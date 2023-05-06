@@ -1,0 +1,49 @@
+::ng-deep {
+  .background-color-white {
+    background-color: #fff !important;
+    border: unset;
+  }
+
+  .note-bar {
+    border-radius: 25px;
+  }
+
+  .e-control,
+  .e-css,
+  body,
+  html {
+    font-family: Roboto, Helvetica, "sans-serif";
+    font-size: 13px;
+  }
+
+  // .codx-form > .card-header {
+  //   min-height: 94px !important;
+  // }
+
+  .symbol-group-check {
+    margin-left: -4px;
+
+    .symbol {
+      border: 0;
+      margin-left: 4px;
+    }
+
+    .symbol-more-check {
+      margin-left: 4px;
+    }
+
+    .symbol .symbol-badge.badge-sm {
+      font-size: 13px !important;
+    }
+
+    .symbol .symbol-badge {
+      transform: translateX(-60%) translateY(-70%) !important;
+    }
+  }
+
+  .codx-tab {
+    .e-tab .e-tab-header.e-vertical .e-toolbar-item .e-tab-wrap {
+      padding: 4px 0px !important;
+    }
+  }
+}

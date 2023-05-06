@@ -47,6 +47,34 @@ export class CodxTasksService {
       listDepID
     );
   }
+  getListUserIDByListPositionsID(listPositionID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListPositionsIDAsync',
+      listPositionID
+    );  
+  }
+  getListUserIDByListEmployeeID(listEmployeeID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDbyListEmployeeIDAsync',
+      listEmployeeID
+    );  
+  }
+
+  getListUserIDByListGroupID(listGroupID){
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'GroupMembersBusiness',
+      'GetListUserIDByListGroupIDAsync',
+      listGroupID
+    );  
+  }
 
   //update status
   setStatusTask(
@@ -83,13 +111,13 @@ export class CodxTasksService {
   }
 
   //sendMail
-  sendAlertMail(recID: string, valueRuleNo: string, funcID: string) {
+  sendAlertMail(recID: string, valueRuleNo: string, funcID: string, recIDTaskExtend : string =null) {
     return this.api.execSv<any>(
       'TM',
       'TM',
       'TaskBusiness',
       'SendAlertMailAsync',
-      [recID,valueRuleNo,funcID]
+      [recID,valueRuleNo,funcID,recIDTaskExtend]
     );
   }
 
@@ -110,6 +138,16 @@ export class CodxTasksService {
       'TaskBusiness',
       'AddAssignToTaskAsync',
       data
+    );
+  }
+
+  checkEdit(taskID) {
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'IsCanClickEditTaskByTaskIDAsync',
+      taskID
     );
   }
 

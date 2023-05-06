@@ -37,6 +37,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   defautComment = 'Bình luận';
   comment = '';
   action = 'confirm';
+  isSave = false;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -61,11 +62,11 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
       fieldDefault.charAt(0).toLocaleLowerCase() + fieldDefault.slice(1);
     this.valueDefault = UrlUtil.getUrl('defaultValue', this.url);
     if (this.action == 'extend') {
-      this.taskExtends = this.data?.data;
+      this.taskExtends = JSON.parse(JSON.stringify(this.data?.data));
       this.task[this.fieldDefault] = this.valueDefault;
       this.taskExtends.status = this.task[this.fieldDefault];
     } else {
-      this.task = this.data?.data;
+      this.task = JSON.parse(JSON.stringify(this.data?.data));
       this.task[this.fieldDefault] = this.valueDefault;
     }
   }
@@ -87,6 +88,8 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   // }
 
   saveData() {
+    if(this.isSave) return ;
+    this.isSave=true ;
     switch (this.action) {
       case 'confirm':
         this.saveConfirmStatus();
@@ -127,13 +130,16 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
         if (res) {
           this.dialog.close(res);
           this.notiService.notifyCode('SYS007');
-          if (this.task.confirmStatus == '2') {
-            this.tmSv.sendAlertMail(this.task?.recID, 'TM_0006', this.funcID).subscribe();
-          } else if (this.task.confirmStatus == '3') {
-            this.tmSv.sendAlertMail(this.task?.recID, 'TM_0007', this.funcID).subscribe();
-          }
-          // this.notiService.notify('Xác nhận công việc thành công !');
-          // this.notiService.notifyCode(" 20K của Hảo :))") ;
+          //send mail FE
+          // if (this.task.confirmStatus == '2') {
+          //   this.tmSv
+          //     .sendAlertMail(this.task?.recID, 'TM_0006', this.funcID)
+          //     .subscribe();
+          // } else if (this.task.confirmStatus == '3') {
+          //   this.tmSv
+          //     .sendAlertMail(this.task?.recID, 'TM_0007', this.funcID)
+          //     .subscribe();
+          // }
         } else this.dialog.close();
       });
   }
@@ -159,7 +165,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
                 }
               });
             } else this.actionExtends();
-          }
+          }else this.actionExtends();
         });
     } else this.actionExtends();
   }
@@ -170,22 +176,28 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
         this.taskExtends.taskID,
         this.taskExtends.status,
         this.comment,
+        this.taskExtends.recID
       ])
       .subscribe((res) => {
         if (res) {
           this.dialog.close(res);
           this.notiService.notifyCode('SYS007');
-          this.tmSv
-            .getRecIDTaskByIdAsync(this.taskExtends.taskID)
-            .subscribe((data) => {
-              if (data) {
-                if (this.taskExtends.status == '5') {
-                  this.tmSv.sendAlertMail(data, 'TM_0006', this.funcID).subscribe();
-                } else if (this.taskExtends.status == '4') {
-                  this.tmSv.sendAlertMail(data, 'TM_0006', this.funcID).subscribe();
-                }
-              }
-            });
+          // send mail FE        
+          // this.tmSv
+          //   .getRecIDTaskByIdAsync(this.taskExtends.taskID)
+          //   .subscribe((data) => {
+          //     if (data) {
+          //       // if (this.taskExtends.status == '5') {
+          //       //   this.tmSv
+          //       //     .sendAlertMail(data, 'TM_0013', this.funcID,this.taskExtends.recID)
+          //       //     .subscribe();
+          //       // } else if (this.taskExtends.status == '4') {
+          //       //   this.tmSv
+          //       //     .sendAlertMail(data, 'TM_0014', this.funcID,this.taskExtends.recID)
+          //       //     .subscribe();
+          //       // }
+          //     }
+          //   });
         } else this.dialog.close();
       });
   }
@@ -203,16 +215,66 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
         this.comment,
       ])
       .subscribe((res) => {
-        if (res) {
-          this.dialog.close(res);
+        if (res && res?.length > 0) {
+          this.dialog.close(res[0]);
           this.notiService.notifyCode('SYS007');
-          if (this.task.approveStatus == '5') {
-            this.tmSv.sendAlertMail(this.task.recID, 'TM_0009', this.funcID).subscribe();
-          } else if (this.task.approveStatus == '4') {
-            this.tmSv.sendAlertMail(this.task.recID, 'TM_0011', this.funcID).subscribe();
-          } else if (this.task.approveStatus == '2') {
-            this.tmSv.sendAlertMail(this.task.recID, 'TM_0010', this.funcID).subscribe();
-          }
+          //send mail Fe
+          // if (this.task.taskGroupID) {
+          //   this.api
+          //     .execSv<any>(
+          //       'TM',
+          //       'ERM.Business.TM',
+          //       'TaskGroupBusiness',
+          //       'GetAsync',
+          //       this.task.taskGroupID
+          //     )
+          //     .subscribe((res) => {
+          //       if (res && res.approveControl == '1') {
+          //         if (this.task.approveStatus == '5') {
+          //           this.tmSv
+          //             .sendAlertMail(this.task.recID, 'TM_0009', this.funcID)
+          //             .subscribe();
+          //         } else if (this.task.approveStatus == '4') {
+          //           this.tmSv
+          //             .sendAlertMail(this.task.recID, 'TM_0011', this.funcID)
+          //             .subscribe();
+          //         } else if (this.task.approveStatus == '2') {
+          //           this.tmSv
+          //             .sendAlertMail(this.task.recID, 'TM_0010', this.funcID)
+          //             .subscribe();
+          //         }
+          //       }
+          //     });
+          // } else {
+          //   this.api
+          //     .execSv<any>(
+          //       'SYS',
+          //       'ERM.Business.SYS',
+          //       'SettingValuesBusiness',
+          //       'GetByModuleWithCategoryAsync',
+          //       ['TMParameters', '1']
+          //     )
+          //     .subscribe((res) => {
+          //       if (res) {
+          //         let param = JSON.parse(res.dataValue);
+          //         if (param?.ApproveControl == '1') {
+          //           if (this.task.approveStatus == '5') {
+          //             this.tmSv
+          //               .sendAlertMail(this.task.recID, 'TM_0009', this.funcID)
+          //               .subscribe();
+          //           } else if (this.task.approveStatus == '4') {
+          //             this.tmSv
+          //               .sendAlertMail(this.task.recID, 'TM_0011', this.funcID)
+          //               .subscribe();
+          //           } else if (this.task.approveStatus == '2') {
+          //             this.tmSv
+          //               .sendAlertMail(this.task.recID, 'TM_0010', this.funcID)
+          //               .subscribe();
+          //           }
+          //         }
+          //       }
+          //     });
+          // }
         } else this.dialog.close();
       });
   }
@@ -238,13 +300,16 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
         if (res) {
           this.dialog.close(res);
           this.notiService.notifyCode('SYS007');
-          if (this.task.verifyStatus == '2') {
-            this.tmSv.sendAlertMail(this.task?.recID, 'TM_0016', this.funcID).subscribe();
-          } else if (this.task.verifyStatus == '3') {
-            this.tmSv.sendAlertMail(this.task?.recID, 'TM_0017', this.funcID).subscribe();
-          }
-          //this.notiService.notify('Duyệt công việc thành công !');
-          // this.notiService.notifyCode(" 20K của Hảo :))") ;
+          // sendMAil FE
+          // if (this.task.verifyStatus == '2') {
+          //   this.tmSv
+          //     .sendAlertMail(this.task?.recID, 'TM_0016', this.funcID)
+          //     .subscribe();
+          // } else if (this.task.verifyStatus == '3') {
+          //   this.tmSv
+          //     .sendAlertMail(this.task?.recID, 'TM_0017', this.funcID)
+          //     .subscribe();
+          // }
         } else this.dialog.close();
       });
   }

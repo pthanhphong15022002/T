@@ -11,9 +11,6 @@
     }
 }
 
-@import "~swiper/css";
-@import "~swiper/css/navigation";
-
 .progress,
 .full {
     opacity: 1 !important;
@@ -28,11 +25,6 @@ ngx-skeleton-loader {
     width: 100%;
 }
 
-.swiper-slide {
-    width: initial;
-}
-
-
 .tagitem {
     border-radius: 15px;
     width: fit-content;
@@ -43,22 +35,6 @@ ngx-skeleton-loader {
 
 .tagitem div {
     font-size: 12px;
-}
-
-.swiper-button-next {
-    top: 22px;
-    position: absolute;
-    right: 0;
-    background-color: #f2fcfb;
-    border-radius: 4px;
-}
-
-.swiper-button-prev {
-    top: 22px;
-    position: absolute;
-    left: 0;
-    background-color: #f2fcfb;
-    border-radius: 4px;
 }
 
 .yeartoyear {
@@ -103,9 +79,10 @@ ngx-skeleton-loader {
     max-width: 1000px;
 }
 
-.pw-menu {
+.employee-info-main .pw-menu {
     height: 42px;
     line-height: 42px;
+
     border-radius: 6px !important;
     background-color: var(--bs-body-bg);
     width: 100%;

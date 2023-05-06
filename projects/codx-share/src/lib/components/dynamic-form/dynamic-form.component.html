@@ -13,22 +13,34 @@
 </codx-views>
 
 <ng-template #morefunction let-data>
-  <div class="" style="height: 30px">
+  <div class="d-flex float-end" style="height: 30px">
     <!-- <div class="action-menu"> -->
     <codx-mfunc
       [dataItem]="data"
       [formModel]="viewBase.formModel"
       (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
       type="view"
-    ></codx-mfunc>
+    >
+    </codx-mfunc>
     <!-- </div> -->
   </div>
 
-  <!-- <codx-mfunc 
+  <!-- <codx-mfunc
   [dataItem]="data"
       [formModel]="viewBase.formModel"
       (clickMF)="clickMF($event, data)"
       type="view"
       >
 </codx-mfunc> -->
+</ng-template>
+
+<ng-template #tabRef>
+  <codx-tabs
+    [entityName]="view.formModel.entityName"
+    [formModel]="view.formModel"
+    [objectID]="''"
+    [funcID]="view.formModel.funcID"
+    [TabControl]="tabs"
+  ></codx-tabs>
 </ng-template>

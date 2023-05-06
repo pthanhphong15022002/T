@@ -16,6 +16,7 @@ import {
   ButtonModel,
   CacheService,
   CallFuncService,
+  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
@@ -123,13 +124,15 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
 
   initForm() {
     if (this.transId != '') {
-      let gridModels = new GridModels();
+      let gridModels = new DataRequest();
       gridModels.dataValue = this.transId;
       gridModels.predicate = 'TransID=@0';
       gridModels.funcID = this.formModel.funcID;
       gridModels.entityName = this.formModel.entityName;
       gridModels.gridViewName = this.formModel.gridViewName;
-      gridModels.pageSize = 20;
+      gridModels.pageLoading = false;
+      gridModels.srtColumns = 'StepNo';
+      gridModels.srtDirections = 'asc';
 
       this.esService.getApprovalSteps(gridModels).subscribe((res) => {
         if (res && res?.length >= 0) {
@@ -314,17 +317,19 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
           }
         }
         if (this.type == '0') {
-          this.notifySvr.notifyCode('RS002');
+          this.notifySvr.notifyCode('SYS007');
           this.addEditItem.emit(true);
         }
       }
     });
 
-    this.esService.deleteApprovalStep(this.lstDeleteStep).subscribe((res) => {
-      console.log('result delete aaappppp', res);
-      if (res == true) {
-        this.addEditItem.emit(true);
-      }
-    });
+    if (this.lstDeleteStep?.length > 0) {
+      this.esService.deleteApprovalStep(this.lstDeleteStep).subscribe((res) => {
+        console.log('result delete aaappppp', res);
+        if (res == true) {
+          this.addEditItem.emit(true);
+        }
+      });
+    }
   }
 }

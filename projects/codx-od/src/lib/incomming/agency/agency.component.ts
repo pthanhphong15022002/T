@@ -1,12 +1,7 @@
 import {
   Component,
   OnInit,
-  TemplateRef,
-  ViewChild,
-  AfterViewInit,
-  ChangeDetectorRef,
   Input,
-  Optional,
 } from '@angular/core';
 
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
@@ -22,6 +17,7 @@ import { agency } from '../../models/agency.model';
 export class AgencyComponent implements OnInit {
   @Input() dialog;
   @Input() data;
+  @Input() formModel;
   agencyForm = new FormGroup({
     agencyName: new FormControl(),
     category: new FormControl(),
@@ -45,14 +41,23 @@ export class AgencyComponent implements OnInit {
     this.dtAgency.Category = event;
   }
   onSave() {
+    if(this.checkRequired()) return; 
     this.codxService
       .getAutoNumber('ODT3', 'OD_Agencies', 'AgencyID')
       .subscribe((dt: any) => {
-        this.agencyForm.value.agencyID = dt;
-        this.agService.SaveAgency(this.agencyForm.value).subscribe((item) => {
+        let agency:any= this.agencyForm.value;
+        agency.agencyID = dt;
+        this.agService.SaveAgency(agency).subscribe((item) => {
           if (item.status == 0) this.dialog.close();
           this.notifySvr.notify(item.message);
         });
       });
+  }
+
+  checkRequired()
+  {
+    if(this.agencyForm.value?.agencyName) return false;
+    this.notifySvr.notifyCode('SYS009', 0, "Tên đơn vị");
+    return true
   }
 }

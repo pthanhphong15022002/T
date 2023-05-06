@@ -421,6 +421,7 @@ export class MoveComponent implements OnInit {
             if (index > -1) {
               list.splice(index, 1);//remove element from array             
               that.dmSV.listFiles = list;
+              this.dmSV.ChangeDataView.next(true);
               that.changeDetectorRef.detectChanges();
             }
           }
@@ -431,7 +432,7 @@ export class MoveComponent implements OnInit {
               that.changeDetectorRef.detectChanges();
             }
           }          
-          that.dmSV.ChangeData.next(true);
+          //that.dmSV.ChangeData.next(true);
           this.dialog.close();
         }
         else {      

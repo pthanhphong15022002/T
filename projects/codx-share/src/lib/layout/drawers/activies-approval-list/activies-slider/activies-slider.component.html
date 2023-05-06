@@ -2,72 +2,76 @@
   [dialog]="dialog">
 </codx-form>
 <ng-template #subheader>
-  <div class="d-flex justify-content-end w-100">
-    <div class="rounded-pill p-2">
+  <div class="codx-approval-filter" ngbDropdown ngbDropdownToggle #dropdown id="noti-dropdowTonggle">
+    <button class="btn btn-sm btn-light-primary" *ngIf="valueSelected">
+      <span class="w-20px" [class]="valueSelected.icon"></span>
       <span>
-        <i class="icon-filter_alt"></i>
+        {{valueSelected.text}}
       </span>
-      <span class="mx-1">
-        <codx-label [formModel]="dialog.formModel" name="" default="Loại xét duyệt"></codx-label>
-      </span>
-      <span><i class="fas fa-ellipsis-h"></i></span>
+    </button>
+    <div ngbDropdownMenu aria-labelledby="noti-dropdowTonggle" id="noti-dropdownPopup" class="dropdown-menu">
+      <div ngbDropdownMenu>
+        <ng-container *ngFor="let item of datas">
+          <button (click)="valueChange(item)" ngbDropdownItem>
+            <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
+            </span>
+            <span>
+              {{item.text}}
+            </span>
+          </button>
+        </ng-container>
+      </div>
     </div>
   </div>
 </ng-template>
 <ng-template #body>
-  <div class="p-2">
-    <ng-container *ngFor="let item of lstApproval">
-      <div class="d-flex p-4 my-2">
-        <div class="">
-          <codx-vll [name]="'ES022'" [value]="item.title" [showIcon]="true"></codx-vll>
-        </div>
-        <div class="ms-4">
-          <div>
-            <codx-vll [name]="'ES022'" [value]="item.title" [showText]="true"></codx-vll>
+  <div class="container p-0 h-100">
+    <ng-container *ngIf="loaded; else templateEmpty">
+      <ng-container *ngFor="let item of lstApproval;index as index">
+        <div class="d-flex align-items-top border-top py-3 pe-2">
+          <div [style]="setStyles(item.entityName)"
+            class="w-35px h-35px fs-5 d-flex justify-content-center align-items-center rounded-circle me-3">
+            <codx-vll [name]="'SYS055'" [value]="item.entityName" [showIcon]="true"></codx-vll>
           </div>
-          <div class="" [innerHTML]="item.textValue"></div>
-          <div class="d-flex align-items-center justify-content-between ">
-            <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
-            <codx-img 
-              [width]="30" 
-              [isDefaulImg]="true" 
-              [objectId]="item.userID" 
-              [objectType]="'AD_Users'">
-            </codx-img>
-          </div>
-          <div class="d-flex align-items-center justify-content-between border-top mt-2 pt-2">
-            <div>
-              <button type="button" class="btn btn-sm btn-light-primary">
-                <codx-label [formModel]="dialog.formModel" name="" default="Duyệt"></codx-label>
-              </button>
-              <button type="button" class="btn btn-outline-danger min-w-90px ms-4">
-                <codx-label class="text-danger" [formModel]="dialog.formModel" name="" default="Từ chối"></codx-label>
-              </button>
+          <div class="w-100">
+            <div class="d-flex justify-content-between">
+              <div class="" [innerHTML]="item.textValue | fTextValue:item.text | async"></div>
+              <codx-vll 
+                [classList]="'fw-bold text-dark'" 
+                [name]="'SYS055'" 
+                [value]="item.entityName"
+                [showText]="true">
+              </codx-vll>
             </div>
-            <div>
-              <codx-label [formModel]="dialog.formModel" name="" default="Xem chi tiết"></codx-label>
+            <div class="d-flex align-items-center justify-content-between ">
+              <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
+              <codx-img [width]="25" [objectId]="item.userID" [objectName]="item.userName" [objectType]="'AD_Users'">
+              </codx-img>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-1">
+              <div class="">
+                <button [disabled]="item.blocked" type="button" class="btn btn-sm btn-outline-success me-3"
+                  (click)="approvalAsync(item,'5',index)">
+                  <codx-label [formModel]="dialog.formModel" name="" default="Duyệt"></codx-label>
+                </button>
+                <button [disabled]="item.blocked" type="button" class="btn btn-sm btn-outline-danger"
+                  (click)="approvalAsync(item,'4',index)">
+                  <codx-label class="text-danger" [formModel]="dialog.formModel" name="" default="Từ chối"></codx-label>
+                </button>
+              </div>
+              <div class="cursor-pointer" (click)="clickViewDetail(item)">
+                <codx-label [classList]="'fst-italic text-gray-500'" [formModel]="dialog.formModel" name=""
+                  default="Xem chi tiết"></codx-label>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
+      </ng-container>
     </ng-container>
   </div>
 </ng-template>
-<ng-template #itemNoti let-item>
-  <div class="row p-4 my-2">
-    <div class="col-1">
-      <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
-    </div>
-    <div class="col-10">
-      <div [innerHTML]="item.textValue">
-      </div>
-      <div>
-        <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
-      </div>
-    </div>
-    <div class="col-1" *ngIf="!item.isRead">
-      <span class="dots"></span>
-    </div>
+<ng-template #templateEmpty>
+  <div class="d-flex align-items-center justify-content-center h-100">
+    <img class="w-250px" src="assets/themes/sys/default/img/DataEmpty.svg">
   </div>
 </ng-template>

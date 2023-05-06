@@ -1,0 +1,169 @@
+.login-qtsc {
+	.login {
+		width: 100%;
+		max-width: 1400px;
+		margin: 0 auto;
+	}
+
+	.login-pic {
+		height: calc(100vh - 260px);
+		display: flex;
+		align-items: center;
+		min-height: 480px !important;
+	}
+
+	/**Custom*/
+	.login {
+		background-size: cover;
+		background-position: center center;
+		position: relative;
+		height: 100%;
+		width: 100%;
+	}
+
+	.bg-linear-gradient-blue {
+		background: linear-gradient(290.8deg, #005ac0 -10.9%, #0077ff 17.77%, #00f0ff 84.01%) !important;
+		box-sizing: border-box;
+		height: 100%;
+	}
+
+	a,
+	a:focus,
+	a:hover {
+		text-decoration: underline;
+	}
+
+	.form-group {
+		margin-bottom: 20px;
+	}
+
+	.form-control {
+		background-color: #e8f0fe !important;
+		border: 0;
+		border-radius: 35px !important;
+		padding: 13px 20px !important;
+		box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+		height: 36px;
+		line-height: 36px;
+	}
+
+	.login-content {
+		max-width: 1400px;
+		width: 100%;
+		margin: 0 auto;
+	}
+
+
+
+	.login-right {
+		width: 420px;
+		min-width: 420px;
+		padding: 10px 50px !important;
+	}
+
+	span.splitter {
+		padding-left: 10px;
+		margin-right: 10px;
+		color: #444443;
+		line-height: 18px;
+	}
+
+	.fs-title {
+		font-size: 26px;
+		line-height: 1.4;
+	}
+
+	.login-link {
+		display: flex;
+		justify-content: center;
+	}
+
+	.login-link img {
+		width: 40px;
+		float: left;
+		margin: 6px;
+	}
+
+	.btn-login {
+		text-transform: uppercase;
+		color: #fff !important;
+		font-weight: bold !important;
+		font-weight: 600 !important;
+		padding: 8px 20px !important;
+		border-radius: 25px !important;
+		border: 0 !important;
+		background-image: linear-gradient(to right, #f79653, #f78851, #f67951, #f46953, #f15956) !important;
+		font-size: 13px !important;
+	}
+
+	.input-icon {
+		position: relative;
+	}
+
+	.input-icon img[class*="ic-"] {
+		position: absolute;
+		top: 12px;
+		right: 25px;
+		height: 20px;
+		z-index: 2;
+	}
+
+	.form-group-pass {
+		padding: 8px 15px;
+		background-color: #e8f0fe;
+		border-radius: 30px;
+	}
+
+
+	.e-input-group-icon.icon-visibility {
+		background-color: #e8f0fe !important;
+	}
+
+	.codx-password.e-input-group {
+		background-color: transparent !important;
+	}
+
+	background: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	overflow: auto;
+
+	.form-control {
+		background-color: #e8f0fe !important;
+	}
+
+	.btn-login:hover {
+		background-image: linear-gradient(30deg, #f67951, #f46953, #f15956) !important;
+	}
+
+}
+
+@media screen and (max-width: 991px) {
+	div.login-qtsc {
+		.pic-left {
+			display: none !important;
+		}
+
+		.login-right {
+			margin: 0 auto;
+		}
+
+		.login-right {
+			width: 560px;
+			min-width: 560px;
+		}
+
+		.fs-title {
+			font-size: 20px;
+			text-align: center;
+			margin: 0 auto;
+			margin-top: 30px;
+		}
+
+		.login-pic {
+			min-height: 520px !important;
+		}
+	}
+}

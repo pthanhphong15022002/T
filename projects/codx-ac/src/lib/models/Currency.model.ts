@@ -1,0 +1,30 @@
+export class Currency {
+  aRounding: any;
+  allowEditKey: any;
+  assign: any;
+  calculation: any;
+  createdBy: any;
+  createdOn: any;
+  currencyID: any;
+  currencyName: any;
+  currencyName2: any;
+  delete: any;
+  idField: any;
+  includeTables: any;
+  isoCode: any;
+  modifiedBy: any;
+  modifiedOn: any;
+  multi: any;
+  pRounding: any;
+  penny: any;
+  precisionName: any;
+  prefix: any;
+  recID: any;
+  share: any;
+  stop: any;
+  symbol: any;
+  translateName: any;
+  unbounds: any;
+  updateColumns: any;
+  write: any;
+}

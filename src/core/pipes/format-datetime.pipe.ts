@@ -62,7 +62,7 @@ export class FormatDatetimePipe implements PipeTransform {
     interval = seconds / 86400;
     if (interval > 1) {
       if (Math.floor(interval) < 2)
-        return locale.yesterday;
+        return locale.yesterday + " " + moment(date).format('HH:mm');
       return Math.floor(interval) + locale.days  + " "  + moment(date).format('HH:mm');
     }
     interval = seconds / 3600;

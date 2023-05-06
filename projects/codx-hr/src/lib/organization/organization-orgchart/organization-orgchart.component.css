@@ -1,0 +1,64 @@
+.connector {
+    position: absolute;
+    background-color: #fff;
+    width: 20px;
+    height: 20px;
+    left: 50%;
+    bottom: -10px;
+    margin-left: -5px;
+    cursor: pointer;
+  }
+  
+  .popover {
+    /* width: 320px;
+    max-width: 320px; */
+    z-index: 99999 !important;
+  }
+  
+  .popover .popover-body {
+    max-height: 368px !important;
+    overflow: auto;
+  }
+  
+  .popover-body {
+    padding: 1rem 1.25rem;
+    color: #3f4254;
+  }
+  
+  .empPopoverClass .popover-body>div {
+    padding: 5px 1.25rem;
+    overflow: auto;
+  }
+  
+  .userPopoverClass {
+    margin-top: -10px;
+  }
+  
+  .popover .popover-header {
+    border-bottom: 0;
+    padding-bottom: 5px;
+  }
+  
+  @media (max-height: 800px) {
+    .empPopoverClass {
+      margin-top: -40px;
+    }
+  }
+  
+  @media (min-height: 1000px) {
+    .empPopoverClass .popover-body>div {
+      height: 550px;
+    }
+  }
+  
+  .empPopoverClass .popover-body {
+    padding: 0px;
+  }
+  
+  .empPopoverClass {
+    width: 300px;
+  }
+  
+  .codx-bghover:hover {
+    cursor: pointer !important;
+  }

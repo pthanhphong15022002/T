@@ -1,9 +1,12 @@
-<codx-views
-  #view
-  entityName="HR_EmployeeDetail"
-  idField="employeeID"
-  [views]="views"
-  [viewActiveType]="'16'"
-  [autoLoad]="false"
->
-</codx-views>
+<codx-gridview
+  #gridView
+  [columnsGrid]="columnsGrid"
+  [rowTmp]="rowTemplate"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [className]="className"
+  [method]="method"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [entityName]="entity"
+></codx-gridview>

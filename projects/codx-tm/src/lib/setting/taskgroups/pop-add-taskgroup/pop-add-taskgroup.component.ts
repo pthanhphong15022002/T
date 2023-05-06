@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { fail } from 'assert';
 import {
   ApiHttpService,
   AuthStore,
@@ -19,8 +20,10 @@ import {
   ViewsComponent,
   FormModel,
   CallFuncService,
+  Util,
 } from 'codx-core';
 import { AnyARecord } from 'dns';
+
 import { Observable, Subject } from 'rxjs';
 import { CodxTMService } from '../../../codx-tm.service';
 import { StatusTaskGoal } from '../../../models/enum/enum';
@@ -62,10 +65,12 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
   listName = '';
   fieldValue = '';
   listCombobox = {};
-  showInput = true;
+  disabledShowInput = false;
   titleAction = '';
   verifyName = '';
   approveName = '';
+  mess = '';
+  planceHolderAutoNumber = '';
   constructor(
     private authStore: AuthStore,
     private cache: CacheService,
@@ -76,13 +81,28 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
-    this.data = dialog.dataService!.dataSelected;
+    this.data = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.taskGroups = this.data;
     this.dialog = dialog;
     this.action = dt.data[0];
     this.titleAction = dt.data[1];
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
+    if (this.action == 'add') {
+      //defaut
+      this.taskGroups.maxHoursControl = this.taskGroups.maxHoursControl ?? '0';
+      this.taskGroups.locationControl = this.taskGroups.locationControl ?? '0';
+      this.taskGroups.projectControl = this.taskGroups.projectControl ?? '0';
+      this.taskGroups.planControl = this.taskGroups.planControl ?? '0';
+      this.taskGroups.updateControl = this.taskGroups.updateControl ?? '0';
+      this.taskGroups.autoCompleted = this.taskGroups.autoCompleted ?? '0';
+      this.taskGroups.dueDateControl = this.taskGroups.dueDateControl ?? '0';
+      this.taskGroups.extendControl = this.taskGroups.extendControl ?? '0';
+      this.taskGroups.editControl = this.taskGroups.editControl ?? '0';
+      this.taskGroups.completedControl =
+        this.taskGroups.completedControl ?? '0';
+    }
+
     this.api
       .execSv<any>(
         'SYS',
@@ -92,14 +112,14 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
         [this.functionID, this.dialog.formModel.entityName]
       )
       .subscribe((res) => {
-        if (res && res.stop) {
-          this.showInput = false;
-          if (this.action == 'add' || this.action == 'copy') {
-            this.data.taskGroupID = '';
-            this.taskGroups.taskGroupID = '';
-          }
+        if (res && !res.stop) {
+          this.disabledShowInput = true;
+          this.cache.message('AD019').subscribe((mes) => {
+            if (mes)
+              this.planceHolderAutoNumber = mes?.customName || mes?.description;
+          });
         } else {
-          this.showInput = true;
+          this.disabledShowInput = false;
         }
       });
   }
@@ -107,8 +127,14 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     //   this.initForm();
+    if (this.action === 'copy') {
+      this.taskGroups.taskGroupID = null;
+    }
     this.cache.gridViewSetup('TaskGroups', 'grvTaskGroups').subscribe((res) => {
       if (res) this.gridViewSetup = res;
+    });
+    this.cache.message('TM046').subscribe((dt) => {
+      this.mess = dt?.defaultName;
     });
 
     if (this.taskGroups.checkList) {
@@ -123,7 +149,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     this.changDetec.detectChanges();
     // this.openForm(this.taskGroups, false);
     this.getGridViewSetUp();
-    if (this.action === 'edit') this.valueName();
+    if (this.action === 'edit' || this.action === 'copy') this.valueName();
   }
 
   onDeleteTodo(index) {
@@ -145,12 +171,10 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
 
   getGridViewSetUp() {
     this.cache.functionList(this.functionID).subscribe((func) => {
-      console.log('functuonID: ', func);
       this.cache
         .gridViewSetup(func?.formName, func?.gridViewName)
         .subscribe((grd) => {
           this.gridViewSetUp = grd;
-          console.log('gridViewSetUp: ', this.gridViewSetUp);
         });
     });
   }
@@ -175,7 +199,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
 
   valueChange(data) {
     if (data.data) {
-      this.taskGroups.taskGroupName = data.data;
+      this.taskGroups[data.field] = data.data;
     }
   }
   valueList(data) {
@@ -187,7 +211,21 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       this.taskGroups[data.field] = '1';
     } else {
       this.taskGroups[data.field] = '0';
+      if (data.field == 'verifyControl') {
+        this.verifyName = '';
+        this.taskGroups.verifyByType = '';
+        this.taskGroups.verifyBy = '';
+      }
+      if (data.field == 'approveControl') {
+        this.approveName = '';
+        this.taskGroups.approveBy = '';
+        this.taskGroups.approvers = '';
+      }
+      if (data.field == 'maxHoursControl') {
+        this.taskGroups.maxHours = 0;
+      }
     }
+    this.changDetec.detectChanges();
   }
 
   changeHours(e) {
@@ -196,10 +234,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     if (numberValue > 0 && numberValue <= 8) {
       this.taskGroups.maxHours = numberValue;
     } else {
-      this.notiService.notifyCode(
-        'Vui lòng nhập giá trị lớn hơn 0 hoặc nhỏ hơn 9'
-      );
-      this.taskGroups.maxHours = 1;
+      this.taskGroups.maxHours = 0;
     }
   }
   // valuePro(data) {
@@ -237,7 +272,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
           verifyByType += e[0].objectType;
           verifyBy += e[0].id;
           this.api
-            .execSv<any>('SYS', 'AD', 'RolesBusiness', 'GetOneAsync', verifyBy)
+            .execSv<any>('SYS', 'AD', 'RolesBusiness', 'GetAsync', verifyBy)
             .subscribe((res) => {
               if (res) {
                 console.log(res);
@@ -269,7 +304,11 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
           break;
       }
       if (verifyByType) this.taskGroups.verifyByType = verifyByType;
-      if (verifyBy) this.taskGroups.verifyBy = verifyBy;
+      if (verifyBy) {
+        this.taskGroups.verifyBy = verifyBy;
+      } else {
+        this.taskGroups.verifyBy = '';
+      }
     } else {
       switch (e[0].objectType) {
         case 'S':
@@ -280,7 +319,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
           approveBy += e[0].objectType;
           approves += e[0].id;
           this.api
-            .execSv<any>('SYS', 'AD', 'RolesBusiness', 'GetOneAsync', approves)
+            .execSv<any>('SYS', 'AD', 'RolesBusiness', 'GetAsync', approves)
             .subscribe((res) => {
               if (res) {
                 console.log(res);
@@ -326,7 +365,11 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       if (approveBy) {
         this.taskGroups.approveBy = approveBy;
       }
-      if (approves) this.taskGroups.approvers = approves;
+      if (approves) {
+        this.taskGroups.approvers = approves;
+      } else {
+        this.taskGroups.approvers = '';
+      }
     }
   }
 
@@ -375,7 +418,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
             'SYS',
             'AD',
             'RolesBusiness',
-            'GetOneAsync',
+            'GetAsync',
             this.taskGroups.verifyBy
           )
           .subscribe((res) => {
@@ -431,7 +474,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
             'SYS',
             'AD',
             'RolesBusiness',
-            'GetOneAsync',
+            'GetAsync',
             this.taskGroups.approvers
           )
           .subscribe((res) => {
@@ -528,12 +571,13 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
 
   beforeSave(op: any) {
     var data = [];
-    if (this.action === 'add') {
+    op.className = 'TaskGroupBusiness';
+    if (this.action === 'add' || this.action === 'copy') {
       op.method = 'AddTaskGroupsAsync';
-      data = [this.taskGroups];
+      data = [this.taskGroups, this.functionID];
     } else if (this.action === 'edit') {
       op.method = 'UpdateTaskGroupsAsync';
-      data = [this.taskGroups];
+      data = [this.taskGroups, this.functionID];
     }
 
     op.data = data;
@@ -567,6 +611,58 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
 
   onSave() {
     this.lstSavecheckList = [];
+    if (
+      !this.taskGroups.taskGroupName ||
+      this.taskGroups.taskGroupName.trim() == ''
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['TaskGroupName']?.headerText + '"'
+      );
+      return;
+    }
+
+    if (this.taskGroups.approveControl == '1') {
+      if (
+        this.taskGroups.approveBy == null ||
+        this.taskGroups.approveBy.trim() == ''
+      ) {
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewSetup['ApproveBy']?.headerText + '"'
+        );
+        return;
+      }
+    }
+
+    if (this.taskGroups.verifyControl == '1') {
+        if (
+          this.taskGroups.verifyByType == null ||
+          this.taskGroups.verifyByType.trim() == ''
+        ) {
+          this.notiService.notifyCode(
+            'SYS009',
+            0,
+            '"' + this.gridViewSetup['VerifyByType']?.headerText + '"'
+          );
+          return;
+
+      }
+    }
+
+    if (this.taskGroups.maxHoursControl == '1') {
+      if (this.taskGroups.maxHours <= 0 || this.taskGroups.maxHours > 8) {
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewSetup['MaxHours']?.headerText + '"'
+        );
+        return; //Lớn hơn 0 và nhỏ hơn 9 chưa có mssg
+      }
+    }
+
     if (this.taskGroups.checkListControl == '2') {
       for (let item of this.listTodo) {
         this.lstSavecheckList.push(item.text);
@@ -578,7 +674,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       this.taskGroups.checkList = null;
     }
 
-    if (this.action === 'add') {
+    if (this.action === 'add' || this.action === 'copy') {
       return this.addRow();
     }
     return this.updateRow();
@@ -587,5 +683,9 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
   openPopupLink() {
     var m = this.taskGroups.maxHours;
     this.callfc.openForm(this.addLink, '', 500, 300);
+  }
+
+  viewHtmlMaxHour(hour) {
+    return Util.stringFormat(this.mess, hour);
   }
 }

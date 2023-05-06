@@ -15,10 +15,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { viewChangeEvent } from '@syncfusion/ej2-angular-documenteditor';
 import {
+  LayoutService,
   NotificationsService,
   ScrollComponent,
   TenantStore,
   UIComponent,
+  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { Subscription } from 'rxjs';
@@ -51,6 +53,7 @@ export class RoleDetailComponent
   sub: Subscription;
   funcIDPara: any;
   views = [];
+  role: any = {};
   formName = '';
   gridViewName = '';
   functionID = '';
@@ -65,6 +68,8 @@ export class RoleDetailComponent
   dataAdv: any = {};
   checkAll: any = {};
   selectIndex = 0;
+  objTemplate: any = {};
+  allowMore: boolean = false;
 
   @ViewChild('template') template: TemplateRef<any>;
 
@@ -77,6 +82,7 @@ export class RoleDetailComponent
     private notificationsService: NotificationsService,
     private tenantStore: TenantStore,
     private route: ActivatedRoute,
+    private layout: LayoutService,
     injector: Injector
   ) {
     super(injector);
@@ -121,17 +127,17 @@ export class RoleDetailComponent
 
   LoadAsside() {
     this.api
-      .execSv(
-        'SYS',
-        'SYS',
-        'FunctionListBusiness',
-        'GetModuleFunctionAsync',
-        [this.recid]
-      )
+      .execSv('SYS', 'SYS', 'FunctionListBusiness', 'GetModuleFunctionAsync', [
+        this.recid,
+      ])
       .subscribe((res: any) => {
         if (res) {
           var data = res;
-          this.myTree = data;
+          this.role = data[0];
+          // if (this.role && this.role.administrator) {
+          //   this.active = false;
+          // }
+          this.myTree = data[1];
           this.df.detectChanges();
           this.asideClick(null, 0, data[0]);
         }
@@ -144,8 +150,9 @@ export class RoleDetailComponent
     this.formName = item.formName;
     this.gridViewName = item.gridViewName;
     this.functionID = item.functionID;
+
     this.parent = item;
-    this.tempService.roleName.next(item.customName);
+    //this.tempService.roleName.next(item.customName);
     this.api
       .execSv(
         'SYS',
@@ -156,11 +163,17 @@ export class RoleDetailComponent
       )
       .subscribe((res: any) => {
         if (res) {
-          this.active = true;
+          if (this.role && this.role.administrator) {
+            this.active = false;
+          } else this.active = true;
           var funtion = res[0] as any[];
-          if (funtion.length > 0) {
-            this.dataAuthorize = funtion.filter((x) => x.functionType != 'R');
-            this.dataReport = funtion.filter((x) => x.functionType == 'R');
+          if (funtion && funtion.length > 0) {
+            this.dataAuthorize = funtion.filter(
+              (x) => x.functionType != 'R' && x.functionType != 'D'
+            );
+            this.dataReport = funtion.filter(
+              (x) => x.functionType == 'R' || x.functionType == 'D'
+            );
           }
 
           this.dataRole = res[1];
@@ -177,7 +190,7 @@ export class RoleDetailComponent
   valueChange(e, funcID) {
     if (e.field === 'selectAll') {
       var codxinput = document.querySelectorAll(
-        'codx-input[data-parent="' + funcID + '"]'
+        '.more codx-input[data-parent="' + funcID + '"]'
       );
       if (codxinput && codxinput.length > 0) {
         codxinput.forEach((element) => {
@@ -201,6 +214,18 @@ export class RoleDetailComponent
           }
         });
       }
+    } else if (e.field === 'allow') {
+      this.allowMore = e.data;
+      var f = this.dataAuthorize.find((x) => x.functionID === funcID);
+      if (
+        f &&
+        (f.activeSysFuction != e.data || f.activeMoreFunction != e.data)
+      ) {
+        f.activeSysFuction = f.activeMoreFunction = e.data;
+        this.api
+          .execAction('SYS_FunctionList', [f], 'UpdateAsync')
+          .subscribe((res) => {});
+      }
     } else {
       if (e.field == 'sys' || e.field == 'exp' || e.field == 'more') {
         this.checkAndLock(e.field, e.data);
@@ -212,10 +237,12 @@ export class RoleDetailComponent
           this.dataRole[funcID].DataPer
         ) {
           per = this.dataRole[funcID].DataPer;
+        } else {
         }
         per[e.field] = e.data;
         per['functionID'] = funcID;
         per['roleID'] = this.recid;
+        per['run'] = true;
         this.dataRole[funcID].DataPer = per;
         this.RolesService._dataChanged = true;
       }
@@ -247,7 +274,21 @@ export class RoleDetailComponent
     var role = Object.values(this.dataRole) as any[];
     var pers = [];
     role.forEach((element) => {
-      pers.push(element.DataPer);
+      var dataper = element.DataPer;
+      var entity = element.Entity;
+      if (dataper) {
+        if (!dataper.permissionControl && entity && entity.permissionControl)
+          dataper.permissionControl = entity.permissionControl;
+        pers.push(dataper);
+      } else {
+        // dataper = {};
+        // dataper['functionID'] = funcID;
+        // dataper['roleID'] = this.recid;
+        // dataper['run'] = true;
+        // if (entity.permissionControl)
+        //   dataper.permissionControl = entity.permissionControl;
+        // pers.push(dataper);
+      }
     });
     var roleID = this.recid;
     var sys = this.activeSys;
@@ -267,6 +308,7 @@ export class RoleDetailComponent
         roleID,
         pers,
         this.dataFuncRole,
+        this.dataReport,
       ])
       .subscribe((res) => {
         t.dataFuncRole = {};
@@ -293,8 +335,8 @@ export class RoleDetailComponent
           } else {
           }
         } else {
-          if (dt && dt.length > 0 && !dt.includes(id)) {
-            dt.push(id);
+          if (dt && dt.length > 0) {
+            if (!dt.includes(id)) dt.push(id);
           } else {
             var arr = [];
             arr.push(id);
@@ -331,5 +373,10 @@ export class RoleDetailComponent
           this.asideClick(null, 0, this.myTree[0]);
         }
       });
+  }
+
+  viewChanged(evt: any, view: ViewsComponent) {
+    this.view = view;
+    this.layout.setLogo(null);
   }
 }

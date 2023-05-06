@@ -8,7 +8,8 @@ import {
 import { ImageElement } from '@syncfusion/ej2-angular-diagrams';
 import { UIComponent, AuthStore, DialogData, DialogRef } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { CodxEsService, UrlUpload } from '../../codx-es.service';
+import { CodxEsService } from '../../codx-es.service';
+import { environment } from 'src/environments/environment';
 import { PopupConfirmSaveLabelComponent } from './popup-confirm-save-label/popup-confirm-save-label.component';
 
 @Component({
@@ -110,7 +111,7 @@ export class PopupSelectLabelComponent extends UIComponent {
     this.esService.getLabels().subscribe((res) => {
       this.selfLabels = res as Array<any>;
       this.selfLabels.forEach((label) => {
-        label.pathDisk = UrlUpload + '/' + label.pathDisk;
+        label.pathDisk = environment.urlUpload + '/' + label.pathDisk;
       });
       console.log('Self Labels', res);
       this.detectorRef.detectChanges();

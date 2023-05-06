@@ -20,5 +20,9 @@ lib-catagory .card-body {
 .category-title {
     font-size: 14px;
     margin-bottom: 12px;
-    margin-top: 10px;
+    margin-top: 5px;
+}
+
+.category-control ejs-dropdownlist {
+    width: 200px !important;
 }

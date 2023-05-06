@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Injectable, NgModule, OnInit } from "@angular/core";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { BehaviorSubject, Observable, Subject, finalize, from, map, share } from "rxjs";
 import { DomSanitizer } from "@angular/platform-browser";
 import { AuthService, NotificationsService } from "codx-core";
 import { FolderService } from "@shared/services/folder.service";
 import { FileService } from "@shared/services/file.service";
 import { FileUpload } from "@shared/models/file.model";
+import { lvFileClientAPI } from "@shared/services/lv.component";
 
 @Injectable({
     providedIn: 'root'
@@ -38,10 +39,8 @@ export class AttachmentService {
     public parentFolderId: string;
     public isTree = false;
     public breadcumbLink: string[];
-    private titlemessage = 'Thông báo';
-    private copymessage = 'Bạn có muốn lưu lên không ?';
-    private renamemessage = 'Bạn có muốn lưu với tên {0} không ?';
-    private FOLDER_NAME = "Quản lý tài liệu cá nhân";
+    public caches = new Map<string, Map<string, any>>();
+    private cachedObservables = new Map<string, Observable<any>>();
     constructor(
         private domSanitizer: DomSanitizer,
         private auth: AuthService,
@@ -67,4 +66,38 @@ export class AttachmentService {
             return "";
     }
 
+    loadTenant(name:any): Observable<any>
+    {
+      let paras = [name];
+      let keyRoot = name;
+      let key = JSON.stringify(paras).toLowerCase();
+      if (this.caches.has(keyRoot)) {
+        var c = this.caches.get(keyRoot);
+        if (c && c.has(key)) {
+          return c.get(key);
+        }
+      }
+      else {
+        this.caches.set(keyRoot, new Map<any, any>());
+      }
+  
+      if (this.cachedObservables.has(key)) {
+        this.cachedObservables.get(key)
+      }
+      let observable =  from(lvFileClientAPI.postAsync(`api/admin/apps/get/${name}`,""))
+      .pipe(
+        map((res) => {
+          if (res) {
+            let c = this.caches.get(keyRoot);
+            c?.set(key, res);
+            return res;
+          }
+          return null
+        }),
+        share(),
+        finalize(() => this.cachedObservables.delete(key))
+      );
+      this.cachedObservables.set(key, observable);
+      return observable;
+    }
 }

@@ -3,18 +3,18 @@
         <form nane="frm_editfile1" class="mt-3">
             <div class="mb-3">
                 <div class="d-flex align-items-center file-item ng-star-inserted">
-                    <img alt="{{fileEditing.fileName}}" class="max-h-30px me-3"
-                        src="../../../assets/codx/dms/{{getAvatar(fileEditing.extension)}}">
+                    <img alt="{{fileEditing?.fileName}}" class="max-h-30px me-3"
+                        src="../../../assets/codx/dms/{{getAvatar(fileEditing?.extension)}}">
                     <codx-input placeholder="Tên tài liệu..." #fileNameCtrl [class]="validate('fileName')" type="text"
-                        style="width:100%" [crrValue]="fileEditing.fileName"
+                        style="width:100%" [crrValue]="fileEditing?.fileName"
                         (valueChange)="txtValue($event, 'filename')"></codx-input>
                     <!-- <input [disabled]="noeditName ? 'disabled' : null" type="text" required id="fileName"
                         name="fileName" class="form-control" (input)="validate('fileName')"
-                        placeholder="Tên tài liệu..." minlength="4" [(ngModel)]="fileEditing.fileName" #fileNamectrl
+                        placeholder="Tên tài liệu..." minlength="4" [(ngModel)]="fileEditing?.fileName" #fileNamectrl
                         matInput /> -->
                 </div>
                 <!-- <div>
-                    {{fileEditing.description}}
+                    {{fileEditing?.description}}
                 </div> -->
                 <div *ngIf="checkFileName() != '0'" class="d-flex mb-2 invalid-feedback">
                     <div *ngIf="(checkFileName() == '1') then titleEmpty else TitleInvalid"></div>
@@ -33,46 +33,46 @@
                 </div> -->
             </div>
             <div class="d-flex mb-2">
-                <codx-tag entityName="DM_FileInfo" [isEdit]="true" [value]="fileEditing.tags" (valueChange)="txtValue($event, 'tag')">
+                <codx-tag entityName="DM_FileInfo" [isEdit]="true" [value]="fileEditing?.tags"
+                    (valueChange)="txtValue($event, 'tag')">
                 </codx-tag>
 
-                <!-- <tags [editMode]='true' [entityName]="'TM_Task'" [(value)]="fileEditing.tags"
+                <!-- <tags [editMode]='true' [entityName]="'TM_Task'" [(value)]="fileEditing?.tags"
                     (valueChange)="tagsChange($event)"> </tags> -->
             </div>
             <div class="d-flex mb-1">
-                <span class="text-gray-700 me-2">{{titleFileType}}: </span>
-                <span class="text-dark fw-bold">{{fileEditing.type}} ({{fileEditing.extension}})</span>
+                <codx-label [default]="titleFileType" fiedName="lblFileType" [formName]="formModel?.formName" ngClass="text-gray-700 me-2 w-70px"></codx-label>
+                <span class="text-gray-600">{{fileEditing?.extension}}</span>
             </div>
             <div class="d-flex mb-1">
-                <span class="text-gray-700 me-2">{{titleSize}}: </span>
-                <span class="text-dark fw-bold">{{getSizeKB(fileEditing.fileSize)}} KB
-                    ({{getSizeByte(fileEditing.fileSize)}} bytes)</span>
+                <codx-label [default]="titleSize" fiedName="lblSize" [formName]="formModel?.formName" ngClass="text-gray-700 me-2 w-70px"></codx-label>
+                <span class="text-gray-600">{{getSizeKB(fileEditing?.fileSize)}} KB</span>
             </div>
             <div class="d-flex mb-1">
-                <span class="text-gray-700 me-2">{{titleCreator}}: </span>
-                <span class="text-dark fw-bold">{{fileEditing.createdBy}}</span>
+                <codx-label [default]="titleCreator" fiedName="lblTitleCreator" [formName]="formModel?.formName" ngClass="text-gray-700 me-2 w-70px"></codx-label>
+                <span class="text-gray-600">{{fileEditing?.userName}}</span>
             </div>
             <div class="d-flex mb-1">
-                <span class="text-gray-700 me-2">{{titleCreaton}}: </span>
-                <span class="text-dark fw-bold">{{fileEditing.createdOn}}</span>
+                <codx-label [default]="titleCreaton" fiedName="lblTitleCreaton" [formName]="formModel?.formName" ngClass="text-gray-700 me-2 w-70px"></codx-label>
+                <span class="text-gray-600"> {{fileEditing?.createdOn | date : "dd/MM/yyyy HH:mm"}}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between mb-2">
                 <ul class="nav nav-tabs nav-tabs-line">
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" (click)="onSetPermision(false)">
-                            <span class="nav-text fw-bold">{{titleShare}}</span>
+                            <span class="nav-text"><codx-label [default]="titleShare" fiedName="lblTitleShare" [formName]="formModel?.formName"></codx-label></span>
                         </a>
                     </li>
                 </ul>
                 <button type="button" (click)="openRight()"
-                    class="btn btn-sm btn-outline-primary">{{titleSelectObject}}</button>
+                    class="btn btn-sm btn-outline-primary"><codx-label [default]="titleSelectObject" fiedName="lblTitleSelectObject" [formName]="formModel?.formName"></codx-label></button>
 
                 <!-- <button type="button" (click)="openRight()"
                     class="btn btn-pill btn-xs btn-outline-primary">{{titleSelectObject}}</button> -->
             </div>
             <div class="dms-user-mini-group border border-1 p-2 pb-1 rounded-2">
-                <ng-container *ngIf="fileEditing != null && fileEditing.permissions != null">
-                    <ng-container *ngFor="let perm of fileEditing.permissions; index as i;">
+                <ng-container *ngIf="fileEditing != null && fileEditing?.permissions != null">
+                    <ng-container *ngFor="let perm of fileEditing?.permissions; index as i;">
                         <ng-container
                             *ngIf="perm.isActive != false && ((!modeSharing && (!perm.isSharing  || perm.isSharing == null)) || (modeSharing && perm.isSharing))">
                             <div class="user-mini-item">
@@ -105,165 +105,147 @@
                 </ng-container>
             </div>
             <div (click)="hideInfo()"
-                class="d-flex text-primary text-hover-danger cursor-pointer align-items-center mt-4">
-                <span class="icon-add_circle icon-18 me-1"></span>
-                <span class="fw-bold">{{titleExpand}}</span>
+                class="d-flex text-primary text-hover-danger cursor-pointer align-items-center mt-5">
+                <span class="icon-add_circle icon-18 me-2"></span>
+                <codx-label [default]="titleExpand" fiedName="lblTitleExpand" [formName]="formModel?.formName"></codx-label>
             </div>
-            <div [hidden]="!information" class="mt-6 mb-3">
-                <div class="form-group row">
-                    <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titleFile}}">
-                        </codx-label>
+            <div [hidden]="!information" class="mt-3 mb-2">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <codx-label [formModel]="formModel" fiedName="Title"></codx-label>
+                            <codx-input  type="text" [crrValue]="fileEditing?.title" (valueChange)="txtValue($event, 'title')"></codx-input>
+                        </div>
                     </div>
-                    <div class="col-10">
-                        <codx-input placeholder="{{titleFile}}..." class="form-control" type="text"
-                            [crrValue]="fileEditing.title" (valueChange)="txtValue($event, 'title')"></codx-input>
-                        <!-- <input [(ngModel)]="fileEditing.title" name="title" type="text" class="form-control"
-                        placeholder="title..." /> -->
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titleSubject}}">
-                        </codx-label>
-                    </div>
-                    <div class="col-10">
-                        <codx-input placeholder="{{titleSubject}}..." class="form-control" type="text"
-                            style="width:100%" [crrValue]="fileEditing.subject"
-                            (valueChange)="txtValue($event, 'subject')"></codx-input>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <codx-label [formModel]="formModel" fiedName="Subject"></codx-label>
+                            <codx-input placeholder="{{titleSubject}}..." class="form-control" type="text"
+                                style="width:100%" [crrValue]="fileEditing?.subject"
+                                (valueChange)="txtValue($event, 'subject')"></codx-input>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titleCate}}">
-                        </codx-label>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <codx-label [formModel]="formModel" fiedName="Category"></codx-label>
+                            <codx-input placeholder="{{titleCate}}..." class="form-control test-datetime"
+                                type="combobox" style="width:100%" refValue="CategoriesDM"
+                                [crrValue]="fileEditing?.category" (valueChange)="txtValue($event, 'category')">
+                            </codx-input>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <codx-input placeholder="{{titleCate}}..." class="form-control test-datetime" type="combobox"
-                            style="width:100%" refValue="CategoriesDM" [crrValue]="fileEditing.category"
-                            (valueChange)="txtValue($event, 'category')">
-                        </codx-input>
-                    </div>
-                    <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titleLanguage}}">
-                        </codx-label>
-                    </div>
-                    <div class="col-4">
-                        <codx-input placeholder="{{titleLanguage}}..." class="form-control test-datetime"
-                            type="valuelist" style="width:100%" refValue="L1473" [crrValue]="fileEditing.language"
-                            (valueChange)="txtValue($event, 'language')"></codx-input>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <codx-label [formModel]="formModel" fiedName="Language"></codx-label>
+                            <codx-input placeholder="{{titleLanguage}}..." class="form-control test-datetime"
+                                type="valuelist" style="width:100%" refValue="L1473" [crrValue]="fileEditing?.language"
+                                (valueChange)="txtValue($event, 'language')"></codx-input>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titleExcerpts}}">
-                        </codx-label>
+
+                <div class="form-group">
+                    <codx-label [formModel]="formModel" fiedName="Excerpts"></codx-label>
+                    <codx-input placeholder="{{titleExcerpts}}..." class="form-control test-datetime h-100"
+                        type="textarea" format="ed3" [crrValue]="fileEditing?.excerpts"
+                        (valueChange)="txtValue($event, 'excerpts')"></codx-input>
+                    <!-- <textarea name="excerpts" class="form-control" rows="2" (change)="doTrichluc($event)"
+                    [(ngModel)]="fileEditing?.excerpts"></textarea> -->
+                </div>
+                <div class="form-group">
+                    <codx-label [formModel]="formModel" fiedName="Description"></codx-label>
+                    <codx-input placeholder="{{titleDescription}}..." class="form-control test-datetime" type="text"
+                        format="ed3" [crrValue]="fileEditing?.description"
+                        (valueChange)="txtValue($event, 'description')"></codx-input>
+                    <!-- <textarea name="excerpts" class="form-control" rows="2" (change)="doTrichluc($event)"
+                    [(ngModel)]="fileEditing?.excerpts"></textarea> -->
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <codx-label [formModel]="formModel" fiedName="Relation"></codx-label>
+                            <codx-input placeholder="{{titleRelation}}..." class="form-control" type="text"
+                                style="width:100%" [crrValue]="fileEditing?.relation"
+                                (valueChange)="txtValue($event, 'relation')"></codx-input>
+                        </div>
                     </div>
-                    <div class="col-10">
-                        <codx-input placeholder="{{titleExcerpts}}..." class="form-control test-datetime"
-                            type="textarea" format="ed3" style="width:100%" height="100px" [crrValue]="fileEditing.excerpts"
-                            (valueChange)="txtValue($event, 'excerpts')"></codx-input>
-                        <!-- <textarea name="excerpts" class="form-control" rows="2" (change)="doTrichluc($event)"
-                        [(ngModel)]="fileEditing.excerpts"></textarea> -->
+                    <div class="col-6">
+                        <div class="form-group">
+                            <codx-label [formModel]="formModel" fiedName="Source"></codx-label>
+                            <codx-input placeholder="{{titleSource}}..." class="form-control" type="text"
+                                style="width:100%" [crrValue]="fileEditing?.source"
+                                (valueChange)="txtValue($event, 'source')"></codx-input>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titleDescription}}">
-                        </codx-label>
-                    </div>
-                    <div class="col-10">
-                        <codx-input placeholder="{{titleDescription}}..." class="form-control test-datetime"
-                            type="text" format="ed3" style="width:100%" height="100px" [crrValue]="fileEditing.description"
-                            (valueChange)="txtValue($event, 'description')"></codx-input>
-                        <!-- <textarea name="excerpts" class="form-control" rows="2" (change)="doTrichluc($event)"
-                        [(ngModel)]="fileEditing.excerpts"></textarea> -->
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titleRelation}}">
-                        </codx-label>
-                    </div>
-                    <div class="col-10">
-                        <codx-input placeholder="{{titleRelation}}..." class="form-control" type="text"
-                            style="width:100%" [crrValue]="fileEditing.relation"
-                            (valueChange)="txtValue($event, 'relation')"></codx-input>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titleSource}}">
-                        </codx-label>
-                    </div>
-                    <div class="col-10">
-                        <codx-input placeholder="{{titleSource}}..." class="form-control" type="text" style="width:100%"
-                            [crrValue]="fileEditing.source" (valueChange)="txtValue($event, 'source')"></codx-input>
-                    </div>
-                </div>
+
             </div>
             <div (click)="hideLicence()"
-                class="d-flex text-primary text-hover-danger cursor-pointer align-items-center mt-4">
-                <span class="icon-add_circle icon-18 me-1"></span>
-                <span class="fw-bold">{{titleCopyright}}</span>
+                class="d-flex text-primary text-hover-danger cursor-pointer align-items-center mt-3">
+                <span class="icon-add_circle icon-18 me-2"></span>
+                <codx-label [default]="titleCopyright" fiedName="lblCopyRights" [formName]="formModel?.formName"></codx-label>
             </div>
-            <div [hidden]="!license" class="mt-6 mb-3">
-                <div class="form-group row">
-                    <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titleAuthor}}">
-                        </codx-label>
+            <div [hidden]="!license" class="mt-3 mb-2">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <codx-label [default]="titleAuthor" fiedName="lblAuthor" [formName]="formModel?.formName"></codx-label>
+                            <span *ngIf="isCopyRight && gridViewSetup && gridViewSetup['Author'].isRequire" class="text-danger ms-1">*</span> 
+                            <codx-input placeholder="{{titleAuthor}}..." class="form-control" type="text"
+                                style="width:100%" [crrValue]="fileEditing?.author"
+                                (valueChange)="txtValue($event, 'authur')"></codx-input>
+                        </div>
                     </div>
-                    <div class="col-10">
-                        <codx-input placeholder="{{titleAuthor}}..." class="form-control" type="text" style="width:100%"
-                            [crrValue]="fileEditing.author" (valueChange)="txtValue($event, 'authur')"></codx-input>
-                    
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titlePublisher}}">
-                        </codx-label>
-                    </div>
-                    <div class="col-10">
-                        <codx-input placeholder="{{titlePublisher}}..." class="form-control test-datetime"
-                            type="combobox" style="width:100%" refValue="Publishers" [crrValue]="fileEditing.publisher"
-                            (valueChange)="txtValue($event, 'publisher')">
-                        </codx-input>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <codx-label [default]="titlePublisher" fiedName="lblPublisher" [formName]="formModel?.formName"></codx-label>
+                            <span *ngIf="isCopyRight && gridViewSetup && gridViewSetup['Publisher'].isRequire" class="text-danger ms-1">*</span> 
+                            <codx-input placeholder="{{titlePublisher}}..." class="form-control test-datetime"
+                                type="combobox" style="width:100%" refValue="Publishers"
+                                [crrValue]="fileEditing?.publisher" (valueChange)="txtValue($event, 'publisher')">
+                            </codx-input>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titlePublishyear}}">
-                        </codx-label>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <codx-label [default]="titlePublishyear" fiedName="lblPublishYear" [formName]="formModel?.formName"></codx-label>
+                            <span *ngIf="isCopyRight && gridViewSetup && gridViewSetup['PublishYear'].isRequire" class="text-danger ms-1">*</span> 
+                            <codx-input placeholder="{{titlePublishyear}}..." class="form-control test-datetime"
+                                type="dateTime" style="width:100%" format="d" [crrValue]="fileEditing?.publishYear"
+                                (valueChange)="txtValue($event, 'publishyear')"></codx-input>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <codx-input placeholder="{{titlePublishyear}}..." class="form-control test-datetime"
-                            type="dateTime" style="width:100%" format="d" [crrValue]="fileEditing.publishYear"
-                            (valueChange)="txtValue($event, 'publishyear')"></codx-input>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titleCopyright}}">
-                        </codx-label>
-                    </div>
-                    <div class="col-10">
-                        <codx-input placeholder="{{titleCopyright}}..." class="form-control test-datetime" type="text"
-                            style="width:100%" [crrValue]="fileEditing.copyRights"
-                            (valueChange)="txtValue($event, 'copyrights')"></codx-input>
-                        <!-- <input type="text" class="form-control" [(ngModel)]="fileEditing.copyRights" name="copyRights"
+                    <div class="col-6">
+                        <div class="form-group">
+                            <codx-label [default]="titleCopyright" fiedName="lblCopyRights" [formName]="formModel?.formName"></codx-label>
+                            <span *ngIf="isCopyRight && gridViewSetup && gridViewSetup['CopyRights'].isRequire" class="text-danger ms-1">*</span> 
+                            <codx-input placeholder="{{titleCopyright}}..." class="form-control test-datetime"
+                                type="text" style="width:100%" [crrValue]="fileEditing?.copyRights"
+                                (valueChange)="txtValue($event, 'copyrights')"></codx-input>
+                            <!-- <input type="text" class="form-control" [(ngModel)]="fileEditing?.copyRights" name="copyRights"
                             placeholder="Copyrights..." /> -->
+                        </div>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titlePublishDate}}">
-                        </codx-label>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <codx-label [default]="titlePublishDate" fiedName="lblPublishDate" [formName]="formModel?.formName"></codx-label>
+                            <span *ngIf="isCopyRight && gridViewSetup && gridViewSetup['PublishDate'].isRequire" class="text-danger ms-1">*</span> 
+                            <codx-input placeholder="{{titlePublishDate}}..." class="form-control test-datetime"
+                                type="dateTime" style="width:100%" format="d" [crrValue]="fileEditing?.publishDate"
+                                (valueChange)="txtValue($event, 'publishdate')"></codx-input>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <codx-input placeholder="{{titlePublishDate}}..." class="form-control test-datetime"
-                            type="dateTime" style="width:100%" format="d" [crrValue]="fileEditing.publishDate"
-                            (valueChange)="txtValue($event, 'publishdate')"></codx-input>
+                    <div class="col-6">
+                        <div class="form-group">
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -271,6 +253,6 @@
     </ng-template>
     <ng-template #footer>
         <button type="button" class="btn btn-primary" [disabled]="this.checkFileName() !='0'"
-            (click)="onSaveEditingFile()">{{titleSave}}</button>
+            (click)="onSaveEditingFile()"><codx-label [default]="titleSave" fiedName="lblSave" [formName]="formModel?.formName"></codx-label></button>
     </ng-template>
 </codx-form>

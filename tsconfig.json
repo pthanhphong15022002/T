@@ -11,7 +11,6 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     //"esModuleInterop": true,
-
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "declaration": false,
@@ -19,7 +18,7 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2017",
+    "target": "ES2022",
     "module": "es2020",
     "lib": [
       "es2020",
@@ -38,6 +37,10 @@
       "@core/*": [
         "src/core/*"
       ],
+      "codx-ac": [
+        "dist/codx-ac/codx-ac",
+        "dist/codx-ac"
+      ],
       "codx-ad": [
         "dist/codx-ad/codx-ad",
         "dist/codx-ad"
@@ -46,9 +49,21 @@
         "dist/codx-bp/codx-bp",
         "dist/codx-bp"
       ],
+      "codx-cm": [
+        "dist/codx-cm/codx-cm",
+        "dist/codx-cm"
+      ],
       "codx-dm": [
         "dist/codx-dm/codx-dm",
         "dist/codx-dm"
+      ],
+      "codx-dp": [
+        "dist/codx-dp/codx-dp",
+        "dist/codx-dp"
+      ],
+      "codx-ei": [
+        "dist/codx-ei/codx-ei",
+        "dist/codx-ei"
       ],
       "codx-ep": [
         "dist/codx-ep/codx-ep",
@@ -87,12 +102,20 @@
         // "dist/codx-share/codx-share",
         // "dist/codx-share"
       ],
+      "codx-sm": [
+        "dist/codx-sm/codx-sm",
+        "dist/codx-sm"
+      ],
       "codx-tm": [
         "projects/codx-tm/src"
         // "dist/codx-tm/codx-tm",
         // "dist/codx-tm",
         // "dist/codx-tm/codx-tm",
         // "dist/codx-tm"
+      ],
+      "codx-tn": [
+        "dist/codx-tn/codx-tn",
+        "dist/codx-tn"
       ],
       "codx-wp": [
         "dist/codx-wp/codx-wp",
@@ -109,7 +132,9 @@
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "enableIvy": true,
+    "allowEmptyCodegenFiles": true
     // "enableI18nLegacyMessageIdFormat": false,
     // "strictInjectionParameters": true,
     // "strictInputAccessModifiers": true,

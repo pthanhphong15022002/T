@@ -45,7 +45,6 @@ var lvFileClientAPI = {
         }
     },
     __post__: async (apiPath,data) => {
-        
         var url = lvFileClientAPI.serverApIHostUrl + "/" + apiPath;
         function checkHasFile() {
             var retData = {}
@@ -86,8 +85,8 @@ var lvFileClientAPI = {
 
             }
             else {
-                if (fetcher.status == 401) {
-                    throw (err);
+                if (fetcher.status == 401 || fetcher.status == 404) {
+                    return "401"
                 }
                 var err = await fetcher.json()
                 throw (err)
@@ -189,7 +188,7 @@ var lvFileClientAPI = {
             return ret;
         }
         catch (e) {
-
+            return e;
             throw (e);
         }
     },

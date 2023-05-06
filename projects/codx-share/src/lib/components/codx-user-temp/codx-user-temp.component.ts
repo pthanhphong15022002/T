@@ -50,7 +50,6 @@ export class CodxUserTempComponent implements OnInit {
         [pObjectID])
       .subscribe((res:any)=>{
         if(res){
-          console.log(res);
           this.countData = res.length;
         }
       })

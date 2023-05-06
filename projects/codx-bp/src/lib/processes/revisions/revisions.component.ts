@@ -9,16 +9,19 @@ import {
 import {
   DialogData,
   DialogRef,
-  ApiHttpService,
   NotificationsService,
+  CacheService,
+  Util,
   AuthStore,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { filter, from, map } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
+import { CodxBpService } from '../../codx-bp.service';
 import {
   BP_Processes,
   BP_ProcessRevisions,
 } from '../../models/BP_Processes.model';
-
 @Component({
   selector: 'lib-revisions',
   templateUrl: './revisions.component.html',
@@ -32,54 +35,75 @@ export class RevisionsComponent implements OnInit {
   headerText = '';
   data: any;
   dialog: any;
-  recID: any;
   more: any;
   comment = '';
   funcID: any;
-  user: any;
-  testHeader:any;
+  disableTitle = true;
+  versionDefault: string;
+  verName: string;
+  verNameDefault: string;
+  verNo: string;
+  entityName: string;
   version = new BP_ProcessRevisions();
+  msgErrorValidExit = 'msgErrorValidExit'; // Check name exist
+  msgErrorValidIsNull = 'msgErrorValidIsNull'; // Check name is null or don't select
+  msgSucess = 'msgSucess'; //Condtion sucess
+  isUpdate: boolean = false;
+  gridViewSetup: any;
+  fucntionIdMain: any;
+  enterComment: any;
+  enterName: any;
+  msgCodeNameVersionIsExist: string = 'BP002';
+  user: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private api: ApiHttpService,
     private notiService: NotificationsService,
+    private cache: CacheService,
     private authStore: AuthStore,
-
+    private change: ChangeDetectorRef,
+    private bpService: CodxBpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.data = JSON.parse(JSON.stringify(dt?.data));
-    // this.testHeader = JSON.parse(JSON.stringify(dt?.data));
     this.dialog = dialog;
     this.more = this.data?.more;
     this.funcID = this.more?.functionID;
+    this.entityName = this.more?.entityName;
     this.process = this.data?.data;
+    this.fucntionIdMain = this.data?.funcIdMain;
     this.revisions = this.process?.versions;
-    this.headerText = 'Quản lý phiên bản';
     this.user = this.authStore.get();
+    this.headerText = dt?.data.more.defaultName;
+    this.verNo = 'V' + this.revisions.length.toString() + '.0';
+    this.cache.message('BP001').subscribe((res) => {
+      if (res) {
+        this.verNameDefault = Util.stringFormat(
+          res.defaultName,
+          '' + this.verNo.toString() + ''
+        );
+      }
+    });
+    this.comment = '';
+    this.cache
+      .gridViewSetup('ProcessRevisions', 'grvProcessRevisions')
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+          this.enterComment = this.gridViewSetup['Comment']?.description;
+          this.enterName = this.gridViewSetup['VersionName']?.headerText;
+        }
+      });
   }
 
-  ngOnInit(): void {
-    // if(this.revisions.length > 0 && this.revisions != null){
-    //   var lastVersion = this.revisions[this.revisions.length - 1];
-    //   if(lastVersion.comment != ''){
-    //     this.comment = lastVersion.comment;
-    //   }else{
-    //     this.comment = '';
-    //   }
-    // }
-   // console.log(lastVersion);
-   this.process.versionNo='';
-   this.comment=''
-  }
+  ngOnInit(): void {}
 
   //#region event
   valueChange(e) {
     if (e?.data) {
-      this.process.versionNo = e.data;
-
-      // this.process.versions = this.revisions;
+      this.verName = e?.data;
     }
+    this.changeDetectorRef.detectChanges;
   }
 
   valueComment(e) {
@@ -89,20 +113,58 @@ export class RevisionsComponent implements OnInit {
     this.changeDetectorRef.detectChanges;
   }
   //#endregion
+  checkValiName(nameVersion: string) {
+    let check = true;
+    if (nameVersion === null || nameVersion.trim() === '') {
+      return this.msgErrorValidIsNull;
+    }
+
+    for (let element of this.revisions) {
+      if (
+        element.versionName &&
+        element?.versionName.toUpperCase() == nameVersion.trim().toUpperCase()
+      ) {
+        check = false;
+        return this.msgErrorValidExit;
+      }
+    }
+    return this.msgSucess;
+  }
 
   onSave() {
-    this.api
-      .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'UpdateVersionAsync', [
-        this.funcID,
-        this.process.recID,
-        this.process.versionNo,
-        this.comment,
-      ])
-      .subscribe((res) => {
-        if (res) {
-            this.dialog.close(res);
+    switch (this.checkValiName(this.verName)) {
+      case this.msgErrorValidIsNull:
+        this.notiService.notifyCode('SYS009', 0, '"' + this.enterName + '"');
+        break;
+      case this.msgErrorValidExit:
+        this.notiService.notifyCode(this.msgCodeNameVersionIsExist);
+        break;
+      case this.msgSucess:
+        this.isUpdate = true;
+        this.actionSave();
+        break;
+    }
+  }
+  actionSave() {
+    if (this.isUpdate) {
+      this.bpService
+        .updateRevision(
+          this.funcID,
+          this.process.recID,
+          this.verNo,
+          this.verName,
+          this.comment,
+          this.entityName,
+          this.fucntionIdMain
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.process.versionNo = res.versionNo;
+            this.process.versions = res.versions;
+            this.dialog.close(this.process);
             this.notiService.notifyCode('SYS007');
-        }
-      });
+          }
+        });
+    }
   }
 }

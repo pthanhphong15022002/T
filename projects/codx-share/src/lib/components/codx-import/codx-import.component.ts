@@ -41,7 +41,7 @@ import { CodxImportAddTemplateComponent } from './codx-import-add-template/codx-
   templateUrl: './codx-import.component.html',
   styleUrls: ['./codx-import.component.scss'],
 })
-export class CodxImportComponent implements OnInit, OnChanges , AfterViewInit {
+export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   active = '1';
   dialog: any;
   submitted = false;
@@ -90,7 +90,7 @@ export class CodxImportComponent implements OnInit, OnChanges , AfterViewInit {
     //this.recID = dt.data?.[1];
   }
   ngAfterViewInit(): void {
-    this.getHeight();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+    this.getHeight();
   }
   ngOnInit(): void {
     //Tạo formGroup
@@ -103,7 +103,6 @@ export class CodxImportComponent implements OnInit, OnChanges , AfterViewInit {
     this.request.gridViewName = 'grvPurchaseInvoices';
     this.request.funcID = this.formModel?.funcID;
     this.getData();
-   
   }
   get f(): { [key: string]: AbstractControl } {
     return this.importGroup.controls;
@@ -121,7 +120,7 @@ export class CodxImportComponent implements OnInit, OnChanges , AfterViewInit {
     this.submitted = true;
     if (this.importGroup.invalid) return;
     this.api
-      .execSv(this.service, 'CM', 'CMBusiness', 'ImportAsync', [
+      .execSv(this.service, 'Core', 'CMBusiness', 'ImportAsync', [
         this.binaryString,
         this.fileName,
         this.importGroup.value.dataImport,
@@ -204,11 +203,12 @@ export class CodxImportComponent implements OnInit, OnChanges , AfterViewInit {
       };
     }
   }
-  getHeight()
-  {
-    
-    var heightP = (document.getElementsByClassName("tab-content")[0] as HTMLElement).offsetHeight;
-    var height = (document.getElementsByClassName("tab-pane")[0] as HTMLElement).offsetHeight;
-    this.hScroll = heightP-height;
+  getHeight() {
+    var heightP = (
+      document.getElementsByClassName('tab-content')[0] as HTMLElement
+    ).offsetHeight;
+    var height = (document.getElementsByClassName('tab-pane')[0] as HTMLElement)
+      .offsetHeight;
+    this.hScroll = heightP - height;
   }
 }

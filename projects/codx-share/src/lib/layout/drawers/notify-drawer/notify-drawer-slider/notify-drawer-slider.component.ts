@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { MODEL_CHANGED } from '@syncfusion/ej2-angular-richtexteditor';
-import { DateTime } from '@syncfusion/ej2-charts';
-import { DialogRef, CRUDService, ApiHttpService, AuthService, DialogData, ScrollComponent, RequestModel, DataRequest } from 'codx-core';
+import { ChangeDetectorRef, Component, OnChanges, OnInit, Optional, SimpleChanges, ViewChild, } from '@angular/core';
+import { DialogRef, ApiHttpService, DialogData, ScrollComponent, DataRequest, CacheService, CodxService, AuthStore, DialogModel, CallFuncService, FormModel } from 'codx-core';
+import { NotifyBodyComponent } from '../notify-body/notify-body.component';
+import { NotifyDrawerPopupComponent } from '../notify-drawer-popup/notify-drawer-popup.component';
 
 @Component({
   selector: 'lib-notify-drawer-slider',
@@ -10,107 +10,101 @@ import { DialogRef, CRUDService, ApiHttpService, AuthService, DialogData, Scroll
 })
 export class NotifyDrawerSliderComponent implements OnInit {
   dialogRef: DialogRef;
-  lstNotify:any[] = [];
-  model:DataRequest = {
-    entityName:"BG_Notification",
-    predicate: "ActionType != @0",
-    dataValue: "AP",
-    formName:"Notification",
-    gridViewName:"grvNotification",
-    srtColumns:"CreatedOn",
-    srtDirections:"desc",
-    pageLoading: true,
-    pageSize:20,
-    page: 1
-  }
-  user:any = null;
-  totalPage:number = 0;
-  isScroll = true;
+  messageNoData:string ="";
+  vllType:any[] = [];
+  type:any = null;
+  vllStatus:any[] = [];
+  status:any = null;
+  moreFC:any[] = [];
+  formModel:FormModel = null;
+  @ViewChild("notiBody") notiBody:NotifyBodyComponent; 
   constructor(
-    private api:ApiHttpService,
-    private dt:ChangeDetectorRef,
-    private auth:AuthService,
+    private cache:CacheService,
+    private callFC:CallFuncService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) 
   {    
     this.dialogRef = dialogRef;
-    this.user = this.auth.userValue;
+    this.formModel = new FormModel();
   }
 
   ngOnInit(): void {
-    this.getNotifyAsync();
+    this.cache.valueList("SYS055")
+    .subscribe((vll:any) => {
+      if(vll){
+        this.vllType = vll.datas;
+        this.type = vll.datas[0];
+      }
+    });
+    this.cache.valueList("SYS057")
+    .subscribe((vll:any) => {
+      if(vll){
+        this.vllStatus = vll.datas;
+        this.status = vll.datas[0];
+      }
+    });
+    this.cache.functionList("BGT001")
+    .subscribe((func:any)=>{
+      this.formModel.funcID = func.functionID;
+      this.formModel.formName = func.formName;
+      this.formModel.gridViewName = func.gridViewName;
+      this.formModel.entityName = func.entityName;
+      this.formModel.userPermission = func.userPermission;
+      this.cache.moreFunction(this.formModel.formName,this.formModel.gridViewName)
+      .subscribe((mfc:any) => {
+        this.moreFC = mfc;
+      });
+    });
   }
 
   ngAfterViewInit(){
-    ScrollComponent.reinitialization();
+
   }
-  clickCloseFrom(){
-    this.dialogRef.close();
+  
+  // filter entityName
+  typeChange(event:any){
+    this.type = event;
+    this.notiBody.typeChange(event);
   }
-  getNotifyAsync(){
-    this.api.execSv(
-      'BG',
-      'ERM.Business.BG',
-      'NotificationBusinesss',
-      'GetAsync',
-      [this.model]
-    ).subscribe((res:any[]) => {
-      if(res){
-        this.lstNotify = res[0];
-        let totalRecord = res[1];
-        this.totalPage = totalRecord / this.model.pageSize;
-        this.isScroll = false;
-        this.dt.detectChanges();
-        console.log(totalRecord,this.totalPage);
-      }
-    });
+  // filter isRead
+  statusChange(event:any){
+    this.status = event;
+    this.notiBody.statusChange(event);
   }
 
-  onScroll(event: any) {
-    let dcScroll = event.srcElement;
-    if (dcScroll.scrollTop + dcScroll.clientHeight < dcScroll.scrollHeight - 150) return;
-    if(this.model.page > this.totalPage || this.isScroll) return;
-    this.isScroll = true;
-    this.model.page = this.model.page + 1;
-    this.api.execSv(
-      'BG',
-      'ERM.Business.BG',
-      'NotificationBusinesss',
-      'GetAsync',
-      [this.model]
-    ).subscribe((res:any[]) => {
-      if(res && res[0].length > 0){
-        let notifications = res[0];
-        this.lstNotify = this.lstNotify.concat(notifications);
-        this.isScroll = false;
-        this.dt.detectChanges();
-      }
-    });
+  //
+  // open popup view all noti
+  viewAll(){
+    let _option = new DialogModel();
+    _option.IsFull = true;
+    _option.zIndex = 1001;
+    _option.IsModal = false;
+    this.callFC.openForm(NotifyDrawerPopupComponent,"",0,0,"",null,"",_option);
   }
-
-  clickNotification(item:any){
-    if(!item || !item.recID) return;
-    
-    this.api.execSv(
-    'BG',
-    'ERM.Business.BG',
-    'NotificationBusiness',
-    'UpdateNotificationAsync', 
-    [item.recID]).subscribe((res:boolean) => {
-      if(res){
-        if(!item.isRead || item.isRead.length == 0){
-          item.isRead = [];
-        }
-        let object = {
-          objectID: this.user.userID,
-          objectName: this.user.userName,
-          createdOn: new DateTime()
-        }
-        item.isRead.push(object);
+  //click more FC
+  clickMF(event){
+    if(event){
+      switch(event.functionID){
+        case "WP009": // đánh dấu đọc tất cả
+          this.notiBody.checkReadAll();
+          break;
+        case "WP010": // xem tất cả
+          this.viewAll();
+          break; 
+        default:
+          break;
       }
-    })
-    this.dt.detectChanges();
+    }
+  }
+   // change More funtion
+  changeDataMF(arrMFC){
+      arrMFC.map(e => {
+        if(e.functionID == "WP009" || e.functionID == "WP010")
+          e.disabled = false;
+        else
+          e.disabled = true;
+      });
   }
 
 }

@@ -43,7 +43,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
   pagedistance: any = 0;
   activePage = 1;
   arrayPaging = [];
-  hideN = false;
+  hideN = true;
   page = 1;
 
   //template
@@ -77,7 +77,6 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
         if (this.funcID) this.getGridViewSetup();
       });
     if (!this.tempMenu) this.getGridViewSetup();
-    this.searchText();
   }
   ngOnChanges(changes: SimpleChanges): void {}
   getGridViewSetup() {
@@ -104,6 +103,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
             referedType: grd[key[i]]?.referedType,
             headerText: grd[key[i]]?.headerText,
             data: grd[key[i]]?.headerText,
+            fieldName : grd[key[i]]?.fieldName,
           };
           this.getDataByRefValue(
             grd[key[i]]?.referedType,
@@ -115,6 +115,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
           var objn = {
             dataType: grd[key[i]]?.dataType,
             headerText: grd[key[i]]?.headerText,
+            fieldName : grd[key[i]]?.fieldName,
             view: key[i],
           };
           objn.headerText = grd[key[i]]?.headerText;
@@ -128,7 +129,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
     a.comboboxName = refValue;
     a.page = 1;
     a.pageSize = 5;
-   
+
     if (this.modeDropDown == true && (type == '2' || type == '3')) {
       data.data = refValue;
       this.dataGroup.push(data);
@@ -184,7 +185,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
     this.api
       .execSv<any>(
         this.service,
-        'CM',
+        'Core',
         'DataBusiness',
         'SearchFullTextAdvAsync',
         {
@@ -200,7 +201,18 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
         if (item) {
           this.count = 0;
           this.hideN = false;
-          this.searchData = item;
+
+          if (item[0]) {
+            if (item[2] && item[2].length > 0) {
+              for (var i = 0; i < item[0].length; i++) {
+                var hl = item[2].filter(
+                  (x) => x.recID == item[0][i].recID.toString()
+                );
+                if (hl[0]) item[0][i].highlight = hl[0].highlight;
+              }
+            }
+            this.searchData = item[0];
+          }
           if (item[1]) {
             this.count = item[1];
             if (!changePage) {
@@ -270,7 +282,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
   ): Observable<any[]> {
     let loadmore = false;
     return this.api
-      .execSv(cbb.service, 'CM', 'DataBusiness', 'LoadDataCbxAsync', request)
+      .execSv(cbb.service, 'Core', 'DataBusiness', 'LoadDataCbxAsync', request)
       .subscribe((item) => {
         if (item) {
           var res = JSON.parse(item[0]);

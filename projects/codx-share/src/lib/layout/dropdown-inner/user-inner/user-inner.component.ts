@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   HostBinding,
   Input,
@@ -18,9 +19,15 @@ import {
   MenuComponent,
   ApiHttpService,
   AuthStore,
+  CallFuncService,
+  AlertConfirmInputConfig,
+  FilesService,
 } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 import { CodxShareService } from '../../../codx-share.service';
+import { environment } from 'src/environments/environment';
+import { CodxClearCacheComponent } from '../../../components/codx-clear-cache/codx-clear-cache.component';
+import { SignalRService } from '../../drawers/chat/services/signalr.service';
 
 @Component({
   selector: 'codx-user-inner',
@@ -36,15 +43,17 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   @Input() buttonMarginClass: any;
 
   tenant?: string;
+  themeMode: ThemeMode = themeModeDefault;
   language: LanguageFlag = langDefault;
   theme: ThemeFlag = themeDefault;
   user$: Observable<UserModel | null> = of(null);
   langs = languages;
   themes = themeDatas;
+  themeModes = themeModeDatas;
   private unsubscribe: Subscription[] = [];
   functionList: any;
   formModel: any;
-
+  modifiedOn = new Date();
   constructor(
     public codxService: CodxService,
     private auth: AuthService,
@@ -54,89 +63,85 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private cache: CacheService,
     private api: ApiHttpService,
     private codxShareSV: CodxShareService,
-    private change: ChangeDetectorRef
+    private change: ChangeDetectorRef,
+    private element: ElementRef,
+    private signalRSV: SignalRService,
+    private callSV: CallFuncService,
+    private fileSv: FilesService
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
-      if (res) this.functionList = res;
-    });
-  }
-
-  ngOnInit(): void {
-    this.user$ = this.auth.userSubject.asObservable();
-    this.tenant = this.tenantStore.get()?.tenant;
-    this.setLanguage(this.auth.userValue?.language?.toLowerCase());
-    this.selectTheme('default'); //(this.auth.userValue.theme.toLowerCase());
-    if (this.functionList) {
-      this.formModel = {
-        formName: this.functionList?.formName,
-        gridViewName: this.functionList?.gridViewName,
-      };
-    }
-    this.refreshAvatar();
-  }
-
-  ngAfterViewInit() {
-    MenuComponent.reinitialization();
-  }
-
-  refreshAvatar() {
-    //Nguyên thêm để refresh avatar khi change
-    this.codxShareSV.dataRefreshImage.subscribe((res) => {
       if (res) {
-        this.user['modifiedOn'] = res?.modifiedOn;
-        this.change.detectChanges();
+        this.functionList = res;
+        this.formModel = {
+          formName: this.functionList.formName,
+          gridViewName: this.functionList.gridViewName,
+        };
       }
     });
   }
 
-  mouseEnter(ele: any, sub: any) {
-    // let menuInstance = MenuComponent.getInstance(ele);
-    // if (menuInstance) menuInstance.show(ele);
+  ngOnInit(): void {
+    this.user$ = this.auth.user$;
+    if (!this.user) this.user = this.authstore.get();
+    this.tenant = this.tenantStore.get()?.tenant;
+    this.setLanguage(this.auth.userValue?.language?.toLowerCase());
+
+    if (environment.themeMode == 'body')
+      document.body.classList.add('codx-theme');
+    if (!this.auth.userValue.theme) this.auth.userValue.theme = 'default';
+
+    var arr = this.auth.userValue.theme.split('|');
+    let th = arr[0],
+      thMode = arr.length > 1 ? arr[1] : 'light';
+
+    this.setTheme(th.toLowerCase());
+    this.setThemeMode(thMode.toLowerCase());
+    // if (this.functionList) {
+
+    // }
+  }
+
+  ngAfterViewInit() {
+    MenuComponent.reinitialization();
+    MenuComponent.createInstances('[data-kt-menu="true"]');
   }
 
   logout() {
-    this.auth.logout();
-    document.location.reload();
+    let ele = document.getElementsByTagName('codx-chat-container');
+    if(ele.length > 0){
+      ele[0].remove();
+    }
+    this.signalRSV.sendData('LogOutAsync', this.user.tenant, this.user.userID);
+    this.auth.logout('');
+    // document.location.reload();
   }
 
-  selectLanguage(lang: string) {
-    this.setLanguage(lang);
-    var l = this.language.lang.toUpperCase();
+  updateSettting(lang: string, theme: string, themeMode: string) {
+    let l = '',
+      t = '';
+    if (lang) {
+      this.setLanguage(lang);
+      l = this.language.lang.toUpperCase();
+    }
+    if (theme) {
+      this.setTheme(theme);
+      t = this.theme.id + '|' + this.themeMode.id;
+    }
+    if (themeMode) {
+      this.setThemeMode(themeMode);
+      t = this.theme.id + '|' + this.themeMode.id;
+    }
+
     this.api
-      .execSv('SYS', 'AD', 'SystemFormatBusiness', 'UpdateSettingAsync', [
-        l,
-        '',
-      ])
-      .subscribe((res: UserModel) => {
-        this.auth.userSubject.next(res);
-        //this.auth.startRefreshTokenTimer();
-        this.authstore.set(res);
-        document.location.reload();
+      .execSv('SYS', 'AD', 'SystemFormatBusiness', 'UpdateSettingAsync', [l, t])
+      .subscribe((res: any) => {
+        var user = this.authstore.get();
+        user.language = l;
+        user.theme = t;
+        this.auth.userSubject.next(user);
+        this.authstore.set(user);
+        if (lang) document.location.reload();
       });
-    this.cache.systemSetting().subscribe((systemSetting: any) => {
-      systemSetting.language = this.language.lang.toUpperCase();
-      var user = this.authstore.get();
-      // this.user$.subscribe((user) => {
-      //   user.language = this.language.lang.toUpperCase();
-      //   this.auth.userSubject.next(user);
-      //   //this.auth.startRefreshTokenTimer();
-      //   this.authstore.set(user);
-      // });
-      this.api
-        .execAction('AD_SystemSettings', [systemSetting], 'UpdateAsync')
-        .subscribe((res) => {
-          if (res) {
-            user.language = this.language.lang.toUpperCase();
-            //this.auth.stopRefreshTokenTimer();
-            //this.authstore.remove();
-            //this.auth.userValue = null;
-            this.auth.userSubject.next(user);
-            //this.auth.startRefreshTokenTimer();
-            this.authstore.set(user);
-            document.location.reload();
-          }
-        });
-    });
   }
 
   setLanguage(lang?: string) {
@@ -151,34 +156,136 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   selectTheme(theme: string) {
-    this.setTheme(theme);
+    //this.setTheme(theme);
+    this.updateSettting('', theme, '');
     // document.location.reload();
   }
 
   setTheme(value: string) {
+    //check exist list theme
+    let findtheme = this.themes.find((x) => x.id == value);
+    if (!findtheme) value = 'default';
+    //Remove Old
+    let elm =
+      environment.themeMode == 'body'
+        ? document.body
+        : this.element.nativeElement.closest('.codx-theme');
+    if (this.theme && elm) {
+      elm.classList.remove(this.theme.id);
+    }
+
     this.themes.forEach((theme: ThemeFlag) => {
       if (theme.id === value) {
         theme.active = true;
         this.theme = theme;
+
+        elm.classList.add(this.theme.id);
       } else {
         theme.active = false;
       }
     });
   }
 
+  setThemeMode(value: string) {
+    //check exist list theme
+    let findThemeMode = this.themeModes.find((x) => x.id == value);
+    if (!findThemeMode) value = 'light';
+
+    //Remove Old
+    let elm =
+      environment.themeMode == 'body'
+        ? document.body
+        : this.element.nativeElement.closest('.codx-theme');
+    if (this.themeMode && elm) {
+      elm.classList.remove(this.themeMode.id);
+    }
+
+    this.themeModes.forEach((themeMode: ThemeMode) => {
+      if (themeMode.id === value) {
+        themeMode.active = true;
+        this.themeMode = themeMode;
+
+        elm.classList.add(this.themeMode.id);
+      } else {
+        themeMode.active = false;
+      }
+    });
+
+    this.changeCss();
+  }
+
   avatarChanged(data: any) {
     this.onAvatarChanged.emit(data);
+    this.modifiedOn = new Date();
+    this.fileSv.dataRefreshImage.next(this.user);
   }
 
   clearCache() {
-    this.auth
-      .clearCache()
-      .pipe()
-      .subscribe((data) => {
-        if (data) {
-          if (!data.isError) this.notifyService.notifyCode('SYS017');
-          else this.notifyService.notify(data.error);
+    this.callSV.openForm(CodxClearCacheComponent, 'Clear cache', 500, 700);
+    // this.auth
+    //   .clearCache()
+    //   .pipe()
+    //   .subscribe((data) => {
+    //     if (data) {
+    //       if (!data.isError) this.notifyService.notifyCode('SYS017');
+    //       else this.notifyService.notify(data.error);
+    //     }
+    //   });
+  }
+
+  runCompare() {
+    var config = new AlertConfirmInputConfig();
+    // config.type = 'YesNo';
+    this.notifyService
+      .alert(
+        'Cánh báo',
+        '<span style="color: red">ĐÂY LÀ CHỨC NĂNG NGUY HIỂM!!!! bạn có chắc chắn muốn thực hiện không???</span><div><a href="tel:+84363966390">Gọi hỗ trợ</a></div><div><a href="mailto:Quangvovan22@gmail.com">Gửi mail hỗ trợ</a></div>'
+        //config
+      )
+      .closed.subscribe((x) => {
+        if (x.event.status == 'Y') {
+          this.api
+            .execSv('SYS', 'SYS', 'UpdatesBusiness', 'UpdateDataAsync', [])
+            .subscribe((res) => {
+              if (res) this.notifyService.notify('Đã compare xong');
+              console.log(res);
+            });
         }
+      });
+  }
+
+  clearTenant() {
+    // var config = new AlertConfirmInputConfig();
+    // config.type = 'text';
+    // config.label = 'predicate';
+    // this.notifyService
+    //   .alert(
+    //     'Cánh báo',
+    //     '<span style="color: red">CHỨC NĂNG NÀY SẼ XÓA CÁC TENANT HIỆN TẠI THEO ĐIỀU KIỆN!!!! VUI LÒNG BACKUP DATA TRƯỚC KHI THỰC HIỆN!!! XIN CẢM ƠN!!!</span><div><a href="tel:+84363966390">Gọi hỗ trợ</a></div><div><a href="mailto:Quangvovan22@gmail.com">Gửi mail hỗ trợ</a></div>',
+    //     config
+    //   )
+    //   .closed.subscribe((x) => {
+    //     debugger;
+    //     if (x.event && x.event.status == 'Y' && x.event.data) {
+    //       this.api
+    //         .execSv('Tenant', 'Tenant', 'TenantsBusiness', 'DropTenantAsync', [
+    //           x.event.data,
+    //         ])
+    //         .subscribe((res) => {
+    //           if (res) console.log(res);
+    //         });
+    //     }
+    //   });
+  }
+
+  testFormatString() {
+    this.api
+      .callSv('SYS', 'ERM.Business.Core', 'CMBusiness', 'ReplaceStringAsync', [
+        '',
+        null,
+      ])
+      .subscribe((res) => {
+        console.log(res);
       });
   }
 
@@ -190,6 +297,22 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     this.tenant;
     var url = `auth/login`;
     this.codxService.navigate(null, url, { id: 'changePass' });
+  }
+
+  changeCss() {
+    var lsLinks = document.getElementsByClassName('ejcss');
+    for (let i = 0; i < lsLinks.length; i++) {
+      let l: any = lsLinks[i];
+      l.href =
+        this.themeMode.id == 'dark'
+          ? l.href.replace('.css', '-dark.css')
+          : l.href.replace('-dark.css', '.css');
+    }
+  }
+  // link my profile
+  myProfile() {
+    debugger;
+    this.codxService.navigate('MWP009', '', { funcID: 'MWP009' });
   }
 }
 
@@ -226,23 +349,64 @@ interface ThemeFlag {
   active?: boolean;
 }
 
+interface ThemeMode {
+  id: string;
+  name: string;
+  icon: string;
+  active?: boolean;
+}
+
 const themeDatas: ThemeFlag[] = [
   {
     id: 'default',
     name: 'Default',
-    color: '#187de4',
+    color: '#005DC7',
     enable: true,
   },
   {
     id: 'orange',
     name: 'Orange',
-    color: '#f36519',
+    color: '#f15711',
+    enable: true,
   },
   {
-    id: 'pink',
-    name: 'Pink',
-    color: '#f70f8f',
+    id: 'sapphire',
+    name: 'Sapphire',
+    color: '#009384',
+    enable: true,
+  },
+  {
+    id: 'green',
+    name: 'Green',
+    color: '#0f8633',
+    enable: true,
+  },
+  {
+    id: 'purple',
+    name: 'Purple',
+    color: '#5710b2',
+    enable: true,
+  },
+  {
+    id: 'navy',
+    name: 'Navy',
+    color: '#192440',
+    enable: true,
   },
 ];
 
 const themeDefault = themeDatas[0];
+
+const themeModeDatas: ThemeMode[] = [
+  {
+    id: 'light',
+    name: 'Light',
+    icon: './assets/media/svg/light.svg',
+  },
+  {
+    id: 'dark',
+    name: 'Dark',
+    icon: './assets/media/svg/dark.svg',
+  },
+];
+const themeModeDefault = themeModeDatas[0];

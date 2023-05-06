@@ -1,7 +1,9 @@
-import { ChangeDetectorRef, Component, HostBinding, Injector, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, HostBinding, Injector, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
-import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel, UIComponent, NotificationsService } from 'codx-core';
+import { NgbCarousel, NgbSlideEvent, NgbSlideEventSource } from '@ng-bootstrap/ng-bootstrap';
+import { load } from '@syncfusion/ej2-angular-charts';
+import { ListViewComponent } from '@syncfusion/ej2-angular-lists';
+import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel, UIComponent, NotificationsService, CRUDService } from 'codx-core';
 import { PopupAddComponent } from './popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from './popup/popup-search/popup-search.component';
 
@@ -19,24 +21,22 @@ export class NewsComponent extends UIComponent {
     return "bg-body h-100 news-main card-body hover-scroll-overlay-y";
   }
   funcID: string = "";
-  entityName: string = 'WP_News';
-  service: string = "WP";
-  assemblyName: string = "ERM.Business.WP";
-  className: string = "NewsBusiness"
-  predicate: string = "";
-  dataValue: string = "5;null;2;";
-  arrPost: any[] = [];
+  posts: any[] = [];
   videos: any[] = [];
-  lstGroup: any[] = [];
-  isAllowNavigationArrows = false;
   views: Array<ViewModel> = [];
-  category: string = "home";
+  category: string = "";
   mssgWP025:string = "";
   mssgWP026:string = "";
   mssgWP027:string = "";
-  pageSlider:any[] = [];
-  newDate:any = new Date();
+  loaded:boolean = false;
   userPermission:any = null;
+  scrolled:boolean = false;
+  slides:any[] = [];
+  showNavigation:boolean = false;
+  page:number = 0;
+  pageIndex:number = 0;
+  moreFunction:any = null;
+
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -51,53 +51,57 @@ export class NewsComponent extends UIComponent {
   }
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-
+  @ViewChild('listview') listview: CodxListviewComponent;
+  @ViewChild('carousel') carousel: NgbCarousel;
   constructor
   (
-    private injector: Injector,
-    private notifySV:NotificationsService
+    private injector: Injector
   ) 
   { 
     super(injector)
   }
+
   onInit(): void {
     this.router.params.subscribe((param) => {
-      if (param) {
+      this.category = param["category"];
+      this.loadDataAsync(this.category);
+      if(param["funcID"] && !this.userPermission){
         this.funcID = param["funcID"];
-        this.category = param["category"];
-        this.loadDataAsync(this.funcID, this.category);
         this.getUserPermission(this.funcID);
       }
     });
-
     this.getMessageDefault();
   }
+
   ngAfterViewInit(): void {
     this.views = [
       {
         active: true,
+        sameData:false,
         type: ViewType.content,
         model: {
           panelLeftRef: this.panelLeftRef,
         }
       }
     ];
-    this.detectorRef.detectChanges();
   }
   
+  // get user permission
   getUserPermission(funcID:string){
-    if(funcID){
       funcID  = funcID + "P";
-      this.api.execSv("SYS","ERM.Business.SYS","CommonBusiness","GetUserPermissionsAsync",[funcID])
-      .subscribe((res:any) => {
+      this.api.execSv(
+        "SYS",
+        "ERM.Business.SYS",
+        "CommonBusiness",
+        "GetUserPermissionsAsync",
+        [funcID]).subscribe((res:any) => {
         if(res){
           this.userPermission = res;
           this.detectorRef.detectChanges();
         }
       });
-    }
   }
-  
+  // get message default
   getMessageDefault() {
     this.cache.message("WP025").subscribe((mssg: any) => {
       if (mssg && mssg?.defaultName) {
@@ -114,93 +118,175 @@ export class NewsComponent extends UIComponent {
         this.mssgWP027 = mssg.defaultName;
       }
     });
+    this.cache.moreFunction("CoDXSystem","")
+    .subscribe((mFuc:any) => {
+      if(mFuc)
+      {
+        this.moreFunction = mFuc;
+      }
+    });
   }
-  loadDataAsync(funcID: string, category: string) {
-    if(funcID && category){
-      this.api.execSv(
-        this.service,
-        this.assemblyName,
-        this.className,
-        "GetDatasNewsAsync",
-        [funcID, category])
-        .subscribe((res: any[]) => {
-          if (res.length > 0 && res[0] && res[1] && res[2]) 
-          {
-            this.arrPost = res[0]; 
-            this.videos = res[1]; 
-            this.lstGroup = res[2]; 
-            if(this.videos.length > 3)
-            {
-              let page = Math.floor(this.videos.length/3);
-              for (let index = 1; index <= page; index++) 
-              {
-                this.pageSlider.push(index);
-              }; 
-              this.isAllowNavigationArrows = true;
-              
-            }
-            this.detectorRef.detectChanges();
-          }
-        });
-    }
+  // get data async
+  loadDataAsync(category: string) {
+    this.page = 0;
+    this.pageIndex = 0;
+    this.posts = [];
+    this.videos = [];
+    this.slides = [];
+    this.getPostAsync(category);
+    this.getVideoAsync(category,this.pageIndex);
   }
-  clickViewDetail(data: any) {
-    if(data && data.recID)
-    {
-      this.api
+  // get post
+  getPostAsync(category:string){
+    this.loaded = false;
+    this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
-        'UpdateViewNewsAsync',
-        data.recID
-      )
-      .subscribe();
-      this.codxService.navigate('', '/wp/news/' + this.funcID + '/' + data.category + '/' + data.recID);
+        'GetTop4PostAsync',
+        [category]).subscribe((res:any) => {
+          if(res)
+          {
+            this.posts = JSON.parse(JSON.stringify(res));
+          }
+          this.loaded = true;
+          this.detectorRef.detectChanges();
+
+        });
+  }
+  
+  // get videos
+  getVideoAsync(category:string,pageIndex = 0){
+    this.api
+      .execSv(
+        'WP',
+        'ERM.Business.WP',
+        'NewsBusiness',
+        'GetVideoAsync',
+        [category,pageIndex])
+        .subscribe((res:any[]) => {
+          let data = res[0];
+          let total = res[1];
+          if(data.length > 0){
+            this.page = Math.ceil(total/6);
+            if(this.scrolled){
+              this.videos = this.videos.concat(data);
+              this.scrolled = false;
+              this.carousel.pause();
+              let slideIndex = this.slides.length;
+              for (let index = 0; index < data.length; index+=3) {
+                this.slides[slideIndex] = [];
+                this.slides[slideIndex] = data.slice(index,index+3);
+                slideIndex++;
+              }
+              this.scrolled = false;
+              this.detectorRef.detectChanges();
+            }
+            else{
+              this.videos = JSON.parse(JSON.stringify(data));
+              let slide = 0;
+                for (let index = 0; index < this.videos.length; index += 3) {
+                  this.slides[slide] = [];
+                  this.slides[slide] = this.videos.slice(index,index+3);
+                  slide ++;
+                }
+                let ins = setInterval(()=>{
+                  if(this.carousel){
+                    this.showNavigation = this.page >= 1 ? true : false;
+                    this.carousel.pause();
+                    this.detectorRef.detectChanges();
+                    clearInterval(ins);
+                  }
+                },100);
+            }
+            this.pageIndex += 1;
+          }
+          else
+          {
+            this.videos = [];
+            this.slides = [];
+            this.page = 0;
+            this.pageIndex = 0;
+            this.showNavigation = false;
+            this.detectorRef.detectChanges();
+          }
+        });
+  }
+  // slideChange
+  slideChange(slideEvent:NgbSlideEvent){
+    if(slideEvent.source === NgbSlideEventSource.ARROW_RIGHT && this.pageIndex < this.page){
+      this.scrolled = true;
+      this.getVideoAsync(this.category,this.pageIndex);
     }
   }
-  clickShowPopupCreate(newsType: string) {
-    if(this.view && newsType){
+  // click view detail news
+  clickViewDetail(data: any) {
+    if(data?.recID)
+    {
+      this.api
+      .execSv(
+      'WP',
+      'ERM.Business.WP',
+      'NewsBusiness',
+      'UpdateViewNewsAsync',
+      [data.recID]).subscribe();
+      this.codxService.navigate('', `wp2/news/${this.funcID}/${data.category}/${data.recID}`);
+    }
+  }
+  // open popup create
+  openPopupAdd(type: string) {
+    if(type){
+      debugger
       let option = new DialogModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.IsFull = true;
-      let modal = this.callfc.openForm(PopupAddComponent, '', 0, 0, '', newsType, '', option);
-      modal.closed.subscribe((res: any) => {
+      let mfc = Array.from<any>(this.moreFunction).find((x:any) => x.functionID === "SYS01");
+      let data = {
+        action: mfc.defaultName,
+        type:type
+      }
+      let popup = this.callfc.openForm(PopupAddComponent, '', 0, 0, '', data, '', option);
+      popup.closed.subscribe((res: any) => {
+        debugger
         if (res?.event) {
           let data = res.event;
-          switch(data.newsType)
+          //post
+          if(data.newsType == this.NEWSTYPE.POST)
           {
-            case this.NEWSTYPE.POST:
-              let arrPostNew = [];
-              if(this.arrPost.length > 0)
-              {
-                arrPostNew = [...this.arrPost];
+            this.posts.unshift(data);
+            if(this.posts.length > 4){
+              this.posts.pop();
+            }
+          }
+          //video
+          else
+          {
+            if(this.videos.length > 0){
+              this.videos.unshift(data);
+            }
+            let slideIndex = 0;
+            for (let idx = 0; idx < this.videos.length; idx += 3) {
+              this.slides[slideIndex] = [];
+              this.slides[slideIndex] = this.videos.slice(idx,idx+3);
+              slideIndex++;
+            }
+            let ins = setInterval(()=>{
+              if(this.carousel){
+                this.carousel.pause();
+                this.detectorRef.detectChanges();
+                clearInterval(ins);
               }
-              arrPostNew.unshift(data);
-              if(arrPostNew.length > 4){
-                arrPostNew.pop();
-              }
-              this.arrPost = [...arrPostNew];
-              break;
-            case this.NEWSTYPE.VIDEO:
-              let arrVideoNew = [];
-              if(this.videos.length > 0)
-              {
-                arrVideoNew = [...this.videos];
-              }
-              arrVideoNew.unshift(data);
-              this.videos = [...arrVideoNew];
-              break;
-            default:
-              break;
+            },100);
           }
           this.detectorRef.detectChanges();
         }
       });
     }
   }
-  clickShowPopupSearch() {
+  // open popup search
+  openPopupSearch() {
     if(this.view){
       let option = new DialogModel();
       option.DataService = this.view.dataService;
@@ -211,6 +297,6 @@ export class NewsComponent extends UIComponent {
   }
 
 
-
+  
 
 }

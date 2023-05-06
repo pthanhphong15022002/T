@@ -1,9 +1,9 @@
 <codx-views id="dm" #view [autoLoad]="true" [entityName]="'DM_FolderInfo'" [method]="'GetFoldersAsync'"
-  [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views" [orgView]="orgViews"
-  [autoSort]="false" [autoSearch]="false" [selectedFirst]="false" (selectedChange)="onSelectionChanged($event)"
-  [button]="button" (buttonClick)="addFile($event)" (viewChanged)="changeView($event)"
-  (viewChanging)="viewChanging($event)" (filterChange)="filterChange($event)"  [autoFilter]="false"
-  (onLoading)="onLoading($event)" (sortChanged)="sortChanged($event)" (requestEnded)="requestEnded($event)" (searchChanged)="searchChange($event)" >
+  [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views" 
+  [autoSort]="false" [autoSearch]="false" [selectedFirst]="false" [button]="button" (buttonClick)="addFile($event)"
+  (selectedChange)="onSelectionChanged($event)"  (sortChanged)="sortChanged($event)" (viewChanged)="changeView($event)"
+  (searchChanged)="searchChange($event)" 
+  >
 </codx-views>
 <ng-template #templateMain let-data>
   <div *ngIf="dmSV.checkUserForder(data); then noContext; else context"></div>
@@ -29,13 +29,14 @@
 
 <!-- view-list -->
 <ng-template #templateRight>
-  <ng-container *ngTemplateOutlet="empty"></ng-container>
+
   <div *ngIf="isSearch">
   </div>
-  <div (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
-    class="w-100 scroll-y home rounded-2" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+  <div #divHome  (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
+    class="w-100 scroll-y home rounded-2 h-100 bg-white containerScroll" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
     data-kt-scroll-height="auto" data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
     data-kt-scroll-offset="0">
+    <ng-container *ngTemplateOutlet="empty"></ng-container>
     <ng-container *ngTemplateOutlet="currView"></ng-container>
     <ng-container *ngTemplateOutlet="nodata"></ng-container>
   </div>
@@ -45,16 +46,16 @@
     <div class="d-flex align-items-start justify-content-between result-item border-bottom p-5">
       <div class="d-flex flex-column">
         <div class="d-flex align-items-center">
-          <codx-temp-full (dblclick)="dbView(file)" appDragDropFileFolder [dataDrapDrop]="file" (fileFolderDropped)="fileFolderDropped($event)"
-            [class]="classFile(file, 'float-start')" [imageWidth]="20" [imageSrc]="dmSV.getImage(file)"
-            imgCss="w-20px me-3 cursor-pointer" [title]="
+          <codx-temp-full (dblclick)="dbView(file)" appDragDropFileFolder [dataDrapDrop]="file"
+            (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(file, 'float-start')" [imageWidth]="20"
+            [imageSrc]="dmSV.getImage(file)" imgCss="w-20px me-3 cursor-pointer" [title]="
               file.folderName != undefined ? file.folderName : file.fileName
-            " cardCss="w-250px" [typeMF]="'hover'"
-            [baseHeaderRightTmp]="rightSecurity"
-          >
+            " cardCss="w-250px" [typeMF]="'hover'" [baseHeaderRightTmp]="rightSecurity">
           </codx-temp-full>
           <ng-template #rightSecurity>
             <span *ngIf="dmSV.checkView(file?.read) == false" class="icon-security text-primary icon-18"></span>
+            <span *ngIf="file?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+            <span *ngIf="file?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
           </ng-template>
         </div>
         <div class="d-flex align-items-center text-primary font-size-md mt-1">
@@ -97,97 +98,178 @@
         </div>
       </div>
       <div class="action-menu-item ml-2">
-        <codx-mfunc [formModel]="view.formModel" (clickMF)="dmSV.clickMF($event, file)" (changeDataMF)="dmSV.filterMoreFunction($event, file)" [type]="'hover'"></codx-mfunc>
+        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMoreFunction($event,file)"
+          (changeDataMF)="dmSV.filterMoreFunction($event, file)" [type]="'hover'"></codx-mfunc>
       </div>
     </div>
   </div>
 </ng-template>
 <ng-template #templateCard>
+  <ng-container *ngIf="data && data.length>0">
     <div class="d-flex flex-wrap dms-card p-5">
-      <ng-container  *ngFor="let item of data ; trackBy: trackItem">
+      <ng-container *ngFor="let item of data ; trackBy: trackItem">
         <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
-          [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item"
-          [formModel]="view.formModel" [view]="codxview">
+          [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item" [formModel]="view.formModel"
+          [view]="codxview" >
         </card>
       </ng-container>
     </div>
+  </ng-container>
 </ng-template>
 <ng-template #templateSmallCard>
   <div class="d-flex flex-wrap dms-card-sm p-5">
     <ng-container *ngFor="let item of data">
       <codx-temp-full (dblclick)="dbView(item)" appDragDropFileFolder [dataDrapDrop]="item"
-        (fileFolderDropped)="fileFolderDropped($event)"  [class]="classFile(item, 'float-start')"
-        [imageSrc]="dmSV.getImage(item)" (clickMF)="dmSV.clickMF($event, item)" imgCss="card-item img-folder me-3"
+        (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(item, 'float-start')"
+        [imageSrc]="dmSV.getImage(item)" (clickMF)="clickMoreFunction($event,item)" imgCss="card-item img-folder me-3"
         [title]="item.folderName != undefined ? item.folderName : item.fileName"
         (changeDataMF)="dmSV.filterMoreFunction($event, item)" [formModel]="view.formModel" [typeMF]="'hover'"
-        [bookmark]="dmSV.showBookmark(item)" subTitle="{{ item.createdOn | date: 'dd/MM/yyyy' }} | {{ item.userName }}"
-        cardCss="card-item card-template w-300px sm-card rounded-1 p-3 mb-3 me-3"
-        [baseHeaderRightTmp]="rightSecurity"
-      >
+        [bookmark]="dmSV.showBookmark(item)" [subTitle]="(item.createdOn | date: 'dd/MM/yyyy') +  (item.userName ? (' | ' + item.userName) : '')"
+        cardCss="card-item card-template w-300px sm-card rounded-1 p-3 mb-3 me-3" [baseHeaderRightTmp]="rightSecurity">
       </codx-temp-full>
       <ng-template #rightSecurity>
         <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18"></span>
+        <span *ngIf="item?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+        <span *ngIf="item?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
       </ng-template>
     </ng-container>
-    
+
   </div>
 </ng-template>
 <ng-template #templateList>
   <ng-container *ngIf="data && data.length > 0">
-    <div class="dms-listview h-100 p-2">
+    <div id="tabel-div" class="tabel-div">
       <table class="table tb-dm">
-        <thead class="border-top">
+        <thead >
           <tr>
-            <th scope="col" class="w-30">
+            <th scope="col" class="w-50px">
+            </th>
+            <th scope="col" class="w-300px">
               <div class="fw-bold text-dark">{{ titleFileName }}</div>
             </th>
-            <th scope="col" class="w-20">
-              <div class="fw-bold text-dark">{{ titleCreatedBy }}</div>
-            </th>
-            <th scope="col" class="w-10">
-              <div class="fw-bold text-dark">{{ titleCreatedOn }}</div>
-            </th>
-            <th scope="col" class="w-10">
+            <th scope="col" class="w-100px">
               <div class="fw-bold text-dark">{{ titleLength }}</div>
             </th>
-            <th scope="col">
+            <ng-container *ngIf="funcID == 'DMT06' || funcID == 'DMT05'">
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark text-center">Tình trạng</div>
+              </th>
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark">Đối tượng được cấp quyền</div>
+              </th>
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark">Quyền được cấp</div>
+              </th>
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark">Người yêu cầu</div>
+              </th>
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark">Ngày yêu cầu</div>
+              </th>
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark">Lý do yêu cầu</div>
+              </th>
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark">Mô tả lý do yêu cầu</div>
+              </th>
+             
+            </ng-container>
+            <ng-container *ngIf="funcID == 'DMT07'">
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark text-center">Tình trạng</div>
+              </th>
+            </ng-container>
+            <th scope="col" class="w-200px">
+              <div class="fw-bold text-dark">{{ titleCreatedBy }}</div>
+            </th>
+            <th scope="col" class="w-200px">
+              <div class="fw-bold text-dark">{{ titleCreatedOn }}</div>
+            </th>
+            <th *ngIf="funcID != 'DMT06' && funcID != 'DMT05'" scope="col" class="w-300px">
               <div class="fw-bold text-dark">{{ titleDisc }}</div>
             </th>
           </tr>
         </thead>
-        <tbody>
-          <tr (dblclick)="dbView(item)" class="border-top dms-list" *ngFor="let item of data" [title]="
-              item.folderName != undefined ? item.folderName : item.fileName
-            ">
-            <td class="w-30">
-              <codx-temp-full appDragDropFileFolder [dataDrapDrop]="item"
-                (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(item, 'float-start')"
-                [imageWidth]="20" [imageSrc]="dmSV.getImage(item)" imgCss="w-20px me-3 cursor-pointer" [title]="
-                  item.folderName != undefined ? item.folderName : item.fileName
-                " cardCss="w-250px" titleCss="dms-title pe-6" [baseHeaderRightTmp]="rightSecurity">
+        <tbody (scroll)="onScroll($event)"  [ngStyle]="{'max-height.px': maxHeightScroll}">
+          <tr class="border-top dms-list align-items-center" *ngFor="let item of data" [title]="item.folderName != undefined ? item.folderName : item.fileName">
+            <td class="w-50px">
+              <codx-mfunc  *ngIf="!hideMF && item?.approvalStatus != '5' && item?.approvalStatus != '6' && item?.approvalStatus != '4' && item?.approvalStatus != '7'" (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+                type="hover" [formModel]="view.formModel"></codx-mfunc>
+                <codx-mfunc  *ngIf="item?.approvalStatus == '5' || item?.approvalStatus == '6' ||  item?.approvalStatus == '8'" (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+                type="hover" [formModel]="view.formModel"></codx-mfunc>
+            </td>
+            <td class="w-300px cursor-pointer" (dblclick)="dbView(item)">
+              <codx-temp-full 
+                appDragDropFileFolder 
+                [dataDrapDrop]="item"
+                cardCss="w-250px" 
+                imgCss="w-20px me-3" 
+                titleCss="dms-title pe-6" 
+                [class]="classFile(item, 'float-start')"
+                [title]="item.folderName  ? item.folderName : item.fileName" 
+                [imageSrc]="dmSV.getImage(item)" 
+                [imageWidth]="20" 
+                [baseHeaderRightTmp]="rightSecurity"
+                [footer]="footerTmp"
+                [dataItem]="item"
+                (fileFolderDropped)="fileFolderDropped($event)" 
+              >
               </codx-temp-full>
+              <ng-template #footerTmp>
+                <div *ngIf="(funcID == 'DMT06' || funcID == 'DMT05' || funcID == 'DMT07') && item?.filePath" [title]="item?.filePath" class="div-dm-overflow"><span>{{item?.filePath}}</span></div>
+              </ng-template>
               <ng-template #rightSecurity>
-                <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18"></span>
+                <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18" title="Tài liệu bảo mật"></span>
+                <span *ngIf="funcID == 'DMT00' && item?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+                <span *ngIf="funcID == 'DMT00' && item?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
               </ng-template>
             </td>
-            <td class="w-20">
+            <td class="w-100px">
+              {{dmSV.getSizeKB(item)}}
+            </td>
+            <ng-container *ngIf="funcID == 'DMT06' || funcID == 'DMT05'">
+              <td class="w-200px text-center">
+                <span class="badge badge-square" [style.background]="convertStatus(item.approvalStatus,'class')">{{convertStatus(item.approvalStatus)}}</span>
+              </td>
+              <td class="w-200px">
+                <codx-temp-full [imageId]="item.approverID" imageObjType="AD_Users" imgCss="me-3 cursor-pointer" [imageWidth]="25" [subTitle]="item.approverName">
+                </codx-temp-full>
+              </td>
+              <td class="w-200px">
+                {{viewPermiss(item.permissions)}}
+              </td>
+              <td class="w-200px">
+                <codx-temp-full [imageId]="item.requestPermissionID" imageObjType="AD_Users" imgCss="me-3 cursor-pointer"
+                  [imageWidth]="25" [subTitle]="item.requestPermissionName">
+                </codx-temp-full>
+              </td>
+              <td class="w-200px">
+                {{getDUser(item) | date: "dd/MM/yyyy HH:mm"}}
+              </td>
+              <td class="w-200px">
+                {{item.permissions[0].title}}
+              </td>
+              <td class="w-200px" >
+                {{extractContent(item.permissions[0].description)}}
+              </td>
+             
+            </ng-container>
+            <ng-container *ngIf="funcID == 'DMT07'">
+              <td class="w-200px text-center">
+                <span class="badge badge-square" [style.background]="convertStatus(item.approvalStatus,'class')">{{convertStatus(item.approvalStatus)}}</span>
+              </td>
+            </ng-container>
+            <td class="w-200px">
               <codx-temp-full [imageId]="item.createdBy" imageObjType="AD_Users" imgCss="me-3 cursor-pointer"
                 [imageWidth]="25" [subTitle]="item.userName">
               </codx-temp-full>
             </td>
-            <td class="w-10">
+            <td class="w-200px">
               <div class="erm-date">
-                {{ item.createdOn | date: "dd/MM/yyyy" }}
+                {{ item.createdOn | date: "dd/MM/yyyy HH:mm" }}
               </div>
             </td>
-            <td class="w-10">
-              <codx-temp-full class="float-start" imgCss="me-3" (clickMF)="dmSV.clickMF($event, item)"
-                [formModel]="view.formModel" [typeMF]="'hover'" [title]="dmSV.getSizeKB(item)"
-                (changeDataMF)="dmSV.filterMoreFunction($event, item)" cardCss="d-flex justify-content-end">
-              </codx-temp-full>
-            </td>
-            <td>
-
+            <td *ngIf="funcID != 'DMT06' && funcID != 'DMT05'" class="w-300px">
               <span>{{item.description}}</span><!-- item.revisionNote -->
             </td>
           </tr>
@@ -197,20 +279,20 @@
   </ng-container>
 </ng-template>
 <ng-template #empty>
-  <ng-container *ngIf="data && data[0] != null && data[0].isDelete">
+  <ng-container *ngIf="!textSearch && data && data[0] != null && data[0].isDelete">
     <div class="nondata-container w-100 mb-2">
-      <div class="d-flex justify-content-between page-heading align-items-center">
-        <div>{{ dmSV.titleEmptyTrash30 }}</div>
-        <button (click)="this.dmSV.emptyTrash()" class="btn btn-sm btn-secondary">
-          {{ dmSV.titleEmptyAction }}
-        </button>
+      <div class="d-flex justify-content-between page-heading align-items-center p-2">
+        <div class="fw-bold ms-2">{{ dmSV.titleEmptyTrash30 + " " + dmSV.paraSetting.OldDays + " ngày" }}</div>
+        <div class="cursor-pointer">
+          <div class="div-btn-delete d-flex justify-content-center align-items-center cursor-pointer" (click)="this.dmSV.emptyTrash()" title="Dọn sạch thùng rác"><i class="far fa-trash-alt fs-4" ></i></div>
+        </div>
       </div>
     </div>
   </ng-container>
 </ng-template>
 <ng-template #nodata>
   <ng-container *ngIf="
-      (data === undefined || !data || data.length <= 0)
+      (!data || data.length <= 0)
     ">
     <div class="container h-100">
       <div class="list-empty card card-flush h-100">

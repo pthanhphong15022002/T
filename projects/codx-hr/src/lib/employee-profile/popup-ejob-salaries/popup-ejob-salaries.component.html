@@ -1,0 +1,306 @@
+<!-- <layout-list-detail
+  #lstDetail
+  [title]="headerText"
+  [formModel]="formModel"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="currentEJobSalaries"
+  [leftTemlate]="LeftTemlate"
+  [RightTemlate]="body"
+  *ngIf="isAfterRender"
+>
+  <ng-template #body>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="decisionNo"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
+        </div>
+        <codx-input
+          disabled="true"
+          field="isCurrent"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label
+          fiedName="EffectedDate"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+          field="effectedDate"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="expiredDate"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="form-group row">
+      <codx-label fiedName="JSalary" [formModel]="formModel"></codx-label>
+      <div class="col-6">
+
+      <codx-input
+        field="jSalary"
+        [formModel]="formModel"
+        [Group]="formGroup"
+        [showSpinButton]="false" 
+      ></codx-input>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="signedDate"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="SignStatus" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="signStatus"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="signerID"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group row">
+      <codx-label
+        fiedName="SignerPosition"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="signerPosition"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group rpw">
+      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="note"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="onSaveForm()">
+        <i class="icon-save"></i>
+        <codx-label
+          default="Lưu"
+          name="lblSave"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</layout-list-detail>
+
+<ng-template #LeftTemlate>
+  <codx-listview
+    #listView
+    [type]="'cardView'"
+    [service]="'HR'"
+    [assemblyName]="'HR'"
+    [entityName]="'HR_EJobSalaries'"
+    [className]="'EJobSalariesBusiness'"
+    [method]="'GetListAsync'"
+    [predicate]="'EmployeeID=@0'"
+    [dataValue]="employeeId"
+    [itemTemplate]="itemTemplate"
+    (afterRender) = "afterRenderListView($event)"
+    [selectFirst]="true"
+  >
+  </codx-listview>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+  <codx-temp-full
+    [formModel]="formModel"
+    [typeMF]="'hover'"
+    [title]="data.jSalary"
+    [icoTitleCss]="'icon-attach_money'"
+    cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+    [subTitleTmp]="tmplateEJobSalaries"
+    [dataItem]="data"
+    typeMF="hover"
+    [hideMF]="true"
+    (click)="click(data)"
+  >
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #tmplateEJobSalaries let-data1>
+  <div class="d-flex flex-column ">
+    <div class="d-flex align-items-center pt-1 pb-1"><i class="icon-event"></i>{{(data1.effectedDate | fmDT) + ' - ' + (data1.expiredDate | fmDT)}}</div>
+    <div class="d-flex align-items-center"><i class="icon-list_alt"></i>{{(data1.decisionNo)}} <i class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"></i> {{(data1.signedDate | fmDT)}}</div>
+  </div>
+</ng-template> -->
+
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm()">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [formModel]="formModel"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="currentEJobSalaries"
+  *ngIf="isAfterRender"
+>
+<ng-template #body>
+  <div class="form-group row mt-5">
+    <div class="col-6">
+      <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="decisionNo"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <div>
+        <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
+      </div>
+      <codx-input
+        disabled="true"
+        field="isCurrent"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="EffectedDate"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="effectedDate"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="expiredDate"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="form-group row">
+    <codx-label fiedName="JSalary" [formModel]="formModel"></codx-label>
+    <div class="col-6">
+
+    <codx-input
+      field="jSalary"
+      [formModel]="formModel"
+      [Group]="formGroup"
+      [showSpinButton]="false" 
+    ></codx-input>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="signedDate"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label fiedName="SignStatus" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="signStatus"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
+    <codx-input
+      field="signerID"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+
+  <div class="form-group row">
+    <codx-label
+      fiedName="SignerPosition"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      field="signerPosition"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+
+  <div class="form-group rpw">
+    <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+    <codx-input
+      field="note"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+</ng-template>
+</codx-form>

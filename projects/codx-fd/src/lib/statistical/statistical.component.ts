@@ -24,7 +24,6 @@ import {
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
 import { ActivatedRoute } from '@angular/router';
-declare var _;
 
 @Component({
   selector: 'app-statistical',
@@ -387,9 +386,10 @@ export class StatisticalComponent extends UIComponent implements OnInit {
           this.lstTotalCoin = res.totalCoin;
           listBehavior_Temp = res.resultBehaviors;
           this.selectTopBehaviors = res.selectTopBehaviors;
-          this.totalBehavior = _.sumBy(res.resultBehaviors, function (o) {
-            return o.count;
-          });
+          this.totalBehavior = res.resultBehaviors.reduce((sum, current) => sum + current.count, 0);
+          // this.totalBehavior = _.sumBy(res.resultBehaviors, function (o) {
+          //   return o.count;
+          // });
           this.getDataSet();
           this.setChartBehavior(res.resultBehaviors);
 
@@ -460,9 +460,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     console.log('check chart_Datas', this.chart_Datas);
   }
   getLabelName(key) {
-    let oData = _.filter(this.dataStore, function (o) {
-      if (key == o.value) return o;
-    });
+    let oData = this.dataStore.filter(x=>x.value==key);
     return oData[0].text;
   }
   getDataChartA() {
@@ -514,8 +512,8 @@ export class StatisticalComponent extends UIComponent implements OnInit {
 
   dateChange(evt: any) {
     if (evt?.fromDate || evt?.toDate) {
-      this.fromDateDropdown = this.dateTimeToString(evt?.fromDate);
-      this.toDateDropdown = this.dateTimeToString(evt?.toDate);
+      this.fromDateDropdown = new Date(evt.fromDate).toISOString()
+      this.toDateDropdown = new Date(evt.toDate).toISOString()
       this.reloadAllChart();
     }
   }

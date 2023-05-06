@@ -1,3 +1,4 @@
+import { Util } from "codx-core";
 import { Permission } from "./file.model";
 
 export class Post {
@@ -26,6 +27,7 @@ export class Post {
   modifiedOn: string;
   modifiedBy: string;
   picture: string;
+  votes:any[];
   voted: boolean;
   totalComment: number = 0;
   totalVote: number = 0;
@@ -48,17 +50,29 @@ export class Post {
   shareIcon:string;
   shareText:string;
   shareName: string;
+  tagName:string;
   shortConent: string;
   createdBy:string;
   createdName:string;
   subject:string;
   subContent:string ;
+  medias:number ;
+  attachments:number ;
+  myVoteType:string;
+  myVoted:string;
+  listVoteType:string;
+
 
   constructor(){
+    this.recID = Util.uid();
     this.createdOn = new Date();
     this.permissions = [];
     this.files = [];
     this.listComment = [];
+    this.medias = 0;
+    this.attachments = 0;
+    this.totalComment = 0;
+    this.votes = [];
 
 }
 

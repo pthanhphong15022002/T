@@ -1,0 +1,80 @@
+<div class="d-flex flex-row align-items-top p-2 border-bottom" (dblclick)="dbClick(data)">
+
+  <div class="me-5">
+    <div class="badge badge-danger me-2 label-status a" [style.background-color]="
+    (data.status | vll: 'CO004':'textColor' | async) +
+    '30'">
+      <div class="text-dark">
+        Tháng {{month }}
+      </div>
+      <div class="a2" [style.color]="
+      data.status | vll: 'CO004':'textColor' | async
+      ">
+        {{day }}
+      </div>
+      <div class="a3 text-dark">
+        {{startTime}}
+      </div>
+    </div>
+  </div>
+  <div class="w-25 me-5">
+    <div class="text-dark fw-bold fs-6 ">
+      {{data.meetingName}}
+    </div>
+    <div class=" justify-content-start" style="margin-top: 10px;">
+      <codx-temp-full cardCss="card-template" [imageId]="data.userID" imageObjType="AD_Users" [titleTmp]="titleTmp"
+        [desc]="convertHtmlAgency(data.positionName)" [dataItem]="data">
+      </codx-temp-full>
+    </div>
+  </div>
+  <div class="w-25 me-5">
+    <div [innerHTML]="data.memo">
+    </div>
+  </div>
+  <div class="w-20 me-5">
+    <div *ngIf="data.tags">
+      <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="data.tags">
+      </codx-tag>
+    </div>
+  </div>
+  <div class="w-15 me-5">
+    <codx-imgs [width]="30" [objectId]="objectID" objectType="AD_Users" [numberImages]="4"
+      (mouseenter)="popoverEmpList(popoverList)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
+      #popoverList="ngbPopover" placement="bottom" container="body" autoClose="outside" [openDelay]="500">
+    </codx-imgs>
+  </div>
+  <div class="w-5px">
+    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)"
+      [isBookMark]="false" [dataItem]="data" type="hover">
+    </codx-mfunc>
+  </div>
+
+</div>
+
+<ng-template #titleTmp>
+  <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2"> {{data.userName}}</div>
+
+</ng-template>
+
+
+<ng-template #popEmpList>
+  <div class="fw-bold">
+    <codx-label name="Resouces" [formModel]="formModel" default="Danh sách phân công cho"></codx-label>
+    <span>{{ "(" + data.permissions.length + ")" }}</span>
+  </div>
+  <!-- <div>
+    <codx-searchbar *ngIf="data.resources.length > 0" (searchEvent)="searchName($event)"></codx-searchbar>
+  </div> -->
+  <div class="d-flex align-items-start user-card p-3" *ngFor="let item of data.permissions">
+    <div class="me-3">
+      <div>
+        <codx-img class="" [objectId]="item?.objectID" objectType="AD_Users">
+        </codx-img>
+      </div>
+    </div>
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="text-dark fw-bold">{{ item?.objectName }}</div>
+      <div class="text-gray-600 fs-7">{{ item?.positionName }}</div>
+    </div>
+  </div>
+</ng-template>

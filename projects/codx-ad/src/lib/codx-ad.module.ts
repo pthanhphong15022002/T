@@ -23,7 +23,6 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { LayoutComponent } from './_layout/layout.component';
 import { PopupContactComponent } from './company-setting/popup-contact/popup-contact.component';
@@ -36,7 +35,6 @@ import { SharedModule } from '@shared/shared.module';
 import { RolesComponent } from './Roles/home/home.component';
 import { RoleEditComponent } from './Roles/role-edit/role-edit.component';
 import { RoleDetailComponent } from './Roles/detail/detail.component';
-import { AsideroledetailComponent } from './Roles/asideroledetail/asideroledetail.component';
 import { UserGroupsComponent } from './user-groups/user-group.component';
 import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-groups.component';
 import { SystemsettingsComponent } from './systemsettings/systemsettings.component';
@@ -44,6 +42,13 @@ import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 import { BindPipe } from './Roles/detail/pipes/bindValue.pipe';
+import { ActiveTemplatePipe } from './Roles/detail/pipes/activeTemplate.pipe';
+import { PleaseUseComponent } from './users/please-use/please-use.component';
+import { PopupModuleDetailComponent } from './company-setting/popup-module-detail/popup-module-detail.component';
+import { PopupInfoComponent } from './company-setting/popup-info/popup-info.component';
+import { PopActiveAccountComponent } from './users/pop-active-account/pop-active-account.component';
+import { DecentralizedGroupComponent } from './decentralized-group/decentralized-group.component';
+import { AddDecentralGroupMemComponent } from './decentralized-group/add-decentral-group-mem/add-decentral-group-mem.component';
 
 export const routes: Routes = [
   {
@@ -61,12 +66,16 @@ export const routes: Routes = [
       },
 
       {
-        path: 'approvers/:funcID',
+        path: 'usergroups/:funcID',
         component: ApproversComponent,
       },
       {
         path: 'roles/:funcID',
         component: RolesComponent,
+      },
+      {
+        path: 'grouppermissions/:funcID',
+        component: DecentralizedGroupComponent,
       },
     ],
   },
@@ -77,6 +86,7 @@ export const routes: Routes = [
       {
         path: 'roledetails/:funcID',
         component: RoleDetailComponent,
+        data: { noReuse: true },
       },
       {
         path: 'systemsetting/:funcID',
@@ -103,20 +113,25 @@ const T_Component: Type<any>[] = [
   RolesComponent,
   RoleEditComponent,
   RoleDetailComponent,
-  AsideroledetailComponent,
   AddUserGroupsComponent,
   SystemsettingsComponent,
   NoSubAsideComponent,
   ApproversComponent,
   AddApproversComponent,
   BindPipe,
+  ActiveTemplatePipe,
+  PleaseUseComponent,
+  PopupModuleDetailComponent,
+  PopupInfoComponent,
+  PopActiveAccountComponent,
+  DecentralizedGroupComponent,
+  AddDecentralGroupMemComponent,
 ];
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     OverlayModule,
-    InlineSVGModule.forRoot(),
     HttpClientModule,
     CodxCoreModule,
     RouterModule.forChild(routes),

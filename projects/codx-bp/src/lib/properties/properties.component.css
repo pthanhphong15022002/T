@@ -206,13 +206,11 @@ div.offcanvas {
         /* #1e90ff;*/
 }
 
-.bad {
-    color: #deb0b0;
-}
 
+/*
 .filled.bad {
     color: #ff1e1e;
-}
+} */
 
 
 .rating-group {
@@ -310,7 +308,6 @@ div.offcanvas {
     content: " ";
     position: absolute;
     left: 17px;
-    background-color: var(--gray-300);
 }
 
 .history-item.line-hor:last-child:before {
@@ -320,4 +317,33 @@ div.offcanvas {
 .pic-file.h-140px {
     height: 140px;
     overflow: hidden;
+}
+
+.margin {
+    margin-top: 15px;
+}
+
+.dropzone.dropzone-default {
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    border: 0.5px dashed #6C757D;
+    border-radius: 0.42rem;
+    height: 200px;
+    background: #F5F8FA;
+    margin-bottom: 10px;
+}
+
+.dropzone.dropzone-default.dropzone-primary {
+    border-color: #3699FF;
+}
+
+.image-maxsize {
+    width: 490px !important;
+    height: 194px !important;
+    border-radius: 0.42rem;
+}
+
+.process-rating {
+    padding-bottom: 10px;
 }

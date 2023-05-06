@@ -13,6 +13,8 @@ import {
   RequestOption,
   AlertConfirmInputConfig,
   NotificationsService,
+  FormModel,
+  DialogModel,
 } from 'codx-core';
 import {
   Component,
@@ -29,6 +31,9 @@ import {
 import { ViewUsersComponent } from './view-users/view-users.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { CodxAdService } from '../codx-ad.service';
+import { environment } from 'src/environments/environment';
+import { PleaseUseComponent } from './please-use/please-use.component';
+import { PopActiveAccountComponent } from './pop-active-account/pop-active-account.component';
 
 @Component({
   selector: 'lib-user',
@@ -40,6 +45,7 @@ export class UserComponent extends UIComponent {
   @ViewChild('tempFull') tempFull: CodxTempFullComponent;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
+  @ViewChild('please_use') please_use: TemplateRef<any>;
   itemSelected: any;
   dialog!: DialogRef;
   button?: ButtonModel;
@@ -88,11 +94,8 @@ export class UserComponent extends UIComponent {
   clickMF(e: any, data?: any) {
     this.headerText = e.text;
     switch (e.functionID) {
-      case 'SYS01':
-        this.add(e);
-        break;
       case 'SYS03':
-        this.edit(data);
+        this.edit('edit', data);
         break;
       case 'SYS04':
         this.copy(data);
@@ -103,7 +106,25 @@ export class UserComponent extends UIComponent {
       case 'ADS0501':
         this.stop(data);
         break;
+      case 'ADS0502':
+        this.activeAccount(data);
+        break;
+
+      default:
+        break;
     }
+  }
+
+  activeAccount(data) {
+    console.log('data', data);
+    let dlog = this.callfc.openForm(
+      PopActiveAccountComponent,
+      '',
+      500,
+      300,
+      '',
+      data
+    );
   }
 
   openPopup(item: any) {
@@ -128,19 +149,65 @@ export class UserComponent extends UIComponent {
     return desc + '</div>';
   }
 
-  add(e) {
-    this.headerText = e.text;
+  pleaseUse(e) {
+    if (environment.saas == 0) {
+      this.headerText = e.text;
+      this.add();
+    } else {
+      let optionForm = new DialogModel();
+      optionForm.DataService = this.view?.currentView?.dataService;
+      optionForm.FormModel = this.view?.currentView?.formModel;
+      var dialog = this.callfc.openForm(
+        PleaseUseComponent,
+        '',
+        400,
+        70,
+        '',
+        '',
+        '',
+        optionForm
+      );
+      dialog.closed.subscribe((x) => {
+        if (x.event) {
+          this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+            if (res) {
+              let dataMF: any = [];
+              if (x.event?.formType == 'invite') {
+                dataMF = res;
+                dataMF = dataMF.filter((y) => y.functionID == 'SYS01');
+                this.headerText = dataMF[0].customName;
+                this.edit(x.event?.formType, x.event?.data);
+              } else if (x.event?.formType == 'edit') {
+                dataMF = res;
+                dataMF = dataMF.filter((y) => y.functionID == 'SYS03');
+                this.headerText = dataMF[0].customName;
+                this.edit(x.event?.formType, x.event?.data);
+              } else {
+                dataMF = res;
+                dataMF = dataMF.filter((y) => y.functionID == 'SYS01');
+                this.headerText = dataMF[0].customName;
+                this.add(x.event?.data);
+              }
+            }
+          });
+        }
+      });
+    }
+  }
+
+  add(email = null) {
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',
         headerText: this.headerText,
+        email: email,
       };
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
-      this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      this.dialog.closed.subscribe((e) => {
+      let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+      dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e?.event) {
           e.event.modifiedOn = new Date();
@@ -157,12 +224,14 @@ export class UserComponent extends UIComponent {
       .delete([this.view.dataService.dataSelected])
       .subscribe((res: any) => {
         if (res.data) {
-          this.codxAdService.deleteFile(res.data.userID, 'AD_Users', true);
+          this.codxAdService
+            .deleteFile(res.data.userID, 'AD_Users', true)
+            .subscribe();
         }
       });
   }
 
-  edit(data?) {
+  edit(formType: string, data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -170,19 +239,21 @@ export class UserComponent extends UIComponent {
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         var obj = {
-          formType: 'edit',
+          formType: formType,
           headerText: this.headerText,
         };
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = 'Auto';
-        this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-        this.dialog.closed.subscribe((x) => {
+        let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+        dialog.closed.subscribe((x) => {
           if (!x?.event) this.view.dataService.clear();
           if (x.event) {
             x.event.modifiedOn = new Date();
-            this.view.dataService.update(x.event).subscribe();
+            this.view.dataService.update(x.event).subscribe((res) => {
+              console.log('edit xong', res);
+            });
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -207,8 +278,8 @@ export class UserComponent extends UIComponent {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
-      this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      this.dialog.closed.subscribe((x) => {
+      let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+      dialog.closed.subscribe((x) => {
         if (x.event) {
           x.event.modifiedOn = new Date();
           this.view.dataService.update(x.event).subscribe();
@@ -250,8 +321,16 @@ export class UserComponent extends UIComponent {
   }
   //#endregion
 
-  changeDataMF(e: any) {
-    var dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
+  changeDataMF(e: any, data) {
+    let dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
     dl[0].disabled = true;
+    let copyMF = e.filter((x) => x.functionID == 'SYS04');
+    copyMF[0].disabled = true;
+    if (data.status == '1') {
+      let activeMF = e.find((x) => x.functionID == 'ADS0502');
+      if (activeMF) {
+        activeMF.disabled = true;
+      }
+    }
   }
 }

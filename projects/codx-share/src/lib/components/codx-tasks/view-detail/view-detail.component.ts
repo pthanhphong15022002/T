@@ -1,4 +1,3 @@
-import { DomSanitizer } from '@angular/platform-browser';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -18,8 +17,13 @@ import {
   DialogRef,
   FormModel,
 } from 'codx-core';
-import { tmpReferences } from '../model/task.model';
-import { CRUDService } from 'codx-core/public-api';
+import {
+  tmpReferences,
+  TM_Parameter,
+  TM_TaskGroups,
+} from '../model/task.model';
+import { AuthStore, CRUDService } from 'codx-core/public-api';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'share-view-detail',
@@ -31,7 +35,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   dialog: any;
   @Input() formModel?: FormModel;
   @Input() taskExtends?: any;
-  @Input() param?: any;
+  @Input() paramDefaut?: TM_Parameter = new TM_Parameter();
   @Input() listRoles?: any;
   @Input() popoverCrr?: any;
   @Input() vllStatus?: any;
@@ -39,6 +43,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() vllApproveStatus?: any;
   @Input() showMoreFunc?: any;
   @Input() dataService: CRUDService;
+  @Input() user: any;
   dataTree?: any[];
   dataReferences?: any[];
   @Input() taskID: string;
@@ -53,19 +58,31 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   firstLoad = true;
   viewTags = '';
   vllPriority = 'TM005';
+  tabControl = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+    { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+    { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+  ];
+  loadParam = false;
+  param?: TM_Parameter = new TM_Parameter();
+  isEdit = true;
+  timeoutId :any
+
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
-    private sanitizer: DomSanitizer,
+    public sanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) { }
+  ) {}
   //#endregion
   //#region Init
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['taskID']) {
@@ -76,54 +93,92 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
   //#region
   //#region Method
-  getChangeData() { }
+  getChangeData() {}
   getTaskDetail() {
     this.viewTags = '';
     this.dataTree = [];
     this.dataReferences = [];
+    this.loadParam = false;
     this.api
       .exec<any>('TM', 'TaskBusiness', 'GetTaskDetailsByTaskIDAsync', this.id)
       .subscribe((res) => {
         if (res) {
           this.itemSelected = res;
-          // this.itemSelected['memoHTML'] = this.sanitizer.bypassSecurityTrustHtml(this.itemSelected.memo)
-          // this.itemSelected['memoHTML2'] = this.sanitizer.bypassSecurityTrustHtml(this.itemSelected.memo2)
           this.viewTags = this.itemSelected?.tags;
-          this.changeDetectorRef.detectChanges();
+          if (this.itemSelected.taskGroupID) {
+            this.getTaskGroup(this.itemSelected.taskGroupID);
+          } else {
+            this.param = JSON.parse(JSON.stringify(this.paramDefaut));
+            this.loadParam = true;
+            if (this.itemSelected.category == '2') {
+              if (this.param.EditControl == '1') this.isEdit = true;
+              else this.isEdit = false;
+            } else this.isEdit = true;
+          }
+          //chinh 16/2/2023
+          if (res?.listTaskResources?.length > 0)
+            this.listTaskResousce = res.listTaskResources;
+          else this.listTaskResousce = [];
+          this.listTaskResousceSearch = this.listTaskResousce;
+          this.countResource = this.listTaskResousce.length;
           this.loadTreeView();
           this.loadDataReferences();
+          this.changeDetectorRef.detectChanges();
         }
       });
   }
 
-  popoverEmpList(p: any, task) {
-    this.listTaskResousceSearch = [];
-    this.countResource = 0;
-    if (this.popoverCrr) {
-      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+  popoverEmpList(p: any, task = null) {
+    if (this.popoverCrr && this.popoverCrr.isOpen()) {
+       this.popoverCrr.close();
     }
     if (this.popoverDataSelected) {
       if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
     }
-
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskResourcesBusiness',
-        'GetListTaskResourcesByTaskIDAsync',
-        task.taskID
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.listTaskResousce = res;
-          this.listTaskResousceSearch = res;
-          this.countResource = res.length;
+    //sua ngày 16/2/2023
+    // p.open();
+    // this.popoverDataSelected = p;
+    // this.hoverPopover.emit(p);
+    //sua ngay 07/03/2023
+    if(p){
+      var element = document.getElementById(task?.taskID);
+      if (element) {
+        var t = this
+        this.timeoutId = setTimeout(function () {
           p.open();
-          this.popoverDataSelected = p;
-          this.hoverPopover.emit(p);
-        }
-      });
+          if (t.popoverCrr && t.popoverCrr.isOpen()) {
+            t.popoverCrr.close();
+          }
+         //this.popoverDataSelected = p;
+        }, 2000);
+      }
+      this.hoverPopover.emit(p);
+    }else{
+      if(this.timeoutId)
+      clearTimeout( this.timeoutId);
+    }
+   
+
+    // this.listTaskResousceSearch = [];
+    // this.countResource = 0;
+    // this.api
+    //   .execSv<any>(
+    //     'TM',
+    //     'ERM.Business.TM',
+    //     'TaskResourcesBusiness',
+    //     'GetListTaskResourcesByTaskIDAsync',
+    //     task.taskID
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.listTaskResousce = res;
+    //       this.listTaskResousceSearch = res;
+    //       this.countResource = res.length;
+    //       p.open();
+    //       this.popoverDataSelected = p;
+    //       this.hoverPopover.emit(p);
+    //     }
+    //   });
   }
   //#endregion
   //#region Event
@@ -138,7 +193,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       e.forEach((x) => {
         if (
           (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
-          (data.confirmControl == '0' || data.confirmStatus != '1')
+          data.confirmStatus != '1'
         ) {
           x.disabled = true;
         }
@@ -184,10 +239,48 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
-         //an cap nhat tien do khi hoan tat 
-         if ((x.functionID == 'TMT02018'|| x.functionID == 'TMT02026'||x.functionID == 'TMT02035')&& data.status=="90") {
+        if (
+          (x.functionID == 'TMT02015' || x.functionID == 'TMT02025') &&
+          data.status == '90'
+        ) {
           x.disabled = true;
         }
+        //an cap nhat tien do khi hoan tat
+        if (
+          (x.functionID == 'TMT02018' ||
+            x.functionID == 'TMT02026' ||
+            x.functionID == 'TMT02035') &&
+          data.status == '90'
+        ) {
+          x.disabled = true;
+        }
+        //an voi ca TMT026
+        if (
+          (x.functionID == 'SYS02' ||
+            x.functionID == 'SYS03' ||
+            x.functionID == 'SYS04') &&
+          (this.formModel?.funcID == 'TMT0206' ||
+            this.formModel?.funcID == 'MWP0063')
+        ) {
+          x.disabled = true;
+        }
+        //an voi fun TMT03011
+        if (
+          (this.formModel?.funcID == 'TMT03011' ||
+            this.formModel?.funcID == 'TMT05011') &&
+          data.category == '1' &&
+          data.createdBy != this.user.userID &&
+          !this.user?.administrator &&
+          (x.functionID == 'SYS02' || x.functionID == 'SYS03')
+        ) {
+          x.disabled = true;
+        }
+        //an TMT02019
+        if (
+          (x.functionID == 'TMT02019' || x.functionID == 'TMT02026') &&
+          (data.status == '80' || data.status == '90')
+        )
+          x.disabled = true;
       });
     }
   }
@@ -198,13 +291,15 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       this.listTaskResousceSearch = this.listTaskResousce;
       return;
     }
-
-    this.listTaskResousce.forEach((res) => {
-      var name = res.resourceName;
-      if (name.toLowerCase().includes(e.toLowerCase())) {
-        listTaskResousceSearch.push(res);
-      }
-    });
+    listTaskResousceSearch = this.listTaskResousce.filter((x) =>
+      x.resourceName.toLowerCase().includes(e.toLowerCase())
+    );
+    // this.listTaskResousce.forEach((res) => {
+    //   var name = res.resourceName;
+    //   if (name.toLowerCase().includes(e.toLowerCase())) {
+    //     listTaskResousceSearch.push(res);
+    //   }
+    // });
     this.listTaskResousceSearch = listTaskResousceSearch;
   }
   //#endregion
@@ -212,7 +307,12 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   //#region  tree
   loadTreeView() {
     this.dataTree = [];
-    if (!this.itemSelected || !this.itemSelected?.taskID || !this.itemSelected.isAssign ) return;
+    if (
+      !this.itemSelected ||
+      !this.itemSelected?.taskID ||
+      (this.itemSelected.category == '1' && !this.itemSelected.isAssign)
+    )
+      return;
     this.api
       .execSv<any>(
         'TM',
@@ -228,49 +328,10 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
   //#endregion
 
-  //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
   loadDataReferences() {
-    if (this.itemSelected.category == '1') {
-      this.dataReferences = [];
-      return;
-    }
     this.dataReferences = [];
-    if (this.itemSelected.category == '2') {
-      this.api
-        .execSv<any>(
-          'TM',
-          'TM',
-          'TaskBusiness',
-          'GetTaskParentByTaskIDAsync',
-          this.itemSelected.taskID
-        )
-        .subscribe((res) => {
-          if (res) {
-            var ref = new tmpReferences();
-            ref.recIDReferences = res.recID;
-            ref.refType = 'TM_Tasks';
-            ref.createdOn = res.createdOn;
-            ref.memo = res.taskName;
-            ref.createdBy = res.createdBy;
-            ref.attachments = res.attachments;
-            ref.comments = res.comments;
-            var taskParent = res;
-            this.api
-              .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-                res.createdBy,
-              ])
-              .subscribe((user) => {
-                if (user) {
-                  ref.createByName = user.userName;
-                  this.dataReferences.push(ref);
-                  this.getReferencesByCategory3(taskParent);
-                }
-              });
-          }
-        });
-    } else if (this.itemSelected.category == '3') {
+    if (this.itemSelected.refID)
       this.getReferencesByCategory3(this.itemSelected);
-    }
   }
 
   getReferencesByCategory3(task) {
@@ -385,4 +446,50 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       });
   }
   //#endregion
+  getTaskGroup(idTasKGroup) {
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskGroupBusiness',
+        'GetAsync',
+        idTasKGroup
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.loadParam = true;
+          this.convertParameterByTaskGroup(res);
+          if (
+            this.param.EditControl != '1' &&
+            this.itemSelected.category == '2'
+          )
+            this.isEdit = true;
+          else this.isEdit = false;
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+  }
+
+  //#region Convert
+  convertParameterByTaskGroup(taskGroup: TM_TaskGroups) {
+    this.param.ApproveBy = taskGroup.approveBy;
+    this.param.Approvers = taskGroup.approvers;
+    this.param.ApproveControl = taskGroup.approveControl;
+    this.param.AutoCompleted = taskGroup.autoCompleted;
+    this.param.ConfirmControl = taskGroup.confirmControl;
+    this.param.EditControl = taskGroup.editControl;
+    this.param.LocationControl = taskGroup.locationControl;
+    this.param.MaxHours = taskGroup.maxHours.toString();
+    this.param.MaxHoursControl = taskGroup.maxHoursControl;
+    this.param.PlanControl = taskGroup.planControl;
+    this.param.ProjectControl = taskGroup.projectControl;
+    this.param.UpdateControl = taskGroup.updateControl;
+    this.param.VerifyBy = taskGroup.verifyBy;
+    this.param.VerifyByType = taskGroup.verifyByType;
+    this.param.VerifyControl = taskGroup.verifyControl;
+    this.param.DueDateControl = taskGroup.dueDateControl;
+    this.param.ExtendControl = taskGroup.extendControl;
+    this.param.ExtendBy = taskGroup.extendBy;
+    this.param.CompletedControl = taskGroup.completedControl;
+  }
 }

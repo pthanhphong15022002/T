@@ -8,6 +8,12 @@ import { CacheService } from 'codx-core';
 })
 export class Error404Component implements OnInit {
   mssgCode = 'SYS032';
+  mssgCode1 = 'SYS032';
+  mssgCode2 = 'SYS032';
+  mssgCode3 = 'SYS032';
+  mssgCode4 = 'SYS032';
+
+  mssgCode5 = 'SYS032';
   title = '';
   constructor(
     private cache: CacheService,

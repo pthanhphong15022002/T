@@ -1,29 +1,29 @@
 <codx-form headerText="Chia sẻ văn bản" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
     <ng-template popup adde #body>
         <div class="request-to">
-            <div class="d-flex algin-items-center mb-3">
-                <div class="w-50px fw-bold text-dark">
+            <div class="d-flex algin-items-center mb-3 pb-1 border-bottom">
+                <div class="w-50px fw-bold text-dark pt-2">
                     <codx-label default="Đến"></codx-label>
                 </div>
                 <div class="w-100">
-                    <codx-input type="Combobox" [refValue]="gridViewSetup['Owner']['referedValue']" [showInput]="true"
+                    <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="true"
                         refType="P" field="popup" [ngClass]="'w-100'" (valueChange)="changeValueTo($event)">
                     </codx-input>
                 </div>
             </div>
-            <div class="d-flex algin-items-center mb-3">
-                <div class="w-50px fw-bold text-dark">
+            <div class="d-flex algin-items-center mb-3 pb-1 border-bottom">
+                <div class="w-50px fw-bold text-dark pt-2">
                     <codx-label default="CC:"></codx-label>
                 </div>
                 <div class="w-100">
-                    <codx-input [refValue]="gridViewSetup['Owner']['referedValue']" type="combobox" refType="P"
+                    <codx-input [refValue]="'Share_Users'" type="combobox" refType="P"
                         field="popup" [ngClass]="'w-100'" (valueChange)="changeValueCC($event)">
                     </codx-input>
                 </div>
             </div>
         </div>
         <ng-container *ngIf="data.files">
-            <codx-thumbnail [files]="data.files"></codx-thumbnail>
+            <codx-thumbnail [files]="data.files" [hideDelete]="'1'" [hideMoreF]="'0'"></codx-thumbnail>
         </ng-container>
         <!-- <div class="d-flex align-items-center justify-content-between mt-8 mb-8">
             <ng-container *ngIf="data.files != null && data.files.length>0">
@@ -35,36 +35,40 @@
                 </div>
             </ng-container>
         </div> -->
-        <div class="form-group mt-3">
-            <codx-label default="Nội dung chia sẻ" class="text-primary"></codx-label>
-            <codx-input type="textarea" field="textarea" [Group]="shareForm" ControlName="desc">
+        <div class="form-group mt-4">
+            <div class="mb-1">
+                <codx-label default="Nội dung chia sẻ" [fiedName]="'lblDescPermiss'" [formName]="formModel?.formName" class="text-primary fs-6"></codx-label>
+            </div>
+            <codx-input type="textarea" [height]="'150px'"  [Group]="shareForm" ControlName="desc">
             </codx-input>
         </div>
         <div class="d-flex align-items-center justify-content-between mt-3">
-            <codx-label class="text-dark" default="Cho phép chỉnh sửa nội dung văn bản?"></codx-label>
+            <codx-label class="text-dark" [fiedName]="'lblEditPermiss'" [formName]="formModel?.formName" default="Cho phép chỉnh sửa nội dung văn bản?"></codx-label>
             <codx-input #checkbox type="switch" class="test-switch" [Group]="shareForm" ControlName="edit">
             </codx-input>
         </div>
-        <div class="d-flex align-items-center justify-content-between mt-3">
-            <codx-label class="text-dark" default="Cho phép chia sẻ lại cho người khác"></codx-label>
+        <div class="d-flex align-items-center justify-content-between mt-2">
+            <codx-label class="text-dark" [fiedName]="'lblSharePermiss'" [formName]="formModel?.formName" default="Cho phép chia sẻ lại cho người khác"></codx-label>
             <codx-input #checkbox type="switch" class="test-switch" [Group]="shareForm" ControlName="share">
             </codx-input>
         </div>
-        <div class="d-flex align-items-center justify-content-between mt-3">
-            <codx-label class="text-dark" default="Cho phép dowlnload hoặc in tài liệu?"></codx-label>
+        <div class="d-flex align-items-center justify-content-between mt-2">
+            <codx-label class="text-dark" [fiedName]="'lblDownloadPermiss'" [formName]="formModel?.formName" default="Cho phép dowlnload hoặc in tài liệu?"></codx-label>
             <codx-input #checkbox type="switch" class="test-switch" [Group]="shareForm" ControlName="download">
             </codx-input>
         </div>
-        <label class="text-primary mt-6">Giới hạn thời gian chia sẻ</label>
-        <div class="row">
+        <div class="mt-5 mb-2 text-primary fs-6">
+            <codx-label [fiedName]="'lblLimitTime'" [formName]="formModel?.formName" default="Giới hạn thời gian chia sẻ"></codx-label>
+        </div>
+        <div class="row form-group">
             <div class="col-6 d-flex align-items-center justify-content-between ">
-                <codx-label default='Từ ngày' class="w-100px"></codx-label>
-                <codx-input type="dateTime" format="d" field="date" [Group]="shareForm" ControlName="formDate">
+                <codx-label [fiedName]="'lblFormDate'" [formName]="formModel?.formName" default='Từ ngày' class="w-100px"></codx-label>
+                <codx-input type="dateTime" format="d"  [Group]="shareForm" ControlName="formDate">
                 </codx-input>
             </div>
             <div class="col-6 d-flex align-items-center justify-content-between">
-                <codx-label default="Đến ngày" class="w-100px"></codx-label>
-                <codx-input type="dateTime" format="d" field="date" [Group]="shareForm" ControlName="toDate">
+                <codx-label [fiedName]="'lblToDate'" [formName]="formModel?.formName" default="Đến ngày" class="w-100px"></codx-label>
+                <codx-input type="dateTime" format="d"  [Group]="shareForm" ControlName="toDate">
                 </codx-input>
             </div>
         </div>

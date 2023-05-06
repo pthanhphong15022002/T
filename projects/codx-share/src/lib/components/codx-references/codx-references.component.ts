@@ -29,6 +29,8 @@ export class CodxReferencesComponent implements OnInit, OnChanges {
   @Input() dataReferences: any[];
   @Input() vllRefType = 'TM018';
   @Input() formModel?: FormModel;
+  @Input() zIndex : number = 0;
+  @Input() openViewPopup = true ;// Thảo truyền ko cho click
   @ViewChild('attachment') attachment: AttachmentComponent;
   message: string = '';
   REFERTYPE = {

@@ -1,614 +1,99 @@
-import { SortSessionComponent } from './sort-session/sort-session.component';
-import { SV_Questions } from './../model/SV_Questions';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
-  ChangeDetectorRef,
   Component,
-  HostListener,
   Injector,
-  Input,
-  OnDestroy,
-  OnInit,
   TemplateRef,
   ViewChild,
+  ComponentRef,
+  ChangeDetectorRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  MultiSelectService,
-  RteService,
-} from '@syncfusion/ej2-angular-inplace-editor';
-import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
-import {
-  CallFuncService,
-  DialogModel,
-  NotificationsService,
-  SidebarModel,
-  UIComponent,
-  ViewModel,
-  ViewType,
-} from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AuthStore, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxSvService } from '../codx-sv.service';
-import { SV_Surveys } from '../model/SV_Surveys';
-import { PopupUploadComponent } from '../popup-upload/popup-upload.component';
-import { Observable, Subscription } from 'rxjs';
-import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
+import { SV_Questions } from '../models/SV_Questions';
+import { SV_Surveys } from '../models/SV_Surveys';
+import { NgxCaptureService } from 'ngx-capture';
+import { tap } from 'rxjs';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import { FileUpload } from '@shared/models/file.model';
 import { environment } from 'src/environments/environment';
-import { TemplateSurveyOtherComponent } from '../template-survey-other.component/template-survey-other.component';
-import { PopupQuestionOtherComponent } from '../template-survey-other.component/popup-question-other/popup-question-other.component';
-
 @Component({
   selector: 'app-add-survey',
   templateUrl: './add-survey.component.html',
   styleUrls: ['./add-survey.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  providers: [RteService, MultiSelectService],
 })
-export class AddSurveyComponent extends UIComponent implements OnInit {
-  surveys: SV_Surveys = new SV_Surveys();
-  formats: any = new Array();
-  questions: any = new Array();
-  sessions: any = new Array();
-  answers: any = new Array();
+export class AddSurveyComponent extends UIComponent {
   isModeAdd = true;
   funcID = '';
   functionList: any;
-  public titleEditorModel: RichTextEditorModel = {
-    toolbarSettings: {
-      enableFloating: false,
-      items: ['Bold', 'Italic', 'Underline', 'ClearFormat', 'CreateLink'],
-    },
-  };
-  public descriptionEditorModel: RichTextEditorModel = {
-    toolbarSettings: {
-      enableFloating: false,
-      items: [
-        'Bold',
-        'Italic',
-        'Underline',
-        'ClearFormat',
-        'CreateLink',
-        'NumberFormatList',
-        'BulletFormatList',
-      ],
-    },
-  };
-  public titleRule: { [name: string]: { [rule: string]: Object } } = {
-    Title: { required: [true, 'Enter valid title'] },
-  };
-  public commentRule: { [name: string]: { [rule: string]: Object } } = {
-    rte: { required: [true, 'Enter valid comments'] },
-  };
-
-  data: any = {
-    text: 'Mẫu không có tiêu đề',
-    description: 'Mô tả biểu mẫu',
-  };
-  REFER_TYPE = {
-    IMAGE: 'image',
-    VIDEO: 'video',
-    APPLICATION: 'application',
-  };
-
-  dataAnswer: any = new Array();
-  active = false;
-  MODE_IMAGE_VIDEO = 'EDIT';
-  lstEditIV: any = new Array();
   recID: any;
-  children: any = new Array();
   views: Array<ViewModel> = [];
   viewType = ViewType;
-  @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
-  @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
+  mode: any = 'Q';
+  seletedQ = false;
+  seletedA = false;
+  seletedS = false;
+  sv:any;
+  title: any ;
+  signal: any = null;
+  url: any;
+  user: any;
+  titleNull = "Mẫu không có tiêu đề";
+  questions: SV_Questions = new SV_Questions();
+  surveys: SV_Surveys = new SV_Surveys();
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
-  src: any;
+  @ViewChild('app_question') app_question: ComponentRef<any>;
+  @ViewChild('screen', { static: true }) screen: any;
   constructor(
-    inject: Injector,
+    private injector: Injector, 
+    private SvService: CodxSvService,
+    private captureService: NgxCaptureService,
+    private auth : AuthStore,
+    private dmSV: CodxDMService,
     private change: ChangeDetectorRef,
-    private SVServices: CodxSvService,
-    private notification: NotificationsService,
+    private notifySvr: NotificationsService,
   ) {
-    super(inject);
-
-    this.formats = {
-      item: 'Title',
-      fontStyle: 'Arial',
-      fontSize: '13',
-      fontColor: 'black',
-      fontFormat: 'B',
-    };
-    // this.router.params.subscribe((params) => {
-    //   if (params) this.funcID = params['funcID'];
-    // });
+    super(injector);
     this.router.queryParams.subscribe((queryParams) => {
+      this.title = this.titleNull;
       if (queryParams?.funcID) this.funcID = queryParams.funcID;
       if (queryParams?.recID) {
         this.recID = queryParams.recID;
-        this.loadData();
+        this.getSV();
+        this.change.detectChanges();
       }
+      this.url = queryParams;
     });
-    this.cache.functionList('SVT01').subscribe((res) => {
+    this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) this.functionList = res;
     });
   }
-
+  getSV()
+  {
+    this.SvService.getSV(this.recID).subscribe((item :any)=>{
+      if(item) this.title = !item.title ?"Mẫu không có tiêu đề" : item.title;
+      else this.title = this.titleNull;
+    })
+  }
   onInit(): void {
-    // this.add();
-    // this.getFileByObjectID('84458c7d-1a7a-470b-a1c6-dedbb5ba66de').subscribe((res: any[]) => {
-    //   if (res.length > 0) {
-    //     let files = res;
-    //     files.map((e: any) => {
-    //       if (e && e.referType == this.REFER_TYPE.VIDEO) {
-    //         e[
-    //           'srcVideo'
-    //         ] = `${environment.urlUpload}/${e.url}`;
-    //       }
-    //     });
-    //     this.src = files;
-    //   }
-    // });
+
+    this.user = this.auth.get();
+
+    if (!this.funcID) this.codxService.navigate('SVT01');
+    //this.getSV();
+    this.getSignalAfterSave();
   }
 
-  onLoading(e) {
-    if (this.view.formModel) {
-      var formModel = this.view.formModel;
-      this.views = [
-        {
-          active: true,
-          type: ViewType.content,
-          sameData: true,
-          model: {
-            panelLeftRef: this.panelLeftRef,
-          },
-        },
-      ];
-      this.change.detectChanges();
-      var html = document.querySelector('codx-wrapper');
-      if (html) {
-        html.addEventListener('scroll', (e) => {
-          var htmlMF = document.querySelector('.moreFC');
-          if (htmlMF) htmlMF.setAttribute('style', `top: ${html.scrollTop}px`);
-        });
-      }
-    }
-  }
-
-  ngAfterViewInit() {}
-
-  loadData() {
-    this.questions = null;
-    this.api
-      .exec('ERM.Business.SV', 'QuestionsBusiness', 'GetByRecIDAsync', [
-        this.recID,
-      ])
-      .subscribe((res: any) => {
-        if (res[0] && res[0].length > 0) {
-          this.questions = this.getHierarchy(res[0], res[1]);
-          console.log('check questions', this.questions);
-        } else {
-          this.questions = [
-            {
-              seqNo: 0,
-              question: null,
-              answers: null,
-              other: false,
-              mandatory: false,
-              answerType: null,
-              category: 'S',
-              children: [
-                {
-                  seqNo: 0,
-                  question: 'Câu hỏi 1',
-                  answers: [
-                    {
-                      seqNo: 0,
-                      answer: 'Tùy chọn 1',
-                      other: false,
-                      isColumn: false,
-                      hasPicture: false,
-                    },
-                  ],
-                  other: true,
-                  mandatory: false,
-                  answerType: 'O',
-                  category: 'Q',
-                },
-              ],
-            },
-          ];
-        }
-        this.questions[0].children[0]['active'] = true;
-        this.itemActive = this.questions[0].children[0];
-      });
-  }
-
-  getHierarchy(dataSession, dataQuestion) {
-    var dataTemp = JSON.parse(JSON.stringify(dataSession));
-    dataTemp.forEach((res) => {
-      res['children'] = [];
-      dataQuestion.forEach((x) => {
-        if (x.parentID == res.recID) {
-          res['children'].push(x);
-        }
-      });
-    });
-    return dataTemp;
-  }
-
-  valueChange(e, dataQuestion) {
-    if (e) {
-      this.questions[dataQuestion.seqNo].mandatory = e.data;
-    }
-  }
-
-  drop(seqNoSession, event: CdkDragDrop<string[]>) {
-    moveItemInArray(
-      this.questions[seqNoSession].children,
-      event.previousIndex,
-      event.currentIndex
-    );
-  }
-
-  dropAnswer(event: CdkDragDrop<string[]>, idParent) {
-    var index = this.questions.findIndex((x) => x.seqNo == idParent);
-    this.dataAnswer = this.questions[index].answers;
-    moveItemInArray(this.dataAnswer, event.previousIndex, event.currentIndex);
-    this.dataAnswer.forEach((x, index) => (x.seqNo = index));
-    this.questions[idParent].answers = this.dataAnswer;
-  }
-
-  dropAnswerRC(
-    event: CdkDragDrop<string[]>,
-    seqNoSession,
-    seqNoQuestion,
-    answerType
-  ) {
-    var dataTemp = JSON.parse(
-      JSON.stringify(
-        this.questions[seqNoSession].children[seqNoQuestion].answers
-      )
-    );
-    moveItemInArray(dataTemp, event.previousIndex, event.currentIndex);
-    var dataAnswerR = dataTemp.filter((x) => !x.isColumn);
-    var dataAnswerC = dataTemp.filter((x) => x.isColumn);
-    if (answerType == 'row') {
-      dataAnswerR.forEach((x, index) => {
-        x.seqNo = index;
-      });
-    } else {
-      dataAnswerC.forEach((x, index) => {
-        x.seqNo = index;
-      });
-    }
-    var dataMerge = [...dataAnswerR, ...dataAnswerC];
-    if (dataMerge.length > 0) {
-      this.questions[seqNoSession].children[seqNoQuestion].answers = dataMerge;
-      console.log(
-        'check dropAnswerRC',
-        this.questions[seqNoSession].children[seqNoQuestion].answers
-      );
-    }
-    this.questions[seqNoSession].children[seqNoQuestion].answers = dataMerge;
-  }
-
-  public focusIn(target: HTMLElement): void {
-    target.parentElement.classList.add('e-input-focus');
-  }
-
-  public focusOut(target: HTMLElement): void {
-    target.parentElement.classList.remove('e-input-focus');
-  }
-
-  questionAdd: SV_Questions = new SV_Questions();
-  add() {
-    var dataAnswerTemp = [
-      {
-        seqNo: 0,
-        answer: `Tùy chọn 1`,
-      },
-    ];
-    this.questionAdd.transID = this.recID;
-    this.questionAdd.seqNo = 6;
-    this.questionAdd.category = 'S';
-    this.questionAdd.question = 'Câu hỏi session 3';
-    this.questionAdd.answers = dataAnswerTemp;
-    this.questionAdd.answerType = 'O';
-    this.questionAdd.parentID = 'a32f2b10-5e76-11ed-a637-e454e8b52262';
-
-    this.api
-      .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
-        this.recID,
-        this.questionAdd,
-        true,
-      ])
-      .subscribe((res) => {
-        if (res) {
-        }
-      });
-  }
-
-  itemActive: any;
-  clickToScroll(seqNoSession = null, recIDQuestion = null, category = null) {
-    let recID = 0;
-    let id = 'card-survey';
-    if (category == 'S') recID = seqNoSession;
-    else {
-      recID = recIDQuestion;
-      id = 'card-survey-question';
-    }
-    let html = document.getElementById(`${id}-${recID}`);
-    let htmlE = html as HTMLElement;
-    let htmlMF = document.querySelector('.moreFC');
-    if (htmlMF)
-      htmlMF.setAttribute('style', `top: calc(${htmlE?.offsetTop}px - 151px);`);
-    this.activeCard(seqNoSession, recIDQuestion, category);
-  }
-
-  indexSessionA = 0;
-  indexQuestionA = 0;
-  activeCard(seqNoSession, recIDQuestion, category) {
-    this.indexSessionA = seqNoSession;
-    this.questions.forEach((x) => {
-      if (x['active'] == true) x['active'] = false;
-      x.children.forEach((y) => {
-        if (y['active'] == true) y['active'] = false;
-      });
-    });
-    if (category == 'S') {
-      this.questions.forEach((x) => {
-        if (x['active'] == true) x['active'] = false;
-        if (x.seqNo == seqNoSession) {
-          x['active'] = true;
-          this.itemActive = x;
-        }
-      });
-    } else {
-      this.questions[seqNoSession].children.forEach((x) => {
-        if (x['active'] == true) x['active'] = false;
-        if (x.recID == recIDQuestion) {
-          x['active'] = true;
-          this.itemActive = x;
-        }
-      });
-    }
-  }
-
-  addAnswer(indexSession, indexQuestion) {
-    var data = JSON.parse(
-      JSON.stringify(this.questions[indexSession].children[indexQuestion])
-    );
-    data?.answers.filter((x) => x.other == false);
-    var seqNo = data?.answers.length;
-    var dataAnswerTemp = {
-      seqNo: seqNo,
-      answer: `Tùy chọn ${seqNo + 1}`,
-      other: false,
-      isColumn: false,
-      hasPicture: false,
-    };
-    var index = data.answers.findIndex((x) => x.other == true);
-    if (index >= 0) {
-      var dataOtherTemp = {
-        seqNo: seqNo - 1,
-        answer: `Tùy chọn ${seqNo}`,
-        other: false,
-        isColumn: false,
-        hasPicture: false,
-      };
-      data.answers.splice(seqNo - 1, 0, dataOtherTemp);
-      data.answers[index + 1].seqNo = seqNo;
-    } else data.answers.push(dataAnswerTemp);
-    this.questions[indexSession].children[indexQuestion] = data;
-    console.log('check question after addAnswer', this.questions);
-  }
-
-  deleteAnswer(indexSession, indexQuestion, dataAnswer) {
-    var data = JSON.parse(
-      JSON.stringify(
-        this.questions[indexSession].children[indexQuestion].answers
-      )
-    );
-    data = data.filter((x) => x.seqNo != dataAnswer.seqNo);
-    data.forEach((x, index) => {
-      x.seqNo = index;
-    });
-    this.questions[indexSession].children[indexQuestion].answers = data;
-    if (dataAnswer.other)
-      this.questions[indexSession].children[indexQuestion].other = false;
-    console.log('check questions', this.questions);
-  }
-
-  deleteCard(seqNoSession, seqNoQuestion, category) {
-    if (category == 'S') this.deleteSession(seqNoSession);
-    else this.deleteNoSession(seqNoSession, seqNoQuestion);
-    console.log('check delete card', this.questions);
-  }
-
-  deleteSession(seqNoSession) {
-    this.notification
-      .alert(
-        'Xóa câu hỏi và mục?',
-        'Việc xóa một mục cũng sẽ xóa các câu hỏi và câu trả lời trong mục đó.'
-      )
-      .closed.subscribe((x) => {
-        if (x.event.status == 'Y') {
-          var data = JSON.parse(JSON.stringify(this.questions));
-          data = data.filter((x) => x.seqNo != seqNoSession);
-          data.forEach((x, index) => {
-            x.seqNo = index;
-          });
-          this.questions = data;
-          this.change.detectChanges();
-        }
-      });
-  }
-
-  deleteNoSession(seqNoSession, seqNoQuestion) {
-    var data = JSON.parse(
-      JSON.stringify(this.questions[seqNoSession].children)
-    );
-    data = data.filter((x) => x.seqNo != seqNoQuestion);
-    data.forEach((x, index) => {
-      x.seqNo = index;
-    });
-    if (seqNoQuestion == 0) this.questions[seqNoSession].active = true;
-    else data[seqNoQuestion - 1].active = true;
-    this.questions[seqNoSession].children = data;
-  }
-
-  addOtherAnswer(indexSession, indexQuestion) {
-    var seqNo =
-      this.questions[indexSession].children[indexQuestion].answers?.length;
-    var dataAnswerTemp = {
-      seqNo: seqNo,
-      answer: '',
-      other: true,
-      isColumn: false,
-      hasPicture: false,
-    };
-    var data = JSON.parse(
-      JSON.stringify(
-        this.questions[indexSession].children[indexQuestion].answers
-      )
-    );
-    data.push(dataAnswerTemp);
-    this.questions[indexSession].children[indexQuestion]!.answers = data;
-    this.questions[indexSession].children[indexQuestion]['other'] = true;
-  }
-
-  copyCard(itemSession, itemQuestion, category) {
-    if (category == 'S') this.copySession(itemSession);
-    else this.copyNoSession(itemSession, itemQuestion);
-    console.log('check copy questions', this.questions);
-  }
-
-  copySession(itemSession) {
-    this.generateGuid();
-    delete itemSession.id;
-    itemSession.recID = this.GUID;
-    var data = JSON.parse(JSON.stringify(this.questions));
-    data[itemSession.seqNo].active = false;
-    data.splice(itemSession.seqNo + 1, 0, itemSession);
-    data.forEach((x, index) => {
-      x.seqNo = index;
-    });
-    this.questions = data;
-  }
-
-  copyNoSession(itemSession, itemQuestion) {
-    var dataTemp = JSON.parse(JSON.stringify(itemQuestion));
-    this.generateGuid();
-    delete itemQuestion.id;
-    itemQuestion.recID = this.GUID;
-    var data = JSON.parse(
-      JSON.stringify(this.questions[itemSession.seqNo].children)
-    );
-    data[itemQuestion.seqNo].active = false;
-    data.splice(itemQuestion.seqNo + 1, 0, itemQuestion);
-    data.forEach((x, index) => {
-      x.seqNo = index;
-      if (x.parentID == dataTemp.recID) x.parentID = this.GUID;
-    });
-    this.questions[itemSession.seqNo].children = data;
-  }
-
-  clickMF(functionID, eleAttachment = null) {
-    if (functionID) {
-      switch (functionID) {
-        case 'LTN01':
-          this.addCard(this.itemActive, this.indexSessionA, 'Q');
-          break;
-        case 'LTN02':
-          this.addQuestionOther();
-          break;
-        case 'LTN03':
-          this.addCard(this.itemActive, this.indexSessionA, 'T');
-          break;
-        case 'LTN04':
-          this.uploadFile('image', 'upload');
-          break;
-        case 'LTN05':
-          this.uploadFile('video', 'upload');
-          break;
-        case 'LTN06':
-          this.addCard(this.itemActive, this.indexSessionA, 'S');
-          break;
-      }
-    }
-  }
-
-  addQuestionOther() {
-    var option = new DialogModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    var dialog = this.callfc.openForm(
-      TemplateSurveyOtherComponent,
-      '',
-      1000,
-      700,
-      '',
-      '',
-      '',
-      option
-    );
-    dialog.closed.subscribe((res) => {
-      if (res.event) {
-        var obj = {dataSurvey: res.event, dataQuestion: this.questions};
-        var option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        var dialog = this.callfc.openSide(PopupQuestionOtherComponent, obj, option);
-        dialog.closed.subscribe(res => {
-          if(res.event) {}
-        })
-      }
-    });
-  }
-
-  uploadFile(typeFile, modeFile) {
-    var obj = {
-      functionList: this.functionList,
-      typeFile: typeFile,
-      modeFile: modeFile,
-      data: this.itemActive,
-    };
-    var dialog = this.callfc.openForm(
-      PopupUploadComponent,
-      '',
-      900,
-      600,
-      '',
-      obj,
-      ''
-    );
-    dialog.closed.subscribe((res) => {
-      if (res.event) {
-        this.uploadImage(this.indexSessionA, this.itemActive, res.event);
-      }
-    });
-  }
-
-  deleteFile() {
-    this.SVServices.deleteFile(
-      this.itemActive,
-      this.functionList.entityName
-    ).subscribe((res) => {
-      if (res) {
-        this.questions.splice(this.itemActive.seqNo, 1);
-        this.questions.forEach((x, index) => (x.seqNo = index));
-      }
-    });
-  }
-
-  GUID: any;
-  generateGuid() {
+  generateGUID() {
     var d = new Date().getTime(); //Timestamp
     var d2 =
       (typeof performance !== 'undefined' &&
         performance.now &&
         performance.now() * 1000) ||
       0; //Time in microseconds since page-load or 0 if unsupported
-    this.GUID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+    var GUID;
+    return (GUID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,
       function (c) {
         var r = Math.random() * 16; //random number between 0 and 16
@@ -623,289 +108,201 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         }
         return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
       }
-    );
+    ));
   }
 
-  addCard(itemActive, seqNoSession = null, category) {
-    if (itemActive) {
-      if (category == 'S') this.addSession(itemActive, seqNoSession);
-      else this.addNoSession(itemActive, seqNoSession, category);
-      console.log('check addCard', this.questions);
-    }
-  }
-
-  addSession(itemActive, seqNoSession) {
-    var index = itemActive.seqNo;
-    this.generateGuid();
-    var tempQuestion = JSON.parse(JSON.stringify(itemActive));
-    tempQuestion.answers = null;
-    tempQuestion.answerType = null;
-    tempQuestion.question = null;
-    tempQuestion.seqNo = index + 1;
-    tempQuestion.category = 'S';
-    tempQuestion.recID = this.GUID;
-    this.questions.splice(index + 1, 0, tempQuestion);
-    this.questions.forEach((x, index) => (x.seqNo = index));
-    this.questions[index].active = false;
-    this.questions[index + 1].active = true;
-    this.itemActive = this.questions[index + 1];
-    var lstMain = this.questions[seqNoSession].children;
-    if (itemActive.category == 'S') {
-      this.questions[index + 1].children = this.questions[index].children;
-      this.questions[index].children = [];
-    } else {
-      var lstUp = [];
-      var lstDown = [];
-      lstUp = lstMain.slice(0, index + 1);
-      lstDown = lstMain.slice(index + 1, lstMain.length);
-      this.questions[index + 1]['children'] = lstDown;
-      this.questions[index]['children'] = lstUp;
-    }
-    this.clickToScroll(index + 1, this.GUID, 'S');
-  }
-
-  addNoSession(itemActive, seqNoSession, category) {
-    this.generateGuid();
-    var dataAnswerTemp = {
-      seqNo: 0,
-      answer: 'Tùy chọn 1',
-      other: true,
-      isColumn: false,
-      hasPicture: false,
-    };
-    var tempQuestion = JSON.parse(JSON.stringify(itemActive));
-    if (category == 'T') {
-      tempQuestion.answers = null;
-      tempQuestion.answerType = null;
-      tempQuestion.question = null;
-    } else {
-      tempQuestion.answers = [dataAnswerTemp];
-      tempQuestion.answerType = 'O';
-      tempQuestion.question = 'Câu hỏi';
-    }
-    tempQuestion.seqNo = itemActive.seqNo + 1;
-    tempQuestion.category = category;
-    tempQuestion.recID = this.GUID;
-    this.questions[seqNoSession].children.splice(
-      itemActive.seqNo + 1,
-      0,
-      tempQuestion
-    );
-    this.questions[seqNoSession].children.forEach(
-      (x, index) => (x.seqNo = index)
-    );
-    this.questions[seqNoSession].children[itemActive.seqNo].active = false;
-    this.questions[seqNoSession].children[itemActive.seqNo + 1].active = true;
-    this.itemActive =
-      this.questions[seqNoSession].children[itemActive.seqNo + 1];
-    this.clickToScroll(seqNoSession, this.GUID, category);
-  }
-
-  importQuestion(dataQuestion) {}
-
-  addTitle(dataQuestion) {}
-
-  uploadImage(seqNoSession, dataQuestion, data) {
-    if (dataQuestion) {
-      var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
-      tempQuestion.seqNo = dataQuestion.seqNo + 1;
-      tempQuestion.answerType = null;
-      tempQuestion.question = null;
-      tempQuestion.category = 'P';
-      tempQuestion.recID = data[0].objectID;
-      this.questions[seqNoSession].children.splice(
-        dataQuestion.seqNo + 1,
-        0,
-        tempQuestion
-      );
-      this.questions[seqNoSession].children.forEach(
-        (x, index) => (x.seqNo = index)
-      );
-      this.questions[seqNoSession].children[dataQuestion.seqNo].active = false;
-      this.questions[seqNoSession].children[dataQuestion.seqNo + 1].active =
-        true;
-      this.itemActive =
-        this.questions[seqNoSession].children[dataQuestion.seqNo + 1];
-      // this.clickToScroll(dataQuestion.seqNo + 1);
-    }
-    data[0]['recID'] = data[0].objectID;
-    this.lstEditIV = data;
-    if (this.lstEditIV[0].referType == 'video')
-      this.lstEditIV[0][
-        'srcVideo'
-      ] = `${environment.urlUpload}/${this.lstEditIV[0].urlPath}`;
-    this.change.detectChanges();
-  }
-
-  uploadVideo(dataQuestion) {}
-
-  amountOfRow = 2;
-  clickQuestionMF(seqNoSession, itemQuestion, answerType) {
-    this.generateGuid();
-    var recID = JSON.parse(JSON.stringify(this.GUID));
-    if (answerType) {
-      var data = JSON.parse(
-        JSON.stringify(
-          this.questions[seqNoSession].children[itemQuestion.seqNo]
-        )
-      );
-      data.answerType = answerType;
-      if (
-        answerType == 'O' ||
-        answerType == 'C' ||
-        answerType == 'L' ||
-        answerType == 'R'
-      ) {
-        if (itemQuestion.answerType != 'O' && itemQuestion.answerType != 'C') {
-          data.answers = new Array();
-          let dataAnswerTemp = {
-            recID: recID,
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-          };
-          data.answers.push(dataAnswerTemp);
+  addSV() {
+    this.surveys.title = 'Đăng ký sự kiện';
+    this.surveys.memo = 'Đăng ký sự kiện';
+    this.api
+      .exec('ERM.Business.SV', 'SurveysBusiness', 'SaveAsync', [
+        this.surveys,
+        null,
+        true,
+      ])
+      .subscribe((res) => {
+        if (res) {
         }
-      } else if (answerType == 'O2' || answerType == 'C2') {
-        if (
-          itemQuestion.answerType != 'O2' &&
-          itemQuestion.answerType != 'C2'
-        ) {
-          data.answers = new Array();
-          let dataAnswerR = {
-            recID: recID,
-            seqNo: 0,
-            answer: 'Hàng 1',
-            isColumn: false,
-          };
-          data.answers.push(dataAnswerR);
-          this.generateGuid();
-          let dataAnswerC = {
-            recID: this.GUID,
-            seqNo: 0,
-            answer: 'Cột 1',
-            isColumn: true,
-          };
-          data.answers.push(dataAnswerC);
+      });
+  }
+
+  //Click morefunc
+  clickMF(e:any)
+  {
+    debugger
+    switch(e?.functionID)
+    {
+      //Copy link
+      case "SVT0101":
+        {
+          var url = location.host + "/" + this.user.tenant +  "/forms?funcID=" + this.funcID +"&recID=" + this.recID;
+          navigator.clipboard.writeText(url);
+          this.notifySvr.notifyCode("SYS041");
+          break;
         }
-      }
-      this.questions[seqNoSession].children[itemQuestion.seqNo] = data;
+      //Đóng khảo sát 
+      case "SVT0104":
+        {
+          var obj = 
+          {
+            title: this.title,
+            stop: true,
+          }
+          this.SvService.updateSV(this.recID,obj).subscribe(item=>{
+
+          })
+          break;
+        }
     }
-  }
+  } 
+  // add() {
+  //   var dataAnswerTemp = [
+  //     {
+  //       seqNo: 0,
+  //       answer: `Tùy chọn 1`,
+  //     },
+  //   ];
+  //   this.questions.transID = 'dced3e82-8d71-11ed-9499-00155d035517';
+  //   this.questions.seqNo = 0;
+  //   this.questions.category = 'S';
+  //   this.questions.question = 'Câu hỏi session 1';
+  //   this.questions.answers = null;
+  //   this.questions.answerType = null;
+  //   this.questions.parentID = null;
 
-  addAnswerR(seqNoSession, seqNoQuestion) {
-    this.generateGuid();
-    var dataTemp = JSON.parse(
-      JSON.stringify(
-        this.questions[seqNoSession].children[seqNoQuestion].answers
-      )
-    );
-    var dataAnswerR = dataTemp.filter((x) => !x.isColumn);
-    this.amountOfRow = 0;
-    this.amountOfRow = dataAnswerR.length;
-    var dataAnswerTemp = {
-      recID: this.GUID,
-      seqNo: dataAnswerR.length,
-      answer: `Hàng ${dataAnswerR.length + 1}`,
-      isColumn: false,
-    };
-    dataTemp.push(dataAnswerTemp);
-    this.amountOfRow += 2;
-    this.questions[seqNoSession].children[seqNoQuestion].answers = dataTemp;
-    console.log(
-      'check addAnswerR',
-      this.questions[seqNoSession].children[seqNoQuestion].answers
-    );
-  }
+  //   this.api
+  //     .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
+  //       'dced3e82-8d71-11ed-9499-00155d035517',
+  //       [this.questions],
+  //       true,
+  //     ])
+  //     .subscribe((res) => {
+  //       if (res) {
+  //       }
+  //     });
+  // }
 
-  addAnswerC(seqNoSession, seqNoQuestion) {
-    this.generateGuid();
-    var dataTemp = JSON.parse(
-      JSON.stringify(
-        this.questions[seqNoSession].children[seqNoQuestion].answers
-      )
-    );
-    var dataAnswerR = dataTemp.filter((x) => x.isColumn);
-    var dataAnswerTemp = {
-      recID: this.GUID,
-      seqNo: dataAnswerR.length,
-      answer: `Cột ${dataAnswerR.length + 1}`,
-      isColumn: true,
-    };
-    dataTemp.push(dataAnswerTemp);
-    this.questions[seqNoSession].children[seqNoQuestion].answers = dataTemp;
-    console.log(
-      'check addAnswerC',
-      this.questions[seqNoSession].children[seqNoQuestion].answers
-    );
-  }
-
-  deleteAnswerRC(seqNoSession, seqNoQuestion, itemAnswer, answerType) {
-    var dataTemp = JSON.parse(
-      JSON.stringify(
-        this.questions[seqNoSession].children[seqNoQuestion].answers
-      )
-    );
-    var dataAnswerR = dataTemp.filter((x) => !x.isColumn);
-    var dataAnswerC = dataTemp.filter((x) => x.isColumn);
-    if (answerType == 'row') {
-      dataAnswerR = dataAnswerR.filter((x) => x.recID != itemAnswer.recID);
-      dataAnswerR.forEach((x, index) => {
-        x.seqNo = index;
-      });
-    } else {
-      dataAnswerC = dataAnswerC.filter((x) => x.recID != itemAnswer.recID);
-      dataAnswerC.forEach((x, index) => {
-        x.seqNo = index;
-      });
-    }
-    var dataMerge = [...dataAnswerR, ...dataAnswerC];
-    if (dataMerge.length > 0) {
-      this.questions[seqNoSession].children[seqNoQuestion].answers = dataMerge;
-      console.log(
-        'check deleteAnswerRC',
-        this.questions[seqNoSession].children[seqNoQuestion].answers
-      );
-    }
-  }
-
-  valueFrom = 1;
-  valueTo = 5;
-  changeRating(value, type) {
-    if (type == 'FROM') this.valueFrom = value;
-    else this.valueTo = value;
-  }
-
-  sortSession() {
-    var obj = {
-      data: this.questions,
-    };
-    var dialog = this.callfc.openForm(
-      SortSessionComponent,
-      '',
-      500,
-      600,
-      '',
-      obj
-    );
-    dialog.closed.subscribe((res) => {
-      if (res.event) {
-        this.questions = res.event;
+  getSignalAfterSave() {
+    this.SvService.signalSave.subscribe((res) => {
+      if (res) {
+        this.signal = res;
+        this.detectorRef.detectChanges();
       }
     });
   }
 
-  filterDataColumn(data) {
-    data = data.filter((x) => x.isColumn);
-    return data;
+  onLoading(e) {
+    if (this.view.formModel) {
+      this.views = [
+        {
+          active: true,
+          type: ViewType.content,
+          sameData: true,
+          model: {
+            panelLeftRef: this.panelLeftRef,
+          },
+        },
+      ];
+      this.detectorRef.detectChanges();
+    }
   }
 
-  filterDataRow(data) {
-    data = data.filter((x) => !x.isColumn);
-    return data;
+  onChangeMode(mode) {
+    this.mode = mode;
+    this.detectorRef.detectChanges();
   }
 
-  hideComment(seqNoSession, seqNoQuestion) {
-    this.questions[seqNoSession].children[seqNoQuestion].hideComment = true;
+  onSelected(e: any) {
+    if (e.selectedIndex == 0 && !this.seletedQ) {
+      this.seletedQ = true;
+      this.mode = 'Q';
+    }
+    else if (e.selectedIndex == 1 && !this.seletedA){
+      this.seletedA = true;
+      this.mode = 'A';
+    } 
+    else if (e.selectedIndex == 2 && !this.seletedS) {
+      this.seletedS = true;
+      this.mode = 'S';
+    }
   }
+
+  onSubmit() {}
+
+  back() {
+    // this.captureService.getImage(this.screen.nativeElement, true)
+    // .pipe(
+    //   tap(img => {
+    //     var name = 'Capture_' + this.makeid(10) + '.jpg';
+    //     var file = this.dataURLtoFile(img,name);
+    //     this.ShareService.uploadFileAsync(file,this.user.tenant,this.dmSV.ChunkSizeInKB).then(result=>{
+    //       var fileItem = new FileUpload();
+    //       fileItem.objectID = this.recID;
+    //       fileItem.objectType = this.functionList.entityName;
+    //       fileItem.thumbnail = result.Data?.RelUrlThumb;
+    //       fileItem.uploadId = result.Data?.UploadId; 
+    //       fileItem.urlPath = result.Data?.RelUrlOfServerPath; 
+    //       fileItem.fileSize = file.size;
+    //       fileItem.folderID = "";
+    //       fileItem.fileName = file.name;
+    //       fileItem.extension = "jpg";
+    //       fileItem.permissions = [];
+    //       fileItem.referType = 'avt'
+    //       this.ShareService.addFile(fileItem,"",this.functionList.entityName);
+          
+    //     })
+    //   })
+    // ).subscribe();
+    this.codxService.navigate('SVT01');
+  }
+
+  review() {
+    this.codxService.openUrlNewTab('', 'sv/review', {
+      funcID: this.funcID,
+      recID: this.recID,
+    });
+  }
+
+  onChangeTitle(e:any)
+  {
+    var obj = 
+    {
+      title : e?.data
+    }
+    this.title = e?.data;
+    this.SvService.updateSV(this.recID,obj).subscribe();
+  }
+
+  updateSV()
+  {
+    this.SvService.getSV(this.recID)
+  }
+
+  dataURLtoFile(dataurl : any, filename : any) {
+ 
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), 
+        n = bstr.length, 
+        u8arr = new Uint8Array(n);
+        
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    
+    return new File([u8arr], filename, {type:mime});
+  }
+
+  makeid(length:any) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
+
 }

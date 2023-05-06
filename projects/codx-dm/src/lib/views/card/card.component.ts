@@ -17,6 +17,9 @@ export class CardComponent implements OnInit , OnChanges {
   user: any;
   totalRating: number;
   totalViews: number;
+  favoriteID: any;
+  viewc:number = 0;
+  downc:number = 0;
   @Input() data: any;
   @Input() view: any;
   @Output() viewFile = new EventEmitter<any>();
@@ -24,16 +27,32 @@ export class CardComponent implements OnInit , OnChanges {
     public dmSV: CodxDMService,
     private auth: AuthStore,
     private fileService: FileService,
+    private folderService: FolderService,
     private notificationsService: NotificationsService
   ) {
   }
   ngOnChanges(changes: SimpleChanges): void {
+    debugger
     if(changes["data"] && changes["data"].currentValue != changes["data"].previousValue )
-      this.data = changes["data"].currentValue 
+    {
+      this.data = changes["data"].currentValue ;
+      if(this.data.fileName)
+      {
+        var arrName = this.data.fileName.split(".");
+        if(arrName.length >1)
+          arrName.splice((arrName.length - 1), 1);
+        this.data.fileName = arrName.join('.')  + this.data.extension;
+      }
+    }
+    this.viewc = this.dmSV.getViews(this.data.history); 
+    this.downc = this.dmSV.showDownloadCount(this.data.countDownload)
   }
 
   ngOnInit(): void {
     this.user = this.auth.get();
+    this.favoriteID = this.fileService.options.favoriteID;
+    if(this.data.folderName)
+      this.favoriteID = this.folderService.options.favoriteID;
   }
   
   classRating(rating) {    
@@ -55,10 +74,12 @@ export class CardComponent implements OnInit , OnChanges {
         if(data)
         {
           this.viewFile.emit(data);
+          this.viewc += 1;
         }
       })
     }
     else this.dmSV.clickMF(e, data ,this.view)
+    if(e?.functionID == "DMT0211") this.downc += 1;
   }
   dbView()
   {
@@ -73,5 +94,6 @@ export class CardComponent implements OnInit , OnChanges {
       });
     }
     this.dmSV.openItem(this.data);
+    this.viewc += 1;
   }
 }

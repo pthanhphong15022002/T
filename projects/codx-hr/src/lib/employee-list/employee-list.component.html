@@ -6,9 +6,9 @@
   [button]="button"
   (buttonClick)="btnClick()"
   idField="employeeID"
-  assemblyName="ERM.Business.HR"
-  className="EmployeesBusiness"
-  method="GetModelFormEmployAsync"
+  assemblyName="ERM.Business.Core"
+  className="DataBusiness"
+  method="LoadDataAsync"
   [selectedFirst]="true"
   [itemSelected]="itemSelected"
 >
@@ -53,14 +53,16 @@
         [imgOn]="data?.modifiedOn"
         [imageObjName]="data.employeeName"
         [title]="
-          placeholder(data.employeeName, view.formModel, 'EmployeeName') | async
+          data?.employeeName
+            | formatvalue : view.formModel : 'employeeName'
+            | async
         "
         [subTitle]="
-          placeholder(data.positionName, view.formModel, 'PositionID') | async
+          data?.positionID | formatvalue : view.formModel : 'positionID' | async
         "
         [dataItem]="data"
         [desc]="
-          placeholder(data.birthday | fmDT, view.formModel, 'Birthday') | async
+          data?.birthday | formatvalue : view.formModel : 'birthday' | async
         "
         [footer]="footer"
         [typeMF]="'hover'"
@@ -71,34 +73,20 @@
   </ng-container>
 </ng-template>
 
+
 <ng-template #footer let-data>
   <div class="d-flex align-items-top mt-2">
     <span class="icon-email icon-16 me-2"> </span>
     <span class="text-dark fw-bold">
-      <span #email>{{
-        data.email | formatvalue: view.formModel:"email":email | async
-      }}</span>
+      <span #email [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async"></span>
     </span>
   </div>
   <div class="d-flex align-items-center">
     <span class="icon-phone_android icon-16 me-2"></span>
     <span class="text-dark fw-bold">
-      <span #phone>{{
-        data.phone | formatvalue: view.formModel:"phone":phone | async
-      }}</span>
+      <span #phone [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async"></span>
     </span>
   </div>
-</ng-template>
-
-<ng-template #itemAction let-data>
-  <codx-mfunc
-    [formModel]="view.formModel"
-    [itemSelected]="itemSelected"
-    (clickMF)="clickMF($event, data)"
-    [dataItem]="data"
-    [typeMF]="'hover'"
-  >
-  </codx-mfunc>
 </ng-template>
 
 <ng-template #itemEmployee let-data>
@@ -114,8 +102,8 @@
         >
         </codx-img>
         <div class="d-flex flex-column flex-grow-1">
-          <div class="d-flex align-items-center">
-            <div class="text-dark fw-bold fs-6 me-2 text-nowrap">
+          <div class="d-flex align-items-center mb-1">
+            <div class="text-dark fw-bold fs-6 me-3 text-nowrap">
               {{ data.employeeName }}
             </div>
             <div
@@ -123,44 +111,32 @@
               *ngIf="data.gender"
               [style.background]="data.genderColor"
             >
-              {{ data.gender | vll: "HR001":"text" | async }}
+              {{ data.gender | vll : "HR001" : "text" | async }}
             </div>
           </div>
 
-          <span class="text-dark fw-bold">
-            <span #positionName>{{
-              data.positionName
-                | formatvalue: view.formModel:"positionID":positionName
-                | async
-            }}</span>
+          <span class="text-gray-500 mb-1">
+            <span #positionName [innerHTML]=" data?.positionID
+            | formatvalue : view.formModel : 'positionID'
+            | async"></span>
           </span>
 
-          <span class="text-dark fw-bold">
-            <span #organizationName>{{
-              data.organizationName
-                | formatvalue: view.formModel:"orgUnitID":organizationName
-                | async
-            }}</span>
+          <span class="text-gray-700 mb-1">
+            <span #organizationName [innerHTML]="data?.orgUnitID
+            | formatvalue : view.formModel : 'orgUnitID'
+            | async"></span>
           </span>
 
-          <div>
-            <span class="text-dark fw-bold">
-              <span #departmentName>{{
-                data.departmentName
-                  | formatvalue: view.formModel:"departmentID":departmentName
-                  | async
-              }}</span>
-            </span>
+          <div class="text-gray-700">
+            <span #departmentName [innerHTML]="data?.departmentID
+              | formatvalue : view.formModel : 'departmentID'
+              | async"></span>
 
-            <span class="text-gray-400"> | </span>
+            <span class="text-gray-400 mx-1">|</span>
 
-            <span class="text-dark fw-bold">
-              <span #divisionName>{{
-                data.divisionName
-                  | formatvalue: view.formModel:"divisionID":divisionName
-                  | async
-              }}</span>
-            </span>
+            <span #divisionName [innerHTML]="data?.divisionID
+              | formatvalue : view.formModel : 'divisionID'
+              | async"></span>
           </div>
         </div>
       </div>
@@ -171,28 +147,24 @@
 <ng-template #itemContact let-data>
   <div (dblclick)="doubleClick(data)">
     <div class="d-flex flex-column employee-add">
-      <div class="d-flex align-items-center">
-        <span class="icon-email icon-16 text-gray-800 me-1"></span>
-        <span class="text-dark fw-bold">
-          <span #email>{{
-            data.email | formatvalue: view.formModel:"email":email | async
-          }}</span>
+      <div class="d-flex align-items-center mb-1">
+        <span class="icon-email icon-16 text-gray-600 me-2"></span>
+        <span class="text-gray-700">
+          <span #email [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async"></span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center mb-1">
+        <span class="icon-phone_android icon-16 text-gray-600 me-2"></span>
+        <span class="text-gray-700">
+          <span #phone [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async"></span>
         </span>
       </div>
       <div class="d-flex align-items-center">
-        <span class="icon-phone_android icon-16 text-gray-800 me-1"></span>
-        <span class="text-dark fw-bold">
-          <span #phone>{{
-            data.phone | formatvalue: view.formModel:"phone":phone | async
-          }}</span>
-        </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span class="icon-place icon-16 text-gray-800 me-1"></span>
-        <span class="text-dark fw-bold">
-          <span #street>{{
-            data.street | formatvalue: view.formModel:"street":street | async
-          }}</span>
+        <span class="icon-place icon-16 text-gray-600 me-2"></span>
+        <span class="text-gray-700">
+          <span #street [innerHTML]="            data.street
+          | formatvalue : view.formModel : 'street'
+          | async"></span>
         </span>
       </div>
     </div>
@@ -202,24 +174,22 @@
 <ng-template #itemInfoPersonal let-data>
   <div (dblclick)="doubleClick(data)">
     <div class="d-flex flex-column employee-info">
-      <div class="align-items-center1 fs-7">
-        <span class="text-gray-600 me-1">
+      <div class="align-items-center1 mb-1">
+        <span class="text-gray-700 me-1">
           <codx-label
             name="lblBirthday"
             formName="Employees"
             default="Ngày sinh: "
           ></codx-label>
         </span>
-        <span class="text-dark fw-bold">
-          <span #birthday>{{
-            data.birthday
-              | formatvalue: view.formModel:"birthday":birthday
-              | async
-          }}</span>
+        <span class="text-gray-700">
+          <span #birthday [innerHTML]="data.birthday
+          | formatvalue : view.formModel : 'birthday'
+          | async"></span>
         </span>
       </div>
-      <div class="align-items-center fs-7">
-        <span class="text-gray-600 me-1">
+      <div class="align-items-center mb-1">
+        <span class="text-gray-700 me-1">
           <codx-label
             name="lblBirthPlace"
             formName="Employees"
@@ -227,15 +197,13 @@
           ></codx-label>
         </span>
 
-        <span class="text-dark fw-bold">
-          <span #birthPlace>{{
-            data.provinceName
-              | formatvalue: view.formModel:"birthPlace":birthPlace
-              | async
-          }}</span>
+        <span class="text-gray-700">
+          <span #birthPlace [innerHTML]="data?.birthPlace
+          | formatvalue : view.formModel : 'birthPlace'
+          | async"></span>
         </span>
       </div>
-      <div class="align-items-center fs-7">
+      <div class="align-items-center">
         <span class="text-gray-600 me-1">
           <codx-label
             name="lblEducation"
@@ -245,11 +213,9 @@
         </span>
 
         <span class="text-dark fw-bold">
-          <span #education>{{
-            data.education
-              | formatvalue: view.formModel:"education":education
-              | async
-          }}</span>
+          <span #education [innerHTML]="data.education
+          | formatvalue : view.formModel : 'education'
+          | async"></span>
         </span>
       </div>
     </div>
@@ -257,18 +223,17 @@
 </ng-template>
 
 <ng-template #itemStatusName let-data>
-  <div (dblclick)="doubleClick(data)">
+  <div (dblclick)="doubleClick(data)" class="w-100 has-action-menu">
     <div class="d-flex flex-column employee-info">
-      <div class="d-flex">
+      <div class="d-flex mb-1">
         <span
-          class="badge badge-success badge-sm badge-inline"
-          [style.background]="data.statusColor"
-        >
-          {{ data.statusName }}
-        </span>
+        [ngClass]="data.status == 50 ? 'badge badge-success badge-sm badge-inline' : 'badge badge-secondary badge-sm badge-inline' "
+        [innerHTML]="data.status | formatvalue : view.formModel : 'status' | async"
+       >
+       </span>
       </div>
 
-      <div class="align-items-center fs-7 mt-1">
+      <div class="align-items-center mb-1">
         <span class="text-gray-600 me-1">
           <codx-label
             name="lblJoinedOn"
@@ -279,15 +244,13 @@
         </span>
         <ng-container *ngIf="data.joinedOn">
           <span class="text-gray-800">
-            <span #joinedOn>{{
-              data.joinedOn
-                | formatvalue: view.formModel:"joinedOn":joinedOn
-                | async
-            }}</span>
+            <span #joinedOn [innerHTML]="data.joinedOn
+            | formatvalue : view.formModel : 'joinedOn'
+            | async"></span>
           </span>
         </ng-container>
       </div>
-      <div class="align-items-center fs-7">
+      <div class="align-items-center">
         <span class="text-gray-600 me-1">
           <codx-label
             name="lblSenioritydate"
@@ -296,8 +259,17 @@
           >
           </codx-label>
         </span>
-        <span>{{ data.senioritydate | timeAgo }}</span>
+        <span
+        >{{ data.senioritydate | timeAgo }}</span>
       </div>
     </div>
+    <codx-mfunc
+    [formModel]="view.formModel"
+    [itemSelected]="itemSelected"
+    (clickMF)="clickMF($event, data)"
+    [dataItem]="data"
+    type="hover"
+  >
+  </codx-mfunc>
   </div>
 </ng-template>

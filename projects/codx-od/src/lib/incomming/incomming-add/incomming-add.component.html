@@ -4,16 +4,16 @@
 <ng-template #subHeader>
   <div class="d-flex align-items-center">
     <div *ngIf="
-        this.dispatch?.status == '1' || this.dispatch?.status == '2';
+        this.dispatch?.status == '1' || this.dispatch?.status == '2' || this.dispatch?.status == '4';
         else elseSelected
       ">
       <span class="btn btn-sm btn-primary btn-pill" (click)="openFormUploadFile()">
-        <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
+        <i class="icon-cloud_upload icon-16 me-2"></i><codx-label default="Chọn tệp tin" fiedName="lblSelectFile" [formName]="formModel?.formName"> </codx-label>
       </span>
     </div>
     <ng-template #elseSelected>
       <span class="btn btn-sm btn-light btn-pill">
-        <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
+        <i class="icon-cloud_upload icon-16 me-2"></i><codx-label default="Chọn tệp tin" fiedName="lblSelectFile" [formName]="formModel?.formName"> </codx-label>
       </span>
     </ng-template>
   </div>
@@ -21,13 +21,12 @@
 </ng-template>
 <ng-template popup adde #body>
   <div class="py-2">
-    <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0"
-      hideBtnSave="1" hideFolder="1" hideUploadBtn="1" hideDes="1" [functionID]="formModel?.funcID"
-      (fileAdded)="fileAdded($event)" (fileDelete)="handleDelete($event)" (fileCount)="getfileCount($event)"
-      (fileGet)="getfileCount($event)" isDeleteTemp="1" [objectId]="dispatch?.recID" [allowMultiFile]="0"
-      [idBrowse]="'add'" [hideDelete]="
-        this.dispatch?.status == '1' || this.dispatch?.status == '2' ? '1' : '0'
-      " hideMoreF="0">
+    <codx-attachment #attachment hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+      hideDes="1" (fileAdded)="fileAdded($event)" (fileDelete)="handleDelete($event)" (fileCount)="getfileCount($event)"
+      (fileGet)="getfileCount($event)" isDeleteTemp="1" [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="
+        this.dispatch?.status == '1' || this.dispatch?.status == '2' || this.dispatch?.status == '4' ? '0' : '1'
+      " hideMoreF="0" [permissions]="dispatch?.relations" [addPermissions]="listPermission" [formModel]="formModel" [dataSelected]="dispatch"
+      [idField]="'RecID'" [referType]="'source'" [objectType]="formModel?.entityName">
     </codx-attachment>
   </div>
   <div class="tab-horizone form-group">
@@ -54,9 +53,8 @@
         (valueChange)="changeValueAgencyText($event)"
       >
       </codx-input> -->
-      <codx-label></codx-label>
-      <span class="btn btn-primary btn-32 ms-2" (click)="openFormAgency('agency')">
-        <codx-label [default]="'Thêm'" [fiedName]="'lblAdd'"></codx-label>
+      <span *ngIf="(dispatch.dispatchType == '1' || dispatch.dispatchType == '4')" class="btn btn-primary btn-32 ms-2" (click)="openFormAgency('agency')">
+        <codx-label [default]="'Thêm'" [fiedName]="'lblAdd'" [formName]="formModel?.formName"></codx-label>
       </span>
     </div>
     <div class="align-items-start" style="display:flex" [hidden]="!showAgency">
@@ -64,15 +62,23 @@
         (valueChange)="changeValueDept($event)">
       </codx-input>
       <span class="btn btn-primary btn-32 ms-2" (click)="openFormAgency('dept')">
-        <codx-label [default]="'Thêm'" [fiedName]="'lblAdd'"></codx-label>
+        <codx-label [default]="'Thêm'" [fiedName]="'lblAdd'" [formName]="formModel?.formName"></codx-label>
       </span>
+    </div>
+  </div>
+  <div class="row form-group">
+    <div class="col-12">
+      <codx-label [formModel]="form.formModel" fiedName="ContactName" class="fw-bold"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="contactName"
+        >
+      </codx-input>
     </div>
   </div>
   <div class="row form-group">
     <div class="col-6">
       <codx-label [formModel]="form.formModel" fiedName="CategoryID" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="categoryID"
-        (valueChange)="changeCbb($event)">
+        (valueChange)="changeCbb($event)" [disabled]="(formModel?.funcID == 'ODT41' && type == 'edit' && dispatch?.approveStatus == '3')?true:false">
       </codx-input>
     </div>
     <div class="col-6">
@@ -81,12 +87,13 @@
       </codx-input>
     </div>
   </div>
+
   <div class="row form-group">
     <div class="col-6">
-      <codx-label [formModel]="form.formModel" fiedName="DispatchNo" class="fw-bold"></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="DispatchNo" class="fw-bold"></codx-label> <span *ngIf="!keyField" class="text-danger">*</span>
       <!-- Bùa r nhờ Quang fix sau -->
       <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate" [format]="'d'">   </codx-input>-->
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchNo" [disabled]="true">
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchNo" [disabled]="keyField">
       </codx-input>
     </div>
     <div class="col-6">
@@ -123,13 +130,13 @@
     <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="title" class="h-105px">
     </codx-input>
   </div>
-  <div class="form-group row">
-    <div class="col-6">
+  <div class="form-group row" *ngIf="gridViewSetup && gridViewSetup['Urgency'].allowPopup == '1' && gridViewSetup['Security'].allowPopup == '1'">
+    <div class="col" *ngIf="gridViewSetup['Urgency'].allowPopup == '1'">
       <codx-label [formModel]="form.formModel" fiedName="Urgency" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="urgency">
       </codx-input>
     </div>
-    <div class="col-6">
+    <div class="col" *ngIf="gridViewSetup['Security'].allowPopup == '1'">
       <codx-label [formModel]="form.formModel" fiedName="Security" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="security">
       </codx-input>
@@ -137,26 +144,42 @@
   </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="departmentID" class="fw-bold"></codx-label>
-    <div class="d-flex">
-      <codx-input type="Combobox" name="combobox" [refValue]="
+    <!-- <codx-input type="Combobox" name="combobox" [refValue]="
           gridViewSetup != null ? gridViewSetup['DepartmentID']['referedValue'] : null
-        " refType="P" field="departmentID" [showInput]="true" [crrValue]="dispatch?.departmentID" [ngClass]="'w-100'"
+        " refType="P"  [showInput]="true" [crrValue]="dispatch?.departmentID" [ngClass]="'w-100'"
         (valueChange)="changeValueBUID($event)">
-      </codx-input>
-    </div>
+      </codx-input> -->
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup" [ngClass]="'w-100'" field="departmentID"
+      (valueChange)="changeValueBUID($event)">
+    </codx-input>
   </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Owner"
-      [default]="form.formModel.funcID == 'ODT41' ? 'Người gửi' : null"></codx-label>
-    <div class="d-flex">
-      <codx-input type="Combobox" name="combobox" [refValue]="
+      [default]="dispatch?.dispatchType == '2' ? 'Người gửi' : null"></codx-label>
+    <!-- <codx-input type="Combobox" name="combobox" [refValue]="
           gridViewSetup != null ? gridViewSetup['Owner']['referedValue'] : null
-        " [multiple]="false" [crrValue]="this.dispatch.owner" [showInput]="true" refType="P" field="popup"
+        " [multiple]="false" [crrValue]="this.dispatch.owner" [showInput]="true" refType="P"
         [ngClass]="'w-100'" (valueChange)="changeValueOwner($event)">
-      </codx-input>
-    </div>
+      </codx-input> -->
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="owner" [ngClass]="'w-100'"
+      (valueChange)="changeValueOwner($event)">
+    </codx-input>
   </div>
-  <div class="form-group row form-group">
+  <div class="form-group">
+    
+      <codx-label fiedName="lblodshare" [default]="'Người được chia sẻ'" [formName]="form.formModel.formName"></codx-label>
+      <!-- <codx-input type="Combobox" name="combobox" [refValue]="
+            gridViewSetup != null ? gridViewSetup['Owner']['referedValue'] : null
+          " [multiple]="false" [crrValue]="this.dispatch.owner" [showInput]="true" refType="P"
+          [ngClass]="'w-100'" (valueChange)="changeValueOwner($event)">
+        </codx-input> -->
+      <div class="border-bottom border-gray-150 py-1">
+        <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="true"
+            refType="P" field="popup" [ngClass]="'w-100 od-ip-share'" [crrValue]="lrelations" (valueChange)="changeDataShare($event)">
+        </codx-input>
+      </div>
+  </div>
+  <div class="row form-group">
     <div class="col">
       <codx-label [formModel]="form.formModel" fiedName="SendMode"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="sendMode"></codx-input>
@@ -168,7 +191,7 @@
         (valueChange)="valueChangeDate($event)">
       </codx-input>
     </div>
-    <div class="col" *ngIf="form.formModel.funcID != 'ODT41'">
+    <div class="col" *ngIf="form.formModel.funcID != 'ODT41' && gridViewSetup && gridViewSetup['Deadline'].allowPopup == '1'">
       <codx-label [formModel]="form.formModel" fiedName="Deadline"></codx-label>
       <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deadline" [format]="'d'">
       </codx-input> -->
@@ -180,12 +203,12 @@
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button class="btn btn-primary" (click)="onSave()">Lưu</button>
+    <button class="btn btn-primary" (click)="onSave()"><codx-label [formName]="form.formModel.formName" fiedName="lblSave" default="Lưu"></codx-label></button>
   </div>
 </ng-template>
 <ng-template #tmpagency let-dialog>
-  <app-od-agency [dialog]="dialog" [data]="data"></app-od-agency>
+  <app-od-agency [dialog]="dialog" [data]="data" [formModel]="formModel"></app-od-agency>
 </ng-template>
 <ng-template #tmpdept let-dialog>
-  <app-od-department></app-od-department>
+  <app-od-department [dialog]="dialog" [agencyID]="data?.agencyID" [formModel]="formModel"></app-od-department>
 </ng-template>

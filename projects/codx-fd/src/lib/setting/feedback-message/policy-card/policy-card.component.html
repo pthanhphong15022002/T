@@ -67,8 +67,15 @@
                         </codx-input>
                     </span>
                     <span class="setting-btnright">
-                        <span class="icon-edit-one text-hover-primary icon-18"
-                            (click)="openPopupCbb(UserGroups)"></span>
+                        <ng-container
+                            *ngIf="quantity.ApprovalControl || quantity.ApprovalControl === '1'; else noPopupApprovalControl">
+                            <span class="icon-edit-one text-hover-primary icon-18"
+                                (click)="openPopupCbb(UserGroups)"></span>
+                        </ng-container>
+                        <ng-template #noPopupApprovalControl>
+                            <span class="icon-edit-one text-hover-primary icon-18"></span>
+                        </ng-template>
+
                     </span>
                 </div>
             </div>
@@ -93,7 +100,13 @@
                     </codx-input>
                 </span>
                 <span class="setting-btnright">
-                    <span class="icon-edit-one text-hover-primary icon-18" (click)="open(content, 0)"></span>
+                    <ng-container
+                        *ngIf="quantity.MaxSendControl || quantity.MaxSendControl == '1'; else noPopupMaxSendControl">
+                        <span class="icon-edit-one text-hover-primary icon-18" (click)="open(content, 0)"></span>
+                    </ng-container>
+                    <ng-template #noPopupMaxSendControl>
+                        <span class="icon-edit-one text-hover-primary icon-18"></span>
+                    </ng-template>
                 </span>
             </div>
         </div>
@@ -117,7 +130,14 @@
                     </codx-input>
                 </span>
                 <span class="setting-btnright">
-                    <span class="icon-edit-one text-hover-primary icon-18" (click)="open(content, 1)"></span>
+                    <ng-container
+                        *ngIf="quantity.MaxReceiveControl || quantity.MaxReceiveControl === '1'; else noPopupMaxReceiveControl">
+                        <span class="icon-edit-one text-hover-primary icon-18" (click)="open(content, 1)"></span>
+                    </ng-container>
+                    <ng-template #noPopupMaxReceiveControl>
+                        <span class="icon-edit-one text-hover-primary icon-18"></span>
+                    </ng-template>
+
                 </span>
 
             </div>
@@ -141,9 +161,15 @@
                     </codx-input>
                 </span>
                 <span class="setting-btnright">
-                    <span class="icon-edit-one text-hover-primary icon-18" (click)="open(content, 2)"></span>
-                </span>
+                    <ng-container
+                        *ngIf="quantity.MaxPointControl || quantity.MaxPointControl === '1'; else noPopupMaxPointControl">
+                        <span class="icon-edit-one text-hover-primary icon-18" (click)="open(content, 2)"></span>
+                    </ng-container>
+                    <ng-template #noPopupMaxPointControl>
+                        <span class="icon-edit-one text-hover-primary icon-18"></span>
+                    </ng-template>
 
+                </span>
             </div>
         </div>
         <div class="d-flex align-items-start py-4" *ngIf="item.fieldName == 'MaxPointPerOnceControl'">
@@ -163,7 +189,13 @@
                     </codx-input>
                 </span>
                 <span class="setting-btnright">
-                    <span class="icon-edit-one text-hover-primary icon-18" (click)="open(content, 3)"></span>
+                    <ng-container
+                        *ngIf="quantity.MaxPointPerOnceControl || quantity.MaxPointPerOnceControl === '1'; else noPopupMaxPointPerOnceControl">
+                        <span class="icon-edit-one text-hover-primary icon-18" (click)="open(content, 3)"></span>
+                    </ng-container>
+                    <ng-template #noPopupMaxPointPerOnceControl>
+                        <span class="icon-edit-one text-hover-primary icon-18"></span>
+                    </ng-template>
                 </span>
             </div>
         </div>
@@ -186,7 +218,7 @@
             </div>
         </div>
         <div class="d-flex align-items-start py-4 border-bottom border-light"
-            *ngIf="item.fieldName == 'PolicyControl' && quantity?.PolicyControl!==''">
+            *ngIf="item.fieldName == 'PolicyControl' && quantity?.PolicyControl !== ''">
             <div class="d-flex flex-column flex-grow-1">
                 <div class="text-dark fw-bold fs-6">
                     {{item.title}}
@@ -207,17 +239,18 @@
     </div>
 </ng-container>
 <ng-template #content let-modal>
-    <div class="modal-header">
+    <div class="modal-header p-5">
         <h4 class="modal-title" id="modal-basic-title">{{ modelForm.title }}</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <button type="button" class="btn btn-icon btn-sm btn-white" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span class="icon-close icon-18"></span>
         </button>
     </div>
     <div class="modal-body">
-        <div class="row form-group">
-            <div class="col-xl-3 col-md-3">
+        <div class="form-group">
+            <div class="mb-1">
                 <codx-label name="lblQuantity" [formModel]="formModel" [default]="'Số lượng'"></codx-label>
             </div>
-            <div class="col-xl-9 col-md-9">
+            <div class="">
                 <codx-input [crrValue]="modelForm.quantity" type="number" min="1" class="form-control"
                     [showSpinButton]="false" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                     placeholder="3" (valueChange)="valueChangeQuantity($event)">
@@ -225,21 +258,18 @@
             </div>
         </div>
 
-        <div class="row form-group" *ngIf="modelForm.type == 0 || modelForm.type == 1 || modelForm.type == 2">
-            <div class="col-xl-3 col-md-3">
+        <div class="form-group" *ngIf="modelForm.type == 0 || modelForm.type == 1 || modelForm.type == 2">
+            <div class="mb-1">
                 <codx-label name="lblCycle" [formModel]="formModel" [default]="'Chu kỳ'"></codx-label>
             </div>
-            <div class="col-xl-9 col-md-9">
-                <div class="lv-control">
-                    <codx-input type="valuelist" class="control-vll w-338px" placeholder="" refValue="L1435"
-                        field="edit" [crrValue]="modelForm.cycle"
-                        (valueChange)="changValueListPopup($event,modelForm.type)">
-                    </codx-input>
-                </div>
+            <div class="lv-control">
+                <codx-input type="valuelist" class="control-vll w-338px" placeholder="" refValue="L1435" field="edit"
+                    [crrValue]="modelForm.cycle" (valueChange)="changValueListPopup($event,modelForm.type)">
+                </codx-input>
             </div>
         </div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer px-5 py-4">
         <button type="button" class="btn btn-primary" (click)="onSavePopup(modelForm.type)"
             (click)="modal.close('Save click')">
             {{'Lưu' | lang:'PolicyCard':'lblSave' | async}}

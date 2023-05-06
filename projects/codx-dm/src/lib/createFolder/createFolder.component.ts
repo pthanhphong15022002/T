@@ -152,8 +152,9 @@ export class CreateFolderComponent implements OnInit {
   approval = false;
   revision = false;
   physical = false;
+  viewThumb = false;
   copyrights: any;
-  copyrightsControl: any;
+  copyrightsControl: any = false;
   approvers: string;
   revisionNote: string;
   location: string;
@@ -220,7 +221,7 @@ export class CreateFolderComponent implements OnInit {
   titleSetting = 'Thiết lập';
   titleLevel = 'Cấp thư mục';
   titleCreateSubFolder = 'Tạo thư mục cấp con tự động';
-  titleAvatar = "Hiển thị hình ảnh tập tin"
+  titleAvatar = 'Hiển thị hình ảnh tập tin';
   titleSecurityControl = 'Bảo mật';
   copymessage = 'Bạn có muốn lưu lên không ?';
   renamemessage = 'Bạn có muốn lưu với tên {0} không ?';
@@ -253,6 +254,7 @@ export class CreateFolderComponent implements OnInit {
   objectUpdate = {};
   fieldUpdate = '';
   showPopup = false;
+  edit = false;
   constructor(
     private folderService: FolderService,
     private api: ApiHttpService,
@@ -270,8 +272,9 @@ export class CreateFolderComponent implements OnInit {
     this.user = this.auth.get();
     this.dialog = dialog;
     this.titleDialog = data.data.title;
-    this.id = data.data.id;
+    this.id = data.data.id ?? this.dmSV.folderID;
     this.propertiesFolder = data.data.readonly;
+    if (data.data.id) this.edit = true;
     this.openForm();
     // if (this.fileEditing  == null) {
     //   this.fileEditing  = new FileUpload;
@@ -283,7 +286,7 @@ export class CreateFolderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.refesh();
+    //this.refesh();
     //  this.openForm();
     this.dmSV.isFileEditing.subscribe((item) => {
       if (item) {
@@ -292,15 +295,7 @@ export class CreateFolderComponent implements OnInit {
       }
     });
 
-    this.dmSV.isLocation.subscribe((item) => {
-      if (item) {
-        this.location = item;
-        if (this.fileEditing === undefined) this.fileEditing = new FileUpload();
-        this.fileEditing.location = item;
-        this.changeDetectorRef.detectChanges();
-      }
-    });
-
+    if (!this.dmSV.folderId) this.refesh();
     // this.dmSV.isListSubFolder.subscribe((item) => {
     //   this.listSubFolder = item;
     //   if (this.fileEditing === undefined) this.fileEditing = new FileUpload();
@@ -338,8 +333,7 @@ export class CreateFolderComponent implements OnInit {
       this.listFormat4 = res.datas;
     });
   }
-  refesh()
-  {
+  refesh() {
     this.revision = false;
     this.physical = false;
     this.copyrightsControl = false;
@@ -359,11 +353,11 @@ export class CreateFolderComponent implements OnInit {
     }
   }
 
-  allpyShare($event) { }
+  allpyShare($event) {}
 
   changeValueOwner($event) {
     this.showPopup = false;
-    this.approvers = $event.id
+    this.approvers = $event.id;
     // this.api.execSv("SYS","AD","UserGroupsBusiness","GetListMemberIDByGroupIDAsync",$event.id).subscribe(item=>{
     //   if(item)
     //     this.approvers = item[0]
@@ -372,86 +366,145 @@ export class CreateFolderComponent implements OnInit {
   }
 
   openForm() {
-    var that = this;
-    this.showAll = false;
-    if (that.id != '' && this.id != null) {
-      this.noeditName = false;
-      this.folderService.getFolder(this.id).subscribe(async (res) => {
-        this.checkPermission();
-        this.fileEditing = res;
-        this.assignRight = res.assign;
-        this.folderName = res.folderName;
-        this.id = res.recID;
-        this.icon = res.icon;
-        this.listSubFolder = this.fileEditing.subFolder;
-        //  this.checkSecurity = this.fileEditing.checkSecurity;
-        if (this.fileEditing.hasSubFolder == true) {
-          this.createSubFolder = true;
-        } else {
-          this.createSubFolder = false;
-        }
-        this.revision = this.fileEditing.revision;
-        this.physical = this.fileEditing.physical;
-        this.copyrightsControl = res.copyrights;
-        this.approval = this.fileEditing.approval;
-        this.security = this.fileEditing.checkSecurity;
-        this.location = this.fileEditing.location;
-        this.approvers = this.fileEditing.approvers;
-        this.revisionNote = this.fileEditing.revisionNote;
-        if (
-          this.fileEditing.location != null &&
-          this.fileEditing.location != ''
-        ) {
-          let list = this.fileEditing.location.split('|');
-          this.floor = list[0];
-          this.range = list[1];
-          this.shelf = list[2];
-          this.compartment = list[3];
-        } else {
-          this.location = '';
-          // this.approvers = "";
-          // this.revisionNote = "";
+    this.showAll = true;
+    this.folderService.getFolder(this.id).subscribe(async (res) => {
+      if (res) {
+        this.setFolderAS(res);
+        if (this.edit) {
+          this.noeditName = false;
+          this.checkPermission();
+          this.fileEditing = res;
+          this.assignRight = res.assign;
+          this.folderName = res.folderName;
+          this.id = res.recID;
+          this.icon = res.icon;
+          this.listSubFolder = this.fileEditing.subFolder;
+          //  this.checkSecurity = this.fileEditing.checkSecurity;
+          if (this.fileEditing.hasSubFolder == true) this.createSubFolder = true;
+          else this.createSubFolder = false;
+
+          if (this.fileEditing.location) 
+          {
+            let list = this.fileEditing.location.split('|');
+            this.floor = list[0];
+            this.range = list[1];
+            this.shelf = list[2];
+            this.compartment = list[3];
+          } else {
+            this.location = '';
+            // this.approvers = "";
+            // this.revisionNote = "";
+            this.floor = '';
+            this.range = '';
+            this.shelf = '';
+            this.compartment = '';
+          }
+          //  that.icon = "";
+          //    this.openFileDialog('dms_folder');
+          //this.validate('folderName');
+          this.changeDetectorRef.detectChanges();
+        } 
+        else {
+          this.noeditName = false;
+          //this.folderName = "";
           this.floor = '';
           this.range = '';
           this.shelf = '';
           this.compartment = '';
+          this.modeSharing = false;
+          this.fileEditing = new FileUpload();
+          this.fileEditing.folderID = res.recID;
+          this.fileEditing.permissions = res.permissions;
+
+          
+          var check = this.fileEditing.permissions.filter(x=>x.objectType == "1")
+          if(check.length == 0)
+          {
+            var check2 = this.fileEditing.permissions.filter(x=> x.objectID == this.user.userID)
+            if(check2 && check2.length > 0) this.fileEditing.permissions = this.fileEditing.permissions.filter(x=>x.id != check2[0].id)
+            var perm = new Permission();
+            perm.objectType = '1';
+            perm.objectID = this.user.userID;
+            perm.objectName = 'Owner (' + this.user.userName + ')';
+            perm.isSystem = true;
+            perm.isActive = true;
+            perm.isSharing = false;
+            perm.read = true;
+            perm.download = true;
+            perm.full = true;
+            perm.share = true;
+            perm.update = true;
+            perm.create = true;
+            perm.delete = true;
+            perm.upload = true;
+            perm.assign = true;
+            this.fileEditing.permissions.push(perm);
+          }
+          
+        
+          
+          this.startDate = null;
+          this.endDate = null;
+          if (this.parentFolder != null) {
+            this.fileEditing.permissions = [];
+            this.fileEditing.permissions = JSON.parse(
+              JSON.stringify(this.parentFolder.permissions)
+            );
+          }
+          this.checkPermission();
+          // this.fileEditing.permissions = this.addPermissionForRoot(
+          //   this.fileEditing.permissions
+          // );
+          this.icon = '';
+          this.changeDetectorRef.detectChanges();
         }
-        //  that.icon = "";
-        //    this.openFileDialog('dms_folder');
-        //this.validate('folderName');
-        this.changeDetectorRef.detectChanges();
-      });
-    } else {
-      this.noeditName = false;
-      //this.folderName = "";
-      this.security = false;
-      this.revision = this.dmSV.parentRevision;
-      this.physical = this.dmSV.parentPhysical;
-      this.copyrightsControl = this.dmSV.parentCopyrights;
-      this.approval = this.dmSV.parentApproval;
-      this.location = this.dmSV.parentLocation;
-      this.approvers = this.dmSV.parentApprovers;
-      this.revisionNote = this.dmSV.parentRevisionNote;
-      this.floor = '';
-      this.range = '';
-      this.shelf = '';
-      this.compartment = '';
-      this.fileEditing = new FileUpload();
-      //alert(1);
-      this.startDate = null;
-      this.endDate = null;
-      if (this.parentFolder != null) {
-        this.fileEditing.permissions = [];
-        this.fileEditing.permissions = JSON.parse(
-          JSON.stringify(this.parentFolder.permissions)
+      } else {
+        this.noeditName = false;
+        //this.folderName = "";
+        this.security = false;
+        this.revision =  false;//this.dmSV.parentRevision;
+        this.physical = false;//this.dmSV.parentPhysical;
+        this.copyrightsControl =  false ;//this.dmSV.parentCopyrights;
+        this.approval =  false;//this.dmSV.parentApproval;
+        this.viewThumb = false;
+        this.location = ""; //this.dmSV.parentLocation;
+        this.approvers = ""; //this.dmSV.parentApprovers;
+        this.revisionNote = ""; //this.dmSV.parentRevisionNote;
+        this.floor = '';
+        this.range = '';
+        this.shelf = '';
+        this.compartment = '';
+        this.fileEditing = new FileUpload();
+        //alert(1);
+        this.startDate = null;
+        this.endDate = null;
+        if (this.parentFolder != null) {
+          this.fileEditing.permissions = [];
+          this.fileEditing.permissions = JSON.parse(
+            JSON.stringify(this.parentFolder.permissions)
+          );
+        }
+        this.checkPermission();
+        this.fileEditing.permissions = this.addPermissionForRoot(
+          this.fileEditing.permissions
         );
+        this.icon = '';
+        this.changeDetectorRef.detectChanges();
       }
-      this.checkPermission();
-      this.fileEditing.permissions = this.addPermissionForRoot(
-        this.fileEditing.permissions
-      );
-      this.icon = '';
-    }
+    });
+  }
+
+  setFolderAS(data: any) {
+    this.revision = data?.revision == null ? false : data?.revision;
+    this.physical = data?.physical == null ? false : data?.physical;
+    this.copyrightsControl = data?.copyrights  == null ? false : data?.copyrights;
+    this.approval = data?.approval == null ? false : data?.approval;
+    this.security = data?.checkSecurity == null ? false : data?.checkSecurity;
+    this.location = data?.location == null ? "" : data?.location;
+    this.approvers = data?.approvers == null ? "" : data?.approvers;
+    this.revisionNote = data?.revisionNote == null ? "" : data?.revisionNote;
+    this.viewThumb = data?.viewThumb == null ? false : data?.viewThumb;
+    this.changeDetectorRef.detectChanges();
   }
 
   onSaveRightChanged($event, ctrl) {
@@ -488,7 +541,7 @@ export class CreateFolderComponent implements OnInit {
         this.assign = value;
         break;
       case 'titleAvatar':
-        this.fileEditing.viewThumb = value;
+        this.viewThumb = value;
         break;
     }
     this.changeDetectorRef.detectChanges();
@@ -566,7 +619,10 @@ export class CreateFolderComponent implements OnInit {
 
   onFolderSave() {
     this.errorshow = true;
-    if (this.approval && (this.approvers == '' || this.approvers == undefined)) {
+    if (
+      this.approval &&
+      (this.approvers == '' || this.approvers == undefined)
+    ) {
       this.notificationsService.notify(this.titleApprovalName);
       return;
     }
@@ -577,14 +633,13 @@ export class CreateFolderComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-    debugger;
     this.folderName = this.folderName.trim();
     this.fileEditing.folderName = this.folderName;
     this.fileEditing.approval = this.approval;
     this.fileEditing.revision = this.revision;
     this.fileEditing.physical = this.physical;
     this.fileEditing.copyrightsControl = this.copyrightsControl;
-    this.fileEditing.folderID = this.dmSV.getFolderId();
+    this.fileEditing.folderID = this.dmSV.folderID;
     this.fileEditing.recID = this.id;
     this.fileEditing.location = this.location;
     this.fileEditing.hasSubFolder = this.createSubFolder;
@@ -593,16 +648,19 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.revisionNote = this.revisionNote;
     this.fileEditing.icon = this.icon;
     this.fileEditing.subFolder = this.listSubFolder;
+    this.fileEditing.viewThumb = this.viewThumb;
     var that = this;
-    if (this.id == '' || this.id == null) {
+    if (!this.edit) {
       this.fileEditing.folderType = this.dmSV.idMenuActive;
       this.folderService.addFolder(this.fileEditing).subscribe(async (res) => {
         if (res.status == 0) {
           var folders = this.dmSV.listFolder;
           if (folders == null) folders = [];
           folders.push(Object.assign({}, res.data));
+          this.fileEditing = res.data;
+          this.setFolderAS(this.fileEditing);
           that.dmSV.listFolder = folders;
-          that.dmSV.ChangeData.next(true);
+          that.dmSV.ChangeDataView.next(true);
           that.dmSV.addFolder.next(res.data);
           that.changeDetectorRef.detectChanges();
           this.dialog.close();
@@ -635,7 +693,9 @@ export class CreateFolderComponent implements OnInit {
               folders[index] = item.data;
             }
             that.dmSV.listFolder = folders;
-            that.dmSV.ChangeData.next(true);
+            //that.dmSV.ChangeData.next(true);
+            //that.dmSV.ChangeOneFolder.next(folders[index]);
+            that.dmSV.parentFolder.next(item?.data);
             that.dmSV.nodeChange.next(folders[index]);
             that.changeDetectorRef.detectChanges();
             this.modalService.dismissAll();
@@ -673,7 +733,7 @@ export class CreateFolderComponent implements OnInit {
                         }
                         that.dmSV.listFolder = folders;
                         that.dmSV.ChangeData.next(true);
-                        this.dmSV.fileEditing.next(null)
+                        this.dmSV.fileEditing.next(null);
                         this.dialog.close();
                       } else {
                         // $('#fullName').addClass('form-control is-invalid');
@@ -688,7 +748,7 @@ export class CreateFolderComponent implements OnInit {
               });
           } else {
             this.notificationsService.notify(item.message);
-            this.dmSV.fileEditing.next(null)
+            this.dmSV.fileEditing.next(null);
             this.dialog.close();
           }
         });
@@ -725,12 +785,10 @@ export class CreateFolderComponent implements OnInit {
       [this.functionID, this.indexSub, this.subitem, this.listSubFolder],
       ''
     );
-    dialog.closed.subscribe(item=>{
-      if(item.event)
-      debugger;
-        this.listSubFolder = item.event;
+    dialog.closed.subscribe((item) => {
+      if (item.event) this.listSubFolder = item.event;
       this.changeDetectorRef.detectChanges();
-    })
+    });
   }
 
   onDeleteSub(index) {
@@ -759,21 +817,23 @@ export class CreateFolderComponent implements OnInit {
       [this.functionID, this.indexSub, this.subitem, this.listSubFolder],
       ''
     );
-    dialog.closed.subscribe(item=>{
-      if(item.event) this.listSubFolder = item.event
+    dialog.closed.subscribe((item) => {
+      if (item.event) this.listSubFolder = item.event;
       this.changeDetectorRef.detectChanges();
-    })
+    });
   }
 
   removeUserRight(index) {
-    this.fileEditing.permissions = this.fileEditing.permissions.filter(x=>x.id != this.fileEditing.permissions[index].id);
+    this.fileEditing.permissions = this.fileEditing.permissions.filter(
+      (x) => x.id != this.fileEditing.permissions[index].id
+    );
     // this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
     //   if (res) {
     //     this.dmSV.fileEditing.next(this.fileEditing);
     //     this.notificationsService.notify(res.message);
     //   }
     // });
-   }
+  }
 
   isShowAll(action = false) {
     if (action) this.showAll = !this.showAll;
@@ -812,7 +872,7 @@ export class CreateFolderComponent implements OnInit {
   }
 
   openPhysical() {
-    this.callfc.openForm(
+    let dialog = this.callfc.openForm(
       PhysicalComponent,
       this.titleDialogPHysical,
       450,
@@ -821,6 +881,9 @@ export class CreateFolderComponent implements OnInit {
       [this.functionID, this.location],
       ''
     );
+    dialog.closed.subscribe((item) => {
+      if (item && item.event) this.location = item.event;
+    });
   }
 
   disableRight(item: string) {
@@ -850,14 +913,14 @@ export class CreateFolderComponent implements OnInit {
 
   openRight(mode = 1, type = true) {
     this.dmSV.dataFileEditing = this.fileEditing;
-    this.dmSV.dataFileEditing.assign = true;
+    this.dmSV.dataFileEditing.assign = this.assignRight;
     this.callfc.openForm(
       RolesComponent,
       this.titleRolesDialog,
       950,
       650,
       '',
-      [this.functionID],
+      [this.functionID , null , null ,null, this.propertiesFolder],
       ''
     );
   }
@@ -888,9 +951,8 @@ export class CreateFolderComponent implements OnInit {
   valueChange($event, field) {
     if ($event != null) {
       switch (field) {
-        case "icon":
-          if ($event)
-            this.icon = $event;
+        case 'icon':
+          if ($event) this.icon = $event;
           break;
       }
     }

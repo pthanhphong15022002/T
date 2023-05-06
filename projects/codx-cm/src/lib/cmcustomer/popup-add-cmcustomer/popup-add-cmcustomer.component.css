@@ -1,0 +1,61 @@
+.avatar-container {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ddd;
+}
+
+.input-avt {
+  align-items: center;
+  background-color: #ebf0f1;
+  border-radius: 50%;
+  color: #c2c8ca;
+  display: flex;
+  font-family: Roboto;
+  font-size: 11px;
+  justify-content: center;
+  line-height: 11px;
+  margin: 0px 0px 6.5px;
+  text-align: center;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.icon-edit {
+  height: 30px;
+  background: #ebf0f1;
+  width: 30px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -6px;
+  left: 65px;
+}
+
+.body_detail {
+  border: 1px solid #ececec;
+  margin-bottom: 15px;
+  border-radius: 6px;
+}
+.footer_content {
+  padding: 15px 15px 2px 15px;
+}
+
+.image-maxsize {
+  width: 100% !important;
+  height: auto !important;
+}

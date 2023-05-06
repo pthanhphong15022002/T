@@ -68,30 +68,6 @@ export class VideoComponent implements OnInit {
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
-    this.listview.dataService.requestEnd = (t, d) => {
-      if (t == 'loaded') {
-        if (d) this.getFile(d);
-      }
-    };
-  }
-
-  getFile(data) {
-    // if (data.length > 0) {
-    //   data.forEach((f: any) => {
-    //     if (f.referType == this.FILE_REFERTYPE.VIDEO) {
-    //       f[
-    //         'srcVideo'
-    //       ] = `${environment.urlUpload}/${f.pathDisk}`;
-    //       //this.file_video.push(f);
-    //       this.listview.dataService.data = [
-    //         ...this.listview.dataService.data,
-    //         ...[],
-    //       ];
-    //     }
-    //   });
-    //   console.log("check data", this.listview.dataService.data)
-    //   this.dt.detectChanges();
-    // }
   }
 
   getSrcVideo(data) {

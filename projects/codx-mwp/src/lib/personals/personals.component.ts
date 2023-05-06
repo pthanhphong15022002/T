@@ -1,22 +1,21 @@
-import { ActivatedRoute } from '@angular/router';
 import {
-  ApiHttpService,
-  CacheService,
   AuthService,
-  CodxService,
   ViewsComponent,
+  AuthStore,
+  UIComponent,
+  ViewModel,
   ViewType,
-  PageTitleService,
 } from 'codx-core';
 import {
   Component,
-  OnInit,
   ChangeDetectorRef,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
+  Injector,
 } from '@angular/core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/list-post.component';
 
 @Component({
   selector: 'app-personals',
@@ -24,7 +23,9 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
   styleUrls: ['./personals.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class PersonalsComponent implements OnInit {
+export class PersonalsComponent extends UIComponent {
+  
+  views: Array<ViewModel> | any = [];
   formName: any;
   gridViewName: any;
   employeeInfo: any;
@@ -35,7 +36,7 @@ export class PersonalsComponent implements OnInit {
   default = true;
   showHeader: boolean = true;
   checkRefreshAvatar = false;
-
+  user:any = null;
   headerMF = {
     POST: true,
     IMAGE: false,
@@ -44,42 +45,56 @@ export class PersonalsComponent implements OnInit {
     STORAGE: false,
     INFORMATION: false,
   };
-
+  predicatePortal = '@CreatedBy=@0 && (Category="1" || Category="3" || Category="4") && Stop=false';
+  dataValuePortal = "";
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
-
+  @ViewChild('templateContent') templateContent: ViewsComponent;
+  @ViewChild("listPost") listPost:ListPostComponent;
   constructor(
+    private injector:Injector,
     private changedt: ChangeDetectorRef,
     private auth: AuthService,
-    private route: ActivatedRoute,
+    private authStore: AuthStore,
     private codxShareSV: CodxShareService
-  ) {
+  ) 
+  {
+    super(injector);
     var data: any = this.auth.user$;
     this.employeeInfo = data.source._value;
     this.active = true;
+    this.user = this.authStore.get();
+    
   }
 
-  ngOnInit(): void {
-    this.route.params.subscribe((param) => {
+
+  onInit(): void {
+    this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.menuUrl = this.funcID;
     });
-    this.refreshAvatar();
+    if(this.user)
+    {
+      this.dataValuePortal = this.user.userID;
+    }
+
   }
 
   ngAfterViewInit() {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData:false,
+        model: {
+          panelLeftRef: this.templateContent
+        }
+      },
+    ];
+    this.detectorRef.detectChanges();
   }
 
-  refreshAvatar() {
-    this.codxShareSV.dataRefreshImage.subscribe((res) => {
-      if (res) {
-        this.checkRefreshAvatar = !this.checkRefreshAvatar;
-        this.employeeInfo['modifiedOn'] = res?.modifiedOn;
-        this.changedt.detectChanges();
-      }
-    });
-  }
 
   getFunctionList() {
     // if (this.funcID) {
@@ -88,11 +103,11 @@ export class PersonalsComponent implements OnInit {
     //       this.pageTitle.setSubTitle(res.customName);
     //       this.formName = res.formName;
     //       this.gridViewName = res.gridViewName;
-    //       debugger
+    //
     //       this.cachesv
     //         .moreFunction(this.formName, this.gridViewName)
     //         .subscribe((res: any) => {
-    //           debugger
+    //
     //           this.moreFunc = res;
     //           this.changedt.detectChanges();
     //         });
@@ -110,5 +125,29 @@ export class PersonalsComponent implements OnInit {
     this.headerMF.INFORMATION = false;
     this.headerMF[type] = true;
     this.changedt.detectChanges();
+  }
+  // edit post
+  editPost(item:any){
+    if(this.listPost){
+      this.listPost.editPost(item);
+    }
+  }
+  // save post
+  savePost(item:any){
+    if(this.listPost){
+      this.listPost.savePost(item);
+    }
+  }
+  // share post
+  sharePost(item:any){
+    if(this.listPost){
+      this.listPost.sharePost(item);
+    }
+  }
+  // delete post
+  deletePost(item:any){
+    if(this.listPost){
+      this.listPost.deletePost(item);
+    }
   }
 }

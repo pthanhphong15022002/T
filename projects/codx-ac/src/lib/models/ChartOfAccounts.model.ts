@@ -1,0 +1,36 @@
+export class ChartOfAccounts {
+  accountID: any;
+  accountName: any;
+  accountName2: any;
+  accountType: any;
+  parentID: any;
+  Consolidate: any;
+  detail: any;
+  multiCurrency: any;
+  subLGControl: any;
+  subLGType: any;
+  objectType: any;
+  objectID: any;
+  invoiceDetail: any;
+  diM1Control: any;
+  diM2Control: any;
+  diM3Control: any;
+  loanControl: any;
+  assetControl: any;
+  PostControl: any;
+  budgetControl: any;
+  balControl: any;
+  vATControl: any;
+  dIM1: any;
+  dIM2: any;
+  dIM3: any;
+  note: any;
+  stop: any;
+  owner: any;
+  buid: any;
+  createdOn: any;
+  createdBy: any;
+  modifiedOn: any;
+  modifiedBy: any;
+  projectControl: any;
+}

@@ -1,11 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
 import { AnimationSettingsModel, ButtonPropsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
-import { AlertConfirmInputConfig, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
+import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { RolesComponent } from 'projects/codx-dm/src/lib/roles/roles.component';
 import { environment } from 'src/environments/environment';
+import { CodxShareService } from '../../codx-share.service';
 import { objectPara } from '../viewFileDialog/alertRule.model';
 import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
@@ -20,13 +22,18 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() files: any;
   @Input() formModel: any;
   @Input() displayThumb: any;
-  @Input() hideDelete = '1';
+  @Input() hideDelete = '0';
   @Input() isDeleteTemp = '0';
   @Input() hideMoreF = '1';
   @Input() hideHover = '1';
+  @Input() isScroll = '0';
+  @Input() permissions :any ;
+  @Input() objectID = ""; 
+  @Input() isReferType : boolean = false; 
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileDelete = new EventEmitter<any>();
   @Output() viewFile = new EventEmitter<any>();
+
   titleEditFileDialog = "Cập nhật file";
   titleUpdateFile = "Cập nhật file";
   titleUpdateShare = "Chia sẻ";
@@ -37,6 +44,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   titlePermission = "Permission";
   dataDelete = [];
   dataFile:any;
+  showDelete = false;
   // files: any;
   title = 'Thông báo';
   titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
@@ -44,13 +52,19 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   target: string = '.control-section';
   fileName:any
   visible: boolean = false;
+  userID: any;
+  file:any
   constructor(
+    private router: Router,
+    private cache: CacheService,
+    private shareService : CodxShareService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
     private callfc: CallFuncService,
     private fileService: FileService,
     public dmSV: CodxDMService,
     private notificationsService: NotificationsService,
+    private authStore: AuthStore
   ) {
     // this.dialog.close = function (e) {
     //   this.dialog.destroy();
@@ -83,8 +97,14 @@ export class ThumbnailComponent implements OnInit, OnChanges {
         }
       });
     }
+    
+    this.userID = this.authStore.get().userID;
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    this.changeDetectorRef.detectChanges();
+  }
+ 
   openPermission(data) {
     this.dmSV.dataFileEditing = data;
     //  this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "");
@@ -95,9 +115,27 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     document.getElementById('drop').setAttribute("style", "display: none;");
   }
 
-  checkDownloadRight(file) {
-    return file.download;;
-  }
+  // checkDelete(file:any) {
+  //   if(file)
+  //   {
+  //     debugger
+  //     var per = file.permissions.filter(x=>x.userID == this.userID || x.objectID == this.userID);
+  //     if(per && per[0]) return per[0].delete
+  //   }
+  //   return false;
+  // }
+  // isAdmin()
+  // {
+
+  // }
+  // checkDownloadRight(file:any) {
+  //   if(file.permissions)
+  //   {
+  //     var per = file.permissions.filter(x=>x.userID == this.userID || x.objectID == this.userID);
+  //     if(per && per[0]) return per[0].download;
+  //   }
+  //   return false;
+  // }
 
   base64ToArrayBuffer(base64) {
     var binaryString = window.atob(base64);
@@ -110,72 +148,74 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     return bytes;
   }
 
-  deleteFile(id) {
-    var config = new AlertConfirmInputConfig();
-    config.type = "YesNo";
-
-    // this.notificationsService.alertCode('TM005', config).subscribe((res) => {
-    //   if (res?.event && res?.event?.status == 'Y') {
-    //     console.log(res);
-    //   }
-    // });
-
-    this.notificationsService.alert(this.title, this.titleDeleteConfirm, config).closed.subscribe(x => {
-      if (x.event.status == "Y") {
-        if (this.isDeleteTemp == '0') {
-          this.fileService.deleteFileToTrash(id, "", true).subscribe(item => {
-            if (item) {
+  deleteFile(file:any) {
+    this.fileService.getFile(file.recID).subscribe(item=>{
+      if(item && item.delete)
+      {
+        var config = new AlertConfirmInputConfig();
+        config.type = "YesNo";
+        this.notificationsService.alert(this.title, this.titleDeleteConfirm, config)
+        .closed.subscribe(x => {
+          if (x.event.status == "Y") {
+            if (this.isDeleteTemp == '0') {
+              this.fileService.deleteFileToTrash(file.recID, "", true,this.objectID).subscribe(item => {
+                if (item) {
+                  let list = this.files;
+                  var index = -1;
+                  if (list.length > 0) {
+                    if (list[0].data != null) {
+                      index = list.findIndex(d => d.data.recID.toString() === file.recID);
+                    }
+                    else {
+                      index = list.findIndex(d => d.recID.toString() === file.recID);
+                    }
+                    if (index > -1) {
+                      this.dataDelete.push(list[index]);
+                      this.fileDelete.emit(this.dataDelete);
+                      list.splice(index, 1);//remove element from array
+                      this.files = list;
+                      this.fileCount.emit(this.files);
+              
+                      this.changeDetectorRef.detectChanges();
+                    }
+                  }
+                }
+              })
+            }
+            else {
               let list = this.files;
               var index = -1;
               if (list.length > 0) {
                 if (list[0].data != null) {
-                  index = list.findIndex(d => d.data.recID.toString() === id);
+                  index = list.findIndex(d => d.data.recID.toString() === file.recID);
                 }
                 else {
-                  index = list.findIndex(d => d.recID.toString() === id);
+                  index = list.findIndex(d => d.recID.toString() === file.recID);
                 }
                 if (index > -1) {
+                  this.dataDelete.push(list[index]);
                   list.splice(index, 1);//remove element from array
                   this.files = list;
                   this.fileCount.emit(this.files);
+                  this.fileDelete.emit(this.dataDelete);
                   this.changeDetectorRef.detectChanges();
                 }
               }
             }
-          })
-        }
-        else {
-          let list = this.files;
-          var index = -1;
-          if (list.length > 0) {
-            if (list[0].data != null) {
-              index = list.findIndex(d => d.data.recID.toString() === id);
-            }
-            else {
-              index = list.findIndex(d => d.recID.toString() === id);
-            }
-            if (index > -1) {
-              this.dataDelete.push(list[index]);
-              list.splice(index, 1);//remove element from array
-              this.files = list;
-              this.fileCount.emit(this.files);
-              this.fileDelete.emit(this.dataDelete);
-              this.changeDetectorRef.detectChanges();
-            }
           }
-        }
+        })
       }
-    })
+      else this.notificationsService.notifyCode("SYS032")
+    });
   }
 
-  async download(id): Promise<void> {
-    this.fileService.getFile(id).subscribe(file => {
-      var id = file.recID;
-      var that = this;
-      if (this.checkDownloadRight(file)) {
-        this.fileService.downloadFile(id).subscribe(async res => {
+  async download(file:any): Promise<void> {
+    this.fileService.getFile(file.recID).subscribe(item=>{
+      if(item && item.download)
+      {
+        this.fileService.downloadFile(file.recID).subscribe(async res => {
           if (res) {
-            fetch(res)
+            fetch(environment.urlUpload+ "/" + res)
               .then(response => response.blob())
               .then(blob => {
                 const link = document.createElement("a");
@@ -185,29 +225,53 @@ export class ThumbnailComponent implements OnInit, OnChanges {
               })
               .catch(console.error);
           }
-        });
+        })
       }
-      else {
-        this.notificationsService.notifyCode("DM060");
-      }
+      else this.notificationsService.notifyCode("DM060");
     });
   }
 
-  openFile(id) {
-    //var data = JSON.parse(file);
-    this.fileService.getFile(id).subscribe(data => {
-      var option = new DialogModel();
-      option.IsFull = true;
-      this.fileName = data.fileName;
-      this.dataFile = data;
-      this.visible = true;
-      this.viewFile.emit(true);
-    });
+  openFile(file:any) {
+    this.fileService.getFile(file.recID).subscribe(item=>{
+      if(item && item.read)
+      {
+        this.cache.moreFunction("FileInfo","grvFileInfo").subscribe(item2=>{
+            if(item2 && item2.length > 0)
+            {
+              var c = item2.filter(x=>x.functionID == "DMT0210");
+              if(c && c[0])
+              {
+                if(c[0].displayMode == "2")
+                {
+                  const queryParams = {
+                    id: file.recID,
+                  };
+                  var l = this.router.url.split("/");
+                  const url = this.router.serializeUrl(
+                    this.router.createUrlTree([`/`+l[1]+`/viewfile`],{
+                      queryParams: queryParams
+                    })
+                  );
+                  window.open(url, '_blank');
+                }
+                else 
+                {
+                  var option = new DialogModel();
+                  option.IsFull = true;
+                  this.fileName = item.fileName;
+                  this.dataFile = item;
+                  this.visible = true;
+                  this.viewFile.emit(true);
+                }
+              }
+            }
+        })
+      }
+      else this.notificationsService.notifyCode("SYS032")
+    })
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.changeDetectorRef.detectChanges();
-  }
+ 
   properties() {
 
   }
@@ -258,17 +322,6 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     }
   }
 
-  getSubTitle(id) {
-    var html = `<div class='action-menu d-flex align-items-center cursor-pointer'>
-                  <div class='btn btn-sm btn-icon btn-white cursor-pointer' (click)='openFile("${id}")'>
-                    <i class='icon-preview text-primary icon-18'></i>
-                  </div>
-                  <div class='btn btn-sm btn-icon btn-white cursor-pointer' (click)='download("${id}")'>
-                    <i class='icon-cloud_download text-primary icon-18'></i>
-                  </div>
-                </div> `;
-    return html;
-  }
   dialogClosed(){
     this.visible = false;
     this.changeDetectorRef.detectChanges();

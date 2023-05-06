@@ -12,6 +12,7 @@ import {
   ApiHttpService,
   FormModel,
   CallFuncService,
+  AuthStore,
 } from 'codx-core';
 
 @Component({
@@ -29,7 +30,8 @@ export class ViewListComponent implements OnInit {
   @Input() vllStatus?: any;
   @Input() listRoles?: any;
   @Input() showMoreFunc?: any;
-
+  @Input() user: any;
+  @Input() popoverSelected: any;
   listTaskResousceSearch = [];
   listTaskResousce = [];
   countResource = 0;
@@ -38,8 +40,11 @@ export class ViewListComponent implements OnInit {
 
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() viewTask = new EventEmitter<any>();
+  @Output() hoverPopover = new EventEmitter<any>();
 
   lstTaskbyParent = [];
+  isHoverPop = false;
+  timeoutId: any;
 
   constructor(
     private api: ApiHttpService,
@@ -78,10 +83,48 @@ export class ViewListComponent implements OnInit {
         if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
-         //an cap nhat tien do khi hoan tat 
-         if ((x.functionID == 'TMT02018'|| x.functionID == 'TMT02026'||x.functionID == 'TMT02035')&& data.status=="90") {
+        if (
+          (x.functionID == 'TMT02015' || x.functionID == 'TMT02025') &&
+          data.status == '90'
+        ) {
           x.disabled = true;
         }
+        //an cap nhat tien do khi hoan tat
+        if (
+          (x.functionID == 'TMT02018' ||
+            x.functionID == 'TMT02026' ||
+            x.functionID == 'TMT02035') &&
+          data.status == '90'
+        ) {
+          x.disabled = true;
+        }
+        //an voi ca TMT026
+        if (
+          (x.functionID == 'SYS02' ||
+            x.functionID == 'SYS03' ||
+            x.functionID == 'SYS04') &&
+          (this.formModel?.funcID == 'TMT0206' ||
+            this.formModel?.funcID == 'MWP0063')
+        ) {
+          x.disabled = true;
+        }
+        //an voi fun TMT03011
+        if (
+          (this.formModel?.funcID == 'TMT03011' ||
+            this.formModel?.funcID == 'TMT05011') &&
+          data.category == '1' &&
+          data.createdBy != this.user?.userID &&
+          !this.user?.administrator &&
+          (x.functionID == 'SYS02' || x.functionID == 'SYS03')
+        ) {
+          x.disabled = true;
+        }
+        //an TMT02019
+        if (
+          (x.functionID == 'TMT02019' || x.functionID == 'TMT02026') &&
+          (data.status == '80' || data.status == '90')
+        )
+          x.disabled = true;
       });
     }
   }
@@ -94,28 +137,87 @@ export class ViewListComponent implements OnInit {
     } else p.close();
   }
 
-  popoverEmpList(p: any, task) {
-    this.listTaskResousceSearch = [];
-    this.countResource = 0;
-    if (this.popoverCrr) {
-      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+  popoverEmpList(p, task, mouseenter = true) {
+    // this.listTaskResousceSearch = [];
+    // this.countResource = 0;
+    if (
+      this.popoverCrr &&
+      p != this.popoverCrr &&
+      mouseenter &&
+      this.popoverCrr.isOpen()
+    ) {
+      this.popoverCrr.close();
     }
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskResourcesBusiness',
-        'GetListTaskResourcesByTaskIDAsync',
-        task.taskID
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.listTaskResousce = res;
-          this.listTaskResousceSearch = res;
-          this.countResource = res.length;
-          p.open();
-        }
-      });
+    if (
+      p &&
+      p != this.popoverSelected &&
+      this.popoverSelected &&
+      this.popoverSelected.isOpen()
+    ) {
+      this.popoverSelected.close();
+    }
+    if (p) {
+      var element = document.getElementById(task?.taskID);
+      if (element) {
+        let t = this;
+        this.timeoutId = setTimeout(function () {
+          if (t.isHoverPop) return;
+          t.isHoverPop = true;
+          t.api
+            .execSv<any>(
+              'TM',
+              'ERM.Business.TM',
+              'TaskResourcesBusiness',
+              'GetListTaskResourcesByTaskIDAsync',
+              task.taskID
+            )
+            .subscribe((res) => {
+              t.listTaskResousceSearch = [];
+              t.countResource = 0;
+              if (t.popoverCrr && p != t.popoverCrr && t.popoverCrr.isOpen())
+                t.popoverCrr.close();
+              if (
+                t.popoverSelected &&
+                p != t.popoverSelected &&
+                t.popoverSelected.isOpen()
+              ) {
+                t.popoverSelected.close();
+              }
+              if (res) {
+                t.listTaskResousce = res;
+                t.listTaskResousceSearch = res;
+                t.countResource = res.length;
+                if (t.isHoverPop && p) p.open();
+              }
+              if (p) t.popoverCrr = p;
+              t.isHoverPop = false;
+            });
+        }, 2000);
+        this.hoverPopover.emit(p);
+      }
+    } else {
+      if (this.timeoutId) clearTimeout(this.timeoutId);
+    }
+    // if (this.isHoverPop) return;
+    // this.isHoverPop = true;
+    // this.api
+    //   .execSv<any>(
+    //     'TM',
+    //     'ERM.Business.TM',
+    //     'TaskResourcesBusiness',
+    //     'GetListTaskResourcesByTaskIDAsync',
+    //     task.taskID
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.listTaskResousce = res;
+    //       this.listTaskResousceSearch = res;
+    //       this.countResource = res.length;
+    //       if (this.isHoverPop) p.open();
+    //       this.popoverCrr = p;
+    //     }
+    //     this.isHoverPop = false;
+    //   });
   }
 
   searchName(e) {

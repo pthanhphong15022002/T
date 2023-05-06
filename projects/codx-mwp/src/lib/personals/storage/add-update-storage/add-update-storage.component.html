@@ -1,85 +1,80 @@
 <codx-form
-  [headerText]="header"
+  [headerText]="headerText"
   [body]="body"
   [footer]="footer"
-  [dialog]="dialog"
-  [formModel]="dialog?.formModel"
+  [dialog]="dialogRef"
+  [formModel]="formModel"
+  [data]="data"
 >
   <ng-template popup add #body>
-    <div class="form-group">
-      <codx-label
-        name="lblStorageTitle"
-        [formName]="formModel.formName"
-        default="Kho lưu trữ"
-      >
-      </codx-label>
-      <codx-input
-        type="text"
-        field="title"
-        (valueChange)="valueChange($event)"
-        ngDefaultControl
-        [crrValue]="storage?.title"
-        [placeholder]="gridViewSetup.title"
-      >
-      </codx-input>
-    </div>
-    <div class="form-group">
-      <codx-label
-        name="lblStorageMemo"
-        [formName]="formModel.formName"
-        default="Diễn giải"
-      ></codx-label>
-      <codx-input
-        format="ed2"
-        type="textarea"
-        rows="4"
-        field="memo"
-        [placeholder]="gridViewSetup.title"
-        class="test-textarea"
-        ngDefaultControl
-        [crrValue]="formType == 'edit' ? storage?.memo || '' : empty"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
-    </div>
-    <div class="form-group">
-      <codx-label
-        name="lblStorageImg"
-        [formName]="formModel.formName"
-        default="Hình hiển thị"
-      >
-      </codx-label>
-      <div class="upload-img d-flex mode-edit mt-3">
-        <codx-img
-          #imageUpLoad
-          [width]="100"
-          [objectType]="'WP_Storages'"
-          aria-disabled="true"
-          [funcId]="funcID"
-          [isAllowEdit]="true"
-          [objectId]="storage?.recID"
-          [objectName]="storage?.title"
-          [imgOn]="storage?.modifiedOn"
-        >
-        </codx-img>
+    <ng-container *ngIf="formModel?.funcID">
+      <div class="form-group">
+        <codx-label
+          [fiedName]="'Title'"
+          [formModel]="formModel"
+          default="Tên kho lưu trữ">
+        </codx-label>
+        <codx-input
+          field="title"
+          [formModel]="formModel"
+          [crrValue]="data.title"
+          (valueChange)="valueChange($event)">
+        </codx-input>
       </div>
-    </div>
+      <div class="form-group">
+        <codx-label
+          [fiedName]="'Memo'"
+          [formModel]="formModel"
+          default="Diễn giải"
+        ></codx-label>
+        <codx-input
+          field="memo"
+          [formModel]="formModel"
+          [crrValue]="data.memo"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          [fiedName]="'Icon'"
+          [formModel]="formModel"
+          default="Hình hiển thị"
+        >
+        </codx-label>
+        <div class="upload-img d-flex mode-edit mt-3">
+          <codx-img
+            #imageUpLoad
+            [width]="100"
+            [funcId]="funcID"
+            [isDefaulImg]="action == 'add'"
+            [isAllowEdit]="true"
+            [objectId]="data.recID"
+            [objectType]="'WP_Storages'"
+            referType="avt">
+          </codx-img>
+        </div>
+      </div>
+    </ng-container>
   </ng-template>
 
   <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button
-        type="button"
-        class="btn btn-primary ms-1"
-        (click)="saveStorage()"
-        *ngIf="!readOnly"
-      >
-        <codx-label
-          name="Save"
-          [formName]="formModel.formName"
-          default="Lưu"
-        ></codx-label>
-      </button>
-    </div>
+    <ng-container *ngIf="formModel?.funcID">
+      <div class="d-flex justify-content-end">
+        <ng-container *ngIf="!readOnly">
+          <button
+          type="button"
+          class="btn btn-primary ms-1"
+          (click)="submit()">
+          <codx-label
+            name="lblSave"
+            [formModel]="formModel"
+            default="Lưu"
+          ></codx-label>
+        </button>
+        </ng-container>
+        
+      </div>
+    </ng-container>
   </ng-template>
 </codx-form>

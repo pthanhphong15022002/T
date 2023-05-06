@@ -44,8 +44,13 @@ export class AddBehaviorComponent extends UIComponent implements OnInit {
     this.isModeAdd = dt.data?.isModeAdd;
     this.formModel = dialog.formModel;
     this.title = dt.data?.headerText;
+
+    console.log('md:', this.formModel);
+
+
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
       if (res) {
+
         this.header =
           this.title +
           ' ' +
@@ -66,7 +71,8 @@ export class AddBehaviorComponent extends UIComponent implements OnInit {
 
   onSave() {
     var formGroup = this.form.formGroup.controls;
-    if (formGroup.competenceID.status == 'VALID') {
+    if (formGroup.competenceID.status == 'VALID' &&
+      formGroup.competenceName.status == 'VALID') {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option), 0)
         .subscribe((res) => {

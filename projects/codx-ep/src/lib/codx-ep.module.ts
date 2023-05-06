@@ -1,106 +1,88 @@
-
-import { PopupAddQuotaComponent } from './settings/stationery/popup-add-quota/popup-add-quota.component';
-import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
-import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ModuleWithProviders, NgModule, Type } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Route, RouterModule } from '@angular/router';
-import { SharedModule } from '@shared/shared.module';
 import {
-  AccumulationChartAllModule,
-  ChartAllModule,
-} from '@syncfusion/ej2-angular-charts';
+  NgModule,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ModuleWithProviders,
+  Type,
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Routes, RouterModule } from '@angular/router';
+import { CoreModule } from '@core/core.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
+import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
-import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
-import { AuthGuard, CodxCoreModule, EnvironmentConfig } from 'codx-core';
+import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { ApprovalCarsComponent } from './approval/car/approval-car.component';
-import { ApprovalRoomsComponent } from './approval/room/approval-room.component';
-import { ApprovalStationeryComponent } from './approval/stationery/approval-stationery.component';
-import { TabsComponent } from './approval/tabs/tabs.component';
-import { BookingCarComponent } from './booking/car/booking-car.component';
-import { CarDashboardComponent } from './booking/car/dashboard/dashboard.component';
-import { PopupAddBookingCarComponent } from './booking/car/popup-add-booking-car/popup-add-booking-car.component';
-import { BookingRoomComponent } from './booking/room/booking-room.component';
-import { RoomDashboardComponent } from './booking/room/dashboard/dashboard.component';
-import { PopupAddBookingRoomComponent } from './booking/room/popup-add-booking-room/popup-add-booking-room.component';
-import { BookingStationeryComponent } from './booking/stationery/booking-stationery.component';
-import { StationeryDashboardComponent } from './booking/stationery/dashboard/dashboard.component';
-import { CarsComponent } from './settings/cars/cars.component';
-import { PopupAddCarsComponent } from './settings/cars/popup-add-cars/popup-add-cars.component';
-import { DriversComponent } from './settings/drivers/drivers.component';
-import { PopupAddDriversComponent } from './settings/drivers/popup-add-drivers/popup-add-drivers.component';
-import { PopupAddRoomsComponent } from './settings/rooms/popup-add-rooms/popup-add-rooms.component';
-import { RoomsComponent } from './settings/rooms/rooms.component';
-import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
-import { StationeryComponent } from './settings/stationery/stationery.component';
 import { LayoutComponent } from './_layout/layout.component';
-import { EpCardsComponent } from './settings/epCards/epCards.component';
-import { PopupAddEpCardsComponent } from './settings/epCards/popup-add-epCards/popup-add-epCards.component';
-import { ApprovalRoomViewDetailComponent } from './approval/room/approval-room-view-detail/approval-room-view-detail.component';
-import { ApprovalCarViewDetailComponent } from './approval/car/approval-car-view-detail/approval-car-view-detail.component';
-import { BookingRoomViewDetailComponent } from './booking/room/view-detail/booking-room-view-detail.component';
-import { BookingCarViewDetailComponent } from './booking/car/view-detail/booking-car-view-detail.component';
-import { ApprovalStationeryViewDetailComponent } from './approval/stationery/approval-stationery-view-detail/approval-stationery-view-detail.component';
-import { HistoryCardsComponent } from './settings/historyCards/historyCards.component';
-import { CardTransComponent } from './booking/cardTran/cardTrans.component';
-import { MeetingComponent } from './meeting/meeting.component';
-import { PopupUpdateQuantityComponent } from './settings/stationery/popup-update-quantity/popup-update-quantity.component';
-import { PopupAddCardTransComponent } from './booking/cardTran/popup-add-cardTrans/popup-add-cardTrans.component';
-import { PopupDriverAssignComponent } from './approval/car/popup-driver-assign/popup-driver-assign.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { ReportComponent } from './stationery/report/report.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { CardTransComponent } from './car/cardTran/cardTrans.component';
+import { ResourcesComponent } from './resources/resources.component';
+import { PopupAddResourcesComponent } from './resources/popup-add-resources/popup-add-resources.component';
+import { EPHistoryCardComponent } from './resources/ep-history-card/ep-history-card.component';
+import { PopupAddStationeryComponent } from './resources/popup-add-stationery/popup-add-stationery.component';
+import { PopupUpdateQuantityComponent } from './resources/popup-update-quantity/popup-update-quantity.component';
+import { PopupAddQuotaComponent } from './resources/popup-add-quota/popup-add-quota.component';
+import { EPBookingComponent } from './booking/ep-booking.component';
+import { EPApprovalComponent } from './approval/ep-approval.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 
-const routes: Route[] = [
+export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
       {
-        path: 'bookingrooms/:funcID',
-        component: BookingRoomComponent,
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
       },
       {
-        path: 'bookingcars/:funcID',
-        component: BookingCarComponent,
-      },
-      {
-        path: 'bookingstationery/:funcID',
-        component: BookingStationeryComponent,
-      },
-      {
-        path: 'approverooms/:funcID',
-        component: ApprovalRoomsComponent,
-      },
-      {
-        path: 'approvecars/:funcID',
-        component: ApprovalCarsComponent,
-      },
-      {
-        path: 'approvestationery/:funcID',
-        component: ApprovalStationeryComponent,
-      },
-      {
-        path: 'cardtrans/:funcID',
-        component: CardTransComponent,
-      },
-      {
-        path: 'settings',
-        canActivate: [AuthGuard],
-        loadChildren: () =>
-          import('./settings/_layout/layout.modules').then(
-            (m) => m.LayoutModule
-          ),
-      },
-      {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full',
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
       },
       {
         path: '**',
         redirectTo: 'error/404',
+      },
+
+      {
+        path: 'bookingstationery/:funcID',
+        component: EPBookingComponent,
+      },
+      {
+        path: 'approvestationery/:funcID',
+        component: EPApprovalComponent,
+      },
+      {
+        path: 'report/:funcID',
+        component: ReportComponent,
+      },
+
+      {
+        path: 'bookingrooms/:funcID',
+        component: EPBookingComponent,
+      },
+      {
+        path: 'approverooms/:funcID',
+        component: EPApprovalComponent,
+      },
+
+      {
+        path: 'bookingcars/:funcID',
+        component: EPBookingComponent,
+      },
+      {
+        path: 'approvecars/:funcID',
+        component: EPApprovalComponent,
+      },
+      {
+        path: 'cardtrans/:funcID',
+        component: CardTransComponent,
       },
     ],
   },
@@ -109,89 +91,66 @@ const routes: Route[] = [
     component: LayoutNoAsideComponent,
     children: [
       {
+        path: 'stationery/:funcID',
+        component: ResourcesComponent,
+      },
+      {
         path: 'rooms/:funcID',
-        component: RoomsComponent,
+        component: ResourcesComponent,
       },
       {
         path: 'cars/:funcID',
-        component: CarsComponent,
+        component: ResourcesComponent,
       },
       {
         path: 'drivers/:funcID',
-        component: DriversComponent,
-      },
-      {
-        path: 'stationery/:funcID',
-        component: StationeryComponent,
+        component: ResourcesComponent,
       },
       {
         path: 'epcards/:funcID',
-        component: EpCardsComponent,
+        component: ResourcesComponent,
       },
       {
         path: 'historycards/:funcID/:id',
-        component: HistoryCardsComponent,
+        component: EPHistoryCardComponent,
       },
     ],
   },
 ];
 
-const Components: Type<any>[] = [
-  LayoutComponent,
-  BookingRoomComponent,
-  BookingCarComponent,
-  BookingStationeryComponent,
-  BookingStationeryViewDetailComponent,
-  ApprovalStationeryComponent,
-  ApprovalCarsComponent,
-  ApprovalRoomsComponent,
-  PopupAddBookingRoomComponent,
-  PopupAddBookingCarComponent,
-  PopupRequestStationeryComponent,
-  PopupAddCarsComponent,
-  PopupAddRoomsComponent,
-  PopupAddStationeryComponent,
-  PopupAddDriversComponent,
-  PopupAddEpCardsComponent,
-  PopupAddQuotaComponent,
-  StationeryComponent,
-  CarsComponent,
-  DriversComponent,
-  RoomsComponent,
-  EpCardsComponent,
-  HistoryCardsComponent,
-  RoomDashboardComponent,
-  CarDashboardComponent,
-  StationeryDashboardComponent,
-  TabsComponent,
-  ApprovalRoomViewDetailComponent,
-  ApprovalCarViewDetailComponent,
-  ApprovalStationeryViewDetailComponent,
-  BookingRoomViewDetailComponent,
-  BookingCarViewDetailComponent,
-  CardTransComponent,
-  PopupUpdateQuantityComponent,
-  PopupAddCardTransComponent,
-  PopupDriverAssignComponent,
-];
-
 @NgModule({
-  declarations: [Components, MeetingComponent],
   imports: [
-    RouterModule.forChild(routes),
+    CommonModule,
     FormsModule,
-    ReactiveFormsModule,
-    SharedModule,
-    ChartAllModule,
-    AccumulationChartAllModule,
-    ProgressBarAllModule,
-    TabModule,
+    OverlayModule,
+    HttpClientModule,
+    CodxCoreModule,
+    CoreModule,
+    RouterModule.forChild(routes),
     CodxShareModule,
+    DatePickerModule,
+    TabModule,
+    FormsModule,
+    NgbModule,
+    SplitterModule,
     CodxReportModule,
   ],
   exports: [RouterModule],
+  declarations: [
+    LayoutComponent,
+    ResourcesComponent,
+    PopupAddResourcesComponent,
+    EPHistoryCardComponent,
+    PopupAddStationeryComponent,
+    PopupUpdateQuantityComponent,
+    PopupAddQuotaComponent,
+    EPBookingComponent,
+    EPApprovalComponent,
+  ],
+  providers: [],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class CodxEpModule {
+export class CodxEPModule {
   public static forRoot(
     config?: EnvironmentConfig
   ): ModuleWithProviders<CodxCoreModule> {

@@ -1,0 +1,31 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [formModel]="dialog?.FormModel"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="quotationsLine"
+>
+  <ng-template #body> 
+    'Chua cos view'
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end mt-1 me-3">
+      <div class="ms-2">
+        <button
+          type="button"
+          class="btn btn-primary"
+          style="min-width: 60px"
+          (click)="onSave()"
+        >
+          <codx-label
+            class="fs-6 fw-normal"
+            fiedName="lblSave"
+            default="Lưu"
+          ></codx-label>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</codx-form>

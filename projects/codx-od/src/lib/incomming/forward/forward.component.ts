@@ -10,17 +10,17 @@ import { forwarDis } from '../../models/dispatch.model';
   styleUrls: ['./forward.component.scss']
 })
 export class ForwardComponent implements OnInit {
+  data : any;
   files: any;
   title: any = "Chuyển tiếp";
   user: any;
-  forward = new forwarDis();
   dialog: any;
-  gridViewSetup     : any;
+  gridViewSetup : any;
+  forward = new forwarDis();
+  formModel:any;
   formatBytes = formatBytes;
   getJSONString = getJSONString;
-  data : any;
   @Input() viewbase: ViewsComponent;
- 
   @Output() save : EventEmitter<any> = new EventEmitter();
   forwardForm = new FormGroup({
     userID: new FormControl(),
@@ -36,6 +36,7 @@ export class ForwardComponent implements OnInit {
   ) {
     this.data = dt?.data;
     this.dialog = dialog;
+    this.formModel = dt?.data?.formModel
   }
     
   ngOnInit(): void {
@@ -50,8 +51,12 @@ export class ForwardComponent implements OnInit {
   }
   onSave()
   {
-    this.forwardForm.value.userID = this.forwardForm.value.userID.join(";");
-    this.odService.forwardDispatch(this.dialog.dataService.dataSelected.recID , this.forwardForm.value).subscribe((item)=>{
+    let forwardForm: any = this.forwardForm.value;
+    forwardForm.userID = forwardForm.userID.join(";");
+    forwardForm.funcID = this.formModel?.funcID;
+    forwardForm.referType = "source";
+    forwardForm.entityName = this.formModel?.entityName;
+    this.odService.forwardDispatch(this.dialog.dataService.dataSelected.recID , forwardForm).subscribe((item)=>{
       if(item.status==0) this.dialog.close(item.data);
       this.notifySvr.notify(item.message);
     })

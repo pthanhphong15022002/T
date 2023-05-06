@@ -1,0 +1,34 @@
+.chat-popup{
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    width: 350px;
+}
+
+.chat-list{
+    padding: 5px;
+}
+.chat-list-header{
+    border-bottom: 1px var(--gray-150) solid;
+    padding-bottom: 5px;
+}
+
+.chat-list-body{
+    height: auto !important;
+    max-height: 480px;
+    overflow: auto;
+    padding-right: 4px;
+    padding-top: 4px;
+}
+.chat-list-header_func{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+.chat-list-header_func > li {
+    display: inline-block;
+    padding: 5px;
+}
+
+
+
+
+

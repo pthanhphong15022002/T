@@ -1,3 +1,4 @@
+import { CoreModule } from '@core/core.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
@@ -11,7 +12,6 @@ import {
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { LayoutComponent } from './_layout/layout.component';
 import { EmployeeInfomationComponent } from './employeeinfomation/employee-infomation.component';
 import { HomeComponent } from './home/home.component';
@@ -58,6 +58,18 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { TasksComponent } from './tasks/tasks.component';
 import { LayoutNoToolbarComponent } from './_noToolbar/_noToolbar.component';
 import { InformationComponent } from './personals/information/information.component';
+import { MWPBookingRoomComponent } from './booking/room/mwp-booking-room.component';
+import { MWPPopupAddBookingRoomComponent } from './booking/room/popup-add-booking-room/mwp-popup-add-booking-room.component';
+import { MWPBookingRoomViewDetailComponent } from './booking/room/view-detail/mwp-booking-room-view-detail.component';
+import { MWPBookingCarComponent } from './booking/car/mwp-booking-car.component';
+import { MWPPopupAddBookingCarComponent } from './booking/car/popup-add-booking-car/mwp-popup-add-booking-car.component';
+import { MWPBookingCarViewDetailComponent } from './booking/car/view-detail/mwp-booking-car-view-detail.component';
+import { MWPBookingStationeryComponent } from './booking/stationery/mwp-booking-stationery.component';
+import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
+import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
+import { PortalComponent } from './employeeinfomation/portal/portal.component';
+import { ScrollSpyDirective } from './scroll-spy.directive'
+import { EmployeeDetailComponent } from 'projects/codx-hr/src/lib/employee-list/employee-detail/employee-detail.component';
 
 export const routes: Routes = [
   {
@@ -76,7 +88,10 @@ export const routes: Routes = [
     children: [
       {
         path: 'employeeinfomation/:funcID',
-        component: EmployeeInfomationComponent,
+        // component: EmployeeInfomationComponent,
+        component: PortalComponent
+        // component: EmployeeDetailComponent
+
       },
       {
         path: 'personals/:funcID',
@@ -94,6 +109,40 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {      
+  
+        path: 'bookingstationery/:funcID',
+        component: MWPBookingStationeryComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {      
+  
+        path: 'bookingcar/:funcID',
+        component: MWPBookingCarComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {      
+  
+        path: 'bookingrooms/:funcID',
+        component: MWPBookingRoomComponent,
+      },
+    ],
+  },
+  
 ];
 
 const Component: Type<any>[] = [
@@ -117,6 +166,16 @@ const Component: Type<any>[] = [
   EditRelationComponent,
   TasksComponent,
   InformationComponent,
+  MWPBookingRoomComponent,
+  MWPPopupAddBookingRoomComponent,
+  MWPBookingRoomViewDetailComponent,
+  MWPBookingCarComponent,
+  MWPPopupAddBookingCarComponent,
+  MWPBookingCarViewDetailComponent,
+  MWPBookingStationeryComponent,
+  BookingStationeryViewDetailComponent,
+  PopupRequestStationeryComponent,
+  ScrollSpyDirective,
 ];
 
 @NgModule({
@@ -124,7 +183,6 @@ const Component: Type<any>[] = [
     CommonModule,
     FormsModule,
     OverlayModule,
-    InlineSVGModule.forRoot(),
     HttpClientModule,
     CodxCoreModule,
     RouterModule.forChild(routes),
@@ -137,9 +195,16 @@ const Component: Type<any>[] = [
     AccumulationChartModule,
     TabModule,
     NgbModule,
+    CoreModule,
   ],
   exports: [RouterModule],
-  declarations: [Component, EditSkillComponent, PopAddSkillComponent, InformationComponent],
+  declarations: [
+    Component,
+    EditSkillComponent,
+    PopAddSkillComponent,
+    InformationComponent,
+    PortalComponent,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     AreaSeriesService,

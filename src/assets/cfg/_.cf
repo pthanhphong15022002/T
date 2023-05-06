@@ -1,0 +1,41 @@
+{
+  "apiUrl": "http://172.16.7.34:8011",
+  "reportUrl": "http://172.16.7.34:4203/report",
+  "shopping": "https://172.16.7.34:44317/Shopping",
+  "urlUpload": "http://172.16.7.34:8011/lvfile",
+  "appName": "hps-file-test",
+  "office365": "",
+  "saas": 0,
+  "layoutCZ": "",
+  "themeMode": "body",
+  "hideFavCount":false,
+  "singleExec":false,
+  "asideMinimize":"icon-title",
+  "captchaKey": "6LctVdwkAAAAAF_yJPT2NGF2SvEpCKyLS4t68Ps1",
+  "captchaEnable": 0,
+  "externalLogin": {
+    "amazonId": "amzn1.application-oa2-client.f074ae67c0a146b6902cc0c4a3297935",
+    "facebookId": "553419903425493",
+    "googleId": "1004809784960-375udeskttcpr03e0pqshf0hpococ0vq.apps.googleusercontent.com",
+    "microsoftId": "0611ccc3-9521-45b6-b432-039852002705"
+  },
+  "SureMeet": {
+    "baseUrl": "/suremeet/",
+    "tokenUrl": "api/auth/token",
+    "addUpdateMeetingUrl": "PublicMeeting/AddUpdate",
+    "connectMettingUrl": "PublicMeeting/Verify",
+    "client_id": "portal",
+    "client_secret": "lacviet@2022@$%!$$!(@",
+    "app_id": "demo.suremeet@gmail.com",
+    "app_secret": "123456"
+  },
+  "firebase": {
+    "apiKey": "AIzaSyC1SKqppxpxwT7i3qEdUjJjn-J_SMoUBic",
+    "authDomain": "ermtest-2a9bb.firebaseapp.com",
+    "projectId": "ermtest-2a9bb",
+    "storageBucket": "ermtest-2a9bb.appspot.com",
+    "messagingSenderId": "319703529330",
+    "appId": "1:319703529330:web:d0569f86d85524c1ca0feb",
+    "measurementId": "G-HH40VHYRF0"
+  }
+}

@@ -4,30 +4,50 @@ import {
   Component,
   ViewEncapsulation,
   OnInit,
+  OnChanges,
+  SimpleChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Route, Router } from '@angular/router';
 @Component({
   selector: 'codx-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TasksComponent implements OnInit {
+export class TasksComponent implements OnInit, OnChanges {
   funcID: any;
-  constructor(private activedRouter: ActivatedRoute, private tmService: CodxTMService, private cache: CacheService) {
+  constructor(
+    private activedRouter: ActivatedRoute,
+    private tmService: CodxTMService,
+    private cache: CacheService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router
+  ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.changeDetectorRef.detectChanges();
   }
 
   ngOnInit(): void {
-    // this.cache.functionList(this.funcID).subscribe(res => {
-    //   console.log(res);
-    // })
-    this.tmService.menuClick.subscribe(res => {
+    this.changeFunction();
+    //   this.router.events.subscribe((val) => {
+    //     if(val &&  val instanceof NavigationEnd){
+    //       let arr = val.url.split('/') ;
+    //       if(arr.length >0){
+    //         this.funcID = arr[arr.length-1] ;
+    //       }
+    //     }
+    // });
+  }
+  changeFunction() {
+    this.tmService.childMenuClick.subscribe((res) => {
       if (res && res.func) {
         if (this.funcID != res.func.functionID)
           this.funcID = res.func.functionID;
-        this.tmService.menuClick.next(null);
+        this.tmService.childMenuClick.next(null);
       }
-    })
+    });
   }
 }

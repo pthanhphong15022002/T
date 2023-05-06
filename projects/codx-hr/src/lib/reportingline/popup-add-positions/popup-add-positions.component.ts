@@ -1,168 +1,150 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Optional, Output } from '@angular/core';
-import { ApiHttpService, AuthService, AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  OnInit,
+  Optional,
+  Output,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  AuthService,
+  CacheService,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+} from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
-import { HR_Positions } from '../../model/HR_Positions.module';
 
 @Component({
-  selector: 'lib-popup-add-positions',
+  selector: 'hr-popup-add-positions',
   templateUrl: './popup-add-positions.component.html',
-  styleUrls: ['./popup-add-positions.component.css']
+  styleUrls: ['./popup-add-positions.component.css'],
 })
 export class PopupAddPositionsComponent implements OnInit {
   title = 'Thêm mới';
   dialogRef: any;
-  isNew: boolean = true;
   user: any;
   functionID: string;
-  action = '';
-  position: HR_Positions = new HR_Positions();
-  data: any;
+  isAdd = '';
+  data: any = null;
+  isCorporation;
+  formModel;
+  formGroup;
+  blocked: boolean = false;
+  isAfterRender = false;
+
   @Output() Savechange = new EventEmitter();
 
   constructor(
-    private detectorRef: ChangeDetectorRef,
-    private notiService: NotificationsService,
     private auth: AuthService,
     private api: ApiHttpService,
-    private reportingLine: CodxHrService,
+    private cacheService: CacheService,
+    private cr: ChangeDetectorRef,
+    private notifiSV: NotificationsService,
+    private hrService: CodxHrService,
     @Optional() dialog?: DialogRef,
-    @Optional() dt?: DialogData,
+    @Optional() dt?: DialogData
   ) {
-    this.action = dt.data;
+    this.isAdd = dt.data.isAddMode;
+    this.title = dt.data.titleMore;
+    this.data = JSON.parse(JSON.stringify(dt.data.data));
     this.dialogRef = dialog;
-    this.functionID = this.dialogRef.formModel.funcID;
-    this.data = dialog.dataService!.dataSelected;
-    this.position = this.data;
-  }
-
-  ngOnInit(): void {
+    this.functionID = dt.data.function;
+    this.formModel = this.dialogRef.formModel;
+    debugger;
+    // this.isCorporation = dt.data.isCorporation; // check disable field DivisionID
     this.user = this.auth.userValue;
-    this.getParamerAsync(this.functionID);
-    if (this.action === 'edit') {
-      this.title = 'Chỉnh sửa';
-      this.isNew = false;
-    }
-    if (this.action === 'copy') {
-      this.title = 'Sao chép';
-    }
   }
-
-
-  paramaterHR:any = null;
-  getParamerAsync(funcID:string){
-    if(funcID)
-    {
-      this.api.execSv("SYS",
-      "ERM.Business.AD",
-      "AutoNumberDefaultsBusiness",
-      "GenAutoDefaultAsync",
-      [funcID])
-      .subscribe((res:any) => {
-        if(res)
-        {
-          this.paramaterHR = res;
-          if(this.paramaterHR.stop) return;
-          else
-          {
-            let funcID = this.dialogRef.formModel.funcID;
-            let entityName = this.dialogRef.formModel.entityName;
-            let fieldName = "PositionID";
-            if(funcID && entityName)
-            {
-              this.getDefaultPositionID(funcID,entityName,fieldName);
-            }
-          }
+  ngOnInit(): void {
+    this.hrService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((fg) => {
+        if (fg) {
+          this.formGroup = fg;
+          this.formGroup.patchValue(this.data);
+          this.cr.detectChanges();
+          this.isAfterRender = true;
         }
-      })
-    }
+      });
+
+    this.getFucnName(this.functionID);
+    if (this.isAdd)
+      this.blocked = this.dialogRef.dataService.keyField ? true : false;
+    else this.blocked = true;
   }
-  positionID:string = "";
-  getDefaultPositionID(funcID:string,entityName:string,fieldName:string,data:any = null)
-  {
-    if(funcID && entityName && fieldName){
-      this.api.execSv(
-        "SYS", 
-        "ERM.Business.AD",
-        "AutoNumbersBusiness",
-        "GenAutoNumberAsync",
-        [funcID, entityName, fieldName, null])
-        .subscribe((res:any) =>{
-          if(res)
-          {
-            this.positionID = res;
-            this.data.OrgUnitID = res;
-            this.detectorRef.detectChanges();
-          }
-        })
+  // get function name
+  getFucnName(funcID: string) {
+    if (funcID) {
+      this.cacheService.functionList(funcID).subscribe((func) => {
+        if (func) {
+          this.title = `${this.title} ${func.description}`;
+          // this.cacheService
+          // .gridViewSetup(func.formName,func.gridViewName).subscribe((gv: any) => {
+          //   console.log('form', gv);
+          // });
+        }
+      });
     }
-    
-  }
-  valueChange(event:any){
-    
   }
 
+  // value change
   dataChange(e: any, field: string) {
+    debugger;
     if (e) {
       if (e?.length == undefined) {
-        this.position[field] = e?.data;
+        this.data[field] = e?.data;
       } else {
-        this.position[field] = e[0];
+        this.data[field] = e[0];
+        // if(field == "positionID"){
+        //   let itemSelected = e.component?.itemsSelected[0];
+        //   if(itemSelected){
+        //     if(itemSelected.hasOwnProperty("DepartmentID"))
+        //     {
+        //       let departmentID = itemSelected["DepartmentID"];
+        //       this.data["departmentID"] = departmentID;
+        //     }
+        //     if(itemSelected.hasOwnProperty("DivisionID"))
+        //     {
+        //       let departmentID = itemSelected["DivisionID"];
+        //       this.data["divisionID"] = departmentID;
+        //     }
+        //     if(itemSelected.hasOwnProperty("CompanyID"))
+        //     {
+        //       let departmentID = itemSelected["CompanyID"];
+        //       this.data["companyID"] = departmentID;
+        //     }
+        //   }
+        // }
       }
     }
   }
 
-  beforeSave(op: any) {
-    var data = [];
-    op.methodName = 'UpdateAsync';
-    op.className = 'PositionsBusiness';
-    if (this.action === 'add') {
-      this.isNew = true;
-    } else if (this.action === 'edit') {
-      this.isNew = false;
-    }
-    data = [
-      this.position,
-      this.isNew
-    ];
-    op.data = data;
-    return true;
+  valChange(evt) {
+    debugger;
+    //this.data.orgUnitID = evt.data.value[0]
   }
 
+  // click save
   OnSaveForm() {
-
-    this.api.exec("ERM.Business.HR", "PositionsBusiness", "UpdateAsync", [this.data, this.isNew]).subscribe(res => {
-      if (res) {
-        if (res) {
-          if (this.isNew) {
-            this.reportingLine.reportingLineComponent.addPosition(res);
-          }
-          else {
-            this.reportingLine.positionsComponent.updatePosition(res);
-          }
-          this.Savechange.emit(res);
-          this.dialogRef.close(res);
-        }
-        else {
-          this.notiService.notify("Error");
-        }
-      }
-    });
-  }
-
-  addPosition() {
-    var t = this;
-    this.dialogRef.dataService.save((opt: any) => {
-      opt.data = [this.position];
-      return true;
-    })
+    debugger;
+    let _method = this.isAdd ? 'SaveAsync' : 'UpdateAsync';
+    this.api
+      .execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', _method, [
+        this.data,
+        this.functionID,
+      ])
       .subscribe((res) => {
-        if (res.save) {
-          this.dialogRef.close();
+        if (this.isAdd) this.dialogRef.dataService.add(res, 0).subscribe();
+        else {
+          this.notifiSV.notifyCode('SYS007');
+          this.dialogRef.dataService.update(res).subscribe();
         }
+        this.dialogRef.close(res);
       });
   }
 
   closePanel() {
-    this.dialogRef.close()
+    this.dialogRef.close();
   }
 }

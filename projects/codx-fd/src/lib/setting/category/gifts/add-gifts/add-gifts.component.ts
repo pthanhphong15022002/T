@@ -51,7 +51,7 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
       JSON.stringify(this.dialog.dataService.dataSelected)
     );
     this.formModel = this.dialog?.formModel;
-    if(!this.dialog?.formModel.entityName) this.formModel.entityName = this.dialog?.formModel.entityPer;
+    if (!this.dialog?.formModel.entityName) this.formModel.entityName = this.dialog?.formModel.entityPer;
     this.formType = data.data?.formType;
     this.title = data.data?.headerText;
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
@@ -75,7 +75,52 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
     if (!this.dataUpdate.owner) this.dataUpdate.owner = null;
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
+
+  // onSave() {
+  //   var formGroup = this.form.formGroup.controls;
+  //   if (
+  //     formGroup.giftName.status == 'VALID' &&
+  //     formGroup.giftID.status == 'VALID' &&
+  //     formGroup.memo.status == 'VALID' &&
+  //     formGroup.price.status == 'VALID'
+  //   ) {
+  //     this.dialog.dataService
+  //       .save((option: any) => this.beforeSave(option, this.isAddMode), 0)
+  //       .subscribe((res) => {
+  //         if (res.save) {
+  //           let data = res.save[2];
+  //           this.imageUpload
+  //             .updateFileDirectReload(data.giftID)
+  //             .subscribe((result) => {
+  //               if (result) {
+  //                 this.loadData.emit();
+  //               }
+  //               var obj = { data: data, file: result };
+  //               this.dialog.close(obj);
+  //             });
+  //         } else if (res.update) {
+  //           let data = res.update[2];
+  //           this.imageUpload
+  //             .updateFileDirectReload(data.giftID)
+  //             .subscribe((result) => {
+  //               if (result) {
+  //                 this.loadData.emit();
+  //               }
+  //               var obj = { data: data, file: result };
+  //               this.dialog.close(obj);
+  //             });
+  //         }
+  //         this.change.detectChanges();
+  //       });
+  //   } else this.fdSV.notifyInvalid(this.form.formGroup, this.formModel);
+  // }
+
+  // beforeSave(op: any, isAdd) {
+  //   op.methodName = 'AddEditGiftAsync';
+  //   op.data = [this.dataUpdate, isAdd];
+  //   return true;
+  // }
 
   onSave() {
     var formGroup = this.form.formGroup.controls;
@@ -85,11 +130,12 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
       formGroup.memo.status == 'VALID' &&
       formGroup.price.status == 'VALID'
     ) {
-      this.dialog.dataService 
-        .save((option: any) => this.beforeSave(option, this.isAddMode), 0)
+      if(this.formType == 'edit')
+      {
+        this.dialog.dataService
+        .save((option: any) => this.beforeEdit(option))
         .subscribe((res) => {
-          if (res.save) {
-            let data = res.save[2];
+          let data = res.update[2];
             this.imageUpload
               .updateFileDirectReload(data.giftID)
               .subscribe((result) => {
@@ -99,32 +145,44 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
                 var obj = { data: data, file: result };
                 this.dialog.close(obj);
               });
-          } else if (res.update) {
-            let data = res.update[2];
-            this.imageUpload
-              .updateFileDirectReload(data.giftID)
-              .subscribe((result) => {
-                if (result) {
-                  this.loadData.emit();
-                }
-                var obj = { data: data, file: result };
-                this.dialog.close(obj);
-              });
-          }
           this.change.detectChanges();
         });
+      }
+      else{
+        this.dialog.dataService
+        .save((option: any) => this.beforeAdd(option))
+        .subscribe((res) => {
+          let data = res.save[2];
+          this.imageUpload
+            .updateFileDirectReload(data.giftID)
+            .subscribe((result) => {
+              if (result) {
+                this.loadData.emit();
+              }
+              var obj = { data: data, file: result };
+              this.dialog.close(obj);
+            });
+          this.change.detectChanges();
+        });
+      }
     } else this.fdSV.notifyInvalid(this.form.formGroup, this.formModel);
   }
 
-  beforeSave(op: any, isAdd) {
-    op.methodName = 'AddEditGiftAsync';
-    op.data = [this.dataUpdate, isAdd];
+  beforeAdd(op: any) {
+    op.methodName = 'AddGiftAsync';
+    op.data = [this.dataUpdate];
     return true;
   }
 
-  changeHand(e) {}
+  beforeEdit(op: any) {
+    op.methodName = 'EditGiftAsync';
+    op.data = [this.dataUpdate];
+    return true;
+  }
 
-  onChangeOnHandOfGift() {}
+  changeHand(e) { }
+
+  onChangeOnHandOfGift() { }
 
   valueChange(event) {
     if (event) {

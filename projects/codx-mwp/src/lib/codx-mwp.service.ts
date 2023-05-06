@@ -33,6 +33,7 @@ export class CodxMwpService {
   hobbyEdit = new BehaviorSubject<any>(null);
   hobbyChange = this.hobbyEdit.asObservable();
 
+  childMenuClick = new BehaviorSubject<any>(null)
   dataObj: any;
   isUser: any = false;
   isEdit: any = true;
@@ -107,4 +108,5 @@ export class CodxMwpService {
       data,
     ]);
   }
+ 
 }

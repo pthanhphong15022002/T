@@ -106,21 +106,19 @@ export class UserGroupsComponent extends UIComponent {
     this.notifySvr.alertCode('AD009', config).subscribe((x) => {
       if (x.event.status == 'Y') {
         data.stop = true;
-        this.codxAdService
-          .stopUser(data)
-          .subscribe((res) => {
-            if (res) {
-              // this.view.dataService.remove(res).subscribe();
-              this.detectorRef.detectChanges();
-            }
-          });
+        this.codxAdService.stopUser(data).subscribe((res) => {
+          if (res) {
+            // this.view.dataService.remove(res).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
       }
     });
   }
 
   changeDataMF(e: any) {
     var dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
-    dl[0].disabled = true;
+    if (dl) dl[0].disabled = true;
   }
 
   openPopup(item: any) {
@@ -135,12 +133,12 @@ export class UserGroupsComponent extends UIComponent {
     this.dialog.closed.subscribe((e) => {});
   }
 
-  convertHtmlAgency(buID: any) {
+  convertHtmlAgency(description: any) {
     var desc = '<div class="d-flex">';
-    if (buID)
+    if (description)
       desc +=
         '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="ms-1">' +
-        buID +
+        description +
         '</span></div>';
     return desc + '</div>';
   }

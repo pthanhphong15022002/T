@@ -3,3 +3,47 @@
 codx-view-list-detail .codx-detail-footer {
     overflow: hidden;
 }
+.bgEDEDED
+{
+    background-color: #EDEDED !important;
+}
+// codx-wrapper{
+//     padding-top: 0;
+// }
+
+
+.okr-treeview{
+    .content-tree{
+        padding: 0;
+
+        .nochild {
+            width: 25px;
+        }
+        .collapse-conent{
+            margin-top: 17px;
+            margin-right: 2px;
+        }
+    }
+   
+}
+codx-tmmeetings {
+    codx-card-center{ 
+    .card-body .text-gray-700.line-clamp{
+        height: 36px;
+        line-height: 18px;
+        margin-top: 10px;
+        overflow:hidden;
+        text-overflow: ellipsis;
+    } 
+    .card .card-body {
+        padding: 1rem;
+    }
+    .card-footer .h-50px {
+        height: 40px !important;
+    }
+}
+}
+.tab-okr-trees{
+    height: calc(100vh - 152px);
+    overflow: auto;
+}

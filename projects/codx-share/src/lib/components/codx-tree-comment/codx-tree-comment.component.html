@@ -1,0 +1,61 @@
+<div class="treehis-main">
+    <ng-container *ngIf="addNew">
+        <div class="tree-footer">
+            <codx-comment-history 
+                [new]="true" 
+                [dVll]="dVll" 
+                [vllIcon]="vllIcon" 
+                [funcID]="funcID" 
+                [formModel]="formModel"
+                [actionType]="actionType" 
+                [objectID]="objectID"
+                [objectType]="objectType" 
+                [reference]="null" 
+                (evtSend)="sendComment($event)">
+            </codx-comment-history>
+        </div>
+    </ng-container>
+    <div class="tree-body">
+        <ng-container *ngFor="let node of root.listSubComment">
+            <ng-container *ngIf="node">
+                <ng-container *ngTemplateOutlet="NodeHistory; context: { $implicit: node }"></ng-container>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>
+<ng-template #NodeHistory let-item>
+    <div class="c1 task-his" [attr.dt]="setDicData(item)">
+        <codx-comment-history
+            [data]="item"
+            [dVll]="dVll" 
+            [vllIcon]="vllIcon"  
+            [actionType]="item.actionType" 
+            [formModel]="formModel"
+            (evtDelete)="deleteComment($event)" 
+            (evtReply)="replyTo($event)" 
+            [viewIcon]="viewIcon"
+            [allowVotes]="viewVote"
+            [allowEdit]="allowEdit">
+        </codx-comment-history>
+        <ng-container *ngIf="item.listSubComment && item.listSubComment.length > 0 ">
+            <ng-container *ngFor="let node of item.listSubComment">
+                <div class="ms-15">
+                    <ng-container *ngTemplateOutlet="NodeHistory; context: { $implicit: node }"></ng-container>
+                </div>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="item.showReply">
+            <codx-comment-history 
+                [new]="true"
+                [funcID]="funcID" 
+                [actionType]="actionType"
+                [formModel]="formModel"
+                [objectID]="objectID" 
+                [objectType]="objectType" 
+                [reference]="item.recID"
+                (evtSend)="sendComment($event,item)">
+            </codx-comment-history>
+        </ng-container>
+    </div>
+
+</ng-template>

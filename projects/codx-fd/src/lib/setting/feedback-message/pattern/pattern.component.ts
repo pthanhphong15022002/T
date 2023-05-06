@@ -16,6 +16,7 @@ import {
   ViewType,
 } from 'codx-core';
 import _ from 'lodash';
+import { environment } from 'src/environments/environment';
 import { EditPatternComponent } from './edit-pattern/edit-pattern.component';
 import { PatternService } from './pattern.service';
 
@@ -40,7 +41,7 @@ export class PatternComponent extends UIComponent implements OnInit {
     VIDEO: 'video',
     APPLICATION: 'application',
   };
-
+  environment = environment;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
 
   constructor(
@@ -54,6 +55,9 @@ export class PatternComponent extends UIComponent implements OnInit {
       if (res) this.functionList = res;
     });
     this.getCardType('FDS026');
+    this.router.params.subscribe((params) => {
+      if (params.funcID) this.funcID = params.funcID;
+    });
   }
 
   onInit(): void {
@@ -76,23 +80,12 @@ export class PatternComponent extends UIComponent implements OnInit {
   }
 
   LoadData() {
-    this.api
-      .call('ERM.Business.FD', 'PatternsBusiness', 'GetCardTypeAsync', [
-        this.type,
-      ])
+    this.api.execSv("FD",'ERM.Business.FD', 'PatternsBusiness', 'GetCardTypeAsync', this.type)
       .subscribe((res) => {
-        if (res && res.msgBodyData[0]) {
-          var data = res.msgBodyData[0] as any[];
-          this.lstPattern = data;
-          this.lstPattern.push({});
-          this.lstPattern.forEach((dt) => {
-            this.patternSV.getFileByObjectID(dt.recID).subscribe((res: any) => {
-              if (res && res?.length > 0) {
-                this.lstFile.push(res[0]);
-              }
-            });
-          });
-          this.change.detectChanges();
+        if (res) {
+          this.lstPattern = res;
+          this.lstPattern.push({})
+          //this.change.detectChanges();
         }
       });
   }
@@ -159,6 +152,7 @@ export class PatternComponent extends UIComponent implements OnInit {
       formType: 'add',
       dataUpdate: '',
       formModel: this.functionList,
+      funcID: this.funcID,
     };
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
@@ -169,6 +163,7 @@ export class PatternComponent extends UIComponent implements OnInit {
       dialog.closed.subscribe((e) => {
         if (e?.event?.data?.save) {
           this.lstPattern.splice(this.lstPattern.length - 1, 1);
+          this.change.detectChanges();
           this.lstPattern.push(e.event?.data?.save);
           this.lstPattern.push({});
           if (e.event.data.save.isDefault) {
@@ -178,8 +173,8 @@ export class PatternComponent extends UIComponent implements OnInit {
               else this.lstPattern[index].isDefault = false;
             });
           }
+          this.change.detectChanges();
           var data = e?.event?.data?.save;
-          data['modifiedOn'] = new Date();
           this.view.dataService.update(data).subscribe();
         }
         this.view.dataService.clear();
@@ -188,7 +183,7 @@ export class PatternComponent extends UIComponent implements OnInit {
     this.change.detectChanges();
   }
 
-  openFormEdit(item = null, i = null, elm = null) {
+  openFormEdit(item = null) {
     var arr = new Array();
     if (item) {
       this.view.dataService.dataSelected = item;
@@ -197,6 +192,7 @@ export class PatternComponent extends UIComponent implements OnInit {
       formType: 'edit',
       dataUpdate: item,
       formModel: this.functionList,
+      funcID: this.funcID,
     };
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -210,24 +206,13 @@ export class PatternComponent extends UIComponent implements OnInit {
           if (e?.event?.data.update) {
             this.lstPattern.forEach((dt, index) => {
               if (dt.recID == e.event.data.update.recID)
+              {
                 this.lstPattern[index] = e.event.data.update;
+                this.change.detectChanges();
+              }
               else this.lstPattern[index].isDefault = false;
             });
-            if (e.event.listFile) {
-              this.lstFile = new Array();
-              this.lstPattern.forEach((x) => {
-                this.patternSV
-                  .getFileByObjectID(x.recID)
-                  .subscribe((res: any[]) => {
-                    if (res.length > 0) {
-                      arr.push(res[0]);
-                    }
-                  });
-              });
-              this.lstFile = arr;
-            }
             var data = e?.event?.data?.update;
-            data['modifiedOn'] = new Date();
             this.view.dataService.update(data).subscribe();
           }
           this.view.dataService.clear();

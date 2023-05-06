@@ -29,7 +29,7 @@ import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-
 import { Approvers } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
 import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-approver.component';
-import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
+//import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
 
 @Component({
   selector: 'popup-add-approval-step',
@@ -196,6 +196,20 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             .subscribe((res: any) => {
               if (res) {
                 this.data = res.data;
+                if (this.data.stepName == '' || this.data.stepName == null) {
+                  let vllName = this.eSign == true ? 'ES002' : 'ES026';
+                  this.cache.valueList(vllName).subscribe((res) => {
+                    if (res?.datas) {
+                      let i = res.datas.findIndex(
+                        (p) => p.value == this.data.stepType
+                      );
+                      this.data.stepName = res.datas[i]?.text;
+                      this.dialogApprovalStep.patchValue({
+                        stepName: this.data.stepName,
+                      });
+                    }
+                  });
+                }
                 this.data.stepNo = this.stepNo;
                 this.data.transID = this.transId;
                 this.data.signatureType = this.defaultSignType;
@@ -388,7 +402,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         showFrom: true,
       };
 
-      this.callfc.openForm(
+      let dialogEmail = this.callfc.openForm(
         CodxEmailComponent,
         '',
         800,
@@ -396,6 +410,26 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         '',
         data
       );
+      dialogEmail.closed.subscribe((res) => {
+        if (res.event) {
+          let emailTemplates = this.dialogApprovalStep?.value.emailTemplatess;
+          let i = emailTemplates?.findIndex(
+            (p) => p.emailType == res.templateType
+          );
+          if (i >= 0) {
+            emailTemplates[i].templateID = res.event.recID;
+
+            // if (this.attachment.fileUploadList.length > 0) {
+            //   this.attachment.objectId = res.recID;
+            //   this.attachment.saveFiles();
+            // }
+
+            this.dialogApprovalStep.patchValue({
+              emailTemplates: emailTemplates,
+            });
+          }
+        }
+      });
     }
   }
 
@@ -492,12 +526,4 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       console.log(this.lstStep);
     }
   }
-}
-
-export class Files {
-  recID: string;
-  fileID: string;
-  fileName: string;
-  eSign: boolean = true;
-  comment: string;
 }

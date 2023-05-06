@@ -1,0 +1,61 @@
+<codx-form #form [headerText]="headerText" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog"
+  [footer]="footer" [data]="bankaccount" subToolbarCss="text-end">
+</codx-form>
+<ng-template #body>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="row mx-0 mt-3">
+      <div class="col-6 ps-0">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="BankAcctID"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="bankaccount.bankAcctID" [formModel]="form.formModel" field="bankAcctID"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6 pe-0">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="BankID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="bankaccount.bankID" field="bankID"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
+      <codx-input [Group]="form.formGroup" [crrValue]="bankaccount.owner" [formModel]="form.formModel" field="owner"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="Description"></codx-label>
+      <codx-input [Group]="form.formGroup" [crrValue]="bankaccount.description" [formModel]="form.formModel" field="description"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div *ngIf="form?.formGroup" class="d-flex align-items-center">
+      <codx-input [Group]="form.formGroup" class="me-2" [checked]="bankaccount.isDefault" type="switch" field="isDefault"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+      <codx-label [formModel]="form.formModel" fiedName="IsDefault" default="Mặc định"></codx-label>
+    </div>
+    <div class="d-flex justify-content-end mt-1 me-3">
+      <div *ngIf="type != 'editbank'" class="ms-2">
+        <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
+          <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+            [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+        </button>
+      </div>
+      <div class="ms-2">
+        <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
+          <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+            [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -3,12 +3,17 @@
     <div class="card-body">
       <div class="d-flex align-items-center">
         <div class="me-3">
-          <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="40" [imgOn]="user?.modifiedOn">
+          <codx-img 
+            [objectId]="user?.userID" 
+            [objectName]="user?.userName" 
+            objectType="AD_Users" 
+            [width]="40"
+            [imgOn]="user?.modifiedOn">
           </codx-img>
         </div>
         <div class="d-flex flex-column flex-grow-1 share">
-          <span class="text-gray-500 feed-box box-new share-input" (click)="openPopupAdd()">
-            {{title}}
+          <span class="text-gray-500 feed-box box-new share-input" (click)="addPost()">
+            {{mssgPlaceHolder}}
           </span>
         </div>
       </div>
@@ -19,28 +24,25 @@
   <div id="newfeed" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
     data-kt-scroll-dependencies="#postnew, .pw-profile, .pw-menu"
     data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #newfeed, .pw-content" data-kt-scroll-offset="0">
-      <codx-listview #listview
-        [dataService]="dataService"
-        [funcId]="'WP'"
-        [service]="service"
-        [assemblyName]="assemblyName"
-        [className]="className"
-        [method]="method"
-        entityName="WP_Comments"
-        [itemTemplate]="tmpPortal"
-        [emptyTemplate]="empty"
-        [predicates]="predicateWP "
-        [dataValues]="dataValueWP "
-        [formModel]="formModel">
-      </codx-listview>
-
+    <codx-listview #listview 
+      [dataService]="dataService" 
+      [funcId]="'WP'" 
+      [formModel]="formModel"
+      entityName="WP_Comments" 
+      [itemTemplate]="itemTemplate" 
+      [emptyTemplate]="empty">
+    </codx-listview>
   </div>
 </div>
-<ng-template #tmpPortal let-item>
+<ng-template #itemTemplate let-item>
   <div class="p-5 pb-0">
     <div class="d-flex align-items-top">
       <div class="me-3">
-        <codx-img [objectId]="item.createdBy" [objectName]="item.createdName" objectType="AD_Users" [width]="40">
+        <codx-img 
+          [objectId]="item.createdBy" 
+          [objectName]="item.createdName" 
+          objectType="AD_Users" 
+          [width]="40">
         </codx-img>
       </div>
       <div class="d-flex flex-column flex-grow-1">
@@ -49,335 +51,277 @@
             <span class="text-dark fw-bolder me-2">{{ item.createdName }}</span>
           </ng-container>
           <ng-container *ngIf="item.tagName">
-            <ng-container
-                *ngTemplateOutlet="templateTags; context: { $implicit: item }">
+            <ng-container *ngTemplateOutlet="templateTags; context: { $implicit: item }">
             </ng-container>
           </ng-container>
         </div>
-        <div class="d-flex align-items-center text-info-date">
+        <div class="d-flex align-items-center text-info-date mb-1">
           <span class="d-flex algin-items-center me-2 mt-1">
-            <span class="text-gray-600 fs-7 me-2">{{
+            <span class="text-gray-600 fs-7 me-2 mt-1">{{
               item.createdOn | timefrom
               }}</span>
-            <span class="rounded-1 py-0 px-2 bg-gray-200 d-flex algin-items-center">
-              <codx-vll
-                [name]="'L1901'"
-                [value]="item.shareControl"
-                [showText]="true"
-                [showIcon]="true"
+            <span class="rounded-1 py-1 px-2 bg-gray-200 d-flex algin-items-center">
+              <codx-vll [name]="'WP001'" [value]="item.shareControl" [showText]="true" [showIcon]="true"
+                [className]="'text-gray-600'" [icoCss]="'w-13px h-13px'" [path]="'assets/themes/sys/default/img/'"
                 [showBgColor]="true">
               </codx-vll>
             </span>
           </span>
-
-          <span *ngIf="item.shareName">
-            <ng-container
-                *ngTemplateOutlet="templateShares; context: { $implicit: item }">
+          <span class="mt-1" *ngIf="item.shareName">
+            <ng-container *ngTemplateOutlet="templateShares; context: { $implicit: item }">
             </ng-container>
           </span>
         </div>
       </div>
-      <ng-container *ngIf="moreFunc && moreFuncTmp; else defaultMoreFunc">
+      <!-- bổ sung moreFCtmp cho Nguyên dùng bên MWP -->
+      <ng-container *ngIf="moreFuncTmp; else defaultMoreFunc">
         <ng-container *ngTemplateOutlet="moreFuncTmp; context: { $implicit: item }"></ng-container>
       </ng-container>
       <ng-template #defaultMoreFunc>
         <div class="more">
-          <codx-mfunc
-            [formModel]="formModel"
-            (changeDataMF)="changeMoreFunction($event)"
-            (clickMF)="clickMF($event,item)"
-            [dataItem]="item" >
-          </codx-mfunc>
-        </div>
-        <!-- <div class="more">
           <div ngbDropdown class="dropdown">
             <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
               id="dropdownMenuButton1" aria-expanded="false">
               <i class="fas fa-ellipsis-h"></i>
             </a>
             <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-              <ng-container *ngFor="let element of defaultMoreFC">
-                <li *ngIf="item.write">
-                  <a (click)="openEditModal(item)" ngbDropdownItem href="javascript:void(0)">
-                    <span class="icon-edit icon-16 me-2 icon-editPost"></span>
-                    <codx-label [formModel]="formModel" name="lblEdit_comments" default="Chỉnh sửa">
-                    </codx-label>
-                  </a>
-                </li>
-              </ng-container>
-              <li *ngIf="item.write">
-                <a (click)="openEditModal(item)" ngbDropdownItem href="javascript:void(0)">
+              <li *ngIf="item.write && item.createdBy == user.userID">
+                <a (click)="editPost(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-edit icon-16 me-2 icon-editPost"></span>
-                  <codx-label [formModel]="formModel" name="lblEdit_comments" default="Chỉnh sửa">
+                  <codx-label [formModel]="formModel" name="lblEdit" default="Chỉnh sửa">
                   </codx-label>
                 </a>
               </li>
               <li *ngIf="item.delete">
-                <a (click)="removePost(item)" ngbDropdownItem href="javascript:void(0)">
+                <a (click)="deletePost(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-close icon-16 me-2 icon-removePost"></span>
-                  <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
+                  <codx-label [formModel]="formModel" name="lblDelete" default="Xóa"></codx-label>
                 </a>
               </li>
               <li *ngIf="item.share">
-                <a (click)="openModalShare(item)" ngbDropdownItem href="javascript:void(0)">
+                <a (click)="sharePost(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-share icon-16 me-2"></span>
-                  <codx-label [formModel]="formModel" name="lblShare_comments" default="Chia sẻ"></codx-label>
+                  <codx-label [formModel]="formModel" name="lblShare" default="Chia sẻ"></codx-label>
                 </a>
               </li>
               <li>
-                <a (click)="openModalDownload(item)" ngbDropdownItem href="javascript:void(0)">
+                <a (click)="savePost(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-save icon-save_alt icon-16 me-2"></span>
-                  <codx-label [formModel]="formModel" name="lblSave_comments" default="Thêm vào kho lưu trữ">
+                  <codx-label [formModel]="formModel" name="lblSave" default="Thêm vào kho lưu trữ">
                   </codx-label>
                 </a>
               </li>
             </ul>
           </div>
-        </div> -->
+        </div>
       </ng-template>
     </div>
-    <ng-container *ngIf="item.category == CATEGORY.SHARE; else shareTemplate">
-      <ng-container *ngIf="item.isContentTmp; else noContentTemp">
-        <ng-container *ngTemplateOutlet="item.contentTmp; context: { $implicit: item }"></ng-container>
-      </ng-container>
-      <ng-template #noContentTemp>
-        <div class="my-3">
-          <div [innerHTML]="item.content"></div>
-        </div>
-      </ng-template>
-      <!-- <div class="mt-3">
-        <div [innerHTML]="item.content"></div>
-      </div> -->
-      <div class="mt-2">
-        <codx-file [objectID]="item.recID" objectType="WP_Comments" (evtViewDetail)="clickViewDetail($event)">
-        </codx-file>
+    <!-- contents -->
+    <div class="wp-contents">
+      <div class="wp-contents-text">
+        <ng-container *ngIf="item.contents">
+          <div [innerHTML]="item.isShowShortContent ? item.shortContent : item.contents | safe: 'html'"></div>
+          <ng-container *ngIf="item.isShowShortContent">
+            <div>
+              <a href="javascript:void(0)" (click)="viewMore(item)">
+                <codx-label [formModel]="formModel" name="lblViewMore" default="Xem thêm"></codx-label>
+              </a>
+            </div>
+          </ng-container>
+        </ng-container>
       </div>
-      <ng-container *ngIf="item.refType == 'WP_News'; else tmpSharePost">
-        <ng-container *ngIf="item.news; else postShareDeleted">
-          <div class="post mt-3">
-            <div class="border-top border-bottom" (click)="naviagteWPNew(item.news)">
-              <div>
-                <codx-file [objectID]="item.refID" [objectType]="'WP_News'">
-                </codx-file>
-              </div>
-              <div class="p-2" [style]="'background: #f0f8ff'">
-                <div class="fw-bolder">{{ item.news.subject }}</div>
-                <div>{{ item.news.subContent }}</div>
-                <div class="text-gray-600 fs-7 me-2">{{ item.news.createdOn | fmDT }}</div>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      </ng-container>
-      <ng-template #tmpSharePost>
-        <ng-container *ngIf="item.shares; else postShareDeleted">
-          <div class="card card-custom mt-3">
-            <div class="border border-1 rounded-3 p-3">
-              <ng-container *ngTemplateOutlet="
-                  containTemplate;
-                  context: { $implicit: item.shares }
-                ">
-              </ng-container>
-              <div [innerHTML]="item.shares.content" class="mb-2"></div>
-              <div class="d-flex">
-                <div class="me-3">
-                  <codx-img
-                    slot="start"
-                    [objectName]="item.shares.createdName"
-                    [objectId]="item.shares.createdBy"
-                    objectType="AD_Users"
-                    [width]="30">
-                  </codx-img>
-                </div>
-                <div class="d-flex flex-column flex-grow-1">
-                  <span class="text-dark fw-bolder">{{
-                    item.shares.createdName
-                    }}</span>
-                  <span class="text-gray-500 fs-7 mt-1">{{
-                    item.shares.createdOn | fmDT
-                    }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      </ng-template>
-
-      <!-- end share -->
-    </ng-container>
-    <ng-template #shareTemplate>
-      <ng-container *ngIf="item.isContentTmp; else noContentShareTemp">
-      </ng-container>
-      <ng-template #noContentShareTemp>
-        <div class="my-3">
-          <div [innerHTML]="item.content"></div>
+      <ng-container *ngIf="item.attachments > 0">
+        <div class="wp-contents-files">
+          <codx-view-files 
+            [objectID]="item.recID" 
+            [objectType]="'WP_Comments'" 
+            [formModel]="formModel"
+            [medias]="item.medias" 
+            (selectFile)="clickViewDetail($event)">
+          </codx-view-files>
         </div>
-      </ng-template>
-      <ng-container *ngTemplateOutlet="containTemplate; context: { $implicit: item }"></ng-container>
-    </ng-template>
+      </ng-container>
+    </div>
+    <!-- template share -->
+    <ng-container *ngIf="item.category == CATEGORY.SHARE || item.category == CATEGORY.FEEDBACK">
+      <wp-post-share [objectID]="item.refID" [refType]="item.refType" [formModel]="formModel"></wp-post-share>
+    </ng-container>
     <!-- commemt -->
-    <treeview-comment
-      [funcID]="listview.formModel.funcID"
-      [formModel]="listview.formModel"
+    <treeview-comment 
+      [funcID]="formModel.funcID" 
+      [formModel]="formModel" 
+      [data]="item"
       [objectType]="'WP_Comments'"
-      [dataComment]="item"
       [objectID]="item.recID">
     </treeview-comment>
-    <!-- end comment -->
+
   </div>
 </ng-template>
-<!-- content body -->
-<ng-template #containTemplate let-item>
-  <ng-container *ngIf="item.isFeedBack; else WPComment">
-    <ng-container *ngIf="item.card">
-      <div class="d-flex flex-column flex-grow-1 justify-content-center align-items-center pt-5">
-        <div class="card-img w-300px h-450px" [style.background]="item.card.backgroundColor"
-          style="background-size: 100% auto">
-          <div class="card-body text-center">
-            <div color="bg-transparent" class="text-center">
-              <h2 class="fw-bolderer mb-6 mt-3" [style.color]="item.card.headerColor">
-                {{ item.card.cardType | vll: "L1422":"text" | async }}
-              </h2>
-            </div>
-            <div class="d-flex justify-content-center align-items-center">
-              <div>
-                <codx-img [width]="40" [objectId]="item.card.senderID" objectType="AD_Users">
-                </codx-img>
+<!-- template empty data -->
+<ng-template #empty>
+  <div class="p-6 bg-body">
+    <div [innerHTML]="strEmtyData">
+    </div>
+    <div class="mt-2">
+      <img class="w-100" src="assets/themes/wp/default/img/Portal_NoData.png" />
+    </div>
+  </div>
+</ng-template>
+<!-- template share WP_Comments -->
+<ng-template #templateSharePost let-share>
+  <div class="WP_Comments">
+    <div class="wp-share-files">
+      <ng-container *ngIf="share.recID">
+          <codx-view-files 
+              [formModel]="formModel" 
+              [objectType]="'WP_Comments'"
+              [medias]="share.medias"
+              [objectID]="share.recID"
+              (selectFile)="clickViewDetail($event)">
+          </codx-view-files>
+      </ng-container>
+    </div>
+    <div class="wp-share-contents">
+      <ng-container *ngIf="share.contents">
+        <div [innerHTML]="share.contents | safe: 'html'"></div>
+      </ng-container>
+    </div>
+    <div class="d-flex border-top p-4">
+      <codx-img 
+        [width]="30" 
+        [objectId]="share.createdBy" 
+        [objectName]="share.createdName" 
+        objectType="AD_Users">
+      </codx-img>
+      <div class="d-flex flex-column flex-grow-1 ms-2">
+        <div class="d-flex align-items-center">
+          <div class="user-name fw-bolder me-2">
+            <span>{{share.createdName}}</span>
+          </div>
+          <ng-container *ngIf="share.tagName">
+            <ng-container *ngTemplateOutlet="templateTags; context: { $implicit: share }">
+            </ng-container>
+          </ng-container>
+        </div>
+        <div class="d-flex text-info-date">
+          <div class="text-gray-500 me-2">{{share.createdOn | timefrom}}</div>
+          <div class="d-flex align-items-center justify-content-start ">
+            <ng-container *ngIf="share.shareControl">
+              <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
+                <codx-vll [name]="'WP001'" [value]="share.shareControl" [showText]="true" [className]="'text-gray-600'"
+                  [showIcon]="true" [path]="'assets/themes/sys/default/img/'" [icoCss]="'symbol-12px symbol-circle'"
+                  [showBgColor]="true">
+                </codx-vll>
+                <i class="icon-arrow_drop_down icon-18 text-dark"></i>
               </div>
-              <div class="w-50px text-center ion-justify-content-between">
-                <img class="icon-mail ion-margin-top-8" src="/assets/themes/fd/default/img/img_SendCard.svg" />
+            </ng-container>
+            <ng-container *ngIf="share.shareName">
+              <div class="ms-2">
+                <ng-container *ngTemplateOutlet="templateShares; context: { $implicit: share }">
+                </ng-container>
               </div>
-              <div>
-                <codx-img [width]="40" [objectId]="item.card.receiverID" objectType="AD_Users">
-                </codx-img>
-              </div>
-            </div>
-            <div class="text-dark text-feed mt-6">
-              <div [innerHTML]="item.card.situation" [style.color]="item.card.textColor"></div>
-            </div>
-            <div class="d-flex align-items-center justify-content-center mt-6">
-              <ng-container *ngIf="item.card.rating">
-                <div class="symbol symbol-30 me-2">
-                  <ng-container *ngIf="item.card.cardType == '2'">
-                    <img class="w-100" src="/assets/themes/fd/default/img/{{
-                        item.card.rating | vll: 'L1419':'icon' | async
-                      }}" />
-                  </ng-container>
-                  <ng-template>
-                    <img class="w-100" src="/assets/themes/fd/default/img/{{
-                        item.card.rating | vll: 'L1424':'icon' | async
-                      }}" />
-                  </ng-template>
-                </div>
-              </ng-container>
-              <ng-container *ngIf="item.card.hasGift">
-                <div class="">
-                  <img src="/assets/themes/fd/default/img/img_HasGifts.svg" />
-                </div>
-              </ng-container>
-              <ng-container *ngIf="item.card.hasPoint">
-                <div class="ms-2">
-                  <img src="/assets/themes/fd/default/img/img_HasCoins.svg" />
-                </div>
-              </ng-container>
-            </div>
+            </ng-container>
           </div>
         </div>
       </div>
-    </ng-container>
-  </ng-container>
-  <ng-template #WPComment>
-    <div class="pic-feed mb-2">
-      <div class="pic-feed-img">
-        <codx-file [objectID]="item.recID" (evtGetFiles)="getFiles($event, item)"
-          (evtViewDetail)="clickViewDetail($event)">
-        </codx-file>
-      </div>
     </div>
-  </ng-template>
+  </div>
 </ng-template>
-<!-- content body -->
-<ng-template #empty>
-  <div class="d-flex justify-content-between align-items-center p-6 bg-body">
-    <div [innerHTML]="strEmtyData">
+<!-- template share WP_News-->
+<ng-template #templateShareNews let-news>
+  <div class="WP_News" (click)="naviagteWPNew(news)">
+    <div class="WP_News-images">
+      <ng-container *ngIf="news.recID">
+        <codx-img 
+          [cssClass]="'news-image'" 
+          [objectId]="news.recID" 
+          [objectType]="'WP_News'" 
+          [referType]="'image'"
+          [width]="500" 
+          imageType="square">
+        </codx-img>
+      </ng-container>
     </div>
-    <div>
-      <img src="assets/themes/wp/default/img/Portal_NoData.svg" />
+    <div class="WP_News-contents mb-2">
+      <ng-container *ngIf="news.subject">
+        <div class="fw-bold text-dark fs-5 mt-2">
+          {{news.subject}}
+        </div>
+      </ng-container>
+      <ng-container *ngIf="news.subContent">
+        <div class="text-gray-600 mt-1">
+          {{news.subContent}}
+        </div>
+      </ng-container>
+      <ng-container *ngIf="news.createdOn">
+        <div class="text-gray-400 mt-1" [innerHTML]="news.createdOn | formatvalue:formModel:'CreatedOn' | async">
+        </div>
+      </ng-container>
     </div>
+  </div>
+</ng-template>
+<!-- template FD card -->
+<ng-template #templateShareCard let-card>
+  <div class="FD_Cards">
+    <codx-view-card [card]="card"></codx-view-card>
   </div>
 </ng-template>
 
-<ng-template #postShareDeleted>
-  <div class="card card-custom card-border border border-1 mt-3">
-    <div class="card-body p-5">
-      <div class="d-flex">
-        <div class="me-3">
-          <codx-img slot="start" objectId="" isDefaulImg="true" objectType="AD_Users" [width]="30">
-          </codx-img>
-        </div>
-        <div class="d-flex flex-column flex-grow-1">
-          <codx-label formModel="" name="lblPostDeleted" default="Bài viết không còn tồn tại">
-          </codx-label>
-        </div>
+<!-- template list permissions share -->
+<ng-template #templateShares let-data>
+  <div ngbDropdown class="symbol-more" [container]="'body'">
+    <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span [innerHTML]="data.shareName"> </span>
+    </div>
+    <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+      <div class="py-2">
+        <codx-label [formModel]="formModel" name="lblShares" default="Danh sách người được chia sẻ" class="fw-bolder"></codx-label>
+      </div>
+      <div class="hr-list-employee">
+        <ng-container *ngFor="let perrmisison of data.permissions">
+          <ng-container *ngIf="perrmisison.memberType == '2'">
+            <div class="d-flex align-items-center mt-3">
+              <codx-img 
+                [objectId]="perrmisison.objectID" 
+                [objectName]="perrmisison.objectName" 
+                [objectType]="'AD_Users'" 
+                [cssClass]="'me-3'"
+                [width]="30">
+              </codx-img>
+              <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>
+            </div>
+          </ng-container>
+        </ng-container>
       </div>
     </div>
   </div>
 </ng-template>
-<!-- template permissions chia sẻ -->
-<ng-template #templateShares let-data>
-  <div ngbDropdown class="symbol-more" [container]="'body'">
-      <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span [innerHTML]="data.shareName"> </span>
-      </div>
-      <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-          <div class="py-2">
-              <codx-label [formModel]="" default="Danh sách người được chia sẻ" class="fw-bolder"></codx-label>
-          </div>
-          <div class="hr-list-employee">
-              <ng-container *ngFor="let perrmisison of data.permissions">
-                  <ng-container *ngIf="perrmisison.memberType == '2'">
-                    <div class="d-flex align-items-center mt-3">
-                      <codx-img
-                          [objectId]="perrmisison.objectID"
-                          [objectType]="'AD_Users'"
-                          [cssClass]="'me-3'"
-                          [objectName]="perrmisison.objectName"
-                          [width]="30">
-                      </codx-img>
-                      <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>
-                  </div>
-                  </ng-container>
-              </ng-container>
-          </div>
-      </div>
-  </div>
-</ng-template>
-<!-- template permissions gắn thẻ -->
+<!-- template list permissions tag -->
 <ng-template #templateTags let-data>
   <div ngbDropdown class="symbol-more" [container]="'body'">
-      <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span [innerHTML]="data.tagName"> </span>
+    <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span [innerHTML]="data.tagName"> </span>
+    </div>
+    <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+      <div class="py-2">
+        <codx-label [formModel]="" default="Danh sách người gắn thẻ" class="fw-bolder"></codx-label>
       </div>
-      <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-          <div class="py-2">
-              <codx-label [formModel]="" default="Danh sách người gắn thẻ" class="fw-bolder"></codx-label>
-          </div>
-          <div class="hr-list-employee">
-              <ng-container *ngFor="let perrmisison of data.permissions">
-                  <ng-container *ngIf="perrmisison.memberType == '3'">
-                    <div class="d-flex align-items-center mt-3">
-                      <codx-img
-                          [objectId]="perrmisison.objectID"
-                          [objectType]="'AD_Users'"
-                          [cssClass]="'me-3'"
-                          [objectName]="perrmisison.objectName"
-                          [width]="30">
-                      </codx-img>
-                      <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>
-                  </div>
-                  </ng-container>
-              </ng-container>
-          </div>
+      <div class="hr-list-employee">
+        <ng-container *ngFor="let perrmisison of data.permissions">
+          <ng-container *ngIf="perrmisison.memberType == '3'">
+            <div class="d-flex align-items-center mt-3">
+              <codx-img 
+                [objectId]="perrmisison.objectID" 
+                [objectName]="perrmisison.objectName" 
+                [objectType]="'AD_Users'" 
+                [cssClass]="'me-3'"
+                [width]="30">
+              </codx-img>
+              <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>
+            </div>
+          </ng-container>
+        </ng-container>
       </div>
+    </div>
   </div>
 </ng-template>

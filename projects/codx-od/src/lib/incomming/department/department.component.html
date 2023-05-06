@@ -1,37 +1,38 @@
-<div class="card w-100 rounded-0 border-0">
-  <div class="card-body">
+<codx-form headerText="Thêm phòng ban"  [body]="body" [footer]="footer" [dialog]="dialog">
+    <ng-template popup adde #body>
       <div class="form-group mt-3">
-          <label>Tên phòng ban</label>
-          <input type="text" class="form-control" placeholder="" [(ngModel)]="dtAgency.AgencyName"/>
+        <codx-label fiedName="lblDAgencyName" [default]="'Tên phòng ban'" [formName]="formModel?.formName" class="fw-bold"></codx-label> <span class="text-danger">*</span>
+        <input type="text" class="form-control" placeholder="" [(ngModel)]="dtAgency.AgencyName"/>
       </div>
       <div class="form-group mt-3">
-          <label>Người đại diện</label>
-          <input type="text" class="form-control" placeholder="" [(ngModel)]="dtAgency.ContactName"/>
+        <codx-label default="Người đại diện" fiedName="lblDContactName" [formName]="formModel?.formName"></codx-label>
+        <input type="text" class="form-control" placeholder="" [(ngModel)]="dtAgency.ContactName"/>
       </div>
       <div class="form-group mt-3">
-          <label>Chức vụ</label>
-          <input type="text" class="form-control" placeholder="" [(ngModel)]="dtAgency.JobTitle"/>
+        <codx-label default="Chức vụ" fiedName="lblDJobTitle" [formName]="formModel?.formName"></codx-label>
+        <input type="text" class="form-control" placeholder="" [(ngModel)]="dtAgency.JobTitle"/>
       </div>
       <div class="form-group row mt-3">
-          <div class="col-6">
-              <label>Điện thoại</label>
-              <input type="text" class="form-control" placeholder="" [(ngModel)]="dtAgency.Phone"/>
-          </div>
-          <div class="col-6">
-              <label>Fax</label>
-              <input type="text" class="form-control" placeholder="" />
-          </div>
-      </div>
-      <div class="form-group mt-3">
-          <label>Ghi chú</label>
-          <codx-input type="textarea" field="textarea" placeholder="" (valueChange)="changeValueNote($event)">
-          </codx-input>
-      </div>
-  </div>
-  <div class="card-footer pt-4">
-      <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-primary" (click)="saveAgency()">Lưu</button>
-
-      </div>
-  </div>
-</div>
+        <div class="col-6">
+            <codx-label default="Điện thoại" fiedName="lblDPhone" [formName]="formModel?.formName"></codx-label>
+            <input type="text" class="form-control" placeholder="" [(ngModel)]="dtAgency.Phone"/>
+        </div>
+        <div class="col-6">
+            <codx-label default="Điện thoại" fiedName="lblDFax" [formName]="formModel?.formName"></codx-label>
+            <input type="text" class="form-control" placeholder="Fax" />
+        </div>
+    </div>
+    <div class="form-group mt-3">
+        <codx-label default="Ghi chú" fiedName="lblDNote" [formName]="formModel?.formName"></codx-label>
+        <codx-input type="textarea" field="textarea" placeholder="" (valueChange)="changeValueNote($event)">
+        </codx-input>
+    </div>
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+            <div class="d-flex">
+                <button type="button" class="btn btn-primary" type="submit" (click)="saveAgency()"><codx-label default="Lưu" [fiedName]="'lblSave'" [formName]="formModel?.formName"></codx-label></button>
+            </div>
+        </div>
+    </ng-template>
+</codx-form>

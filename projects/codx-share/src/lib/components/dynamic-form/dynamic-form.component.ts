@@ -12,10 +12,14 @@ import {
   DataRequest,
   CallFuncService,
   LayoutService,
+  NotificationsService,
+  FormModel,
 } from 'codx-core';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { ActivatedRoute } from '@angular/router';
+import { TabModel } from '../codx-tabs/model/tabControl.model';
+import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 
 @Component({
   selector: 'codx-dynamic-form',
@@ -39,11 +43,13 @@ export class DynamicFormComponent extends UIComponent {
   idField: string = 'recID';
   dataSelected: any;
   function: any = {};
+  tabs: TabModel[] = [];
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
     private route: ActivatedRoute,
-    private layout: LayoutService
+    private layout: LayoutService,
+    private notifySvr: NotificationsService
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -71,12 +77,13 @@ export class DynamicFormComponent extends UIComponent {
         sameData: true,
         active: true,
         model: {
-          resources: this.columnsGrid,
+          //resources: this.columnsGrid,
           template2: this.morefunction,
-          frozenColumns: 1,
+          //frozenColumns: 1,
         },
       },
     ];
+    this.detectorRef.detectChanges();
   }
 
   viewChanged(evt: any, view: ViewsComponent) {
@@ -85,6 +92,18 @@ export class DynamicFormComponent extends UIComponent {
       .subscribe(() => {});
   }
 
+  changeDataMF(e: any, data) {
+    console.log('event', e);
+    console.log('data', data);
+    if (data.isSystem) {
+      let delMF = e.filter(
+        (x: { functionID: string }) => x.functionID == 'SYS02'
+      );
+      if (delMF) {
+        delMF[0].disabled = true;
+      }
+    }
+  }
   clickMF(evt?: any, data?: any) {
     this.function = evt;
     switch (evt.functionID) {
@@ -101,9 +120,54 @@ export class DynamicFormComponent extends UIComponent {
       case 'SYS002':
         this.export(data);
         break;
+      //Quy trình chi tiết của OD
+      case 'ODS2101':
+        this.openFormEditCategory(data,evt)
+        break;
       default:
         break;
     }
+  }
+
+
+  //Form chỉnh sửa quy trình duyệt OD
+  openFormEditCategory(data:any , e:any)
+  {
+    this.api.execSv("ES","ES","CategoriesBusiness","GetByCategoryIDAsync",data?.categoryID).subscribe(item=>{
+      if(item)
+      {
+        this.viewBase.dataService.dataSelected = item;
+        let option = new SidebarModel();
+        option.Width = '550px';
+        option.DataService = this.viewBase?.dataService;
+        option.FormModel = new FormModel()
+        option.FormModel.entityName = "ES_Categories";
+        option.FormModel.entityPer  = "ES_ODCategoriesApproval";
+        option.FormModel.formName   = "ODCategoriesApproval";
+        option.FormModel.funcID     = "ODS24";
+        option.FormModel.gridViewName = "grvODCategoriesApproval";
+        option.FormModel.userPermission = this.viewBase?.formModel?.userPermission;
+        let popupEdit = this.callfunc.openSide(
+          PopupAddCategoryComponent,
+          {
+            disableCategoryID: '1',
+            data: item,
+            isAdd: false,
+            headerText: e?.data?.customName,
+          },
+          option
+        );
+        popupEdit.closed.subscribe((res) => {
+          if (res?.event == null) {
+            //this.viewBase.dataService.dataSelected = evt.data;
+            //this.viewBase.dataService.clear();
+          } else {
+            //this.viewBase.dataService.update(res.event).subscribe();
+          }
+        });
+      }
+    })
+   
   }
 
   click(evt: ButtonModel) {
@@ -141,15 +205,17 @@ export class DynamicFormComponent extends UIComponent {
           if (dt && !dt?.error && dt?.data && dt?.data?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api
-              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [dt?.data,'ODS21'])
+              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [
+                dt?.data,
+                'ODS21',
+              ])
               .subscribe();
           }
         });
     });
   }
   private edit(evt?, mFunc?) {
-    this.dataSelected = this.viewBase.dataService.dataSelected;
-    if (evt) this.dataSelected = evt;
+    if (evt) this.viewBase.dataService.dataSelected = this.dataSelected = evt;
     this.viewBase.dataService.edit(this.dataSelected).subscribe(() => {
       let option = new SidebarModel();
       option.Width = '550px';
@@ -174,7 +240,10 @@ export class DynamicFormComponent extends UIComponent {
           if (dt && dt?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api
-              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [dt,'ODS21'])
+              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [
+                dt,
+                'ODS21',
+              ])
               .subscribe();
           }
         });
@@ -182,8 +251,8 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   private copy(evt: any, mFunc?) {
-    this.dataSelected = this.viewBase.dataService.dataSelected;
-    if (!this.dataSelected && evt) {
+    //this.dataSelected = this.viewBase.dataService.dataSelected;
+    if (evt) {
       this.viewBase.dataService.dataSelected = this.dataSelected = evt;
     }
     (this.viewBase.dataService as CRUDService).copy().subscribe((res) => {
@@ -207,17 +276,34 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   private delete(evt?) {
-    let delItem = this.viewBase.dataService.dataSelected;
-    if (evt) delItem = evt;
-    this.viewBase.dataService.delete([delItem]).subscribe((res) => {
-      this.dataSelected = res;
-    });
+    if (evt) var delItem = (this.viewBase.dataService.dataSelected = evt);
     //Xử lý riêng OD
-    if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
+    if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21') {
       this.api
-          .execSv('ES', 'ES', 'CategoriesBusiness', 'DeleteCategoyAsync', [delItem?.categoryID])
-          .subscribe();
-    
+        .execSv(
+          'OD',
+          'OD',
+          'DispatchesBusiness',
+          'GetItemByCategoryIDAsync',
+          delItem.categoryID
+        )
+        .subscribe((item) => {
+          if (!item) {
+            this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+              this.dataSelected = res;
+            });
+            this.api
+              .execSv('ES', 'ES', 'CategoriesBusiness', 'DeleteCategoyAsync', [
+                delItem?.categoryID,
+              ])
+              .subscribe();
+          } else this.notifySvr.notifyCode('SYS002');
+        });
+    } else {
+      this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+        this.dataSelected = res;
+      });
+    }
   }
 
   private export(evt: any) {

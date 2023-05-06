@@ -1,3 +1,4 @@
+import { AssignTaskModel } from './../../../../../codx-share/src/lib/models/assign-task.model';
 import {
   Component,
   Input,
@@ -8,13 +9,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { dataValidate } from '@syncfusion/ej2-angular-spreadsheet';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import {
   ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
+  DataRequest,
   DialogModel,
   DialogRef,
   NotificationsService,
@@ -23,7 +24,7 @@ import {
   ViewsComponent,
 } from 'codx-core';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
-import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
+import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign-file.component';
 
@@ -48,6 +49,7 @@ export class ViewDetailComponent implements OnInit {
     this.user = this.authStore.get();
   }
 
+  @Input() data: any = { category: 'Trình ký' };
   @Input() showApproveStatus: boolean = true;
   @Input() itemDetail: any;
   @Input() funcID;
@@ -76,24 +78,57 @@ export class ViewDetailComponent implements OnInit {
   dataReferences: any = [];
   vllRefType: string = 'TM018';
   isAfterRender: boolean = false;
+  gridViewSetup: any = {};
+
+  mfRelease: any;
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;
+
+  tabControl: TabModel[] = [];
 
   ngOnInit(): void {
     this.itemDetailStt = 3;
     this.itemDetailDataStt = 1;
     if (this.formModel) {
-      this.initForm();
+      this.cache
+        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+        .subscribe((gv) => {
+          if (gv) this.gridViewSetup = gv;
+          this.initForm();
+        });
     } else {
       this.esService.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) this.formModel = formModel;
-        this.initForm();
+        if (formModel) {
+          this.formModel = formModel;
+          this.cache
+            .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+            .subscribe((gv) => {
+              if (gv) this.gridViewSetup = gv;
+              this.initForm();
+            });
+        }
       });
     }
   }
 
+  ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+    ];
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes?.data &&
+      changes.data?.previousValue?.recID != changes.data?.currentValue?.recID
+    ) {
+      this.data = changes.data?.currentValue;
+    }
     if (this.formModel) {
       this.initForm();
     } else {
@@ -102,8 +137,6 @@ export class ViewDetailComponent implements OnInit {
           this.formModel = formModel;
           this.esService.setCacheFormModel(this.formModel);
         }
-        console.log(this.formModel);
-
         this.initForm();
       });
     }
@@ -143,9 +176,7 @@ export class ViewDetailComponent implements OnInit {
     if (this.itemDetailTemplate && !this.itemDetailTemplate?.formModel) {
       this.itemDetailTemplate.formModel = this.formModel;
     }
-    this.cache.valueList('TM018').subscribe((res) => {
-      console.log('TM018', res);
-    });
+    this.cache.valueList('TM018').subscribe((res) => {});
     if (this.itemDetail?.recID) {
       this.esService.getTask(this.itemDetail?.recID).subscribe((res) => {
         this.taskViews = res;
@@ -158,8 +189,6 @@ export class ViewDetailComponent implements OnInit {
         this.esService
           .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
           .subscribe((res) => {
-            console.log('get file', res);
-
             if (res) {
               this.files = res;
             }
@@ -187,7 +216,6 @@ export class ViewDetailComponent implements OnInit {
                         this.df.detectChanges();
                       });
                   }
-                  console.log(oEntity);
                 });
             }
             this.itemDetail = res;
@@ -197,7 +225,8 @@ export class ViewDetailComponent implements OnInit {
       this.transID = this.itemDetail.processID;
       if (
         this.itemDetail?.approveControl == '1' ||
-        this.itemDetail?.approveStatus != '1'
+        this.itemDetail?.approveStatus == '3' ||
+        this.itemDetail?.approveStatus == '5'
       ) {
         this.transID = this.itemDetail.recID;
       }
@@ -205,13 +234,14 @@ export class ViewDetailComponent implements OnInit {
       this.esService.getFormModel('EST04').then((res) => {
         if (res) {
           let fmApprovalStep = res;
-          let gridModels = new GridModels();
+          let gridModels = new DataRequest();
           gridModels.dataValue = this.transID;
           gridModels.predicate = 'TransID=@0';
           gridModels.funcID = fmApprovalStep.funcID;
           gridModels.entityName = fmApprovalStep.entityName;
           gridModels.gridViewName = fmApprovalStep.gridViewName;
-          gridModels.pageSize = 20;
+          // gridModels.pageSize = 20;
+          gridModels.pageLoading = false;
 
           if (gridModels.dataValue != null) {
             this.esService.getApprovalSteps(gridModels).subscribe((res) => {
@@ -266,20 +296,28 @@ export class ViewDetailComponent implements OnInit {
     var unbm = e.filter(
       (x: { functionID: string }) => x.functionID == 'EST01104'
     );
+    var release = e.filter(
+      (x: { functionID: string }) => x.functionID == 'EST01105'
+    );
+
+    this.mfRelease = release;
 
     if (bookmarked == true) {
-      bm[0].disabled = true;
-      unbm[0].disabled = false;
+      if (bm && bm.length) bm[0].disabled = true;
+      if (unbm && unbm.length) unbm[0].disabled = false;
     } else {
-      unbm[0].disabled = true;
-      bm[0].disabled = false;
+      if (unbm && unbm.length) unbm[0].disabled = true;
+      if (bm && bm.length) bm[0].disabled = false;
     }
 
-    if (data.approveStatus == '0') {
+    if (data.approveStatus != '3') {
       var cancel = e.filter(
         (x: { functionID: string }) => x.functionID == 'EST01101'
       );
-      cancel[0].disabled = true;
+      if (cancel && cancel.length) cancel[0].disabled = true;
+    }
+    if (data.approveStatus != 1 && data.approveStatus != 2) {
+      if (release?.length) release[0].disabled = true;
     }
   }
 
@@ -318,6 +356,9 @@ export class ViewDetailComponent implements OnInit {
       case 'EST01104': //unBookmark
         this.unBookmark(datas);
         break;
+      case 'EST01105': //Gửi duyệt
+        this.release();
+        break;
     }
   }
 
@@ -327,16 +368,19 @@ export class ViewDetailComponent implements OnInit {
       task.refID = datas?.recID;
       task.refType = this.view?.formModel.entityName;
       task.dueDate = datas?.expiredOn;
-      var vllControlShare = 'TM003';
-      var vllRose = 'TM002';
-      var title = 'Giao việc';
+      let assignModel: AssignTaskModel = {
+        vllRole: 'TM002',
+        title: 'Giao việc',
+        vllShare: 'TM003',
+        task: task,
+      };
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
       let dialogAdd = this.callfunc.openSide(
         AssignInfoComponent,
-        [task, vllControlShare, vllRose, title],
+        assignModel,
         option
       );
       dialogAdd.closed.subscribe((e) => {});
@@ -363,6 +407,7 @@ export class ViewDetailComponent implements OnInit {
           formModel: this.view?.formModel,
           option: option,
           headerText: mF?.text,
+          moreFunction: this.mfRelease,
         },
         '',
         dialogModel
@@ -376,6 +421,7 @@ export class ViewDetailComponent implements OnInit {
             this.view.dataService.update(res.event).subscribe();
           }
         }
+        this.esService.setupChange.next(true);
       });
     });
   }
@@ -409,11 +455,15 @@ export class ViewDetailComponent implements OnInit {
         '',
         dialogModel
       );
-      dialogAdd.closed.subscribe((res) => {
-        if (!res.event) {
-          this.esService.deleteStepByTransID(res.recID).subscribe();
-        } else {
-          this.view.dataService.add(res.event.data, 0).subscribe();
+      dialogAdd.closed.subscribe((x) => {
+        if (x.event) {
+          if (x.event?.approved) {
+            this.view.dataService.add(x.event.data, 0).subscribe();
+          } else {
+            delete x.event._uuid;
+            this.view.dataService.add(x.event, 0).subscribe();
+            //this.getDtDis(x.event?.recID)
+          }
         }
       });
     });
@@ -457,7 +507,6 @@ export class ViewDetailComponent implements OnInit {
                   this.oCancelSF = datas;
                   this.callfunc.openForm(this.addCancelComment, '', 650, 380);
                 }
-                console.log(lstTrans);
                 return;
               }
             });
@@ -473,7 +522,7 @@ export class ViewDetailComponent implements OnInit {
         if (res) {
           datas.approveStatus = '0';
           this.view.dataService.update(datas).subscribe();
-          this.notify.notifyCode('RS002');
+          this.notify.notifyCode('SYS034');
         }
       });
   }
@@ -531,6 +580,9 @@ export class ViewDetailComponent implements OnInit {
         '',
         dialogModel
       );
+      dialogAdd.closed.subscribe((res) => {
+        window['PDFViewerApplication']?.unbindWindowEvents();
+      });
     });
   }
 
@@ -576,6 +628,43 @@ export class ViewDetailComponent implements OnInit {
       });
   }
 
+  release() {
+    //Gửi duyệt'
+
+    if (this.user.userID != this.itemDetail.owner) {
+      return;
+    }
+    // if (this.itemDetail.eSign == true && this.processTab < 3 && this.currentTab == 3) {
+    //   return;
+    // }
+
+    this.esService
+      .release(
+        this.itemDetail,
+        this.formModel.entityName,
+        this.formModel.funcID
+      )
+      .subscribe((res) => {
+        if (res?.msgCodeError == null && res?.rowCount > 0) {
+          //Gen QR code
+          this.esService
+            .addQRBeforeRelease(this.itemDetail.recID)
+            .subscribe((res) => {});
+          this.esService
+            .getDetailSignFile(this.itemDetail?.recID)
+            .subscribe((res) => {
+              if (res) {
+                this.view.dataService.update(res).subscribe();
+                this.itemDetail = res;
+                this.df.detectChanges();
+              }
+            });
+          // Notify
+          this.notify.notifyCode('ES007');
+        }
+      });
+  }
+
   //#endregion
 
   checkOpenForm(val: any) {
@@ -587,9 +676,7 @@ export class ViewDetailComponent implements OnInit {
     return true;
   }
 
-  clickMF(e) {
-    console.log(e);
-  }
+  clickMF(e) {}
 
   saveFile() {
     this.attachment.saveFiles();

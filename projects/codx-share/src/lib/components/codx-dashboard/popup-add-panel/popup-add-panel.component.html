@@ -55,6 +55,30 @@
       placeholder=""
       (valueChange)="valueChange($event)"
     ></codx-input>
+    <codx-label
+      name="lblMinSizeX"
+      [formModel]="dialog.formModel"
+      default="MinSizeX"
+    ></codx-label>
+    <codx-input
+      type="number"
+      class="test-textbox"
+      field="minSizeX"
+      placeholder=""
+      (valueChange)="valueChange($event)"
+    ></codx-input>
+    <codx-label
+      name="lblMinSizeY"
+      [formModel]="dialog.formModel"
+      default="MinSizeY"
+    ></codx-label>
+    <codx-input
+      type="number"
+      class="test-textbox"
+      field="minSizeY"
+      placeholder=""
+      (valueChange)="valueChange($event)"
+    ></codx-input>
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">

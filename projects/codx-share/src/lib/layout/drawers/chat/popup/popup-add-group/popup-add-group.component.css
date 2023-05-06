@@ -1,0 +1,34 @@
+
+.popup{
+    width: 100%;
+    height: 100%;
+}
+.popup-header{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.popup-body{
+    width: 100%;
+    height: 100%;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+.panel-left{
+    width: 100%;
+    height: 100%;
+}
+.panel-right{
+    width: 100%;
+    margin-left: 15px;
+}
+.panel-left-header{
+    width: 100%;
+    height: auto;
+}
+.panel-left-body{
+    width: 100%;
+}
+

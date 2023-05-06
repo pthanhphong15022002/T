@@ -5,6 +5,8 @@ import {
   AfterViewInit,
   ViewChild,
   TemplateRef,
+  Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   UIComponent,
@@ -12,9 +14,12 @@ import {
   ViewType,
   ViewModel,
   ViewsComponent,
+  ResourceModel,
 } from 'codx-core';
 import { PopupAddCalendarComponent } from './popup-add-calendar/popup-add-calendar.component';
 import { PopupSettingCalendarComponent } from './popup-setting-calendar/popup-setting-calendar.component';
+import moment from 'moment';
+import { CodxShareService } from '../../codx-share.service';
 
 @Component({
   selector: 'setting-calendar',
@@ -28,24 +33,64 @@ export class SettingCalendarComponent
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('view') viewOrg!: ViewsComponent;
   views: Array<ViewModel> | any = [];
-  funcID: string;
-  calendarID: string;
   calendarName: string;
   dayWeek = [];
   daysOff = [];
   formModel: FormModel;
+  request?: ResourceModel;
+  calendarID: string;
+  vllPriority = 'TM005';
+  startTime: any;
+  month: any;
+  day: any;
+  resourceID: any;
+  tempCarName = '';
+  listCar = [];
+  driverName = '';
+  selectBookingAttendeesCar = '';
+  selectBookingAttendeesRoom = '';
+  listDriver: any[];
+  tempDriverName = '';
+  selectBookingItems = [];
+  tempRoomName = '';
+  listRoom = [];
+  funcID: string;
 
   constructor(
     private injector: Injector,
-    private settingCalendar: SettingCalendarService
+    private settingCalendar: SettingCalendarService,
+    private codxShareSV: CodxShareService,
+    private change: ChangeDetectorRef
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
+    this.router.params.subscribe((params) => {
+      if (params) {
+        this.funcID = params['funcID'];
+        this.cache.functionList(this.funcID).subscribe((res) => {
+          if (res) this.getParams(res.module + 'Parameters', 'CalendarID');
+        });
+      }
+    });
   }
 
   onInit(): void {
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      this.getParams(res.module + 'Parameters', 'CalendarID');
+    this.codxShareSV.getListResource('1').subscribe((res: any) => {
+      if (res) {
+        this.listRoom = [];
+        this.listRoom = res;
+      }
+    });
+    this.codxShareSV.getListResource('2').subscribe((res: any) => {
+      if (res) {
+        this.listCar = [];
+        this.listCar = res;
+      }
+    });
+    this.codxShareSV.getListResource('3').subscribe((res: any) => {
+      if (res) {
+        this.listDriver = [];
+        this.listDriver = res;
+      }
     });
   }
 
@@ -63,6 +108,20 @@ export class SettingCalendarComponent
     this.detectorRef.detectChanges();
   }
 
+  //region EP
+  showHour(date: any) {
+    let temp = new Date(date);
+    let time =
+      ('0' + temp.getHours()).toString().slice(-2) +
+      ':' +
+      ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
+
+  sameDayCheck(sDate: any, eDate: any) {
+    return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
+  }
+
   getParams(formName: string, fieldName: string) {
     this.settingCalendar.getParams(formName, fieldName).subscribe((res) => {
       if (res) {
@@ -75,7 +134,7 @@ export class SettingCalendarComponent
         }
         this.getDayWeek(this.calendarID);
         this.getDaysOff(this.calendarID);
-        this.detectorRef.detectChanges();
+        // this.detectorRef.detectChanges();
       }
     });
   }

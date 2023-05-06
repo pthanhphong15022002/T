@@ -1,48 +1,16 @@
-<codx-form
-  [headerText]="'Thêm ngày nghỉ'"
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialog"
-  (reload)="reloadCalendar"
-  *ngIf="isAfterRender"
->
+<codx-form [headerText]="'Thêm ngày nghỉ'" [body]="body" [footer]="footer" [dialog]="dialog" (reload)="reloadCalendar"
+  *ngIf="isAfterRender">
   <ng-template #body>
     <div class="form-popup my-6">
       <div class="form-group row">
         <div class="col-2 col-form-label">
-          <codx-label
-            name="lblCalendarDate"
-            formName="Calendars"
-            default="Ngày nghỉ"
-          >
+          <codx-label name="lblCalendarDate" formName="Calendars" default="Ngày nghỉ">
           </codx-label>
         </div>
         <div class="col-4">
-          <codx-input
-            type="datetime"
-            format="d"
-            field="calendarDate"
-            [crrValue]="this.dialogAddDayoffs.value?.calendarDate"
-            (valueChange)="valueChange($event)"
-          >
+          <codx-input type="datetime" format="d" field="calendarDate"
+            [crrValue]="this.dialogAddDayoffs.value?.calendarDate" (valueChange)="valueChange($event)">
           </codx-input>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-2 col-form-label">
-          <codx-label name="lblColor" formName="Calendars" default="Màu">
-          </codx-label>
-        </label>
-        <div class="col-4" #group1>
-          <codx-colorpicker
-            type="colorpicker"
-            class="form-control text-white color-large"
-            field="dayoffColor"
-            format="hex"
-            [value]="this.dialogAddDayoffs.value?.dayoffColor"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-colorpicker>
         </div>
       </div>
       <div class="form-group row">
@@ -50,15 +18,19 @@
           <codx-label name="lblSymbol" formName="Calendars" default="Symbol">
           </codx-label>
         </label>
-        <div class="col-2 input-symbol">
-          <codx-input
-            type="vllicon"
-            refValue="L1470"
-            field="symbol"
-            [crrValue]="this.dialogAddDayoffs.value?.symbol"
-            (valueChange)="valueChange($event)"
-          >
+        <div class="col-4 input-symbol">
+          <codx-input type="vllicon" refValue="L1470" field="symbol" [crrValue]="this.dialogAddDayoffs.value?.symbol"
+            (valueChange)="valueChange($event)">
           </codx-input>
+        </div>
+        <label class="col-2 col-form-label">
+          <codx-label name="lblColor" formName="Calendars" default="Màu">
+          </codx-label>
+        </label>
+        <div class="col-4" #group1>
+          <codx-colorpicker type="colorpicker" class="form-control text-white color-large" field="dayoffColor"
+            format="hex" [value]="this.dialogAddDayoffs.value?.dayoffColor" (valueChange)="valueChange($event)">
+          </codx-colorpicker>
         </div>
       </div>
       <div class="form-group row">
@@ -67,13 +39,8 @@
           </codx-label>
         </label>
         <div class="col-10">
-          <codx-input
-            type="textarea"
-            field="note"
-            format="ed3"
-            [crrValue]="this.dialogAddDayoffs.value?.note"
-            (valueChange)="valueChange($event)"
-          >
+          <codx-input type="textarea" field="note" format="ed3" [crrValue]="this.dialogAddDayoffs.value?.note"
+            (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
@@ -81,11 +48,7 @@
   </ng-template>
   <ng-template #footer>
     <div class="mb-4">
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="saveCalendarDate()"
-      >
+      <button type="button" class="btn btn-primary" (click)="saveCalendarDate()">
         Save
       </button>
     </div>

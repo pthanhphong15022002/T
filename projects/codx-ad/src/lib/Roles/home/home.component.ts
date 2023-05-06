@@ -46,6 +46,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   button?: ButtonModel;
   dialog: DialogRef;
   urlDetailRoles: any;
+  headerText = '';
 
   @ViewChild('templateListView') templateListView!: TemplateRef<any>;
 
@@ -53,7 +54,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     private injector: Injector,
     private tenantStore: TenantStore,
     private tempService: TempService,
-    private changedt: ChangeDetectorRef,
+    // private changedt: ChangeDetectorRef,
     private route: ActivatedRoute
   ) {
     super(injector);
@@ -72,7 +73,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     };
   }
 
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
   ngAfterViewInit() {
     this.views = [
@@ -86,7 +87,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
         },
       },
     ];
-    this.changedt.detectChanges();
+    this.detectorRef.detectChanges();
   }
   ngOnChanges() {
     if (!this.isLoad) return;
@@ -98,10 +99,17 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     this.codxService.navigate('', this.urlDetailRoles, { recID: recID });
   }
 
-  openFormEdit(data) {
+  changeDataMF(evt: any, item: any) {
+    if (item.isSystem) {
+      var dl = evt.find((x: { functionID: string }) => x.functionID == 'SYS02');
+      if (dl) dl.disabled = true;
+    }
+  }
+
+  openFormEdit(data, type = 'edit') {
     var obj = {
       role: data,
-      mode: 'edit',
+      mode: type,
     };
 
     let option = new SidebarModel();
@@ -109,25 +117,6 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     option.FormModel = this.view?.formModel;
     option.Width = '550px';
     this.dialog = this.callfc.openSide(RoleEditComponent, obj, option);
-  }
-
-  delete(data) {
-    // var t = this;
-    // this.confirmSv
-    //   .confirm("Thông báo", "Bạn có muốn xóa?")
-    //   .then((confirmed) => {
-    //     if (confirmed) {
-    //       this.api
-    //         .call("ERM.Business.AD", "RolesBusiness", "DeleteAsync", [
-    //           data.recID,
-    //         ])
-    //         .subscribe((res) => {
-    //           if (res && res.msgBodyData[0]) {
-    //             t.listRoles.removeHandler(data, "recID");
-    //           }
-    //         });
-    //     }
-    //   });
   }
 
   styleObject(elm): Object {
@@ -152,26 +141,124 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     this.tempService.changeDatasaveas('1');
   }
 
-  openFormAdd(e) {
+  // openFormAdd(e) {
+  //   this.view.dataService.addNew().subscribe((res: any) => {
+  //     var obj = {
+  //       role: res,
+  //       mode: 'add',
+  //     };
+  //     let option = new SidebarModel();
+  //     option.DataService = this.view?.dataService;
+  //     option.FormModel = this.view?.formModel;
+  //     option.Width = '550px';
+  //     this.dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+  //   });
+  // }
+
+  add(evt) {
+    this.headerText = evt.text + ' ' + this.view?.function?.customName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
-        role: res,
-        mode: 'add',
+        formType: 'add',
+        headerText: this.headerText,
       };
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+      // option.Type = 'Slide';
+      // option.isFull = true;
+      let dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+      // dialog.closed.subscribe((e) => {
+      //   debugger;
+      // });
+      dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
+        if (e?.event) {
+          this.view.dataService.add(e.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+    });
+  }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected])
+      .subscribe((res: any) => {
+        if (res.data) {
+          // this.codxAdService
+          //   .deleteFile(res.data.userID, 'AD_Users', true)
+          //   .subscribe();
+        }
+      });
+  }
+
+  edit(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'edit',
+          headerText: this.headerText,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '550px';
+        var dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+
+        dialog.closed.subscribe((x) => {
+          if (!x?.event) this.view.dataService.clear();
+          if (x.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
+      });
+  }
+
+  copy(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    let oldID = data.recID;
+    this.view.dataService.copy().subscribe((res: any) => {
+      if (res) {
+        var obj = {
+          formType: 'copy',
+          headerText: this.headerText,
+          oldID: oldID,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '550px';
+        var dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+        dialog.closed.subscribe((e) => {
+          console.log('e', e);
+          this.view.dataService.add(e?.event).subscribe();
+        });
+      }
     });
   }
 
   clickMF(e, item) {
+    this.headerText = e.text + ' ' + this.view?.function?.customName;
     switch (e.functionID) {
       case 'SYS03':
-        this.openFormEdit(item);
+        this.edit(item);
         break;
       case 'SYS02':
+        this.delete(item);
+        break;
+      case 'SYS04':
+        this.copy(item);
         break;
     }
   }

@@ -19,6 +19,7 @@ export class SharingComponent implements OnInit {
   userTo      : any;
   userCC      : any;
   gridViewSetup     : any;
+  referType = 'source'
   formatBytes = formatBytes
   shareForm = new FormGroup({
     to: new FormControl(),
@@ -62,6 +63,7 @@ export class SharingComponent implements OnInit {
   }
   onSave()
   {
+    if(!this.checkRequired()) return;
    /*  var objID = (this.shareForm.get('form').value).concat(this.shareForm.get('to').value);
     this.dataDis.objID       = objID.join(";");
     this.dataDis.description = this.shareForm.get('desc').value;
@@ -70,15 +72,25 @@ export class SharingComponent implements OnInit {
     this.dataDis.share = this.shareForm.get('share').value == null ? false :this.shareForm.get('share').value;
     this.dataDis.formDate = this.shareForm.get('formDate').value == null ? new Date : this.shareForm.get('formDate').value;
     this.dataDis.toDate = this.shareForm.get('toDate').value == null ? new Date : this.shareForm.get('formDate').value; */
-    if(this.shareForm.value.formDate == null) this.shareForm.value.formDate = new Date();
-    if(this.shareForm.value.toDate == null) this.shareForm.value.toDate = new Date();
-    this.shareForm.value.recID = this.dialog.dataService.dataSelected.recID;
-    this.odService.shareDispatch(this.shareForm.value).subscribe((item)=>{
-      if(item.status==0)
-      {
-        this.dialog.close(item.data);
-      }
+    let shareForm: any =this.shareForm.value;
+    shareForm.recID = this.dialog.dataService.dataSelected.recID;
+    shareForm.funcID = this.formModel.funcID;
+    this.odService.shareDispatch(shareForm,this.referType,this.formModel.entityName).subscribe((item)=>{
+      if(item.status==0) this.dialog.close(item.data);
       this.notifySvr.notify(item.message);
     })
+  }
+
+  checkRequired()
+  {
+    var name = [];
+    if(!this.shareForm.value.to || this.shareForm.value.to.length==0) name.push("Đến") ;
+    if(!this.shareForm.value.desc) name.push("Nội dung chia sẻ") ;
+    if(name.length>0)
+    {
+      this.notifySvr.notifyCode("SYS009",0,name.join(' , '));
+      return false;
+    }
+    return true
   }
 }

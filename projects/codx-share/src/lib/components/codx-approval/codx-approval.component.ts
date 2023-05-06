@@ -10,8 +10,15 @@ import {
   Input,
   Output,
   EventEmitter,
+  ViewEncapsulation,
+  Injector,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
@@ -19,24 +26,33 @@ import {
   CacheService,
   CallFuncService,
   CodxService,
+  DataRequest,
   DialogModel,
   NotificationsService,
   SidebarModel,
+  UIComponent,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
+import { environment } from 'src/environments/environment';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
+import { CodxShareService } from '../../codx-share.service';
+import { log } from 'console';
 
 @Component({
   selector: 'codx-approval',
   templateUrl: './codx-approval.component.html',
   styleUrls: ['./codx-approval.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
-export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
-  @ViewChild('view') view!: ViewsComponent;
+export class CodxApprovalComponent
+  extends UIComponent
+  implements OnChanges, AfterViewInit
+{
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @Input() tmpHeader?: TemplateRef<any>;
@@ -53,24 +69,38 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   dataItem: any;
   lstDtDis: any;
   lstUserID: any;
+  listApproveMF: any = [];
+
+  tabControl: TabModel[] = [];
   /**
    *
    */
-  constructor(
-    private router: Router,
-    private api: ApiHttpService,
-    private cache: CacheService,
-    private odService: DispatchService,
-    private detectorRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
-    private codxService: CodxService,
-    private notifySvr: NotificationsService,
-    private callfunc: CallFuncService,
-    private esService: CodxEsService
-  ) {}
+  odService: DispatchService;
+  codxShareService: CodxShareService;
+  notifySvr: NotificationsService;
+  callfunc: CallFuncService;
+  esService: CodxEsService;
+  routers: Router;
+  constructor(inject: Injector) {
+    super(inject);
+    this.routers = inject.get(Router);
+    this.odService = inject.get(DispatchService);
+    (this.codxShareService = inject.get(CodxShareService)),
+      (this.notifySvr = inject.get(NotificationsService)),
+      (this.callfunc = inject.get(CallFuncService)),
+      (this.esService = inject.get(CodxEsService));
+  }
+
   ngOnChanges(changes: SimpleChanges): void {}
-  ngOnInit(): void {}
+  onInit(): void {}
   ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+    ];
     this.views = [
       {
         type: ViewType.listdetail,
@@ -111,19 +141,42 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       this.dataItem = dt;
     }
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
+      var sa = new URL(environment.apiUrl + '/' + this.routers.url);
+      var check = sa.searchParams.get('dataValue');
+      //Lấy params không có dataValue
+      let r = '';
+      if (check) {
+        var arrPath = sa.pathname.split('/');
+        var slicePath = arrPath.slice(3);
+        r = slicePath.join('/') + '/';
+      } else {
+        var s = this.routers.url.split('/');
+        s = s.slice(2, 5);
+        r = '/' + s.join('/').toString() + '/';
+      }
+
+      //var c = this.routers.routerState.subscribe()
       if (fuc) {
-        var params;
         if (fuc?.url) {
-          params = fuc?.url.split('/');
-          this.codxService.navigate(
-            '',
-            '/es/approvals/EST021/' +
+          var params = fuc?.url.split('/');
+          if (
+            r &&
+            params[1] != null &&
+            params[1] != '' &&
+            fuc?.functionID != null &&
+            fuc?.functionID != '' &&
+            this.dataItem?.transID != null &&
+            this.dataItem?.transID != ''
+          ) {
+            var url =
+              r +
               params[1] +
               '/' +
               fuc?.functionID +
               '/' +
-              this.dataItem?.transID
-          );
+              this.dataItem?.transID;
+            if (url) this.codxService.navigate('', url);
+          }
         }
 
         ///es/approvals/EST021/
@@ -139,10 +192,23 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     this.selectedChange.emit([this.dataItem, this.view]);
   }
 
+  vllApproval: any;
+
   getGridViewSetup(funcID: any) {
-    this.cache.valueList('ES022').subscribe((item) => {
-      this.dvlApproval = item?.datas[0];
-      //this.ref.detectChanges();
+    this.cache.valueList('SYS055').subscribe((result) => {
+      if (result?.datas?.length > 0) {
+        var obj: { [key: string]: any } = {};
+
+        let lstData = result?.datas;
+        lstData.forEach((element) => {
+          let key = element?.value;
+          obj[key] = element;
+        });
+
+        this.vllApproval = obj as Object;
+        this.dvlApproval = result?.datas[0];
+        //this.ref.detectChanges();
+      }
     });
     /*  this.cache.functionList('ODT31').subscribe((fuc) => {
 
@@ -171,7 +237,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         list[i].isbookmark = true;
         if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
           list[i].disabled = true;
-          if (value.status == '5') list[i].disabled = true;
+          if (value.status == '5' || value.status == '2' || value.status == '4')
+            list[i].disabled = true;
           else if (
             ((datas?.stepType == 'S1' ||
               datas?.stepType == 'S2' ||
@@ -187,8 +254,19 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           ) {
             list[i].disabled = false;
           }
-        } else if (value.status == '5') list[i].disabled = true;
+        } else if (
+          value.status == '5' ||
+          value.status == '2' ||
+          value.status == '4'
+        )
+          list[i].disabled = true;
       }
+      this.listApproveMF = list.filter(
+        (p) => p.data.functionID == 'SYS208' || p.disabled == false
+      );
+
+      console.log(this.listApproveMF);
+
       //Ẩn thêm xóa sửa
       var list2 = data.filter(
         (x) =>
@@ -201,11 +279,32 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         list2[i].disabled = true;
       }
     }
+    var bm = data.filter(
+      (x: { functionID: string }) => x.functionID == 'SYS207'
+    );
+    bm[0].disabled = true;
+    if (datas.status != '3') {
+      this.api
+        .execSv<any>(
+          'ES',
+          'ERM.Business.ES',
+          'ApprovalTransBusiness',
+          'CheckRestoreAsync',
+          datas.recID
+        )
+        .subscribe((item) => {
+          var bm = data.filter(
+            (x: { functionID: string }) => x.functionID == 'SYS207'
+          );
+          bm[0].disabled = !item;
+          this.detectorRef.detectChanges();
+        });
+    }
   }
   clickMF(e: any, data: any) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
     var funcID = e?.functionID;
-    if (data.processType == 'ES_SignFiles') {
+    if (data.eSign == true) {
       //Kys
       if (
         funcID == 'SYS201' ||
@@ -239,6 +338,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             stepNo: data.stepNo,
             transRecID: data.recID,
             oTrans: data,
+            lstMF: this.listApproveMF,
           },
           '',
           dialogModel
@@ -250,8 +350,12 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             this.esService.setupChange.next(true);
             this.esService.isStatusChange.subscribe((res) => {
               if (res != null) {
-                data.status = res;
-                this.view.dataService.update(data).subscribe();
+                if (res.toString() == '2') {
+                  this.view.dataService.remove(data).subscribe();
+                } else {
+                  data.status = res;
+                  this.view.dataService.update(data).subscribe();
+                }
               }
             });
           }
@@ -271,7 +375,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       // else if (funcID == 'SYS204') {
 
       // }
-    } else if (data.processType != 'ES_SignFiles') {
+    } else {
       var status;
       if (
         funcID == 'SYS201' ||
@@ -282,21 +386,71 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         status = '5';
       else if (funcID == 'SYS205') status = '4';
       else if (funcID == 'SYS206') status = '2';
-      this.api
-        .execSv(
-          'ES',
-          'ERM.Business.ES',
-          'ApprovalTransBusiness',
-          'ApproveAsync',
-          [data?.recID, status, '', '']
-        )
-        .subscribe((res2: any) => {
-          if (!res2?.msgCodeError) {
-            data.status = status;
-            this.view.dataService.update(data).subscribe();
-            this.notifySvr.notifyCode('SYS007');
-          } else this.notifySvr.notify(res2?.msgCodeError);
+
+      let dialog = this.codxShareService.beforeApprove(
+        status,
+        data,
+        this.funcID,
+        e?.text,
+        this.view?.formModel
+      );
+      if (dialog) {
+        dialog.closed.subscribe((res) => {
+          let oComment = res?.event;
+          this.api
+            .execSv(
+              'ES',
+              'ERM.Business.ES',
+              'ApprovalTransBusiness',
+              'ApproveAsync',
+              [data?.recID, status, oComment.comment, oComment.reasonID]
+            )
+            .subscribe((res2: any) => {
+              if (!res2?.msgCodeError) {
+                if (status.toString() == '2') {
+                  this.view.dataService.remove(data).subscribe();
+                } else {
+                  data.status = status;
+                  this.view.dataService.update(data).subscribe();
+                  this.esService.setupChange.next(true);
+                }
+                this.notifySvr.notifyCode('SYS007');
+              } else this.notifySvr.notify(res2?.msgCodeError);
+            });
         });
+      } else {
+        this.api
+          .execSv(
+            'ES',
+            'ERM.Business.ES',
+            'ApprovalTransBusiness',
+            'ApproveAsync',
+            [data?.recID, status, '', '']
+          )
+          .subscribe((res2: any) => {
+            if (!res2?.msgCodeError) {
+              if (!res2?.msgCodeError) {
+                if (status.toString() == '2') {
+                  this.view.dataService.remove(data).subscribe();
+                } else {
+                  data.status = status;
+                  this.view.dataService.update(data).subscribe();
+                  this.esService.setupChange.next(true);
+                }
+              }
+              this.notifySvr.notifyCode('SYS007');
+            } else this.notifySvr.notify(res2?.msgCodeError);
+          });
+      }
+    }
+    if (funcID == 'SYS207') {
+      this.esService.undo(data?.recID).subscribe((res) => {
+        if (res != null) {
+          data = res;
+          this.view.dataService.update(data).subscribe();
+          this.esService.setupChange.next(true);
+        }
+      });
     }
   }
 

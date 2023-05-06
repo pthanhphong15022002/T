@@ -34,23 +34,24 @@
       </div>
       <div #group class="form-group row">
         <label class="col-2 col-form-label">
-          <codx-label name="lblColor" formName="Calendars" default="Màu">
-          </codx-label>
-        </label>
-        <div class="col-4">
-          <codx-colorpicker type="colorpicker" class="form-control text-white color-large" field="color" format="hex"
-            [value]="this.dialogAddEvent.value?.color" (valueChange)="valueChange($event)">
-          </codx-colorpicker>
-        </div>
-        <label class="col-2 col-form-label">
           <codx-label name="lblSymbol" formName="Calendars" default="Symbol">
           </codx-label>
         </label>
-        <div class="col-2 input-symbol">
+        <div class="col-4 input-symbol">
           <codx-input type="vllicon" refValue="L1470" field="symbol" [crrValue]="this.dialogAddEvent.value?.symbol"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
+        <label class="col-2 col-form-label">
+          <codx-label name="lblColor" formName="Calendars" default="Màu">
+          </codx-label>
+        </label>
+        <div class="col-2">
+          <codx-colorpicker type="colorpicker" class="form-control text-white color-large" field="color" format="hex"
+            [value]="this.dialogAddEvent.value?.color" (valueChange)="valueChange($event)">
+          </codx-colorpicker>
+        </div>
+
       </div>
       <div class="form-group row">
         <label class="col-2 col-form-label">

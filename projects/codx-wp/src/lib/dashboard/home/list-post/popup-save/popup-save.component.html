@@ -1,18 +1,22 @@
 <codx-form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialogRef"></codx-form>
 <ng-template #body>
-    <div class="list-storage">
-        <ng-container *ngIf="listStorage.length > 0">
-            <ng-container *ngFor="let item of listStorage">
-                <div class="d-flex mb-1 px-3 py-2 rounded-1 bg-gray-100 justify-content-between align-items-center"
-                    (click)="selectStorage(item)">
-                    <span class="fw-bold text-dark">{{item.title}}</span>
-                    <i class="icon-adjust icon-20" [style.color]="item.isActive?'#3578E5':'#c2c8ca'"></i>
-                </div>
-            </ng-container>
-        </ng-container>
-
-        <div class="mt-3">
-            <button class="btn btn-sm btn-light-primary" (click)="openModelAddStorage()" type="button">
+    <div class="storage-content">
+        <div class="list-storage" >
+            <codx-listview #listview 
+                [funcId]="'WP'"
+                [service]="'WP'"
+                [assemblyName]="'ERM.Business.WP'" 
+                [className]="'StoragesBusiness'" 
+                [method]="'GetListStorageAsync'"
+                entityName="WP_Storages" 
+                [itemTemplate]="itemTemplate" 
+                [emptyTemplate]="empty"
+                [selectFirst]="true"
+                (onSelectionChanged)="selectedItem($event)">
+            </codx-listview>
+        </div>
+        <div class="btn-storage">
+            <button class="btn btn-sm btn-light-primary" (click)="openPopupAdd()" type="button">
                 <div class="d-flex align-items-center">
                     <i class="icon-add_box icon-18"></i>
                     <codx-label [formModel]="dialogRef.formModel" name="lblStorage" default="Tạo kho lưu trữ mới">
@@ -24,22 +28,37 @@
 </ng-template>
 <ng-template #footer>
     <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary btn-post" (click)="saveObjectToStorage()">
+        <button type="button" class="btn btn-primary btn-post" (click)="saveToStorage()">
             <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu">
             </codx-label>
         </button>
     </div>
 </ng-template>
-
-
-<ng-template #fromPopupAdd let-dialog>
+<ng-template #itemTemplate let-item>
+    <div class="d-flex mb-1 px-3 py-2 rounded-1 bg-gray-100 justify-content-between align-items-center cursor-pointer">
+        <span class="fw-bold text-dark">{{item.title}}</span>
+        <i class="icon-adjust icon-20" [style.color]="item.recID == itemSelected.recID ?'#3578E5':'#c2c8ca'"></i>
+    </div>
+</ng-template>
+<!-- template empty -->
+<ng-template #empty>
+    <div class="list-empty">
+        <img class="list-empty-img" src="assets/themes/sys/default/img/DataEmpty.svg" />
+        <span>{{mssgNoData}}</span>
+    </div>
+</ng-template>
+<ng-template #tmpPopupAdd let-dialog>
     <codx-form [body]="popupBody" [footer]="popupFooter" [headerText]="headerTextPopup" [dialog]="dialog"></codx-form>
     <ng-template #popupBody>
         <div class="form-group">
             <codx-label default="Tên kho">
             </codx-label>
-            <codx-input type="text" [placeholder]="'Tên kho lưu trữ'" [crrValue]="title"
-                (valueChange)="valueChange($event)"></codx-input>
+            <codx-input 
+                type="text" 
+                [placeholder]="'Tên kho lưu trữ'" 
+                [crrValue]="title"
+                (valueChange)="valueChange($event)">
+            </codx-input>
         </div>
     </ng-template>
     <ng-template #popupFooter>

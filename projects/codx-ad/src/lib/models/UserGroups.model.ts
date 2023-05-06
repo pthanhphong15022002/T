@@ -5,6 +5,8 @@ export class GroupMembers {
   memberID: string;
   memberName: string;
   description: string;
+  positionName: string;
+  orgUnitName: string;
 }
 
 export class UserGroup {

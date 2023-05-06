@@ -1,16 +1,41 @@
 .user-mini-nav {
-    height: 29px;
-    padding: 2px 10px 2px 2px !important;
-    border-radius: 20px;
-    margin-bottom: 3px;
-    background-color: #f3f3f3;
-    margin-right: 3px;
-    float: left;
-}
-.mail{
-    cursor: pointer;
+  height: 29px;
+  padding: 2px 10px 2px 2px !important;
+  border-radius: 20px;
+  margin-bottom: 3px;
+  background-color: #f3f3f3;
+  margin-right: 3px;
+  float: left;
 }
 .note ::ng-deep span.codx-label {
-    width: 100%;
-    margin-top: 12px;
+  width: 100%;
+  margin-top: 12px;
 }
+.button-mail {
+  border: 1px solid #ced4da;
+  background: none;
+  outline: none;
+  border-radius: 2px;
+  height: 31.5px;
+  margin-left: 5px;
+}
+.icon-email {
+  color: #747474;
+}
+::ng-deep .e-toast-top-right{
+    z-index: 10050 !important;
+}
+.owners{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.rotate-back {
+  transform: rotate(180deg);
+}
+.right-body{
+  border-left: 0.5px solid var(--gray-200)!important;
+  height: 80vh;
+}
+
+/* codx-toast-container e-lib e-toast e-control e-toast-container e-toast-top-right */

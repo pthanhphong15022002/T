@@ -3,7 +3,7 @@
     <ng-template [ngTemplateOutlet]="tempMenu"></ng-template>
     <ng-container *ngIf="gridViewSetup">
       <div *ngFor="let item of dataGroup" class="my-2">
-        <codx-label [default]="item.headerText " class="fw-bold text-dark"></codx-label>
+        <codx-label [default]="item.headerText" [fiedName]="'lbl'+item?.fieldName" [formName]="'SearchFullText'" class="fw-bold text-dark"></codx-label>
         <ng-container [ngSwitch]="item?.dataType">
           <ng-container *ngSwitchCase="'String'">
             <div class="w-100">
@@ -63,14 +63,16 @@
     </div>
     <div class="d-flex flex-column justify-content-start w-100">
       <div class="d-flex justify-content-between align-items-center border-bottom pb-3">
-        <span class="fs-4 fw-bold text-dark">Khoảng <span class="text-danger">{{count}}</span> kết quả được tìm
-          thấy</span>
+        <ng-container *ngIf="searchData">
+          <span class="fs-4 fw-bold text-dark">Khoảng <span class="text-danger">{{count}}</span> kết quả được tìm
+            thấy</span>
+        </ng-container>
         <codx-searchbar (searchEvent)="changeSearch($event)" class="text w-300px"></codx-searchbar>
       </div>
       <div class="overflow-auto pe-5 h-searchtmp">
         <!-- <div class="ps-5" [style.maxWidth.px]="widthItemTmp"> </div> -->
-        <ng-container *ngIf="searchData && searchData[0]">
-          <ng-container *ngFor="let data of searchData[0]">
+        <ng-container *ngIf="searchData ; else defaulEmpt">
+          <ng-container *ngFor="let data of searchData">
             <div (click)="onSelected(data)">
               <ng-container *ngTemplateOutlet="centerTmp ; context: { $implicit: data}"></ng-container>
             </div>
@@ -85,7 +87,7 @@
           <li class="paginate_button cursor-pointer page-item previous" [class.disabled]="activePage == 1"
             id="kt_ecommerce_products_table_previous" (click)="previewPage()">
             <a aria-controls="kt_ecommerce_products_table" data-dt-idx="0" tabindex="0" class="page-link"><i
-                class="previous"></i></a>
+                class="icon-navigate_before"></i></a>
           </li>
           <ng-container *ngFor="let item of arrayPaging">
             <li class="paginate_button cursor-pointer page-item" [class.active]="activePage==item"
@@ -96,7 +98,7 @@
           <li class="paginate_button cursor-pointer page-item next" [class.disabled]="activePage == pageTotal"
             id="kt_ecommerce_products_table_next" (click)="nextPage()">
             <a aria-controls="kt_ecommerce_products_table" data-dt-idx="6" tabindex="0" class="page-link"><i
-                class="next"></i></a>
+                class="icon-navigate_next"></i></a>
           </li>
         </ul>
       </div>
@@ -107,4 +109,17 @@
 </div>
 <ng-template #tipContent>
   <codx-label [formModel]="formModel" [fiedName]="'Xem thêm'"></codx-label>
+</ng-template>
+<ng-template #defaulEmpt>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+        <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+      </div>
+    </div>
+  </div>
 </ng-template>

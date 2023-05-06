@@ -1,16 +1,12 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ApiHttpService, AuthService, CacheService, CallFuncService, CRUDService, DataRequest, DialogModel, FormModel, NotificationsService, RequestOption, VLLPipe } from 'codx-core';
 import { Observable } from 'rxjs';
-import { PopupAddPostComponents } from '../../dashboard/home/list-post/popup-add/popup-add.component';
-import { WP_News } from '../../models/WP_News.model';
+import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupEditComponent } from '../../news/popup/popup-edit/popup-edit.component';
-import { ApproveComponent } from '../approve.component';
 
 @Component({
-  selector: 'approve-view-detail',
+  selector: 'wp-approve-view-detail',
   templateUrl: './approve-detail.component.html',
   styleUrls: ['./approve-detail.component.css']
 })
@@ -45,10 +41,9 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
     private sanitizer: DomSanitizer
 
     ) { }
-  
-
   ngOnInit(): void {
-    this.getPostInfor();
+    debugger
+    this.getPostInfor(this.objectID);
     this.cache.functionList(this.funcID).subscribe((func: any) => 
       {
         if(func)
@@ -59,29 +54,38 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.objectID?.currentValue && (changes.objectID?.currentValue != changes.objectID?.previousValue)){
-      this.getPostInfor();
+    if(changes.objectID)
+    {
+      this.getPostInfor(this.objectID);
     }
   }
-  getPostInfor(){
-    if(!this.objectID){
-      this.data = null;
-      return;
+
+  hideMFC:boolean = false;
+  // get data detail
+  getPostInfor(objectID:string){
+    if(objectID)
+    {
+      this.api.execSv(
+        "WP",
+        "ERM.Business.WP",
+        "NewsBusiness",
+        "GetPostInfoAsync",
+        [this.objectID,this.funcID])
+        .subscribe((res:any) => {
+          if(res)
+          {
+            debugger  
+            this.data = JSON.parse(JSON.stringify(res));
+            this.hideMFC = this.data.approvalStatus == '5';
+            this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
+            this.dt.detectChanges();
+          }
+        });
     }
-    this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "NewsBusiness",
-      "GetPostInfoAsync",
-      [this.objectID,this.funcID])
-      .subscribe((res:any) => {
-        if(res)
-        {
-          this.data = res;
-          this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
-          this.dt.detectChanges();
-        }
-      });
+    else
+    {
+      this.data = null;
+    }
   }
   clickMF(event:any){
     if(event?.functionID){
@@ -121,7 +125,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
                     let option = new DialogModel();
                     option.DataService = this.dataService;
                     option.FormModel = this.formModel;
-                    this.callFuc.openForm(PopupAddPostComponents,'',700,550,'',obj,'',option).closed.subscribe((res:any) => {
+                    this.callFuc.openForm(PopupAddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((res:any) => {
                       if (res?.event) 
                       {
                         this.dataService.update(res.event).subscribe();
@@ -136,7 +140,8 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
             .subscribe((option:any) =>{
               if(option?.event?.status == "Y")
               {
-                this.updateApprovalStatus(this.data.recID, "5").subscribe((res:any) => {
+                this.updateApprovalStatus(this.data.recID, "5")
+                .subscribe((res:any) => {
                     if(res)
                     {
                       this.data.approveStatus = "5";

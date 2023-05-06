@@ -31,18 +31,29 @@ export class PopupSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getGridViewSetup();
+    this.getGridViewSetup(this.funcID);
   }
 
   onSelected(event:any){
     console.log(event)
   }
 
-  getGridViewSetup(){
-      this.cache.gridViewSetup(this.dialogRef.formModel.formName, this.dialogRef.formModel.gridViewName)
-      .subscribe((grd) => {
-        this.gridViewSetup = grd;
-      });
+  getGridViewSetup(funcID:string){
+    if(funcID){
+      this.cache.functionList(funcID).subscribe(func => {
+        if(func)
+        {
+          let formName = func.formName;
+          let grvName = func.gridViewName;
+          this.cache.gridViewSetup(formName,grvName)
+          .subscribe(grv => {
+            if(grv){
+              this.gridViewSetup = grv;
+            }
+          })
+        }
+      })
+    }
   }
 
   clickViewDetail(data:any){
@@ -57,7 +68,7 @@ export class PopupSearchComponent implements OnInit {
     .subscribe((res:any) => {
       if(res){
         this.dialogRef.close();
-        this.codxService.navigate('','/wp/news/'+this.funcID + '/' + data.category +'/' + data.recID);
+        this.codxService.navigate('',`/wp2/news/${this.funcID}/${data.category}/${data.recID}`);
       }
     });
   }

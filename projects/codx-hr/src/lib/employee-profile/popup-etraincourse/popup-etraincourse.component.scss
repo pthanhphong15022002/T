@@ -1,0 +1,14 @@
+.list_icon::after{
+    content: "";
+    background-color: #dbdbdb;
+    width: 2px;
+    position: absolute;
+    top: 29px;
+    left: 19px;
+    bottom: -15px;
+    z-index: 1;
+
+}
+ul.e-list-parent li.e-list-item:last-child .list_icon::after{
+    visibility: hidden;
+}

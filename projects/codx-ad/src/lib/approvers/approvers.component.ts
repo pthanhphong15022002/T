@@ -1,11 +1,26 @@
 import { AddApproversComponent } from './add/add.component';
-import { UIComponent, ViewModel, ViewType, ButtonModel, SidebarModel, RequestOption } from 'codx-core';
-import { Component, OnInit, Injector, AfterViewInit, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
+import {
+  UIComponent,
+  ViewModel,
+  ViewType,
+  ButtonModel,
+  SidebarModel,
+  RequestOption,
+} from 'codx-core';
+import {
+  Component,
+  OnInit,
+  Injector,
+  AfterViewInit,
+  ViewChild,
+  TemplateRef,
+  ChangeDetectorRef,
+} from '@angular/core';
 
 @Component({
   selector: 'lib-approvers',
   templateUrl: './approvers.component.html',
-  styleUrls: ['./approvers.component.css']
+  styleUrls: ['./approvers.component.css'],
 })
 export class ApproversComponent extends UIComponent implements AfterViewInit {
   //#region Constructor
@@ -19,29 +34,40 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
   resouscesSearch: Array<any> = [];
   popoverCrr: any;
   //End tooltip
-
+  moreFuncName: string = '';
   @ViewChild('item2') itemTemplate: TemplateRef<any>;
-  constructor(injector: Injector, private changeDetectorRef: ChangeDetectorRef) {
+  constructor(
+    injector: Injector,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
     super(injector);
   }
   //#endregion
   //#region  Init
-  onInit(): void { }
+  onInit(): void {
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS01');
+        if (m) this.moreFuncName = m.defaultName;
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
-    this.views = [{
-      type: ViewType.list,
-      active: true,
-      sameData: true,
-      model: {
-        template: this.itemTemplate
-      }
-    }];
+    this.views = [
+      {
+        type: ViewType.list,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+        },
+      },
+    ];
     this.changeDetectorRef.detectChanges();
-    this.cache.functionList(this.view.formModel.funcID).subscribe(res => {
-      if (res)
-        this.func = res;
-    })
+    this.cache.functionList(this.view.formModel.funcID).subscribe((res) => {
+      if (res) this.func = res;
+    });
   }
   //#endregion
 
@@ -55,16 +81,15 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
   }
 
   moreFunction(e: any, data) {
-    console.log(e);
     switch (e.functionID) {
-      case "SYS02":
+      case 'SYS02':
         this.delete(data);
         break;
-      case "SYS03":
+      case 'SYS03':
         this.edit(data, e.text);
         break;
-      case "SYS04":
-        this.copy(data, e.text)
+      case 'SYS04':
+        this.copy(data, e.text);
         break;
     }
   }
@@ -78,7 +103,6 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
     this.resourcesCount = data.members.length;
     e.open();
   }
-
 
   searchName(e) {
     var resouscesSearch = [];
@@ -99,80 +123,107 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
 
   //#region method
   add() {
-    this.view.dataService.addNew().subscribe(res => {
+    this.view.dataService.addNew().subscribe((res) => {
       if (res) {
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.Width = "550px";
+        option.Width = '550px';
         let action = 'add';
-        let title = "Thêm " + this.func.defaultName;
-        let side = this.callfc.openSide(AddApproversComponent, [title, action], option)
-        side.closed.subscribe(x => {
+        let title = this.moreFuncName + ' ' + this.func.description;
+        let side = this.callfc.openSide(
+          AddApproversComponent,
+          [title, action],
+          option
+        );
+        side.closed.subscribe((x) => {
           if (x.event == null) {
-            if (this.view.dataService.hasSaved)
+            if (this.view.dataService.hasSaved) {
               this.view.dataService
                 .delete([this.view.dataService.dataSelected], false)
                 .subscribe();
-
-            this.view.dataService.clear();
+            }
+          } else {
+            this.view.dataService.dataSelected.members = x.event.members;
+            this.view.dataService.dataSelected.memberIDs = x.event.memberIDs;
+            this.view.dataService.add(x.event).subscribe();
           }
-        })
+          this.view.dataService.hasSaved = false;
+
+          this.view.dataService.clear();
+        });
       }
-    })
+    });
   }
 
   edit(data, text) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.edit(data).subscribe(res => {
+    this.view.dataService.edit(data).subscribe((res) => {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = "550px";
+      option.Width = '550px';
       let action = 'edit';
-      let title = text + " " + this.func.defaultName;
-      let side = this.callfc.openSide(AddApproversComponent, [title, action], option);
-      side.closed.subscribe(x => {
-        if (x.event == null)
-          this.view.dataService.clear;
-      })
-    })
+      let title = text + ' ' + this.func.description;
+      let side = this.callfc.openSide(
+        AddApproversComponent,
+        [title, action],
+        option
+      );
+      side.closed.subscribe((x) => {
+        if (x.event == null) this.view.dataService.clear();
+        else {
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
+    });
   }
 
   copy(data, text) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.copy().subscribe(res => {
+    this.view.dataService.copy().subscribe((res) => {
       if (res) {
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.Width = "550px";
+        option.Width = '550px';
         let action = 'add';
-        let title = text + " " + this.func.defaultName;
-        let side = this.callfc.openSide(AddApproversComponent, [title, action], option)
-        side.closed.subscribe(x => {
+        let title = text + ' ' + this.func.description;
+        let side = this.callfc.openSide(
+          AddApproversComponent,
+          [title, action],
+          option
+        );
+        side.closed.subscribe((x) => {
           if (x.event == null && this.view.dataService.hasSaved)
             this.view.dataService
               .delete([this.view.dataService.dataSelected])
               .subscribe();
-        })
+        });
       }
-    })
+    });
   }
 
   delete(data) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([data], true, (option: RequestOption) => this.beforeDelete(option)).subscribe();
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option)
+      )
+      .subscribe();
   }
   //#endregion
 
   //#region  method
   beforeDelete(opt: RequestOption) {
-    opt.service = "SYS";
-    opt.assemblyName = "AD";
-    opt.className = "UserGroupsBusiness";
-    opt.methodName = "DeleteAsync";
-    opt.data = this.view.dataService.dataSelected.recID;
+    opt.service = 'SYS';
+    opt.assemblyName = 'AD';
+    opt.className = 'UserGroupsBusiness';
+    opt.methodName = 'DeleteAsync';
+    opt.data = [
+      this.view.dataService.dataSelected.recID,
+      this.view.dataService.dataSelected['groupID'],
+    ];
     return true;
   }
   //#endregion

@@ -1,6 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { rejects } from 'assert';
 import {
@@ -12,14 +17,16 @@ import {
   NotificationsService,
   UploadFile,
   UserModel,
+  Util,
 } from 'codx-core';
 import { AnyARecord } from 'dns';
 import { resolve } from 'path';
+import { highLightTextArea } from 'projects/codx-share/src/lib/components/pdf/model/tmpSignArea.model';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Approvers, tmpBG_TrackLogs } from './codx-es.model';
 
-export const UrlUpload: string = 'http://172.16.1.210:8011';
+//export const UrlUpload: string = 'http://172.16.1.210:8011';
 export class GridModels {
   pageSize: number;
   entityName: string;
@@ -152,16 +159,14 @@ export class CodxEsService {
   }
 
   //#region Get from FunctionList
-  getDataDefault(
-    funcID: string,
-    entityName: string,
-    idField: string
-  ): Observable<object> {
-    return this.api.execSv('ES', 'CM', 'DataBusiness', 'GetDefaultAsync', [
-      funcID,
-      entityName,
-      idField,
-    ]);
+  getDataDefault(funcID: string, entityName: string, idField: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName, idField]
+    );
   }
 
   setCacheFormModel(formModel: FormModel) {
@@ -210,76 +215,59 @@ export class CodxEsService {
 
   getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
-      this.cache.gridViewSetup(formName, gridView).subscribe((gv) => {
-        var model = {};
-        model['write'] = [];
-        model['delete'] = [];
-        model['assign'] = [];
-        model['share'] = [];
+      this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
         if (gv) {
-          const user = this.auth.get();
-          for (const key in gv) {
-            var b = false;
-            if (Object.prototype.hasOwnProperty.call(gv, key)) {
-              const element = gv[key];
-              element.fieldName =
-                element.fieldName.charAt(0).toLowerCase() +
-                element.fieldName.slice(1);
-              model[element.fieldName] = [];
-
-              if (element.fieldName == 'owner') {
-                model[element.fieldName].push(user.userID);
-              } else if (element.fieldName == 'bUID') {
-                model[element.fieldName].push(user['buid']);
-              } else if (element.fieldName == 'createdOn') {
-                model[element.fieldName].push(new Date());
-              } else if (element.fieldName == 'stop') {
-                model[element.fieldName].push(false);
-              } else if (element.fieldName == 'orgUnitID') {
-                model[element.fieldName].push(user['buid']);
-              } else if (
-                element.dataType == 'Decimal' ||
-                element.dataType == 'Int'
-              ) {
-                model[element.fieldName].push(0);
-              } else if (
-                element.dataType == 'Bool' ||
-                element.dataType == 'Boolean'
-              )
-                model[element.fieldName].push(false);
-              else if (element.fieldName == 'createdBy') {
-                model[element.fieldName].push(user.userID);
-              } else {
-                model[element.fieldName].push(null);
-              }
-
-              let modelValidator = [];
-              if (element.isRequire) {
-                modelValidator.push(Validators.required);
-              }
-              if (element.fieldName == 'email') {
-                modelValidator.push(Validators.email);
-              }
-              if (modelValidator.length > 0) {
-                model[element.fieldName].push(modelValidator);
-              }
-
-              // if (element.isRequire) {
-              //   model[element.fieldName].push(
-              //     Validators.compose([Validators.required])
-              //   );
-              // } else {
-              //   model[element.fieldName].push(Validators.compose([]));
-              // }
-            }
-          }
-          model['write'].push(false);
-          model['delete'].push(false);
-          model['assign'].push(false);
-          model['share'].push(false);
+          var arrgv = Object.values(gv) as any[];
+          const group: any = {};
+          arrgv.forEach((element) => {
+            var keytmp = Util.camelize(element.fieldName);
+            var value = null;
+            var type = element.dataType.toLowerCase();
+            if (type === 'bool') value = false;
+            if (type === 'datetime') value = new Date();
+            if (type === 'int' || type === 'decimal') value = 0;
+            group[keytmp] = element.isRequire
+              ? new FormControl(value, Validators.required)
+              : new FormControl(value);
+          });
+          group['updateColumn'] = new FormControl('');
+          var formGroup = new FormGroup(group);
+          resolve(formGroup);
         }
-        resolve(this.fb.group(model, { updateOn: 'blur' }));
       });
+      // this.cache
+      //   .gridViewSetup(formName, gridView)
+      //   .subscribe((grvSetup: any) => {
+      //     let gv = Util.camelizekeyObj(grvSetup);
+      //     var model = {};
+      //     model['write'] = [];
+      //     model['delete'] = [];
+      //     model['assign'] = [];
+      //     model['share'] = [];
+      //     if (gv) {
+      //       const user = this.auth.get();
+      //       for (const key in gv) {
+      //         const element = gv[key];
+      //         element.fieldName = Util.camelize(element.fieldName);
+      //         model[element.fieldName] = [];
+      //         let modelValidator = [];
+      //         if (element.isRequire) {
+      //           modelValidator.push(Validators.required);
+      //         }
+      //         if (element.fieldName == 'email') {
+      //           modelValidator.push(Validators.email);
+      //         }
+      //         if (modelValidator.length > 0) {
+      //           model[element.fieldName].push(modelValidator);
+      //         }
+      //       }
+      //       model['write'].push(false);
+      //       model['delete'].push(false);
+      //       model['assign'].push(false);
+      //       model['share'].push(false);
+      //     }
+
+      //   });
     });
   }
 
@@ -318,6 +306,16 @@ export class CodxEsService {
     });
 
     return obj;
+  }
+
+  getMoreFunction(funcID: string, formName: string, grvName: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'MoreFunctionsBusiness',
+      'GetWithPermSystemAsync',
+      [funcID, formName, grvName]
+    );
   }
 
   //#endregion
@@ -433,6 +431,21 @@ export class CodxEsService {
     );
   }
 
+  genAutoNumber(
+    funcID: string,
+    entityName: string,
+    keyField: string,
+    data: object = null
+  ) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumbersBusiness',
+      'GenAutoNumberAsync',
+      [funcID, entityName, keyField, data]
+    );
+  }
+
   addEditAutoNumbers(data: any, isAdd: boolean): Observable<any> {
     return this.api.execSv(
       'SYS',
@@ -525,6 +538,29 @@ export class CodxEsService {
         return stringFormat;
       });
     });
+  }
+
+  //#endregion
+
+  //#region AD_AutoNumberDefaults
+  getAutoNumberDefaults(functionID: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumberDefaultsBusiness',
+      'GetByFuncNEntityAsync',
+      [functionID]
+    );
+  }
+
+  updateAutoNumberDefaults(data: any) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumberDefaultsBusiness',
+      'UpdateAutoDefaultAsync',
+      [data]
+    );
   }
 
   //#endregion
@@ -631,9 +667,21 @@ export class CodxEsService {
     });
   }
 
-  getApprovalSteps(model: GridModels): Observable<any> {
+  // getApprovalSteps(model: GridModels) {
+  //   if (model.dataValue && (model.dataValue != '' || model.dataValue != null)) {
+  //     return this.api.execSv<any>(
+  //       'es',
+  //       'ERM.Business.ES',
+  //       'ApprovalStepsBusiness',
+  //       'GetListApprovalStepAsync',
+  //       [model]
+  //     );
+  //   } else return EMPTY;
+  // }
+
+  getApprovalSteps(model: DataRequest) {
     if (model.dataValue && (model.dataValue != '' || model.dataValue != null)) {
-      return this.api.execSv(
+      return this.api.execSv<any>(
         'es',
         'ERM.Business.ES',
         'ApprovalStepsBusiness',
@@ -867,13 +915,13 @@ export class CodxEsService {
     );
   }
 
-  getSFByID(sfRecID) {
+  getSFByID(lstParams) {
     return this.api.execSv<any>(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
       'GetByIDAsync',
-      sfRecID
+      lstParams
     );
   }
 
@@ -1000,6 +1048,51 @@ export class CodxEsService {
     );
   }
 
+  // addHighlightText(lstHighlightTextArea: Array<highLightTextArea>) {
+  //   return this.api.execSv(
+  //     'ES',
+  //     'ERM.Business.ES',
+  //     'ApprovalTransBusiness',
+  //     'AddHighlightTextAsync',
+  //     lstHighlightTextArea
+  //   );
+  // }
+
+  changeHLComment(fileUrl, fileID, fileName, name, cmt, page) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'ChangeCommentAsync',
+      [fileUrl, fileID, fileName, name, cmt, page]
+    );
+  }
+
+  removeHighlightText(
+    fileUrl,
+    fileID,
+    fileName,
+    lstHighlightTextArea: Array<highLightTextArea>
+  ) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'RemoveHighlightAsync',
+      [fileUrl, fileID, fileName, lstHighlightTextArea]
+    );
+  }
+
+  getListAddedAnnoataion(fileUrl, lstRenderedPages) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetListHighlightAsync',
+      [fileUrl, lstRenderedPages]
+    );
+  }
+
   cancelSignfile(sfRecID: string, comment: string) {
     return this.api.execSv<any>(
       'ES',
@@ -1056,7 +1149,7 @@ export class CodxEsService {
   release(oSignFile: any, entityName: string, funcID: string): Observable<any> {
     return this.api.execSv(
       'ES',
-      'ERM.Business.CM',
+      'ERM.Business.Core',
       'DataBusiness',
       'ReleaseAsync',
       [
@@ -1068,6 +1161,16 @@ export class CodxEsService {
         funcID,
         '<div>' + oSignFile.title + '</div>',
       ]
+    );
+  }
+
+  undo(transRecID: string) {
+    return this.api.execSv<any>(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'UndoAsync',
+      [transRecID]
     );
   }
 
@@ -1166,8 +1269,8 @@ export class CodxEsService {
     );
   }
 
-  getSignAreas(sfID, fileID, isApprover, userID): Observable<any> {
-    let data = [sfID, fileID, isApprover, userID];
+  getSignAreas(sfID, fileID, isApprover, userID, stepNo): Observable<any> {
+    let data = [sfID, fileID, isApprover, userID, stepNo];
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
@@ -1255,6 +1358,43 @@ export class CodxEsService {
     );
   }
 
+  changeSFCacheBytes(fileUrl) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'ChangeSignFileAsync',
+      [fileUrl]
+    );
+  }
+  highlightText(
+    sfID,
+    edited,
+    fileUrl,
+    fileID,
+    fileName,
+    isClear,
+    lstHLArea,
+    rerenderPages
+  ) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'HighlightTextAsync',
+      [
+        sfID,
+        edited,
+        fileUrl,
+        fileID,
+        fileName,
+        isClear,
+        lstHLArea,
+        rerenderPages,
+      ]
+    );
+  }
+
   SignAsync(
     stepNo,
     isAwait,
@@ -1264,7 +1404,8 @@ export class CodxEsService {
     supplier,
     hasCA,
     mode,
-    comment
+    comment,
+    transRecID
   ) {
     let data = [
       stepNo,
@@ -1276,6 +1417,7 @@ export class CodxEsService {
       hasCA,
       mode,
       comment,
+      transRecID,
     ];
     return this.api.execSv(
       'es',
@@ -1374,7 +1516,7 @@ export class CodxEsService {
     }
     return this.api.execSv(
       service,
-      'ERM.Business.CM',
+      'ERM.Business.Core',
       'DataBusiness',
       'LoadDataCbxAsync',
       [dataRequest]

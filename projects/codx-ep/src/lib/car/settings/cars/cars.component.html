@@ -1,0 +1,110 @@
+<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+  [views]="views" [button]="buttons" (buttonClick)="click($event)"  [idField]="idField"
+  [className]="className" [method]="method" (onLoading)="onLoading($event)" [viewActiveType]="viewType.grid">
+</codx-views>
+<ng-template #itemAction let-data>
+  <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data">
+  </codx-mfunc>
+</ng-template>
+<ng-template #resourceNameCol let-data>
+  <div class="d-flex flex-row align-items-center py-3 align-items-center ">
+    <codx-img class="me-4" [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'"
+      [objectName]="data?.resourceName" imageType="circle" width="50" [imgOn]="data?.modifiedOn"></codx-img>
+    <div class="d-flex flex-column">
+      <span class="d-flex flex-row mt-1" >
+
+        <span class="fw-bold" [innerHTML]=" data?.resourceName | formatvalue : formModel : 'resourceName' | async"></span>
+      
+        <span class="fw-bold mx-1">-</span>
+        <span class="fw-bold" [innerHTML]=" data?.code | formatvalue : formModel : 'Code' | async"></span>
+      </span>
+      <div class="d-flex flex-row mt-1">
+        <codx-label [default]="'Xếp hạng'" name="lblCategory" class=""></codx-label>
+        <span>:</span>
+        <span class="fw-bold ms-1" [innerHTML]=" data?.ranking | formatvalue : formModel : 'Ranking' | async"></span>
+      </div>
+      <div class="d-flex flex-row mt-1">
+        <codx-label [default]="'Sức chứa(người)'" name="lblCapacity" class=""></codx-label>
+        <span>:</span>
+        <span class="fw-bold ms-1" [innerHTML]=" data?.capacity | formatvalue : formModel : 'Capacity' | async"></span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #locationCol let-data>
+  <div class="d-flex flex-column justify-content-start">
+    <!-- <span>{{data?.category| vll: "VL005" : 'text' | async}}</span>  -->
+    <span class="text-truncate" [innerHTML]=" data?.companyID | formatvalue : formModel : 'CompanyID' | async"></span>
+  </div>
+</ng-template>
+<ng-template #popupDevice let-dialog>
+  <div class="modal-header mx-5 my-5">
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 id="modal-basic-title">
+          <codx-label default="Cài đặt thiết bị" name="lblEquipment" [default]="'Thiết bị'"
+            [formModel]="dialog.formModel"></codx-label>
+        </h2>
+        <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+          (click)="dialog.close()">
+          <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+        </button>
+      </div>
+      <div class="text-dark-50">
+        <codx-label name="lblChooseCarEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong xe"
+          [formModel]="dialog.formModel"></codx-label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body  mx-5 my-5">
+    <div class="py-2" *ngFor="let item of carsEquipments">
+      <div class="d-flex flex-stack">
+        <div class="d-flex">
+          <span class="text-dark me-2 p-1" [className]="item.icon"
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']">
+          </span>
+          <div class="d-flex flex-column justify-content-center">
+            <span href="#" class="text-dark fw-bolder">{{ item.text }}</span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <div class="form-check form-check-solid form-switch">
+            <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
+              [checked]="item.isSelected" [disabled]="true"></codx-input>
+            <label class="form-check-label" for="googleswitch"></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #equipmentsCol let-data>
+  <div (click)="openPopupDevice(popupDevice, data?.equipments)" class="d-flex align-items-center">
+    <i class="icon-devices"></i>
+    <span class="ms-2 fw-bold">{{ data?.equipmentQty }}</span>
+    <codx-label [default]="'Thiết bị'" class="ms-1" name="lblDevice"></codx-label>
+  </div>
+</ng-template>
+<ng-template #ownerCol let-data>
+  <div class="d-flex  align-items-center">
+    <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users"></codx-img>
+    <div class="ms-2">
+      <span class="fw-bold"[innerHTML]=" data?.owner | formatvalue : formModel : 'Owner' | async"></span>
+    </div>
+    </div>
+</ng-template>
+
+<ng-template #linkCol let-data>
+  <div class="d-flex align-items-center">
+    <codx-img [objectId]="data?.linkRecID" [objectName]="data?.linkName" imageType="circle" [width]="25"
+      [objectType]="'EP_Resources'"></codx-img>
+    <div class="ms-2">
+      <span class="fw-bold" [innerHTML]="data?.linkID | formatvalue : formModel : 'LinkID' | async"></span>   
+    </div>
+  </div>
+</ng-template>
+<ng-template #noteCol let-data>
+  <div class="d-flex align-items-center">
+      <span  [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"></span>    
+  </div>
+</ng-template>

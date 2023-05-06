@@ -1,0 +1,24 @@
+.storage-content {
+    height: 100%;
+    position: relative;
+}
+
+.list-storage {
+    height: calc(100% - 33px);
+    overflow: auto;
+}
+.list-empty{
+    width: 100%;
+    height: 100%;
+    text-align: center;   
+}
+.list-empty-img{
+    width: 100%;
+    height: calc(100% - 20px);
+}
+.btn-storage {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 26px;
+}

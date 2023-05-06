@@ -19,10 +19,12 @@
     [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
     [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
     [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
-    [bookmark]="data.isBookmark" [titleLine]="2"  [dataItem]="data" >
+    [bookmark]="data.isBookmark" [titleLine]="2"  [dataItem]="data" [footer]="footer">
     </codx-temp-full>
 </ng-template>
-
+<ng-template #footer let-data>
+    <div class="text-dark" [innerHtml]="data.highlight"></div>
+</ng-template>
 <ng-template #rightTmp>
     <span class="fs-5 fw-bolder">Tài liệu liên kết</span>
     <div class="mt-2">

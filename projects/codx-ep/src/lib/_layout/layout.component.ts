@@ -1,7 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Injector } from '@angular/core';
-import { CallFuncService, DialogRef, LayoutBaseComponent, SidebarModel } from 'codx-core';
+import { Component, Injector } from '@angular/core';
+import {
+  CallFuncService,
+  DialogRef,
+  LayoutBaseComponent,
+  SidebarModel,
+} from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
-import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'lib-layout',
@@ -9,28 +13,20 @@ import { Observable, of } from 'rxjs';
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
-
-  module = "EP";
   dialog!: DialogRef;
 
-  constructor(
-    inject: Injector,
-    private callfc: CallFuncService,
-  ) {
+  constructor(inject: Injector, private callfc: CallFuncService) {
     super(inject);
+    this.module = 'EP';
   }
-  onInit(): void {
+  onInit(): void {}
 
-  }
-
-  onAfterViewInit(): void {
-
-  }
+  onAfterViewInit(): void {}
 
   openFormNoteDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';
     this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
-    this.dialog.closed.subscribe()
+    this.dialog.closed.subscribe();
   }
 }

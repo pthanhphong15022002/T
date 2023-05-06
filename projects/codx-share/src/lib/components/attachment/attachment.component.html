@@ -32,21 +32,31 @@
                                             </div>
                                             <div class="dropzone-msg dz-message needsclick">
                                                 <div class="dropzone-msg-title mb-2">
-                                                    <codx-label name="lblupload3" [formModel]="formModel"
+                                                    <codx-label 
                                                         default="Chọn một hay nhiều file từ máy của bạn."
-                                                        class="fw-bold"></codx-label>
+                                                        [fiedName]="'lblAttachmentTitle'"
+                                                        [formName]="'fmAttachment'"
+                                                        class="fw-bold"
+                                                    >
+                                                    </codx-label>
                                                 </div>
                                                 <span class="dropzone-msg-desc">
-                                                    <codx-label name="lblupload4" [formModel]="formModel"
-                                                        default="Kéo thả file tài liệu (.doc, .xlx, .pdf...) vào đây, hoặc"
-                                                        class="fw-bold"></codx-label>
+                                                    <codx-label 
+                                                        default="Kéo thả file tài liệu (.doc, .xlx, .pdf...) vào đây"
+                                                        [fiedName]="'lblAttachmentSubTitle'"
+                                                        [formName]="'fmAttachment'"
+                                                        class="fw-bold"
+                                                    >
+                                                    </codx-label>
                                                 </span>
                                             </div>
+                                            <!-- Select Folder directoryUpload='true' -->
                                             <div class="dropzone-panel mt-6">
                                                 <ejs-uploader #templateupload id='templatefileupload'
                                                     [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()'
                                                     [asyncSettings]='path' [dropArea]='dropElement'
-                                                    (selected)='onFileSelect($event)'>
+                                                    (selected)='onFileSelect($event)'
+                                                    >
                                                 </ejs-uploader>
                                             </div>
                                         </div>
@@ -107,7 +117,7 @@
         </ng-template>
         <ng-template #footer>
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary" (click)="onMultiFileSave()">
+                <button [disabled]="closeBtnUp" type="submit" class="btn btn-primary" (click)="onMultiFileSave()">
                     {{titleUpload}}
                 </button>
             </div>
@@ -185,12 +195,12 @@
                     </div>
                     <div *ngIf="hideImageUpload == '0'" class="overflow-auto mh-200px">
                         <div *ngFor="let file of sortBy();  index as i;"
-                            class="d-flex align-items-center mb-3 has-action-menu">
+                            class="d-flex align-items-center  mb-3 has-action-menu">
                             <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
                             <ng-template #simple>
                                 <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer"
                                     title="{{file.fileName}} ({{dmSV.formatBytes(file.fileSize)}})"
-                                    [subTitleTmp]="cardImgFooter" [descLine]="1">
+                                    [subTitleTmp]="cardImgFooter" [descLine]="1" class="w-100">
                                 </codx-temp-full>
                                 <ng-template #cardImgFooter let-data>
                                     <div *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1 file-item w-100">
@@ -207,7 +217,7 @@
                             <ng-template #full>
                                 <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer"
                                     title="{{file.fileName}} ({{dmSV.formatBytes(file.fileSize)}})"
-                                    [subTitleTmp]="cardImgFooter" [descLine]="1">
+                                    [subTitleTmp]="cardImgFooter" [descLine]="1" class="w-100">
                                 </codx-temp-full>
                             </ng-template>
                             <ng-template #cardImgFooter let-data>
@@ -243,10 +253,17 @@
             </form>
         </div>
     </div>
-    <div *ngIf="hideImageThumb == '0'">
-        <codx-thumbnail [displayThumb]="displayThumb" [formModel]="formModel" [files]="data"
-            (fileCount)="handleDeleteCount($event)" [isDeleteTemp]="isDeleteTemp" [hideDelete]="hideDelete"
-            [hideMoreF]="hideMoreF" (viewFile)="handleView($event)" (fileDelete)="handleDelete($event)">
-        </codx-thumbnail>
+    <div class="attach-group">
+        <div *ngIf="hideImageThumb == '0'">
+            <div class="mt-2 attach-files" style="overflow: auto" [style.maxHeight]="heightScroll + 'px'"
+                (scroll)="scrollFile()">
+                <codx-thumbnail [displayThumb]="displayThumb" [formModel]="formModel" [files]="data" [isScroll]="'1'"
+                    (fileCount)="handleDeleteCount($event)" [isDeleteTemp]="isDeleteTemp" [hideDelete]="hideDelete"
+                    [hideMoreF]="hideMoreF" (viewFile)="handleView($event)" (fileDelete)="handleDelete($event)"
+                    [permissions]="permissions" [objectID]="objectId" [isReferType]="isReferType">
+                </codx-thumbnail>
+            </div>
+        </div>
     </div>
+
 </ng-template>

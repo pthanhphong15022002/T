@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import {
   Component,
   OnInit,
@@ -9,22 +10,33 @@ import {
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
   FormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { map, Subscription } from 'rxjs';
+import { catchError, finalize, map, of, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ApiHttpService,
   AuthService,
   AuthStore,
   CacheRouteReuseStrategy,
+  ExtendUser,
   NotificationsService,
   TenantStore,
   UrlUtil,
+  UserModel,
 } from 'codx-core';
+import {
+  AmazonLoginProvider,
+  FacebookLoginProvider,
+  GoogleLoginProvider,
+  MicrosoftLoginProvider,
+  SocialUser,
+  SocialAuthService,
+} from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-login',
@@ -45,14 +57,15 @@ export class LoginComponent implements OnInit, OnDestroy {
   alerttext: string;
   sessionID = null;
   email = null;
-  mode: string = 'login';
+  mode: string = 'login'; // 'login' | 'firstLogin' | 'activeTenant' | 'changePass';
   user: any;
+  layoutCZ: any;
 
   // private fields
-  private unsubscribe: Subscription[] = [];
+  unsubscribe: Subscription[] = [];
+
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
     private notificationsService: NotificationsService,
@@ -60,33 +73,43 @@ export class LoginComponent implements OnInit, OnDestroy {
     private api: ApiHttpService,
     private routeActive: ActivatedRoute,
     private dt: ChangeDetectorRef,
-    private auth: AuthStore
+    private auth: AuthStore,
+    private readonly authService: AuthService,
+    private readonly extendAuthService: SocialAuthService
   ) {
+    this.layoutCZ = environment.layoutCZ;
     const tenant = this.tenantStore.getName();
     CacheRouteReuseStrategy.clear();
-    
+
     // redirect to home if already logged in
     this.routeActive.queryParams.subscribe((params) => {
       if (params.sk) {
         this.api
-          .call('ERM.Business.AD', 'UsersBusiness', 'GetUserBySessionAsync', [
-            params.sk,
-          ])
+          .execSv<string[]>(
+            'SYS',
+            'ERM.Business.AD',
+            'UsersBusiness',
+            'GetUserBySessionAsync',
+            [params.sk]
+          )
           .subscribe((res) => {
-            if (res && res.msgBodyData[0]) {
+            console.log('em', res);
+            //[email, mode]
+            if (res) {
               this.sessionID = params.sk;
-              this.email = res.msgBodyData[0].email;
-              if (
-                res.msgBodyData[0].lastLogin == null ||
-                (params.id && params.id == 'forget')
-              ) {
-                this.mode = 'firstLogin';
-                dt.detectChanges();
-              }
+              this.email = res[0];
+              this.mode = res[1];
+              dt.detectChanges();
+              // if (
+              //   res.msgBodyData[0].lastLogin == null ||
+              //   (params.id && params.id == 'forget')
+              // ) {
+              //   this.mode = 'firstLogin';
+              //   dt.detectChanges();
+              // }
             }
           });
-      }
-      if (params.id && params.id == 'changePass') {
+      } else if (params.id && params.id == 'changePass') {
         this.mode = params.id;
         this.user = this.auth.get();
         this.email = this.user.email;
@@ -125,6 +148,33 @@ export class LoginComponent implements OnInit, OnDestroy {
     // get return url from route parameters or default to '/'
     this.returnUrl =
       this.route.snapshot.queryParams['returnUrl'.toString()] || '/';
+
+    // this.extendAuthService.authState.subscribe(
+    //   (sus: SocialUser | undefined) => {
+    //     if (sus) {
+    //       let extendUser = new ExtendUser()
+    //       extendUser.provider = sus.provider;
+    //       extendUser.id = sus.id;
+    //       extendUser.email = sus.email;
+    //       extendUser.name = sus.name;
+    //       extendUser.photoUrl = sus.photoUrl;
+    //       extendUser.firstName = sus.firstName;
+    //       extendUser.lastName = sus.lastName;
+    //       extendUser.idToken = sus.idToken;
+    //       extendUser.authToken = sus.authToken;
+    //       extendUser.authorizationCode = sus.authorizationCode;
+    //       extendUser.response = sus.response;
+
+    //       const loginSubscr = this.authService
+    //         .extendLogin(extendUser)
+    //         .pipe()
+    //         .subscribe((data) => {
+    //           this.loginAfter(data);
+    //         });
+    //       this.unsubscribe.push(loginSubscr);
+    //     }
+    //   }
+    // );
   }
 
   // convenience getter for easy access to form fields
@@ -166,6 +216,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           Validators.maxLength(100),
         ]),
       ],
+      //captCha: ['', Validators.compose([Validators.required])],
     });
 
     this.changePassForm = this.fb.group(
@@ -202,6 +253,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             Validators.maxLength(100),
           ]),
         ],
+        //captCha: ['', Validators.compose([Validators.required])],
       },
       { validators: this.checkPasswords }
     );
@@ -231,6 +283,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             Validators.maxLength(100),
           ]),
         ],
+        //captCha: ['', Validators.compose([Validators.required])],
       },
       { validators: this.checkPasswords }
     );
@@ -243,56 +296,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.dt.detectChanges();
   }
 
-  submit() {
-    //$(this.error.nativeElement).html('');
-    this.hasError = false;
-    const loginSubscr = this.authService
-      .login(this.f.email.value, this.f.password.value)
-      .pipe()
-      .subscribe((data) => {
-        if (data) {
-          if (!data.isError) {
-            this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
-            if (this.returnUrl) {
-              this.returnUrl = decodeURIComponent(this.returnUrl);
-            }
-
-            if (
-              this.returnUrl.indexOf('http://') == 0 ||
-              this.returnUrl.indexOf('https://') == 0
-            ) {
-              this.api
-                .get(`auth/GetInfoToken?token=${this.auth.get().token}`)
-                .pipe(
-                  map((data) => {
-                    if (data && data.userID) {
-                      document.location.href =
-                        this.returnUrl + '&token=' + this.auth.get().token;
-                    }
-                  })
-                )
-                .subscribe();
-
-              return;
-            } else {
-              if (this.returnUrl.indexOf(data.tenant) > 0)
-                this.router.navigate([`${this.returnUrl}`]);
-              else this.router.navigate([`${data.tenant}/${this.returnUrl}`]);
-            }
-          } else {
-            // this.alerttext = data.error;
-            //$(this.error.nativeElement).html(data.error);
-            this.notificationsService.notify(data.error);
-            // alert(data.error);
-          }
-          // this.router.navigate([this.returnUrl]);
-        }
-        //  else {
-        //   this.hasError = true;
-        //   //this.alerttext = this.authService.message;
-        // }
-      });
-    this.unsubscribe.push(loginSubscr);
+  submit(type?: string) {
+    if (type) this.extendLogin(type);
+    else this.login();
   }
 
   submitChangePass() {
@@ -372,6 +378,98 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+  //#region Login
+  private login() {
+    const loginSubscr = this.authService
+      .login(this.f.email.value, this.f.password.value)
+      .pipe()
+      .subscribe((data) => {
+        this.loginAfter(data);
+      });
+    this.unsubscribe.push(loginSubscr);
+  }
+
+  private extendLogin(type: string) {
+    var id = '';
+    switch (type) {
+      case 'a':
+        id = AmazonLoginProvider.PROVIDER_ID;
+        break;
+      case 'f':
+        id = FacebookLoginProvider.PROVIDER_ID;
+        break;
+      case 'g':
+        id = GoogleLoginProvider.PROVIDER_ID;
+        break;
+      case 'm':
+        id = MicrosoftLoginProvider.PROVIDER_ID;
+        break;
+    }
+
+    if (id) this.extendAuthService.signIn(id);
+  }
+
+  private loginAfter(data: any) {
+    if (data) {
+      if (!data.isError) {
+        this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
+        if (this.returnUrl) {
+          this.returnUrl = decodeURIComponent(this.returnUrl);
+        }
+
+        if (
+          this.returnUrl.indexOf('http://') == 0 ||
+          this.returnUrl.indexOf('https://') == 0
+        ) {
+          return (
+            this.api
+              .get(`auth/GetInfoToken?token=${this.auth.get().token}`)
+              // .pipe(
+              //   map((data: any) => {
+              //     if (data && data.userID) {
+              //       this.router.navigate([`${this.returnUrl + '&token=' + this.auth.get().token}`]);
+              //       document.location.href =
+              //         this.returnUrl + '&token=' + this.auth.get().token;
+              //     }
+              //   })
+              // )
+              .subscribe((data: any) => {
+                if (data && data.userID)
+                  this.router.navigate([
+                    `${this.returnUrl + '&token=' + this.auth.get().token}`,
+                  ]);
+              })
+          );
+        } else {
+          if (this.returnUrl.indexOf(data.tenant) > 0)
+            return this.router.navigate([`${this.returnUrl}`]);
+          // window.location.href = this.returnUrl;
+          else if (environment.saas == 1) {
+            if (!data.tenant) return this.router.navigate(['/tenants']);
+            //window.location.href = '/tenants';
+            // window.location.href = this.returnUrl
+            //   ? this.returnUrl
+            //   : data.tenant;
+            else
+              return this.router.navigate([
+                `${this.returnUrl ? this.returnUrl : data.tenant}`,
+              ]);
+          }
+          window.location.href = this.returnUrl ? this.returnUrl : data.tenant;
+          // return this.router.navigate([
+          //   `${this.returnUrl ? this.returnUrl : data.tenant}`,
+          // ]);
+        }
+      } else {
+        this.notificationsService.notify(data.error);
+        return false;
+      }
+      return this.router.navigate([this.returnUrl]);
+    }
+    return false;
+  }
+  //#endregion
 
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());

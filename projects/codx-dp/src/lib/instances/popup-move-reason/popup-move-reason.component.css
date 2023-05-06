@@ -1,0 +1,12 @@
+.tm-desc ejs-richtexteditor .e-content,
+.tm-desc ejs-richtexteditor .e-rte-content {
+    height: calc(100vh - 240px) !important;
+    border-bottom: 0 !important;
+    box-sizing: content-box;
+    max-height: none !important;
+}
+
+::ng-deep .e-toast-top-right{
+    z-index: 10050 !important;
+  }
+  /* test push */

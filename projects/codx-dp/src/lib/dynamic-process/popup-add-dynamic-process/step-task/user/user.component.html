@@ -1,0 +1,103 @@
+<div class="w-100">
+  <div class="d-flex align-items-center" [ngStyle]="style">
+    <div class="">
+      <codx-label
+        class="fw-bold text-dark"
+        [fiedName]="fiedName"
+        [formModel]="formModel"
+        [default]="default"
+      ></codx-label>
+    </div>
+    <div class="ms-3">
+      <button class="btn btn-icon btn-light" (click)="disabled ? '' : shareUser(controlUser)">
+        <span class="icon-16" [ngClass]="icon"></span>
+      </button>
+    </div>
+  </div>
+  <div>
+    <!-- <ng-container  *ngIf=" isPopupUserCbb"> 
+      <codx-combobox-popup
+      [comboboxName]="'Users'"
+      [field]="'cbbUser'"
+      [multiple]="multiple"
+      [width]="700"
+      [height]="600"
+      [value]=""
+      (clickSave)="applyUser($event, dataSource)"
+    >
+    </codx-combobox-popup>
+    <codx-input
+      type="combobox"
+      [refValue]="'Users'"
+      [multiple]="false"
+      [showInput]="false"
+    >
+    </codx-input>
+    </ng-container> -->
+    <ng-container
+      *ngIf="dataSource.length > 0"
+      [ngTemplateOutlet]="showUser"
+      [ngTemplateOutletContext]="{ users: dataSource }"
+    ></ng-container>
+    <codx-label
+      *ngIf="dataSource.length == 0 && title"
+      class="fw-normal text-gray-400"
+      [fiedName]="fiedNameTitle"
+      [formModel]="formModel"
+      [default]="title"
+    >
+    </codx-label>
+  </div>
+</div>
+
+<ng-template #showUser let-data="users">
+  <div class="mt-3" style="display: block">
+    <ng-container *ngFor="let item of data; index as i">
+      <div class="user-mini-nav" style="background-color: #f4f7ff">
+        <span>
+          <codx-img
+            [width]="25"
+            class="me-2"
+            [objectId]="item?.objectID"
+            objectType="AD_Users"
+            [objectName]="item?.objectName"
+          >
+          </codx-img>
+        </span>
+        <span class="text-dark fw-bold"> {{ item?.objectName }} </span>
+        <span class="mt-1">
+          <a
+            (click)="onDeleteOwner(item?.objectID, data)"
+            style="cursor: pointer"
+          >
+            <span class="icon-close icon-16 text-danger ms-3"></span>
+          </a>
+        </span>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #controlUser let-dialog>
+  <codx-share
+    [dialog]="dialog"
+    [multiple]="multiple"
+    [listCombobox]="listCombobox"
+    (eventApply)="applyUser($event, dataSource)"
+    [listName]="vllShare"
+  ></codx-share>
+</ng-template>
+
+<ng-template #controlUserOne let-dialog>
+  <codx-combobox-popup
+    *ngIf=" isPopupUserCbb"
+    [comboboxName]="'Users'"
+    [field]="'cbbUser'"
+    [multiple]="multiple"
+    [width]="700"
+    [height]="600"
+    [value]=""
+    (clickSave)="applyUser($event, dataSource)"
+  >
+  </codx-combobox-popup>
+</ng-template>

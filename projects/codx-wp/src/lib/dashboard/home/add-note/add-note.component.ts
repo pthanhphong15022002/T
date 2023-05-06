@@ -112,12 +112,15 @@ export class AddNoteComponent implements OnInit {
     this.currentDate = dt.data?.currentDate;
     this.maxPinNotes = dt.data?.maxPinNotes;
     this.component = dt.data?.component;
+    this.countNotePin = dt.data?.countNotePin;
     this.cache.functionList('WPT08').subscribe((res) => {
       if (res) this.functionList = res;
     });
     if (this.component == 'note-drawer') {
-      if (this.formType == 'add') this.currentDate = new Date();
-      else
+      if (this.formType == 'add') {
+        var date = new Date();
+        this.currentDate = date.toISOString();
+      } else
         this.currentDate = JSON.parse(
           JSON.stringify(dt.data?.dataUpdate?.createdOn)
         );
@@ -135,18 +138,7 @@ export class AddNoteComponent implements OnInit {
       };
       if (this.note.noteType != 'text') this.note.checkList.push(dtt);
     }
-    this.getNumberNotePin();
     this.noteType.text = true;
-  }
-
-  getNumberNotePin() {
-    if (this.data) {
-      this.data.forEach((res) => {
-        if (res.isPin == true || res.isPin == '1') {
-          this.countNotePin++;
-        }
-      });
-    }
   }
 
   ngAfterViewInit() {
@@ -219,18 +211,19 @@ export class AddNoteComponent implements OnInit {
       this.countValueChange++;
       var date = new Date(e.data.fromDate);
       var crr = date.toLocaleDateString();
-      if (crr !== this.currentDate) {
-        this.currentDate = '';
+      if (crr != this.currentDate.toLocaleDateString()) {
         this.currentDate = crr;
       }
       if (this.countValueChange == 1) {
-        var date1 = new Date(e.data.fromDate);
-        var crr1 = date1.toLocaleDateString();
-        this.date1 = crr1;
+        // var date1 = new Date(e.data.fromDate);
+        // var crr1 = date1.toLocaleDateString();
+        // this.date1 = crr1;
+        this.date1 = crr;
       } else if (this.countValueChange > 1) {
-        var date2 = new Date(e.data.fromDate);
-        var crr2 = date2.toLocaleDateString();
-        this.date2 = crr2;
+        // var date2 = new Date(e.data.fromDate);
+        // var crr2 = date2.toLocaleDateString();
+        // this.date2 = crr2;
+        this.date2 = crr;
       }
     }
   }
@@ -335,11 +328,14 @@ export class AddNoteComponent implements OnInit {
         )
         .subscribe(async (res) => {
           if (res) {
-            var dtNew = res;
-            dtNew.type = 'WP_Notes';
+            let dtNew = res;
+            dtNew['transType'] = 'WP_Notes';
+            dtNew['memo'] = res.memo;
+            dtNew['transID'] = res.recID;
+            dtNew['calendarDate'] = res.createdOn;
             if (this.listFileUpload.length > 0) {
               this.listFileUpload.forEach((dt) => {
-                dt.objectID = dtNew.recID;
+                dt.objectID = dtNew.transID;
               });
               this.attachmentAdd.fileUploadList = [...this.listFileUpload];
               (await this.attachmentAdd.saveFilesObservable()).subscribe(
@@ -360,7 +356,7 @@ export class AddNoteComponent implements OnInit {
               else object = [{ data: dtNew, type: 'add-currentDate' }];
             }
             this.noteService.data.next(object);
-            this.dialog.close();
+            this.dialog.close(dtNew);
             if (this.note?.showCalendar == true) {
               var today: any = document.querySelector(
                 ".e-footer-container button[aria-label='Today']"
@@ -401,7 +397,7 @@ export class AddNoteComponent implements OnInit {
     this.noteService.dataUpdate.subscribe((x) => {
       if (x) {
         if (x[0].formType == 'edit') this.dialog.close();
-        if(x[0].formType == 'add') this.onCreateNote();
+        if (x[0].formType == 'add') this.onCreateNote();
       }
     });
   }
@@ -446,17 +442,20 @@ export class AddNoteComponent implements OnInit {
     this.note.fileCount = this.listFileUpload?.length;
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-        this.note?.recID,
+        this.note?.transID,
         this.note,
       ])
       .subscribe(async (res) => {
         if (res) {
-          var dtNew = res;
-          dtNew.type = 'WP_Notes';
+          let dtNew = res;
+          dtNew['transType'] = 'WP_Notes';
+          dtNew['memo'] = res.memo;
+          dtNew['transID'] = res.recID;
+          dtNew['calendarDate'] = res.createdOn;
           this.checkUpdate = true;
           if (this.listFileEdit?.length > 0) {
             this.listFileEdit?.forEach((x) => {
-              this.deleteFileByRecID(x.recID, true);
+              this.deleteFileByRecID(x.transID, true);
             });
           }
           var checkDifferentFile =
@@ -464,20 +463,24 @@ export class AddNoteComponent implements OnInit {
             JSON.stringify(this.listFileUpload);
           if (this.listFileUpload?.length > 0 && !checkDifferentFile) {
             this.listFileUpload?.forEach((dt) => {
-              dt.objectID = this.note.recID;
+              dt.objectID = this.note.transID;
             });
             this.attachmentEdit.fileUploadList = this.listFileUpload;
+            this.attachmentEdit.objectId = this.note.transID;
             (await this.attachmentEdit.saveFilesObservable()).subscribe(
               (res: any) => {
-                if (res) {
+                if (res?.length > 0) {
                 }
               }
             );
           }
           var object = [];
-          if (this.component == 'note-drawer')
-            object = [{ data: dtNew, type: 'edit-note-drawer' }];
-          else {
+          if (this.component == 'note-drawer') {
+            if (this.date2 != undefined)
+              object = [{ data: dtNew, type: 'edit-note-drawer-otherDate' }];
+            else
+              object = [{ data: dtNew, type: 'edit-note-drawer-currentDate' }];
+          } else {
             if (this.date2 != undefined)
               object = [{ data: dtNew, type: 'edit-otherDate' }];
             else object = [{ data: dtNew, type: 'edit-currentDate' }];
@@ -566,7 +569,7 @@ export class AddNoteComponent implements OnInit {
         'ERM.Business.DM',
         'FileBussiness',
         'GetFilesByObjectIDImageAsync',
-        this.note.recID
+        this.note.transID
       )
       .subscribe((res) => {});
   }

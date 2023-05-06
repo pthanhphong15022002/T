@@ -8,7 +8,7 @@
     aria-controls="kt_account_profile_details"
   >
     <div class="card-title m-0">
-      <h3 class="fw-bold m-0">
+      <h3 class="fw-bold mb-2 mt-5">
         <codx-label
           fiedName="Information"
           [formModel]="formModel"
@@ -30,15 +30,15 @@
               fiedName="Avatar"
               [formModel]="formModel"
               default="Avatar"
-            ></codx-label
-          ></label>
+            ></codx-label>
+          </label>
           <div class="col-lg-8">
             <codx-img
               #imageUpLoad
               [width]="100"
               [objectType]="'AD_Users'"
               aria-disabled="true"
-              [funcId]="funcID"
+              [funcId]="'ADS05'"
               [isAllowEdit]="true"
               [objectId]="employeeInfo.userID"
               [objectName]="employeeInfo.userName"
@@ -55,8 +55,8 @@
               fiedName="UserName"
               [formModel]="formModel"
               default="Họ và tên"
-            ></codx-label
-          ></label>
+            ></codx-label>
+          </label>
           <div class="col-lg-8">
             <codx-input
               type="text"
@@ -75,14 +75,15 @@
               fiedName="Theme"
               [formModel]="formModel"
               default="Theme"
-            ></codx-label
-          ></label>
+            ></codx-label>
+          </label>
           <div class="col-lg-8 fv-row fv-plugins-icon-container">
             <div class="theme-color">
               <div class="symbol-list d-flex flex-wrap mb-4">
                 <div
                   *ngFor="let t of themes"
                   class="symbol symbol-40px symbol-circle me-4 cursor-pointer"
+                  (click)="updateSettting('', t.id, '')"
                   [ngbTooltip]="t.enable ? '' : 'Coming soon'"
                 >
                   <span class="symbol-label" [style.background-color]="t.color">
@@ -98,14 +99,16 @@
           </div>
         </div>
         <div class="row mb-6">
-          <label class="col-lg-4 col-form-label fw-semibold fs-6">
+          <label class="col-4 col-form-label fw-semibold fs-6">
             <codx-label
               fiedName="lblLanguage"
               [formModel]="formModel"
               default="Language"
             ></codx-label>
           </label>
-          <div class="col-lg-1 fv-row fv-plugins-icon-container btn btn-outline-primary">
+          <div
+            class="col-3 fv-row fv-plugins-icon-container btn btn-outline-primary"
+          >
             <span
               [ngbPopover]="tempLanguage"
               placement="end"
@@ -123,7 +126,7 @@
             <div
               *ngFor="let l of langs"
               class="menu-item px-3 cursor-pointer"
-              (click)="selectLanguage(l.lang)"
+              (click)="updateSettting(l.lang, '', '')"
               data-toggle="tooltip"
               [title]="l.enable ? '' : 'Coming soon'"
             >
@@ -132,7 +135,7 @@
                 [ngClass]="l.lang === language.lang ? 'active' : ''"
               >
                 <span class="symbol symbol-20px me-4">
-                  <img class="rounded-1" [src]="l.flag" alt="metronic" />
+                  <img class="rounded-1" [src]="l.flag" alt="flag" />
                 </span>
                 {{ l.name }}
               </a>
@@ -151,7 +154,7 @@
     aria-controls="kt_account_profile_details"
   >
     <div class="card-title m-0">
-      <h3 class="fw-bold m-0">
+      <h3 class="fw-bold mb-2">
         <codx-label
           fiedName="Signature"
           [formModel]="formModelES"

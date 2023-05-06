@@ -135,11 +135,11 @@ export class SprintsComponent extends UIComponent {
       );
       this.dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+        // if (e?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
         if (e?.event != null) {
           e.event.modifiedOn = new Date();
           this.view.dataService.update(e?.event).subscribe();
@@ -167,11 +167,11 @@ export class SprintsComponent extends UIComponent {
         );
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
+          // if (e?.event == null)
+          //   this.view.dataService.delete(
+          //     [this.view.dataService.dataSelected],
+          //     false
+          //   );
           if (e?.event != null) {
             e.event.modifiedOn = new Date();
             this.view.dataService.update(e?.event).subscribe();
@@ -195,11 +195,11 @@ export class SprintsComponent extends UIComponent {
       );
       this.dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+        // if (e?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
         if (e?.event != null) {
           e.event.modifiedOn = new Date();
           this.view.dataService.update(e?.event).subscribe();
@@ -272,12 +272,14 @@ export class SprintsComponent extends UIComponent {
 
   shareBoard(e, data) {
     var listUserDetail = [];
+    let isAdmin = this.user?.administrator || data?.createdBy==this.user?.userID
     if (data.iterationID) {
       var obj = {
         boardAction: data,
         listUserDetail: listUserDetail,
         title: e?.customName,
         vllShare: 'TM003',
+        isAdmin : isAdmin
       };
       this.api
         .execSv<any>(
@@ -317,22 +319,26 @@ export class SprintsComponent extends UIComponent {
   }
   //#endregion
   changeDataMF(e, data) {
-    if (e) {
-      e.forEach((x) => {
-        if (
-          (x.functionID == 'SYS02' ||
-            x.functionID == 'SYS03' ||
-            x.functionID == 'SYS04') &&
-          data.iterationID == this.user.userID
-        ) {
-          x.disabled = true;
-        }
-        //an giao viec
-        if (x.functionID == 'SYS005') {
-          x.disabled = true;
-        }
-      });
-    }
+    // if (e) {
+    //   // e.forEach((x) => {
+    //   //   // if (
+    //   //   //   (x.functionID == 'SYS02' ||
+    //   //   //     x.functionID == 'SYS03' ||
+    //   //   //     x.functionID == 'SYS04') &&
+    //   //   //   data.iterationID == this.user.userID
+    //   //   // ) {
+    //   //   //   x.disabled = true;
+    //   //   // }
+    //   //   // an edit và delete 
+    //   //   if ((x.functionID == 'SYS02' || x.functionID == 'SYS03') && data?.createdBy != this.user?.userID && !this.user?.administrator) {
+    //   //     x.disabled = true;
+    //   //   }
+    //   //   //an giao viec
+    //   //   if (x.functionID == 'SYS005') {
+    //   //     x.disabled = true;
+    //   //   }
+    //   // });
+    // }
   }
 
   //#region doubeclick carrd
@@ -352,6 +358,7 @@ export class SprintsComponent extends UIComponent {
         };
 
         let dialogModel = new DialogModel();
+        dialogModel.FormModel= this.view.formModel
         dialogModel.IsFull = true;
         dialogModel.zIndex = 900;
         var dialog = this.callfc.openForm(

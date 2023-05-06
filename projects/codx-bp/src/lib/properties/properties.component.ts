@@ -2,18 +2,29 @@ import {
   BP_Processes,
   BP_ProcessesRating,
 } from './../models/BP_Processes.model';
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { FileUpload, View } from '@shared/models/file.model';
 import { FileService } from '@shared/services/file.service';
 import {
   ApiHttpService,
+  AuthStore,
   CacheService,
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { CodxBpService } from '../codx-bp.service';
-import { B } from '@angular/cdk/keycodes';
+import { environment } from 'src/environments/environment';
+import { CodxHistoryComponent } from 'projects/codx-share/src/lib/components/codx-history/codx-history.component';
+import { tmpListUserName } from '../models/BP_UserPermission.model';
 
 @Component({
   selector: 'lib-properties',
@@ -21,6 +32,8 @@ import { B } from '@angular/cdk/keycodes';
   styleUrls: ['./properties.component.css'],
 })
 export class PropertiesComponent implements OnInit {
+  @ViewChild('history') history: CodxHistoryComponent;
+
   process = new BP_Processes();
   rattings: BP_ProcessesRating[] = [];
   dialog: any;
@@ -42,26 +55,84 @@ export class PropertiesComponent implements OnInit {
   vlL1473: any;
   requestTitle: string;
   userName = '';
+  funcID: any;
+  entityName: any;
+  flowChart= '';
+  objectID: any;
+  firstNameVersion:string = '';
+  listUserName:any;
+  userNameLogin:any;
+  isCheckNotUserNameLogin: boolean = false;
+  listUserShow:tmpListUserName[]=[];
+  index:number = 0;
+  user:any;
+  userIdLogin:any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private bpSV: CodxBpService,
     private cache: CacheService,
     private api: ApiHttpService,
+    private authStore: AuthStore,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.data = data.data;
+    this.data = JSON.parse(JSON.stringify(data.data));
+    this.objectID = this.data.recID;
     this.process = this.data;
-    if (this.process.rattings.length > 0) this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
+    this.funcID = this.dialog.formModel.funcID;
+    this.entityName = this.dialog.formModel.entityName;
+    this.getAvatar(this.process);
+
+    if (this.process.rattings.length > 0)
+      this.rattings = this.process.rattings.sort(
+        (a, b) =>
+          new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
+      );
     this.totalRating = 0;
+    this.user = this.authStore.get();
+    this.userIdLogin = this.user.userID;
+    this.userNameLogin= this.user.userName;
   }
 
   ngOnInit(): void {
+    this.cache.message('BP001').subscribe((res) => {
+      if (res) {
+        this.firstNameVersion = Util.stringFormat(
+          res.defaultName,''
+        ).trim()+': '+'V0.0';
+      }
+    });
     this.openProperties(this.data.recID);
+    let isCheck=this.process.versions.map(x=>
+      {
+      if(x.createdBy !== this.userIdLogin) {
+        this.isCheckNotUserNameLogin=true;
+        return;
+      }
+    });
+     if(this.isCheckNotUserNameLogin){
+      var listnew= this.process.versions.map(x => x.createdBy)
+      this.bpSV.getUserNameByListId(listnew).subscribe((res)=> {
+         res=res.map(x=>
+          {
+            let user= new tmpListUserName();
+            user.userName = x.userName;
+            user.userID = x.userID;
+            user.postion= this.index;
+            this.listUserShow.push(user);
+            this.index++;
+        },
+        );
+      });
+   }
     this.changeDetectorRef.detectChanges();
   }
+
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   this.eventEnter();
+  // }
 
   loadUserName(id) {
     // this.api.callSv('SYS','AD','UsersBusiness','GetAsync', id).subscribe(res=>{
@@ -81,6 +152,18 @@ export class PropertiesComponent implements OnInit {
     this.getRating(this.rattings);
     this.changeDetectorRef.detectChanges();
   }
+
+  //#region event enter comment
+  eventEnter() {
+    var input = document.getElementById('myInput');
+    input.addEventListener('keypress', function (event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        document.getElementById('myBtn').click();
+      }
+    });
+  }
+  //#endregion
 
   //#region mo rong
   extendShow(): void {
@@ -178,20 +261,32 @@ export class PropertiesComponent implements OnInit {
   }
   //#endregion
 
-  setComment() {
+  setComment(event = null) {
+    console.log(event);
     this.bpSV
-      .setViewRattings(this.id, this.currentRate.toString(), this.commenttext)
+      .setViewRattings(
+        this.id,
+        this.currentRate.toString(),
+        this.commenttext,
+        this.funcID,
+        this.entityName
+      )
       .subscribe((res) => {
         if (res.rattings.length > 0) {
           this.currentRate = 1;
           this.readonly = false;
           this.commenttext = '';
           this.process = res;
-          this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
+          this.objectID = this.process.recID;
+          this.rattings = this.process.rattings.sort(
+            (a, b) =>
+              new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
+          );
           this.getRating(res.rattings);
-          this.changeDetectorRef.detectChanges();
-          this.notificationsService.notify('Đánh giá thành công');
+          this.notificationsService.notifyCode('DM010');
           this.dialog.dataService.update(this.process).subscribe();
+          this.history.getDataAsync(this.objectID);
+          this.changeDetectorRef.detectChanges();
         }
       });
   }
@@ -201,11 +296,76 @@ export class PropertiesComponent implements OnInit {
     else return 'icon-star text-muted icon-16 mr-1';
   }
 
-  // sortRattings(data: BP_ProcessesRating[]) {
-  //   data.sort((a, b) => {
-  //     var date1 = a.createdOn.getTime();
-  //     var date2 = b.createdOn.getTime();
-  //     return date1 - date2;
-  //   });
+  // viewFlowChart() {
+  //   let paras = [
+  //     '',
+  //     this.funcID,
+  //     this.process?.recID,
+  //     'BP_Processes',
+  //     'inline',
+  //     1000,
+  //     this.process?.processName,
+  //     'Flowchart',
+  //     false,
+  //   ];
+  //   this.api
+  //     .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
+  //     .subscribe((res) => {
+  //       if (res && res?.url) {
+  //         let obj = {
+  //           pathDisk: environment.urlUpload + '/' + res?.url,
+  //           fileName: this.process?.processName,
+  //         };
+  //         this.flowChart = obj;
+  //       }
+  //     });
+  // }
 
+  getAvatar(process) {
+    let avatar = [
+      '',
+      this.funcID,
+      process?.recID,
+      'BP_Processes',
+      'inline',
+      1000,
+      process?.processName,
+      'avt',
+      false,
+    ];
+    let flowChart = [
+      '',
+      this.funcID,
+      process?.recID,
+      'BP_Processes',
+      'inline',
+      1000,
+      process?.processName,
+      'Flowchart',
+      false,
+    ];
+    this.api
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', avatar)
+      .subscribe((res) => {
+        if (res && res?.url) {
+          this.flowChart = environment.urlUpload + '/' + res?.url;
+          this.changeDetectorRef.detectChanges();
+        } else {
+          this.api
+            .execSv<any>(
+              'DM',
+              'DM',
+              'FileBussiness',
+              'GetAvatarAsync',
+              flowChart
+            )
+            .subscribe((res) => {
+              if (res && res?.url) {
+                this.flowChart = environment.urlUpload + '/' + res?.url;
+                this.changeDetectorRef.detectChanges();
+              }
+            });
+        }
+      });
+  }
 }

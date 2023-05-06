@@ -1,0 +1,1792 @@
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
+import {
+  AuthStore,
+  CacheService,
+  CallFuncService,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  SidebarModel,
+  Util,
+} from 'codx-core';
+import { PopupAddStaskComponent } from './popup-add-stask/popup-add-stask.component';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { PopupAddGroupTaskComponent } from './popup-add-group-task/popup-add-group-task.component';
+import {
+  DP_Instances_Steps,
+  DP_Instances_Steps_Reasons,
+  DP_Instances_Steps_TaskGroups,
+  DP_Instances_Steps_TaskGroups_Roles,
+  DP_Instances_Steps_Tasks,
+  DP_Instances_Steps_Tasks_Roles,
+} from '../../../models/models';
+import { CodxDpService } from '../../../codx-dp.service';
+import { PopupCustomFieldComponent } from '../field-detail/popup-custom-field/popup-custom-field.component';
+import { ViewJobComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
+import { PopupTypeTaskComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
+import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
+import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
+import { InstancesComponent } from '../../instances.component';
+import { firstValueFrom } from 'rxjs';
+@Component({
+  selector: 'codx-stages-detail',
+  templateUrl: './stages-detail.component.html',
+  styleUrls: ['./stages-detail.component.scss'],
+})
+export class StagesDetailComponent implements OnInit {
+  Number(arg0: string) {
+    throw new Error('Method not implemented.');
+  }
+  @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
+  @ViewChild('updateProgress') updateProgress: TemplateRef<any>;
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('viewReason', { static: true }) viewReason;
+  @Input() dataStep: any;
+  @Input() formModel: any;
+  @Input() currentStep: any;
+  @Input() titleDefault = '';
+  @Input() listStepReason: any;
+  @Input() instance: any;
+  @Input() stepNameEnd: any;
+  @Input() proccesNameMove: any;
+  @Input() lstIDInvo: any;
+  @Input() showColumnControl = 1;
+  @Input() listStep: any;
+  @Input() viewsCurrent = '';
+  @Input() currentElmID: string;
+  @Input() listUserIdRole: string[] = [];
+  @Input() lstStepProcess: any;
+  @Input() isOnlyView: any;
+  @Input() frmModelInstancesTask: FormModel;
+  @Output() saveAssign = new EventEmitter<any>();
+  @Output() outDataStep = new EventEmitter<any>();
+
+  stepID: any;
+  isDelete: boolean = false;
+  isEdit: boolean = false;
+  isUpdate: boolean = false;
+  isCreate: boolean = false;
+  permissionCloseInstances: boolean = false;
+  isClosed = false;
+  
+  dateActual: any;
+  startDate: any;
+  endDate: any;
+  progress: string = '0';
+  lstFields = [];
+  comment: string;
+  listTypeTask = [];
+  //nvthuan
+  isStart = false;
+  taskGroupList: DP_Instances_Steps_TaskGroups[] = [];
+  userTaskGroup: DP_Instances_Steps_TaskGroups_Roles;
+  progressOld = 0;
+  actualEndMax: Date;
+  grvTaskGroupsForm: FormModel;
+  dataProgress: any;
+  dataProgressClone: any;
+  dataProgressCkeck: any;
+  showLabelAttachment = false;
+  user;
+  disabledProgressInput = false;
+  disabledProgressCkeck = false;
+  isHaveFile = false;
+  folderID = '';
+  groupTaskID = null;
+  funcIDparent: any;
+  moreDefaut = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
+  moreReason = {
+    delete: true,
+  };
+  dateFomat = 'dd/MM/yyyy';
+  dateTimeFomat = 'HH:mm - dd/MM/yyyy';
+  frmModelInstancesSteps: FormModel;
+  frmModelInstancesGroup: FormModel;
+  headerTextInsStep = {};
+  popupJob: DialogRef;
+  popupTaskGroup: DialogRef;
+  popupUpdateProgress: DialogRef;
+  jobType: any;
+  step: DP_Instances_Steps;
+  taskList: DP_Instances_Steps_Tasks[] = [];
+  userGroupJob = [];
+  listJobType = [];
+  titleMemo = '';
+  listReasonStep: DP_Instances_Steps_Reasons[] = [];
+  listReasonsClick: DP_Instances_Steps_Reasons[] = [];
+  dialogPopupReason: DialogRef;
+  viewCrr = '';
+  readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
+  titleReason: string = '';
+  stepNameSuccess: string = '';
+  stepNameFail: string = '';
+  stepNameReason: string = '';
+  idTaskEnd: string = '';
+  isContinueTaskEnd = false;
+  isContinueTaskAll = false;
+  isShowFromTaskEnd = false;
+  isShowFromTaskAll = false;
+  isRoleAll = false;
+  leadtimeControl = false; //sửa thời hạn công việc mặc định
+  progressTaskGroupControl = false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
+  progressStepControl = false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
+  ownerStepProcess: any;
+  constructor(
+    private callfc: CallFuncService,
+    private notiService: NotificationsService,
+    private cache: CacheService,
+    private authStore: AuthStore,
+    private dpService: CodxDpService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private serviceInstance: InstancesComponent
+  ) {
+    this.user = this.authStore.get();
+    this.viewCrr = this.viewsCurrent;
+  }
+
+  async ngOnInit(): Promise<void> {
+    console.log(this.user?.employee);
+
+    this.getValueListReason();
+    this.cache.valueList('DP035').subscribe((res) => {
+      if (res.datas) {
+        let data = [];
+        res.datas.forEach((element) => {
+          if (['T', 'E', 'M', 'C', 'S'].includes(element['value'])) {
+            data.push(element);
+          }
+        });
+        this.listJobType = data.map((item) => {
+          return {
+            ...item,
+            color: { background: item['color'] },
+            icon: 'icon-local_phone',
+            checked: false,
+          };
+        });
+      }
+    });
+    this.cache.valueList('DP004').subscribe((res) => {
+      if (res.datas) {
+        this.listTypeTask = res?.datas;
+      }
+    });
+    this.frmModelInstancesGroup = {
+      entityName: 'DP_Instances_Steps_TaskGroups',
+      formName: 'DPInstancesStepsTaskGroups',
+      gridViewName: 'grvDPInstancesStepsTaskGroups',
+    };
+    this.frmModelInstancesTask = {
+      entityName: 'DP_Instances_Steps_Tasks',
+      formName: 'DPInstancesStepsTasks',
+      funcID: 'DPT040102',
+      gridViewName: 'grvDPInstancesStepsTasks',
+    };
+    this.getgridViewSetup(this.frmModelInstancesGroup);
+    this.frmModelInstancesSteps = await this.getFormModel('DPT0402');
+  }
+
+  getgridViewSetup(data) {
+    this.cache
+      .gridViewSetup(data?.formName, data?.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          for (let item in res) {
+            this.headerTextInsStep[item] = res[item]['headerText'];
+          }
+        }
+      });
+  }
+  saveDataStep(e) {
+    this.dataStep = e;
+    this.outDataStep.emit(this.dataStep);
+  }
+
+  ngAfterViewInit(): void {
+    this.cache.gridViewSetup('DPSteps', 'grvDPSteps').subscribe((res) => {
+      if (res) {
+        this.titleMemo = res?.Memo?.headerText;
+      }
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
+    this.stepID= this.instance.stepID
+    this.permissionCloseInstances=this.instance?.permissionCloseInstances
+    this.isDelete=this.instance.delete
+    this.isEdit=this.instance.edit
+    this.isUpdate=
+    this.instance.write &&
+      !this.instance.closed &&
+      (this.instance.status == '1' || this.instance.status == '2') &&
+      this.dataStep.stepStatus < '2'
+    this.isCreate=this.instance.create
+    this.isClosed=this.instance.closed
+
+    if (changes['dataStep']) {
+      if (changes['dataStep'].currentValue != null) {
+        if (this.lstStepProcess != null && this.lstStepProcess.length > 0) {
+          this.lstStepProcess.forEach((element) => {
+            if (element.stepID == this.dataStep.stepID) {
+              this.ownerStepProcess =
+                element.roles != null && element.roles.length > 0
+                  ? this.checkOwnerRoleProcess(element.roles)
+                  : null;
+            }
+          });
+        }
+        if (changes['dataStep'].currentValue?.startDate != null) {
+          var date = new Date(changes['dataStep'].currentValue?.startDate);
+          this.startDate =
+            this.padTo2Digits(date.getHours()) +
+            ':' +
+            this.padTo2Digits(date.getMinutes()) +
+            ' ' +
+            date.getDate() +
+            '/' +
+            (date.getMonth() + 1) +
+            '/' +
+            date.getFullYear();
+        }
+        if (changes['dataStep'].currentValue?.endDate != null) {
+          var endDate = new Date(changes['dataStep'].currentValue?.endDate);
+          this.endDate =
+            this.padTo2Digits(endDate.getHours()) +
+            ':' +
+            this.padTo2Digits(endDate.getMinutes()) +
+            ' ' +
+            endDate.getDate() +
+            '/' +
+            (endDate.getMonth() + 1) +
+            '/' +
+            endDate.getFullYear();
+        }
+        var tasks = changes['dataStep'].currentValue?.tasks;
+        var taskGroups = changes['dataStep'].currentValue?.taskGroups;
+        this.lstFields = changes['dataStep'].currentValue?.fields;
+        //nvthuan
+        this.groupByTask(changes['dataStep'].currentValue);
+        this.checkRole(changes['dataStep'].currentValue?.roles || []);
+        this.step = changes['dataStep'].currentValue;
+        this.progress = this.step?.progress.toString();
+      } else {
+        this.dataStep = null;
+      }
+      if(!this.titleReason){
+        this.titleReason = changes['dataStep'].currentValue?.isSuccessStep
+
+         ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
+        : changes['dataStep'].currentValue?.isFailStep
+        ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
+        : '';
+      }
+
+    }
+  }
+
+  padTo2Digits(num) {
+    return String(num).padStart(2, '0');
+  }
+
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        break;
+      case 'SYS03':
+        this.popupCustomField(data);
+        break;
+      case 'SYS04':
+        break;
+    }
+  }
+
+  clickShow(e, id) {
+    let children = e.currentTarget.children[0];
+    let element = document.getElementById(id);
+    if (element) {
+      let isClose = element.classList.contains('hidden-main');
+      let isShow = element.classList.contains('show-main');
+      if (isClose) {
+        children.classList.add('icon-expand_less');
+        children.classList.remove('icon-expand_more');
+        element.classList.remove('hidden-main');
+        element.classList.add('show-main');
+      } else if (isShow) {
+        element.classList.remove('show-main');
+        element.classList.add('hidden-main');
+        children.classList.remove('icon-expand_less');
+        children.classList.add('icon-expand_more');
+      }
+    }
+  }
+
+  toggleTask(e, id) {
+    let elementGroup = document.getElementById('group' + id.toString());
+    let children = e.currentTarget.children[0];
+    let isClose = elementGroup.classList.contains('hiddenTask');
+    if (isClose) {
+      elementGroup.classList.remove('hiddenTask');
+      elementGroup.classList.add('showTask');
+      children.classList.remove('icon-add');
+      children.classList.add('icon-horizontal_rule');
+    } else {
+      elementGroup.classList.remove('showTask');
+      elementGroup.classList.add('hiddenTask');
+      children.classList.remove('icon-horizontal_rule');
+      children.classList.add('icon-add');
+    }
+  }
+  getIconTask(task) {
+    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    return color?.icon;
+  }
+  getColor(task) {
+    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    return { 'background-color': color?.color };
+  }
+
+  //huong dan buoc nhiem vu
+  openPopupSup(popup, data) {
+    this.callfc.openForm(popup, '', 800, 400, '', data);
+  }
+
+  valueChange(data) {}
+
+  onSave() {}
+
+  //Field
+  popupCustomField(data) {
+    var list = [];
+    if (data && data.length > 0) {
+      list = data;
+    } else {
+      list.push(data);
+    }
+    var obj = { data: list };
+    let formModel: FormModel = {
+      entityName: 'DP_Instances_Steps_Fields',
+      formName: 'DPInstancesStepsFields',
+      gridViewName: 'grvDPInstancesStepsFields',
+    };
+    let option = new SidebarModel();
+    option.FormModel = formModel;
+    option.Width = '550px';
+    option.zIndex = 1010;
+    let field = this.callfc.openSide(PopupCustomFieldComponent, obj, option);
+  }
+
+  //task -- nvthuan
+  openTypeTask() {
+    this.popupJob = this.callfc.openForm(PopupTypeTaskComponent, '', 400, 400);
+    this.popupJob.closed.subscribe(async (value) => {
+      if (value?.event && value?.event?.value) {
+        this.jobType = value?.event;
+        this.handleTask(null, 'add');
+      }
+    });
+  }
+
+  handleTask(data?: any, status?: string) {
+    let taskGroupIdOld = '';
+    let frmModel: FormModel = {
+      entityName: 'DP_Instances_Steps_Tasks',
+      formName: 'DPInstancesStepsTasks',
+      gridViewName: 'grvDPInstancesStepsTasks',
+    };
+    if (!data) {
+      this.popupJob.close();
+    } else {
+      taskGroupIdOld = data['taskGroupID'];
+    }
+    let dataTransmit =
+      status == 'copy' ? JSON.parse(JSON.stringify(data)) : data;
+    let listData = {
+      status,
+      taskType: this.jobType,
+      step: this.step,
+      listGroup: this.taskGroupList,
+      stepTaskData: dataTransmit || {},
+      taskList: this.taskList,
+      stepName: this.step?.stepName,
+      groupTaskID: this.groupTaskID,
+      leadtimeControl: !this.step?.leadtimeControl,
+    };
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.zIndex = 1011;
+    option.FormModel = frmModel;
+    let dialog = this.callfc.openSide(PopupAddStaskComponent, listData, option);
+
+    dialog.closed.subscribe(async (e) => {
+      this.groupTaskID = null; //set lại
+      if (e?.event) {
+        let taskData = e?.event?.data;
+        if (e.event?.status === 'add' || e.event?.status === 'copy') {
+          let groupTask = this.taskGroupList?.find(
+            (x) => x.refID === taskData.taskGroupID
+          );
+          let role = new DP_Instances_Steps_Tasks_Roles();
+          this.setRole(role);
+          taskData['roles'] = [role, ...taskData['roles']];
+          taskData['createdOn'] = new Date();
+          taskData['modifiedOn'] = null;
+          taskData['modifiedBy'] = null;
+          taskData['indexNo'] = groupTask ? groupTask['task']?.length : 1;
+          let progress = await this.calculateProgressTaskGroup(taskData, 'add');
+          this.dpService
+            .addTask([taskData, progress?.average])
+            .subscribe((res) => {
+              if (res) {
+                this.notiService.notifyCode('SYS006');
+                let index = this.taskGroupList.findIndex(
+                  (task) => task.refID == taskData.taskGroupID
+                );
+                if (index < 0) {
+                  let taskGroup = new DP_Instances_Steps_TaskGroups();
+                  taskGroup['task'] = [];
+                  taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+                  this.taskGroupList.push(taskGroup);
+                  this.taskGroupList[0]['task'].push(taskData);
+                } else {
+                  this.taskGroupList[index]['task'].push(taskData);
+                }
+                this.taskList.push(taskData);
+                this.taskGroupList[progress?.indexGroup]['progress'] =
+                  progress?.average; // cập nhật tiến độ của cha
+                this.calculateProgressStep();
+                this.saveAssign.emit(true);
+              }
+            });
+        } else {
+          taskData['modifiedOn'] = new Date();
+          this.dpService.updateTask(taskData).subscribe((res) => {
+            if (res) {
+              if (taskData?.taskGroupID != taskGroupIdOld) {
+                this.changeGroupTask(taskData, taskGroupIdOld);
+                this.notiService.notifyCode('SYS007');
+                this.saveAssign.emit(true);
+              }
+            }
+          });
+        }
+      }
+    });
+  }
+
+  deleteTask(taskData) {
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        let progress = this.calculateProgressTaskGroup(taskData, 'delete');
+        let value = [
+          taskData?.recID,
+          taskData?.taskGroupID,
+          taskData?.stepID,
+          progress?.average,
+        ];
+        this.dpService.deleteTask(value).subscribe((res) => {
+          if (res) {
+            this.taskGroupList[progress.indexGroup]['progress'] =
+              progress?.average;
+            this.taskGroupList[progress.indexGroup]['task'].splice(
+              progress.indexTask,
+              1
+            );
+            this.saveAssign.emit(true);
+            this.notiService.notifyCode('SYS008');
+            this.calculateProgressStep();
+          }
+        });
+      }
+    });
+  }
+
+  clickMFTask(e: any, taskList?: any, task?: any) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteTask(task);
+        break;
+      case 'SYS03':
+        if (task.taskType) {
+          this.jobType = this.listJobType.find(
+            (type) => type.value === task.taskType
+          );
+        }
+        this.handleTask(task, 'edit');
+        break;
+      case 'SYS04':
+        if (task.taskType) {
+          this.jobType = this.listJobType.find(
+            (type) => type.value === task.taskType
+          );
+        }
+        this.handleTask(task, 'copy');
+        break;
+      case 'DP07':
+        if (task.taskType) {
+          this.jobType = this.listJobType.find(
+            (type) => type?.value === task?.taskType
+          );
+        }
+        this.viewTask(task);
+        break;
+      case 'DP13':
+        this.assignTask(e.data, task);
+        break;
+      case 'DP20':
+        this.openUpdateProgress(task);
+        break;
+    }
+  }
+  //giao viec
+  assignTask(moreFunc, data) {
+    var task = new TM_Tasks();
+    task.taskName = data.taskName;
+    task.refID = data?.recID;
+    task.refType = 'DP_Instance';
+    task.dueDate = data?.endDate;
+    let assignModel: AssignTaskModel = {
+      vllRole: 'TM001',
+      title: moreFunc.customName,
+      vllShare: 'TM003',
+      task: task,
+    };
+    let option = new SidebarModel();
+    option.FormModel = this.frmModelInstancesTask;
+    option.Width = '550px';
+    var dialogAssign = this.callfc.openSide(
+      AssignInfoComponent,
+      assignModel,
+      option
+    );
+    dialogAssign.closed.subscribe((e) => {
+      var doneSave = false;
+      if (e && e.event != null) {
+        doneSave = true;
+      }
+      this.saveAssign.emit(doneSave);
+    });
+  }
+  //View task
+  viewTask(data?: any, type?: string) {
+    let listTaskConvert = this.taskList?.map((item) => {
+      return {
+        ...item,
+        name: item?.taskName,
+        type: item?.taskType,
+      };
+    });
+    let value = JSON.parse(JSON.stringify(data));
+    value['name'] = value['taskName'] || value['taskGroupName'];
+    value['type'] = value['taskType'] || type;
+    if (data) {
+      let frmModel: FormModel = {
+        entityName: 'DP_Instances_Steps_Tasks',
+        formName: 'DPInstancesStepsTasks',
+        gridViewName: 'grvDPInstancesStepsTasks',
+      };
+      let listData = {
+        value: value,
+        listValue: listTaskConvert,
+        step: this.dataStep,
+        isRoleAll: this.isRoleAll,
+        isUpdate: this.isUpdate,
+      };
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      let dialog = this.callfc.openSide(ViewJobComponent, listData, option);
+
+      // this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      //   value: value,
+      //   listValue: listTaskConvert,
+      //   step: this.dataStep,
+      // });
+    }
+  }
+
+  changeGroupTask(taskData, taskGroupIdOld) {
+    let tastClone = JSON.parse(JSON.stringify(taskData));
+    let indexNew = this.taskGroupList.findIndex(
+      (group) => group.recID == taskData.taskGroupID
+    );
+    let index = this.taskGroupList.findIndex(
+      (group) => group.recID == taskGroupIdOld
+    );
+    let listTaskOld = this.taskGroupList[indexNew]['task'] || [];
+    let listTaskNew = this.taskGroupList[indexNew]['task'] || [];
+    listTaskOld.push(tastClone);
+    listTaskNew.forEach((element, i) => {
+      if (element?.taskGroupID !== taskGroupIdOld) {
+        this.taskGroupList[index]['task'].splice(i, 1);
+      }
+    });
+    this.changeValueDrop(listTaskOld, 'indexNo');
+    this.changeValueDrop(listTaskNew, 'indexNo');
+  }
+
+  //taskGroup
+  groupByTask(data) {
+    let step = JSON.parse(JSON.stringify(data));
+    this.isStart = step?.endDate && step?.startDate ? true : false;
+    if (!step['isSuccessStep'] && !step['isFailStep']) {
+      const taskGroupList = step?.tasks.reduce((group, product) => {
+        const { taskGroupID } = product;
+        group[taskGroupID] = group[taskGroupID] ?? [];
+        group[taskGroupID].push(product);
+        return group;
+      }, {});
+      const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
+        let task = taskGroupList[taskGroup['refID']] ?? [];
+        return {
+          ...taskGroup,
+          task: task.sort((a, b) => a['indexNo'] - b['indexNo']),
+        };
+      });
+      step['taskGroups'] = taskGroupConvert;
+      this.taskGroupList = step['taskGroups'];
+      if (step['taskGroups']?.length > 0 || step['tasks']?.length > 0) {
+        let taskGroup = new DP_Instances_Steps_TaskGroups();
+        taskGroup['task'] =
+          taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) ||
+          [];
+        taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+        this.taskGroupList.push(taskGroup);
+      }
+      this.taskList = step['tasks'];
+      this.getTaskEnd();
+    }
+  }
+
+  getTaskEnd() {
+    let countGroup = this.taskGroupList?.length;
+    if (countGroup > 0) {
+      for (let i = countGroup - 1; i >= 0; i--) {
+        let countTask = 0;
+
+        try {
+          countTask = this.taskGroupList[i]['task']?.length;
+        } catch (error) {
+          countTask = 0;
+        }
+
+        if (countTask > 0) {
+          for (let j = countTask - 1; j >= 0; j--) {
+            let task = this.taskGroupList[i]['task'][j];
+            if (task?.isTaskDefault) {
+              this.idTaskEnd =
+                this.taskGroupList[i]['task'][countTask - 1].recID;
+              return;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  clickMFTaskGroup(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteGroupTask(data);
+        break;
+      case 'SYS03':
+        this.openPopupTaskGroup(data, 'edit');
+        break;
+      case 'SYS04':
+        this.openPopupTaskGroup(data, 'copy');
+        break;
+      case 'DP08':
+        this.groupTaskID = data?.refID;
+        this.openTypeTask();
+        break;
+      case 'DP12':
+        this.viewTask(data, 'G');
+        break;
+      case 'DP20':
+        this.openUpdateProgress(data);
+        break;
+    }
+  }
+
+  async openPopupTaskGroup(data?: any, type = '') {
+    let taskGroup = new DP_Instances_Steps_TaskGroups();
+    let index = this.taskGroupList.length;
+    let taskBefore;
+    if (index > 0) {
+      taskBefore = this.taskGroupList[index - 2];
+    }
+    if (data) {
+      let dataCopy = JSON.parse(JSON.stringify(data));
+      taskGroup = dataCopy;
+      taskGroup['startDate'] =
+        type === 'copy'
+          ? taskBefore?.endDate || new Date()
+          : taskGroup['startDate'];
+    } else {
+      taskGroup['progress'] = 0;
+      taskGroup['stepID'] = this.step['recID'];
+      taskGroup['startDate'] = taskBefore?.endDate || this.step?.startDate;
+      taskGroup['task'] = [];
+    }
+    this.popupTaskGroup = this.callfc.openForm(
+      PopupAddGroupTaskComponent,
+      '',
+      500,
+      500,
+      '',
+      { taskGroup, isEditTime: !this.step?.leadtimeControl }
+    );
+    this.popupTaskGroup.closed.subscribe(async (value) => {
+      if (value?.event) {
+        await this.saveGroupTask(value.event, type, data);
+      }
+    });
+  }
+
+  async copyTaskInGroup(taskList, groupID) {
+    if (taskList?.length > 0) {
+      let data = taskList.map((task) => {
+        return {
+          ...task,
+          recID: Util.uid(),
+          refID: Util.uid(),
+          taskGroupID: groupID,
+          createdOn: new Date(),
+          modifiedOn: null,
+        };
+      });
+      return data;
+    }
+    return null;
+  }
+
+  async saveGroupTask(value, type, dataOld) {
+    if (!value['recID'] || type === 'copy') {
+      let role = new DP_Instances_Steps_TaskGroups_Roles();
+      await this.setRole(role);
+      value['roles'] = [role];
+      let index = this.taskGroupList?.length;
+      value['recID'] = Util.uid();
+      value['refID'] = Util.uid();
+      value['createdOn'] = new Date();
+      value['indexNo'] = index;
+      let listTaskSave = await this.copyTaskInGroup(
+        value['task'],
+        value['refID']
+      );
+      value['task'] = listTaskSave || [];
+      let valueSave = JSON.parse(JSON.stringify(value));
+      delete valueSave['task'];
+
+      this.dpService
+        .addTaskGroups([valueSave, listTaskSave])
+        .subscribe((res) => {
+          if (res) {
+            this.notiService.notifyCode('SYS006');
+            this.taskGroupList.splice(index - 1, 0, value);
+            this.calculateProgressStep();
+            this.saveAssign.emit(true);
+          }
+        });
+    } else {
+      value['modifiedOn'] = new Date();
+      delete value['task'];
+      this.dpService.updateTaskGroups(value).subscribe(async (res) => {
+        if (res) {
+          this.notiService.notifyCode('SYS007');
+          await this.copyValue(value, dataOld);
+          this.calculateProgressStep();
+          this.saveAssign.emit(true);
+        }
+      });
+    }
+  }
+
+  deleteGroupTask(data) {
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        let value = [data?.recID, data?.stepID];
+        this.dpService.deleteTaskGroups(value).subscribe((res) => {
+          if (res) {
+            let index = this.taskGroupList?.findIndex(
+              (x) => x.recID == data.recID
+            );
+            this.taskGroupList.splice(index, 1);
+            this.notiService.notifyCode('SYS008');
+            this.calculateProgressStep();
+            this.saveAssign.emit(true);
+          }
+        });
+      }
+    });
+  }
+  // Progress
+  styleProgress(progress) {
+    if (progress >= 0 && progress < 50) return { background: '#FE0000' };
+    else if (progress >= 50 && progress < 75) return { background: '#E1BE27' };
+    else {
+      return { background: '#34CDEF' };
+    }
+  }
+  openUpdateProgress(data?: any) {
+    if (data?.parentID) {
+      //check công việc liên kết hoàn thành trước
+      let check = false;
+      let taskName = '';
+      let listID = data?.parentID.split(';');
+      listID?.forEach((item) => {
+        let taskFind = this.taskList?.find((task) => task.refID == item);
+        if (taskFind?.progress != 100) {
+          check = true;
+          taskName = taskFind?.taskName;
+        } else {
+          this.actualEndMax =
+            !this.actualEndMax || taskFind?.actualEnd > this.actualEndMax
+              ? taskFind?.actualEnd
+              : this.actualEndMax;
+        }
+      });
+      if (check) {
+        this.notiService.notifyCode('DP023', 0, taskName);
+        return;
+      }
+    } else {
+      this.actualEndMax = this.step?.actualStart;
+    }
+    if (data) {
+      this.dataProgress = JSON.parse(JSON.stringify(data));
+      this.dataProgressClone = data;
+      this.progressOld = data['progress'] == 100 ? 0 : data['progress'];
+      this.disabledProgressInput = data['progress'] == 100 ? true : false;
+    }
+    this.popupUpdateProgress = this.callfc.openForm(
+      this.updateProgress,
+      '',
+      550,
+      450
+    );
+  }
+  checkEventProgress(data, group) {
+    if (group) {
+      let isGroup = false;
+      let isTask = false;
+      if (!this.isRoleAll) {
+        isGroup = this.checRoleTask(group, 'O');
+        if (!isGroup) {
+          isTask = this.checRoleTask(data, 'O');
+        }
+      }
+      return this.isRoleAll || isGroup || isTask ? true : false;
+    } else {
+      let isGroup = false;
+      if (!this.isRoleAll) {
+        isGroup = this.checRoleTask(data, 'O');
+      }
+      return this.progressTaskGroupControl && (this.isRoleAll || isGroup)
+        ? true
+        : false;
+    }
+  }
+
+  async handelProgress() {
+    if (this.dataProgress?.progress == 100 && !this.dataProgress?.actualEnd) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        this.headerTextInsStep['ActualEnd']
+      );
+      return;
+    }
+    if (
+      this.dataProgress?.actualEnd &&
+      new Date(this.actualEndMax) > new Date(this.dataProgress?.actualEnd)
+    ) {
+      this.notiService.notifyCode(
+        'DP035',
+        0,
+        this.headerTextInsStep['ActualEnd']
+      );
+      return;
+    }
+    if (this.attachment && this.attachment.fileUploadList.length) {
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          if (this.dataProgress['isSuccessStep'] != undefined) {
+            this.updateProgressStep();
+          } else if (this.dataProgress['taskGroupID'] === undefined) {
+            this.updateProgressGroupTask();
+          } else {
+            this.updateProgressTask();
+          }
+        }
+      });
+    } else {
+      if (this.dataProgress['isSuccessStep'] != undefined) {
+        this.updateProgressStep();
+      } else if (this.dataProgress['taskGroupID'] === undefined) {
+        this.updateProgressGroupTask();
+      } else {
+        this.updateProgressTask();
+      }
+    }
+  }
+
+  updateProgressStep() {
+    let idStep = this.dataProgress['recID'];
+    let progress = this.dataProgress['progress'];
+    let actualEnd = this.dataProgress['actualEnd'];
+    let note = this.dataProgress['note'];
+    this.dpService
+      .updateProgressStep([idStep, Number(progress), actualEnd, note])
+      .subscribe((res) => {
+        if (res) {
+          this.step.progress = Number(progress);
+          this.step.actualEnd = actualEnd;
+          this.step.note = note;
+          this.progress = progress;
+          this.notiService.notifyCode('SYS006');
+          this.popupUpdateProgress.close();
+          this.saveAssign.emit(true);
+        }
+      });
+  }
+
+  updateProgressGroupTask() {
+    this.notiService.alertCode('DP031').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        let taskGroupSave = JSON.parse(JSON.stringify(this.dataProgress));
+        delete taskGroupSave['task'];
+        this.dpService.updateTaskGroups(taskGroupSave).subscribe((res) => {
+          if (res) {
+            this.dataProgressClone['progress'] = this.dataProgress['progress'];
+            this.dataProgressClone['actualEnd'] =
+              this.dataProgress['actualEnd'];
+            this.dataProgressClone['note'] = this.dataProgress['note'];
+            this.notiService.notifyCode('SYS006');
+            this.popupUpdateProgress.close();
+            this.calculateProgressStep();
+            this.saveAssign.emit(true);
+          }
+        });
+      }
+      if (x.event && x.event.status == 'N') {
+        let taskGroupSave = JSON.parse(JSON.stringify(this.dataProgress));
+        delete taskGroupSave['task'];
+        this.dpService.updateTaskGroups(taskGroupSave).subscribe((res) => {
+          if (res) {
+            this.dataProgressClone['progress'] = this.dataProgress['progress'];
+            this.dataProgressClone['actualEnd'] =
+              this.dataProgress['actualEnd'];
+            this.dataProgressClone['note'] = this.dataProgress['note'];
+            this.notiService.notifyCode('SYS006');
+            this.popupUpdateProgress.close();
+            this.saveAssign.emit(true);
+          }
+        });
+      }
+    });
+  }
+
+  updateProgressTask() {
+    this.notiService.alertCode('DP028').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.dataProgressClone['progress'] = this.dataProgress['progress'];
+        this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
+        this.dataProgressClone['note'] = this.dataProgress['note'];
+        let value = this.calculateProgressTaskGroup(
+          this.dataProgress,
+          'update'
+        );
+        let dataSave = [this.dataProgress, value?.average];
+        this.dpService.updateTask(dataSave).subscribe((res) => {
+          if (res) {
+            this.taskGroupList[value?.indexGroup]['progress'] = value?.average;
+            this.notiService.notifyCode('SYS007');
+            this.popupUpdateProgress.close();
+            this.calculateProgressStep();
+            this.saveAssign.emit(true);
+            this.checkContinueStep();
+          } else {
+            this.popupUpdateProgress.close();
+          }
+        });
+      }
+      if (x.event && x.event.status == 'N') {
+        let dataSave = [this.dataProgress, -1];
+        this.dpService.updateTask(dataSave).subscribe((res) => {
+          if (res) {
+            this.dataProgressClone['progress'] = this.dataProgress['progress'];
+            this.dataProgressClone['actualEnd'] =
+              this.dataProgress['actualEnd'];
+            this.dataProgressClone['note'] = this.dataProgress['note'];
+            this.notiService.notifyCode('SYS007');
+            this.popupUpdateProgress.close();
+            this.saveAssign.emit(true);
+            this.checkContinueStep();
+          } else {
+            this.popupUpdateProgress.close();
+          }
+        });
+      }
+    });
+  }
+
+  checkContinueStep() {
+    if (this.dataProgress['progress'] == 100) {
+      this.isContinueTaskAll = this.checkSuccessTaskRequired('', '', true);
+      this.isShowFromTaskEnd = !this.checkSuccessTaskRequired(
+        this.dataProgress?.recID
+      );
+      this.isContinueTaskEnd =
+        this.dataProgress?.recID == this.idTaskEnd
+          ? true
+          : this.checkSuccessTaskRequired('', this.idTaskEnd, true);
+      this.isShowFromTaskAll = !this.isContinueTaskAll;
+      var isAuto = {
+        isShowFromTaskAll: this.isShowFromTaskAll,
+        isShowFromTaskEnd: this.isShowFromTaskEnd,
+        isContinueTaskEnd: this.isContinueTaskEnd,
+        isContinueTaskAll: this.isContinueTaskAll,
+      };
+
+      let dataInstance = {
+        instance: this.instance,
+        listStep: this.listStep,
+        step: this.step,
+        isAuto: isAuto,
+      };
+      this.serviceInstance.autoMoveStage(dataInstance);
+    } else {
+      this.isShowFromTaskAll = false;
+      this.isShowFromTaskEnd = false;
+      this.isContinueTaskEnd = false;
+      this.isContinueTaskAll = false;
+    }
+  }
+
+  checkSuccessTaskRequired(
+    taskID?: string,
+    taskEnd?: string,
+    isAllTask = false
+  ) {
+    for (let group of this.taskGroupList) {
+      if (group['task']?.length > 0) {
+        for (let task of group['task']) {
+          if (isAllTask) {
+            if (taskEnd) {
+              if (task?.recID == taskEnd && task?.progress == 100) {
+                return true;
+              }
+            } else {
+              if (task?.progress != 100) {
+                return false;
+              }
+            }
+          } else {
+            if (task?.recID != taskID) {
+              if (task?.requireCompleted && task?.progress != 100) {
+                return false;
+              } else {
+                continue;
+              }
+            }
+          }
+        }
+      }
+    }
+    return taskEnd ? false : true;
+    // const taskList = isAllTask
+    // ? [].concat(...this.taskGroupList.map((group) => group['task']))
+    // : this.taskGroupList.flatMap((group) => group['task']);
+
+    // for (const task of taskList) {
+    //   if (!isAllTask) {
+    //     if (task?.recID != taskID) {
+    //       return task?.requireCompleted && task?.progress != 100 ? false : continue;
+    //     }
+    //   } else {
+    //     return taskEnd && task?.recID == taskEnd && task?.progress == 100 || task?.progress == 100;
+    //   }
+
+    //   if (!isAllTask && task.recID !== taskID) continue;
+    //   if (taskEnd && task.recID !== taskEnd) continue;
+    //   if (task.progress !== 100) return false;
+    //   if (!isAllTask && task.requireCompleted) return false;
+    //   if (isAllTask && taskEnd && !task.requireCompleted) return true;
+    // }
+  }
+
+  checkExitsParentID(taskList, task): string {
+    if (task?.requireCompleted) {
+      return 'text-red';
+    }
+    let check = 'd-none';
+    if (task['groupTaskID']) {
+      taskList?.forEach((taskItem) => {
+        if (taskItem['parentID']?.includes(task['refID'])) {
+          check = 'text-orange';
+        }
+      });
+    } else {
+      this.taskList?.forEach((taskItem) => {
+        if (taskItem['parentID']?.includes(task['refID'])) {
+          check = 'text-orange';
+        }
+      });
+    }
+    return check;
+  }
+  // Common
+  calculateProgressTaskGroup(data, status) {
+    let proggress = 0;
+    let average = 0;
+    let indexTask = -1;
+    let indexGroup = this.taskGroupList?.findIndex(
+      (task) => task.refID == data?.taskGroupID
+    );
+    let taskGroupFind = JSON.parse(
+      JSON.stringify(this.taskGroupList[indexGroup]['task'])
+    );
+    if (status == 'add') {
+      taskGroupFind.push(data);
+    } else if (status == 'delete') {
+      indexTask = taskGroupFind?.findIndex((task) => task.recID == data.recID);
+      taskGroupFind.splice(indexTask, 1);
+    }
+    taskGroupFind.forEach((item) => {
+      proggress += parseFloat(item?.progress) || 0;
+    });
+    average = parseFloat((proggress / taskGroupFind.length).toFixed(1)) || 0;
+    return { average: average, indexGroup: indexGroup, indexTask: indexTask };
+  }
+
+  calculateProgressStep() {
+    let sum = 0;
+    let length = 0;
+    this.taskGroupList?.forEach((group) => {
+      if (!group['recID'] && group['task']?.length > 0) {
+        sum += group['task']?.reduce((accumulator, currentValue) => {
+          return accumulator + Number(currentValue['progress'] || 0);
+        }, 0);
+        length += group['task']?.length;
+      }
+      if (group['recID']) {
+        sum += Number(group['progress'] || 0);
+        length++;
+      }
+    });
+    let medium = (sum / length).toFixed(2);
+    let stepID = this.step?.recID;
+    this.dpService
+      .updateProgressStep([stepID, Number(medium)])
+      .subscribe((res) => {
+        if (res) {
+          this.step.progress = Number(medium);
+          this.progress = medium;
+        }
+      });
+  }
+
+  setRole<T>(role: T) {
+    role['recID'] = Util.uid();
+    role['objectName'] = this.user['userName'];
+    role['objectID'] = this.user['userID'];
+    role['createdOn'] = new Date();
+    role['createdBy'] = this.user['userID'];
+    role['roleType'] = 'O';
+    return role;
+  }
+
+  getRole(task, type) {
+    let role =
+      task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
+    return type == 'ID' ? role?.objectID : role?.objectName;
+  }
+
+  // getObjectIdRole(task, group) {
+  //   if (task?.taskType != 'M' && group) {
+  //     let objectId =
+  //       task?.roles.find((role) => role?.roleType == 'P')?.objectID ||
+  //       task?.roles[0]?.objectID;
+  //     return objectId;
+  //   } else {
+  //     let objectId =
+  //       task?.roles.find((role) => role?.roleType == 'O')?.objectID||
+  //       task?.roles[0]?.objectID;
+  //     return objectId;
+  //   }
+  // }
+  // getObjectNameRole(task, group) {
+  //   if (task?.taskType != 'M' && group) {
+  //     let objectName =
+  //       task?.roles.find((role) => role?.roleType == 'P')?.objectName ||
+  //       task?.roles[0]?.objectName;
+  //     return objectName;
+  //   } else {
+  //     let objectName =
+  //       task?.roles.find((role) => role?.roleType == 'O')?.objectName ||
+  //       task?.roles[0]?.objectName;
+  //     return objectName;
+  //   }
+  // }
+
+  copyValue(dataCopy, data) {
+    if (typeof data === 'object') {
+      for (let key in data) {
+        if (typeof data[key] !== 'object') {
+          data[key] = dataCopy[key];
+        }
+      }
+    }
+  }
+
+  async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {
+    if (event.previousContainer === event.container) {
+      if (event.previousIndex == event.currentIndex) return;
+      if (data && isParent) {
+        moveItemInArray(data, event.previousIndex, event.currentIndex);
+        await this.changeValueDrop(data, 'indexNo');
+        await this.updateDropDrap('parent');
+      } else {
+        moveItemInArray(
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+        await this.changeValueDrop(event.container.data, 'indexNo');
+        await this.updateDropDrap('child');
+      }
+    } else {
+      let groupTaskIdOld = '';
+      if (event.previousContainer.data.length > 0) {
+        groupTaskIdOld =
+          event.previousContainer.data[event.previousIndex]['taskGroupID'];
+        event.previousContainer.data[event.previousIndex]['taskGroupID'] =
+          data?.recID;
+      }
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+      this.calculateProgressStep();
+      await this.changeValueDrop(
+        event.previousContainer.data,
+        'indexNo',
+        groupTaskIdOld,
+        true
+      );
+      await this.changeValueDrop(
+        event.container.data,
+        'indexNo',
+        groupTaskIdOld,
+        true
+      );
+      await this.updateDropDrap('all');
+    }
+  }
+
+  async updateDropDrap(status) {
+    let listTask = [];
+    let taskGroupListClone = JSON.parse(JSON.stringify(this.taskGroupList));
+    let listGroupTask = taskGroupListClone?.map((group) => {
+      listTask = [...listTask, ...group['task']];
+      delete group['task'];
+      return group;
+    });
+    listGroupTask.pop();
+    let dataSave = [];
+    switch (status) {
+      case 'all':
+        dataSave = [listGroupTask, listTask, this.step.recID];
+        break;
+      case 'parent':
+        dataSave = [listGroupTask, null, this.step.recID];
+        break;
+      case 'child':
+        dataSave = [null, listTask, this.step.recID];
+        break;
+    }
+    this.dpService.updateDataDrop(dataSave).subscribe((res) => {
+      if (res) {
+        this.notiService.notifyCode('SYS007');
+      }
+    });
+  }
+
+  async changeValueDrop(
+    data: any,
+    value: string,
+    recID = '',
+    isProgress = false
+  ) {
+    if (data.length > 0) {
+      let index = this.taskGroupList?.findIndex(
+        (group) => group.recID == data[0]['taskGroupID']
+      );
+      let sum = 0;
+      let average = 0;
+      data.forEach((item, index) => {
+        item[value] = index + 1; // cập nhật số thứ tự
+        sum += Number(item['progress']); // tổng tiến độ
+      });
+      if (isProgress) {
+        average = parseFloat((sum / data.length).toFixed(1)) || 0;
+        this.taskGroupList[index]['progress'] = average;
+      }
+    } else if (data.length == 0 && isProgress) {
+      let index = this.taskGroupList.findIndex((group) => group.recID == recID);
+      this.taskGroupList[index]['progress'] = 0;
+    }
+    this.calculateProgressStep();
+  }
+
+  changeProgress(e, data) {
+    data['progress'] = e?.value ? e?.value : 0;
+    if (data['progress'] < 100) {
+      data['actualEnd'] = null;
+    }
+    if (data['progress'] == 100 && !data['actualEnd']) {
+      data['actualEnd'] = new Date();
+    }
+  }
+
+  changeValueInput(event, data) {
+    data[event?.field] = event?.data;
+  }
+
+  changeValueDate(event, data) {
+    data[event?.field] = event?.data?.fromDate;
+    if (data['progress'] < 100) {
+      data['actualEnd'] = null;
+    }
+  }
+
+  // check checkbox 100%
+  checkRadioProgress(event, data) {
+    if (event?.data) {
+      data[event?.field] = 100;
+      data['actualEnd'] = new Date();
+    } else {
+      data[event?.field] = this.progressOld;
+      data['actualEnd'] = null;
+    }
+    this.disabledProgressInput = event?.data;
+  }
+
+  checkRole(listRoleStep) {
+    if (
+      this.permissionCloseInstances ||
+      this.listUserIdRole?.some((id) => id == this.user.userID) ||
+      listRoleStep?.some(
+        (role) => role.objectID == this.user.userID && role.roleType == 'S'
+      )
+    ) {
+      this.isRoleAll = true;
+    } else if (this.dataStep?.roles?.length > 0) {
+      this.isRoleAll =
+        this.dataStep?.roles?.some(
+          (element) =>
+            element?.objectID == this.user.userID && element.roleType == 'S'
+        ) || false;
+    }
+    this.leadtimeControl = this.dataStep?.leadtimeControl || false; //sửa thời hạn công việc mặc định
+    this.progressTaskGroupControl =
+      this.dataStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
+    this.progressStepControl = this.dataStep?.progressStepControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
+  }
+
+  checRoleTask(data, type) {
+    return (
+      data.roles?.some(
+        (element) =>
+          element?.objectID == this.user.userID && element.roleType == type
+      ) || false
+    );
+  }
+
+  async changeDataMFTask(event, task, groupTask) {
+    if (event != null) {
+      let isGroup = false;
+      let isTask = false;
+      if (!this.isRoleAll) {
+        isGroup = this.checRoleTask(groupTask, 'O');
+        if (!isGroup) {
+          isTask = this.checRoleTask(task, 'O');
+        }
+      }
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02': //xóa
+            if (!(!task?.isTaskDefault && (this.isRoleAll || isGroup) && this.isOnlyView)) {
+              res.disabled = true;
+            }
+            break;
+          case 'SYS03': //sửa
+            if (!this.isOnlyView) {
+              res.disabled = true;
+            } else {
+              if (!(this.isRoleAll || isGroup || isTask)) {
+                res.disabled = true;
+              } else {
+                if (task?.isTaskDefault && !this.leadtimeControl) {
+                  res.disabled = true;
+                }
+              }
+            }
+            break;
+          case 'SYS04': //copy
+            if (!((this.isRoleAll || isGroup) && this.isOnlyView)) {
+              res.disabled = true;
+            }
+            break;
+          case 'SYS003': //đính kèm file
+            if (!task?.isTaskDefault && !this.isOnlyView) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP20': // tiến độ
+            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP13': //giao việc
+            if (!(task?.createTask && this.isOnlyView && (this.isRoleAll || isGroup || isTask))) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP12':
+            res.disabled = true;
+            break;
+          case 'DP08':
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
+  async changeDataMFGroupTask(event, group) {
+    if (event != null) {
+      let isGroup = false;
+      if (!this.isRoleAll) {
+        isGroup = this.checRoleTask(group, 'O');
+      }
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'DP13':
+          case 'DP07':
+            res.disabled = true;
+            break;
+          case 'SYS02': //xóa
+            if (!(!group?.isTaskDefault && (this.isRoleAll ||isGroup ) && this.isOnlyView)) {
+              res.disabled = true;
+            }
+            break;
+          case 'SYS04': //copy
+            if (!this.isRoleAll || !this.isOnlyView) {
+              res.disabled = true;
+            }
+            break;
+          case 'SYS03': //sửa
+            if (!this.isOnlyView) {
+              res.disabled = true;
+            } else {
+              if (!(this.isRoleAll || isGroup)) {
+                res.disabled = true;
+              } else {
+                if (group?.isTaskDefault && !this.leadtimeControl) {
+                  res.disabled = true;
+                }
+              }
+            }
+            break;
+          case 'SYS003': //đính kèm file
+            if (group?.isTaskDefault && !this.isOnlyView) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP08': // thêm công việc
+            if (!((this.isRoleAll || isGroup) && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP20': // tiến độ
+            if (!(this.progressTaskGroupControl && (this.isRoleAll || isGroup) && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            break;
+        }
+      });
+    }
+  }
+
+  async changeDataMF(e, type, data = null) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          //xóa
+          case 'SYS102':
+          case 'SYS02':
+            if (
+              !this.isDelete ||
+              (this.instance.status != 1 && this.instance.status != 2) ||
+              !this.isUpdate
+            )
+              res.disabled = true;
+            break;
+          //EDIT
+          //Đính kèm file
+          case 'SYS003':
+          case 'SYS103':
+          case 'SYS03':
+            if (
+              !this.isEdit ||
+              (this.instance.status != 1 && this.instance.status != 2) ||
+              !this.isUpdate
+            )
+              res.disabled = true;
+            break;
+          //copy
+          case 'SYS104':
+          case 'SYS04':
+            if (
+              !this.isCreate ||
+              (this.instance.status != 1 && this.instance.status != 2) ||
+              !this.isUpdate
+            )
+              res.disabled = true;
+            break;
+          //"Chi tiết nhóm công việc"
+          case 'DP12':
+            if (
+              type != 'group' ||
+              (this.instance.status != 1 && this.instance.status != 2)
+            )
+              res.disabled = true;
+            break;
+          //Thêm công việc
+          case 'DP08':
+            if (
+              type != 'group' ||
+              (this.instance.status != 1 && this.instance.status != 2) ||
+              !this.isUpdate
+            )
+              res.disabled = true;
+            break;
+          //Chi tiết công việc
+          case 'DP07':
+            if (
+              type == 'group' ||
+              (this.instance.status != 1 && this.instance.status != 2)
+            )
+              res.disabled = true;
+            break;
+          // giao viẹc
+          case 'DP13':
+            if (
+              type == 'group' ||
+              (this.instance.status != 1 && this.instance.status != 2) ||
+              !this.isUpdate
+            )
+              res.disabled = true;
+            if (!data?.createTask) res.isblur = true;
+            break;
+        }
+      });
+    }
+  }
+
+  changeFieldMF(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS103':
+          case 'SYS03':
+            if (!this.isUpdate) res.disabled = true;
+            break;
+          default:
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
+
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
+
+  getfileCount(e) {
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    this.showLabelAttachment = this.isHaveFile;
+  }
+
+  async getFormModel(functionID) {
+    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let formModel = JSON.parse(JSON.stringify(this.formModel)) || {};
+    formModel.formName = f?.formName;
+    formModel.gridViewName = f?.gridViewName;
+    formModel.entityName = f?.entityName;
+    formModel.funcID = functionID;
+    return formModel;
+  }
+
+  //End task -- nvthuan
+
+  openPopupReason() {
+    this.listReasonsClick = [];
+    this.dialogPopupReason = this.callfc.openForm(
+      this.viewReason,
+      '',
+      500,
+      500
+    );
+  }
+  changeReasonMF(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02':
+            if (this.isClosed) {
+              res.disabled = true;
+            }
+            break;
+          case 'SYS102':
+            if (this.isClosed) {
+              res.disabled = true;
+            }
+            // this.deleteReason();
+            break;
+          default:
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
+  clickMFReason($event, data) {
+    switch ($event.functionID) {
+      case 'SYS02':
+        this.deleteReason(data);
+        break;
+      default:
+        break;
+    }
+  }
+  checkValue($event, data) {
+    if ($event && $event.currentTarget.checked) {
+      this.listReasonsClick.push(data);
+    } else {
+      let idx = this.listReasonsClick.findIndex((x) => x.recID === data.recID);
+      if (idx >= 0) this.listReasonsClick.splice(idx, 1);
+    }
+  }
+  onSaveReason() {
+    var data = [
+      this.instance.recID,
+      this.dataStep.stepID,
+      this.listReasonsClick,
+    ];
+    this.dpService.updateListReason(data).subscribe((res) => {
+      if (res) {
+        this.dataStep.reasons = this.listReasonsClick;
+        this.dialogPopupReason.close();
+        this.notiService.notifyCode('SYS007');
+        return;
+      }
+    });
+  }
+  deleteReason(data) {
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x?.event && x.event?.status == 'Y') {
+        this.onDeleteReason(data);
+      } else {
+        return;
+      }
+    });
+  }
+
+  onDeleteReason(dataReason) {
+    var data = [this.instance.recID, this.dataStep.stepID, dataReason.recID];
+    this.dpService.DeleteListReason(data).subscribe((res) => {
+      if (res) {
+        let idx = this.dataStep.reasons.findIndex(
+          (x) => x.recID === dataReason.recID
+        );
+        if (idx >= 0) this.dataStep.reasons.splice(idx, 1);
+        this.notiService.notifyCode('SYS008');
+        return;
+      }
+    });
+  }
+  getValueListReason() {
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.stepNameSuccess = item?.text;
+          } else if (item.value === 'F') {
+            this.stepNameFail = item?.text;
+          } else if (item.value === 'R') {
+            this.stepNameReason = item?.text;
+          }
+        }
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+  joinTwoString(valueFrist, valueTwo) {
+    valueTwo = this.LowercaseFirstPipe(valueTwo);
+    if (!valueFrist || !valueTwo) return '';
+    return valueFrist + ' ' + valueTwo;
+  }
+  LowercaseFirstPipe(value) {
+    if (!value) return '';
+    return value.charAt(0).toLowerCase() + value.slice(1);
+  }
+  checkOwnerRoleProcess(roles) {
+    if (roles != null && roles.length > 0) {
+      var checkOwner = roles.find((x) => x.roleType == 'S');
+
+      return checkOwner != null ? checkOwner.objectID : null;
+    } else {
+      return null;
+    }
+  }
+  //detail field
+  // inputElmIDCustomField(e){
+  //   this.currentElmID = e ;
+  //   this.inputElmIDCFStage.emit(e)
+  // }
+  // actionSaveCustomField(e){
+  //   this.isSaving =e ;
+  //   this.actionSaveCFStage.emit(e)
+  // }
+}

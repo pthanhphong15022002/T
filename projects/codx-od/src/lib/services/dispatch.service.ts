@@ -191,9 +191,9 @@ export class DispatchService implements OnDestroy {
   }
 
   //Chia sẻ văn bản
-  shareDispatch(obj: permissionDis)
+  shareDispatch(obj: permissionDis , referType:any , entityName:string)
   {
-    return this.api.exec<any>('OD', 'DispatchesBusiness', 'ShareDispatchAsync', obj);
+    return this.api.exec<any>('OD', 'DispatchesBusiness', 'ShareDispatchAsync', [obj , referType,entityName]);
   }
 
   //Thu hồi quyền chia sẻ của user
@@ -218,14 +218,14 @@ export class DispatchService implements OnDestroy {
     return this.api.exec<any>('OD', 'DispatchesBusiness', 'UpdateResultAsync', obj);
   }
    //Thêm mới công văn
-   saveDispatch(dataRq : DataRequest ,obj: dispatch)
+   saveDispatch(dataRq : DataRequest ,obj: dispatch , keyField:boolean)
    {
-     return this.api.exec<any>('OD', 'DispatchesBusiness', 'SaveDispatchAsync', [dataRq , obj]);
+     return this.api.exec<any>('OD', 'DispatchesBusiness', 'SaveDispatchAsync', [dataRq , obj , keyField]);
    }
     //cập nhật công văn
-    updateDispatch(obj: dispatch , isDlFile: boolean)
+    updateDispatch(obj: dispatch , funcID: string = "", isDlFile: boolean , referType: string , entityName: string)
     {
-      return this.api.exec<any>('OD', 'DispatchesBusiness', 'UpdateDispatchAsync', [obj,isDlFile]);
+      return this.api.exec<any>('OD', 'DispatchesBusiness', 'UpdateDispatchAsync', [obj , funcID ,isDlFile,referType,entityName]);
     }
 
    //Add link
@@ -273,9 +273,9 @@ export class DispatchService implements OnDestroy {
     }
 
     //Lấy chi tiết 1 công văn
-    getDetailDispatch(recID:any , objectType:any , isEntities=false)
+    getDetailDispatch(recID:any , objectType:any , referType:any , isEntities=false)
     {
-       return this.api.exec<any>('OD', 'DispatchesBusiness', 'GetItemByIDAsync', [recID,objectType,isEntities]);
+       return this.api.exec<any>('OD', 'DispatchesBusiness', 'GetItemByIDAsync', [recID,objectType , referType,isEntities]);
     }
 
     //Xóa công văn
@@ -311,9 +311,18 @@ export class DispatchService implements OnDestroy {
        return this.api.execSv<any>('TM','ERM.Business.TM','TaskBusiness','GetListTaskTreeByRefIDAsync', recID)
      }
      //Completed
-     complete(recID:string , comment:string , status:any)
+     complete(recID:string , comment:string , status:any , funcID:any)
      {
-       return this.api.exec<any>('OD','DispatchesBusiness','CompletedAsync', [recID,comment,status])
+       return this.api.exec<any>('OD','DispatchesBusiness','CompletedAsync', [recID,comment,status,funcID])
      }
-    
+    //check autoNumber
+    autoNumber(formName: string , funcID: any ,entityName: string , key: any)
+    {
+      return this.api.execSv<any>('SYS','AD','AutoNumbersBusiness','GenAutoNumberAsync', [funcID , entityName , key])
+    }
+    //send mail
+    sendMail2(dataRq : DataRequest , recID:string)
+    {
+      return this.api.execSv<any>('OD','OD','DispatchesBusiness','SendMailAsync', [dataRq , recID])
+    }
 }

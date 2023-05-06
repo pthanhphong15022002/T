@@ -7,6 +7,8 @@ import {
   CodxGridviewComponent,
   DialogRef,
   DialogModel,
+  NotificationsService,
+  ViewModel,
 } from 'codx-core';
 import {
   Component,
@@ -18,13 +20,14 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { PopupAddUpdate } from './popup-add-update/popup-add-update.component';
+import { A } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-detail-note-books',
   templateUrl: './detail-note-books.component.html',
   styleUrls: ['./detail-note-books.component.scss'],
 })
 export class DetailNoteBooksComponent extends UIComponent {
-  @Input() views: any = [];
+  @Input() views: ViewModel[] = [];
 
   recID: any;
   data: any;
@@ -61,18 +64,28 @@ export class DetailNoteBooksComponent extends UIComponent {
   constructor(
     injector: Injector,
     private route: ActivatedRoute,
-    private change: ChangeDetectorRef
+    private change: ChangeDetectorRef,
+    private notifySvr: NotificationsService
   ) {
     super(injector);
-    this.route.params.subscribe((params) => {
-      if (params) this.funcID = params['funcID'];
-    });
+    
+  }
 
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      if (res) {
-        this.functionList.formName = res.formName;
-        this.functionList.gridViewName = res.gridViewName;
-        this.functionList.entityName = res.entityName;
+  onInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
+    this.route.params.subscribe((params) => {
+      if(params){
+        this.funcID = params['funcID'];
+        this.cache.functionList(this.funcID)
+        .subscribe((res) => {
+          if (res) {
+            this.functionList.formName = res.formName;
+            this.functionList.gridViewName = res.gridViewName;
+            this.functionList.entityName = res.entityName;
+          }
+        });
       }
     });
     this.cache
@@ -85,85 +98,73 @@ export class DetailNoteBooksComponent extends UIComponent {
           this.saveMF = res[1];
         }
       });
-    this.cache.gridViewSetup('Notes', 'grvNotes').subscribe((res) => {
+    this.cache.gridViewSetup('Notes', 'grvNotes')
+    .subscribe((res) => {
+      debugger
       if (res) {
         this.gridViewSetup = res;
       }
     });
     this.getQueryParams();
+
   }
 
-  onInit(): void {
-    this.button = {
-      id: 'btnAdd',
-    };
-  }
-
-  ngAfterViewInit(): void {}
-
-  onLoading(e: any) {
-    if (this.view.formModel) {
-      var formModel = this.view.formModel;
-      this.cache
-        .gridViewSetup(formModel.formName, formModel.gridViewName)
-        .subscribe((res) => {
-          if (res) {
-            this.columnsGrid = [
-              {
-                field: 'title',
-                headerText: res.Title.headerText,
-                template: '',
-              },
-              {
-                field: 'Tag#',
-                headerText: res.Tags.headerText,
-                template: this.tags,
-              },
-              {
-                field: 'memo',
-                headerText: res.Memo.headerText,
-                template: this.memo,
-              },
-              {
-                field: 'Đính kèm',
-                headerText: res.Attachments.headerText,
-                template: this.fileCount,
-              },
-              {
-                field: 'createdOn',
-                headerText: res.CreatedOn.headerText,
-                template: this.createdOn,
-              },
-              {
-                field: 'modifiedOn',
-                headerText: res.ModifiedOn.headerText,
-                template: this.modifiedOn,
-              },
-            ];
-            this.views = [
-              {
-                type: ViewType.grid,
-                sameData: true,
-                id: '1',
-                active: true,
-                model: {
-                  resources: this.columnsGrid,
-                },
-              },
-              {
-                sameData: true,
-                id: '2',
-                type: ViewType.list,
-                active: false,
-                model: {
-                  template: this.listView,
-                },
-              },
-            ];
-            this.change.detectChanges();
-          }
-        });
-    }
+  ngAfterViewInit(): void {
+    debugger
+    // this.columnsGrid = [
+    //   {
+    //     field: 'title',
+    //     headerText: this.gridViewSetup.Title.headerText,
+    //     template: '',
+    //   },
+    //   {
+    //     field: 'tags',
+    //     headerText: this.gridViewSetup.Tags.headerText,
+    //     template: this.tags,
+    //   },
+    //   {
+    //     field: 'memo',
+    //     headerText: this.gridViewSetup.Memo.headerText,
+    //     template: this.memo,
+    //   },
+    //   {
+    //     field: 'attachments',
+    //     headerText: this.gridViewSetup.Attachments.headerText,
+    //     template: this.fileCount,
+    //   },
+    //   {
+    //     field: 'createdOn',
+    //     headerText: this.gridViewSetup.CreatedOn.headerText,
+    //     template: this.createdOn,
+    //   },
+    //   {
+    //     field: 'modifiedOn',
+    //     headerText: this.gridViewSetup.ModifiedOn.headerText,
+    //     template: this.modifiedOn,
+    //   },
+    // ];
+    this.views = [
+      {
+        type: ViewType.grid,
+        sameData: true,
+        id: '1',
+        active: true,
+        model: {
+          hideMoreFunc:true,
+        },
+      },
+      {
+        sameData: true,
+        id: '2',
+        type: ViewType.list,
+        active: false,
+        model: {
+          template: this.listView,
+          hideMoreFunc:true,
+        },
+      },
+    ];
+    this.change.detectChanges();
   }
 
   getQueryParams() {
@@ -185,7 +186,6 @@ export class DetailNoteBooksComponent extends UIComponent {
         headerText: this.headerText,
       },
     ];
-
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new DialogModel();
       option.DataService = this.view?.currentView?.dataService;
@@ -222,18 +222,16 @@ export class DetailNoteBooksComponent extends UIComponent {
         headerText: this.headerText,
       },
     ];
-
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         let option = new DialogModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        this.dialog = this.callfc.openForm(
+        let dialog = this.callfc.openForm(
           PopupAddUpdate,
           '',
           1438,
@@ -243,32 +241,41 @@ export class DetailNoteBooksComponent extends UIComponent {
           '',
           option
         );
+        dialog.closed.subscribe((res) => {
+          this.view.dataService.update(res.update).subscribe();
+        });
       });
   }
 
   delete(data) {
-    this.api
-      .exec<any>(
-        'ERM.Business.WP',
-        'NotesBusiness',
-        'DeleteNoteAsync',
-        data.recID
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (option: any) =>
+        this.beforeDelete(option, this.view.dataService.dataSelected)
       )
-      .subscribe((res) => {
+      .subscribe((res: any) => {
         if (res) {
+          this.view.dataService.remove(res).subscribe();
           this.api
             .execSv(
               'DM',
               'ERM.Business.DM',
               'FileBussiness',
-              'DeleteByObjectIDAsync',
-              [data.recID, 'WP_Notes', true]
+              'DeleteListFileByListObjectIDAsync',
+              [res.recID,true,null]
             )
-            .subscribe();
-          this.view.dataService.remove(res).subscribe();
-          this.detectorRef.detectChanges();
+            .subscribe(res => {
+            });
         }
       });
+  }
+
+  beforeDelete(op: any, data) {
+    op.assemblyName = 'ERM.Business.WP';
+    op.className = 'NotesBusiness';
+    op.methodName = 'DeleteNoteAsync';
+    op.data = data.recID;
+    return true;
   }
 
   copy(data) {

@@ -127,11 +127,11 @@ export class PopupSignatureComponent extends UIComponent {
   addEditSignature(i) {
     if (this.isAddNew && i <= 0 && this.type == 'signFile') {
       this.esService.addNewSignature(this.data).subscribe((res) => {
-        if (res) this.notify.notifyCode('RS002');
+        if (res) this.notify.notifyCode('SYS006');
       });
     } else if (this.isAddNew == false && i <= 0 && this.type == 'signFile') {
       this.esService.editSignature(this.data).subscribe((res) => {
-        if (res) this.notify.notifyCode('RS002');
+        if (res) this.notify.notifyCode('SYS007');
       });
     }
   }

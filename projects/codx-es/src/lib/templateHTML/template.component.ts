@@ -6,4 +6,5 @@ import { Component, ViewEncapsulation } from '@angular/core';
   styleUrls: ['./template.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ESTemplateComponent {}
+export class ESTemplateComponent {
+}

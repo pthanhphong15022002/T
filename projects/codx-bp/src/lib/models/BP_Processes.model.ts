@@ -1,6 +1,7 @@
 import { Permission } from '@shared/models/file.model';
 
 export class BP_Processes {
+  id:string;
   recID: string;
   category: string;
   processNo: string;
@@ -40,6 +41,8 @@ export class BP_Processes {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  tags: string;
+  actived : boolean
 }
 
 export class BP_ProcessSteps {
@@ -76,6 +79,7 @@ export class BP_ProcessSteps {
 }
 export class BP_ProcessRevisions {
   recID: string;
+  versionName: string;
   versionNo: string;
   activedOn: Date;
   comment: string;
@@ -90,6 +94,7 @@ export class BP_ProcessOwners {
   recID: string;
   objectType: string;
   objectID: string;
+  objectName: string;
   rAIC: string;
   note: string;
   createdOn: Date;
@@ -118,12 +123,15 @@ export class BP_ProcessPermissions {
   read: boolean;
   update: boolean;
   delete: boolean;
+  edit: boolean;
   assign: boolean;
   share: boolean;
   upload: boolean;
+  allowPermit: boolean;
   isActive: boolean;
   download: boolean;
-  nemberType: string;
+  publish: boolean;
+  memberType: string;
   startDate: Date;
   endDate: Date;
   approveStatus: string;
@@ -131,12 +139,14 @@ export class BP_ProcessPermissions {
   approvalRule: string;
   approvedBy: string;
   approvedOn: Date;
-  autoCreat: boolean;
+  autoCreate: boolean;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
   form: string;
+  reason: string;
+  memo: string;
 }
 
 export class BP_ProcessesRating{
@@ -159,6 +169,8 @@ export class tmpPermission{
   postBlog: boolean;
   urlShare: string;
   urlPath: string;
+  reason: string;
+  memo: string;
   permissions: BP_ProcessPermissions[];
   toPermission: BP_ProcessPermissions[];
   byPermission: BP_ProcessPermissions[];
@@ -167,12 +179,20 @@ export class tmpPermission{
 }
 
 export class ColumnsModel{
-   headerText :string;
-   keyField :string;
-   color :string;
-   showItemCount :boolean =true ;
-   allowDrag :boolean = true;
    allowDrop :boolean = true;
+   allowDrag :boolean = true;
+   allowToggle :boolean = false;
+   color :string;
+   dataValue : string
+   headerText :string;
+   isExpanded:boolean =false ;
+   keyField :string;
+   maxCount :number = 0
+   minCount :number = 0
+   predicate :string
+   showAddButton :boolean =false ;
+   showItemCount :boolean =false ;
+   dataColums : any;
 }
 
 export class TabModel {
@@ -180,4 +200,5 @@ export class TabModel {
   textDefault: string;
   template?: any;
   isActive: boolean = false;
+  id :number
 }

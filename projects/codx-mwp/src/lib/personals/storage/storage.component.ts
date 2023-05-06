@@ -1,31 +1,23 @@
-import { detach } from '@syncfusion/ej2-base';
 import {
-  ApiHttpService,
   AuthStore,
   CodxCardCenterComponent,
-  CodxService,
   ResourceModel,
   ViewsComponent,
-  ViewType,
-  FormModel,
   ButtonModel,
   SidebarModel,
   DialogRef,
-  CallFuncService,
   UIComponent,
   CodxListviewComponent,
   CRUDService,
-  CacheService,
   ScrollComponent,
   NotificationsService,
-  RequestOption,
+  FormModel,
 } from 'codx-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import {
   Component,
   OnInit,
-  ChangeDetectorRef,
   ViewChild,
   ViewContainerRef,
   TemplateRef,
@@ -34,7 +26,6 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { AddUpdateStorageComponent } from './add-update-storage/add-update-storage.component';
-import { StorageServices } from '../../services/storage.services';
 import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/list-post.component';
 
 @Component({
@@ -42,13 +33,14 @@ import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-
   templateUrl: './storage.component.html',
   styleUrls: ['./storage.component.scss'],
 })
-export class StorageComponent
-  extends UIComponent
-  implements OnInit, AfterViewInit
-{
+export class StorageComponent extends UIComponent implements OnInit, AfterViewInit{
+  
+  @Input() formModel : FormModel = null;
+  @Input() storageID : string = "";
+  
   user: any;
   dataValue = '';
-  predicate = 'CreatedBy=@0';
+  predicate = 'CreatedBy = @0';
   data: any;
   recID: any;
   checkFormComment = false;
@@ -62,7 +54,12 @@ export class StorageComponent
   listStorage = [];
   checkDESC = false;
   gridViewSetup: any = [];
+  dataService: CRUDService;
+  predicatePost = "RecID.Contains(@0)";
+  dataValuePost = "";
 
+  function:any = null;
+  sysMoreFc:any = null;
   @ViewChild('lstCardStorage') lstCardStorage: CodxCardCenterComponent;
   @ViewChild('lstStorage') lstStorage: AddUpdateStorageComponent;
   @ViewChild('detail', { read: ViewContainerRef }) detail!: ViewContainerRef;
@@ -73,46 +70,39 @@ export class StorageComponent
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('listView') listView: CodxListviewComponent;
   @ViewChild('moreFC') moreFC: TemplateRef<any>;
-  @ViewChild('detail') lstComment: TemplateRef<any>;
 
+  @ViewChild("listPost") listPost : ListPostComponent;
   constructor(
-    inject: Injector,
+    private inject: Injector,
     private authStore: AuthStore,
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private notification: NotificationsService
   ) {
     super(inject);
     this.user = this.authStore.get();
-    this.dataValue = this.user?.userID;
-    this.route.params.subscribe((params) => {
-      this.funcID = params['funcID'];
-    });
-    this.cache.gridViewSetup('Storages', 'grvStorages').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
+    this.dataService = new CRUDService(inject);
   }
 
   onInit(): void {
-    // this.storageService.data.subscribe((res) => {
-    //   if (res) {
-    //     var data = res[0]?.data;
-    //     var type = res[0]?.type;
-    //     if (type == 'add') {
-    //
-    //       this.view.dataService.add(data).subscribe();
-    //     }
-    //   }
-    // })
+    this.route.params.subscribe((params) => {
+      if(params){
+        this.funcID = params['funcID'];
+      }
+    });
+    this.dataValue = this.user?.userID;
+    this.cache.gridViewSetup('Storages', 'grvStorages')
+    .subscribe((res) => {
+      this.gridViewSetup = res;
+    });
+    this.cache.moreFunction("CoDXSystem","").subscribe((moreFC:any) => {
+      this.sysMoreFc = moreFC;
+    });
   }
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
   }
 
-  testdate(dr) {}
 
   openFormMoreFunc(e) {
     if (e) {
@@ -124,7 +114,7 @@ export class StorageComponent
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'SYS03':
-        this.edit(data);
+        this.edit(data,e.text);
         break;
       case 'SYS02':
         this.delete(data);
@@ -137,8 +127,9 @@ export class StorageComponent
     this.detectorRef.detectChanges();
   }
 
-  formAddNoteBook() {
-    this.dataSort = [];
+  //open slidebar add
+  openPopupAdd() {
+    let moreFC = Array.from<any>(this.sysMoreFc).find(x => x.functionID == "SYS01");
     (this.listView.dataService as CRUDService)
       .addNew()
       .subscribe((res: any) => {
@@ -146,50 +137,45 @@ export class StorageComponent
         option.DataService = this.listView.dataService as CRUDService;
         option.FormModel = this.listView?.formModel;
         option.Width = '550px';
+        res.storageType = 'WP_Comments';
         var dialog = this.callfc.openSide(
           AddUpdateStorageComponent,
-          [this.listView.dataService.data, 'add'],
+          {data:res,action:'add',text:moreFC.defaultName},
           option
         );
         dialog.closed.subscribe((res) => {
-          if (res.event) {
-            res.event['modifiedOn'] = new Date();
+          if (res.event){
             (this.listView.dataService as CRUDService)
-              .update(res.event)
+              .add(res.event)
               .subscribe();
-            this.detectorRef.detectChanges();
           }
         });
       });
   }
 
-  edit(data: any) {
-    if (data) {
+  // edit kho lưu trữ
+  edit(data: any, text:string) {
+    if (data){
       this.listView.dataService.dataSelected = data;
-    }
-    this.dataSort = [];
-    (this.listView.dataService as CRUDService)
-      .edit(this.listView.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.listView?.dataService as CRUDService;
-        option.FormModel = this.listView?.formModel;
-        option.Width = '550px';
-        var dialog = this.callfc.openSide(
-          AddUpdateStorageComponent,
-          [this.listView.dataService.dataSelected, 'edit'],
-          option
-        );
-        dialog.closed.subscribe((res) => {
-          if (res.event) {
-            res.event['modifiedOn'] = new Date();
-            (this.listView.dataService as CRUDService)
-              .update(res.event)
-              .subscribe();
-            this.detectorRef.detectChanges();
-          }
-        });
+      this.dataSort = [];
+      let option = new SidebarModel();
+      option.DataService = this.listView.dataService;
+      option.FormModel = this.listView.formModel;
+      option.Width = '550px';
+      var dialog = this.callfc.openSide(
+        AddUpdateStorageComponent,
+        {data:data,action:'edit',text:text},
+        option
+      );
+      dialog.closed.subscribe((res) => {
+        if (res.event) {
+          (this.listView.dataService as CRUDService)
+            .update(res.event)
+            .subscribe();
+          this.detectorRef.detectChanges();
+        }
       });
+    }
   }
 
   formUpdateStorage(e) {
@@ -227,70 +213,16 @@ export class StorageComponent
       });
   }
 
-  dataUpdate: any = [];
-  dataComments: any = [];
-  a: any;
-  openStorageDetail(e) {
-    this.dataUpdate = e;
+  storageSelected: any = [];
+  openStorageDetail(data:any) {
+    debugger;
+    this.storageSelected = data;
     this.dataSort = [];
     this.checkFormComment = true;
+    this.detail = null;
+    this.dataValuePost = data.recID;
     this.detectorRef.detectChanges();
-
-    var arr: any = new Array();
-    if (e?.details) {
-      for (let i = 0; i < e?.details?.length; i++) {
-        arr.push(e?.details[i]?.refID);
-      }
-    }
-    var formModel = {
-      entityName: 'WP_Comments',
-      entityPermission: 'WP_Comments',
-      gridViewName: 'grvWPComments',
-      formName: 'WPComments',
-      funcID: 'WP',
-    };
-    this.a = this.detail.createComponent(ListPostComponent);
-    if (arr?.length == 0) {
-      this.generateGuid();
-      this.a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (RecID="${this.guidID}")`;
-    } else {
-      this.a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
-      this.a.instance.dataValueWP = `[${arr.join(';')}]`;
-    }
-    this.a.instance.isShowCreate = false;
-    this.a.instance.formModel = formModel;
-    this.a.instance.moreFunc = true;
-    this.a.instance.moreFuncTmp = this.moreFC;
-    this.detectorRef.detectChanges();
-    this.dataComments = this.a.instance.listview?.dataService?.data;
   }
-
-  guidID: any;
-  generateGuid() {
-    var d = new Date().getTime(); //Timestamp
-    var d2 =
-      (typeof performance !== 'undefined' &&
-        performance.now &&
-        performance.now() * 1000) ||
-      0; //Time in microseconds since page-load or 0 if unsupported
-    this.guidID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = Math.random() * 16; //random number between 0 and 16
-        if (d > 0) {
-          //Use timestamp until depleted
-          r = (d + r) % 16 | 0;
-          d = Math.floor(d / 16);
-        } else {
-          //Use microseconds since page-load if supported
-          r = (d2 + r) % 16 | 0;
-          d2 = Math.floor(d2 / 16);
-        }
-        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
-      }
-    );
-  }
-
   onUpdateBackground(e) {}
 
   back() {
@@ -313,30 +245,27 @@ export class StorageComponent
     this.checkDESC = false;
   }
 
+  // xóa bài viết ra khỏi kho lưu trữ
   removePost(data) {
-    if (data) {
-      for (let i = 0; i < this.dataUpdate?.details.length; i++) {
-        if (this.dataUpdate?.details[i].refID == data.recID) {
-          this.dataUpdate?.details.splice(i, 1);
-        }
-      }
-      this.api
-        .exec('ERM.Business.WP', 'StoragesBusiness', 'UpdateStorageAsync', [
-          this.dataUpdate.recID,
-          this.dataUpdate,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            var dataSelected =
-              this.a.instance?.listview?.dataService?.dataSelected;
-            if (this.a.instance?.listview?.dataService?.data && dataSelected) {
-              (this.a.instance.listview.dataService as CRUDService)
-                .remove(dataSelected)
-                .subscribe();
-              this.detectorRef.detectChanges();
-            }
+    if(data){
+      let index = Array.from<any>(this.storageSelected.details).findIndex(x => x.refID == data.recID);
+      if(index != -1){
+        this.storageSelected.details.splice(index, 1);
+      } 
+      this.api.exec(
+        'ERM.Business.WP',
+        'StoragesBusiness',
+        'UpdateStorageAsync',
+        [this.storageSelected])
+        .subscribe((res:boolean) => {
+        if(res){
+          //remove post
+          if(this.listPost)
+          {
+            this.listPost.removePost(data);
           }
-        });
+        }
+      });
     }
   }
 }

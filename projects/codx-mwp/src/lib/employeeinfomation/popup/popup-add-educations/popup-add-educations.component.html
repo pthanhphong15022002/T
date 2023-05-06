@@ -1,0 +1,179 @@
+<codx-form [body]="body" [dialog]="dialogRef" [footer]="footer" [headerText]="headerText" [lblHeader]="'lblHeader'" [formModel]="dialogRef.formModel">
+
+</codx-form>
+<ng-template #body>
+    <div class="">
+        <!-- khóa đào tạo -->
+        <div class="row my-4">
+            <div class="col-12">
+                <div>
+                    <codx-label [formModel]="dialogRef.formModel" [fiedName]="'CourseName'"></codx-label>
+                </div>
+                <div>
+                    <codx-input 
+                        [formModel]="dialogRef.formModel" 
+                        field="courseName"
+                        [crrValue]="data.courseName"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <!-- Nơi đào tạo -->
+        <div class="row my-4">
+            <div class="col-12">
+                <div>
+                    <codx-label [formModel]="dialogRef.formModel" [fiedName]="'InstitutionID'"></codx-label>
+                </div>
+                <div>
+                    <codx-input 
+                        [formModel]="dialogRef.formModel" 
+                        field="institutionID"
+                        [crrValue]="data.institutionID"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <!-- Loại đào tạo -->
+        <div class="row my-4">
+            <div class="col-12">
+                <div>
+                    <codx-label [formModel]="dialogRef.formModel" [fiedName]="'Category'"></codx-label>
+                </div>
+                <div>
+                    <codx-input 
+                        [formModel]="dialogRef.formModel" 
+                        field="category"
+                        [crrValue]="data.category"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <!-- Từ ngày & đến ngày -->
+        <div class="row my-4">
+            <div class="col-12">
+                <div class="row">
+                    <!-- Từ ngày -->
+                    <div class="col-6">
+                        <div>
+                            <codx-label [formModel]="dialogRef.formModel" [fiedName]="'FromDate'"></codx-label>
+                        </div>
+                        <div>
+                            <codx-input 
+                                [formModel]="dialogRef.formModel" 
+                                field="fromDate"
+                                [crrValue]="data.fromDate"
+                                (valueChange)="valueChange($event)">
+                            </codx-input>
+                        </div>
+                    </div>
+                    <!-- Đến ngày-->
+                    <div class="col-6">
+                        <div>
+                            <codx-label [formModel]="dialogRef.formModel" [fiedName]="'ToDate'"></codx-label>
+                        </div>
+                        <div>
+                            <codx-input 
+                                [formModel]="dialogRef.formModel" 
+                                field="toDate"
+                                [crrValue]="data.toDate"
+                                (valueChange)="valueChange($event)">
+                            </codx-input>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Bằng cấp chứng chỉ -->
+        <!-- Tên bằng cấp chứng chỉ -->
+        <div class="row my-4">
+            <div class="col-12">
+                <div>
+                    <codx-label [formModel]="dialogRef.formModel" [fiedName]="'CertificateID'"></codx-label>
+                </div>
+                <div>
+                    <codx-input 
+                        [formModel]="dialogRef.formModel" 
+                        field="certificateID"
+                        [crrValue]="data.certificateID"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <!-- Cấp bậc -->
+        <div class="row my-4">
+            <div class="col-6">
+                <div>
+                    <codx-label [formModel]="dialogRef.formModel" [fiedName]="'EducationID'"></codx-label>
+                </div>
+                <div>
+                    <codx-input 
+                        [formModel]="dialogRef.formModel" 
+                        field="educationID"
+                        [crrValue]="data.educationID"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <!-- Ngày cấp & Ngày hết hạn -->
+        <div class="row my-4">
+            <div class="col-12">
+                <div class="row">
+                    <!-- Ngày cấp -->
+                    <div class="col-6">
+                        <div>
+                            <codx-label [formModel]="dialogRef.formModel" [fiedName]="'IssuedOn'"></codx-label>
+                        </div>
+                        <div>
+                            <codx-input 
+                                [formModel]="dialogRef.formModel" 
+                                field="issuedOn"
+                                [crrValue]="data.issuedOn"
+                                (valueChange)="valueChange($event)">
+                            </codx-input>
+                        </div>
+                    </div>
+                    <!-- Ngày hết hạn-->
+                    <div class="col-6">
+                        <div>
+                            <codx-label [formModel]="dialogRef.formModel" [fiedName]="'ExpiredOn'"></codx-label>
+                        </div>
+                        <div>
+                            <codx-input 
+                                [formModel]="dialogRef.formModel" 
+                                field="expiredOn"
+                                [crrValue]="data.expiredOn"
+                                (valueChange)="valueChange($event)">
+                            </codx-input>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Ghi chú -->
+        <div class="row my-4">
+            <div class="col-12">
+                <codx-label [formModel]="dialogRef.formModel" [fiedName]="'Memo'"></codx-label>
+            </div>
+            <div class="col-12">
+                <codx-input 
+                    [formModel]="dialogRef.formModel" 
+                    field="memo"
+                    [crrValue]="data.memo"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex flex-row-reverse">
+        <button class="btn btn-primary" (click)="clickSave()">
+            <codx-label [formModel]="dialogRef.formModel" name="lblSubmit" [default]="'Lưu'"></codx-label>
+        </button>
+    </div>
+</ng-template>

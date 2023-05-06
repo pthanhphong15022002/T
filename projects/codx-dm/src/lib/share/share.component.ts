@@ -12,6 +12,7 @@ import { SystemDialogService } from 'projects/codx-share/src/lib/components/view
 import { FileInfo, FileUpload, ItemInterval, Permission } from '@shared/models/file.model';
 import { resetInfiniteBlocks } from '@syncfusion/ej2-grids';
 import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'share',
@@ -23,7 +24,7 @@ export class ShareComponent implements OnInit {
   @Input() formModel: any;    
   //listFolders: FolderInfo[];
  // listFiles: FileInfo[];
-  selection = 0;
+  selection = true;
   listNodeMove: FileUpload[] = [];
   //listNodeMove: any;
   html: string;
@@ -47,7 +48,7 @@ export class ShareComponent implements OnInit {
   loadedFolder: boolean;
   setting: any;  
   title = 'Thông báo';    
-  titleDialog = `Chia sẻ qua email`;  
+  titleDialog = `Chia sẻ`;  
   titleDialogRequest = `Yêu cầu cấp quyền`;  
   fileEditing: FileUpload;
   titleShared = "Chia sẻ thành công";
@@ -71,10 +72,12 @@ export class ShareComponent implements OnInit {
   shareContent = '';
   isShare = true;
   requestTitle = '';
-  toPermission: Permission[];
-  byPermission: Permission[];
+  ownerID :any;
+  toPermission: Permission[] = [];
+  byPermission: Permission[] = [];
   ccPermission: Permission[];
   bccPermission: Permission[];  
+  shareGroup: FormGroup
 //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
   @ViewChild('view') view!: ViewsComponent; 
   
@@ -87,6 +90,7 @@ export class ShareComponent implements OnInit {
     private api: ApiHttpService,
     public dmSV: CodxDMService,
     private modalService: NgbModal,
+    private formBuilder: FormBuilder,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
    // private confirmationDialogService: ConfirmationDialogService,
@@ -99,17 +103,22 @@ export class ShareComponent implements OnInit {
       this.type = data.data[0];
       this.fileEditing = data.data[1];
       this.id =  this.fileEditing.recID;
-      
       this.isShare = data.data[2];
       this.fullName = this.fileEditing.folderName ? this.fileEditing.folderName : this.fileEditing.fileName;
       this.formModel = dialog.formModel;  
-
+      this.titleDialog = "Chia sẻ thư mục"
+      if(!this.fileEditing.folderName) this.titleDialog = "Chia sẻ tài liệu"; 
     //  this.id = this.data.recID;     
   }
 
-  ngOnInit(): void {   
+  ngOnInit(): void { 
+    this.shareGroup = this.formBuilder.group({
+      by: '',
+      per: 'readonly'
+    });  
     this.user = this.auth.get();       
     if(this.dmSV.breakCumArr.length>0 && this.dmSV.breakCumArr.includes(this.fullName)) this.fullName= null
+    this.getOwner();
   }
 
 
@@ -119,6 +128,24 @@ export class ShareComponent implements OnInit {
     return true;
   }
 
+  getOwner()
+  {
+    if(this.fileEditing && Array.isArray(this.fileEditing.permissions))
+    { 
+      var f = this.fileEditing.permissions.filter(x=>x.objectType == "1");
+      if(typeof f == "object" && f.length >0) 
+      { 
+        let o : any = {};
+        o.objectType = f[0].objectType
+        o.objectName = f[0].objectName;
+        o.id = f[0].objectID;
+        this.ownerID = [o];
+        o.objectID = f[0].objectID;
+        this.toPermission.push(o);
+        
+      }
+    }
+  }
   validate(item) {
     //  fileName
    // this.errorshow = true;  
@@ -144,21 +171,34 @@ export class ShareComponent implements OnInit {
     }    
   }
 
-  onSaveRole($event, type: string) {    
+  onSaveRole($event, type: string) { 
+    debugger
    // console.log($event);
     var list = [];
-    if ($event.data != undefined) {
+    if ($event.data) {
       var data = $event.data;
       for(var i=0; i<data.length; i++) {
         var item = data[i];
-        var perm = new Permission;               
+        var perm = new Permission;
+        if(type == "to" && data[i].objectType == "1")
+        {
+          var o = this.fileEditing.permissions.filter(x=>x.objectType == "1") // Lấy owner;
+          perm.objectID = o[0].objectID;
+          perm.objectType = o[0].objectType;
+          perm.objectName = o[0].objectName;
+        }
+        else
+        {
+          perm.objectID = item.id;
+          perm.objectType = item.objectType;
+          perm.objectName = item.text ? item.text : item.objectName;
+        }               
         perm.startDate = this.startDate;       
         perm.endDate = this.endDate;
         perm.isSystem = false;
         perm.isActive = true;
-        perm.objectName = item.text;
-        perm.objectID = item.id;
-        perm.objectType = item.objectType;
+       
+      
         perm.read = true;        
         list.push(Object.assign({}, perm));        
       //  this.fileEditing.permissions = this.addRoleToList(this.fileEditing.permissions, perm);
@@ -224,16 +264,16 @@ export class ShareComponent implements OnInit {
     if (this.shareContent === '') {
       //$('#shareContent').addClass('form-control is-invalid');
       this.errorshow = true;
-      this.changeDetectorRef.detectChanges();
       return;
     }
 
     if (!this.isShare && this.requestTitle === '') {  
       this.errorshow = true;
-      this.changeDetectorRef.detectChanges();
       return;
     }
-    if(!this.isShare && !this.checkPermission(this.fileEditing.permissions , this.byPermission)) return this.notificationsService.notifyCode("DM066");
+    
+    debugger
+    if(!this.isShare && !this.checkPermission(this.fileEditing.permissions , this.toPermission)) return this.notificationsService.notifyCode("DM066");
     //  if (this.updateRequestShare())
     this.fileEditing.toPermission = this.toPermission;
     this.fileEditing.byPermission = this.byPermission;
@@ -245,21 +285,21 @@ export class ShareComponent implements OnInit {
       // this.fileEditing.toPermission[i].read = true;
       // this.fileEditing.toPermission[i].share = this.share;
       // this.fileEditing.toPermission[i].download = this.download;
-      this.fileEditing.toPermission[i].startDate = this.startDate;
-      this.fileEditing.toPermission[i].endDate = this.endDate;
+      this.fileEditing.byPermission[i].startDate = this.startDate ? new Date(this.startDate).toLocaleString() : "";
+      this.fileEditing.byPermission[i].endDate =   this.endDate ? new Date(this.endDate).toLocaleString() : "";
       if (!this.isShare) {
-        if (this.selection) {
-          this.fileEditing.toPermission[i].create = true;
-          this.fileEditing.toPermission[i].update = true;
-          this.fileEditing.toPermission[i].share = true;
-          this.fileEditing.toPermission[i].download = true;
-          this.fileEditing.toPermission[i].upload = true;
-          this.fileEditing.toPermission[i].read = true;
+        if (this.shareGroup.value.per == 'modified') {
+          this.fileEditing.byPermission[i].create = true;
+          this.fileEditing.byPermission[i].update = true;
+          this.fileEditing.byPermission[i].share = true;
+          this.fileEditing.byPermission[i].download = true;
+          this.fileEditing.byPermission[i].upload = true;
+          this.fileEditing.byPermission[i].read = true;
         }
         else {
           //modified: xem, sua, xoa, download
           //readonly: xem
-          this.fileEditing.toPermission[i].read = true;
+          this.fileEditing.byPermission[i].read = true;
         }
       }
       else {
@@ -353,10 +393,10 @@ export class ShareComponent implements OnInit {
         this.download = $event.data;
         break;
       case "startDate":
-        this.startDate = $event.data;
+        this.startDate = $event.data?.fromDate;
         break;
       case "endDate":
-        this.endDate = $event.data;
+        this.endDate = $event.data?.fromDate;
         break;
       case "sentemail":
         this.sentEmail = $event.data;

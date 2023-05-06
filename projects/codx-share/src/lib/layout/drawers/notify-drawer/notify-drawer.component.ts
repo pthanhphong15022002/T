@@ -1,34 +1,55 @@
-import { ChangeDetectorRef, Component, HostBinding, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { itemMove } from '@syncfusion/ej2-angular-treemap';
-import { DateTime } from '@syncfusion/ej2-charts';
-import {  ApiHttpService, AuthService, CallFuncService, CodxService, CRUDService, DialogData, DialogRef, ScrollComponent, SidebarModel, UIComponent } from 'codx-core';
-import { debug } from 'console';
+import { Component, HostBinding, OnInit, AfterViewInit} from '@angular/core';
+import { ApiHttpService, CallFuncService, CodxService, SidebarModel, } from 'codx-core';
 import { NotifyDrawerSliderComponent } from './notify-drawer-slider/notify-drawer-slider.component';
-
 @Component({
   selector: 'codx-notify-drawer',
   templateUrl: './notify-drawer.component.html',
   styleUrls: ['./notify-drawer.component.scss'],
 })
-export class NotifyDrawerComponent implements OnInit {
+export class NotifyDrawerComponent implements OnInit, AfterViewInit {
   @HostBinding('class') get class() {
      return "d-flex align-items-center " + this.codxService.toolbarButtonMarginClass; 
   }
-
   constructor(
+    private api:ApiHttpService,
     public codxService:CodxService,
     private callFc:CallFuncService,
   ) 
   { }
+ 
 
   ngOnInit(): void {
+    this.getNotiNumber();
   }
 
 
+  ngAfterViewInit(): void {
+
+  }
+  
   openFormNotify(){
     let option = new SidebarModel();
     option.Width = '550px';
-    this.callFc.openSide(NotifyDrawerSliderComponent, "", option);
+    let slider = this.callFc.openSide(NotifyDrawerSliderComponent, "", option);
+    slider.closed.subscribe(() => {
+      this.getNotiNumber();
+    })
   }
 
+  totalNoti:number = 0;
+  // get noti number
+  getNotiNumber(){
+    this.api.execSv(
+      "BG",
+      "ERM.Business.BG",
+      "NotificationBusinesss",
+      "GetNotiNumberAsync",
+      ["NO"]).subscribe((res:any) => {
+        if(res > 0) 
+        {
+          this.totalNoti = res;
+        }
+        else this.totalNoti = 0;
+      });
+  }
 }

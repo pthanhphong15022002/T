@@ -1,65 +1,161 @@
-<codx-form headerText="{{ title }}" #form [body]="body" [footer]="footer" [data]="master" [formModel]="dialog.formModel"
-  [dialog]="dialog">
+<codx-form
+  headerText="{{ title }}"
+  #form
+  [body]="body"
+  [footer]="footer"
+  [data]="master"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+>
   <ng-template #body>
-    <div class="form-group">
-      <codx-label fiedName="groupName" [formModel]="form.formModel">
-      </codx-label>
-      <codx-input field="groupName" [formModel]="form.formModel" [Group]="form.formGroup">
-      </codx-input>
-    </div>
-    <div class="form-group">
-      <codx-label fiedName="note" [formModel]="form.formModel" default="Ghi chú">
-      </codx-label>
-      <codx-input field="note" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
-    </div>
-    <div class="d-flex align-items-center justify-content-between mb-3">
-      <div class="d-flex align-items-center">
-        <span class="icon-person icon-16 me-2 text-primary"></span>
-        <div class="fw-bold fs-6 text-primary">
-          <codx-label fiedName="assign" [formModel]="form.formModel" default="Phân công cho">
-          </codx-label>
-        </div>
+    <ng-container *ngIf="form.formGroup">
+      <div class="form-group">
+        <codx-img
+          #imageUpload
+          class="avata ava-edit"
+          [objectId]="master?.recID"
+          [isDefaulImg]="true"
+          [objectName]="master?.contactName"
+          [objectType]="dialog?.formModel?.entityName"
+          [width]="80"
+          [isAllowEdit]="true"
+          [funcId]="dialog.formModel?.funcID"
+          [imgOn]="date"
+        >
+        </codx-img>
       </div>
-      <codx-input type="Share" refValue="AD003" field="groupmember" [dataShared]="[]" multiple="false"
-        [showInput]="false" (valueChange)="eventApply($event)">
-      </codx-input>
-    </div>
-    <div class="form-group">
-      <ng-container *ngFor="let item of details">
-        <div class="d-flex py-2 justify-content-between list-title">
-          <div class="d-flex align-items-top w-100">
-            <codx-img class="me-3" [objectId]="item?.memberID" objectType="AD_Users">
-            </codx-img>
-            <div class="d-flex flex-column me-6 w-100">
-              <div class="text-dark fw-bold fs-6">
-                {{ item?.memberName }}
-              </div>
-              <div class="text-gray-500">
-                {{ item?.description }}
+      <div class="form-group">
+        <codx-label fiedName="groupType" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          field="groupType"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label fiedName="groupName" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          field="groupName"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          fiedName="note"
+          [formModel]="form.formModel"
+          default="Ghi chú"
+        >
+        </codx-label>
+        <codx-input
+          field="note"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+        <!-- (valueChange)="show()" -->
+      </div>
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center">
+          <span class="icon-person icon-16 me-2 text-primary"></span>
+          <div class="fw-bold fs-6 text-primary">
+            <codx-label
+              fiedName="assign"
+              [formModel]="form.formModel"
+              default="Phân công cho"
+            >
+            </codx-label>
+          </div>
+        </div>
+        <!-- [disabled]="form?.formGroup?.status === 'INVALID'" -->
+        <!-- <codx-input
+          type="combobox"
+          [refType]="'P'"
+          refValue="Share_Users"
+          field="groupmember"
+          [showInput]="false"
+          [value]="'2303270043;2303270044'"
+          (valueChange)="eventApply($event)"
+        >
+        </codx-input> -->
+        <button
+          type="button"
+          class="cursor-pointer btn btn-icon btn-sm btn-light"
+          (click)="clickAddMemeber()"
+        >
+          <span class="icon-group_add icon-16"></span>
+        </button>
+        <ng-container *ngIf="showPopup">
+          <codx-combobox-popup
+            [comboboxName]="'Share_Users'"
+            [multiple]="true"
+            [width]="width"
+            [height]="height"
+            [value]="detailIDs"
+            (clickSave)="eventApply($event)"
+          >
+          </codx-combobox-popup>
+        </ng-container>
+      </div>
+      <div class="form-group">
+        <ng-container *ngFor="let item of members">
+          <div
+            *ngIf="!item.isRemoved"
+            class="d-flex align-items-top border-bottom py-2 justify-content-between list-title"
+          >
+            <div class="d-flex align-items-top w-100">
+              <codx-img
+                class="me-3"
+                [objectId]="item?.memberID"
+                objectType="AD_Users"
+              >
+              </codx-img>
+              <div class="d-flex flex-column me-6 w-100">
+                <div class="text-dark fw-bold fs-6">
+                  {{ item?.memberName }}
+                </div>
+                <div class="text-gray-500">
+                  {{
+                    (item?.positionName ? item?.positionName + " | " : "") +
+                      item?.orgUnitName ??
+                      ""
+                  }}
+                </div>
               </div>
             </div>
+            <div class="ms-5">
+              <a
+                class="btn btn-icon btn-sm btn-light-danger"
+                style="cursor: pointer"
+                (click)="removeDetail(item)"
+              >
+                <span class="icon-close icon-16"></span>
+              </a>
+            </div>
           </div>
-          <div>
-            <a class="btn btn-icon btn-sm btn-light-danger" style="cursor: pointer" (click)="removeDetail(item.recID)">
-              <span class="icon-close icon-16"></span>
-            </a>
-          </div>
-        </div>
-      </ng-container>
-    </div>
+        </ng-container>
+      </div>
+    </ng-container>
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">
-      <div class="d-flex align-items-center">
-        <span class="me-3">
-          <codx-input field="stop" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
-        </span>
-        <codx-label fiedName="stop" [formModel]="form.formModel" default="Ngưng sử dụng">
-        </codx-label>
-      </div>
+      <!-- <div class="d-flex align-items-center">
+        <button
+          [disabled]="!isGroupType3"
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="popRoles(null)"
+        >
+          <codx-label name="lblSaveUserGroup" [default]="'Phân quyền'">
+          </codx-label>
+        </button>
+      </div> -->
       <div class="d-flex">
         <button type="button" class="btn btn-primary" (click)="onSave()">
-          Lưu
+          <codx-label name="lblSaveUserGroup" [default]="'Lưu'"> </codx-label>
         </button>
       </div>
     </div>

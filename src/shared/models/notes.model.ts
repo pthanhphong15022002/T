@@ -13,9 +13,10 @@ export class Notes {
   createdOn: string;
   createdBy: string;
   tags: string;
-  fileCount: string;
+  fileCount: number;
   isNote: boolean;
   files: any[];
+  calendarDate: any;
 }
 
 export class TempNote {
@@ -39,4 +40,10 @@ export class NoteFile {
   objectType: string;
   recID: string;
   thumbnail: string;
+}
+
+export class tmpBookingCalendar {
+  type: string;
+  refID: string;
+  value: string;
 }

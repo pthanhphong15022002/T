@@ -1,0 +1,13 @@
+.star {
+  font-size: 2.5rem;
+  color: #f1f3f5;
+}
+
+.filled {
+  color: #FFA800 !important
+      /* #1e90ff;*/
+}
+
+.process-rating {
+  padding-bottom: 10px;
+}

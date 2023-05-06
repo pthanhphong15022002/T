@@ -48,7 +48,7 @@ export class RoleEditComponent
   gridViewSetup: any = [];
   empty = '';
   roleID = '';
-
+  oldID: any;
   @Input() modelPage: any;
 
   constructor(
@@ -64,7 +64,9 @@ export class RoleEditComponent
   ) {
     super(injector);
     this.dialog = dialog;
+    this.isAdd = dt.data.isAdd;
     this.tenant = this.tenantStore.get()?.tenant;
+    this.data = dialog.dataService!.dataSelected;
     this.cache
       .moreFunction(
         this.dialog.formModel.formName,
@@ -82,9 +84,10 @@ export class RoleEditComponent
         if (res) this.gridViewSetup = res;
       });
     if (dt && dt.data) {
-      this.data = dt.data.role;
-      this.formType = dt.data.mode;
+      this.formType = dt.data.formType;
+      this.oldID = dt.data.oldID;
       this.roleID = this.data?.recID;
+      this.header = dt.data.headerText;
       this.tempService.roleName.next(this.data?.roleName);
       //this.tempService.roleName = roleName;
     }
@@ -130,35 +133,51 @@ export class RoleEditComponent
     //   this.SaveRole(true, false, false);
     // }
 
-    if (this.formType == 'edit' || this.formType == 'add')
-      this.SaveRole(true, false, false);
-    else {
+    if (this.formType == 'add') this.SaveRole(true);
+    else if (this.formType == 'edit') {
+      this.UpdateRole();
+    } else {
+      this.SaveRole(false);
     }
   }
-  SaveRole(
-    isLoadDetail = false,
-    isCopyPermision: boolean,
-    isRedirectPage: boolean = true
-  ) {
-    var isNew;
-    if (this.formType == 'add') isNew = true;
-    else isNew = false;
-    //var listview = this.adsv.listview;
+  isAdd = false;
+  SaveRole(isCopyPermision: boolean) {
     this.api
       .call('ERM.Business.AD', 'RolesBusiness', 'SaveRoleAsync', [
-        this.roleID,
-        this.data.roleName,
-        this.data.description,
-        isNew,
-        isCopyPermision,
+        this.data,
+        this.formType,
+        this.oldID,
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
-          this.dialog.close();
+          this.dialog.close(res.msgBodyData[0]);
         } else {
           this.notificationsService.notifyCode('SYS020');
         }
       });
+  }
+
+  UpdateRole() {
+    this.api
+      .execAction('AD_Roles', [this.data], 'UpdateAsync')
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close(this.data);
+        }
+      });
+    // this.api
+    //   .call('ERM.Business.AD', 'RolesBusiness', 'SaveRoleAsync', [
+    //     this.data,
+    //     this.formType,
+    //     this.oldID,
+    //   ])
+    //   .subscribe((res) => {
+    //     if (res && res.msgBodyData[0]) {
+    //       this.dialog.close(res.msgBodyData[0]);
+    //     } else {
+    //       this.notificationsService.notifyCode('SYS020');
+    //     }
+    //   });
   }
 
   closeEdit(): void {}
@@ -166,9 +185,13 @@ export class RoleEditComponent
   valueChange(e) {
     if (e) {
       var field = e.field;
-      var value = e.data;
+      var data = e.data;
       if (field) {
-        this.data[field] = value;
+        if (field == 'modules' && data.value)
+          this.data[field] = Array.isArray(data.value)
+            ? data.value.join(';')
+            : data.value;
+        else this.data[field] = data;
       }
     }
   }

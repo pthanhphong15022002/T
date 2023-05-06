@@ -25,7 +25,7 @@ import { AttachmentService } from 'projects/codx-share/src/lib/components/attach
 import { ActivatedRoute } from '@angular/router';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../approval-step/approval-step.component';
-import { PopupAddEmailTemplateComponent } from '../approval-step/popup-add-email-template/popup-add-email-template.component';
+//import { PopupAddEmailTemplateComponent } from '../approval-step/popup-add-email-template/popup-add-email-template.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 export class defaultRecource {}
@@ -39,12 +39,12 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('gridTemplate') grid: TemplateRef<any>;
   @ViewChild('gridView') gridView: CodxGridviewComponent;
-  @ViewChild('process', { static: true }) process;
+  @ViewChild('process') process!:TemplateRef<any>;
   @ViewChild('editCategory') editCategory: PopupAddCategoryComponent;
-  @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
-  @ViewChild('eSign', { static: true }) eSign: TemplateRef<any>;
-  @ViewChild('color', { static: true }) color: TemplateRef<any>;
-  @ViewChild('memo', { static: true }) memo: TemplateRef<any>;
+  @ViewChild('icon') icon!: TemplateRef<any>;
+  @ViewChild('eSign') eSign!: TemplateRef<any>;
+  @ViewChild('color') color!: TemplateRef<any>;
+  @ViewChild('memo') memo!: TemplateRef<any>;
   @ViewChild('parentID', { static: true }) parentID: TemplateRef<any>;
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
 
@@ -67,7 +67,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   funcList: any = {};
 
   dataSelected: any;
-  dialog!: DialogRef;
+  dialog: DialogRef;
 
   constructor(
     private cacheSv: CacheService,
@@ -79,6 +79,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     private layout: LayoutService
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    console.log('functionID category', this.funcID);
+
     this.cacheSv.functionList(this.funcID).subscribe((func) => {
       this.funcList = func;
     });
@@ -92,10 +94,11 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.methodDelete = 'DeleteCategoryAsync';
     this.viewBase.dataService.methodSave = 'AddNewAsync';
     this.viewBase.dataService.methodUpdate = 'EditCategoryAsync';
-
-    this.button = {
-      id: 'btnAdd',
-    };
+    if (this.funcID != 'ODS24') {
+      this.button = {
+        id: 'btnAdd',
+      };
+    }
 
     this.moreFunc = [
       {
@@ -123,19 +126,19 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.columnsGrid = [
-            {
-              field: '',
-              headerText: '',
-              width: 20,
-              template: this.itemAction,
-              textAlign: 'center',
-            },
+            // {
+            //   field: '',
+            //   headerText: '',
+            //   width: 30,
+            //   template: this.itemAction,
+            //   textAlign: 'center',
+            // },
             {
               field: 'categoryID',
               headerText: gv
                 ? gv['CategoryID'].headerText || 'categoryID'
                 : 'categoryID',
-              template: '',
+              //template: '',
               width: 100,
             },
             {
@@ -143,7 +146,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               headerText: gv
                 ? gv['CategoryName'].headerText || 'CategoryName'
                 : 'CategoryName',
-              template: '',
+              //template: '',
               width: 180,
             },
             // {
@@ -161,19 +164,19 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             {
               field: 'memo',
               headerText: gv ? gv['Memo'].headerText || 'Memo' : 'Memo',
-              template: this.memo,
+              template : this.memo,
               width: 180,
             },
             {
               field: 'eSign',
               headerText: gv ? gv['ESign'].headerText || 'ESign' : 'ESign',
-              template: this.eSign,
+              template : this.eSign,
               width: 80,
             },
             {
               field: 'processID',
               headerText: 'Quy trình duyệt',
-              template: this.process,
+              template : this.process,
               width: 220,
             },
           ];
@@ -193,6 +196,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               active: true,
               model: {
                 resources: this.columnsGrid,
+                hideMoreFunc:true
               },
             },
           ];
@@ -213,16 +217,21 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         this.delete(evt);
         break;
       case 'btnEmail':
+        let isAddNewEmail = false;
         let data = {
           dialog: this.dialog,
           formGroup: null,
-          templateID: 'afc89b5d-ef88-4a02-a470-88843c4fa49e',
+          templateID: '',
           showIsTemplate: true,
           showIsPublish: true,
           showSendLater: true,
           files: null,
-          isAddNew: false,
+          isAddNew: true,
         };
+        if (!isAddNewEmail) {
+          data.templateID = '79009019-9e0f-4fb3-b77b-7ef1086af1ad';
+          data.isAddNew = false;
+        }
 
         let popEmail = this.callfunc.openForm(
           CodxEmailComponent,
@@ -235,7 +244,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
 
         popEmail.closed.subscribe((res) => {
           if (res.event) {
-            console.log(res.event);
+            console.log('email', res.event);
           }
         });
         break;
@@ -304,7 +313,6 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   edit(evt?) {
     if (evt?.data) {
       this.viewBase.dataService.dataSelected = evt?.data;
-
       this.viewBase.dataService
         .edit(this.viewBase.dataService.dataSelected)
         .subscribe((res) => {
@@ -350,6 +358,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   }
 
   clickMF(event, data) {
+    debugger
     event.data = data;
     switch (event?.functionID) {
       //edit

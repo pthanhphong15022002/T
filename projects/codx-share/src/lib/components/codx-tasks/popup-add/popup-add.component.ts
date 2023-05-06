@@ -14,7 +14,9 @@ import {
   ApiHttpService,
   AuthStore,
   CacheService,
+  CallFuncService,
   DialogData,
+  DialogModel,
   DialogRef,
   NotificationsService,
   RequestOption,
@@ -79,6 +81,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   popover: any;
   vllShare = 'TM003';
   planholderTaskGoal = 'Add to do list…';
+  planholderTaskChild = 'Ghi chú phân công...';
   listRoles: any;
   vllRole = 'TM001';
   vllRefType = 'TM018';
@@ -95,6 +98,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   gridViewSetup: any;
   changTimeCount = 2;
   dataReferences = [];
+  disabledProject = false;
+  isClickSave = false;
+  accountable = false;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -153,10 +159,13 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   tabContent: any[] = [];
   titleAction = '';
   disableDueDate = false;
+  titleViewTask = 'Xem';
+  crrRole: any;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
+    private callFC: CallFuncService,
     private authStore: AuthStore,
     private tmSv: CodxTasksService,
     private notiService: NotificationsService,
@@ -169,15 +178,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       ...this.task,
       ...dt?.data[0],
     };
-    if (this.task.taskGroupID != null) {
+    this.getParam();
+    if (this.task.taskGroupID) {
       this.logicTaskGroup(this.task.taskGroupID);
-    } else this.getParam();
-
+    }
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
     this.titleAction = dt?.data[3];
     this.functionID = dt?.data[4];
     this.taskCopy = dt?.data[5];
+    this.disabledProject = dt?.data[6];
     this.dialog = dialog;
     this.user = this.authStore.get();
 
@@ -185,31 +195,36 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     //   if(this.showAssignTo ) this.functionID = 'TMT0203'  ;else this.functionID = 'TMT0201'  //truong hop xu ly assign\
     // }
 
-    this.cache.functionList(this.functionID).subscribe(f => {
+    this.cache.functionList(this.functionID).subscribe((f) => {
       if (f) {
+        this.titleViewTask = f.language == 'VN' ? 'Xem chi tiết' : 'View';
         this.cache
-          .gridViewSetup(
-            f.formName,
-            f.gridViewName
-          )
+          .gridViewSetup(f.formName, f.gridViewName)
           .subscribe((res) => {
             if (res) {
               this.gridViewSetup = res;
+              this.planholderTaskChild = res['Memo']?.description;
+
+              // for (let key in res) {
+              //   if (res[key]['isRequire']) {
+              //     let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
+              //     let obj = {
+              //       keyRequire: keyConvert,
+              //       textHeader: res[key]['headerText'],
+              //     };
+              //     this.listRequire.push(obj);
+              //   }
+              //}
             }
           });
       }
-    })
-    // this.functionID = this.dialog.formModel.funcID;
-    // this.cache
-    //   .gridViewSetup(
-    //     this.dialog.formModel.formName,
-    //     this.dialog.formModel.gridViewName
-    //   )
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.gridViewSetup = res;
-    //     }
-    //   });
+    });
+    this.cache.gridViewSetup('TaskGoals', 'grvTaskGoals').subscribe((res) => {
+      if (res) {
+        this.planholderTaskGoal = res['Memo']?.description;
+      }
+    });
+
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -219,7 +234,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (this.action == 'add') {
-      if (this.functionID == 'TMT0203') {
+      if (
+        this.functionID == 'TMT0203' ||
+        this.functionID == 'MWP0062' ||
+        this.functionID == 'OMT014'
+      ) {
         this.task.category = '3';
       } else {
         this.task.category = '1';
@@ -227,7 +246,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.openTask();
     } else if (this.action == 'copy') {
       this.task.status = '10';
-      if (this.functionID == 'TMT0203') {
+      if (
+        this.functionID == 'TMT0203' ||
+        this.functionID == 'MWP0062' ||
+        this.functionID == 'OMT014'
+      ) {
         this.task.category = '3';
       } else {
         this.task.category = '1';
@@ -235,7 +258,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.getTaskCoppied(this.taskCopy.taskID);
     } else {
       this.titleAction =
-        this.action == 'edit' ? this.titleAction : 'Xem chi tiết';
+        this.action == 'edit' ? this.titleAction : this.titleViewTask;
       if (this.action == 'view') {
         this.disableDueDate = true;
         this.readOnly = true;
@@ -303,10 +326,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
+          //var dataValue = JSON.parse(res.dataValue);
           var param = JSON.parse(res.dataValue);
-          this.param = param;
-          this.taskType = param?.TaskType;
-          //  this.paramModule = param;
+          if (param.Accountable == '1') this.accountable = true;
+          else this.accountable = false;
+          if (!this.task.taskGroupID) {
+            this.param = param;
+            this.taskType = param?.TaskType;
+            if (this.param?.PlanControl == '1' && this.task.startDate == null)
+              this.task.startDate = new Date();
+          }
         }
       });
   }
@@ -390,12 +419,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTodo = res[2];
         this.listTaskResources = res[3];
         this.listUser = this.task.assignTo?.split(';') || [];
-        this.showLabelAttachment = this.task.attachments > 0? true : false ;
+        this.showLabelAttachment = this.task.attachments > 0 ? true : false;
         if (this.action == 'edit' && this.task.category == '2') {
           this.disableDueDate = true;
-          if (this.param?.EditControl == '0') this.readOnly = true;
+          if (this.param?.EditControl != '1') this.readOnly = true;
         }
-
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -446,6 +474,15 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM027');
       return;
     }
+    if (!this.task.taskGroupID && this.gridViewSetup['TaskGroupID'].isRequire) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        this.gridViewSetup['TaskGroupID'].headerText
+      );
+      return;
+    }
+
     if (this.task.estimated < 0) {
       this.notiService.notifyCode('TM033');
       return;
@@ -521,12 +558,19 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   async actionSave(id) {
     if (this.taskType) this.task.taskType = this.taskType;
     else this.task.taskType = '1';
+    if (this.isClickSave) return;
+    this.isClickSave = true;
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          this.task.attachments = Array.isArray(res) ? res.length : 1;
-          if (this.action == 'edit') this.updateTask();
-          else this.addTask();
+          let attachments = Array.isArray(res) ? res.length : 1;
+          if (this.action == 'edit') {
+            this.task.attachments += attachments;
+            this.updateTask();
+          } else {
+            this.task.attachments = attachments;
+            this.addTask();
+          }
         }
       });
     else {
@@ -573,15 +617,27 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         return true;
       })
       .subscribe((res) => {
+        this.isClickSave = false;
         this.dialog.close(res);
         this.attachment?.clearData();
         if (res && res.save) {
           var task = res.save[0];
-          if (this.param?.ConfirmControl == "1") {
-            this.tmSv.sendAlertMail(task?.recID, "TM_0008", this.functionID).subscribe();
-          }
-          
-          if (task?.category == '1' && task.verifyControl == '1') this.tmSv.sendAlertMail(task?.recID, "TM_0018", this.functionID).subscribe();
+          //send mail FE
+          // if (task.category == '3') {
+          //   if (this.param?.ConfirmControl == '1')
+          //     this.tmSv
+          //       .sendAlertMail(task?.recID, 'TM_0008', this.functionID)
+          //       .subscribe();
+          //   else
+          //     this.tmSv
+          //       .sendAlertMail(task?.recID, 'TM_0001', this.functionID)
+          //       .subscribe();
+          // }
+
+          // if (task?.category == '1' && task.verifyControl == '1')
+          //   this.tmSv
+          //     .sendAlertMail(task?.recID, 'TM_0018', this.functionID)
+          //     .subscribe();
         }
       });
   }
@@ -596,14 +652,18 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               if (res) {
                 this.dialog.dataService.addDatas.clear();
                 if (res.update) {
+                  var task = res.update;
                   this.dialog.close(res.update);
                   this.attachment?.clearData();
-                  this.tmSv.sendAlertMail(this.task.recID, 'TM_0002', this.functionID).subscribe();   //mai test laji vi sao khong vao
-
+                  //send mail FE
+                  // this.tmSv
+                  //   .sendAlertMail(task?.recID, 'TM_0002', this.functionID)
+                  //   .subscribe();
                 }
+              } else {
+                this.dialog.close();
+                this.attachment?.clearData();
               }
-              this.dialog.close();
-              this.attachment?.clearData();
             });
         } else {
           this.dialog.close();
@@ -624,52 +684,109 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             this.dialog.close();
             this.attachment?.clearData();
           }
-
         });
     }
   }
-
 
   eventApply(e: any) {
     var assignTo = '';
     var listDepartmentID = '';
     var listUserID = '';
-
-    e?.data?.forEach((obj) => {
-      switch (obj.objectType) {
-        case 'U':
-          listUserID += obj.id + ';';
-          break;
-        case 'O':
-        case 'D':
-          listDepartmentID += obj.id + ';';
-          break;
+    var listPositionID = '';
+    var listEmployeeID = '';
+    var listGroupMembersID = '';
+    if (!e || e?.length == 0) return;
+    e.forEach((obj) => {
+      if (obj.objectType && obj.id) {
+        switch (obj.objectType) {
+          case 'U':
+            listUserID += obj.id + ';';
+            break;
+          case 'O':
+          case 'D':
+            listDepartmentID += obj.id + ';';
+            break;
+          case 'RP':
+          case 'P':
+            listPositionID += obj.id + ';';
+            break;
+          case 'RE':
+            listEmployeeID += obj.id + ';';
+            break;
+          case 'UG':
+            listGroupMembersID += obj.id + ';';
+            break;
+        }
       }
     });
     if (listUserID != '') {
       listUserID = listUserID.substring(0, listUserID.length - 1);
       this.valueSelectUser(listUserID);
     }
-
     if (listDepartmentID != '') {
       listDepartmentID = listDepartmentID.substring(
         0,
         listDepartmentID.length - 1
       );
       this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
-        if (res) {
-          assignTo += res;
-          if (listUserID != '') assignTo += ';' + listUserID;
-          this.valueSelectUser(assignTo);
-        }
+        if (res && res.trim() != '') {
+          if (
+            res.trim() == '' ||
+            res.split(';')?.length != listDepartmentID.split(';')?.length
+          )
+            this.notiService.notifyCode('TM065');
+          this.valueSelectUser(res);
+        } else this.notiService.notifyCode('TM065');
       });
+    }
+    if (listEmployeeID != '') {
+      listEmployeeID = listEmployeeID.substring(0, listEmployeeID.length - 1);
+      this.tmSv
+        .getListUserIDByListEmployeeID(listEmployeeID)
+        .subscribe((res) => {
+          if (res && res?.length > 0) {
+            this.valueSelectUser(res);
+          }
+        });
+    }
+    if (listPositionID != '') {
+      listPositionID = listPositionID.substring(0, listPositionID.length - 1);
+      this.tmSv
+        .getListUserIDByListPositionsID(listPositionID)
+        .subscribe((res) => {
+          if (res && res?.length > 0) {
+            if (!res[1]) this.notiService.notifyCode('TM066');
+            this.valueSelectUser(res[0]);
+          } else this.notiService.notifyCode('TM066');
+        });
+    }
+    if (listGroupMembersID != '') {
+      listGroupMembersID = listGroupMembersID.substring(
+        0,
+        listGroupMembersID.length - 1
+      );
+      this.tmSv
+        .getListUserIDByListGroupID(listGroupMembersID)
+        .subscribe((res) => {
+          if (res && res?.length > 0) {
+            this.valueSelectUser(res);
+          }
+        });
     }
   }
 
   valueSelectUser(assignTo) {
     if (assignTo != '') {
+      var arrAssign = assignTo.split(';');
+      if (arrAssign?.length > 1 && this.crrRole == 'A' && this.accountable) {
+        this.notiService.notifyCode('TM078');
+        // this.notiService.notify(
+        //   'Người chiu trách nhiệm chỉ được chọn 1 người - Cần messcode từ Thuong',
+        //   '2'
+        // );
+        return;
+      }
       if (this.task.assignTo && this.task.assignTo != '') {
-        var arrAssign = assignTo.split(';');
         var arrNew = [];
         arrAssign.forEach((e) => {
           if (!this.task.assignTo.includes(e)) {
@@ -678,11 +795,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         });
         if (arrNew.length > 0) {
           assignTo = arrNew.join(';');
-          this.task.assignTo += ';' + assignTo;
           this.getListUser(assignTo);
         }
+        if (arrNew?.length != arrAssign?.length)
+          this.notiService.notifyCode('TM077');
+        // this.notiService.notify(
+        //   'Người được chọn đã có trong danh sách trước đó - Cần messcode từ Thuong',
+        //   '3'
+        // );
       } else {
-        this.task.assignTo = assignTo;
+        // this.task.assignTo = assignTo;
         this.getListUser(assignTo);
       }
     }
@@ -761,7 +883,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.isCheckTime = true;
     }
   }
-
   logicTaskGroup(idTaskGroup) {
     this.api
       .execSv<any>(
@@ -773,6 +894,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
+          this.taskGroup = res;
           this.convertParameterByTaskGroup(res);
         }
       });
@@ -792,7 +914,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.taskGroup = res;
           if (res.checkList != null && res.checkList.trim() != '') {
             var toDo = res.checkList.split(';');
-            // this.countTodoByGroup = toDo.length ;
             this.listTodo = [];
             toDo.forEach((tx) => {
               var taskG = new TaskGoal();
@@ -800,6 +921,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               taskG.text = tx;
               this.listTodo.push(taskG);
             });
+          }
+          if (
+            this.taskGroup?.planControl == '1' &&
+            this.task.startDate == null
+          ) {
+            this.task.startDate = new Date();
           }
           this.convertParameterByTaskGroup(this.taskGroup);
         }
@@ -811,7 +938,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
-    this.listUser = this.listUser.concat(arrUser);
+    var crrRole =this.crrRole
     this.api
       .execSv<any>(
         'HR',
@@ -821,8 +948,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         JSON.stringify(listUser.split(';'))
       )
       .subscribe((res) => {
-        this.listUserDetail = this.listUserDetail.concat(res);
         if (res && res.length > 0) {
+          this.listUserDetail = this.listUserDetail.concat(res);
+
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
             var taskResource = new tmpTaskResource();
@@ -830,9 +958,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             taskResource.resourceName = emp?.userName;
             taskResource.positionName = emp?.positionName;
             taskResource.departmentName = emp?.departmentName;
-            taskResource.roleType = 'R';
+            taskResource.roleType = crrRole ?? 'R';
             this.listTaskResources.push(taskResource);
           }
+          if (arrUser.length != res.length) {
+            arrUser = res.map((x) => x.userID);
+          }
+          this.listUser = this.listUser.concat(arrUser);
+          this.task.assignTo = this.listUser.join(';');
         }
       });
   }
@@ -847,28 +980,40 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       return;
     }
     var userID = item.resourceID;
-    var listUser = [];
-    var listTaskResources = [];
-    var listUserDetail = [];
-    var totalUser = this.listUser.length;
-    for (var i = 0; i < totalUser; i++) {
-      if (this.listUser[i] != userID) {
-        listUser.push(this.listUser[i]);
-      }
-      if (this.listUserDetail[i].userID != userID) {
-        listUserDetail.push(this.listUserDetail[i]);
-      }
-      if (this.listTaskResources[i]?.resourceID != userID) {
-        listTaskResources.push(this.listTaskResources[i]);
-      }
-    }
-    this.listUser = listUser;
-    this.listUserDetail = listUserDetail;
-    this.listTaskResources = listTaskResources;
+
+    // var listUser = [];
+    // var listTaskResources = [];
+    // var listUserDetail = [];
+    // var totalUser = this.listUser.length;
+    // for (var i = 0; i < totalUser; i++) {
+    //   if (this.listUser[i] != userID) {
+    //     listUser.push(this.listUser[i]);
+    //   }
+    //   if (this.listUserDetail[i].userID != userID) {
+    //     listUserDetail.push(this.listUserDetail[i]);
+    //   }
+    //   if (this.listTaskResources[i]?.resourceID != userID) {
+    //     listTaskResources.push(this.listTaskResources[i]);
+    //   }
+    // }
+    // this.listUser = listUser;
+    // this.listUserDetail = listUserDetail;
+    // this.listTaskResources = listTaskResources;
+
+    var idxUser = this.listUser.findIndex((x) => x == userID);
+    if (idxUser != -1) this.listUser.splice(idxUser, 1);
+
+    var idxUserDt = this.listUserDetail.findIndex((x) => x.userID == userID);
+    if (idxUserDt != -1) this.listUserDetail.splice(idxUserDt, 1);
+
+    var idxUserRs = this.listTaskResources.findIndex(
+      (x) => x.resourceID == userID
+    );
+    if (idxUserRs != -1) this.listTaskResources.splice(idxUserRs, 1);
 
     var assignTo = '';
-    if (listUser.length > 0) {
-      listUser.forEach((idUser) => {
+    if (this.listUser.length > 0) {
+      this.listUser.forEach((idUser) => {
         assignTo += idUser + ';';
       });
       assignTo = assignTo.slice(0, -1);
@@ -886,13 +1031,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var message = e?.data;
     var index = this.listTaskResources.findIndex((obj) => obj.resourceID == id);
     if (index != -1) {
-      this.listTaskResources.forEach((obj) => {
-        if (obj.resourceID == id) {
-          obj.memo = message;
-          return;
-        }
-      });
+      this.listTaskResources[index].memo = message;
+      // this.listTaskResources.forEach((obj) => {
+      //   if (obj.resourceID == id) {
+      //     obj.memo = message;
+      //   }
+      // });
     }
+    this.changeDetectorRef.detectChanges();
   }
   addFile(evt: any) {
     this.attachment.uploadFile();
@@ -901,9 +1047,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
+    this.showLabelAttachment = this.isHaveFile;
   }
   showPoppoverDelete(p, i) {
     if (i == null) return;
@@ -917,22 +1063,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
 
-  searchName(e) {
-    var listUserDetailSearch = [];
-    var searchField = e;
-    if (searchField.trim() == '') {
-      this.listUserDetailSearch = this.listUserDetail;
-      return;
-    }
-    this.listUserDetail.forEach((res) => {
-      var name = res.userName;
-      if (name.toLowerCase().includes(searchField.toLowerCase())) {
-        listUserDetailSearch.push(res);
-      }
-    });
-    this.listUserDetailSearch = listUserDetailSearch;
-  }
-
   //#region popver select RolType
   showPopover(p, userID) {
     if (this.popover) this.popover.close();
@@ -942,6 +1072,15 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   selectRoseType(idUserSelected, value) {
+    if (value == 'A' && this.accountable) {
+      var checkRoleA = this.listTaskResources.some(
+        (x) => x.roleType == 'A' && x.resourceID != idUserSelected
+      );
+      if (checkRoleA) {
+        this.notiService.notifyCode('TM078');
+        return;
+      }
+    }
     this.listTaskResources.forEach((res) => {
       if (res.resourceID == idUserSelected) res.roleType = value;
     });
@@ -952,46 +1091,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
+  //referen new
   loadDataReferences() {
-    if (this.task.category == '1') {
-      this.dataReferences = [];
-      return;
-    }
     this.dataReferences = [];
-    if (this.task.category == '2') {
-      this.api
-        .execSv<any>(
-          'TM',
-          'TM',
-          'TaskBusiness',
-          'GetTaskParentByTaskIDAsync',
-          this.task.taskID
-        )
-        .subscribe((res) => {
-          if (res) {
-            var ref = new tmpReferences();
-            ref.recIDReferences = res.recID;
-            ref.refType = 'TM_Tasks';
-            ref.createdOn = res.createdOn;
-            ref.memo = res.taskName;
-            ref.createdBy = res.createdBy;
-            var taskParent = res;
-            this.api
-              .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-                res.createdBy,
-              ])
-              .subscribe((user) => {
-                if (user) {
-                  ref.createByName = user.userName;
-                  this.dataReferences.push(ref);
-                  this.getReferencesByCategory3(taskParent);
-                }
-              });
-          }
-        });
-    } else if (this.task.category == '3') {
-      this.getReferencesByCategory3(this.task);
-    }
+    if (this.task.refID) this.getReferencesByCategory3(this.task);
   }
 
   getReferencesByCategory3(task) {
@@ -999,12 +1102,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     switch (task.refType) {
       case 'OD_Dispatches':
         this.api
-          .exec<any>(
-            'OD',
-            'DispatchesBusiness',
-            'GetListByIDAsync',
-            task.refID
-          )
+          .exec<any>('OD', 'DispatchesBusiness', 'GetListByIDAsync', task.refID)
           .subscribe((item) => {
             if (item) {
               item.forEach((x) => {
@@ -1104,8 +1202,19 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
   //#endregion
 
+  //open control share
+  openControlShare(controlShare: any, roleType) {
+    this.crrRole = roleType;
+    if (controlShare) {
+      let option = new DialogModel();
+      option.zIndex = 1010;
+      this.callFC.openForm(controlShare, '', 450, 600, '', null, '', option);
+    }
+  }
+
   convertParameterByTaskGroup(taskGroup: TM_TaskGroups) {
     this.param.ApproveBy = taskGroup.approveBy;
+    this.param.Approvers = taskGroup.approveBy;
     this.param.ApproveControl = taskGroup.approveControl;
     this.param.AutoCompleted = taskGroup.autoCompleted;
     this.param.ConfirmControl = taskGroup.confirmControl;

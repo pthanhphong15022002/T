@@ -32,6 +32,8 @@ export class PostComponent extends UIComponent {
         }
       },
     ];
+    this.dataService.predicates = this.view.dataService.predicates;
+    this.dataService.dataValues = this.view.dataService.dataValues;
     this.detectorRef.detectChanges();
   }
 

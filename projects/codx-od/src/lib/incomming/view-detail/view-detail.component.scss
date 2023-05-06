@@ -23,8 +23,14 @@ codx-detail-tmp {
 }
 codx-view-list-detail .codx-detail-main {
   padding-bottom: 0;
+  height: 100%;
 }
 
 .expired {
   color: #f64e60;
+}
+.badge-od
+{
+  background-color: var(--primary-lightest);
+  color: var(--title-color);
 }

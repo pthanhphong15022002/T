@@ -221,6 +221,7 @@ export class RolesComponent implements OnInit {
   objectUpdate = {};
   fieldUpdate = "";
   data: any;
+  isNewFolder = false;
   @ViewChild('fileNameCtrl') fileNameCtrl;
   constructor(
     private domSanitizer: DomSanitizer,
@@ -239,23 +240,21 @@ export class RolesComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-
     //   this.read = true;
     this.data = data.data;
-    if (this.data[0] == "1")
-      this.modePermission = true;
-    else
-      this.modePermission = false;
-    if (this.data[2])
-      this.codxView = this.data[2];
+    if (this.data[0] == "1") this.modePermission = true;
+    else this.modePermission = false;
+    if(this.data[2]) this.codxView = this.data[2];
+    if(this.data[4]) this.propertiesFolder = true;
+    if(this.data[5]) this.titleDialog = this.data[5];
     this.fileEditing = JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));
     this.id = this.fileEditing.recID;
     this.folderName = this.fileEditing.folderName
-    if (this.fileEditing.folderName != null) {
+    if (this.fileEditing.fileName ) this.type = 'file';
+    else {
+      if(!this.fileEditing.folderName) this.isNewFolder = true;
       this.type = 'folder';
     }
-    else
-      this.type = 'file';
 
     this.user = this.auth.get();
     this.dialog = dialog;
@@ -284,14 +283,7 @@ export class RolesComponent implements OnInit {
   onSaveRightChanged($event, ctrl) {
     var value = $event.data;
     switch (ctrl) {
-      case 'checkFolder':
-        this.createSubFolder = value;
-        this.changeDetectorRef.detectChanges();
-        break;
 
-      case 'checkSecurity':
-        this.security = value;
-        break;
       case "full":
         this.full = value;
         if (this.isSetFull) {
@@ -310,30 +302,7 @@ export class RolesComponent implements OnInit {
           this.download = value;
           this.assign = value;
         }
-        break;
-      case "approval":
-        this.approval = value;
-        //    if (!this.approval)
-        this.approvers = "";
-        break;
-      case "physical":
-        this.physical = value;
-        break;
-      case "revision":
-        this.revision = value;
-        break;
-      case "copyrightsControl":
-        this.copyrightsControl = value;
-        break;
-      case "sentemail":
-        this.sendEmail = value;
-        break;
-      case "postBlob":
-        this.postblog = value;
-        break;
-      case "assign":
-        this.assign = value;
-        break;
+        break;      
       case "fromdate":
         if (value != null)
           this.startDate = value.fromDate;
@@ -358,15 +327,14 @@ export class RolesComponent implements OnInit {
   }
 
   checkCurrentRightUpdate(owner = true) {
+
+    if(this.propertiesFolder) return true
+    
     if (!this.isSystem) {
-      if (this.user.administrator)
-        return false;
-      else {
-        return !this.fileEditing.assign; //!this.assignRight;//this.fileEditing.assign;
-      }
+      if (this.user.administrator) return false;
+      else  return !this.fileEditing.assign; //!this.assignRight;//this.fileEditing.assign;
     }
-    else {
-      return true;
+    else return true;
       // if (owner) {
       //   if (this.objectType === "7")
       //     return true;
@@ -376,7 +344,7 @@ export class RolesComponent implements OnInit {
       // }
       // else
       //   return true;
-    }
+    //}
   }
 
   checkCurrentRightUpdate1() {
@@ -400,6 +368,8 @@ export class RolesComponent implements OnInit {
         if (item.status == 0) {
           let res = item.data;
           if (res != null) {
+            this.fileEditing = res;
+            this.changePermission(0);
             var files = this.dmSV.listFiles;
             let index = files.findIndex(d => d.recID.toString() === this.id);
             if (index != -1) {
@@ -551,33 +521,36 @@ export class RolesComponent implements OnInit {
             if (this.fileEditing && this.fileEditing.permissions && this.fileEditing.permissions.length > 0) {
               this.fileEditing.permissions.splice(index, 1);//remove element from array
               this.currentPemission = 0;
-              if (this.userID.toLocaleLowerCase() != "admin") {
+              if (this.userID && this.userID.toLocaleLowerCase() != "admin" && !this.isNewFolder) {
                 var check = this.fileEditing.permissions.filter(x => x.objectID == this.userID && x.objectType != "1" && x.objectType != "7");
                 var checkEveryOne = this.fileEditing.permissions.filter(x => x.objectType == "9");
                 if (check.length == 0 && checkEveryOne.length == 0) this.fileEditing.assign = false;
               }
-              this.changePermission(0);
+              if(!this.isNewFolder) this.changePermission(0);
             }
           }
-          else {
-            if (list && list.length > 0) {
-              list.splice(index, 1);//remove element from array
-              this.changeDetectorRef.detectChanges();
-            }
-          }
+          else if(list && list.length > 0) list.splice(index, 1);//remove element from array
 
-          if (this.type == "file") {
-            this.onSaveEditingFile();
-          }
+          if (this.type == "file") this.onSaveEditingFile();
           else {
             this.fileEditing.folderName = this.folderName;
             this.fileEditing.folderID = this.dmSV.getFolderId();
             this.fileEditing.recID = this.id;
-            this.folderService.updateFolder(this.fileEditing).subscribe(res => {
-              if (res)
-                this.codxView?.dataService.update(this.fileEditing).subscribe();
-            });
+            if(!this.isNewFolder)
+            {
+              this.folderService.updateFolder(this.fileEditing).subscribe(res => {
+                if(res)
+                {
+                  this.fileEditing = res.data;
+                  this.codxView?.dataService.update(this.fileEditing).subscribe();
+                  this.changePermission(0);
+                  this.dmSV.fileEditing.next(this.fileEditing);
+                }
+              });
+            }
+            //else this.fileEditing.permissions[0].assign = this.assign;
           }
+          this.changeDetectorRef.detectChanges();
         };
       });
   }
@@ -587,6 +560,7 @@ export class RolesComponent implements OnInit {
     var right = this.dmSV.idMenuActive != '6' && this.dmSV.idMenuActive != '7' && this.assignRight;
     //var right = this.dmSV.idMenuActive != '6' && this.dmSV.idMenuActive != '7' && this.fileEditing.assign;
     right = true;
+   
     return right;
   }
 
@@ -807,7 +781,7 @@ export class RolesComponent implements OnInit {
   }
 
   onSaveRole($event) {
-
+    if(this.propertiesFolder) return
     if ($event.data != undefined) {
       var data = $event.data;
       for (var i = 0; i < data.length; i++) {

@@ -1,0 +1,66 @@
+<div class="w-100 h-100">
+    <codx-listview #codxListView
+        [itemTemplate]="searched ? itemTemplateSearch : itemTemplateGroup" 
+        [funcId]="funcID"
+        service="WP" 
+        assemblyName="ERM.Business.WP" 
+        className="GroupBusiness"
+        method="GetGroupAsync"
+        [selectFirst]="false">
+    </codx-listview>
+</div>
+<!-- template group chat -->
+<ng-template #itemTemplateGroup let-item>
+    <div class="d-flex align-items-center p-2 rounded-1 border-bottom" (click)="selectItem(item)">
+        <!-- image -->
+        <div class="me-3 group-avatar">
+            <codx-img 
+                [objectId]="item.groupType == '1'? item.groupID2:item.groupID" 
+                [objectName]="item.groupType == '1'? item.groupName2:item.groupName" 
+                [objectType]="item.groupType == '1'? 'AD_Users':'WP_Groups'"
+                [width]="30">
+            </codx-img>
+            <ng-container *ngIf="item.isOnline">
+                <div class="group-avatar_status">
+                    <span class="group-avatar_status-icon"></span>
+                </div>
+            </ng-container>
+        </div>
+        <!-- group name - created - seen -->
+        <div class="d-flex flex-column w-100">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <span class="fw-bold">{{ item.groupType == '1' ? item.groupName2 : item.groupName}}</span>
+                <span *ngIf="item.messageMissed > 0" class="topbar-badge badge badge-sm rounded-pill bg-danger px-2 ">{{item.messageMissed}}</span>
+            </div>
+            <ng-container *ngIf="item.message">
+                <div class="d-flex justify-content-between align-items-top w-100">
+                    <span class="message" [classList]="item.message.isRead ? 'text-gray-600 fs-7 line-clamp line-clamp-1' : 'text-primary'">
+                        {{item.message.message}}
+                    </span>
+                    <ng-container *ngIf="item.message.createdOn">
+                        <div class="d-flex justify-content-end ms-3 fs-7 w-75px min-w-75px">
+                            <span class="text-gray-500 text-nowrap">{{item.message.createdOn | timefrom}}</span>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>
+<!-- template search chat -->
+<ng-template #itemTemplateSearch let-item>
+    <div class="p-2" (click)="selectItemSeach(item)">
+        <ng-container *ngIf="item.type == 'H';else tmpItem">
+            <codx-label [formModel]="" [name]="'lblHeader'" [default]="item.name"></codx-label>
+        </ng-container>
+        <ng-template #tmpItem>
+            <codx-temp-full 
+                [dataItem]="item" 
+                [title]="item.name" 
+                [imageId]="item.id" 
+                [imageObjType]="item.type == 'U' ? 'AD_Users':'WP_Groups'" 
+                [imageObjName]="item.name">
+            </codx-temp-full>
+        </ng-template>
+    </div>
+</ng-template>

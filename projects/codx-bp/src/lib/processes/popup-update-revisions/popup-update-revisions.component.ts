@@ -1,16 +1,13 @@
-import { ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FileUpload, View } from '@shared/models/file.model';
-import { FileService } from '@shared/services/file.service';
-import { Day } from '@syncfusion/ej2-angular-schedule';
-import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { Component, Input, OnInit, Optional, ViewChild, ViewEncapsulation,ChangeDetectorRef } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, Util } from 'codx-core';
 import moment from 'moment';
-import { type } from 'os';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { Subject, from, observable, Observable, of } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
 import { CodxBpService } from '../../codx-bp.service';
 import { BP_Processes, BP_ProcessRevisions } from '../../models/BP_Processes.model';
-import { RevisionsComponent } from '../revisions/revisions.component';
+import { tmpListUserName } from '../../models/BP_UserPermission.model';
+import { PopupViewDetailProcessesComponent } from '../../popup-view-detail-processes/popup-view-detail-processes.component';
 @Component({
   selector: 'lib-popup-update-revisions',
   templateUrl: './popup-update-revisions.component.html',
@@ -35,58 +32,130 @@ export class PopupUpdateRevisionsComponent implements OnInit {
   isHaveFile = false;
   revisions: BP_ProcessRevisions[] = [];
   getProcess = new BP_Processes;
-  test1 = '';
   user: any;
-  dateLanguage:any;
+  dateLanguage: any;
+  moreFunc: any;
+  userId:string = '';
+  isAdmin: false;
+  isAdminBp: false;
+  firstNameVersion: string = '';
+  listUserName:any;
+  userIdLogin:any;
+  userNameLogin:any;
+  isCheckNotUserNameLogin: boolean = false;
+  listUserShow:tmpListUserName[]=[];
+  index:number = 0;
   constructor(
+    private bpService: CodxBpService,
     private callfc: CallFuncService,
     private authStore: AuthStore,
-    private change: ChangeDetectorRef,
+    private cache: CacheService,
+    private changeDetectorRef: ChangeDetectorRef,
+    public sanitizer: DomSanitizer,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.data = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.dialog = dialog;
     this.getProcess = this.data;
-    // this.titleAction = dt.data;
-    // this.action = dt.data[0];
-    // this.dateLanguage=dt.data[1].more;
+    this.titleAction = dt.data.title;
+    this.moreFunc = dt.data.moreFunc;
+    this.userId = dt.data.userId;
+    this.isAdmin = dt.data.isAdmin;
+    this.isAdminBp = dt.data.isAdminBp;
     this.funcID = this.dialog.formModel.funcID;
     this.user = this.authStore.get();
-    this.revisions = this.getProcess.versions.sort((a,b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf());
+    this.revisions = this.getProcess.versions.sort((a, b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf());
     this.title = this.titleAction;
+    this.userIdLogin = this.user.userID;
+    this.userNameLogin= this.user.userName;
+
   };
-
-
-
   ngOnInit(): void {
-    // gán tạm label
-    this.titleAction='Cập nhật phiên bản';
-    console.log(this.revisions);
+    this.cache.message('BP001').subscribe((res) => {
+      if (res) {
+        this.firstNameVersion = Util.stringFormat(
+          res.defaultName,''
+        ).trim()+': '+'V0.0';
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+    let isCheck=this.revisions.map(x=>
+      {
+      if(x.createdBy !== this.userIdLogin) {
+        this.isCheckNotUserNameLogin=true;
+        return;
+      }
+    });
+     if(this.isCheckNotUserNameLogin){
+      var listnew= this.revisions.map(x => x.createdBy)
+      this.bpService.getUserNameByListId(listnew).subscribe((res)=> {
+         res=res.map(x=>
+          {
+            let user= new tmpListUserName();
+            user.userName = x.userName;
+            user.userID = x.userID;
+            user.postion= this.index;
+            this.listUserShow.push(user);
+            this.index++;
+        },
+        );
+      });
+   }
+
   }
 
-  onCreate() {
-    var obj = {
-      more: 'BPT103',
-      data: this.getProcess,
+  onClose() {
+    this.dialog.close();
+  }
+
+  openProcessStep(process, role){
+    let editRole = false;
+    if(role){
+      editRole = process.write && !process.deleted ? true : false;
+    }
+    let obj = {
+      moreFunc: this.moreFunc,
+      data: process,
+      formModel: {
+        entityName: "BP_Processes",
+        entityPer: "BP_Processes",
+        formName: "Processes",
+        funcID: "BPT1",
+        gridViewName: "grvProcesses",
+        userPermission: null,
+      },
+      editRole,
     };
-    var dialogRevisions = this.callfc.openForm(
-      RevisionsComponent,
+
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 999;
+    var dialog = this.callfc.openForm(
+      PopupViewDetailProcessesComponent,
       '',
-      500,
-      350,
+      Util.getViewPort().height - 100,
+      Util.getViewPort().width - 100,
       '',
-      obj
-      );
-      dialogRevisions.closed.subscribe((e) => {
-        if (e?.event != null && e?.event.versions.length > 0) {
-          this.getProcess.versions = e.event?.versions;
-          this.getProcess.versionNo = e.event?.versionNo;
-           this.revisions = e?.event.versions.sort((a,b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf());
-          this.dialog.close(this.getProcess);
-          this.change.detectChanges();
+      obj,
+      '',
+      dialogModel
+    );
+  }
+
+  getProcessesStep(item) {
+    if(item?.versionNo == this.data?.versionNo){
+      this.dialog.close();
+      this.openProcessStep(this.data, true);
+    }else{
+      this.bpService.getProcessesByVersion([this.data.recID, item.versionNo])
+      .subscribe(proesses => {
+        if (proesses) {
+          this.dialog.close();
+          this.openProcessStep(proesses, false);
         }
-      });
+      })
+    }
   }
   //#endregion event
 }

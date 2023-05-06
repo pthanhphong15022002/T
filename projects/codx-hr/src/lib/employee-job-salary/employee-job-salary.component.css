@@ -1,0 +1,5 @@
+.p-disabled {
+    pointer-events: none;
+    background: gray;
+}
+

@@ -1,0 +1,47 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  (viewChanged)="viewChanged($event)"
+  [toolbarDisplay]="true"
+  [views]="views"
+  [button]="button"
+  (onActions)="onActions($event)"
+  >
+</codx-views>
+<ng-template #templateListCard let-data>
+  <!-- <codx-img [cssClass]="'w-100 h-100'" [objectId]="data.recID" [objectName]="data.reportName" [objectType]="'SYS_ReportList'"  [imageType]="'square'" [isFull]="true"></codx-img> -->
+  <codx-card-img
+    cardCss="border w-250px h-200px card-vpp"
+    [imageObjType]="'SYS_ReportList'"
+    [imageObjName]="data.reportName"
+    [imageId]="data.recID"
+    [hideMF]="true"
+    [typeMF]="'hover'"
+    [rootData]="data"
+    [footer]="cardItemFooter"
+    [imgOn]="data.modifiedOn"
+    [imageWidth]="500"
+    [height]="500"
+    [contentLine]="data.defaultName"
+    [content]="data.customName"
+    [dataItem]="data"
+    [imageRecId]="data.recID"
+
+  >
+  </codx-card-img>
+</ng-template>
+<ng-template #cardItemFooter let-data>
+  <div class="e-card-actions w-100 d-flex justify-content-center">
+    <button
+      id="showcarddata"
+      class="w-100 text-center e-btn e-outline e-primary"
+      (click)="cardClick(data)"
+    >
+    <codx-label
+    name="lblInfomation"
+    default="Xem thông tin chi tiết"
+    formName="sys"
+  ></codx-label>
+    </button>
+  </div>
+</ng-template>

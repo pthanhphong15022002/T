@@ -28,7 +28,7 @@ export class CodxFdService {
     private tenantStore: TenantStore,
     private notificationsService: NotificationsService,
     private cache: CacheService
-  ) {}
+  ) { }
   appendTitle(title) {
     this.title.next(title);
     this.tenant = this.tenantStore.get()?.tenant;

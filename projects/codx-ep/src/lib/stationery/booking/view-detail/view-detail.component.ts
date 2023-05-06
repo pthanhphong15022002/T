@@ -1,0 +1,365 @@
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Injector,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { AuthService, UIComponent, ViewsComponent } from 'codx-core';
+import { CodxEpService } from '../../../codx-ep.service';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { Permission } from '@shared/models/file.model';
+@Component({
+  selector: 'booking-stationery-view-detail',
+  templateUrl: './view-detail.component.html',
+  styleUrls: ['./view-detail.component.scss'],
+})
+export class BookingStationeryViewDetailComponent
+  extends UIComponent
+  implements OnChanges
+{
+  @ViewChild('itemDetailTemplate') itemDetailTemplate;
+  @ViewChild('attachment') attachment;
+  @Output('copy') copy: EventEmitter<any> = new EventEmitter();
+  @Output('edit') edit: EventEmitter<any> = new EventEmitter();
+  @Output('delete') delete: EventEmitter<any> = new EventEmitter();
+  @Output('release') release: EventEmitter<any> = new EventEmitter();
+  @Output('allocate') allocate: EventEmitter<any> = new EventEmitter();
+  @Output('cancel') cancel: EventEmitter<any> = new EventEmitter();
+  @Output('approve') approve: EventEmitter<any> = new EventEmitter();
+  @Output('reject') reject: EventEmitter<any> = new EventEmitter();
+  @Output('undo') undo: EventEmitter<any> = new EventEmitter();
+  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
+    new EventEmitter();
+  @ViewChild('reference') reference: TemplateRef<ElementRef>;
+  @Input() itemDetail: any;
+  @Input() funcID;
+  @Input() formModel;
+  @Input() data: any;
+  @Input() hideMF = false;
+  @Input() hideFooter = false;
+  firstLoad = true;
+  id: string;
+  itemDetailDataStt: any;
+  itemDetailStt: any;
+  active = 1;
+  tabControl: TabModel[] = [];
+  routerRecID: any;
+  isEdit: boolean = false;
+  listFilePermission = [];
+
+  constructor(injector: Injector, private authService: AuthService) {
+    super(injector);
+    this.routerRecID = this.router.snapshot.params['id'];
+    if (this.routerRecID != null) {
+      this.hideFooter = true;
+    }
+  }
+
+  onInit(): void {
+    this.itemDetailStt = 1;
+    if (this.routerRecID != null) {
+    } else {
+    }
+    this.detectorRef.detectChanges();
+    this.setHeight();
+  }
+
+  ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+    ];
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (
+      changes?.itemDetail &&
+      changes.itemDetail?.previousValue?.recID !=
+        changes.itemDetail?.currentValue?.recID
+    ) {
+      this.api
+        .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
+          changes.itemDetail?.currentValue?.recID,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.itemDetail = res;
+            this.listFilePermission=[];
+            let tmpPer = new Permission();
+            tmpPer.objectID = this.itemDetail.createdBy;
+            tmpPer.objectType = 'U';
+            tmpPer.read = true;
+            tmpPer.share = true;
+            tmpPer.download = true;
+            tmpPer.isActive = true;
+            this.listFilePermission.push(tmpPer);
+            if (
+              this.itemDetail?.createdBy == this.authService.userValue.userID
+            ) {
+              this.isEdit = true;
+            } else {
+              this.isEdit = false;
+            }
+            this.detectorRef.detectChanges();
+          }
+        });
+      this.detectorRef.detectChanges();
+    }
+    this.setHeight();
+    this.active = 1;
+  }
+
+  clickMF(event, data) {
+    switch (event?.functionID) {
+      case 'SYS02': //Xoa
+        this.lviewDelete(data);
+        break;
+      case 'SYS03': //Sua.
+        this.lviewEdit(data, event.text);
+        break;
+      case 'SYS04': //Copy.
+        this.lviewCopy(data, event.text);
+        break;
+      case 'EP8T1101': //Copy.
+        this.lviewRelease(data);
+        break;
+      case 'EPT40303': //Cấp phát
+        this.lviewAllocate(data);
+        break;
+      case 'EP8T1102': //Hủy gửi duyệt
+        this.lviewCancel(data);
+        break;
+      case 'EPT40301':
+        this.lviewApprove(data);
+        break;
+      case 'EPT40302':
+        this.lviewReject(data);
+        break;
+      case 'EPT40306':
+        this.lviewUndo(data);
+        break;
+    }
+  }
+
+  lviewEdit(data?, mfuncName?) {
+    if (data) {
+      this.setPopupTitle.emit(mfuncName);
+      this.edit.emit(data);
+    }
+  }
+
+  lviewCopy(data?, mfuncName?) {
+    if (data) {
+      this.setPopupTitle.emit(mfuncName);
+      this.copy.emit(data);
+    }
+  }
+
+  lviewDelete(data?) {
+    if (data) {
+      this.delete.emit(data);
+    }
+  }
+
+  lviewRelease(data?) {
+    if (data) {
+      this.release.emit(data);
+    }
+  }
+
+  lviewAllocate(data?) {
+    if (data) {
+      this.allocate.emit(data);
+    }
+  }
+
+  lviewCancel(data?) {
+    if (data) {
+      this.cancel.emit(data);
+    }
+  }
+
+  lviewApprove(data){
+    if(data){
+      this.approve.emit()
+    }
+  }
+
+  lviewReject(data){
+    if(data){
+      this.reject.emit();
+    }
+  }
+
+  lviewUndo(data){
+    if(data){
+      this.undo.emit();
+    }
+  }
+
+  changeDataMF(event, data: any) {
+    if (event != null && data != null && this.funcID == 'EP8T11') {
+      if (data.approveStatus == '1') {
+        event.forEach((func) => {
+          //Mới tạo
+          if (
+            // Hiện: sửa - xóa - chép - gửi duyệt -
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'SYS04' /*MF chép*/ ||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/
+          ) {
+            func.disabled = false;
+          }
+          if (
+            //Ẩn: hủy
+            func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else if (data.approveStatus == '5') {
+        event.forEach((func) => {
+          //Đã duyệt
+          if (
+            // Hiện: Chép
+            func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (
+            //Ẩn: sửa - xóa - duyệt - hủy
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/ ||
+            func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if (
+            //Hiện: chép - hủy
+            func.functionID == 'SYS04' /*MF chép*/ ||
+            func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = false;
+          }
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt
+
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else if (data.approveStatus == '4') {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if (
+            //Hiện: chép
+            func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt - hủy
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/ ||
+            func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if (
+            //Hiện: chép
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/ ||
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt - hủy
+            func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
+    }
+    if (event != null && data != null && this.funcID == 'EP8T12') {
+      event.forEach((func) => {
+        if (
+          func.functionID == 'SYS02' /*MF sửa*/ ||
+          func.functionID == 'SYS03' /*MF xóa*/ ||
+          func.functionID == 'SYS04' /*MF chép*/ ||
+          func.functionID == 'EP8T1101' /*MF gửi duyệt*/
+        ) {
+          func.disabled = true;
+        }
+      });
+    }
+    if (event != null && data != null && data.issueStatus == 3) {
+      event.forEach((func) => {
+        if (func.functionID == 'EPT40303' /*MF cấp phát*/) {
+          func.disabled = true;
+        }
+      });
+    }
+  }
+
+  clickChangeItemDetailDataStatus(stt) {
+    this.itemDetailDataStt = stt;
+  }
+
+  clickChangeItemViewStatus(stt) {
+    this.itemDetailStt = stt;
+  }
+
+  setHeight() {
+    let main,
+      header = 0;
+    let ele = document.getElementsByClassName(
+      'codx-detail-main'
+    ) as HTMLCollectionOf<HTMLElement>;
+    if (ele) {
+      main = Array.from(ele)[0]?.offsetHeight;
+    }
+
+    let eleheader = document.getElementsByClassName(
+      'codx-detail-header'
+    ) as HTMLCollectionOf<HTMLElement>;
+    if (ele) {
+      header = Array.from(eleheader)[0]?.offsetHeight;
+    }
+
+    let nodes = document.getElementsByClassName(
+      'codx-detail-body'
+    ) as HTMLCollectionOf<HTMLElement>;
+    if (nodes.length > 0) {
+      Array.from(
+        document.getElementsByClassName(
+          'codx-detail-body'
+        ) as HTMLCollectionOf<HTMLElement>
+      )[0].style.height = main - header - 27 + 'px';
+    }
+  }
+}

@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
-import { HoverPreloadModule } from 'ngx-hover-preload';
-
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './login/login.component';
 // import { RegistrationComponent } from './registration/registration.component';
@@ -17,28 +15,54 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { CoreModule } from 'src/core/core.module';
 import { CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
+import { ForgotPasswordDefaultComponent } from './default/forgot-password-default/forgot-password-default.component';
+import { ForgotPasswordQTSCComponent } from './cz/qtsc/forgot-password-qtsc/forgot-password-qtsc.component';
+import { LoginDefaultComponent } from './default/login-default/login-default.component';
+import { LoginQTSCComponent } from './cz/qtsc/login-qtsc/login-qtsc.component';
+import { TenantsComponent } from './tenants/tenants.component';
+import { RedirectToComponent } from './redirect-to/redirect-to.component';
+import {
+  RECAPTCHA_SETTINGS,
+  RecaptchaFormsModule,
+  RecaptchaModule,
+  RecaptchaSettings,
+} from 'ng-recaptcha';
 
 @NgModule({
   declarations: [
     LoginComponent,
+    LoginDefaultComponent,
+    LoginQTSCComponent,
     // RegistrationComponent,
     ForgotPasswordComponent,
     // LogoutComponent,
-    AuthComponent
+    AuthComponent,
+    ForgotPasswordDefaultComponent,
+    ForgotPasswordQTSCComponent,
+    TenantsComponent,
+    RedirectToComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
+    RecaptchaFormsModule,
+    RecaptchaModule,
     ReactiveFormsModule,
     HttpClientModule,
-
     SharedModule,
     CoreModule,
     ERMModule,
     CodxCoreModule,
     AuthRoutingModule,
-    HoverPreloadModule,
-    CodxCoreModule.forRoot({environment}),
-  ]
+    CodxCoreModule.forRoot({ environment }),
+  ],
+  providers: [
+    {
+      provide: RECAPTCHA_SETTINGS,
+      useValue: {
+        siteKey: environment.captchaKey,
+      } as RecaptchaSettings,
+    },
+  ],
 })
-export class AuthModule { }
+export class AuthModule {}

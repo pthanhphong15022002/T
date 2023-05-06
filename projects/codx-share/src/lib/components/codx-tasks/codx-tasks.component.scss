@@ -49,11 +49,16 @@ ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
 }
 
 .listuser-box {
-  max-height: 300px;
-  overflow: auto;
-  margin-top: 10px;
+  max-height: 220px;
+    overflow: auto;
+    margin-top: 8px;
+    border-top: 1px var(--gray-100) solid;
+    padding-top: 5px;
+    clear: both;
 }
-
+.e-dlg-content .listuser-box{
+  max-height: 395px;
+}
 codx-tasks {
   height: 100%;
 }
@@ -66,4 +71,17 @@ codx-tasks {
   overflow: hidden;
   margin-right: 10px;
   font-weight: 600;
+}
+
+.list-task .text-gray-700 {
+  color: var(--gray-600) !important;
+}
+
+.taskPopoverClass {
+  width: 370px !important;
+}
+.taskPopoverClass .popover-body {
+  width: 370px !important;
+  background-color: white;
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.07);
 }

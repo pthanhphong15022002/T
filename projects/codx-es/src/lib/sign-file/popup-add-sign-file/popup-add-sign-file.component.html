@@ -8,7 +8,9 @@
         <h2 class="h2-title">
           <codx-label
             *ngIf="
-              data?.approveStatus == 1 && isAddNew == true && modeView != '1'
+              (data?.approveStatus == 1 || data?.approveStatus == 2) &&
+              isAddNew == true &&
+              modeView != '1'
             "
             name="lblTitleSignFile"
             default="Thêm mới tài liệu"
@@ -16,21 +18,32 @@
           ></codx-label>
           <div
             *ngIf="
-              data?.approveStatus == 1 && isAddNew == false && modeView != '1'
+              (data?.approveStatus == 1 || data?.approveStatus == 2) &&
+              isAddNew == false &&
+              modeView != '1'
             "
           >
             {{ headerText }}
           </div>
           <div *ngIf="modeView == '1'">{{ headerText }}</div>
 
-          <div *ngIf="data?.approveStatus != 1 && modeView != '1'">
+          <div
+            *ngIf="
+              data?.approveStatus != 1 &&
+              data?.approveStatus != 2 &&
+              modeView != '1'
+            "
+          >
             {{ data?.title }}
           </div>
         </h2>
       </div>
       <div
         class="d-flex align-items-center stepper"
-        *ngIf="data?.approveStatus == 1 && modeView != '1'"
+        *ngIf="
+          (data?.approveStatus == 1 || data?.approveStatus == 2) &&
+          modeView != '1'
+        "
       >
         <div class="stepper-nav flex-center flex-wrap" #status>
           <div
@@ -198,7 +211,11 @@
       </div>
       <div class="d-flex justify-content-end">
         <ng-container
-          *ngIf="data?.approveStatus == 1 && modeView != '1' && modeView != '2'"
+          *ngIf="
+            (data?.approveStatus == 1 || data?.approveStatus == 2) &&
+            modeView != '1' &&
+            modeView != '2'
+          "
         >
           <div
             ngbDropdown
@@ -263,19 +280,20 @@
             </ul>
           </div>
           <a
-            class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+            class="btn btn-sm btn-success me-2 mb-2 min-w-60px rounded-4"
             (click)="release()"
             [ngClass]="user.userID == data.owner ? '' : 'disabled'"
             [style.visibility]="
               currentTab == 3 &&
               data.files?.length > 0 &&
-              data.approveStatus == '1'
+              (data.approveStatus == '1' || data.approveStatus == '2')
                 ? 'visible'
                 : 'hidden'
             "
           >
             <codx-label
               Name="lblAprrove"
+              class="text-white"
               [formModel]="dialog.formModel"
               default="Gửi duyệt"
             ></codx-label>
@@ -341,6 +359,9 @@
                   hideUploadBtn="0"
                   [functionID]="formModelCustom.funcID"
                   type="inline"
+                  (fileDelete)="fileDelete($event)"
+                  (fileCount)="fileDelete($event)"
+                  referType="sign"
                 >
                 </codx-attachment>
               </div>
@@ -400,7 +421,10 @@
                         field="categoryID"
                         [crrValue]="data?.categoryID"
                         [placeholder]="gvSetup['CategoryID']['description']"
-                        [refValue]="gvSetup['CategoryID']['referedValue']"
+                        [refValue]="
+                          this.cbxCategory ??
+                          gvSetup['CategoryID']['referedValue']
+                        "
                         type="combobox"
                         (valueChange)="valueChange($event)"
                         [disabled]="disableCateID"
@@ -494,7 +518,7 @@
               id="pane_3"
               [ngClass]="currentTab == 2 ? 'active show' : ''"
             >
-              <app-approval-steps
+              <codx-approval-steps
                 #viewApprovalStep
                 *ngIf="currentTab == 2"
                 [transId]="
@@ -507,7 +531,7 @@
                 [mssgDelete]="mssgDelete"
                 (addEditItem)="dataStepChange($event)"
               >
-              </app-approval-steps>
+              </codx-approval-steps>
             </div>
             <div
               class="tab-pane fade"
@@ -655,8 +679,12 @@
       <lib-pdf
         [recID]="data.recID"
         [isApprover]="false"
+        [oApprovalTrans]="data"
         [isEditable]="
-          data?.approveStatus == '1' && modeView != '1' ? true : false
+          (data?.approveStatus == '1' || data?.approveStatus == '2') &&
+          modeView != '1'
+            ? true
+            : false
         "
         (isAreaControl)="setValueAreaControl($event)"
       >
@@ -713,19 +741,19 @@
     </div>
     <div class="card-footer border-0">
       <div class="d-flex justify-content-end">
-        <a
-          class="btn btn-primary"
-          (click)="onSaveProcessTemplateID(dialogTemplate)"
-        >
-          <codx-label name="lblOk" default="OK" [formModel]="formModelCustom">
-          </codx-label>
-        </a>
         <a class="btn btn-secondary" (click)="closeDialogTmp(dialogTemplate)">
           <codx-label
             name="lblExit"
             default="Hủy"
             [formModel]="formModelCustom"
           >
+          </codx-label>
+        </a>
+        <a
+          class="btn btn-primary ms-2"
+          (click)="onSaveProcessTemplateID(dialogTemplate)"
+        >
+          <codx-label name="lblOk" default="OK" [formModel]="formModelCustom">
           </codx-label>
         </a>
       </div>

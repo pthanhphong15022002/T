@@ -26,6 +26,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import moment from 'moment';
+import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
 import { CodxHrService } from '../codx-hr.service';
@@ -52,33 +53,36 @@ export class EmployeesComponent extends UIComponent {
   employStatus: any;
   urlView: string;
   listMoreFunc = [];
-
   // @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemContact', { static: true }) itemContact: TemplateRef<any>;
-  @ViewChild('itemInfoPersonal', { static: true })itemInfoPersonal: TemplateRef<any>;
-  @ViewChild('itemStatusName', { static: true })itemStatusName: TemplateRef<any>;
-  @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
+  @ViewChild('itemInfoPersonal', { static: true })
+  itemInfoPersonal: TemplateRef<any>;
+  @ViewChild('itemStatusName', { static: true })
+  itemStatusName: TemplateRef<any>;
+  //@ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
 
-
   constructor(
-    private injector:Injector,
-    private notifiSV: NotificationsService,
-  ) 
-  {
+    private injector: Injector,
+    private notifiSV: NotificationsService
+  ) {
     super(injector);
-    
   }
+
   onInit(): void {
-    this.cache.moreFunction('Employees', 'grvEmployees').subscribe((res) => {
-      if (res) this.listMoreFunc = res;
+    this.router.params.subscribe((param: any) => {
+      if (param) {
+        let funcID = param['funcID'];
+        if (funcID) {
+          this.functionID = funcID;
+          this.getSetup(funcID);
+        }
+      }
     });
-   
-    
   }
 
   ngAfterViewInit(): void {
@@ -89,7 +93,7 @@ export class EmployeesComponent extends UIComponent {
       {
         field: 'employeeID',
         headerText: 'Nhân viên',
-        width: 250,
+        width: 300,
         template: this.itemEmployee,
       },
       {
@@ -104,17 +108,12 @@ export class EmployeesComponent extends UIComponent {
         width: 200,
         template: this.itemInfoPersonal,
       },
-      {
-        field: 'statusName',
-        headerText: 'Tình trạng',
-        width: 200,
-        template: this.itemStatusName,
-      },
-      { field: '', 
-        headerText: '', 
-        width: 50, 
-        template: this.itemAction
-      },
+      // {
+      //   field: '',
+      //   headerText: '',
+      //   width: 30,
+      //   template: this.itemAction,
+      // },
     ];
     this.views = [
       {
@@ -125,6 +124,7 @@ export class EmployeesComponent extends UIComponent {
         model: {
           panelLeftRef: this.panelLeftRef,
           resources: this.columnsGrid,
+          hideMoreFunc: true,
         },
       },
       // {
@@ -141,68 +141,27 @@ export class EmployeesComponent extends UIComponent {
     this.view.dataService.methodUpdate = 'UpdateAsync';
     this.detectorRef.detectChanges();
   }
-
-  btnClick(){
-    if(this.view)
-    {
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '800px'; 
-      let popup = this.callfc.openSide(
-        PopupAddEmployeesComponent,
-        "add",
-        option
-      );
-      popup.closed.subscribe((res:any) => {
-        if(res && res.event){
-          let data = res.event;
-          this.view.dataService.add(data,0).subscribe();
-          this.detectorRef.detectChanges();
-        }
-      })
-    }
-  }
-  click(evt: ButtonModel) {
-    switch (evt.id) {
-      case 'btnAdd':
-        // this.add();
-        this.openPopupAdd();
-        break;
-    }
-  }
-
-  openPopupAdd(){
-    if(this.view)
-    {
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '800px'; 
-      this.callfc.openSide(
-        PopupAddEmployeesComponent,
-        null,
-        option
-      );
-    }
-    
-  }
-  add() {
-    this.view.dataService.addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfc.openSide(
-        PopupAddEmployeesComponent,
-        this.view.dataService.dataSelected,
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
-        console.log(e);
-        this.detectorRef.detectChanges();
-      });
+  changeDataMF(event: any) {
+    event.forEach((element) => {
+      if (element.functionID == 'HR0032') {
+        element.disabled = true;
+      }
     });
+  }
+  getSetup(functionID: string) {
+    if (functionID) {
+      this.cache.functionList(functionID).subscribe((func: any) => {
+        if (func) {
+          this.cache
+            .moreFunction(func.formName, func.gridViewName)
+            .subscribe((res) => {
+              if (res) {
+                this.listMoreFunc = res;
+              }
+            });
+        }
+      });
+    }
   }
 
   senioritydate(value: string) {
@@ -212,81 +171,130 @@ export class EmployeesComponent extends UIComponent {
     return moment(value).fromNow(true);
   }
 
-  edit(data?) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '800px';
-        var dialog = this.callfc.openSide(
-          PopupAddEmployeesComponent,
-          'edit',
-          option
-        );
-        dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-          if (e?.event && e?.event != null) {
-            this.view.dataService
-              .update(e.event.update.InfoPersonal)
-              .subscribe();
-            // this.view.dataService.update(e.event.update.Employees).subscribe();
-            // e?.event.update.forEach((obj) => {
-            //   this.view.dataService.update(obj).subscribe();
-            // });
-            this.detectorRef.detectChanges();
-          }
-        });
+  btnClick(event: any) {
+    if (event?.text) {
+      this.view.dataService.addNew().subscribe((res: any) => {
+        if (res) {
+          debugger;
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.Width = '800px';
+          let object = {
+            employee: res,
+            isAdd: true,
+            funcID: this.view.funcID,
+            action: event.text,
+          };
+          let popup = this.callfc.openSide(
+            PopupAddEmployeesComponent,
+            object,
+            option
+          );
+          popup.closed.subscribe((res: any) => {
+            debugger;
+            if (res?.event) {
+              let data = res.event;
+              this.view.dataService.add(data, 0).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
       });
-    // this.detectorRef.detectChanges();
+    }
   }
 
-  copy(data) {
-    if (data) {
+  clickMF(event: any, data: any) {
+    if (event && data) {
       this.view.dataService.dataSelected = data;
+      switch (event.functionID) {
+        case 'SYS02': // xóa
+          this.delete(data);
+          break;
+        case 'SYS03': // edit
+          this.edit(event, data);
+          break;
+        case 'SYS04': // sao chép
+          this.copy(event, data);
+          break;
+        case 'HR0031': // cập nhật tình trạng
+          this.updateStatus(data, event.functionID);
+          break;
+        // case 'HR0032': // xem chi tiết
+        //   this.viewEmployeeInfo(event.data, data);
+        //   break;
+        case 'SYS002':
+          this.exportFile();
+          break;
+      }
     }
-    this.view.dataService
-      .copy(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
+  }
+  // edit
+  edit(event: any, data: any) {
+    if (event && data) {
+      this.view.dataService.dataSelected = data;
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '800px';
+      let object = {
+        employee: data,
+        isAdd: false,
+        funcID: this.view.funcID,
+        action: event.text,
+      };
+      let popup = this.callfc.openSide(
+        PopupAddEmployeesComponent,
+        object,
+        option
+      );
+      popup.closed.subscribe((result) => {
+        if (result?.event) {
+          let dataUpdate = result.event;
+          this.view.dataService.update(dataUpdate).subscribe();
+        }
+      });
+    }
+  }
+
+  copy(event: any, data: any) {
+    if (event && data) {
+      this.view.dataService.dataSelected = data;
+      this.view.dataService.copy().subscribe((res: any) => {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '800px';
-        this.dialog = this.callfc.openSide(
+        let object = {
+          employee: res,
+          isAdd: true,
+          funcID: this.view.funcID,
+          action: event.text,
+        };
+        debugger;
+        let popup = this.callfc.openSide(
           PopupAddEmployeesComponent,
-          'copy',
+          object,
           option
         );
       });
-    this.detectorRef.detectChanges();
+      this.detectorRef.detectChanges();
+    }
   }
 
   delete(data: any) {
-    if (data.status != '10') {
-      this.notifiSV.notifyCode('E0760');
-      return;
-    }
-    this.view.dataService.dataSelected = data;
     this.view.dataService
       .delete(
-        [this.view.dataService.dataSelected],
+        [data],
         true,
-        (opt) => this.beforeDel(opt),
-        'Thông báo'
+        (option: any) => this.beforeDel(option),
+        null,
+        null,
+        null,
+        null,
+        false
       )
-      .subscribe((res) => {
-        if (res[0]) {
-          this.itemSelected = this.view.dataService.data[0];
-        }
-      });
+      .subscribe();
     this.detectorRef.detectChanges();
   }
 
@@ -339,10 +347,11 @@ export class EmployeesComponent extends UIComponent {
   }
 
   beforeDel(opt: RequestOption) {
-    var itemSelected = opt.data[0];
-    opt.methodName = 'DeleteAsync';
+    opt.service = 'HR';
+    opt.assemblyName = 'ERM.Business.HR';
     opt.className = 'EmployeesBusiness';
-    opt.data = itemSelected.employeeID;
+    opt.methodName = 'DeleteAsync';
+    opt.data = this.view.dataService.dataSelected.employeeID;
     return true;
   }
 
@@ -351,20 +360,27 @@ export class EmployeesComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  updateStatus(data:any,funcID:string) {
-    let popup = this.callfc.openForm(UpdateStatusComponent,'Cập nhật tình trạng',350,200,funcID,data);
+  // cập nhật tình trạng nhân viên
+  updateStatus(data: any, funcID: string) {
+    let popup = this.callfc.openForm(
+      UpdateStatusComponent,
+      'Cập nhật tình trạng',
+      350,
+      200,
+      funcID,
+      data
+    );
     popup.closed.subscribe((e) => {
       if (e?.event) {
         var emp = e.event;
-        if (emp.status == '90') {
-          this.view.dataService.remove(emp).subscribe();
-        } 
+        if (emp.status === '90') this.view.dataService.remove(emp).subscribe();
         else this.view.dataService.update(emp).subscribe();
       }
       this.detectorRef.detectChanges();
     });
   }
 
+  // view emp infor
   viewEmployeeInfo(func, data) {
     if (func.url)
       this.codxService.navigate('', func.url, { employeeID: data.employeeID });
@@ -393,45 +409,22 @@ export class EmployeesComponent extends UIComponent {
     );
   }
 
-  clickMF(e: any, data?: any) {
-    this.itemSelected = data;
-    switch (e.functionID) {
-      case 'SYS01': // thêm
-        this.add();
-        break;
-      case 'SYS02': // xóa
-        this.delete(data);
-        break;
-      case 'SYS03': // edit
-        this.edit(data);
-        break;
-      case 'SYS04': // sao chép
-        this.copy(data);
-        break;
-      case 'HR0031': // cập nhật tình trạng
-        this.updateStatus(data,e.functionID);
-        break;
-      case 'HR0032': // xem chi tiết
-        this.viewEmployeeInfo(e.data, data);
-        break;
-      case 'SYS002':
-        this.exportFile();
-        break;
-    }
-  }
-
   doubleClick(data) {
-    if (this.listMoreFunc.length > 0) {
-      this.listMoreFunc.forEach((obj) => {
-        if (obj.functionID == 'HR0032') this.urlView = obj.url;
-      });
-      this.codxService.navigate('', this.urlView, {
-        employeeID: data.employeeID,
-      });
-    }
+    // if (Array.isArray(this.listMoreFunc)){
+    //   let _mFunc = this.listMoreFunc.find(x => x.functionID === "HR0032");
+    //   if(_mFunc?.url){
+    //     this.codxService.navigate('', _mFunc.url, {
+    //       employeeID: data.employeeID,
+    //     });
+    //   }
+    // }
   }
 
-  placeholder(value: string,formModel: FormModel,field: string): Observable<string> {
+  placeholder(
+    value: string,
+    formModel: FormModel,
+    field: string
+  ): Observable<string> {
     if (value) {
       return of(`<span>${value}</span>`);
     } else {

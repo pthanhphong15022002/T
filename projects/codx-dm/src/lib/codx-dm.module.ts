@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
@@ -59,7 +58,8 @@ export const routes: Routes = [
       // },  
       {
         path: ':funcID',
-        component: HomeComponent
+        component: HomeComponent,
+        data: { noReuse: true },
       },
       {
         path: ':funcID/:fileID',
@@ -102,7 +102,6 @@ const T_Component: Type<any>[] = [
     CommonModule,
     FormsModule,
     OverlayModule,
-    InlineSVGModule.forRoot(),
     HttpClientModule,
     CodxCoreModule,
     RouterModule.forChild(routes),

@@ -1,16 +1,22 @@
-<div>
-    <div class="d-flex align-items-center {{countResource>0 ? 'text-success' : 'text-gray-600'}}">
-        <div class="me-1" (click)="countResource>0? openPopup():''"><i class="text-hover-primary icon-person_outline icon-16 text-dark cursor-pointer"></i></div>
-        <div>{{countResource}}</div>
+<div (click)="countResource > 0 && openViewPopup ? openPopup() : ''">
+  <div
+    class="d-flex align-items-center"
+  >
+    <div class="me-1">
+      <i
+        class="text-hover-primary icon-i-clipboard-check icon-18 cursor-pointer text-gray-400"
+      ></i>
     </div>
+    <div>{{ countResource }}</div>
+  </div>
 </div>
 <ng-template #tmpListResource let-dialog>
   <div class="m-5">
     <div class="d-flex justify-content-between">
       <div class="fw-bold mt-2">
         <codx-label
-          name="AssignmentList"
-          formName="Tasks"
+          [formModel]="formModel"
+          name="lblAssign"
           default="Danh sách phân công cho"
         ></codx-label>
         <span class="">{{ "(" + countResource + ")" }}</span>
@@ -26,9 +32,19 @@
     </div>
     <div class="mb-1">
       <codx-searchbar
-        *ngIf="countResource > 0"
+        *ngIf="countResource > 10"
         (searchEvent)="searchName($event)"
       ></codx-searchbar>
+    </div>
+    <div class="d-flex me-2">
+      <ng-container *ngFor="let item of listRoles">
+        <div class="d-flex align-items-center ms-4">
+          <span class="me-1"
+            ><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt=""
+          /></span>
+          <div class="fs-8 text-gray-500">{{ item.text }}</div>
+        </div>
+      </ng-container>
     </div>
     <div class="listuser-box">
       <div
@@ -67,7 +83,7 @@
             <div class="d-flex align-items-end me-2 codx-badge">
               <span>
                 <codx-vll
-                [name]="item?.category=='3'?vllStatusAssign: vllStatus"
+                  [name]="item?.category == '3' ? vllStatusAssign : vllStatus"
                   [field]="'Status'"
                   [value]="item?.status"
                   [showText]="true"
@@ -77,9 +93,20 @@
                 </codx-vll>
               </span>
               <span>
-                <span #dueDate>{{
-                  item.dueDate |formatvalue :formModel :"dueDate":dueDate :"Tasks" :"grvTasks" | async 
-                }}</span>
+                <span
+                  #dueDate
+                  [innerHTML]="
+                    item.dueDate
+                      | formatvalue
+                        : formModel
+                        : 'dueDate'
+                        : dueDate
+                        : 'Tasks'
+                        : 'grvTasks'
+                      | async
+                  "
+                >
+                </span>
               </span>
             </div>
           </div>

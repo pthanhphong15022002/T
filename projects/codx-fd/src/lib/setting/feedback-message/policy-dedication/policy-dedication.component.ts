@@ -52,6 +52,7 @@ export class PolicyDedicationComponent extends UIComponent implements OnInit {
         [this.typeCard, this.categoryID, applyFor]
       )
       .subscribe((res) => {
+        console.log(res);
         if (res && res.msgBodyData.length > 0) {
           this.policyDedicationList = res.msgBodyData[0];
         }

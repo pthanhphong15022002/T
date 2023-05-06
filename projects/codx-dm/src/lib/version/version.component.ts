@@ -37,6 +37,7 @@ export class VersionComponent implements OnInit {
   comment: string;
   path: any;
   historyID: string;
+  nameFile: string;
   fileEditing: FileUpload;
   fileUploadList: FileUpload[];
   interval: ItemInterval[];
@@ -68,9 +69,11 @@ export class VersionComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
     ) {
+      debugger
       this.dialog = dialog;
       this.formModel = data.data[0];
-      this.fileEditing = data.data[1]; 
+      this.fileEditing = data.data[1];
+      this.nameFile =  this.fileEditing?.fileName
       this.comment = '';
   }
 
@@ -320,7 +323,6 @@ export class VersionComponent implements OnInit {
     this.fileEditing.avatar = `../../../assets/codx/dms/${this.getAvatar(file.name)}`;
     this.fileEditing.extension = file.name.substring(file.name.lastIndexOf('.'), file.name.length) || file.name;
     this.fileEditing.createdBy = this.user.userName;//userName;
-    this.fileEditing.createdOn = this.getNow();
     this.fileEditing.type = file.type;
     this.fileEditing.fileSize = file.size;
     this.fileEditing.fileName = file.name;
@@ -482,7 +484,7 @@ export class VersionComponent implements OnInit {
       //     });
       //   });
       // }
-
+      this.fileEditing.createdOn = new Date();
       this.fileService.updateVersionFile(this.fileEditing).subscribe(async res => {
         if (res.status == 0) {
           var files = that.dmSV.listFiles;
@@ -493,8 +495,35 @@ export class VersionComponent implements OnInit {
             files[index].fileName = res.data.fileName;
             files[index].thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";//res.data.thumbnail;
             that.displayThumbnail(res.data);
-            this.dmSV.ChangeData.next(true);
+            this.dmSV.ChangeOneFolder.next(files[index]);
           }
+          var appName = environment.appName; // Tam thoi de hard
+          var uploadFile = fileItem.item.rawFile;
+          var sizeInBytes = fileItem.fileSize; // uploadFile.size;
+          var chunSizeInfBytes = this.dmSV.ChunkSizeInKB * 1024;
+          var numOfChunks = Math.floor(fileItem.fileSize / chunSizeInfBytes);
+          if (fileItem.fileSize % chunSizeInfBytes > 0) {
+            numOfChunks++;
+          }
+
+          //api/lv-docs/files/upload
+          for (var i = 0; i < numOfChunks; i++) {
+            var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
+            var end = start + chunSizeInfBytes; //Vị trí cuối
+            if (end > sizeInBytes) end = sizeInBytes; //Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+            var blogPart = uploadFile.slice(start, end); //Lấy dữ liệu của chunck dựa vào đầu cuối
+            var fileChunk = new File([blogPart], uploadFile.name, {
+              type: uploadFile.type,
+            }); //Gói lại thành 1 file chunk để upload
+            var uploadChunk = await lvFileClientAPI.formPostWithToken(
+              `api/${appName}/files/upload`,
+              {
+                FilePart: fileChunk,
+                UploadId: fileItem.uploadId,
+                Index: i,
+              }
+            );
+          }  
           // thumbmail
           that.dmSV.listFiles = files;
           that.changeDetectorRef.detectChanges();
@@ -503,33 +532,7 @@ export class VersionComponent implements OnInit {
         that.notificationsService.notify(res.message);
       });
 
-      var appName = environment.appName; // Tam thoi de hard
-      var uploadFile = fileItem.item.rawFile;
-      var sizeInBytes = fileItem.fileSize; // uploadFile.size;
-      var chunSizeInfBytes = this.dmSV.ChunkSizeInKB * 1024;
-      var numOfChunks = Math.floor(fileItem.fileSize / chunSizeInfBytes);
-      if (fileItem.fileSize % chunSizeInfBytes > 0) {
-        numOfChunks++;
-      }
-
-      //api/lv-docs/files/upload
-      for (var i = 0; i < numOfChunks; i++) {
-        var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
-        var end = start + chunSizeInfBytes; //Vị trí cuối
-        if (end > sizeInBytes) end = sizeInBytes; //Nếu điểm cắt cuối vượt quá kích thước file chặn lại
-        var blogPart = uploadFile.slice(start, end); //Lấy dữ liệu của chunck dựa vào đầu cuối
-        var fileChunk = new File([blogPart], uploadFile.name, {
-          type: uploadFile.type,
-        }); //Gói lại thành 1 file chunk để upload
-        var uploadChunk = await lvFileClientAPI.formPostWithToken(
-          `api/${appName}/files/upload`,
-          {
-            FilePart: fileChunk,
-            UploadId: fileItem.uploadId,
-            Index: i,
-          }
-        );
-      }  
+      
     }
     else {
       this.notificationsService.notify(this.titleUploadFile);

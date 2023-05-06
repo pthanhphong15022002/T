@@ -31,7 +31,10 @@
 .text-dark-75 {
     color: #3e4347 !important;
 }
-
+.border-dm
+{
+    border: 1px solid #FAF9F9 !important;
+}
 .float-start.codx_cardimg {
     min-width: 125px !important;
     width: 125px !important;
@@ -70,4 +73,13 @@ codx-view-tree-detail .e-pane.e-static-pane+.e-pane {
 
 codx-card-img .line-clamp-2 {
     word-break: break-all;
+}
+.file-name
+{
+    width: 150px;
+    white-space: nowrap;
+    /* word-break: break-all; */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: center;
 }

@@ -30,8 +30,8 @@ export class FileService implements OnDestroy {
         //  private aesCrypto: AESCryptoService,
         private api: ApiHttpService
     ) {
-      //  this.options.pageLoading = false;
-        this.options.pageSize = 1;
+        this.options.pageLoading = false;
+        this.options.pageSize = 20;
         this.options.funcID = "";
         this.options.srtDirections
     }
@@ -52,8 +52,8 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "FileBussiness", "SearchAsync", [textSearch, model]);
     }
 
-    searchFileAdv(textSearch: string, predicates: string, paras: string, pageNo: number, pageSize: number, searchAdvance: boolean): Observable<any> {
-        return this.api.exec<any>("DM", "FileBussiness", "SearchAdvAsync", [textSearch, predicates, paras, pageNo, pageSize, searchAdvance]);
+    searchFileAdv(textSearch: string, predicates: string, paras: string, pageNo: number, pageSize: number, searchAdvance: boolean,funcID:string): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "SearchAdvAsync", [textSearch, predicates, paras, pageNo, pageSize, searchAdvance,funcID]);
     }
     updatePermisson(data: any): Observable<any> {
         return this.api.exec<DataReturn>("DM", "FileBussiness", "UpdatePermissionAsync", [data]);
@@ -63,8 +63,8 @@ export class FileService implements OnDestroy {
         return this.api.exec<DataReturn>("DM", "FileBussiness", "GetTernantHddAsync", [""]);
     }
 
-    deleteFileToTrash(id: string, folderId: string, deleted: boolean): Observable<any> {
-        return this.api.exec<boolean>("DM", "FileBussiness", "DeleteFileToTrashAsync", [id, folderId, deleted]);
+    deleteFileToTrash(id: string, folderId: string, deleted: boolean , objectID:string = ""): Observable<any> {
+        return this.api.exec<boolean>("DM", "FileBussiness", "DeleteFileToTrashAsync", [id, folderId, deleted,objectID]);
     }
 
     restoreFile(id: string, fileName: string, rewrite: string = "0"): Observable<any> {
@@ -96,9 +96,11 @@ export class FileService implements OnDestroy {
     getFileNyObjectID(objectID: string): Observable<any> {
         return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesByObjectIDAsync", [objectID]);
     }
-
+    getFileByDataRequest(dataRequest: DataRequest): Observable<any> {
+        return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesByGridModelAsync", dataRequest);
+    }
     downloadFile(id: string): Observable<any> {
-        return this.api.exec<FileDownload>("DM", "FileBussiness", "DownloadFileAsync", id);
+        return this.api.exec<FileDownload>("DM", "FileBussiness", "DownloadFileAsync", [id]);
     }
 
     arrayBufferToBase64(buffer) {
@@ -164,9 +166,9 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "FileBussiness", "RenameFileAsync", [id, fileName]);
     }
 
-    addMultiFileObservable(list: FileUpload[] , isDM: boolean = false , folderID: string = "" , folderName: string = "" , parentID:string= ""): Observable<DataReturn[] | null> {
+    addMultiFileObservable(list: FileUpload[] , actionType: string , entityName:string , isDM: boolean = false  , folder:object = null , folderID: string = "" , folderName: string = "" , parentID:string= "" , idField:string = "" ): Observable<DataReturn[] | null> {
         let data = JSON.stringify(list);
-        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM,folderID,folderName,parentID]).pipe(
+        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM ,folder,folderID,folderName,parentID,idField,entityName,actionType]).pipe(
             map(data => {
                 return data;                
             }),
@@ -177,15 +179,15 @@ export class FileService implements OnDestroy {
         );
     }
 
-    addMultiFile(list: FileUpload[] , isDM: boolean = false , folderID: string = "" , folderName: string = "", parentID:string= ""): Observable<DataReturn[]> {
-        //var bytes = new Int8Array(data as ArrayBuffer); 
+    addMultiFile(list: FileUpload[] , actionType: string , entityName:string , isDM: boolean = false ,  folder:object = null , folderID: string = "" , folderName: string = "", parentID:string= "" , idField:string = "" ): Observable<DataReturn[]> {
+        //var bytes = new Int8Array(data as ArrayBuffer);
         //  var item = this.arrayBufferToBase64(data);
         let data = JSON.stringify(list);
-        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM , folderID , folderName,parentID]);
+        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM , folder, folderID , folderName,parentID,idField,entityName,actionType]);
     }
 
-    UpdateRequestAsync(id: string, objectID: string, status: string, isActive: boolean): Observable<any> {
-        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "UpdateRequestAsync", [id, objectID, status, isActive]);
+    UpdateRequestAsync(id: string, objectID: string, status: string, isActive: boolean , funcID: string = ""): Observable<any> {
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "UpdateRequestAsync", [id, objectID, status, isActive,funcID]);
     }
 
     updateVersionFile(file: FileUpload): Observable<any> {
@@ -227,14 +229,14 @@ export class FileService implements OnDestroy {
     }
 
     //Observable<any>
-    addFile(file: FileUpload , isDM : boolean = false , folderID: string = "" , folderName: string = "" , parentID:string = ""): Observable<any> {
+    addFile(file: FileUpload , actionType: string , entityName:string , isDM : boolean = false , folder:object = null , folderID: string = "" , folderName: string = "" , parentID:string = ""  , idField:string = "" , ): Observable<any> {
         //  var bytes = new Int8Array(data as ArrayBuffer); 
         //  var item = this.arrayBufferToBase64(data);        
-        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folderID , folderName,parentID]);
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folder , folderID , folderName,parentID,idField,entityName , actionType]);
     }
 
-    addFileObservable(file: FileUpload, isDM:boolean = false , folderID: string = "" , folderName: string = "", parentID:string = ""): Observable<any> {
-        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folderID , folderName,parentID]).pipe(
+    addFileObservable(file: FileUpload , actionType: string , entityName:string , isDM:boolean = false , folder:object = null , folderID: string = "" , folderName: string = "", parentID:string = "" , idField:string = ""): Observable<any> {
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folder , folderID , folderName,parentID,idField,entityName,actionType]).pipe(
             map(data => {
                 return data;                
             }),
@@ -246,9 +248,9 @@ export class FileService implements OnDestroy {
 
       //  return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", file);
     }
-
+  
     addFileTemp(folderID: string, objectID: string, objectType: string, cate: string, fileName: string, data: ArrayBuffer): Observable<any> {
-        var bytes = new Int8Array(data as ArrayBuffer);
+        //var bytes = new Int8Array(data as ArrayBuffer);
         var item = this.arrayBufferToBase64(data);
         return this.api.exec<DataReturn>("DM", "FileBussiness", "AddFileAsync", [folderID, objectID, objectType, cate, item, fileName]);
     }
@@ -268,11 +270,11 @@ export class FileService implements OnDestroy {
          );*/
         //return this.api.exec<FolderInfo[]>("DM", "FolderBussiness", "GetFoldersAsync", parentId);
         this.options.entityName = "DM_FileInfo";      
-        this.options.pageSize = 20;         
         //return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", parentId);
-        var data = this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", [this.options, parentId]);
+        return this.api.execSv<FileInfo[]>("DM","DM", "FileBussiness", "GetFilesAsync", [this.options, parentId]);
         // var fileIbfo = data[0]
       //  console.log(data);
-        return data;
     }
+
+
 }

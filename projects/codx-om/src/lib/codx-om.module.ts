@@ -1,8 +1,8 @@
+import { PopupViewVersionComponent } from './popup/popup-view-version/popup-view-version.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxOmComponent } from './codx-om.component';
 import { LayoutComponent } from './_layout/layout.component';
-
 import { OKRComponent } from './okr/okr.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportsComponent } from './reports/reports.component';
@@ -13,10 +13,24 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { OKRTasksComponent } from './okr/tasks/tasks.component';
-import { OkrAddComponent } from './okr/okr-add/okr-add.component';
-import { OkrToolbarComponent } from './okr/okr-toolbar/okr-toolbar.component';
-import { PopupAddKRComponent } from './okr/popup-add-kr/popup-add-kr.component';
+import { PopupAddKRComponent } from './popup/popup-add-kr/popup-add-kr.component';
+import { OkrTargetsComponent } from './okr/okr-targets/okr-targets.component';
+import { OkrReviewsComponent } from './okr/okr-reviews/okr-reviews.component';
+import { PopupSaveVersionComponent } from './popup/popup-save-version/popup-save-version.component';
+import { PopupShowKRComponent } from './popup/popup-show-kr/popup-show-kr.component';
+import { PopupCheckInComponent } from './popup/popup-check-in/popup-check-in.component';
+import { PopupOKRWeightComponent } from './popup/popup-okr-weight/popup-okr-weight.component';
+import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
+import { PopupShowOBComponent } from './popup/popup-show-ob/popup-show-ob.component';
+import { PopupDistributeOKRComponent } from './popup/popup-distribute-okr/popup-distribute-okr.component';
+import { PopupAssignmentOKRComponent } from './popup/popup-assignment-okr/popup-assignment-okr.component';
+import { OkrTreesComponent } from './okr/okr-trees/okr-trees.component';
+import { PopupAddOBComponent } from './popup/popup-add-ob/popup-add-ob.component';
+import { PopupAddOKRPlanComponent } from './popup/popup-add-okr-plan/popup-add-okr-plan.component';
+import { PopupShareOkrPlanComponent } from './popup/popup-share-okr-plans/popup-share-okr-plans.component';
+import { ViewOKRComponent } from './component/view-okr/view-okr.component';
+import { ProgressAnnotationService, ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
+import { PopupAddRoleComponent } from './popup/popup-add-role/popup-add-role.component';
 
 const routes: Routes = [
   {
@@ -60,10 +74,23 @@ const routes: Routes = [
     DashboardComponent,
     ReportsComponent,
     ReviewsComponent,
-    OKRTasksComponent,
-    OkrAddComponent,
-    OkrToolbarComponent,
     PopupAddKRComponent,
+    PopupAddOBComponent,
+    PopupShowKRComponent,
+    PopupShowOBComponent,
+    PopupDistributeOKRComponent,
+    PopupAssignmentOKRComponent,
+    OkrTargetsComponent,
+    OkrReviewsComponent,
+    PopupCheckInComponent,
+    PopupSaveVersionComponent,
+    PopupViewVersionComponent,
+    PopupOKRWeightComponent,
+    PopupShareOkrPlanComponent,
+    OkrTreesComponent,
+    PopupAddOKRPlanComponent,
+    ViewOKRComponent,
+    PopupAddRoleComponent,   
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -73,7 +100,10 @@ const routes: Routes = [
     ReactiveFormsModule,
     SharedModule,
     CodxShareModule,
+    CircularGaugeModule,
+    ProgressBarModule
   ],
   exports: [RouterModule],
+  providers: [ProgressAnnotationService]
 })
 export class CodxOmModule {}

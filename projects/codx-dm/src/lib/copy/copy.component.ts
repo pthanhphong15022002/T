@@ -60,18 +60,14 @@ export class CopyComponent implements OnInit {
   
   @Output() eventShow = new EventEmitter<boolean>();
   constructor(  
-    private domSanitizer: DomSanitizer,
-    private tenantService: TenantService,
     private folderService: FolderService,
     private fileService: FileService,
     private api: ApiHttpService,
     public dmSV: CodxDMService,
-    private modalService: NgbModal,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
-    private systemDialogService: SystemDialogService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
     ) {
@@ -84,10 +80,13 @@ export class CopyComponent implements OnInit {
       this.copy = data.data[3];
       if (this.data != null) {
         if (this.objectType == "file") {
-          this.fullName = this.data.fileName;
+          this.fullName = this.dmSV.getFileName(this.data.fileName)
           if (this.copy)
             this.fileService.getFileDuplicate(this.data.fileName ,this.data.folderId).subscribe(item => {
-              this.fullName = item;
+              if(item)
+              {
+                this.fullName = this.dmSV.getFileName(item)
+              }
               this.changeDetectorRef.detectChanges();
             });
         }  
@@ -103,6 +102,8 @@ export class CopyComponent implements OnInit {
     this.user = this.auth.get();
   }
 
+  
+
   displayThumbnail(data) {
     this.dmSV.setThumbnailWait.next(data);
   }
@@ -114,7 +115,8 @@ export class CopyComponent implements OnInit {
       return;      
     }
     if (this.objectType == 'file') {
-      // doi ten file   
+      // doi ten file
+      that.fullName = that.fullName + that.data.extension;
       if (this.copy) {
         this.fileService.copyFile(that.id, that.fullName, "").subscribe(async res => {
           if (res.status == 0) {
@@ -124,7 +126,7 @@ export class CopyComponent implements OnInit {
             res.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";
             files.push(Object.assign({}, res.data));
             this.dmSV.listFiles = files;
-            that.dmSV.ChangeData.next(true);
+            that.dmSV.addFile.next(true);
             that.displayThumbnail(res.data);
             this.dialog.close();
             that.notificationsService.notify(res.message);
@@ -172,9 +174,11 @@ export class CopyComponent implements OnInit {
             let index = files.findIndex(d => d.recID.toString() === this.id);
             if (index != -1) {
               files[index].fileName = this.fullName;
+            
             }
             this.dmSV.listFiles = files;
-            this.dmSV.ChangeData.next(true);
+            this.dmSV.ChangeOneFolder.next(files[index]);
+            this.changeDetectorRef.detectChanges();
             this.dialog.close();     
          //   that.notificationsService.notify(res.message);    
           }
@@ -240,37 +244,40 @@ export class CopyComponent implements OnInit {
           this.errorshow = true;
         }
 
-        // thu muc da cc 
+        // thu muc da tồn tại 
         if (res.status == 2) {
+          debugger
           that.fullName = res.data.folderName;
           var config = new AlertConfirmInputConfig();
           config.type = "YesNo";
           this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
-            var id = '';
-            this.folderService.copyFolder(that.id, res.data.folderName, "", 1, 1).subscribe(async item => {
-              if (item.status == 0) {
-                // id = item.data.recID; 
-                that.dmSV.isTree = false;
-                that.dmSV.currentNode = '';
-                that.dmSV.folderId.next(item.data.parentId);
-                var folders = this.dmSV.listFolder;
-                let index = folders.findIndex(d => d.recID.toString() === that.id);
-                if (index > -1) {
-                  folders[index] = item.data;
-                  that.dmSV.nodeChange.next(folders[index]);
+            if(x.event.status == "Y") {
+              this.dialog.close();
+              this.folderService.renameFolder(that.id, res.data.folderName).subscribe(async item => {
+                if (item.status == 0) {
+                  // id = item.data.recID; 
+                  that.dmSV.isTree = false;
+                  that.dmSV.currentNode = '';
+                  that.dmSV.folderId.next(item.data.parentId);
+                  var folders = this.dmSV.listFolder;
+                  let index = folders.findIndex(d => d.recID.toString() === that.id);
+                  if (index > -1) {
+                    folders[index] = item.data;
+                    that.dmSV.nodeChange.next(folders[index]);
+                    that.dmSV.ChangeOneFolder.next(folders[index]);
+                  }
+                  that.dmSV.listFolder = folders;                    
+                //  that.modalService.dismissAll();                      
+                  that.changeDetectorRef.detectChanges();
                 }
-                that.dmSV.listFolder = folders;                    
-                that.dmSV.ChangeData.next(true);
-              //  that.modalService.dismissAll();                      
-                that.changeDetectorRef.detectChanges();
-                this.dialog.close();
-              }
-              else {
-                that.titleMessage = item.message;
-                that.errorshow = true;
-                that.notificationsService.notify(item.message);
-              }
-            });
+                else {
+                  that.titleMessage = item.message;
+                  that.errorshow = true;
+                  that.notificationsService.notify(item.message);
+                }
+              });
+            }
+         
           });
         }
         else {

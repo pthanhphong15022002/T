@@ -1,4 +1,4 @@
-<codx-form
+<!-- <codx-form
   #form
   [headerText]="headerText"
   [subHeaderText]=""
@@ -10,8 +10,7 @@
   [dialog]="dialog"
   *ngIf="isAfterRender"
 >
-  <!-- <codx-form [dialog]="dialog" [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
-  [formControl]="dialogETemplate" *ngIf="isAfterRender"> -->
+
   <ng-template #body>
     <div class="request-to">
       <div id="box_from" *ngIf="showFrom">
@@ -378,53 +377,7 @@
           [formModel]="formModel"
         ></codx-input>
       </div>
-      <!-- <div ngbDropdown class="dropdown">
-        <button
-          ngbDropdownToggle
-          class="btn btn-sm btn-light d-flex align-items-center"
-          type="button"
-          id="dropdownMenuButton1"
-          aria-expanded="false"
-        >
-          <span>Chọn mẫu</span>
-          <span class="icon-keyboard_arrow_down icon-16 ms-2"></span>
-        </button>
-        <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-          <li>
-            <div class="mb-1 mx-3">
-              <codx-input
-                type="text"
-                [disabled]="false"
-                placeholder="Tìm kiếm"
-                (valueChange)="valueChange($event)"
-              >
-              </codx-input>
-            </div>
-          </li>
-          <li>
-            <a ngbDropdownItem>
-              <div class="d-flex flex-column">
-                <span class="text-dark">Cấp quyền xem tài liệu</span>
-                <i class="fs-7 mt-1">Xin cấp quyền full xem tài liệu</i>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a ngbDropdownItem>
-              <div class="d-flex flex-column">
-                <span class="text-dark">Cấp quyền full</span>
-                <i class="fs-7 mt-1">Xin cấp quyền full control</i>
-              </div>
-            </a>
-          </li>
-          <div class="separator mt-3 opacity-75"></div>
-          <li>
-            <a ngbDropdownItem href="#">
-              <span class="text-primary">Thêm mẫu mail</span>
-            </a>
-          </li>
-        </ul>
-      </div> -->
+    
     </div>
     <div class="d-flex justify-content-between align-items-end mt-4">
       <div>
@@ -625,10 +578,6 @@
           <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
           </codx-label>
         </a>
-        <!-- <a class="btn btn-primary fw-bold ms-2" (click)="sendEmail()">
-          <codx-label name="lblSend" default="Gửi" [formModel]="formModel">
-          </codx-label>
-        </a> -->
       </div>
     </div>
   </ng-template>
@@ -741,4 +690,4 @@
     >
     </codx-input>
   </div>
-</ng-template>
+</ng-template> -->

@@ -21,7 +21,7 @@
 <ng-template #process let-data>
   <div class="has-action-menu">
     <div
-      class="progress-approval mt-3 mb-3"
+      class="progress-approval ms-3 mx-3"
       *ngIf="data?.countStep > 0"
       (click)="viewDetail(data)"
     >
@@ -46,29 +46,31 @@
       >
       </codx-label>
     </div>
-    <!-- <codx-mfunc
+    <codx-mfunc
       [formModel]="viewBase.formModel"
       (clickMF)="clickMF($event, data)"
       type="hover"
       [dataItem]="data"
     >
-    </codx-mfunc> -->
+    </codx-mfunc>
   </div>
 </ng-template>
 
 <ng-template #memo let-data>
-  <div #memo class="text-dark">
-    {{ data.memo | formatvalue: viewBase.formModel:"memo":memo | async }}
-  </div>
+  <div
+    #memo
+    class="text-dark"
+    [innerHTML]="data.memo | formatvalue : viewBase.formModel : 'memo' | async"
+  ></div>
 </ng-template>
 
 <ng-template #icon let-data>
-  <div class="">
+  <div class="d-flex justify-content-left">
     <i
       [ngClass]="data.icon"
       [style.background]="data.color"
       [style.color]="'white'"
-      class="fs-3 align-self-start rounded-circle p-3 m-1"
+      class="fs-5 d-flex align-items-center justify-content-center h-35px w-35px rounded-circle p-3 m-1"
     ></i>
   </div>
 </ng-template>
@@ -82,7 +84,8 @@
     [disabled]="true"
   >
   </codx-input> -->
-  <codx-input
+  <div class="d-flex justify-content-left">
+    <codx-input
     #checkbox
     type="switch"
     id="switch"
@@ -90,6 +93,8 @@
     [disabled]="true"
   >
   </codx-input>
+  </div>
+
 </ng-template>
 
 <!-- <ng-template #color let-data>
@@ -100,13 +105,13 @@
 </ng-template> -->
 
 <ng-template #parentID let-data>
-  <div #parentID class="text-dark">
-    {{
-      data.parentID
-        | formatvalue: viewBase.formModel:"parentID":parentID
-        | async
-    }}
-  </div>
+  <div
+    #parentID
+    class="text-dark"
+    [innerHTML]="
+      data.parentID | formatvalue : viewBase.formModel : 'parentID' | async
+    "
+  ></div>
 </ng-template>
 
 <ng-template #listItem let-data>
@@ -126,7 +131,7 @@
         <td class="w-15">
           <div class="d-flex justify-content-center">
             <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-              data.signatureType | vll: "ES001":"text" | async
+              data.signatureType | vll : "ES001" : "text" | async
             }}</span>
           </div>
         </td>

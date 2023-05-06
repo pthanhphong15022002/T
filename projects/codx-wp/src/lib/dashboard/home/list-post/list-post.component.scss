@@ -61,7 +61,7 @@ codx-view-content {
 
 ejs-listview .e-ul>li {
     margin-bottom: 1px;
-    background-color: #fff;
+    // background-color: #fff;
 
 }
 
@@ -90,11 +90,31 @@ ejs-listview .e-ul>li {
     height: 100%;
 }
 
+
 .body-function {
     position: absolute;
     bottom: 0;
-    width: 100%;
+    left: 30px;
+    right: 15px;
 }
+
+
+.body.body-addpost {
+    height: 420px;
+    position: relative;
+    overflow: auto;
+    padding-right: 5px;
+    
+  }
+
+//   .body-function {
+//     position: absolute;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     border: 1px red solid;
+//   }
+
 
 .body-post {
     bottom: 45px;
@@ -133,8 +153,8 @@ ejs-listview .e-ul>li {
 }
 
 .h-13px.w-13px {
-    width: 13px;
-    height: 13px;
+    width: 12px;
+    height: 12px;
 }
 
 .h-12px.w-12px {
@@ -151,11 +171,7 @@ ejs-listview .e-ul>li {
 //     margin-bottom: 5px !important;
 // }
 
-.remove-file {
-    //visibility: hidden;
-    visibility: visible;
-    opacity: 0.3;
-}
+
 
 .position-relative:hover .remove-file {
     //visibility: visible;
@@ -188,7 +204,7 @@ ejs-listview .e-ul>li {
     position: absolute;
     background-color: #fff;
     right: 20px;
-    bottom: -14px;
+    bottom: -18px;
     padding: 6px 10px;
     border-radius: 18px;
     box-shadow: 0px 0px 6px 0px rgb(76 87 125 / 12%);
@@ -211,7 +227,7 @@ ejs-listview .e-ul>li {
 .feed-box input.codx-text {
     border: 0;
     padding-left: 0;
-    background-color: #f5f5f5;
+    background-color: transparent;
 }
 
 .btn-like,
@@ -251,7 +267,7 @@ ejs-listview .e-ul>li {
 .feed-box .e-float-input {
     background-color: transparent;
     padding-left: 0;
-    padding-right: 20px;
+    padding-right: 40px;
 }
 
 .feed-box {
@@ -307,4 +323,44 @@ ejs-listview .e-ul>li {
 
 .icon-editPost {
     color: rgb(0, 93, 199);
+}
+
+.pic>img {
+    width: 100%;
+    height: auto;
+}
+
+.dark {
+    .post-new {
+        border-color: var(--border-gray) !important;
+    }
+}
+.WP_Comments{
+    border: 1px solid var(--border-gray);
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.WP_News-contents {
+    padding: 5px 12px;
+    border-radius: 0px 0px 4px 4px;
+    background: var(--primary-lightest);
+}
+
+.WP_News-images>codx-img>div>img {
+    width: 100% !important;
+}
+.news-image{
+    width: 100% !important;
+}
+.news-image > img {
+    width: 100% !important;
+    height: 300px !important;
+}
+.wp-share-contents {
+    margin-top: 8px;
+}
+codx-img > .news-image > div{
+    width: 100% !important;
+    height: 300px !important;
 }

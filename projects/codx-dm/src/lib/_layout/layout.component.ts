@@ -42,13 +42,10 @@ export class LayoutComponent
 {
   // Public variables
   override contentContainerClasses = '';
-  override headerCSSClasses?: string;
   override headerHTMLAttributes: any = {};
   override headerLeft: string = 'menu';
   override asideDisplay: boolean = false;
-  override asideCSSClasses?: string;
   disableInput = false;
-  module = 'DM';
   dialog: DialogRef;
   percentUsed: any;
   itemHdd: any;
@@ -102,7 +99,7 @@ db.DM_FolderInfo.updateMany(
     private cache: CacheService
   ) {
     super(injector);
-    this.codxService.init('DM');
+    this.module = 'DM';
     this.fileService.getTotalHdd().subscribe((item) => {
       //  totalUsed: any;
       // totalHdd: any;
@@ -148,8 +145,9 @@ db.DM_FolderInfo.updateMany(
         this.submenu == 'DMT08' ||
         this.submenu == 'DMT02' ||
         this.submenu == 'DMT03' ||
-        this.submenu == 'DMT04'
-      )
+        this.submenu == 'DMT04' ||
+        this.submenu == 'DMT00'      
+        )
         css = css + ' disabled';
     }
     // console.log(css);
@@ -168,27 +166,14 @@ db.DM_FolderInfo.updateMany(
     this.dmSV.currentNode = '';
     this.dmSV.folderId.next(id);
     this.dmSV.dmFavoriteID = "2";
-    this.folderService.options.funcID = id;
+    this.dmSV.folderID = "";
     this.folderService.options.favoriteID = subid;
-    this.folderService.getFolders('').subscribe(async (list) => {
-      if (list) {
-        this.dmSV.listFolder = list[0];
-        this.dmSV.ChangeData.next(true);
-        this.changeDetectorRef.detectChanges();
-      }
-    });
-
-    this.fileService.options.funcID = id;
     this.fileService.options.favoriteID = subid;
-    this.fileService.GetFiles('').subscribe(async (list) => {
-      this.dmSV.listFiles = list[0];
-      this.dmSV.ChangeData.next(true);
-      this.changeDetectorRef.detectChanges();
-    });
+    this.dmSV.refeshData.next(true);
   }
 
   getHDDInformaton(item: any) {
-    if (item != null) {
+    if (item != null && typeof item === 'object') {
       this.itemHdd = item;
       this.percentUsed = 100 * (item.totalUsedBytes / item.totalHdd);
       this.titleHddUsed_small = this.percentUsed.toFixed(1);
@@ -245,6 +230,8 @@ db.DM_FolderInfo.updateMany(
         ];
       }
     }
+    else if(typeof item === 'string')
+      this.titleHddUsed = item;
   }
 
   //Pie Chart
@@ -309,6 +296,7 @@ db.DM_FolderInfo.updateMany(
 
   AddFolder() {
     //this.dmSV.openCreateFolder.next(true);
+    //this.dmSV.folderID = ""
     let option = new SidebarModel();
     option.DataService = this.dmSV.dataService;
     option.FormModel = this.dmSV.formModel;
@@ -337,12 +325,15 @@ db.DM_FolderInfo.updateMany(
     this.dialog.closed.subscribe();
   }
   onJump() {
+    //Tài liệu chia sẻ hoặc tài liệu yêu cầu chia sẻ
+    if(this.dmSV.idMenuActive == "DMT06" || this.dmSV.idMenuActive == "DMT05" || this.dmSV.idMenuActive == "DMT07" || this.dmSV.idMenuActive == "DMT00") return ;
     var data = {} as any;
     data.recID = '';
+    this.dmSV.folderID = ""
+    this.dmSV.isSearchView = false;
     this.dmSV.refreshTree.next(true);
     this.dmSV.breadcumb.next([this.dmSV.menuActive.getValue()]);
-    this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0,1);
-    //isFolderId
+    if(this.dmSV.breadcumbLink) this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0,1);
     this.changeDetectorRef.detectChanges();
   }
   /* public funcs$: Observable<any> = of([

@@ -1,13 +1,14 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToggleComponent, 
-  ScrollTopComponent, 
-  DrawerComponent, 
-  StickyComponent, 
-  MenuComponent, 
-  ScrollComponent } 
-from 'codx-core';
-
+import {
+  ToggleComponent,
+  ScrollTopComponent,
+  DrawerComponent,
+  StickyComponent,
+  MenuComponent,
+  ScrollComponent,
+  CodxService,
+} from 'codx-core';
 
 @Component({
   selector: 'app-errors',
@@ -16,12 +17,12 @@ from 'codx-core';
 })
 export class ErrorsComponent implements OnInit {
   @HostBinding('class') class = 'd-flex flex-column flex-root';
-  constructor(private router: Router) { }
+  constructor(private codxService: CodxService) {}
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   routeToHome() {
-    this.router.navigate(['/']);
+    this.codxService.navigate(null, '/');
     setTimeout(() => {
       ToggleComponent.bootstrap();
       ScrollTopComponent.bootstrap();

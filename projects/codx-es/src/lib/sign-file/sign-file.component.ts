@@ -82,16 +82,19 @@ export class SignFileComponent extends UIComponent {
   assemblyName = 'ES';
   entity = 'ES_SignFiles';
   className = 'SignFilesBusiness';
+  method = 'LoadDataSignFileAsync';
   idField = 'recID';
 
   predicate = '';
   datavalue = '';
   dataSelected = '';
   SidebarModel;
+  lstSignfiles: any;
 
   dialog: DialogRef;
 
   buttons: Array<ButtonModel> = [];
+  moreFunc: Array<ButtonModel> = [];
   views: Array<ViewModel> | any = []; // @ViewChild('uploadFile') uploadFile: TemplateRef<any>;
 
   lstReferValue;
@@ -172,6 +175,13 @@ export class SignFileComponent extends UIComponent {
         },
       },
     ];
+    this.moreFunc = [
+      {
+        id: 'btnOverdue',
+        icon: 'icon-list-chechbox',
+        text: 'Duyệt quá hạn',
+      },
+    ];
     this.df.detectChanges();
   }
 
@@ -188,14 +198,17 @@ export class SignFileComponent extends UIComponent {
 
   changeItemDetail(event) {
     this.itemDetail = event?.data;
+    if (event?.data?.recID) this.getDetailSignFile(event?.data.recID);
   }
 
   getDetailSignFile(id: any) {
+    this.lstSignfiles = null;
     this.esService
       .getDetailSignFile(this.itemDetail?.recID)
       .subscribe((res) => {
         if (res) {
           this.itemDetail = res;
+          this.lstSignfiles = res;
           this.df.detectChanges();
         }
       });
@@ -214,11 +227,13 @@ export class SignFileComponent extends UIComponent {
       case 'btnAdd':
         this.addNew();
         break;
+      case 'btnOverdue':
+        this.esService.overdue().subscribe();
+        break;
     }
   }
 
   addNew(evt?) {
-    //this.esService.overdue().subscribe();
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.Width = '800px';
@@ -243,6 +258,8 @@ export class SignFileComponent extends UIComponent {
       );
       dialogAdd.closed.subscribe((x) => {
         if (x.event) {
+          window['PDFViewerApplication']?.unbindWindowEvents();
+
           if (x.event?.approved) {
             this.view.dataService.add(x.event.data, 0).subscribe();
           } else {
@@ -299,23 +316,27 @@ export class SignFileComponent extends UIComponent {
       (x: { functionID: string }) => x.functionID == 'EST01104'
     );
     var edit = e.filter((x: { functionID: string }) => x.functionID == 'SYS03');
+    var release = e.filter(
+      (x: { functionID: string }) => x.functionID == 'EST01105'
+    );
 
     if (bookmarked == true) {
-      bm[0].disabled = true;
-      unbm[0].disabled = false;
+      if (bm?.length) bm[0].disabled = true;
+      if (unbm?.length) unbm[0].disabled = false;
     } else {
-      unbm[0].disabled = true;
-      bm[0].disabled = false;
+      if (unbm?.length) unbm[0].disabled = true;
+      if (bm?.length) bm[0].disabled = false;
     }
 
-    if (data.approveStatus == '0') {
+    if (data.approveStatus != 3) {
       var cancel = e.filter(
         (x: { functionID: string }) => x.functionID == 'EST01101'
       );
-      cancel[0].disabled = true;
+      if (cancel?.length) cancel[0].disabled = true;
     }
-    if (data.approveStatus != 1) {
-      edit[0].disabled = true;
+    if (data.approveStatus != 1 && data.approveStatus != 2) {
+      if (edit?.length) edit[0].disabled = true;
+      if (release?.length) release[0].disabled = true;
     }
   }
 

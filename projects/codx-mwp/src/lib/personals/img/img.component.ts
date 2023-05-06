@@ -18,11 +18,10 @@ import {
   ViewChild,
   Injector,
 } from '@angular/core';
-import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
 import { FileService } from '@shared/services/file.service';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'app-img',
@@ -30,6 +29,7 @@ import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/
   styleUrls: ['./img.component.scss'],
 })
 export class ImgComponent implements OnInit, AfterViewInit {
+  urlUpload = environment.urlUpload;
   data: any = [];
   user: any;
   functionList = {
@@ -54,42 +54,26 @@ export class ImgComponent implements OnInit, AfterViewInit {
     private fileService: FileService,
     private callfc: CallFuncService,
     private auth: AuthStore,
+    private shareService: CodxShareService,
     private injector: Injector
   ) {
+    
+    this.user = this.auth.get();
+    this.dataValue = `WP_Comments;false;${this.user?.userID};image`;
+  }
+
+  ngOnInit(): void {
     this.cache.functionList('WP').subscribe((res) => {
       if (res) {
         this.functionList.entityName = res.entityName;
         this.functionList.funcID = res.functionID;
       }
     });
-    this.user = this.auth.get();
-    this.dataValue = `WP_Comments;false;${this.user?.userID};image`;
-    var dataSv = new CRUDService(injector);
-    dataSv.request.gridViewName = 'grvFileInfo';
-    dataSv.request.entityName = 'DM_FileInfo';
-    dataSv.request.formName = 'FileInfo';
-    this.dtService = dataSv;
   }
-
-  ngOnInit(): void {}
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
   }
-
-  // getFile() {
-  //   this.api.exec<any>('ERM.Business.DM', 'FileBussiness', 'GetFilesByObjectTypeAsync', 'WP_Comments').
-  //     subscribe((files: any[]) => {
-  //       if (files.length > 0) {
-  //         files.forEach((f: any) => {
-  //           if (f.referType == this.FILE_REFERTYPE.IMAGE && (f.thumbnail != '' || f.thumbnail != null)) {
-  //             this.file_img.push(f);
-  //           }
-  //         });
-  //         this.dt.detectChanges();
-  //       }
-  //     })
-  // }
 
   openImg(item) {
     this.fileService.getFile(item.recID).subscribe((data) => {
@@ -103,5 +87,13 @@ export class ImgComponent implements OnInit, AfterViewInit {
         ''
       );
     });
+  }
+
+  getThumb(file:any){
+    if(file.pathDisk)
+    {
+      return this.shareService.getThumbByUrl(file.pathDisk,300);
+    }
+    return "/assets/themes/wp/default/img/Image_NoData.svg";
   }
 }

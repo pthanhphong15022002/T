@@ -1,16 +1,10 @@
-<div
-  class="btn btn-icon btn-active-light-primary position-relative"
-  [ngClass]="codxService.toolbarButtonHeightClass"
-  (click)="openFormNotify()"
->
-  <span
-    [inlineSVG]="
+<div class="btn btn-icon btn-clean position-relative" [ngClass]="codxService.toolbarButtonHeightClass"
+  (click)="openFormNotify()">
+  <span [inlineSVG]="
       './assets/themes/sys/default/img/header_notifications.svg'
-    "
-    class="svg-icon"
-    [ngClass]="codxService.toolbarButtonIconSizeClass"
-  ></span>
-  <!-- <span
-    class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"
-  ></span> -->
+    " class="svg-icon" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
+  <span *ngIf="totalNoti > 0"
+    class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger px-2 top-0 start-100">
+    <span class="text-white fs-8">{{totalNoti < 9 ? totalNoti : '9+' }}</span>
+    </span>
 </div>

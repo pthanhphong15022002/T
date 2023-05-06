@@ -12,11 +12,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxCoreModule } from 'codx-core';
 import { CoreModule } from '@core/core.module';
 import { HttpClientModule } from '@angular/common/http';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
-import { PopupSendEmailComponent } from './processsteps/popup-send-email/popup-send-email.component';
 import { PopupAddProcessesComponent } from './processes/popup-add-processes/popup-add-processes.component';
 import { ProcessStepsComponent } from './processsteps/processsteps.component';
 import { PopupAddProcessStepsComponent } from './processsteps/popup-add-process-steps/popup-add-process-steps.component';
@@ -32,6 +30,9 @@ import { PopupRolesComponent } from './processes/popup-roles/popup-roles.compone
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 import { PopupUpdateRevisionsComponent } from './processes/popup-update-revisions/popup-update-revisions.component';
 import { PopupViewDetailProcessesComponent } from './popup-view-detail-processes/popup-view-detail-processes.component';
+import { PopupPhasesActivitiesComponent } from './processes/popup-phases-activities/popup-phases-activities.component';
+import { ShowMoreLessComponent } from './processes/show-more-less/show-more-less.component';
+import { PopupApprovalComponent } from './aprpermission/popup-approval/popup-approval.component';
 
 export const routes: Routes = [
   {
@@ -41,14 +42,17 @@ export const routes: Routes = [
       {
         path: 'processes/:funcID',
         component: ProcessesComponent,
+        data: { noReuse: true },
       },
       {
         path: 'approvals/:funcID',
         component: ProcessesComponent,
+        data: { noReuse: true },
       },
       {
         path: 'aprpermission/:funcID',
         component: AprpermissionComponent,
+        data: { noReuse: true },
       },
       {
         path: 'testhtml',
@@ -78,7 +82,6 @@ export const routes: Routes = [
     ViewListProcessesComponent,
     ProcessStepsComponent,
     PopupAddProcessStepsComponent,
-    PopupSendEmailComponent,
     PopupAddProcessStepsComponent,
     RevisionsComponent,
     PropertiesComponent,
@@ -88,6 +91,9 @@ export const routes: Routes = [
     PopupRolesComponent,
     PopupUpdateRevisionsComponent,
     PopupViewDetailProcessesComponent,
+    PopupPhasesActivitiesComponent,
+    ShowMoreLessComponent,
+    PopupApprovalComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -98,12 +104,11 @@ export const routes: Routes = [
     NgbModule,
     CoreModule,
     HttpClientModule,
-    InlineSVGModule.forRoot(),
     OverlayModule,
     TabModule,
     CommonModule,
     DragDropModule,
-    PinchZoomModule
+    PinchZoomModule,
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],

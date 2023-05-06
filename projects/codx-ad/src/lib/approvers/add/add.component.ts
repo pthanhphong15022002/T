@@ -1,145 +1,209 @@
-import { GroupMembers, UserGroup } from '../../models/UserGroups.model';
-import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
-import { ApiHttpService, CallFuncService, CodxService, DialogData, DialogRef, FormModel, NotificationsService, RequestOption } from 'codx-core';
+import {
+  Component,
+  Optional,
+  ChangeDetectorRef,
+  ViewChild,
+  Injector,
+} from '@angular/core';
+import {
+  DialogData,
+  DialogRef,
+  ImageViewerComponent,
+  NotificationsService,
+  RequestOption,
+  UIComponent,
+} from 'codx-core';
+import { CodxAdService } from '../../codx-ad.service';
 
 @Component({
   selector: 'lib-add',
   templateUrl: './add.component.html',
-  styleUrls: ['./add.component.css']
+  styleUrls: ['./add.component.css'],
 })
-export class AddApproversComponent implements OnInit {
+export class AddApproversComponent extends UIComponent {
   //#region Constructor
   master: any;
   orgData: any;
-  details: Array<any> = [];
+  members: Array<any> = [];
   detailIDs: string;
   dialog: DialogRef;
-  title: string = "";
-  action: string = "add";
+  title: string = '';
+  action: string = 'add';
+  isInValid = true;
+  isTemp = true;
+  // lstChangeFunc: tmpTNMD[] = [];
+  // lstRoles: tmpformChooseRole[] = [];
+  //#region Roles
+  dialogRoles: DialogRef;
+  //#endregion
+  date = new Date();
+  showPopup: boolean = false;
   constructor(
-    private api: ApiHttpService,
+    private inject: Injector,
+    // private api: ApiHttpService,
     private notiService: NotificationsService,
-    private codxService: CodxService,
-    private callfc: CallFuncService,
+    // private codxService: CodxService,
+    private adService: CodxAdService,
+    // private callfc: CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dialog?: DialogRef,
-    @Optional() dialogData?: DialogData,
+    @Optional() dialogData?: DialogData
   ) {
+    super(inject);
     this.dialog = dialog;
     this.title = dialogData.data[0];
     this.action = dialogData.data[1];
+    this.isTemp = this.action == 'add';
     this.master = dialog.dataService!.dataSelected;
     this.orgData = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
   }
   //#endregion
 
+  //#region ViewChild
+  @ViewChild('form', { static: true }) form;
+  @ViewChild('imageUpload') imageUpload?: ImageViewerComponent;
+
+  //#endregion
+
   //#region  Init
-  ngOnInit(): void {
+  onInit(): void {
     if (this.master.members && this.master.members.length) {
-      this.details = this.master.members;
+      this.master?.members?.forEach((mem) => {
+        mem.userID = mem.memberID;
+        mem.isAdded = true;
+        mem.isRemoved = false;
+      });
+      this.members = this.master?.members;
+
       this.detailIDs = this.master.memberIDs;
     }
 
-    this.dialog.beforeClose.subscribe(res => {
+    this.dialog.beforeClose.subscribe((res) => {
       if (!res.event && this.action == 'edit') {
         if (this.master.updateColumn) {
           let updateColumn = this.master.updateColumn.split(';');
-          updateColumn.forEach(e => {
+          updateColumn.forEach((e) => {
             let key = this.codxService.capitalize(e);
             this.master[key] = this.orgData[key];
           });
         }
       }
       this.dialog.dataService.clear();
-    })
+    });
+  }
+
+  ngAfterViewInit() {
+    console.log('formmodel', this.form);
   }
   //#endregion
 
   //#region event
+  width = 720;
+  height = window.innerHeight;
   eventApply(e) {
-    if (!e.data || e.data.length == 0) return;
-    if (!this.dialog.dataService.hasSaved && this.action == "add") {
-      this.dialog.dataService.save((opt: RequestOption) => this.beforeSave(opt), 0, "", "", false).subscribe(res => {
-        if (res && !res.error) {
-          this.dialog.dataService.hasSaved = true;
-          this.saveMember(e.data);
+    this.showPopup = !this.showPopup;
+    if (!e.dataSelected || e.dataSelected.length == 0) return;
+    else {
+      e?.dataSelected.forEach((user) => {
+        //chua add
+        if (this.members.findIndex((x) => x.memberID == user.UserID) == -1) {
+          user.isAdded = false;
+          user.isRemoved = false;
+          user.memberID = user.UserID;
+          user.userID = user.UserID;
+          user.memberName = user.UserName;
+          user.positionName = user.PositionName;
+          user.orgUnitName = user.OrgUnitName;
+          this.members.push(user);
         }
-      })
-    } else
-      this.saveMember(e.data);
+      });
+    }
   }
 
   onSave() {
     if (this.dialog.dataService.hasSaved) {
       this.dialog.dataService.hasSaved = false;
-      if (this.details.length)
+      if (this.members.length)
         this.dialog.dataService.update(this.master).subscribe();
       this.dialog.close(true);
-    }
-    else {
-      this.dialog.dataService.save((opt: RequestOption) => this.beforeSave(opt), 0).subscribe(res => {
-        if (res && !res.error) {
-          this.dialog.dataService.hasSaved = false;
-          this.dialog.close(true);
-        }
-      })
+    } else {
+      this.dialog.dataService
+        .save((opt: RequestOption) => this.beforeSave(opt), 0)
+        .subscribe((res: any) => {
+          if (res && !res.error) {
+            this.master.groupID = this.dialog.dataService.dataSelected.groupID;
+            this.beforeSaveMember();
+          }
+        });
     }
   }
 
-  removeDetail(id) {
-    if (!id) return null;
-    this.api.execSv<any>("SYS", "AD", "GroupMembersBusiness", "DeleteAsync", [id]).subscribe(res => {
-      if (res) {
-        let idx = this.details.findIndex(x => x.recID == id);
-        if (idx > -1) {
-          this.details.splice(idx, 1);
-          let ids = "";
-          this.details.forEach((v) => {
-            ids += v.memberID + ";";
-          })
-          this.master['memberIDs'] = ids;
-          this.master["members"] = this.details;
-          this.dialog.dataService.update(this.master);
-        }
-      }
-    })
+  removeDetail(item) {
+    if (!item) return;
+    if (item.isAdded == false) {
+      this.members = this.members.filter((mem) => mem.userID != item.userID);
+    } else {
+      let curMem = this.members.find((mem) => mem.userID == item.userID);
+      curMem.isRemoved = true;
+    }
+    this.changeDetectorRef.detectChanges();
   }
   //#endregion
 
   //#region Method
-  saveMember(data: Array<any>) {
-    let groupMembers = new Array<GroupMembers>();
-    data.forEach(e => {
-      let member = new GroupMembers();
-      member.groupID = this.master.groupID;
-      member.memberID = e.id;
-      member.memberType = e.objectType;
-      member.memberName = e.text
-      groupMembers.push(member);
+  saveMember(groupType) {
+    this.api
+      .execSv<any>('SYS', 'AD', 'GroupMembersBusiness', 'AddUpdateAsync', [
+        this.members,
+        groupType,
+        [],
+        [],
+      ])
+      .subscribe((res) => {
+        if (res) {
+          // this.dialog.dataService.hasSaved = true;
+          this.dialog.dataService.hasSaved = false;
+          this.master.members = res[2];
+          this.master.memberIDs = res[1];
+          // this.dialog.dataService.update(this.master).subscribe((res2) => {
+          this.dialog.close(this.master);
+          this.imageUpload
+            .updateFileDirectReload(this.master.recID)
+            .subscribe((result) => {
+              if (result) {
+                console.log('res', result);
+              }
+            });
+        } else {
+          this.dialog.dataService.hasSaved = true;
+        }
+      });
+  }
+
+  beforeSaveMember() {
+    let groupType = this.form?.formGroup?.get('groupType')?.value;
+    this.members?.forEach((mem) => {
+      mem.groupID = this.master.groupID;
     });
-    this.api.execSv<any>("SYS", "AD", "GroupMembersBusiness", "AddAsync", [groupMembers]).subscribe(res => {
-      if (res && res.length == 3) {
-        this.master.memberType = res[0];
-        this.master.memberIDs = this.detailIDs ? this.detailIDs + ';' + res[1] : res[1];
-        this.details = [...this.details, ...res[2]];
-        this.master.members = this.details;
-        this.dialog.dataService.update(this.master).subscribe();
-      }
-    })
+    this.saveMember(groupType);
   }
 
   beforeSave(opt: RequestOption) {
-    opt.service = "SYS";
-    opt.assemblyName = "AD";
-    opt.className = "UserGroupsBusiness";
+    opt.service = 'SYS';
+    opt.assemblyName = 'AD';
+    opt.className = 'UserGroupsBusiness';
 
-    if (this.action == "add")
-      opt.methodName = "AddAsync";
-    else
-      opt.methodName = "UpdateAsync";
+    if (this.action == 'add') opt.methodName = 'AddAsync';
+    else opt.methodName = 'UpdateAsync';
 
     opt.data = this.master;
     return true;
+    // }
   }
   //#endregion
+
+  clickAddMemeber() {
+    this.showPopup = !this.showPopup;
+    this.changeDetectorRef.detectChanges();
+  }
 }

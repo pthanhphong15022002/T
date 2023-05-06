@@ -1,0 +1,105 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [subHeader]="subHeader"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="formModel"
+></codx-form>
+
+<ng-template #subHeader>
+
+</ng-template>
+<ng-template #body>
+  <div class="mt-5">
+    <span class="fs-3 fw-bold text-primary">{{ stepName }}</span>
+  </div>
+  <div class="form-group mt-3">
+    <div>
+      <codx-label
+        fiedName="Memo"
+        [formModel]="form.formModel"
+        default="Ghi chú"
+      >
+      </codx-label>
+    </div>
+    <codx-input
+      field="memo"
+      type="textarea"
+      [crrValue]="reasonStep.memo"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+
+  <div class="form-group">
+    <div class="mb-2">
+      <codx-label
+          fiedName="ProcessID"
+          [formModel]="form.formModel"
+          default="Quy trình được chuyển đến"
+        >
+        </codx-label>
+
+      <div class="mb-1">
+      <ejs-combobox
+        id="recID"
+        [dataSource]="listCbxProccess"
+        [fields]="fieldCbxProccess"
+        (valueChange)="cbxChange($event)"
+        [value]="moveProccess"
+        [enabled]="false"
+      ></ejs-combobox>
+    </div>
+      <div class="mb-1">
+        <codx-label
+          class="text-italic fs-7 text-danger"
+          default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thành công"
+        ></codx-label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group" *ngIf="moveProccess !== guidEmpty">
+    <div>
+      <codx-label fiedName="owner" [formModel]="form.formModel" default="Người phụ trách ở quy trình chuyển đến">
+      </codx-label>
+    </div>
+    <codx-popup-participants [lstParticipants]="listParticipantReason" [dialog]="dialog" [isType]="'I'"
+    (eventUser)="eventUser($event)" [owner]="ownerMove"></codx-popup-participants>
+  </div>
+
+
+  <div *ngIf="listReason.length > 0 && listReason !== null">
+    <div class="fw-bold text-dark mb-3">
+      <codx-label
+        fiedName=""
+        [formModel]="form.formModel"
+        [default]="titleReasonClick"
+      >
+      </codx-label>
+      <span class="text-danger" *ngIf="reasonStep.reasonControl">*</span>
+    </div>
+    <div *ngFor="let item of listReason">
+      <div class="form-check mb-3">
+        <input class="form-check-input rounded-circle w-20px h-20px" type="checkbox" (change)="checkValue($event,item)"/>
+        <span class="form-check-label">
+          {{ item.reasonName }}
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+      <codx-label
+        name="Save"
+        [formModel]="form.formModel"
+        default="Lưu"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>

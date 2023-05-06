@@ -1,50 +1,55 @@
 <codx-card-img (dblclick)="dbView()" cardCss="border w-200px h-100 card-folder-center" [imageSrc]="dmSV.getImage(data)"
-  imgCss="card-img-center h-100px mt-2" [rootData]="data" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(data)"
-  [formModel]="formModel" (clickMF)="clickMoreFunction($event,data)"
-  [typeMF]="'hover'" [footer]="cardImgFooter" 
-  (changeDataMF)="dmSV.filterMoreFunction($event, data)" >
+  imgCss="card-img-center h-75px mt-5" [rootData]="data" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(data)"
+  [formModel]="formModel" (clickMF)="clickMoreFunction($event,data)" [typeMF]="'hover'" [footer]="cardImgFooter"
+  (changeDataMF)="dmSV.filterMoreFunction($event, data)"
+  [hideMF]="(formModel.funcID == 'DMT06' && favoriteID == '3')?true:false">
 </codx-card-img>
 <ng-template #cardImgFooter let-data let-setting="setting">
-  <div [title]="data.folderName != undefined ? data.folderName : data.fileName"
+  <div [title]="data.folderName  ? data.folderName : data.fileName"
     class="d-flex align-items-start w-100 dms-card-icon">
     <div *ngIf="(data.folderName && !data?.extension) then folder else file"></div>
     <ng-template #folder>
-      <div *ngIf="(data.icon != null && data.icon != '') then showicon2 else noshowicon2"></div>
-      <ng-template #showicon2>
-        <div class="icon-16 me2" *ngIf="(dmSV.checkIconFolder(data)) then showsvg2 else noshowsvg2">
+      <div class="d-flex flex-column w-100 dms-footer-r align-items-center ms-2 mt-2">
+        <div class="d-flex align-items-center">
+          <div *ngIf="(data.icon != null && data.icon != '') then showicon2 else noshowicon2"></div>
+          <div class="fw-bold file-name">{{data.folderName}}</div>
+          <ng-template #showicon2>
+            <div class="icon-16 me-2" *ngIf="(dmSV.checkIconFolder(data)) then showsvg2 else noshowsvg2">
+            </div>
+            <ng-template #showsvg2>
+              <img alt="" class="mh-15px me-2" src="{{dmSV.getSvg(data.icon)}}">
+            </ng-template>
+            <ng-template #noshowsvg2>
+              <span class="me-2" [ngClass]="dmSV.getFolderClass(data.icon)"></span>
+            </ng-template>
+          </ng-template>
+          <ng-template #noshowicon2>
+            <!-- <img alt="" class="mh-15px me-2" src="../../../assets/codx/dms/folder.svg"> -->
+          </ng-template>
         </div>
-        <ng-template #showsvg2>
-          <img alt="" class="mh-15px me-2" src="{{dmSV.getSvg(data.icon)}}">
-        </ng-template>
-        <ng-template #noshowsvg2>
-          <span class="icon-16 me2" [className]="dmSV.getFolderClass(data.icon)"></span>
-        </ng-template>
-      </ng-template>
-      <ng-template #noshowicon2>
-        <!-- <img alt="" class="mh-15px me-2" src="../../../assets/codx/dms/folder.svg"> -->
-      </ng-template>
-      <div class="d-flex flex-column w-100 dms-footer-r align-items-center">
-        <div class="text-dark-75 fw-bold file-name text-box-140">{{data.folderName}}
-        </div>
-        <div class="d-flex justify-content-between" style="height: 18px">
+        <div class="d-flex justify-content-between" style="height: 25px">
           <div *ngIf="(!data.isSystem) then createBy2 else nocreateBy2">
           </div>
           <ng-template #createBy2>
-            <span class="text-dark-50">{{data.userName}}</span>
+            <span class="text-gray-500">{{data.userName}}</span>
           </ng-template>
           <ng-template #nocreateBy2>
-            <span class="text-dark-50"></span>
+            <span class="text-gray-500"></span>
           </ng-template>
-          <span *ngIf="dmSV.checkView(data.read) == false" class="icon-security text-primary icon-18 position-absolute end-0"></span>
+          <span *ngIf="dmSV.checkView(data.read) == false" class="icon-security text-primary icon-18 position-absolute end-0" title="Tài liệu bảo mật"></span>
+          <span *ngIf="data?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+          <span *ngIf="data?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
         </div>
       </div>
     </ng-template>
     <ng-template #file>
       <div title="{{data.fileName}}" class="dms-card-footer d-flex">
         <div class="d-flex flex-column w-100 align-items-center">
-          <div><!-- <div class="d-flex align-items-center"> -->
+          <div>
+            <!-- <div class="d-flex align-items-center"> -->
             <!-- <img alt="" class="mh-15px me-2" src="{{dmSV.getThumbnail(data)}}"> -->
-            <div class="text-gray-600 fw-bold file-name text-box-140">{{data.fileName?data.fileName:data.folderName}}</div>
+            <div class="text-gray-600 fw-bold file-name text-box-140">{{data.fileName?data.fileName:data.folderName}}
+            </div>
           </div>
           <div class="d-flex align-items-center mt-2">
             <div class="d-flex w-100 text-gray-600">
@@ -53,15 +58,17 @@
                 <span [class]="classRating(dmSV.getRating(data.views))"></span>
               </div>
               <div class="d-flex me-3">
-                <span class="me-1 fw-bold">{{dmSV.getViews(data.history)}}</span>
+                <span class="me-1 fw-bold">{{viewc}}</span>
                 <span class="icon-remove_red_eye icon-16"></span>
               </div>
               <div class="d-flex me-3">
-                <span class="me-1 fw-bold">{{dmSV.showDownloadCount(data.countDownload)}}</span>
+                <span class="me-1 fw-bold">{{downc}}</span>
                 <span class="icon-download icon-16"></span>
               </div>
             </div>
-            <span *ngIf="dmSV.checkView(data.read) == false" class="icon-security text-primary icon-18  position-absolute end-0"></span>
+            <span *ngIf="dmSV.checkView(data.read) == false" class="icon-security text-primary icon-18 position-absolute end-0"></span>
+            <span *ngIf="data?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+            <span *ngIf="data?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
           </div>
         </div>
       </div>

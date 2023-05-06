@@ -1,4 +1,5 @@
 import { Permission } from "@shared/models/file.model";
+import { Util } from "codx-core";
 
 export class WP_News{
     public id:string;
@@ -11,7 +12,7 @@ export class WP_News{
     public subject:string;
     public contents:string;
     public subContent:string
-    public image:string;
+    public image:number;
     public shareControl:string
     public publishControl:string;
     public status:string;
@@ -34,15 +35,19 @@ export class WP_News{
     public createdBy:string;
     public modifiedOn:Date;
     public modifiedBy:string;
+    public shareName:string;
+
 
     public constructor(){
-        this.recID = "";
+        this.recID = Util.uid();
         this.newsType = "";
         this.category = "";
-        this.shareControl = "";
+        this.shareControl = "9";
         this.subject = "";
         this.subContent = "";
-        this.image = "";
+        this.refType = "";
+        this.tags = "";
+        this.image = 0;
         this.allowShare = false;
         this.createPost = false;
         this.contents = "";
@@ -50,5 +55,10 @@ export class WP_News{
         this.createdOn = new Date();
         this.startDate = new Date();
         this.endDate = null;
+        this.createdBy = "";
+        this.stop = false;
+        this.views = 0;
+        this.shares = 0;
+        this.shareName = "";
     }
 }

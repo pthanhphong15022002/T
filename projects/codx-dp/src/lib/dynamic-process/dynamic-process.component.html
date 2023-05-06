@@ -1,0 +1,330 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="methodGetList"
+  [views]="views"
+  [button]="showButtonAdd ? button : null"
+  (buttonClick)="click($event)"
+  [dataObj]="dataObj"
+  [moreFuncs]="moreFuncs"
+  [autoLoad]="true"
+  [idField]="idField"
+  [autoSearch]="true"
+  (viewChanged)="viewChanged($event)"
+  (searchChanged)="searchDynamicProcess($event)"
+></codx-views>
+
+<ng-template #templateViewCard let-data>
+  <codx-card-img
+    cardCss="card-process border border-gray-200 rounded-2 h-250px
+      w-225px card-no-body"
+    [imageObjType]="'DP_Processes'"
+    imgCss="w-100 h-150px"
+    [imageObjName]="data?.processName"
+    [imageId]="data?.recID"
+    [imgOn]="data?.modifiedOn"
+    [imageWidth]="1000"
+    [imageReferType]="'avt'"
+    [rootData]="data"
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    [footer]="footerbg"
+    [typeMF]="'hover'"
+    (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)"
+    (dblclick)="doubleClickViewProcess(data)"
+  >
+  </codx-card-img>
+  <ng-template #footerbg let-data>
+    <div class="d-flex bg-footer">
+      <div class="d-flex flex-column w-100">
+        <div class="d-flex justify-content-between">
+          <div style="width: 100%">
+            <div
+              #processName
+              class="fs-6 fw-bold line-clamp line-clamp-1 process-name"
+              [ngbPopover]="setTextPopover(data?.processName)"
+              #p="ngbPopover"
+              [openDelay]="500"
+              (mouseenter)="PopoverDetail($event, p, data)"
+              (mouseleave)="p.close()"
+              placement="bottom right top"
+              [popoverClass]="data.recID"
+
+              [innerHTML]="
+              data?.processName
+                  | formatvalue
+                    : view.formModel
+                    : 'processName'
+                    : processName
+                    : 'Processes'
+                    : 'grvProcesses'
+                  | async
+              "
+            >
+            </div>
+          </div>
+          <div class="me-2">
+            <span *ngIf="!checkPermissionRead(data)" class="icon-eye-off text-primary icon-18" #pCr="ngbPopover"
+            [ngbPopover]="popperRead"
+            (mouseenter)="pCr.open()"
+            (mouseleave)="pCr.close()"
+            placement="left"></span>
+          </div>
+          <div>
+            <span *ngIf="!data.allowCopy" class="icon-privacy_tip text-primary icon-18" #pEd="ngbPopover"
+            [ngbPopover]="popperAllowCopy"
+            (mouseenter)="pEd.open()"
+            (mouseleave)="pEd.close()"
+            placement="right"></span>
+          </div>
+
+        </div>
+        <div class="footerCard-item">
+          <div class="d-flex align-items-center justify-content-between mt-2">
+            <div class="d-flex align-items-center">
+              <span class="icon-adjust icon-16 me-2"></span>
+              <span class="text-gray-700">
+                {{ getNameAppyFor(data?.applyFor) }}
+              </span>
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="icon-access_alarm icon-16 me-2"></span>
+              <span class="text-gray-700">{{ data.createdOn | date : "dd/MM/yyyy" }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="footerCard-item">
+          <div class="d-flex justify-content-start mt-1">
+            <div class="me-2 mt-1">
+              <span class="icon-server icon-14 " #steps="ngbPopover" [ngbPopover]="popperSteps"
+              [openDelay]="500" (mouseenter)="steps.open()" (mouseleave)="steps.close()" placement="right">&nbsp;{{totalSteps(data)}}</span>
+            </div>
+            <div class="me-2 mt-1">
+              <span class="icon-format_list_bulleted icon-14 " #instances="ngbPopover" [ngbPopover]="popperInstances"
+              [openDelay]="500" (mouseenter)="instances.open()"
+              (mouseleave)="instances.close()" placement="right">&nbsp;{{data?.totalInstance ?? 0}}</span>
+            </div>
+            <div class="ms-auto">
+              <codx-imgs
+                [width]="25"
+                [objectId]="getNameUsersStr(data?.permissions)"
+                objectType="AD_Users"
+                [numberImages]="2"
+              >
+              </codx-imgs>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #popperRead>
+  <span>
+    <codx-label
+      [name]="'lblRead'"
+      [formModel]="view.formModel"
+      default="Không có quyền xem"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popperAllowCopy>
+  <span>
+    <codx-label
+    [name]="'lblAllowCopy'"
+    [formModel]="view.formModel"
+    default="Không cho phép sao chép quy trình"
+  ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #editNameProcess>
+  <codx-form
+    [headerText]="TITLENAME"
+    [body]="editNameBody"
+    [footer]="editNameFooter"
+    [dialog]="popupEditName"
+  >
+  </codx-form>
+</ng-template>
+
+<ng-template #editNameBody>
+  <div class="mt-5">
+    <div class="form-group">
+      <div>
+        <codx-label
+          fiedName="processName"
+          [formModel]="view.formModel"
+          default="Tên giai đoạn"
+        ></codx-label>
+      </div>
+      <codx-input
+        field="processName"
+        [formModel]="view.formModel"
+        type="text"
+        [crrValue]="processName"
+        (valueChange)="changeValueInput($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #editNameFooter>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-outline-primary me-2" (click)="popupEditName.close()">
+      <codx-label
+        fiedName="lblCancel"
+        [formModel]="view.formModel"
+        default="Hủy"
+      ></codx-label>
+    </button>
+    <button type="button" class="btn btn-primary"  (click)="editName()">
+      <codx-label
+        name=" lblSuscess"
+        [formModel]="view.formModel"
+        default="Đồng ý"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #headerTemplate>
+  <ng-container *ngIf="view.formModel.funcID == 'DP04'">
+    <div class="nondata-container w-100 mb-2">
+      <div
+        class="d-flex justify-content-between page-heading align-items-center p-2"
+      >
+        <codx-label
+          fiedName="lbl"
+          default="Các mục trong thùng rác sẽ xóa vĩnh
+          viễn trong 30 ngày"
+        ></codx-label>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #popUpQuestionCopy let-dialog="dialogQuestionCopy">
+  <codx-form
+    [body]="bodyFormCopyName"
+    [footer]="footerFormCopyName"
+    [dialog]="dialogQuestionCopy"
+  >
+  </codx-form>
+</ng-template>
+
+<ng-template #bodyFormCopyName>
+  <div class="dynamic-copy">
+    <div class="d-flex align-items-center text-primary">
+      <span class="icon-reorder me-3"></span>
+      <codx-label class="fs-5 fw-bold" default="Chọn các thông tin muốn sao chép:"></codx-label>
+    </div>
+    <div class="mt-3">
+      <div *ngFor="let item of listSelectCoppy; let i = index">
+
+            <div *ngIf="i == 2;else other_content">
+              <div class="form-check py-2">
+              <input
+              class="form-check-input w-20px h-20px rounded-1"
+              type="checkbox"
+              style=" cursor: pointer;"
+              id="toggle" [(ngModel)]="isChecked"
+              [checked]="listClickedCoppy.indexOf(item) >= 0"
+              (change)="checkValueCopy($event, item)"
+            />
+              <span for="toggle" class="form-check-label ms-0" style=" cursor: pointer;"
+              (click)="checkValueCopy($event, item)"
+              >
+                {{ item?.text }}
+              </span>
+              <ng-container>
+                <div *ngIf="isChecked" id="menu" class="pt-3">
+                  <div  *ngFor="let cell of listSelectStepCoppy">
+                    <div class="form-check py-2 d-flex align-items-center">
+                      <input
+                        class="form-check-input w-20px h-20px rounded-1"
+                        type="checkbox"
+                        style=" cursor: pointer;"
+                        [checked]="listClickedCoppy.indexOf(cell) >= 0"
+                        (change)="checkValueCopy($event, cell)"
+                      />
+                      <span class="form-check-label ms-3" style=" cursor: pointer;"
+                      (click)="checkValueCopy($event, cell)"
+                      >
+                        {{ cell?.text }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+          </ng-container>
+
+        </div>
+      </div>
+
+          <ng-template #other_content>
+            <div class="form-check py-2 d-flex align-items-center ">
+              <input
+                class="form-check-input w-20px h-20px rounded-1"
+                type="checkbox"
+                style=" cursor: pointer;"
+                (change)="checkValueCopy($event, item)"
+                [disabled]="i == 0 ? true : false"
+                [checked]="i == 0 ? true : listClickedCoppy.indexOf(item) >= 0"
+              />
+              <span class="form-check-label ms-3"   style=" cursor: pointer;"  (click)="checkValueCopy($event, item)">
+                {{ item?.text }}
+              </span>
+            </div>
+          </ng-template>
+
+      </div>
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #footerFormCopyName>
+  <button type="button" class="btn btn-primary" (click)="saveCopy()">
+    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
+  </button>
+</ng-template>
+
+
+<ng-template #popperSteps>
+  <span>
+    <codx-label name="lblSteps" [formModel]="view.formModel" default="Số lượng
+      giai đoạn"></codx-label>
+  </span>
+</ng-template>
+<ng-template #popperInstances>
+  <span>
+    <codx-label name="lblInstances" [formModel]="view.formModel" default="Số
+      lượng nhiệm vụ"></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #footerButton>
+  <span class="mx-1">
+    <codx-dropdown-select
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      [emptyText]="grvSetup['GroupID']?.headerText"
+      [isMulti]="grvSetup?.GroupID?.multiSelect"
+      type="combobox"
+      [field]="'GroupID'"
+      [refValue]="grvSetup?.GroupID?.referedValue"
+      (valueChange)="valueChangeFilter($event)"
+    ></codx-dropdown-select>
+  </span>
+</ng-template>
+

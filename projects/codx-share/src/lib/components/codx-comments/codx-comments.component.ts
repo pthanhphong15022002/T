@@ -1,9 +1,11 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Post } from '@shared/models/post';
-import { CacheService, ApiHttpService, AuthService, NotificationsService, CallFuncService, Util, DialogModel } from 'codx-core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { CacheService, ApiHttpService, AuthService, NotificationsService, CallFuncService, Util, DialogModel, AuthStore } from 'codx-core';
 import { environment } from 'src/environments/environment';
+import { CodxShareService } from '../../codx-share.service';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { PopupVoteComponent } from '../treeview-comment/popup-vote/popup-vote.component';
+import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
+import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 
 @Component({
   selector: 'codx-comments',
@@ -11,32 +13,27 @@ import { PopupVoteComponent } from '../treeview-comment/popup-vote/popup-vote.co
   styleUrls: ['./codx-comments.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CodxCommentsComponent implements OnInit {
+export class CodxCommentsComponent implements OnInit,OnChanges {
   @Input() data :any = null;
-  @Input() post:any = null;
-  @Input() parentID: string = null;
+  @Input() parent :any = null;
   @Input() refID: string = null;
   @Input() funcID:string ="";
-  @Input() objectID:string ="";
-  @Input() objectType:string = "";
   @Input() formModel:any;
   @Input() new:boolean = false;
-  @Input() dVll: any = {};
   @Output() evtReplyTo = new EventEmitter;
   @Output() evtSendComment = new EventEmitter;
   @Output() evtDeleteComment = new EventEmitter;
-  @Output() evtLoadSubComment = new EventEmitter;
   @Output() evtViewDetail = new EventEmitter;
   //
   @ViewChild('codxATM') codxATM :AttachmentComponent;
   user:any
-  message:string ="";
-  fileUpload:any = null;
+  file:any = null;
   fileDelete:any = null;
   checkVoted = false
-  lstData: any;
-  edit:boolean = false;
+  vllL1480: any;
   date = new Date();
+  grvWP:any = null;
+  isEdit:boolean = false;
   REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
@@ -44,247 +41,317 @@ export class CodxCommentsComponent implements OnInit {
   }
   constructor(
     private api:ApiHttpService,
-    private auth:AuthService,
+    private auth:AuthStore,
     private cache: CacheService,
     private callFuc: CallFuncService,
     private notifySvr:NotificationsService,
+    private codxShareSV:CodxShareService,
     private dt:ChangeDetectorRef
-  ){}
+  )
+  {
+    this.user = this.auth.get();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+  }
   ngOnInit(): void {
-    this.user = this.auth.userValue;
-    this.cache.valueList('L1480').subscribe((res) => {
-      if (res) {
-        this.lstData = res.datas;
-      }
-    });
-    if(!this.new && this.data){
-      this.message = this.data.content;
+    if(this.new)
+    {
+      this.data = new WP_Comments();
+      this.data.refID = this.refID;
+      this.data.parentID = this.parent.recID;
+    }
+    else
+    {
       this.getFileByObjectID();
     }
+    this.cache.valueList('L1480').subscribe((res) => {
+      if (res) {
+        this.vllL1480 = res.datas;
+      }
+    });
+    this.getGrdSetup();
   }
+  // get gridview set up WP_Comments
+  getGrdSetup(){
+    this.cache.gridViewSetup("Comments","grvComments")
+    .subscribe((grv:any) => {
+      if(grv){
+        this.grvWP = grv;
+      }
+    })
+  }
+  // get file by objectID
   getFileByObjectID(){
-    this.api.execSv(
-      "DM","ERM.Business.DM",
-      "FileBussiness",
-      "GetFilesByIbjectIDAsync",
-      this.data.recID)
-    .subscribe((result:any[]) => {
-      if(result.length > 0){
-        let file = result[0];
-        if(file && file.referType == this.REFERTYPE.VIDEO)
-        {
-          file['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${file.recID}?access_token=${this.user.token}`;
-        }
-        this.fileUpload = file; 
-        this.dt.detectChanges();
-    }});
+    if(this.data.attachments > 0){
+      this.api.execSv(
+        "DM",
+        "ERM.Business.DM",
+        "FileBussiness",
+        "GetFilesByIbjectIDAsync",
+        [this.data.recID])
+      .subscribe((res:any[]) => {
+        if(res.length > 0){
+          this.file = res[0];
+          if(this.file.referType == this.REFERTYPE.IMAGE)
+          {
+            this.file["source"] = this.codxShareSV.getThumbByUrl(this.file.url,150);
+          }
+          else if(this.file.referType == this.REFERTYPE.VIDEO){
+            this.file["source"] = `${environment.urlUpload}/${this.file.url}`; 
+          }
+          this.dt.detectChanges();
+      }});
+    }
+    
   }
+  // value change
   valueChange(value:any){
-    let text = value.data.toString().trim();
-    if(text){
-      this.message = text;
-      this.dt.detectChanges();
+    this.data.contents = value.data;
+  }
+  loading:boolean = false;
+  // send comment
+  sendComment(){
+    if(!this.loading)
+    {
+      if (!this.data.contents.trim() && !this.file) {
+        this.notifySvr.notifyCode('SYS009',0,this.grvWP['Comments']['headerText']);
+        return;
+      }
+      this.loading = true;
+      //update
+      if(this.isEdit)
+      {
+        this.updateComment(this.data);
+      }
+      //insert
+      else
+      {
+        this.insertComment(this.data);
+      }
     }
   }
-  sendComment(){
-    if (!this.message.trim() && !this.fileUpload) {
-      this.notifySvr.notifyCode('E0315');
+  // insert comments
+  insertComment(data:any){
+    this.data.refID = this.refID;
+    this.data.parentID = this.parent.recID;
+    if(!this.data.parentID){
+      this.notifySvr.notifyCode('SYS009',0,this.grvWP['ParentID']['headerText']);
+      this.loading = false;
       return;
     }
-    let comment = new Post()
-    if(this.data){
-      comment = this.data;
+    if(!this.data.refID){
+      this.notifySvr.notifyCode('SYS009',0,this.grvWP['RefID']['headerText']);
+      this.loading = false;
+      return;
     }
-    comment.content = this.message;
-    comment.refType = "WP_Comments";
-    comment.refID = this.refID;
-    if(this.parentID){
-      comment.parentID = this.parentID;
+    //có đính kèm file
+    if(this.file){
+      let lstFile = [];
+      lstFile.push(this.file);
+      this.codxATM.objectId = data.recID;
+      this.codxATM.fileUploadList = JSON.parse(JSON.stringify(lstFile));
+      this.codxATM.objectType = "WP_Comments";
+      this.codxATM.saveFilesMulObservable()
+      .subscribe((res:any)=>{
+        if(res){
+          data.attachments = 1;
+          this.api
+          .execSv<any>(
+            'WP',
+            'ERM.Business.WP',
+            'CommentsBusiness',
+            'InsertCommentAsync',
+            [data])
+          .subscribe((res:any) => {
+            if(res)
+            {
+              this.data.recID = Util.uid();
+              this.data.contents = "";
+              this.file = null;
+              this.evtSendComment.emit(res);
+              this.notifySvr.notifyCode("WP034");
+            }
+            else
+              this.notifySvr.notifyCode("SYS023");
+            this.loading = false;
+            this.dt.detectChanges();
+          });
+        }
+        else
+        {
+          this.loading = false;
+          this.notifySvr.notifyCode("SYS023");
+        }
+      });
     }
-    else 
+    else
     {
-      comment.parentID = comment.refID;
-    }
-    let parent = this.new ? this.post : null;
-    this.api
+      this.api
       .execSv<any>(
         'WP',
         'ERM.Business.WP',
         'CommentsBusiness',
-        'PublishCommentAsync',
-        [comment,parent]
-      )
-      .subscribe(async (res) => {
-        if (res) 
-        {
-          if(this.data && this.edit)
-          { // update
-            this.data = res;
-            this.new = !this.new;
-            if(this.fileDelete){
-              this.api.execSv("DM",
-              "ERM.Business.DM",
-              "FileBussiness",
-              "DeleteByObjectIDAsync",
-              [this.data.recID.toString(), 'WP_Comments', true]).subscribe(async (result:any) => {
-                if(result)
-                {
-                  if(this.fileUpload){
-                    this.codxATM.objectId = res.recID;
-                    let files = [];
-                    files.push(this.fileUpload);
-                    this.codxATM.fileUploadList = files;
-                    this.codxATM.objectType = this.objectType;
-                    (await this.codxATM.saveFilesObservable()).subscribe((result:any)=>{
-                      if(result){
-                        this.date = new Date();
-                        this.fileUpload = result.data;
-                        this.dt.detectChanges();
-                        this.evtSendComment.emit(res);
-                        this.notifySvr.notifyCode("SYS006");
-                      }
-                    });
-                  }
-                }
-                else
-                {
-                  let fileName = this.fileUpload.fileName;
-                  this.cache.message("DM006").subscribe((mssg:any) =>{
-                    if(mssg && mssg.defaultName){
-                      let strMssg = Util.stringFormat(mssg.defaultName,fileName);
-                      this.notifySvr.notify(strMssg);
-                    }
-                  });
-                  this.evtSendComment.emit(res);
-                  this.dt.detectChanges();
-                }
-              });
-            }
-            
-          }
-          else
-          { // add
-            this.message = "";
-            if(this.fileUpload){
-              this.codxATM.objectId = res.recID;
-              let files = [];
-              files.push(this.fileUpload);
-              this.codxATM.fileUploadList = files;
-              this.codxATM.objectType = this.objectType;
-              this.cache.message("DM006").subscribe((mssg:any) =>{
-                if(mssg && mssg.defaultName)
-                {
-                  let strMssg = Util.stringFormat(mssg.defaultName,this.fileUpload);
-                  console.log(strMssg);
-                }
-              });
-              (await this.codxATM.saveFilesObservable()).subscribe((result:any)=>{
-                if(result){
-                  this.date = new Date();
-                  this.fileUpload = null;
-                  this.dt.detectChanges();
-                  this.evtSendComment.emit(res);
-                  this.notifySvr.notifyCode("WP034");
-                }
-                else
-                {
-                  let fileName = this.fileUpload.fileName;
-                  this.cache.message("DM006").subscribe((mssg:any) =>{
-                    if(mssg && mssg.defaultName){
-                      let strMssg = Util.stringFormat(mssg.defaultName,fileName);
-                      this.notifySvr.notify(strMssg);
-                    }
-                  });
-                  this.evtSendComment.emit(res);
-                  this.dt.detectChanges();
-                }
-              });
-            }
-            else
-            {
-              this.dt.detectChanges();
-              this.evtSendComment.emit(res);
-              this.notifySvr.notifyCode("WP034");
-            }
-          }
+        'InsertCommentAsync',
+        [data])
+      .subscribe((res:any) => {
+        if(res){
+          this.data.recID = Util.uid();
+          this.data.contents = "";
+          this.file = null;
+          this.evtSendComment.emit(res);
+          this.notifySvr.notifyCode("WP034");
         }
-        else 
+        else
+          this.notifySvr.notifyCode("SYS023");
+        this.loading = false;
+        this.dt.detectChanges();
+      });
+    }
+  }
+  // update comments
+  updateComment(data){
+    //check deleted file
+    if(this.fileDelete)
+    {
+      data.attachments = 0;
+      this.deleteFile(this.fileDelete);
+    }
+    // đính kèm file
+    if(this.file){
+      let lstFile = [];
+      lstFile.push(this.file);
+      this.codxATM.objectId = data.recID;
+      this.codxATM.fileUploadList = JSON.parse(JSON.stringify(lstFile));
+      this.codxATM.saveFilesMulObservable()
+      .subscribe((res:any)=>{
+        if(res){
+          data.attachments = 1;
+          this.api.execSv<any>(
+            'WP',
+            'ERM.Business.WP',
+            'CommentsBusiness',
+            'UpdateCommentAsync',
+            [data])
+            .subscribe((res:boolean) => {
+              if(res)
+              {
+                this.new = false;
+                this.isEdit = false;
+                this.notifySvr.notifyCode("SYS007");
+              }
+              else
+                this.notifySvr.notifyCode("SYS021");
+              this.loading = false;
+              this.dt.detectChanges();
+          });
+        }
+        else
         {
+          this.loading = false;
           this.notifySvr.notifyCode("SYS023");
         }
       });
+    }
+    else
+    {
+      this.api
+      .execSv<any>(
+        'WP',
+        'ERM.Business.WP',
+        'CommentsBusiness',
+        'UpdateCommentAsync',
+        [data])
+        .subscribe((res:boolean) => {
+          if(res){
+            this.new = false;
+            this.isEdit = false;
+            this.notifySvr.notifyCode("SYS007");
+          }
+          else
+            this.notifySvr.notifyCode("SYS021");
+          this.loading = false;
+          this.dt.detectChanges();
+        });
+    }
+  } 
+  //
+  deleteFile(file:any){
+    this.api.execSv(
+      "DM",
+      "ERM.Business.DM",
+      "FileBussiness",
+      "DeleteFileAsync",
+      [file.recID, true])
+      .subscribe();
   }
-
-  editComment(){
-    this.edit = true;
+  //edit comment
+  clickEditComment(){
+    this.isEdit = true;
     this.new = true;
-    this.message = this.data.content;
-    this.data.isEditComment = true;
-    this.dt.detectChanges();
   }
-
+  //delete comment
   deleteComment(){
-    this.notifySvr.alertCode('WP032').subscribe((res) => {
+    this.notifySvr.alertCode('WP032')
+    .subscribe((res) => {
       if (res.event.status == "Y") {
         this.api.execSv(
           "WP", 
           "ERM.Business.WP", 
           "CommentsBusiness", 
-          "DeletePostAsync", 
-          this.data).subscribe((res: number) => {
-            if(res) 
-            { 
-              let obj = {
-                data: this.data,
-                total: res
-              }
-              this.evtDeleteComment.emit(obj);
+          "DeleteCommentAsync", 
+          [this.data.recID])
+          .subscribe((res:boolean) => {
+            if(res)
+            {
+              this.evtDeleteComment.emit(this.data);
+              this.notifySvr.notifyCode('SYS008');
             }
             else
-            {
               this.notifySvr.notifyCode("SYS022");
-            }
           });
       }
     });
   }
-
-  loadSubComment(){
-    this.data.totalSubComment  = 0 ;
-    this.evtLoadSubComment.emit(this.data);
-  }
+  // click upload
   uploadFile(){
     this.codxATM.uploadFile();
   }
-
-  getFileCount(files:any){
-    let file = files.data[0];
-    if(file){
+  // attachement return file
+  selectFile(event:any){
+    if(Array.isArray(event.data)){
+      let file = event.data[0];
       if(file.mimeType.indexOf("image") >= 0 ){
         file['referType'] = this.REFERTYPE.IMAGE;
+        this.file = file;
+        this.file['source'] = file.avatar;
       }
       else if(file.mimeType.indexOf("video") >= 0)
       {
         file['referType'] = this.REFERTYPE.VIDEO;
+        this.file = file;
+        this.file['source'] = file.data.changingThisBreaksApplicationSecurity;
       }
-      else{
+      else
+      {
         file['referType'] = this.REFERTYPE.APPLICATION;
+        this.file = file;
       }
-      this.fileUpload = file;
       this.dt.detectChanges();
     }
   }
-
+  //remove file
   removeFile(){
-    this.fileDelete = this.fileUpload;
-    this.fileUpload = null;
+    if(this.isEdit){
+      this.fileDelete = JSON.parse(JSON.stringify(this.file));
+    }
+    this.file = null;
     this.dt.detectChanges();
   }
-
+  //reply
   replyTo(data) {
     this.evtReplyTo.emit(data);
   }
-
+  //vote 
   votePost(data: any, voteType = null) {
     this.api.execSv(
       "WP",
@@ -312,20 +379,34 @@ export class CodxCommentsComponent implements OnInit {
 
       });
   }
+  // show vote
   showVotes(data: any) {
     let object = {
       data: data,
       entityName: "WP_Comments",
-      vll: this.dVll
     }
     this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", object);
   }
-
-
-  clickViewDetail(file:any){
-    if(this.evtViewDetail){
-      this.evtViewDetail.emit(file);
-    }
+  //click view detail
+  clickViewFile(file:any){
+    let option = new DialogModel();
+      option.FormModel = this.formModel;
+      option.IsFull = true;
+      option.zIndex = 999;
+      this.callFuc.openForm(
+        ViewFileDialogComponent,
+        '',
+        0,
+        0,
+        '',
+        file,
+        '',
+        option
+      );
   }
-
+  // click cancel edit
+  clickCancelEdit(){
+    this.isEdit = false;
+    this.new = false;
+  }
 }

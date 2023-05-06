@@ -6,22 +6,24 @@ import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxCoreModule } from 'codx-core';
 import { GroupPipe } from './pipes/group-filter.pipe';
 import { FormatPipe } from './pipes/format-string.pipe';
 import { SubCategoryComponent } from './sub-category/sub-category.component';
 import { InputTypePipe } from './pipes/input-type.pipe';
 import { ShareSettingPipe } from './pipes/shareSetting.pipe';
+import { BindValuePipe } from './pipes/bind-value.pipe';
 
 export const routes: Routes = [
   {
     path: '',
     component: DynamicSettingComponent,
+
     children: [
       {
         path: ':catagory',
         component: CatagoryComponent,
+        //data: { noReuse: true },
       },
       {
         path: ':catagory/detail',
@@ -38,6 +40,7 @@ const T_Pipe: Type<any>[] = [
   FormatPipe,
   InputTypePipe,
   ShareSettingPipe,
+  BindValuePipe,
 ];
 
 @NgModule({
@@ -47,7 +50,6 @@ const T_Pipe: Type<any>[] = [
     NgbModule,
     FormsModule,
     SharedModule,
-    InlineSVGModule.forRoot(),
     CodxCoreModule,
     RouterModule.forChild(routes),
   ],

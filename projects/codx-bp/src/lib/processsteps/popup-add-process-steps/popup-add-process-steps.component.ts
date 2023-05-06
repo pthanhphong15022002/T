@@ -17,13 +17,19 @@ import {
   CallFuncService,
   NotificationsService,
   UIComponent,
+  Util,
 } from 'codx-core';
 import { FormControlName } from '@angular/forms';
 import { CodxBpService } from '../../codx-bp.service';
-import { BP_ProcessOwners, BP_ProcessSteps } from '../../models/BP_Processes.model';
+import {
+  BP_ProcessOwners,
+  BP_ProcessSteps,
+} from '../../models/BP_Processes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
+//import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { ActivatedRoute } from '@angular/router';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-add-process-steps',
@@ -42,7 +48,7 @@ export class PopupAddProcessStepsComponent
   processSteps: BP_ProcessSteps;
   owners: Array<BP_ProcessOwners> = [];
   ownersClone: any = [];
-
+  process: any;
   user: any;
   data: any;
   funcID: any;
@@ -52,29 +58,36 @@ export class PopupAddProcessStepsComponent
   textChange = '';
   titleActon = '';
   stepType = 'C';
-  vllShare = 'TM003';
+  vllShare = 'BP021';
   readOnly = false;
   isHaveFile = false;
   isNewEmails = true;
   showLabelAttachment = false;
   listUser = [];
-  listOwnerID = [];
-  listOwnerIDClone = [];
   referenceText = [];
   listOwnerDetails = [];
   popover: any;
   formModelMenu: FormModel;
+  funcIDparent: any;
   crrIndex = 0;
-
+  gridViewSetup: any;
+  recIDCopied: any;
+  lockParentId = false;
+  editTodo = -1;
+  stepNameOld = '';
+  linkQuesiton = '';
+  hideExtend = false;
+  folderID = '';
+  isView = false;
   constructor(
     private inject: Injector,
     private bpService: CodxBpService,
-    // private api: ApiHttpService,
     private authStore: AuthStore,
-    // private cache: CacheService,
+    private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
-    private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
+    private notificationsService: NotificationsService,
+    private activedRouter: ActivatedRoute,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -82,18 +95,36 @@ export class PopupAddProcessStepsComponent
     this.processSteps = JSON.parse(
       JSON.stringify(dialog.dataService!.dataSelected)
     );
-
+    this.stepNameOld = this.processSteps['stepName'];
     this.action = dt?.data[0];
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
-
+    this.process = dt?.data[4];
+    this.recIDCopied = dt?.data[5];
+    this.isView = dt?.data[6];
+    if (this.processSteps.parentID && this.action == 'add') {
+      this.lockParentId = true;
+    }
+    this.bpService.funcIDParent.subscribe((func) => (this.funcIDparent = func));
+    if (this.process)
+      this.folderID = this.process.versions.find(
+        (x) => x.versionNo == this.process.versionNo
+      ).recID;
     if (this.stepType) this.processSteps.stepType = this.stepType;
     this.owners = this.processSteps.owners ? this.processSteps.owners : [];
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
 
     this.title = this.titleActon;
+    if (
+      this.processSteps.parentID &&
+      this.stepType != 'A' &&
+      this.stepType != 'P'
+    ) {
+      this.getOwnerByParentID(this.processSteps.parentID);
+    }
+
     if (this.action == 'edit') {
       this.showLabelAttachment =
         this.processSteps.attachments > 0 ? true : false;
@@ -101,26 +132,33 @@ export class PopupAddProcessStepsComponent
       this.processSteps.owners;
       if (this.stepType === 'A') {
         this.getOwnerByParentID(this.processSteps['recID']);
-      } else {
-        this.listOwnerID = this.processSteps.owners.map((item) => {
-          return item?.objectID ? item.objectID : null;
-        });
       }
-      if (this.stepType === 'E' && this.processSteps.reference) {
+      if (
+        (this.stepType === 'E' || this.stepType === 'M') &&
+        this.processSteps.reference
+      ) {
         this.isNewEmails = false;
         this.recIdEmail = this.processSteps.reference;
       }
     }
+    this.cache
+      .gridViewSetup(
+        this.formModelMenu.formName,
+        this.formModelMenu.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
   onInit(): void {
     this.loadData();
-    if (this.listOwnerID.length > 0) {
-      this.getListUser();
-    }
+    this.getListUser();
+
     if (this.action == 'edit') {
       this.ownersClone = JSON.parse(JSON.stringify(this.owners));
-      this.listOwnerIDClone = JSON.parse(JSON.stringify(this.listOwnerID));
     }
   }
 
@@ -133,7 +171,7 @@ export class PopupAddProcessStepsComponent
   handelMail() {
     let data = {
       dialog: this.dialog,
-      formGroup: true,
+      formGroup: null,
       templateID: this.recIdEmail,
       showIsTemplate: true,
       showIsPublish: true,
@@ -154,30 +192,64 @@ export class PopupAddProcessStepsComponent
     popEmail.closed.subscribe((res) => {
       if (res && res.event) {
         this.processSteps['reference'] = res.event?.recID;
-        // this.processSteps["reference"] = "8a37d9b8-a5bc-489e-8b5b-f325d59c8cb4";
+        this.recIdEmail = res.event?.recID ? res.event?.recID : '';
+        this.isNewEmails = this.recIdEmail ? true : false;
       }
     });
   }
 
-  viewDetailSurveys(e) {
-    let url = 'sv/surveys/SVT01';
-    this.codxService.navigate('', url);
+  async checkValidate() {
+    let headerText = [];
+    if (
+      this.stepType != 'P' &&
+      (this.processSteps.parentID == '' || this.processSteps.parentID == null)
+    ) {
+      headerText.push(this.gridViewSetup['ParentID']?.headerText ?? 'ParentID');
+    }
+    if (!this.processSteps.stepName?.trim()) {
+      headerText.push(this.gridViewSetup['StepName']?.headerText ?? 'StepName');
+    }
+    if (this.processSteps.duration <= 0) {
+      headerText.push(this.gridViewSetup['Duration']?.headerText ?? 'Duration');
+    }
+    if (this.owners.length === 0) {
+      headerText.push(this.gridViewSetup['Owners']?.headerText ?? 'Owners');
+    }
+    return headerText;
   }
 
   async saveData() {
+    let headerText = await this.checkValidate();
+    if (headerText.length > 0) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + headerText.join(', ') + '"'
+      );
+      return;
+    }
     this.processSteps.owners = this.owners;
     this.convertReference();
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          this.processSteps.attachments = Array.isArray(res) ? res.length : 1;
-          if (this.action == 'edit') this.updateProcessStep();
-          else this.addProcessStep();
+          var attachments = Array.isArray(res) ? res.length : 1;
+          if (this.action == 'edit') {
+            this.processSteps.attachments += attachments;
+            this.updateProcessStep();
+          } else if (this.action == 'add') {
+            this.processSteps.attachments = attachments;
+            this.addProcessStep();
+          } else {
+            this.processSteps.attachments = attachments;
+            this.copyProcessStep();
+          }
         }
       });
     else {
       if (this.action == 'edit') this.updateProcessStep();
-      else this.addProcessStep();
+      else if (this.action == 'add') this.addProcessStep();
+      else this.copyProcessStep();
     }
   }
 
@@ -186,9 +258,18 @@ export class PopupAddProcessStepsComponent
     if (this.action == 'edit') {
       op.method = 'UpdateProcessStepAsync';
       data = [this.processSteps, this.owners];
-    } else {
+    } else if (this.action == 'add') {
       op.method = 'AddProcessStepAsync';
       data = [this.processSteps, this.owners];
+    } else {
+      op.method = 'CopyProcessStepAsync';
+      data = [
+        this.processSteps,
+        this.owners,
+        this.recIDCopied,
+        this.formModelMenu.formName,
+        this.formModelMenu.gridViewName,
+      ];
     }
     op.data = data;
     return true;
@@ -202,19 +283,24 @@ export class PopupAddProcessStepsComponent
           this.dialog.close(data);
         } else this.dialog.close();
       });
-    // }
+  }
+  copyProcessStep() {
+    this.bpService
+      .copyProcessStep([
+        this.processSteps,
+        this.owners,
+        this.recIDCopied,
+        this.formModelMenu.formName,
+        this.formModelMenu.gridViewName,
+      ])
+      .subscribe((data) => {
+        if (data) {
+          this.dialog.close(data);
+        } else this.dialog.close();
+      });
   }
 
   updateProcessStep() {
-    //đang lỗi
-    // this.dialog.dataService
-    //   .save((option: any) => this.beforeSave(option))
-    //   .subscribe((res) => {
-    //     this.attachment?.clearData();
-    //     if (res) {
-    //       this.dialog.close(res.update);
-    //     } else this.dialog.close();
-    //   });
     this.bpService
       .updateProcessStep([this.processSteps, this.owners])
       .subscribe((data) => {
@@ -235,26 +321,25 @@ export class PopupAddProcessStepsComponent
   valueChangeCbx(e) {
     this.processSteps.parentID = e?.data;
     let parentID = e?.data;
-    // Get owners  
-    if (this.stepType !== "A" && this.stepType !== "P") {
-      this.getOwnerByParentID(parentID, true);
-    }
-  }
-  valueChangeCbxTest() {
-    var e ='cdc08630-2790-45f1-a3af-b1b7b8572156';
-    // var e = 'ffcc6e88-f3c4-4d4a-8463-dfdd6a865c06';
-    this.processSteps.parentID = e;
-    let parentID = e;
-    // Get owners  
-    if (this.stepType !== "A" && this.stepType !== "P") {
+    // Get owners
+    if (this.stepType !== 'A' && this.stepType !== 'P') {
       this.getOwnerByParentID(parentID, true);
     }
   }
 
+  valueChangeRefrenceItem(e, i) {
+    let value = e.target.value;
+    if (value && value.trim() != '') {
+      this.referenceText.splice(i, 1, value);
+    }
+    this.editTodo = -1;
+  }
+
   valueChangeRefrence(e) {
-    if (e?.data && e?.data.trim() != '') {
-      this.textChange = e?.data;
-      // this.enterRefrence();
+    let value = e.target.value;
+    if (value && value.trim() != '') {
+      this.textChange = value;
+      this.enterRefrence();
     }
   }
   enterRefrence() {
@@ -282,13 +367,14 @@ export class PopupAddProcessStepsComponent
   addFile(evt: any) {
     this.attachment.uploadFile();
   }
-  fileAdded(e) {
-    console.log(e);
-  }
+  fileAdded(e) {}
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
+    this.showLabelAttachment = this.isHaveFile;
+  }
+  getfileDelete(event) {
+    event.data.length;
   }
   valueChangeAlert(e) {
     this.processSteps[e?.field] = e.data;
@@ -306,7 +392,7 @@ export class PopupAddProcessStepsComponent
   }
 
   eventApply(e) {
-    if (!e || e?.data.length == 0) return;
+    if (!e || e?.data?.length == 0) return;
     var dataSelected = e?.data;
     var listUser = [];
     dataSelected.forEach((dt) => {
@@ -315,10 +401,11 @@ export class PopupAddProcessStepsComponent
         index = this.owners.findIndex(
           (obj) => obj.objectID == dt.id && obj.objectType == dt.objectType
         );
-      if (index == -1) {
+      if (index == -1 && dt?.id && dt?.objectName) {
         var owner = new BP_ProcessOwners();
         owner.objectType = dt.objectType;
         owner.objectID = dt.id;
+        owner.objectName = dt.text;
         owner.rAIC = 'R';
         this.owners.push(owner);
         this.listOwnerDetails.push({
@@ -334,49 +421,93 @@ export class PopupAddProcessStepsComponent
     if (i != -1) this.owners.splice(i, 1);
   }
 
-  // get list user by userID
+  // get list user
   getListUser() {
-    this.api
-      .execSv<any>(
-        'HR',
-        'ERM.Business.HR',
-        'EmployeesBusiness',
-        'GetListEmployeesByUserIDAsync',
-        JSON.stringify(this.listOwnerID)
-      )
-      .subscribe((res) => {
-        this.listOwnerDetails = res.map(user => {
-          return { id: user.userID, name: user.userName }
-        })
-      });
+    this.listOwnerDetails = this.owners.map((user) => {
+      return { id: user.objectID, name: user.objectName };
+    });
   }
   getOwnerByParentID(id, isChange = false) {
-    this.bpService
-      .getOwnersByParentID([id])
-      .subscribe((data) => {
-        let ownerIDs = [];
-        let owenrs = [];
-        data.forEach((item) => {
-          if (item.objectID) {
-            ownerIDs.push(item.objectID);
-            var owner = new BP_ProcessOwners();
-            owner.objectType = item.objectType;
-            owner.objectID = item.objectID;
-            owner.rAIC = item.raic;
-            owenrs.push(owner);
-          }
-        })
-
-        if (this.action == 'edit' && isChange) {
-          this.owners = [...owenrs, ...this.ownersClone].filter((item, pos, self) => {
-            return self.findIndex(i => i['objectID'] == item['objectID']) == pos;
-          })
-          this.listOwnerID = this.owners.map(item => {return item['objectID']})
-        } else {
-          this.listOwnerID = [...ownerIDs];
-          this.owners = [...owenrs];
+    this.bpService.getOwnersByParentID([id]).subscribe((data) => {
+      let ownerIDs = [];
+      let owenrs = [];
+      data.forEach((item) => {
+        if (item.objectID) {
+          ownerIDs.push(item.objectID);
+          var owner = new BP_ProcessOwners();
+          owner.objectType = item.objectType;
+          owner.objectID = item.objectID;
+          owner.objectName = item.objectName;
+          owner.rAIC = item.raic;
+          owenrs.push(owner);
         }
-        this.getListUser();
       });
+      // thêm owners mới của cha cho con khi sửa
+      if (this.action == 'edit' && isChange) {
+        this.owners = [...owenrs, ...this.ownersClone].filter(
+          (item, pos, self) => {
+            return (
+              self.findIndex((i) => i['objectID'] == item['objectID']) == pos
+            );
+          }
+        );
+      } else {
+        this.owners = [...owenrs];
+      }
+      this.getListUser();
+    });
+  }
+
+  editTodoIndex(i) {
+    this.editTodo = i;
+  }
+  buttonClick(e) {
+    console.log(e);
+  }
+
+  changeQuestion(e) {
+    if (e?.data) {
+      this.processSteps['reference'] = e?.data;
+      let url = window.location.href;
+      let index = url.indexOf('/bp/');
+      if (index != -1)
+        this.linkQuesiton =
+          url.substring(0, index) +
+          Util.stringFormat(
+            '/sv/add-survey?funcID={0}&title={1}&recID={2}',
+            'SVT01',
+            '',
+            e?.data
+          );
+      this.changeDef.detectChanges();
+    }
+  }
+  viewDetailSurveys() {
+    // let url = 'sv/surveys/SVT01';
+    // this.codxService.navigate('', url);
+    // this.codxService.navigate('', 'sv/add-survey', {
+    //   funcID: 'SVT01',
+    //   title: '',
+    //   recID: e,
+    // });
+    if (this.linkQuesiton) window.open(this.linkQuesiton);
+  }
+  extendShow(): void {
+    this.hideExtend = !this.hideExtend;
+    var doc = document.getElementsByClassName('extend-more')[0];
+    var ext = document.getElementsByClassName('ext_button')[0];
+
+    if (!this.hideExtend) {
+      document
+        .getElementsByClassName('codx-dialog-container')[0]
+        .setAttribute('style', 'width: 550px; z-index: 1000;');
+      doc.setAttribute('style', 'display: none');
+      ext.classList.remove('rotate-back');
+    } else {
+      document
+        .getElementsByClassName('codx-dialog-container')[0]
+        .setAttribute('style', 'width: 900px; z-index: 1000;');
+      ext.classList.add('rotate-back');
+    }
   }
 }

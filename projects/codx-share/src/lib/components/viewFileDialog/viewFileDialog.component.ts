@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Input, ElementRef, ViewChild, Optional, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input, ElementRef, ViewChild, Optional, OnChanges, SimpleChanges, HostBinding } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DataItem } from '@shared/models/folder.model';
@@ -7,7 +7,7 @@ import { DocumentEditorContainerComponent , ToolbarService , PrintService } from
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { SpreadsheetComponent } from '@syncfusion/ej2-angular-spreadsheet';
 import { Sorting } from '@syncfusion/ej2-pivotview';
-import { AuthService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
+import { ApiHttpService, AuthService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { PropertiesComponent } from 'projects/codx-dm/src/lib/properties/properties.component';
 import { environment } from 'src/environments/environment';
@@ -65,6 +65,8 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     private callfc: CallFuncService,    
     private elementRef: ElementRef,
     private sanitizer: DomSanitizer,
+    private route: ActivatedRoute,
+    private api: ApiHttpService,
     //private modalService: NgbModal,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
@@ -83,6 +85,8 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     //  var data: any = this.auth.user$;
     // this.user = data.source.value;
   }
+  @HostBinding('class') someField = 'h-100 bg-white';
+
   ngOnChanges(changes: SimpleChanges): void {
     this.isImg = false;
     this.isVideo = false;
@@ -95,7 +99,29 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
       // this.changeDetectorRef.detectChanges();
     }
   }
-
+  ngOnInit(): void {
+    this.route.queryParams
+      .subscribe(params => {
+        if(params && params.id)
+        {
+          this.api.execSv("DM","DM","FileBussiness","GetFilesByIDAsync",params.id).subscribe(item=>{
+            if(item) 
+            {
+              this.dataFile = item;
+              this.data = item;
+              this.getData();
+            }
+          })
+        }
+        else if(params)
+        {
+          this.data = this.dataFile;
+          this.getData();
+        }
+      }
+    );
+    //if(this.data)this.getData(); 
+  }
 
   setShare() {
     if (this.checkShareRight()) {
@@ -211,7 +237,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     if (this.checkDownloadRight()) {   
       this.fileService.downloadFile(id).subscribe(async res => {
         if (res) {                   
-          let blob = await fetch(res).then(r => r.blob());                
+          let blob = await fetch(environment.urlUpload+ "/" + res).then(r => r.blob());                
           let url = window.URL.createObjectURL(blob);
           var link = document.createElement("a");
           link.setAttribute("href", url);
@@ -320,10 +346,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
   closeOpenForm(e: any) {
   }
 
-  ngOnInit(): void {
-    this.data = this.dataFile;
-    //if(this.data)this.getData(); 
-  }
+
   getData()
   {
     this.id = this.dataFile?.recID;
@@ -333,13 +356,13 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     let baseurl: string = environment.apiUrl+'/api/documenteditor/import';
     baseurl += "?sk="+ btoa(this.auth.userValue.userID+"|"+this.auth.userValue.securityKey);
     this.serviceUrl = baseurl;
-    this.dmSV.isChangeDataViewFile.subscribe(item => {
-      if (item) {
-        this.data = item;
-        this.getBookmark();
-        this.changeDetectorRef.detectChanges();
-      }
-    })
+    // this.dmSV.isChangeDataViewFile.subscribe(item => {
+    //   if (item) {
+    //     this.data = item;
+    //     this.getBookmark();
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // })
     this.ext = (this.data.extension || "").toLocaleLowerCase();
     this.fullName = this.data.fileName;
     this.fMoreAction = this.data.moreAction;

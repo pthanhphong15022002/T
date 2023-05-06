@@ -1,0 +1,34 @@
+export class DimensionGroups {
+  active0: any;
+  active1: any;
+  active2: any;
+  active3: any;
+  active4: any;
+  active5: any;
+  active6: any;
+  active7: any;
+  active8: any;
+  active9: any;
+  allowEditKey: any;
+  assign: any;
+  buid: any;
+  createdBy: any;
+  createdOn: any;
+  delete: any;
+  dimGroupID: any;
+  dimGroupName: any;
+  id: any;
+  idField: any;
+  includeTables: any;
+  modifiedBy: any;
+  modifiedOn: any;
+  owner: any;
+  reportItemID: any;
+  reportItemName: any;
+  separator: any;
+  share: any;
+  stop: any;
+  unbounds: any;
+  updateColumns: any;
+  write: any;
+}

@@ -1,0 +1,135 @@
+<div class="container d-flex flex-column">
+  <div class="title">
+    <div class="row">
+      <div class="col-4"></div>
+      <div class="col-4">
+        <codx-label
+          [default]="'Đơn hàng'"
+          [fiedName]=""
+          [formModel]="orderFormodel"
+        ></codx-label>
+      </div>
+      <div class="col-4">
+        <codx-input [type]="'number'" [min]="1"> </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="">
+    <codx-gridview
+      *ngIf="orderRecID"
+      #gridView
+      [columnsGrid]="moduleDetailGridClmn"
+      [service]="'Tenant'"
+      [assemblyName]="'ERM.Business.Tenant'"
+      [className]="'OrderModulesBusiness'"
+      [method]="'GetListBoughtModuleByOrderIDAsync'"
+      [entityName]="orderFormodel.entityName"
+      [predicates]="'TransID=@0'"
+      [dataValues]="orderRecID"
+      [pageSize]="20"
+      [rowHeight]="50"
+      height="500px"
+    ></codx-gridview>
+  </div>
+  <div class="">footer</div>
+</div>
+
+<ng-template #moduleTmpl let-data>
+  <div class="module-info d-flex" *ngIf="data.refID == null">
+    <codx-temp-full
+      cardCss="card-template mb-3"
+      [typeMF]="'hover'"
+      [imageSrc]="data?.image"
+      [titleLine]="2"
+      typeMF="hover"
+      [dataItem]="data"
+    >
+    </codx-temp-full>
+    <div class="txtInfo">
+      <div class="">
+        <codx-label name="lblMDTitle" [default]="data.moduleName"> </codx-label>
+      </div>
+      <div class="operator d-flex">
+        <codx-label [name]="'operator'" [default]="'Nhân viên nghiệp vụ'">
+        </codx-label>
+        <span>
+          {{
+            ": " +
+              data.price +
+              " " +
+              data.currency +
+              "/" +
+              data.conversion +
+              " " +
+              data.umid +
+              " / "
+          }}
+        </span>
+        <codx-vll
+          [name]="'L1449'"
+          [value]="data?.interval"
+          [showText]="true"
+          [showBgColor]="false"
+        >
+        </codx-vll>
+      </div>
+      <div class="employee" *ngIf="data.childModule != null">
+        <codx-label [name]="'employee'" [default]="'Nhân viên thường'">
+        </codx-label>
+        <span>
+          {{
+            ": " +
+              data.childModule.price +
+              " " +
+              data.childModule.currency +
+              "/" +
+              data.childModule.conversion +
+              " " +
+              data.childModule.umid +
+              " / "
+          }}
+        </span>
+        <codx-vll
+          [name]="'L1449'"
+          [value]="data?.childModule?.interval"
+          [showText]="true"
+          [showBgColor]="false"
+        >
+        </codx-vll>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #moduleQuantityTmpl let-data>
+  <ng-container *ngIf="data">
+    <codx-input
+      [type]="'number'"
+      [crrValue]="data.quantity"
+      (valueChange)="changeModuleQuantity(data.moduleID, false, $event)"
+      [min]="0"
+    >
+    </codx-input>
+  </ng-container>
+</ng-template>
+
+<ng-template #childModuleQuantityTmpl let-data>
+  <ng-container *ngIf="data.childModule">
+    <codx-input
+      [type]="'number'"
+      [crrValue]="data.childModule.quantity"
+      (valueChange)="changeModuleQuantity(data.moduleID, true, $event)"
+      [min]="0"
+    >
+    </codx-input>
+  </ng-container>
+</ng-template>
+
+<ng-template #moduleNetAmt let-data>
+  <span>
+    {{
+      +data.quantity * +data.price +
+        +(+data.childModule?.quantity) * +data.childModule?.price
+    }}
+  </span>
+</ng-template>

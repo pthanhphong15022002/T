@@ -28,12 +28,21 @@ export class HomeComponent extends UIComponent implements OnInit {
   className = 'SurveysBusiness';
   method = 'GetAsync';
   functionList: any;
-
+  formats = {
+    item: 'Title',
+    fontStyle: 'Arial',
+    fontSize: '13',
+    fontColor: 'black',
+    fontFormat: 'B',
+  };
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('lstView') lstView: CodxListviewComponent;
 
   constructor(private injector: Injector, private change: ChangeDetectorRef) {
     super(injector);
+  }
+
+  onInit(): void {
     this.router.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
     });
@@ -41,8 +50,6 @@ export class HomeComponent extends UIComponent implements OnInit {
       if (res) this.functionList = res;
     });
   }
-
-  onInit(): void {}
 
   ngAfterViewInit() {
     this.views = [
@@ -61,11 +68,22 @@ export class HomeComponent extends UIComponent implements OnInit {
 
   clickMF(e, data) {}
 
-  add() {
-    this.codxService.navigate('', 'sv/pop-add-survey');
+  createNewSurvey() {
+    this.view.dataService.addNew().subscribe((res) => {
+      res.title = "Mẫu không có tiêu đề"
+      this.api.execSv("SV","SV","SurveysBusiness","SaveAsync",[res,this.formats,true]).subscribe((item : any)=>{
+        this.codxService.navigate('', 'sv/add-survey', {
+          funcID: this.funcID,
+          recID: item?.result?.recID,
+        });
+      })
+    });
   }
 
   update(item) {
-    this.codxService.navigate('', 'sv/pop-add-survey', { funcID: this.funcID, recID: item.recID });
+    this.codxService.navigate('', 'sv/add-survey', {
+      funcID: this.funcID,
+      recID: item.recID,
+    });
   }
 }

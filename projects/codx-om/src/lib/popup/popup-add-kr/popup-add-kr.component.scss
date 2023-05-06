@@ -1,0 +1,27 @@
+.w-40px{
+    width: 40px !important;
+}
+.w-60px{    
+    width: 60px !important;
+}
+
+.comment-text {
+    font-style: italic;
+    cursor: pointer;
+}
+.comment-text:hover {
+    color: var(--text-primary) !important;
+    
+}
+.w-100px{
+    width: 100px !important;
+}
+.h-kr-add{
+    height: calc(100% - 85px);
+}
+.h-kr-add2{
+    height: calc(100% - 105px);
+    overflow: auto;
+    margin-top: 20px;
+    
+}

@@ -65,22 +65,41 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
           applyFor = '1';
           this.tabActive = 3;
         }
-        this.api
-          .call('ERM.Business.FD', 'PoliciesBusiness', 'GetPolicyAsync', [
-            category,
-            this.cardtype,
-            applyFor,
-            this.recID,
-            this.isGroup
-          ])
-          .subscribe((res) => {
-            if (res && res.msgBodyData[0]) {
-              var data = res.msgBodyData[0] as [];
-              this.policy = data['Policie'];
-              this.lstPolicyLine = data['policyLine'];
-              this.changedr.detectChanges();
-            }
-          });
+        if (this.isGroup == 0) {
+          this.lstPolicyLine = [];
+          this.api
+            .call('ERM.Business.FD', 'PoliciesBusiness', 'GetPolicyAsync', [
+              category,
+              this.cardtype,
+              applyFor,
+              this.recID,
+              this.isGroup,
+            ])
+            .subscribe((res) => {
+              if (res && res.msgBodyData[0]) {
+                var data = res.msgBodyData[0] as [];
+                this.policy = data['Policie'];
+                this.changedr.detectChanges();
+              }
+            });
+        } else {
+          this.api
+            .call('ERM.Business.FD', 'PoliciesBusiness', 'GetPolicyAsync', [
+              category,
+              this.cardtype,
+              applyFor,
+              this.recID,
+              this.isGroup,
+            ])
+            .subscribe((res) => {
+              if (res && res.msgBodyData[0]) {
+                var data = res.msgBodyData[0] as [];
+                this.policy = data['Policie'];
+                this.lstPolicyLine = data['policyLine'];
+                this.changedr.detectChanges();
+              }
+            });
+        }
       }
     });
   }

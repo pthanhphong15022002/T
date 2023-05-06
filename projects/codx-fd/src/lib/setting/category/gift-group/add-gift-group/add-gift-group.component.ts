@@ -42,13 +42,16 @@ export class AddGiftGroupComponent extends UIComponent implements OnInit {
     super(injector);
     this.user = this.authStore.get();
     this.dialog = dialog;
+
     this.dataUpdate = JSON.parse(
       JSON.stringify(dialog.dataService.dataSelected)
     );
+
     this.formModel = dialog.formModel;
     this.isModeAdd = dt.data?.isModeAdd;
     this.title = dt.data?.headerText;
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
+
       if (res) {
         this.header =
           this.title +
@@ -59,13 +62,41 @@ export class AddGiftGroupComponent extends UIComponent implements OnInit {
     });
   }
 
-  onInit(): void {}
+  onInit(): void { }
 
   valueChange(e) {
     if (e) {
       this.dataUpdate[e.field] = e.data;
     }
   }
+
+  // onSave() {
+  //   var formGroup = this.form.formGroup.controls;
+  //   if (
+  //     formGroup.giftID.status == 'VALID' &&
+  //     formGroup.giftName.status == 'VALID' &&
+  //     formGroup.memo.status == 'VALID'
+  //   ) {
+  //     this.dialog.dataService
+  //       .save((option: any) => this.beforeSave(option), 0)
+  //       .subscribe((res) => {
+  //         if (this.isModeAdd) {
+  //           if (res && res.save[2]) this.dialog.close(res.save[2]);
+  //           else this.notification.notifyCode('SYS023');
+  //         } else {
+  //           if (res && res.update[2]) this.dialog.close(res.update[2]);
+  //           else this.notification.notifyCode('SYS007');
+  //         }
+  //       });
+  //   } else this.fdSV.notifyInvalid(this.form.formGroup, this.formModel);
+  // }
+
+  // beforeSave(option) {
+  //   option.methodName = 'AddEditGiftGroupAsync';
+  //   if (this.user.userName) this.dataUpdate.createdName = this.user.userName;
+  //   option.data = [this.dataUpdate, this.isModeAdd];
+  //   return true;
+  // }
 
   onSave() {
     var formGroup = this.form.formGroup.controls;
@@ -74,24 +105,38 @@ export class AddGiftGroupComponent extends UIComponent implements OnInit {
       formGroup.giftName.status == 'VALID' &&
       formGroup.memo.status == 'VALID'
     ) {
-      this.dialog.dataService
-        .save((option: any) => this.beforeSave(option), 0)
+      if(this.isModeAdd)
+      {
+        this.dialog.dataService
+        .save((option: any) => this.beforeAdd(option))
         .subscribe((res) => {
-          if (this.isModeAdd) {
-            if (res && res.save[2]) this.dialog.close(res.save[2]);
+          if (res && res.save[2]) this.dialog.close(res.save[2]);
             else this.notification.notifyCode('SYS023');
-          } else {
-            if (res && res.update[2]) this.dialog.close(res.update[2]);
-            else this.notification.notifyCode('SYS007');
-          }
         });
+      }
+      else
+      {
+        this.dialog.dataService
+        .save((option: any) => this.beforeEdit(option))
+        .subscribe((res) => {
+          if (res && res.update[2]) this.dialog.close(res.update[2]);
+            else this.notification.notifyCode('SYS007');
+        });
+      }
     } else this.fdSV.notifyInvalid(this.form.formGroup, this.formModel);
   }
 
-  beforeSave(option) {
-    option.methodName = 'AddEditGiftGroupAsync';
+  beforeAdd(option) {
+    option.methodName = 'AddGiftGroupAsync';
     if (this.user.userName) this.dataUpdate.createdName = this.user.userName;
-    option.data = [this.dataUpdate, this.isModeAdd];
+    option.data = [this.dataUpdate];
+    return true;
+  }
+
+  beforeEdit(option){
+    option.methodName = 'EditGiftGroupAsync';
+    if (this.user.userName) this.dataUpdate.createdName = this.user.userName;
+    option.data = [this.dataUpdate];
     return true;
   }
 }

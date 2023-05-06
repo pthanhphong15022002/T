@@ -83,7 +83,7 @@ export class ViewDetailCoinsComponent extends UIComponent implements OnInit {
   onInit(): void {
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   onLoading(e) {
     this.columnsGrid = [

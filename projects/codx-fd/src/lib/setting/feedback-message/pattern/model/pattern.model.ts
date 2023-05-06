@@ -12,4 +12,5 @@ export class Pattern {
     stop: boolean;
     updateColumn: string;
     modifiedOn: string;
+    imageSrc: string;
 }

@@ -10,6 +10,7 @@ import {
 } from '@syncfusion/ej2-angular-diagrams';
 import { DataManager } from '@syncfusion/ej2-data';
 import { ApiHttpService, CallFuncService, NotificationsService } from 'codx-core';
+import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'lib-reportingline-orgchart',
@@ -42,7 +43,7 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
   @ViewChild('diagram') diagram: any;
 
   datasetting: any = null;
-  data:any = null
+  data:any = null;
 
   constructor(
     private api:ApiHttpService,
@@ -69,7 +70,7 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
   }
 
   public connDefaults(connector: ConnectorModel,diagram: Diagram): ConnectorModel {
-    connector.targetDecorator!.shape = 'None';
+    connector.targetDecorator.shape = 'None';
     connector.type = 'Orthogonal';
     connector.constraints = 0;
     connector.cornerRadius = 5;
@@ -115,51 +116,37 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
     }
   }
 
-  getDataPositionByID(positionID:string){
-    this.api.execSv("HR",
-    "ERM.Business.HR",
-    "PositionsBusiness",
-    "GetDataOrgChartAsync",
-    [positionID]
-    )
-    .subscribe((res:any) =>{
-      if(res)
-      {
-        this.data = res;
-        this.setDataOrg(this.data);
-      }
-    });
+  getDataPositionByID(positionID:string)
+  {
+    if(positionID){
+      this.api.execSv("HR",
+      "ERM.Business.HR",
+      "PositionsBusiness",
+      "GetDataOrgChartAsync",
+      [positionID]
+      )
+      .subscribe((res:any) =>{
+        if(res)
+        {
+          this.data = res;
+          this.setDataOrg(this.data);
+        }
+      });
+    }
+    
   }
   orgClick(event){
 
   }
 
-  showEmploy(pemp, emp){
-
+  showEmploy(employes:any[]){
+    debugger
+    
   }
 
   onSearch($event){
     
   }
-
-  isClick = false;
-  classIcon(dt: any, ele: HTMLElement): string {
-    if (this.isClick) {
-      var cls = ele.classList;
-      if (cls.contains('icon-do_disturb_on')) {
-        cls.remove('icon-do_disturb_on');
-        return 'icon-add_circle_outline';
-      } else {
-        cls.remove('icon-add_circle_outline');
-        return 'icon-do_disturb_on';
-      }
-    } else {
-      var exist = this.checkExistParent(dt.positionCode);
-      if (exist) return 'icon-do_disturb_on';
-      else return 'icon-add_circle_outline';
-    }
-  }
-
   mouseUp(dataNode: any, evt: any) {
     this.positionID = dataNode.positionID;
     var exist = this.checkExistParent(this.positionID);
@@ -169,16 +156,68 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
     }
   }
 
-  loadDataChild(dataNode: any) {
-    this.positionID = dataNode.positionID;
-    var exist = this.checkExistParent(this.positionID);
-    if (!exist) {
-      this.getDataPositionByID(this.positionID);
+  loadDataChild(node: any,element: HTMLElement) {
+    let result = [];
+    if(node.loadChildrent){
+      result = this.data.filter(e => e.reportTo != node.positionID);
+      if(result.length > 0)
+      {
+        result.forEach(element => {
+          if(element.positionID == node.positionID)
+          {
+            element.loadChildrent = false;
+          }
+        });
+        this.data = JSON.parse(JSON.stringify(result))
+      }
+      this.setDataOrg(this.data);
     }
+    else{
+      if(node.positionID)
+      {
+        this.api.execSv(
+          "HR",
+          "ERM.Business.HR",
+          "PositionsBusiness",
+          "GetChildOrgChartAsync",
+          [node.positionID]
+          )
+          .subscribe((res:any) =>{
+            if(res)
+            {
+              result = this.data.concat(res);
+              if(result.length > 0)
+              {
+                result.forEach(element => {
+                  if(element.positionID == node.positionID)
+                  {
+                    element.loadChildrent = true;
+                  }
+                });
+                this.data = JSON.parse(JSON.stringify(result))
+              }
+              this.setDataOrg(this.data);
+            }
+          });
+      }
+    }
+    
   }
   checkExistParent(parentID: string): boolean {
     var dt = this.data.filter((x) => x.positionID === parentID);
     if (dt && dt.length > 0) return true;
     return false;
+  }
+
+  removeNode(id:string,result:any[] = null): any[] | null{
+    let data  = this.data.filter(e => e.reportTo === id)
+    if(data?.length > 0)
+    {
+      result = result.concat(data);
+      data.forEach(element => {
+        this.removeNode(element.positionID,result);
+      });
+    }
+    return result;
   }
 }

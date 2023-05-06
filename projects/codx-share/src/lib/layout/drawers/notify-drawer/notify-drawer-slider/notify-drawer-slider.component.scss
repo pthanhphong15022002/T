@@ -1,7 +1,11 @@
-.dots {
-    height: 6px;
-    width: 6px;
-    background-color: rgb(19, 101, 224);
-    border-radius: 50%;
-    display: inline-block;
-  }
+.codx-notification-filter {
+  position: absolute;
+  display: flex;
+  justify-content: end;
+  right: 52px;
+  top: 18px;
+}
+
+.codx-notification-filter .btn {
+  border-radius: 20px !important;
+}

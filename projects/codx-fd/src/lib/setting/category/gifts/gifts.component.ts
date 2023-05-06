@@ -100,6 +100,7 @@ export class GiftsComponent extends UIComponent implements OnInit {
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
         this.functionList = res;
+        console.log('fc:', res);
       }
     });
   }
@@ -185,6 +186,36 @@ export class GiftsComponent extends UIComponent implements OnInit {
           if (e?.event?.data) e.event.data.modifiedOn = new Date();
           this.view.dataService.update(e.event?.data).subscribe();
           this.changedr.detectChanges();
+        });
+      });
+  }
+
+  copy(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    var obj = {
+      formType: 'copy',
+      headerText: this.headerText,
+    };
+    this.view.dataService
+      .copy()
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(AddGiftsComponent, obj, option);
+        this.dialog.closed.subscribe((e: any) => {
+          if (e?.event?.data) {
+            this.view.dataService.add(e.event?.data, 0).subscribe();
+            this.changedr.detectChanges();
+          }
+          if (e?.event?.file) {
+            e.event.data.modifiedOn = new Date();
+            this.view.dataService.update(e.event?.data).subscribe();
+            this.changedr.detectChanges();
+          }
         });
       });
   }
@@ -286,6 +317,7 @@ export class GiftsComponent extends UIComponent implements OnInit {
   }
 
   openFormWarehouse(data) {
+    console.log(data);
     var obj = {
       data: data,
     };
@@ -324,6 +356,9 @@ export class GiftsComponent extends UIComponent implements OnInit {
           break;
         case 'SYS03':
           this.edit(data);
+          break;
+        case 'SYS04':
+          this.copy(data);
           break;
         case 'FED204211':
           this.openFormWarehouse(data);

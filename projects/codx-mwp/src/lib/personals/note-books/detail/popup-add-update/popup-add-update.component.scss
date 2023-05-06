@@ -28,17 +28,14 @@ app-popup-add-update {
         top: 50px;
         overflow: auto;
     }
+}
 
-    .dot-black {
-        width: 4px;
-        height: 4px;
-        display: block;
-        border-radius: 3px;
-        background-color: rgb(51, 53, 54);
-
-    }
-
-
+.dot-black {
+    width: 4px;
+    height: 4px;
+    display: block;
+    border-radius: 3px;
+    background-color: rgb(51, 53, 54);
 }
 
 .notebook-right {

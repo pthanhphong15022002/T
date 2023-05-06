@@ -1,0 +1,89 @@
+<codx-form
+  [headerText]="header"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="formModel"
+  #form
+>
+  <ng-template #body>
+    <div class="w-100 pb-6">
+      <span>{{ dataSurvey?.title }}</span>
+    </div>
+    <span class="color-blue pointer" (click)="chooseOtherTemplate()">
+      <codx-label
+        fiedName="Save"
+        [formModel]="form.formModel"
+        default="Thay đổi biểu mẫu"
+      ></codx-label
+    ></span>
+    <hr />
+    <codx-input
+      type="checkBox"
+      field="status"
+      labelPosition="After"
+      class="test-check"
+      label="Chọn tất cả"
+      (valueChange)="valueChangeAll($event)"
+    >
+    </codx-input>
+    <hr />
+    <ng-container #tempDataQuestion>
+      <div *ngFor="let itemSession of dataQuestion">
+        <codx-input
+          type="checkBox"
+          field="status"
+          labelPosition="After"
+          class="test-check"
+          [checked]="itemSession?.check == '1' || itemSession?.check == 'true'"
+          [label]="'Mục: ' + itemSession.question"
+          (valueChange)="valueChangeSession($event, itemSession.seqNo)"
+        >
+        </codx-input>
+        <br />
+        <div
+          *ngFor="let itemQuestion of itemSession.children"
+          class="pt-6 pb-6"
+        >
+          <div class="w-100">
+            <codx-input
+              type="checkBox"
+              field="status"
+              labelPosition="After"
+              class="test-check fs-16px"
+              [checked]="
+                itemQuestion?.check == '1' || itemQuestion?.check == 'true'
+              "
+              [label]="itemQuestion.question"
+              (valueChange)="
+                valueChangeQuestion($event, itemSession, itemQuestion)
+              "
+            >
+            </codx-input>
+          </div>
+          <span class="placeholder ps-8">{{
+            answerType[itemQuestion.answerType]
+          }}</span>
+          <br />
+        </div>
+        <hr />
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn btn-primary ms-1"
+        (click)="onSave()"
+        [disabled]="disableSave"
+      >
+        <codx-label
+          fiedName="Save"
+          [formModel]="form.formModel"
+          default="Nhập câu hỏi()"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

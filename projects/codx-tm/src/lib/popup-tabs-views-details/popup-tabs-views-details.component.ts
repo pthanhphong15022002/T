@@ -20,7 +20,7 @@ import { TabModelSprints } from '../models/TM_Sprints.model';
   encapsulation: ViewEncapsulation.None,
 })
 export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
-  title = 'Danh sách công việc';
+  title = '';
   createdByName: any;
   dialog: DialogRef;
   active = 1;
@@ -75,15 +75,25 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
       this.projectID = this.data?.projectID;
       this.resources = this.data?.resources;
       this.iterationID = this.data?.iterationID;
+      if (this.data?.iterationType == '0') {
+        this.all = [
+          { name: 'Dashboard', textDefault: 'Dashboard', isActive: false },
+          { name: 'Tasks', textDefault: 'Công việc', isActive: true },
+          { name: 'History', textDefault: 'Lịch sử', isActive: false },
+          { name: 'Comments', textDefault: 'Bình luận', isActive: false },
+        ];
+      }
     }
 
     if (this.data?.meetingID) {
-      this.getListRecID(this.data?.meetingID);
+     // this.getListRecID(this.data?.meetingID);  bỏ dùng RefNo
+     
       this.createdByName = this.data?.userName;
       this.nameObj = this.data?.meetingName;
       this.projectID = this.data?.refID;
       this.resources = this.dataObj?.resources;
       this.meetingID = this.data?.meetingID;
+      this.dataObjAssign ={sessionID : this.meetingID}
       this.name = 'Comments';
       this.all = [
         {
@@ -96,8 +106,8 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
         { name: 'Tasks', textDefault: 'Công việc', isActive: false },
       ];
 
-      this.showButtonAdd = false;
-      this.showMoreFunc = false;
+      this.showButtonAdd = true;
+      this.showMoreFunc = true;
     }
 
     this.dialog = dialog;

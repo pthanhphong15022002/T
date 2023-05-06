@@ -1,0 +1,16 @@
+.btnsavenew{
+    height: 35px;
+    border: 1px solid #FF6E03;
+    background-color: white;
+    color: #FF6E03;
+    font-weight: bold;
+    border-radius: 7px;;
+  }
+  .btnsave{
+    height: 35px;
+    width: 62px;
+    border-radius: 5px;
+    background-color: #FF4900;
+    border: none;
+    color: white;
+  }

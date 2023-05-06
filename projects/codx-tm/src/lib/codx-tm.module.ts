@@ -21,13 +21,15 @@ import { CommonModule } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
-import { InlineSVGModule } from 'ng-inline-svg';
 import {
   AccumulationChartAllModule,
   AccumulationTooltipService,
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
-import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
+import {
+  ProgressAnnotationService,
+  ProgressBarModule,
+} from '@syncfusion/ej2-angular-progressbar';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SprintsComponent } from './sprints/sprints.component';
@@ -45,39 +47,41 @@ import { TaskByProjectsComponent } from './reports/task-by-projects/task-by-proj
 import { ProjectChartComponent } from './reports/task-by-projects/project-chart/project-chart.component';
 import { CalendarComponent } from './setting/calendar/calendar.component';
 import { FormsModule } from '@angular/forms';
-import { MyDashboardComponent } from './dashboard/mydashboard/mydashboard.component';
-import { TeamDashboardComponent } from './dashboard/teamdashboard/teamdashboard.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
-import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
+import {
+  AnnotationsService,
+  CircularGaugeModule,
+} from '@syncfusion/ej2-angular-circulargauge';
 import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
-import { PopupAddMeetingComponent } from './tmmeetings/popup-add-meeting/popup-add-meeting.component';
-import { DeptDashboardComponent } from './dashboard/deptdashboard/deptdashboard.component';
-import { CompDashboardComponent } from './dashboard/compdashboard/compdashboard.component';
-import { ViewListMeetComponent } from './tmmeetings/view-list-meet/view-list-meet.component';
-import { MeetingDetailComponent } from './tmmeetings/meeting-detail/meeting-detail.component';
 import { TaskExtendsComponent } from './taskextends/taskextends.component';
-import { TemplateComponent } from './tmmeetings/template/template.component';
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.component';
 import { DashboardComponent } from './sprints/sprintdetails/dashboard/dashboard.component';
-import { ViewWorkComponent } from './tmmeetings/view-work/view-work.component';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
-import { PopupStatusMeetingComponent } from './tmmeetings/popup-status-meeting/popup-status-meeting.component';
 import { CoreModule } from '@core/core.module';
 import { PopupTabsViewsDetailsComponent } from './popup-tabs-views-details/popup-tabs-views-details.component';
-import { PopupRescheduleMeetingComponent } from './tmmeetings/popup-reschedule-meeting/popup-reschedule-meeting.component';
-import { PopupAddResourcesComponent } from './tmmeetings/popup-add-resources/popup-add-resources.component';
+
+import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
+import { TMDashboardComponent } from './tmdashboard/tmdashboard.component';
+import { LayoutNoToolbarComponent } from './tmdashboard/_noToolbar/_noToolbar.component';
+import { DashboardContentComponent } from './tmdashboard/dashboard-content/dashboard-content.component';
+import { MeetingDetailComponent } from 'projects/codx-share/src/lib/components/codx-tmmeetings/meeting-detail/meeting-detail.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-      // {
-      //   path: 'tasks/:funcID',
-      //   component: CodxTasksComponent,
-      // },
+      {
+        path: 'report/:funcID',
+        component: ReportsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
+      },
       {
         path: 'tasks/:funcID',
         component: TasksComponent,
@@ -95,23 +99,6 @@ export const routes: Routes = [
         path: 'meeting/:funcID',
         component: TMMeetingsComponent,
       },
-      {
-        path: 'mydashboard/:funcID',
-        component: MyDashboardComponent,
-      },
-      {
-        path: 'teamdashboard/:funcID',
-        component: TeamDashboardComponent,
-      },
-      {
-        path: 'deptdashboard/:funcID',
-        component: DeptDashboardComponent,
-      },
-      {
-        path: 'compdashboard/:funcID',
-        component: CompDashboardComponent,
-      },
-
       // {
       //   path: 'reports',
       //   component: ReportsComponent,
@@ -194,6 +181,24 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: '',
+    component: LayoutNoToolbarComponent,
+    children: [
+      {
+        path: 'tmdashboard/:funcID',
+        component: TMDashboardComponent,
+      },
+      // {
+      //   path: 'teamdashboard/:funcID',
+      //   component: TMDashboardComponent,
+      // },
+      // {
+      //   path: 'assigndashboard/:funcID',
+      //   component: TMDashboardComponent,
+      // },
+    ],
+  },
 ];
 
 const T_Component: Type<any>[] = [
@@ -221,30 +226,20 @@ const T_Component: Type<any>[] = [
   PopupAddDayoffsComponent,
   PopupShareSprintsComponent,
   TasksComponent,
-  MyDashboardComponent,
-  TeamDashboardComponent,
-  DeptDashboardComponent,
-  CompDashboardComponent,
+  TMDashboardComponent,
   TMMeetingsComponent,
-  PopupAddMeetingComponent,
-  ViewListMeetComponent,
-  MeetingDetailComponent,
   TaskExtendsComponent,
-  TemplateComponent,
   SprintDetailsComponent,
-  ViewWorkComponent,
   DashboardComponent,
-  PopupStatusMeetingComponent,
   PopupTabsViewsDetailsComponent,
-  PopupRescheduleMeetingComponent,
-  PopupAddResourcesComponent
+  LayoutNoToolbarComponent,
+  DashboardContentComponent,
 ];
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     OverlayModule,
-    InlineSVGModule.forRoot(),
     HttpClientModule,
     CodxCoreModule,
     CoreModule,
@@ -254,6 +249,7 @@ const T_Component: Type<any>[] = [
     AccumulationChartAllModule,
     ProgressBarModule,
     CircularGaugeModule,
+    TreeMapModule,
     DatePickerModule,
     TabModule,
     FormsModule,
@@ -263,7 +259,11 @@ const T_Component: Type<any>[] = [
   ],
   exports: [RouterModule],
   declarations: T_Component,
-  providers: [AccumulationTooltipService],
+  providers: [
+    AccumulationTooltipService,
+    ProgressAnnotationService,
+    AnnotationsService,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class TMModule {

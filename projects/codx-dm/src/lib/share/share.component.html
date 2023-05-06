@@ -15,14 +15,15 @@
                 </a>
             </div>
             <div class="request-to mt-4">
-                <div class="d-flex justify-content-between border-bottom py-1">
+
+                <div *ngIf="!isShare" class="d-flex justify-content-between border-bottom py-1">
                     <div class="d-flex align-items-center flex-grow-1">
                         <div class="w-50px">
-                            <codx-label fiedName="fromTo" [formModel]="formModel" [default]="isShare ? 'Đến' : 'Cho'"
+                            <codx-label fiedName="fromTo" [formModel]="formModel" [default]="'Cho'"
                                 class="fw-bold"></codx-label>:
                         </div>
                         <div class="send-group">
-                            <ng-container *ngFor="let perm of toPermission; index as i;">
+                            <ng-container *ngFor="let perm of byPermission; index as i;">
                                 <div class="user-mini-item">
                                     <div class="d-flex align-items-center">
                                         <div class="me-2">
@@ -37,7 +38,7 @@
                                                 </codx-temp-full>
                                             </ng-template>
                                             <ng-template #elsethenAvatar1>
-                                                <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
+                                                <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users" 
                                                     imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
                                                     [imageWidth]="20" [title]="perm.objectName">
                                                 </codx-temp-full>
@@ -53,19 +54,19 @@
                     </div>
                     <div class="d-flex">
                         <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
-                            (valueChange)="onSaveRole($event, 'to')">
+                            (valueChange)="onSaveRole($event, 'by')">
                         </codx-input>
 
                     </div>
                 </div>
-                <div *ngIf="!isShare" class="d-flex justify-content-between border-bottom py-1">
+                <div class="d-flex justify-content-between border-bottom py-1">
                     <div class="d-flex align-items-center flex-grow-1">
                         <div class="w-50px">
                             <codx-label [fiedName]="'formTo'" [formModel]="formModel" default="Đến" class="fw-bold">
                             </codx-label>
                         </div>
                         <div class="send-group">
-                            <ng-container *ngFor="let perm of byPermission; index as i;">
+                            <ng-container *ngFor="let perm of toPermission; index as i;">
                                 <div class="user-mini-item">
                                     <div class="d-flex align-items-center">
                                         <div class="symbol symbol-30 symbol-circle me-2">
@@ -80,7 +81,7 @@
                                                 </codx-temp-full>
                                             </ng-template>
                                             <ng-template #elsethenAvatar1>
-                                                <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
+                                                <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users" 
                                                     imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
                                                     [imageWidth]="20" [title]="perm.objectName">
                                                 </codx-temp-full>
@@ -94,10 +95,10 @@
                             </ng-container>
                         </div>
                     </div>
-                    <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
-                        (valueChange)="onSaveRole($event, 'by')"> </codx-input>
+                    <codx-input type="share" field="addUser" refValue="DM002" [showInput]="false"
+                        (valueChange)="onSaveRole($event, 'to')" [crrValue]="ownerID"> </codx-input>
                 </div>
-                <div class="d-flex justify-content-between border-bottom py-1">
+                <div *ngIf="isShare" class="d-flex justify-content-between border-bottom py-1">
                     <div class="d-flex align-items-center flex-grow-1">
                         <div class="w-50px">
                             <codx-label [fiedName]="'ccTo'" [formModel]="formModel" default="Cc" class="fw-bold">
@@ -119,7 +120,7 @@
                                                 </codx-temp-full>
                                             </ng-template>
                                             <ng-template #elsethenAvatar1>
-                                                <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
+                                                <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users" 
                                                     imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
                                                     [imageWidth]="20" [title]="perm.objectName">
                                                 </codx-temp-full>
@@ -137,7 +138,7 @@
                         (valueChange)="onSaveRole($event, 'cc')"> </codx-input>
                 </div>
 
-                <div *ngIf="!isShare" class="d-flex justify-content-between border-bottom py-1">
+                <div *ngIf="isShare" class="d-flex justify-content-between border-bottom py-1">
                     <div class="d-flex align-items-center flex-grow-1">
                         <div class="w-50px">
                             <codx-label fiedName="bccTo" [formModel]="formModel" default="Bcc" class="fw-bold">
@@ -159,7 +160,7 @@
                                                 </codx-temp-full>
                                             </ng-template>
                                             <ng-template #elsethenAvatar1>
-                                                <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
+                                                <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users" 
                                                     imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
                                                     [imageWidth]="20" [title]="perm.objectName">
                                                 </codx-temp-full>
@@ -190,8 +191,8 @@
             </div>
 
             <div class="request-box mt-4">
-                <codx-input class="form-control" [placeholder]="titleShareContent" [class]="validate('shareContent')"
-                    type="textarea" style="width:100%; height: 400px;" [crrValue]="shareContent"
+                <codx-input [placeholder]="titleShareContent" [class]="validate('shareContent')"
+                    type="textarea" [height]="'200px'"  [crrValue]="shareContent"
                     (valueChange)="txtValue($event, 'shareContent')"></codx-input>
             </div>
             <div *ngIf="errorshow && !checkContent()" class="d-flex mb-2 invalid-feedback">
@@ -199,7 +200,7 @@
             </div>
             <div *ngIf="isShare" class="d-flex align-items-center justify-content-between share-item mt-2 mt-6">
                 <div class="text-dark-75">
-                    <codx-label [fiedName]="'isShare'" [formModel]="formModel"
+                    <codx-label [fiedName]="'lblIsShare'" [formName]="formModel?.formName"
                         default="Cho phép chia sẻ lại cho người khác?" class="ms-1 fw-bold"></codx-label>
                 </div>
                 <div class="d-flex">
@@ -209,9 +210,9 @@
                     </span>
                 </div>
             </div>
-            <div *ngIf="isShare" class="d-flex align-items-center justify-content-between share-item mt-6">
+            <div *ngIf="isShare" class="d-flex align-items-center justify-content-between share-item mt-3">
                 <div class="text-dark-75">
-                    <codx-label fiedName="lblDownload" [formModel]="formModel"
+                    <codx-label fiedName="lblDownload" [formName]="formModel?.formName"
                         default="Cho phép dowlnload hoặc in tài liệu?" class="ms-1 fw-bold"></codx-label>
                 </div>
                 <div class="d-flex">
@@ -226,14 +227,10 @@
             <div *ngIf="!isShare" class="mt-4">
                 <div class="d-flex align-items-center">
                     <div class="me-5">
-                        <codx-input name="group" class="test-check" type="radio" style="width:100%"
-                            [checked]="selection == 0 ? true : false" [label]="titleReadonly"
-                            (valueChange)="txtValue($event, 'copyto')"></codx-input>
+                        <codx-input name="group" class="test-check" type="radio" style="width:100%" [label]="titleReadonly" [crrValue]="'readonly'" [Group]="shareGroup" [ControlName]="'per'"></codx-input>
                     </div>
                     <div class="me-5">
-                        <codx-input name="group" class="test-check" type="radio" style="width:100%"
-                            [checked]="selection == 1 ? true : false" [label]="titleModified"
-                            (valueChange)="txtValue($event, 'move')"></codx-input>
+                        <codx-input name="group" class="test-check" type="radio" style="width:100%" [label]="titleModified" [crrValue]="'modified'" [Group]="shareGroup" [ControlName]="'per'"></codx-input>
                     </div>
                 </div>
             </div>
@@ -264,15 +261,15 @@
         </div>         
       </div> -->
 
-            <div *ngIf="isShare" class="text-primary font-weight-bold mt-4">
-                <codx-label name="lblDownload" [formModel]="formModel" default="Giới hạn thời gian chia sẻ"
-                    class="ms-1 fw-bold"></codx-label>
+            <div *ngIf="isShare" class="text-primary font-weight-bold mt-7">
+                <codx-label [fiedName]="'lblLimit'" [formName]="formModel?.formName" default="Giới hạn thời gian chia sẻ"
+                    class="fw-bold"></codx-label>
             </div>
-            <div class="row mt-5">
+            <div class="row mt-3">
                 <div class="col-xl-6 col-lg-6 col-md-6">
                     <div class="form-group row">
                         <div class="col-4 pt-2">
-                            <codx-label name="fromDate" [formModel]="formModel" default="Từ ngày"
+                            <codx-label [fiedName]="'lblFromDate'" [formName]="formModel?.formName" default="Từ ngày"
                                 class="text-dark fw-bold"></codx-label>
                         </div>
                         <div class="col-8">
@@ -285,7 +282,7 @@
                 <div class="col-xl-6 col-lg-6 col-md-6">
                     <div class="form-group row">
                         <div class="col-4 pt-2">
-                            <codx-label name="toDate" [formModel]="formModel" default="Đến ngày"
+                            <codx-label [fiedName]="'lblFromDate'" [formName]="formModel?.formName" default="Đến ngày"
                                 class="text-dark fw-bold"></codx-label>
                         </div>
                         <div class="col-8">
@@ -303,19 +300,19 @@
         <div class="d-flex align-items-center justify-content-between">
             <div class="checkbox-inline d-flex align-items-center">
                 <ng-container *ngIf="isShare">
-                    <codx-input class="test-check" type="checkbox" [checked]="sentEmail" field="sentEmail"
+                    <!-- <codx-input class="test-check" type="checkbox" [checked]="sentEmail" field="sentEmail"
                         (valueChange)="txtValue($event, 'sentemail')"></codx-input>
                     <codx-label name="lblSendEmail" [formModel]="formModel" default="Gửi mail" class="ms-2 fw-bold">
-                    </codx-label>
-                    <codx-input class="test-check ms-5" type="checkbox" [checked]="postblog" field="postblog"
+                    </codx-label> -->
+                    <!-- <codx-input class="test-check" type="checkbox" [checked]="postblog" field="postblog"
                         (valueChange)="txtValue($event, 'postblog')"></codx-input>
                     <span></span>
                     <codx-label name="lblCreatePost" [formModel]="formModel" default="Tạo bài viết"
-                        class="ms-2 fw-bold"></codx-label>
+                        class="ms-2 fw-bold"></codx-label> -->
                 </ng-container>
             </div>
             <button type="button" id="btnShare" class="btn btn-primary" (click)="onShare()">
-                <codx-label name="lblSend" [formModel]="formModel" default="Gửi" class="ms-1 fw-bold"></codx-label>
+                <codx-label [fiedName]="'lblSend'" [formName]="formModel?.formName" default="Gửi" class="ms-1 fw-bold"></codx-label>
             </button>
         </div>
     </ng-template>

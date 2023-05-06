@@ -34,10 +34,8 @@
                             <div *ngIf="fileEditing">
                                 {{fileEditing.description}}
                             </div>
-                            <div *ngIf="fileEditing" class="mt-3 pic-file h-140px d-flex justify-content-center">
-                                <div *ngIf="fileEditing.thumbnail" class="w-100">
-                                    <img alt="" class="w-100" [src]="getThumbnail(fileEditing)">
-                                </div>
+                            <div *ngIf="fileEditing && fileEditing.thumbnail" class="mt-3 pic-file h-140px d-flex justify-content-center" [style.background-image]="'url('+(getThumbnail(fileEditing))+')'">
+                               
                                 <!-- <img alt="" class="w-100 me-2" src="../../../assets/demos/dms/demo1.png"> -->
                             </div>
                             <div class="dms-btn d-flex justify-content-between mt-4">
@@ -54,7 +52,6 @@
                                     </ng-container>
                                 </div>
                                 <div class="d-flex">
-
                                     <a (click)="openRight(2, false)"
                                         class="btn btn-sm btn-outline-primary">{{titleShare}}</a>
                                     <!-- <a (click)="openRight(2, true)"
@@ -63,15 +60,54 @@
                             </div>
                             <div *ngIf="fileEditing" class="d-flex my-3">
                                 <ng-container *ngIf="fileEditing">
-                                    <span class="text-gray-600 me-2 w-100px">{{titleFiletype}}:</span>
-                                    <span class="">
-                                        <!-- {{fileEditing.type}} --> {{fileEditing.extension}}
-                                    </span>
+                                    <codx-label [default]="titleFiletype" fiedName="lblFileType"
+                                        class="text-gray-600 me-2 w-100px"></codx-label>
+                                    <span class="">{{fileEditing.extension}}</span>
                                 </ng-container>
                                 <ng-template #elseVersion>
                                     <span class="">{{messerror}}</span>
                                 </ng-template>
                             </div>
+                            <div *ngIf="fileEditing" class="d-flex my-3">
+                                <ng-container *ngIf="fileEditing">
+                                    <codx-label [default]="titleFilesize" fiedName="lblFileSize"
+                                        class="text-gray-600 me-2 w-100px"></codx-label>
+                                    <span class="">{{fileEditing.fileSize}} (bytes)</span>
+                                </ng-container>
+                                <ng-template #elseVersion>
+                                    <span class="">{{messerror}}</span>
+                                </ng-template>
+                            </div>
+                            <div *ngIf="fileEditing" class="d-flex my-3">
+                                <ng-container *ngIf="fileEditing">
+                                    <codx-label [default]="titleCreator" fiedName="lblCreator"
+                                        class="text-gray-600 me-2 w-100px"></codx-label>
+                                    <span class="">{{fileEditing.userName}}</span>
+                                </ng-container>
+                                <ng-template #elseVersion>
+                                    <span class="">{{messerror}}</span>
+                                </ng-template>
+                            </div>
+                            <div *ngIf="fileEditing" class="d-flex my-3">
+                                <ng-container *ngIf="fileEditing">
+                                    <codx-label [default]="titleVersion" fiedName="lblVersion"
+                                        class="text-gray-600 me-2 w-100px"></codx-label>
+                                    <span class="">{{fileEditing.version ? fileEditing.version : "Không có dữ
+                                        liệu"}}</span>
+                                </ng-container>
+                                <ng-template #elseVersion>
+                                    <span class="">{{messerror}}</span>
+                                </ng-template>
+                            </div>
+                            <!-- <div *ngIf="fileEditing" class="d-flex my-3">
+                                <ng-container *ngIf="fileEditing">
+                                    <codx-label [default]="titleApprove" fiedName="lblApprove" class="text-gray-600 me-2 w-100px"></codx-label>
+                                    <span class="">{{fileEditing.fileName}}</span>
+                                </ng-container>
+                                <ng-template #elseVersion>
+                                    <span class="">{{messerror}}</span>
+                                </ng-template>
+                            </div> -->
                             <div *ngIf="fileEditing" class="d-flex my-3">
                                 <span class="text-gray-600 me-2 w-100px">{{titleLanguage}}:</span>
                                 <ng-container *ngIf="fileEditing.language , else elselanguage">
@@ -89,13 +125,13 @@
 
                             <div *ngIf="fileEditing" class="d-flex my-3">
                                 <span class="text-gray-600 me-2 w-100px">{{titlePublisher}}:</span>
-                                <ng-container *ngIf="fileEditing.publisher , else elsepublisher">
-                                    <span class="">{{fileEditing.publisher}}</span>
+                                <ng-container *ngIf="fileEditing.publisherName , else elsepublisher">
+                                    <span class="">{{fileEditing.publisherName}}</span>
                                 </ng-container>
                                 <ng-template #elsepublisher>
                                     <span class="">{{messerror}}</span>
                                 </ng-template>
-                                <!-- <span class="">{{fileEditing.publisher ? fileEditing.publisher : "Không có dữ liệu"}}</span> -->
+                              
                             </div>
 
                             <div *ngIf="fileEditing" class="d-flex my-3">
@@ -104,8 +140,8 @@
                                     liệu"}}</span>
                             </div>
                         </div>
-                        <div *ngIf="fileEditing" class="card-rating mt-6">
-                            <div class="fw-bold text-gray-600 mb-4">{{titleRating}}</div>
+                        <div *ngIf="fileEditing" class="card-rating mt-4">
+                            <div class="fw-bold text-gray-600 mb-3">{{titleRating}}</div>
                             <div class="d-flex">
                                 <div class="d-flex flex-column me-20 text-center">
                                     <div class="fw-bolder text-warning mb-2" [style.fontSize]="'40px'">{{totalRating}}
@@ -210,10 +246,10 @@
                             <ng-container *ngIf="fileEditing.views">
                                 <ng-container *ngFor="let view of fileEditing.views; let i = index">
                                     <div *ngIf="view.rating > 0"
-                                        class="d-flex flex-column py-3 w-100 border-bottom user-rating">
+                                        class="d-flex flex-column py-4 w-100 border-bottom user-rating">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="me-3">
-                                                <codx-temp-full [imageId]="view.objectID" imageObjType="AD_Users"
+                                                <codx-temp-full [imageId]="view.objectID" imageObjType="AD_Users" 
                                                     imgCss="w-30px me-3" [imageWidth]="30" [title]="view.userName"
                                                     [subTitle]="view.positionName">
                                                 </codx-temp-full>
@@ -235,7 +271,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="rating-comment mt-1">
+                                        <div class="rating-comment mt-3">
                                             {{view.comment}}
                                         </div>
                                     </div>
@@ -251,15 +287,16 @@
                         <e-tabitems>
                             <e-tabitem>
                                 <ng-template #headerText>
-                                    <div>{{titleVersion}}</div>
+                                    <div class="ms-2">{{titleVersion}}</div>
                                 </ng-template>
                                 <ng-template #content>
-                                    <div class="pt-5 extend-more-content pe-3">
+                                    <div class="pt-5 extend-more-content px-3 ms-2">
                                         <ng-container
                                             *ngIf="(fileEditing.history && fileEditing.history.length>0 ), else defaulEmpt">
                                             <div *ngFor="let his of fileEditing.history; let i = index">
                                                 <ng-container *ngIf="his.fileName != null && his.fileName != ''">
-                                                    <div class="d-flex history-item pb-4 line-hor">
+                                                    <div class="d-flex history-item pb-4 line-hor"
+                                                        (click)="dbView(his,fileEditing)">
                                                         <img *ngIf="his.extension != null && his.extension != ''"
                                                             alt="{{his.fileName}}" class="max-h-20px me-2"
                                                             src="../../../assets/codx/dms/{{getAvatar(his.extension)}}">
@@ -285,7 +322,7 @@
                                     <div>{{titleHistory}}</div>
                                 </ng-template>
                                 <ng-template #content>
-                                    <div class="pt-5 extend-more-content pe-3">
+                                    <div class="pt-5 extend-more-content px-3 ms-2">
                                         <ng-container
                                             *ngIf="(fileEditing?.history && fileEditing?.history.length>0 ), else defaulEmpt">
                                             <div *ngFor="let history of fileEditing.history; let i = index"
@@ -293,7 +330,7 @@
                                                 <div class="d-flex ">
                                                     <div class="me-3">
                                                         <codx-temp-full [imageId]="history.createdBy"
-                                                            imageObjType="AD_Users" imgCss="w-35px" [imageWidth]="35">
+                                                            imageObjType="AD_Users"  imgCss="w-35px" [imageWidth]="35">
                                                         </codx-temp-full>
                                                     </div>
                                                     <div class="d-flex flex-column flex-grow-1">
@@ -334,3 +371,6 @@
         </div>
     </div>
 </ng-template>
+<ng-container *ngIf="visible">
+    <lib-dialogthumb [dataFile]="dataFile" (dialogClosed)="dialogClosed()"></lib-dialogthumb>
+</ng-container>

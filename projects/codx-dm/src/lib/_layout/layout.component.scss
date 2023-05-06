@@ -123,20 +123,11 @@
     justify-content: center !important;
     padding-left: 0 !important;
   }
-
-  .aside-light .menu .menu-title {
-    display: none;
-  }
 }
 
 #kt_aside_menu_header {
   margin-bottom: 15px;
   white-space: nowrap;
-}
-
-
-.e-pane codx-treeview .aside-menu {
-  padding: 10px;
 }
 
 .aside-menu codx-temp-full .fw-bold {
@@ -149,8 +140,6 @@
   width: 22px;
   height: 22px;
 }
-
-
 
 .aside-menu codx-temp-full {
   width: 100%;
@@ -283,11 +272,6 @@ ejs-switch .form-control {
   border: 0;
 }
 
-.aside-menu .menu .menu-item .menu-link {
-  padding-left: 18px;
-  padding-right: 18px;
-}
-
 /* css chart */
 .e-panel {
   cursor: auto !important;
@@ -306,4 +290,14 @@ ejs-switch .form-control {
 codx-view-tree-detail .e-pane.e-static-pane {
   flex-basis: 26% !important;
   min-width: 250px;
+}
+
+codx-views#dm .content-tree {
+  padding-right: 0 !important;
+
+}
+
+codx-views#dm .content-tree codx-mfunc .btn {
+  padding-top: 8px !important;
+  background-color: var(--bghover);
 }

@@ -35,3 +35,27 @@ export class tmpAreaName {
   LabelType: string;
   LabelValue: string;
 }
+
+export class highLightTextArea {
+  author: string;
+  locations: Array<location>;
+  comment: comment;
+  createdDate: Date;
+  color: string;
+  group: string;
+  isAdded: boolean;
+  isChange: boolean;
+}
+
+export class comment {
+  author: string;
+  content: string;
+}
+
+export class location {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+  pageNumber: number;
+}

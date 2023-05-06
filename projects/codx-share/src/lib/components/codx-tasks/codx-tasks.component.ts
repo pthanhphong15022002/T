@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Injector,
   Input,
@@ -39,7 +40,9 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
-import { debug } from 'console';
+import { X } from '@angular/cdk/keycodes';
+import { AssignTaskModel } from '../../models/assign-task.model';
+import { concat } from 'rxjs';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -58,9 +61,11 @@ export class CodxTasksComponent
   @Input() showMoreFunc = true;
   @Input() refID?: any;
   @Input() refType?: any;
-
   @Input() calendarID: string;
+  @Input() resourceModel!: any;
   @Input() viewPreset: string = 'weekAndDay';
+  @Input() predicate?: string ;  //truyen predicate dạng 'Status==@0 && Priority=@1'
+  @Input() dataValue?: string ; //truyen dataValue dạng  "90;1"
   @Input() service = 'TM';
   @Input() entityName = 'TM_Tasks';
   @Input() idField = 'taskID';
@@ -82,8 +87,8 @@ export class CodxTasksComponent
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
 
+  @Input() viewsInput: Array<ViewModel> = [];
   views: Array<ViewModel> = [];
-  viewsActive: Array<ViewModel> = [];
 
   button?: ButtonModel = {
     id: 'btnAdd',
@@ -117,7 +122,8 @@ export class CodxTasksComponent
   gridView: any;
   isAssignTask = false;
   param: TM_Parameter = new TM_Parameter();
-  paramModule: any;
+  paramModule: TM_Parameter = new TM_Parameter();
+  paramDefaut: TM_Parameter = new TM_Parameter();
   listTaskResousce = [];
   searchField = '';
   listTaskResousceSearch = [];
@@ -147,58 +153,41 @@ export class CodxTasksComponent
   titleAction = '';
   moreFunction = [];
   crrStatus = '';
+  disabledProject = false;
+  crrFuncID = '';
+  isHoverPop = false;
+  timeoutId: any;
 
   constructor(
     inject: Injector,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
-    private tmSv: CodxTasksService
+    private tmSv: CodxTasksService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);
     this.user = this.authStore.get();
-    if (!this.funcID)
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
       }
     });
-    this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f)
-        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
-          if (res) {
-            this.moreFunction = res;
-          }
-        });
-    });
+    // this.api.callSv(
+    //   'TM',
+    //   'TM',
+    //   'TaskBusiness',
+    //   'RPASendAlertMailIsOverDue1Async'
+    // ).subscribe();
   }
 
   //#region Init
   onInit(): void {
-    if (this.funcID == 'TMT0203') {
-      this.vllStatus = this.vllStatusAssignTasks;
-    } else {
-      this.vllStatus = this.vllStatusTasks;
-    }
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.crrFuncID = this.funcID;
     this.projectID = this.dataObj?.projectID;
     this.viewMode = this.dataObj?.viewMode;
-
-    this.modelResource = new ResourceModel();
-    if (this.funcID != 'TMT03011') {
-      this.modelResource.assemblyName = 'HR';
-      this.modelResource.className = 'OrganizationUnitsBusiness';
-      this.modelResource.service = 'HR';
-      this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
-    } else {
-      //xu ly khi truyeefn vao 1 list resourece
-      this.modelResource.assemblyName = 'HR';
-      this.modelResource.className = 'OrganizationUnitsBusiness';
-      this.modelResource.service = 'HR';
-      this.modelResource.method = 'GetListUserByResourceAsync';
-      this.modelResource.dataValue = this.dataObj?.resources;
-    }
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
@@ -215,36 +204,130 @@ export class CodxTasksComponent
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
 
-    this.requestSchedule = new ResourceModel();
-    this.requestSchedule.service = 'TM';
-    this.requestSchedule.assemblyName = 'TM';
-    this.requestSchedule.className = 'TaskBusiness';
-    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
-    this.requestSchedule.idField = 'taskID';
-
-    if (this.funcID != 'TMT0201') {
-      if (this.funcID == 'TMT0203') {
-        this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
-        this.requestSchedule.dataValue = '2;' + this.user.userID;
-      } else {
-        this.requestSchedule.predicate = 'Category=@0 or Category=@1';
-        this.requestSchedule.dataValue = '1;2';
-      }
-    } else {
-      this.requestSchedule.predicate = '';
-      this.requestSchedule.dataValue = '';
-    }
-
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
     this.requestTree.assemblyName = 'TM';
     this.requestTree.className = 'TaskBusiness';
     this.requestTree.method = 'GetListTreeDetailTasksAsync';
     this.requestTree.idField = 'taskID';
-    this.getParams();
 
+    this.afterLoad();
+    //this.getParams(); //cai nay lúc trước lọc ngày schedule
+    this.getParam();
+
+    //them prdicate vao loc
+    if (this.predicate && this.dataValue) {
+      let object = {
+        predicate: this.predicate,
+        dataValue: this.dataValue,
+      };
+      this.dataObj = Object.assign({}, this.dataObj, object);
+    }
+   
     this.dataObj = JSON.stringify(this.dataObj);
     this.detectorRef.detectChanges();
+  }
+
+  afterLoad() {
+    //cai này có thể gọi grvSetup
+    // if (this.funcID == 'TMT0203' || this.funcID == 'TMT0206' || this.funcID == 'MWP0062' || this.funcID == 'MWP0063') {
+    //   this.vllStatus = this.vllStatusAssignTasks;
+    // } else this.vllStatus = this.vllStatusTasks;
+
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f)
+        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+          if (res) {
+            this.moreFunction = res;
+          }
+        });
+      this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
+        if (grv) {
+          this.vllStatus = grv?.Status?.referedValue;
+          this.vllApproveStatus = grv?.ApproveStatus?.referedValue;
+          this.vllExtendStatus = grv?.ExtendStatus?.referedValue;
+          this.vllVerifyStatus = grv?.VerifyStatus?.referedValue;
+          this.vllConfirmStatus = grv?.ConfirmStatus?.referedValue;
+          this.vllPriority = grv?.Priority?.referedValue;
+        }
+      });
+    });
+
+    this.showButtonAdd =
+      this.funcID != 'TMT0206' &&
+      this.funcID != 'TMT0202' &&
+      this.funcID != 'MWP0063' &&
+      this.funcID != 'MWP0064' &&
+      this.funcID != 'TMT0402' &&
+      this.funcID != 'TMT0403' &&
+      this.funcID != 'OMT014';
+
+    this.showMoreFunc = this.funcID != 'TMT0206' && this.funcID != 'MWP0063';
+
+    this.modelResource = new ResourceModel();
+    if (this.funcID != 'TMT03011' && this.funcID != 'TMT05011') {
+      this.modelResource.assemblyName = 'HR';
+      this.modelResource.className = 'OrganizationUnitsBusiness';
+      this.modelResource.service = 'HR';
+      this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+    } else {
+      //xu ly khi truyeefn vao 1 list resourece
+      this.modelResource.assemblyName = 'HR';
+      this.modelResource.className = 'OrganizationUnitsBusiness';
+      this.modelResource.service = 'HR';
+      this.modelResource.method = 'GetListUserByResourceAsync';
+      this.modelResource.dataValue = this.dataObj?.resources;
+    }
+
+    this.requestSchedule = new ResourceModel();
+    this.requestSchedule.service = 'TM';
+    this.requestSchedule.assemblyName = 'TM';
+    this.requestSchedule.className = 'TaskBusiness';
+    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
+    this.requestSchedule.idField = 'taskID';
+    this.requestSchedule.dataObj = this.dataObj;
+
+    // if (
+    //   this.funcID != 'TMT0201' &&
+    //   this.funcID != 'TMT0206' &&
+    //   this.funcID != 'MWP0061' &&
+    //   this.funcID != 'MWP0063'
+    // ) {
+    //   if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062') {
+    //     this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
+    //     this.requestSchedule.dataValue = '2;' + this.user.userID;
+    //   } else {
+    //     this.requestSchedule.predicate = 'Category=@0 or Category=@1';
+    //     this.requestSchedule.dataValue = '1;2';
+    //   }
+    // } else {
+    //   this.requestSchedule.predicate = '';
+    //   this.requestSchedule.dataValue = '';
+    // }
+    //fix theo core mới schedule bỏ resoure
+    switch (this.funcID) {
+      case 'MWP0061':
+      case 'TMT0201':
+        this.requestSchedule.predicate =
+          '(Category=@0 or Category=@1) and Owner=@2';
+        this.requestSchedule.dataValue = '1;2;' + this.user.userID;
+        break;
+      case 'TMT0203':
+      case 'MWP0062':
+      case 'OMT014':
+        this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
+        this.requestSchedule.dataValue = '2;' + this.user.userID;
+        break;
+      case 'MWP0064':
+      case 'TMT0202':
+        this.requestSchedule.predicate = 'Category=@0 or Category=@1';
+        this.requestSchedule.dataValue = '1;2';
+        break;
+      default:
+        this.requestSchedule.predicate = '';
+        this.requestSchedule.dataValue = '';
+        break;
+    }
   }
 
   ngAfterViewInit(): void {
@@ -284,7 +367,8 @@ export class CodxTasksComponent
         showSearchBar: false,
         model: {
           eventModel: this.fields,
-          resourceModel: this.resourceField,
+          //resourceModel: this.resourceModel,
+          // resourceModel: this.resourceField, //ko có thang nay
           //template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
@@ -302,7 +386,7 @@ export class CodxTasksComponent
         request: this.requestSchedule,
         request2: this.modelResource,
         showSearchBar: false,
-        showFilter:false,
+        showFilter: true,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
@@ -328,27 +412,47 @@ export class CodxTasksComponent
       },
     ];
 
+    if (this.funcID == 'TMT03011')
+      this.cache.viewSettings(this.funcID).subscribe((res) => {
+        if (res && res.length > 0) {
+          var viewFunc = [];
+          res.forEach((x) => {
+            var idx = this.views.findIndex((obj) => obj.type == x.view);
+            if (idx != -1) {
+              viewFunc.push(this.views[idx]);
+              if (x.isDefault && !this.viewMode) this.viewMode = x.view;
+            }
+          });
+          this.views = viewFunc.sort((a, b) => {
+            return b.id - a.id;
+          });
+        }
+      });
+
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
     this.view.dataService.methodDelete = 'DeleteTaskAsync';
-    this.getParam();
-    //this.detectorRef.detectChanges();
+
+    this.detectorRef.detectChanges();
   }
   //#endregion
 
   //#region CRUD
   add() {
+    //this.api.exec<any>("TM","TaskBusiness","RPASendAlertMailIsOverDue1Async",).subscribe();
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      if (this.projectID)
+      option.zIndex = 1001;
+      if (this.projectID) {
         this.view.dataService.dataSelected.projectID = this.projectID;
+        this.disabledProject = true;
+      } else this.disabledProject = false;
       if (this.refID) this.view.dataService.dataSelected.refID = this.refID;
       if (this.refType)
         this.view.dataService.dataSelected.refType = this.refType;
-
       var dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -357,16 +461,18 @@ export class CodxTasksComponent
           this.isAssignTask,
           this.titleAction,
           this.funcID,
+          null,
+          this.disabledProject,
         ],
         option
       );
       dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+        // if (e?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
       });
     });
   }
@@ -421,6 +527,11 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
+      option.zIndex = 1001;
+      if (this.projectID) {
+        this.view.dataService.dataSelected.projectID = this.projectID;
+        this.disabledProject = true;
+      } else this.disabledProject = false;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -430,16 +541,17 @@ export class CodxTasksComponent
           this.titleAction,
           this.funcID,
           data,
+          this.disabledProject,
         ],
         option
       );
       this.dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+        // if (e?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
       });
     });
   }
@@ -486,24 +598,29 @@ export class CodxTasksComponent
 
   assignTask(moreFunc, data) {
     this.view.dataService.dataSelected = data;
-    var vllControlShare = 'TM003';
-    var vllRose = 'TM001';
-    var title = moreFunc.customName;
+    let assignModel: AssignTaskModel = {
+      vllRole: 'TM001',
+      title: moreFunc.customName,
+      vllShare: 'TM003',
+      task: this.view.dataService.dataSelected,
+      taskParent: data,
+    };
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = '550px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      [this.view.dataService.dataSelected, vllControlShare, vllRose, title],
+      assignModel,
       option
     );
     this.dialog.closed.subscribe((e) => {
-      if (e?.event == null)
-        this.view.dataService.delete(
-          [this.view.dataService.dataSelected],
-          false
-        );
+      if (!e.event) this.view.dataService.clear();
+      // if (e?.event == null)
+      //   this.view.dataService.delete(
+      //     [this.view.dataService.dataSelected],
+      //     false
+      //   );
       if (e?.event && e?.event != null && e?.event[1] != null) {
         if (e.event[0]) {
           this.itemSelected = data;
@@ -528,6 +645,10 @@ export class CodxTasksComponent
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '800px';
+        option.zIndex = 1001;
+        if (this.projectID) {
+          this.disabledProject = true;
+        } else this.disabledProject = false;
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
           [
@@ -536,16 +657,18 @@ export class CodxTasksComponent
             this.isAssignTask,
             this.titleAction,
             this.funcID,
+            null,
+            this.disabledProject,
           ],
           option
         );
         this.dialog.closed.subscribe((e) => {
           if (!e.event) this.view.dataService.clear();
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
+          // if (e?.event == null)
+          //   this.view.dataService.delete(
+          //     [this.view.dataService.dataSelected],
+          //     false
+          //   );
           if (e?.event && e?.event != null) {
             this.view.dataService.update(e?.event).subscribe();
             this.itemSelected = e?.event;
@@ -587,6 +710,16 @@ export class CodxTasksComponent
   }
 
   changeStatusTask(moreFunc, taskAction) {
+    if (
+      (taskAction.createdBy != this.user.userID &&
+        taskAction.category == '3') ||
+      (taskAction.owner != this.user.userID &&
+        (taskAction.category == '2' || taskAction.category == '1'))
+    ) {
+      //dung chung ma voi ep
+      this.notiService.notifyCode('TM052');
+      return;
+    }
     if (taskAction.status == '05') {
       this.notiService.notifyCode('TM020');
       return;
@@ -650,10 +783,10 @@ export class CodxTasksComponent
             this.actionUpdateStatus(
               moreFunc,
               taskAction,
-              this.paramModule.UpdateControl,
-              this.paramModule.MaxHoursControl,
-              this.paramModule.MaxHours,
-              this.paramModule.CompletedControl
+              this.paramDefaut.UpdateControl,
+              this.paramDefaut.MaxHoursControl,
+              this.paramDefaut.MaxHours,
+              this.paramDefaut.CompletedControl
             );
           }
         });
@@ -661,10 +794,10 @@ export class CodxTasksComponent
       this.actionUpdateStatus(
         moreFunc,
         taskAction,
-        this.paramModule.UpdateControl,
-        this.paramModule.MaxHoursControl,
-        this.paramModule.MaxHours,
-        this.paramModule.CompletedControl
+        this.paramDefaut.UpdateControl,
+        this.paramDefaut.MaxHoursControl,
+        this.paramDefaut.MaxHours,
+        this.paramDefaut.CompletedControl
       );
     }
   }
@@ -678,7 +811,11 @@ export class CodxTasksComponent
     completedControl
   ) {
     var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
-    if (status == '90' && completedControl != '0') {
+    if (
+      status == '90' &&
+      completedControl != '0' &&
+      taskAction.category == '3'
+    ) {
       var isCheck = false;
       this.api
         .execSv<any>(
@@ -689,15 +826,13 @@ export class CodxTasksComponent
           taskAction.taskID
         )
         .subscribe((res) => {
-          if (res) {
-            res.forEach((obj) => {
-              if (obj.status != '90' && obj.status != '80') {
-                isCheck = true;
-                return;
-              }
+          if (res && res.length > 0) {
+            isCheck = res.some((obj) => {
+              obj.status != '90' && obj.status != '80';
             });
             if (isCheck) {
               this.notiService.notifyCode('TM008');
+              return;
             } else
               this.updatStatusAfterCheck(
                 moreFunc,
@@ -708,7 +843,7 @@ export class CodxTasksComponent
               );
           }
         });
-    } else if (status == '80') {
+    } else if (status == '80' && taskAction.category == '3') {
       this.updateStatusCancel(
         moreFunc,
         taskAction,
@@ -734,7 +869,6 @@ export class CodxTasksComponent
     maxHoursControl,
     maxHours
   ) {
-    var isCheck = false;
     this.api
       .execSv<any>(
         'TM',
@@ -744,15 +878,13 @@ export class CodxTasksComponent
         taskAction.taskID
       )
       .subscribe((res) => {
-        if (res) {
-          res.forEach((element) => {
-            if (element.status != '00' && element.status != '10') {
-              isCheck = false;
-              return;
-            }
+        if (res && res.length > 0) {
+          var isCheck = res.some((obj) => {
+            obj.status != '00' && obj.status != '10';
           });
           if (isCheck) {
             this.notiService.notifyCode('TM008');
+            return;
           } else
             this.updatStatusAfterCheck(
               moreFunc,
@@ -822,19 +954,65 @@ export class CodxTasksComponent
             this.itemSelected = res[0];
             this.detectorRef.detectChanges();
             this.notiService.notifyCode('TM009');
-            if (taskAction.category == '3' && status == '80')
-              this.tmSv
-                .sendAlertMail(taskAction.recID, 'TM_0004', this.funcID)
-                .subscribe();
-            if (status == '90' && taskAction.approveControl == '1') {
-              this.tmSv
-                .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
-                .subscribe();
-            }
-          } else {
+            //send mail BE
+            // if (taskAction.category == '3' && status == '80')
+            //   this.tmSv
+            //     .sendAlertMail(taskAction.recID, 'TM_0004', this.funcID)
+            //     .subscribe();
+            // if (status == '90') {
+            //   if (this.itemSelected.taskGroupID) {
+            //     this.api
+            //       .execSv<any>(
+            //         'TM',
+            //         'ERM.Business.TM',
+            //         'TaskGroupBusiness',
+            //         'GetAsync',
+            //         taskAction.taskGroupID
+            //       )
+            //       .subscribe((res) => {
+            //         if (res && res.approveControl == '1') {
+            //           this.tmSv
+            //             .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
+            //             .subscribe();
+            //         } else
+            //           this.tmSv
+            //             .sendAlertMail(taskAction.recID, 'TM_0005', this.funcID)
+            //             .subscribe();
+            //       });
+            //   } else {
+            //     this.api
+            //       .execSv<any>(
+            //         'SYS',
+            //         'ERM.Business.SYS',
+            //         'SettingValuesBusiness',
+            //         'GetByModuleWithCategoryAsync',
+            //         ['TMParameters', '1']
+            //       )
+            //       .subscribe((res) => {
+            //         if (res) {
+            //           let param = JSON.parse(res.dataValue);
+            //           if (param?.ApproveControl == '1') {
+            //             this.tmSv
+            //               .sendAlertMail(
+            //                 taskAction.recID,
+            //                 'TM_0012',
+            //                 this.funcID
+            //               )
+            //               .subscribe();
+            //           } else
+            //             this.tmSv
+            //               .sendAlertMail(
+            //                 taskAction.recID,
+            //                 'TM_0005',
+            //                 this.funcID
+            //               )
+            //               .subscribe();
+            //         }
+            //       });
+            //   }
+            // }
             if (kanban) kanban.updateCard(taskAction);
-            this.notiService.notifyCode('TM008');
-          }
+          } else this.notiService.notifyCode('SYS021');
         });
     }
   }
@@ -874,29 +1052,30 @@ export class CodxTasksComponent
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
-      }else{
+      } else {
         if (kanban) kanban.updateCard(taskAction);
       }
       this.detectorRef.detectChanges();
     });
   }
   //#endregion
-  //#region Event
-  changeView(evt: any) {}
+  //#region Event đã có dùng clickChildrenMenu truyền về
+  changeView(evt: any) {
+    if (this.crrFuncID != this.funcID) {
+      this.afterLoad();
+      this.crrFuncID = this.funcID;
+    }
+  }
 
   requestEnded(evt: any) {}
 
   onDragDrop(data) {
-    // this.api
-    //   .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', data)
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.view.dataService.update(data).subscribe();
-    //     }
-    //   });
-    ///chắc chắn phải sửa
-    if (this.crrStatus == data?.status || this.moreFunction?.length == 0)
+    if (this.crrStatus == data?.status) return;
+    if (this.funcID == 'TMT0206' || this.moreFunction?.length == 0) {
+      data.status = this.crrStatus;
       return;
+    }
+
     var moreFun = this.moreFunction.find(
       (x) =>
         UrlUtil.getUrl('defaultValue', x?.url) == data.status &&
@@ -916,7 +1095,7 @@ export class CodxTasksComponent
   }
 
   receiveMF(e: any) {
-    this.clickMF(e.e, this.itemSelected);
+    this.clickMF(e.e, e?.data);
   }
 
   getParam(callback = null) {
@@ -932,7 +1111,8 @@ export class CodxTasksComponent
         if (res) {
           var param = JSON.parse(res.dataValue);
           this.param = param;
-          this.paramModule = param;
+          this.paramModule = JSON.parse(JSON.stringify(param));
+          this.paramDefaut = JSON.parse(JSON.stringify(param));
           return callback && callback(true);
         }
       });
@@ -953,7 +1133,7 @@ export class CodxTasksComponent
           this.convertParameterByTaskGroup(res);
           this.clickMFAfterParameter(e, data);
         } else {
-          this.param = this.paramModule;
+          this.param = JSON.parse(JSON.stringify(this.paramModule));
           this.clickMFAfterParameter(e, data);
         }
       });
@@ -962,6 +1142,7 @@ export class CodxTasksComponent
   //#region Convert
   convertParameterByTaskGroup(taskGroup: TM_TaskGroups) {
     this.param.ApproveBy = taskGroup.approveBy;
+    this.param.Approvers = taskGroup.approvers;
     this.param.ApproveControl = taskGroup.approveControl;
     this.param.AutoCompleted = taskGroup.autoCompleted;
     this.param.ConfirmControl = taskGroup.confirmControl;
@@ -981,33 +1162,83 @@ export class CodxTasksComponent
     this.param.CompletedControl = taskGroup.completedControl;
   }
   //#endregion
+  //region Popoverer
+  popoverEmpList(p: any, task, mouseenter = true) {
+    if (
+      this.popoverCrr &&
+      p != this.popoverCrr &&
+      mouseenter &&
+      this.popoverCrr.isOpen()
+    ) {
+      this.popoverCrr.close();
+    }
+    if (this.popoverDataSelected && this.popoverDataSelected.isOpen()) {
+      this.popoverDataSelected.close();
+    }
+    if (p) {
+      var element = document.getElementById(task?.taskID);
+      if (element) {
+        let t = this;
+        this.timeoutId = setTimeout(function () {
+          if (t.isHoverPop) return;
+          t.isHoverPop = true;
+          t.api
+            .execSv<any>(
+              'TM',
+              'ERM.Business.TM',
+              'TaskResourcesBusiness',
+              'GetListTaskResourcesByTaskIDAsync',
+              task.taskID
+            )
+            .subscribe((res) => {
+              t.listTaskResousceSearch = [];
+              t.countResource = 0;
+              if (
+                t.popoverCrr &&
+                p != t.popoverCrr &&
+                mouseenter &&
+                t.popoverCrr.isOpen()
+              )
+                t.popoverCrr.close();
+              if (t.popoverDataSelected && t.popoverDataSelected.isOpen()) {
+                t.popoverDataSelected.close();
+              }
+              if (res) {
+                t.listTaskResousce = res;
+                t.listTaskResousceSearch = res;
+                t.countResource = res.length;
 
-  popoverEmpList(p: any, task) {
-    this.listTaskResousceSearch = [];
-    this.countResource = 0;
-    if (this.popoverCrr) {
-      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+                if (t.isHoverPop && p) p.open();
+                if (p) t.popoverCrr = p;
+              }
+              t.isHoverPop = false;
+            });
+        }, 2000);
+      }
+    } else {
+      if (this.timeoutId) clearTimeout(this.timeoutId);
     }
-    if (this.popoverDataSelected) {
-      if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
-    }
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskResourcesBusiness',
-        'GetListTaskResourcesByTaskIDAsync',
-        task.taskID
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.listTaskResousce = res;
-          this.listTaskResousceSearch = res;
-          this.countResource = res.length;
-          p.open();
-          this.popoverCrr = p;
-        }
-      });
+    // if (this.isHoverPop) return;
+    // this.isHoverPop = true;
+    // this.api
+    //   .execSv<any>(
+    //     'TM',
+    //     'ERM.Business.TM',
+    //     'TaskResourcesBusiness',
+    //     'GetListTaskResourcesByTaskIDAsync',
+    //     task.taskID
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.listTaskResousce = res;
+    //       this.listTaskResousceSearch = res;
+    //       this.countResource = res.length;
+
+    //       if (this.isHoverPop && p) p.open();
+    //       this.popoverCrr = p;
+    //     }
+    //     this.isHoverPop = false;
+    //   });
   }
 
   searchName(e) {
@@ -1029,7 +1260,7 @@ export class CodxTasksComponent
   hoverPopover(p: any) {
     this.popoverDataSelected = p;
   }
-
+  //#endregion
   //#region Confirm
   openConfirmStatusPopup(moreFunc, data) {
     if (data.owner != this.user.userID) {
@@ -1090,10 +1321,9 @@ export class CodxTasksComponent
     );
     this.dialogApproveStatus.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        e?.event.forEach((obj) => {
-          this.view.dataService.update(obj).subscribe();
-        });
-        this.itemSelected = e?.event[0];
+        this.view.dataService.update(e?.event).subscribe();
+
+        this.itemSelected = e?.event;
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
       }
@@ -1140,16 +1370,10 @@ export class CodxTasksComponent
     }
     if (data.status < '10') {
       this.notiService.notifyCode('TM061');
-      // this.notiService.notify(
-      //   'Công việc chưa được xác nhận thực hiện ! Vui lòng xác nhận trước khi cập nhật tiến độ !'
-      // );
       return;
     }
     if (data.status == '50' || data.status == '80') {
       this.notiService.notifyCode('TM062');
-      // this.notiService.notify(
-      //   'Công việc đang bị "Hoãn" hoặc bị "Hủy" ! Vui lòng chuyển trạng thái trước khi cập nhật tiến độ !'
-      // );
       return;
     }
 
@@ -1162,7 +1386,7 @@ export class CodxTasksComponent
       PopupUpdateProgressComponent,
       '',
       560,
-      360,
+      370,
       '',
       obj
     );
@@ -1196,24 +1420,48 @@ export class CodxTasksComponent
       return;
     }
 
-    if (data.extendStatus == '1') {
-      this.notiService.alertCode('TM055').subscribe((confirm) => {
-        if (confirm?.event && confirm?.event?.status == 'Y') {
-          this.confirmExtend(data, moreFunc);
-        }
-      });
+    if (data.extendStatus == '3') {
+      this.api
+        .execSv<any>(
+          'TM',
+          'TM',
+          'TaskExtendsBusiness',
+          'GetExtendDateByTaskIDAsync',
+          [data.taskID]
+        )
+        .subscribe((dt) => {
+          if (dt) {
+            this.notiService.alertCode('TM055').subscribe((confirm) => {
+              if (confirm?.event && confirm?.event?.status == 'Y') {
+                this.taskExtend = dt;
+                this.confirmExtend(data, moreFunc);
+              }
+            });
+          } else {
+            if (data.createdBy != data.owner)
+              this.taskExtend.extendApprover = data.createdBy;
+            else this.taskExtend.extendApprover = data.verifyBy;
+            this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
+            this.taskExtend.reason = '';
+            this.taskExtend.taskID = data?.taskID;
+            this.taskExtend.extendDate = moment(
+              new Date(data.dueDate)
+            ).toDate();
+            this.confirmExtend(data, moreFunc);
+          }
+        });
     } else {
+      if (data.createdBy != data.owner)
+        this.taskExtend.extendApprover = data.createdBy;
+      else this.taskExtend.extendApprover = data.verifyBy;
+      this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
+      this.taskExtend.reason = '';
+      this.taskExtend.taskID = data?.taskID;
+      this.taskExtend.extendDate = moment(new Date(data.dueDate)).toDate();
       this.confirmExtend(data, moreFunc);
     }
   }
   confirmExtend(data, moreFunc) {
-    if (data.createdBy != data.owner)
-      this.taskExtend.extendApprover = data.createdBy;
-    else this.taskExtend.extendApprover = data.verifyBy;
-    this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
-    this.taskExtend.reason = '';
-    this.taskExtend.taskID = data?.taskID;
-    this.taskExtend.extendDate = moment(new Date()).toDate();
     this.api
       .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
         this.taskExtend.extendApprover,
@@ -1231,15 +1479,16 @@ export class CodxTasksComponent
             PopupExtendComponent,
             '',
             500,
-            400,
+            425,
             '',
             obj
           );
           this.dialogExtends.closed.subscribe((e) => {
             if (e?.event && e?.event != null) {
-              this.tmSv
-                .sendAlertMail(data?.recID, 'TM_0015', this.funcID)
-                .subscribe();
+              //gửi mail FE
+              // this.tmSv
+              //   .sendAlertMail(data?.recID, 'TM_0015', this.funcID)
+              //   .subscribe();
               e?.event.forEach((obj) => {
                 this.view.dataService.update(obj).subscribe();
               });
@@ -1310,7 +1559,7 @@ export class CodxTasksComponent
     this.itemSelected = data;
     if (data.taskGroupID) this.getTaskGroup(data.taskGroupID, e, data);
     else {
-      this.param = this.paramModule;
+      this.param = JSON.parse(JSON.stringify(this.paramDefaut));
       this.clickMFAfterParameter(e, data);
     }
   }
@@ -1356,6 +1605,10 @@ export class CodxTasksComponent
       case 'TMT02012':
       case 'TMT02013':
       case 'TMT02014':
+      case 'TMT02021':
+      case 'TMT02022':
+      case 'TMT02023':
+      case 'TMT02024':
       case 'TMT02031':
       case 'TMT02032':
       case 'TMT02033':
@@ -1363,6 +1616,7 @@ export class CodxTasksComponent
         this.changeStatusTask(e.data, data);
         break;
       case 'TMT02019':
+      case 'TMT02027':
         this.openExtendsAction(e.data, data);
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
@@ -1385,7 +1639,7 @@ export class CodxTasksComponent
         //tắt duyệt confirm
         if (
           (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
-          (data.confirmControl == '0' || data.confirmStatus != '1')
+          data.confirmStatus != '1'
         ) {
           x.disabled = true;
         }
@@ -1416,17 +1670,58 @@ export class CodxTasksComponent
         if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
-        //an cap nhat tien do khi hoan tat 
-        if ((x.functionID == 'TMT02018'|| x.functionID == 'TMT02026'||x.functionID == 'TMT02035')&& data.status=="90") {
+        if (
+          (x.functionID == 'TMT02015' || x.functionID == 'TMT02025') &&
+          data.status == '90'
+        ) {
           x.disabled = true;
         }
+        //an cap nhat tien do khi hoan tat
+        if (
+          (x.functionID == 'TMT02018' ||
+            x.functionID == 'TMT02026' ||
+            x.functionID == 'TMT02035') &&
+          data.status == '90'
+        ) {
+          x.disabled = true;
+        }
+        //an voi ca TMT026
+        if (
+          (x.functionID == 'SYS02' ||
+            x.functionID == 'SYS03' ||
+            x.functionID == 'SYS04') &&
+          (this.funcID == 'TMT0206' || this.funcID == 'MWP0063') // Hảo sửa k hiện more function 3/1/2023 => ok lỗi do anh đặt điều kiện sai nên a bật lại :v
+        ) {
+          x.disabled = true;
+        }
+        //an voi ca TMT03011
+        if (
+          (this.funcID == 'TMT03011' || this.funcID == 'TMT05011') &&
+          data.category == '1' &&
+          data.createdBy != this.user?.userID &&
+          !this.user?.administrator &&
+          (x.functionID == 'SYS02' || x.functionID == 'SYS03')
+        ) {
+          x.disabled = true;
+        }
+        //an gia hạn cong viec
+        if (
+          (x.functionID == 'TMT02019' || x.functionID == 'TMT02026') &&
+          (data.status == '80' || data.status == '90')
+        )
+          x.disabled = true;
       });
     }
   }
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
-    if (this.funcID == 'TMT0203') this.isAssignTask = true;
+    if (
+      this.funcID == 'TMT0203' ||
+      this.funcID == 'MWP0062' ||
+      this.funcID == 'OMT014'
+    )
+      this.isAssignTask = true;
     else this.isAssignTask = false;
     switch (evt.id) {
       case 'btnAdd':
@@ -1446,6 +1741,41 @@ export class CodxTasksComponent
       case 'dbClick':
         this.viewTask(e?.data);
         break;
+      case 'doubleClick':
+        this.viewTask(e?.data);
+        break;
+      case 'pined-filter':
+        // var index = this.view.views.findIndex((x) => x.active == true);
+        // if (index != 1) {
+        //   let type = this.view.views[index].type;
+        //   if (type == 7 || type == 8) {
+        //     // calender + schedule
+        //     this.view.currentView['schedule'].dataService.filter.filters = [
+        //       this.view.currentView['schedule'].dataService.filter.filters[0],
+        //     ];
+        //     if (Array.isArray(e.data) && e?.data?.length > 0) {
+        //       this.view.currentView['schedule'].applyFilter(e.data);
+        //     } else {
+        //       this.view.currentView['schedule'].refresh();
+        //     }
+
+        //     //if (Array.isArray(e.data)) {
+        //     //   e.data.forEach((filter: any) => {
+        //     //     if (
+        //     //       !this.view.currentView['schedule'].dataService.filter.filters
+        //     //     ) {
+        //     //       this.view.currentView['schedule'].dataService.filter.filters =
+        //     //         [];
+        //     //     }
+        //     //     this.view.currentView[
+        //     //       'schedule'
+        //     //     ].dataService.filter.filters[0].filters.push(filter);
+        //     //   });
+        //     //   this.view.currentView['schedule'].refresh();
+        //     //  }
+        //   }
+        // }
+        break;
     }
   }
 
@@ -1459,7 +1789,7 @@ export class CodxTasksComponent
       option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
-        [data, 'view', isAssignTask, funcID],
+        [data, 'view', isAssignTask, '', funcID],
         option
       );
     }
@@ -1504,7 +1834,7 @@ export class CodxTasksComponent
               (item as any).style.backgroundColor = this.dayoff[i].color;
             });
           }
-          if(this.dayoff[i].note ){
+          if (this.dayoff[i].note) {
             return (
               '<icon class="' +
               this.dayoff[i].symbol +
@@ -1513,9 +1843,7 @@ export class CodxTasksComponent
               this.dayoff[i].note +
               '</span>'
             );
-          }
-          else return null;
-
+          } else return null;
         }
       }
     }
@@ -1582,11 +1910,30 @@ export class CodxTasksComponent
       )
       .subscribe((res) => {
         if (res) {
-          res.forEach((ele) => {
-            this.dayoff = res;
-          });
+          this.dayoff = res;
+          //  res.forEach((ele) => {
+          //   this.dayoff = res;
+          // });
         }
       });
   }
   //#endregion schedule
+
+  getDataAsync(pObjectID: string) {
+    if (pObjectID) {
+      this.api
+        .execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'GetFilesByIbjectIDAsync',
+          pObjectID
+        )
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            return res.length;
+          }
+        });
+    }
+  }
 }

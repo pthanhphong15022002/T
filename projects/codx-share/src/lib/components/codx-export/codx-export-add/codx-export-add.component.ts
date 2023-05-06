@@ -31,6 +31,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   headerText: any;
   exportAddForm: FormGroup;
   submitted = false;
+  refID :any;// Thảo thêm để thêm biến lưu cho temEx
+  refType :any // Thảo thêm để thêm biến lưu cho temEx
   fileCount = 0;
   module: any;
   @ViewChild('attachment') attachment: AttachmentComponent
@@ -46,6 +48,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   ) {
     this.action = dt.data?.action;
     this.type = dt.data?.type;
+    this.refID = dt.data?.refID// Thảo thêm để thêm biến lưu cho temEx
+    this.refType = dt.data?.refType// Thảo thêm để thêm biến lưu cho temEx
+
     if (this.action == "add") {
       this.headerText = "Thêm " + this.type + " Template";
     }
@@ -96,17 +101,20 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     this.exportAddForm.value.buid = "a";
     //Thêm mới
     if (this.action == "add") {
+      this.exportAddForm.value.refID = this.refID;// Thảo thêm để thêm biến lưu cho temEx
+      this.exportAddForm.value.refType = this.refType;// Thảo thêm để thêm biến lưu cho temEx
       if (this.fileCount > 0) {
-
         this.api
-          .execActionData<any>(
-            this.module,
-            [this.exportAddForm.value],
-            'SaveAsync'
+          .execSv(
+            "SYS",
+            "AD",
+            "ExcelTemplatesBusiness",
+            "SaveTemplateAsync",
+            this.exportAddForm.value
           ).subscribe(item => {
-            if (item[0] == true) {
+            if (item && item[0]) {
               this.notifySvr.notifyCode("RS002");
-              this.attachment.objectId = item[1][0].recID;
+              this.attachment.objectId = item[1].recID;
               this.attachment.saveFiles();
               this.dialog.close([item[1], this.type]);
             }
@@ -118,16 +126,19 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     //Chỉnh sửa
     else if (this.action == "edit") {
       this.exportAddForm.value.recID = this.data.recID
+      this.exportAddForm.value.refID = this.data.refID; // Thảo thêm để thêm biến lưu cho temEx
+      this.exportAddForm.value.refType = this.data.refType;// Thảo thêm để thêm biến lưu cho temEx
       this.api
         .execActionData<any>(
           'AD_ExcelTemplates',
           [this.exportAddForm.value],
           'UpdateAsync'
         ).subscribe(item => {
+          debugger
           if (item[0] == true) {
             this.notifySvr.notifyCode("RS002");
             this.attachment.objectId = item[1][0].recID;
-            if (this.fileCount >= 0) {
+            if (this.fileCount > 0) {
               /* this.file.deleteFileByObjectIDType(this.idCrrFile,"AD_ExcelTemplates",true).subscribe(item=>{
                 console.log(item);
               }); */
@@ -135,7 +146,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
               this.attachment.objectId = item[1][0].recID;
               this.attachment.saveFiles();
             }
-            this.dialog.close([item[1], this.type]);
+            this.dialog.close([item[1][0], this.type]);
           }
           else this.notifySvr.notify("SYS021");
         })

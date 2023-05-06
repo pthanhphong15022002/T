@@ -18,16 +18,17 @@ export class CompanyInforComponent extends UIComponent {
   data :any = null;
   views: Array<ViewModel> = [];
   userPermission:any = null;
+  loaded:boolean = true;
   @ViewChild('panelLeftRef') panelLefRef :  TemplateRef<any>;
   constructor(
     private injector:Injector,
     private callc:CallFuncService,
     private notifySvr:NotificationsService,
     private sanitizer: DomSanitizer
-    ) 
-    {
-      super(injector);
-    }
+  ) 
+  {
+    super(injector);
+  }
   ngAfterViewInit(): void {
     this.views= [{
       id: "1",
@@ -40,14 +41,15 @@ export class CompanyInforComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.loadData();
     let funcID =  this.router.snapshot.params["funcID"];
     if(funcID){
-      let funcIDPermisson = funcID + "P";
-      this.getUserPermission(funcIDPermisson);
+      this.funcID = funcID + "P";
+      this.loadData(this.funcID);
+      this.getUserPermission(this.funcID);
     }
     
   }
+  // get permission by user
   getUserPermission(funcID:string){
     if(funcID){
       this.api.execSv("SYS","ERM.Business.SYS","CommonBusiness","GetUserPermissionsAsync",[funcID])
@@ -59,19 +61,26 @@ export class CompanyInforComponent extends UIComponent {
       });
     }
   }
-  loadData(){
+  // get companyinfor
+  loadData(funcID:string){
+    if(funcID){
       this.api
-        .execSv(
-          'WP',
-          'ERM.Business.WP',
-          'NewsBusiness',
-          'GetConpanyInforAsync'
-        )
+      .execSv(
+        'WP',
+        'ERM.Business.WP',
+        'NewsBusiness',
+        'GetConpanyInforAsync',
+        [funcID])
         .subscribe((res:any) => {
-          this.data = res;
-          this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
-          this.detectorRef.detectChanges();
-        });
+          if(res)
+          {
+            this.data = JSON.parse(JSON.stringify(res));
+            this.detectorRef.detectChanges();
+          }
+          else
+            this.loaded = false;
+      });
+    }
   }
 
   clickShowPopupEdit(){
@@ -83,8 +92,13 @@ export class CompanyInforComponent extends UIComponent {
       let popup = this.callc.openForm(CompanyEditComponent,"",0,0,"",this.data,"",option);
       popup.closed.subscribe((res:any)=>{
         if(res?.event){
-          this.data = res.event;
-          this.detectorRef.detectChanges();
+          let isAppro = res.event[0];
+          if(!isAppro)
+          {
+            this.data = JSON.parse(JSON.stringify(res.event[1]));
+            this.detectorRef.detectChanges();
+          }
+          this.notifySvr.notifyCode('WP024');
         }
       });
     }

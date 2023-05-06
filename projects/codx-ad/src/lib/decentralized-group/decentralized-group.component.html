@@ -1,0 +1,217 @@
+<codx-views
+  #view
+  service="SYS"
+  assemblyName="AD"
+  className="UserGroupsBusiness"
+  method="GetUserGroupsAsync"
+  [views]="views"
+  [button]="button"
+  idField="groupID"
+  [selectedFirst]="true"
+  (buttonClick)="tbBtnclick($event)"
+>
+</codx-views>
+
+<ng-template #titleTmp let-data>
+  <div class="d-flex">
+    <div
+      class="title"
+      [innerHTML]="
+        data.groupName | formatvalue : view.formModel : 'GroupName' | async
+      "
+    ></div>
+  </div>
+</ng-template>
+
+<ng-template #subTitleTmp let-data>
+  <div class="d-flex">
+    <div
+      class="note"
+      [innerHTML]="data.note | formatvalue : view.formModel : 'Note' | async"
+    ></div>
+  </div>
+</ng-template>
+
+<ng-template #item let-data>
+  <div class="tm-viewlist justify-content-between d-flex">
+    <div class="d-flex flex-row align-items-top p-3 border-bottom">
+      <div class="w-100 min-w-200px ps-3">
+        <codx-temp-full
+          cardCss="card-template border-bottom px-2 pt-4 pb-2"
+          [imageId]="data.recID"
+          [imageObjType]="view.formModel?.entityName"
+          [titleTmp]="titleTmp"
+          [subTitleTmp]="subTitleTmp"
+          [descTmp]="lstGroupMems"
+          [resources]="data['users']"
+          [formModel]="view.formModel"
+          [typeMF]="'hover'"
+          [hideMF]="true"
+          [dataItem]="data"
+          (clickMF)="moreFunction($event, data)"
+        ></codx-temp-full>
+      </div>
+    </div>
+    <div class="mb-3 d-flex">
+      <div class="d-flex flex-wrap align-items-center">
+        <div class="flex">
+          <div class="" *ngIf="data.groupRoles && data.groupRoles.length <= 5">
+            <ng-container
+              class="container"
+              *ngFor="let item of data.groupRoles; index as num"
+            >
+              <a>
+                <img
+                  [ngbPopover]="item.customName"
+                  triggers="mouseenter:mouseleave"
+                  placement="bottom"
+                  [autoClose]="'outside'"
+                  class="w-30px me-2"
+                  container="body"
+                  src="/{{ item.smallIcon }}"
+                />
+              </a>
+            </ng-container>
+          </div>
+          <div class="" *ngIf="data.groupRoles && data.groupRoles.length > 5">
+            <ng-container
+              class="container"
+              *ngFor="let item of data.groupRoles; index as num"
+            >
+              <a *ngIf="num < 5 || (num == 5 && data?.groupRoles?.length == 6)">
+                <img
+                  [ngbPopover]="item.customName"
+                  triggers="mouseenter:mouseleave"
+                  placement="bottom"
+                  [autoClose]="'outside'"
+                  class="w-30px"
+                  container="body"
+                  src="../../../{{ item.smallIcon }}"
+                />
+              </a>
+            </ng-container>
+            <ng-container *ngIf="data?.groupRoles?.length > 6">
+              <span
+                [ngbPopover]="manyModule"
+                [autoClose]="'outside'"
+                class="btn btn-sm btn-icon btn-light-primary rounde-1 ms-1 w-30px h-30px"
+              >
+                +{{ data.groupRoles && data.groupRoles.length - 5 }}
+              </span>
+              <ng-template #manyModule>
+                <div *ngFor="let item of data.groupRoles">
+                  <div class="d-flex align-items-center mb-4">
+                    <img
+                      class="w-30px me-3"
+                      src="../../../{{ item.smallIcon }}"
+                      alt=""
+                    />
+                    <div class="d-flex flex-column w-100">
+                      <div class="fw-bold text-dark">
+                        {{ item.customName }}
+                      </div>
+                      <div class="text-gray-500 fs-7">
+                        {{ item.roleName }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-container>
+          </div>
+        </div>
+        <div class="d-flex flex-column text-right ms-6">
+          <codx-vll
+            [name]="'AD002'"
+            [value]="data.status"
+            [showText]="true"
+            [showBgColor]="true"
+          >
+          </codx-vll>
+        </div>
+        <!-- <div class="w-10px min-w-10px">
+          <codx-mfunc
+            [formModel]="view.formModel"
+            (clickMF)="clickMF($event, data)"
+            [dataItem]="data"
+            (changeDataMF)="changeDataMF($event, data)"
+            type="hover"
+          >
+          </codx-mfunc>
+        </div> -->
+      </div>
+      <div class="w-10px min-w-10px">
+        <codx-mfunc
+          [formModel]="view.formModel"
+          [isBookMark]="false"
+          [dataItem]="data"
+          (clickMF)="moreFunction($event, data)"
+          type="hover"
+        >
+        </codx-mfunc>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #popEmpList>
+  <div class="fw-bold">
+    <codx-label
+      name="AssignmentList"
+      formName="Tasks"
+      default="Danh sách phân công cho"
+    ></codx-label>
+    <!-- <span>{{ resourcesCount }}</span> -->
+  </div>
+  <!-- <div class="my-1">
+    <codx-searchbar
+      *ngIf="resourcesCount > 0"
+      (searchEvent)="searchName($event)"
+    ></codx-searchbar>
+  </div> -->
+  <div class="userlist mh-300px overflow-auto">
+    <!-- <div
+      class="d-flex align-items-start user-card p-3"
+      *ngFor="let item of resources"
+    >
+      <div class="me-3">
+        <codx-img
+          class=""
+          [objectId]="item.memberID"
+          [objectType]="item.memberType"
+        >
+        </codx-img>
+      </div>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold">{{ item.memberName }}</div>
+        <div class="text-dark">
+          {{ item.description }}
+        </div>
+      </div>
+    </div> -->
+  </div>
+</ng-template>
+
+<ng-template #lstGroupMems let-data>
+  <div
+    class="w-150px min-w-150px"
+    [ngbPopover]="popEmpList"
+    #popoverList="ngbPopover"
+    placement="right bottom"
+    container="body"
+    autoClose="outside"
+    [openDelay]="500"
+  >
+    <ng-container *ngIf="data.members && data.members.length">
+      <codx-imgs
+        [isToolTip]="false"
+        [width]="30"
+        [objectId]="data.memberIDs"
+        [objectType]="data.memberType == 'U' ? 'AD_Users' : 'HR_Positions'"
+        [numberImages]="4"
+      >
+      </codx-imgs>
+    </ng-container>
+  </div>
+</ng-template>
+<ng-template #lstGroupRoles> </ng-template>

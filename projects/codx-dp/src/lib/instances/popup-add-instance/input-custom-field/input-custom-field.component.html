@@ -1,0 +1,213 @@
+<div class="form-group">
+  <div class="fw-bold mb-1">
+    <codx-label
+      [name]="customField.fieldName"
+      formName="DPInstancesStepsFields"
+      gridViewName="grvDPInstancesStepsFields"
+      [default]="customField.title"
+    >
+    </codx-label>
+    <span *ngIf="viewFieldName && customField.fieldName">
+      {{ "(" + customField.fieldName + ")" }}
+    </span>
+    <span *ngIf="customField.isRequired">
+      <codx-label
+        class="text-danger"
+        name="attentionIsRequired"
+        formName="DPInstancesStepsFields"
+        gridViewName="grvDPInstancesStepsFields"
+        default="*"
+      >
+      </codx-label>
+    </span>
+    <span
+      *ngIf="customField.dataType == 'A'"
+      class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
+      (click)="!disable ?addFile():''"
+    ></span>
+    <span *ngIf="customField.dataType == 'P'" class="mx-2 me-5">
+      <button
+        class="btn btn-sm btn-icon"
+        (click)="openUserPopup()"
+        [disabled]="disable"
+      >
+        <span class="icon-group_add text-primary icon-18"></span>
+      </button>
+    </span>
+    <span
+      *ngIf="customField.dataType == 'N' && customField.dataFormat == 'P'"
+      class="codx-label"
+    >
+      (%)
+    </span>
+  </div>
+  <ng-container *ngIf="customField.dataType == 'T'">
+    <codx-input
+      *ngIf="customField.dataFormat != 'L'"
+      [field]="customField.fieldName"
+      type="text"
+      [placeholder]="customField.note || ''"
+      [crrValue]="customField.dataValue || ''"
+      (keyUpEnter)="valueChange($event)"
+      (valueChange)="valueChange($event)"
+      [disabled]="disable"
+    >
+    </codx-input>
+    <codx-input
+      *ngIf="customField.dataFormat == 'L'"
+      [field]="customField.fieldName"
+      type="textarea"
+      format="ed2"
+      [placeholder]="customField.note || ''"
+      [crrValue]="customField.dataValue || ''"
+      (keyUpEnter)="valueChange($event)"
+      (valueChange)="valueChange($event)"
+      [disabled]="disable"
+    >
+    </codx-input>
+  </ng-container>
+  <ng-container *ngIf="customField.dataType == 'N'">
+    <ng-container>
+      <codx-input
+        [field]="customField.fieldName"
+        type="number"
+        [showSpinButton]="false"
+        [crrValue]="customField.dataValue"
+        [placeholder]="customField.note || ''"
+        (keyUpEnter)="valueChange($event)"
+        (valueChange)="valueChange($event)"
+        [disabled]="disable"
+      ></codx-input>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="customField.dataType == 'D'">
+    <codx-input
+      [field]="customField.fieldName"
+      type="datetime"
+      [format]="formatDate"
+      [placeholder]="customField.note || ''"
+      [crrValue]="customField.dataValue"
+      (valueChange)="valueChangeTime($event)"
+      [disabled]="disable"
+    >
+    </codx-input>
+  </ng-container>
+
+  <ng-container *ngIf="customField.dataType == 'L'">
+    <codx-input
+      [field]="customField.fieldName"
+      type="valuelist"
+      [refValue]="customField.refValue"
+      [placeholder]="customField.note || ''"
+      [crrValue]="customField.dataValue"
+      (keyUpEnter)="valueChange($event)"
+      (valueChange)="valueChange($event)"
+      [disabled]="disable"
+    >
+    </codx-input>
+  </ng-container>
+
+  <ng-container *ngIf="customField.dataType == 'P'">
+    <!-- <ng-container
+    *ngIf="customField.dataFormat == 'C' || customField.dataFormat == 'V'"
+  >
+    <codx-input
+      service="SYS"
+      type="combobox"
+      name="combobox"
+      ngDefaultControl
+      refValue="Users"
+      [loadFull]="true"
+      field="userID"
+      inputmode="text"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </ng-container> -->
+
+    <ng-container *ngIf="isPopupUserCbb">
+      <codx-combobox-popup
+        [comboboxName]="'Users'"
+        [field]="'cbbUser'"
+        [multiple]="customField.dataFormat == '2' ? true : false"
+        [width]="700"
+        [height]="600"
+        [value]=""
+        [formModel]="formModel"
+        (clickSave)="valueCbxUserChange($event)"
+      >
+      </codx-combobox-popup>
+    </ng-container>
+
+    <!-- <codx-imgs
+      [objectId]="listIdUser"
+      objectType="AD_Users"
+      [numberImages]="5"
+    ></codx-imgs> -->
+    <div class="d-flex flex-wrap"  *ngIf="arrIdUser && arrIdUser?.length > 0">
+      <ng-container *ngFor="let id of arrIdUser">
+        <div style="position: relative">
+          <codx-img class="" [objectId]="id" objectType="AD_Users"> </codx-img>
+          <div style="position: absolute; right: 0px; top: 0px">
+            <span
+              class="text-danger icon-close icon-16 cursor-pointer"
+              (click)="deleteUser(id)"
+            ></span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="customField.dataType == 'R'">
+    <ngb-rating
+      [(rate)]="currentRate"
+      [max]="customField.rank"
+      (rateChange)="rateChange($event)"
+      (hover)="hovered = $event"
+      (leave)="hovered = currentRate"
+      [readonly]="disable"
+      [starTemplate]="temp"
+      [disabled]="disable"
+    >
+      <ng-template #temp let-fill="fill" let-index="index">
+        <span
+          class="rankIcon {{ customField.rankIcon }} filled"
+          [class.filled]="fill === 100"
+          [class.bad]="index < customField.rank"
+        ></span>
+      </ng-template>
+    </ngb-rating>
+  </ng-container>
+
+  <ng-container *ngIf="customField.dataType == 'A'">
+    <codx-attachment
+      #attachment
+      [objectId]="objectId"
+      [objectType]="objectType"
+      hideFolder="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      hideDes="1"
+      type="inline"
+      [allowMultiFile]="allowMultiFile"
+      referType="source"
+      [functionID]="funID"
+      [isSaveSelected]="1"
+      (fileAdded)="fileAdded($event)"
+      (fileCount)="getfileCount($event)"
+      (fileSave)="fileSave($event)"
+      displayThumb="full"
+      showMessage="0"
+      [referType]="'source'"
+    >
+    </codx-attachment>
+       <!-- [formModel]="formModel" -->
+  </ng-container>
+
+  <div *ngIf="showErrMess" class="errorMessage text-danger ms-3" data-field="">
+    {{ errorMessage }}
+  </div>
+</div>

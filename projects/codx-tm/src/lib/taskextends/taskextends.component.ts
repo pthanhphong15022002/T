@@ -72,9 +72,6 @@ export class TaskExtendsComponent
 
   selectedChange(val: any) {
     this.taskExtends = val?.data ? val?.data : val;
-    // this.itemSelected = val?.data?.task ;
-    // this.taskExtends = val
-  //  this.loadTreeView();
     this.detectorRef.detectChanges();
   }
   requestEnded(e) { }
