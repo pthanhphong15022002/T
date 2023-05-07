@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
@@ -85,6 +86,7 @@ export class CodxAddTaskComponent implements OnInit {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private authStore: AuthStore,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -105,42 +107,40 @@ export class CodxAddTaskComponent implements OnInit {
     this.roles = this.stepsTasks['roles'] || [];
     this.startDateParent = new Date(this.step['startDate']);
     this.endDateParent = new Date(this.step['endDate']);
-    console.log(this.startDateParent.getTime());
     if(!this.stepsTasks['taskGroupID']){
       this.stepsTasks['startDate'] = this.startDateParent;
-      console.log(this.stepsTasks['startDate'].getTime());
     }
     this.getFormModel();
     if (this.stepsTasks['parentID']) {
       this.litsParentID = this.stepsTasks['parentID'].split(';');
     }
-    if (this.listTask.length > 0) {
-      this.dataCombobox = this.listTask.map((data) => {
-        if (this.litsParentID.some((x) => x == data.refID)) {
-          return {
-            key: data.refID,
-            value: data.taskName,
-            checked: true,
-          };
-        } else {
-          return {
-            key: data.refID,
-            value: data.taskName,
-            checked: false,
-          };
-        }
-      });
-      if (this.action == 'edit') {
-        let index = this.dataCombobox?.findIndex(
-          (x) => x.key === this.stepsTasks.refID
-        );
-        this.dataCombobox.splice(index, 1);
-      }
-      this.valueInput = this.dataCombobox
-        .filter((x) => x.checked)
-        .map((y) => y.value)
-        .join('; ');
-    }
+    // if (this.listTask.length > 0) {
+    //   this.dataCombobox = this.listTask.map((data) => {
+    //     if (this.litsParentID.some((x) => x == data.refID)) {
+    //       return {
+    //         key: data.refID,
+    //         value: data.taskName,
+    //         checked: true,
+    //       };
+    //     } else {
+    //       return {
+    //         key: data.refID,
+    //         value: data.taskName,
+    //         checked: false,
+    //       };
+    //     }
+    //   });
+    //   if (this.action == 'edit') {
+    //     let index = this.dataCombobox?.findIndex(
+    //       (x) => x.key === this.stepsTasks.refID
+    //     );
+    //     this.dataCombobox.splice(index, 1);
+    //   }
+    //   this.valueInput = this.dataCombobox
+    //     .filter((x) => x.checked)
+    //     .map((y) => y.value)
+    //     .join('; ');
+    // }
     this.owner = this.roles?.filter((role) => role.roleType === 'O');
     if(this.taskType == "M"){
       this.participant = this.roles?.filter((role) => role.roleType === 'P');
@@ -278,20 +278,20 @@ export class CodxAddTaskComponent implements OnInit {
     this.participant = listRole;
   }
 
-  applyOwner(e, datas) {
-    if (!e || e?.data.length == 0) return;
-    let listUser = e?.data;
-    listUser.forEach((element) => {
-      if (!datas.some((item) => item.id == element.id)) {
-        datas.push({
-          objectID: element.id,
-          objectName: element.text,
-          objectType: element.objectType,
-          roleType: element.objectName,
-        });
-      }
-    });
-  }
+  // applyOwner(e, datas) {
+  //   if (!e || e?.data.length == 0) return;
+  //   let listUser = e?.data;
+  //   listUser.forEach((element) => {
+  //     if (!datas.some((item) => item.id == element.id)) {
+  //       datas.push({
+  //         objectID: element.id,
+  //         objectName: element.text,
+  //         objectType: element.objectType,
+  //         roleType: element.objectName,
+  //       });
+  //     }
+  //   });
+  // }
 
   onDeleteOwner(objectID, data) {
     let index = data.findIndex((item) => item.objectID == objectID);
@@ -331,24 +331,26 @@ export class CodxAddTaskComponent implements OnInit {
 
     if (this.attachment && this.attachment.fileUploadList.length) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
-        if (res) {
-          if (this.action === 'copy') {
-            this.stepsTasks['recID'] = Util.uid();
-            this.stepsTasks['refID'] = Util.uid();
-            this.stepsTasks['isTaskDefault'] = false;
-          }
-          this.dialog.close({ data: this.stepsTasks, status: this.action });
-        }
+        this.save(this.stepsTasks);
       });
     } else {
-      if (this.action === 'copy') {
-        this.stepsTasks['recID'] = Util.uid();
-        this.stepsTasks['refID'] = Util.uid();
-        this.stepsTasks['isTaskDefault'] = false;
-      }
-      this.dialog.close({ data: this.stepsTasks, status: this.action });
+      this.save(this.stepsTasks);
     }
   }
+
+  save(task){
+    this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'AddTaskStepAsync',
+      task
+    ).subscribe(res => {
+      if(res){
+        this.dialog.close({ data:res});
+      }
+    });
+  }
+
   handelMail() {
     let data = {
       dialog: this.dialog,
