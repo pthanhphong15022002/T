@@ -18,7 +18,7 @@ implements OnInit, AfterViewInit {
   listStep = [];
   isUpdate = true //xư lý cho edit trung tuy chinh ko
   listStepsProcess = [] ;
-  titleDefault= "Trường tùy chỉnh"//truyen vay da
+  // titleDefault= "Trường tùy chỉnh"//truyen vay da
   readonly tabInformation: string = 'Information';
   readonly tabField: string = 'Field';
   readonly tabContact: string ='Contact';
