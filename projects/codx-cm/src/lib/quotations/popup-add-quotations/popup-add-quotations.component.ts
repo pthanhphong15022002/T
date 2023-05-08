@@ -169,7 +169,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     data.read = true;
     data.rowNo = idx + 1;
     data.transID = this.quotations?.recID;
-    // this.gridQuationsLines.addRow(data, idx);  //add row gridview
+   // this.gridQuationsLines.addRow(data, idx);  //add row gridview
     var obj = {
       headerText: 'Thêm sản phẩm báo giá',
       quotationsLine: data,
