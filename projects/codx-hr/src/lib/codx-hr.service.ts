@@ -501,6 +501,18 @@ export class CodxHrService {
   //   );
   // }
 
+  GetEmpCurrentWorkpermit(empID: string){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EWorkPermitsBusiness',
+      'GetEmpCrrWorkPermitAsync',
+      [empID]
+    );
+  }
+
+  
+
   getListWorkPermitByEmployeeID(data) {
     return this.api.execSv<any>(
       'HR',
@@ -1064,6 +1076,16 @@ export class CodxHrService {
       [empID]
     );
   }
+
+  // countEFamilyMembers(empID: string) {
+  //   return this.api.execSv<any>(
+  //     'HR',
+  //     'HR',
+  //     'EFamiliesBusiness',
+  //     'CountEmpFamilyMemberAsync',
+  //     [empID]
+  //   );
+  // }
 
   getEFamilyWithDataRequest(data) {
     return this.api.execSv<any>(
@@ -2220,6 +2242,16 @@ export class CodxHrService {
   }
 
   //#endregion
+
+  countEmpTotalRecord(empId, business){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      business,
+      'CountEmpTotalRecordAsync',
+      empId
+    );
+  }
 
   getFunctionList(funcID: string) {
     return this.api.execSv<any>(
