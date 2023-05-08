@@ -33,7 +33,7 @@
           <codx-label fiedName="ReasonID" [formModel]="form.formModel">
           </codx-label>
           <codx-input [Group]="form.formGroup" field="reasonID" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
+            (valueChange)="lineChanged($event)">
           </codx-input>
         </div>
       </div>
@@ -42,7 +42,7 @@
           <codx-label fiedName="DR" [formModel]="form.formModel">
           </codx-label>
           <codx-input [Group]="form.formGroup" field="dr" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
+            (valueChange)="lineChanged($event)">
           </codx-input>
         </div>
       </div>
@@ -51,7 +51,7 @@
           <codx-label fiedName="OffsetAcctID" [formModel]="form.formModel">
           </codx-label>
           <codx-input #cbxOffsetAcctID [Group]="form.formGroup" field="offsetAcctID" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
+            (valueChange)="lineChanged($event)">
           </codx-input>
         </div>
       </div>
@@ -60,7 +60,7 @@
           <codx-label fiedName="AccountID" [formModel]="form.formModel">
           </codx-label>
           <codx-input #cbxAccountID [Group]="form.formGroup" field="accountID" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
+            (valueChange)="lineChanged($event)">
           </codx-input>
         </div>
       </div>
@@ -69,7 +69,7 @@
           <codx-label fiedName="DIM3" [formModel]="form.formModel">
           </codx-label>
           <codx-input [Group]="form.formGroup" field="diM3" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
+            (valueChange)="lineChanged($event)">
           </codx-input>
         </div>
       </div>
@@ -78,7 +78,7 @@
           <codx-label fiedName="DIM1" [formModel]="form.formModel">
           </codx-label>
           <codx-input [Group]="form.formGroup" field="diM1" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
+            (valueChange)="lineChanged($event)">
           </codx-input>
         </div>
       </div>
@@ -87,7 +87,7 @@
           <codx-label fiedName="DIM2" [formModel]="form.formModel">
           </codx-label>
           <codx-input [Group]="form.formGroup" field="diM2" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
+            (valueChange)="lineChanged($event)">
           </codx-input>
         </div>
       </div>
@@ -96,7 +96,7 @@
           <codx-label fiedName="ProjectID" [formModel]="form.formModel">
           </codx-label>
           <codx-input [Group]="form.formGroup" field="projectID" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
+            (valueChange)="lineChanged($event)">
           </codx-input>
         </div>
       </div>
@@ -105,7 +105,7 @@
           <codx-label fiedName="AssetType" [formModel]="form.formModel">
           </codx-label>
           <codx-input [Group]="form.formGroup" field="assetType" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
+            (valueChange)="lineChanged($event)">
           </codx-input>
         </div>
       </div>
@@ -114,7 +114,7 @@
           <codx-label fiedName="AssetGroupID" [formModel]="form.formModel">
           </codx-label>
           <codx-input [Group]="form.formGroup" field="assetGroupID" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
+            (valueChange)="lineChanged($event)">
           </codx-input>
         </div>
       </div>
@@ -122,7 +122,7 @@
         <codx-label fiedName="Note" [formModel]="form.formModel">
         </codx-label>
         <codx-input [Group]="form.formGroup" field="note" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)">
+          (valueChange)="lineChanged($event)">
         </codx-input>
       </div>
     </div>

@@ -58,6 +58,12 @@ export class CodxFieldsDetailTempComponent implements OnInit {
     this.formModel.formName = 'DPInstancesStepsFields';
     this.formModel.gridViewName = 'grvDPInstancesStepsFields';
     this.formModel.entityName = 'DP_Instances_Steps_Fields';
+    if(!this.titleHeaderFormCF){
+      this.cache.functionList('DPT0301').subscribe(f=>{
+        this.titleHeaderFormCF = f?.customName || f?.description;
+      })
+    }
+  
     this.cache.valueList('DP0274').subscribe((res) => {
       if (res) this.dtFormatDate = res.datas;
     });

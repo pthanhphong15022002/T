@@ -1520,7 +1520,7 @@
                   </div>
                 </div>
                 <!-- Hộ chiếu -->
-                <div #passport class="mb-1" *ngIf="ePassportFormModel">
+                <div #passport class="mb-1 " *ngIf="ePassportFormModel">
                   <div class="d-flex align-items-center mt-6 mb-4">
                     <span class="icon-i-filter-right icon-20 me-2"></span>
                     <div class="fw-bold text-uppercase fs-5 text-gray-600">
@@ -1533,7 +1533,7 @@
                     </div>
                   </div>
 
-                  <div class="row mb-5">
+                  <div class="row mb-5  ">
                     <div class="col">
                       <div class="text-gray-600 pb-1">
                         <span
@@ -1565,7 +1565,7 @@
                         </span>
                       </div>
                     </div>
-                    <div class="col">
+                    <div class="col has-action-menu">
                       <div class="text-gray-600 pb-1">
                         <codx-label
                           fiedName="ExpiredDate"
@@ -1577,16 +1577,20 @@
                         <span class="fw-bold text-dark fs-6">
                           {{ crrPassport?.expiredDate | fmDT }}
                         </span>
-                        <codx-mfunc
-                          [formModel]="ePassportFormModel"
-                          (clickMF)="clickMF($event, crrPassport, 'passport')"
-                          type="hover"
-                          [dataItem]="crrPassport"
-                        >
-                        </codx-mfunc>
+
                       </div>
+                      <codx-mfunc
+                      [formModel]="ePassportFormModel"
+                      (clickMF)="clickMF($event, crrPassport, 'passport')"
+                      type="hover"
+                      [dataItem]="crrPassport"
+                    >
+                    </codx-mfunc>
                     </div>
+
                   </div>
+
+
 
                   <!-- <div class="mt-4 profile-grid">
                     <codx-gridview
@@ -1660,7 +1664,7 @@
                           </span>
                         </div>
                       </div>
-                      <div class="col">
+                      <div class="col has-action-menu">
                         <div class="text-gray-600 pb-1">
                           <codx-label
                             [default]="'Thời hạn'"
@@ -1675,6 +1679,13 @@
                             {{ crrVisa?.expiredDate | fmDT }}
                           </span>
                         </div>
+                        <codx-mfunc
+                        [formModel]="eVisaFormModel"
+                        (clickMF)="clickMF($event, crrVisa, 'visa')"
+                        type="hover"
+                        [dataItem]="crrVisa"
+                      >
+                      </codx-mfunc>
                       </div>
                     </div>
 
@@ -1714,13 +1725,7 @@
                           </span>
                         </div>
                       </div>
-                      <codx-mfunc
-                        [formModel]="eVisaFormModel"
-                        (clickMF)="clickMF($event, crrVisa, 'visa')"
-                        type="hover"
-                        [dataItem]="crrVisa"
-                      >
-                      </codx-mfunc>
+
                     </div>
                   </div>
 
@@ -1901,8 +1906,8 @@
                         </span>
                       </div>
                     </div>
-                    <div class="col">
-                      <div class="text-gray-600 pb-1">
+                    <div class="col has-action-menu">
+                      <div class="text-gray-600 pb-1 ">
                         <codx-label
                           [default]="'Thời hạn'"
                           [name]="'lblTimeEworkpermit'"
@@ -1916,6 +1921,13 @@
                           {{ crrWorkpermit?.toDate | fmDT }}
                         </span>
                       </div>
+                      <codx-mfunc
+                      [formModel]="eWorkPermitFormModel"
+                      (clickMF)="clickMF($event, crrWorkpermit, 'workpermit')"
+                      type="hover"
+                      [dataItem]="crrWorkpermit"
+                    >
+                    </codx-mfunc>
                     </div>
                   </div>
 
@@ -1936,9 +1948,11 @@
                       </span>
                     </div>
                   </div>
+
+
                 </div>
 
-                <div class="mt-4 profile-grid">
+                <!-- <div class="mt-4 profile-grid">
                   <codx-gridview
                     *ngIf="workPermitColumnGrid && eWorkPermitFormModel"
                     #workPermitGridview
@@ -1955,7 +1969,7 @@
                     height="auto"
                     [sort]="[workPermitSortModel]"
                   ></codx-gridview>
-                </div>
+                </div> -->
               </div>
             </div>
 
@@ -2091,6 +2105,10 @@
                   </codx-label> -->
                       {{ getFormHeader(eFamiliesFuncID) }}
                     </div>
+                    <span class="text-gray-500 mx-2">|</span>
+                    <span class="text-dark">
+                      <span>({{ lstFamily.length }})</span>
+                    </span>
                   </div>
                   <div class="d-flex align-items-center ms-5">
                     <button type="button" class="btn btn-icon btn-white">
@@ -2104,109 +2122,111 @@
 
                 <div #family class="mb-1">
                   <div class="d-flex flex-wrap py-3">
-                    <ng-container *ngFor="let item of lstFamily">
-                      <div class="w-50">
-                        <div
-                          class="border rounded border-gray-200 min-w-250px mw-400px me-4 mb-4"
-                        >
-                          <!-- <codx-temp-full
-                      (clickMF)="clickMF($event, item, 'family')"
-                      cardCss="card codx_cardcenter px-2 pt-4 pb-4"
-                      [imageId]="item.recID"
-                      [imageObjType]="'HR_EFamilies'"
-                      [imageWidth]="40"
-                      [formModel]="eInfoFormModel"
-                      [title]="item?.relationName"
-                      [dataItem]="item"
-                      [desc]="
-                        (item.relationType | vll : 'HR006' : 'text' | async) +
-                        ' | ' +
-                        'Năm sinh: ' +
-                        (item.birthday | fmDT)
-                      "
-                      [typeMF]="'hover'"
-                      [footer]="footerFamily"
-                    >
-                    </codx-temp-full>
-                    <ng-template #footerFamily let-data>
-                      <div
-                        class="d-flex align-items-center mt-1"
-                        *ngIf="data.isDependent"
-                      >
-                        <span
-                          class="icon-check icon-14 me-1 text-success"
-                        ></span
-                        >Phụ thuộc giảm trừ gia cảnh
-                      </div>
-                      <div
-                        class="d-flex align-items-center"
-                        *ngIf="data.isEmergency"
-                      >
-                        <span class="icon-check icon-14 me-1 text-danger"></span
-                        >Liên hệ khẩn cấp: {{ data.mobile }}
-                      </div>
-                    </ng-template> -->
-                          <codx-temp-full
-                            (clickMF)="clickMF($event, item, 'family')"
-                            cardCss="card codx_cardcenter p-3"
-                            [imageId]="item.recID"
-                            [imageObjType]="'HR_EFamilies'"
-                            [imageWidth]="40"
-                            [formModel]="eInfoFormModel"
-                            [titleTmp]="titleTmp"
-                            [dataItem]="item"
-                            [imgOn]="item?.modifiedOn"
-                            [typeMF]="'hover'"
+                    <div *ngIf="lstFamily.length > 0;else emptyDataTemplate">
+                      <ng-container *ngFor="let item of lstFamily">
+                        <div class="w-50">
+                          <div
+                            class="border rounded border-gray-200 min-w-250px mw-400px me-4 mb-4"
                           >
-                          </codx-temp-full>
-                          <ng-template #titleTmp let-data>
-                            <div class="row">
-                              <div class="fw-bold fs-6 text-dark">
-                                {{ data.relationName }}
-                              </div>
-                              <div class="d-flex align-items-center mb-1">
-                                <span class="fw-bold">{{
-                                  item.relationType
-                                    | vll : "HR006" : "text"
-                                    | async
-                                }}</span>
-                                <span class="text-gray-400 mx-2">|</span>
-                                <span class="d-flex align-items-center">
-                                  <codx-label
-                                    class="text-gray-600 label-colon me-2"
-                                    fiedName="Birthday"
-                                    [formModel]="eFamilyFormModel"
-                                  >
-                                  </codx-label>
-                                  <span class="text-dark">
-                                    {{ item.birthday | fmDT }}</span
-                                  >
-                                </span>
-                              </div>
-
-                              <div
-                                class="d-flex align-items-center mb-1"
-                                *ngIf="data.isDependent"
-                              >
-                                <span
-                                  class="icon-check icon-16 me-2 text-success"
-                                ></span
-                                >Phụ thuộc giảm trừ gia cảnh
-                              </div>
-                              <div
-                                class="d-flex align-items-center"
-                                *ngIf="data.isEmergency"
-                              >
-                                <span
-                                  class="icon-check icon-16 me-2 text-danger"
-                                ></span
-                                >Liên hệ khẩn cấp: {{ data.mobile }}
-                              </div>
-                            </div>
-                          </ng-template>
+                            <!-- <codx-temp-full
+                        (clickMF)="clickMF($event, item, 'family')"
+                        cardCss="card codx_cardcenter px-2 pt-4 pb-4"
+                        [imageId]="item.recID"
+                        [imageObjType]="'HR_EFamilies'"
+                        [imageWidth]="40"
+                        [formModel]="eInfoFormModel"
+                        [title]="item?.relationName"
+                        [dataItem]="item"
+                        [desc]="
+                          (item.relationType | vll : 'HR006' : 'text' | async) +
+                          ' | ' +
+                          'Năm sinh: ' +
+                          (item.birthday | fmDT)
+                        "
+                        [typeMF]="'hover'"
+                        [footer]="footerFamily"
+                      >
+                      </codx-temp-full>
+                      <ng-template #footerFamily let-data>
+                        <div
+                          class="d-flex align-items-center mt-1"
+                          *ngIf="data.isDependent"
+                        >
+                          <span
+                            class="icon-check icon-14 me-1 text-success"
+                          ></span
+                          >Phụ thuộc giảm trừ gia cảnh
                         </div>
-                      </div>
-                    </ng-container>
+                        <div
+                          class="d-flex align-items-center"
+                          *ngIf="data.isEmergency"
+                        >
+                          <span class="icon-check icon-14 me-1 text-danger"></span
+                          >Liên hệ khẩn cấp: {{ data.mobile }}
+                        </div>
+                      </ng-template> -->
+                            <codx-temp-full
+                              (clickMF)="clickMF($event, item, 'family')"
+                              cardCss="card codx_cardcenter p-3"
+                              [imageId]="item.recID"
+                              [imageObjType]="'HR_EFamilies'"
+                              [imageWidth]="40"
+                              [formModel]="eInfoFormModel"
+                              [titleTmp]="titleTmp"
+                              [dataItem]="item"
+                              [imgOn]="item?.modifiedOn"
+                              [typeMF]="'hover'"
+                            >
+                            </codx-temp-full>
+                            <ng-template #titleTmp let-data>
+                              <div class="row">
+                                <div class="fw-bold fs-6 text-dark">
+                                  {{ data.relationName }}
+                                </div>
+                                <div class="d-flex align-items-center mb-1">
+                                  <span class="fw-bold">{{
+                                    item.relationType
+                                      | vll : "HR006" : "text"
+                                      | async
+                                  }}</span>
+                                  <span class="text-gray-400 mx-2">|</span>
+                                  <span class="d-flex align-items-center">
+                                    <codx-label
+                                      class="text-gray-600 label-colon me-2"
+                                      fiedName="Birthday"
+                                      [formModel]="eFamilyFormModel"
+                                    >
+                                    </codx-label>
+                                    <span class="text-dark">
+                                      {{ item.birthday | fmDT }}</span
+                                    >
+                                  </span>
+                                </div>
+  
+                                <div
+                                  class="d-flex align-items-center mb-1"
+                                  *ngIf="data.isDependent"
+                                >
+                                  <span
+                                    class="icon-check icon-16 me-2 text-success"
+                                  ></span
+                                  >Phụ thuộc giảm trừ gia cảnh
+                                </div>
+                                <div
+                                  class="d-flex align-items-center"
+                                  *ngIf="data.isEmergency"
+                                >
+                                  <span
+                                    class="icon-check icon-16 me-2 text-danger"
+                                  ></span
+                                  >Liên hệ khẩn cấp: {{ data.mobile }}
+                                </div>
+                              </div>
+                            </ng-template>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2266,6 +2286,7 @@
                       [dataValues]="employeeID"
                       [pageSize]="numPageSizeGridView"
                       [entityName]="'HR_EExperiences'"
+                      [emptyTemplate]="emptyDataTemplate"
                       [rowHeight]="30"
                       height="auto"
                     ></codx-gridview>
@@ -3264,11 +3285,11 @@
 
           <div class="mt-3">
             <div *ngIf="!crrEBSalary && !eBasicSalaryFormmodel">
-                <div class="d-flex ms-1">
-                  <span class="text-gray-500 fw-bold">
-                    {{ "SYS011" | mssg | async }}
-                  </span>
-                </div>
+              <div class="d-flex ms-1">
+                <span class="text-gray-500 fw-bold">
+                  {{ "SYS011" | mssg | async }}
+                </span>
+              </div>
             </div>
             <div
               class="mb-2"
@@ -6100,7 +6121,7 @@
 </ng-template>
 
 <ng-template #templateEExperienceGridCol4 let-data>
-  <div class="has-action-menu min-h-40px">
+  <div class="has-action-menu h-40px">
     {{ data?.position }}
     <codx-mfunc
       [formModel]="eExperienceFormModel"
@@ -6314,12 +6335,12 @@
 <!-- #region Giấy phép lao động columnGrid templates-->
 <ng-template #workPermitCol1 let-data>
   <div class="d-flex align-items-center">
-    <span
+    <!-- <span
       class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
       [class]="
         data.recID == crrWorkpermit?.recID ? ' bg-primary' : 'bg-transparent'
       "
-    ></span>
+    ></span> -->
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-5px">
         <span class="icon-email icon-16 text-gray-500 me-2"></span>
@@ -7027,15 +7048,18 @@
     </span>
   </div>
   <div class="d-flex align-items-center">
-    <span
-      class="badge badge-success fw-bold border-0 me-3"
-      *ngIf="data.isInspect"
-    >
-      Có giám định Y khoa
-    </span>
     <i class="icon-calendar_today icon-16 me-2"></i>
-    <span class="text-dark">
-      {{ data?.diseaseDate | fmDT }}
+    <span
+      class="fw-bold text-dark me-2"
+      [innerHTML]="
+        data?.diseaseDate
+          | formatvalue : eDiseasesFormModel : 'diseaseDate'
+          | async
+      "
+    >
+    </span>
+    <span class="badge badge-success fw-bold border-0" *ngIf="data.isInspect">
+      Có giám định Y khoa
     </span>
   </div>
 </ng-template>
@@ -7462,7 +7486,7 @@
                   >
                   </codx-label>
                   <span class="text-gray-500 mx-2"> | </span>
-                  <span class="text-gray-500">({{ visaRowCount }})</span>
+                  <span class="text-gray-500">Tất cả ({{ visaRowCount }})</span>
                 </div>
               </div>
             </div>
@@ -7495,6 +7519,7 @@
             [pageSize]="numPageSizeGridView"
             [rowHeight]="40"
             height="auto"
+            [emptyTemplate]="emptyDataTemplate"
             [sort]="[visaSortModel]"
           ></codx-gridview>
         </div>
@@ -7569,7 +7594,7 @@
                   >
                   </codx-label>
                   <span class="text-gray-500 mx-2"> | </span>
-                  <span class="text-gray-500">({{ passportRowCount }})</span>
+                  <span class="text-gray-500">Tất cả ({{ passportRowCount }})</span>
                 </div>
               </div>
             </div>
@@ -7687,6 +7712,7 @@
         [dataValues]="employeeID"
         [pageSize]="numPageSizeGridView"
         [rowHeight]="30"
+        [emptyTemplate]="emptyDataTemplate"
         height="auto"
       ></codx-gridview>
     </div>
@@ -7819,5 +7845,111 @@
     <span class="text-gray-500 fw-bold">
       {{ "SYS011" | mssg | async }}
     </span>
+  </div>
+</ng-template>
+
+<ng-template #tmpViewAllWorkpermit let-dialog1>
+  <div class="">
+    <div class="codx-form card w-100 h-100 rounded-0 border-0">
+      <div class="card-header flex-column">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <div class="card-title">
+            <div class="d-flex flex-column">
+              <div class="d-flex align-items-center mb-3 mt-5">
+                <span class="icon-i-filter-right icon-20 me-2"></span>
+                <div class="d-flex align-items-center me-3">
+                  <codx-label
+                    [formModel]="eWorkPermitFormModel"
+                    [name]="'lblViewAllEWorkpermit'"
+                    default="Giấy phép lao động"
+                    class="fw-bold text-uppercase fs-5 text-gray-600"
+                  >
+                  </codx-label>
+                  <span class="text-gray-500 mx-2"> | </span>
+                  <span class="text-gray-500">Tất cả ({{ workPermitRowCount }})</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-toolbar">
+            <button
+              type="button"
+              class="btn btn-flex text-dark-75 text-hover-primary px-0"
+              (click)="close2(dialog1)"
+            >
+              <span class="icon-close icon-18"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="mt-4 profile-grid">
+          <codx-gridview
+            *ngIf="workPermitColumnGrid && eWorkPermitFormModel"
+            #workPermitGridview
+            [formModel]="eWorkPermitFormModel"
+            [columnsGrid]="workPermitColumnGrid"
+            [service]="'HR'"
+            [assemblyName]="'Core'"
+            [className]="'DataBusiness'"
+            [method]="'LoadDataAsync'"
+            [predicates]="'EmployeeID=@0'"
+            [dataValues]="employeeID"
+            [pageSize]="numPageSizeGridView"
+            [rowHeight]="40"
+            height="auto"
+            [sort]="[workPermitSortModel]"
+          ></codx-gridview>
+        </div>
+      </div>
+      <div class="card-footer border-0">
+        <div class="d-flex justify-content-end">
+          <!-- <button class="btn btn-primary" (click)="onSaveUpdateForm()">
+            <i class="icon-save"></i>
+            <codx-label
+              default="Lưu"
+              name="lblSave"
+              [formModel]="view.formModel"
+            ></codx-label>
+          </button> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="d-flex align-items-center mb-3 mt-5">
+      <span class="icon-i-filter-right icon-20 me-2"></span>
+      <div class="d-flex align-items-center me-3">
+        <codx-label
+          [formModel]="ePassportFormModel"
+          [name]="'lblViewAllEPassport'"
+          default="Hộ chiếu"
+          class="fw-bold text-uppercase fs-5 text-gray-600"
+        >
+        </codx-label>
+        <span class="text-gray-500 mx-2"> | </span>
+        <span class="text-gray-500">({{ passportRowCount }})</span>
+      </div>
+</div>
+
+
+  <div class="mt-4 profile-grid">
+    <codx-gridview
+      *ngIf="passportColumnGrid && ePassportFormModel"
+      #passportGridview
+      [formModel]="ePassportFormModel"
+      [columnsGrid]="passportColumnGrid"
+      [service]="'HR'"
+      [assemblyName]="'Core'"
+      [className]="'DataBusiness'"
+      [method]="'LoadDataAsync'"
+      [predicates]="'EmployeeID=@0'"
+      [dataValues]="employeeID"
+      [dataService]="dataService"
+      [pageSize]="numPageSizeGridView"
+      [rowHeight]="40"
+      height="auto"
+      [sort]="[passportSortModel]"
+    ></codx-gridview>
+  </div> -->
   </div>
 </ng-template>
