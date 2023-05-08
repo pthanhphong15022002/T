@@ -19,6 +19,7 @@ import {
   ViewType,
   SidebarModel,
   ResourceModel,
+  RequestOption,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
@@ -86,7 +87,7 @@ export class DealsComponent
   customerName: string = '';
 
   @Input() showButtonAdd = false;
-  
+
   columnGrids = [];
   // showButtonAdd = false;
   button?: ButtonModel;
@@ -125,7 +126,7 @@ export class DealsComponent
   }
 
   onInit(): void {
-     //test no chosse 
+     //test no chosse
      this.dataObj = {
       processID:'327eb334-5695-468c-a2b6-98c0284d0620'
     }
@@ -147,7 +148,7 @@ export class DealsComponent
     this.button = {
       id: this.btnAdd,
     };
-   
+
 
     this.views = [
       {
@@ -392,6 +393,9 @@ export class DealsComponent
       case 'SYS04':
         this.copy(data);
         break;
+      case 'SYS02':
+        this.delete(data);
+        break;
     }
   }
 
@@ -464,27 +468,15 @@ export class DealsComponent
       formMD: formMD,
       titleAction: action === 'add' ? 'Thêm cơ hội' : 'Copy cơ hội',
     };
-    var dialogCustomField = this.callfc.openSide(
+    let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
       obj,
       option
     );
-    dialogCustomField.closed.subscribe((e) => {
+    dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
-        var data = e.event;
-        if (this.kanban) {
-          this.kanban.updateCard(data);
-          if (this.kanban?.dataSource?.length == 1) {
-            this.kanban.refresh();
-          }
-        }
-        // this.dataSelected = data;
-        // if (this.detailViewInstance) {
-        //   this.detailViewInstance.dataSelect = this.dataSelected;
-        //   this.detailViewInstance.listSteps = this.listStepInstances;
-        // }
-
-        this.detectorRef.detectChanges();
+        // this.view.dataService.update(e.event).subscribe();
+       // this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -534,6 +526,26 @@ export class DealsComponent
   }
 
   copy(data) {}
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+        }
+      });
+    this.changeDetectorRef.detectChanges();
+  }
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeletedDealAsync';
+    opt.data = [itemSelected.recID];
+    return true;
+  }
   //#endregion
 
   //#region event

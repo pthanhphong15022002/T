@@ -111,10 +111,65 @@ export class CodxCmService {
     return formModel;
   }
 
-  //#region API For Deal
-  getListCustomer() {
-    return this.api.exec<any>('CM', 'DealsBusiness', 'GetListCustomersAsync');
+
+  // #region API OF BAO
+
+  // Combox
+
+  getListCbxProcess(data:any) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetListCbxProcessesAsync',
+      data
+    );
   }
+
+  getInstanceSteps(data:any){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'CreateListInstancesStepsByProcessAsync',
+      data
+    );
+  }
+
+  addInstance(data:any){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'AddInstanceAsync',
+      data
+    );
+  }
+
+  getListCbxCampaigns() {
+    return this.api.exec<any>(
+      'CM',
+      'CampaignsBusiness',
+      'GetListCbxCampaignsAsync',
+    );
+  }
+
+  getListCustomer() {
+    return this.api.exec<any>('CM', 'CustomersBusiness', 'GetListCustomersAsync');
+  }
+  getListChannels() {
+    return this.api.exec<any>('CM', 'ChannelsBusiness', 'GetListChannelsAsync');
+  }
+  AddDeal(data) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealAsync',data);
+  }
+
+  // genAutoNumber(funcID: any, entityName: string, key: any) {
+  //   return this.api.execSv<any>(
+  //     'SYS',
+  //     'AD',
+  //     'AutoNumbersBusiness',
+  //     'GenAutoNumberAsync',
+  //     [funcID, entityName, key]
+  //   );
+  // }
   //#endregion
 
   //contracts -- nvthuan

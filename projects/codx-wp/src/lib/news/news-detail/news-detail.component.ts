@@ -172,14 +172,13 @@ export class NewsDetailComponent extends UIComponent {
     } 
   }
   // open popup share
-  openPopupShare(post: any) {
-    if (post)
-    {
-      let _data = new WP_Comments();
-      _data.news = JSON.parse(JSON.stringify(post));
-      _data.refID = post.recID;
+  openPopupShare(data: any) {
+    if (data){
+      let post = new WP_Comments();
+      post.news = JSON.parse(JSON.stringify(data));
+      post.refID = data.recID;
       let _obj = {
-        data: _data,
+        data: post,
         refType: "WP_News",
         status: 'share',
         headerText: 'Chia sẻ bài viết',
