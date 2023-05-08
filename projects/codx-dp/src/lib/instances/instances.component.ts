@@ -176,20 +176,20 @@ export class InstancesComponent
 
   isHaveFile: boolean = false;
   //test temp
-  dataTemplet = [
-    {
-      templateName: 'File excel của Khanh- Team bá cháy',
-      recID: '1',
-    },
-    {
-      templateName: 'Khanh múa rất đẹp,sập sân khấu',
-      recID: '2',
-    },
-    {
-      templateName: 'Khanh pig bá đạo',
-      recID: '3',
-    },
-  ];
+  // dataTemplet = [
+  //   {
+  //     templateName: 'File excel của Khanh- Team bá cháy',
+  //     recID: '1',
+  //   },
+  //   {
+  //     templateName: 'Khanh múa rất đẹp,sập sân khấu',
+  //     recID: '2',
+  //   },
+  //   {
+  //     templateName: 'Khanh pig bá đạo',
+  //     recID: '3',
+  //   },
+  // ];
   type = 'excel';
   requestTemp = new DataRequest();
   optionEx = new DataRequest();
@@ -296,7 +296,7 @@ export class InstancesComponent
     this.views = [
       {
         type: ViewType.listdetail,
-        active: false,
+        active: true,
         sameData: true,
         toolbarTemplate: this.footerButton,
         model: {
@@ -1434,7 +1434,7 @@ export class InstancesComponent
   }
 
   checkFieldsIEmpty(fields) {
-    return fields.includes((x) => !x.dataValue && x.isRequired);
+    return fields.some((x) => !x.dataValue && x.isRequired);
   }
 
   checkTransferControl(stepID) {
@@ -1596,25 +1596,19 @@ export class InstancesComponent
       const isSunday = dayOff.includes('8');
       let day = 0;
 
-      for (
-        let currentDate = new Date(startDay);
-        currentDate <= endDay;
-        currentDate.setDate(currentDate.getDate() + 1)
+      for (let currentDate = new Date(startDay); currentDate <= endDay; currentDate.setDate(currentDate.getDate() + 1)
       ) {
-        if (currentDate.getDay() === 6 && isSaturday) {
-          ++day;
-        }
-        if (currentDate.getDay() === 0 && isSunday) {
-          ++day;
-        }
+        day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
+        day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
       }
       endDay.setDate(endDay.getDate() + day);
+
       if (endDay.getDay() === 6 && isSaturday) {
         endDay.setDate(endDay.getDate() + 1);
       }
-      endDay.setDate(endDay.getDate() + day);
+
       if (endDay.getDay() === 0 && isSunday) {
-        endDay.setDate(endDay.getDate() + 1);
+        endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
       }
     }
     return endDay;
@@ -1946,7 +1940,7 @@ export class InstancesComponent
   }
 
   showFormSubmit() {
-    if (!this.dataSelected.approveStatus) return;
+    // if (!this.dataSelected.approveStatus) return;
     this.codxDpService
       .getESCategoryByCategoryID(this.process.processNo)
       .subscribe((item: any) => {

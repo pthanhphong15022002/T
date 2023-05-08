@@ -59,7 +59,7 @@ export const EPCONST = {
     Delete: 'SYS02',
     Edit: 'SYS03',
     Copy: 'SYS04',
-
+    View:'ViewEP',
     //Room
     R_Reschedule:'EP4T1101',
     R_Invite:'EP4T1102',
@@ -93,7 +93,13 @@ export const EPCONST = {
 
     
   },
+  PARAM:{
 
+    EPParameters : 'EPParameters',
+    EPCarParameters : 'EPCarParameters',
+    EPStationeryParameters : 'EPStationeryParameters',
+    EPRoomParameters : 'EPRoomParameters',
+  },
   MES_CODE:{
     Success:'SYS034',
   },
