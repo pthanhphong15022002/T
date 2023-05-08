@@ -271,8 +271,6 @@ export class DP_Instances {
   stepID: string;
   title: string;
   memo: string;
-  taskGroups: DP_Instances_Steps_TaskGroups[] = []; // objects;
-  tasks: DP_Instances_Steps_Tasks[] = []; // objects;
   statusCodeID: string;
   status: string;
   lastUpdate: Date;
