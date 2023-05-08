@@ -50,7 +50,7 @@ import {
 } from '@syncfusion/ej2-angular-inputs';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { from, map, mergeMap, Observable, Observer, of } from 'rxjs';
+import { from, isObservable, map, mergeMap, Observable, Observer, of } from 'rxjs';
 import { lvFileClientAPI } from '@shared/services/lv.component';
 import { environment } from 'src/environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -724,50 +724,94 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
-
-    var tenants = from(this.CheckTenantFile(this.user.tenant));
-    return tenants.pipe(
-      mergeMap((value, i) => { 
-        if(typeof value == 'object' && value.AppId)
-        {
-          return from(this.fileService.getTotalHdd()).pipe(mergeMap(hdd=>{
-            if(hdd)
-            {
-              this.infoHDD.totalHdd = hdd?.totalHdd;
-              this.infoHDD.totalUsed = hdd?.TotalUsedBytes;
-              return from(this.onMultiFileSaveObservableAfterTenant()).pipe(mergeMap(res => {
-                return res
-              }))
-            }
-            return of(null);
-          }))
-        }
-        else
-        {
-          return from(this.fileService.getTotalHdd()).pipe(mergeMap(hdd=>{
-            if(hdd)
-            {
-              this.infoHDD.totalHdd = hdd?.totalHdd;
-              this.infoHDD.totalUsed = hdd?.TotalUsedBytes;
-              var tenants = from(this.RegisterTenantFile(this.user.tenant))
-              return tenants.pipe(mergeMap((val,i)=>{
-                if(typeof val == 'object' && val.Data.AppId) {
-                  return from(this.onMultiFileSaveObservableAfterTenant()).pipe(mergeMap(res => {
-                    return res
-                  }))
-                } 
-                else {
-                  this.notificationsService.notify("Đăng ký tenant không thành công");
-                  return [];
-                }
-              }))
-            }
-            return of(null);
-          }));
-          
-        } 
-       }));
+    var check = this.CheckTenantFile(this.user.tenant) as any;
+    if(isObservable(check))
+    {
+      var tenants = from(check);
+      return tenants.pipe(
+        mergeMap((value : any, i) => { 
+          if(typeof value == 'object' && value.AppId)
+          {
+            return from(this.fileService.getTotalHdd()).pipe(mergeMap(hdd=>{
+              if(hdd)
+              {
+                this.infoHDD.totalHdd = hdd?.totalHdd;
+                this.infoHDD.totalUsed = hdd?.TotalUsedBytes;
+                return from(this.onMultiFileSaveObservableAfterTenant()).pipe(mergeMap(res => {
+                  return res
+                }))
+              }
+              return of(null);
+            }))
+          }
+          else
+          {
+            return from(this.fileService.getTotalHdd()).pipe(mergeMap(hdd=>{
+              if(hdd)
+              {
+                this.infoHDD.totalHdd = hdd?.totalHdd;
+                this.infoHDD.totalUsed = hdd?.TotalUsedBytes;
+                var tenants = from(this.RegisterTenantFile(this.user.tenant))
+                return tenants.pipe(mergeMap((val,i)=>{
+                  if(typeof val == 'object' && val.Data.AppId) {
+                    return from(this.onMultiFileSaveObservableAfterTenant()).pipe(mergeMap(res => {
+                      return res
+                    }))
+                  } 
+                  else {
+                    this.notificationsService.notify("Đăng ký tenant không thành công");
+                    return [];
+                  }
+                }))
+              }
+              return of(null);
+            }));
+            
+          } 
+        }));
     }
+    else 
+    {
+      if(typeof check == 'object' && check.AppId)
+          {
+            return from(this.fileService.getTotalHdd()).pipe(mergeMap(hdd=>{
+              if(hdd)
+              {
+                this.infoHDD.totalHdd = hdd?.totalHdd;
+                this.infoHDD.totalUsed = hdd?.TotalUsedBytes;
+                return from(this.onMultiFileSaveObservableAfterTenant()).pipe(mergeMap(res => {
+                  return res
+                }))
+              }
+              return of(null);
+            }))
+          }
+          else
+          {
+            return from(this.fileService.getTotalHdd()).pipe(mergeMap(hdd=>{
+              if(hdd)
+              {
+                this.infoHDD.totalHdd = hdd?.totalHdd;
+                this.infoHDD.totalUsed = hdd?.TotalUsedBytes;
+                var tenants = from(this.RegisterTenantFile(this.user.tenant))
+                return tenants.pipe(mergeMap((val,i)=>{
+                  if(typeof val == 'object' && val.Data.AppId) {
+                    return from(this.onMultiFileSaveObservableAfterTenant()).pipe(mergeMap(res => {
+                      return res
+                    }))
+                  } 
+                  else {
+                    this.notificationsService.notify("Đăng ký tenant không thành công");
+                    return [];
+                  }
+                }))
+              }
+              return of(null);
+            }));
+            
+          } 
+    }
+  }
     
   async onMultiFileSaveObservableAfterTenant()
   {
@@ -776,18 +820,20 @@ export class AttachmentComponent implements OnInit, OnChanges {
       if (this.data == undefined) this.data = [];
       this.addPermissionA();
       let total = this.fileUploadList.length;
+
+      var data = JSON.parse(JSON.stringify(this.fileUploadList));
       //  var that = this;
       //await this.dmSV.getToken();
       for (var i = 0; i < total; i++) {
-        if (this.objectId) this.fileUploadList[i].objectID = this.objectId;
+        if (this.objectId) data[i].objectID = this.objectId;
         // await this.serviceAddFile(fileItem);
-        this.fileUploadList[i].avatar = null;
-        this.fileUploadList[i].data = '';
-        this.fileUploadList[i].createdOn = new Date();
+        data[i].avatar = null;
+        data[i].data = '';
+        data[i].createdOn = new Date();
       
         if (total > 1)
-          this.fileUploadList[i] = await this.addFileLargeLong(
-            this.fileUploadList[i],
+          data[i] = await this.addFileLargeLong(
+            data[i],
             false
           );
         // if (total > 1) {
@@ -801,12 +847,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
       if (total > 1) {
         for(var i = 0 ; i< this.fileUploadList.length ; i++)
         {
-          this.fileUploadList[i].source = null;
-          this.fileUploadList[i].item = null
+          data[i].source = null;
+          data[i].item = null
         }
         return this.fileService
           .addMultiFileObservable(
-            this.fileUploadList,
+            data,
             this.actionType,
             this.formModel?.entityName,
             this.isDM,
@@ -881,8 +927,19 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   async onMultiFileSave() {
     this.closeBtnUp = true;
-    var check = await this.CheckTenantFile(this.user.tenant);
-    if(typeof check == 'object' && check.AppId) await this.onMultiSaveAfterTenant();
+    var check = this.CheckTenantFile(this.user.tenant);
+    if(isObservable(check))
+    {
+      check.subscribe(async (item : any)=>{
+       this.onMultiSaveResult(item);
+      })
+    }
+    else this.onMultiSaveResult(check);
+  }
+
+  async onMultiSaveResult(item:any)
+  {
+    if(typeof item == 'object' && item.AppId) await this.onMultiSaveAfterTenant();
     else
     {
       var regs = await this.RegisterTenantFile(this.user.tenant);
@@ -892,9 +949,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         this.closeBtnUp = false
       }
     }
-   
   }
-
   async onMultiSaveAfterTenant()
   {
     this.fileService.getTotalHdd().subscribe(async (hdd) => {
@@ -913,22 +968,23 @@ export class AttachmentComponent implements OnInit, OnChanges {
         }
         if (this.data == undefined) this.data = [];
         let total = this.fileUploadList.length;
+        var data = JSON.parse(JSON.stringify(this.fileUploadList));
         var toltalUsed = 0; //bytes
         var remainingStorage = -1;
         if (this.infoHDD.totalHdd >= 0)
           remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
         var that = this;
         for (var i = 0; i < total; i++) {
-          this.fileUploadList[i].objectID = this.objectId;
-          this.fileUploadList[i].description = this.description[i];
-          this.fileUploadList[i].avatar = null;
-          this.fileUploadList[i].data = '';
-          if(this.isTab) this.fileUploadList[i].createdOn = this.date;
-          else this.fileUploadList[i].createdOn = new Date();
-          toltalUsed += this.fileUploadList[i].fileSize;
+          data[i].objectID = this.objectId;
+          data[i].description = this.description[i];
+          data[i].avatar = null;
+          data[i].data = '';
+          if(this.isTab) data[i].createdOn = this.date;
+          else data[i].createdOn = new Date();
+          toltalUsed += data[i].fileSize;
           if (total > 1)
-            this.fileUploadList[i] = await this.addFileLargeLong(
-              this.fileUploadList[i],
+            data[i] = await this.addFileLargeLong(
+              data[i],
               false
             );
         }
@@ -943,7 +999,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         if (total > 1) {
           var done = this.fileService
             .addMultiFile(
-              this.fileUploadList,
+              data,
               this.actionType,
               this.formModel?.entityName,
               this.isDM,
@@ -1213,10 +1269,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   //Kiểm tra tenant đã tồn tại hay chưa ?
-  async CheckTenantFile(getAppName: any)
+  CheckTenantFile(getAppName: any)
   {
     lvFileClientAPI.setUrl(environment.urlUpload);
-    return await lvFileClientAPI.postAsync(`api/admin/apps/get/${getAppName}`,"");
+    return this.atSV.loadTenant(getAppName);
   }
 
   //Đăng ký tenant file

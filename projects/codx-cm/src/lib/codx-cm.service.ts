@@ -171,4 +171,22 @@ export class CodxCmService {
   //   );
   // }
   //#endregion
+
+  //contracts -- nvthuan
+  addContracts(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'AddContractsAsync',
+      data
+    );
+  }
+  editContracts(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'UpdateContractAsync',
+      data
+    );
+  }
 }

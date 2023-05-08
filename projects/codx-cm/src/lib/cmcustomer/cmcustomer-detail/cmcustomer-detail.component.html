@@ -357,6 +357,8 @@
         [objectID]="dataSelected.recID"
         [funcID]="funcID"
         [dataTree]="treeTask"
+        [funcIDQuotations]="'CM0202'"
+        [customerID]="dataSelected.customerID"
       ></codx-tabs>
     </ng-template>
   </codx-detail-tmp>
@@ -520,4 +522,8 @@
 </ng-template>
 <ng-template #product let-data="value">
   <codx-table></codx-table>
+</ng-template>
+
+<ng-template #contract let-data>
+  <list-contracts [projectID]="dataSelected?.recID"></list-contracts>
 </ng-template>

@@ -934,7 +934,7 @@ export class PopupAddSignFileComponent implements OnInit {
             (await this.attachment.saveFilesObservable()).subscribe(
               (item2: any) => {
                 this.disableContinue = false;
-                if (item2?.status == 0) {
+                if (item2 && item2?.status == 0) {
                   this.fileAdded(item2);
                   this.updateNodeStatus(oldNode, newNode);
                   this.currentTab++;

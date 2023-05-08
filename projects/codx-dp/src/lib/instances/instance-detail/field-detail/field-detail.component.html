@@ -66,7 +66,7 @@
             12 / showColumnControl
           }} has-action-menu crr-fiels mb-5"
         >
-        <!-- p-3 -->
+          <!-- p-3 -->
           <ng-container
             [ngTemplateOutlet]="viewDetailFieldCurrent"
             [ngTemplateOutletContext]="{ $implicit: field }"
@@ -136,8 +136,8 @@
           *ngIf="data.dataType == 'N' && data.dataFormat && data.dataValue"
           [innerHTML]="formatNumber(data)"
         >
-          <span *ngIf="data.dataFormat == 'P'">%</span>
         </span>
+
         <span class="text-dark margin-l" *ngIf="data.dataType == 'D'">
           <span
             *ngIf="
@@ -196,6 +196,7 @@
             showMessage="0"
             [hideDelete]="'1'"
             [hideMoreF]="'0'"
+            [referType]="'source'"
           >
           </codx-attachment>
         </ng-container>
@@ -225,7 +226,7 @@
       <codx-input-custom-field
         [customField]="data"
         [objectId]="data?.recID"
-        [objectType]="'DP_Instances'"
+        [objectType]="'DP_Instances_Steps'"
         [formModel]="formModelDefault"
         [checkValid]="false"
         (valueChangeCustom)="valueChangeCustom($event)"
@@ -249,13 +250,13 @@
       </span>
       <span>
         <codx-label
-        class="fw-bold mb-1"
-        name="separation"
-        formName="DPInstancesStepsFields"
-        gridViewName="grvDPInstancesStepsFields"
-        default=":"
-      >
-      </codx-label>
+          class="fw-bold mb-1"
+          name="separation"
+          formName="DPInstancesStepsFields"
+          gridViewName="grvDPInstancesStepsFields"
+          default=":"
+        >
+        </codx-label>
       </span>
     </span>
 
@@ -352,6 +353,7 @@
             showMessage="0"
             [hideDelete]="'1'"
             [hideMoreF]="'0'"
+            [referType]="'source'"
           >
           </codx-attachment>
         </ng-container>

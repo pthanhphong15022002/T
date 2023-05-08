@@ -7,6 +7,8 @@ import {
   SimpleChanges,
   Output,
   EventEmitter,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import {
   CallFuncService,
@@ -27,6 +29,7 @@ import { PopupListContactsComponent } from '../popup-add-cmcustomer/popup-list-c
   styleUrls: ['./cmcustomer-detail.component.css'],
 })
 export class CmcustomerDetailComponent implements OnInit {
+  @ViewChild('contract')contract: TemplateRef<any>;
   @Input() recID: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
@@ -40,15 +43,14 @@ export class CmcustomerDetailComponent implements OnInit {
   vllContactType = '';
   listContacts = [];
   tabControl = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true },
-    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Task', textDefault: 'Công việc', isActive: false },
-    { name: 'Approve', textDefault: 'Ký duyệt', isActive: false },
-    { name: 'References', textDefault: 'Liên kết', isActive: false },
-    { name: 'Quote', textDefault: 'Báo giá', isActive: false },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false },
-    { name: 'Contract', textDefault: 'Hợp đồng', isActive: false },
+    { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+    { name: 'Comment', textDefault: 'Thảo luận', isActive: false, template: null },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false, template: null },
+    { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
+    { name: 'Approve', textDefault: 'Ký duyệt', isActive: false, template: null },
+    { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
+    { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
+    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
   ];
   treeTask = [];
   dataSelected: any;
@@ -90,6 +92,10 @@ export class CmcustomerDetailComponent implements OnInit {
       }
     }
   }
+
+  ngAfterViewInit(): void {
+     this.tabControl.push({ name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract});
+   }
 
   getOneCustomerDetail(id, funcID) {
     this.viewTag = '';
