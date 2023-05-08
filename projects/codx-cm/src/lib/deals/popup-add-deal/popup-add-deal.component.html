@@ -185,14 +185,16 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-      <codx-input
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      field="owner"
-      [crrValue]="deal?.owner"
-      (valueChange)="valueChange($event)"
-    >
-    </codx-input>
+
+    <codx-popup-participants
+      [lstParticipants]="lstParticipants"
+      [dialog]="dialog"
+      [isType]="'I'"
+      (eventUser)="eventUser($event)"
+      [owner]="owner"
+    ></codx-popup-participants>
+
+
       </div>
     </div>
     <div class="col-6">
@@ -315,12 +317,12 @@
 
 
 <ng-template #tabCustomFieldDetail let-form>
-  <!-- <ng-container *ngIf="listInstanceSteps?.length > 0">
+  <ng-container *ngIf="listInstanceSteps?.length > 0">
     <ng-container *ngFor="let step of listInstanceSteps">
       <ng-container *ngIf="step?.fields?.length > 0">
         <ng-container *ngFor="let item of step.fields">
           <div class="form-group">
-            <codx-input-custom-field-cm
+            <codx-input-custom-field
               [customField]="item"
               [checkValid]="false"
               [objectId]="item.recID"
@@ -328,12 +330,12 @@
               [formModel]="dialog.formModel"
               (valueChangeCustom)="valueChangeCustom($event)"
             >
-            </codx-input-custom-field-cm>
+            </codx-input-custom-field>
           </div>
         </ng-container>
       </ng-container>
     </ng-container>
-  </ng-container> -->
+  </ng-container>
 </ng-template>
 
 <ng-container *ngIf="addFieldsControl == '1'">
