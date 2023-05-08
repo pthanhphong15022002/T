@@ -22,7 +22,7 @@
           <div
             id="{{item.stepID}}"
             style="flex-grow: 1; cursor: pointer"
-            [ngClass]="getColorStepName(item?.stepStatus) + ' ' +(idElementCrr == item?.stepID? 'custom-horizontal-rule':'')"
+            [ngClass]="getColorStepName(item?.stepStatus) + ' ' +(idElementCrr === item?.stepID ? 'custom-horizontal-rule':'')"
             (click)="eventClick(item?.stepID)"
             [style]="getbackgroundColor(item)"
           >
@@ -57,7 +57,7 @@
       <div
       id="step-click"
       style="flex-grow: 1; cursor: pointer"
-      [ngClass]="getColorStepName(item?.stepStatus) + ' ' +(idElementCrr == item.stepID || idElementCrr == guidEmpty ? 'custom-horizontal-rule':'')"
+      [ngClass]="getColorStepName(item?.stepStatus) + ' ' +(idElementCrr === item?.stepID ? 'custom-horizontal-rule':'')"
       (click)="eventClick(item.stepID)"
       [style]="getbackgroundColor(item)"
     >
