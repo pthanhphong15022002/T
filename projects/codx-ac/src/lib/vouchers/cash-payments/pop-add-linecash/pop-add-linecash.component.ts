@@ -14,6 +14,7 @@ import {
   NotificationsService,
   DialogData,
   CodxInputComponent,
+  CodxComboboxComponent,
 } from 'codx-core';
 import { CashPaymentLine } from '../../../models/CashPaymentLine.model';
 import { CashPayment } from '../../../models/CashPayment.model';
@@ -37,6 +38,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   cashpaymentline: CashPaymentLine;
   cashpayment: CashPayment;
   lockFields: any;
+  journal : any;
   objectcashpaymentline: Array<CashPaymentLine> = [];
   constructor(
     private inject: Injector,
@@ -54,6 +56,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.cashpayment = dialogData.data?.datacash;
     this.type = dialogData.data?.type;
     this.lockFields = dialogData.data?.lockFields;
+    this.journal = this.dialogData.data.journal;
     this.cache
       .gridViewSetup('CashPaymentsLines', 'grvCashPaymentsLines')
       .subscribe((res) => {
@@ -69,8 +72,18 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashpaymentline);
+    if (this.journal?.drAcctControl === '0') {
+      this.cbxAccountID.crrValue = this.journal?.drAcctID;
+    }
+    if (['1', '2'].includes(this.journal?.drAcctControl)) {
+      (
+        this.cbxAccountID.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(
+        ['@0.Contains(AccountID)'],
+        [`[${this.journal?.drAcctID}]`]
+      );
+    }
     this.dt.detectChanges();
-
     // this.journalService.setAccountCbxDataSourceByJournal(
     //   this.dialogData.data.journal,
     //   this.cbxAccountID,

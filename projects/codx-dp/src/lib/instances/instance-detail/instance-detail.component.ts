@@ -84,7 +84,7 @@ export class InstanceDetailComponent implements OnInit {
   currentStep = 0;
 
   listTypeTask = [];
- 
+
   dialogPopupDetail: DialogRef;
   currentElmID: any;
   frmModelInstancesTask: FormModel;
@@ -306,8 +306,9 @@ export class InstanceDetailComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelect']) {
       if (changes['dataSelect'].currentValue?.recID != null) {
+        console.log(this.dataSelect.owner);
         this.id = changes['dataSelect'].currentValue.recID;
-        this.dataSelect = changes['dataSelect'].currentValue;
+        // this.dataSelect = changes['dataSelect'].currentValue;
         this.instanceStatus = this.dataSelect.status;
         this.GetStepsByInstanceIDAsync();
         this.getDataGanttChart(

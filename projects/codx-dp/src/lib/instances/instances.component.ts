@@ -738,6 +738,7 @@ export class InstancesComponent
             .subscribe((res) => {
               if (res) {
                 this.dataSelected.closed = check;
+                this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
                 this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
                 if (this.process.showInstanceControl === '1') {
                   this.view.dataService.update(this.dataSelected).subscribe();
