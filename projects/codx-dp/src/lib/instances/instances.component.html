@@ -469,11 +469,11 @@
   <ng-template #bodyTemplate>
     <div style="height: 350px">
       <ng-container
-        *ngIf="!(dataTemplet?.length > 0)"
+        *ngIf="!(dataEx?.length > 0)"
         [ngTemplateOutlet]="emptyTemplate"
       >
       </ng-container>
-      <ng-container *ngIf="dataTemplet?.length > 0">
+      <ng-container *ngIf="dataEx?.length > 0">
         <div *ngFor="let item of dataEx">
           <div class="d-flex w-100">
             <div class="w-20px h-20px me-2">

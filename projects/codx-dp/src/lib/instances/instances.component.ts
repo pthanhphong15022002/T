@@ -176,20 +176,20 @@ export class InstancesComponent
 
   isHaveFile: boolean = false;
   //test temp
-  dataTemplet = [
-    {
-      templateName: 'File excel của Khanh- Team bá cháy',
-      recID: '1',
-    },
-    {
-      templateName: 'Khanh múa rất đẹp,sập sân khấu',
-      recID: '2',
-    },
-    {
-      templateName: 'Khanh pig bá đạo',
-      recID: '3',
-    },
-  ];
+  // dataTemplet = [
+  //   {
+  //     templateName: 'File excel của Khanh- Team bá cháy',
+  //     recID: '1',
+  //   },
+  //   {
+  //     templateName: 'Khanh múa rất đẹp,sập sân khấu',
+  //     recID: '2',
+  //   },
+  //   {
+  //     templateName: 'Khanh pig bá đạo',
+  //     recID: '3',
+  //   },
+  // ];
   type = 'excel';
   requestTemp = new DataRequest();
   optionEx = new DataRequest();
@@ -296,7 +296,7 @@ export class InstancesComponent
     this.views = [
       {
         type: ViewType.listdetail,
-        active: false,
+        active: true,
         sameData: true,
         toolbarTemplate: this.footerButton,
         model: {
@@ -1945,7 +1945,7 @@ export class InstancesComponent
   }
 
   showFormSubmit() {
-    if (!this.dataSelected.approveStatus) return;
+    // if (!this.dataSelected.approveStatus) return;
     this.codxDpService
       .getESCategoryByCategoryID(this.process.processNo)
       .subscribe((item: any) => {
