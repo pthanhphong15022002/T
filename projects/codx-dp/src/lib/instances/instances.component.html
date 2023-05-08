@@ -169,34 +169,33 @@
   </div>
 </ng-template>
 
-<ng-template #popDetail let-dialog>
-  <codx-form [body]="detailPopupClick" [dialog]="dialog">
-    <ng-template #detailPopupClick>
-      <codx-instance-detail
-        #detailViewPopup
-        [dataService]="view.dataService"
-        [formModel]="view.formModel"
-        [dataSelect]="dataSelected"
-        (moreFunctionEvent)="clickMoreFunc($event)"
-        (changeMF)="changeMF($event)"
-        [listStepsProcess]="process.steps"
-        [listCbxProccess]="listProccessCbx"
-        [viewModelDetail]="this.process.viewModeDetail"
-        [tabInstances]="tabInstances"
-        [moreFunc]="moreFuncStart"
-        (clickStartInstances)="clickStartInstances($event)"
-        [viewsCurrent]="'k-'"
-        [reloadData]="reloadData"
-        [listSteps]="listInstanceStep"
-        (outStepInstance)="outStepInstance($event)"
-        (saveDatasInstance)="saveDatasInstance($event)"
-        [lstStepProcess]="listSteps"
-        [colorSuccesss]="colorReasonSuccess?.color"
-        [colorFail]="colorReasonFail?.color"
-      >
-      </codx-instance-detail>
-    </ng-template>
+<ng-template #popDetail >
+  <codx-form [body]="detailPopupClick" [dialog]="popup">
   </codx-form>
+</ng-template>
+<ng-template #detailPopupClick>
+  <codx-instance-detail
+    #detailViewPopup
+    [dataService]="view.dataService"
+    [formModel]="view.formModel"
+    [dataSelect]="dataSelected"
+    (moreFunctionEvent)="clickMoreFunc($event)"
+    (changeMF)="changeMF($event)"
+    [listStepsProcess]="process.steps"
+    [listCbxProccess]="listProccessCbx"
+    [viewModelDetail]="this.process.viewModeDetail"
+    [tabInstances]="tabInstances"
+    [moreFunc]="moreFuncStart"
+    (clickStartInstances)="clickStartInstances($event)"
+    [viewsCurrent]="'k-'"
+    [listSteps]="listInstanceStep"
+    (outStepInstance)="outStepInstance($event)"
+    (saveDatasInstance)="saveDatasInstance($event)"
+    [lstStepProcess]="listSteps"
+    [colorSuccesss]="colorReasonSuccess?.color"
+    [colorFail]="colorReasonFail?.color"
+  >
+  </codx-instance-detail>
 </ng-template>
 <!-- end kanban -->
 
