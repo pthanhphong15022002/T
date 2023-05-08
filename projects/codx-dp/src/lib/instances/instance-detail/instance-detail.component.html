@@ -245,7 +245,7 @@
           "
         >
         </ng-container>
-        <ng-container *ngIf="viewModelDetail == 'S'">
+        <div class="view-model" style="overflow: hidden;" *ngIf="viewModelDetail == 'S'">
           <codx-carousel-stage
             [dataSource]="listSteps"
             [fieldName]="'stepName'"
@@ -288,7 +288,7 @@
             [isCreate]="dataSelect.create"
             [isClosed]="dataSelect.closed" -->
           </ng-container>
-        </ng-container>
+        </div>
         <ng-container *ngIf="viewModelDetail == 'F'">
           <ng-container *ngFor="let item of listSteps">
             <codx-field-detail

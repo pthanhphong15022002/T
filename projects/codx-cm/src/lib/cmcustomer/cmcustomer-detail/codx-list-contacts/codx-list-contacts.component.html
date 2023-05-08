@@ -108,7 +108,7 @@
           >
         </div>
       </div>
-      <div class="col-4 d-flex justify-content-start">
+      <div class="col-4 d-flex justify-content-between">
         <div
           class="mb-1"
           *ngIf="
@@ -117,7 +117,7 @@
         >
           <ng-container *ngFor="let item of data?.contactType.split(';')">
             <div
-              class="mb-1"
+              class="d-flex justify-content-start mb-1"
               [innerHTML]="
                 item | formatvalue : formModelContact : 'ContactType' | async
               "
@@ -126,7 +126,9 @@
             </div>
           </ng-container>
         </div>
-        <div class="action-menu-od d-flex ms-5">
+        <div
+          class="d-flex justify-content-end align-items-start action-menu-od d-flex ms-5"
+        >
           <codx-mfunc
             [hidden]="hidenMF"
             [formModel]="formModelContact"

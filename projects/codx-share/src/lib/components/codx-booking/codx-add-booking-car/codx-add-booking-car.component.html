@@ -9,14 +9,14 @@
       <div class="col-6 " *ngIf="grView?.startDate?.allowPopup">
         <codx-label fiedName="StartDate" [formModel]="form.formModel">
         </codx-label>
-        <codx-input field="startDate" format="F" type="datetime" class="test-datetime" [crrValue]="data?.startDate"
+        <codx-input field="startDate" format="F" type="datetime" class="test-datetime" [crrValue]="data?.startDate" [disabled]="viewOnly"
           (valueChange)="startDateChange($event)">
         </codx-input>
       </div>
       <div class="col-6 " *ngIf="grView?.endDate?.allowPopup">
         <codx-label fiedName="EndDate" [formModel]="form.formModel">
         </codx-label>
-        <codx-input field="endDate" format="F" type="datetime" class="test-datetime" [crrValue]="data?.endDate"
+        <codx-input field="endDate" format="F" type="datetime" class="test-datetime" [crrValue]="data?.endDate" [disabled]="viewOnly"
           (valueChange)="endDateChange($event)">
         </codx-input>
       </div>
@@ -36,7 +36,9 @@
         </div>
       </ng-template>
       <ejs-dropdownlist id='resource' #cusCBB [dataSource]='cbbResource' [fields]='fields' [footerTemplate]="showAll"
-        [placeholder]="'Chọn xe...'" (valueChange)="cbxResourceChange($event)"></ejs-dropdownlist>
+        [placeholder]="grView?.resourceID?.description" (valueChange)="cbxResourceChange($event)">
+      
+      </ejs-dropdownlist>
       <div class="mt-2">
         <div *ngIf="tmplstDevice != null && tmplstDevice.length > 0" class="d-flex flex-row justify-content-between">
           <div class="d-flex justify-content-start flex-wrap">
@@ -49,7 +51,7 @@
             </div>
           </div>
           <span class="text-end" *ngIf="tmplstDevice != null && tmplstDevice.length > 0 ">
-            <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
+            <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md"  [disabled]="viewOnly"
               (click)="openPopupDevice(popupDevice)">
               <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
             </button>
@@ -59,7 +61,7 @@
     </div>
     <div class="d-flex align-items-top mb-3">
       <div class="me-2">
-        <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="driverCheck"
+        <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="driverCheck" 
           (valueChange)="valueChange($event)">
         </codx-input>
       </div>
@@ -80,25 +82,25 @@
     <div class="form-group" *ngIf="grView?.reasonID?.allowPopup">
       <codx-label fiedName="ReasonID" [formModel]="form.formModel">
       </codx-label>
-      <codx-input ControlName="reasonID" [formModel]="form.formModel" [Group]="form.formGroup">
+      <codx-input ControlName="reasonID" [formModel]="form.formModel" [Group]="form.formGroup"  [disabled]="viewOnly">
       </codx-input>
     </div>
 
     <div class="form-group" *ngIf="grView?.reasonID?.allowPopup">
       <codx-label fiedName="Title" [formModel]="form.formModel"> </codx-label>
-      <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+      <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly"></codx-input>
     </div>
 
     <div class="form-group" *ngIf="grView?.agencyName?.allowPopup">
       <codx-label fiedName="AgencyName" [formModel]="form.formModel">
       </codx-label>
-      <codx-input ControlName="agencyName" [formModel]="form.formModel" [Group]="form.formGroup">
+      <codx-input ControlName="agencyName" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
       </codx-input>
     </div>
 
     <div class="form-group" *ngIf="grView?.address?.allowPopup">
       <codx-label fiedName="Address" [formModel]="form.formModel"> </codx-label>
-      <codx-input type="text" ControlName="address" [formModel]="form.formModel" [Group]="form.formGroup">
+      <codx-input type="text" ControlName="address" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
       </codx-input>
     </div>
 
@@ -106,13 +108,13 @@
       <div class="col-7 " *ngIf="grView?.requester?.allowPopup">
         <codx-label fiedName="Requester" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="requester" [formModel]="form.formModel" [Group]="form.formGroup" disabled="true">
+        <codx-input ControlName="requester" [formModel]="form.formModel" [Group]="form.formGroup"  [disabled]="true">
         </codx-input>
       </div>
 
       <div class="col-5 " *ngIf="grView?.phone?.allowPopup">
         <codx-label fiedName="Phone" [formModel]="form.formModel"> </codx-label>
-        <codx-input type="number" ControlName="phone" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input type="number" ControlName="phone" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
     </div>
@@ -124,7 +126,7 @@
         <div class="d-flex flex-row text-end align-items-end">
 
           <div class="mx-2">
-            <codx-input type="Share" refValue="TM003" (valueChange)="shareInputChange($event)" field="resources"
+            <codx-input type="Share" refValue="TM003" (valueChange)="shareInputChange($event)" field="resources"  [disabled]="viewOnly"
               [dataShared]="[]" [multiple]="true" [showInput]="false">
             </codx-input>
           </div>
@@ -175,7 +177,7 @@
       </ng-container>
     </div>
     <div class="mx-2">
-      <codx-input type="Share" refValue="TM003" (valueChange)="shareInputChange($event)" field="resources"
+      <codx-input type="Share" refValue="TM003" (valueChange)="shareInputChange($event)" field="resources"  [disabled]="viewOnly"
         [dataShared]="[]" [multiple]="true" [showInput]="false">
       </codx-input>
     </div>
@@ -233,7 +235,7 @@
   <ng-container *ngIf="form && form.formGroup">
     <div class="form-group" *ngIf="grView?.note.allowPopup">
       <codx-label fiedName="Note" [formModel]="form.formModel"> </codx-label>
-      <codx-input field="note" [formModel]="form.formModel" [Group]="form.formGroup">
+      <codx-input field="note" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
       </codx-input>
     </div>
   </ng-container>
@@ -242,10 +244,10 @@
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <div class="btn-group">
-      <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)">
+      <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)"  [disabled]="viewOnly">
         <codx-label name="lblApprove" default="Gửi duyệt" [formModel]="formModel"></codx-label>
       </button>
-      <button class="btn btn-primary" (click)="onSaveForm()">
+      <button class="btn btn-primary" (click)="onSaveForm()"  [disabled]="viewOnly">
         <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
       </button>
     </div>
