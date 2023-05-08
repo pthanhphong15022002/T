@@ -1,0 +1,10 @@
+<codx-views #view idField="recID" [views]="views" [button]="button" entityName="IV_InventoryJournals"
+  (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo"
+  (selectedChange)="changeItemDetail($event)">
+</codx-views>
+<ng-template #templateMore let-data>
+  <div class="has-action-menu" style="height: 30px">
+    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
+      type="hover"></codx-mfunc>
+  </div>
+</ng-template>

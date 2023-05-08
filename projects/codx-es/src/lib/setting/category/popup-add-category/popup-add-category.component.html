@@ -39,7 +39,7 @@
   </ng-template>
   <ng-template #body>
     <ng-container *ngIf="form?.formGroup">
-      <div class="row">
+      <div class="row mt-5">
         <div class="col-md-8">
           <div class="form-group">
             <codx-label fiedName="CategoryName" [formModel]="formModel">
@@ -171,18 +171,18 @@
       <div class="row">
         <div class="d-flex flex-stack mb-4">
           <codx-label
-            class="text-primary fw-bold fs-5"
+            class="text-primary fw-bold fs-5-sm"
             fiedName="AutoNumber"
             [formModel]="formModel"
           >
           </codx-label>
           <button
             type="button"
-            class="btn btn-clean btn-sm btn-icon btn-icon-md"
+            class="btn btn-light-primary btn-icon"
             data-dismiss="modal"
             (click)="openAutoNumPopup()"
           >
-            <i class="icon-edit-one text-primary icon-20"></i>
+            <i class="icon-edit-one icon-18"></i>
           </button>
         </div>
         <div class="col-md-6">
@@ -202,18 +202,18 @@
       </div>
       <div class="d-flex flex-stack mb-4">
         <codx-label
-          class="text-primary fw-bold fs-5"
+          class="text-primary fw-bold fs-5-sm"
           fiedName="ProcessID"
           [formModel]="formModel"
         >
         </codx-label>
         <button
           type="button"
-          class="btn btn-clean btn-sm btn-icon btn-icon-md"
+          class="btn btn-light-primary btn-icon"
           data-dismiss="modal"
           (click)="openPopupApproval()"
         >
-          <i class="icon-settings text-primary icon-20"></i>
+          <i class="icon-settings icon-18"></i>
         </button>
       </div>
     </ng-container>
@@ -278,6 +278,7 @@
       #approvalStep
       [transID]="data.recID"
       [approveStatus]="'1'"
+      [eSign]="data.eSign"
     >
     </codx-view-approval-step>
   </ng-template>

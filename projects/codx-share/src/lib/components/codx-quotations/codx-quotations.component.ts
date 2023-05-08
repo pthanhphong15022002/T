@@ -1,26 +1,45 @@
-import { Component, Injector, Input, Optional, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  Injector,
+  Input,
+  OnChanges,
+  Optional,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CallFuncService, DialogModel, DialogRef, FormModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  CallFuncService,
+  DataRequest,
+  DialogModel,
+  DialogRef,
+  FormModel,
+  RequestOption,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
+import { Observable, finalize, map } from 'rxjs';
 
 @Component({
   selector: 'codx-quotations',
   templateUrl: './codx-quotations.component.html',
-  styleUrls: ['./codx-quotations.component.css']
+  styleUrls: ['./codx-quotations.component.css'],
 })
-export class CodxQuotationsComponent  extends UIComponent {
+export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   @Input() funcID: string;
-  @Input() customerID: string = '';
+  @Input() customerID: string;
+  service = 'CM';
+  assemblyName = 'ERM.Business.CM';
+  entityName = 'CM_Quotations';
+  className = 'QuotationsBusiness';
+  methodLoadData = 'GetListQuotationsAsync';
   @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  readonly service = 'CM';
-  readonly assemblyName = 'ERM.Business.CM';
-  readonly entityName = 'CM_Quotations';
-  readonly className = 'QuotationsBusiness';
-  readonly methodLoadData = 'GetListQuotationsAsync';
   //test
-  formModel : FormModel;
   moreDefaut = {
     share: true,
     write: true,
@@ -28,8 +47,16 @@ export class CodxQuotationsComponent  extends UIComponent {
     download: true,
     delete: true,
   };
-  grvSetup :any ;
-  vllStatus=''
+  grvSetup: any;
+  vllStatus = '';
+  formModel: FormModel = {
+    formName: 'CMQuotations',
+    gridViewName: 'grvCMQuotations',
+    funcID: 'CM0202',
+  };
+  customerIDCrr =''
+  requestData = new DataRequest();
+  listQuotations = [] ;
 
   constructor(
     private inject: Injector,
@@ -38,41 +65,87 @@ export class CodxQuotationsComponent  extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    this.cache.gridViewSetup('CMQuotations','grvCMQuotations').subscribe(res=>{
-      if(res) {
-        this.grvSetup=res
-        this.vllStatus = res['Status'].referedValue
-      }
-    })
+    this.cache
+      .gridViewSetup('CMQuotations', 'grvCMQuotations')
+      .subscribe((res) => {
+        if (res) {
+          this.grvSetup = res;
+          this.vllStatus = res['Status'].referedValue;
+        }
+      });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['customerID']) {
+      if (changes['customerID'].currentValue === this.customerIDCrr) return;
+      this.customerIDCrr = changes['customerID'].currentValue;
+      //this.getQuotations();
+    }
   }
 
   onInit(): void {}
+
   ngAfterViewInit() {
     this.views = [
       {
         type: ViewType.list,
         active: true,
-        sameData: false, //true, fasle để test
+        sameData: true, 
         model: {
           template: this.itemViewList,
         },
       },
-      // {
-      //   type: ViewType.grid,
-      //   active: true,
-      //   sameData: true,
-      //   model: {
-      //     template2: this.templateMore,
-      //     frozenColumns: 1,
-      //   },
-      // },
     ];
   }
-  changeDataMF(e,data){}
-  clickMF(e, data) {}
+  getQuotations(){
+    this.requestData.predicates = 'CustomerID==@0';
+    this.requestData.dataValues= this.customerIDCrr;
+    this.requestData.entityName = this.entityName;
+    this.requestData.funcID = this.funcID;
+    this.fetch().subscribe(res=>{
+      this.listQuotations = res ;
+     // this.view.dataService.data = this.listQuotations
+    })
+  }
 
+  fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.service,
+        this.assemblyName,
+        this.className,
+        this.methodLoadData,
+        this.requestData
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response[0];
+        })
+      );
+  }
+ 
   changeItemDetail(e) {}
-  
+
+  changeDataMF(e, data) {}
+
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'SYS03':
+        this.edit(e, data);
+        break;
+      case 'SYS04':
+        this.copy(e, data);
+        break;
+    }
+  }
+
   add() {
     this.view.dataService.addNew().subscribe((res) => {
       //this.cache.functionList('CM0202').subscribe((f) => {
@@ -81,16 +154,19 @@ export class CodxQuotationsComponent  extends UIComponent {
       //   formModel.funcID = 'CM0202';
       //   formModel.formName = f.formName;
       //   formModel.gridViewName = f.gridViewName;
-      res.status ="1"
+      res.status = '1';
+      res.customerID = this.customerID;
+
       var obj = {
-        data : res,
+        data: res,
         action: 'add',
         headerText: 'sdasdsadasdasd',
       };
       let option = new DialogModel();
       option.IsFull = true;
+      option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      var dialog = this.callfc.openForm(
+      let dialog = this.callfc.openForm(
         PopupAddQuotationsComponent,
         '',
         null,
@@ -104,7 +180,85 @@ export class CodxQuotationsComponent  extends UIComponent {
     //   });
     // });
   }
-  getIndex(recID){
-    return this.view.dataService.data.findIndex(obj=>obj.recID==recID)
+  edit(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(data).subscribe((res) => {
+      var obj = {
+        data: this.view.dataService.dataSelected,
+        action: 'edit',
+        headerText: e.text,
+      };
+      let option = new DialogModel();
+      option.IsFull = true;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let dialog = this.callfc.openForm(
+        PopupAddQuotationsComponent,
+        '',
+        null,
+        null,
+        '',
+        obj,
+        '',
+        option
+      );
+    });
+  }
+
+  copy(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.copy(data).subscribe((res) => {
+      var obj = {
+        data: res,
+        action: 'copy',
+        headerText: e.text,
+      };
+      let option = new DialogModel();
+      option.IsFull = true;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let dialog = this.callfc.openForm(
+        PopupAddQuotationsComponent,
+        '',
+        null,
+        null,
+        '',
+        obj,
+        '',
+        option
+      );
+    });
+  }
+
+  delete(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data.recID)
+      )
+      .subscribe((res: any) => {
+        if (res) {
+        }
+      });
+  }
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteQuotationsByRecIDAsync';
+    opt.className = 'QuotationsBusiness';
+    opt.assemblyName = 'CM';
+    opt.service = 'CM';
+    opt.data = data;
+    return true;
+  }
+
+  getIndex(recID) {
+    return (
+       this.view.dataService.data.findIndex((obj) => obj.recID == recID) + 1
+    );
   }
 }

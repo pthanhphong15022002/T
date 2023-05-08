@@ -5,17 +5,18 @@
     <div class="d-flex justify-content-center">
       <div class="w-250px me-5">
         <ejs-calendar
-          #calendar_mini
+          #ejCalendar
           [firstDayOfWeek]="1"
           (change)="changeDayOfMonth($event)"
           cssClass="width-calendar"
           class="e-customStyle"
-          title="Lịch cá nhân"
           (navigated)="changeNewMonth($event)"
           (renderDayCell)="onLoad($event)"
           [value]="dateChange"
         >
         </ejs-calendar>
+        <ng-container #cbxCalendar>
+        </ng-container>
         <ng-container #listParam>
           <div class="d-flex align-items-center mt-3 title-calendar">
             <div class="w-100">
@@ -217,8 +218,16 @@
             </div>
           </div>
         </ng-container>
+
       </div>
-      <div class="w-100"><ng-template #calendar_setting></ng-template></div>
+      <!-- <div class="w-100"><ng-template #calendar_setting></ng-template></div> -->
+      <div class="w-100">
+        <lib-calendar-center
+          #calendarCenter
+          [resources]="resource"
+          [resourceModel]="dataResourceModel"
+        ></lib-calendar-center>
+      </div>
     </div>
   </div>
 </ng-template>

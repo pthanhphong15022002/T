@@ -2,7 +2,7 @@
   [views]="views" [button]="buttons" (buttonClick)="click($event)" [moreFuncs]="moreFunc" [idField]="idField"
   [className]="className" [method]="method" (selectedChange)="changeItemDetail($event)" [selectedFirst]="true"
   [autoLoad]="true" (onActions)="onActionClick($event)" (onLoading)="onLoading($event)"
-  [viewActiveType]="viewType.schedule">
+  (viewChanged)="viewChanged($event)" [viewActiveType]="viewType.schedule">
 </codx-views>
 
 
@@ -41,13 +41,13 @@
 <!----------------------------------List---------------------------------->
 <ng-template #subTitleTmp let-data>
   <div class="">
-    <div class="">
+    <div class="text-gray-600">
       <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
     </div>
     <div class="">
       <span [innerHTML]="data?.title "></span>
     </div>
-    <div class="d-flex mt-1 flex-grow-1 mb-2">
+    <div class="d-flex mt-1 flex-grow-1 mb-2 " *ngIf="resourceType!='6'">
       <div class="d-flex me-6 justify-content-center align-items-center">
         <i class="icon-calendar_today icon-16 me-2"></i>
         <span class="text-gray-800" [innerHTML]="data?.bookingOn | fmDT : 'dmy'">
@@ -67,16 +67,27 @@
         </span>
       </div>
     </div>
+    <div class="d-flex align-items-center pt-2">
+      <codx-vll [showText]="true" [showBgColor]="true" [name]="'EP022'" [value]="data?.approveStatus"
+        class="badge badge-light badge-md fs-7">
+      </codx-vll>
+
+      <codx-vll *ngIf="resourceType=='6'" [showText]="true" [showBgColor]="true" [name]="'EP020'"
+        [value]="data?.issueStatus" class="badge badge-light badge-md fs-7">
+      </codx-vll>
+      <div [innerHTML]=" data?.bookingOn | formatvalue : formModel : 'BookingOn' | async "></div>
+    </div>
+
   </div>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2 card codx_cardcenter p-3 " (click)="click(data)"
-    [typeMF]="'hover'" [title]="data?.requester " [subTitleTmp]="subTitleTmp" [icoCss]="
+  <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2 card codx_cardcenter p-3 " [typeMF]="'hover'"
+    [title]="data?.requester " [subTitleTmp]="subTitleTmp" [icoCss]="
       'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
-    " [status]="data?.approveStatus" [statusVll]="'EP022'" [date]="data?.createdOn" [imageId]="data?.createdBy"
-    imageObjType="AD_Users" [titleLine]="2" [dataItem]="data" [formModel]="formModel" [footer]="footerTmp"
-    (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)" typeMF="hover" [dataItem]="data">
+    " [imageId]="data?.createdBy" imageObjType="AD_Users" [titleLine]="2" [dataItem]="data" [formModel]="formModel"
+    [footer]="footerTmp" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)" typeMF="hover"
+    [dataItem]="data">
   </codx-temp-full>
 </ng-template>
 

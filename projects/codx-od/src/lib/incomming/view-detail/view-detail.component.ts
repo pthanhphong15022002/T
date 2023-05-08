@@ -210,7 +210,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     ) as HTMLCollectionOf<HTMLElement>;
     if (nodes.length > 0) {
       var a = 0;
-      if (this.view.formModel.funcID.includes('ODT8')) a = 70;
+      if (this.view?.formModel?.funcID.includes('ODT8')) a = 70;
       Array.from(
         document.getElementsByClassName(
           'codx-detail-body'

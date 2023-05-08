@@ -10,41 +10,41 @@
       </button>
     </div>
   </div>
-  <!-- <ng-container [ngTemplateOutlet]="itemViewList"></ng-container> -->
+  <!-- <ng-container
+    *ngIf="listQuotations?.length > 0"
+    [ngTemplateOutlet]="itemViewList"
+  ></ng-container> -->
+  <codx-views
+    #view
+    [service]="service"
+    [assemblyName]="assemblyName"
+    [entityName]="entityName"
+    [className]="className"
+    [method]="methodLoadData"
+    idField="recID"
+    [funcID]="'CM0202'"
+    predicates="CustomerID==@0"
+    [dataValues]="customerID"
+    [views]="views"
+    [toolbarDisplay]="false"
+    [selectedFirst]="true"
+    [autoLoad]="true"
+    (selectedChange)="changeItemDetail($event)"
+  >
+  </codx-views>
 </ng-container>
-<codx-views
-  #view
-  idField="recID"
-  [funcID]="'CM0202'"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entityName"
-  [className]="className"
-  [method]="methodLoadData"
-  [views]="views"
-  [toolbarDisplay]="false"
-  (selectedChange)="changeItemDetail($event)"
->
-  <!-- predicates="CustomerID=@0"
-[dataValues]="customerID" -->
-</codx-views>
-<ng-template #templateMore let-data>
-  <codx-mfunc
-    [dataItem]="data"
-    [formModel]="view.formModel"
-    (clickMF)="clickMF($event, data)"
-    [isBookMark]="true"
-    type="view"
-  ></codx-mfunc>
-</ng-template>
+
 <ng-template #itemViewList let-data>
-  <div class="w-100 has-action-menu">
+  <!-- <ng-template #itemViewList> 
+   <ng-container *ngFor="let data of listQuotations; let i = index"> -->
+  <div class="has-action-menu my-5 py-3">
     <div class="row">
       <div class="col-1 d-flex justify-content-center align-items-center">
         {{ getIndex(data.recID) }}
+        <!-- {{i+1}} -->
       </div>
       <div class="col-3 d-flex flex-column justify-content-center">
-        <span class="fs-6 fw-bold">Báo giá test</span>
+        <span class="fs-6 fw-bold">{{ data.quotationName }}</span>
       </div>
       <div class="col-2 d-flex justify-content-end align-items-center">
         <span class="fs-6">50.000.000 VND</span>
@@ -78,9 +78,10 @@
       (clickMF)="clickMF($event, data)"
       (changeDataMF)="changeDataMF($event, data)"
       [isBookMark]="true"
-      [dataItem]="moreDefaut"
+      [dataItem]="data"
       type="hover"
     >
     </codx-mfunc>
   </div>
+  <!-- </ng-container> -->
 </ng-template>

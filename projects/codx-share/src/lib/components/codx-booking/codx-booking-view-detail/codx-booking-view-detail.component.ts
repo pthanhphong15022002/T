@@ -80,7 +80,6 @@ export class CodxBookingViewDetailComponent
   routerRecID: any;
   listFilePermission = [];
   allowUploadFile = false;
-  renderFooter = false;
   grView: any;
 
   constructor(
@@ -126,11 +125,8 @@ export class CodxBookingViewDetailComponent
   }
   ngOnChanges(changes: SimpleChanges) {
     if (
-      changes?.itemDetail &&
-      changes.itemDetail?.previousValue?.recID !=
-        changes.itemDetail?.currentValue?.recID
+      changes?.itemDetail 
     ) {
-      this.renderFooter = false;
       if (this.viewMode == '1') {
         this.codxEpService
           .getBookingByRecID(changes.itemDetail?.currentValue?.recID)
@@ -252,7 +248,6 @@ export class CodxBookingViewDetailComponent
               func.functionID == EPCONST.MFUNCID.Delete ||
               func.functionID == EPCONST.MFUNCID.Edit ||
               func.functionID == EPCONST.MFUNCID.Copy ||
-
               func.functionID == EPCONST.MFUNCID.R_Release ||
               func.functionID == EPCONST.MFUNCID.C_Release ||
               func.functionID == EPCONST.MFUNCID.S_Release
@@ -375,31 +370,47 @@ export class CodxBookingViewDetailComponent
     } else if (this.viewMode == '2') {
       if (event != null && data != null) {
         event.forEach((func) => {
-          if (func.functionID == 'SYS04' /*Copy*/) {
+          if (func.functionID == EPCONST.MFUNCID.Copy) {
             func.disabled = true;
           }
         });
         if (data.approveStatus == '3') {
           event.forEach((func) => {
             if (
-              func.functionID == 'EPT40101' /*MF Duyệt*/ ||
-              func.functionID == 'EPT40105' /*MF từ chối*/
+              func.functionID == EPCONST.MFUNCID.R_Approval ||
+              func.functionID == EPCONST.MFUNCID.C_Approval ||
+              func.functionID == EPCONST.MFUNCID.S_Approval ||
+              func.functionID == EPCONST.MFUNCID.R_Reject ||
+              func.functionID == EPCONST.MFUNCID.C_Reject ||
+              func.functionID == EPCONST.MFUNCID.S_Reject
             ) {
               func.disabled = false;
             }
-            if (func.functionID == 'EPT40106' /*MF Thu Hồi*/) {
+            if (
+              func.functionID == EPCONST.MFUNCID.R_Undo ||
+              func.functionID == EPCONST.MFUNCID.C_Undo ||
+              func.functionID == EPCONST.MFUNCID.S_Undo
+            ) {
               func.disabled = true;
             }
           });
         } else {
           event.forEach((func) => {
             if (
-              func.functionID == 'EPT40101' /*MF Duyệt*/ ||
-              func.functionID == 'EPT40105' /*MF từ chối*/
+              func.functionID == EPCONST.MFUNCID.R_Approval ||
+              func.functionID == EPCONST.MFUNCID.C_Approval ||
+              func.functionID == EPCONST.MFUNCID.S_Approval ||
+              func.functionID == EPCONST.MFUNCID.R_Reject ||
+              func.functionID == EPCONST.MFUNCID.C_Reject ||
+              func.functionID == EPCONST.MFUNCID.S_Reject
             ) {
               func.disabled = true;
             }
-            if (func.functionID == 'EPT40106' /*MF Thu Hồi*/) {
+            if (
+              func.functionID == EPCONST.MFUNCID.R_Undo ||
+              func.functionID == EPCONST.MFUNCID.C_Undo ||
+              func.functionID == EPCONST.MFUNCID.S_Undo
+            ) {
               func.disabled = false;
             }
           });
@@ -412,22 +423,37 @@ export class CodxBookingViewDetailComponent
   //-----------------------------------Custom Event----------------------------------//
   //---------------------------------------------------------------------------------//
   refeshData(res: any) {
+    
     this.listFilePermission = [];
-    if (res?.bookingAttendees != null && res?.bookingAttendees != '') {
-      let listAttendees = res.bookingAttendees.split(';');
-      listAttendees.forEach((item) => {
-        if (item != '') {
-          let tmpPer = new Permission();
-          tmpPer.objectID = item; //
-          tmpPer.objectType = 'U';
-          tmpPer.read = true;
-          tmpPer.share = true;
-          tmpPer.download = true;
-          tmpPer.isActive = true;
-          this.listFilePermission.push(tmpPer);
-        }
-      });
+    if (this.resourceType == '6') {
+      let tmpPer = new Permission();
+      tmpPer.objectID = this.itemDetail.createdBy;
+      tmpPer.objectType = 'U';
+      tmpPer.read = true;
+      tmpPer.share = true;
+      tmpPer.download = true;
+      tmpPer.isActive = true;
+      this.listFilePermission.push(tmpPer);
+      
     }
+    else{
+      if (res?.bookingAttendees != null && res?.bookingAttendees != '') {
+        let listAttendees = res.bookingAttendees.split(';');
+        listAttendees.forEach((item) => {
+          if (item != '') {
+            let tmpPer = new Permission();
+            tmpPer.objectID = item; //
+            tmpPer.objectType = 'U';
+            tmpPer.read = true;
+            tmpPer.share = true;
+            tmpPer.download = true;
+            tmpPer.isActive = true;
+            this.listFilePermission.push(tmpPer);
+          }
+        });
+      }
+    }
+    
     if (res?.listApprovers != null && res?.listApprovers.length > 0) {
       res.listApprovers.forEach((item) => {
         if (item != '') {
@@ -444,14 +470,22 @@ export class CodxBookingViewDetailComponent
     }
     if (this.viewMode == '1') {
       this.allowUploadFile = false;
-      for (let u of res.resources) {
-        if (
-          res?.createdBy == this.authService?.userValue?.userID ||
-          this.authService?.userValue?.userID == u?.userID
-        ) {
+      if(this.resourceType=='6'){
+        if (this.itemDetail?.createdBy == this.authService.userValue.userID) {
           this.allowUploadFile = true;
+        } 
+      }
+      else{
+        for (let u of res.resources) {
+          if (
+            res?.createdBy == this.authService?.userValue?.userID ||
+            this.authService?.userValue?.userID == u?.userID
+          ) {
+            this.allowUploadFile = true;
+          }
         }
       }
+      
     }
 
     this.detectorRef.detectChanges();
@@ -472,13 +506,13 @@ export class CodxBookingViewDetailComponent
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
-  
+
   meetingNow(url: string) {
     if (url != null) {
       window.open(url, '_blank');
     }
   }
-  
+
   setHeight() {
     let main,
       header = 0;

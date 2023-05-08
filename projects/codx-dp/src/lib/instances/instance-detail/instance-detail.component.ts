@@ -84,7 +84,7 @@ export class InstanceDetailComponent implements OnInit {
   currentStep = 0;
 
   listTypeTask = [];
- 
+
   dialogPopupDetail: DialogRef;
   currentElmID: any;
   frmModelInstancesTask: FormModel;
@@ -276,7 +276,6 @@ export class InstanceDetailComponent implements OnInit {
         formModel.entityName = res?.entityName;
         formModel.funcID = 'DPT040102';
         this.frmModelInstancesTask = formModel;
-        console.log(this.frmModelInstancesTask);
       }
     });
     this.timelineSettings = this.timelineSettingsWeek;
@@ -307,8 +306,9 @@ export class InstanceDetailComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelect']) {
       if (changes['dataSelect'].currentValue?.recID != null) {
+        console.log(this.dataSelect.owner);
         this.id = changes['dataSelect'].currentValue.recID;
-        this.dataSelect = changes['dataSelect'].currentValue;
+        // this.dataSelect = changes['dataSelect'].currentValue;
         this.instanceStatus = this.dataSelect.status;
         this.GetStepsByInstanceIDAsync();
         this.getDataGanttChart(

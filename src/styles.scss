@@ -28,6 +28,7 @@
   color: inherit;
 }
 
+
 erm-quick-links-inner .dropdown-menu {
   width: 450px !important;
 }
@@ -769,16 +770,22 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 }
 
 .codx-tab .tab-content {
-  min-width: 544px !important;
+  min-width: 580px !important;
   // width: 545px !important;
 }
 
 .e-sidebar {
   .codx-tab .tab-content {
-    width: 544px !important;
+    width: 580px !important;
   }
+  
 }
+codx-layout-add{
+  .nav-pills.w-175px{
+    width: 185px!important;
+  }
 
+}
 .e-appointment {
   text-align: left !important;
   padding-left: 7px !important;
@@ -992,7 +999,7 @@ codx-layout-add .codx-tab {
 codx-layout-add .codx-tab .tab-content {
   height: 100% !important;
   position: absolute;
-  left: 207px;
+  left: 187px;
   right: 0;
   top: 0;
   bottom: 0;
@@ -2381,10 +2388,7 @@ codx-calendar {
   color: inherit;
 }
 
-//dntram edit 28/04/2023
-// #gridViewV2.e-grid .e-rowcell {
-//   padding:8px 10px!important;
-// }
+
 ejs-numerictextbox{
 .e-input-group.e-control-wrapper{
   height: auto;
@@ -2623,8 +2627,41 @@ codx-input .e-icons.e-check:before {
 .e-schedule .e-month-agenda-view .e-date-header-wrap table td {
   font-size: 13px;
 }
+lib-employees{
+  #gridViewV2.e-grid .e-table {
+    table-layout: auto;
+    .e-rowcell {
+      padding:8px 10px!important;
+      line-height: normal!important;
+    }
+  }
+}
+lib-employee-list{
+  #gridViewV2.e-grid .e-table {
+    table-layout: auto;
+    .e-rowcell {
+      padding:8px 10px!important;
+      line-height: normal!important;
+    }
+  }
+}
+lib-employees-leave{
+  #gridViewV2.e-grid .e-table {
+    table-layout: auto;
+    .e-rowcell {
+      padding:8px 10px!important;
+      line-height: normal!important;
+    }
+  }
+}
 
-
+codx-vll.rounded-2{
+  font-size: 11px!important;
+  padding: 0.25em 0.65em!important;
+}
+codx-vll.badge.badge-md span::before{
+  font-size: 11px!important;
+}
 
 /// fix menu left
 ///

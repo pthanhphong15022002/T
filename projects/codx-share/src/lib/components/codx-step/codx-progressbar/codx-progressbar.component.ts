@@ -40,22 +40,29 @@ export class ProgressbarComponent implements OnInit, OnChanges {
       '.circular-progress'
     ) as HTMLElement;
     let progressValue = document.querySelector('.progress-value');
-    if (circularProgress && progressValue && percent) {
+    if (circularProgress && progressValue) {
       let progressStartValue = 0;
       let progressEndValue = percent;
-
-      let progress = setInterval(() => {
-        progressStartValue++;
-
+      if(percent == 0){
         progressValue.textContent = `${progressStartValue}%`;
-        circularProgress.style.background = `conic-gradient(${this.color} ${
-          progressStartValue * 3.6
-        }deg, #ededed 0deg)`;
-
-        if (progressStartValue >= progressEndValue) {
-          clearInterval(progress);
-        }
-      }, 20);
+          circularProgress.style.background = `conic-gradient(${this.color} ${
+            progressStartValue * 3.6
+          }deg, #ededed 0deg)`;
+      }else{
+        let progress = setInterval(() => {
+          progressStartValue++;
+  
+          progressValue.textContent = `${progressStartValue}%`;
+          circularProgress.style.background = `conic-gradient(${this.color} ${
+            progressStartValue * 3.6
+          }deg, #ededed 0deg)`;
+  
+          if (progressStartValue >= progressEndValue) {
+            clearInterval(progress);
+          }
+        }, 20);
+      }
+      
     }
   }
 }

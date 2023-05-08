@@ -1,4 +1,4 @@
-<codx-views #view idField="recID" [views]="views" [button]="button" entityName="AC_CashPayments"
+<codx-views #view idField="recID" [views]="views" [button]="button" [entityName]="this.view.funcID == 'ACT0410' ? 'AC_CashPayments' : 'AC_CashReceipts'"
   (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo"
   (selectedChange)="changeItemDetail($event)">
 </codx-views>
@@ -25,7 +25,7 @@
 </ng-template>
 <ng-template #titleTmp let-data>
   <div class="d-flex align-items-center">
-    <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-1">
+    <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
       <i class="text-white icon-16" [class]="data?.subType | vll : 'AC100' : 'text' | async"></i>
     </div>
     <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
@@ -51,16 +51,25 @@
       <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase me-3">
         {{ itemSelected?.voucherNo }}
       </span>
-      <span class="me-2">
+      <div class="d-flex align-items-center me-3">
+        <span class="icon-customize icon-16 me-2"></span>
+        <codx-label class="fw-bold label-colon" default="Ngày chứng từ" [formModel]="view.formModel">
+        </codx-label>
+        <span class="text-gray-600">
+          {{formatDate(itemSelected?.voucherDate)}}
+        </span>
+      </div>
+      <span class="me-3">
         <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
           [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
         </codx-vll>
       </span>
+      
     </div>
-    <div class="d-flex justify-content-between flex-grow-1 mb-5 mt-3">
+    <div class="d-flex justify-content-between flex-grow-1 mb-5 mt-2">
       <div class="d-flex align-items-center">
         <span class="me-2 icon-apartment icon-16"></span>
-        <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase" #objectName [innerHTML]="
+        <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5" #objectName [innerHTML]="
             itemSelected?.objectName
               | formatvalue : view.formModel : 'objectName' : objectName
               | async
@@ -68,9 +77,7 @@
       </div>
       <div class="d-flex align-self-center">
         <span class="badge badge-pill badge-primary me-3">
-          <span class="fw-bold fs-6">{{itemSelected?.totalAmt?.toLocaleString('it-IT',{style:
-            'currency',currency:
-            'VND'})}}</span>
+          <span class="fw-bold fs-6">{{itemSelected?.totalAmt?.toLocaleString('it-IT')}}</span>
         </span>
       </div>
     </div>
@@ -78,20 +85,20 @@
 </ng-template>
 <ng-template #body>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex flex-stack w-100">
-      <div class="d-flex align-items-center me-5 mb-5">
-        <span class="icon-customize icon-16 me-2"></span>
-        <codx-label class="fw-bold label-colon" fiedName="VoucherDate" [formModel]="view.formModel">
+    <div class="d-flex flex-wrap mb-5">
+      <div class="d-flex align-items-center me-5">
+        <span class="icon-i-person-fill icon-16 me-2"></span>
+        <codx-label class="fw-bold label-colon" default="Người nhận tiền" [formModel]="view.formModel">
         </codx-label>
-        <span class="text-gray-600">
-          {{itemSelected?.voucherDate | date : 'short'}}
-        </span>
+        <span #payee [innerHTML]="
+            itemSelected?.payee
+              | formatvalue : view.formModel : 'payee' : payee
+              | async
+          " class="text-gray-600"></span>
       </div>
     </div>
     <div class="d-flex align-items-center me-5 mb-5">
       <span class="icon-i-journal-album icon-16 me-2"></span>
-      <!-- <codx-label class="fw-bold label-colon" fiedName="CashBookID" [formModel]="view.formModel">
-      </codx-label> -->
       <span *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'" class="fw-bold label-colon">{{'1' | vll : 'AC091' : 'text' | async}}&nbsp;</span>
       <span *ngIf="itemSelected?.subType == '3'" class="fw-bold label-colon">{{'3' | vll : 'AC093' : 'text' | async}}&nbsp;</span>
       <span #cashBookID class="text-gray-600"
@@ -111,17 +118,6 @@
               | async
           "></span>
       </div>
-      <div class="d-flex align-items-center me-5">
-        <span class="icon-i-person-fill icon-16 me-2"></span>
-        <codx-label class="fw-bold label-colon" fiedName="Payee" [formModel]="view.formModel">
-        </codx-label>
-        <span #payee [innerHTML]="
-            itemSelected?.payee
-              | formatvalue : view.formModel : 'payee' : payee
-              | async
-          " class="text-gray-600"></span>
-        <!-- <span class="text-gray-600">{{itemSelected?.payor}}</span> -->
-      </div>
     </div>
     <div class="d-flex align-items-center me-5 mb-5">
       <span class="icon-brush icon-16 me-2"></span>
@@ -133,7 +129,7 @@
             | async
         "></span>
     </div>
-    <div class="card-add mt-5" #cardbodyRef>
+    <div class="card-add mt-2" #cardbodyRef>
       <ejs-tab #cashRef>
         <e-tabitems>
           <!-- Tab thông tin chứng từ -->
@@ -183,7 +179,7 @@
       <div class="d-flex align-items-center">
         <span class="icon-customize icon-16 me-1 text-gray-600"></span>
         <span class="text-gray-600">
-          {{data?.voucherDate | date :'short'}}
+          {{formatDate(data?.voucherDate)}}
         </span>
       </div>
     </div>
@@ -235,7 +231,7 @@
             <td>
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
-                  <codx-label style="white-space: nowrap;" class="fw-bold label-colon" fiedName="AccountID"
+                  <codx-label style="white-space: nowrap;" class="fw-bold label-colon" default="Nợ"
                     [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
@@ -263,7 +259,7 @@
               </div>
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.offsetAcctID != null && item.offsetAcctID != '')">
-                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" fiedName="OffsetAcctID"
+                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" default="Có"
                     [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;

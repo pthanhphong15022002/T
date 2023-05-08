@@ -52,8 +52,8 @@
                   <div class="fw-bold mt-1 text-center">
                     {{ "SYS011" | mssg | async }}
                   </div>
-                  <div class="mb-0">
-                    <a class="btn btn-primary fw-bold" (click)="add()">
+                  <div class="mt-3">
+                    <a class="btn btn-primary fw-bold btn-sm min-w-75px" (click)="add()">
                       <codx-label
                         name="lblAdd"
                         default="Thêm"
@@ -226,7 +226,7 @@
               alt=""
             />
           </div>
-          <h4 class="text-gray-600">
+          <h4 class="text-gray-500">
             <codx-label
               name="lblSubEmpty"
               default="Chưa có dữ liệu phát sinh"
@@ -241,8 +241,8 @@
               [formModel]="formModel"
             ></codx-label>
           </div>
-          <div class="mb-0">
-            <a class="btn btn-primary" (click)="add()">
+          <div class="mt-3">
+            <a class="btn btn-primary btn-sm min-w-75px" (click)="add()">
               <codx-label
                 name="lblAdd"
                 default="Thêm"
