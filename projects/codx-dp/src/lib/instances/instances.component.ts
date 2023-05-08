@@ -803,8 +803,8 @@ export class InstancesComponent
                 res.disabled = true;
               break;
             case 'DP09':
-              if (data.closed || this.checkMoreReason(data, null)) {
-                res.isblur = true;
+              if (this.checkMoreReason(data, null)) {
+                res.disabled = true;
               }
               break;
             //Copy
@@ -843,16 +843,13 @@ export class InstancesComponent
               }
               break;
             case 'DP02':
-              if (data.closed || this.checkMoreReason(data, !this.isUseFail)) {
-                res.isblur = true;
+              if (this.checkMoreReason(data, !this.isUseFail)) {
+                res.disabled = true;
               }
               break;
             case 'DP10':
-              if (
-                data.closed ||
-                this.checkMoreReason(data, !this.isUseSuccess)
-              ) {
-                res.isblur = true;
+              if (this.checkMoreReason(data, !this.isUseSuccess)) {
+                res.disabled = true;
               }
               break;
             //an khi aprover rule
@@ -960,10 +957,12 @@ export class InstancesComponent
     if (data.status != '2' || isUseReason) {
       return true;
     }
+    if(data.closed ){
+      return true;
+    }
     if (!data.permissionMoveInstances) {
       return true;
     }
-
     return false;
   }
 
@@ -1466,7 +1465,7 @@ export class InstancesComponent
       formModel: formMD,
       isReason: isMoveSuccess,
       instance: data,
-      objReason: reason,
+      objReason: JSON.parse(JSON.stringify(reason)) ,
       listProccessCbx: this.listProccessCbx,
       listParticipantReason: this.lstOrg,
     };
