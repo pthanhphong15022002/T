@@ -85,7 +85,6 @@ export class StagesDetailComponent implements OnInit {
   isCreate: boolean = false;
   permissionCloseInstances: boolean = false;
   isClosed = false;
-  
   dateActual: any;
   startDate: any;
   endDate: any;
@@ -170,7 +169,7 @@ export class StagesDetailComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     console.log(this.user?.employee);
 
-    this.getValueListReason();
+   // this.getValueListReason();
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
         let data = [];
@@ -298,12 +297,7 @@ export class StagesDetailComponent implements OnInit {
         this.dataStep = null;
       }
       if(!this.titleReason){
-        this.titleReason = changes['dataStep'].currentValue?.isSuccessStep
-
-         ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
-        : changes['dataStep'].currentValue?.isFailStep
-        ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
-        : '';
+        this.getValueListReason(changes['dataStep']);
       }
 
     }
@@ -1746,7 +1740,7 @@ export class StagesDetailComponent implements OnInit {
       }
     });
   }
-  getValueListReason() {
+  getValueListReason(dataChange) {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
         for (let item of res.datas) {
@@ -1758,6 +1752,11 @@ export class StagesDetailComponent implements OnInit {
             this.stepNameReason = item?.text;
           }
         }
+        this.titleReason = dataChange.currentValue?.isSuccessStep
+        ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
+       : dataChange.currentValue?.isFailStep
+       ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
+       : '';
         this.changeDetectorRef.detectChanges();
       }
     });
