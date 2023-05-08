@@ -1,4 +1,3 @@
-declare var window: any;
 import {
   Component,
   TemplateRef,
@@ -34,6 +33,7 @@ import { CodxInviteRoomAttendeesComponent } from './codx-invite-room-attendees/c
 // import { PopupAddAttendeesComponent } from './popup-add-attendees/popup-add-attendees.component';
 // import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add-booking-room.component';
 // import { PopupRescheduleBookingComponent } from './popup-reschedule-booking/popup-reschedule-booking.component';
+import { ɵglobal as global } from '@angular/core';
 
 @Component({
   selector: 'codx-booking',
@@ -64,6 +64,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   @ViewChild('gridEndDate') gridEndDate: TemplateRef<any>;
   @ViewChild('gridNote') gridNote: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
+  ngCmp: any = global;
 
   //---------------------------------------------------------------------------------//
   service = 'EP';
@@ -96,6 +97,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   isAfterRender = false;
   isAllocateStationery = false;
   popupBookingComponent: any;
+  
   constructor(
     injector: Injector,
     private codxEpService: CodxEpService,
@@ -598,11 +600,11 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       let ele = document.getElementsByTagName('codx-schedule')[0];
       if (ele) {
         if (
-          (window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj
+          (this.ngCmp.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj
             .first.element.id == 'Schedule'
         ) {
           (
-            window.ng.getComponent(ele) as CodxScheduleComponent
+            this.ngCmp.ng.getComponent(ele) as CodxScheduleComponent
           ).scheduleObj.first.selectedDate = new Date(date);
           this.navigated = true;
         }
