@@ -169,34 +169,34 @@
   </div>
 </ng-template>
 
-<ng-template #popDetail let-dialog>
-  <codx-form [body]="detailPopupClick" [dialog]="dialog">
-    <ng-template #detailPopupClick>
-      <codx-instance-detail
-        #detailViewPopup
-        [dataService]="view.dataService"
-        [formModel]="view.formModel"
-        [dataSelect]="dataSelected"
-        (moreFunctionEvent)="clickMoreFunc($event)"
-        (changeMF)="changeMF($event)"
-        [listStepsProcess]="process.steps"
-        [listCbxProccess]="listProccessCbx"
-        [viewModelDetail]="this.process.viewModeDetail"
-        [tabInstances]="tabInstances"
-        [moreFunc]="moreFuncStart"
-        (clickStartInstances)="clickStartInstances($event)"
-        [viewsCurrent]="'k-'"
-        [reloadData]="reloadData"
-        [listSteps]="listInstanceStep"
-        (outStepInstance)="outStepInstance($event)"
-        (saveDatasInstance)="saveDatasInstance($event)"
-        [lstStepProcess]="listSteps"
-        [colorSuccesss]="colorReasonSuccess?.color"
-        [colorFail]="colorReasonFail?.color"
-      >
-      </codx-instance-detail>
-    </ng-template>
+<ng-template #popDetail >
+  <codx-form [body]="detailPopupClick" [dialog]="popup">
   </codx-form>
+</ng-template>
+<ng-template #detailPopupClick>
+  <codx-instance-detail
+    #detailViewPopup
+    [dataService]="view.dataService"
+    [formModel]="view.formModel"
+    [dataSelect]="dataSelected"
+    (moreFunctionEvent)="clickMoreFunc($event)"
+    (changeMF)="changeMF($event)"
+    [listStepsProcess]="process.steps"
+    [listCbxProccess]="listProccessCbx"
+    [viewModelDetail]="this.process.viewModeDetail"
+    [tabInstances]="tabInstances"
+    [moreFunc]="moreFuncStart"
+    (clickStartInstances)="clickStartInstances($event)"
+    [viewsCurrent]="'k-'"
+    [listSteps]="listInstanceStep"
+    (outStepInstance)="outStepInstance($event)"
+    (saveDatasInstance)="saveDatasInstance($event)"
+    [lstStepProcess]="listSteps"
+    [colorSuccesss]="colorReasonSuccess?.color"
+    [colorFail]="colorReasonFail?.color"
+    [reasonStepsObject]="reasonStepsObject"
+  >
+  </codx-instance-detail>
 </ng-template>
 <!-- end kanban -->
 
@@ -469,11 +469,11 @@
   <ng-template #bodyTemplate>
     <div style="height: 350px">
       <ng-container
-        *ngIf="!(dataTemplet?.length > 0)"
+        *ngIf="!(dataEx?.length > 0)"
         [ngTemplateOutlet]="emptyTemplate"
       >
       </ng-container>
-      <ng-container *ngIf="dataTemplet?.length > 0">
+      <ng-container *ngIf="dataEx?.length > 0">
         <div *ngFor="let item of dataEx">
           <div class="d-flex w-100">
             <div class="w-20px h-20px me-2">

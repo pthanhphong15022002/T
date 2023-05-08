@@ -5224,25 +5224,24 @@
             </div>
           </div>
           <div class="mb-1">
-            <div>
-              <codx-gridview
-                *ngIf="eAccidentsColumnsGrid && eAccidentsFormModel"
-                #eAccidentGridView
-                [formModel]="eAccidentsFormModel"
-                [columnsGrid]="eAccidentsColumnsGrid"
-                [service]="'HR'"
-                [assemblyName]="'Core'"
-                [className]="'DataBusiness'"
-                [method]="'LoadDataAsync'"
-                [predicates]="'EmployeeID=@0'"
-                [dataValues]="employeeID"
-                [pageSize]="numPageSizeGridView"
-                [entityName]="'HR_EDiseases'"
-                height="auto"
-                [sort]="[accidentDateSortModel]"
-              >
-              </codx-gridview>
-            </div>
+            <codx-gridview
+              *ngIf="eAccidentsColumnsGrid && eAccidentsFormModel"
+              #eAccidentGridView
+              [formModel]="eAccidentsFormModel"
+              [columnsGrid]="eAccidentsColumnsGrid"
+              [service]="'HR'"
+              [assemblyName]="'Core'"
+              [className]="'DataBusiness'"
+              [method]="'LoadDataAsync'"
+              [predicates]="'EmployeeID=@0'"
+              [dataValues]="employeeID"
+              [pageSize]="numPageSizeGridView"
+              [entityName]="'HR_EDiseases'"
+              height="auto"
+              [sort]="[accidentDateSortModel]"
+              [emptyTemplate]="emptyDataTemplate"
+            >
+            </codx-gridview>
           </div>
         </div>
       </div>
@@ -5297,7 +5296,7 @@
           </div>
 
           <!--Griddiseases-->
-          <div class="profile-grid mt-7">
+          <div class="mt-7">
             <codx-gridview
               *ngIf="eDiseasesColumnsGrid && eDiseasesFormModel"
               #eDiseasesGridView
@@ -5313,6 +5312,7 @@
               [entityName]="'HR_EDiseases'"
               height="auto"
               [sort]="[diseasesFromDateSortModel]"
+              [emptyTemplate]="emptyDataTemplate"
             >
             </codx-gridview>
             <!-- <div
@@ -5392,6 +5392,7 @@
                 [entityName]="'HR_EHealths'"
                 height="auto"
                 [sort]="[healthDateSortModel]"
+                [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
           </div>
@@ -5460,71 +5461,24 @@
             </div>
           </div>
           <div class="mt-7">
-            <!-- <ng-container *ngFor="let item of lstVaccine">
-                  <div class="mw-300px min-w-300px me-5">
-                    <div
-                      class="d-flex align-items-center p-1 ps-2 border rounded-2 pf-title mb-3"
-                    >
-                      <span
-                        class="icon-i-arrow-down-left-circle-fill icon-14 me-2"
-                        style="color: blueviolet"
-                      ></span
-                      ><span>{{ item?.vaccineTypeID }}</span>
-                    </div>
-                    <div class="pf-process">
-                      <ng-container *ngFor="let vaccine of item.vaccines">
-                        <div class="has-action-menu">
-                          <div
-                            class="d-flex align-items-center pf-process-item py-2"
-                          >
-                            <span
-                              class="icon-i-circle icon-12 me-3 text-gray-600 pf-circle"
-                            ></span
-                            ><span
-                              class="icon-i-calendar-event icon-16 me-2 text-gray-600"
-                            ></span
-                            ><span class="text-gray-600 me-3">{{
-                              vaccine.injectDate | fmDT
-                            }}</span
-                            ><span
-                              *ngIf="vaccine?.vaccineName != null"
-                              class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 me-2 text-gray-400"
-                            ></span>
-                            <div class="text-primary">
-                              {{ vaccine?.vaccineName }}
-                            </div>
-                          </div>
-                          <codx-mfunc
-                            [formModel]="formModel"
-                            (clickMF)="clickMFVaccine($event, vaccine, item)"
-                            type="hover"
-                            [dataItem]="vaccine"
-                          >
-                          </codx-mfunc>
-                        </div>
-                      </ng-container>
-                    </div>
-                  </div>
-                </ng-container> -->
-            <div class="profile-grid">
-              <codx-gridview
-                *ngIf="eVaccineColumnGrid"
-                #eVaccinesGridView
-                [formModel]="eVaccineFormModel"
-                [columnsGrid]="eVaccineColumnGrid"
-                [service]="'HR'"
-                [assemblyName]="'Core'"
-                [className]="'DataBusiness'"
-                [method]="'LoadDataAsync'"
-                [predicates]="'EmployeeID=@0'"
-                [dataValues]="employeeID"
-                [pageSize]="numPageSizeGridView"
-                [entityName]="'HR_EVaccines'"
-                height="auto"
-                [sort]="[injectDateSortModel]"
-                [sort]="[injectDateSortModel]"
-              ></codx-gridview>
-            </div>
+            <codx-gridview
+              *ngIf="eVaccineColumnGrid"
+              #eVaccinesGridView
+              [formModel]="eVaccineFormModel"
+              [columnsGrid]="eVaccineColumnGrid"
+              [service]="'HR'"
+              [assemblyName]="'Core'"
+              [className]="'DataBusiness'"
+              [method]="'LoadDataAsync'"
+              [predicates]="'EmployeeID=@0'"
+              [dataValues]="employeeID"
+              [pageSize]="numPageSizeGridView"
+              [entityName]="'HR_EVaccines'"
+              height="auto"
+              [sort]="[injectDateSortModel]"
+              [sort]="[injectDateSortModel]"
+              [emptyTemplate]="emptyDataTemplate"
+            ></codx-gridview>
           </div>
         </div>
       </div>
@@ -7118,7 +7072,6 @@
 <!-- #endregion -->
 
 <!-- #region Tai nạn lao động column template  -->
-
 <ng-template #templateEAccidentCol1 let-data>
   <div class="d-flex align-items-center">
     <span
@@ -7849,5 +7802,13 @@
         height="auto"
       ></codx-gridview>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #emptyDataTemplate>
+  <div class="d-flex ms-1">
+    <span class="text-gray-500 fw-bold">
+      {{ "SYS011" | mssg | async }}
+    </span>
   </div>
 </ng-template>

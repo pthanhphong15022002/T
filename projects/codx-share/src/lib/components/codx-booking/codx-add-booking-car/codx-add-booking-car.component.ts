@@ -25,11 +25,13 @@ import {
   Resource,
 } from '../codx-booking.model';
 import { CodxBookingService } from '../codx-booking.service';
-const _copyMF = 'SYS04';
-const _addMF = 'SYS01';
-const _editMF = 'SYS03';
-const _EPParameters = 'EPParameters';
-const _EPCarParameters = 'EPCarParameters';
+import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
+const _addMF = EPCONST.MFUNCID.Add;
+const _copyMF = EPCONST.MFUNCID.Copy;
+const _editMF = EPCONST.MFUNCID.Edit;
+const _viewMF = EPCONST.MFUNCID.View;
+const _EPParameters = EPCONST.PARAM.EPParameters;
+const _EPCarParameters = EPCONST.PARAM.EPCarParameters;
 @Component({
   selector: 'codx-add-booking-car',
   templateUrl: './codx-add-booking-car.component.html',
@@ -112,6 +114,7 @@ export class CodxAddBookingCarComponent
       name: 'tabMoreInfo',
     },
   ];
+  viewOnly=false;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -126,6 +129,9 @@ export class CodxAddBookingCarComponent
     this.funcType = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
+    if(dialogData?.data[4]!=null && dialogData?.data[4]==true){
+      this.viewOnly=true;
+    }
     this.user = this.authStore.get();
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
