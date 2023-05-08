@@ -81,6 +81,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   @ViewChild('paneRight') panelRight: TemplateRef<any>;
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
 
+  
   views: Array<ViewModel> | any = [];
   minType = 'MinRange';
   user;
@@ -447,6 +448,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   tmpTemp: TemplateRef<any>;
   @ViewChild('tmpViewAllPassport', { static: true }) tmpViewAllPassport: TemplateRef<any>;
   @ViewChild('tmpViewAllVisa', { static: true }) tmpViewAllVisa: TemplateRef<any>;
+  @ViewChild('tmpViewAllWorkpermit', { static: true }) tmpViewAllWorkpermit: TemplateRef<any>;
 
   //Declare model ViewAll Salary
   @ViewChild('templateViewSalary', { static: true })
@@ -482,28 +484,28 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   //#endregion
 
   //#region RowCount
-  eDegreeRowCount;
-  passportRowCount: number;
-  visaRowCount: number;
-  workPermitRowCount: number;
-  eExperienceRowCount;
-  eCertificateRowCount;
+  eDegreeRowCount: number = 0;
+  passportRowCount: number = 0;
+  visaRowCount: number = 0;
+  workPermitRowCount: number = 0;
+  eExperienceRowCount = 0;
+  eCertificateRowCount = 0;
   eBenefitRowCount: number = 0;
   eBusinessTravelRowCount = 0;
   eSkillRowCount = 0;
   dayoffRowCount: number = 0;
-  eAssetRowCount;
-  eBasicSalaryRowCount;
-  eTrainCourseRowCount;
+  eAssetRowCount = 0;
+  eBasicSalaryRowCount = 0;
+  eTrainCourseRowCount = 0;
   eHealthRowCount = 0;
   eVaccineRowCount = 0;
-  appointionRowCount;
-  eJobSalaryRowCount;
-  awardRowCount;
-  eContractRowCount;
-  eDisciplineRowCount;
-  eDiseasesRowCount;
-  eAccidentsRowCount;
+  appointionRowCount = 0;
+  eJobSalaryRowCount = 0;
+  awardRowCount = 0;
+  eContractRowCount = 0;
+  eDisciplineRowCount = 0;
+  eDiseasesRowCount = 0;
+  eAccidentsRowCount = 0;
   //#endregion
 
   //#region var functionID
@@ -637,6 +639,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
       opFamily.pageLoading = false;
       this.hrService.getEFamilyWithDataRequest(opFamily).subscribe((res) => {
         if (res) this.lstFamily = res[0];
+        debugger
       });
 
       // let opPassport = new DataRequest();
@@ -688,21 +691,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         this.hrService.loadData('HR', rqBSalary).subscribe((res) => {
           if (res && res[0]) {
             this.crrEBSalary = res[0][0];
-            let rqJSalary = new DataRequest();
-            rqJSalary.entityName = 'HR_EJobSalaries';
-            rqJSalary.dataValues = this.employeeID + ';true';
-            rqJSalary.predicates = 'EmployeeID=@0 and IsCurrent=@1';
-            rqJSalary.page = 1;
-            rqJSalary.pageSize = 1;
-            this.hrService.loadData('HR', rqJSalary).subscribe((res) => {
-              if (res && res[0]) {
-                this.crrEBSalary = {
-                  ...this.crrEBSalary,
-                  jSalary: res[0][0].jSalary,
-                };
-                this.df.detectChanges();
-              }
-            });
+            this.df.detectChanges();
           }
         });
       }
@@ -1732,6 +1721,11 @@ export class EmployeeInfoDetailComponent extends UIComponent{
       this.crrVisa = res;
     })
 
+    this.hrService.GetEmpCurrentWorkpermit(this.employeeID).subscribe((res) => {
+      this.crrWorkpermit = res;
+    })
+
+
     this.initLegalInfo();
 
     //#region - Công tác
@@ -1990,7 +1984,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
 
         {
           headerText: this.eExperienceHeaderText['Position'],
-          // field: 'position',
+          //field: 'position',
           template: this.templateEExperienceGridCol4,
           width: '150',
         },
@@ -2373,6 +2367,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           this.HandleEmployeeTrainCourseInfo(event.text, 'edit', data);
           this.df.detectChanges();
         } else if (funcID == 'eHealth') {
+          this.HandleEmployeeEHealths(event.text, 'edit', data);
+          this.df.detectChanges();
         } else if (funcID == 'eVaccine') {
           this.HandleEVaccinesInfo(event.text, 'edit', data);
           this.df.detectChanges();
@@ -2399,11 +2395,14 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         }
         break;
 
-        case this.ePassportFuncID + 'ViewAll':        
+      case this.ePassportFuncID + 'ViewAll':        
         this.popupViewAll(this.ePassportFuncID)
         break;
       case this.eVisaFuncID + 'ViewAll':
         this.popupViewAll(this.eVisaFuncID)
+        break;
+      case this.eWorkPermitFuncID + 'ViewAll':
+        this.popupViewAll(this.eWorkPermitFuncID)
         break;
       
 
@@ -2811,6 +2810,15 @@ export class EmployeeInfoDetailComponent extends UIComponent{
                   this.notify.notifyCode('SYS022');
                 }
               });
+            } else if (funcID == 'eAccidents'){
+              this.hrService.deleteEAccident(data?.recID).subscribe(res =>{
+                if(res){
+                  this.notify.notifyCode('SYS008');
+                  (this.eAccidentGridView.dataService as CRUDService)?.remove(data).subscribe();
+                  this.eAccidentsRowCount--;
+                  this.df.detectChanges();
+                }else this.notify.notifyCode('SYS022');
+              })
             }
           }
         });
@@ -2842,7 +2850,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           this.copyValue(event.text, data, 'Assets');
           this.df.detectChanges();
         } else if (funcID == 'eDegrees') {
-          this.HandleEmployeeEDegreeInfo(event.text, 'copy', data);
+          // this.HandleEmployeeEDegreeInfo(event.text, 'copy', data);
+          this.copyValue(event.text, data, 'eDegrees');
           this.df.detectChanges();
         } else if (funcID == 'eCertificate') {
           this.HandleEmployeeECertificateInfo(event.text, 'copy', data);
@@ -2912,10 +2921,23 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     switch (funcID){
       case this.ePassportFuncID:
         ref = this.tmpViewAllPassport;
+        this.hrService.countEmpTotalRecord(this.employeeID, 'EPassportsBusiness').subscribe((res) =>{
+          this.passportRowCount = res;
+        })
         break;
 
       case this.eVisaFuncID:
         ref = this.tmpViewAllVisa;
+        this.hrService.countEmpTotalRecord(this.employeeID, 'EmpVisasBusiness').subscribe((res) =>{
+          this.visaRowCount = res;
+        })
+        break;
+      
+      case this.eWorkPermitFuncID:
+        ref = this.tmpViewAllWorkpermit;
+        this.hrService.countEmpTotalRecord(this.employeeID, 'EWorkPermitsBusiness').subscribe((res) =>{
+          this.workPermitRowCount = res;
+        })
         break;
     }
 
@@ -4170,10 +4192,6 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         actionHeaderText + ' ' + this.getFormHeader(this.eDiseasesFuncID),
     });
     dialogAdd.closed.subscribe((res) => {
-      console.log(
-        'ressssss diseasesssssssssssssssssssssssssssssssssssssssssssssssss',
-        res
-      );
       if (res)
         this.eDiseasesRowCount += this.updateGridView(
           this.eDiseasesGrid,
@@ -4852,7 +4870,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         });
     } else if (flag == 'eAccidents') {
       this.hrService
-        .copy(data, this.eJobSalaryFormModel, 'RecID')
+        .copy(data, this.eAccidentsFormModel, 'RecID')
         .subscribe((res) => {
           this.HandleEmployeeAccidentInfo(actionHeaderText, 'copy', res);
         });
@@ -4867,6 +4885,12 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         .copy(data, this.eContractFormModel, 'RecID')
         .subscribe((res) => {
           this.HandleEContractInfo(actionHeaderText, 'copy', res);
+        });
+    }else if (flag == 'eDegrees') {
+      this.hrService
+        .copy(data, this.eDegreeFormModel, 'RecID')
+        .subscribe((res) => {
+          this.HandleEmployeeEDegreeInfo(actionHeaderText, 'copy', res);
         });
     }
   }

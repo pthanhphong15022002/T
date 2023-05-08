@@ -720,6 +720,7 @@ export class InstancesComponent
         data.status = '2';
         data.startDate = res?.length > 0 ? res[0].startDate : null;
         this.dataSelected = data;
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected))
         this.listInstanceStep = res;
         
         this.notificationsService.notifyCode('SYS007');
@@ -1714,7 +1715,7 @@ export class InstancesComponent
     // }
   }
   clickStartInstances(e) {
-    if (e) this.startInstance(this.dataSelected);
+    if (e) this.handelStartDay(this.dataSelected);
   }
   //load DATA
   async loadData(ps) {

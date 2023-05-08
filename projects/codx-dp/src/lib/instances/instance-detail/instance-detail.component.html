@@ -292,7 +292,7 @@
         </div>
         <ng-container *ngIf="viewModelDetail == 'F'">
           <ng-container *ngFor="let item of listSteps">
-            <codx-field-detail
+            <!-- <codx-field-detail
               *ngIf="item?.fields?.length > 0"
               [dataStep]="item"
               [showColumnControl]="showColumnControl(item.stepID)"
@@ -310,7 +310,26 @@
               [viewsCurrent]="viewsCurrent"
               (saveDataStep)="saveDataStep($event)"
             >
-            </codx-field-detail>
+            </codx-field-detail> -->
+            <codx-fields-detail-temp
+              *ngIf="item?.fields?.length > 0"
+              [dataStep]="item"
+              [showColumnControl]="showColumnControl(item.stepID)"
+              [isUpdate]="
+                dataSelect.write &&
+                !dataSelect.closed &&
+                (dataSelect.status == '1' || dataSelect.status == '2') &&
+                item.stepStatus < '2'
+              "
+              [currentElmID]="currentElmID"
+              (inputElmIDCF)="inputElmIDCustomField($event)"
+              [isSaving]="isSaving"
+              (actionSaveCF)="actionSaveCustomField($event)"
+              [titleHeaderFormCF]="titleDefault"
+              [viewsCurrent]="viewsCurrent"
+              (saveDataStep)="saveDataStep($event)"
+            >
+            </codx-fields-detail-temp>
           </ng-container>
         </ng-container>
       </div>
