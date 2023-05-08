@@ -13,6 +13,7 @@
           class="step-title text-gray-700 fw-bold fs-5 me-1"
           *ngIf="item.signatureType">|</div>
         <div
+          *ngIf="eSign"
           class="step-title text-gray-700 fw-bold fs-5 me-1"
           [innerHTML]="
             item.signatureType
@@ -217,6 +218,7 @@
           <div
           class="step-title text-gray-700 fw-bold fs-5 me-1">|</div>
           <div
+            *ngIf="eSign"
             class="step-title text-gray-700 fw-bold fs-5 me-1"
             [innerHTML]="
               item.signatureType

@@ -30,7 +30,8 @@
         <div *ngIf="funcID == 'CM0101'">
           <div class="mb-1">
             <span class="icon-corporate_fare text-primary icon-20 me-1"></span>
-            <span class="text-dark fw-bold h3"
+            <span
+              class="text-dark fw-bold h3"
               [innerHTML]="
                 dataSelected?.custGroupID
                   | formatvalue : formModel : 'CustGroupID'
@@ -39,7 +40,7 @@
             ></span>
           </div>
         </div>
-        <div class="d-flex justify-content-end"  *ngIf="funcID == 'CM0101'">
+        <div class="d-flex justify-content-end" *ngIf="funcID == 'CM0101'">
           <codx-mfunc
             [hideMF]="false"
             [dataItem]="dataSelected"
@@ -298,37 +299,24 @@
             </codx-information>
           </ng-container>
           <ng-container *ngIf="name == 'Contact'">
-            <div
-              class="d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2"
-            >
-              <div class="me-3">
-                <button
-                  type="button"
-                  class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                  (click)="clickPopupContacts()"
-                >
-                  <i class="icon-check-correct icon-18 text-primary"></i>
-                </button>
-              </div>
-              <div>
-                <button
-                  type="button"
-                  class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                  (click)="clickAddContact('add', null, moreFuncAdd)"
-                >
-                  <i class="icon-person_add_alt_1 icon-18 text-primary"></i>
-                </button>
-              </div>
-            </div>
-            <div *ngIf="listContacts != null && listContacts.length > 0">
-              <div *ngFor="let item of listContacts">
+            <!-- <div *ngFor="let item of listContacts">
                 <ng-container
                   [ngTemplateOutlet]="contacts"
                   [ngTemplateOutletContext]="{ $implicit: item }"
                 >
                 </ng-container>
-              </div>
-            </div>
+              </div> -->
+            <codx-list-contacts
+              (contactPerson)="contactPersonEvent($event)"
+              [funcID]="funcID"
+              [objectID]="dataSelected.recID"
+              [objectName]="
+                funcID == 'CM0101'
+                  ? dataSelected.customerName
+                  : dataSelected.partnerName
+              "
+              [hidenMF]="false"
+            ></codx-list-contacts>
           </ng-container>
           <ng-container *ngIf="name == 'Task'">
             <ng-container
@@ -363,95 +351,6 @@
     </ng-template>
   </codx-detail-tmp>
 </ng-container>
-
-<ng-template #contacts let-data>
-  <div class="row mb-2 has-action-menu-od">
-    <div class="col-4 d-flex">
-      <div class="me-3">
-        <codx-img
-          [objectId]="data.recID"
-          [objectName]="data?.contactName"
-          [objectType]="'CM_Contacts'"
-          [width]="35"
-        >
-        </codx-img>
-      </div>
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="d-flex justify-content-between">
-          <div class="d-flex flex-column">
-            <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
-              {{ data?.contactName }}
-            </div>
-            <div class="me-4" *ngIf="data.address">
-              <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
-              <span class="text-gray-900">{{ data.address }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-4 d-flex flex-column">
-      <div class="mb-1" *ngIf="data?.mobile">
-        <span
-          [ngClass]="
-            data.allowCall
-              ? 'icon-phone_android text-primary'
-              : 'icon-phonelink_erase'
-          "
-          class="icon-16 me-1"
-        ></span>
-        <span
-          [ngClass]="data.allowCall ? 'text-primary' : ''"
-          class="text-gray-900"
-          >{{ data.mobile }}</span
-        >
-      </div>
-      <div *ngIf="data?.personalEmail">
-        <span
-          [ngClass]="
-            data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'
-          "
-          class="icon-16 me-1 text-gray-900"
-        ></span>
-        <span
-          [ngClass]="data.allowEmail ? 'text-primary' : ''"
-          class="text-gray-900"
-          >{{ data.personalEmail }}</span
-        >
-      </div>
-    </div>
-    <div class="col-4 d-flex justify-content-start">
-      <div
-        class="mb-1"
-        *ngIf="
-          data?.contactType != null && data?.contactType.split(';').length > 0
-        "
-      >
-        <ng-container *ngFor="let item of data?.contactType.split(';')">
-          <div
-            class="mb-1"
-            [innerHTML]="
-              item | formatvalue : formModelContact : 'ContactType' | async
-            "
-          >
-            <!-- {{ item | vll : vllContactType : "text" | async }} -->
-          </div>
-        </ng-container>
-      </div>
-      <div class="action-menu-od d-flex ms-5">
-        <codx-mfunc
-          [formModel]="formModelContact"
-          [isBookMark]="true"
-          [dataItem]="data"
-          [type]="'hover'"
-          (clickMF)="clickMFContact($event, data)"
-          (changeDataMF)="changeDataMFContact($event, data)"
-        >
-        </codx-mfunc>
-      </div>
-    </div>
-  </div>
-</ng-template>
 
 <ng-template #opportunity>
   <div class="d-flex justify-content-between">
