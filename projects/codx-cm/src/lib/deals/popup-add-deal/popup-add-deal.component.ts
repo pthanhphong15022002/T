@@ -180,9 +180,9 @@ export class PopupAddDealComponent
         return;
       }
     this.convertDataInstance(this.deal,this.instance);
-    // this.insertInstance();
-    // this.insertDeal();
-    this.onAdd();
+    this.insertInstance();
+    this.insertDeal();
+   // this.onAdd();
 
 
   }

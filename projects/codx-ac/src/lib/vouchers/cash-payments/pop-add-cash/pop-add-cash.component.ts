@@ -1084,7 +1084,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   loadformSettledInvoices() {
     var obj = {
-      cbxName: 'OpenInvoices',
       cashpayment: this.cashpayment,
     };
     let opt = new DialogModel();
@@ -1106,7 +1105,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     );
     voucherDialog.closed.subscribe((res) => {
       if (res && res.event && res.event.length) {
-        this.setVoucherRef(res.event);
+       // this.setVoucherRef(res.event);
+       this.settledInvoices = res.event;
+       this.gridSettledInvoices.gridRef.refresh();
       }
     });
   }

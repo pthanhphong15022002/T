@@ -23,7 +23,6 @@ import { CustomizedMultiSelectPopupComponent } from '../customized-multi-select-
 import { IJournal } from '../interfaces/IJournal.interface';
 import { JournalService } from '../journals.service';
 import { PopupSetupInvoiceComponent } from '../popup-setup-invoice/popup-setup-invoice.component';
-import { SingleSelectPopupComponent } from '../single-select-popup/single-select-popup.component';
 
 const irrPropNames: string[] = [
   'drAcctControl',
@@ -75,8 +74,9 @@ export class PopupAddJournalComponent
     },
   ];
   fiscalYears: any[] = [];
-  isMultiSelectPopupDrHidden: boolean = true;
-  isMultiSelectPopupCrHidden: boolean = true;
+  isPopupDrHidden: boolean = true;
+  isPopupCrHidden: boolean = true;
+  isMultiple: boolean = true;
   isEdit: boolean = false;
   hasVouchers: boolean = false;
   tempIDIMControls: any[] = [];
@@ -84,6 +84,7 @@ export class PopupAddJournalComponent
   dataValueProps: string[] = [];
   autoPostLabelText: string;
 
+  vllIDIMControls: any;
   vllDateFormat: any;
   vllStringFormat: any;
   vllAcctControl: any;
@@ -109,9 +110,6 @@ export class PopupAddJournalComponent
     if (dialogData.data.formType === 'edit') {
       this.isEdit = true;
 
-      this.tempIDIMControls = this.journal.idimControl
-        ? JSON.parse(this.journal.idimControl)
-        : '';
       this.journal.creater = this.journal.creater
         ? JSON.parse(this.journal.creater)
         : '';
@@ -133,6 +131,14 @@ export class PopupAddJournalComponent
 
   //#region Init
   onInit(): void {
+    this.cache.valueList('AC069').subscribe((res) => {
+      this.vllIDIMControls = res.datas;
+
+      this.tempIDIMControls = this.vllIDIMControls.filter((d) =>
+        this.journal.idimControl.split(',').includes(d.value)
+      );
+    });
+
     this.cache
       .gridViewSetup(
         this.dialogRef.formModel.formName,
@@ -238,12 +244,6 @@ export class PopupAddJournalComponent
     } else {
       this.journal[e.field] = e.data;
     }
-  }
-
-  onApprovalControlChange(e): void {
-    console.log('onApprovalControlChange');
-
-    // this.autoPostLabelText = e.itemData?.text;
   }
 
   onSelect(e): void {
@@ -401,35 +401,19 @@ export class PopupAddJournalComponent
       });
   }
 
-  openSelectPopup(type: string, acctControl: string): void {
+  onClickOpenSelectPopup(type: string, acctControl: string): void {
     if (acctControl === '0' || acctControl === '1') {
-      this.callfc
-        .openForm(
-          SingleSelectPopupComponent,
-          'This param is not working',
-          500,
-          400,
-          '',
-          {
-            selectedOption:
-              type === 'dr' ? this.journal.drAcctID : this.journal.crAcctID,
-          }
-        )
-        .closed.subscribe(({ event }) => {
-          console.log(event);
-
-          if (event) {
-            type === 'dr'
-              ? (this.journal.drAcctID = event)
-              : (this.journal.crAcctID = event);
-          }
-        });
+      this.isMultiple = false;
     }
 
     if (acctControl === '2') {
-      type === 'dr'
-        ? (this.isMultiSelectPopupDrHidden = false)
-        : (this.isMultiSelectPopupCrHidden = false);
+      this.isMultiple = true;
+    }
+
+    if (type === 'dr') {
+      this.isPopupDrHidden = false;
+    } else {
+      this.isPopupCrHidden = false;
     }
   }
 
@@ -440,8 +424,8 @@ export class PopupAddJournalComponent
       this.journal[prop] = e.id;
     }
 
-    this.isMultiSelectPopupDrHidden = true;
-    this.isMultiSelectPopupCrHidden = true;
+    this.isPopupDrHidden = true;
+    this.isPopupCrHidden = true;
   }
 
   openCustomizedMultiSelectPopup(): void {
@@ -461,7 +445,9 @@ export class PopupAddJournalComponent
 
         if (event) {
           this.journal.idimControl = event;
-          this.tempIDIMControls = JSON.parse(event);
+          this.tempIDIMControls = this.vllIDIMControls.filter((d) =>
+            this.journal.idimControl.split(',').includes(d.value)
+          );
         }
       });
   }

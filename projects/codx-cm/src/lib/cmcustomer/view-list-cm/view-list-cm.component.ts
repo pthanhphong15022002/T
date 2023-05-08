@@ -4,10 +4,10 @@ import { CodxCmService } from '../../codx-cm.service';
 @Component({
   selector: 'codx-view-list-cm',
   templateUrl: './view-list-cm.component.html',
-  styleUrls: ['./view-list-cm.component.css']
+  styleUrls: ['./view-list-cm.component.css'],
 })
 export class ViewListCmComponent implements OnInit {
-  @Input() dataSelected: any
+  @Input() dataSelected: any;
   @Input() formModel: any;
   @Input() vllPriority = '';
   @Input() funcID = 'CM0101';
@@ -16,23 +16,24 @@ export class ViewListCmComponent implements OnInit {
   @Output() changeMoreMF = new EventEmitter<any>();
 
   listContacts = [];
+  countDeal = 0;
   contactPerson: any;
-  constructor(
-    private cmSv: CodxCmService,
-  ) { }
+  constructor(private cmSv: CodxCmService) {}
 
   ngOnInit(): void {
-    this.getListContactByObjectID(this.dataSelected.recID);
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
+      this.getListContactByObjectID(this.dataSelected.recID);
+    if (this.funcID == 'CM0101') {
+      this.countDealsByCustomerID(this.dataSelected.recID);
+    }
   }
 
-
-
-  clickMF(e, data){
-    this.clickMoreFunc.emit({e: e, data: data});
+  clickMF(e, data) {
+    this.clickMoreFunc.emit({ e: e, data: data });
   }
 
-  changeDataMF(e, data){
-    this.changeMoreMF.emit({e: e, data: data});
+  changeDataMF(e, data) {
+    this.changeMoreMF.emit({ e: e, data: data });
   }
 
   getListContactByObjectID(objectID) {
@@ -46,14 +47,24 @@ export class ViewListCmComponent implements OnInit {
     });
   }
 
-  getNameCrm(data){
-    if(this.funcID == "CM0101"){
+  countDealsByCustomerID(customerID) {
+    this.cmSv.countDealsByCustomerID(customerID).subscribe((res) => {
+      if (res > 0) {
+        this.countDeal = res;
+      } else {
+        this.countDeal = 0;
+      }
+    });
+  }
+
+  getNameCrm(data) {
+    if (this.funcID == 'CM0101') {
       return data.customerName;
-    }else if(this.funcID == "CM0102"){
+    } else if (this.funcID == 'CM0102') {
       return data.contactName;
-    }else if(this.funcID == "CM0103"){
+    } else if (this.funcID == 'CM0103') {
       return data.partnerName;
-    }else{
+    } else {
       return data.opponentName;
     }
   }
