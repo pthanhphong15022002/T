@@ -1,6 +1,4 @@
-declare var window: any;
 import { CodxOmService } from 'projects/codx-om/src/public-api';
-import { Util } from 'codx-core';
 import { OMCONST } from './../../codx-om.constant';
 import {
   AfterViewInit,
@@ -20,6 +18,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { ɵglobal as global } from '@angular/core';
 
 @Component({
   selector: 'popup-add-okr-plan',
@@ -31,7 +30,7 @@ export class PopupAddOKRPlanComponent
   implements AfterViewInit
 {
   @ViewChild('form') form: CodxFormComponent;
-
+  ngCmp: any = global;
   obType = OMCONST.VLL.OKRType.Obj;
   krType = OMCONST.VLL.OKRType.KResult;
   skrType = OMCONST.VLL.OKRType.SKResult;
@@ -219,7 +218,7 @@ export class PopupAddOKRPlanComponent
           break;
       }
       let dom = document.getElementById(id);
-      let curInput = window.ng.getComponent(dom);
+      let curInput = this.ngCmp.ng.getComponent(dom);
       if (curInput) {
         curInput.multiSelectObj.enableEditMode = true;
       }
