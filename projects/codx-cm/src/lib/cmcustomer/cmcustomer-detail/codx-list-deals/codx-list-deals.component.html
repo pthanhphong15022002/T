@@ -40,7 +40,7 @@
             fiedName="DealValue"
           ></codx-label>
           <span
-            class="ms-1"
+            class="ms-1 text-dark fw-bold"
             [innerHTML]="
               data.dealValue | formatvalue : formModel : 'DealValue' | async
             "
@@ -54,12 +54,12 @@
             fiedName="Probability"
           ></codx-label>
           <span
-            class="me-1"
+            class="me-1 text-dark fw-bold"
             [innerHTML]="
               data.probability | formatvalue : formModel : 'Probability' | async
             "
           ></span
-          ><span>%</span>
+          ><span class="text-dark fw-bold">%</span>
         </div>
       </div>
     </div>
