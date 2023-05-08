@@ -372,20 +372,21 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       this.addNew(event.data);
     }
     if (event.type == 'doubleClick' || event.type == 'edit') {
-      if (event?.data.approveStatus == '1') {
-        if (
-          !this.codxEpService.checkRole(
-            this.authService.userValue,
-            event?.data?.createdBy,
-            this.isAdmin
-          )
-        ) {
-          this.notificationsService.notifyCode('TM052');
-          return;
-        } else {
-          this.edit(event.data);
-        }
-      }
+      this.viewDetail(event.data);
+      // if (event?.data.approveStatus == '1') {
+      //   if (
+      //     !this.codxEpService.checkRole(
+      //       this.authService.userValue,
+      //       event?.data?.createdBy,
+      //       this.isAdmin
+      //     )
+      //   ) {
+      //     this.notificationsService.notifyCode('TM052');
+      //     return;
+      //   } else {
+      //     this.edit(event.data);
+      //   }
+      // }
     }
   }
 
@@ -431,7 +432,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   changeDataMF(event, data: any) {
-    if (event != null && data != null) {
+    if (event != null && data != null && this.funcID!=EPCONST.FUNCID.S_Allocation) {
       if (data.approveStatus == EPCONST.A_STATUS.New) {
         //Mới tạo
         event.forEach((func) => {
@@ -554,6 +555,25 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
             func.functionID == EPCONST.MFUNCID.R_Invite ||
             func.functionID == EPCONST.MFUNCID.R_Reschedule
           ) {
+            func.disabled = true;
+          }
+        });
+      }
+    }
+    else if(event != null && data != null && this.funcID==EPCONST.FUNCID.S_Allocation){
+        event.forEach((func) => {
+          if (
+            func.functionID == EPCONST.MFUNCID.Delete ||
+            func.functionID == EPCONST.MFUNCID.Edit ||
+            func.functionID == EPCONST.MFUNCID.Copy 
+          ) {
+            func.disabled = true;
+          }
+        });
+      
+      if (data?.issueStatus == '3') {
+        event.forEach((func) => {
+          if (func.functionID == EPCONST.MFUNCID.S_Allocate /*MF cấp phát*/) {
             func.disabled = true;
           }
         });
@@ -934,6 +954,18 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           });
       }
     }
+  }
+
+  viewDetail(evt:any){
+    let option = new SidebarModel();
+    option.Width = '800px';
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.formModel;
+    let dialogview = this.callfc.openSide(
+      this.popupBookingComponent,
+      [evt, EPCONST.MFUNCID.Edit, 'Xem chi tiết',null,true],
+      option
+    );
   }
 
   delete(evt?) {
