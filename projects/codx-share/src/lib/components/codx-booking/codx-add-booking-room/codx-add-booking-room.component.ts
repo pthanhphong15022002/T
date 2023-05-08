@@ -32,6 +32,7 @@ const _addMF = 'SYS01';
 const _editMF = 'SYS03';
 const _EPParameters = 'EPParameters';
 const _EPRoomParameters = 'EPRoomParameters';
+
 export class Device {
   id;
   text = '';
@@ -60,10 +61,16 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   formModel: FormModel;
   funcID: string;
   user: any;
-  attendeesNumber=0;
+  attendeesNumber = 0;
   startTime: string;
   endTime: string;
   listUM = [];
+  tabControl = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+    { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+  ];
   grView: any;
   cbbResource = [];
   fields: Object = { text: 'resourceName', value: 'resourceID' };
@@ -99,11 +106,11 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   listRoles = [];
   curUser: any;
   resources = [];
-  guestNumber=0;
+  guestNumber = 0;
   roomCapacity = 0;
   calendarID: any;
   dueDateControl: any;
-  vllDevices: any;
+  vllDevices = [];
   lstDeviceRoom = [];
   tmplstDeviceEdit = [];
   tmplstDevice = [];
@@ -125,6 +132,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   idUserSelected: any;
   popover: any;
   listUserID = [];  
+  guestControl: any;
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -179,7 +187,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     this.getCacheData();
     this.getCalendateTime();
     this.cacheService.valueList('EP012').subscribe((res) => {
-      this.vllDevices = res.datas;
+      this.vllDevices = Array.from(res.datas);
       this.vllDevices.forEach((item) => {
         let device = new Device();
         device.id = item.value;
@@ -335,6 +343,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         if (res) {
           let roomSetting_1 = JSON.parse(res);
           this.dueDateControl = roomSetting_1?.DueDateControl;
+          this.guestControl = roomSetting_1?.GuestControl;
         }
       });
     this.codxBookingService
@@ -359,7 +368,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           }
         });
         //thêm người đặt(người dùng hiên tại) khi thêm mới
-        if (this.funcType == _addMF) {
+        if (this.funcType == _addMF || this.funcType == _copyMF) {
           let people = this.authService.userValue;
           let tmpResource = new BookingAttendees();
           tmpResource.userID = people?.userID;
@@ -374,7 +383,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
               tmpResource.roleName = element?.text;
             }
           });
-          this.curUser=tmpResource;
+          this.curUser = tmpResource;
           this.resources.push(tmpResource);
           this.changeDetectorRef.detectChanges();
         } else {
@@ -444,7 +453,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
               });
           }
         }
-      });    
+      });
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//
@@ -580,15 +589,15 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     }
   }
 
-  eventApply(e) {
-    var assignTo = '';
-    var listUserIDByOrg = '';
-    var listDepartmentID = '';
-    var listUserID = '';
-    var listPositionID = '';
-    var listEmployeeID = '';
-    var listGroupMembersID = '';
-    var type = 'U';
+  shareInputChange(e) {
+    let assignTo = '';
+    let listUserIDByOrg = '';
+    let listDepartmentID = '';
+    let listUserID = '';
+    let listPositionID = '';
+    let listEmployeeID = '';
+    let listGroupMembersID = '';
+    let type = 'U';
     if (e == null) return;
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -670,7 +679,6 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         });
     }
   }
-
   valueUser(resourceID) {
     if (resourceID != '') {
       if (this.resources != null) {
@@ -688,7 +696,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             if (!id.split(';').includes(element)) arrayNew.push(element);
           });
         }
-        if (arrayNew.length >= 0) {
+        if (arrayNew.length > 0) {
           resourceID = arrayNew.join(';');
           id += ';' + resourceID;
           this.getListUser(resourceID);
@@ -723,9 +731,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
               tmpResource.userName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
               tmpResource.roleType = '1';
-              tmpResource.quantity = 1;
               tmpResource.optional = false;
-
               this.listRoles.forEach((element) => {
                 if (element.value == tmpResource.roleType) {
                   tmpResource.icon = element.icon;
@@ -754,9 +760,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             }
           });
           this.resources = this.filterArray(this.resources);
-          this.attendeesNumber =
-            this.resources.length + this.guestNumber;
-          this.changeDetectorRef.detectChanges();
+          this.data.attendees = this.resources.length + 1;
+          this.detectorRef.detectChanges();
         }
       });
   }
@@ -984,7 +989,6 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           this.data.owner = item?.userID;
         }
       });
-      this.tmpAttendeesList.push(this.curUser);
 
       let tmpEquip = [];
       this.tmplstDevice.forEach((element) => {
@@ -1437,7 +1441,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
 
   openPopupDevice(template: any) {
-    this.changeDetectorRef.detectChanges();
+    var dialog = this.callfc.openForm(template, '', 550, 400);
+    this.detectorRef.detectChanges();
   }
 
   openPopupLink() {

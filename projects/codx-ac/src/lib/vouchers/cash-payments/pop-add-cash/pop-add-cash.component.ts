@@ -379,7 +379,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
 
-    this.gridHeight = hBody - (hTab + hNote + 180);
+    this.gridHeight = hBody - (hTab + hNote + 140);
     grid.disableField(this.lockFields);
   }
 

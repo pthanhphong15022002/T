@@ -179,6 +179,10 @@ import { CodxTypeTaskComponent } from './components/codx-step/codx-type-task/cod
 import { CodxViewTaskComponent } from './components/codx-step/codx-view-task/codx-view-task.component';
 import { CodxAddBookingCarComponent } from './components/codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { CodxAddBookingRoomComponent } from './components/codx-booking/codx-add-booking-room/codx-add-booking-room.component';
+import { CodxAddBookingStationeryComponent } from './components/codx-booking/codx-add-booking-stationery/codx-add-booking-stationery.component';
+import { CodxInviteRoomAttendeesComponent } from './components/codx-booking/codx-invite-room-attendees/codx-invite-room-attendees.component';
+import { CodxRescheduleBookingRoomComponent } from './components/codx-booking/codx-reschedule-booking-room/codx-reschedule-booking-room.component';
+import { CodxInputCustomFieldComponent } from './components/codx-input-custom-field/codx-input-custom-field.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -265,7 +269,6 @@ const T_Component: Type<any>[] = [
   ListPostComponent,
   PostShareComponent,
 
-
   CodxHistoryComponent,
   CodxHistoryItemComponent,
   PopupSelectTemplateComponent,
@@ -309,12 +312,18 @@ const T_Component: Type<any>[] = [
   CodxBookingComponent,
   CodxAddBookingCarComponent,
   CodxAddBookingRoomComponent,
+  CodxAddBookingStationeryComponent,
+  CodxInviteRoomAttendeesComponent,
+  CodxRescheduleBookingRoomComponent,
   CodxBookingCarScheduleContentComponent,
   CodxBookingRoomScheduleContentComponent,
   CodxBookingViewDetailComponent,
   CountChartComponent,
   TopChartComponent,
   CodxMeetingOnlineComponent,
+ //CM+DP
+  CodxQuotationsComponent,
+  CodxInputCustomFieldComponent
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -326,7 +335,7 @@ const T_Pipe: Type<any>[] = [
   ScrollPipe,
   MessageSystemPipe,
   SearchPipe,
-  FillterReferType
+  FillterReferType,
 ];
 
 @NgModule({
@@ -341,7 +350,6 @@ const T_Pipe: Type<any>[] = [
     PopupAddApproverComponent,
     CodxClearCacheComponent,
     CalendarCenterComponent,
-    CodxQuotationsComponent,
   ],
   exports: [T_Component, T_Pipe],
   imports: [

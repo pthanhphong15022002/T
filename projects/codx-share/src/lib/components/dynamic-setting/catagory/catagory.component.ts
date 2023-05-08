@@ -662,7 +662,12 @@ export class CatagoryComponent implements OnInit {
             console.log(res);
           });
       } else {
-        if (this.category != '4') if (this.dataValue[field] == value) return;
+        if (this.category != '4') {
+          if (this.dataValue[field] == value) {
+            this.collapseItem(null, data.recID, data.fieldName);
+            return;
+          }
+        }
         var dt = this.settingValue.find((x) => x.category == this.category);
         if (this.category == '1' || this.category == '4') {
           if (this.category == '4' && Array.isArray(this.dataValue)) {

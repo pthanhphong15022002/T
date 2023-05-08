@@ -67,28 +67,17 @@
         </span>
       </div>
     </div>
-    <div class="d-flex align-items-center">
-      <codx-vll
-        [showText]="true"
-        [showBgColor]="true"
-        [name]="'EP022'"
-        [value]="data?.approveStatus"
-        class="badge badge-light badge-md fs-7"
-      >
+    <div class="d-flex align-items-center pt-2">
+      <codx-vll [showText]="true" [showBgColor]="true" [name]="'EP022'" [value]="data?.approveStatus"
+        class="badge badge-light badge-md fs-7">
       </codx-vll>
 
-      <codx-vll
-        *ngIf="resourceType=='6'"
-        [showText]="true"
-        [showBgColor]="true"
-        [name]="'EP020'"
-        [value]="data?.issueStatus"
-        class="badge badge-light badge-md fs-7"
-      >
+      <codx-vll *ngIf="resourceType=='6'" [showText]="true" [showBgColor]="true" [name]="'EP020'"
+        [value]="data?.issueStatus" class="badge badge-light badge-md fs-7">
       </codx-vll>
-      <div [innerHTML]=" data?.bookingOn | formatvalue : formModel : 'BookingOn' | async " ></div>
+      <div [innerHTML]=" data?.bookingOn | formatvalue : formModel : 'BookingOn' | async "></div>
     </div>
-    
+
   </div>
 </ng-template>
 
@@ -96,9 +85,9 @@
   <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2 card codx_cardcenter p-3 " [typeMF]="'hover'"
     [title]="data?.requester " [subTitleTmp]="subTitleTmp" [icoCss]="
       'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
-    "  [imageId]="data?.createdBy"
-    imageObjType="AD_Users" [titleLine]="2" [dataItem]="data" [formModel]="formModel" [footer]="footerTmp"
-    (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)" typeMF="hover" [dataItem]="data">
+    " [imageId]="data?.createdBy" imageObjType="AD_Users" [titleLine]="2" [dataItem]="data" [formModel]="formModel"
+    [footer]="footerTmp" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)" typeMF="hover"
+    [dataItem]="data">
   </codx-temp-full>
 </ng-template>
 

@@ -12,7 +12,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { DP_Steps_Fields } from '../../../models/models';
 
 @Component({
-  selector: 'codx-input-custom-field',
+  selector: 'lib-input-custom-field',
   templateUrl: './input-custom-field.component.html',
   styleUrls: ['./input-custom-field.component.css'],
 })

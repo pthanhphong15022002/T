@@ -38,6 +38,8 @@ import { TabDetailCustomComponent } from './deals/deal-detail/tab-detail-custom/
 import { CodxTableComponent } from './contracts/codx-table/codx-table.component';
 import { AddContractsComponent } from './contracts/add-contracts/add-contracts.component';
 import { ListContractsComponent } from './contracts/list-contracts/list-contracts.component';
+import { QuotationsLinesComponent } from './quotations-lines/quotations-lines.component';
+import { PopupAddQuotationsLinesComponent } from './quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
 
 const routes: Routes = [
   {
@@ -89,6 +91,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxTableComponent,
     AddContractsComponent,
     ListContractsComponent,
+    QuotationsLinesComponent,
+    PopupAddQuotationsLinesComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

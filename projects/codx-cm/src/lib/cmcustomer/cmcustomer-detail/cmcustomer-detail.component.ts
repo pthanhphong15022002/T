@@ -49,7 +49,7 @@ export class CmcustomerDetailComponent implements OnInit {
     { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
     { name: 'Approve', textDefault: 'Ký duyệt', isActive: false, template: null },
     { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
-    { name: 'Quote', textDefault: 'Báo giá', isActive: false, template: null },
+    { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
     { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
   ];
   treeTask = [];

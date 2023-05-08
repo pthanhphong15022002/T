@@ -65,6 +65,7 @@ import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-e
 import { Sort } from '@syncfusion/ej2-angular-grids';
 import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 import { PopupEProcessContractComponent } from '../../employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
+import { PopupForeignWorkerComponent } from '../../employee-profile/popup-foreign-worker/popup-foreign-worker.component';
 
 
 @Component({
@@ -243,6 +244,10 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   bSalarySortModel: SortModel;
   issuedDateSortModel: SortModel;
   TrainFromDateSortModel: SortModel;
+  injectDateSortModel: SortModel;
+  healthDateSortModel: SortModel;
+  diseasesFromDateSortModel: SortModel;
+  accidentDateSortModel: SortModel;
   //#endregion
 
   reRenderGrid = true;
@@ -438,7 +443,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
 
   //#endregion
 
-  @ViewChild('tmpTemp', { static: true }) tmpTemp: TemplateRef<any>;
+  @ViewChild('tmpTemp', { static: true })
+  tmpTemp: TemplateRef<any>;
   @ViewChild('tmpViewAllPassport', { static: true }) tmpViewAllPassport: TemplateRef<any>;
   @ViewChild('tmpViewAllVisa', { static: true }) tmpViewAllVisa: TemplateRef<any>;
 
@@ -654,21 +660,21 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   initSalaryInfo() {
     if (this.employeeID) {
       //Job salaries Lương chức danh
-      if (!this.crrJobSalaries) {
-        let rqJSalary = new DataRequest();
-        rqJSalary.entityName = 'HR_EJobSalaries';
-        rqJSalary.dataValues = this.employeeID + ';true';
-        rqJSalary.predicates = 'EmployeeID=@0 and IsCurrent=@1';
-        rqJSalary.page = 1;
-        rqJSalary.pageSize = 1;
+      // if (!this.crrJobSalaries) {
+      //   let rqJSalary = new DataRequest();
+      //   rqJSalary.entityName = 'HR_EJobSalaries';
+      //   rqJSalary.dataValues = this.employeeID + ';true';
+      //   rqJSalary.predicates = 'EmployeeID=@0 and IsCurrent=@1';
+      //   rqJSalary.page = 1;
+      //   rqJSalary.pageSize = 1;
 
-        this.hrService.loadData('HR', rqJSalary).subscribe((res) => {
-          if (res && res[0]) {
-            this.crrJobSalaries = res[0][0];
-            this.df.detectChanges();
-          }
-        });
-      }
+      //   this.hrService.loadData('HR', rqJSalary).subscribe((res) => {
+      //     if (res && res[0]) {
+      //       this.crrJobSalaries = res[0][0];
+      //       this.df.detectChanges();
+      //     }
+      //   });
+      // }
 
       // Salary
       if (!this.crrEBSalary) {
@@ -712,7 +718,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
 
       // Asset
       if (!this.lstAsset)
-        this.hrService.LoadDataEAsset(this.employeeID).subscribe((res) => {
+        this.hrService.LoadListEAsset(this.employeeID).subscribe((res) => {
           if (res) {
             this.lstAsset = res;
             this.df.detectChanges();
@@ -780,33 +786,33 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           },
           {
             headerText:
-            "Lương chức danh",
-            template: this.basicSalaryCol4,
-            width: '150',
-          },
-          {
-            headerText:
-              basicSalaryHeaderText['EffectedDate'],
+              basicSalaryHeaderText['JSalary'],
             template: this.basicSalaryCol3,
             width: '150',
           }, 
+          {
+            headerText:basicSalaryHeaderText['EffectedDate'],
+            template: this.basicSalaryCol4,
+            width: '150',
+          },
         ];
       });
-      // let insBSalary = setInterval(() => {
-      //   if (this.basicSalaryGridview) {
-      //     clearInterval(insBSalary);
-      //     let t = this;
-      //     this.basicSalaryGridview.dataService.onAction.subscribe((res) => {
-      //       if (res) {
-      //         if (res.type == 'loaded') {
-      //           t.eBasicSalaryRowCount = res['data'].length;
-      //         }
-      //       }
-      //     });
-      //     this.eBasicSalaryRowCount =
-      //       this.basicSalaryGridview.dataService.rowCount;
-      //   }
-      // }, 100);
+      let insBSalary = setInterval(() => {
+        if (this.basicSalaryGridview) {
+          clearInterval(insBSalary);
+          let t = this;
+          this.basicSalaryGridview.dataService.onAction.subscribe((res) => {
+            if (res) {
+              if (res.type == 'loaded') {
+                t.eBasicSalaryRowCount = 0;
+                t.eBasicSalaryRowCount = res['data'].length;
+              }
+            }
+          });
+          this.eBasicSalaryRowCount =
+            this.basicSalaryGridview.dataService.rowCount;
+        }
+      }, 100);
 
       //#endregion
 
@@ -827,7 +833,6 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         this.hrService.getViewSkillAsync(rqESkill).subscribe((res) => {
           if (res) {
             this.lstESkill = res;
-            console.log('ressssssssssssssssssssss', res);
           }
         });
       }
@@ -1183,38 +1188,38 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         this.visaColumnGrid = [
           {
             headerText:
-              visaHeaderText['VisaNo'] + ' | ' + visaHeaderText['VisaType'],
+              visaHeaderText['VisaNo'] + ' | ' + visaHeaderText['IssuedPlace'],
             template: this.visaCol1,
             width: '150',
           },
           {
             headerText:
-              'Thời hạn '+
+              visaHeaderText['IssuedDate'] +
               ' | ' +
-              visaHeaderText['NationalityID'],
+              visaHeaderText['ExpiredDate'],
             template: this.visaCol2,
             width: '150',
           },
         ];
       });
   
-      // let insVisa = setInterval(() => {
-      //   if (this.visaGridview) {
-      //     clearInterval(insVisa);
-      //     let t = this;
-      //     this.visaGridview.dataService.onAction.subscribe((res) => {
-      //       if (res) {
-      //         if (res.type == 'loaded') {
-      //           t.visaRowCount = res['data'].length;
-      //           if(res['data'].length > 0){
-      //             this.crrVisa = res.data[0]
-      //           }
-      //         }
-      //       }
-      //     });
-      //     this.visaRowCount = this.visaGridview.dataService.rowCount;
-      //   }
-      // }, 100);
+      let insVisa = setInterval(() => {
+        if (this.visaGridview) {
+          clearInterval(insVisa);
+          let t = this;
+          this.visaGridview.dataService.onAction.subscribe((res) => {
+            if (res) {
+              if (res.type == 'loaded') {
+                t.visaRowCount = res['data'].length;
+                if(res['data'].length > 0){
+                  this.crrVisa = res.data[0]
+                }
+              }
+            }
+          });
+          this.visaRowCount = this.visaGridview.dataService.rowCount;
+        }
+      }, 100);
     }
     //#endregion
 
@@ -1242,25 +1247,24 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         ];
       });
   
-      // let insPassport = setInterval(() => {
-      //   if (this.passportGridview) {
-      //     clearInterval(insPassport);
-      //     let t = this;
-      //     this.passportGridview?.dataService.onAction.subscribe((res) => {
-      //       if (res) {
-      //         if (res.type == 'loaded') {
-      //           t.passportRowCount = res['data'].length;
-      //           if(res['data'].length > 0){
-      //             this.crrPassport = res.data[0]
-      //             console.log('crr passport', this.crrPassport);
-      //             debugger
-      //           }
-      //         }
-      //       }
-      //     });
-      //     this.passportRowCount = this.passportGridview?.dataService.rowCount;
-      //   }
-      // }, 100);
+      let insPassport = setInterval(() => {
+        if (this.passportGridview) {
+          clearInterval(insPassport);
+          let t = this;
+          this.passportGridview?.dataService.onAction.subscribe((res) => {
+            if (res) {
+              if (res.type == 'loaded') {
+                t.passportRowCount = res['data'].length;
+                if(res['data'].length > 0){
+                  this.crrPassport = res.data[0]
+                  // debugger
+                }
+              }
+            }
+          });
+          this.passportRowCount = this.passportGridview?.dataService.rowCount;
+        }
+      }, 100);
     }
     //#endregion
 
@@ -1376,6 +1380,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         if(history.state?.empInfo){
           this.infoPersonal = JSON.parse(history.state?.empInfo);
         }
+        console.log('thong tin nhan vien ne', this.infoPersonal);
+        
         this.listEmp = history.state?.data;
         this.request = history.state?.request;
         if (!this.request && !this.listEmp) {
@@ -1507,6 +1513,27 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     this.appointionSortModel = new SortModel();
     this.appointionSortModel.field = '(EffectedDate)';
     this.appointionSortModel.dir = 'desc';
+
+    // #region Sức khỏe sort model
+
+    this.injectDateSortModel = new SortModel();
+    this.injectDateSortModel.field = '(InjectDate)';
+    this.injectDateSortModel.dir = 'desc';
+
+    this.accidentDateSortModel  = new SortModel();
+    this.accidentDateSortModel.field = '(AccidentDate)';
+    this.accidentDateSortModel.dir = 'desc';
+
+    this.diseasesFromDateSortModel = new SortModel();
+    this.diseasesFromDateSortModel.field = '(FromDate)';
+    this.diseasesFromDateSortModel.dir = 'desc';
+
+    this.healthDateSortModel = new SortModel();
+    this.healthDateSortModel.field = '(HealthDate)';
+    this.healthDateSortModel.dir = 'desc';
+
+    //#endregion
+
 
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       this.addHeaderText = res[0].customName;
@@ -2296,7 +2323,6 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   }
 
   clickMF(event: any, data: any, funcID = null) {
-    debugger
     switch (event.functionID) {
       case 'SYS03': //edit
         if (funcID == 'passport') {
@@ -2372,6 +2398,14 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           this.df.detectChanges();
         }
         break;
+
+        case this.ePassportFuncID + 'ViewAll':        
+        this.popupViewAll(this.ePassportFuncID)
+        break;
+      case this.eVisaFuncID + 'ViewAll':
+        this.popupViewAll(this.eVisaFuncID)
+        break;
+      
 
       case 'SYS02': //delete
         this.notifySvr.alertCode('SYS030').subscribe((x) => {
@@ -2856,14 +2890,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           this.df.detectChanges();
         }
         break;
-    
-      case this.ePassportFuncID + 'ViewAll':        
-        this.popupViewAll(this.ePassportFuncID)
-        break;
-      case this.eVisaFuncID + 'ViewAll':
-        this.popupViewAll(this.eVisaFuncID)
-        break;
-      }
+    }
   }
 
   popupViewAll(funcID){
@@ -2906,7 +2933,6 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     );
     
   }
-
   // getDataAsync(funcID: string) {
   //   this.getDataFromFunction(funcID);
   // }
@@ -2929,10 +2955,6 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   //       });
   //   }
   // }
-
-  close2(dialog: DialogRef) {
-    dialog.close();
-  }
 
   ngAfterViewInit(): void {
     // this.view.dataService.methodDelete = 'DeleteSignFileAsync';
@@ -3163,6 +3185,29 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         funcID: this.ePartyFuncID,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.ePartyFuncID),
+        dataObj: this.infoPersonal,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res?.event) {
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
+    });
+  }
+
+  editEmployeeForeignWorkerInfo(actionHeaderText) {
+    let option = new SidebarModel();
+    option.FormModel = this.eInfoFormModel;
+    option.Width = '550px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupForeignWorkerComponent,
+      {
+        funcID: this.ePartyFuncID,
+        headerText:
+          actionHeaderText + ' ' + this.getFormHeader(this.foreignWorkerFuncID),
         dataObj: this.infoPersonal,
       },
       option
@@ -3460,7 +3505,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
       if (!res?.event) {
         (this.basicSalaryGridview?.dataService as CRUDService)?.clear();
       } else {
-        this.eBasicSalaryRowCount = this.updateGridView(
+        this.eBasicSalaryRowCount += this.updateGridView(
           this.basicSalaryGridview,
           actionType,
           res.event[0]
@@ -4633,7 +4678,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   }
 
   popupUpdateEJobSalaryStatus() {
-    this.dialogViewSalary = this.callfc.openForm(
+    let dialogViewSalary = this.callfc.openForm(
       this.templateViewSalary,
       null,
       850,
@@ -4641,7 +4686,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
       null,
       null
     );
-    this.dialogViewSalary.closed.subscribe((res) => {
+    dialogViewSalary.closed.subscribe((res) => {
       // if (res?.event) {
       //   this.view.dataService.update(res.event[0]).subscribe((res) => {});
       // }
@@ -4649,23 +4694,26 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     });
   }
 
-  valueChangeViewAllEBasicSalary(evt) {
-    this.ViewAllEBasicSalaryFlag = evt.isTrusted;
-    // this.ViewAllEBasicSalaryFlag = evt.data;
+  valueChangeViewAllEBasicSalary() {
+    this.ViewAllEBasicSalaryFlag = true;
+    
+    // this.ViewAllEBasicSalaryFlag = evt.data; 
+    
     this.popupUpdateEJobSalaryStatus();
-    let ins = setInterval(() => {
-      if (this.basicSalaryGridview) {
-        clearInterval(ins);
-        let t = this;
-        this.basicSalaryGridview.dataService.onAction.subscribe((res) => {
-          if (res?.type == 'loaded') {
-            t.eBasicSalaryRowCount = res['data'].length;
-          }
-        });
-        this.eBasicSalaryRowCount =
-          this.basicSalaryGridview.dataService.rowCount;
-      }
-    }, 100);
+      
+    // let ins = setInterval(() => {
+    //   if (this.basicSalaryGridview) {
+    //     clearInterval(ins);
+    //     let t = this;
+    //     this.basicSalaryGridview.dataService.onAction.subscribe((res) => {
+    //       if (res?.type == 'loaded') {
+    //         t.eBasicSalaryRowCount = res['data'].length;
+    //       }
+    //     });
+    //     this.eBasicSalaryRowCount =
+    //       this.basicSalaryGridview.dataService.rowCount;
+    //   }
+    // }, 100);
   }
   valueChangeViewAllEJobSalary(evt) {
     this.ViewAllEJobSalaryFlag = evt.data;
@@ -5426,4 +5474,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     return '#000205';
   }
   //#endregion
+
+  close2(dialog: DialogRef) {
+    dialog.close();
+  }
 }

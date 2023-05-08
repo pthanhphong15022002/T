@@ -1,4 +1,3 @@
-declare var window: any;
 import {
   Component,
   TemplateRef,
@@ -21,15 +20,20 @@ import {
   AuthService,
   CodxScheduleComponent,
   Util,
+  DialogModel,
 } from 'codx-core';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
 import { CodxAddBookingCarComponent } from './codx-add-booking-car/codx-add-booking-car.component';
 import { CodxAddBookingRoomComponent } from './codx-add-booking-room/codx-add-booking-room.component';
+import { CodxAddBookingStationeryComponent } from './codx-add-booking-stationery/codx-add-booking-stationery.component';
+import { CodxRescheduleBookingRoomComponent } from './codx-reschedule-booking-room/codx-reschedule-booking-room.component';
+import { CodxInviteRoomAttendeesComponent } from './codx-invite-room-attendees/codx-invite-room-attendees.component';
 // import { codxEpService } from '../../codx-ep.service';
 // import { PopupAddAttendeesComponent } from './popup-add-attendees/popup-add-attendees.component';
 // import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add-booking-room.component';
 // import { PopupRescheduleBookingComponent } from './popup-reschedule-booking/popup-reschedule-booking.component';
+import { ɵglobal as global } from '@angular/core';
 
 @Component({
   selector: 'codx-booking',
@@ -40,6 +44,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //Input
   @Input() funcID: string;
   @Input() queryParams: any;
+  @Input() resourceType: any;
   //list view
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
@@ -59,6 +64,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   @ViewChild('gridEndDate') gridEndDate: TemplateRef<any>;
   @ViewChild('gridNote') gridNote: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
+  ngCmp: any = global;
 
   //---------------------------------------------------------------------------------//
   service = 'EP';
@@ -89,9 +95,9 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   navigated = false;
   isAdmin = false;
   isAfterRender = false;
-  resourceType: string;
   isAllocateStationery = false;
   popupBookingComponent: any;
+  
   constructor(
     injector: Injector,
     private codxEpService: CodxEpService,
@@ -100,7 +106,6 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     private activatedRoute: ActivatedRoute
   ) {
     super(injector);
-    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
@@ -108,28 +113,25 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   onInit(): void {
     this.getBaseVariable();
     this.roleCheck();
-    if(this.funcID==EPCONST.FUNCID.S_Allocation ||this.funcID == EPCONST.FUNCID.S_Bookings){
+    if (
+      this.funcID == EPCONST.FUNCID.S_Allocation ||
+      this.funcID == EPCONST.FUNCID.S_Bookings
+    ) {
       this.getSchedule();
     }
 
     this.buttons = {
       id: 'btnAdd',
     };
-    if(this.resourceType=='1'){
-      this.popupBookingComponent= CodxAddBookingRoomComponent;
-    }
-    else if(this.resourceType=='2'){
-      this.popupBookingComponent= CodxAddBookingCarComponent;
-    }
-    else if(this.resourceType=='6'){
-      this.popupBookingComponent= CodxAddBookingCarComponent;
-    }
   }
 
   onLoading(evt: any) {
     if (this.formModel) {
-      if(this.funcID==EPCONST.FUNCID.S_Allocation ||this.funcID == EPCONST.FUNCID.S_Bookings){
-        this.views = [          
+      if (
+        this.funcID == EPCONST.FUNCID.S_Allocation ||
+        this.funcID == EPCONST.FUNCID.S_Bookings
+      ) {
+        this.views = [
           {
             type: ViewType.listdetail,
             sameData: true,
@@ -138,122 +140,123 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               template: this.itemTemplate,
               panelRightRef: this.panelRight,
             },
-          },          
+          },
         ];
         this.detectorRef.detectChanges();
-      }
-      else{
+      } else {
         this.cache
-        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
-        .subscribe((grv) => {
-          if (grv) {
-            this.grView = Util.camelizekeyObj(grv);
-            this.getSchedule();
-            if(this.funcID==EPCONST.FUNCID.R_Bookings ||this.funcID==EPCONST.FUNCID.C_Bookings){
-              this.columnGrids = [
-                {
-                  field: 'bookingOn',
-                  template: this.gridBookingOn,
-                  headerText: this.grView?.bookingOn?.headerText,
-                },
-                {
-                  field: 'resourceID',
-                  template: this.gridResourceName,
-                  headerText: this.grView?.resourceID?.headerText,
-                },
-                {
-                  field: 'title',
-                  headerText: this.grView?.title?.headerText,
-                },
-                {
-                  field: 'title',
-                  template: this.gridHost,
-                  headerText: 'Người chủ trì',
-                },
-                {
-                  field: 'startDate',
-                  template: this.gridStartDate,
-                  headerText: this.grView?.startDate?.headerText,
-                },
-                {
-                  field: 'endDate',
-                  template: this.gridEndDate,
-                  headerText: this.grView?.endDate?.headerText,
-                },
-                {
-                  field: 'requester',
-                  headerText: this.grView?.requester?.headerText,
-                },
-                {
-                  field: '',
-                  headerText: '',
-                  width: 120,
-                  template: this.gridMF,
-                  textAlign: 'center',
-                },
-              ];
-              this.views = [
-                {
-                  sameData: false,
-                  type: ViewType.schedule,
-                  active: true,
-                  request2: this.scheduleHeader,
-                  request: this.scheduleEvent,
-                  toolbarTemplate: this.footerButton,
-                  showSearchBar: false,
-                  showFilter: false,
-                  model: {
-                    //panelLeftRef:this.panelLeft,
-                    eventModel: this.scheduleEvtModel,
-                    resourceModel: this.scheduleHeaderModel, //resource
-                    template: this.cardTemplate,
-                    template4: this.resourceHeader,
-                    //template5: this.resourceTootip,//tooltip
-                    template6: this.mfButton, //header
-                    template8: this.contentTmp, //content
-                    //template7: this.footerButton,//footer
-                    statusColorRef: 'EP022',
+          .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+          .subscribe((grv) => {
+            if (grv) {
+              this.grView = Util.camelizekeyObj(grv);
+              this.getSchedule();
+              if (
+                this.funcID == EPCONST.FUNCID.R_Bookings ||
+                this.funcID == EPCONST.FUNCID.C_Bookings
+              ) {
+                this.columnGrids = [
+                  {
+                    field: 'bookingOn',
+                    template: this.gridBookingOn,
+                    headerText: this.grView?.bookingOn?.headerText,
                   },
-                },
-                {
-                  type: ViewType.listdetail,
-                  sameData: true,
-                  active: false,
-                  model: {
-                    template: this.itemTemplate,
-                    panelRightRef: this.panelRight,
+                  {
+                    field: 'resourceID',
+                    template: this.gridResourceName,
+                    headerText: this.grView?.resourceID?.headerText,
                   },
-                },
-                {
-                  sameData: true,
-                  type: ViewType.grid,
-                  active: false,
-                  model: {
-                    resources: this.columnGrids,
-                    template2: this.mfButton,
-                    hideMoreFunc: true,
+                  {
+                    field: 'title',
+                    headerText: this.grView?.title?.headerText,
                   },
-                },
-              ];
-              this.navigateSchedule();
-            }
-            
-            this.detectorRef.detectChanges();
-          }
-        });
+                  {
+                    field: 'title',
+                    template: this.gridHost,
+                    headerText: 'Người chủ trì',
+                  },
+                  {
+                    field: 'startDate',
+                    template: this.gridStartDate,
+                    headerText: this.grView?.startDate?.headerText,
+                  },
+                  {
+                    field: 'endDate',
+                    template: this.gridEndDate,
+                    headerText: this.grView?.endDate?.headerText,
+                  },
+                  {
+                    field: 'requester',
+                    headerText: this.grView?.requester?.headerText,
+                  },
+                  {
+                    field: '',
+                    headerText: '',
+                    width: 120,
+                    template: this.gridMF,
+                    textAlign: 'center',
+                  },
+                ];
+                this.views = [
+                  {
+                    sameData: false,
+                    type: ViewType.schedule,
+                    active: true,
+                    request2: this.scheduleHeader,
+                    request: this.scheduleEvent,
+                    toolbarTemplate: this.footerButton,
+                    showSearchBar: false,
+                    showFilter: false,
+                    model: {
+                      //panelLeftRef:this.panelLeft,
+                      eventModel: this.scheduleEvtModel,
+                      resourceModel: this.scheduleHeaderModel, //resource
+                      template: this.cardTemplate,
+                      template4: this.resourceHeader,
+                      //template5: this.resourceTootip,//tooltip
+                      template6: this.mfButton, //header
+                      template8: this.contentTmp, //content
+                      //template7: this.footerButton,//footer
+                      statusColorRef: 'EP022',
+                    },
+                  },
+                  {
+                    type: ViewType.listdetail,
+                    sameData: true,
+                    active: false,
+                    model: {
+                      template: this.itemTemplate,
+                      panelRightRef: this.panelRight,
+                    },
+                  },
+                  {
+                    sameData: true,
+                    type: ViewType.grid,
+                    active: false,
+                    model: {
+                      resources: this.columnGrids,
+                      template2: this.mfButton,
+                      hideMoreFunc: true,
+                    },
+                  },
+                ];
+                this.navigateSchedule();
+              }
 
-      this.detectorRef.detectChanges();
-    }
+              this.detectorRef.detectChanges();
+            }
+          });
+
+        this.detectorRef.detectChanges();
       }
-      
+    }
   }
 
   ngAfterViewInit(): void {}
-  
+
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
-  getBaseVariable(){
+  getBaseVariable() {
     if (this.funcID == null) {
       this.funcID = this.activatedRoute.snapshot.params['funcID'];
     }
@@ -270,22 +273,31 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.funcIDName = res.customName.toString().toLowerCase();
       }
     });
-    switch (this.funcID) {
-      case EPCONST.FUNCID.R_Bookings:
-        this.resourceType = '1';
-        break;
-      case EPCONST.FUNCID.C_Bookings:
-        this.resourceType = '2';
-        break;
+    if (this.resourceType == null) {
+      switch (this.funcID) {
+        case EPCONST.FUNCID.R_Bookings:
+          this.resourceType = '1';
+          break;
+        case EPCONST.FUNCID.C_Bookings:
+          this.resourceType = '2';
+          break;
 
-      case EPCONST.FUNCID.S_Bookings:
-        this.resourceType = '6';
-        break;
-      case EPCONST.FUNCID.S_Allocation:
-        this.isAllocateStationery = true;
-        this.resourceType = '6';
+        case EPCONST.FUNCID.S_Bookings:
+          this.resourceType = '6';
+          break;
+      }
+    }
+    if (this.funcID == EPCONST.FUNCID.S_Allocation) {
+      this.isAllocateStationery = true;
+      this.resourceType = '6';
+    }
 
-        break;
+    if (this.resourceType == '1') {
+      this.popupBookingComponent = CodxAddBookingRoomComponent;
+    } else if (this.resourceType == '2') {
+      this.popupBookingComponent = CodxAddBookingCarComponent;
+    } else if (this.resourceType == '6') {
+      this.popupBookingComponent = CodxAddBookingStationeryComponent;
     }
   }
 
@@ -330,11 +342,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     };
   }
 
-
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Event------------------------------------//
   //---------------------------------------------------------------------------------//
-  viewChanged(evt:any){
+  viewChanged(evt: any) {
     this.getBaseVariable();
   }
   click(evt: ButtonModel) {
@@ -589,11 +600,11 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       let ele = document.getElementsByTagName('codx-schedule')[0];
       if (ele) {
         if (
-          (window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj
+          (this.ngCmp.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj
             .first.element.id == 'Schedule'
         ) {
           (
-            window.ng.getComponent(ele) as CodxScheduleComponent
+            this.ngCmp.ng.getComponent(ele) as CodxScheduleComponent
           ).scheduleObj.first.selectedDate = new Date(date);
           this.navigated = true;
         }
@@ -696,28 +707,27 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       this.notificationsService.notifyCode('TM052');
       return;
     }
-    // let dialogReschedule = this.callfc.openForm(
-    //   PopupRescheduleBookingComponent,
-    //   '',
-    //   550,
-    //   400,
-    //   this.funcID,
-    //   [data, this.formModel, this.popupTitle]
-    // );
-    // dialogReschedule.closed.subscribe((x) => {
-    //   this.popupClosed = true;
-    //   if (!x.event) this.view.dataService.clear();
-    //   if (x.event == null && this.view.dataService.hasSaved)
-    //     this.view.dataService
-    //       .delete([this.view.dataService.dataSelected])
-    //       .subscribe((x) => {
-    //         this.detectorRef.detectChanges();
-    //       });
-    //   else if (x.event) {
-    //     x.event.modifiedOn = new Date();
-    //     this.view.dataService.update(x.event).subscribe();
-    //   }
-    // });
+    let dialogReschedule = this.callfc.openForm(
+      CodxRescheduleBookingRoomComponent,
+      '',
+      550,
+      400,
+      this.funcID,
+      [data, this.formModel, this.popupTitle]
+    );
+    dialogReschedule.closed.subscribe((x) => {
+      if (!x.event) this.view.dataService.clear();
+      if (x.event == null && this.view.dataService.hasSaved)
+        this.view.dataService
+          .delete([this.view.dataService.dataSelected])
+          .subscribe((x) => {
+            this.detectorRef.detectChanges();
+          });
+      else if (x.event) {
+        x.event.modifiedOn = new Date();
+        this.view.dataService.update(x.event).subscribe();
+      }
+    });
   }
   invite(data: any) {
     let host: any;
@@ -734,28 +744,28 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       this.notificationsService.notifyCode('TM052');
       return;
     }
-    // let dialogInvite = this.callfc.openForm(
-    //   PopupAddAttendeesComponent,
-    //   '',
-    //   800,
-    //   500,
-    //   this.funcID,
-    //   [data, this.formModel, this.popupTitle]
-    // );
-    // dialogInvite.closed.subscribe((x) => {
-    //   if (!x.event) this.view.dataService.clear();
-    //   if (x.event == null && this.view.dataService.hasSaved)
-    //     this.view.dataService
-    //       .delete([this.view.dataService.dataSelected])
-    //       .subscribe((x) => {
-    //         this.detectorRef.detectChanges();
-    //       });
-    //   else if (x.event) {
-    //     x.event.modifiedOn = new Date();
+    let dialogInvite = this.callfc.openForm(
+      CodxInviteRoomAttendeesComponent,
+      '',
+      800,
+      500,
+      this.funcID,
+      [data, this.formModel, this.popupTitle]
+    );
+    dialogInvite.closed.subscribe((x) => {
+      if (!x.event) this.view.dataService.clear();
+      if (x.event == null && this.view.dataService.hasSaved)
+        this.view.dataService
+          .delete([this.view.dataService.dataSelected])
+          .subscribe((x) => {
+            this.detectorRef.detectChanges();
+          });
+      else if (x.event) {
+        x.event.modifiedOn = new Date();
 
-    //     this.view.dataService.update(x.event).subscribe();
-    //   }
-    // });
+        this.view.dataService.update(x.event).subscribe();
+      }
+    });
   }
 
   addNew(evt?) {
@@ -766,21 +776,42 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     }
     if (true) {
       this.view.dataService.addNew().subscribe((res) => {
-        let option = new SidebarModel();
-        option.Width = '800px';
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.formModel;
-        let dialog = this.callfc.openSide(
-          this.popupBookingComponent,
-          [res, EPCONST.MFUNCID.Add, this.popupTitle, this.optionalData],
-          option
-        );
-        dialog.closed.subscribe((returnData) => {
-          
-          if (!returnData.event) {
-            this.view.dataService.clear();
-          }
-        });
+        if (this.resourceType == EPCONST.VLL.ResourceType.Stationery) {
+          let dModel = new DialogModel();
+          dModel.IsFull = true;
+          dModel.FormModel = this.formModel;
+          dModel.DataService = this.view?.dataService;
+          let dialogStationery = this.callfc.openForm(
+            this.popupBookingComponent,
+            '',
+            null,
+            null,
+            null,
+            [res, EPCONST.MFUNCID.Add, this.popupTitle],
+            '',
+            dModel
+          );
+          dialogStationery.closed.subscribe((returnData) => {
+            if (!returnData.event) {
+              this.view.dataService.clear();
+            }
+          });
+        } else {
+          let option = new SidebarModel();
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.formModel;
+          option.Width = '800px';
+          let dialogAdd = this.callfc.openSide(
+            this.popupBookingComponent,
+            [res, EPCONST.MFUNCID.Add, this.popupTitle, this.optionalData],
+            option
+          );
+          dialogAdd.closed.subscribe((returnData) => {
+            if (!returnData.event) {
+              this.view.dataService.clear();
+            }
+          });
+        }
       });
     }
   }
@@ -803,19 +834,49 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           .subscribe((booking) => {
             if (booking) {
               this.view.dataService.edit(booking).subscribe(() => {
-                let option = new SidebarModel();
-                option.Width = '800px';
-                this.view.dataService.dataSelected = booking;
-                option.DataService = this.view?.dataService;
-                option.FormModel = this.formModel;
-                this.dialog = this.callfc.openSide(
-                  this.popupBookingComponent,
-                  [this.view.dataService.dataSelected, EPCONST.MFUNCID.Edit, this.popupTitle],
-                  option
-                );
-                this.dialog.closed.subscribe((returnData) => {                  
-                  if (!returnData.event) this.view.dataService.clear();
-                });
+                if (this.resourceType == EPCONST.VLL.ResourceType.Stationery) {
+                  let dModel = new DialogModel();
+                  dModel.IsFull = true;
+                  dModel.FormModel = this.formModel;
+                  dModel.DataService = this.view?.dataService;
+                  let dialogStationery = this.callfc.openForm(
+                    this.popupBookingComponent,
+                    '',
+                    null,
+                    null,
+                    null,
+                    [
+                      this.view.dataService.dataSelected,
+                      EPCONST.MFUNCID.Edit,
+                      this.popupTitle,
+                    ],
+                    '',
+                    dModel
+                  );
+                  dialogStationery.closed.subscribe((returnData) => {
+                    if (!returnData.event) {
+                      this.view.dataService.clear();
+                    }
+                  });
+                } else {
+                  let option = new SidebarModel();
+                  option.Width = '800px';
+                  this.view.dataService.dataSelected = booking;
+                  option.DataService = this.view?.dataService;
+                  option.FormModel = this.formModel;
+                  let dialogEdit = this.callfc.openSide(
+                    this.popupBookingComponent,
+                    [
+                      this.view.dataService.dataSelected,
+                      EPCONST.MFUNCID.Edit,
+                      this.popupTitle,
+                    ],
+                    option
+                  );
+                  dialogEdit.closed.subscribe((returnData) => {
+                    if (!returnData.event) this.view.dataService.clear();
+                  });
+                }
               });
             }
           });
@@ -833,25 +894,42 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               this.view.dataService.dataSelected = booking;
               this.view.dataService.copy().subscribe((res) => {
                 if (res) {
-                  let option = new SidebarModel();
-                  option.Width = '800px';
-                  option.DataService = this.view?.dataService;
-                  option.FormModel = this.formModel;
-                  // let dialogCopy = this.callFuncService.openSide(
-                  //   PopupAddBookingRoomComponent,
-                  //   [
-                  //     res,
-                  //     true,
-                  //     this.popupTitle,
-                  //     null,
-                  //     true,
-                  //   ],
-                  //   option
-                  // );
-                  // dialogCopy.closed.subscribe((returnData) => {
-                  //   this.popupClosed = true;
-                  //   if (!returnData.event) this.view.dataService.clear();
-                  // });
+                  if (
+                    this.resourceType == EPCONST.VLL.ResourceType.Stationery
+                  ) {
+                    let dModel = new DialogModel();
+                    dModel.IsFull = true;
+                    dModel.FormModel = this.formModel;
+                    dModel.DataService = this.view?.dataService;
+                    let dialogStationery = this.callfc.openForm(
+                      this.popupBookingComponent,
+                      '',
+                      null,
+                      null,
+                      null,
+                      [res, EPCONST.MFUNCID.Copy, this.popupTitle],
+                      '',
+                      dModel
+                    );
+                    dialogStationery.closed.subscribe((returnData) => {
+                      if (!returnData.event) {
+                        this.view.dataService.clear();
+                      }
+                    });
+                  } else {
+                    let option = new SidebarModel();
+                    option.Width = '800px';
+                    option.DataService = this.view?.dataService;
+                    option.FormModel = this.formModel;
+                    let dialogCopy = this.callfc.openSide(
+                      this.popupBookingComponent,
+                      [res, EPCONST.MFUNCID.Copy, this.popupTitle],
+                      option
+                    );
+                    dialogCopy.closed.subscribe((returnData) => {
+                      if (!returnData.event) this.view.dataService.clear();
+                    });
+                  }
                 }
               });
             }

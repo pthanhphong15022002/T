@@ -1,29 +1,18 @@
 declare var window: any;
 import {
   Component,
-  TemplateRef,
-  ViewChild,
   Injector,
   AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  ButtonModel,
-  DataRequest,
-  DialogRef,
-  ResourceModel,
-  SidebarModel,
   UIComponent,
-  ViewModel,
   CallFuncService,
-  ViewType,
-  FormModel,
   NotificationsService,
   AuthService,
-  CodxScheduleComponent,
-  Util,
 } from 'codx-core';
 import { CodxEpService } from '../codx-ep.service';
+import { EPCONST } from '../codx-ep.constant';
 
 @Component({
   selector: 'ep-booking',
@@ -33,19 +22,24 @@ import { CodxEpService } from '../codx-ep.service';
 export class EPBookingComponent extends UIComponent implements AfterViewInit {
   funcID: any;
   queryParams: any;
+  resourceType: string;
   
   constructor(
     private injector: Injector,
-    private callFuncService: CallFuncService,
-    private codxEpService: CodxEpService,
-    private notificationsService: NotificationsService,
-    private authService: AuthService,
     private activatedRoute: ActivatedRoute
   ) {
     super(injector);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
     this.queryParams = this.router.snapshot.queryParams;
-    
+    if(this.funcID == EPCONST.FUNCID.R_Bookings){
+      this.resourceType=EPCONST.VLL.ResourceType.Room;
+    } 
+    else if(this.funcID == EPCONST.FUNCID.C_Bookings){
+      this.resourceType=EPCONST.VLL.ResourceType.Car;
+    }
+    else{
+      this.resourceType=EPCONST.VLL.ResourceType.Stationery;
+    }
   }
   onInit(){
     

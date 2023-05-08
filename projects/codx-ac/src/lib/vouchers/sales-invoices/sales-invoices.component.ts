@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import {
   DataRequest,
-  FormModel,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -15,10 +14,11 @@ import {
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
-import { PopupAddSalesInvoiceComponent } from './popup-add-sales-invoice/popup-add-sales-invoice.component';
 import { CodxAcService } from '../../codx-ac.service';
+import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from './interfaces/ISalesInvoicesLine.interface';
+import { PopupAddSalesInvoiceComponent } from './popup-add-sales-invoice/popup-add-sales-invoice.component';
+import { SalesInvoiceService } from './sales-invoices.service';
 
 @Component({
   selector: 'lib-sales-invoices',
@@ -49,7 +49,11 @@ export class SalesInvoicesComponent
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
 
-  constructor(inject: Injector, private acService: CodxAcService) {
+  constructor(
+    inject: Injector,
+    private acService: CodxAcService,
+    private salesInvoiceService: SalesInvoiceService
+  ) {
     super(inject);
 
     this.router.queryParams.subscribe((params) => {
@@ -62,6 +66,8 @@ export class SalesInvoicesComponent
   onInit(): void {}
 
   ngAfterViewInit(): void {
+    console.log(this.view);
+
     this.views = [
       {
         type: ViewType.grid,
@@ -90,10 +96,14 @@ export class SalesInvoicesComponent
   //#endregion
 
   //#region Event
-  onChange(e) {
-    console.log(e);
+  onChange(e): void {
+    console.log('onChange', e);
 
-    this.selectedData = e?.data;
+    if (e.data.error?.isError) {
+      return;
+    }
+
+    this.selectedData = e.data.data ?? e.data;
 
     const salesInvoicesLinesOptions = new DataRequest();
     salesInvoicesLinesOptions.entityName = 'SM_SalesInvoicesLines';
@@ -154,9 +164,12 @@ export class SalesInvoicesComponent
   //#endregion
 
   //#region Method
-  delete(data): void {
+  delete(data: ISalesInvoice): void {
     this.view.dataService.delete([data], true).subscribe((res: any) => {
       console.log({ res });
+      if (!res.error) {
+        this.salesInvoiceService.deleteLinesByTransID(data.recID);
+      }
     });
   }
 

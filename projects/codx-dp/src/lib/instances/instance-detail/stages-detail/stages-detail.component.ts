@@ -61,19 +61,12 @@ export class StagesDetailComponent implements OnInit {
   @Input() dataStep: any;
   @Input() formModel: any;
   @Input() currentStep: any;
-  @Input() stepID: any;
   @Input() titleDefault = '';
-  @Input() isDelete: boolean = false;
-  @Input() isEdit: boolean = false;
-  @Input() isUpdate: boolean = false;
-  @Input() isCreate: boolean = false;
-  @Input() permissionCloseInstances: boolean = false;
   @Input() listStepReason: any;
   @Input() instance: any;
   @Input() stepNameEnd: any;
   @Input() proccesNameMove: any;
   @Input() lstIDInvo: any;
-  @Input() isClosed = false;
   @Input() showColumnControl = 1;
   @Input() listStep: any;
   @Input() viewsCurrent = '';
@@ -85,6 +78,14 @@ export class StagesDetailComponent implements OnInit {
   @Output() saveAssign = new EventEmitter<any>();
   @Output() outDataStep = new EventEmitter<any>();
 
+  stepID: any;
+  isDelete: boolean = false;
+  isEdit: boolean = false;
+  isUpdate: boolean = false;
+  isCreate: boolean = false;
+  permissionCloseInstances: boolean = false;
+  isClosed = false;
+  
   dateActual: any;
   startDate: any;
   endDate: any;
@@ -235,6 +236,18 @@ export class StagesDetailComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
+    this.stepID= this.instance.stepID
+    this.permissionCloseInstances=this.instance?.permissionCloseInstances
+    this.isDelete=this.instance.delete
+    this.isEdit=this.instance.edit
+    this.isUpdate=
+    this.instance.write &&
+      !this.instance.closed &&
+      (this.instance.status == '1' || this.instance.status == '2') &&
+      this.dataStep.stepStatus < '2'
+    this.isCreate=this.instance.create
+    this.isClosed=this.instance.closed
+
     if (changes['dataStep']) {
       if (changes['dataStep'].currentValue != null) {
         if (this.lstStepProcess != null && this.lstStepProcess.length > 0) {
