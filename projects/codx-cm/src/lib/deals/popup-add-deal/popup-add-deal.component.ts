@@ -56,6 +56,7 @@ export class PopupAddDealComponent
   listCbxChannels: any[] = [];
   listMemorySteps: any[] = [];
   listCustomFile: any[] = [];
+  lstParticipants:any[] = [];
   // const
   readonly actionAdd: string = 'add';
   readonly actionCopy: string = 'copy';
@@ -87,6 +88,7 @@ export class PopupAddDealComponent
   //type any
   gridViewSetup: any;
   listProcess: any;
+  owner:any;
 
   // model of DP
   instance: tmpInstances = new tmpInstances();
@@ -118,6 +120,13 @@ export class PopupAddDealComponent
       this.deal[$event.field] = $event.data;
     }
   }
+  eventUser(e) {
+    if (e != null) {
+      this.owner = e?.id; // thêm check null cái
+      this.deal.owner = this.owner;
+    }
+  }
+
   saveOpportunity() {
     if (!this.deal?.processID) {
       this.notificationsService.notifyCode(
@@ -171,9 +180,9 @@ export class PopupAddDealComponent
         return;
       }
     this.convertDataInstance(this.deal,this.instance);
-    // this.insertInstance();
-    // this.insertDeal();
-    this.onAdd();
+    this.insertInstance();
+    this.insertDeal();
+   // this.onAdd();
 
 
   }
@@ -379,7 +388,6 @@ export class PopupAddDealComponent
     deal.status = "1";
     deal.refID = instance.recID;
   }
-
   checkFormat(field) {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {

@@ -41,7 +41,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   isRoleAll = false;
   listTaskType = [];
   listTask = [];
-  taskGroupList = [];
+  listGroupTask = [];
   grvMoreFunction: FormModel;
 
   taskType: any;
@@ -107,20 +107,20 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   removeSuccess() {
-    if (this.taskGroupList?.length > 0) {
-      for (let i = 0; i < this.taskGroupList.length;) {
-        if (this.taskGroupList[i]?.task?.length > 0) {
-          for (let j = 0; j < this.taskGroupList[i]?.task.length;) {
-            let task = this.taskGroupList[i]?.task[j];
+    if (this.listGroupTask?.length > 0) {
+      for (let i = 0; i < this.listGroupTask.length;) {
+        if (this.listGroupTask[i]?.task?.length > 0) {
+          for (let j = 0; j < this.listGroupTask[i]?.task.length;) {
+            let task = this.listGroupTask[i]?.task[j];
             if (task?.progress == 100) {
-              this.taskGroupList[i]?.task.splice(j, 1)
+              this.listGroupTask[i]?.task.splice(j, 1)
             } else {
               ++j
             }
           }
         }
-        if (this.taskGroupList[i]?.progress == 100 && this.taskGroupList[i]?.task?.length == 0) {
-          this.taskGroupList?.splice(i, 1);
+        if (this.listGroupTask[i]?.progress == 100 && this.listGroupTask[i]?.task?.length == 0) {
+          this.listGroupTask?.splice(i, 1);
         }else {
           i++
         }
@@ -148,14 +148,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       };
     });
     this.currentStep['taskGroups'] = taskGroupConvert;
-    this.taskGroupList = this.currentStep['taskGroups'];
+    this.listGroupTask = this.currentStep['taskGroups'];
     if (this.currentStep['taskGroups']?.length > 0 || this.currentStep['tasks']?.length > 0) {
       let taskGroup = {};
       taskGroup['task'] =
         taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) ||
         [];
       taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
-      this.taskGroupList.push(taskGroup);
+      this.listGroupTask.push(taskGroup);
     }
     this.listTask = this.currentStep['tasks'];
   }
@@ -233,7 +233,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (event.type == 'P') {//step
       this.currentStep['progress'] = event?.progressStep;
     } else if (event.type == 'G') { // group
-      this.taskGroupList?.forEach(group => {
+      this.listGroupTask?.forEach(group => {
         if (group.recID == event.groupTaskID) {
           group['progress'] = event.progressGroupTask;
         }
@@ -242,7 +242,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.currentStep['progress'] = event?.progressStep;
       }
     } else {//task
-      this.taskGroupList?.forEach(group => {
+      this.listGroupTask?.forEach(group => {
         if (group.refID == event.groupTaskID) {
           group?.task?.forEach(task => {
             if (task.recID == event.taskID) {
@@ -466,6 +466,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       task['isTaskDefault'] = false;
       this.taskType = this.listTaskType.find(type => type.value == taskCopy?.taskType)
       let taskOutput = await this.openPopupTask('copy',taskCopy);
+      if(taskOutput?.event.task){
+        let data = taskOutput?.event;
+        this.currentStep?.tasks?.push(data.task);
+        this.currentStep['progress'] = data.progressStep;
+        let group = this.listGroupTask.find(group => group.refID == data.task.taskGroupID);
+        if(group){
+          group?.task.push(data.task);
+          group['progress'] = data.progressGroup;
+        }
+      }
     }
   }
    
@@ -478,7 +488,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       action,
       taskType: this.taskType,
       step: this.currentStep,
-      listGroup: this.taskGroupList,
+      listGroup: this.listGroupTask,
       dataTask: dataTask || {},
       listTask: this.listTask,
       isEditTimeDefault:this.currentStep?.leadtimeControl,

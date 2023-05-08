@@ -579,9 +579,9 @@ export class CmCustomerComponent
             this.dataSelected = JSON.parse(
               JSON.stringify(this.view.dataService.data[0])
             );
-            this.customerDetail.getListContactByObjectID(
-              this.dataSelected?.recID
-            );
+            // this.customerDetail.getListContactByObjectID(
+            //   this.dataSelected?.recID
+            // );
             this.customerDetail.getListAddress(
               this.entityName,
               this.dataSelected?.recID

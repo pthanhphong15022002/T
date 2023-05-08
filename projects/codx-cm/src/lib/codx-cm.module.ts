@@ -40,6 +40,8 @@ import { AddContractsComponent } from './contracts/add-contracts/add-contracts.c
 import { ListContractsComponent } from './contracts/list-contracts/list-contracts.component';
 import { QuotationsLinesComponent } from './quotations-lines/quotations-lines.component';
 import { PopupAddQuotationsLinesComponent } from './quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
+import { CodxListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
+import { CodxListDealsComponent } from './cmcustomer/cmcustomer-detail/codx-list-deals/codx-list-deals.component';
 
 const routes: Routes = [
   {
@@ -93,6 +95,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ListContractsComponent,
     QuotationsLinesComponent,
     PopupAddQuotationsLinesComponent,
+    CodxListContactsComponent,
+    CodxListDealsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

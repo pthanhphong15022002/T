@@ -345,8 +345,8 @@ export class CodxAddTaskComponent implements OnInit {
       'AddTaskStepAsync',
       task
     ).subscribe(res => {
-      if(res){
-        this.dialog.close({ data:res});
+      if(res){        
+        this.dialog.close({ task:res[0],progressGroup: res[1], progressStep: res[2] });
       }
     });
   }

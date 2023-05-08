@@ -80,7 +80,6 @@ export class CodxBookingViewDetailComponent
   routerRecID: any;
   listFilePermission = [];
   allowUploadFile = false;
-  renderFooter = false;
   grView: any;
 
   constructor(
@@ -126,11 +125,8 @@ export class CodxBookingViewDetailComponent
   }
   ngOnChanges(changes: SimpleChanges) {
     if (
-      changes?.itemDetail &&
-      changes.itemDetail?.previousValue?.recID !=
-        changes.itemDetail?.currentValue?.recID
+      changes?.itemDetail 
     ) {
-      this.renderFooter = false;
       if (this.viewMode == '1') {
         this.codxEpService
           .getBookingByRecID(changes.itemDetail?.currentValue?.recID)
@@ -374,31 +370,47 @@ export class CodxBookingViewDetailComponent
     } else if (this.viewMode == '2') {
       if (event != null && data != null) {
         event.forEach((func) => {
-          if (func.functionID == 'SYS04' /*Copy*/) {
+          if (func.functionID == EPCONST.MFUNCID.Copy) {
             func.disabled = true;
           }
         });
         if (data.approveStatus == '3') {
           event.forEach((func) => {
             if (
-              func.functionID == 'EPT40101' /*MF Duyệt*/ ||
-              func.functionID == 'EPT40105' /*MF từ chối*/
+              func.functionID == EPCONST.MFUNCID.R_Approval ||
+              func.functionID == EPCONST.MFUNCID.C_Approval ||
+              func.functionID == EPCONST.MFUNCID.S_Approval ||
+              func.functionID == EPCONST.MFUNCID.R_Reject ||
+              func.functionID == EPCONST.MFUNCID.C_Reject ||
+              func.functionID == EPCONST.MFUNCID.S_Reject
             ) {
               func.disabled = false;
             }
-            if (func.functionID == 'EPT40106' /*MF Thu Hồi*/) {
+            if (
+              func.functionID == EPCONST.MFUNCID.R_Undo ||
+              func.functionID == EPCONST.MFUNCID.C_Undo ||
+              func.functionID == EPCONST.MFUNCID.S_Undo
+            ) {
               func.disabled = true;
             }
           });
         } else {
           event.forEach((func) => {
             if (
-              func.functionID == 'EPT40101' /*MF Duyệt*/ ||
-              func.functionID == 'EPT40105' /*MF từ chối*/
+              func.functionID == EPCONST.MFUNCID.R_Approval ||
+              func.functionID == EPCONST.MFUNCID.C_Approval ||
+              func.functionID == EPCONST.MFUNCID.S_Approval ||
+              func.functionID == EPCONST.MFUNCID.R_Reject ||
+              func.functionID == EPCONST.MFUNCID.C_Reject ||
+              func.functionID == EPCONST.MFUNCID.S_Reject
             ) {
               func.disabled = true;
             }
-            if (func.functionID == 'EPT40106' /*MF Thu Hồi*/) {
+            if (
+              func.functionID == EPCONST.MFUNCID.R_Undo ||
+              func.functionID == EPCONST.MFUNCID.C_Undo ||
+              func.functionID == EPCONST.MFUNCID.S_Undo
+            ) {
               func.disabled = false;
             }
           });

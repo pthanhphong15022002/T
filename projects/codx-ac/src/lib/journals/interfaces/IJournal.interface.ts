@@ -76,4 +76,5 @@ export interface IJournal {
   approvalType: string;
   inputMode: string;
   invoiceSeriNo: string;
+  currSourceType: string;
 }

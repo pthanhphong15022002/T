@@ -235,7 +235,7 @@ export class PopupRolesDynamicComponent implements OnInit {
       this.dialog.close(this.process.permissions);
     } else {
       this.dpSv.updatePermissionProcess(this.process).subscribe((res) => {
-        if (res.permissions.length > 0) {
+        if (res) {
           // this.notifi.notifyCode('SYS034');
           this.noti.notifyCode('SYS034');
           this.dialog.close(res);

@@ -224,12 +224,8 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   // }
 
   focus(evt) {
-    let isChecked = evt.checked;
-    if (isChecked == true) {
-      this.isEmployee = true;
-    } else {
-      this.isEmployee = false;
-    }
+    debugger
+    this.isEmployee = evt.checked;
     this.cr.detectChanges();
   }
 
