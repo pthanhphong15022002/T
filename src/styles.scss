@@ -776,7 +776,7 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 
 .e-sidebar {
   .codx-tab .tab-content {
-    width: 580px !important;
+    width: 578px !important;
   }
   
 }
@@ -1973,11 +1973,11 @@ lib-dynamic-process .card-header.m-h-auto.p-0 {
 .card.rounded-2 .codx-image {
   border-radius: 0.4rem 0.4rem 0 0 !important;
 }
-.codx-form > .card-body,
-.e-dialog > .e-dlg-content .card-body {
-  margin-right: 2px;
-}
-//
+// .codx-form > .card-body,
+// .e-dialog > .e-dlg-content .card-body {
+//   margin-right: 2px;
+// }
+// //
 
 .btn-clean {
   .svg-icon.svg-icon-primary svg [fill]:not(.permanent):not(g) {
@@ -2685,4 +2685,27 @@ codx-vll.badge.badge-md span::before{
   padding-left: 5px;
   padding-right: 5px;
   width: 82px;
+}
+
+
+
+
+
+codx-instance-detail div.codx-detail-main{
+  padding-bottom: 0;
+}
+
+/*** temp ****/
+codx-layout-add .lay-add-tab-footer {
+  margin: -10px -15px -10px 197px;
+  padding: 10px 15px 10px 20px;
+}
+
+.codx-form>.card-header {
+  padding: 5px 15px 12px 20px;
+}
+
+.e-dialog .e-dlg-header .card-header {
+  padding: 10px 15px 12px 20px;
+
 }
