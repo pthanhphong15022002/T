@@ -16,7 +16,9 @@ implements OnInit, AfterViewInit {
 
   titleAction: string = '';
   listStep = [];
-
+  isUpdate = true //xư lý cho edit trung tuy chinh ko
+  listStepsProcess = [] ;
+  titleDefault= "Trường tùy chỉnh"//truyen vay da
   readonly tabInformation: string = 'Information';
   readonly tabField: string = 'Field';
   readonly tabContact: string ='Contact';
@@ -81,5 +83,15 @@ implements OnInit, AfterViewInit {
         // }
       });
     });
+  }
+
+  //truong tuy chinh - đang cho bằng 1 
+  showColumnControl(stepID) {
+    if (this.listStepsProcess?.length > 0) {
+      var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
+      if (idx == -1) return 1;
+      return this.listStepsProcess[idx]?.showColumnControl;
+    }
+    return 1;
   }
 }
