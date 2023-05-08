@@ -688,21 +688,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         this.hrService.loadData('HR', rqBSalary).subscribe((res) => {
           if (res && res[0]) {
             this.crrEBSalary = res[0][0];
-            let rqJSalary = new DataRequest();
-            rqJSalary.entityName = 'HR_EJobSalaries';
-            rqJSalary.dataValues = this.employeeID + ';true';
-            rqJSalary.predicates = 'EmployeeID=@0 and IsCurrent=@1';
-            rqJSalary.page = 1;
-            rqJSalary.pageSize = 1;
-            this.hrService.loadData('HR', rqJSalary).subscribe((res) => {
-              if (res && res[0]) {
-                this.crrEBSalary = {
-                  ...this.crrEBSalary,
-                  jSalary: res[0][0].jSalary,
-                };
-                this.df.detectChanges();
-              }
-            });
+            this.df.detectChanges();
           }
         });
       }
@@ -2842,7 +2828,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           this.copyValue(event.text, data, 'Assets');
           this.df.detectChanges();
         } else if (funcID == 'eDegrees') {
-          this.HandleEmployeeEDegreeInfo(event.text, 'copy', data);
+          // this.HandleEmployeeEDegreeInfo(event.text, 'copy', data);
+          this.copyValue(event.text, data, 'eDegrees');
           this.df.detectChanges();
         } else if (funcID == 'eCertificate') {
           this.HandleEmployeeECertificateInfo(event.text, 'copy', data);
@@ -4867,6 +4854,12 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         .copy(data, this.eContractFormModel, 'RecID')
         .subscribe((res) => {
           this.HandleEContractInfo(actionHeaderText, 'copy', res);
+        });
+    }else if (flag == 'eDegrees') {
+      this.hrService
+        .copy(data, this.eDegreeFormModel, 'RecID')
+        .subscribe((res) => {
+          this.HandleEmployeeEDegreeInfo(actionHeaderText, 'copy', res);
         });
     }
   }
