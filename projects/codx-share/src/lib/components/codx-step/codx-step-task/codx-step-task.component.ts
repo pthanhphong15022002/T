@@ -8,6 +8,7 @@ import { CodxAddTaskComponent } from '../codx-add-stask/codx-add-task.component'
 import { TM_Tasks } from '../../codx-tasks/model/task.model';
 import { AssignTaskModel } from '../../../models/assign-task.model';
 import { AssignInfoComponent } from '../../assign-info/assign-info.component';
+import { DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
 
 @Component({
   selector: 'codx-step-task',
@@ -38,9 +39,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   dateFomat = 'dd/MM/yyyy';
   dateTimeFomat = 'HH:mm - dd/MM/yyyy';
   isRoleAll = false;
-  listTypeTask = [];
-  taskList = [];
-  taskGroupList = [];
+  listTaskType = [];
+  listTask = [];
+  listGroupTask = [];
   grvMoreFunction: FormModel;
 
   taskType: any;
@@ -60,7 +61,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private notiService: NotificationsService,
     private cache: CacheService,
     private authStore: AuthStore,
-  
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
   ) {
@@ -72,7 +72,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     this.grvMoreFunction = await this.getFormModel('DPT040102');
     this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
-        this.listTypeTask = res?.datas;
+        this.listTaskType = res?.datas;
       }
     });
     this.frmModelInstancesGroup = {
@@ -107,20 +107,20 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   removeSuccess() {
-    if (this.taskGroupList?.length > 0) {
-      for (let i = 0; i < this.taskGroupList.length;) {
-        if (this.taskGroupList[i]?.task?.length > 0) {
-          for (let j = 0; j < this.taskGroupList[i]?.task.length;) {
-            let task = this.taskGroupList[i]?.task[j];
+    if (this.listGroupTask?.length > 0) {
+      for (let i = 0; i < this.listGroupTask.length;) {
+        if (this.listGroupTask[i]?.task?.length > 0) {
+          for (let j = 0; j < this.listGroupTask[i]?.task.length;) {
+            let task = this.listGroupTask[i]?.task[j];
             if (task?.progress == 100) {
-              this.taskGroupList[i]?.task.splice(j, 1)
+              this.listGroupTask[i]?.task.splice(j, 1)
             } else {
               ++j
             }
           }
         }
-        if (this.taskGroupList[i]?.progress == 100 && this.taskGroupList[i]?.task?.length == 0) {
-          this.taskGroupList?.splice(i, 1);
+        if (this.listGroupTask[i]?.progress == 100 && this.listGroupTask[i]?.task?.length == 0) {
+          this.listGroupTask?.splice(i, 1);
         }else {
           i++
         }
@@ -148,16 +148,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       };
     });
     this.currentStep['taskGroups'] = taskGroupConvert;
-    this.taskGroupList = this.currentStep['taskGroups'];
+    this.listGroupTask = this.currentStep['taskGroups'];
     if (this.currentStep['taskGroups']?.length > 0 || this.currentStep['tasks']?.length > 0) {
       let taskGroup = {};
       taskGroup['task'] =
         taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) ||
         [];
       taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
-      this.taskGroupList.push(taskGroup);
+      this.listGroupTask.push(taskGroup);
     }
-    this.taskList = this.currentStep['tasks'];
+    this.listTask = this.currentStep['tasks'];
   }
 
   toggleTask(e, idGroup) {
@@ -188,11 +188,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   getIconTask(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    let color = this.listTaskType?.find((x) => x.value === task.taskType);
     return color?.icon;
   }
   getColor(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    let color = this.listTaskType?.find((x) => x.value === task.taskType);
     return { 'background-color': color?.color };
   }
 
@@ -208,7 +208,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       });
     } else {
-      this.taskList?.forEach((taskItem) => {
+      this.listTask?.forEach((taskItem) => {
         if (taskItem['parentID']?.includes(task['refID'])) {
           check = 'text-orange';
         }
@@ -233,7 +233,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (event.type == 'P') {//step
       this.currentStep['progress'] = event?.progressStep;
     } else if (event.type == 'G') { // group
-      this.taskGroupList?.forEach(group => {
+      this.listGroupTask?.forEach(group => {
         if (group.recID == event.groupTaskID) {
           group['progress'] = event.progressGroupTask;
         }
@@ -242,7 +242,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.currentStep['progress'] = event?.progressStep;
       }
     } else {//task
-      this.taskGroupList?.forEach(group => {
+      this.listGroupTask?.forEach(group => {
         if (group.refID == event.groupTaskID) {
           group?.task?.forEach(task => {
             if (task.recID == event.taskID) {
@@ -380,7 +380,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
 
-  clickMFTask(e: any, taskList?: any, task?: any) {
+  clickMFTask(e: any, groupTask: any, task?: any) {
     switch (e.functionID) {
       case 'SYS02':
         this.deleteTask(task);
@@ -389,8 +389,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.editTask(task);
         break;
       case 'SYS04': //copy
-        // this.copyTask(task);
-        this.addTask();
+        this.copyTask(task);
+        // this.addTask(groupTask);
         break;
       case 'DP07': // view
         this.viewTask(task);
@@ -432,37 +432,65 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async chooseTypeTask() {
     let popupTypeTask = this.callfc.openForm(CodxTypeTaskComponent, '', 400, 400);
     let dataOutput = await firstValueFrom(popupTypeTask.closed);
-    if (dataOutput?.event && dataOutput?.event?.value) {
-      this.taskType = dataOutput?.event;      
-    }
     return dataOutput?.event?.value ? dataOutput?.event : null;
   }
 
-  async addTask(){
+  async addTask(groupID){
     this.taskType = await this.chooseTypeTask();
+    let task = new DP_Instances_Steps_Tasks();
+    task['taskType'] = this.taskType;
+    task['stepID'] = this.currentStep?.recID;
+    task['progress'] = 0;
+    task['taskGroupID'] = groupID || null;
+    task['refID'] = Util.uid();
+    task['isTaskDefault'] = false;
+
+    let taskOutput = await this.openPopupTask('add',task);
+    console.log(taskOutput);
+    
   }
 
-  editTask(task){
-
+  async editTask(task){
+    if(task){
+      let taskEdit = JSON.parse(JSON.stringify(task));
+      this.taskType = this.listTaskType.find(type => type.value == taskEdit?.taskType)
+      let taskOutput = await this.openPopupTask('edit',taskEdit);
+    }
   }
   
-  copyTask(task){
-
+  async copyTask(task){
+    if(task){
+      let taskCopy = JSON.parse(JSON.stringify(task));
+      taskCopy.recID = Util.uid();
+      taskCopy.refID = Util.uid();
+      task['isTaskDefault'] = false;
+      this.taskType = this.listTaskType.find(type => type.value == taskCopy?.taskType)
+      let taskOutput = await this.openPopupTask('copy',taskCopy);
+      if(taskOutput?.event.task){
+        let data = taskOutput?.event;
+        this.currentStep?.tasks?.push(data.task);
+        this.currentStep['progress'] = data.progressStep;
+        let group = this.listGroupTask.find(group => group.refID == data.task.taskGroupID);
+        if(group){
+          group?.task.push(data.task);
+          group['progress'] = data.progressGroup;
+        }
+      }
+    }
   }
    
   deleteTask(task){
 
   }
 
-  async openPopupTask(action, dataTask?, groupTaskID?) {
+  async openPopupTask(action, dataTask) {
     let dataInput = {
       action,
-      groupTaskID: groupTaskID || null,
       taskType: this.taskType,
       step: this.currentStep,
-      listGroup: this.taskGroupList,
+      listGroup: this.listGroupTask,
       dataTask: dataTask || {},
-      taskList: this.taskList,
+      listTask: this.listTask,
       isEditTimeDefault:this.currentStep?.leadtimeControl,
     };
     let frmModel: FormModel = {

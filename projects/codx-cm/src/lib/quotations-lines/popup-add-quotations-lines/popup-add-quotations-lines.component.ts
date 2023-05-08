@@ -8,16 +8,16 @@ import { DialogData, DialogRef } from 'codx-core';
 })
 export class PopupAddQuotationsLinesComponent implements OnInit {
   dialog: DialogRef;
-  headerText :any;
-  quotationsLine:any
+  headerText: any;
+  quotationsLine: any;
   constructor(@Optional() dt?: DialogData, @Optional() dialog?: DialogRef) {
     this.dialog = dialog;
-    this.quotationsLine = JSON.parse(JSON.stringify(dt?.data?.quotationsLine)) ;
-    this.headerText = dt?.data?.headerText
-  }
-  
-  ngOnInit(): void {
-    
+    this.quotationsLine = JSON.parse(JSON.stringify(dt?.data?.quotationsLine));
+    this.headerText = dt?.data?.headerText;
   }
 
+  ngOnInit(): void {}
+  onSave() {
+    this.dialog.close(this.quotationsLine);
+  }
 }

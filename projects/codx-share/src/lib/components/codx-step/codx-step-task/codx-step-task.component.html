@@ -1,13 +1,13 @@
 <div id="id" class="main" [ngClass]="'show-main'">
   <!-- drap drop công việc ngoài-->
-  <div class="main-body" *ngIf="taskGroupList?.length > 0">
+  <div class="main-body" *ngIf="listGroupTask?.length > 0">
     <div
       cdkDropList
       class="list"
-      (cdkDropListDropped)="drop($event, taskGroupList, true)"
+      (cdkDropListDropped)="drop($event, listGroupTask, true)"
     >
       <div cdkDropListGroup>
-        <ng-container *ngFor="let groupTask of taskGroupList">
+        <ng-container *ngFor="let groupTask of listGroupTask">
           <div
             class="card-job-list"
             cdkDrag
@@ -182,7 +182,7 @@
       [isBookMark]="true"
       [dataItem]="moreDefaut"
       [type]="'hover'"
-      (clickMF)="clickMFTask($event, data)"
+      (clickMF)="clickMFTask($event, data?.group, data?.task)"
     >
     </codx-mfunc>
   </div>
@@ -227,7 +227,7 @@
   <button
     type="button"
     class="btn btn-outline-primary ms-4"
-    (click)="addTask()"
+    (click)="addTask(null)"
     style="min-width: 170px"
   >
     <i class="icon-add_task icon-18 text-primary"></i>

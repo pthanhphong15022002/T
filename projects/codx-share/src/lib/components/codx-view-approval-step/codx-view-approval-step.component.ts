@@ -37,7 +37,7 @@ export class CodxViewApprovalStepComponent
 {
   @Input() transID: string = '';
   @Input() approveStatus: string = '';
-
+  @Input() eSign = false;
   formModel: FormModel;
   fmApprovalTrans: FormModel;
   fmApprovalStep: FormModel;
@@ -102,6 +102,7 @@ export class CodxViewApprovalStepComponent
           .subscribe((res) => {
             if (res) {
               this.process = res;
+              console.log(this.process)
               this.cr.detectChanges();
             }
           });

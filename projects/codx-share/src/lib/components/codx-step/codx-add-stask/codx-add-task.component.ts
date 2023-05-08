@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
@@ -32,39 +33,38 @@ export class CodxAddTaskComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
   REQUIRE = ['taskName', 'endDate', 'startDate'];
-  title = '';
+  action = 'add';
   dialog!: DialogRef;
-  formModelMenu: FormModel;
-  stepType = '';
+  title = '';
+  taskType = '';
+  isEditTimeDefault = false;
   vllShare = 'BP021';
-  taskName = '';
-  taskGroupName = '';
   linkQuesiton = 'http://';
-  listChair = [];
+  listGroup = [];
+  formModelMenu: FormModel;
   recIdEmail = '';
   isNewEmails = true;
-  groupTackList = [];
   stepsTasks: DP_Instances_Steps_Tasks;
+  listTask: DP_Instances_Steps_Tasks[] = [];
+  step: DP_Instances_Steps;
+
   fieldsGroup = { text: 'taskGroupName', value: 'refID' };
   fieldsTask = { text: 'taskName', value: 'refID' };
-  tasksItem = '';
-  status = 'add';
-  taskList: DP_Instances_Steps_Tasks[] = [];
-  step: DP_Instances_Steps;
-  show = false;
+
   dataCombobox = [];
   valueInput = '';
   litsParentID = [];
+
   showLabelAttachment = false;
   isHaveFile = false;
-  funcIDparent: any;
+
   folderID = '';
   groupTaskID = '';
   view = [];
   isSaveTimeTask = true;
   isSaveTimeGroup = true;
   groupTask;
-  leadtimeControl = false;
+  
   isLoadDate = false;
   isTaskDefault = false;
   startDateParent: Date;
@@ -86,82 +86,63 @@ export class CodxAddTaskComponent implements OnInit {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private authStore: AuthStore,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.user = this.authStore.get();
-    this.status = dt?.data?.status;
-    this.title = dt?.data['taskType']['text'];
-    this.stepType = dt?.data['taskType']['value'];
-    this.step = dt?.data['step'];
-    this.groupTackList = dt?.data['listGroup'];
     this.dialog = dialog;
-
-    if (this.status == 'add') {
-      this.stepsTasks = new DP_Instances_Steps_Tasks();
-      this.stepsTasks['taskType'] = this.stepType;
-      this.stepsTasks['stepID'] = this.step?.recID;
-      this.stepsTasks['progress'] = 0;
-      this.stepsTasks['taskGroupID'] = dt?.data['groupTaskID'];
-      this.stepsTasks['refID'] = Util.uid();
-      this.stepsTasks['isTaskDefault'] = false;
-    } else {
-      this.stepsTasks = dt?.data['stepTaskData'] || new DP_Instances_Steps_Tasks();
-      this.stepType = this.stepsTasks.taskType;
-    }
-    this.taskList = dt?.data['taskList'];
-    this.taskName = dt?.data['stepName'];
-    this.groupTaskID = dt?.data['groupTaskID'];
-    this.leadtimeControl = dt?.data['leadtimeControl'];
-    this.isTaskDefault = this.status == 'edit' ? this.stepsTasks['isTaskDefault'] : false;
+    this.user = this.authStore.get();
+    this.action = dt?.data?.action;
+    this.title = dt?.data?.taskType?.text;
+    this.taskType = dt?.data?.taskType?.value;
+    this.step = dt?.data?.step;
+    this.listGroup = dt?.data?.listGroup;
+    this.listTask = dt?.data?.listTask;
+    this.stepsTasks = dt?.data?.dataTask;
+    this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
+    this.groupTaskID = this.stepsTasks?.taskGroupID;
   }
 
   ngOnInit(): void {
     this.roles = this.stepsTasks['roles'] || [];
     this.startDateParent = new Date(this.step['startDate']);
     this.endDateParent = new Date(this.step['endDate']);
-    console.log(this.startDateParent.getTime());
     if(!this.stepsTasks['taskGroupID']){
       this.stepsTasks['startDate'] = this.startDateParent;
-      console.log(this.stepsTasks['startDate'].getTime());
     }
     this.getFormModel();
     if (this.stepsTasks['parentID']) {
       this.litsParentID = this.stepsTasks['parentID'].split(';');
     }
-    if (this.taskList.length > 0) {
-      this.dataCombobox = this.taskList.map((data) => {
-        if (this.litsParentID.some((x) => x == data.refID)) {
-          return {
-            key: data.refID,
-            value: data.taskName,
-            checked: true,
-          };
-        } else {
-          return {
-            key: data.refID,
-            value: data.taskName,
-            checked: false,
-          };
-        }
-      });
-      if (this.status == 'edit') {
-        let index = this.dataCombobox?.findIndex(
-          (x) => x.key === this.stepsTasks.refID
-        );
-        this.dataCombobox.splice(index, 1);
-        this.taskGroupName =
-          this.groupTackList?.find(
-            (x) => x.refID === this.stepsTasks.taskGroupID
-          )?.taskGroupName || null;
-      }
-      this.valueInput = this.dataCombobox
-        .filter((x) => x.checked)
-        .map((y) => y.value)
-        .join('; ');
-    }
+    // if (this.listTask.length > 0) {
+    //   this.dataCombobox = this.listTask.map((data) => {
+    //     if (this.litsParentID.some((x) => x == data.refID)) {
+    //       return {
+    //         key: data.refID,
+    //         value: data.taskName,
+    //         checked: true,
+    //       };
+    //     } else {
+    //       return {
+    //         key: data.refID,
+    //         value: data.taskName,
+    //         checked: false,
+    //       };
+    //     }
+    //   });
+    //   if (this.action == 'edit') {
+    //     let index = this.dataCombobox?.findIndex(
+    //       (x) => x.key === this.stepsTasks.refID
+    //     );
+    //     this.dataCombobox.splice(index, 1);
+    //   }
+    //   this.valueInput = this.dataCombobox
+    //     .filter((x) => x.checked)
+    //     .map((y) => y.value)
+    //     .join('; ');
+    // }
     this.owner = this.roles?.filter((role) => role.roleType === 'O');
-    if(this.stepType == "M"){
+    if(this.taskType == "M"){
       this.participant = this.roles?.filter((role) => role.roleType === 'P');
     }else{
       let role = new DP_Instances_Steps_Tasks_Roles();
@@ -203,13 +184,11 @@ export class CodxAddTaskComponent implements OnInit {
   filterText(value, key) {
     this.stepsTasks[key] = value;
     if(value){
-      this.groupTask = this.groupTackList.find((x) => x.refID === value);
-      this.taskGroupName = this.groupTask['taskGroupName'] || '';
+      this.groupTask = this.listGroup.find((x) => x.refID === value);
       this.startDateParent = new Date(this.groupTask['startDate']);
       this.endDateParent = new Date(this.groupTask['endDate']);
       this.stepsTasks['startDate'] = this.startDateParent || new Date();
     }else{
-      this.taskGroupName = '';
       this.startDateParent = new Date(this.step['startDate']);
       this.endDateParent = new Date(this.step['endDate']);
       this.stepsTasks['startDate'] = this.startDateParent || new Date();
@@ -299,20 +278,20 @@ export class CodxAddTaskComponent implements OnInit {
     this.participant = listRole;
   }
 
-  applyOwner(e, datas) {
-    if (!e || e?.data.length == 0) return;
-    let listUser = e?.data;
-    listUser.forEach((element) => {
-      if (!datas.some((item) => item.id == element.id)) {
-        datas.push({
-          objectID: element.id,
-          objectName: element.text,
-          objectType: element.objectType,
-          roleType: element.objectName,
-        });
-      }
-    });
-  }
+  // applyOwner(e, datas) {
+  //   if (!e || e?.data.length == 0) return;
+  //   let listUser = e?.data;
+  //   listUser.forEach((element) => {
+  //     if (!datas.some((item) => item.id == element.id)) {
+  //       datas.push({
+  //         objectID: element.id,
+  //         objectName: element.text,
+  //         objectType: element.objectType,
+  //         roleType: element.objectName,
+  //       });
+  //     }
+  //   });
+  // }
 
   onDeleteOwner(objectID, data) {
     let index = data.findIndex((item) => item.objectID == objectID);
@@ -352,24 +331,26 @@ export class CodxAddTaskComponent implements OnInit {
 
     if (this.attachment && this.attachment.fileUploadList.length) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
-        if (res) {
-          if (this.status === 'copy') {
-            this.stepsTasks['recID'] = Util.uid();
-            this.stepsTasks['refID'] = Util.uid();
-            this.stepsTasks['isTaskDefault'] = false;
-          }
-          this.dialog.close({ data: this.stepsTasks, status: this.status });
-        }
+        this.save(this.stepsTasks);
       });
     } else {
-      if (this.status === 'copy') {
-        this.stepsTasks['recID'] = Util.uid();
-        this.stepsTasks['refID'] = Util.uid();
-        this.stepsTasks['isTaskDefault'] = false;
-      }
-      this.dialog.close({ data: this.stepsTasks, status: this.status });
+      this.save(this.stepsTasks);
     }
   }
+
+  save(task){
+    this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'AddTaskStepAsync',
+      task
+    ).subscribe(res => {
+      if(res){        
+        this.dialog.close({ task:res[0],progressGroup: res[1], progressStep: res[2] });
+      }
+    });
+  }
+
   handelMail() {
     let data = {
       dialog: this.dialog,

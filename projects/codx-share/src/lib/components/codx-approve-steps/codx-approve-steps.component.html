@@ -49,11 +49,11 @@
                     src="../assets/themes/sys/default/img/DataEmpty.svg"
                     class="w-200px"
                   />
-                  <div class="fw-bold mt-1 text-center">
+                  <div class="fw-bold mt-1 text-center text-gray-500">
                     {{ "SYS011" | mssg | async }}
                   </div>
-                  <div class="mb-0">
-                    <a class="btn btn-primary fw-bold" (click)="add()">
+                  <div class="mt-6">
+                    <a class="btn btn-sm btn-primary min-w-75px" (click)="add()">
                       <codx-label
                         name="lblAdd"
                         default="Thêm"
@@ -226,14 +226,12 @@
               alt=""
             />
           </div>
-          <h4 class="text-gray-600">
-            <codx-label
+          <codx-label class="text-gray-500"
               name="lblSubEmpty"
               default="Chưa có dữ liệu phát sinh"
               [formModel]="formModel"
             >
             </codx-label>
-          </h4>
           <div class="fs-5 text-gray-500 mb-7">
             <codx-label
               name="lblContentEmpty"
@@ -241,8 +239,8 @@
               [formModel]="formModel"
             ></codx-label>
           </div>
-          <div class="mb-0">
-            <a class="btn btn-primary" (click)="add()">
+          <div class="mt-6">
+            <a class="btn btn-primary btn-sm min-w-75px" (click)="add()">
               <codx-label
                 name="lblAdd"
                 default="Thêm"

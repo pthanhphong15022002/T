@@ -1,26 +1,6 @@
 <codx-form #form [body]="body" [footer]="footer" [formModel]="dialog.formModel" [dialog]="dialog" [data]="cashpayment"
-  [subHeader]="subHeader" [customToolbar]="subToolbar" [openMore]="false" ngClass="ac-dialog">
+[customToolbar]="subToolbar" [openMore]="false" ngClass="ac-dialog">
 </codx-form>
-
-<!-- Start: Sub header -->
-<ng-template #subHeader>
-  <ng-container *ngIf="form?.formGroup">
-    <div class="w-100 d-flex justify-content-between">
-      <div class="mt-2 ms-10 input-circle input-border-0 w-225px">
-        <codx-input *ngIf="formType == 'add' && !hasSaved" [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
-          (valueChange)="changeType($event)">
-        </codx-input>
-        <span *ngIf="(formType == 'edit' && cashpayment?.subType) || hasSaved"class="me-2">
-          <codx-vll [name]="'AC057'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
-            [showText]="true" [showBgColor]="true" class="badge badge-pill badge-primary badge-lg lg">
-          </codx-vll>
-        </span>
-      </div>
-    </div>
-  </ng-container>
-</ng-template>
-<!-- End: Sub header -->
-
 <!-- Start: Body -->
 <ng-template #body>
   <div class="card-add" #cardbodyRef>
@@ -84,7 +64,7 @@
 <!-- Start: Tab Basic -->
 <ng-template #tabBasic>
   <ng-container *ngIf="form?.formGroup">
-    <div class="row mt-5">
+    <div class="row mt-8">
       <div class="col-7 ac-left">
         <div class="mw-750px">
           <div class="row">
@@ -165,11 +145,11 @@
         <div class="d-flex flex-column mw-300px">
           <div class="row">
             <!-- Tiền tệ -->
-            <div class="col-6">
+            <div class="col-6" *ngIf="journal">
               <div class="form-group">
                 <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
+                <codx-input [disabled]="true" [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
                   (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
@@ -246,7 +226,7 @@
   </ng-container>
   <ng-container
     *ngIf="form?.formGroup && (cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == '2'">
-    <div class="table-responsive mt-3 h-400px">
+    <div style="height: 430px;" class="table-responsive mt-3">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
         <thead>
           <tr>
@@ -612,24 +592,43 @@
             </codx-vll>
           </span>
         </div>
+        <div class="ms-3 input-circle input-border-0 w-225px" *ngIf="form?.formGroup">
+          <codx-input *ngIf="formType == 'add' && !hasSaved" [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
+              (valueChange)="changeType($event)">
+            </codx-input>
+            <span *ngIf="(formType == 'edit' && cashpayment?.subType) || hasSaved"class="me-2">
+              <codx-vll [name]="'AC063'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
+                [showText]="true" [showBgColor]="true" class="badge badge-pill badge-primary badge-lg lg">
+              </codx-vll>
+            </span>
+        </div>
       </div>
       <div class="d-flex align-items-center me-3">
         <div *ngIf="formType != 'edit'" class="ms-2">
-          <button type="button" class="btn btn-sm btn-light-primary" (click)="onSaveAdd()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"
+          <button type="button" class="btn btn-lg btn-light-primary" (click)="onSaveAdd()">
+            <div class="d-flex align-items-center">
+              <i class="icon-save_alt icon-18"></i>
+              <codx-label class="fs-6 fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"
                 [formName]="formModel?.formName"></codx-label>
+            </div>
           </button>
         </div>
         <div class="ms-2">
-          <button type="button" class="btn btn-sm btn-primary" (click)="onSave()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-            [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+          <button type="button" class="btn btn-lg btn-primary" style="min-width: 60px" (click)="onSave()">
+            <div class="d-flex align-items-center">
+              <i class="icon-save icon-18"></i>
+              <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+            </div>
           </button>
         </div>
         <div *ngIf="cashpayment?.status == '0' && hasSaved" class="ms-2">
-          <button type="button" class="btn btn-sm btn-danger" (click)="onDiscard()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblDiscard" default="Hủy bỏ"
+          <button type="button" class="btn btn-lg btn-danger" (click)="onDiscard()">
+            <div class="d-flex align-items-center">
+              <i class="icon-settings_backup_restore icon-18"></i>
+              <codx-label class="fs-6 fw-normal" fiedName="lblDiscard" default="Hủy bỏ"
                 [formName]="formModel?.formName"></codx-label>
+            </div>
           </button>
         </div>
         <div class="ms-2">

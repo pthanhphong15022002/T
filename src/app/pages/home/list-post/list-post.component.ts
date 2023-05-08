@@ -147,7 +147,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 700, 550, "", obj, '', option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 700, 650, "", obj, '', option);
     this.modal.closed.subscribe(res=>{
 
     })
@@ -164,7 +164,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 700, 650, "", obj, '', option);
 
   }
 
@@ -179,7 +179,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 700, 650, "", obj, '', option);
   }
   pushComment(data: any) {
     this.listview.dataService.data.map((p) => {

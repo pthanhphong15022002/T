@@ -252,7 +252,7 @@ export class PopupAddInstanceComponent implements OnInit {
     return true;
   }
   saveInstances() {
-    if (this.instance?.title === null || this.instance?.title.trim() === '') {
+    if (this.instance?.title === null || this.instance?.title?.trim() === '') {
       this.notificationsService.notifyCode(
         'SYS009',
         0,
