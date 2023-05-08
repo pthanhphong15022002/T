@@ -10,18 +10,17 @@
 
 <ng-template #body>
   <div class="mt-5">
-  <div *ngFor="let d of dimControls$ | async" class="mb-3">
-    <codx-input
-      type="checkbox"
-      class="check-circle"
-      [label]="d.text"
-      [checked]="d.checked"
-      [disabled]="d.disabled"
-      field="dim"
-      (valueChange)="handleChange($event, d)"
-    ></codx-input>
+    <div *ngFor="let d of dimControls$ | async" class="mb-3">
+      <codx-input
+        type="checkbox"
+        class="check-circle"
+        [label]="d.text"
+        [checked]="d.checked"
+        field="dim"
+        (valueChange)="handleChange($event, d)"
+      ></codx-input>
+    </div>
   </div>
-</div>
 </ng-template>
 
 <ng-template #footer>
