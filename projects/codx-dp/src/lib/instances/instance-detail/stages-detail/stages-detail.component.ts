@@ -168,8 +168,6 @@ export class StagesDetailComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    console.log(this.user?.employee);
-
     this.getValueListReason();
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
@@ -236,6 +234,7 @@ export class StagesDetailComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
+    
     this.stepID= this.instance.stepID
     this.permissionCloseInstances=this.instance?.permissionCloseInstances
     this.isDelete=this.instance.delete
@@ -247,7 +246,7 @@ export class StagesDetailComponent implements OnInit {
       this.dataStep.stepStatus < '2'
     this.isCreate=this.instance.create
     this.isClosed=this.instance.closed
-
+    this.isStart = this.instance?.status == 2 ? true : false;
     if (changes['dataStep']) {
       if (changes['dataStep'].currentValue != null) {
         if (this.lstStepProcess != null && this.lstStepProcess.length > 0) {
@@ -653,7 +652,6 @@ export class StagesDetailComponent implements OnInit {
   //taskGroup
   groupByTask(data) {
     let step = JSON.parse(JSON.stringify(data));
-    this.isStart = step?.endDate && step?.startDate ? true : false;
     if (!step['isSuccessStep'] && !step['isFailStep']) {
       const taskGroupList = step?.tasks.reduce((group, product) => {
         const { taskGroupID } = product;
