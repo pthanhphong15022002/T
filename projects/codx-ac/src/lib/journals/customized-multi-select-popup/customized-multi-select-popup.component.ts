@@ -17,7 +17,7 @@ export class CustomizedMultiSelectPopupComponent extends UIComponent {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   formTitle$: Observable<string>;
-  selectedOptions: { value: string; text: string }[] = [];
+  selectedOptions: string[] = [];
   dimControls$: Observable<any[]>;
 
   constructor(
@@ -27,9 +27,7 @@ export class CustomizedMultiSelectPopupComponent extends UIComponent {
   ) {
     super(injector);
 
-    try {
-      this.selectedOptions = JSON.parse(dialogData.data.selectedOptions) ?? [];
-    } catch {}
+    this.selectedOptions = dialogData.data.selectedOptions?.split(",") ?? [];
   }
 
   //#endregion
@@ -53,12 +51,13 @@ export class CustomizedMultiSelectPopupComponent extends UIComponent {
       .subscribe((settingValues) => {
         this.dimControls$ = this.cache.valueList('AC069').pipe(
           map((data) =>
-            data.datas.map((d) => ({
-              value: d.value,
-              text: d.text,
-              checked: this.selectedOptions?.some((o) => o.value === d.value),
-              disabled: !settingValues?.includes(d.value),
-            }))
+            data.datas
+              .filter((d) => settingValues.includes(d.value))
+              .map((d) => ({
+                value: d.value,
+                text: d.text,
+                checked: this.selectedOptions?.some((o) => o === d.value),
+              }))
           ),
           tap((data) => console.log(data))
         );
@@ -69,19 +68,19 @@ export class CustomizedMultiSelectPopupComponent extends UIComponent {
   //#region Event
   handleClickSave(): void {
     console.log(this.selectedOptions);
-    this.dialogRef.close(JSON.stringify(this.selectedOptions));
+    this.dialogRef.close(this.selectedOptions.toString());
   }
 
   handleChange(e, data): void {
     console.log(e);
 
     if (e.data) {
-      if (!this.selectedOptions?.some((o) => o.value === data.value)) {
-        this.selectedOptions.push({ value: data.value, text: data.text });
+      if (!this.selectedOptions?.some((o) => o === data.value)) {
+        this.selectedOptions.push(data.value);
       }
     } else {
       this.selectedOptions = this.selectedOptions.filter(
-        (o) => o.value !== data.value
+        (o) => o !== data.value
       );
     }
   }
