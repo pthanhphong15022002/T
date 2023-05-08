@@ -145,11 +145,11 @@
         <div class="d-flex flex-column mw-300px">
           <div class="row">
             <!-- Tiền tệ -->
-            <div class="col-6">
+            <div class="col-6" *ngIf="journal">
               <div class="form-group">
                 <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
+                <codx-input [disabled]="true" [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
                   (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
