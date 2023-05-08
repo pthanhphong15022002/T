@@ -45,7 +45,8 @@ export class VoucherComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
   @ViewChild('cashRef') cashRef: ElementRef;
-
+  morefunction: any;
+  payAmt: number = 0;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -53,7 +54,6 @@ export class VoucherComponent implements OnInit {
     @Optional() dialogData?: DialogData
   ) {
     this.dialog = dialog;
-    this.gridModel.comboboxName = dialogData.data.cbxName;
     this.cashpayment = dialogData.data.cashpayment;
     this.title = dialogData.data.title;
     this.gridModel.pageSize = 20;
@@ -63,9 +63,19 @@ export class VoucherComponent implements OnInit {
 
   //#region Init
   ngOnInit(): void {
-    this.loadData();
+    this.cache
+      .moreFunction('SubLedgerOpen', 'grvSubLedgerOpen')
+      .subscribe((res) => {
+        if (res && res.length) {
+          let m = res.find((x) => x.functionID == 'ACT041005');
+          if (m) {
+            this.morefunction = m;
+            this.loadData();
+          }
+        }
+      });
   }
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     let hBody, hTab;
     if (this.cardbodyRef)
       hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
@@ -75,28 +85,39 @@ export class VoucherComponent implements OnInit {
   }
 
   loadData() {
+    this.gridModel.predicate = this.morefunction.predicate;
+    this.gridModel.dataValue = this.morefunction.dataValue;
+    this.gridModel.entityName = this.morefunction.entityName;
     this.api
       .execSv<any>(
         'AC',
         'Core',
         'DataBusiness',
-        'LoadDataCbxAsync',
+        'LoadDataAsync',
         this.gridModel
       )
       .subscribe((res) => {
         if (res && res.length) {
-          let data = [];
-          let p = JSON.parse(res[0]);
-          for (let i = 0; i < p.length; i++) {
-            data.push(Util.camelizekeyObj(p[i]));
-          }
-          this.sublegendOpen = data;
+          this.sublegendOpen = res[0];
         }
       });
   }
   //#endregion
 
   //#region Event
+  payAmtEnter(e: any) {
+    let data = e.component?.value;
+    if (this.payAmt == data) return;
+    this.payAmt = data;
+    if (this.payAmt && this.payAmt > 0) this.paymentAmt();
+  }
+
+  payAmtBlur(e: any) {
+    if (this.payAmt == e.value) return;
+    this.payAmt = e.value;
+    if (this.payAmt && this.payAmt > 0) this.paymentAmt();
+  }
+
   valueChange(e: any) {
     let field = e.field;
     if (!e.data || typeof e.data.data === 'undefined') {
@@ -126,7 +147,10 @@ export class VoucherComponent implements OnInit {
 
     if (field === 'invoiceDueDate' && typeof e.data.data !== 'undefined') {
       this.mapPredicates.set('invoiceDueDate', 'InvoiceDueDate = @0');
-      this.mapDataValues.set('invoiceDueDate', new Date(e.data.toDate).toISOString());
+      this.mapDataValues.set(
+        'invoiceDueDate',
+        new Date(e.data.toDate).toISOString()
+      );
     }
   }
 
@@ -146,11 +170,41 @@ export class VoucherComponent implements OnInit {
   }
 
   apply() {
-    let data = this.grid.gridRef.getSelectedRecords();
-      this.dialog.close(data);
+    let data = this.grid.arrSelectedRows;
+    this.api
+      .exec<any>('AC', 'SettledInvoicesBusiness', 'ConvertSubLedgenToSettled', [
+        data,
+        this.cashpayment,
+        this.payAmt,
+      ])
+      .subscribe((res) => {
+        if (res && res.length) this.dialog.close(res);
+      });
   }
 
-  close(){
+  paymentAmt() {
+    let data = this.grid.arrSelectedRows;
+    let termID = [];
+    data.filter((x) => {
+      if (x.invoiceDueDate <= this.cashpayment.voucherDate && x.pmtTermID)
+        termID.push(x.pmtTermID);
+    });
+
+    if (termID) {
+      this.api
+        .exec<any>(
+          'BS',
+          'PaymentTermsBusiness',
+          'GetListPmtAsync',
+          JSON.stringify(termID)
+        )
+        .subscribe((res) => {
+          if (res) this.handSettledAmt(data, res);
+        });
+    } else this.handSettledAmt(data);
+  }
+
+  close() {
     this.dialog.close();
   }
   //#endregion
@@ -160,6 +214,50 @@ export class VoucherComponent implements OnInit {
     let date = new Date(this.form.formGroup.value['invoiceDueDate']);
     let aDate = (date as any).addDays(day || 0);
     this.mapDataValues.set('date', aDate.toISOString());
+  }
+
+  handSettledAmt(data = [], terms = []) {
+    let pay = this.payAmt;
+    let len = data.length;
+let indexes = this.grid.selectedIndexes;
+    data.forEach((e: any, i: number) => {
+      if (e.invoiceDueDate <= this.cashpayment.voucherDate) {
+        let settled = terms.find((x) => x.pmtTermID == e.pmtTermID);
+        let mustPay = e.balanceAmt;
+        let settledDisc = e.settledDisc || 0;
+        if (pay > 0) {
+          // Tinh chiet khau
+          if (
+            (settled && settled.discPartial) ||
+            (!settled.discPartial && e.balanceAmt == pay)
+          ) {
+            settledDisc = settled.discPct * e.balanceAmt;
+          }
+
+          //Tinh so tien chi tra
+          mustPay = e.balanceAmt - settledDisc;
+
+          if (pay > mustPay) {
+            e.settledAmt = mustPay;
+            pay -= mustPay;
+          } else {
+            e.settledAmt = pay;
+            pay = 0;
+          }
+          // this.grid.gridRef.updateRow(e._rowIndex, e);
+          // setTimeout(() => {
+          //   this.grid.gridRef?.selectRow(e._rowIndex);
+          // }, 100);
+        }
+        e.settledDisc = settledDisc;
+        if (i == len - 1) {
+          this.grid.gridRef.refresh();
+          setTimeout(() => {
+            this.grid.gridRef?.selectRows(indexes);
+          }, 100);
+        }
+      }
+    });
   }
   //#endregion
 }
