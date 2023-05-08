@@ -358,7 +358,6 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   }
 
   clickMF(event, data) {
-    debugger
     event.data = data;
     switch (event?.functionID) {
       //edit
