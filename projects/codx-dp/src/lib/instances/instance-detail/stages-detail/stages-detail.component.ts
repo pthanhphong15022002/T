@@ -61,19 +61,12 @@ export class StagesDetailComponent implements OnInit {
   @Input() dataStep: any;
   @Input() formModel: any;
   @Input() currentStep: any;
-  @Input() stepID: any;
   @Input() titleDefault = '';
-  @Input() isDelete: boolean = false;
-  @Input() isEdit: boolean = false;
-  @Input() isUpdate: boolean = false;
-  @Input() isCreate: boolean = false;
-  @Input() permissionCloseInstances: boolean = false;
   @Input() listStepReason: any;
   @Input() instance: any;
   @Input() stepNameEnd: any;
   @Input() proccesNameMove: any;
   @Input() lstIDInvo: any;
-  @Input() isClosed = false;
   @Input() showColumnControl = 1;
   @Input() listStep: any;
   @Input() viewsCurrent = '';
@@ -85,6 +78,13 @@ export class StagesDetailComponent implements OnInit {
   @Output() saveAssign = new EventEmitter<any>();
   @Output() outDataStep = new EventEmitter<any>();
 
+  stepID: any;
+  isDelete: boolean = false;
+  isEdit: boolean = false;
+  isUpdate: boolean = false;
+  isCreate: boolean = false;
+  permissionCloseInstances: boolean = false;
+  isClosed = false;
   dateActual: any;
   startDate: any;
   endDate: any;
@@ -167,9 +167,6 @@ export class StagesDetailComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    console.log(this.user?.employee);
-
-    this.getValueListReason();
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
         let data = [];
@@ -235,6 +232,19 @@ export class StagesDetailComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
+
+    this.stepID= this.instance.stepID
+    this.permissionCloseInstances=this.instance?.permissionCloseInstances
+    this.isDelete=this.instance.delete
+    this.isEdit=this.instance.edit
+    this.isUpdate=
+    this.instance.write &&
+      !this.instance.closed &&
+      (this.instance.status == '1' || this.instance.status == '2') &&
+      this.dataStep.stepStatus < '2'
+    this.isCreate=this.instance.create
+    this.isClosed=this.instance.closed
+    this.isStart = this.instance?.status == 2 ? true : false;
     if (changes['dataStep']) {
       if (changes['dataStep'].currentValue != null) {
         if (this.lstStepProcess != null && this.lstStepProcess.length > 0) {
@@ -285,12 +295,7 @@ export class StagesDetailComponent implements OnInit {
         this.dataStep = null;
       }
       if(!this.titleReason){
-        this.titleReason = changes['dataStep'].currentValue?.isSuccessStep
-
-         ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
-        : changes['dataStep'].currentValue?.isFailStep
-        ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
-        : '';
+        this.getValueListReason(changes['dataStep']);
       }
 
     }
@@ -640,7 +645,6 @@ export class StagesDetailComponent implements OnInit {
   //taskGroup
   groupByTask(data) {
     let step = JSON.parse(JSON.stringify(data));
-    this.isStart = step?.endDate && step?.startDate ? true : false;
     if (!step['isSuccessStep'] && !step['isFailStep']) {
       const taskGroupList = step?.tasks.reduce((group, product) => {
         const { taskGroupID } = product;
@@ -1733,7 +1737,7 @@ export class StagesDetailComponent implements OnInit {
       }
     });
   }
-  getValueListReason() {
+  getValueListReason(dataChange) {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
         for (let item of res.datas) {
@@ -1745,6 +1749,11 @@ export class StagesDetailComponent implements OnInit {
             this.stepNameReason = item?.text;
           }
         }
+        this.titleReason = dataChange.currentValue?.isSuccessStep
+        ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
+       : dataChange.currentValue?.isFailStep
+       ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
+       : '';
         this.changeDetectorRef.detectChanges();
       }
     });

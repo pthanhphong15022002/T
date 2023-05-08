@@ -1,26 +1,6 @@
 <codx-form #form [body]="body" [footer]="footer" [formModel]="dialog.formModel" [dialog]="dialog" [data]="cashpayment"
-  [subHeader]="subHeader" [customToolbar]="subToolbar" [openMore]="false" ngClass="ac-dialog">
+[customToolbar]="subToolbar" [openMore]="false" ngClass="ac-dialog">
 </codx-form>
-
-<!-- Start: Sub header -->
-<ng-template #subHeader>
-  <ng-container *ngIf="form?.formGroup">
-    <div class="w-100 d-flex justify-content-between">
-      <div class="mt-2 ms-10 input-circle input-border-0 w-225px">
-        <codx-input *ngIf="formType == 'add'" [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
-          (valueChange)="changeType($event)">
-        </codx-input>
-        <span *ngIf="formType == 'edit' && cashpayment?.status" class="me-2">
-          <codx-vll [name]="'AC057'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
-            [showText]="true" [showBgColor]="true" class="badge badge-pill badge-primary badge-lg lg">
-          </codx-vll>
-        </span>
-      </div>
-    </div>
-  </ng-container>
-</ng-template>
-<!-- End: Sub header -->
-
 <!-- Start: Body -->
 <ng-template #body>
   <div class="card-add" #cardbodyRef>
@@ -84,7 +64,7 @@
 <!-- Start: Tab Basic -->
 <ng-template #tabBasic>
   <ng-container *ngIf="form?.formGroup">
-    <div class="row mt-5">
+    <div class="row mt-8">
       <div class="col-7 ac-left">
         <div class="mw-750px">
           <div class="row">
@@ -134,16 +114,22 @@
             <div class="col-6">
               <div class="form-group">
                 <!-- Người nhận tiền -->
-                <div class="form-group">
+                <div *ngIf="form.formModel.funcID == 'ACT0410'" class="form-group">
                   <codx-label fiedName="Payee" [formModel]="form.formModel">
                   </codx-label>
                   <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="payee"
                     (controlBlur)="controlBlur($event)"></codx-input>
                 </div>
+                <div *ngIf="form.formModel.funcID == 'ACT0401'" class="form-group">
+                  <codx-label fiedName="Payor" [formModel]="form.formModel">
+                  </codx-label>
+                  <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="payor"
+                    (controlBlur)="controlBlur($event)"></codx-input>
+                </div>
               </div>
             </div>
           </div>
-          <div class="row">
+          <div #noteRef class="row">
             <div class="form-group">
               <codx-label fiedName="Memo" [formModel]="form.formModel">
               </codx-label>
@@ -159,11 +145,11 @@
         <div class="d-flex flex-column mw-300px">
           <div class="row">
             <!-- Tiền tệ -->
-            <div class="col-6">
+            <div class="col-6" *ngIf="journal">
               <div class="form-group">
                 <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
+                <codx-input [disabled]="true" [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
                   (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
@@ -215,17 +201,32 @@
 
 <!-- Start:CashPaymentLine -->
 <ng-template #tabLine>
-  <div class="h-100" *ngIf="(cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == 1">
-    <codx-gridview-v2 #gridCashPaymentLine [formName]="fmCashPaymentsLines.formName"
-      [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
-      [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
-      [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
-      [height]="gridHeight" [autoLoad]="false" rowHeight="30" (cellChanged)="cashPaymentLineChanged($event)"
-      (created)="gridCreated($event, gridCashPaymentLine)"></codx-gridview-v2>
-  </div>
+  <ng-container *ngIf="(cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == '1'">
+    <div class="h-100">
+      <codx-gridview-v2 #gridCashPaymentLine [formName]="fmCashPaymentsLines.formName"
+        [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
+        [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
+        [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
+        [height]="gridHeight"  [autoLoad]="false" rowHeight="30" (cellChanged)="lineChanged($event)"
+        (created)="gridCreated($event, gridCashPaymentLine)"></codx-gridview-v2>
+    </div>
+    <div  class="container w-90 h-90">
+      <div style="background: none" class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center mt-2">
+          <div [ngbTooltip]="popContent" placement="bottom" style="width: 40px !important;height: 40px !important;"
+            class="btn btn-icon btn-bg btn-light-primary btn-circle me-4" (click)="addRow()">
+            <i class="icon-i-file-earmark-plus icon-18"></i>
+          </div>
+          <ng-template #popContent>
+            <span #popContent [ngbTooltip]="popContent" class="fs-6 fw-bold">Thêm dòng</span>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </ng-container>
   <ng-container
-    *ngIf="form?.formGroup && (cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == 2">
-    <div class="table-responsive mt-3 h-400px">
+    *ngIf="form?.formGroup && (cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == '2'">
+    <div style="height: 430px;" class="table-responsive mt-3">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
         <thead>
           <tr>
@@ -264,14 +265,14 @@
         </thead>
         <tbody cdkDropList (cdkDropListDropped)="onDrop($event)" cdkDropListLockAxis="y" [cdkDropListData]="cashpaymentline"
         class="border-bottom">
-          <tr draggable="true" *ngFor="let item of cashpaymentline" cdkDrag>
+          <tr *ngFor="let item of cashpaymentline" cdkDrag>
             <td style="width: 50px;" class="text-center fw-bold">
               {{ item.rowNo }}
             </td>
             <td style="width: 560px;">
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
-                  <codx-label style="white-space: nowrap;" class="fw-bold label-colon" fiedName="AccountID"
+                  <codx-label style="white-space: nowrap;" class="fw-bold label-colon" default="Nợ"
                     [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
@@ -299,7 +300,7 @@
               </div>
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.offsetAcctID != null && item.offsetAcctID != '')">
-                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" fiedName="OffsetAcctID"
+                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" default="Có"
                     [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
@@ -482,10 +483,23 @@
             </td>
           </tr>
         </tbody>
+        <tfoot *ngIf="cashpaymentline.length > 0" style="background: #e8eaef;">
+          <tr>
+            <th style="width: 10%;"></th>
+            <th style="width: 50%;"></th>
+            <th style="width: 15%;">
+              <div class="d-flex align-items-center justify-content-start">
+                <span class="fs-6 fw-bold">{{ total }}</span>
+              </div>
+            </th>
+            <th style="width: 45%;"></th>
+            <th style="width: 20%;"></th>
+            <th *ngIf="cashpaymentline.length > 0" style="width: 10%;"></th>
+          </tr>
+        </tfoot>
       </table>
       <ng-container *ngIf="
-          (cashpayment.subType === '1' || cashpayment.subType === '3') &&
-          modegrid == 2
+          (cashpayment.subType === '1' || cashpayment.subType === '3')
         ">
         <div class="container w-90 h-90">
           <div style="background: none" class="list-empty card card-flush h-100">
@@ -501,22 +515,6 @@
           </div>
         </div>
       </ng-container>
-    </div>
-  </ng-container>
-  <div *ngIf="
-      (cashpayment.subType === '1' || cashpayment.subType === '3') &&
-      modegrid == 2
-    " class="d-flex align-items-center justify-content-start me-10 mt-3">
-    <codx-label class="fs-6 fw-bold" fiedName="TotalAmt" [formModel]="form.formModel">
-    </codx-label>
-    <span class="fs-6 fw-bold">: {{ total }}</span>
-  </div>
-  <ng-container *ngIf="form.formGroup">
-    <div class="d-flex align-items-center justify-content-start me-10 mt-3">
-      <codx-label class="fs-6 fw-bold me-2" fiedName="RefDocs" [formModel]="form.formModel">
-      </codx-label>
-      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="refDocs" [min]="0"
-        (controlBlur)="controlBlur($event)"></codx-input>
     </div>
   </ng-container>
 </ng-template>
@@ -594,6 +592,16 @@
             </codx-vll>
           </span>
         </div>
+        <div class="ms-3 input-circle input-border-0 w-225px" *ngIf="form?.formGroup">
+          <codx-input *ngIf="formType == 'add' && !hasSaved" [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
+              (valueChange)="changeType($event)">
+            </codx-input>
+            <span *ngIf="(formType == 'edit' && cashpayment?.subType) || hasSaved"class="me-2">
+              <codx-vll [name]="'AC063'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
+                [showText]="true" [showBgColor]="true" class="badge badge-pill badge-primary badge-lg lg">
+              </codx-vll>
+            </span>
+        </div>
       </div>
       <div class="d-flex align-items-center me-3">
         <div *ngIf="formType != 'edit'" class="ms-2">
@@ -624,7 +632,7 @@
           </button>
         </div>
         <div class="ms-2">
-          <div class="btn btn-icon btn-light-danger btn-circle bg" (click)="close()">
+          <div class="btn btn-icon btn-light-danger btn-circle" (click)="close()">
             <i class="icon-close icon-18"></i>
           </div>
         </div>
@@ -636,13 +644,13 @@
 
 <!-- Start: addline -->
 <ng-template #addLine let-data>
-  <!-- <div *ngIf="cashpayment.subType === '1' && modegrid == 1" class="mt-5 mb-2">
-    <button id="btn-add" type="button" class="btn btn-light-primary" (click)="addRow()">
-      <div class="d-flex align-items-center">
-        <i class="icon-add icon-16 me-1"></i>
-        <span>Thêm dòng</span>
-      </div>
-    </button>
-  </div> -->
+  <ng-container *ngIf="form.formGroup">
+    <div class="d-flex align-items-center justify-content-start me-10 mt-3">
+      <codx-label class="fs-6 fw-bold me-2" fiedName="RefDocs" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="refDocs" [min]="0"
+        (controlBlur)="controlBlur($event)"></codx-input>
+    </div>
+  </ng-container>
 </ng-template>
 <!-- End: addline -->

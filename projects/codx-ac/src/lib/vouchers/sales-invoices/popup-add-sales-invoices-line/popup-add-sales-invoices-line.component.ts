@@ -6,10 +6,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  CRUDService,
+  CodxComboboxComponent,
   CodxFormComponent,
+  CodxInputComponent,
   DialogData,
   DialogRef,
-  UIComponent
+  UIComponent,
 } from 'codx-core';
 import { combineLatestWith, map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
@@ -26,6 +29,13 @@ export class PopupAddSalesInvoicesLineComponent
 {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('idiM0') idiM0: CodxInputComponent;
+  @ViewChild('idiM1') idiM1: CodxInputComponent;
+  @ViewChild('idiM2') idiM2: CodxInputComponent;
+  @ViewChild('idiM3') idiM3: CodxInputComponent;
+  @ViewChild('idiM5') idiM5: CodxInputComponent;
+  @ViewChild('idiM6') idiM6: CodxInputComponent;
+  @ViewChild('idiM7') idiM7: CodxInputComponent;
 
   salesInvoicesLine: ISalesInvoicesLine = {} as ISalesInvoicesLine;
   salesInvoicesLines: ISalesInvoicesLine[] = [];
@@ -35,6 +45,8 @@ export class PopupAddSalesInvoicesLineComponent
   formTitle: string;
   action: string;
   hiddenFields: string[] = [];
+  dataService: CRUDService;
+  transID: string;
 
   constructor(
     private injector: Injector,
@@ -44,8 +56,10 @@ export class PopupAddSalesInvoicesLineComponent
   ) {
     super(injector);
 
+    this.dataService = dialogRef.dataService;
+    this.salesInvoicesLine = this.dataService.dataSelected;
+    this.transID = this.salesInvoicesLine.transID;
     this.isEdit = dialogData.data.formType === 'edit';
-    this.salesInvoicesLine = dialogData.data.salesInvoicesLine;
     this.index = dialogData.data.index;
     this.gvs = dialogData.data.gvs;
     this.action = dialogData.data.action;
@@ -91,6 +105,44 @@ export class PopupAddSalesInvoicesLineComponent
   //#endregion
 
   //#region Event
+  onInputChange(e) {
+    console.log(e);
+
+    if (e.field === 'itemID') {
+      this.form.formGroup.controls.idiM0.reset();
+      this.form.formGroup.controls.idiM1.reset();
+      this.form.formGroup.controls.idiM2.reset();
+      this.form.formGroup.controls.idiM3.reset();
+      this.form.formGroup.controls.idiM6.reset();
+      this.form.formGroup.controls.idiM7.reset();
+      (
+        this.idiM0.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+      (
+        this.idiM1.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+      (
+        this.idiM2.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+      (
+        this.idiM3.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+      (
+        this.idiM6.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+      (
+        this.idiM7.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+    }
+
+    if (e.field === 'idiM4') {
+      this.form.formGroup.controls.idiM5.reset();
+      (
+        this.idiM5.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['WarehouseID=@0'], [e.data]);
+    }
+  }
+
   onClickSave(closeAfterSaving: boolean) {
     console.log(this.salesInvoicesLine);
 
@@ -104,22 +156,35 @@ export class PopupAddSalesInvoicesLineComponent
       return;
     }
 
-    this.salesInvoicesLines.push({ ...this.salesInvoicesLine }); // wtf ???
-    this.index++;
+    this.dataService.save().subscribe((res: any) => {
+      if (res.save.data || res.update.data) {
+        this.salesInvoicesLines.push({ ...this.salesInvoicesLine });
+        this.index++;
 
-    if (closeAfterSaving) {
-      this.dialogRef.close();
-    } else {
-      delete this.salesInvoicesLine.recID;
+        if (closeAfterSaving) {
+          this.dialogRef.close();
+        } else {
+          this.dataService.addNew().subscribe((res: ISalesInvoicesLine) => {
+            console.log(res);
 
-      this.api
-        .exec('SM', 'SalesInvoicesLinesBusiness', 'GetDefault')
-        .subscribe((res: ISalesInvoicesLine) => {
-          res.rowNo = this.index + 1;
+            res.rowNo = this.index + 1;
+            res.transID = this.transID;
+            this.salesInvoicesLine.recID = res.recID; // wtf ???
 
-          this.form.formGroup.patchValue(res);
-        });
-    }
+            this.form.formGroup.patchValue(res);
+
+            // after implementing addNew(), both this.dataService.dataSelected and this.dataService.addDatas
+            // no longer point to the object referenced by this.salesInvoicesLine,
+            // so I reassign it here
+            this.dataService.dataSelected = this.salesInvoicesLine;
+            this.dataService.addDatas.set(
+              this.salesInvoicesLine.recID,
+              this.salesInvoicesLine
+            );
+          });
+        }
+      }
+    });
   }
   //#endregion
 

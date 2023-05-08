@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnInit,
@@ -8,12 +9,16 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import {
   ApiHttpService,
+  CRUDService,
   CacheService,
+  CallFuncService,
   CodxFormComponent,
   CodxGridviewV2Component,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
+  RequestOption,
   Util,
 } from 'codx-core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
@@ -23,6 +28,7 @@ import {
   CM_Quotations,
   CM_QuotationsLines,
 } from '../../models/cm_model';
+import { PopupAddQuotationsLinesComponent } from '../../quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -63,6 +69,8 @@ export class PopupAddQuotationsComponent implements OnInit {
     public sanitizer: DomSanitizer,
     private api: ApiHttpService,
     private cache: CacheService,
+    private changeDetector: ChangeDetectorRef,
+    private callFc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -77,13 +85,62 @@ export class PopupAddQuotationsComponent implements OnInit {
         this.fmQuotationLines.formName
       )
       .subscribe((res) => {
-        this.gridViewSetupQL=res
+        this.gridViewSetupQL = res;
       });
   }
 
   ngOnInit(): void {}
 
-  onSave() {}
+  beforeSave(op: RequestOption) {
+    let data = [];
+    if (this.action == 'add' || this.action == 'copy') {
+      op.methodName = 'AddQuotationsAsync';
+      data = [this.quotations];
+    }
+    if (this.action == 'edit') {
+      op.methodName = 'EditQuotationsAsync';
+      data = [this.quotations];
+    }
+    op.data = data;
+    return true;
+  }
+  onAdd() {
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt), 0)
+      .subscribe((res) => {
+        if (res.save) {
+          (this.dialog.dataService as CRUDService).update(res.save).subscribe();
+          this.dialog.close(res.save);
+        } else {
+          this.dialog.close();
+        }
+        this.changeDetector.detectChanges();
+      });
+  }
+
+  onUpdate() {
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe((res) => {
+        if (res.update) {
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
+          this.dialog.close(res.update);
+        } else {
+          this.dialog.close();
+        }
+        this.changeDetector.detectChanges();
+      });
+  }
+  onSave() {
+    if (this.action == 'add' || this.action == 'copy') {
+      this.onAdd();
+    } else if (this.action == 'edit') {
+      this.onUpdate();
+    }
+  }
+
   valueChange(e) {}
   select(e) {}
   created(e) {}
@@ -112,11 +169,32 @@ export class PopupAddQuotationsComponent implements OnInit {
     data.read = true;
     data.rowNo = idx + 1;
     data.transID = this.quotations?.recID;
-    this.gridQuationsLines.addRow(data, idx);
+   // this.gridQuationsLines.addRow(data, idx);  //add row gridview
+    var obj = {
+      headerText: 'Thêm sản phẩm báo giá',
+      quotationsLine: data,
+    };
+    let opt = new DialogModel();
+    opt.zIndex=1000;
+    let dataModel = new FormModel();
+    opt.FormModel = dataModel;
+
+    let dialogQuotations = this.callFc.openForm(
+      PopupAddQuotationsLinesComponent,
+      '',
+      650,
+      570,
+      '',
+      obj,
+      '',
+      opt
+    );
+    dialogQuotations.closed.subscribe((res) => {
+      //lam gi day
+    });
   }
 
   quotionsLineChanged(e) {
-    
     //  const field = [
     //  'rowno',
     //  'itemid',

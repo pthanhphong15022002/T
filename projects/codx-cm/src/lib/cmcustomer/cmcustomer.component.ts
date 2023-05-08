@@ -434,6 +434,9 @@ export class CmCustomerComponent
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
+          case 'SYS04':
+            res.disabled = false;
+            break;
           case 'SYS003':
           case 'SYS004':
           case 'SYS002':
@@ -576,9 +579,9 @@ export class CmCustomerComponent
             this.dataSelected = JSON.parse(
               JSON.stringify(this.view.dataService.data[0])
             );
-            this.customerDetail.getListContactByObjectID(
-              this.dataSelected?.recID
-            );
+            // this.customerDetail.getListContactByObjectID(
+            //   this.dataSelected?.recID
+            // );
             this.customerDetail.getListAddress(
               this.entityName,
               this.dataSelected?.recID

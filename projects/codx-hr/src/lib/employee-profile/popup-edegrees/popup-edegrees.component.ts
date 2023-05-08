@@ -2,7 +2,6 @@ import { FormGroup } from '@angular/forms';
 import { CodxHrService } from '../../codx-hr.service';
 import { Injector, ChangeDetectorRef } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
-
 import {
   CodxFormComponent,
   CodxListviewComponent,
@@ -14,8 +13,6 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { DateTime } from '@syncfusion/ej2-angular-charts';
-import { copy } from '@syncfusion/ej2-angular-spreadsheet';
 @Component({
   selector: 'lib-popup-edegrees',
   templateUrl: './popup-edegrees.component.html',
@@ -66,7 +63,6 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.formModel = dialog?.formModel;
-    console.log(this.formModel);
     this.headerTextCalendar[0] = data?.data?.trainFromHeaderText;
     this.headerTextCalendar[1] = data?.data?.trainToHeaderText;
   }
@@ -101,17 +97,17 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.dialog &&
-      this.dialog.closed.subscribe((res) => {
-        if (!res.event) {
-          if (this.successFlag) {
-            this.dialog.close(this.degreeObj);
-          } else {
-            this.degreeObj.isSuccess = false;
-            this.dialog.close(null);
-          }
-        }
-      });
+    // this.dialog &&
+    //   this.dialog.closed.subscribe((res) => {
+    //     if (!res.event) {
+    //       if (this.successFlag) {
+    //         this.dialog.close(this.degreeObj);
+    //       } else {
+    //         this.degreeObj.isSuccess = false;
+    //         this.dialog.close(null);
+    //       }
+    //     }
+    //   });
   }
 
   initForm() {
@@ -119,7 +115,6 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
       .subscribe((grvSetup) => {
         if (grvSetup) {
-          console.log(grvSetup);
           let dataRequest = new DataRequest();
           dataRequest.comboboxName = grvSetup.TrainSupplierID.referedValue;
           dataRequest.pageLoading = false;
@@ -128,7 +123,6 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
             if (data) {
               this.dataVllSupplier = JSON.parse(data[0]);
             }
-            console.log(this.dataVllSupplier);
           });
         }
       });
@@ -156,8 +150,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
                 this.degreeObj.employeeID = this.employId;
                 this.formModel.currentData = this.degreeObj;
                 this.formGroup.patchValue(this.degreeObj);
-                this.cr.detectChanges();
                 this.isAfterRender = true;
+                this.cr.detectChanges();
               } else {
                 this.notify.notify('Error');
               }
@@ -174,10 +168,10 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           if (this.degreeObj.trainFromDate == null) this.isNullFrom = false;
           if (this.degreeObj.trainToDate == null) this.isNullTo = false;
 
-          this.formModel.currentData = this.degreeObj;
           this.formGroup.patchValue(this.degreeObj);
-          this.cr.detectChanges();
+          this.formModel.currentData = this.degreeObj;
           this.isAfterRender = true;
+          this.cr.detectChanges();
         }
       });
     if (this.degreeObj) {
@@ -190,7 +184,6 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    console.log('data obj', this.degreeObj);
     if (!this.formModel)
       this.hrService.getFormModel(this.funcID).then((formModel) => {
         if (formModel) this.formModel = formModel;
@@ -206,11 +199,21 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     // }
     this.degreeObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
+      if(this.actionType === 'add'){
+        localStorage.setItem('add', JSON.stringify(this.degreeObj));
+      }
+      if(this.actionType === 'copy'){
+        localStorage.setItem('copy', JSON.stringify(this.degreeObj));
+      }
+      
       this.hrService.AddEmployeeDegreeInfo(this.degreeObj).subscribe((p) => {
         if (p != null) {
+          console.log(p);
           this.notify.notifyCode('SYS006');
           this.dialog && this.dialog.close(p);
-        } else this.notify.notifyCode('SYS023');
+        } else {
+          this.notify.notifyCode('SYS023');
+        }
       });
     } else {
       this.hrService

@@ -58,7 +58,7 @@ export class InstanceDetailComponent implements OnInit {
   @ViewChild('viewDetail') viewDetail: CodxDetailTmpComponent;
   @Input() viewsCurrent = '';
   @Input() moreFunc: any;
-  @Input() reloadData = false;
+  // @Input() reloadData = false;
   @Input() stepStart: any;
   @Input() reasonStepsObject: any;
   @Output() clickStartInstances = new EventEmitter<any>();
@@ -84,7 +84,7 @@ export class InstanceDetailComponent implements OnInit {
   currentStep = 0;
 
   listTypeTask = [];
- 
+
   dialogPopupDetail: DialogRef;
   currentElmID: any;
   frmModelInstancesTask: FormModel;
@@ -276,7 +276,6 @@ export class InstanceDetailComponent implements OnInit {
         formModel.entityName = res?.entityName;
         formModel.funcID = 'DPT040102';
         this.frmModelInstancesTask = formModel;
-        console.log(this.frmModelInstancesTask);
       }
     });
     this.timelineSettings = this.timelineSettingsWeek;
@@ -308,27 +307,23 @@ export class InstanceDetailComponent implements OnInit {
     if (changes['dataSelect']) {
       if (changes['dataSelect'].currentValue?.recID != null) {
         this.id = changes['dataSelect'].currentValue.recID;
-        this.dataSelect = changes['dataSelect'].currentValue;
-        this.instanceStatus = this.dataSelect.status;
-        this.GetStepsByInstanceIDAsync();
-        this.getDataGanttChart(
-          this.dataSelect.recID,
-          this.dataSelect.processID
-        );
-        this.listReasonBySteps(this.reasonStepsObject);
-        this.maxSize = 4;
-        this.isOnlyView = true;
+        this.loadChangeData() ;
+       // this.dataSelect = changes['dataSelect'].currentValue
       }
-    } else if (changes['reloadData'] && this.reloadData) {
-      this.instanceStatus = this.dataSelect.status;
-      //muon change ma ko chang dc
-      if (this.viewDetail && this.moreFuncCrr) {
-        this.viewDetail.dataItem = this.dataSelect;
-        this.viewDetail.changedataMFs(this.moreFuncCrr);
-      }
-      this.getStageByStep(this.listSteps);
-      this.changeDetec.detectChanges();
-    }
+    } 
+  }
+
+  loadChangeData(){   
+    this.instanceStatus = this.dataSelect.status;
+    this.GetStepsByInstanceIDAsync();
+    this.getDataGanttChart(
+      this.dataSelect.recID,
+      this.dataSelect.processID
+    );
+    this.listReasonBySteps(this.reasonStepsObject);
+    this.maxSize = 4;
+    this.isOnlyView = true;
+    this.changeDetec.detectChanges();
   }
 
   GetStepsByInstanceIDAsync() {
@@ -467,10 +462,14 @@ export class InstanceDetailComponent implements OnInit {
       lstStepCbx: this.listStepInstance,
     });
   }
+  // changeDataMFUpData(){
+  //   if(this.moreFuncCrr)
+  //   this.changeDataMF(this.moreFuncCrr,this.dataSelect)
+  // }
 
   changeDataMF(e, data) {
-    if (this.viewsCurrent == 'k-')
-      this.moreFuncCrr = JSON.parse(JSON.stringify(e));
+    //  if (this.viewsCurrent == 'k-')
+    //  this.moreFuncCrr = JSON.parse(JSON.stringify(e));
     this.changeMF.emit({
       e: e,
       data: data,

@@ -105,7 +105,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.dataService.setSort(arrSort);
     this.dataService.pageSize = 20;
     this.getSetting();
-    // this.testApiReport();
+    //this.testApiReport();
   }
 
 
@@ -119,16 +119,21 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       projectID :"",
       orgUnitID :"",
       departmentID :"",
-      group1 : false,
-      groupType1 :"",
+      group1 : true,
+      groupType1 :"1",
       group2 : false,
       groupType2 :"",
       group3 : false,
       groupType3 :"",
 
     }
-    this.api.execSv("TM","ERM.Business.TM","TaskReportBusiness","TaskDailyAsync",[JSON.stringify(jsParams)])
-    .subscribe((res:any) => console.log("testApiReport: ", res));
+    this.api.execSv(
+      "TM",
+      "ERM.Business.TM",
+      "TaskReportBusiness",
+      "TaskDailyAsync",
+      [JSON.stringify(jsParams)])
+      .subscribe((res:any) => console.log("testApiReport: ", JSON.parse(res)));
   }
  
 
