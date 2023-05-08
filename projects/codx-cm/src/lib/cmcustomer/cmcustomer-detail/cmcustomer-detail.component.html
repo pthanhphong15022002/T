@@ -318,21 +318,11 @@
               [hidenMF]="false"
             ></codx-list-contacts>
           </ng-container>
-          <ng-container *ngIf="name == 'Task'">
-            <ng-container
-              [ngTemplateOutlet]="task"
-              [ngTemplateOutletContext]="{ value: dataSelected }"
-            >
-            </ng-container>
-          </ng-container>
-          <ng-container *ngIf="name == 'Opportunity'">
-            <ng-container [ngTemplateOutlet]="opportunity"> </ng-container>
+          <ng-container *ngIf="name == 'Deal'">
+           <codx-list-deals [customerID]="dataSelected.recID"></codx-list-deals>
           </ng-container>
           <ng-container *ngIf="name == 'Product'">
             <ng-container [ngTemplateOutlet]="product"> </ng-container>
-          </ng-container>
-          <ng-container *ngIf="name == 'Opportunity'">
-            <ng-container>Sản phẩm cung cấp </ng-container>
           </ng-container>
         </div>
       </ng-template>
@@ -351,57 +341,6 @@
     </ng-template>
   </codx-detail-tmp>
 </ng-container>
-
-<ng-template #opportunity>
-  <div class="d-flex justify-content-between">
-    <div class="d-flex flex-column">
-      <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
-        Trương Đặng Ngọc Phúc
-      </div>
-      <div class="d-flex align-items-start me-4 mb-1">
-        <div class="me-3">
-          <span class="icon-money icon-16 me-1"></span>
-          <codx-label
-            class="text-gray-600"
-            name="lblNumber"
-            default="Doanh số
-            kỳ vọng: "
-          ></codx-label>
-          <span class="ms-1">50.000.000 VND</span>
-        </div>
-        <div>
-          <span class="">%</span>
-          <codx-label
-            class="text-gray-600"
-            name="lblNumber"
-            default="Tỷ lệ
-            thành công: "
-          ></codx-label>
-          <span class="ms-1">70%</span>
-        </div>
-      </div>
-    </div>
-    <div class="d-flex align-items-top">
-      <div class="d-flex flex-column">
-        <div class="badge badge-primary">Giới thiệu sản phẩm</div>
-        <div class="ms-5">
-          <span class="icon-money icon-16 me-1"></span>
-          <span class="text-gray-500 my-2">23/04/2023</span>
-        </div>
-      </div>
-      <div class="ms-3">
-        <codx-imgs
-          [isToolTip]="true"
-          [width]="35"
-          [objectId]="'ADMIN'"
-          ojectType="AD_Users"
-          [numberImages]="1"
-        >
-        </codx-imgs>
-      </div>
-    </div>
-  </div>
-</ng-template>
 
 <ng-template #task let-data="value">
   <codx-show-task [dataSource]="data"></codx-show-task>

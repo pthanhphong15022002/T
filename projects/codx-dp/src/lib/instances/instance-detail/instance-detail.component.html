@@ -11,8 +11,8 @@
     [footer]="tabs"
   >
     <ng-template #header>
-      <div class="d-flex justify-content-between align-items-end">
-        <div class="container_detail mt-2">
+      <div class="d-flex justify-content-between align-items-top mt-2">
+        <div class="container_detail">
           <div class="d-flex justify-content-between">
             <h3 class="mb-0">
               {{ dataSelect?.title }}
@@ -30,9 +30,9 @@
               </codx-tag>
             </div>
 
-            <div class="d-flex mt-2">
+            <div class="d-flex flex-wrap mt-2">
               <div class="d-flex me-5">
-                <div class="me-2">
+                <div>
                   <codx-label
                     class="text-gray-500 label-colon text-nowrap"
                     [setRequire]="false"
@@ -53,7 +53,7 @@
                 </div>
               </div>
               <div class="d-flex me-5">
-                <div class="me-2">
+                <div>
                   <codx-label
                     class="text-gray-500 label-colon text-nowrap"
                     [setRequire]="false"
@@ -72,7 +72,7 @@
                 ></div>
               </div>
               <div class="d-flex me-5">
-                <div class="me-2">
+                <div>
                   <codx-label
                     class="text-gray-500 label-colon text-nowrap"
                     fiedName="StartDate"
@@ -90,7 +90,7 @@
                 ></div>
               </div>
               <div class="d-flex me-5">
-                <div class="me-2">
+                <div>
                   <codx-label
                     class="text-gray-500 label-colon text-nowrap"
                     fiedName="EndDate"
@@ -110,7 +110,7 @@
               </div>
             </div>
             <div class="d-flex align-items-start mt-2 " *ngIf="dataSelect.memo">
-              <div class="me-2">
+              <div>
                 <codx-label
                   class="text-gray-500 label-colon text-nowrap"
                   fiedName="Memo"
@@ -157,12 +157,12 @@
           </div>
         </div>
         <div
-            class="d-flex flex-column align-items-end justify-content-center mx-3"
+            class="d-flex flex-column align-items-end"
           >
             <div class="d-flex align-items-top w-100">
               <div class="d-flex flex-column">
                 <div
-                  class="badge badge-md d-flex align-items-center"
+                  class="badge badge-sm d-flex align-items-center"
                   [ngStyle]="{
                     'background-color':
                       dataSelect.status == '3' || dataSelect.status == '4'
@@ -175,7 +175,7 @@
                   <span
                     [ngClass]="stepValue['icon']"
                     [ngStyle]="{ color: stepValue['iconColor'] }"
-                    class="me-2"
+                    class="me-1 icon-14"
                   ></span>
                   <span [ngStyle]="{ color: stepValue['textColor'] }">{{
                     stepName
@@ -193,7 +193,8 @@
                 </codx-imgs>
               </div>
             </div>
-            <codx-progressbar [progress]="progress"></codx-progressbar>
+            <div class="mt-2">
+            <codx-progressbar [progress]="progress"></codx-progressbar></div>
         </div>
       </div>
     </ng-template>
@@ -291,7 +292,7 @@
         </div>
         <ng-container *ngIf="viewModelDetail == 'F'">
           <ng-container *ngFor="let item of listSteps">
-            <codx-field-detail
+            <!-- <codx-field-detail
               *ngIf="item?.fields?.length > 0"
               [dataStep]="item"
               [showColumnControl]="showColumnControl(item.stepID)"
@@ -309,7 +310,26 @@
               [viewsCurrent]="viewsCurrent"
               (saveDataStep)="saveDataStep($event)"
             >
-            </codx-field-detail>
+            </codx-field-detail> -->
+            <codx-fields-detail-temp
+              *ngIf="item?.fields?.length > 0"
+              [dataStep]="item"
+              [showColumnControl]="showColumnControl(item.stepID)"
+              [isUpdate]="
+                dataSelect.write &&
+                !dataSelect.closed &&
+                (dataSelect.status == '1' || dataSelect.status == '2') &&
+                item.stepStatus < '2'
+              "
+              [currentElmID]="currentElmID"
+              (inputElmIDCF)="inputElmIDCustomField($event)"
+              [isSaving]="isSaving"
+              (actionSaveCF)="actionSaveCustomField($event)"
+              [titleHeaderFormCF]="titleDefault"
+              [viewsCurrent]="viewsCurrent"
+              (saveDataStep)="saveDataStep($event)"
+            >
+            </codx-fields-detail-temp>
           </ng-container>
         </ng-container>
       </div>

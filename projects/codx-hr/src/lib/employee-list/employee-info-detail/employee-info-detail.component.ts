@@ -81,6 +81,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   @ViewChild('paneRight') panelRight: TemplateRef<any>;
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
 
+  
   views: Array<ViewModel> | any = [];
   minType = 'MinRange';
   user;
@@ -688,21 +689,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         this.hrService.loadData('HR', rqBSalary).subscribe((res) => {
           if (res && res[0]) {
             this.crrEBSalary = res[0][0];
-            let rqJSalary = new DataRequest();
-            rqJSalary.entityName = 'HR_EJobSalaries';
-            rqJSalary.dataValues = this.employeeID + ';true';
-            rqJSalary.predicates = 'EmployeeID=@0 and IsCurrent=@1';
-            rqJSalary.page = 1;
-            rqJSalary.pageSize = 1;
-            this.hrService.loadData('HR', rqJSalary).subscribe((res) => {
-              if (res && res[0]) {
-                this.crrEBSalary = {
-                  ...this.crrEBSalary,
-                  jSalary: res[0][0].jSalary,
-                };
-                this.df.detectChanges();
-              }
-            });
+            this.df.detectChanges();
           }
         });
       }
@@ -2373,6 +2360,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           this.HandleEmployeeTrainCourseInfo(event.text, 'edit', data);
           this.df.detectChanges();
         } else if (funcID == 'eHealth') {
+          this.HandleEmployeeEHealths(event.text, 'edit', data);
+          this.df.detectChanges();
         } else if (funcID == 'eVaccine') {
           this.HandleEVaccinesInfo(event.text, 'edit', data);
           this.df.detectChanges();
@@ -2811,6 +2800,15 @@ export class EmployeeInfoDetailComponent extends UIComponent{
                   this.notify.notifyCode('SYS022');
                 }
               });
+            } else if (funcID == 'eAccidents'){
+              this.hrService.deleteEAccident(data?.recID).subscribe(res =>{
+                if(res){
+                  this.notify.notifyCode('SYS008');
+                  (this.eAccidentGridView.dataService as CRUDService)?.remove(data).subscribe();
+                  this.eAccidentsRowCount--;
+                  this.df.detectChanges();
+                }else this.notify.notifyCode('SYS022');
+              })
             }
           }
         });
@@ -2842,7 +2840,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           this.copyValue(event.text, data, 'Assets');
           this.df.detectChanges();
         } else if (funcID == 'eDegrees') {
-          this.HandleEmployeeEDegreeInfo(event.text, 'copy', data);
+          // this.HandleEmployeeEDegreeInfo(event.text, 'copy', data);
+          this.copyValue(event.text, data, 'eDegrees');
           this.df.detectChanges();
         } else if (funcID == 'eCertificate') {
           this.HandleEmployeeECertificateInfo(event.text, 'copy', data);
@@ -4170,10 +4169,6 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         actionHeaderText + ' ' + this.getFormHeader(this.eDiseasesFuncID),
     });
     dialogAdd.closed.subscribe((res) => {
-      console.log(
-        'ressssss diseasesssssssssssssssssssssssssssssssssssssssssssssssss',
-        res
-      );
       if (res)
         this.eDiseasesRowCount += this.updateGridView(
           this.eDiseasesGrid,
@@ -4852,7 +4847,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         });
     } else if (flag == 'eAccidents') {
       this.hrService
-        .copy(data, this.eJobSalaryFormModel, 'RecID')
+        .copy(data, this.eAccidentsFormModel, 'RecID')
         .subscribe((res) => {
           this.HandleEmployeeAccidentInfo(actionHeaderText, 'copy', res);
         });
@@ -4867,6 +4862,12 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         .copy(data, this.eContractFormModel, 'RecID')
         .subscribe((res) => {
           this.HandleEContractInfo(actionHeaderText, 'copy', res);
+        });
+    }else if (flag == 'eDegrees') {
+      this.hrService
+        .copy(data, this.eDegreeFormModel, 'RecID')
+        .subscribe((res) => {
+          this.HandleEmployeeEDegreeInfo(actionHeaderText, 'copy', res);
         });
     }
   }

@@ -144,6 +144,8 @@ export class CmcustomerDetailComponent implements OnInit {
     if (e.recID != this.contactPerson.recID) this.contactPerson = e;
   }
 
+
+
   getGridviewSetup() {
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
@@ -190,7 +192,7 @@ export class CmcustomerDetailComponent implements OnInit {
           isActive: false,
         },
         {
-          name: 'Opportunity',
+          name: 'Deal',
           textDefault: 'Cơ hội',
           icon: 'icon-add_shopping_cart',
           isActive: false,

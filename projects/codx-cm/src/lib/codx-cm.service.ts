@@ -68,6 +68,24 @@ export class CodxCmService {
     );
   }
 
+  getListDealsByCustomerID(customerID){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'GetListDealsByCustomerIDAsync',
+      [customerID]
+    );
+  }
+
+  countDealsByCustomerID(customerID){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'CountDealsByCustomerIDAsync',
+      [customerID]
+    );
+  }
+
   updateContactCrm(recID) {
     return this.api.exec<any>(
       'CM',
