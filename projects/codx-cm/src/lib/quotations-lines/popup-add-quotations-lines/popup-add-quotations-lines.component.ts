@@ -10,9 +10,11 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
   dialog: DialogRef;
   headerText: any;
   quotationsLine: any;
+  quotationsLines =[]
   constructor(@Optional() dt?: DialogData, @Optional() dialog?: DialogRef) {
     this.dialog = dialog;
     this.quotationsLine = JSON.parse(JSON.stringify(dt?.data?.quotationsLine));
+    this.quotationsLines = dt?.data?.quotationsLines??[]
     this.headerText = dt?.data?.headerText;
   }
 

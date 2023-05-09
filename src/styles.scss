@@ -10,6 +10,9 @@
   .e-grid .e-rowcell {
     font-size: var(--fs-body);
   }
+  .e-control, .e-css {
+    font-size: var(--fs-body);
+  }
 }
 
 .e-device .e-dlg-content,
@@ -1093,6 +1096,9 @@ codx-layout-add .card-header {
 }
 .badge.badge-sm {
   font-size: 11px;
+}
+.badge-md.fs-7{
+  font-size: 11px!important;
 }
 /*** list view srcoll ngang ***/
 .e-listview .e-content {
@@ -2332,10 +2338,12 @@ codx-calendar {
 
 //
 
- .btn:focus {
+ .btn:not(.btn-outline-default):focus {
    border-color: transparent !important;
  }
-
+ .btn.btn-outline-default:focus {
+  border-color: var(--gray-150);
+}
 // .form-control.codx-textarea {
 //   padding: 0;
 // }
@@ -2705,6 +2713,17 @@ a.layout-add-menuleft{
 codx-instance-detail div.codx-detail-main{
   padding-bottom: 0;
 }
+
+.card-ep-report{
+  .codx-image {
+    max-height: 120px !important;
+  }
+  .card-body{
+    min-height: 60px;
+    padding-top:7px!important;
+  }
+}
+
 
 /*** temp ****/
 codx-layout-add .lay-add-tab-footer {

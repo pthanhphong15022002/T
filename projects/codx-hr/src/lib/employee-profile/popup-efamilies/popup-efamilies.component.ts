@@ -225,7 +225,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
 
   focus(evt) {
     debugger
-    this.isEmployee = evt.checked;
+    this.isEmployee = evt.data;
     this.cr.detectChanges();
   }
 

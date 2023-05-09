@@ -13,9 +13,9 @@
 </ng-template>
 <ng-template #body>
   <div class="mt-5">
-    <span class="fs-3 fw-bold text-primary">{{ stepName }}</span>
+    <span class="fs-4 fw-bold text-primary">{{ stepName }}</span>
   </div>
-  <div class="form-group mt-3">
+  <div class="form-group mt-2">
     <div>
       <codx-label
         fiedName="Memo"
@@ -81,7 +81,7 @@
       </codx-label>
       <span class="text-danger" *ngIf="reasonStep.reasonControl">*</span>
     </div>
-    <div *ngFor="let item of listReason">
+    <div class="ms-6" *ngFor="let item of listReason">
       <div class="form-check mb-3">
         <input class="form-check-input rounded-circle w-20px h-20px" type="checkbox" (change)="checkValue($event,item)"/>
         <span class="form-check-label">
