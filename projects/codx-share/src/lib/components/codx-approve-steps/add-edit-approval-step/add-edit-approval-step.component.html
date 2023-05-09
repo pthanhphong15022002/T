@@ -98,15 +98,17 @@
   <div class="d-flex flex-column">
     <div class="d-flex flex-stack mb-4">
       <codx-label
-        class="text-primary fw-bolder"
+        class="text-primary fw-bold fs-6"
         fiedName="Approvers"
         [formModel]="formModel"
       >
       </codx-label>
-      <div
-        class="icon-person_add_alt_1 text-hover-primary icon-20"
+      <button type="button"
+        class="btn btn-icon btn-sm btn-light-primary"
         (click)="testdata(controlShare)"
-      ></div>
+      >
+      <i class="icon-person_add_alt_1 icon-18"></i>
+    </button>
     </div>
     <!-- <div cdkDropList class="example-list" (cdkDropListDropped)="drop1($event)">
       <div class="example-box" *ngFor="let movie of movies" cdkDrag>{{movie}}</div>
@@ -310,7 +312,7 @@
   </div>
 
   <div class="d-flex flex-column mb-4">
-    <div class="fw-bolder d-block mb-2">
+    <div class="fw-bold fs-6 d-block mb-2">
       <codx-label
         class="text-primary"
         name="lblTitleComment"
@@ -448,13 +450,15 @@
               </codx-input>
             </div>
             <div class="col-2">
-              <div
-                class="icon-email icon-18 ms-2"
+              <button
+                class="btn btn-sm btn-icon"
                 [ngClass]="
-                  item?.isEmail == '1' ? 'text-hover-primary' : 'text-muted'
+                  item?.isEmail == '1' ? 'btn-light-primary' : 'btn-light'
                 "
                 (click)="openSetupEmail(item)"
-              ></div>
+              >
+              <i class="icon-email icon-16"></i>
+            </button>
             </div>
           </div>
         </div>

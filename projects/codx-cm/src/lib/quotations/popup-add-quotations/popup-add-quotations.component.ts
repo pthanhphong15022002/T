@@ -51,6 +51,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     formName: 'CMQuotationsLines',
     gridViewName: 'grvCMQuotationsLines',
     entityName: 'CM_QuotationsLines',
+    funcID: 'CM02021',
   };
   gridHeight: number = 300;
   editSettings: EditSettingsModel = {
@@ -160,8 +161,48 @@ export class PopupAddQuotationsComponent implements OnInit {
   clickMF(e, data) {}
 
   // region Product
+  addPopup() {
+    let idx = this.gridQuationsLines.dataSource?.length;
+    let data = this.genData(idx);
+    this.cache.functionList(this.fmQuotationLines.funcID).subscribe((f) => {
+      this.cache
+        .gridViewSetup(
+          this.fmQuotationLines.formName,
+          this.fmQuotationLines.gridViewName
+        )
+        .subscribe((res) => {
+          var obj = {
+            headerText: 'Thêm sản phẩm báo giá',
+            quotationsLine: data,
+          };
+          let opt = new DialogModel();
+          opt.zIndex = 1000;
+          let dataModel = new FormModel();
+          opt.FormModel = this.fmQuotationLines;
+
+          let dialogQuotations = this.callFc.openForm(
+            PopupAddQuotationsLinesComponent,
+            '',
+            650,
+            570,
+            '',
+            obj,
+            '',
+            opt
+          );
+          dialogQuotations.closed.subscribe((res) => {
+            //lam gi day
+          });
+        });
+    });
+  }
   addRow() {
     let idx = this.gridQuationsLines.dataSource?.length;
+    let data = this.genData(idx);
+    this.gridQuationsLines.addRow(data, idx); //add row gridview
+  }
+
+  genData(idx) {
     let data = this.gridQuationsLines.formGroup.value; //ddooi tuong
     data.recID = Util.uid();
     data.write = true;
@@ -169,29 +210,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     data.read = true;
     data.rowNo = idx + 1;
     data.transID = this.quotations?.recID;
-    // this.gridQuationsLines.addRow(data, idx);  //add row gridview
-    var obj = {
-      headerText: 'Thêm sản phẩm báo giá',
-      quotationsLine: data,
-    };
-    let opt = new DialogModel();
-    opt.zIndex=1000;
-    let dataModel = new FormModel();
-    opt.FormModel = dataModel;
-
-    let dialogQuotations = this.callFc.openForm(
-      PopupAddQuotationsLinesComponent,
-      '',
-      650,
-      570,
-      '',
-      obj,
-      '',
-      opt
-    );
-    dialogQuotations.closed.subscribe((res) => {
-      //lam gi day
-    });
+    return data;
   }
 
   quotionsLineChanged(e) {

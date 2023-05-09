@@ -7,7 +7,9 @@ import {
 } from '@angular/core';
 import {
   CRUDService,
+  CodxComboboxComponent,
   CodxFormComponent,
+  CodxInputComponent,
   DialogData,
   DialogRef,
   UIComponent,
@@ -27,6 +29,13 @@ export class PopupAddSalesInvoicesLineComponent
 {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('idiM0') idiM0: CodxInputComponent;
+  @ViewChild('idiM1') idiM1: CodxInputComponent;
+  @ViewChild('idiM2') idiM2: CodxInputComponent;
+  @ViewChild('idiM3') idiM3: CodxInputComponent;
+  @ViewChild('idiM5') idiM5: CodxInputComponent;
+  @ViewChild('idiM6') idiM6: CodxInputComponent;
+  @ViewChild('idiM7') idiM7: CodxInputComponent;
 
   salesInvoicesLine: ISalesInvoicesLine = {} as ISalesInvoicesLine;
   salesInvoicesLines: ISalesInvoicesLine[] = [];
@@ -96,6 +105,44 @@ export class PopupAddSalesInvoicesLineComponent
   //#endregion
 
   //#region Event
+  onInputChange(e) {
+    console.log(e);
+
+    if (e.field === 'itemID') {
+      this.form.formGroup.controls.idiM0.reset();
+      this.form.formGroup.controls.idiM1.reset();
+      this.form.formGroup.controls.idiM2.reset();
+      this.form.formGroup.controls.idiM3.reset();
+      this.form.formGroup.controls.idiM6.reset();
+      this.form.formGroup.controls.idiM7.reset();
+      (
+        this.idiM0.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+      (
+        this.idiM1.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+      (
+        this.idiM2.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+      (
+        this.idiM3.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+      (
+        this.idiM6.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+      (
+        this.idiM7.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+    }
+
+    if (e.field === 'idiM4') {
+      this.form.formGroup.controls.idiM5.reset();
+      (
+        this.idiM5.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(['WarehouseID=@0'], [e.data]);
+    }
+  }
+
   onClickSave(closeAfterSaving: boolean) {
     console.log(this.salesInvoicesLine);
 

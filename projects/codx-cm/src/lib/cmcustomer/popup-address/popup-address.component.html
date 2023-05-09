@@ -72,7 +72,17 @@
     >
     </codx-input>
   </div>
-
+  <div class="form-group">
+    <codx-label fiedName="WardID" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      (valueChange)="valueChange($event)"
+      [crrValue]="data?.wardID"
+      [model]="modelWardID"
+      field="wardID"
+    >
+    </codx-input>
+  </div>
   <div class="form-group">
     <codx-label fiedName="Street" [formModel]="form.formModel"></codx-label>
     <codx-input

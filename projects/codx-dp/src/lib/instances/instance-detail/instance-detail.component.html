@@ -11,14 +11,14 @@
     [footer]="tabs"
   >
     <ng-template #header>
-      <div class="d-flex justify-content-between align-items-end">
-        <div class="container_detail mt-2">
+      <div class="d-flex justify-content-between align-items-top mt-2">
+        <div class="container_detail">
           <div class="d-flex justify-content-between">
             <h3 class="mb-0">
               {{ dataSelect?.title }}
             </h3>
           </div>
-  
+
           <div class="d-flex flex-column">
             <div class="mt-2" *ngIf="tags != null && tags.trim() != ''">
               <codx-tag
@@ -29,10 +29,10 @@
               >
               </codx-tag>
             </div>
-  
-            <div class="d-flex mt-2">
+
+            <div class="d-flex flex-wrap mt-2">
               <div class="d-flex me-5">
-                <div class="me-2">
+                <div>
                   <codx-label
                     class="text-gray-500 label-colon text-nowrap"
                     [setRequire]="false"
@@ -53,7 +53,7 @@
                 </div>
               </div>
               <div class="d-flex me-5">
-                <div class="me-2">
+                <div>
                   <codx-label
                     class="text-gray-500 label-colon text-nowrap"
                     [setRequire]="false"
@@ -72,7 +72,7 @@
                 ></div>
               </div>
               <div class="d-flex me-5">
-                <div class="me-2">
+                <div>
                   <codx-label
                     class="text-gray-500 label-colon text-nowrap"
                     fiedName="StartDate"
@@ -90,7 +90,7 @@
                 ></div>
               </div>
               <div class="d-flex me-5">
-                <div class="me-2">
+                <div>
                   <codx-label
                     class="text-gray-500 label-colon text-nowrap"
                     fiedName="EndDate"
@@ -109,8 +109,8 @@
                 ></div>
               </div>
             </div>
-            <div class="d-flex align-items-start mt-2 " *ngIf="dataSelect.memo">
-              <div class="me-2">
+            <div class="d-flex align-items-start mt-2" *ngIf="dataSelect.memo">
+              <div>
                 <codx-label
                   class="text-gray-500 label-colon text-nowrap"
                   fiedName="Memo"
@@ -119,9 +119,11 @@
                 </codx-label>
               </div>
               <div
-                class="text-dark line-clamp line-clamp-2" 
+                class="text-dark line-clamp line-clamp-2"
                 *ngIf="dataSelect?.memo"
-                [innerHTML]="sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)"
+                [innerHTML]="
+                  sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)
+                "
               ></div>
             </div>
             <!-- <div class="mb-6">
@@ -156,44 +158,44 @@
               </div> -->
           </div>
         </div>
-        <div
-            class="d-flex flex-column align-items-end justify-content-center mx-3"
-          >
-            <div class="d-flex align-items-top w-100">
-              <div class="d-flex flex-column">
-                <div
-                  class="badge badge-md d-flex align-items-center"
-                  [ngStyle]="{
-                    'background-color':
-                      dataSelect.status == '3' || dataSelect.status == '4'
-                        ? colorSuccesss
-                        : dataSelect.status == '5' || dataSelect.status == '6'
-                        ? colorFail
-                        : stepValue['backgroundColor']
-                  }"
-                >
-                  <span
-                    [ngClass]="stepValue['icon']"
-                    [ngStyle]="{ color: stepValue['iconColor'] }"
-                    class="me-2"
-                  ></span>
-                  <span [ngStyle]="{ color: stepValue['textColor'] }">{{
-                    stepName
-                  }}</span>
-                </div>
-              </div>
-              <div class="ms-3">
-                <codx-imgs
-                  [isToolTip]="true"
-                  [width]="25"
-                  [objectId]="dataSelect.owner"
-                  ojectType="AD_Users"
-                  [numberImages]="1"
-                >
-                </codx-imgs>
+        <div class="d-flex flex-column align-items-end">
+          <div class="d-flex align-items-top w-100">
+            <div class="d-flex flex-column">
+              <div
+                class="badge badge-sm d-flex align-items-center"
+                [ngStyle]="{
+                  'background-color':
+                    dataSelect.status == '3' || dataSelect.status == '4'
+                      ? colorSuccesss
+                      : dataSelect.status == '5' || dataSelect.status == '6'
+                      ? colorFail
+                      : stepValue['backgroundColor']
+                }"
+              >
+                <span
+                  [ngClass]="stepValue['icon']"
+                  [ngStyle]="{ color: stepValue['iconColor'] }"
+                  class="me-1 icon-14"
+                ></span>
+                <span [ngStyle]="{ color: stepValue['textColor'] }">{{
+                  stepName
+                }}</span>
               </div>
             </div>
+            <div class="ms-3" *ngIf="dataSelect.owner">
+              <codx-imgs
+                [isToolTip]="true"
+                [width]="25"
+                [objectId]="dataSelect.owner"
+                ojectType="AD_Users"
+                [numberImages]="1"
+              >
+              </codx-imgs>
+            </div>
+          </div>
+          <div class="mt-2">
             <codx-progressbar [progress]="progress"></codx-progressbar>
+          </div>
         </div>
       </div>
     </ng-template>
@@ -237,45 +239,49 @@
         id="viewModeDetail"
         class="pt-3 {{ viewModelDetail == 'G' ? '' : 'view-step-box' }}"
       >
-      <div>
-        <ng-container
-          *ngIf="viewModelDetail == 'G'"
-          [ngTemplateOutlet]="
-            dataSelect.status == 1 ? emptyTemplate : tempGanchart
-          "
-        >
-        </ng-container>
-        <ng-container *ngIf="viewModelDetail == 'S'">
-          <codx-carousel-stage
-            [dataSource]="listSteps"
-            [fieldName]="'stepName'"
-            [maxSize]="maxSize"
-            [status]="instanceStatus"
-            (eventClicked)="clickStage($event)"
+        <div>
+          <ng-container
+            *ngIf="viewModelDetail == 'G'"
+            [ngTemplateOutlet]="
+              dataSelect.status == 1 ? emptyTemplate : tempGanchart
+            "
           >
-          </codx-carousel-stage>
-          <ng-container *ngIf="tmpTeps">
-            <codx-stages-detail
-              [dataStep]="tmpTeps"
-              [showColumnControl]="showColumnControl(tmpTeps.stepID)"
-              [formModel]="formModel"
-              [currentStep]="currentNameStep"
-              [instance]="dataSelect"
-              [titleDefault]="titleDefault"
-              [listStep]="listSteps"                  
-              [lstIDInvo]="lstInv"
-              [listUserIdRole]="ownerInstance"
-              [listStepReason]="getReasonByStepId(dataSelect.status)"
-              [stepNameEnd]="getStepNameIsComlepte(dataSelect)"
-              [proccesNameMove]="proccesNameMove"
-              (saveAssign)="saveAssign($event)"
-              (outDataStep)="saveDataStep($event)"
-              [viewsCurrent]="viewsCurrent"
-              [frmModelInstancesTask]="frmModelInstancesTask"
-              [lstStepProcess]="lstStepProcess"
-              [isOnlyView]="isOnlyView"
-            ></codx-stages-detail>
-            <!-- [stepID]="dataSelect.stepID"
+          </ng-container>
+          <div
+            class="view-model"
+            style="overflow: hidden"
+            *ngIf="viewModelDetail == 'S'"
+          >
+            <codx-carousel-stage
+              [dataSource]="listSteps"
+              [fieldName]="'stepName'"
+              [maxSize]="maxSize"
+              [status]="instanceStatus"
+              (eventClicked)="clickStage($event)"
+            >
+            </codx-carousel-stage>
+            <ng-container *ngIf="tmpTeps">
+              <codx-stages-detail
+                [dataStep]="tmpTeps"
+                [showColumnControl]="showColumnControl(tmpTeps.stepID)"
+                [formModel]="formModel"
+                [currentStep]="currentNameStep"
+                [instance]="dataSelect"
+                [titleDefault]="titleDefault"
+                [listStep]="listSteps"
+                [lstIDInvo]="lstInv"
+                [listUserIdRole]="ownerInstance"
+                [listStepReason]="getReasonByStepId(dataSelect.status)"
+                [stepNameEnd]="getStepNameIsComlepte(dataSelect)"
+                [proccesNameMove]="proccesNameMove"
+                (saveAssign)="saveAssign($event)"
+                (outDataStep)="saveDataStep($event)"
+                [viewsCurrent]="viewsCurrent"
+                [frmModelInstancesTask]="frmModelInstancesTask"
+                [lstStepProcess]="lstStepProcess"
+                [isOnlyView]="isOnlyView"
+              ></codx-stages-detail>
+              <!-- [stepID]="dataSelect.stepID"
             [permissionCloseInstances]="dataSelect?.permissionCloseInstances"
             [isDelete]="dataSelect.delete"
             [isEdit]="dataSelect.edit"
@@ -287,11 +293,11 @@
             "
             [isCreate]="dataSelect.create"
             [isClosed]="dataSelect.closed" -->
-          </ng-container>
-        </ng-container>
-        <ng-container *ngIf="viewModelDetail == 'F'">
-          <ng-container *ngFor="let item of listSteps">
-            <codx-field-detail
+            </ng-container>
+          </div>
+          <ng-container *ngIf="viewModelDetail == 'F'">
+            <ng-container *ngFor="let item of listSteps">
+              <!-- <codx-field-detail
               *ngIf="item?.fields?.length > 0"
               [dataStep]="item"
               [showColumnControl]="showColumnControl(item.stepID)"
@@ -309,10 +315,29 @@
               [viewsCurrent]="viewsCurrent"
               (saveDataStep)="saveDataStep($event)"
             >
-            </codx-field-detail>
+            </codx-field-detail> -->
+              <codx-fields-detail-temp
+                *ngIf="item?.fields?.length > 0"
+                [dataStep]="item"
+                [showColumnControl]="showColumnControl(item.stepID)"
+                [isUpdate]="
+                  dataSelect.write &&
+                  !dataSelect.closed &&
+                  (dataSelect.status == '1' || dataSelect.status == '2') &&
+                  item.stepStatus < '2'
+                "
+                [currentElmID]="currentElmID"
+                (inputElmIDCF)="inputElmIDCustomField($event)"
+                [isSaving]="isSaving"
+                (actionSaveCF)="actionSaveCustomField($event)"
+                [titleHeaderFormCF]="titleDefault"
+                [viewsCurrent]="viewsCurrent"
+                (saveDataStep)="saveDataStep($event)"
+              >
+              </codx-fields-detail-temp>
+            </ng-container>
           </ng-container>
-        </ng-container>
-      </div>
+        </div>
       </div>
     </ng-template>
 
@@ -369,32 +394,32 @@
   </div>
   <div class="">
     <codx-gantt-chart
-    [dataSource]="ganttDs"
-    [taskFields]="taskFields"
-    [taskbarHeight]="60"
-    [rowHeight]="60"
-    [readOnly]="true"
-    [templateTaskbar]="ganttItems"
-    [timelineSettings]="timelineSettings"
-    [columns]="columns"
-    [toolbar]="[]"
-  ></codx-gantt-chart>
-  <ng-template #ganttItems let-data>
-    <div
-      class="d-flex justify-content-center align-items-center"
-      (click)="clickDetailGanchart(data.recID)"
-      [ngStyle]="{
-        'background-color': getColor(data.recID),
-        'min-height': '35px',
-        'border-radius': '5px',
-        'min-width': '20px'
-      }"
-    >
-      <div class="fw-bold text-dark line-clamp line-clamp-1 px-1">
-        {{ data.name }}
+      [dataSource]="ganttDs"
+      [taskFields]="taskFields"
+      [taskbarHeight]="60"
+      [rowHeight]="60"
+      [readOnly]="true"
+      [templateTaskbar]="ganttItems"
+      [timelineSettings]="timelineSettings"
+      [columns]="columns"
+      [toolbar]="[]"
+    ></codx-gantt-chart>
+    <ng-template #ganttItems let-data>
+      <div
+        class="d-flex justify-content-center align-items-center"
+        (click)="clickDetailGanchart(data.recID)"
+        [ngStyle]="{
+          'background-color': getColor(data.recID),
+          'min-height': '35px',
+          'border-radius': '5px',
+          'min-width': '20px'
+        }"
+      >
+        <div class="fw-bold text-dark line-clamp line-clamp-1 px-1">
+          {{ data.name }}
+        </div>
       </div>
-    </div>
-  </ng-template>
+    </ng-template>
   </div>
 
   <!-- mô tả -->

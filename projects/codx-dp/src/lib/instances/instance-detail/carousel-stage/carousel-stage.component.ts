@@ -65,7 +65,7 @@ implements OnInit, AfterViewInit {
       this.clearDataBefore();
       this.listStep = changes['dataSource'].currentValue;
       this.handleDateMaxSize(this.listStep, this.maxSize);
-      this.status != '1' && this.autoClick(this.listStep);
+      this.autoClick(this.listStep);
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -82,7 +82,7 @@ implements OnInit, AfterViewInit {
       for (let i = 0; i < list.length; i += maxSize) {
         const combinedItem = { items: list.slice(i, i + maxSize) };
         this.selectedIndex == '0' &&
-          ( this.status == '2') && this.findStatusInDoing(combinedItem, index);
+          ( this.status == '2' || this.status == '1')  && this.findStatusInDoing(combinedItem, index);
         this.listTreeView.push(combinedItem);
         index++;
       }
@@ -116,10 +116,11 @@ implements OnInit, AfterViewInit {
   }
 
   findStatusInDoing(listStep, index) {
-    this.currentStep = this.listStep.findIndex( (item) => item.stepStatus == '1');
+    this.currentStep = this.listStep.findIndex( (item) => item.stepStatus == '1' ||  item.stepStatus == '2'  ) ;
     if (index) {
       var indexResult = listStep.items.findIndex(
-        (item) => item.stepStatus == '1'
+        (item) => item.stepStatus == '1' || item.stepStatus == '2'
+
       );
       if (indexResult > -1) {
 
@@ -147,13 +148,13 @@ implements OnInit, AfterViewInit {
     this.changeDetectorRef.detectChanges();
   }
   autoClick(listStep){
-    let stepCrr = listStep?.filter(x=>x.stepStatus == '1')[0];
+    let stepCrr = listStep?.filter(x=>x.stepStatus == '1' || x.isSuccessStep || x.isFailStep)[0];
     var stepId = '';
     if(stepCrr) {
       stepId = stepCrr.stepID;
     }
     else {
-      stepId = this.guidEmpty;
+      stepId = listStep[0]?.stepID;
     }
     this.idElementCrr = stepId;
   }

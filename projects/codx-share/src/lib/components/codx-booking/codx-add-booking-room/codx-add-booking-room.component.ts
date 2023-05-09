@@ -27,11 +27,13 @@ import {
   Equipments,
   Resource,
 } from '../codx-booking.model';
-const _copyMF = 'SYS04';
-const _addMF = 'SYS01';
-const _editMF = 'SYS03';
-const _EPParameters = 'EPParameters';
-const _EPRoomParameters = 'EPRoomParameters';
+import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
+const _addMF = EPCONST.MFUNCID.Add;
+const _copyMF = EPCONST.MFUNCID.Copy;
+const _editMF = EPCONST.MFUNCID.Edit;
+const _viewMF = EPCONST.MFUNCID.View;
+const _EPParameters = EPCONST.PARAM.EPParameters;
+const _EPRoomParameters = EPCONST.PARAM.EPRoomParameters;
 
 export class Device {
   id;
@@ -131,8 +133,9 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   isPopupStationeryCbb: boolean;
   idUserSelected: any;
   popover: any;
-  listUserID = [];  
+  listUserID = [];
   guestControl: any;
+  viewOnly = false;
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -150,6 +153,9 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     this.funcType = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
+    if(dialogData?.data[4]!=null && dialogData?.data[4]==true){
+      this.viewOnly=true;
+    }
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
@@ -293,8 +299,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       this.codxBookingService
         .getBookingItems(this.data.recID)
         .subscribe((res: any) => {
-          if (res && res.bookingItems) {
-            res.bookingItems.forEach((item) => {
+          if (res) {
+            Array.from(res).forEach((item:any) => {
               let tmpSta = new BookingItems();
               (tmpSta.itemID = item?.itemID),
                 (tmpSta.quantity = item?.quantity),
@@ -533,30 +539,18 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   valueStartTimeChange(event: any) {
     if (event?.data) {
       this.startTime = event.data.fromDate;
+      this.validateStartEndTime(this.startTime, this.endTime);
       this.fullDayChangeWithTime();
       this.changeDetectorRef.detectChanges();
-    }
-    if (!this.validateStartEndTime(this.startTime, this.endTime)) {
-      // this.checkLoop = !this.checkLoop;
-      // if (!this.checkLoop) {
-      //   this.notificationsService.notifyCode('EP002');
-      // }
-      return;
     }
   }
 
   valueEndTimeChange(event: any) {
     if (event?.data) {
       this.endTime = event.data.toDate;
+      this.validateStartEndTime(this.startTime, this.endTime);
       this.fullDayChangeWithTime();
       this.changeDetectorRef.detectChanges();
-    }
-    if (!this.validateStartEndTime(this.startTime, this.endTime)) {
-      // this.checkLoop = !this.checkLoop;
-      // if (!this.checkLoop) {
-      //   this.notificationsService.notifyCode('EP002');
-      // }
-      return;
     }
   }
 
@@ -767,7 +761,10 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   }
 
   deleteAttender(attID: string) {
-    var tempDelete;
+    if(this.viewOnly){
+      return;
+    }
+    let tempDelete;
     this.resources.forEach((item) => {
       if (item.userID == attID) {
         tempDelete = item;
@@ -849,6 +846,9 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   }
 
   deleteStationery(itemID: any) {
+    if(this.viewOnly){
+      return;
+    }
     if (itemID != null && this.lstStationery != null) {
       this.lstStationery = this.lstStationery.filter((item) => {
         return item?.itemID != itemID;

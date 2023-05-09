@@ -1,70 +1,4 @@
-<ng-container *ngIf="addFieldsControl == '1'">
-  <!-- <codx-layout-add
-    #formlayoutadd
-    [title]="title"
-    [subHeader]="subHeader"
-    [tabInfo]="tabInfo"
-    [tabContent]="tabContent"
-    [openMore]="true"
-    (buttonClick)="buttonClick($event)"
-    [dialog]="dialog"
-    [formModel]="formModelCrr"
-    [footer]="footer"
-    [data]="instance"
-    (setTitle)="setTitle($event)"
-  ></codx-layout-add> -->
-
-  <!-- <ng-template #tabGeneralInfo>
-    <ng-container
-      [ngTemplateOutlet]="tabGeneralInfoDetail"
-      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
-    ></ng-container>
-  </ng-template>
-  <ng-template #tabLocation>
-    <ng-container
-      [ngTemplateOutlet]="tabLocationDetail"
-      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
-    ></ng-container>
-  </ng-template>
-
-  <ng-template #tabOpporGeneralInfo>
-    <ng-container
-      [ngTemplateOutlet]="tabOpporGeneralInfoDetail"
-      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
-    ></ng-container>
-  </ng-template>
-
-  <ng-template #tabInputInfo>
-    <ng-container [ngTemplateOutlet]="tabInputInfoDetail"></ng-container>
-  </ng-template> -->
-</ng-container>
-
-<ng-container *ngIf="addFieldsControl == '2'">
-
-
-  <!-- <ng-template #body>
-    <ng-container
-      [ngTemplateOutlet]="tabGeneralInfoDetail"
-      [ngTemplateOutletContext]="{ $implicit: form }"
-    ></ng-container>
-    <ng-container [ngTemplateOutlet]="tabInputInfoDetail"></ng-container>
-  </ng-template> -->
-</ng-container>
-
-<codx-form
-#form
-[headerText]="titleAction"
-[subHeader]="subHeader"
-[body]="body"
-[openMore]="true"
-[dialog]="dialog"
-[formModel]="formModel"
-[footer]="footer"
-[data]="deal"
-></codx-form>
-
-
-<ng-template #subHeader>
+<ng-template #subHeader let-form>
   <codx-tag
     field="tags"
     [entityName]="formModel.entityName"
@@ -74,7 +8,46 @@
   ></codx-tag>
 </ng-template>
 
-<ng-template #body>
+<ng-template #body let-form>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="DealID"
+          default="Mã cơ hội"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+          type="text"
+          field="dealID"
+          [crrValue]="deal?.dealID"
+          [disabled]="deal?.dealID ? true: false"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6" *ngIf="listCbxProcess.length > 0 && listCbxProcess != null">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="ProcessID"
+          [Group]="form.formGroup"
+          default="Quy trình"
+        >
+        </codx-label>
+        <ejs-combobox
+        id="recID"
+        [dataSource]="listCbxProcess"
+        [fields]="fieldCbxProcess"
+        [value]="deal?.processID"
+        (valueChange)="cbxProcessChange($event,'processID')"
+      ></ejs-combobox>
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-6">
       <div class="form-group">
@@ -86,11 +59,11 @@
         >
         </codx-label>
         <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="dealName"
-        [crrValue]="deal?.dealName"
-        (valueChange)="valueChange($event)"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="dealName"
+          [crrValue]="deal?.dealName"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -101,10 +74,16 @@
           [formModel]="form.formModel"
           fiedName="CampaignID"
           [Group]="form.formGroup"
-          [default]="'Chiến dịch'"
+          default="Chiến dịch"
         >
         </codx-label>
-        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+        <ejs-combobox
+        id="recID"
+        [dataSource]="listCbxCampaigns"
+        [fields]="fieldCbxCampaigns"
+        (valueChange)="cbxChange($event,'campaignID')"
+        [value]="deal?.campaignID"
+      ></ejs-combobox>
       </div>
     </div>
   </div>
@@ -112,115 +91,212 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
-          fiedName=""
-          default="Tổ chức"
+          fiedName="CustomerID"
+          default="Khách hàng"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-label>
-        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="customerID"
+          [refValue]="'CMCustomers'"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+
+
       </div>
     </div>
     <div class="col-6">
       <div class="form-group">
         <codx-label
           [formModel]="form.formModel"
-          fiedName="SalespersonID"
+          fiedName="ChannelID"
           [Group]="form.formGroup"
+          default="Kênh"
+        >
+        </codx-label>
+        <ejs-combobox
+        id="recID"
+        [dataSource]="listCbxChannels"
+        [fields]="fieldCbxChannels"
+        (valueChange)="cbxChange($event,'channelID')"
+        [value]="deal?.channelID"
+      ></ejs-combobox>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="Category"
+          default="Loại cơ hội"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+          field="category"
+          type="valuelist"
+          refValue="CRM010"
+          crrValue="2"
+          [crrValue]="deal?.category"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="DealValue"
+          default="Doanh số dư kiến"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fied="dealValue"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="Owner"
+          default="Người phụ trách"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+
+    <!-- <codx-popup-participants
+      [lstParticipants]="listParticipants"
+      [dialog]="dialog"
+      [isType]="'I'"
+      (eventUser)="eventUser($event)"
+      [owner]="owner"
+    ></codx-popup-participants> -->
+    <ejs-combobox [dataSource]="listParticipants"
+    (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
+    [allowFiltering]='true' [value]="owner"></ejs-combobox>
+
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="Probability"
+          default="Tỷ lệ thành công"
+        >
+        </codx-label>
+        <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        fied="probability"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+          fiedName="EndDate"
+          default="Ngày đến hạn dự kiến"
+        >
+        </codx-label>
+        <codx-input
+        type="datetime"
+        field="endDate"
+        format="d"
+        [crrValue]="deal?.endDate"
+        (valueChange)="valueChangeDate($event)"
+      >
+      </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="SalespersonID"
           default="Nhân viên bán hàng"
         >
         </codx-label>
-        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          fiedName="ContactID"
-          [default]="'Liên hệ'"
-        >
-        </codx-label>
-        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          fiedName="ConsultantID"
-          [default]="'Nhân viên tư vấn'"
-        >
-        </codx-label>
-        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-  <div class="col-6">
-    <div class="form-group">
-      <codx-label
-        fiedName=""
-        [default]="'Loại cơ hội'"
-      >
-      </codx-label>
-      <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
-    </div>
-  </div>
-  <div class="col-6">
-    <div class="form-group">
-      <codx-label
+        <codx-input
         [formModel]="form.formModel"
         [Group]="form.formGroup"
-        fiedName=""
-        default="Doanh số dư kiến"
+        field="salespersonID"
+        [crrValue]="deal?.salespersonID"
+        (valueChange)="valueChange($event)"
       >
-      </codx-label>
-      <codx-input
-      type="text"
-      (valueChange)="valueChange($event)"
-    >
-    </codx-input>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-6">
-    <div class="form-group">
-      <codx-label
-        fiedName=""
-        default="Nguồn cơ hội"
-      >
-      </codx-label>
-      <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
-    </div>
-  </div>
-  <div class="col-6">
-    <div class="form-group">
-      <codx-label
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        fiedName="Probability"
-        default="Tỷ lệ thành công"
-      >
-      </codx-label>
-      <!-- <codx-input
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      fiedName="probability"
-      (valueChange)="valueChange($event)"
-    >
-    </codx-input> -->
-    <codx-input
-    type="text"
-    (valueChange)="valueChange($event)"
-  >
-  </codx-input>
+      </codx-input>
 
+      </div>
     </div>
   </div>
-</div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="Memo"
+          default="Mô tả"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="memo"
+          [crrValue]="deal?.memo"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+
+
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+          fiedName="ConsultantID"
+          default="Nhân viên tư vấn"
+        >
+        </codx-label>
+        <codx-input
+        field="consultantID"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        [crrValue]="deal?.salespersonID"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+      </div>
+    </div>
+  </div>
 </ng-template>
 
-<ng-template #footer>
+<ng-template #footer let-form>
   <div class="d-flex justify-content-between">
     <div></div>
     <button
@@ -232,3 +308,74 @@
     </button>
   </div>
 </ng-template>
+
+<ng-template #tabCustomFieldDetail let-form>
+  <ng-container *ngIf="listInstanceSteps?.length > 0">
+    <ng-container *ngFor="let step of listInstanceSteps">
+      <ng-container *ngIf="step?.fields?.length > 0">
+        <ng-container *ngFor="let item of step.fields">
+          <div class="form-group">
+            <codx-input-custom-field
+              [customField]="item"
+              [checkValid]="false"
+              [objectId]="item.recID"
+              [objectType]="'DP_Instances'"
+              [formModel]="dialog.formModel"
+              (valueChangeCustom)="valueChangeCustom($event)"
+            >
+            </codx-input-custom-field>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-container *ngIf="addFieldsControl == '1'">
+  <codx-layout-add
+    #formlayoutadd
+    [title]="titleAction"
+    [subHeader]="subHeader"
+    [tabInfo]="tabInfo"
+    [tabContent]="tabContent"
+    [openMore]="true"
+    [dialog]="dialog"
+    [formModel]="formModel"
+    [footer]="footer"
+    [data]="deal"
+  ></codx-layout-add>
+
+  <ng-template #tabGeneralInfoDetail>
+    <ng-container [ngTemplateOutlet]="body"
+    [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+  <!-- <ng-template #tabLocation>
+    <ng-container
+      [ngTemplateOutlet]="tabLocationDetail"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template> -->
+
+  <ng-template #tabInputInfo>
+    <ng-container [ngTemplateOutlet]="tabCustomFieldDetail"
+    [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+</ng-container>
+
+<!-- <ng-container *ngIf="addFieldsControl == '2'"> </ng-container>
+
+<ng-template #tabGeneralInfoDetail let-form> </ng-template> -->
+
+<!-- <codx-form
+  #form
+  [headerText]="titleAction"
+  [subHeader]="subHeader"
+  [body]="body"
+  [openMore]="true"
+  [dialog]="dialog"
+  [formModel]="formModel"
+  [footer]="footer"
+  [data]=""
+></codx-form> -->

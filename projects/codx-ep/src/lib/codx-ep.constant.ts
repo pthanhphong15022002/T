@@ -17,6 +17,7 @@ export const EPCONST = {
     CA_History:'EP_HistoryCards',
 
   },
+  
   BUSINESS: {
     Bookings: 'BookingsBusiness',
     Resources: 'ResourcesBusiness',
@@ -24,6 +25,7 @@ export const EPCONST = {
     ResourceTrans: 'ResourceTransBusiness',
     Warehouses: 'WarehousesBusiness',
   },
+
   FUNCID: {
     Report:'EPR',
     R_Category:'EPS21',
@@ -37,21 +39,10 @@ export const EPCONST = {
     CA_Get:'EPT22',
     CA_Return:'EPT23',
     S_Bookings:'EPT31',
-    S_Allocation:'EPT32',
+    S_Allocate:'EPT32',
     R_Approval:'EPT401',
     C_Approval:'EPT402',
     S_Approval:'EPT403',
-  },
-
-  R_FUNCID: {
-    
-  },
-
-  C_FUNCID: {
-    
-  },
-  S_FUNCID: {
-    
   },
 
   MFUNCID: {
@@ -59,7 +50,7 @@ export const EPCONST = {
     Delete: 'SYS02',
     Edit: 'SYS03',
     Copy: 'SYS04',
-
+    View:'ViewEP',
     //Room
     R_Reschedule:'EP4T1101',
     R_Invite:'EP4T1102',
@@ -93,7 +84,12 @@ export const EPCONST = {
 
     
   },
-
+  PARAM:{
+    EPParameters : 'EPParameters',
+    EPCarParameters : 'EPCarParameters',
+    EPStationeryParameters : 'EPStationeryParameters',
+    EPRoomParameters : 'EPRoomParameters',
+  },
   MES_CODE:{
     Success:'SYS034',
   },
@@ -103,7 +99,7 @@ export const EPCONST = {
     New:'1',
     Released:'3',
     Rejected:'4',
-    Approved:'5'
+    Approved:'5',
 
   },
 
@@ -114,10 +110,7 @@ export const EPCONST = {
       Driver:'3',
       EpCard:'4',
       Stationery:'6',
-
     },
-
-    
   },
   
 

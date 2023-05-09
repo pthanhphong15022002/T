@@ -14,6 +14,7 @@ import {
   NotificationsService,
   DialogData,
   CodxInputComponent,
+  CodxComboboxComponent,
 } from 'codx-core';
 import { CashPaymentLine } from '../../../models/CashPaymentLine.model';
 import { CashPayment } from '../../../models/CashPayment.model';
@@ -37,6 +38,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   cashpaymentline: CashPaymentLine;
   cashpayment: CashPayment;
   lockFields: any;
+  journal : any;
   objectcashpaymentline: Array<CashPaymentLine> = [];
   constructor(
     private inject: Injector,
@@ -54,6 +56,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.cashpayment = dialogData.data?.datacash;
     this.type = dialogData.data?.type;
     this.lockFields = dialogData.data?.lockFields;
+    this.journal = this.dialogData.data.journal;
     this.cache
       .gridViewSetup('CashPaymentsLines', 'grvCashPaymentsLines')
       .subscribe((res) => {
@@ -67,30 +70,99 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   //#region Init
   onInit(): void {}
   ngAfterViewInit() {
-    this.formModel = this.form?.formModel;
-    this.form.formGroup.patchValue(this.cashpaymentline);
-    this.dt.detectChanges();
-
-    // this.journalService.setAccountCbxDataSourceByJournal(
-    //   this.dialogData.data.journal,
-    //   this.cbxAccountID,
-    //   this.cbxOffsetAcctID
-    // );
-
-    // this.form.formGroup.patchValue({
-    //   accountID: this.cbxAccountID.crrValue,
-    //   offsetAcctID: this.cbxOffsetAcctID.crrValue,
-    // });
+    this.loadInit();
   }
   //#endregion
 
   //#region Event
-  valueChange(e: any) {
+  lineChanged(e: any) {
     this.cashpaymentline[e.field] = e.data;
+    const field = [
+      'accountid',
+      'offsetacctid',
+      'objecttype',
+      'objectid',
+      'dr',
+      'cr',
+      'dr2',
+      'cr2',
+      'reasonid',
+      'referenceno',
+    ];
+    if (field.includes(e.field.toLowerCase())) {
+      this.api
+        .exec('AC', 'CashPaymentsLinesBusiness', 'ValueChangedAsync', [
+          this.cashpayment,
+          this.cashpaymentline,
+          e.field,
+          e.data?.isAddNew,
+        ])
+        .subscribe((res: any) => {
+          if (res && res.line)
+            this.cashpaymentline = res.line;
+        });
+    }
+
+    if (e.field.toLowerCase() == 'sublgtype' && e.value) {
+      if (e.value === '3') {
+        //Set lock field
+      } else {
+        this.api
+          .exec<any>(
+            'AC',
+            'AC',
+            'CashPaymentsLinesBusiness',
+            'SetLockFieldAsync'
+          )
+          .subscribe((res) => {
+            if (res) {
+              //Set lock field
+            }
+          });
+      }
+    }
   }
   //#endregion
 
   //#region Function
+  loadInit() {
+    this.formModel = this.form?.formModel;
+    this.form.formGroup.patchValue(this.cashpaymentline);
+    if (this.journal?.drAcctControl === '1') {
+      (
+        this.cbxAccountID.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(
+        ['AccountID=@0'],
+        [this.journal?.drAcctID]
+      );
+    }
+    if (this.journal?.drAcctControl === '2') {
+      (
+        this.cbxAccountID.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(
+        ['@0.Contains(AccountID)'],
+        [`[${this.journal?.drAcctID}]`]
+      );
+    }
+    if (this.journal?.crAcctControl === '1') {
+      (
+        this.cbxOffsetAcctID.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(
+        ['AccountID=@0'],
+        [this.journal?.crAcctID]
+      );
+    }
+    if (this.journal?.crAcctControl === '2') {
+      (
+        this.cbxOffsetAcctID.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(
+        ['@0.Contains(AccountID)'],
+        [`[${this.journal?.crAcctID}]`]
+      );
+    }
+    this.dt.detectChanges();
+
+  }
   close() {
     this.dialog.close();
   }
