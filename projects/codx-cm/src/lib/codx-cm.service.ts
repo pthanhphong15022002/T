@@ -128,6 +128,15 @@ export class CodxCmService {
     );
   }
 
+  addDealCompetitor(dealCompetitor){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'AddDealCompetitorAsync',
+      [dealCompetitor]
+    );
+  }
+
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = {};

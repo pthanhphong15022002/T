@@ -25,6 +25,14 @@ export class PopupAddDealcompetitorComponent {
   }
 
   onSave(){
-
+    this.cmSv.addDealCompetitor(this.data).subscribe(res =>{
+      if(res){
+        this.dialog.close(res);
+        this.notiService.notifyCode('SYS006');
+      }else{
+        this.dialog.close();
+        this.notiService.notifyCode('SYS023');
+      }
+    })
   }
 }
