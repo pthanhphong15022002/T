@@ -641,7 +641,6 @@ export class EmployeeInfoDetailComponent extends UIComponent{
       opFamily.pageLoading = false;
       this.hrService.getEFamilyWithDataRequest(opFamily).subscribe((res) => {
         if (res) this.lstFamily = res[0];
-        debugger
       });
 
       // let opPassport = new DataRequest();

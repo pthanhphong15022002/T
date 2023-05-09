@@ -137,6 +137,33 @@ export class CodxCmService {
     );
   }
 
+  updateDealCompetitorAsync(dealCompetitor){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'UpdateDealCompetitorAsync',
+      [dealCompetitor]
+    );
+  }
+
+  deleteDealCompetitorAsync(recID){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'DeleteDealCompetitorAsync',
+      [recID]
+    );
+  }
+
+  getListAddressByListID(lstID){
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'GetListAddressByListIDAsync',
+      [lstID]
+    );
+  }
+
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = {};
@@ -147,7 +174,26 @@ export class CodxCmService {
     return formModel;
   }
 
+  loadList(data, list = [], action) {
+    var listTmp = [];
+    if (list != null && list.length > 0) {
+      listTmp = list;
+      var index = listTmp.findIndex((x) => x.recID == data.recID);
+      if (action != 'delete') {
+        if (index != -1) {
+          listTmp[index] = data;
+        } else {
+          listTmp.push(Object.assign({}, data));
+        }
+      } else {
+        listTmp.splice(index, 1);
+      }
+    } else {
+      listTmp.push(Object.assign({}, data));
+    }
 
+    return listTmp;
+  }
   // #region API OF BAO
 
   // Combox
@@ -312,15 +358,15 @@ export class CodxCmService {
     );
   }
 
-  // genAutoNumber(funcID: any, entityName: string, key: any) {
-  //   return this.api.execSv<any>(
-  //     'SYS',
-  //     'AD',
-  //     'AutoNumbersBusiness',
-  //     'GenAutoNumberAsync',
-  //     [funcID, entityName, key]
-  //   );
-  // }
+  genAutoNumber(funcID: any, entityName: string, key: any) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumbersBusiness',
+      'GenAutoNumberAsync',
+      [funcID, entityName, key]
+    );
+  }
   //#endregion
 
   //contracts -- nvthuan
