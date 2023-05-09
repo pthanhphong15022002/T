@@ -19,10 +19,11 @@ export class LayoutComponent extends LayoutBaseComponent {
   constructor(inject: Injector,
     private callfc: CallFuncService) {
     super(inject);
-    this.module = 'TM';
     this.layoutModel.toolbarDisplay = false;
   }
-
+  funcID:any = '';
+  func:any={};
+  submenu:any;
   onInit(): void {
     // this.funcs$.subscribe(res => {
     //   console.log(res);
@@ -31,9 +32,8 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
 
   onAfterViewInit(): void {
-
   }
-  
+
   openFormNoteDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';
