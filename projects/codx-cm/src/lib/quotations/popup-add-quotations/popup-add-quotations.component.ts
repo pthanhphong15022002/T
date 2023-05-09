@@ -208,8 +208,8 @@ export class PopupAddQuotationsComponent implements OnInit {
               data = res?.event;
               this.gridQuationsLines.addRow(data, idx,true);
               this.quotationLinesAddNew.push(data);
-              this.quotationLines.push(data);
-              this.gridQuationsLines.dataSource = this.quotationLines
+              // this.quotationLines.push(data);
+              // this.gridQuationsLines.dataSource = this.quotationLines
               this.loadTotal();
               this.changeDetector.detectChanges();
             }
