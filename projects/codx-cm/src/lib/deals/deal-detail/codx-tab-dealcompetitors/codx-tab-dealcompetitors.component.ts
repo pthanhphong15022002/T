@@ -9,6 +9,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { PopupAddDealcompetitorComponent } from './popup-add-dealcompetitor/popup-add-dealcompetitor.component';
+import { CM_DealsCompetitors } from '../../../models/cm_model';
 
 @Component({
   selector: 'codx-tab-dealcompetitors',
@@ -56,7 +57,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     this.formModel = formModel;
   }
 
-  clickAddCompetitor(titleMore, action) {
+  clickAddCompetitor(titleMore, action, data = new CM_DealsCompetitors()) {
     this.cache
       .gridViewSetup('CMDealsCompetitors', 'grvCMDealsCompetitors')
       .subscribe((res) => {
@@ -66,6 +67,8 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
           title: titleMore,
           gridViewSetup: res,
           action: action,
+          dealID: this.dealID,
+          data: data
         };
         var dialog = this.callFc.openForm(
           PopupAddDealcompetitorComponent,

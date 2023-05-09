@@ -428,5 +428,20 @@ export class CM_Contracts {
   createdBy: string;//Người tạo
   modifiedOn: Date;//Ngày chỉnh sửa
   modifiedBy: string;//Người chỉnh sửa
-  
+
+}
+
+export class CM_DealsCompetitors{
+  recID: string;
+  dealID: string;
+  competitorID: string;
+  strengths: string;
+  weaknesses: string;
+  rating: string;
+  status: string;
+  note: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
 }

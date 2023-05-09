@@ -41,12 +41,15 @@ export class DealDetailComponent  implements OnInit {
   ]
   constructor(
     private changeDetectorRef: ChangeDetectorRef
-  ) { 
+  ) {
+
+    this.nameDetail = 'Information'
+    this.listTab(this.funcID);
   }
 
   ngOnInit(): void {
   }
-  
+
   ngAfterViewInit(): void {
    // this.tabControl.push({ name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: this.quotations});
     //this.tabControl.push({ name: 'References', textDefault: 'Liên kết', isActive: false, template: null});
@@ -58,8 +61,6 @@ export class DealDetailComponent  implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.listTab(this.funcID);
-    this.nameDetail == 'Information'
   }
 
   listTab(funcID){
@@ -69,7 +70,6 @@ export class DealDetailComponent  implements OnInit {
         { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-add_shopping_cart', isActive: false },
         { name: 'Opponent', textDefault: 'Đối thủ', icon: 'icon-shopping_bag', isActive: false },
         { name: 'Task', textDefault: 'Quy trình', icon: 'icon-shopping_bag', isActive: false },
-        { name: 'Product', textDefault: 'Sản phẩm', icon: 'icon-shopping_bag', isActive: false },
       ]
   }
 
@@ -89,7 +89,7 @@ export class DealDetailComponent  implements OnInit {
 
   changeFooter(e){
     console.log(e);
-    
+
   }
 }
 
