@@ -17,6 +17,7 @@ import {
   NotificationsService,
   AuthStore,
   UIComponent,
+  RequestOption,
 } from 'codx-core';
 import { CM_Deals } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
@@ -192,8 +193,8 @@ export class PopupAddDealComponent
       }
     this.convertDataInstance(this.deal,this.instance);
     this.insertInstance();
-    this.insertDeal();
-   // this.onAdd();
+   // this.insertDeal();
+    this.onAdd();
 
 
   }
@@ -269,14 +270,12 @@ export class PopupAddDealComponent
         } else this.dialog.close();
       });
   }
-  beforeSave(op) {
-    op.service = 'CM';
-    op.entityName = 'CM_Deals';
+  beforeSave(option: RequestOption) {
     var data = this.deal;
     if (this.action == this.actionAdd || this.action == this.actionCopy) {
-      op.method = 'AddDealAsync';
-      op.className = 'DealsBusiness';
-      op.data = data;
+      option.methodName = 'AddDealAsync';
+      option.className = 'DealsBusiness';
+      option.data = data;
       return true;
     }
     return false;
@@ -356,12 +355,13 @@ export class PopupAddDealComponent
         this.listInstanceSteps = res[0];
         this.deal.endDate = this.HandleEndDate(this.listInstanceSteps, this.action, null);
         this.deal.dealID = res[2];
+        this.listParticipants = obj.permissions;
         this.changeDetectorRef.detectChanges();
       }
     });
   }
 
-   insertInstance() {
+  insertInstance() {
     var data = [this.instance, this.listInstanceSteps,null];
     this.codxCmService.addInstance(data).subscribe((instance)=> {
       if(instance){

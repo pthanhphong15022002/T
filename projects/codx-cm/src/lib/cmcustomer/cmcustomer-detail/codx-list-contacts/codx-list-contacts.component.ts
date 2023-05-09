@@ -186,7 +186,8 @@ export class CodxListContactsComponent implements OnInit{
         if (!(data.recID == contactPerson.recID)) {
           this.cmSv.updateContactCrm(data.recID).subscribe((res) => {
             if (res) {
-              this.getListContactByObjectID(this.objectID);
+              // this.getListContactByObjectID(this.objectID);
+              this.listContacts = this.cmSv.loadList(data, this.listContacts, 'delete');
               this.notiService.notifyCode('SYS008');
               this.changeDetectorRef.detectChanges();
             }

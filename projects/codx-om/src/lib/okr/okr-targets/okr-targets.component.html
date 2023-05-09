@@ -115,7 +115,7 @@
                 <span class="icon-i-reply-all-fill icon-16 text-primary"></span>
               </span>
             </div>
-            <div class="d-flex ps-9 align-items-end">
+            <div class="d-flex ps-9 align-items-center">
               <div class="d-flex flex-column align-items-center kr-process w-150px me-7  pb-2">
 
               </div>
@@ -129,7 +129,7 @@
                   item?.okrTasks ? item?.okrTasks?.length : 0 }}</span>
               </div>
               <codx-comment-temp [objectID]="item?.recID" [viewType]="3" ngbTooltip="Bình luận"></codx-comment-temp>
-              <span class="ms-2 me-2" *ngIf="okrFM?.obFM">
+              <span class=" me-2" *ngIf="okrFM?.obFM">
                 <codx-mfunc [formModel]="okrFM?.obFM" type="view" [dataItem]="item" (clickMF)="clickMF($event,item)"
                   (changeDataMF)="changeDataOBMF($event,item)"></codx-mfunc>
               </span>
@@ -153,21 +153,23 @@
             <div class="d-flex flex-wrap fs-7">
               <div class="d-flex align-items-center">
                 <span class=" text-gray-500 me-1">{{okrGrv?.krGrv?.target?.headerText+':'}}</span>
-                <span class="me-1" [innerHTML]="item?.target "></span>
+                <span *ngIf="item?.umid=='%'" class="me-1" [innerHTML]="item?.target | formatvalue : okrFM?.krFM : 'progress' | async"></span>
+                <span *ngIf="item?.umid!='%'" class="me-1" [innerHTML]="item?.target | formatvalue : okrFM?.krFM : 'target' | async"></span>
                 <span [innerHTML]="item?.umName"></span>
               </div>
               <span class="mx-2 text-gray-400">|</span>
               <div class="d-flex align-items-center">
                 <span class="text-gray-500 me-1">{{okrGrv?.krGrv?.current?.headerText+':'}}</span>
-                <span class="me-1" [innerHTML]="item?.current "></span>
+                <span *ngIf="item?.umid=='%'" class="me-1" [innerHTML]="item?.current | formatvalue : okrFM?.krFM : 'progress' | async"></span>
+                <span *ngIf="item?.umid!='%'" class="me-1" [innerHTML]="item?.current | formatvalue : okrFM?.krFM : 'target' | async"></span>
                 <span [innerHTML]="item?.umName"></span>
               </div>
               <span class="mx-2 text-gray-400">|</span>
               <div class="d-flex align-items-center">
                 <span class="text-gray-500 me-1">{{okrGrv?.krGrv?.actual?.headerText+':'}}</span>
-                <span class="me-1" [innerHTML]="item?.actual "></span>
+                <span *ngIf="item?.umid=='%'" class="me-1" [innerHTML]="item?.actual | formatvalue : okrFM?.krFM : 'progress' | async"></span>
+                <span *ngIf="item?.umid!='%'" class="me-1" [innerHTML]="item?.actual | formatvalue : okrFM?.krFM : 'target' | async"></span>
                 <span [innerHTML]="item?.umName"></span>
-                <!-- <span [innerHTML]="item?.umid | formatvalue : okrFM?.krFM : 'UMID' | async"></span> -->
               </div>
             </div>
 
@@ -189,7 +191,7 @@
               <span class="icon-i-reply-all-fill icon-16 text-primary"></span>
             </span>
           </div>
-          <div class="d-flex ps-9 align-items-end">
+          <div class="d-flex ps-9 align-items-center justify-content-center">
             <div class="d-flex flex-column align-items-center kr-process w-150px me-7 pb-2" [ngbTooltip]="'Tiến độ'"
               (click)="showHistoryCheckIn($event,item)">
               <span class="mb-1" *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
@@ -215,12 +217,12 @@
                 item?.okrTasks ? item?.okrTasks?.length : 0 }}</span>
             </div>
             <codx-comment-temp [objectID]="item?.recID" [viewType]="3" ngbTooltip="Bình luận"></codx-comment-temp>
-            <span class="ms-2 me-2" *ngIf="item?.okrType==krType && okrFM?.krFM">
+            <span class="me-2" *ngIf="item?.okrType==krType && okrFM?.krFM">
               <codx-mfunc [formModel]="okrFM?.krFM" type="view" [dataItem]="item"
                 (clickMF)="clickKRMF($event,item,false)"
                 (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
             </span>
-            <span class="ms-2 me-2" *ngIf=" item?.okrType==skrType && okrFM?.skrFM">
+            <span class="me-2" *ngIf=" item?.okrType==skrType && okrFM?.skrFM">
               <codx-mfunc [formModel]="okrFM?.skrFM" type="view" [dataItem]="item"
                 (clickMF)="clickKRMF($event,item,true)" (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
             </span>

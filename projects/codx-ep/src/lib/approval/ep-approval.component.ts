@@ -277,7 +277,8 @@ export class EPApprovalComponent extends UIComponent {
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
       event.forEach((func) => {
-        if (func.functionID == EPCONST.MFUNCID.Copy) {
+        if (func.functionID == EPCONST.MFUNCID.Copy||
+          func.functionID == EPCONST.MFUNCID.C_CardTrans) {
           func.disabled = true;
         }
       });
@@ -297,13 +298,35 @@ export class EPApprovalComponent extends UIComponent {
             func.functionID == EPCONST.MFUNCID.R_Undo ||
             func.functionID == EPCONST.MFUNCID.C_Undo ||
             func.functionID == EPCONST.MFUNCID.S_Undo ||
-            func.functionID == EPCONST.MFUNCID.C_DriverAssign ||
-            func.functionID == EPCONST.MFUNCID.C_CardTrans
+            func.functionID == EPCONST.MFUNCID.C_DriverAssign 
           ) {
             func.disabled = true;
           }
         });
-      } else {
+      } else if (data.approveStatus == '4') {
+        event.forEach((func) => {
+          if (
+            
+            func.functionID == EPCONST.MFUNCID.R_Undo ||
+            func.functionID == EPCONST.MFUNCID.C_Undo ||
+            func.functionID == EPCONST.MFUNCID.S_Undo 
+          ) {
+            func.disabled = false;
+          }
+          if (
+            func.functionID == EPCONST.MFUNCID.R_Approval ||
+            func.functionID == EPCONST.MFUNCID.C_Approval ||
+            func.functionID == EPCONST.MFUNCID.S_Approval ||
+            func.functionID == EPCONST.MFUNCID.R_Reject ||
+            func.functionID == EPCONST.MFUNCID.C_Reject ||
+            func.functionID == EPCONST.MFUNCID.S_Reject ||
+            func.functionID == EPCONST.MFUNCID.C_DriverAssign 
+          ) {
+            func.disabled = true;
+          }
+        });
+      }      
+      else if (data.approveStatus == '5') {
         event.forEach((func) => {
           if (
             func.functionID == EPCONST.MFUNCID.R_Approval ||

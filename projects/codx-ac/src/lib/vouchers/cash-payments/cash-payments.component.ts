@@ -27,6 +27,7 @@ import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { SettledInvoices } from '../../models/SettledInvoices.model';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'lib-cash-payments',
@@ -103,17 +104,7 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Init
   onInit(): void {
     this.userID = this.authStore.get().userID;
-    const options = new DataRequest();
-    options.entityName = 'AC_Journals';
-    options.predicates = 'JournalNo=@0';
-    options.dataValues = this.journalNo;
-    options.pageLoading = false;
-    this.acService.loadDataAsync('AC', options).subscribe((res) => {
-      this.journal = res[0]?.dataValue
-        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
-        : res[0];
-      this.approval = res[0].approval;
-    });
+    this.loadjounal();
   }
 
   ngAfterViewInit() {
@@ -433,5 +424,20 @@ export class CashPaymentsComponent extends UIComponent {
   formatDate(date){
     return new Date(date).toLocaleDateString();;
   }
+
+  loadjounal(){
+    const options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.journalNo;
+    options.pageLoading = false;
+    this.api
+      .execSv<any>('AC','Core','DataBusiness', 'LoadDataAsync',options)
+      .pipe(map((r) => r[0]))
+      .subscribe((res) => {
+        this.journal = res[0];
+      });
+  }
+
   //#endregion
 }
