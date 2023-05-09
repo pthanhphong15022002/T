@@ -1,3 +1,4 @@
+<div class="card-ep-report">
 <codx-views
   #view
   [funcID]="funcID"
@@ -8,6 +9,7 @@
   (onActions)="onActions($event)"
   >
 </codx-views>
+</div>
 <ng-template #templateListCard let-data>
   <!-- <codx-img [cssClass]="'w-100 h-100'" [objectId]="data.recID" [objectName]="data.reportName" [objectType]="'SYS_ReportList'"  [imageType]="'square'" [isFull]="true"></codx-img> -->
   <codx-card-img

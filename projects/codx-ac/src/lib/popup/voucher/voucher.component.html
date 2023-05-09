@@ -43,7 +43,9 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-info icon-18 me-2"></i>
-              <span class="fw-bold fs-6 text-uppercase">Điều kiện lọc</span>
+              <span class="fw-bold fs-6 text-uppercase">
+                <codx-label class="fs-6 fw-normal" fiedName="lblTitle" [formName]="formModel?.formName"
+                [gridViewName]="formModel?.gridViewName" default="Điều kiện lọc"></codx-label></span>
             </div>
           </ng-template>
           <ng-template #content>
@@ -147,7 +149,7 @@
                 <div class="form-group">
                   <codx-label fiedName="lblCurencies" [formModel]="form.formModel" default="Số tiền chi trả">
                   </codx-label>
-                  <codx-input type="text" field="payAmt" [formModel]="form.formModel">
+                  <codx-input type="number" field="payAmt" (keyUpEnter)="payAmtEnter($event)"  (controlBlur)="payAmtBlur($event)" >
                   </codx-input>
                 </div>
               </div>
@@ -182,7 +184,7 @@
                   <codx-label fiedName="lblType" [formModel]="form.formModel" default="Cấn trừ hóa đơn">
                   </codx-label>
                   <codx-input type="valuelist" refValue="AC083" field="payTypem"
-                    (valueChange)="valueChange($event)"></codx-input>
+                    (valueChange)="valueChange($event)" *></codx-input>
                 </div>
               </div>
             </div>       

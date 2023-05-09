@@ -29,6 +29,7 @@ import {
   CM_QuotationsLines,
 } from '../../models/cm_model';
 import { PopupAddQuotationsLinesComponent } from '../../quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
+import { CodxCmService } from '../../codx-cm.service';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -51,6 +52,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     formName: 'CMQuotationsLines',
     gridViewName: 'grvCMQuotationsLines',
     entityName: 'CM_QuotationsLines',
+    funcID: 'CM02021',
   };
   gridHeight: number = 300;
   editSettings: EditSettingsModel = {
@@ -64,10 +66,14 @@ export class PopupAddQuotationsComponent implements OnInit {
   lockFields = [];
   dataParent: any;
   gridViewSetupQL: any;
+  quotationLinesAddNew = [];
+  quotationLinesEdit = [];
+  disableRefID = false;
 
   constructor(
     public sanitizer: DomSanitizer,
     private api: ApiHttpService,
+    private codxCM: CodxCmService,
     private cache: CacheService,
     private changeDetector: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -75,9 +81,9 @@ export class PopupAddQuotationsComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    // this.quotations = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.quotations = JSON.parse(JSON.stringify(dt?.data?.data));
     this.action = dt?.data?.action;
+    this.disableRefID = dt?.data?.disableRefID;;
     this.quotationLines = [];
     this.cache
       .gridViewSetup(
@@ -140,8 +146,16 @@ export class PopupAddQuotationsComponent implements OnInit {
       this.onUpdate();
     }
   }
+  //change Data
+  changeRefID(e){
 
-  valueChange(e) {}
+  }
+  valueChange(e) {
+    if(e?.data && e?.field) this.quotations[e.field] = e.data
+  }
+  valueChangeDate(e) {
+    if(e?.data && e?.field) this.quotations[e.field] = e.data?.fromDate
+  }
   select(e) {}
   created(e) {}
 
@@ -160,8 +174,57 @@ export class PopupAddQuotationsComponent implements OnInit {
   clickMF(e, data) {}
 
   // region Product
+  addPopup() {
+    let idx = this.gridQuationsLines.dataSource?.length;
+    let data = this.genData(idx);
+    this.cache.functionList(this.fmQuotationLines.funcID).subscribe((f) => {
+      this.cache
+        .gridViewSetup(
+          this.fmQuotationLines.formName,
+          this.fmQuotationLines.gridViewName
+        )
+        .subscribe((res) => {
+          var obj = {
+            headerText: 'Thêm sản phẩm báo giá',
+            quotationsLine: data,
+            quotationsLines: this.quotationLines,
+          };
+          let opt = new DialogModel();
+          opt.zIndex = 1000;
+          let dataModel = new FormModel();
+          opt.FormModel = this.fmQuotationLines;
+
+          let dialogQuotations = this.callFc.openForm(
+            PopupAddQuotationsLinesComponent,
+            '',
+            650,
+            570,
+            '',
+            obj,
+            '',
+            opt
+          );
+          dialogQuotations.closed.subscribe((res) => {
+            if (res?.event) {
+              data = res?.event;
+              // // this.gridQuationsLines.addRow(data, idx);
+              // this.quotationLines.push(data)
+              this.quotationLinesAddNew.push(data);
+              this.quotationLines.push(data);
+              this.loadTotal();
+              this.changeDetector.detectChanges();
+            }
+          });
+        });
+    });
+  }
   addRow() {
     let idx = this.gridQuationsLines.dataSource?.length;
+    let data = this.genData(idx);
+    this.gridQuationsLines.addRow(data, idx); //add row gridview
+  }
+
+  genData(idx) {
     let data = this.gridQuationsLines.formGroup.value; //ddooi tuong
     data.recID = Util.uid();
     data.write = true;
@@ -169,29 +232,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     data.read = true;
     data.rowNo = idx + 1;
     data.transID = this.quotations?.recID;
-    // this.gridQuationsLines.addRow(data, idx);  //add row gridview
-    var obj = {
-      headerText: 'Thêm sản phẩm báo giá',
-      quotationsLine: data,
-    };
-    let opt = new DialogModel();
-    opt.zIndex=1000;
-    let dataModel = new FormModel();
-    opt.FormModel = dataModel;
-
-    let dialogQuotations = this.callFc.openForm(
-      PopupAddQuotationsLinesComponent,
-      '',
-      650,
-      570,
-      '',
-      obj,
-      '',
-      opt
-    );
-    dialogQuotations.closed.subscribe((res) => {
-      //lam gi day
-    });
+    return data;
   }
 
   quotionsLineChanged(e) {
@@ -259,5 +300,21 @@ export class PopupAddQuotationsComponent implements OnInit {
     }
   }
 
+  loadTotal() {
+    var totals = 0;
+    var totalsdr = 0;
+    this.quotationLines.forEach((element) => {
+      //tisnh tong tien
+      // totals = totals + element.dr;
+      // totalsdr = totalsdr + element.dR2;
+    });
+    // this.total = totals.toLocaleString('it-IT');
+    // this.totaldr2 = totalsdr.toLocaleString('it-IT');
+  }
+
+  clearQuotationsLines() {
+    let idx = this.quotationLines.length;
+    let data = new CM_QuotationsLines();
+  }
   //#endregion
 }

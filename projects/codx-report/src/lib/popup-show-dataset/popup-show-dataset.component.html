@@ -1,0 +1,41 @@
+<codx-form
+  [headerText]="headerTitle"
+  [body]="body"
+  [footer]="footer"
+  #form
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div class="w-100 h-0100" *ngIf="dataSource && dataSource.length">
+      <ejs-grid
+        [dataSource]="dataSource"
+        height="100%"
+        allowExcelExport="true"
+        allowPdfExport="true"
+        [contextMenuItems]="contextMenuItems"
+      >
+      </ejs-grid>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-danger mr-5" (click)="dialog.close()">
+        <codx-label
+          name="lblClose"
+          default="Đóng"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </button>
+    </div>
+    <!-- <div class="d-flex justify-content-end">
+      <button class="btn btn-primary mr-5" (click)="onSaveForm()">
+        <codx-label
+          name="lblApply"
+          default="Áp dụng"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </button>
+    </div> -->
+  </ng-template>
+</codx-form>

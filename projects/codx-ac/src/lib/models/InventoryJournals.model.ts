@@ -30,6 +30,8 @@ export class InventoryJournals {
     memo2: any;
     diM2: any;
     refTransID: any;
+    currencyID: any;
+    exchangeRate: 1;
     approvedBy: any;
     direction: any;
     totalAmt: any;
@@ -63,6 +65,6 @@ export class InventoryJournals {
     invoiceType: any;
     journalNo: any;
     unbounds: any;
-    currencyID: any;
-    exchangeRate: any;
+    warehouseName: any;
+    objectName: any;
 }
