@@ -114,18 +114,58 @@ export class EPApprovalComponent extends UIComponent {
   onInit(): void {
     this.getBaseVariable();
     this.getCacheData();
-    if (
-      this.funcID == EPCONST.FUNCID.R_Approval ||
-      this.funcID == EPCONST.FUNCID.C_Approval
-    ) {
-      this.getSchedule();
-    }
+    
   }
   ngAfterViewInit(): void {
+    this.getView();
+    this.detectorRef.detectChanges();
+  }
+
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Cache Data--------------------------------//
+  //---------------------------------------------------------------------------------//
+  getBaseVariable() {
+    if (this.funcID == null) {
+      this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    }
+    if (this.queryParams == null) {
+      this.queryParams = this.router.snapshot.queryParams;
+    }
+
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
+
+    switch (this.funcID) {
+      case EPCONST.FUNCID.R_Approval:
+        this.resourceType = EPCONST.VLL.ResourceType.Room;
+        break;
+      case EPCONST.FUNCID.C_Approval:
+        this.resourceType = EPCONST.VLL.ResourceType.Car;
+        break;
+      case EPCONST.FUNCID.S_Approval:
+        this.resourceType = EPCONST.VLL.ResourceType.Stationery;
+        break;
+    }
+  }
+  getCacheData(): void {
+    this.cache
+      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+      .subscribe((grv) => {
+        if (grv) {
+          this.grView = Util.camelizekeyObj(grv);
+        }
+      });
+  }
+  getView(){
     if (
       this.funcID == EPCONST.FUNCID.R_Approval ||
       this.funcID == EPCONST.FUNCID.C_Approval
     ) {
+      
+      this.getSchedule();
       this.views = [
         {
           id: '1',
@@ -175,48 +215,6 @@ export class EPApprovalComponent extends UIComponent {
         },
       ];
     }
-
-    this.detectorRef.detectChanges();
-  }
-
-  //---------------------------------------------------------------------------------//
-  //-----------------------------------Get Cache Data--------------------------------//
-  //---------------------------------------------------------------------------------//
-  getBaseVariable() {
-    if (this.funcID == null) {
-      this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    }
-    if (this.queryParams == null) {
-      this.queryParams = this.router.snapshot.queryParams;
-    }
-
-    this.codxEpService.getFormModel(this.funcID).then((res) => {
-      if (res) {
-        this.formModel = res;
-      }
-    });
-
-    switch (this.funcID) {
-      case EPCONST.FUNCID.R_Approval:
-        this.resourceType = '1';
-        break;
-      case EPCONST.FUNCID.C_Approval:
-        this.resourceType = '2';
-        break;
-
-      case EPCONST.FUNCID.S_Approval:
-        this.resourceType = '6';
-        break;
-    }
-  }
-  getCacheData(): void {
-    this.cache
-      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
-      .subscribe((grv) => {
-        if (grv) {
-          this.grView = Util.camelizekeyObj(grv);
-        }
-      });
   }
   getSchedule() {
     //lấy list booking để vẽ schedule
@@ -260,6 +258,12 @@ export class EPApprovalComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Event------------------------------------//
   //---------------------------------------------------------------------------------//
+  viewChanged(evt: any) {
+    this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    this.getBaseVariable();
+    this.getView();
+
+  }
   changeItemDetail(event) {
     let recID = '';
     if (event?.data) {
