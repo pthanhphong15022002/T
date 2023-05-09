@@ -20,10 +20,10 @@
         >
         </codx-label>
         <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
+          type="text"
           field="dealID"
           [crrValue]="deal?.dealID"
+          [disabled]="deal?.dealID ? true: false"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -179,14 +179,16 @@
         >
         </codx-label>
 
-    <codx-popup-participants
-      [lstParticipants]="lstParticipants"
+    <!-- <codx-popup-participants
+      [lstParticipants]="listParticipants"
       [dialog]="dialog"
       [isType]="'I'"
       (eventUser)="eventUser($event)"
       [owner]="owner"
-    ></codx-popup-participants>
-
+    ></codx-popup-participants> -->
+    <ejs-combobox [dataSource]="listParticipants"
+    (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
+    [allowFiltering]='true' [value]="owner"></ejs-combobox>
 
       </div>
     </div>

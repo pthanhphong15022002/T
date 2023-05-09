@@ -43,6 +43,7 @@ import { PopupAddQuotationsLinesComponent } from './quotations-lines/popup-add-q
 import { CodxListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CodxListDealsComponent } from './cmcustomer/cmcustomer-detail/codx-list-deals/codx-list-deals.component';
 import { ProductComponent } from './contracts/product/product.component';
+import { TabsHeaderComponent } from './contracts/tabs-header/tabs-header.component';
 import { CodxTabDealcompetitorsComponent } from './deals/deal-detail/codx-tab-dealcompetitors/codx-tab-dealcompetitors.component';
 import { PopupAddDealcompetitorComponent } from './deals/deal-detail/codx-tab-dealcompetitors/popup-add-dealcompetitor/popup-add-dealcompetitor.component';
 
@@ -64,6 +65,10 @@ const routes: Routes = [
         path: 'sales/:funcID',
         component: DealsComponent,
       },
+      // {
+      //   path: 'services/:funcID',
+      //   component: DealsComponent,
+      // },
       {
         path: '**',
         redirectTo: 'error/404',
@@ -101,6 +106,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxListContactsComponent,
     CodxListDealsComponent,
     ProductComponent,
+    TabsHeaderComponent,
     CodxTabDealcompetitorsComponent,
     PopupAddDealcompetitorComponent,
   ],

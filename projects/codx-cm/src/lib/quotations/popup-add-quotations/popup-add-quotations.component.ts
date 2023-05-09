@@ -65,6 +65,8 @@ export class PopupAddQuotationsComponent implements OnInit {
   lockFields = [];
   dataParent: any;
   gridViewSetupQL: any;
+  quotationLinesAddNew=[] ;
+  quotationLinesEdit=[] ;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -174,6 +176,7 @@ export class PopupAddQuotationsComponent implements OnInit {
           var obj = {
             headerText: 'Thêm sản phẩm báo giá',
             quotationsLine: data,
+            quotationsLines :this.quotationLines
           };
           let opt = new DialogModel();
           opt.zIndex = 1000;
@@ -191,7 +194,15 @@ export class PopupAddQuotationsComponent implements OnInit {
             opt
           );
           dialogQuotations.closed.subscribe((res) => {
-            //lam gi day
+            if(res?.event){
+               data = res?.event
+              // // this.gridQuationsLines.addRow(data, idx);
+              // this.quotationLines.push(data)
+              this.quotationLinesAddNew.push(data)
+              this.quotationLines.push(data);
+                this.loadTotal();
+              this.changeDetector.detectChanges();
+            }
           });
         });
     });
@@ -278,5 +289,21 @@ export class PopupAddQuotationsComponent implements OnInit {
     }
   }
 
+  loadTotal() {
+    var totals = 0;
+    var totalsdr = 0;
+    this.quotationLines.forEach((element) => {
+      //tisnh tong tien
+      // totals = totals + element.dr;
+      // totalsdr = totalsdr + element.dR2;
+    });
+    // this.total = totals.toLocaleString('it-IT');
+    // this.totaldr2 = totalsdr.toLocaleString('it-IT');
+  }
+
+  clearQuotationsLines() {
+    let idx = this.quotationLines.length;
+    let data = new CM_QuotationsLines();   
+  }
   //#endregion
 }
