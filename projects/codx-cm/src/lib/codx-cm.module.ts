@@ -42,6 +42,7 @@ import { QuotationsLinesComponent } from './quotations-lines/quotations-lines.co
 import { PopupAddQuotationsLinesComponent } from './quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
 import { CodxListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CodxListDealsComponent } from './cmcustomer/cmcustomer-detail/codx-list-deals/codx-list-deals.component';
+import { ProductComponent } from './contracts/product/product.component';
 
 const routes: Routes = [
   {
@@ -97,6 +98,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddQuotationsLinesComponent,
     CodxListContactsComponent,
     CodxListDealsComponent,
+    ProductComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

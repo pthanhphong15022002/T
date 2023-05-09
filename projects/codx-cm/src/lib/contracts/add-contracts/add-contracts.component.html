@@ -38,6 +38,27 @@
   </header>
 
   <main>
+
+    <container-element [ngSwitch]="tabClicked">
+      <some-element
+        *ngSwitchCase="'general'"
+        [ngTemplateOutlet]="generalTemplate"
+      ></some-element>
+      <some-element
+        *ngSwitchCase="'representative'"
+        [ngTemplateOutlet]="representativeTemplate"
+      ></some-element>
+      <some-element
+        *ngSwitchCase="'items'"
+        [ngTemplateOutlet]="itemsTemplate"
+      ></some-element>
+      <some-element
+        *ngSwitchCase="'contract'"
+        [ngTemplateOutlet]="contractTemplate"
+      ></some-element>
+      <some-element *ngSwitchDefault></some-element>
+    </container-element>
+
     <article>
       <div >
         <div class="d-inline-flex align-items-center text-primary mb-3" style="border-bottom: 2px solid;">
