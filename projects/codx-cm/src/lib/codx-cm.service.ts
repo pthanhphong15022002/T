@@ -119,6 +119,15 @@ export class CodxCmService {
     ]);
   }
 
+  getDealCompetitors(dealID){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'GetListDealCompetitorsAsync',
+      [dealID]
+    );
+  }
+
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = {};
