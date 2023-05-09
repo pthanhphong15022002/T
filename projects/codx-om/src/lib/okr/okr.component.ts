@@ -1,4 +1,4 @@
-import { FormGroup } from '@angular/forms';
+
 declare var window: any;
 import { OMCONST } from './../codx-om.constant';
 import {
@@ -65,9 +65,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Kỳ
   periodID: string;
   //Loại
-  interval :string;
+  interval: string;
   //Năm
-  year :number;
+  year: number;
   fromDate: any;
   toDate: any;
   dataDate = null;
@@ -92,9 +92,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     kr: null,
     skr: null,
   };
-  obFG: FormGroup;
-  krFG: FormGroup;
-  skrFG: FormGroup;
   funcID: any;
   obFuncID: any;
   krFuncID: any;
@@ -114,52 +111,51 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   curOrgName: any;
   periodName: any;
   orgUnitTree: any[];
-  refIDMeeting:any;
-  isCollapsed=false;
-  listUM=[];
+  refIDMeeting: any;
+  isCollapsed = false;
+  listUM = [];
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
     private codxOmService: CodxOmService,
     private notificationsService: NotificationsService,
-    private authService :AuthService,
+    private authService: AuthService
   ) {
     super(inject);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
     this.auth = inject.get(AuthStore);
     this.okrService = inject.get(CodxOmService);
-    
+
     this.curUser = this.auth.get();
     //this.curUser= this.authService.userValue;
-    this.createCOObject()
+    this.createCOObject();
   }
 
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
-  
-  onInit(): void {    
-    
-    if(this.curUser.employee==null){
+
+  onInit(): void {
+    if (this.curUser.employee == null) {
       this.codxOmService.getUser([this.curUser?.userID]).subscribe((user) => {
         if (user) {
-          this.codxOmService.getEmployeesByEmpID(user[0]?.employeeID).subscribe((emp)=>{
-            if(emp){
-              this.curUser.employee=emp;          
-              this.getCacheData();
-              this.getOKRModel();
-              this.funcIDChanged();
-              this.formModelChanged();
-              this.createCOObject();
-              this.setTitle();
-              this.getOKRPlans(this.periodID, this.interval, this.year);
-            }
-          })
+          this.codxOmService
+            .getEmployeesByEmpID(user[0]?.employeeID)
+            .subscribe((emp) => {
+              if (emp) {
+                this.curUser.employee = emp;
+                this.getCacheData();
+                this.getOKRModel();
+                this.funcIDChanged();
+                this.formModelChanged();
+                this.createCOObject();
+                this.setTitle();
+                this.getOKRPlans(this.periodID, this.interval, this.year);
+              }
+            });
         }
       });
-    }   
-    else{
-
+    } else {
       this.getCacheData();
       this.getOKRModel();
       this.funcIDChanged();
@@ -168,8 +164,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.setTitle();
       this.getOKRPlans(this.periodID, this.interval, this.year);
     }
-
-    
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -199,57 +193,48 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       if (krFM) {
         this.formModelKR = krFM;
         this.okrFM.krFM = this.formModelKR;
-
-        this.krFG = this.codxService.buildFormGroup(
-          this.formModelPlan?.formName,
-          this.formModelPlan?.gridViewName
-        );
-
         this.cache
-      .gridViewSetup(this.formModelKR?.formName, this.formModelKR?.gridViewName)
-      .subscribe((krGrd) => {
-        if (krGrd) {
-          this.okrGrv.krGrv = Util.camelizekeyObj(krGrd);
-        }
-      });
-    
+          .gridViewSetup(
+            this.formModelKR?.formName,
+            this.formModelKR?.gridViewName
+          )
+          .subscribe((krGrd) => {
+            if (krGrd) {
+              this.okrGrv.krGrv = Util.camelizekeyObj(krGrd);
+            }
+          });
       }
     });
     this.codxOmService.getFormModel(this.skrFuncID).then((skrFM) => {
       if (skrFM) {
         this.formModelSKR = skrFM;
-        this.okrFM.skrFM = this.formModelSKR;
-        this.skrFG = this.codxService.buildFormGroup(
-          this.formModelSKR?.formName,
-          this.formModelSKR?.gridViewName
-        );
+        this.okrFM.skrFM = this.formModelSKR;        
         this.cache
-      .gridViewSetup(
-        this.formModelSKR?.formName,
-        this.formModelSKR?.gridViewName
-      )
-      .subscribe((skrGrd) => {
-        if (skrGrd) {
-          this.okrGrv.skrGrv = Util.camelizekeyObj(skrGrd);
-        }
-      });
+          .gridViewSetup(
+            this.formModelSKR?.formName,
+            this.formModelSKR?.gridViewName
+          )
+          .subscribe((skrGrd) => {
+            if (skrGrd) {
+              this.okrGrv.skrGrv = Util.camelizekeyObj(skrGrd);
+            }
+          });
       }
     });
     this.codxOmService.getFormModel(this.obFuncID).then((obFM) => {
       if (obFM) {
         this.formModelOB = obFM;
-        this.okrFM.obFM = this.formModelOB;
-        this.obFG = this.codxService.buildFormGroup(
-          this.formModelOB?.formName,
-          this.formModelOB?.gridViewName
-        );
+        this.okrFM.obFM = this.formModelOB;        
         this.cache
-      .gridViewSetup(this.formModelOB?.formName, this.formModelOB?.gridViewName)
-      .subscribe((obGrd) => {
-        if (obGrd) {
-          this.okrGrv.obGrv = Util.camelizekeyObj(obGrd);
-        }
-      });
+          .gridViewSetup(
+            this.formModelOB?.formName,
+            this.formModelOB?.gridViewName
+          )
+          .subscribe((obGrd) => {
+            if (obGrd) {
+              this.okrGrv.obGrv = Util.camelizekeyObj(obGrd);
+            }
+          });
       }
     });
     //Lấy tiêu đề theo FuncID cho Popup
@@ -277,33 +262,37 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   getCacheData() {
     this.cache.valueList('OM004').subscribe((vll) => {
       if (vll) {
-        this.okrVll.ob=vll?.datas.filter((res) => res.value ==OMCONST.VLL.OKRType.Obj)[0];
-        this.okrVll.kr=vll?.datas.filter((res) => res.value ==OMCONST.VLL.OKRType.KResult)[0];
-        this.okrVll.skr=vll?.datas.filter((res) => res.value ==OMCONST.VLL.OKRType.SKResult)[0];
-        this.okrVll.ob.icon=OMCONST.ASSET_URL+this.okrVll.ob.icon;
-        this.okrVll.kr.icon=OMCONST.ASSET_URL+this.okrVll.kr.icon;
-        this.okrVll.skr.icon=OMCONST.ASSET_URL+this.okrVll.skr.icon;
+        this.okrVll.ob = vll?.datas.filter(
+          (res) => res.value == OMCONST.VLL.OKRType.Obj
+        )[0];
+        this.okrVll.kr = vll?.datas.filter(
+          (res) => res.value == OMCONST.VLL.OKRType.KResult
+        )[0];
+        this.okrVll.skr = vll?.datas.filter(
+          (res) => res.value == OMCONST.VLL.OKRType.SKResult
+        )[0];
+        this.okrVll.ob.icon = OMCONST.ASSET_URL + this.okrVll.ob.icon;
+        this.okrVll.kr.icon = OMCONST.ASSET_URL + this.okrVll.kr.icon;
+        this.okrVll.skr.icon = OMCONST.ASSET_URL + this.okrVll.skr.icon;
       }
     });
-    this.codxOmService.getListUM().subscribe((res:any)=>{
-      if(res ){
-        Array.from(res).forEach((um:any)=>{
-          this.listUM.push({umid:um?.umid,umName:um?.umName});
-        });        
+    this.codxOmService.getListUM().subscribe((res: any) => {
+      if (res) {
+        Array.from(res).forEach((um: any) => {
+          this.listUM.push({ umid: um?.umid, umName: um?.umName });
+        });
       }
     });
-    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
-  getCurrentEmp(){
-      this.codxOmService.getUser([this.curUser?.userID]).subscribe((emp) => {
-        if (emp) {
-          this.curUser.employee=emp[0];
-        }
-      });
-    
+  getCurrentEmp() {
+    this.codxOmService.getUser([this.curUser?.userID]).subscribe((emp) => {
+      if (emp) {
+        this.curUser.employee = emp[0];
+      }
+    });
   }
   getOKRModel() {
     this.codxOmService.getOKRModel(this.funcID).subscribe((model: any) => {
@@ -317,7 +306,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     });
   }
   //Tạo thông tin cho CO
-  createCOObject(){
+  createCOObject() {
     this.refIDMeeting = {
       projectID: this.dataOKRPlans?.recID ? this.dataOKRPlans?.recID : '',
     };
@@ -325,36 +314,42 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Lấy OKR Plan
   getOKRPlanForComponent(event: any) {
     if (event) {
-      this.getOKRPlans(event?.periodID, event?.interval, event?.year);      
+      this.getOKRPlans(event?.periodID, event?.interval, event?.year);
     }
   }
 
   getOKRPlans(periodID: any, interval: any, year: any) {
-    this.isAfterRender=false;
-    if (this.periodID != null && this.interval != null && this.year != null && this.periodID != '' && this.interval != '' && this.year != 0) {
+    
+    if (
+      this.periodID != null &&
+      this.interval != null &&
+      this.year != null &&
+      this.periodID != '' &&
+      this.interval != '' &&
+      this.year != 0
+    ) {
       this.okrService
         .getOKRPlans(periodID, interval, year)
         .subscribe((item: any) => {
-          //Reset data View          
-            //this.isCollapsed = false;
-            if (item) {            
+          //Reset data View
+          //this.isCollapsed = false;
+          if (item) {
             this.dataOKRPlans = null;
             this.dataOKRPlans = item;
-            this.dataOKRPlans.periodName=this.periodName;
+            this.dataOKRPlans.periodName = this.periodName;
             this.planNull = false;
             this.createCOObject();
             this.okrService
               .getAllOKROfPlan(this.dataOKRPlans.recID)
-              .subscribe((item1: any) => {
-                if (item1) {                  
-                  this.dataOKR = null;
-                  this.dataOKR = item1;  
-                  this.isAfterRender = true;                
+              .subscribe((okrs: any) => {
+                if (okrs) {
+                  this.dataOKR = okrs;
+                  this.isAfterRender = true;
                   this.getOrgTreeOKR();
                 }
               });
           } else {
-            this.orgUnitTree=[];
+            this.orgUnitTree = [];
             this.dataOKRPlans = null;
             this.dataOKR = null;
             this.planNull = true;
@@ -362,34 +357,44 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
           }
         });
     }
+    else{
+      
+      this.orgUnitTree = [];
+      this.dataOKRPlans = null;
+      this.dataOKR = null;
+      this.planNull = true;
+      this.isAfterRender = true;
+    }
   }
-getOrgTreeOKR() {
+  getOrgTreeOKR() {
     if (this.curUser?.employee != null) {
       let tempOrgID = '';
-      let okrLevel='';
+      let okrLevel = '';
       switch (this.funcID) {
         case OMCONST.FUNCID.COMP:
           tempOrgID = this.curUser?.employee.companyID;
-          okrLevel =OMCONST.VLL.OKRLevel.COMP;
+          okrLevel = OMCONST.VLL.OKRLevel.COMP;
           break;
         case OMCONST.FUNCID.DEPT:
           tempOrgID = this.curUser?.employee.departmentID;
-          okrLevel =OMCONST.VLL.OKRLevel.DEPT;
+          okrLevel = OMCONST.VLL.OKRLevel.DEPT;
           break;
         case OMCONST.FUNCID.ORG:
           tempOrgID = this.curUser?.employee.orgUnitID;
-          okrLevel =OMCONST.VLL.OKRLevel.ORG;
+          okrLevel = OMCONST.VLL.OKRLevel.ORG;
           break;
         case OMCONST.FUNCID.PERS:
-          tempOrgID = this.curUser?.employee.employeeID;          
-          okrLevel =OMCONST.VLL.OKRLevel.PERS;
+          tempOrgID = this.curUser?.employee.employeeID;
+          okrLevel = OMCONST.VLL.OKRLevel.PERS;
           break;
       }
-      this.codxOmService.getOrgTreeOKR(this.dataOKRPlans?.recID,tempOrgID).subscribe((listOrg: any) => {
-        if (listOrg) { 
-            this.orgUnitTree=[listOrg];
-        }
-      });
+      this.codxOmService
+        .getOrgTreeOKR(this.dataOKRPlans?.recID, tempOrgID)
+        .subscribe((listOrg: any) => {
+          if (listOrg) {
+            this.orgUnitTree = [listOrg];
+          }
+        });
     }
   }
   //Lấy fucID con
@@ -445,8 +450,14 @@ getOrgTreeOKR() {
     this.setTitle();
     this.dataOKRPlans = null;
     this.dataOKR = null;
-    if(this.periodID !=null && this.interval!=null && this.year!=null && this.periodID !='' && this.interval!='' && this.year!=0){
-
+    if (
+      this.periodID != null &&
+      this.interval != null &&
+      this.year != null &&
+      this.periodID != '' &&
+      this.interval != '' &&
+      this.year != 0
+    ) {
       this.getOKRPlans(this.periodID, this.interval, this.year);
     }
     this.detectorRef.detectChanges();
@@ -464,7 +475,7 @@ getOrgTreeOKR() {
       case OMCONST.MFUNCID.ReleasePlanORG:
       case OMCONST.MFUNCID.ReleasePlanPER:
         this.changePlanStatus(OMCONST.VLL.PlanStatus.Ontracking);
-        
+
         break;
       case OMCONST.MFUNCID.UnReleasePlanCOMP:
       case OMCONST.MFUNCID.UnReleasePlanDEPT:
@@ -477,7 +488,7 @@ getOrgTreeOKR() {
       case OMCONST.MFUNCID.SharesPlanORG:
       case OMCONST.MFUNCID.SharesPlanPER:
         this.sharePlan(evt?.text);
-        break;        
+        break;
       case OMCONST.MFUNCID.PermissionCOMP:
       case OMCONST.MFUNCID.PermissionDEPT:
       case OMCONST.MFUNCID.PermissionORG:
@@ -486,84 +497,79 @@ getOrgTreeOKR() {
         break;
     }
   }
-  changeDataMF(evt:any){
-    if(evt !=null){
-        if(this.dataOKR!=null && this.dataOKR.length>0){
-          evt.forEach((func) => {
-            if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
-              func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
-              func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
-              func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
-              func.disabled = false;
-            }
-          });
-        }
-        else{
-          //nếu ko có OKR thì ẩn MF phân bổ trọng số
-          evt.forEach((func) => {
-            if (
-              func.functionID == OMCONST.MFUNCID.Copy ||
-              
-              func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
-              func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
-              func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
-              func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
-              func.disabled = true;
-            }
-          });
-        }
-        
+  changeDataMF(evt: any) {
+    if (evt != null) {
+      if (this.dataOKR != null && this.dataOKR.length > 0) {
+        evt.forEach((func) => {
+          if (
+            func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightCOMP
+          ) {
+            func.disabled = false;
+          }
+        });
+      } else {
+        //nếu ko có OKR thì ẩn MF phân bổ trọng số
+        evt.forEach((func) => {
+          if (
+            func.functionID == OMCONST.MFUNCID.Copy ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightCOMP
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
+
       //Ẩn MF khi Plan chưa phát hành
-        if(this.dataOKRPlans?.status=='1'){
-          evt.forEach((func) => {
-            if (func.functionID == OMCONST.MFUNCID.UnReleasePlanCOMP ||
-              func.functionID == OMCONST.MFUNCID.UnReleasePlanDEPT ||
-              func.functionID == OMCONST.MFUNCID.UnReleasePlanORG ||
-              func.functionID == OMCONST.MFUNCID.UnReleasePlanPER ) {
-              func.disabled = true;
-            }
-          });
-        }
-        
+      if (this.dataOKRPlans?.status == '1') {
+        evt.forEach((func) => {
+          if (
+            func.functionID == OMCONST.MFUNCID.UnReleasePlanCOMP ||
+            func.functionID == OMCONST.MFUNCID.UnReleasePlanDEPT ||
+            func.functionID == OMCONST.MFUNCID.UnReleasePlanORG ||
+            func.functionID == OMCONST.MFUNCID.UnReleasePlanPER
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
+
       //Ẩn MF khi Plan đã phát hành
-        else if(this.dataOKRPlans?.status=='2'){
-          evt.forEach((func) => {
-            if (
-              func.functionID == OMCONST.MFUNCID.Copy ||
-              
-              func.functionID == OMCONST.MFUNCID.ReleasePlanCOMP ||
-              func.functionID == OMCONST.MFUNCID.ReleasePlanDEPT ||
-              func.functionID == OMCONST.MFUNCID.ReleasePlanORG ||
-              func.functionID == OMCONST.MFUNCID.ReleasePlanPER ||
-              
-              func.functionID == OMCONST.MFUNCID.SharesPlanCOMP ||
-              func.functionID == OMCONST.MFUNCID.SharesPlanDEPT ||
-              func.functionID == OMCONST.MFUNCID.SharesPlanORG ||
-              func.functionID == OMCONST.MFUNCID.SharesPlanPER ||
-
-              func.functionID == OMCONST.MFUNCID.PermissionCOMP ||
-              func.functionID == OMCONST.MFUNCID.PermissionDEPT ||
-              func.functionID == OMCONST.MFUNCID.PermissionORG ||
-              func.functionID == OMCONST.MFUNCID.PermissionPER ||
-
-              func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ||
-              func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
-              func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
-              func.functionID == OMCONST.MFUNCID.PermissionPER
-              
-              
-              ) {
-              func.disabled = true;
-            }
-          });
-        }
-      
-      
+      else if (this.dataOKRPlans?.status == '2') {
+        evt.forEach((func) => {
+          if (
+            func.functionID == OMCONST.MFUNCID.Copy ||
+            func.functionID == OMCONST.MFUNCID.ReleasePlanCOMP ||
+            func.functionID == OMCONST.MFUNCID.ReleasePlanDEPT ||
+            func.functionID == OMCONST.MFUNCID.ReleasePlanORG ||
+            func.functionID == OMCONST.MFUNCID.ReleasePlanPER ||
+            func.functionID == OMCONST.MFUNCID.SharesPlanCOMP ||
+            func.functionID == OMCONST.MFUNCID.SharesPlanDEPT ||
+            func.functionID == OMCONST.MFUNCID.SharesPlanORG ||
+            func.functionID == OMCONST.MFUNCID.SharesPlanPER ||
+            func.functionID == OMCONST.MFUNCID.PermissionCOMP ||
+            func.functionID == OMCONST.MFUNCID.PermissionDEPT ||
+            func.functionID == OMCONST.MFUNCID.PermissionORG ||
+            func.functionID == OMCONST.MFUNCID.PermissionPER ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+            func.functionID == OMCONST.MFUNCID.PermissionPER
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
     }
   }
   //Hàm click
   click(event: any) {
-    switch (event.id) {      
+    switch (event.id) {
       case 'btnAddPlan': {
         this.addEditOKRPlans(true);
         break;
@@ -586,11 +592,11 @@ getOrgTreeOKR() {
     this.toDate = data.toDate;
     if (data.type == 'year') {
       this.periodID = this.year.toString();
-      this.periodName = this.periodID
+      this.periodName = this.periodID;
       this.interval = 'Y';
     } else if (data.type == 'quarter') {
       this.periodID = data.text;
-      this.periodName = this.periodID
+      this.periodName = this.periodID;
       this.interval = 'Q';
     } else if (data.type == 'month') {
       this.periodID = (date.getMonth() + 1).toString();
@@ -598,13 +604,17 @@ getOrgTreeOKR() {
       this.interval = 'M';
     }
     this.setTitle();
-    if(this.dataOKRPlans!=null && this.dataOKRPlans.year== this.year && this.dataOKRPlans.interval== this.interval && this.dataOKRPlans.periodID== this.periodID ){
-      this.isAfterRender=true;
-      return
+    if (
+      this.dataOKRPlans != null &&
+      this.dataOKRPlans.year == this.year &&
+      this.dataOKRPlans.interval == this.interval &&
+      this.dataOKRPlans.periodID == this.periodID
+    ) {
+      this.isAfterRender = true;
+      return;
     }
-    
-      this.getOKRPlans(this.periodID, this.interval, this.year);
-    
+
+    this.getOKRPlans(this.periodID, this.interval, this.year);
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Event----------------------------------//
@@ -621,43 +631,47 @@ getOrgTreeOKR() {
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   changePlanStatus(status) {
-    if(status==OMCONST.VLL.PlanStatus.NotStarted){
-      this.codxOmService.beforeUnReleasePlan(this.dataOKRPlans?.recID).subscribe((res=>{
-        if(res!=null){
-          this.notificationsService.notifyCode("Bộ mục tiêu hiện hành đã phát sinh dữ liệu liên quan. Vui lòng liên hệ với "+res+" để xử lí.");//OM_WAIT: Đợi mssgCode
-          return;
-        }    
-        else{
-          this.codxOmService
-          .changePlanStatus(this.dataOKRPlans.recID, status)
-          .subscribe((res) => {
-            if (res) {
-              this.dataOKRPlans.status = status;
-              this.notificationsService.notifyCode('SYS034'); //thành công
-              
-            }
-          });
-        }        
-      }));      
-    }
-    else if(status==OMCONST.VLL.PlanStatus.Ontracking){
+    if (status == OMCONST.VLL.PlanStatus.NotStarted) {
       this.codxOmService
-      .changePlanStatus(this.dataOKRPlans.recID, status)
-      .subscribe((res) => {
-        if (res) {
-          this.dataOKRPlans.status = status;
-          this.notificationsService.notifyCode('SYS034'); //thành công
-          if(status=OMCONST.VLL.PlanStatus.Ontracking){
-            this.codxOmService.sendMailAfterRelease(this.dataOKRPlans?.recID).subscribe((res=>{
-              if(res){
-                let x= res;
-              }
-            }))
+        .beforeUnReleasePlan(this.dataOKRPlans?.recID)
+        .subscribe((res) => {
+          if (res != null) {
+            this.notificationsService.notifyCode(
+              'Bộ mục tiêu hiện hành đã phát sinh dữ liệu liên quan. Vui lòng liên hệ với ' +
+                res +
+                ' để xử lí.'
+            ); //OM_WAIT: Đợi mssgCode
+            return;
+          } else {
+            this.codxOmService
+              .changePlanStatus(this.dataOKRPlans.recID, status)
+              .subscribe((res) => {
+                if (res) {
+                  this.dataOKRPlans.status = status;
+                  this.notificationsService.notifyCode('SYS034'); //thành công
+                }
+              });
           }
-        }
-      });
+        });
+    } else if (status == OMCONST.VLL.PlanStatus.Ontracking) {
+      this.codxOmService
+        .changePlanStatus(this.dataOKRPlans.recID, status)
+        .subscribe((res) => {
+          if (res) {
+            this.dataOKRPlans.status = status;
+            this.notificationsService.notifyCode('SYS034'); //thành công
+            if ((status = OMCONST.VLL.PlanStatus.Ontracking)) {
+              this.codxOmService
+                .sendMailAfterRelease(this.dataOKRPlans?.recID)
+                .subscribe((res) => {
+                  if (res) {
+                    let x = res;
+                  }
+                });
+            }
+          }
+        });
     }
-    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
@@ -690,7 +704,10 @@ getOrgTreeOKR() {
         this.deptPlanNull = this.deptName;
         this.orgPlanNull = this.orgName;
         this.persPlanNull = this.persName;
-        this.notifyPlanNull = this.notifyPlanNull.replace('{1}', this.periodName);
+        this.notifyPlanNull = this.notifyPlanNull.replace(
+          '{1}',
+          this.periodName
+        );
         this.compPlanNull = this.notifyPlanNull.replace('{0}', this.compName);
         this.deptPlanNull = this.notifyPlanNull.replace('{0}', this.deptName);
         this.orgPlanNull = this.notifyPlanNull.replace('{0}', this.orgPlanNull);
@@ -719,7 +736,6 @@ getOrgTreeOKR() {
     this.notifyPlanNull.replace('{0}', this.curOrg);
     this.notifyPlanNull.replace('{1}', this.periodName);
   }
-
 
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
@@ -771,9 +787,7 @@ getOrgTreeOKR() {
     );
     dialogAddPlan.closed.subscribe((item) => {
       if (item.event) {
-        
-          this.getOKRPlans(this.periodID, this.interval, this.year);
-        
+        this.getOKRPlans(this.periodID, this.interval, this.year);
       }
     });
   }
@@ -792,26 +806,32 @@ getOrgTreeOKR() {
       null,
       null,
       null,
-      [this.dataOKRPlans, OMCONST.VLL.OKRType.Obj, popupTitle, subTitle,this.okrVll,this.okrFM],
+      [
+        this.dataOKRPlans,
+        OMCONST.VLL.OKRType.Obj,
+        popupTitle,
+        subTitle,
+        this.okrVll,
+        this.okrFM,
+      ],
       '',
       dModel
     );
     dialogEditWeight.closed.subscribe((item) => {
-      if (item.event) {        
-          this.getOKRPlans(this.periodID, this.interval, this.year);
-        
+      if (item.event) {
+        this.getOKRPlans(this.periodID, this.interval, this.year);
       }
     });
   }
   //Xem quyền
   showPermission(popupTitle: any) {
     let dialogPermission = this.callfc.openForm(
-      PopupAddRoleComponent, 
+      PopupAddRoleComponent,
       popupTitle,
       950,
       650,
       null,
-      [ this.dataOKRPlans,popupTitle, ]
+      [this.dataOKRPlans, popupTitle]
     );
   }
   //Chia sẻ bộ mục tiêu

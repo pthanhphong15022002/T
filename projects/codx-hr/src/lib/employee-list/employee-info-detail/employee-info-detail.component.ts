@@ -250,6 +250,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   healthDateSortModel: SortModel;
   diseasesFromDateSortModel: SortModel;
   accidentDateSortModel: SortModel;
+  eContractSortModel: SortModel;
   //#endregion
 
   reRenderGrid = true;
@@ -451,6 +452,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   @ViewChild('tmpViewAllPassport', { static: true }) tmpViewAllPassport: TemplateRef<any>;
   @ViewChild('tmpViewAllVisa', { static: true }) tmpViewAllVisa: TemplateRef<any>;
   @ViewChild('tmpViewAllWorkpermit', { static: true }) tmpViewAllWorkpermit: TemplateRef<any>;
+  @ViewChild('tmpViewAllContract', { static: true }) tmpViewAllContract: TemplateRef<any>;
 
   //Declare model ViewAll Salary
   @ViewChild('templateViewSalary', { static: true })
@@ -641,7 +643,6 @@ export class EmployeeInfoDetailComponent extends UIComponent{
       opFamily.pageLoading = false;
       this.hrService.getEFamilyWithDataRequest(opFamily).subscribe((res) => {
         if (res) this.lstFamily = res[0];
-        debugger
       });
 
       // let opPassport = new DataRequest();
@@ -1091,14 +1092,16 @@ export class EmployeeInfoDetailComponent extends UIComponent{
             headerText:
               this.eContractHeaderText['ContractTypeID'] +
               ' | ' +
-              this.eContractHeaderText['ContractNo'] +
-              ' - ' +
-              this.eContractHeaderText['SignedDate'],
+              this.eContractHeaderText['EffectedDate'],
+              
             template: this.eContractCol1,
             width: '250',
           },
           {
-            headerText: this.eContractHeaderText['EffectedDate'],
+            // headerText: this.eContractHeaderText['ContractNo'] +
+            // ' - ' +
+            // this.eContractHeaderText['SignedDate'],
+            headerText: 'Hợp đồng',
             template: this.eContractCol2,
             width: '150',
           },
@@ -1110,21 +1113,21 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         ];
       });
 
-      let insEContract = setInterval(() => {
-        if (this.eContractGridview) {
-          clearInterval(insEContract);
-          let t = this;
-          this.eContractGridview.dataService.onAction.subscribe((res) => {
-            if (res) {
-              if (res.type == 'loaded') {
-                t.eContractRowCount = 0;
-                t.eContractRowCount = res['data'].length;
-              }
-            }
-          });
-          this.eContractRowCount = this.eContractGridview.dataService.rowCount;
-        }
-      }, 100);
+      // let insEContract = setInterval(() => {
+      //   if (this.eContractGridview) {
+      //     clearInterval(insEContract);
+      //     let t = this;
+      //     this.eContractGridview.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.eContractRowCount = 0;
+      //           t.eContractRowCount = res['data'].length;
+      //         }
+      //       }
+      //     });
+      //     this.eContractRowCount = this.eContractGridview.dataService.rowCount;
+      //   }
+      // }, 100);
     }
     //#endregion
 
@@ -1502,8 +1505,12 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     this.TrainFromDateSortModel.dir = 'desc';
 
     this.appointionSortModel = new SortModel();
-    this.appointionSortModel.field = '(EffectedDate)';
+    this.appointionSortModel.field = 'EffectedDate';
     this.appointionSortModel.dir = 'desc';
+
+    this.eContractSortModel = new SortModel();
+    this.eContractSortModel.field = 'EffectedDate'; 
+    this.eContractSortModel.dir = 'desc';
 
     // #region Sức khỏe sort model
 
@@ -2943,6 +2950,13 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         ref = this.tmpViewAllWorkpermit;
         this.hrService.countEmpTotalRecord(this.employeeID, 'EWorkPermitsBusiness').subscribe((res) =>{
           this.workPermitRowCount = res;
+        })
+        break;
+      
+      case this.eContractFuncID:
+        ref = this.tmpViewAllContract;
+        this.hrService.countEmpTotalRecord(this.employeeID, 'EContractsBusiness').subscribe((res) => {
+          this.eContractRowCount = res;
         })
         break;
     }
@@ -4784,34 +4798,22 @@ export class EmployeeInfoDetailComponent extends UIComponent{
       }
     }, 100);
   }
-  valueChangeViewAllEContract(evt) {
-    this.ViewAllEContractFlag = evt.data;
-    let ins = setInterval(() => {
-      if (this.eContractGridview) {
-        clearInterval(ins);
-        let t = this;
-        this.eContractGridview?.dataService.onAction.subscribe((res) => {
-          if (res?.type == 'loaded') {
-            t.eContractRowCount = res['data'].length;
-          }
-        });
-        this.eContractRowCount = this.eContractGridview.dataService.rowCount;
-      }
-    }, 100);
-    let option = new DialogModel();
-    option.zIndex = 999;
-    if(evt.data == true){
-      let dialog = this.callfunc.openForm(
-        this.tmpTemp,
-        '',
-        850,
-        550,
-        '',
-        null,
-        '',
-        option
-      );
-    }
+  valueChangeViewAllEContract() {
+    // this.ViewAllEContractFlag = evt.data;
+    // let ins = setInterval(() => {
+    //   if (this.eContractGridview) {
+    //     clearInterval(ins);
+    //     let t = this;
+    //     this.eContractGridview?.dataService.onAction.subscribe((res) => {
+    //       if (res?.type == 'loaded') {
+    //         t.eContractRowCount = res['data'].length;
+    //       }
+    //     });
+    //     this.eContractRowCount = this.eContractGridview.dataService.rowCount;
+    //   }
+    // }, 100);
+
+    this.popupViewAll(this.eContractFuncID);
   }
 
   copyValue(actionHeaderText, data, flag) {
