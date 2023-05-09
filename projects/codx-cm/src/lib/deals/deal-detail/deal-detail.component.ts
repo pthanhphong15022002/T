@@ -70,7 +70,6 @@ export class DealDetailComponent  implements OnInit {
         { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-add_shopping_cart', isActive: false },
         { name: 'Opponent', textDefault: 'Đối thủ', icon: 'icon-shopping_bag', isActive: false },
         { name: 'Task', textDefault: 'Quy trình', icon: 'icon-shopping_bag', isActive: false },
-        { name: 'Product', textDefault: 'Sản phẩm', icon: 'icon-shopping_bag', isActive: false },
       ]
   }
 
