@@ -35,7 +35,8 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   @Input() refID: string;
   @Input() salespersonID: string;
   @Input() consultantID: string;
-  
+  @Input() disableRefID = true ;
+
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
   entityName = 'CM_Quotations';
@@ -157,41 +158,53 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
 
   add() {
     this.view.dataService.addNew().subscribe((res) => {
-      //this.cache.functionList('CM0202').subscribe((f) => {
-      // this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((gr) => {
-      //   let formModel = new FormModel();
-      //   formModel.funcID = 'CM0202';
-      //   formModel.formName = f.formName;
-      //   formModel.gridViewName = f.gridViewName;
-      res.status = '1';
-      res.customerID = this.customerID;
-      res.refType = this.refType ;
-      res.refID = this.refID ;
-      res.salespersonID = this.salespersonID ;
-      res.consultantID = this.consultantID ;
-      var obj = {
-        data: res,
-        action: 'add',
-        headerText: 'sdasdsadasdasd',
-      };
-      let option = new DialogModel();
-      option.IsFull = true;
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      let dialog = this.callfc.openForm(
-        PopupAddQuotationsComponent,
-        '',
-        null,
-        null,
-        '',
-        obj,
-        '',
-        option
-      );
+      if(!res.quotationsID){
+        this.api.execSv<any>(
+          'SYS',
+          'AD',
+          'AutoNumbersBusiness',
+          'GenAutoNumberAsync',
+          [this.formModel.funcID, this.formModel.entityName, "QuotationsID"]
+        ).subscribe(id=>{
+          res.quotationID = id ;
+          debugger
+          this.openPopup(res)
+        })
+      }else  this.openPopup(res)
+    
     });
-    //   });
-    // });
   }
+
+  openPopup(res){
+    res.versionNo ='V1.0'
+    res.status = '1';
+    res.customerID = this.customerID;
+    res.refType = this.refType ;
+    res.refID = this.refID ;
+    res.salespersonID = this.salespersonID ;
+    res.consultantID = this.consultantID ;
+    var obj = {
+      data: res,
+      disableRefID : this.disableRefID ,
+      action: 'add',
+      headerText: 'sdasdsadasdasd',
+    };
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    let dialog = this.callfc.openForm(
+      PopupAddQuotationsComponent,
+      '',
+      null,
+      null,
+      '',
+      obj,
+      '',
+      option
+    );
+  }
+
   edit(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
