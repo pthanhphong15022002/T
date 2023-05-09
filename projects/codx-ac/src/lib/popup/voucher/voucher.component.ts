@@ -98,6 +98,7 @@ export class VoucherComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res && res.length) {
+          if (this.payAmt && this.payAmt > 0) this.paymentAmt( res[0]);
           this.sublegendOpen = res[0];
         }
       });
@@ -106,16 +107,19 @@ export class VoucherComponent implements OnInit {
 
   //#region Event
   payAmtEnter(e: any) {
-    let data = e.component?.value;
-    if (this.payAmt == data) return;
-    this.payAmt = data;
-    if (this.payAmt && this.payAmt > 0) this.paymentAmt();
+    // let data = e.component?.value;
+    // if (this.payAmt == data) return;
+    // this.payAmt = data;
+    // if (this.payAmt && this.payAmt > 0) this.paymentAmt();
+  }
+
+  payAmtChange(e) {
+    this.payAmt = e.data;
   }
 
   payAmtBlur(e: any) {
-    if (this.payAmt == e.value) return;
-    this.payAmt = e.value;
-    if (this.payAmt && this.payAmt > 0) this.paymentAmt();
+    // if (this.payAmt == e.value) return;
+    // this.payAmt = e.value;
   }
 
   valueChange(e: any) {
@@ -182,8 +186,8 @@ export class VoucherComponent implements OnInit {
       });
   }
 
-  paymentAmt() {
-    let data = this.grid.arrSelectedRows;
+  paymentAmt(data) {
+   // let data = this.sublegendOpen;
     let termID = [];
     data.filter((x) => {
       if (x.invoiceDueDate <= this.cashpayment.voucherDate && x.pmtTermID)
@@ -219,7 +223,7 @@ export class VoucherComponent implements OnInit {
   handSettledAmt(data = [], terms = []) {
     let pay = this.payAmt;
     let len = data.length;
-let indexes = this.grid.selectedIndexes;
+    let indexes = this.grid.selectedIndexes;
     data.forEach((e: any, i: number) => {
       if (e.invoiceDueDate <= this.cashpayment.voucherDate) {
         let settled = terms.find((x) => x.pmtTermID == e.pmtTermID);
@@ -251,7 +255,8 @@ let indexes = this.grid.selectedIndexes;
         }
         e.settledDisc = settledDisc;
         if (i == len - 1) {
-          this.grid.gridRef.refresh();
+        //  this.grid.gridRef.refresh();
+        this.sublegendOpen = data;
           setTimeout(() => {
             this.grid.gridRef?.selectRows(indexes);
           }, 100);

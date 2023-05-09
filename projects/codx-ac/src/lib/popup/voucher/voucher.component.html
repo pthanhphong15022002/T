@@ -149,7 +149,7 @@
                 <div class="form-group">
                   <codx-label fiedName="lblCurencies" [formModel]="form.formModel" default="Số tiền chi trả">
                   </codx-label>
-                  <codx-input type="number" field="payAmt" (keyUpEnter)="payAmtEnter($event)"  (controlBlur)="payAmtBlur($event)" >
+                  <codx-input type="number" field="payAmt" (valueChange)="payAmtChange($event)" (keyUpEnter)="payAmtEnter($event)"  (controlBlur)="payAmtBlur($event)" >
                   </codx-input>
                 </div>
               </div>
