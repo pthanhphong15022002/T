@@ -402,6 +402,20 @@ export class CodxAdService {
       [lstAD_UserRoles, lstUserIDs, needValidate, autoCreated]
     );
   }
+
+  addUserToGroupAsync(
+    groupID: string,
+    userID: string,
+    isOverrideRoles: boolean
+  ) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'AddUserToGroupAsync',
+      [groupID, userID, isOverrideRoles]
+    );
+  }
   //#endregion
 
   //#region UserGroupBusiness
