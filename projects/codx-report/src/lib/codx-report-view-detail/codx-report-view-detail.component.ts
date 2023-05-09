@@ -94,7 +94,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
           this.getReport(funcID);
         }
         else if(event.url.includes(this.rootFunction.funtionID)){
-          debugger
+
           this.pageTitle.setTitle(this.rootFunction.customName);
           this.pageTitle.setSubTitle(this.rootFunction.customName);
           this.pageTitle.setBreadcrumbs([]);
@@ -120,7 +120,14 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     if(e.id == 'btnViewDs'){
       let dialog = new DialogModel;
       dialog.IsFull = true;
-
+      let parameters = this.funcItem.parameters;
+      if(parameters){
+        parameters.forEach((x:any) => {
+          if(x.defaultValue){
+            e.parameters[x.mappingName] = x.defaultValue;
+          }
+        });
+      }
       this.callfc.openForm(PopupShowDatasetComponent,"",window.innerWidth,window.innerHeight,"",{report: this.funcItem, parameters: e.parameters},"",dialog)
     }
   }
@@ -167,6 +174,15 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
         // }
         objParam[key] = e[1][key]
       }
+      // let parameters = this.funcItem.parameters;
+      // if(parameters){
+      //   parameters.forEach((e:any) => {
+      //     if(e.defaultValue){
+      //       objParam[e.mappingName] = e.defaultValue;
+      //     }
+      //   });
+      // }
+
       this._paramString = JSON.stringify(objParam);
     }
   }
