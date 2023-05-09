@@ -1,6 +1,10 @@
 {
   "apiUrl": "http://172.16.7.34:8011",
+<<<<<<< HEAD
+  "reportUrl": "http://172.16.7.34:4203/report",
+=======
   "reportUrl": "http://localhost:4203/report",
+>>>>>>> aa9b97d50c92ec0133ce783e2cb543bd9565a442
   "shopping": "https://172.16.7.34:44317/Shopping",
   "urlUpload": "http://172.16.7.34:8011/lvfile",
   "appName": "hps-file-test",
