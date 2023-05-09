@@ -15,6 +15,7 @@ import {
   FormModel,
   Util,
   CacheService,
+  SortModel,
 } from 'codx-core';
 
 @Component({
@@ -27,6 +28,7 @@ export class VoucherComponent implements OnInit {
   dialog!: DialogRef;
   title: string;
   cashpayment: any;
+  type: number;
   vouchers: Array<any> = [];
   gridModel: DataRequest = new DataRequest();
   invoiceDueDate: any;
@@ -55,6 +57,7 @@ export class VoucherComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.cashpayment = dialogData.data.cashpayment;
+    this.type = dialogData.data.type;
     this.title = dialogData.data.title;
     this.gridModel.pageSize = 20;
     this.gridModel.page = 1;
@@ -70,7 +73,6 @@ export class VoucherComponent implements OnInit {
           let m = res.find((x) => x.functionID == 'ACT041005');
           if (m) {
             this.morefunction = m;
-            this.loadData();
           }
         }
       });
@@ -89,16 +91,15 @@ export class VoucherComponent implements OnInit {
     this.gridModel.dataValue = this.morefunction.dataValue;
     this.gridModel.entityName = this.morefunction.entityName;
     this.api
-      .execSv<any>(
+      .exec<any>(
         'AC',
-        'Core',
-        'DataBusiness',
-        'LoadDataAsync',
+        'SettledInvoicesBusiness',
+        'LoadBySubInvoicesAsync',
         this.gridModel
       )
       .subscribe((res) => {
         if (res && res.length) {
-          if (this.payAmt && this.payAmt > 0) this.paymentAmt( res[0]);
+          if (this.payAmt && this.payAmt > 0) this.paymentAmt(res[0]);
           this.sublegendOpen = res[0];
         }
       });
@@ -124,7 +125,7 @@ export class VoucherComponent implements OnInit {
 
   valueChange(e: any) {
     let field = e.field;
-    if (!e.data || typeof e.data.data === 'undefined') {
+    if (!e.data || typeof e.data === 'undefined') {
       this.mapPredicates.delete(field);
       this.mapDataValues.delete(field);
     }
@@ -141,20 +142,54 @@ export class VoucherComponent implements OnInit {
       }
     }
 
+    if (field === 'mixedPayment' && e.data) {
+      if (e.data) {
+        this.mapPredicates.set('currencyID', 'CurrencyID = @0');
+        this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
+      } else {
+        this.mapPredicates.delete(field);
+        this.mapDataValues.delete(field);
+      }
+    }
+
     if (field === 'date' && this.mapPredicates.has('voucherType') && e.data)
       this.setDate(e.data);
 
     if (field === 'accountID' && e.data) {
-      this.mapPredicates.set('accountID', 'AccountID.Contains(@0)');
+      this.mapPredicates.set('accountID', 'AccountID = @0');
       this.mapDataValues.set('accountID', e.data);
     }
 
-    if (field === 'invoiceDueDate' && typeof e.data.data !== 'undefined') {
+    if (field === 'invoiceDueDate' && typeof e.data !== 'undefined') {
       this.mapPredicates.set('invoiceDueDate', 'InvoiceDueDate = @0');
       this.mapDataValues.set(
         'invoiceDueDate',
         new Date(e.data.toDate).toISOString()
       );
+    }
+
+    if(field === 'payType'){
+      let sort:Array<SortModel> = [];
+      switch (e.data){
+        case '1':
+          break;
+          case '2':
+           sort = [{field:'InvoiceDueDate',dir:'asc'}];
+          break;
+          case '3':
+            sort = [{field:'InvoiceDueDate',dir:'desc'}];
+          break;
+          case '4':
+            sort = [{field:'BalAmt',dir:'asc'},{field:'InvoiceDueDate',dir:'asc'}];
+          break;
+          case '5':
+            sort = [{field:'BalAmt',dir:'desc'},{field:'InvoiceDueDate',dir:'asc'}];
+          break;
+          default:
+            sort = [];
+            break;
+      }
+      this.gridModel.sort = sort;
     }
   }
 
@@ -187,7 +222,7 @@ export class VoucherComponent implements OnInit {
   }
 
   paymentAmt(data) {
-   // let data = this.sublegendOpen;
+    // let data = this.sublegendOpen;
     let termID = [];
     data.filter((x) => {
       if (x.invoiceDueDate <= this.cashpayment.voucherDate && x.pmtTermID)
@@ -255,8 +290,8 @@ export class VoucherComponent implements OnInit {
         }
         e.settledDisc = settledDisc;
         if (i == len - 1) {
-        //  this.grid.gridRef.refresh();
-        this.sublegendOpen = data;
+          //  this.grid.gridRef.refresh();
+          this.sublegendOpen = data;
           setTimeout(() => {
             this.grid.gridRef?.selectRows(indexes);
           }, 100);
