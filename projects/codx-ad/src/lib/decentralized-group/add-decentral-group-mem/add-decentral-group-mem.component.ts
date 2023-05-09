@@ -85,8 +85,8 @@ export class AddDecentralGroupMemComponent extends UIComponent {
 
     let needValidate = this.groupData.memberIDs != '';
     let lstUserIDs = [this.groupData.groupID];
-    if (needValidate) {
-      lstUserIDs.push(...(this.groupData.memberIDs?.split(';') ?? undefined));
+    if (needValidate && this.groupData.memberIDs?.split(';').length > 0) {
+      lstUserIDs.push(...this.groupData.memberIDs?.split(';'));
     }
 
     let obj = {

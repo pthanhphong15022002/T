@@ -19,6 +19,10 @@ import {
 import { CodxEpService } from '../codx-ep.service';
 import { EPCONST } from '../codx-ep.constant';
 import { ActivatedRoute } from '@angular/router';
+import { PopupDriverAssignComponent } from './popup-driver-assign/popup-driver-assign.component';
+import { DriverModel } from '../models/bookingAttendees.model';
+import { ResourceTrans } from '../models/resource.model';
+import { PopupAddCardTransComponent } from '../booking/cardTran/popup-add-cardTrans/popup-add-cardTrans.component';
 
 @Component({
   selector: 'ep-approval',
@@ -85,6 +89,8 @@ export class EPApprovalComponent extends UIComponent {
   resourceField;
   dataSelected: any;
   approvalRule = '0';
+  cbbDriver = [];
+  listDriverAssign = [];
 
   constructor(
     private injector: Injector,
@@ -267,7 +273,7 @@ export class EPApprovalComponent extends UIComponent {
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
       event.forEach((func) => {
-        if (func.functionID == 'SYS04' /*Copy*/) {
+        if (func.functionID == EPCONST.MFUNCID.Copy) {
           func.disabled = true;
         }
       });
@@ -286,7 +292,9 @@ export class EPApprovalComponent extends UIComponent {
           if (
             func.functionID == EPCONST.MFUNCID.R_Undo ||
             func.functionID == EPCONST.MFUNCID.C_Undo ||
-            func.functionID == EPCONST.MFUNCID.S_Undo
+            func.functionID == EPCONST.MFUNCID.S_Undo ||
+            func.functionID == EPCONST.MFUNCID.C_DriverAssign ||
+            func.functionID == EPCONST.MFUNCID.C_CardTrans
           ) {
             func.disabled = true;
           }
@@ -310,32 +318,56 @@ export class EPApprovalComponent extends UIComponent {
           ) {
             func.disabled = false;
           }
+          if (func.functionID == EPCONST.MFUNCID.C_DriverAssign) {
+            if (data?.resources) {
+              let driver = Array.from(data?.resources).filter((item: any) => {
+                return item.roleType == '2';
+              });
+              if ((driver != null && driver.length > 0) || data?.driverName!=null) {
+                func.disabled = false;//true
+              } else {
+                func.disabled = false;
+              }
+            }
+          }
         });
       }
     }
   }
-  clickMF(value, datas: any = null) {
-    let funcID = value?.functionID;
+  clickMF(evt :any, data: any ) {
+    let funcID = evt?.functionID;
     switch (funcID) {
       case EPCONST.MFUNCID.R_Approval:
-      case EPCONST.MFUNCID.R_Approval:
-      case EPCONST.MFUNCID.R_Approval:
+      case EPCONST.MFUNCID.C_Approval:
+      case EPCONST.MFUNCID.S_Approval:
         {
-          this.approve(datas);
+          this.approve(data);
         }
         break;
       case EPCONST.MFUNCID.R_Reject:
       case EPCONST.MFUNCID.C_Reject:
       case EPCONST.MFUNCID.S_Reject:
         {
-          this.reject(datas);
+          this.reject(data);
         }
         break;
       case EPCONST.MFUNCID.R_Undo:
       case EPCONST.MFUNCID.C_Undo:
       case EPCONST.MFUNCID.S_Undo:
         {
-          this.undo(datas);
+          this.undo(data);
+        }
+        break;
+      case EPCONST.MFUNCID.C_CardTrans:
+        {
+          this.popupTitle=evt?.text;
+          this.cardTrans(data);
+        }
+        break;
+      case EPCONST.MFUNCID.C_DriverAssign:
+        {
+          this.popupTitle=evt?.text;
+          this.assignDriver(data);
         }
         break;
     }
@@ -404,5 +436,58 @@ export class EPApprovalComponent extends UIComponent {
       ':' +
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
+  }
+
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Popup-----------------------------------------//
+  //---------------------------------------------------------------------------------//
+
+  assignDriver(data: any) {
+    let startDate = new Date(data?.startDate);
+    let endDate = new Date(data?.endDate);
+    this.codxEpService
+      .getAvailableDriver(startDate.toUTCString(), endDate.toUTCString())
+      .subscribe((res: any) => {
+        if (res) {
+          this.cbbDriver = [];
+          this.listDriverAssign = res;
+          this.listDriverAssign.forEach((dri) => {
+            var tmp = new DriverModel();
+            tmp['driverID'] = dri.resourceID;
+            tmp['driverName'] = dri.resourceName;
+            this.cbbDriver.push(tmp);
+          });
+          let popupDialog = this.callfc.openForm(
+            PopupDriverAssignComponent,
+            '',
+            550,
+            250,
+            this.funcID,
+            [
+              data,
+              this.popupTitle,
+              this.cbbDriver,
+            ]
+          );
+          popupDialog.closed.subscribe((x) => {
+            if (!x?.event) this.view.dataService.clear();
+            else {
+              this.view.dataService.update(x?.event).subscribe();
+            }
+          });
+        }
+      });
+  }
+
+  cardTrans( data: any) {
+    let curTran = new ResourceTrans();
+    let dialog = this.callfc.openForm(
+      PopupAddCardTransComponent,
+      '',
+      550,
+      450,
+      EPCONST.FUNCID.CA_Get,
+      [curTran, EPCONST.FUNCID.CA_Get, this.popupTitle]
+    );
   }
 }
