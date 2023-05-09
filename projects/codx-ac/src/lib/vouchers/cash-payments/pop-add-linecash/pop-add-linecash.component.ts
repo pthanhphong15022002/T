@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Injector,
   OnInit,
   Optional,
@@ -29,7 +30,8 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cbxAccountID') cbxAccountID: CodxInputComponent;
   @ViewChild('cbxOffsetAcctID') cbxOffsetAcctID: CodxInputComponent;
-  dialog!: DialogRef;
+  @ViewChild('cardbody') cardbody: ElementRef;
+  dialog!: any;
   headerText: string;
   formModel: FormModel;
   gridViewSetup: any;
@@ -39,6 +41,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   cashpayment: CashPayment;
   lockFields: any;
   journal : any;
+  baseCurr:any;
   objectcashpaymentline: Array<CashPaymentLine> = [];
   constructor(
     private inject: Injector,
@@ -68,7 +71,9 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.loadCompanySetting();
+  }
   ngAfterViewInit() {
     this.loadInit();
   }
@@ -128,6 +133,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   loadInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashpaymentline);
+    this.dialog.dialog.properties.height = 'auto';
     if (this.journal?.drAcctControl === '1') {
       (
         this.cbxAccountID.ComponentCurrent as CodxComboboxComponent
@@ -213,6 +219,13 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
       return false;
     }
   }
+  loadCompanySetting(){
+    this.api
+    .exec<any>('AC', 'CommonBusiness', 'GetCompanySettings')
+    .subscribe((res) => {
+      this.baseCurr = res.baseCurr;
+    });
+  }
   //#endregion
 
   //#region Method
@@ -252,11 +265,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
             )
             .subscribe((res) => {
               if (res) {
-                window.localStorage.setItem(
-                  'dataline',
-                  JSON.stringify(this.cashpaymentline)
-                );
-                this.dialog.close();
+                this.dialog.close({data:this.cashpaymentline});
               }
             });
           break;
@@ -269,11 +278,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
             )
             .subscribe((res) => {
               if (res) {
-                window.localStorage.setItem(
-                  'dataline',
-                  JSON.stringify(this.cashpaymentline)
-                );
-                this.dialog.close();
+                this.dialog.close({data:this.cashpaymentline});
               }
             });
           break;
