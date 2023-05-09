@@ -375,20 +375,6 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     }
     if (event.type == 'doubleClick' || event.type == 'edit') {
       this.viewDetail(event.data);
-      // if (event?.data.approveStatus == '1') {
-      //   if (
-      //     !this.codxEpService.checkRole(
-      //       this.authService.userValue,
-      //       event?.data?.createdBy,
-      //       this.isAdmin
-      //     )
-      //   ) {
-      //     this.notificationsService.notifyCode('TM052');
-      //     return;
-      //   } else {
-      //     this.edit(event.data);
-      //   }
-      // }
     }
   }
 

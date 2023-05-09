@@ -71,7 +71,7 @@
           class="badge badge-light badge-md fs-7">
         </codx-vll>
 
-        <codx-vll *ngIf="resourceType=='6'" [showText]="true" [showBgColor]="true" [name]="'EP020'"
+        <codx-vll *ngIf="resourceType=='6' || (resourceType=='2' && data?.issueControl)" [showText]="true" [showBgColor]="true" [name]="'EP020'"
           [value]="data?.issueStatus" class="badge badge-light badge-md fs-7">
         </codx-vll>
         <div [innerHTML]=" data?.bookingOn | formatvalue : formModel : 'BookingOn' | async "></div>
