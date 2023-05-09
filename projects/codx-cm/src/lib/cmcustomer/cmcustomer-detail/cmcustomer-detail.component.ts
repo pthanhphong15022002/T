@@ -237,7 +237,7 @@ export class CmcustomerDetailComponent implements OnInit {
           isActive: true,
         },
         {
-          name: 'Opportunity',
+          name: 'DealCompetitors',
           textDefault: 'Cơ hội liên quan',
           icon: 'icon-shopping_cart',
           isActive: false,
