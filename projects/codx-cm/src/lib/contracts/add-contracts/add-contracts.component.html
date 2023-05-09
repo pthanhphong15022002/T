@@ -481,26 +481,30 @@
       <div class="row form-group">
         <div class="col-6">
           <div>
-            <codx-label fiedName="" default="Điện thoại"></codx-label>
+            <codx-label fiedName="phone" default="Điện thoại"></codx-label>
           </div>
           <div class="">
             <codx-input
-              field="taskName"
+              field="phone"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="account?.phone"
+              [disabled]="true"
             >
             </codx-input>
           </div>
         </div>
         <div class="col-6">
           <div>
-            <codx-label fiedName="" default="Fax"></codx-label>
+            <codx-label fiedName="faxNo" default="Fax"></codx-label>
           </div>
           <div class="">
             <codx-input
-              field="taskName"
+              field="faxNo"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="account?.faxNo"
+              [disabled]="true"
             >
             </codx-input>
           </div>
@@ -510,13 +514,15 @@
       <div class="row form-group">
         <div class="col-6">
           <div>
-            <codx-label fiedName="" default="Người đại diện"></codx-label>
+            <codx-label fiedName="contactName" default="Người đại diện"></codx-label>
           </div>
           <div class="">
             <codx-input
-              field="taskName"
+              field="contactName"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="account?.contactName"
+              [disabled]="true"
             >
             </codx-input>
           </div>
@@ -530,6 +536,8 @@
               field="taskName"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="account?.contactName"
+              [disabled]="true"
             >
             </codx-input>
           </div>
@@ -546,6 +554,8 @@
               field="taskName"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="account?.contactName"
+              [disabled]="true"
             >
             </codx-input>
           </div>
@@ -559,6 +569,8 @@
               field="taskName"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="account?.contactName"
+              [disabled]="true"
             >
             </codx-input>
           </div>

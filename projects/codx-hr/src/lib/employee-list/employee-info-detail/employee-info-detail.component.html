@@ -3682,72 +3682,6 @@
               </div>
             </ng-container>
           </div>
-
-          <!-- <div *ngIf="ViewAllEBenefitFlag == true">
-            <div
-              class="d-flex justify-content-between align-items-center mt-6 mb-3"
-            >
-              <div class="d-flex align-items-center">
-                <span class="icon-i-filter-right icon-20 me-2"></span>
-                <div class="d-flex align-items-center me-3">
-                  <codx-label
-                    default="Chi tiết"
-                    class="fw-bold text-uppercase fs-5 text-gray-600"
-                  >
-                  </codx-label>
-                  <span class="text-gray-500 mx-2"> | </span>
-                  <span class="text-gray-500">({{ eBenefitRowCount }})</span>
-                </div>
-              </div>
-
-              <div class="d-flex align-items-center">
-                <span class="ms-2">
-                  <codx-dropdown-select
-                    *ngIf="eBenefitGrvSetup"
-                    [cssClass]="'rounded-pill border-1'"
-                    cssPopup="h-350px w-300px"
-                    [emptyText]="benefitHeaderTexts['BenefitID']"
-                    [isMulti]="true"
-                    type="combobox"
-                    field="BenefitID"
-                    [refValue]="eBenefitGrvSetup?.BenefitID?.referedValue"
-                    (valueChange)="valueChangeFilterBenefit($event)"
-                  ></codx-dropdown-select>
-                </span>
-                <span class="ms-2">
-                  <codx-dropdown-calendar
-                    [cssPopup]="'w-600px h-400px'"
-                    emptyText="Chọn năm"
-                    [firstChange]="false"
-                    [displayOption]="ops"
-                    [selectedType]="'y'"
-                    [cssClass]="'rounded-pill'"
-                    (change)="valueChangeYearFilterBenefit($event)"
-                  ></codx-dropdown-calendar>
-                </span>
-              </div>
-            </div>
-
-            <div class="profile-grid">
-              <codx-gridview
-                *ngIf="benefitColumnGrid"
-                #gridView
-                [sort]="[benefitSortModel]"
-                [formModel]="benefitFormodel"
-                [columnsGrid]="benefitColumnGrid"
-                [service]="'HR'"
-                [assemblyName]="'Core'"
-                [className]="'DataBusiness'"
-                [method]="'LoadDataAsync'"
-                [predicates]="'EmployeeID=@0'"
-                [dataValues]="employeeID"
-                [pageSize]="numPageSizeGridView"
-                [entityName]="'HR_EBenefits'"
-                [rowHeight]="40"
-                height="auto"
-              ></codx-gridview>
-            </div>
-          </div> -->
         </div>
       </div>
       <!-- Tài sản cấp phát -->
@@ -7707,7 +7641,7 @@
 </ng-template>
 
 <!-- Benefit modal view All -->
-<ng-template #templateViewBenefit let-dialogBenefit>
+<!-- <ng-template #templateViewBenefit let-dialogBenefit>
   <div class="codx-form card w-100 h-100 rounded-0 border-0">
     <div class="card-header flex-column" *ngIf="ViewAllEBenefitFlag">
       <div class="d-flex align-items-center justify-content-between w-100">
@@ -7780,7 +7714,7 @@
       ></codx-gridview>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #emptyDataTemplate>
   <div class="d-flex ms-1">
@@ -7960,4 +7894,16 @@
       </div>
     </div>
   </div>
+</ng-template>
+<ng-template #templateViewBenefit let-dialogViewBenefit>
+  <lib-popup-viewall-benefit
+    [funcID]="view.funcID"
+    [employeeId]="employeeID"
+    [dialog]="dialogViewBenefit"
+    [formModel]="view.formModel"
+
+    [headerText]="headerTextBenefit"
+    (clickMFunction)="clickEvent($event)"
+  >
+  </lib-popup-viewall-benefit>
 </ng-template>

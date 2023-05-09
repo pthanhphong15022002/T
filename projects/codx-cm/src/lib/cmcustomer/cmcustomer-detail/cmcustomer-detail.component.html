@@ -321,6 +321,9 @@
           <ng-container *ngIf="name == 'Deal'">
            <codx-list-deals [customerID]="dataSelected.recID"></codx-list-deals>
           </ng-container>
+          <ng-container *ngIf="name == 'DealCompetitors'">
+            <codx-view-dealcompetitors></codx-view-dealcompetitors>
+          </ng-container>
           <ng-container *ngIf="name == 'Product'">
             <ng-container [ngTemplateOutlet]="product"> </ng-container>
           </ng-container>
