@@ -1520,7 +1520,7 @@
                   </div>
                 </div>
                 <!-- Hộ chiếu -->
-                <div #passport class="mb-1 " *ngIf="ePassportFormModel">
+                <div #passport class="mb-1" *ngIf="ePassportFormModel">
                   <div class="d-flex align-items-center mt-6 mb-4">
                     <span class="icon-i-filter-right icon-20 me-2"></span>
                     <div class="fw-bold text-uppercase fs-5 text-gray-600">
@@ -1533,7 +1533,7 @@
                     </div>
                   </div>
 
-                  <div class="row mb-5  ">
+                  <div class="row mb-5">
                     <div class="col">
                       <div class="text-gray-600 pb-1">
                         <span
@@ -1577,20 +1577,16 @@
                         <span class="fw-bold text-dark fs-6">
                           {{ crrPassport?.expiredDate | fmDT }}
                         </span>
-
                       </div>
                       <codx-mfunc
-                      [formModel]="ePassportFormModel"
-                      (clickMF)="clickMF($event, crrPassport, 'passport')"
-                      type="hover"
-                      [dataItem]="crrPassport"
-                    >
-                    </codx-mfunc>
+                        [formModel]="ePassportFormModel"
+                        (clickMF)="clickMF($event, crrPassport, 'passport')"
+                        type="hover"
+                        [dataItem]="crrPassport"
+                      >
+                      </codx-mfunc>
                     </div>
-
                   </div>
-
-
 
                   <!-- <div class="mt-4 profile-grid">
                     <codx-gridview
@@ -1680,12 +1676,12 @@
                           </span>
                         </div>
                         <codx-mfunc
-                        [formModel]="eVisaFormModel"
-                        (clickMF)="clickMF($event, crrVisa, 'visa')"
-                        type="hover"
-                        [dataItem]="crrVisa"
-                      >
-                      </codx-mfunc>
+                          [formModel]="eVisaFormModel"
+                          (clickMF)="clickMF($event, crrVisa, 'visa')"
+                          type="hover"
+                          [dataItem]="crrVisa"
+                        >
+                        </codx-mfunc>
                       </div>
                     </div>
 
@@ -1907,7 +1903,7 @@
                       </div>
                     </div>
                     <div class="col has-action-menu">
-                      <div class="text-gray-600 pb-1 ">
+                      <div class="text-gray-600 pb-1">
                         <codx-label
                           [default]="'Thời hạn'"
                           [name]="'lblTimeEworkpermit'"
@@ -1922,12 +1918,12 @@
                         </span>
                       </div>
                       <codx-mfunc
-                      [formModel]="eWorkPermitFormModel"
-                      (clickMF)="clickMF($event, crrWorkpermit, 'workpermit')"
-                      type="hover"
-                      [dataItem]="crrWorkpermit"
-                    >
-                    </codx-mfunc>
+                        [formModel]="eWorkPermitFormModel"
+                        (clickMF)="clickMF($event, crrWorkpermit, 'workpermit')"
+                        type="hover"
+                        [dataItem]="crrWorkpermit"
+                      >
+                      </codx-mfunc>
                     </div>
                   </div>
 
@@ -1948,8 +1944,6 @@
                       </span>
                     </div>
                   </div>
-
-
                 </div>
 
                 <!-- <div class="mt-4 profile-grid">
@@ -2122,7 +2116,7 @@
 
                 <div #family class="mb-1">
                   <div class="d-flex flex-wrap py-3">
-                    <div *ngIf="lstFamily.length > 0;else emptyDataTemplate">
+                    <div *ngIf="lstFamily.length > 0; else emptyDataTemplate">
                       <ng-container *ngFor="let item of lstFamily">
                         <div class="w-50">
                           <div
@@ -2202,7 +2196,7 @@
                                     >
                                   </span>
                                 </div>
-  
+
                                 <div
                                   class="d-flex align-items-center mb-1"
                                   *ngIf="data.isDependent"
@@ -4279,6 +4273,7 @@
                 [entityName]="'HR_EAppointions'"
                 [rowHeight]="30"
                 height="auto"
+                [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
           </div>
@@ -4379,6 +4374,7 @@
                 [rowHeight]="30"
                 height="auto"
                 [allowSorting]="true"
+                [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
           </div>
@@ -4447,6 +4443,7 @@
                 [entityName]="'HR_EBusinessTravels'"
                 [rowHeight]="30"
                 height="auto"
+                [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
           </div>
@@ -4512,6 +4509,7 @@
                 [entityName]="'HR_EAwards'"
                 [rowHeight]="40"
                 height="auto"
+                [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
             <!-- <codx-gridview-v2
@@ -4589,6 +4587,7 @@
                 [entityName]="'HR_EDisciplines'"
                 [rowHeight]="40"
                 height="auto"
+                [emptyTemplate]="emptyDataTemplate"
               >
               </codx-gridview>
             </div>
@@ -4738,6 +4737,7 @@
                 [entityName]="'HR_EDegrees'"
                 [sort]="[issuedDateSortModel]"
                 height="auto"
+                [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
           </div>
@@ -4851,6 +4851,7 @@
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_ECertificates'"
                 height="auto"
+                [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
           </div>
@@ -4922,6 +4923,7 @@
               [entityName]="'HR_ESkills'"
               [sort]="[skillIDSortModel, skillGradeSortModel]"
               height="auto"
+              [emptyTemplate]="emptyDataTemplate"
             ></codx-gridview>
 
             <!-- <ng-container *ngFor="let eSkill of lstESkill">
@@ -5118,6 +5120,7 @@
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_ETrainCourses'"
                 height="auto"
+                [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
             <!-- <codx-gridview-v2
@@ -5193,6 +5196,10 @@
                             </codx-label> -->
                 {{ getFormHeader(eAccidentsFuncID) }}
               </div>
+              <span class="text-gray-500 mx-2"> | </span>
+              <span class="text-dark">
+                <span>({{ eAccidentsRowCount }})</span>
+              </span>
             </div>
             <div class="d-flex align-items-center ms-5">
               <codx-dropdown-select
@@ -5311,7 +5318,8 @@
               [emptyTemplate]="emptyDataTemplate"
             >
             </codx-gridview>
-            <!-- <div
+          </div>
+          <!-- <div
                       class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                     ></div>
                     <div class="d-flex flex-wrap mt-6 mb-3">
@@ -5333,7 +5341,6 @@
                         </div>
                       </div>
                     </div> -->
-          </div>
         </div>
       </div>
 
@@ -7563,7 +7570,9 @@
                   >
                   </codx-label>
                   <span class="text-gray-500 mx-2"> | </span>
-                  <span class="text-gray-500">Tất cả ({{ passportRowCount }})</span>
+                  <span class="text-gray-500"
+                    >Tất cả ({{ passportRowCount }})</span
+                  >
                 </div>
               </div>
             </div>
@@ -7799,7 +7808,9 @@
                   >
                   </codx-label>
                   <span class="text-gray-500 mx-2"> | </span>
-                  <span class="text-gray-500">Tất cả ({{ workPermitRowCount }})</span>
+                  <span class="text-gray-500"
+                    >Tất cả ({{ workPermitRowCount }})</span
+                  >
                 </div>
               </div>
             </div>

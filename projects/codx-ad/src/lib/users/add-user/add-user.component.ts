@@ -33,6 +33,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 import { Pos } from '@syncfusion/ej2-angular-progressbar';
 import { Post } from '@shared/models/post';
+import { AD_UserGroups } from '../../models/AD_UserGroups.models';
 
 @Component({
   selector: 'lib-add-user',
@@ -337,17 +338,19 @@ export class AddUserComponent extends UIComponent implements OnInit {
         .save((opt: any) => this.beforeSave(opt), 0, '', '', false)
         .subscribe((res) => {
           if (!res?.error) {
+            if (!this.isSaved) {
+              this.getHTMLFirstPost(this.adUser);
+              this.adService.createFirstPost(this.tmpPost).subscribe();
+              this.imageUpload
+                .updateFileDirectReload(res.save.userID)
+                .subscribe((result) => {
+                  if (result) {
+                    this.loadData.emit();
+                  }
+                });
+              this.dataAfterSave = res.save;
+            }
             this.isSaved = true;
-            this.getHTMLFirstPost(this.adUser);
-            this.adService.createFirstPost(this.tmpPost).subscribe();
-            this.imageUpload
-              .updateFileDirectReload(res.save.userID)
-              .subscribe((result) => {
-                if (result) {
-                  this.loadData.emit();
-                }
-              });
-            this.dataAfterSave = res.save;
 
             if (closeAddPopup) {
               this.dialog.close(this.adUser);
@@ -447,6 +450,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
     }
   }
 
+  addUserToGroup(groupID) {}
+
   valueBU(data) {
     if (data.data) {
       this.adUser[data.field] = data.data;
@@ -490,6 +495,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
             dt['roleID'] = dt.roleID;
             dt.userID = this.adUser.userID;
           });
+          this.adUser.chooseRoles = this.viewChooseRole;
           this.countListViewChooseRoleApp = this.viewChooseRole.length;
           this.changeDetector.detectChanges();
         }

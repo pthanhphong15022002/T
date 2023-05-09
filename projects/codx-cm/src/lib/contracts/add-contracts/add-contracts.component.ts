@@ -15,6 +15,8 @@ export class AddContractsComponent implements OnInit{
   isLoadDate: any;
   action = 'add';
   projectID: string;
+  tabClicked  = ''
+  listClicked = [];
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -31,6 +33,12 @@ export class AddContractsComponent implements OnInit{
   }
   ngOnInit() {
     this.setData(this.contractsInput);
+    this.listClicked = [
+      { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+      { name: 'representative', textDefault: 'Chi tiết mặt hàng', icon: 'icon-contact_phone', isActive: false },
+      { name: 'items', textDefault: 'Phương thức và tiến độ thanh toán', icon: 'icon-add_shopping_cart', isActive: false },
+      { name: 'contract', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-shopping_bag', isActive: false },
+    ]
   }
 
   setData(data){

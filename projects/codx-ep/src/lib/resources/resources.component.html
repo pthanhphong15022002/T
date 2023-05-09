@@ -3,19 +3,20 @@
   [method]="method" (onLoading)="onLoading($event)" [toolbarDisplay]="true"></codx-views>
 
 <ng-template #mfCol let-data>
-  <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data" (changeDataMF)="changeDataMF($event,data)">
+  <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data"
+    (changeDataMF)="changeDataMF($event,data)">
   </codx-mfunc>
 </ng-template>
 <ng-template #roomNameCol let-data>
-  <div class="d-flex flex-row justify-content-start align-items-center">
+  <div class="d-flex flex-row justify-content-start align-items-center py-2">
     <codx-img #avatar [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'" imageType="circle"
       width="50" [imgOn]="data.modifiedOn" [objectName]="data.resourceName"></codx-img>
     <div class="ms-4 d-flex flex-column align-items-between ">
       <span class="fw-bold" [innerHTML]="data?.resourceName | formatvalue : formModel : 'ResourceName' | async"></span>
       <div class="float-left mt-1">
-        <codx-label [default]="'Xếp hạng'" [formModel]="formModel" name="lblRanking"  class=""></codx-label>
+        <codx-label [default]="'Xếp hạng'" [formModel]="formModel" name="lblRanking" class=""></codx-label>
         <span>:</span>
-        <span class="fw-bold ms-1"  [innerHTML]="data?.ranking | formatvalue : formModel : 'Ranking' | async"></span>
+        <span class="fw-bold ms-1" [innerHTML]="data?.ranking | formatvalue : formModel : 'Ranking' | async"></span>
       </div>
       <div class="float-left fs-7 mt-1">
         <codx-label [default]="'Diện tích(m2)'" name="lblArea" class=""></codx-label>
@@ -35,10 +36,11 @@
     <codx-img class="me-4" [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'"
       [objectName]="data?.resourceName" imageType="circle" width="50" [imgOn]="data?.modifiedOn"></codx-img>
     <div class="d-flex flex-column">
-      <span class="d-flex flex-row mt-1" >
+      <span class="d-flex flex-row mt-1">
 
-        <span class="fw-bold" [innerHTML]=" data?.resourceName | formatvalue : formModel : 'resourceName' | async"></span>
-      
+        <span class="fw-bold"
+          [innerHTML]=" data?.resourceName | formatvalue : formModel : 'resourceName' | async"></span>
+
         <span class="fw-bold mx-1">-</span>
         <span class="fw-bold" [innerHTML]=" data?.code | formatvalue : formModel : 'Code' | async"></span>
       </span>
@@ -57,23 +59,25 @@
 </ng-template>
 <ng-template #driverNameCol let-data>
   <div class="d-flex flex-row align-items-center">
-    <codx-img [objectName]="data.resourceName" [objectId]="data?.recID" [funcId]="funcID"
-      [objectType]="'EP_Resources'" imageType="circle" width="35" [imgOn]="data.modifiedOn"></codx-img>
+    <codx-img [objectName]="data.resourceName" [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'"
+      imageType="circle" width="35" [imgOn]="data.modifiedOn"></codx-img>
     <div class="ms-3 d-flex flex-column">
       <span class="fw-bold" [innerHTML]=" data?.resourceName | formatvalue : formModel : 'ResourceName' | async"></span>
-    
+
     </div>
   </div>
 </ng-template>
 <ng-template #locationCol let-data>
   <div class="d-flex flex-column justify-content-start">
     <span class=" mt-1" [innerHTML]="data?.location | formatvalue : formModel : 'Location' | async"></span>
-    <span class="  mt-1 text-truncate"  [innerHTML]="data?.companyID | formatvalue : formModel : 'CompanyID' | async"></span>
+    <span class="  mt-1 text-truncate"
+      [innerHTML]="data?.companyID | formatvalue : formModel : 'CompanyID' | async"></span>
   </div>
 </ng-template>
 <ng-template #companyCol let-data>
   <div class="d-flex flex-column justify-content-start">
-    <span class="  mt-1 text-truncate"  [innerHTML]="data?.companyID | formatvalue : formModel : 'CompanyID' | async"></span>
+    <span class="  mt-1 text-truncate"
+      [innerHTML]="data?.companyID | formatvalue : formModel : 'CompanyID' | async"></span>
   </div>
 </ng-template>
 <ng-template #popupDevice let-dialog>
@@ -84,8 +88,7 @@
           <codx-label default="Cài đặt thiết bị" name="lblEquipment" [default]="'Thiết bị'"
             [formModel]="dialog.formModel"></codx-label>
         </div>
-        <button type="button" class="btn btn-sm btn-icon btn-light-primary" aria-label="Close"
-          (click)="dialog.close()">
+        <button type="button" class="btn btn-sm btn-icon btn-light-primary" aria-label="Close" (click)="dialog.close()">
           <span class="icon-close icon-20 text-dark text-hover-primary"></span>
         </button>
       </div>
@@ -95,7 +98,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-body h-100 scroll-y p-5 pt-0" *ngIf="resourceEquipments != null && resourceEquipments?.length > 0">
+  <!-- <div class="modal-body h-100 scroll-y p-5 pt-0" *ngIf="resourceEquipments != null && resourceEquipments?.length > 0">
     <div class="mb-1" *ngFor="let item of resourceEquipments">
       <div class="d-flex flex-stack py-1 px-2 border-bottom">
         <div class="d-flex">
@@ -108,6 +111,26 @@
         </div>
         <div class="d-flex justify-content-end">
           <div class="form-check form-check-solid form-switch mt-2">
+            <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
+              [checked]="item?.isSelected" [disabled]="true"></codx-input>
+            <label class="form-check-label" for="googleswitch"></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <div class="modal-body pt-0 overflow-auto h-300px" *ngIf="resourceEquipments != null">
+    <div class="mb-1 px-5" *ngFor="let item of resourceEquipments">
+      <div class="d-flex flex-stack py-3 rounded-2 bg-hover">
+        <div class="d-flex">
+          <span class="me-1 ps-2" [className]="item?.icon"
+            [ngClass]="[item?.isSelected ? 'text-primary' : 'text-muted']"></span>
+          <div class="d-flex flex-column justify-content-center">
+            <span class="ms-2 text-dark fw-bolder">{{ item?.text }}</span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end align-items-center">
+          <div class="form-check form-check-solid form-switch">
             <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
               [checked]="item?.isSelected" [disabled]="true"></codx-input>
             <label class="form-check-label" for="googleswitch"></label>
@@ -138,13 +161,13 @@
   <div class="d-flex align-items-center justify-content-start">
     <codx-img [width]="25" [objectId]="data?.preparator" objectType="AD_Users"></codx-img>
     <div class="ms-2">
-      <span class="fw-bold"  [innerHTML]="data?.preparator | formatvalue : formModel : 'Preparator' | async"></span>
+      <span class="fw-bold" [innerHTML]="data?.preparator | formatvalue : formModel : 'Preparator' | async"></span>
     </div>
   </div>
 </ng-template>
 <ng-template #noteCol let-data>
   <div class="d-flex align-items-center">
-      <span  [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"></span>
+    <span [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"></span>
   </div>
 </ng-template>
 <ng-template #linkCol let-data>
@@ -152,7 +175,7 @@
     <codx-img [objectId]="data?.linkRecID" [objectName]="data?.linkName" imageType="circle" [width]="25"
       [objectType]="'EP_Resources'"></codx-img>
     <div class="ms-2">
-      <span class="fw-bold" [innerHTML]="data?.linkID | formatvalue : formModel : 'LinkID' | async"></span>   
+      <span class="fw-bold" [innerHTML]="data?.linkID | formatvalue : formModel : 'LinkID' | async"></span>
     </div>
   </div>
 </ng-template>
@@ -160,9 +183,9 @@
   <div class="d-flex flex-row align-items-center">
     <codx-img [objectId]="data.linkRecID" [objectName]="data.LinkName" imageType="circle" [imgOn]="data.modifiedOn"
       [width]="35" [objectType]="'EP_Resources'"></codx-img>
-      <div class="ms-2">
-        <span class="fw-bold" [innerHTML]="data?.linkID | formatvalue : formModel : 'LinkID' | async"></span>   
-      </div>
+    <div class="ms-2">
+      <span class="fw-bold" [innerHTML]="data?.linkID | formatvalue : formModel : 'LinkID' | async"></span>
+    </div>
   </div>
 </ng-template>
 
@@ -178,12 +201,12 @@
 </ng-template>
 <ng-template #cardIDCol let-data>
   <div class="d-flex align-items-center">
-      <span  [innerHTML]="data?.resourceID| formatvalue : formModel : 'resourceID' | async"></span>    
+    <span [innerHTML]="data?.resourceID| formatvalue : formModel : 'resourceID' | async"></span>
   </div>
 </ng-template>
 <ng-template #cardNameCol let-data>
   <div class="d-flex align-items-center">
-      <span  [innerHTML]="data?.resourceName| formatvalue : formModel : 'resourceName' | async"></span>    
+    <span [innerHTML]="data?.resourceName| formatvalue : formModel : 'resourceName' | async"></span>
   </div>
 </ng-template>
 
@@ -193,41 +216,23 @@
     <div class="d-flex justify-content-between align-items-center">
       <div class="w-25 m-4">
         <div class="d-flex align-items-center">
-          <codx-img
-            [objectId]="data?.recID"
-            [funcId]="funcID"
-            [objectType]="view.formModel?.entityName"
-            imageType="circle"
-            width="50"
-            [imgOn]="data.modifiedOn"
-            [objectName]="data.resourceName"
-          ></codx-img>
+          <codx-img [objectId]="data?.recID" [funcId]="funcID" [objectType]="view.formModel?.entityName"
+            imageType="circle" width="50" [imgOn]="data.modifiedOn" [objectName]="data.resourceName"></codx-img>
           <div class="m-2">
-            <div
-              class="fw-bold"
-              [innerHTML]="
+            <div class="fw-bold" [innerHTML]="
                 data?.resourceName
                   | formatvalue : view.formModel : 'ResourceName'
                   | async
-              "
-            ></div>
+              "></div>
             <div>
-              <span
-                [innerHTML]="
+              <span [innerHTML]="
                   data?.resourceID
                     | formatvalue : view.formModel : 'ResourceID'
                     | async
-                "
-              ></span>
+                "></span>
               <span> | </span>
-              <span
-                ><codx-label
-                  name="lblGroup"
-                  [formName]="formModel.formName"
-                  [gridViewName]="formModel.gridViewName"
-                  default="Nhóm"
-                ></codx-label
-                >:
+              <span><codx-label name="lblGroup" [formName]="formModel.formName" [gridViewName]="formModel.gridViewName"
+                  default="Nhóm"></codx-label>:
               </span>
               <span class="fw-bold">{{ data?.groupName }}</span>
             </div>
@@ -237,109 +242,59 @@
       <div class="w-25">
         <div class="d-flex align-items-center">
           <div class="me-4">
-            <codx-label
-              name="lblColor"
-              [formName]="formModel.formName"
-              [gridViewName]="formModel.gridViewName"
-              default="Màu sắc"
-            ></codx-label
-            >:
+            <codx-label name="lblColor" [formName]="formModel.formName" [gridViewName]="formModel.gridViewName"
+              default="Màu sắc"></codx-label>:
           </div>
-          <div
-            class="border"
-            [ngStyle]="{ 'background-color': data?.color }"
-            style="width: 30px; height: 30px; border-radius: 25%"
-          ></div>
+          <div class="border" [ngStyle]="{ 'background-color': data?.color }"
+            style="width: 30px; height: 30px; border-radius: 25%"></div>
         </div>
       </div>
       <div class="w-25">
         <div class="my-2">
-          <span class="fw-bold text-black-50"
-            ><codx-label
-              name="lblCurrentQty"
-              [formName]="formModel.formName"
-              [gridViewName]="formModel.gridViewName"
-              default="Tồn kho"
-            ></codx-label
-            >:
+          <span class="fw-bold text-black-50"><codx-label name="lblCurrentQty" [formName]="formModel.formName"
+              [gridViewName]="formModel.gridViewName" default="Tồn kho"></codx-label>:
           </span>
           <span class="fw-bold">{{ data?.currentQty }}</span>
         </div>
         <div class="my-2">
-          <span class="fw-bold text-black-50"
-            ><codx-label
-              name="lblReservedQty"
-              [formName]="formModel.formName"
-              [gridViewName]="formModel.gridViewName"
-              default="Đã được đăng ký"
-            ></codx-label
-            >:
+          <span class="fw-bold text-black-50"><codx-label name="lblReservedQty" [formName]="formModel.formName"
+              [gridViewName]="formModel.gridViewName" default="Đã được đăng ký"></codx-label>:
           </span>
           <span class="fw-bold">{{ data?.reservedQty }}</span>
         </div>
         <div class="my-2">
-          <span class="fw-bold text-black-50"
-            ><codx-label
-              name="lblAvailableQty"
-              [formName]="formModel.formName"
-              [gridViewName]="formModel.gridViewName"
-              default="Được phép đăng ký"
-            ></codx-label
-            >:
+          <span class="fw-bold text-black-50"><codx-label name="lblAvailableQty" [formName]="formModel.formName"
+              [gridViewName]="formModel.gridViewName" default="Được phép đăng ký"></codx-label>:
           </span>
           <span class="fw-bold">{{ data?.availableQty }}</span>
         </div>
       </div>
       <div class="w-25 has-action-menu">
         <div class="my-2">
-          <codx-label
-            name="lblOwner"
-            [formName]="formModel.formName"
-            [gridViewName]="formModel.gridViewName"
-            default="Người điều phối"
-          ></codx-label>
+          <codx-label name="lblOwner" [formName]="formModel.formName" [gridViewName]="formModel.gridViewName"
+            default="Người điều phối"></codx-label>
         </div>
         <div class="d-flex align-items-center">
-          <codx-img
-            [objectId]="data?.owner"
-            [objectName]="data?.ownerName"
-            objectType="AD_Users"
-            [width]="40"
-            imageType="circle"
-          >
+          <codx-img [objectId]="data?.owner" [objectName]="data?.ownerName" objectType="AD_Users" [width]="40"
+            imageType="circle">
           </codx-img>
           <div class="ms-2">
-            <div >{{ data?.ownerName }}</div>
+            <div>{{ data?.ownerName }}</div>
             <div class="text-black-50">{{ data?.position }}</div>
           </div>
         </div>
-        <codx-mfunc
-          [dataItem]="data"
-          [formModel]="formModel"
-          (clickMF)="clickMF($event, data)"
-          type="hover"
-        ></codx-mfunc>
+        <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)"
+          type="hover"></codx-mfunc>
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #templateListCard let-data>
-  <codx-card-img
-    cardCss="border w-250px h-200px card-vpp"
-    [formModel]="formModel"
-    [imageObjType]="view.formModel?.entityName"
-    [imageObjName]="data.resourceName"
-    [imageId]="data?.recID"
-    [hideMF]="false"
-    (clickMF)="clickMF($event, data)"
-    (changeDataMF)="changeDataMF($event, data)"
-    [typeMF]="'hover'"
-    [rootData]="data"
-    [footer]="cardItemFooter"
-    [imgOn]="data.modifiedOn"
-    [imageWidth]="700"
-  >
+  <codx-card-img cardCss="border w-250px h-200px card-vpp" [formModel]="formModel"
+    [imageObjType]="view.formModel?.entityName" [imageObjName]="data.resourceName" [imageId]="data?.recID"
+    [hideMF]="false" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
+    [rootData]="data" [footer]="cardItemFooter" [imgOn]="data.modifiedOn" [imageWidth]="700">
   </codx-card-img>
 </ng-template>
 
@@ -350,40 +305,29 @@
     </div>
     <div *ngIf="this.isPriceVisible" class="text-start">
       {{
-        data?.costPrice == 0
-          ? (0 | currency : "VND")
-          : (data?.costPrice | currency : "VND" : "symbol" : "3.0")
+      data?.costPrice == 0
+      ? (0 | currency : "VND")
+      : (data?.costPrice | currency : "VND" : "symbol" : "3.0")
       }}
     </div>
     <div class="d-flex justify-content-center">
       <div class="d-flex align-items-end me-2 codx-badge m-3">
-        <div
-          class="d-flex align-items-center position-relative me-4"
-          [title]="resourceGridView['CurrentQty'].headerText"
-        >
+        <div class="d-flex align-items-center position-relative me-4"
+          [title]="resourceGridView['CurrentQty'].headerText">
           <span class="icon-view_agenda icon-20 text-gray-400"></span>
           <span>{{ data?.currentQty }}</span>
         </div>
-        <div
-          class="d-flex align-items-center position-relative me-4"
-          [title]="resourceGridView['ReservedQty'].headerText"
-        >
-          <span
-            class="icon-shopping_cart icon-20 text-gray-400 reservedQty_card"
-          ></span>
+        <div class="d-flex align-items-center position-relative me-4"
+          [title]="resourceGridView['ReservedQty'].headerText">
+          <span class="icon-shopping_cart icon-20 text-gray-400 reservedQty_card"></span>
           <span>{{ data?.reservedQty }}</span>
         </div>
-        <div
-          class="d-flex align-items-center position-relative me-4"
-          [title]="resourceGridView['AvailableQty'].headerText"
-        >
-          <span
-            class="icon-brightness_auto icon-20 text-gray-400 availableQty_card"
-          ></span>
+        <div class="d-flex align-items-center position-relative me-4"
+          [title]="resourceGridView['AvailableQty'].headerText">
+          <span class="icon-brightness_auto icon-20 text-gray-400 availableQty_card"></span>
           <span>{{ data?.availableQty }}</span>
         </div>
       </div>
     </div>
   </div>
 </ng-template>
-

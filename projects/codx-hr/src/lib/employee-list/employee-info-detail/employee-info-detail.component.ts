@@ -1874,9 +1874,9 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         {
           headerText:
             this.eHealthHeaderText['HealthDate'] +
-            '|' +
+            ' | ' +
             this.eHealthHeaderText['HealthPeriodID'] +
-            '|' +
+            ' | ' +
             this.eHealthHeaderText['HospitalID'],
           template: this.tempCol1EHealthGrid,
           width: '150',
@@ -1885,7 +1885,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         {
           headerText:
             this.eHealthHeaderText['HealthType'] +
-            '|' +
+            ' | ' +
             this.eHealthHeaderText['FinalConclusion'],
           template: this.tempCol2EHealthGrid,
           width: '150',
@@ -1922,7 +1922,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         {
           headerText:
             this.eVaccineHeaderText['VaccineTypeID'] +
-            '|' +
+            ' | ' +
             this.eVaccineHeaderText['HopitalID'],
           template: this.tempEVaccineGridCol1,
           width: '150',
@@ -1931,7 +1931,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         {
           headerText:
             this.eVaccineHeaderText['InjectDate'] +
-            '|' +
+            ' | ' +
             this.eVaccineHeaderText['NextInjectDate'],
           template: this.tempEVaccineGridCol2,
           width: '150',
