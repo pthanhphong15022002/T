@@ -22,10 +22,11 @@ export class PopupAddressComponent implements OnInit {
   nameCountry = '';
   nameProvince = '';
   nameDistrict = '';
-  nameRegion = '';
+  nameWard = '';
   action = '';
   model: any;
   modelDistrictID: any;
+  modelWardID: any;
   isDisable = false;
   constructor(
     private cache: CacheService,
@@ -60,23 +61,23 @@ export class PopupAddressComponent implements OnInit {
       this.nameProvince = lstText[lstText.length - 2].trim() + ', ';
       if (this.data.districtID != null && this.data.districtID.trim() != '') {
         this.nameDistrict = lstText[lstText.length - 3].trim() + ', ';
-        if (this.data.regionID != null && this.data.regionID.trim() != '') {
-          this.nameRegion = lstText[lstText.length - 4].trim() + ', ';
+        if (this.data.wardID != null && this.data.wardID.trim() != '') {
+          this.nameWard = lstText[lstText.length - 4].trim() + ', ';
         }
       } else {
-        if (this.data.regionID != null && this.data.regionID.trim() != '') {
-          this.nameRegion = lstText[lstText.length - 3].trim() + ', ';
+        if (this.data.wardID != null && this.data.wardID.trim() != '') {
+          this.nameWard = lstText[lstText.length - 3].trim() + ', ';
         }
       }
     } else {
       if (this.data.districtID != null && this.data.districtID.trim() != '') {
         this.nameDistrict = lstText[lstText.length - 2].trim() + ', ';
-        if (this.data.regionID != null && this.data.regionID.trim() != '') {
-          this.nameRegion = lstText[lstText.length - 3].trim() + ', ';
+        if (this.data.wardID != null && this.data.wardID.trim() != '') {
+          this.nameWard = lstText[lstText.length - 3].trim() + ', ';
         }
       } else {
-        if (this.data.regionID != null && this.data.regionID.trim() != '') {
-          this.nameRegion = lstText[lstText.length - 2].trim() + ', ';
+        if (this.data.wardID != null && this.data.wardID.trim() != '') {
+          this.nameWard = lstText[lstText.length - 2].trim() + ', ';
         }
       }
     }
@@ -108,11 +109,11 @@ export class PopupAddressComponent implements OnInit {
       this.data?.street != null && this.data?.street?.trim() != ''
         ? this.data.street +
           ', ' +
-          this.nameRegion +
+          this.nameWard +
           this.nameDistrict +
           this.nameProvince +
           this.nameCountry
-        : this.nameRegion +
+        : this.nameWard +
           this.nameDistrict +
           this.nameProvince +
           this.nameCountry;
@@ -139,17 +140,18 @@ export class PopupAddressComponent implements OnInit {
               : null;
           break;
         case 'districtID':
+          this.modelWardID = {DistrictID: this.data?.districtID};
           this.nameDistrict =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
               ? e?.component?.itemsSelected[0]?.DistrictName + ', '
               : null;
           break;
-        case 'regionID':
-          this.nameRegion =
+        case 'wardID':
+          this.nameWard =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
-              ? e?.component?.itemsSelected[0]?.RegionName + ', '
+              ? e?.component?.itemsSelected[0]?.WardName + ', '
               : null;
           break;
       }

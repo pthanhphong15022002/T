@@ -466,6 +466,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       task['isTaskDefault'] = false;
       this.taskType = this.listTaskType.find(type => type.value == taskCopy?.taskType)
       let taskOutput = await this.openPopupTask('copy',taskCopy);
+
       if(taskOutput?.event.task){
         let data = taskOutput?.event;
         this.currentStep?.tasks?.push(data.task);
@@ -480,7 +481,36 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
    
   deleteTask(task){
-
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.api.exec<any>(
+          'DP',
+          'InstanceStepsBusiness',
+          'DeleteTaskStepAsync',
+          task
+        ).subscribe(data => {
+          if(data){
+            let indexTask = this.currentStep?.tasks?.findIndex(taskFind => taskFind.recID == task.recID);
+            let group = this.listGroupTask.find(group => group.refID == task.taskGroupID);
+            let indexTaskGroup = -1;
+            if(group?.task?.length > 0){
+              indexTaskGroup = group?.task?.findIndex(taskFind => taskFind.recID == task.recID);
+            }
+            if(indexTask >= 0){
+              this.currentStep?.tasks?.splice(indexTask,1);
+            }
+            if(indexTaskGroup >= 0){
+              group?.task?.splice(indexTaskGroup,1);
+            }            
+            if(group){
+              group['progress'] = data[0];
+            }
+            this.currentStep['progress'] = data[1];
+          }
+        })
+      }
+    })
+   
   }
 
   async openPopupTask(action, dataTask) {

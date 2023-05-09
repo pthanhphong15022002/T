@@ -165,7 +165,7 @@ export class CM_Deals {
   consultantID: string;
   processID: string;
   startDate: Date;
-  endDate: Date;
+  endDate: Date = new Date();
   // datas: Json; hỏi kiểu dữ liệu sau
   owner: string;
   bUID: string;
@@ -359,6 +359,7 @@ export class BS_AddressBook {
   positionID: string;
   orgUnitID: string;
   divisionID: string;
+  wardID: string;
 }
 export class CM_Contracts {
 recID:string;

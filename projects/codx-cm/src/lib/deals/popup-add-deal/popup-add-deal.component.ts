@@ -120,6 +120,11 @@ export class PopupAddDealComponent
       this.deal[$event.field] = $event.data;
     }
   }
+  valueChangeDate($event) {
+    if ($event) {
+      this.deal[$event.field] = $event.data.fromDate ;
+    }
+  }
   eventUser(e) {
     if (e != null) {
       this.owner = e?.id; // thêm check null cái
@@ -180,9 +185,9 @@ export class PopupAddDealComponent
         return;
       }
     this.convertDataInstance(this.deal,this.instance);
-    // this.insertInstance();
-    // this.insertDeal();
-    this.onAdd();
+    this.insertInstance();
+    this.insertDeal();
+   // this.onAdd();
 
 
   }
@@ -198,6 +203,7 @@ export class PopupAddDealComponent
         var result = this.checkProcessInList($event);
         if (result && result.length > 0) {
           this.listInstanceSteps = result;
+          this.deal.endDate = this.HandleEndDate(this.listInstanceSteps, this.action, null);
         } else {
           this.getListInstanceSteps($event);
         }
@@ -332,6 +338,8 @@ export class PopupAddDealComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res;
+        debugger;
+        this.deal.endDate = this.HandleEndDate(this.listInstanceSteps, this.action, null);
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -369,7 +377,6 @@ export class PopupAddDealComponent
     return null;
   }
 
-
   // covnert data CM -> data DP
 
   convertDataInstance(deal:CM_Deals, instance:tmpInstances){
@@ -404,6 +411,50 @@ export class PopupAddDealComponent
       }
     }
     return '';
+  }
+
+  HandleEndDate(listSteps: any, action: string, endDateValue: any) {
+    var dateNow =
+      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+    var endDate =
+      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+    for (let i = 0; i < listSteps.length; i++) {
+      endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
+      endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
+      endDate = this.setTimeHoliday(
+        dateNow,
+        endDate,
+        listSteps[i]?.excludeDayoff
+      );
+      dateNow = endDate;
+    }
+    return endDate;
+  }
+  setTimeHoliday(startDay: Date, endDay: Date, dayOff: string) {
+    if (!dayOff || (dayOff && (dayOff.includes('7') || dayOff.includes('8')))) {
+      const isSaturday = dayOff.includes('7');
+      const isSunday = dayOff.includes('8');
+      let day = 0;
+
+      for (
+        let currentDate = new Date(startDay);
+        currentDate <= endDay;
+        currentDate.setDate(currentDate.getDate() + 1)
+      ) {
+        day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
+        day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
+      }
+      endDay.setDate(endDay.getDate() + day);
+
+      if (endDay.getDay() === 6 && isSaturday) {
+        endDay.setDate(endDay.getDate() + 1);
+      }
+
+      if (endDay.getDay() === 0 && isSunday) {
+        endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
+      }
+    }
+    return endDay;
   }
 
 }
