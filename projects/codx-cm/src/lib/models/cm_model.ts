@@ -52,6 +52,7 @@ export class CM_Quotations {
   orderPoolID: string;
   customerID: string;
   salespersonID: string;
+  contactID : string;
   consultantID: string;
   delTermID: string;
   delModeID: string;
@@ -59,6 +60,7 @@ export class CM_Quotations {
   pmtMethodID: string;
   currencyID: string;
   status: string = '1';
+  exchangeRate:number ;
   deadline: Date;
   memo: string;
   totalAmt: number;
@@ -94,7 +96,7 @@ export class CM_QuotationsLines {
   iDIM1: string;
   iDIM2: string;
   iDIM3: string;
-  iDIM4: string;
+  IDIM4: string;
   quantity: number;
   uMID: string;
   conversion: number;

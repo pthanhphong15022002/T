@@ -41,6 +41,7 @@ import { PopupAddSalesInvoiceComponent } from './vouchers/sales-invoices/popup-a
 import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
 import { TableLineDetailComponent } from './vouchers/sales-invoices/table-line-detail/table-line-detail.component';
+import { PopAddLineinventoryComponent } from './vouchers/receipt-transaction/pop-add-lineinventory/pop-add-lineinventory.component';
 
 export const routes: Routes = [
   {
@@ -149,6 +150,7 @@ export const routes: Routes = [
     PopAddReceiptTransactionComponent,
     ReportsComponent,
     ApprovalsComponent,
+    PopAddLineinventoryComponent
   ],
   imports: [
     RouterModule.forChild(routes),

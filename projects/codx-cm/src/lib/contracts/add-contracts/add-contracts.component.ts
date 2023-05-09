@@ -1,7 +1,8 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { CM_Contacts, CM_Contracts } from '../../models/cm_model';
 import { AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
   selector: 'add-contracts',
@@ -9,6 +10,7 @@ import { CodxCmService } from '../../codx-cm.service';
   styleUrls: ['./add-contracts.component.scss']
 })
 export class AddContractsComponent implements OnInit{
+  @ViewChild('attachment') attachment: AttachmentComponent;
   contracts: CM_Contracts;
   contractsInput: CM_Contracts;
   dialog!: DialogRef;
@@ -17,6 +19,7 @@ export class AddContractsComponent implements OnInit{
   projectID: string;
   tabClicked  = '';
   listClicked = [];
+  account: any;
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -30,14 +33,15 @@ export class AddContractsComponent implements OnInit{
     this.projectID = dt?.data?.projectID;
     this.action = dt?.data?.action;
     this.contractsInput = dt?.data?.contract;
+    this.account = dt?.data?.account;
   }
   ngOnInit() {
     this.setData(this.contractsInput);
     this.listClicked = [
       { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-      { name: 'detailItem', textDefault: 'Chi tiết mặt hàng', icon: 'icon-contact_phone', isActive: false },
-      { name: 'pay', textDefault: 'Phương thức và tiến độ thanh toán', icon: 'icon-add_shopping_cart', isActive: false },
-      { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-shopping_bag', isActive: false },
+      { name: 'detailItem', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
+      { name: 'pay', textDefault: 'Phương thức và tiến độ thanh toán', icon: 'icon-tune', isActive: false },
+      { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-tune', isActive: false },
     ]
   }
 
@@ -123,5 +127,8 @@ export class AddContractsComponent implements OnInit{
   }
   changeTab(e){
     this.tabClicked = e;
+  }
+  addFile(evt: any) {
+    this.attachment.uploadFile();
   }
 }

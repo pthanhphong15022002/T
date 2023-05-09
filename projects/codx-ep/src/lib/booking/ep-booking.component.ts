@@ -7,11 +7,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   UIComponent,
-  CallFuncService,
-  NotificationsService,
-  AuthService,
 } from 'codx-core';
-import { CodxEpService } from '../codx-ep.service';
 import { EPCONST } from '../codx-ep.constant';
 
 @Component({

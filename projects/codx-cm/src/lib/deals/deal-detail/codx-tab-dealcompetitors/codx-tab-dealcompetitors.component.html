@@ -38,12 +38,13 @@
 </div>
 
 <ng-template #dealCompetitors let-data>
-  <div class="d-flex justify-content-between">
+  <div class="d-flex justify-content-between has-action-menu-od mt-2">
     <div class="col-4 d-flex justify-content-start">
       <div class="me-3">
         <codx-img
-          [objectId]="data.recID"
+          [objectId]="data.competitorID"
           [referType]="'avt'"
+          [objectName]="getCompetitorName(data.competitorID)"
           [imgOn]="data?.modifiedOn"
           [objectType]="'CM_Competitors'"
           [width]="35"
@@ -59,9 +60,9 @@
               | async
           "
         ></div>
-        <div class="mb-1">
+        <div class="mb-1" *ngIf="getAddress(data?.competitorID)">
           <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
-          <span class="text-gray-900">địa chỉ</span>
+          <span class="text-gray-900" [innerHTML]="getAddress(data?.competitorID)"></span>
         </div>
       </div>
     </div>
@@ -85,10 +86,23 @@
         ></span>
       </div>
     </div>
-    <div class="col-4 d-flex align-items-start">
-      <span
-        [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"
-      ></span>
+    <div class="col-4 justify-content-between d-flex align-items-start ms-2">
+      <div class="d-flex justify-content-start">
+        <span
+          [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"
+        ></span>
+      </div>
+      <div class="d-flex justify-content-end align-items-start action-menu-od">
+        <codx-mfunc
+          [formModel]="formModel"
+          (clickMF)="clickMF($event, data)"
+          (changeDataMF)="changeDataMF($event)"
+          [isBookMark]="false"
+          [dataItem]="data"
+          type="hover"
+        >
+        </codx-mfunc>
+      </div>
     </div>
   </div>
 </ng-template>

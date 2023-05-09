@@ -126,6 +126,7 @@
             field="quotationName"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
           ></codx-input>
         </div>
         <div class="form-group col-3">
@@ -137,6 +138,7 @@
             field="versionNo"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
+            [disable]="true"
           ></codx-input>
         </div>
       </div>
@@ -152,6 +154,7 @@
               field="quotationID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
+              [disabled]="true"
             ></codx-input>
           </div>
         </div>
@@ -160,10 +163,16 @@
     <div class="row">
       <div class="col-6 row">
         <div class="form-group">
-          <codx-label default="Cơ hội"></codx-label>
+          <codx-label
+            fiedName="RefID"
+            [formModel]="form.formModel"
+          ></codx-label>
           <codx-input
-            type="text"
-            placeholder="LÀ DEADID đang xem lại"
+            field="RefID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [disabled]="disableRefID"
+            (valueChange)="changeRefID($event)"
           ></codx-input>
         </div>
       </div>
@@ -171,10 +180,15 @@
         <div class="col-6"></div>
         <div class="col-6 row">
           <div class="form-group col-6">
-            <codx-label default="Ngày báo giá"></codx-label>
+            <codx-label
+              fiedName="CreatedOn"
+              [formModel]="form.formModel"
+            ></codx-label>
             <codx-input
-              type="text"
-              placeholder="test thôi dung la"
+              field="CreatedOn"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="valueChangeDate($event)"
             ></codx-input>
           </div>
           <div class="form-group col-6">
@@ -186,6 +200,7 @@
               field="deadline"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
+              (valueChange)="valueChangeDate($event)"
             ></codx-input>
           </div>
         </div>
@@ -202,11 +217,13 @@
             field="customerID"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
+            [disabled]="disableRefID"
           ></codx-input>
         </div>
         <div class="form-group col-6">
           <codx-label default="Liên hệ"></codx-label>
-          <codx-input type="text" placeholder="test thôi dung la"></codx-input>
+          <codx-input type="text" placeholder="test thôi dung la"
+          [disabled]="disableRefID"></codx-input>
         </div>
       </div>
       <div class="col-6 row">
