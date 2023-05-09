@@ -147,7 +147,7 @@
       </div>
       <div class="col-2 ps-0">
         <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="UnitPrice"></codx-label>
+          <codx-label [formModel]="form.formModel" fiedName="CostPrice"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (controlBlur)="calculateAtm($event)"
             field="unitPrice">
           </codx-input>
@@ -155,33 +155,9 @@
       </div>
       <div class="col-4">
         <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="NetAmt"></codx-label>
+          <codx-label [formModel]="form.formModel" fiedName="CostAmt"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
             field="netAmt">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="VATID"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="vatid">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="VATAmt"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="vatAmt">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="DiscAmt"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="discAmt">
           </codx-input>
         </div>
       </div>
@@ -252,14 +228,12 @@
   <div class="d-flex justify-content-end me-3">
     <div class="ms-2">
       <button type="button" class="btn btn-light-primary">
-        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-          [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+        <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lưu & thêm"></codx-label>
       </button>
     </div>
     <div class="ms-2">
       <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="onSave()">
-        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-          [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+        <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
       </button>
     </div>
   </div>
