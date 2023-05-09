@@ -206,9 +206,9 @@ export class PopupAddQuotationsComponent implements OnInit {
           dialogQuotations.closed.subscribe((res) => {
             if (res?.event) {
               data = res?.event;
-              this.gridQuationsLines.addRow(data, idx,true);
+             // this.gridQuationsLines.addRow(data, idx);
               this.quotationLinesAddNew.push(data);
-              // this.quotationLines.push(data);
+              this.quotationLines.push(data);
               // this.gridQuationsLines.dataSource = this.quotationLines
               this.loadTotal();
               this.changeDetector.detectChanges();
@@ -234,7 +234,11 @@ export class PopupAddQuotationsComponent implements OnInit {
     return data;
   }
 
-  quotionsLineChanged(e) {
+  loadModegrid() {
+    
+  }
+
+  quotationsLineChanged(e) {
     //  const field = [
     //  'rowno',
     //  'itemid',
