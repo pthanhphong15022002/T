@@ -24,7 +24,7 @@ export class EPHistoryCardComponent
   className = 'ResourceTransBusiness';
   method = 'GetAsync';
   dataValue='';
-  predicate='TransID=@0'
+  predicate='ResourceID=@0'
   viewType = ViewType;
   funcID:any;
   formModel:FormModel;

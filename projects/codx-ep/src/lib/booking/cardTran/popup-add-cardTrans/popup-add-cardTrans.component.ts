@@ -96,4 +96,10 @@ export class PopupAddCardTransComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
+  transIDChange(evt:any){
+    if(evt!=null){
+      this.data.transID=evt?.data;
+      this.detectorRef.detectChanges();
+    }
+  }
 }
