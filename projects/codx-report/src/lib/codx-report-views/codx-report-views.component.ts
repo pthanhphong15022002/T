@@ -12,6 +12,7 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
   @ViewChild('templateListCard') templateListCard!:TemplateRef<any>;
   @ViewChild('view') viewBase:ViewsComponent;
   onInit(): void {
+
   }
 
   views: ViewModel[];
@@ -62,12 +63,13 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
       //   // },
       // },
     ];
+
     this.changeDetectorRef.detectChanges();
   }
   viewChanged(e:any){
     this.funcID = this.router.snapshot.params['funcID'];
-    this.layout.setLogo(null);
-    this.pageTitle.setBreadcrumbs([]);
+    // this.layout.setLogo(null);
+    // this.pageTitle.setBreadcrumbs([]);
   }
   onActions(e:any){
     if (e.type == 'detail') {
