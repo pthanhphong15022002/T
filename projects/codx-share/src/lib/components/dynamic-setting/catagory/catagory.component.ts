@@ -12,6 +12,7 @@ import {
   CacheService,
   CallFuncService,
   CodxFormScheduleComponent,
+  DataRequest,
   DataService,
   DialogData,
   DialogModel,
@@ -25,6 +26,7 @@ import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/ca
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve-steps.component';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
+import { map, tap } from 'rxjs/operators';
 @Component({
   selector: 'lib-catagory',
   templateUrl: './catagory.component.html',
@@ -729,6 +731,43 @@ export class CatagoryComponent implements OnInit {
                 .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
                 .subscribe((res) => {
                   if (res) {
+                    // update AD_CompanySettings
+                    const tempDataValue = JSON.parse(dt.dataValue);
+                    console.log(tempDataValue);
+
+                    const requestData = new DataRequest();
+                    requestData.entityName = 'AD_CompanySettings';
+                    requestData.pageLoading = false;
+                    this.api
+                      .execSv(
+                        'SYS',
+                        'Core',
+                        'DataBusiness',
+                        'LoadDataAsync',
+                        requestData
+                      )
+                      .pipe(
+                        tap((r) => console.log(r)),
+                        map((r) => r[0]),
+                        tap((r) => console.log(r))
+                      )
+                      .subscribe((res) => {
+                        const first = res[0];
+
+                        if (first) {
+                          first.baseCurr = tempDataValue.BaseCurr;
+                          first.secondCurr = tempDataValue.SecondCurr;
+                          first.conversionCurr = tempDataValue.LocalCurr;
+
+                          this.api
+                            .execAction(
+                              'AD_CompanySettings',
+                              [first],
+                              'UpdateAsync'
+                            )
+                            .subscribe();
+                        }
+                      });
                   }
                   this.changeDetectorRef.detectChanges();
                   console.log(res);
