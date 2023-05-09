@@ -15,7 +15,7 @@ export class AddContractsComponent implements OnInit{
   isLoadDate: any;
   action = 'add';
   projectID: string;
-  tabClicked  = ''
+  tabClicked  = '';
   listClicked = [];
   constructor(
     private cache: CacheService,
@@ -35,9 +35,9 @@ export class AddContractsComponent implements OnInit{
     this.setData(this.contractsInput);
     this.listClicked = [
       { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-      { name: 'representative', textDefault: 'Chi tiết mặt hàng', icon: 'icon-contact_phone', isActive: false },
-      { name: 'items', textDefault: 'Phương thức và tiến độ thanh toán', icon: 'icon-add_shopping_cart', isActive: false },
-      { name: 'contract', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-shopping_bag', isActive: false },
+      { name: 'detailItem', textDefault: 'Chi tiết mặt hàng', icon: 'icon-contact_phone', isActive: false },
+      { name: 'pay', textDefault: 'Phương thức và tiến độ thanh toán', icon: 'icon-add_shopping_cart', isActive: false },
+      { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-shopping_bag', isActive: false },
     ]
   }
 
@@ -120,5 +120,8 @@ export class AddContractsComponent implements OnInit{
         this.dialog.close({ contract: res, action: this.action });
       }
     })
+  }
+  changeTab(e){
+    this.tabClicked = e;
   }
 }

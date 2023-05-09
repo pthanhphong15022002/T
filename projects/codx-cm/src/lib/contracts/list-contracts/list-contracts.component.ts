@@ -140,17 +140,19 @@ export class ListContractsComponent implements OnInit, OnChanges {
     }
     let option = new DialogModel();
     option.IsFull = true;
-    option.zIndex = 999;
+    option.zIndex = 1010;
     let popupContract = this.callFunc.openForm(
       AddContractsComponent,
       '',
-      Util.getViewPort().width,
-      Util.getViewPort().height,
+      null,
+      null,
       '',
       data,
       '',
       option
     );
+    // Util.getViewPort().width,
+    // Util.getViewPort().height,
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
     return dataPopupOutput;
   }

@@ -43,6 +43,7 @@ import { PopupAddQuotationsLinesComponent } from './quotations-lines/popup-add-q
 import { CodxListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CodxListDealsComponent } from './cmcustomer/cmcustomer-detail/codx-list-deals/codx-list-deals.component';
 import { ProductComponent } from './contracts/product/product.component';
+import { TabsHeaderComponent } from './contracts/tabs-header/tabs-header.component';
 
 const routes: Routes = [
   {
@@ -99,6 +100,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxListContactsComponent,
     CodxListDealsComponent,
     ProductComponent,
+    TabsHeaderComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
