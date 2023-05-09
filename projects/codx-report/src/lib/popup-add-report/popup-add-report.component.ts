@@ -311,7 +311,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   getRootFunction(module:string, type:string){
-    this.parameters.execSv("SYS","ERM.Business.SYS","FunctionListBusiness","GetFuncByModuleIDAsync",[module,type]).subscribe((res:any)=>{
+    this.api.execSv("SYS","ERM.Business.SYS","FunctionListBusiness","GetFuncByModuleIDAsync",[module,type]).subscribe((res:any)=>{
       if(res){
         this.rootFunction = res.functionID;
       }

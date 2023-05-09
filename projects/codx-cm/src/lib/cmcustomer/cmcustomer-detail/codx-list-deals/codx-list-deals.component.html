@@ -68,7 +68,9 @@
         <div class="badge badge-primary">Giới thiệu sản phẩm</div>
         <div class="ms-5">
           <span class="icon-money icon-16 me-1"></span>
-          <span class="text-gray-500 my-2">23/04/2023</span>
+          <span class="text-gray-500 my-2"  [innerHTML]="
+          data.endDate | formatvalue : formModel : 'EndDate' | async
+        "></span>
         </div>
       </div>
       <div class="ms-3">

@@ -194,7 +194,7 @@ export class PopupAddJournalComponent
 
       if (!res.event && !this.isEdit) {
         this.journalService
-          .deleteAutoNumber(this.journal.recID)
+          .deleteAutoNumber(this.journal.journalNo)
           .subscribe((res) => console.log(res));
       }
     });
@@ -470,7 +470,7 @@ export class PopupAddJournalComponent
 
         if (res.event) {
           this.form.formGroup.patchValue({
-            voucherNoFormat: this.getAutoNumberFormat(res.event),
+            voucherFormat: this.getAutoNumberFormat(res.event),
           });
         }
       });

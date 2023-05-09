@@ -130,16 +130,23 @@
         </codx-view-approval-step>
       </ng-container>
     </ng-container>
-     <ng-container *ngSwitchCase="'quotations'">
+    <ng-container *ngSwitchCase="'quotations'">
       <!-- <ng-container
         [ngTemplateOutlet]="tab.template"
         [ngTemplateOutletContext]="{}"
       ></ng-container>  -->
       <ng-container>
-        <codx-quotations [funcID]="funcIDQuotations" [customerID]="customerID">
+        <codx-quotations
+          [funcID]="funcIDQuotations"
+          [customerID]="customerID"
+          [refType]="refType"
+          [refID]="refID"
+          [salespersonID]="salespersonID"
+          [consultantID]="consultantID"
+        >
         </codx-quotations>
       </ng-container>
-    </ng-container> 
+    </ng-container>
     <!-- nvthuan add contracts -->
     <ng-container *ngSwitchCase="'contract'">
       <ng-container

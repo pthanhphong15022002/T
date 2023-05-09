@@ -17,8 +17,8 @@
                         imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [title]="perm.objectName"
                         [descLine]="1">
                       </codx-temp-full> -->
-                      <div class="me-3 d-flex align-items-center">
-                        <div class="d-flex align-items-center position-relative">
+                      <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center position-relative me-4">
                           <img src="../../../assets/codx/user/user-admin.svg" alt="" style="width: 25px; border-radius: 50%;">
                           <div style="position: absolute; right: 0;bottom:-5px">
                             <ng-container *ngFor="let role of listRoles">
@@ -28,13 +28,13 @@
                             </ng-container>
                           </div>
                         </div>
-                        <div class="ms-3">
+                        <div class="d-flex flex-column">
                           <div class="text-dark fw-bold">
                             {{ perm.objectName }}
                           </div>
                           <ng-container *ngFor="let role of listRoles">
                             <ng-container *ngIf="role.value == perm.memberType">
-                              <div class="text-gray-700">
+                              <div class="text-gray-500 fs-7">
                                 {{role.text}}
                               </div>
                             </ng-container>
@@ -43,7 +43,7 @@
                       </div>
                     </ng-template>
                     <ng-template #elsethenAvatar1>
-                      <div class="me-3 d-flex align-items-center">
+                      <div class="me-4 d-flex align-items-center">
                         <div class="d-flex align-items-center position-relative">
                           <codx-img class="" [width]="25" [objectId]="perm.objectID" objectType="AD_Users">
                           </codx-img>
@@ -55,13 +55,13 @@
                             </ng-container>
                           </div>
                         </div>
-                        <div class="ms-3">
+                        <div class="d-flex flex-column">
                           <div class="text-dark fw-bold">
                             {{ perm.objectName }}
                           </div>
                           <ng-container *ngFor="let role of listRoles">
                             <ng-container *ngIf="role.value == perm.memberType">
-                              <div class="text-gray-700">
+                              <div class="text-gray-500 fs-7">
                                 {{role.text}}
                               </div>
                             </ng-container>
