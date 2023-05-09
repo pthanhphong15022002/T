@@ -312,15 +312,15 @@ export class CodxCmService {
     );
   }
 
-  // genAutoNumber(funcID: any, entityName: string, key: any) {
-  //   return this.api.execSv<any>(
-  //     'SYS',
-  //     'AD',
-  //     'AutoNumbersBusiness',
-  //     'GenAutoNumberAsync',
-  //     [funcID, entityName, key]
-  //   );
-  // }
+  genAutoNumber(funcID: any, entityName: string, key: any) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumbersBusiness',
+      'GenAutoNumberAsync',
+      [funcID, entityName, key]
+    );
+  }
   //#endregion
 
   //contracts -- nvthuan

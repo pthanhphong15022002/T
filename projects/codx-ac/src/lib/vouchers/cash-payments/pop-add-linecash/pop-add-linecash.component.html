@@ -2,7 +2,7 @@
   [customToolbar]="subToolbar" [data]="cashpaymentline">
 </codx-form>
 <ng-template #subToolbar>
-  <div class="w-100">
+  <div id="ac-header-cash" class="w-100 ">
     <div class="d-flex align-items-center justify-content-between pt-2">
       <div class="d-flex justify-content-start me-2">
         <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
@@ -11,13 +11,13 @@
         </div>
         <div class="card-title">
           <div class="d-flex flex-column">
-            <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">{{headerText}}</div>
+            <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">{{'1' | vll : 'AC070' : 'text' | async}}</div>
           </div>
         </div>
       </div>
       <div class="d-flex justify-content-end">
         <div class="ms-2">
-          <div class="btn btn-icon btn-sm btn-light-primary btn-circle bg" (click)="close()">
+          <div class="btn btn-icon btn-light-danger btn-circle" (click)="close()">
             <i class="icon-close icon-16"></i>
           </div>
         </div>
@@ -27,8 +27,8 @@
 </ng-template>
 <ng-template #body>
   <ng-container *ngIf="form?.formGroup">
-    <div class="row">
-      <div class="col-6">
+    <div class="row mt-5">
+      <div class="col-6 ac-line">
         <div class="form-group">
           <codx-label fiedName="ReasonID" [formModel]="form.formModel">
           </codx-label>
@@ -37,7 +37,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-6 ac-line">
         <div class="form-group">
           <codx-label fiedName="DR" [formModel]="form.formModel">
           </codx-label>
@@ -46,7 +46,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-6 ac-line">
         <div class="form-group">
           <codx-label fiedName="OffsetAcctID" [formModel]="form.formModel">
           </codx-label>
@@ -55,7 +55,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-6 ac-line">
         <div class="form-group">
           <codx-label fiedName="AccountID" [formModel]="form.formModel">
           </codx-label>
@@ -64,7 +64,16 @@
           </codx-input>
         </div>
       </div>
-      <div *ngIf="loadControl('DIM3')" class="col-6">
+      <div *ngIf="cashpayment.currencyID != baseCurr" class="col-6 ac-line">
+        <div class="form-group">
+          <codx-label fiedName="DR2" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input [Group]="form.formGroup" field="dR2" [formModel]="form.formModel"
+            (valueChange)="lineChanged($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div *ngIf="loadControl('DIM3')" class="col-6 ac-line">
         <div class="form-group">
           <codx-label fiedName="DIM3" [formModel]="form.formModel">
           </codx-label>
@@ -73,7 +82,7 @@
           </codx-input>
         </div>
       </div>
-      <div *ngIf="loadControl('DIM1')" class="col-6">
+      <div *ngIf="loadControl('DIM1')" class="col-6 ac-line">
         <div class="form-group">
           <codx-label fiedName="DIM1" [formModel]="form.formModel">
           </codx-label>
@@ -82,7 +91,7 @@
           </codx-input>
         </div>
       </div>
-      <div *ngIf="loadControl('DIM2')" class="col-6">
+      <div *ngIf="loadControl('DIM2')" class="col-6 ac-line">
         <div class="form-group">
           <codx-label fiedName="DIM2" [formModel]="form.formModel">
           </codx-label>
@@ -91,7 +100,7 @@
           </codx-input>
         </div>
       </div>
-      <div *ngIf="loadControl('ProjectID')" class="col-6">
+      <div *ngIf="loadControl('ProjectID')" class="col-6 ac-line">
         <div class="form-group">
           <codx-label fiedName="ProjectID" [formModel]="form.formModel">
           </codx-label>
@@ -100,7 +109,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-6 ac-line">
         <div class="form-group">
           <codx-label fiedName="AssetType" [formModel]="form.formModel">
           </codx-label>
@@ -109,7 +118,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-6 ac-line">
         <div class="form-group">
           <codx-label fiedName="AssetGroupID" [formModel]="form.formModel">
           </codx-label>
@@ -118,7 +127,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group ac-line">
         <codx-label fiedName="Note" [formModel]="form.formModel">
         </codx-label>
         <codx-input [Group]="form.formGroup" field="note" [formModel]="form.formModel"
@@ -129,7 +138,7 @@
   </ng-container>
 </ng-template>
 <ng-template #footer>
-  <div class="d-flex justify-content-end me-3">
+  <div class="d-flex justify-content-end me-3" id="ac-footer-cash">
     <div *ngIf="type != 'edit'" class="ms-2">
       <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
         <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
