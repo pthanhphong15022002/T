@@ -62,7 +62,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     mode: 'Normal',
   };
 
-  quotationLines: Array<CM_QuotationsLines> = [];
+  quotationLines: Array<any> = [];
   lockFields = [];
   dataParent: any;
   gridViewSetupQL: any;
@@ -191,7 +191,6 @@ export class PopupAddQuotationsComponent implements OnInit {
           };
           let opt = new DialogModel();
           opt.zIndex = 1000;
-          let dataModel = new FormModel();
           opt.FormModel = this.fmQuotationLines;
 
           let dialogQuotations = this.callFc.openForm(
@@ -207,10 +206,10 @@ export class PopupAddQuotationsComponent implements OnInit {
           dialogQuotations.closed.subscribe((res) => {
             if (res?.event) {
               data = res?.event;
-              // // this.gridQuationsLines.addRow(data, idx);
-              // this.quotationLines.push(data)
+              this.gridQuationsLines.addRow(data, idx,true);
               this.quotationLinesAddNew.push(data);
-              this.quotationLines.push(data);
+              // this.quotationLines.push(data);
+              // this.gridQuationsLines.dataSource = this.quotationLines
               this.loadTotal();
               this.changeDetector.detectChanges();
             }
