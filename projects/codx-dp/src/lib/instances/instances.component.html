@@ -36,7 +36,7 @@
     [rootData]="data"
     (dblclick)="dblClick($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
-  >
+  >c
   </codx-card-img>
 </ng-template>
 
@@ -49,11 +49,10 @@
       <span
         [ngClass]="getPropertiesHeader(data, 'icon')"
         [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
-        style="font-size: 18px"
-        class="me-3"
+        class="me-1 icon-16"
       >
       </span>
-      <span [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
+      <span class="fs-6" [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
         {{ data.headerText }}
       </span>
     </div>
