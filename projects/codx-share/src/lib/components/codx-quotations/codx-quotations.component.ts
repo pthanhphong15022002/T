@@ -167,7 +167,6 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
           [this.formModel.funcID, this.formModel.entityName, "QuotationsID"]
         ).subscribe(id=>{
           res.quotationID = id ;
-          debugger
           this.openPopup(res)
         })
       }else  this.openPopup(res)

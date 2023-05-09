@@ -15,8 +15,14 @@
           [value]="dateChange"
         >
         </ejs-calendar>
-        <ng-container #cbxCalendar>
-        </ng-container>
+        <codx-input
+          type="combobox"
+          [service]="'CO'"
+          [assemblyName]="'CO'"
+          [className]="'CalendarsBusiness'"
+          [method]="'GetOrgUnitByCbxAsync'"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
         <ng-container #listParam>
           <div class="d-flex align-items-center mt-3 title-calendar">
             <div class="w-100">
@@ -218,9 +224,7 @@
             </div>
           </div>
         </ng-container>
-
       </div>
-      <!-- <div class="w-100"><ng-template #calendar_setting></ng-template></div> -->
       <div class="w-100">
         <lib-calendar-center
           #calendarCenter
