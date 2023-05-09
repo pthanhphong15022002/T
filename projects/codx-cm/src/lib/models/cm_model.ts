@@ -362,53 +362,71 @@ export class BS_AddressBook {
   wardID: string;
 }
 export class CM_Contracts {
-recID:string;
-contractID:string;
-contractDate:Date;
-contractName:string;
-contractType:string;
-category:string;
-assetID:string;
-projectID:string;
-quotationID:string;
-orderID:string;
-objectType:string;
-objectID:string;
-objectName:string;
-contactID:string;
-customerID:string;
-currencyID:string;
-exchangeRate:number;
-contractAmt:number;
-VATID:string;
-paymentStatus:string;
-paidAmt:number;
-remainAmt:number;
-memo:string;
-status:string;
-periods:number;
-numbererval:string;
-effectiveFrom:Date;
-effectiveTo:Date;
-extendOn:Date;
-disposalOn:Date;
-warantyMonths:number;
-warantyExpired:Date;
-salespersonID:string;
-consultantID:string;
-pmtMethodID:string;
-delModeID:string;
-delTermID:string;
-parentID:string;
-refType:string;
-refID:string;
-refNo:string;
-attachments:number;
-note:string;
-stop:boolean;
-owner:string;
-bUID:string;
-createdOn:Date;
-createdBy:string;
-modifiedOn:Date;
+  recID: string;//Mã hợp đồng
+  contractID: string;//Mã hợp đồng
+  contractDate: Date;//Ngày lập hợp đồng
+  contractName: string;//Tên hợp đồng
+  contractType: string;//Loại hợp đồng
+  useType: string;//Loại hợp đồng sử dụng: Một lần, nhiều lần
+  category: string;//Phân loại
+  assetID: string;//Mã tài sản
+  projectID: string;//Mã dự án
+  quotationID: string;//Báo giá
+  orderID: string;//Đơn hàng
+  dealID: string;//Cơ hội
+  objectType: string;//Loại đối tượng
+  objectID: string;//Mã đối tượng
+  objectName: string;//Tên đối tượng
+  contactID: string;//Liên hệ
+  customerID: string;//Khách hàng
+  currencyID: string;//Tiền tệ
+  exchangeRate: number;//Tỷ giá hối đoái
+  contractAmt: number;//Giá trị hợp đồng
+  vATID: string;//VAT
+  paymentStatus: string;//Trạng thái thanh toán
+  paidAmt: number;//Số tiền đã thanh toán
+  remainAmt: number;//Số tiền còn lại
+  terms: string;//Điều khoản hợp đồng
+  status: string;//Trạng thái
+  periods: number;//Giai đoạn
+  numbererval: string;//Khoảng thời gian
+  effectiveFrom: Date;//Hiệu lực từ
+  effectiveTo: Date;//Hiệu lực đến
+  extendOn: Date;//Ngày gia hạn
+  disposalOn: Date;//Ngày thanh lý
+  warantyMonths: number;//Số tháng bảo hành
+  warantyExpired: Date;//Ngày hết hạn bảo hành
+  salespersonID: string;//Mã nhân viên kinh doanh
+  consultantID: string;//Mã nhân viên tư vấn
+  pmtMethodID: string;//Phương thức thanh toán
+  pmtTermID: string;//Điều khoản thanh toán
+  pmtStatus: string;//Tình trạng thanh toán
+  delModeID: string;//Hình thức giao hàng
+  delTermID: string;//Điều khoản giao hàng
+  delPrice: number;//Phí vận chuyển
+  delStatus: string;//Tình trạng giao hàng
+  parentID: string;//Tham chiếu cha
+  refType: string;//Loại tham chiếu
+  refID: string;//Mã tham chiếu
+  refNo: string;//Số tham chiếu
+  attachments: number;//Số lượng file đính kèm
+  note: string;//Diễn giải
+  stop: boolean;//Tạm ngừng
+  companyID: string;//Bên A
+  companyName: string;//Tên công ty
+  taxCode: string;//Mã số thuế
+  address: string;//Địa chỉ
+  phone: string;//Số điện thoại
+  faxNo: string;//Số Fax
+  representative: string;//Tên khách hàng
+  jobTitle: string;//Chức vụ
+  bankAccount: string;//Tài khoản ngân hàng
+  bankID: string;//Mở tại ngân hàng
+  owner: string;//Người sở hữu
+  bUID: string;//Đơn vị
+  createdOn: Date;//Ngày tạo
+  createdBy: string;//Người tạo
+  modifiedOn: Date;//Ngày chỉnh sửa
+  modifiedBy: string;//Người chỉnh sửa
+  
 }

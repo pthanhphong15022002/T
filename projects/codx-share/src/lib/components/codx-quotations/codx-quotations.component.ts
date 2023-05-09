@@ -31,6 +31,11 @@ import { Observable, finalize, map } from 'rxjs';
 export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   @Input() funcID: string;
   @Input() customerID: string;
+  @Input() refType: string ='CM_Deals';
+  @Input() refID: string;
+  @Input() salespersonID: string;
+  @Input() consultantID: string;
+  
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
   entityName = 'CM_Quotations';
@@ -57,6 +62,8 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   customerIDCrr =''
   requestData = new DataRequest();
   listQuotations = [] ;
+  predicates = 'RefType==@0 && RefID==@1';
+  dataValues= '';
 
   constructor(
     private inject: Injector,
@@ -76,6 +83,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.dataValues= this.refType+";"+this.refID;
     if (changes['customerID']) {
       if (changes['customerID'].currentValue === this.customerIDCrr) return;
       this.customerIDCrr = changes['customerID'].currentValue;
@@ -97,9 +105,10 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
       },
     ];
   }
+
   getQuotations(){
-    this.requestData.predicates = 'CustomerID==@0';
-    this.requestData.dataValues= this.customerIDCrr;
+    this.requestData.predicates = 'RefType==@0 && RefID==@1';
+    this.requestData.dataValues= this.refType+";"+this.refID;
     this.requestData.entityName = this.entityName;
     this.requestData.funcID = this.funcID;
     this.fetch().subscribe(res=>{
@@ -156,7 +165,10 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
       //   formModel.gridViewName = f.gridViewName;
       res.status = '1';
       res.customerID = this.customerID;
-
+      res.refType = this.refType ;
+      res.refID = this.refID ;
+      res.salespersonID = this.salespersonID ;
+      res.consultantID = this.consultantID ;
       var obj = {
         data: res,
         action: 'add',
