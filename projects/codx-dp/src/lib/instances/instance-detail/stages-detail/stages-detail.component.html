@@ -568,7 +568,7 @@
     >
     <div
       class="disabled-inline"
-      *ngIf="data?.value?.startDate && data?.value?.endDate"
+      *ngIf="isStart"
       (click)="
         checkEventProgress(data?.value, data?.group) && !isClosed && isOnlyView
           ? openUpdateProgress(data?.value)
