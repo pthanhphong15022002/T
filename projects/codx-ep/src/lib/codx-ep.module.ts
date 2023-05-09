@@ -19,9 +19,7 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { LayoutComponent } from './_layout/layout.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
-import { ReportComponent } from './stationery/report/report.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
-import { CardTransComponent } from './car/cardTran/cardTrans.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { PopupAddResourcesComponent } from './resources/popup-add-resources/popup-add-resources.component';
 import { EPHistoryCardComponent } from './resources/ep-history-card/ep-history-card.component';
@@ -31,6 +29,9 @@ import { PopupAddQuotaComponent } from './resources/popup-add-quota/popup-add-qu
 import { EPBookingComponent } from './booking/ep-booking.component';
 import { EPApprovalComponent } from './approval/ep-approval.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
+import { CardTransComponent } from './booking/cardTran/cardTrans.component';
+import { PopupAddCardTransComponent } from './booking/cardTran/popup-add-cardTrans/popup-add-cardTrans.component';
+import { PopupDriverAssignComponent } from './approval/popup-driver-assign/popup-driver-assign.component';
 
 export const routes: Routes = [
   {
@@ -58,10 +59,10 @@ export const routes: Routes = [
         path: 'approvestationery/:funcID',
         component: EPApprovalComponent,
       },
-      {
-        path: 'report/:funcID',
-        component: ReportComponent,
-      },
+      // {
+      //   path: 'report/:funcID',
+      //   component: ReportComponent,
+      // },
 
       {
         path: 'bookingrooms/:funcID',
@@ -146,6 +147,9 @@ export const routes: Routes = [
     PopupAddQuotaComponent,
     EPBookingComponent,
     EPApprovalComponent,
+    PopupAddCardTransComponent,
+    CardTransComponent,
+    PopupDriverAssignComponent,
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
