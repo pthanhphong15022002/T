@@ -20,4 +20,8 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
   onSave() {
     this.dialog.close(this.quotationsLine);
   }
+
+  valueChange(e){
+    this.quotationsLine[e.field] = e.data
+  }
 }
