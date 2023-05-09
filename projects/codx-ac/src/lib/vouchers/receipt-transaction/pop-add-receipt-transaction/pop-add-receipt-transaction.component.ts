@@ -35,7 +35,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   keymodel: any = [];
   headerText: string;
-  formModel: FormModel;
   dialog!: DialogRef;
   inventoryJournal: InventoryJournals;
   formType: any;
@@ -108,52 +107,13 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   //#region Init
 
   onInit(): void {
-    if (this.formType == 'edit') {
-      this.api
-        .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
-          this.inventoryJournal.recID,
-        ])
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            this.keymodel = Object.keys(res[0]);
-            this.inventoryJournalLines = res;
-            this.inventoryJournalLines.forEach((element) => {
-              this.loadTotal();
-            });
-          }
-        });
-    }
-    if (
-      this.inventoryJournal &&
-      this.inventoryJournal.unbounds &&
-      this.inventoryJournal.unbounds.lockFields &&
-      this.inventoryJournal.unbounds.lockFields.length
-    ) {
-      this.lockFields = this.inventoryJournal.unbounds
-        .lockFields as Array<string>;
-    }
-
-    const options = new DataRequest();
-    options.entityName = 'AC_Journals';
-    options.predicates = 'JournalNo=@0';
-    options.dataValues = this.inventoryJournal.journalNo;
-    options.pageLoading = false;
-    this.acService.loadDataAsync('AC', options).subscribe((res) => {
-      this.journal = res[0]?.dataValue
-        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
-        : res[0];
-      this.modeGrid = this.journal.inputMode;
-    });
-    if (this.inventoryJournal.status == '0' && this.formType == 'edit') {
-      this.hasSaved = true;
-    }
+    this.loadInit();
+    this.loadTotal();
+    this.loadJournal();
   }
 
   ngAfterViewInit() {
-    this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.inventoryJournal);
-    this.dt.detectChanges();
-    this.loadTotal();
   }
 
   //#endregion
@@ -553,12 +513,58 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       ])
       .subscribe((res) => {
         if (res) {
-            idx = this.inventoryJournalLines.length;
-            res.rowNo = idx + 1;
-            this.openPopupLine(res)
+          idx = this.inventoryJournalLines.length;
+          res.rowNo = idx + 1;
+          this.openPopupLine(res);
         }
       });
   }
+
+  loadInit(){
+    if (this.formType == 'edit') {
+      this.api
+        .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
+          this.inventoryJournal.recID,
+        ])
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            this.keymodel = Object.keys(res[0]);
+            this.inventoryJournalLines = res;
+            this.inventoryJournalLines.forEach((element) => {
+              this.loadTotal();
+            });
+          }
+        });
+    }
+    if (
+      this.inventoryJournal &&
+      this.inventoryJournal.unbounds &&
+      this.inventoryJournal.unbounds.lockFields &&
+      this.inventoryJournal.unbounds.lockFields.length
+    ) {
+      this.lockFields = this.inventoryJournal.unbounds
+        .lockFields as Array<string>;
+    }
+    if (this.inventoryJournal.status == '0' && this.formType == 'edit') {
+      this.hasSaved = true;
+    }
+  }
+
+  loadJournal(){
+    const options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.inventoryJournal.journalNo;
+    options.pageLoading = false;
+    this.acService.loadDataAsync('AC', options).subscribe((res) => {
+      this.journal = res[0]?.dataValue
+        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
+        : res[0];
+      this.modeGrid = this.journal.inputMode;
+    });
+  }
+
+  
 
   //#endregion
 }
