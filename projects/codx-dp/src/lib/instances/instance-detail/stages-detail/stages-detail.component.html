@@ -44,8 +44,8 @@
         </button>
       </div>
     </div>
-    <div class="mb-3">
-      <div class="d-flex justify-content-between">
+    <div class="mb-3 mt-1">
+      <div class="d-flex justify-content-between flex-wrap">
         <div class="d-flex align-items-center">
           <codx-label
             fiedName="ActualStart"
@@ -130,18 +130,18 @@
         </div> -->
       </div>
     </div>
-    <div class="row">
-      <div class="col-3 d-flex align-items-center">
+    <div class="d-flex flex-wrap">
+      <div class="d-flex align-items-center me-6">
         <codx-label
           name="lblOwnerStepProcess"
           default="Người phụ trách giai đoạn:"
           class="me-2 fw-bold"
         ></codx-label>
-        <div *ngIf="ownerStepProcess">
+        <div class="h-25px" *ngIf="ownerStepProcess">
           <codx-imgs
             [objectId]="ownerStepProcess"
             [isToolTip]="true"
-            [width]="30"
+            [width]="25"
             objectType="AD_Users"
             [numberImages]="1"
           >
@@ -155,17 +155,17 @@
           ></codx-label>
         </div>
       </div>
-      <div class="col-6 d-flex align-items-center">
+      <div class="d-flex align-items-center me-6">
         <codx-label
           name="lblOwner"
           default="Người phụ trách nhiệm vụ tại giai đoạn:"
           class="me-2 fw-bold"
         ></codx-label>
-        <div *ngIf="dataStep.owner">
+        <div class="h-25px" *ngIf="dataStep.owner">
           <codx-imgs
             [objectId]="dataStep.owner"
             [isToolTip]="true"
-            [width]="30"
+            [width]="25"
             objectType="AD_Users"
             [numberImages]="1"
           >
@@ -180,18 +180,18 @@
         </div>
       </div>
 
-      <div class="col-3 d-flex justify-content-end align-items-center">
+      <div class="d-flex align-items-center me-6">
         <codx-label
           class="me-2 fw-bold"
           name="lblInvolved"
           default="Người liên
           quan:"
         ></codx-label>
-        <div *ngIf="lstIDInvo != null && lstIDInvo != ''">
+        <div class="h-25px" *ngIf="lstIDInvo != null && lstIDInvo != ''">
           <codx-imgs
             [objectId]="lstIDInvo != null || lstIDInvo != '' ? lstIDInvo : ''"
             [isToolTip]="true"
-            [width]="30"
+            [width]="25"
             objectType="AD_Users"
             [numberImages]="3"
           >
@@ -266,7 +266,7 @@
 <ng-template #task>
   <div class="back-info">
     <div
-      class="header-info py-2 px-4 d-flex align-items-center justify-content-between mb-0"
+      class="header-info py-1 px-3 d-flex align-items-center justify-content-between mb-0"
     >
       <div>
         <codx-label

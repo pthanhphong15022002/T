@@ -200,7 +200,7 @@ export class ResourcesComponent extends UIComponent {
         this.cardTrans(EPCONST.FUNCID.CA_Return, event?.text, data);
         break;
       case EPCONST.MFUNCID.CA_History:
-        this.historyCard(event?.data?.url + '/' + data?.recID);
+        this.historyCard(event?.data?.url + '/' + data?.resourceID);
         break;
       case EPCONST.MFUNCID.S_UpdateQuantity:
         this.updateQuantity(data);
