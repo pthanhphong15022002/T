@@ -8,13 +8,19 @@
 <ng-template #headerTemplate let-data>
     <div class="d-flex w-100 ps-2 pe-4">
         <div class="w-40 text-dark fw-bold p-3">
-            <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+            <codx-label fiedName="lblEmployeeID" [formModel]="view.formModel"
+                [default]="grvSetup?.EmployeeID?.description"></codx-label>
         </div>
         <div class="w-40 text-dark fw-bold p-3">
-            <codx-label name="lblAwardID" [default]="'Loại | Hình thức khen thưởng'"></codx-label>
+            <codx-label fiedName="lblAwardID" [formModel]="view.formModel"
+            [default]="grvSetup?.AwardID?.description"></codx-label>
+            <span> | </span>
+            <codx-label fiedName="lblAwardFormCategory" [formModel]="view.formModel"
+            [default]="grvSetup?.AwardFormCategory?.description"></codx-label>
         </div>
         <div class="w-20 text-dark fw-bold p-3">
-            <codx-label name="lblAwardDate" [default]="'Ngày khen thưởng'"></codx-label>
+            <codx-label name="lblAwardDate" [formModel]="view.formModel" 
+            [default]="grvSetup?.AwardDate?.description"></codx-label>
         </div>
         <!-- <div class="w-25 text-primary p-3 fw-500">
             <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>

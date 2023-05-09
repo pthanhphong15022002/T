@@ -6,13 +6,22 @@
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 ps-2 pe-4">
     <div class="w-50 text-dark p-3 fw-bold fw-500">
-      <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+      <codx-label fiedName="lblEmployeeID" [formModel]="view.formModel"
+                [default]="grvSetup?.EmployeeID?.description"></codx-label>
     </div>
     <div class="w-20 text-dark p-3 fw-bold fw-500">
-      <codx-label name="lblEBasicSalaries" [default]="'Mức lương | Hiệu lực'"></codx-label>
+      <codx-label fiedName="lblBSalary" [formModel]="view.formModel"
+                [default]="grvSetup?.BSalary?.description"></codx-label>
+      <span> | </span>
+      <codx-label fiedName="lblEffectedDate" [formModel]="view.formModel"
+                [default]="grvSetup?.EffectedDate?.description"></codx-label>
     </div>
     <div class="w-30 text-dark p-3 fw-bold fw-500">
-      <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
+      <codx-label fiedName="lblDecisionNo" [formModel]="view.formModel"
+                [default]="grvSetup?.DecisionNo?.description"></codx-label>
+      <span> | </span>
+      <codx-label fiedName="lblSignedDate" [formModel]="view.formModel"
+                [default]="grvSetup?.SignedDate?.description"></codx-label>
     </div>
     <!-- <div class="w-25 text-dark p-3 fw-bold fw-500">
       <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
@@ -96,8 +105,8 @@
         <div class="text-gray-700 d-flex flex-row mb-1">
           <span class="icon-event_notes icon-16 me-1"></span>
           <div class="align-self-center fw-bold">
-            <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['DecisionNo'] : ''">
-              {{ data?.decisionNo }}
+            <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['DecisionNo'] : ''"
+            [innerHTML]="data?.decisionNo | formatvalue : view.formModel : 'decisionNo'| async">
             </span>
             <span> - </span>
             <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['SignedDate'] : ''"

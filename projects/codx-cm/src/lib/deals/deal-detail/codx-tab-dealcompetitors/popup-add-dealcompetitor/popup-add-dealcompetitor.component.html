@@ -1,0 +1,104 @@
+<codx-form
+  #form
+  [customToolbar]="header"
+  [body]="body"
+  [openMore]="false"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [footer]="footer"
+  [data]="data"
+></codx-form>
+<ng-template #header>
+  <div class="d-flex justify-content-between w-100">
+    <div class="d-flex justify-content-start">
+      <div class="h3">
+        <codx-label
+          name="lblAddDealCompetitor"
+          [formModel]="form.formModel"
+          [default]="
+            action == 'edit' ? title : title + ' ' + 'cơ hội từ đối thủ'
+          "
+        ></codx-label>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end">
+      <i
+        class="icon-close icon-18 text-hover-danger"
+        (click)="dialog.close()"
+      ></i>
+    </div>
+  </div>
+</ng-template>
+<ng-template #body>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="CompetitorID">
+    </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="competitorID"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <span class="d-flex">
+      <span class="icon-star_purple500 icon-16 me-1"> </span>
+      <codx-label [formModel]="form.formModel" fiedName="Strengths">
+      </codx-label>
+    </span>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="strengths"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <span class="d-flex">
+      <span class="icon-star_border_purple500 icon-16 me-1"> </span>
+      <codx-label [formModel]="form.formModel" fiedName="Weaknesses">
+      </codx-label>
+    </span>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="weaknesses"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Note"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="note"
+    >
+    </codx-input>
+  </div>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <div class="me-2">
+      <button
+        type="button"
+        (click)="dialog.close()"
+        class="btn btn-outline-primary"
+      >
+        <codx-label
+          name="lblCancel"
+          [formModel]="dialog.formModel"
+          default="Hủy"
+        ></codx-label>
+      </button>
+    </div>
+    <div class="">
+      <button type="button" (click)="onSave()" class="btn btn-primary">
+        <codx-label
+          name="lblSave"
+          [formModel]="dialog.formModel"
+          default="Đồng ý"
+        ></codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>
