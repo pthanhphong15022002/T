@@ -65,6 +65,10 @@ const routes: Routes = [
         path: 'sales/:funcID',
         component: DealsComponent,
       },
+      // {
+      //   path: 'services/:funcID',
+      //   component: DealsComponent,
+      // },
       {
         path: '**',
         redirectTo: 'error/404',
