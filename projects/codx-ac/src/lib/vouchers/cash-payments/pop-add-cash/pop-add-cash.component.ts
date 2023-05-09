@@ -381,8 +381,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
     this.gridHeight = hBody - (hTab + hNote + 140);
     grid.disableField(this.lockFields);
+    grid.beforeSave = (type,data) => this.beforeSave();
   }
-
+  beforeSave(){
+    console.log('abc123');
+  }
   lineChanged(e: any) {
     const field = [
       'accountid',
@@ -1080,7 +1083,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
         }
       });
-  }
+  }crea
 
   loadformSettledInvoices() {
     var obj = {
