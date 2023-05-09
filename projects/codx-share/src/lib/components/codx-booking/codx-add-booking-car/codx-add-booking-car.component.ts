@@ -394,6 +394,7 @@ export class CodxAddBookingCarComponent
         .getResourceByID(this.data.resourceID)
         .subscribe((res: any) => {
           if (res) {
+            this.useCard=res?.useCard;
             this.carCapacity = res?.capacity;
           } else {
             this.carCapacity = 0;
@@ -518,7 +519,8 @@ export class CodxAddBookingCarComponent
         return obj.resourceID == evt;
       });
       if (selectResource) {
-        this.carCapacity = selectResource[0].capacity;
+        this.carCapacity = selectResource[0]?.capacity;
+        this.useCard=selectResource[0]?.useCard;
         this.tmplstDevice = [];
         if (selectResource[0].equipments != null) {
           selectResource[0].equipments.forEach((item) => {
@@ -829,6 +831,9 @@ export class CodxAddBookingCarComponent
       this.data.stopOn = this.data.endDate;
       this.data.bookingOn = this.data.startDate;
       this.data.resourceType = '2';
+      this.data.issueControl=this.useCard? true : false ;
+      this.data.issueStatus=this.useCard? '1' : null ;
+      
       if (this.approvalRule == '0' && approval) {
         this.data.approveStatus = '5';
       }
@@ -1049,10 +1054,11 @@ export class CodxAddBookingCarComponent
           this.cbbResource = [];
           Array.from(res).forEach((item: any) => {
             let tmpRes = new Resource();
-            tmpRes.resourceID = item.resourceID;
-            tmpRes.resourceName = item.resourceName;
-            tmpRes.capacity = item.capacity;
-            tmpRes.equipments = item.equipments;
+            tmpRes.resourceID = item?.resourceID;
+            tmpRes.resourceName = item?.resourceName;
+            tmpRes.capacity = item?.capacity;
+            tmpRes.equipments = item?.equipments;
+            tmpRes.useCard= item?.useCard;
             this.cbbResource.push(tmpRes);
           });
           let resourceStillAvailable = false;
