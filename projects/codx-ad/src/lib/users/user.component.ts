@@ -295,7 +295,7 @@ export class UserComponent extends UIComponent {
       if (x.event.status == 'Y') {
         data.stop = true;
         data.status = '3';
-        this.codxAdService.stopUser(data).subscribe((res) => {
+        this.codxAdService.stopUser(data.userID).subscribe((res) => {
           if (res) {
             // this.view.dataService.remove(res).subscribe();
             this.view.dataService.update(data).subscribe();

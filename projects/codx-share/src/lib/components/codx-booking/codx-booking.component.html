@@ -1,8 +1,8 @@
 <codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entity"
-  [views]="views" [button]="buttons" (buttonClick)="click($event)" [moreFuncs]="moreFunc" [idField]="idField"
+  [views]="views" [button]="funcID != allocateFuncID ? buttons : ''" (buttonClick)="click($event)" [moreFuncs]="moreFunc" [idField]="idField"
   [className]="className" [method]="method" (selectedChange)="changeItemDetail($event)" [selectedFirst]="true"
   [autoLoad]="true" (onActions)="onActionClick($event)" (onLoading)="onLoading($event)"
-  (viewChanged)="viewChanged($event)" [viewActiveType]="viewType.schedule">
+  (viewChanged)="viewChanged($event)" [viewActiveType]="crrViewMode">
 </codx-views>
 
 
@@ -97,7 +97,7 @@
   <codx-booking-view-detail #viewdetail [viewMode]="'1'" [itemDetail]="itemDetail" [funcID]="funcID"
     [formModel]="formModel" [resourceType]="resourceType" (reschedule)="reschedule($event)" (cancel)="cancel($event)"
     (invite)="invite($event)" (edit)="edit($event)" (copy)="copy($event)" (release)="release($event)"
-    (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"
+    (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"  (allocate)="allocate($event)"
     (setPopupTitleOption)="setPopupTitleOption($event)"></codx-booking-view-detail>
 </ng-template>
 

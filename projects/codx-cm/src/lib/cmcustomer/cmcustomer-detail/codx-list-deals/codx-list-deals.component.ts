@@ -30,4 +30,8 @@ export class CodxListDealsComponent implements OnInit{
       }
     });
   }
+
+  getListStepByStepID(stepID){
+
+  }
 }

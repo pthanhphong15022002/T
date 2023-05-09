@@ -359,6 +359,7 @@ export class BS_AddressBook {
   positionID: string;
   orgUnitID: string;
   divisionID: string;
+  wardID: string;
 }
 export class CM_Contracts {
 recID:string;
