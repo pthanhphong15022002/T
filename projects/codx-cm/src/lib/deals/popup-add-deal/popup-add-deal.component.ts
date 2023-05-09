@@ -356,6 +356,7 @@ export class PopupAddDealComponent
         this.listInstanceSteps = res[0];
         this.deal.endDate = this.HandleEndDate(this.listInstanceSteps, this.action, null);
         this.deal.dealID = res[2];
+        this.listParticipants = obj.permissions;
         this.changeDetectorRef.detectChanges();
       }
     });
