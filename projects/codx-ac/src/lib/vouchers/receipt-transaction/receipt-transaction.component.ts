@@ -15,6 +15,9 @@ import { InventoryJournalLines } from '../../models/InventoryJournalLines.model'
   styleUrls: ['./receipt-transaction.component.css']
 })
 export class ReceiptTransactionComponent extends UIComponent{
+  
+  //#region Constructor
+
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
@@ -22,30 +25,26 @@ export class ReceiptTransactionComponent extends UIComponent{
   dialog!: DialogRef;
   button?: ButtonModel = { id: 'btnAdd' };
   headerText: any;
-  moreFuncName: any;
   funcName: any;
+  parentID: string;
   journalNo: string;
+  width: any;
+  height: any;
+  innerWidth: any;
   itemSelected: any;
   objectname: any;
   oData: any;
-  cashbook: any;
-  userID: any;
-  dataCategory: any;
-  journal: IJournal;
-  approval: any;
-  inventoryJournals: Array<InventoryJournals> = [];
-  inventoryJournalLines: Array<InventoryJournalLines> = [];
-  acctTrans : Array<any> = [];
+  page: any = 1;
+  pageSize = 5;
+  itemName: any;
+  lsVatCode: any;
+  gridViewLines: any;
   fmInventoryJournalLines: FormModel = {
     formName: 'InventoryJournalLines',
     gridViewName: 'grvInventoryJournalLines',
     entityName: 'IV_InventoryJournalLines',
   };
-  fmInventoryJournals: FormModel = {
-    formName: 'InventoryJournals',
-    gridViewName: 'grvInventoryJournals',
-    entityName: 'IV_InventoryJournals',
-  };
+  inventoryJournalLines: Array<InventoryJournalLines> = [];
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
@@ -56,44 +55,37 @@ export class ReceiptTransactionComponent extends UIComponent{
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
-  authStore: AuthStore;
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
-    private acService: CodxAcService,
-    private notification: NotificationsService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'SYS01');
-        if (m) this.moreFuncName = m.defaultName;
-      }
-    });
     this.routerActive.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
     });
+    this.cache
+      .gridViewSetup('InventoryJournalLines', 'grvInventoryJournalLines')
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewLines = res;
+        }
+      });
   }
   //#endregion
 
   //#region Init
+
   onInit(): void {
-    this.userID = this.authStore.get().userID;
-    const options = new DataRequest();
-    options.entityName = 'AC_Journals';
-    options.predicates = 'JournalNo=@0';
-    options.dataValues = this.journalNo;
-    options.pageLoading = false;
-    this.acService.loadDataAsync('AC', options).subscribe((res) => {
-      this.journal = res[0]?.dataValue
-        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
-        : res[0];
-      this.approval = res[0].approval;
-    });
+    this.api
+      .exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.itemName = res;
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -107,34 +99,31 @@ export class ReceiptTransactionComponent extends UIComponent{
         sameData: true,
         model: {
           template2: this.templateMore,
-          frozenColumns: 1,
         },
       },
       {
         type: ViewType.listdetail,
         active: true,
         sameData: true,
-
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
         },
       },
     ];
-
-    this.detectorRef.detectChanges();
   }
-
   //#endregion
 
   //#region Event
+
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.add();
+        this.add(e);
         break;
     }
   }
+
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
@@ -146,24 +135,18 @@ export class ReceiptTransactionComponent extends UIComponent{
       case 'SYS04':
         this.copy(e, data);
         break;
-      case 'SYS002':
-        this.export(data);
-        break;
-      case 'ACT041002':
-        this.release(data);
-        break;
     }
   }
   //#endregion
 
   //#region Method
+
   setDefault(o) {
     return this.api.exec('IV', 'InventoryJournalsBusiness', 'SetDefaultAsync', [
       this.journalNo,
     ]);
   }
-
-  add() {
+  add(e) {
     this.headerText = this.funcName;
     this.view.dataService
       .addNew((o) => this.setDefault(o))
@@ -182,19 +165,11 @@ export class ReceiptTransactionComponent extends UIComponent{
           option,
           this.view.funcID
         );
-        this.dialog.closed.subscribe((res) => {
-          if (res.event != null) {
-            if (res.event['update']) {
-              this.itemSelected = res.event['data'];
-              this.loadDatadetail(this.itemSelected);
-            }
-          }
-        });
       });
   }
   edit(e, data) {
     if (data) {
-      this.view.dataService.dataSelected = { ...data };
+      this.view.dataService.dataSelected = data;
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -213,17 +188,8 @@ export class ReceiptTransactionComponent extends UIComponent{
           option,
           this.view.funcID
         );
-        this.dialog.closed.subscribe((res) => {
-          if (res.event != null) {
-            if (res.event['update']) {
-              this.itemSelected = res.event['data'];
-              this.loadDatadetail(this.itemSelected);
-            }
-          }
-        });
       });
   }
-
   copy(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -247,7 +213,6 @@ export class ReceiptTransactionComponent extends UIComponent{
         );
       });
   }
-
   delete(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -257,30 +222,7 @@ export class ReceiptTransactionComponent extends UIComponent{
   //#endregion
 
   //#region Function
-  export(data) {
-    var gridModel = new DataRequest();
-    gridModel.formName = this.view.formModel.formName;
-    gridModel.entityName = this.view.formModel.entityName;
-    gridModel.funcID = this.view.formModel.funcID;
-    gridModel.gridViewName = this.view.formModel.gridViewName;
-    gridModel.page = this.view.dataService.request.page;
-    gridModel.pageSize = this.view.dataService.request.pageSize;
-    gridModel.predicate = this.view.dataService.request.predicates;
-    gridModel.dataValue = this.view.dataService.request.dataValues;
-    gridModel.entityPermission = this.view.formModel.entityPer;
-    //Chưa có group
-    gridModel.groupFields = 'createdBy';
-    this.callfunc.openForm(
-      CodxExportComponent,
-      null,
-      900,
-      700,
-      '',
-      [gridModel, data.recID],
-      null
-    );
-  }
-
+  
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'InventoryJournalsBusiness';
@@ -289,39 +231,20 @@ export class ReceiptTransactionComponent extends UIComponent{
     opt.data = data;
     return true;
   }
-
-  changeDataMF(e: any, data: any) {
-    //Bookmark
-    var bm = e.filter(
-      (x: { functionID: string }) =>
-        x.functionID == 'ACT041003' ||
-        x.functionID == 'ACT041002' ||
-        x.functionID == 'ACT041004'
-    );
-    // check có hay ko duyệt trước khi ghi sổ
-    if (data?.status == '1') {
-      if (this.approval == '0') {
-        bm.forEach((element) => {
-          element.disabled = true;
-        });
-      } else {
-        bm[1].disabled = true;
-        bm[2].disabled = true;
-      }
-    }
-    //Chờ duyệt
-    if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
-      bm[1].disabled = true;
-      bm[0].disabled = true;
-    }
-    //hủy duyệt
-    if (data?.approveStatus == '4' || data?.status == '0') {
-      for (var i = 0; i < bm.length; i++) {
-        bm[i].disabled = true;
-      }
+  loadDatadetail(data) {
+    this.api
+      .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [data.recID])
+      .subscribe((res: any) => {
+        this.inventoryJournalLines = res;
+      });
+    if(data.warehouseID)
+    {
+      this.api.exec('IV', 'InventoryJournalsBusiness', 'GetWarehouseNameAsync', [data.warehouseID])
+      .subscribe((res: any) => {
+        this.itemSelected.warehouseName = res;
+      });
     }
   }
-
   changeItemDetail(event) {
     if (event?.data.data || event?.data.error) {
       return;
@@ -335,48 +258,18 @@ export class ReceiptTransactionComponent extends UIComponent{
     }
   }
 
-  loadDatadetail(data) {
-    if(data)
-    {
-      this.api
-      .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
-        data.recID,
-      ])
-      .subscribe((res: any) => {
-        this.inventoryJournalLines = res;
-      });
-    }
+  clickChange(data) {
+    this.itemSelected = data;
+    this.loadDatadetail(data);
   }
 
-  release(data: any) {
-    // this.acService
-    //   .getCategoryByEntityName(this.view.formModel.entityName)
-    //   .subscribe((res) => {
-    //     this.dataCategory = res;
-    //     this.acService
-    //       .release(
-    //         data.recID,
-    //         this.dataCategory.processID,
-    //         this.view.formModel.entityName,
-    //         this.view.formModel.funcID,
-    //         ''
-    //       )
-    //       .subscribe((result) => {
-    //         if (result?.msgCodeError == null && result?.rowCount) {
-    //           this.notification.notifyCode('ES007');
-    //           data.status = '3';
-    //           this.dialog.dataService
-    //             .save((opt: RequestOption) => {
-    //               opt.methodName = 'UpdateAsync';
-    //               opt.className = 'CashPaymentsBusiness';
-    //               opt.assemblyName = 'AC';
-    //               opt.service = 'AC';
-    //               opt.data = [data];
-    //               return true;
-    //             })
-    //             .subscribe((res) => {});
-    //         } else this.notification.notifyCode(result?.msgCodeError);
-    //       });
-    //   });
+  changeDataMF() {
+    this.itemSelected = this.view.dataService.dataSelected;
+    this.loadDatadetail(this.itemSelected);
   }
+
+  formatDate(date){
+    return new Date(date).toLocaleDateString();;
+  }
+  //#endregion
 }

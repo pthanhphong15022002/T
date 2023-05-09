@@ -9,6 +9,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { PopupAddDealcompetitorComponent } from './popup-add-dealcompetitor/popup-add-dealcompetitor.component';
+import { CM_DealsCompetitors } from '../../../models/cm_model';
 
 @Component({
   selector: 'codx-tab-dealcompetitors',
@@ -20,7 +21,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   @Input() funcID: any;
   lstDealCompetitors = [];
   moreFuncAdd = '';
-
+  formModel: FormModel;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -31,6 +32,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.getListDealCompetitors(this.dealID);
+    this.getFormModel();
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');
@@ -47,21 +49,26 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     });
   }
 
-  clickAddCompetitor(titleMore, action) {
+  getFormModel() {
+    var formModel = new FormModel();
+    formModel.formName = 'CMDealsCompetitors';
+    formModel.gridViewName = 'grvCMDealsCompetitors';
+    formModel.entityName = 'CM_DealsCompetitors';
+    this.formModel = formModel;
+  }
+
+  clickAddCompetitor(titleMore, action, data = new CM_DealsCompetitors()) {
     this.cache
       .gridViewSetup('CMDealsCompetitors', 'grvCMDealsCompetitors')
       .subscribe((res) => {
         let opt = new DialogModel();
-        let dataModel = new FormModel();
-        dataModel.formName = 'CMDealsCompetitors';
-        dataModel.gridViewName = 'grvCMDealsCompetitors';
-        dataModel.entityName = 'CM_DealsCompetitors';
-        dataModel.funcID = this.funcID;
-        opt.FormModel = dataModel;
+        opt.FormModel = this.formModel;
         var obj = {
           title: titleMore,
           gridViewSetup: res,
           action: action,
+          dealID: this.dealID,
+          data: data
         };
         var dialog = this.callFc.openForm(
           PopupAddDealcompetitorComponent,
@@ -73,6 +80,14 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
           '',
           opt
         );
+        dialog.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            if (e?.event?.recID) {
+              this.getListDealCompetitors(this.dealID);
+              this.changeDetectorRef.detectChanges();
+            }
+          }
+        });
       });
   }
 }
