@@ -1,0 +1,57 @@
+<div class="d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2">
+  <div>
+    <button
+      type="button"
+      class="btn btn-clean btn-sm btn-icon btn-icon-md"
+      (click)="clickAddCompetitor(moreFuncAdd, 'add')"
+    >
+      <i class="icon-person_add_alt_1 icon-18 text-primary"></i>
+    </button>
+  </div>
+</div>
+<div
+  *ngIf="lstDealCompetitors != null && lstDealCompetitors.length > 0"
+  class="d-flex justify-content-between border-bottom"
+>
+  <ng-container *ngFor="let item of lstDealCompetitors">
+    <ng-container
+      [ngTemplateOutlet]="dealCompetitors"
+      [ngTemplateOutletContext]="{ $implicit: item }"
+    >
+    </ng-container>
+  </ng-container>
+</div>
+<div
+  class="empty-data"
+  *ngIf="lstDealCompetitors == null || lstDealCompetitors.length == 0"
+>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-200px"
+        />
+        <div class="fs-5 text-dark fw-bold mt-2 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #dealCompetitors let-data>
+  <div class="col-4 justify-content-start">
+    <div class="me-3">
+      <codx-img
+        [objectId]="data.recID"
+        [objectName]="'ADMIN'"
+        [referType]="'avt'"
+        [imgOn]="data?.modifiedOn"
+        [objectType]="'CM_Competitors'"
+        [width]="35"
+      >
+      </codx-img>
+    </div>
+  </div>
+</ng-template>
