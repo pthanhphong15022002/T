@@ -1075,7 +1075,7 @@
     </div>
   </div>
   <!--Hướng dẫn làm việc với quy trình-->
-  <div class="background">
+  <div class="background mb-0">
     <div
       class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
@@ -1115,7 +1115,7 @@
       </div>
     </div>
     <div id="memo-main" class="main" [ngClass]="'show-main'">
-      <div class="form-group margin-form mb-4">
+      <div class="form-group mb-0">
         <codx-input
           field="memo"
           type="textarea"
@@ -1710,17 +1710,18 @@
 <ng-template #stage>
   <div class="background-stage dp-step">
     <div class="stage-body d-flex">
-      <div class="stage-body-left w-300px minw-300px pe-1">
+      <div class="stage-body-left w-300px minw-300px">
         <div
-          class="fw-bold fs-5 text-dark pb-2 mb-1 border-bottom stage-header d-flex align-items-center justify-content-between"
+          class="py-2 px-3 border-bottom stage-header d-flex align-items-center justify-content-between"
         >
-          <codx-label fiedName="step" default="Giai đoạn"></codx-label>
+          <span class="fw-bold fs-5 text-dark ">
+          <codx-label fiedName="step" default="Giai đoạn"></codx-label></span>
           <button
             type="button"
-            class="btn btn-sm btn-outline-primary"
+            class="btn btn-sm btn-light-primary"
             (click)="openPopupStep('add')"
           >
-            <i class="icon-add icon-14 text-primary ms-n1"></i>
+            <i class="icon-add icon-14 ms-n1"></i>
             <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
           </button>
         </div>
@@ -1763,7 +1764,7 @@
                     </span>
                   </div>
 
-                  <div class="fs-7" [ngStyle]="{ color: itemStep?.textColor }">
+                  <div class="fs-7 text-gray-500" [ngStyle]="{ color: itemStep?.textColor }">
                     <codx-label
                       fiedName="durationTime"
                       [formModel]="dialog.formModel"
@@ -1783,7 +1784,7 @@
                       [default]="strHour"
                     ></codx-label>
                   </div>
-                  <div class="fs-7" [ngStyle]="{ color: itemStep?.textColor }">
+                  <div class="fs-7 text-gray-500" [ngStyle]="{ color: itemStep?.textColor }">
                     <codx-label
                       fiedName="task"
                       [formModel]="dialog.formModel"
@@ -1806,7 +1807,7 @@
           </div>
           <div class="stage-fix">
             <!-- Step Reason successs -->
-            <div class="fw-bold fs-5 text-dark pt-2 pb-1 mb-1 border-top">
+            <div class="fw-bold fs-5 text-dark pt-2 px-3 pb-1 border-top">
               {{ noteResult }}
             </div>
             <div
@@ -1864,7 +1865,7 @@
       </div>
       <div class="stage-body-right w-100 ps-6">
         <div
-          class="d-flex align-items-center justify-content-between pe-1 pb-2 mb-1 border-bottom stage-header"
+          class="d-flex align-items-center justify-content-between pe-1 pb-2 mb-1 stage-header"
         >
           <div class="fw-bold fs-4 text-dark w-100">{{ titleViewStepCrr }}</div>
           <div class="d-flex align-items-center">
