@@ -1,0 +1,172 @@
+<div
+  class="empty-data"
+  *ngIf="!itemSelected?.recID"
+>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-200px"
+        />
+        <div class="fs-5 text-dark fw-bold mt-2 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="itemSelected?.recID">
+  <codx-detail-tmp
+    [header]="header"
+    [formModel]="formModel"
+    [body]="body"
+    [footer]="footer"
+    (clickMF)="clickMF($event, itemSelected)"
+    (changeDataMF)="changeDataMF($event, itemSelected)"
+    [dataItem]="itemSelected"
+  >
+    <ng-template #header>
+      <div class="container_detail mt-3">
+        <div class="d-flex flex-grow-1 mb-4">
+          <div class="me-3">
+            <codx-img objectId="ADMIN" objectType="AD_Users" [width]="50">
+            </codx-img>
+          </div>
+          <div class="d-flex flex-column flex-grow-1">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-column">
+                <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+                  Lê Phạm Hoài Thương
+                </div>
+                <div class="text-gray-500 me-4 mb-1"></div>
+                <ng-container>
+                  <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center me-4">
+                      <span
+                        class="icon-phone_android icon-16 text-gray-700 me-2"
+                      ></span>
+                      <div div class="text-gray-700">
+                        <span #phone [innerHTML]="'0972748255'"></span>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <span
+                        class="icon-email icon-16 text-gray-700 me-2"
+                      ></span>
+                      <div div class="font-size-sm">
+                        <span #email [innerHTML]="'testdata@gmail.com'"></span>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+              <div class="d-flex flex-row align-items-start">
+                <codx-vll
+                  *ngIf="vllStatus"
+                  [name]="vllStatus"
+                  [field]="'Status'"
+                  [value]="itemSelected?.status"
+                  [showText]="true"
+                  [showBgColor]="true"
+                  class="badge badge-light badge-md fs-7"
+                >
+                </codx-vll>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #body>
+      <ng-container>
+        <div class="container_detail mt-3">
+          <div class="d-flex flex-grow-1 mb-4">
+            <div class="me-3">
+              <codx-img objectId="ADMIN" objectType="AD_Users" [width]="50">
+              </codx-img>
+            </div>
+            <div class="d-flex flex-column flex-grow-1">
+              <div class="d-flex justify-content-between">
+                <div class="d-flex flex-column">
+                  <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+                    Lê Phạm Hoài Thương
+                  </div>
+                  <div class="text-gray-500 me-4 mb-1"></div>
+                  <ng-container>
+                    <div class="d-flex align-items-center">
+                      <div class="d-flex align-items-center me-4">
+                        <span
+                          class="icon-phone_android icon-16 text-gray-700 me-2"
+                        ></span>
+                        <div div class="text-gray-700">
+                          <span #phone [innerHTML]="'0972748255'"></span>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <span
+                          class="icon-email icon-16 text-gray-700 me-2"
+                        ></span>
+                        <div div class="font-size-sm">
+                          <span
+                            #email
+                            [innerHTML]="'testdata@gmail.com'"
+                          ></span>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+                <div class="d-flex flex-row align-items-start">
+                  <codx-vll
+                    [name]="vllStatus"
+                    [field]="'Status'"
+                    [value]="itemSelected?.status"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-md fs-7"
+                  >
+                  </codx-vll>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="mt-6 mb-3 text-primary fw-bold">
+        <codx-label
+          name="lblTaskName"
+          [formModel]="formModel"
+          default="Chi tiết mặt hàng"
+        >
+        </codx-label>
+      </div>
+      <codx-gridview-v2
+        #gridQuationsLines
+        service="CM"
+        [formName]="fmQuotationLines.formName"
+        [gridViewName]="fmQuotationLines.gridViewName"
+        [entityName]="fmQuotationLines.entityName"
+        [editSettings]="editSettings"
+        [allowFiltering]="true"
+        [allowSorting]="true"
+        [dataSource]="dataSource"
+        [height]="gridHeight"
+        [autoLoad]="true"
+        rowHeight="40"
+        predicates="TransID=@0"
+        [dataValues]="itemSelected.recID"
+      ></codx-gridview-v2>
+    </ng-template>
+    <ng-template #footer>
+      <codx-tabs
+        [entityName]="formModel.entityName"
+        [formModel]="formModel"
+        [TabControl]="tabControl"
+        [objectID]="itemSelected.recID"
+        [funcID]="formModel.funcID"
+      ></codx-tabs>
+    </ng-template>
+  </codx-detail-tmp>
+</ng-container>
