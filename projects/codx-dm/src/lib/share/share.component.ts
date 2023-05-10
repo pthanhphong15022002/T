@@ -172,7 +172,6 @@ export class ShareComponent implements OnInit {
   }
 
   onSaveRole($event, type: string) { 
-    debugger
    // console.log($event);
     var list = [];
     if ($event.data) {
@@ -272,7 +271,6 @@ export class ShareComponent implements OnInit {
       return;
     }
     
-    debugger
     if(!this.isShare && !this.checkPermission(this.fileEditing.permissions , this.toPermission)) return this.notificationsService.notifyCode("DM066");
     //  if (this.updateRequestShare())
     this.fileEditing.toPermission = this.toPermission;
