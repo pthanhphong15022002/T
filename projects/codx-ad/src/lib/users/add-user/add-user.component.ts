@@ -365,10 +365,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
                     .subscribe((result) => {
                       if (result) {
                         this.loadData.emit();
+                        this.dialog.close(this.adUser);
                       }
                     });
                 }
-                this.dialog.close(this.adUser);
+                else this.dialog.close(this.adUser);
                 break;
               }
               case 'addToGroup': {
