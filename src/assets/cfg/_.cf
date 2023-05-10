@@ -6,7 +6,7 @@
   "appName": "hps-file-test",
   "office365": "",
   "saas": 1,
-  "layoutCZ": "",
+  "layoutCZ": "lacviet",
   "themeMode": "body",
   "hideFavCount":false,
   "singleExec":false,
