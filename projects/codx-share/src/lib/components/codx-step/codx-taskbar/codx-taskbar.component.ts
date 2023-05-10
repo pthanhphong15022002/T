@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-  selector: 'tabs-header',
-  templateUrl: './tabs-header.component.html',
-  styleUrls: ['./tabs-header.component.scss']
+  selector: 'codx-taskbar',
+  templateUrl: './codx-taskbar.component.html',
+  styleUrls: ['./codx-taskbar.component.scss']
 })
-export class TabsHeaderComponent implements OnInit {
+export class CodxTaskbarComponent implements OnInit {
   @Input() listTab = []; // danh sách tab {icon, name, textDefault}
   @Input() size = 20; // kích thước icon và chữ
   @Output() tab = new EventEmitter(); // giá trị trả về khi chọn => name
@@ -28,9 +28,11 @@ export class TabsHeaderComponent implements OnInit {
   }
 
   clickMenu(item) {
-   item.isActive = true;
-   this.tabOld.isActive = false;
-   this.tabOld = item;
-   this.tab.emit(item.name);
+    if(item.name != this.tabOld?.name){
+      item.isActive = true;
+      this.tabOld.isActive = false;
+      this.tabOld = item;
+    }
+    this.tab.emit(item.name);
   }
 }

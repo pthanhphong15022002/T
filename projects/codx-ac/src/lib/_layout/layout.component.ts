@@ -8,6 +8,7 @@ import {
 } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',

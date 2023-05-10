@@ -1,5 +1,5 @@
 
-<div class="okr-treeview w-100 h-100 container mx-auto" *ngIf="orgUnitTree!=null">
+<div class="okr-treeview w-100 h-100 container mx-auto">
     <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="orgUnitTree" [enableCheck]="false"
     idField="orgUnitID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="true"
     (selectionChange)="selectionChange($event)" *ngIf="isAfterRender">
