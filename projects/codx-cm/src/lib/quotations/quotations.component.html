@@ -76,7 +76,7 @@
 </ng-template>
 
 <!-- //--- temp list  //--- -->
-<ng-template #itemTemplate let-data> 
+<ng-template #itemTemplate let-data>
   <codx-temp-full
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
@@ -90,13 +90,12 @@
     [dataItem]="data"
   >
   </codx-temp-full>
-
 </ng-template>
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column py-2">
     <div class="d-flex justify-content-start py-1">
       <i class="icon-view_comfy pe-1"></i>
-      <div> {{data?.dealName}} </div>
+      <div>{{ data?.dealName }}</div>
     </div>
     <!-- <div class="d-flex justify-content-start py-1">
       <i class="icon-k pe-1"></i>
@@ -145,11 +144,9 @@
   </div>
 </ng-template>
 
-
-
 <!--#####  TemplateGridView  #####-->
 <ng-template #templateStatus let-data>
-  <div class="ms-4">
+  <div class="">
     <codx-vll
       [name]="vllStatus"
       [field]="'Status'"
@@ -163,19 +160,22 @@
 </ng-template>
 
 <ng-template #templateCustomer let-data>
-  <div class="ms-4">
+  <div class="">
     <span
       [innerHTML]="
-        data?.customerID | formatvalue : view.formModel : 'CustomerID' | async
-      "
-    ></span>
+        data?.customerID | formatvalue : view.formModel : 'customerID' | async"></span>
   </div>
 </ng-template>
 
 <ng-template #templateCreatedBy let-data>
-  <div class="ms-4">
-    <codx-img [objectId]="data?.createdBy" objectType="AD_Users" [width]="35">
-    </codx-img>
+  <div class="ms-5">
+    <codx-imgs
+      [objectId]="data?.createdBy"
+      objectType="AD_Users"
+      [width]="35"
+      [numberImages]="1"
+    >
+    </codx-imgs>
   </div>
 </ng-template>
 <!--##### End  #####-->
