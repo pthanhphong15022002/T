@@ -2125,7 +2125,7 @@ codx-instances codx-view-list-detail {
     codx-detail-tmp {
       position: relative;
       display: block;
-      height: calc(100vh - 56px) !important;
+      height: calc(100vh - 58px) !important;
 
       overflow: hidden;
 
@@ -2208,7 +2208,18 @@ codx-instances codx-view-list-detail {
     }
   }
 }
-
+.e-dlg-container codx-instance-detail{
+  .codx-detail-header.mt-3{
+  margin-top: 0;
+  }
+  .instance-info{
+    margin-top: -30px;
+  }
+  .codx-detail-toolbar{
+    display: flex;
+    justify-content: end;
+  }
+}
 codx-instance-detail #ganttDefault {
   height: 100% !important;
   padding-bottom: 40px;
@@ -2724,3 +2735,22 @@ codx-instance-detail div.codx-detail-main{
   }
 }
 
+codx-tmmeetings{
+.list-empty.card.card-flush {
+  height: calc(100vh - 128px)!important;
+}
+}
+
+.badge.badge-md{
+  .fa, .fas{
+  font-size: 16px;
+  }
+
+}
+codx-vll.vll-post{
+  display: flex;
+  align-items: baseline;
+  img{
+    margin-right: 4px;
+  }
+}

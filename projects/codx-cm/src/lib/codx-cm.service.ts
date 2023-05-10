@@ -216,6 +216,24 @@ export class CodxCmService {
     );
   }
 
+  getInstancesByListID(lstIns) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetListInstanceByLstIDAsync',
+      [lstIns]
+    );
+  }
+
+  getStepsByListID(lstStepIDs, lstInsID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetListStepsByLstIDAsync',
+      [lstStepIDs, lstInsID]
+    );
+  }
+
   getInstanceSteps(data:any){
     return this.api.exec<any>(
       'DP',

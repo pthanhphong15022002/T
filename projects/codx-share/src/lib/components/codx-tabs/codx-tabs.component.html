@@ -86,7 +86,8 @@
             [actionType]="'C'"
             [addNew]="true"
             [funcID]="funcID"
-          >
+            (totalCommentChange)="changeCountFooter($event,'comment')"
+            >
           </codx-tree-comment>
         </div>
       </div>
