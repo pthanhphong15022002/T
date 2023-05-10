@@ -70,6 +70,7 @@ export class QuotationsViewDetailComponent implements OnChanges {
     allowDeleting: true,
     mode: 'Normal',
   };
+  dataSource= []
 
   constructor() {}
   ngOnChanges(changes: SimpleChanges): void {
