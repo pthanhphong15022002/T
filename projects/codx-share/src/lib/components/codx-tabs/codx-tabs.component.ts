@@ -150,7 +150,9 @@ export class CodxTabsComponent implements OnInit {
   }
 
   changeCountFooter(value:number,key:string){
-    this.oCountFooter[key] = value;
+    let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
+    oCountFooter[key] = value;
+    this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
     this.changeDetectorRef.detectChanges();
   }
 }

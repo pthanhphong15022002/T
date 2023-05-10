@@ -78,7 +78,7 @@ export class CodxCommentTempComponent implements OnInit {
             let codxTabs = window.ng.getComponent(ele[0]) as CodxTabsComponent;
             if(codxTabs)
             {
-              codxTabs.oCountFooter["comment"] = this.totalComment;
+              codxTabs.changeCountFooter(this.totalComment,"comment");
             }
           }
           this.dt.detectChanges();
