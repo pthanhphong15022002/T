@@ -1,7 +1,8 @@
 <div class="progress-pie-chart" [style]="getbackgroundColor()">
   <div class="container">
-    <div class="circular-progress">
-        <span class="progress-value">0%</span>
+    <div class="circular-progress" [ngClass]="'circular-progress-' + id">
+        <span class="progress-value" [ngClass]="'progress-value-' + id">0%</span>
     </div>
   </div>
 </div>
+<!-- <div>{{progress}}</div> -->

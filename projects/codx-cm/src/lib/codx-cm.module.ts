@@ -40,6 +40,13 @@ import { AddContractsComponent } from './contracts/add-contracts/add-contracts.c
 import { ListContractsComponent } from './contracts/list-contracts/list-contracts.component';
 import { QuotationsLinesComponent } from './quotations-lines/quotations-lines.component';
 import { PopupAddQuotationsLinesComponent } from './quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
+import { CodxListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
+import { CodxListDealsComponent } from './cmcustomer/cmcustomer-detail/codx-list-deals/codx-list-deals.component';
+import { ProductComponent } from './contracts/product/product.component';
+import { TabsHeaderComponent } from './contracts/tabs-header/tabs-header.component';
+import { CodxTabDealcompetitorsComponent } from './deals/deal-detail/codx-tab-dealcompetitors/codx-tab-dealcompetitors.component';
+import { PopupAddDealcompetitorComponent } from './deals/deal-detail/codx-tab-dealcompetitors/popup-add-dealcompetitor/popup-add-dealcompetitor.component';
+import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/view-dealcompetitors/view-dealcompetitors.component';
 
 const routes: Routes = [
   {
@@ -59,6 +66,10 @@ const routes: Routes = [
         path: 'sales/:funcID',
         component: DealsComponent,
       },
+      // {
+      //   path: 'services/:funcID',
+      //   component: DealsComponent,
+      // },
       {
         path: '**',
         redirectTo: 'error/404',
@@ -93,6 +104,13 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ListContractsComponent,
     QuotationsLinesComponent,
     PopupAddQuotationsLinesComponent,
+    CodxListContactsComponent,
+    CodxListDealsComponent,
+    ProductComponent,
+    TabsHeaderComponent,
+    CodxTabDealcompetitorsComponent,
+    PopupAddDealcompetitorComponent,
+    ViewDealcompetitorsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

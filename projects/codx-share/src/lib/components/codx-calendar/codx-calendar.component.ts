@@ -79,6 +79,9 @@ export class CodxCalendarComponent
   }
 
   onInit(): void {
+    this.api
+      .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync')
+      .subscribe();
     let myInterVal = setInterval(() => {
       if (this.ejCalendar) {
         clearInterval(myInterVal);
@@ -726,7 +729,7 @@ export class CodxCalendarComponent
             this.calendarCenter && this.calendarCenter.updateData(res);
           }
         });
-        
+
         //this.getCalendarSetting(resources, this.dataResourceModel);
       }
     });
@@ -768,4 +771,6 @@ export class CodxCalendarComponent
       }
     });
   }
+
+  valueChange(event) {}
 }

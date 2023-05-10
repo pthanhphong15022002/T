@@ -17,10 +17,12 @@ import {
   NotificationsService,
   AuthStore,
   UIComponent,
+  RequestOption,
 } from 'codx-core';
 import { CM_Deals } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstances } from '../../models/tmpModel';
+import { debug } from 'console';
 
 @Component({
   selector: 'lib-popup-add-deal',
@@ -55,7 +57,12 @@ export class PopupAddDealComponent
   listCbxCustomers: any[] = [];
   listCbxChannels: any[] = [];
   listMemorySteps: any[] = [];
+  listMemoryProcess: any[] = [];
   listCustomFile: any[] = [];
+  listParticipants:any[] = [];
+  listOrgs:any[] = [];
+
+
   // const
   readonly actionAdd: string = 'add';
   readonly actionCopy: string = 'copy';
@@ -63,7 +70,8 @@ export class PopupAddDealComponent
   readonly typeForDeal: string = '1';
   readonly fieldCbxProcess = { text: 'processName', value: 'recID' };
   readonly fieldCbxCampaigns = { text: 'campaignName', value: 'recID' };
-  readonly fieldCbxCustomers = { text: 'customerName', value: 'recID' };
+  // readonly fieldCbxCustomers = { text: 'customerName', value: 'recID' };
+  readonly fieldCbxParticipants =  { text: 'userName', value: 'userID' };
   readonly fieldCbxChannels = { text: 'channelName', value: 'recID' };
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
@@ -87,6 +95,7 @@ export class PopupAddDealComponent
   //type any
   gridViewSetup: any;
   listProcess: any;
+  owner:any;
 
   // model of DP
   instance: tmpInstances = new tmpInstances();
@@ -118,6 +127,18 @@ export class PopupAddDealComponent
       this.deal[$event.field] = $event.data;
     }
   }
+  valueChangeDate($event) {
+    if ($event) {
+      this.deal[$event.field] = $event.data.fromDate ;
+    }
+  }
+  eventUser(e) {
+    if (e != null) {
+      this.owner = e?.id; // thêm check null cái
+      this.deal.owner = this.owner;
+    }
+  }
+
   saveOpportunity() {
     if (!this.deal?.processID) {
       this.notificationsService.notifyCode(
@@ -171,8 +192,8 @@ export class PopupAddDealComponent
         return;
       }
     this.convertDataInstance(this.deal,this.instance);
-    // this.insertInstance();
-    // this.insertDeal();
+    this.insertInstance();
+   // this.insertDeal();
     this.onAdd();
 
 
@@ -187,8 +208,12 @@ export class PopupAddDealComponent
       this.deal[field] = $event;
       if ($event) {
         var result = this.checkProcessInList($event);
-        if (result && result.length > 0) {
-          this.listInstanceSteps = result;
+        if (result) {
+          this.listInstanceSteps = result?.steps;
+          this.listParticipants = result?.permissions;
+          this.deal.endDate = this.HandleEndDate(this.listInstanceSteps, this.action, null);
+          this.deal.dealID = result?.dealId;
+          this.changeDetectorRef.detectChanges();
         } else {
           this.getListInstanceSteps($event);
         }
@@ -230,7 +255,12 @@ export class PopupAddDealComponent
       }
     }
   }
-
+  valueChangeOwner($event){
+    if ($event != null) {
+      this.owner = $event?.id;
+      this.deal.owner = this.owner;
+    }
+  }
   onAdd() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option),0)
@@ -240,14 +270,12 @@ export class PopupAddDealComponent
         } else this.dialog.close();
       });
   }
-  beforeSave(op) {
-    op.service = 'CM';
-    op.entityName = 'CM_Deals';
+  beforeSave(option: RequestOption) {
     var data = this.deal;
     if (this.action == this.actionAdd || this.action == this.actionCopy) {
-      op.method = 'AddDealAsync';
-      op.className = 'DealsBusiness';
-      op.data = data;
+      option.methodName = 'AddDealAsync';
+      option.className = 'DealsBusiness';
+      option.data = data;
       return true;
     }
     return false;
@@ -312,23 +340,28 @@ export class PopupAddDealComponent
   }
 
   async getListInstanceSteps(processId: any) {
-    this.codxCmService.getInstanceSteps(processId).subscribe((res) => {
+    this.codxCmService.getInstanceSteps(processId).subscribe(async (res) => {
       if (res && res.length > 0) {
         var obj = {
           id: processId,
-          steps: res,
+          steps: res[0],
+          permissions: (await this.getListPermission(res[1])),
+          dealId: res[2]
         };
         var isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
           this.listMemorySteps.push(obj);
         }
-        this.listInstanceSteps = res;
+        this.listInstanceSteps = res[0];
+        this.deal.endDate = this.HandleEndDate(this.listInstanceSteps, this.action, null);
+        this.deal.dealID = res[2];
+        this.listParticipants = obj.permissions;
         this.changeDetectorRef.detectChanges();
       }
     });
   }
 
-   insertInstance() {
+  insertInstance() {
     var data = [this.instance, this.listInstanceSteps,null];
     this.codxCmService.addInstance(data).subscribe((instance)=> {
       if(instance){
@@ -347,19 +380,14 @@ export class PopupAddDealComponent
     });
   }
 
-
-
-
   // check valid
   checkProcessInList(processId) {
-    var result = this.listMemorySteps.filter((x) => x.id === processId)[0]
-      ?.steps;
+    var result = this.listMemorySteps.filter((x) => x.id === processId)[0];
     if (result) {
       return result;
     }
     return null;
   }
-
 
   // covnert data CM -> data DP
 
@@ -379,7 +407,6 @@ export class PopupAddDealComponent
     deal.status = "1";
     deal.refID = instance.recID;
   }
-
   checkFormat(field) {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {
@@ -396,6 +423,62 @@ export class PopupAddDealComponent
       }
     }
     return '';
+  }
+
+  HandleEndDate(listSteps: any, action: string, endDateValue: any) {
+    var dateNow =
+      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+    var endDate =
+      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+    for (let i = 0; i < listSteps.length; i++) {
+      endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
+      endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
+      endDate = this.setTimeHoliday(
+        dateNow,
+        endDate,
+        listSteps[i]?.excludeDayoff
+      );
+      dateNow = endDate;
+    }
+    return endDate;
+  }
+  setTimeHoliday(startDay: Date, endDay: Date, dayOff: string) {
+    if (!dayOff || (dayOff && (dayOff.includes('7') || dayOff.includes('8')))) {
+      const isSaturday = dayOff.includes('7');
+      const isSunday = dayOff.includes('8');
+      let day = 0;
+
+      for (
+        let currentDate = new Date(startDay);
+        currentDate <= endDay;
+        currentDate.setDate(currentDate.getDate() + 1)
+      ) {
+        day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
+        day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
+      }
+      endDay.setDate(endDay.getDate() + day);
+
+      if (endDay.getDay() === 6 && isSaturday) {
+        endDay.setDate(endDay.getDate() + 1);
+      }
+
+      if (endDay.getDay() === 0 && isSunday) {
+        endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
+      }
+    }
+    return endDay;
+  }
+
+  async getListPermission(permissions){
+    this.listParticipants = permissions.filter(
+      (x) => x.roleType === 'P'
+    );
+    // if (this.listParticipants != null && this.listParticipants.length > 0) {
+    //   this.listParticipants = await this.codxCmService.getListUserByOrg(
+    //     this.listParticipants
+    //   );
+    // }
+    return this.listParticipants != null && this.listParticipants.length > 0 ? await this.codxCmService.getListUserByOrg( this.listParticipants) : this.listParticipants;
   }
 
 }

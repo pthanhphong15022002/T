@@ -8,6 +8,8 @@ import {
   OnInit,
   Optional,
   Output,
+  SimpleChange,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -164,7 +166,7 @@ export class InstancesComponent
   user: any;
   isAdminRoles = false;
   listInstanceStep = [];
-  reloadData = false;
+  // reloadData = false;
   popup: DialogRef;
   reasonStepsObject: any;
   addFieldsControl = '1';
@@ -176,20 +178,20 @@ export class InstancesComponent
 
   isHaveFile: boolean = false;
   //test temp
-  dataTemplet = [
-    {
-      templateName: 'File excel của Khanh- Team bá cháy',
-      recID: '1',
-    },
-    {
-      templateName: 'Khanh múa rất đẹp,sập sân khấu',
-      recID: '2',
-    },
-    {
-      templateName: 'Khanh pig bá đạo',
-      recID: '3',
-    },
-  ];
+  // dataTemplet = [
+  //   {
+  //     templateName: 'File excel của Khanh- Team bá cháy',
+  //     recID: '1',
+  //   },
+  //   {
+  //     templateName: 'Khanh múa rất đẹp,sập sân khấu',
+  //     recID: '2',
+  //   },
+  //   {
+  //     templateName: 'Khanh pig bá đạo',
+  //     recID: '3',
+  //   },
+  // ];
   type = 'excel';
   requestTemp = new DataRequest();
   optionEx = new DataRequest();
@@ -296,7 +298,7 @@ export class InstancesComponent
     this.views = [
       {
         type: ViewType.listdetail,
-        active: false,
+        active: true,
         sameData: true,
         toolbarTemplate: this.footerButton,
         model: {
@@ -715,15 +717,16 @@ export class InstancesComponent
   startInstance(data) {
     this.codxDpService.startInstance(data.recID).subscribe((res) => {
       if (res) {
-        this.listInstanceStep = res;
         data.status = '2';
         data.startDate = res?.length > 0 ? res[0].startDate : null;
         this.dataSelected = data;
-        this.reloadData = true;
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.listInstanceStep = res;
+
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      } else this.reloadData = false;
+      }
       this.detectorRef.detectChanges();
     });
   }
@@ -738,7 +741,9 @@ export class InstancesComponent
             .subscribe((res) => {
               if (res) {
                 this.dataSelected.closed = check;
-                this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+                this.dataSelected = JSON.parse(
+                  JSON.stringify(this.dataSelected)
+                );
                 this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
                 if (this.process.showInstanceControl === '1') {
                   this.view.dataService.update(this.dataSelected).subscribe();
@@ -811,14 +816,7 @@ export class InstancesComponent
             //Copy
             case 'SYS104':
             case 'SYS04':
-              let isCopy = this.isCreate ? true : false;
-              if (
-                !isCopy ||
-                data.closed ||
-                data.status != '2' ||
-                !data.permissionCloseInstances
-              )
-                res.disabled = true;
+              if (!this.isCreate) res.disabled = true;
               break;
             //xóa
             case 'SYS102':
@@ -883,6 +881,22 @@ export class InstancesComponent
               if (!data.permissionCloseInstances) {
                 mf.disabled = true;
               }
+              break;
+            //edit
+            case 'SYS03':
+              let isUpdate = data.write;
+              if (!isUpdate || data.closed || !data.permissionCloseInstances)
+                mf.disabled = true;
+              break;
+            //Copy
+            case 'SYS04':
+              if (!this.isCreate) mf.disabled = true;
+              break;
+            //xóa
+            case 'SYS02':
+              let isDelete = data.delete;
+              if (!isDelete || data.closed || !data.permissionCloseInstances)
+                mf.disabled = true;
               break;
             case 'DP09':
             case 'DP10':
@@ -958,7 +972,7 @@ export class InstancesComponent
     if (data.status != '2' || isUseReason) {
       return true;
     }
-    if(data.closed ){
+    if (data.closed) {
       return true;
     }
     if (!data.permissionMoveInstances) {
@@ -1434,7 +1448,7 @@ export class InstancesComponent
   }
 
   checkFieldsIEmpty(fields) {
-    return fields.includes((x) => !x.dataValue && x.isRequired);
+    return fields.some((x) => !x.dataValue && x.isRequired);
   }
 
   checkTransferControl(stepID) {
@@ -1466,7 +1480,7 @@ export class InstancesComponent
       formModel: formMD,
       isReason: isMoveSuccess,
       instance: data,
-      objReason: JSON.parse(JSON.stringify(reason)) ,
+      objReason: JSON.parse(JSON.stringify(reason)),
       listProccessCbx: this.listProccessCbx,
       listParticipantReason: this.lstOrg,
     };
@@ -1601,20 +1615,17 @@ export class InstancesComponent
         currentDate <= endDay;
         currentDate.setDate(currentDate.getDate() + 1)
       ) {
-        if (currentDate.getDay() === 6 && isSaturday) {
-          ++day;
-        }
-        if (currentDate.getDay() === 0 && isSunday) {
-          ++day;
-        }
+        day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
+        day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
       }
       endDay.setDate(endDay.getDate() + day);
+
       if (endDay.getDay() === 6 && isSaturday) {
         endDay.setDate(endDay.getDate() + 1);
       }
-      endDay.setDate(endDay.getDate() + day);
+
       if (endDay.getDay() === 0 && isSunday) {
-        endDay.setDate(endDay.getDate() + 1);
+        endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
       }
     }
     return endDay;
@@ -1713,7 +1724,7 @@ export class InstancesComponent
     // }
   }
   clickStartInstances(e) {
-    if (e) this.startInstance(this.dataSelected);
+    if (e) this.handelStartDay(this.dataSelected);
   }
   //load DATA
   async loadData(ps) {
@@ -1946,7 +1957,7 @@ export class InstancesComponent
   }
 
   showFormSubmit() {
-    if (!this.dataSelected.approveStatus) return;
+    // if (!this.dataSelected.approveStatus) return;
     this.codxDpService
       .getESCategoryByCategoryID(this.process.processNo)
       .subscribe((item: any) => {
@@ -2112,7 +2123,9 @@ export class InstancesComponent
           this.dataSelected.approveStatus = '1';
           this.view.dataService.update(this.dataSelected).subscribe();
           if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          this.codxDpService.updateApproverStatusInstance([data?.recID,"1"]).subscribe();
+          this.codxDpService
+            .updateApproverStatusInstance([data?.recID, '1'])
+            .subscribe();
           this.notificationsService.notifyCode('ES007');
         }
       });

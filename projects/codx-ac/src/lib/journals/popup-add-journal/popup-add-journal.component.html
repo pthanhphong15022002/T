@@ -249,37 +249,68 @@
       ></codx-label>
     </div>
 
-    <div class="row mt-6" *ngIf="journal.multiCurrency">
-      <div class="col-6">
-        <div class="mb-1">
+    <ng-container *ngIf="journal.multiCurrency">
+      <div class="row mt-6">
+        <div class="col-8">
+          <div class="mb-1">
+            <codx-label
+              class="fw-bold"
+              fiedName="currencyID"
+              [formModel]="form.formModel"
+            ></codx-label>
+          </div>
           <codx-label
-            class="fw-bold"
-            fiedName="currencyID"
+            fiedName="lblCurrencyID"
             [formModel]="form.formModel"
+            [default]="gvs.CurrencyID?.description"
+            class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
-        <codx-label
-          fiedName="lblCurrencyID"
-          [formModel]="form.formModel"
-          [default]="gvs.CurrencyID?.description"
-          class="text-gray-500 font-italic fw-normal"
-        ></codx-label>
-      </div>
 
-      <div class="col-6 d-flex align-items-center justify-content-end">
-        <div class="w-100 me-1">
-          <codx-input
-            field="currencyID"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [placeholder]="' '"
-          ></codx-input>
+        <div class="col-4 d-flex align-items-center justify-content-end">
+          <div class="w-100 me-1">
+            <codx-input
+              field="currencyID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              [placeholder]="' '"
+            ></codx-input>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="row mt-5">
-      <div class="col-6">
+      <div class="row mt-5">
+        <div class="col-8">
+          <div class="mb-1">
+            <codx-label
+              class="fw-bold"
+              fiedName="currSourceType"
+              [formModel]="form.formModel"
+            ></codx-label>
+          </div>
+          <codx-label
+            fiedName="lblCurrSourceType"
+            [formModel]="form.formModel"
+            [default]="gvs.CurrSourceType?.description"
+            class="text-gray-500 font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-4 d-flex align-items-center justify-content-end">
+          <div class="w-100 me-1">
+            <codx-input
+              field="currSourceType"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              [placeholder]="' '"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="form-group row mt-5">
+      <div class="col-8">
         <div class="mb-1">
           <codx-label
             fiedName="drAcctControl"
@@ -304,7 +335,7 @@
         </div>
       </div>
 
-      <div class="col-6 d-flex align-items-center">
+      <div class="col-4 d-flex align-items-center">
         <div class="w-100">
           <codx-input
             field="drAcctControl"
@@ -320,15 +351,15 @@
             *ngIf="['0', '1', '2'].includes(journal.drAcctControl)"
             class="btn btn-icon btn-light-primary"
             role="button"
-            (click)="openSelectPopup('dr', journal.drAcctControl)"
+            (click)="onClickOpenSelectPopup('dr', journal.drAcctControl)"
           >
             <i class="icon-edit-one icon-18"></i>
           </button>
 
           <codx-combobox-popup
-            *ngIf="!isMultiSelectPopupDrHidden"
+            *ngIf="!isPopupDrHidden"
             comboboxName="AccountsAC"
-            [multiple]="true"
+            [multiple]="isMultiple"
             [width]="600"
             [height]="500"
             [value]="journal.drAcctID"
@@ -354,7 +385,7 @@
 
     <div class="form-group mt-5">
       <div class="row">
-        <div class="col-6">
+        <div class="col-8">
           <div class="mb-1">
             <codx-label
               fiedName="crAcctControl"
@@ -378,7 +409,7 @@
           </span>
         </div>
 
-        <div class="col-6 d-flex align-items-center">
+        <div class="col-4 d-flex align-items-center">
           <div class="w-100">
             <codx-input
               field="crAcctControl"
@@ -394,15 +425,15 @@
               *ngIf="['0', '1', '2'].includes(journal.crAcctControl)"
               class="btn btn-icon btn-light-primary"
               role="button"
-              (click)="openSelectPopup('cr', journal.crAcctControl)"
+              (click)="onClickOpenSelectPopup('cr', journal.crAcctControl)"
             >
               <i class="icon-edit-one icon-18"></i>
             </button>
 
             <codx-combobox-popup
-              *ngIf="!isMultiSelectPopupCrHidden"
+              *ngIf="!isPopupCrHidden"
               comboboxName="AccountsAC"
-              [multiple]="true"
+              [multiple]="isMultiple"
               [width]="600"
               [height]="500"
               [value]="journal.crAcctID"
@@ -430,7 +461,7 @@
 
     <div class="form-group mt-5">
       <div class="row">
-        <div class="col-6">
+        <div class="col-8">
           <div class="mb-1">
             <codx-label
               fiedName="diM1Control"
@@ -445,7 +476,7 @@
           ></codx-label>
         </div>
 
-        <div class="col-6">
+        <div class="col-4">
           <div class="w-100">
             <codx-input
               field="diM1Control"
@@ -460,7 +491,7 @@
 
     <div class="form-group mt-5">
       <div class="row align-items-center">
-        <div class="col-6">
+        <div class="col-8">
           <div class="mb-1">
             <codx-label
               fiedName="projectControl"
@@ -475,7 +506,7 @@
           ></codx-label>
         </div>
 
-        <div class="col-6">
+        <div class="col-4">
           <codx-input
             field="projectControl"
             [formModel]="form.formModel"
@@ -488,7 +519,7 @@
 
     <div class="form-group mt-5">
       <div class="row align-items-center">
-        <div class="col-6">
+        <div class="col-8">
           <div class="mb-1">
             <codx-label
               fiedName="diM2Control"
@@ -503,7 +534,7 @@
           ></codx-label>
         </div>
 
-        <div class="col-6">
+        <div class="col-4">
           <codx-input
             field="diM2Control"
             [formModel]="form.formModel"
@@ -516,7 +547,7 @@
 
     <div class="form-group mt-5">
       <div class="row align-items-center">
-        <div class="col-6">
+        <div class="col-8">
           <div class="mb-1">
             <codx-label
               fiedName="diM3Control"
@@ -531,7 +562,7 @@
           ></codx-label>
         </div>
 
-        <div class="col-6">
+        <div class="col-4">
           <codx-input
             field="diM3Control"
             [formModel]="form.formModel"
@@ -544,7 +575,7 @@
 
     <div class="form-group mt-5">
       <div class="row align-items-center">
-        <div class="col-6">
+        <div class="col-8">
           <div class="mb-1">
             <codx-label
               fiedName="assetControl"
@@ -559,7 +590,7 @@
           ></codx-label>
         </div>
 
-        <div class="col-6">
+        <div class="col-4">
           <codx-input
             field="assetControl"
             [formModel]="form.formModel"
@@ -579,7 +610,7 @@
     </div>
     <div class="form-group mt-3">
       <div class="row align-items-center">
-        <div class="col-6">
+        <div class="col-8">
           <div class="mb-1">
             <codx-label
               fiedName="subControl"
@@ -594,7 +625,7 @@
           ></codx-label>
         </div>
 
-        <div class="col-6">
+        <div class="col-4">
           <codx-input
             field="subControl"
             [formModel]="form.formModel"
@@ -607,7 +638,7 @@
 
     <div class="form-group mt-5">
       <div class="row align-items-center">
-        <div class="col-6">
+        <div class="col-8">
           <div class="mb-1">
             <codx-label
               fiedName="settleControl"
@@ -622,7 +653,7 @@
           ></codx-label>
         </div>
 
-        <div class="col-6">
+        <div class="col-4">
           <codx-input
             field="settleControl"
             [formModel]="form.formModel"
@@ -662,7 +693,7 @@
       ></codx-label>
 
       <div class="row align-items-center">
-        <div class="col-6">
+        <div class="col-8">
           <codx-label
             fiedName="lblWarehouseIssue"
             [formModel]="form.formModel"
@@ -671,7 +702,7 @@
           ></codx-label>
         </div>
 
-        <div class="col-6">
+        <div class="col-4">
           <codx-input
             field="warehouseIssue"
             [formModel]="form.formModel"
@@ -689,7 +720,7 @@
       ></codx-label>
 
       <div class="row align-items-center">
-        <div class="col-6">
+        <div class="col-8">
           <codx-label
             fiedName="lblWarehouseReceipt"
             [formModel]="form.formModel"
@@ -698,7 +729,7 @@
           ></codx-label>
         </div>
 
-        <div class="col-6">
+        <div class="col-4">
           <codx-input
             field="warehouseReceipt"
             [formModel]="form.formModel"
@@ -786,7 +817,7 @@
       ></codx-label>
 
       <div class="row align-items-center">
-        <div class="col-6">
+        <div class="col-8">
           <codx-label
             fiedName="lblApprovalControl"
             [formModel]="form.formModel"
@@ -795,12 +826,11 @@
           ></codx-label>
         </div>
 
-        <div class="col-5">
+        <div class="col-4">
           <codx-input
             field="approvalControl"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (change)="onApprovalControlChange($event)"
           ></codx-input>
         </div>
       </div>
@@ -845,9 +875,16 @@
         [Group]="form.formGroup"
       ></codx-input>
       <codx-label
+        *ngIf="['1', '2'].includes(journal.approvalControl)"
         fiedName="autoPost"
         [formModel]="form.formModel"
-        [default]="autoPostLabelText"
+        [default]="gvs.AutoPost.description.split(';')[1]"
+      ></codx-label>
+      <codx-label
+        *ngIf="journal.approvalControl == '0'"
+        fiedName="autoPost"
+        [formModel]="form.formModel"
+        [default]="gvs.AutoPost.description.split(';')[0]"
       ></codx-label>
     </div>
 
@@ -935,7 +972,7 @@
       ></codx-label>
 
       <div class="row align-items-center">
-        <div class="col-6">
+        <div class="col-8">
           <codx-label
             fiedName="lblUnPostDays"
             [formModel]="form.formModel"
@@ -944,11 +981,12 @@
           ></codx-label>
         </div>
 
-        <div class="col-5">
+        <div class="col-4">
           <codx-input
             field="unPostDays"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
+            [placeholder]="' '"
           ></codx-input>
         </div>
       </div>

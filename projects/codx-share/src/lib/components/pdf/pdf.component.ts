@@ -544,12 +544,14 @@ export class PdfComponent
   }
 
   goToPage(e) {
-    this.curPage = e.data;
+    if (e.data != this.curPage) {
+      this.curPage = e.data;
 
-    if (this.curPage < 1) {
-      this.curPage = 1;
-    } else if (this.curPage > this.pageMax) {
-      this.curPage = this.pageMax;
+      if (this.curPage < 1) {
+        this.curPage = 1;
+      } else if (this.curPage > this.pageMax) {
+        this.curPage = this.pageMax;
+      }
     }
   }
 
@@ -2001,6 +2003,7 @@ export class PdfComponent
     this.fileInfo = e.itemData;
     this.curFileID = this.fileInfo.fileID;
     this.autoSignState = false;
+    this.lstAreas = [];
     this.getListCA();
     this.esService
       .getSignAreas(
@@ -2013,10 +2016,10 @@ export class PdfComponent
       .subscribe((res) => {
         if (res) {
           this.lstAreas = res;
-          this.curFileUrl = this.fileInfo.fileUrl;
-
+          this.curPage = 0;
           // this.detectorRef.detectChanges();
         }
+        this.curFileUrl = this.fileInfo.fileUrl;
       });
     this.esService
       .changeSFCacheBytes(
@@ -2476,6 +2479,7 @@ export class PdfComponent
         ngxService.currentlyRenderedPages()
       )
       .subscribe((lst: Map<string, Array<location>>) => {
+        if (lst == null) return;
         this.lstKey = [];
         this.lstHighlightTextArea = [];
         let lstTextLayer = document.getElementsByClassName('textLayer');

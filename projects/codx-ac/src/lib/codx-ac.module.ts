@@ -1,48 +1,47 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { CodxCoreModule } from 'codx-core';
-import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { CodxAcComponent } from './codx-ac.component';
-import { LayoutComponent } from './_layout/layout.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TabModule } from '@syncfusion/ej2-angular-navigations';
-import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
+import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { CodxCoreModule } from 'codx-core';
+import { CodxReportModule } from 'projects/codx-report/src/public-api';
+import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { LayoutComponent } from './_layout/layout.component';
 import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
-import { VoucherComponent } from './popup/voucher/voucher.component';
+import { ApprovalsComponent } from './approvals/approvals.component';
+import { CodxAcComponent } from './codx-ac.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { CustomizedMultiSelectPopupComponent } from './journals/customized-multi-select-popup/customized-multi-select-popup.component';
+import { DropdownDetailComponent } from './journals/dropdown-detail/dropdown-detail.component';
 import { JournalsComponent } from './journals/journals.component';
 import { PopupAddJournalComponent } from './journals/popup-add-journal/popup-add-journal.component';
-import { DropdownDetailComponent } from './journals/dropdown-detail/dropdown-detail.component';
 import { PopupSetupInvoiceComponent } from './journals/popup-setup-invoice/popup-setup-invoice.component';
-import { SingleSelectPopupComponent } from './journals/single-select-popup/single-select-popup.component';
-import { CustomizedMultiSelectPopupComponent } from './journals/customized-multi-select-popup/customized-multi-select-popup.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { CashPaymentsComponent } from './vouchers/cash-payments/cash-payments.component';
-import { CashReceiptsComponent } from './vouchers/cash-receipts/cash-receipts.component';
-import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
-import { CashTransfersComponent } from './vouchers/cash-transfers/cash-transfers.component';
-import { PopAddCashComponent } from './vouchers/cash-payments/pop-add-cash/pop-add-cash.component';
-import { PopupAddCashTransferComponent } from './vouchers/cash-transfers/popup-add-cash-transfer/popup-add-cash-transfer.component';
-import { PopAddReceiptsComponent } from './vouchers/cash-receipts/pop-add-receipts/pop-add-receipts.component';
-import { PopAddPurchaseComponent } from './vouchers/purchaseinvoices/pop-add-purchase/pop-add-purchase.component';
-import { PopAddLineComponent } from './vouchers/purchaseinvoices/pop-add-line/pop-add-line.component';
-import { PopAddLinecashComponent } from './vouchers/cash-payments/pop-add-linecash/pop-add-linecash.component';
-import { PopAddLinereceiptsComponent } from './vouchers/cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
 import { PeriodicComponent } from './periodic/periodic.component';
-import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
+import { NameByIdPipe } from './pipes/nameById.pipe';
+import { VoucherComponent } from './popup/voucher/voucher.component';
+import { ReportsComponent } from './reports/reports.component';
+import { SearchingComponent } from './searching/searching.component';
+import { CashPaymentsComponent } from './vouchers/cash-payments/cash-payments.component';
+import { PopAddCashComponent } from './vouchers/cash-payments/pop-add-cash/pop-add-cash.component';
+import { PopAddLinecashComponent } from './vouchers/cash-payments/pop-add-linecash/pop-add-linecash.component';
+import { CashReceiptsComponent } from './vouchers/cash-receipts/cash-receipts.component';
+import { PopAddLinereceiptsComponent } from './vouchers/cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
+import { PopAddReceiptsComponent } from './vouchers/cash-receipts/pop-add-receipts/pop-add-receipts.component';
+import { CashTransfersComponent } from './vouchers/cash-transfers/cash-transfers.component';
+import { PopupAddCashTransferComponent } from './vouchers/cash-transfers/popup-add-cash-transfer/popup-add-cash-transfer.component';
+import { PopAddLineComponent } from './vouchers/purchaseinvoices/pop-add-line/pop-add-line.component';
+import { PopAddPurchaseComponent } from './vouchers/purchaseinvoices/pop-add-purchase/pop-add-purchase.component';
+import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
+import { PopAddReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-receipt-transaction/pop-add-receipt-transaction.component';
+import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/receipt-transaction.component';
 import { PopupAddSalesInvoiceComponent } from './vouchers/sales-invoices/popup-add-sales-invoice/popup-add-sales-invoice.component';
 import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
-import { SearchingComponent } from './searching/searching.component';
+import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
 import { TableLineDetailComponent } from './vouchers/sales-invoices/table-line-detail/table-line-detail.component';
-import { NameByIdPipe } from './pipes/nameById.pipe';
-import { ReportsComponent } from './reports/reports.component';
-import { ApprovalsComponent } from './approvals/approvals.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CoreModule } from '../../../../src/core/core.module';
-import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/receipt-transaction.component';
-import { PopAddReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-receipt-transaction/pop-add-receipt-transaction.component';
+import { PopAddLineinventoryComponent } from './vouchers/receipt-transaction/pop-add-lineinventory/pop-add-lineinventory.component';
 
 export const routes: Routes = [
   {
@@ -136,7 +135,6 @@ export const routes: Routes = [
     DropdownDetailComponent,
     PopupSetupInvoiceComponent,
     PopAddLineComponent,
-    SingleSelectPopupComponent,
     CustomizedMultiSelectPopupComponent,
     VoucherComponent,
     PopAddLinecashComponent,
@@ -152,6 +150,7 @@ export const routes: Routes = [
     PopAddReceiptTransactionComponent,
     ReportsComponent,
     ApprovalsComponent,
+    PopAddLineinventoryComponent
   ],
   imports: [
     RouterModule.forChild(routes),

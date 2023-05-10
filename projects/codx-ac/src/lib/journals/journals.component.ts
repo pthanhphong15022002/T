@@ -91,8 +91,8 @@ export class JournalsComponent extends UIComponent {
   }
 
   dbClick(e, data) {
-    let f = this.func.find(x=>x.value === data.journalType);
-    if(!f) return;
+    let f = this.func.find((x) => x.value === data.journalType);
+    if (!f) return;
     this.cache.functionList(f?.default).subscribe((func) => {
       if (func) {
         let urlRedirect = '/' + UrlUtil.getTenant();
@@ -201,7 +201,7 @@ export class JournalsComponent extends UIComponent {
 
         if (res) {
           this.journalService
-            .deleteAutoNumber(data.recID)
+            .deleteAutoNumber(data.journalNo)
             .subscribe((res) => console.log(res));
         }
       });

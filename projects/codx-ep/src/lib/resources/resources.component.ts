@@ -20,11 +20,11 @@ import {
 import { CodxEpService } from 'projects/codx-ep/src/public-api';
 import { Device } from '../models/equipments.model';
 import { PopupAddResourcesComponent } from './popup-add-resources/popup-add-resources.component';
-import { PopupAddCardTransComponent } from '../car/cardTran/popup-add-cardTrans/popup-add-cardTrans.component';
 import { ResourceTrans } from '../models/resource.model';
 import { PopupAddQuotaComponent } from './popup-add-quota/popup-add-quota.component';
 import { PopupUpdateQuantityComponent } from './popup-update-quantity/popup-update-quantity.component';
 import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-stationery.component';
+import { PopupAddCardTransComponent } from '../booking/cardTran/popup-add-cardTrans/popup-add-cardTrans.component';
 
 @Component({
   selector: 'resources-category',
@@ -200,7 +200,7 @@ export class ResourcesComponent extends UIComponent {
         this.cardTrans(EPCONST.FUNCID.CA_Return, event?.text, data);
         break;
       case EPCONST.MFUNCID.CA_History:
-        this.historyCard(event?.data?.url + '/' + data?.recID);
+        this.historyCard(event?.data?.url + '/' + data?.resourceID);
         break;
       case EPCONST.MFUNCID.S_UpdateQuantity:
         this.updateQuantity(data);
@@ -509,7 +509,7 @@ export class ResourcesComponent extends UIComponent {
         }
       });
     });
-    let dialog = this.callfc.openForm(template, '', 550, 560);
+    let dialog = this.callfc.openForm(template, '', 550, 400);
     this.detectorRef.detectChanges();
   }
 

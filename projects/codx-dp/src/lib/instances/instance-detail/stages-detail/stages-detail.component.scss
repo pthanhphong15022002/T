@@ -29,21 +29,19 @@
 }
 
 .header-info {
-  border: 1px var(--primary-light) solid;
+  //border: 1px var(--primary-light) solid;
   border-radius: 4px;
-  margin-bottom: 15px;
+  margin-bottom: 7px;
   background-color: var(--primary-lighter);
 }
 
 .back-info {
   border: 1px var(--gray-150) solid;
-  border-radius: 4px;
-  padding-bottom: 15px;
+  padding-bottom:7px;
 
   .header-info {
     background-color: var(--primary-lighter);
     padding: 10px 15px;
-    border-radius: 4px;
 
     .title {
       font-weight: 500;
@@ -93,6 +91,7 @@
 .icon-container {
   height: 30px;
   width: 30px;
+  min-width: 30px;
   border-radius: 50%;
   background-color: var(--gray-150);
   display: flex;
@@ -225,6 +224,7 @@
 .icon-container {
   height: 30px;
   width: 30px;
+  min-width: 30px;
   border-radius: 50%;
   background-color: #e4e4e4;
   display: flex;
