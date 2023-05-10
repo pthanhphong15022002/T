@@ -53,10 +53,10 @@
         {{ itemSelected?.voucherNo }}
       </span>
       <div class="d-flex align-items-center me-3">
-        <span class="icon-customize icon-16 me-2"></span>
-        <codx-label class="fw-bold label-colon" default="Ngày chứng từ" [formModel]="view.formModel">
+        <span class="icon-i-calendar-date icon-16 me-2"></span>
+        <codx-label class="fw-bold label-colon mt-1" default="Ngày chứng từ" [formModel]="view.formModel">
         </codx-label>
-        <span class="text-gray-600">
+        <span class="text-gray-600 mt-1">
           {{formatDate(itemSelected?.voucherDate)}}
         </span>
       </div>
@@ -77,7 +77,7 @@
           "></span>
       </div>
       <div class="d-flex align-self-center">
-        <span class="badge badge-pill badge-primary me-3">
+        <span class="badge badge-danger me-3">
           <span *ngIf="journal.multiCurrency == '0'" class="fw-bold fs-6">{{itemSelected?.totalAmt?.toLocaleString('it-IT')}}</span>
           <span *ngIf="journal.multiCurrency == '1'" class="fw-bold fs-6">{{itemSelected?.totalAmt?.toLocaleString('it-IT')+' '+itemSelected?.currencyID }}</span>
         </span>
@@ -87,41 +87,37 @@
 </ng-template>
 <ng-template #body>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex flex-wrap mb-5">
-      <div class="d-flex align-items-center me-5">
-        <span class="icon-i-person-fill icon-16 me-2"></span>
-        <codx-label class="fw-bold label-colon" default="Người nhận tiền" [formModel]="view.formModel">
-        </codx-label>
-        <span #payee [innerHTML]="
-            itemSelected?.payee
-              | formatvalue : view.formModel : 'payee' : payee
-              | async
-          " class="text-gray-600"></span>
-      </div>
+    <div class="d-flex align-items-center me-5 mb-1">
+      <span class="icon-i-person-fill icon-16 me-2"></span>
+      <codx-label class="fw-bold label-colon" default="Người nhận tiền" [formModel]="view.formModel">
+      </codx-label>
+      <span #payee [innerHTML]="
+          itemSelected?.payee
+            | formatvalue : view.formModel : 'payee' : payee
+            | async
+        " class="text-gray-600"></span>
     </div>
-    <div class="d-flex align-items-center me-5 mb-5">
+    <div class="d-flex align-items-center me-5 mb-1">
       <span class="icon-i-journal-album icon-16 me-2"></span>
       <span *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'" class="fw-bold label-colon">{{'1' | vll : 'AC091' : 'text' | async}}&nbsp;</span>
       <span *ngIf="itemSelected?.subType == '3'" class="fw-bold label-colon">{{'3' | vll : 'AC093' : 'text' | async}}&nbsp;</span>
       <span #cashBookID class="text-gray-600"
         [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
     </div>
-    <div class="d-flex flex-wrap mb-5">
-      <div class="d-flex align-items-center me-5">
-        <span class="icon-i-wallet2 icon-16 me-2"></span>
-        <codx-label class="fw-bold label-colon" fiedName="ReasonID" [formModel]="view.formModel">
-        </codx-label>
-        <span #reasonID class="text-gray-600" [innerHTML]="
-            itemSelected?.reasonID
-              | formatvalue
-                : view.formModel
-                : 'reasonID'
-                : reasonID
-              | async
-          "></span>
-      </div>
+    <div class="d-flex align-items-center me-5 mb-1">
+      <span class="icon-i-wallet2 icon-16 me-2"></span>
+      <codx-label class="fw-bold label-colon" fiedName="ReasonID" [formModel]="view.formModel">
+      </codx-label>
+      <span #reasonID class="text-gray-600" [innerHTML]="
+          itemSelected?.reasonID
+            | formatvalue
+              : view.formModel
+              : 'reasonID'
+              : reasonID
+            | async
+        "></span>
     </div>
-    <div class="d-flex align-items-center me-5 mb-5">
+    <div class="d-flex align-items-center me-5 mb-1">
       <span class="icon-brush icon-16 me-2"></span>
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="view.formModel">
       </codx-label>
@@ -131,7 +127,7 @@
             | async
         "></span>
     </div>
-    <div class="card-add mt-2" #cardbodyRef>
+    <div class="card-add mt-5" #cardbodyRef>
       <ejs-tab #cashRef>
         <e-tabitems>
           <!-- Tab thông tin chứng từ -->
@@ -147,7 +143,7 @@
               <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
             </ng-template>
           </e-tabitem>
-          <e-tabitem *ngIf="itemSelected?.subType == '2'">
+          <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2">
                 <i class="icon-text_snippet icon-18 me-2"></i>
@@ -179,8 +175,8 @@
         </codx-vll>
       </span>
       <div class="d-flex align-items-center">
-        <span class="icon-customize icon-16 me-1 text-gray-600"></span>
-        <span class="text-gray-600">
+        <span class="icon-i-calendar-date icon-16 me-1 "></span>
+        <span class="text-gray-600 mt-1">
           {{formatDate(data?.voucherDate)}}
         </span>
       </div>
@@ -194,7 +190,7 @@
 </ng-template>
 <ng-template #tabBasic>
   <ng-container *ngIf="(itemSelected.subType == '1' || itemSelected.subType == '3' ) && cashpaymentline">
-    <div style="height: 420px;" class="table-responsive mt-3">
+    <div style="height: 450px;" class="table-responsive mt-2">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
         <thead style="position: sticky;top: 0;background-color: white;z-index: 15;">
           <tr class="border-bottom">
@@ -382,6 +378,24 @@
             </td>
           </tr>
         </tbody>
+        <tfoot *ngIf="cashpaymentline.length > 0" style="background: whitesmoke;">
+          <tr>
+            <th style="width: 50%;">
+              <div class="d-flex align-items-center justify-content-start">
+                <span class="fs-6 fw-bold">Tổng cộng</span>
+              </div>
+            </th>
+            <th style="width: 15%;">
+              <div class="d-flex align-items-center justify-content-start">
+                <span class="fs-6 fw-bold">{{total}}</span>
+              </div>
+            </th>
+            <th></th>
+            <th style="width: 45%;"></th>
+            <th style="width: 20%;"></th>
+            <th *ngIf="cashpaymentline.length > 0" style="width: 10%;"></th>
+          </tr>
+        </tfoot>
       </table>
       <div *ngIf="cashpaymentline.length == 0" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100 mt-20">
@@ -553,7 +567,7 @@
   </ng-container>
 </ng-template>
 <ng-template #tabSet>
-  <ng-container *ngIf="(itemSelected.subType == '2' )">
+  <ng-container>
     <div class="table-responsive mt-2 h-400px">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
         <thead style="position: sticky; top: 0">

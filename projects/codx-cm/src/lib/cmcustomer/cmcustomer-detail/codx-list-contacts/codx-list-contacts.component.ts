@@ -1,5 +1,19 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AlertConfirmInputConfig, CacheService, CallFuncService, DialogModel, FormModel, NotificationsService } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  AlertConfirmInputConfig,
+  CacheService,
+  CallFuncService,
+  DialogModel,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
 import { PopupQuickaddContactComponent } from '../../popup-add-cmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
 import { PopupListContactsComponent } from '../../popup-add-cmcustomer/popup-list-contacts/popup-list-contacts.component';
@@ -7,10 +21,9 @@ import { PopupListContactsComponent } from '../../popup-add-cmcustomer/popup-lis
 @Component({
   selector: 'codx-list-contacts',
   templateUrl: './codx-list-contacts.component.html',
-  styleUrls: ['./codx-list-contacts.component.css']
+  styleUrls: ['./codx-list-contacts.component.css'],
 })
-export class CodxListContactsComponent implements OnInit{
-
+export class CodxListContactsComponent implements OnInit {
   @Input() objectID: any;
   @Input() funcID: any;
   @Input() objectName: any;
@@ -27,9 +40,7 @@ export class CodxListContactsComponent implements OnInit{
     private cmSv: CodxCmService,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService
-  ){
-
-  }
+  ) {}
 
   async ngOnInit() {
     this.getListContactByObjectID(this.objectID);
@@ -53,7 +64,6 @@ export class CodxListContactsComponent implements OnInit{
         this.contactPerson.emit(contactPerson);
       }
       this.loaded = true;
-
     });
   }
 
@@ -118,7 +128,7 @@ export class CodxListContactsComponent implements OnInit{
           type: 'formDetail',
           recIDCm: this.objectID,
           objectType: this.funcID == 'CM0101' ? '1' : '3',
-          objectName:this.objectName,
+          objectName: this.objectName,
           gridViewSetup: res,
           listContacts: this.listContacts,
         };
@@ -134,8 +144,51 @@ export class CodxListContactsComponent implements OnInit{
         );
         dialog.closed.subscribe((e) => {
           if (e && e.event != null) {
-            this.getListContactByObjectID(this.objectID);
-            this.changeDetectorRef.detectChanges();
+            if (e.event?.recID) {
+              var index = this.listContacts.findIndex(
+                (x) =>
+                  x.recID != e.event?.recID &&
+                  x.contactType.split(';').some((x) => x == '1')
+              );
+              if (index != -1) {
+                if (e?.event?.contactType.split(';').some((x) => x == '1')) {
+                  console.log(this.listContacts[index].contactType.split(';'));
+                  if (
+                    this.listContacts[index].contactType.split(';').length == 1
+                  ) {
+                    this.listContacts[index].contactType = '0';
+                  } else {
+                    var type = '';
+                    this.listContacts[index].contactType
+                      .split(';')
+                      .forEach((element) => {
+                        if (element != '1') {
+                          type = type != '' ? type + ';' + element : element;
+                        }
+                      });
+                    this.listContacts[index].contactType = type;
+                  }
+                  this.listContacts = this.cmSv.loadList(
+                    e.event,
+                    this.listContacts,
+                    'update'
+                  );
+                } else {
+                  this.listContacts = this.cmSv.loadList(
+                    e.event,
+                    this.listContacts,
+                    'update'
+                  );
+                }
+              } else {
+                this.listContacts = this.cmSv.loadList(
+                  e.event,
+                  this.listContacts,
+                  'update'
+                );
+              }
+              this.changeDetectorRef.detectChanges();
+            }
           }
         });
       });
@@ -156,7 +209,7 @@ export class CodxListContactsComponent implements OnInit{
         var obj = {
           type: 'formDetail',
           recIDCm: this.objectID,
-          objectName:this.objectName,
+          objectName: this.objectName,
           objectType: this.funcID == 'CM0101' ? '1' : '3',
           gridViewSetup: res,
           lstContactCm: this.listContacts,
@@ -173,7 +226,51 @@ export class CodxListContactsComponent implements OnInit{
         );
         dialog.closed.subscribe((e) => {
           if (e && e.event != null) {
-            this.getListContactByObjectID(this.objectID);
+            if (e.event?.recID) {
+              var index = this.listContacts.findIndex(
+                (x) =>
+                  x.recID != e.event?.recID &&
+                  x.contactType.split(';').some((x) => x == '1')
+              );
+              if (index != -1) {
+                if (e?.event?.contactType.split(';').some((x) => x == '1')) {
+                  console.log(this.listContacts[index].contactType.split(';'));
+                  if (
+                    this.listContacts[index].contactType.split(';').length == 1
+                  ) {
+                    this.listContacts[index].contactType = '0';
+                  } else {
+                    var type = '';
+                    this.listContacts[index].contactType
+                      .split(';')
+                      .forEach((element) => {
+                        if (element != '1') {
+                          type = type != '' ? type + ';' + element : element;
+                        }
+                      });
+                    this.listContacts[index].contactType = type;
+                  }
+                  this.listContacts = this.cmSv.loadList(
+                    e.event,
+                    this.listContacts,
+                    'update'
+                  );
+                } else {
+                  this.listContacts = this.cmSv.loadList(
+                    e.event,
+                    this.listContacts,
+                    'update'
+                  );
+                }
+              } else {
+                this.listContacts = this.cmSv.loadList(
+                  e.event,
+                  this.listContacts,
+                  'update'
+                );
+              }
+              this.changeDetectorRef.detectChanges();
+            }
           }
         });
       });
@@ -191,7 +288,11 @@ export class CodxListContactsComponent implements OnInit{
           this.cmSv.updateContactCrm(data.recID).subscribe((res) => {
             if (res) {
               // this.getListContactByObjectID(this.objectID);
-              this.listContacts = this.cmSv.loadList(data, this.listContacts, 'delete');
+              this.listContacts = this.cmSv.loadList(
+                data,
+                this.listContacts,
+                'delete'
+              );
               this.notiService.notifyCode('SYS008');
               this.changeDetectorRef.detectChanges();
             }
@@ -204,5 +305,6 @@ export class CodxListContactsComponent implements OnInit{
     });
   }
 
+  loadContact() {}
   //#endregion
 }
