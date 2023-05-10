@@ -48,12 +48,12 @@
   </header>
 
   <main>
-    <tabs-header
+    <codx-taskbar
       [listTab]="listClicked"
       (tab)="changeTab($event)"
       size="22"
       class="mb-3"
-    ></tabs-header>
+    ></codx-taskbar>
     <hr />
     <container-element [ngSwitch]="tabClicked">
       <some-element

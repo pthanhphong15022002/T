@@ -45,7 +45,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    debugger;
     if (environment.layoutCZ == 'qtsc') {
       this.titleService.setTitle('QTSC@oms');
       document
