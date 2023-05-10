@@ -87,41 +87,37 @@
 </ng-template>
 <ng-template #body>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex flex-wrap mb-5">
-      <div class="d-flex align-items-center me-5">
-        <span class="icon-i-person-fill icon-16 me-2"></span>
-        <codx-label class="fw-bold label-colon" default="Người nhận tiền" [formModel]="view.formModel">
-        </codx-label>
-        <span #payee [innerHTML]="
-            itemSelected?.payee
-              | formatvalue : view.formModel : 'payee' : payee
-              | async
-          " class="text-gray-600"></span>
-      </div>
+    <div class="d-flex align-items-center me-5 mb-1">
+      <span class="icon-i-person-fill icon-16 me-2"></span>
+      <codx-label class="fw-bold label-colon" default="Người nhận tiền" [formModel]="view.formModel">
+      </codx-label>
+      <span #payee [innerHTML]="
+          itemSelected?.payee
+            | formatvalue : view.formModel : 'payee' : payee
+            | async
+        " class="text-gray-600"></span>
     </div>
-    <div class="d-flex align-items-center me-5 mb-5">
+    <div class="d-flex align-items-center me-5 mb-1">
       <span class="icon-i-journal-album icon-16 me-2"></span>
       <span *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'" class="fw-bold label-colon">{{'1' | vll : 'AC091' : 'text' | async}}&nbsp;</span>
       <span *ngIf="itemSelected?.subType == '3'" class="fw-bold label-colon">{{'3' | vll : 'AC093' : 'text' | async}}&nbsp;</span>
       <span #cashBookID class="text-gray-600"
         [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
     </div>
-    <div class="d-flex flex-wrap mb-5">
-      <div class="d-flex align-items-center me-5">
-        <span class="icon-i-wallet2 icon-16 me-2"></span>
-        <codx-label class="fw-bold label-colon" fiedName="ReasonID" [formModel]="view.formModel">
-        </codx-label>
-        <span #reasonID class="text-gray-600" [innerHTML]="
-            itemSelected?.reasonID
-              | formatvalue
-                : view.formModel
-                : 'reasonID'
-                : reasonID
-              | async
-          "></span>
-      </div>
+    <div class="d-flex align-items-center me-5 mb-1">
+      <span class="icon-i-wallet2 icon-16 me-2"></span>
+      <codx-label class="fw-bold label-colon" fiedName="ReasonID" [formModel]="view.formModel">
+      </codx-label>
+      <span #reasonID class="text-gray-600" [innerHTML]="
+          itemSelected?.reasonID
+            | formatvalue
+              : view.formModel
+              : 'reasonID'
+              : reasonID
+            | async
+        "></span>
     </div>
-    <div class="d-flex align-items-center me-5 mb-5">
+    <div class="d-flex align-items-center me-5 mb-1">
       <span class="icon-brush icon-16 me-2"></span>
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="view.formModel">
       </codx-label>
