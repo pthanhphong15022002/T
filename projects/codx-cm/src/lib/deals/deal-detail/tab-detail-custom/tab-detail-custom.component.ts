@@ -49,7 +49,7 @@ implements OnInit, AfterViewInit {
   }
 
   getListInstanceStep(){
-    let instanceID = this.data?.processID;
+    let instanceID = this.data?.refID;
     if(instanceID){
       this.cmService.getStepInstance([instanceID]).subscribe(res =>{
         this.listStep = res;    
