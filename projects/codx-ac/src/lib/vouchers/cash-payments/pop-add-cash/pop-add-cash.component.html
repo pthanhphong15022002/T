@@ -201,11 +201,11 @@
       modegrid == '1'
     ">
     <div class="h-100">
-      <codx-gridview-v2 #gridCashPaymentLine [formName]="fmCashPaymentsLines.formName"
+      <codx-gridview-v2 class="tabLine" #gridCashPaymentLine [formName]="fmCashPaymentsLines.formName"
         [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
-        [height]="gridHeight"  [autoLoad]="false" rowHeight="30"(onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"
+        [height]="gridHeight"  [autoLoad]="false" rowHeight="30" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"
         (created)="gridCreated($event, gridCashPaymentLine)"></codx-gridview-v2>
     </div>
     <div class="container w-90 h-90">

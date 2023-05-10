@@ -259,6 +259,7 @@
   <div class="h-100">
     <codx-gridview-v2
       #gridQuationsLines
+      service="CM"
       [formName]="fmQuotationLines.formName"
       [gridViewName]="fmQuotationLines.gridViewName"
       [entityName]="fmQuotationLines.entityName"
@@ -267,13 +268,12 @@
       [allowFiltering]="true"
       [allowSorting]="true"
       [dataSource]="quotationLines"
-      service="CM"
       [height]="gridHeight"
       [autoLoad]="false"
       rowHeight="40"
       predicates="TransID=@0"
       [dataValues]="quotations.recID"
-      (cellChanged)="quotionsLineChanged($event)"
+      (cellChanged)="quotationsLineChanged($event)"
       (created)="gridCreated($event, gridQuationsLines)"
     ></codx-gridview-v2>
   </div>

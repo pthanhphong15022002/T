@@ -141,7 +141,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
           null,
           'EDisciplinesBusiness'
         ).subscribe((res) => {
-          debugger
           console.log('kq luu track log', res);
           
         });

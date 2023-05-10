@@ -1,349 +1,370 @@
-<div class="empty-data" *ngIf="!dataSelected?.recID">
-  <div class="container h-100">
-    <div class="list-empty card card-flush h-100">
-      <div class="d-flex flex-column flex-center justify-content-center">
-        <img
-          src="../assets/themes/sys/default/img/DataEmpty.svg"
-          class="w-200px"
-        />
-        <div class="fs-5 text-dark fw-bold mt-2 text-center">
-          {{ "SYS011" | mssg | async }}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<ng-container *ngIf="dataSelected?.recID">
-  <codx-detail-tmp
-    [header]="header"
-    [formModel]="formModel"
-    [body]="body"
-    [dataItem]="dataSelected"
-    [hideMF]="funcID == 'CM0101' ? true : false"
-    [footer]="tabs"
-    (changeDataMF)="changeDataMF($event, dataSelected)"
-    (clickMF)="clickMF($event, dataSelected)"
-  >
-    <ng-template #header let-data>
-      <div class="d-flex justify-content-between">
-        <div *ngIf="funcID == 'CM0101'">
-          <div class="mb-1">
-            <span class="icon-corporate_fare text-primary icon-20 me-1"></span>
-            <span
-              class="text-dark fw-bold h3"
-              [innerHTML]="
-                dataSelected?.custGroupID
-                  | formatvalue : formModel : 'CustGroupID'
-                  | async
-              "
-            ></span>
-          </div>
-        </div>
-        <div class="d-flex justify-content-end" *ngIf="funcID == 'CM0101'">
-          <codx-mfunc
-            [hideMF]="false"
-            [dataItem]="dataSelected"
-            [formModel]="formModel"
-            (changeDataMF)="changeDataMF($event, dataSelected)"
-            (clickMF)="clickMF($event, dataSelected)"
-            [isBookMark]="true"
-            type="view"
-          ></codx-mfunc>
-        </div>
-      </div>
-      <div class="container_detail mt-3">
-        <div class="d-flex flex-grow-1 mb-4">
-          <div class="me-3">
-            <codx-img
-              [objectId]="dataSelected.recID"
-              [objectName]="getNameCrm(dataSelected)"
-              [referType]="'avt'"
-              [imgOn]="dataSelected?.modifiedOn"
-              [objectType]="entityName"
-              [width]="35"
-            >
-            </codx-img>
-          </div>
-          <div class="d-flex flex-column flex-grow-1">
-            <div class="d-flex justify-content-between">
-              <div class="d-flex flex-column">
-                <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
-                  {{
-                    funcID == "CM0101"
-                      ? dataSelected.customerName
-                      : funcID == "CM0102"
-                      ? dataSelected.contactName
-                      : funcID == "CM0103"
-                      ? dataSelected.partnerName
-                      : dataSelected.competitorName
-                  }}
-                </div>
-                <div
-                  class="d-flex align-items-start me-4 mb-1"
-                  *ngIf="funcID == 'CM0102'"
-                >
-                  <div class="me-3" *ngIf="dataSelected?.mobile">
-                    <span
-                      [ngClass]="
-                        dataSelected?.allowCall
-                          ? 'icon-phone_android text-primary'
-                          : 'icon-phonelink_erase'
-                      "
-                      class="icon-16 me-1"
-                    ></span>
-                    <span
-                      [ngClass]="dataSelected?.allowCall ? 'text-primary' : ''"
-                      class="text-gray-900"
-                      >{{ dataSelected?.mobile }}</span
-                    >
-                  </div>
-                  <div *ngIf="dataSelected?.personalEmail">
-                    <span
-                      [ngClass]="
-                        dataSelected?.allowEmail
-                          ? 'icon-email text-primary'
-                          : 'icon-print_disabled'
-                      "
-                      class="icon-16 me-1 text-gray-900"
-                    ></span>
-                    <span
-                      [ngClass]="dataSelected?.allowEmail ? 'text-primary' : ''"
-                      class="text-gray-900"
-                      >{{ dataSelected?.personalEmail }}</span
-                    >
-                  </div>
-                </div>
-                <div class="me-4 mb-1" *ngIf="dataSelected.address">
-                  <span
-                    class="icon-location_on icon-16 me-1 text-gray-700"
-                  ></span>
-                  <span class="text-gray-900">{{ dataSelected.address }}</span>
-                </div>
-              </div>
-              <div class="d-flex flex-column align-items-start">
-                <div
-                  class="d-flex justify-content-end w-100 mb-5"
-                  *ngIf="dataSelected.isBlackList"
-                >
-                  <span class="icon-do_disturb_alt icon-20"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div [ngClass]="funcID == 'CM0101' ? 'd-flex align-items-start' : ''">
-          <div
-            class="d-flex col-6"
-            *ngIf="funcID == 'CM0101' && contactPerson != null"
-          >
-            <div class="me-3" style="white-space: nowrap">
-              <codx-label
-                class="text-dark"
-                name="lblContact"
-                [formModel]="formModel"
-                default="Liên hệ chính: "
-              ></codx-label>
-            </div>
-            <div class="d-flex flex-grow-1 mb-4">
-              <div class="me-3">
-                <codx-img
-                  [objectId]="contactPerson.recID"
-                  [objectName]="contactPerson.contactName"
-                  [imgOn]="contactPerson?.modifiedOn"
-                  [objectType]="'CM_Contacts'"
-                  [width]="35"
-                >
-                </codx-img>
-              </div>
-              <div class="d-flex flex-column flex-grow-1">
-                <div>
-                  <div class="d-flex flex-column">
-                    <div
-                      class="fw-bold fs-6 text-dark codx-text-overflow-1line"
-                    >
-                      {{ contactPerson?.contactName }}
-                    </div>
-                    <div class="d-flex align-items-start me-4 mb-1">
-                      <div class="me-3" *ngIf="contactPerson?.mobile">
-                        <span
-                          [ngClass]="
-                            contactPerson.allowCall
-                              ? 'icon-phone_android text-primary'
-                              : 'icon-phonelink_erase'
-                          "
-                          class="icon-16 me-1"
-                        ></span>
-                        <span
-                          [ngClass]="
-                            contactPerson.allowCall ? 'text-primary' : ''
-                          "
-                          class="text-gray-900"
-                          >{{ contactPerson?.mobile }}</span
-                        >
-                      </div>
-                      <div *ngIf="contactPerson?.personalEmail">
-                        <span
-                          [ngClass]="
-                            contactPerson.allowEmail
-                              ? 'icon-email text-primary'
-                              : 'icon-print_disabled'
-                          "
-                          class="icon-16 me-1 text-gray-900"
-                        ></span>
-                        <span
-                          [ngClass]="
-                            contactPerson.allowEmail ? 'text-primary' : ''
-                          "
-                          class="text-gray-900"
-                          >{{ contactPerson.personalEmail }}</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="d-flex mt-1" *ngIf="dataSelected.industries">
-            <span> </span>
-            <codx-label
-              style="white-space: nowrap"
-              class="label-colon text-dark"
-              fiedName="Industries"
-              [formModel]="formModel"
-            ></codx-label>
-            <div>
-              <div
-                *ngFor="
-                  let item of dataSelected?.industries.split(';');
-                  index as i
+<ng-container *ngIf="loaded">
+  <ng-container *ngIf="dataSelected?.recID; else noData">
+    <codx-detail-tmp
+      [header]="header"
+      [formModel]="formModel"
+      [body]="body"
+      [dataItem]="dataSelected"
+      [hideMF]="funcID == 'CM0101' ? true : false"
+      [footer]="tabs"
+      (changeDataMF)="changeDataMF($event, dataSelected)"
+      (clickMF)="clickMF($event, dataSelected)"
+    >
+      <ng-template #header let-data>
+        <div class="d-flex justify-content-between">
+          <div *ngIf="funcID == 'CM0101'">
+            <div class="mb-1">
+              <span
+                class="icon-corporate_fare text-primary icon-20 me-1"
+              ></span>
+              <span
+                class="text-dark fw-bold h3"
+                [innerHTML]="
+                  dataSelected?.custGroupID
+                    | formatvalue : formModel : 'CustGroupID'
+                    | async
                 "
-                class="d-inline"
+              ></span>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end" *ngIf="funcID == 'CM0101'">
+            <codx-mfunc
+              [hideMF]="false"
+              [dataItem]="dataSelected"
+              [formModel]="formModel"
+              (changeDataMF)="changeDataMF($event, dataSelected)"
+              (clickMF)="clickMF($event, dataSelected)"
+              [isBookMark]="true"
+              type="view"
+            ></codx-mfunc>
+          </div>
+        </div>
+        <div class="container_detail mt-3">
+          <div class="d-flex flex-grow-1 mb-4">
+            <div class="me-3">
+              <codx-img
+                [objectId]="dataSelected.recID"
+                [objectName]="getNameCrm(dataSelected)"
+                [referType]="'avt'"
+                [imgOn]="dataSelected?.modifiedOn"
+                [objectType]="entityName"
+                [width]="35"
               >
-                <span
-                  class="text-dark fw-bold"
-                  [innerHTML]="
-                    item | formatvalue : formModel : 'Industries' | async
-                  "
-                ></span
-                ><span
-                  class="me-1"
-                  *ngIf="i < dataSelected?.industries.split(';').length - 1"
-                  >,</span
-                >
-                <!-- {{ dataSelected?.segmentID }} -->
+              </codx-img>
+            </div>
+            <div class="d-flex flex-column flex-grow-1">
+              <div class="d-flex justify-content-between">
+                <div class="d-flex flex-column">
+                  <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+                    {{
+                      funcID == "CM0101"
+                        ? dataSelected.customerName
+                        : funcID == "CM0102"
+                        ? dataSelected.contactName
+                        : funcID == "CM0103"
+                        ? dataSelected.partnerName
+                        : dataSelected.competitorName
+                    }}
+                  </div>
+                  <div
+                    class="d-flex align-items-start me-4 mb-1"
+                    *ngIf="funcID == 'CM0102'"
+                  >
+                    <div class="me-3" *ngIf="dataSelected?.mobile">
+                      <span
+                        [ngClass]="
+                          dataSelected?.allowCall
+                            ? 'icon-phone_android text-primary'
+                            : 'icon-phonelink_erase'
+                        "
+                        class="icon-16 me-1"
+                      ></span>
+                      <span
+                        [ngClass]="
+                          dataSelected?.allowCall ? 'text-primary' : ''
+                        "
+                        class="text-gray-900"
+                        >{{ dataSelected?.mobile }}</span
+                      >
+                    </div>
+                    <div *ngIf="dataSelected?.personalEmail">
+                      <span
+                        [ngClass]="
+                          dataSelected?.allowEmail
+                            ? 'icon-email text-primary'
+                            : 'icon-print_disabled'
+                        "
+                        class="icon-16 me-1 text-gray-900"
+                      ></span>
+                      <span
+                        [ngClass]="
+                          dataSelected?.allowEmail ? 'text-primary' : ''
+                        "
+                        class="text-gray-900"
+                        >{{ dataSelected?.personalEmail }}</span
+                      >
+                    </div>
+                  </div>
+                  <div class="me-4 mb-1" *ngIf="dataSelected.address">
+                    <span
+                      class="icon-location_on icon-16 me-1 text-gray-700"
+                    ></span>
+                    <span class="text-gray-900">{{
+                      dataSelected.address
+                    }}</span>
+                  </div>
+                </div>
+                <div class="d-flex flex-column align-items-start">
+                  <div
+                    class="d-flex justify-content-end w-100 mb-5"
+                    *ngIf="dataSelected.isBlackList"
+                  >
+                    <span class="icon-do_disturb_alt icon-20"></span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="d-flex align-items-start" *ngIf="viewTag && viewTag != ''">
-          <codx-tag
-            [entityName]="entityName"
-            [disabled]="true"
-            [isEdit]="false"
-            [value]="viewTag"
-          >
-          </codx-tag>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template #body let-data>
-      <div class="instance-select">
-        <ul ngbNav #nav="ngbNav" [(activeId)]="name" class="nav nav-tabs">
-          <ng-container *ngFor="let item of tabDetail; let i = index">
-            <li [ngbNavItem]="item.name" class="nav-item">
-              <a ngbNavLink class="nav-link">
-                <div class="d-flex align-item-center">
-                  <i
-                    [ngClass]="
-                      item.icon +
-                      ' ' +
-                      (item.name == name ? 'text-primary' : '')
-                    "
-                    class="me-2"
-                  ></i
-                  ><span>
-                    <codx-label
-                      [name]="'tab' + item.name"
-                      [formModel]="'SYS'"
-                      [default]="item.textDefault"
-                    >
-                    </codx-label>
-                  </span>
-                </div>
-              </a>
-              <ng-template ngbNavContent>
-                <ng-container
-                  *ngTemplateOutlet="tabIns; context: { $implicit: item.name }"
-                >
-                </ng-container>
-              </ng-template>
-            </li>
-          </ng-container>
-        </ul>
-        <div [ngbNavOutlet]="nav" class="py-5"></div>
-      </div>
-      <ng-template #tabIns let-name>
-        <div id="viewModeDetail" class="view-step-box">
-          <ng-container *ngIf="name == 'Information'">
-            <codx-information
-              [funcID]="funcID"
-              [dataSelected]="dataSelected"
-              [formModel]="formModel"
-              [gridViewSetup]="gridViewSetup"
-              [entityName]="entityName"
-              [listAddress]="listAddress"
-              [nameCbxCM]="nameCbxCM"
+          <div [ngClass]="funcID == 'CM0101' ? 'd-flex align-items-start' : ''">
+            <div
+              class="d-flex col-6"
+              *ngIf="funcID == 'CM0101' && contactPerson != null"
             >
-            </codx-information>
-          </ng-container>
-          <ng-container *ngIf="name == 'Contact'">
-            <!-- <div *ngFor="let item of listContacts">
+              <div class="me-3" style="white-space: nowrap">
+                <codx-label
+                  class="text-dark"
+                  name="lblContact"
+                  [formModel]="formModel"
+                  default="Liên hệ chính: "
+                ></codx-label>
+              </div>
+              <div class="d-flex flex-grow-1 mb-4">
+                <div class="me-3">
+                  <codx-img
+                    [objectId]="contactPerson.recID"
+                    [objectName]="contactPerson.contactName"
+                    [imgOn]="contactPerson?.modifiedOn"
+                    [objectType]="'CM_Contacts'"
+                    [width]="35"
+                  >
+                  </codx-img>
+                </div>
+                <div class="d-flex flex-column flex-grow-1">
+                  <div>
+                    <div class="d-flex flex-column">
+                      <div
+                        class="fw-bold fs-6 text-dark codx-text-overflow-1line"
+                      >
+                        {{ contactPerson?.contactName }}
+                      </div>
+                      <div class="d-flex align-items-start me-4 mb-1">
+                        <div class="me-3" *ngIf="contactPerson?.mobile">
+                          <span
+                            [ngClass]="
+                              contactPerson.allowCall
+                                ? 'icon-phone_android text-primary'
+                                : 'icon-phonelink_erase'
+                            "
+                            class="icon-16 me-1"
+                          ></span>
+                          <span
+                            [ngClass]="
+                              contactPerson.allowCall ? 'text-primary' : ''
+                            "
+                            class="text-gray-900"
+                            >{{ contactPerson?.mobile }}</span
+                          >
+                        </div>
+                        <div *ngIf="contactPerson?.personalEmail">
+                          <span
+                            [ngClass]="
+                              contactPerson.allowEmail
+                                ? 'icon-email text-primary'
+                                : 'icon-print_disabled'
+                            "
+                            class="icon-16 me-1 text-gray-900"
+                          ></span>
+                          <span
+                            [ngClass]="
+                              contactPerson.allowEmail ? 'text-primary' : ''
+                            "
+                            class="text-gray-900"
+                            >{{ contactPerson.personalEmail }}</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex mt-1" *ngIf="dataSelected.industries">
+              <span> </span>
+              <codx-label
+                style="white-space: nowrap"
+                class="label-colon text-dark"
+                fiedName="Industries"
+                [formModel]="formModel"
+              ></codx-label>
+              <div>
+                <div
+                  *ngFor="
+                    let item of dataSelected?.industries.split(';');
+                    index as i
+                  "
+                  class="d-inline"
+                >
+                  <span
+                    class="text-dark fw-bold"
+                    [innerHTML]="
+                      item | formatvalue : formModel : 'Industries' | async
+                    "
+                  ></span
+                  ><span
+                    class="me-1"
+                    *ngIf="i < dataSelected?.industries.split(';').length - 1"
+                    >,</span
+                  >
+                  <!-- {{ dataSelected?.segmentID }} -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex align-items-start"
+            *ngIf="viewTag && viewTag != ''"
+          >
+            <codx-tag
+              [entityName]="entityName"
+              [disabled]="true"
+              [isEdit]="false"
+              [value]="viewTag"
+            >
+            </codx-tag>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #body let-data>
+        <div class="instance-select">
+          <ul ngbNav #nav="ngbNav" [(activeId)]="name" class="nav nav-tabs">
+            <ng-container *ngFor="let item of tabDetail; let i = index">
+              <li [ngbNavItem]="item.name" class="nav-item">
+                <a ngbNavLink class="nav-link">
+                  <div class="d-flex align-item-center">
+                    <i
+                      [ngClass]="
+                        item.icon +
+                        ' ' +
+                        (item.name == name ? 'text-primary' : '')
+                      "
+                      class="me-2"
+                    ></i
+                    ><span>
+                      <codx-label
+                        [name]="'tab' + item.name"
+                        [formModel]="'SYS'"
+                        [default]="item.textDefault"
+                      >
+                      </codx-label>
+                    </span>
+                  </div>
+                </a>
+                <ng-template ngbNavContent>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      tabIns;
+                      context: { $implicit: item.name }
+                    "
+                  >
+                  </ng-container>
+                </ng-template>
+              </li>
+            </ng-container>
+          </ul>
+          <div [ngbNavOutlet]="nav" class="py-5"></div>
+        </div>
+        <ng-template #tabIns let-name>
+          <div id="viewModeDetail" class="view-step-box">
+            <ng-container *ngIf="name == 'Information'">
+              <codx-information
+                [funcID]="funcID"
+                [dataSelected]="dataSelected"
+                [formModel]="formModel"
+                [gridViewSetup]="gridViewSetup"
+                [entityName]="entityName"
+                [listAddress]="listAddress"
+                [nameCbxCM]="nameCbxCM"
+              >
+              </codx-information>
+            </ng-container>
+            <ng-container *ngIf="name == 'Contact'">
+              <!-- <div *ngFor="let item of listContacts">
                 <ng-container
                   [ngTemplateOutlet]="contacts"
                   [ngTemplateOutletContext]="{ $implicit: item }"
                 >
                 </ng-container>
               </div> -->
-            <codx-list-contacts
-              (contactPerson)="contactPersonEvent($event)"
-              [funcID]="funcID"
-              [objectID]="dataSelected.recID"
-              [objectName]="
-                funcID == 'CM0101'
-                  ? dataSelected.customerName
-                  : dataSelected.partnerName
-              "
-              [hidenMF]="false"
-            ></codx-list-contacts>
-          </ng-container>
-          <ng-container *ngIf="name == 'Deal'">
-           <codx-list-deals [customerID]="dataSelected.recID"></codx-list-deals>
-          </ng-container>
-          <ng-container *ngIf="name == 'DealCompetitors'">
-            <codx-view-dealcompetitors></codx-view-dealcompetitors>
-          </ng-container>
-          <ng-container *ngIf="name == 'Product'">
-            <ng-container [ngTemplateOutlet]="product"> </ng-container>
-          </ng-container>
-        </div>
+              <codx-list-contacts
+                (contactPerson)="contactPersonEvent($event)"
+                [funcID]="funcID"
+                [objectID]="dataSelected.recID"
+                [objectName]="
+                  funcID == 'CM0101'
+                    ? dataSelected.customerName
+                    : dataSelected.partnerName
+                "
+                [hidenMF]="false"
+              ></codx-list-contacts>
+            </ng-container>
+            <ng-container *ngIf="name == 'Deal'">
+              <codx-list-deals
+                [customerID]="dataSelected.recID"
+              ></codx-list-deals>
+            </ng-container>
+            <ng-container *ngIf="name == 'DealCompetitors'">
+              <codx-view-dealcompetitors
+                [competitorID]="dataSelected.recID"
+              ></codx-view-dealcompetitors>
+            </ng-container>
+            <ng-container *ngIf="name == 'Product'">
+              <ng-container [ngTemplateOutlet]="product"> </ng-container>
+            </ng-container>
+          </div>
+        </ng-template>
       </ng-template>
-    </ng-template>
-    <ng-template #tabs let-data>
-      <codx-tabs
-        [entityName]="entityName"
-        [formModel]="formModel"
-        [TabControl]="tabControl"
-        [objectID]="dataSelected.recID"
-        [funcID]="funcID"
-        [dataTree]="treeTask"
-        [funcIDQuotations]="'CM0202'"
-        [customerID]="dataSelected.recID"
-      ></codx-tabs>
-    </ng-template>
-  </codx-detail-tmp>
+      <ng-template #tabs let-data>
+        <codx-tabs
+          [entityName]="entityName"
+          [formModel]="formModel"
+          [TabControl]="tabControl"
+          [objectID]="dataSelected.recID"
+          [funcID]="funcID"
+          [dataTree]="treeTask"
+          [funcIDQuotations]="'CM0202'"
+          [customerID]="dataSelected.recID"
+        ></codx-tabs>
+      </ng-template>
+    </codx-detail-tmp>
+  </ng-container>
 </ng-container>
+<ng-template #noData>
+  <div class="empty-data">
+    <div class="container h-100">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+          />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            {{ "SYS011" | mssg | async }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
 
 <ng-template #task let-data="value">
   <codx-show-task [dataSource]="data"></codx-show-task>

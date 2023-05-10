@@ -202,7 +202,6 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   itemDetail;
 
   employeeID;
-  hrEContract;
   crrTab: number = 0;
   //EDayOff
   lstDayOffs: any = [];
@@ -436,7 +435,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   //#endregion
 
   //#region gridView viewChild
-  @ViewChild('passportGridview') passportGridview: CodxGridviewComponent;
+  @ViewChild('passportGridview',{ static: true }) passportGridview: CodxGridviewComponent;
   @ViewChild('visaGridview') visaGridview: CodxGridviewComponent;
   @ViewChild('workPermitGridview') workPermitGridview: CodxGridviewComponent;
   @ViewChild('basicSalaryGridview') basicSalaryGridview: CodxGridviewComponent;
@@ -1241,24 +1240,24 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         ];
       });
   
-      let insPassport = setInterval(() => {
-        if (this.passportGridview) {
-          clearInterval(insPassport);
-          let t = this;
-          this.passportGridview?.dataService.onAction.subscribe((res) => {
-            if (res) {
-              if (res.type == 'loaded') {
-                t.passportRowCount = res['data'].length;
-                if(res['data'].length > 0){
-                  this.crrPassport = res.data[0]
-                  // debugger
-                }
-              }
-            }
-          });
-          this.passportRowCount = this.passportGridview?.dataService.rowCount;
-        }
-      }, 100);
+      // let insPassport = setInterval(() => {
+      //   if (this.passportGridview) {
+      //     clearInterval(insPassport);
+      //     let t = this;
+      //     this.passportGridview?.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.passportRowCount = res['data'].length;
+      //           if(res['data'].length > 0){
+      //             this.crrPassport = res.data[0]
+      //             // debugger
+      //           }
+      //         }
+      //       }
+      //     });
+      //     this.passportRowCount = this.passportGridview?.dataService.rowCount;
+      //   }
+      // }, 100);
     }
     //#endregion
 
@@ -2349,7 +2348,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           this.HandleEVaccinesInfo(event.text, 'edit', data);
         } else if (funcID == 'basicSalary') {
           //Close popup when click more function
-          this.dialogViewSalary.close(); 
+          // this.dialogViewSalary.close(); 
           this.HandleEmployeeBasicSalariesInfo(event.text, 'edit', data);
           this.df.detectChanges();
         } else if (funcID == 'Assets') {
@@ -2372,7 +2371,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           this.df.detectChanges();
         } else if (funcID == 'eBenefit') {
           //Close popup when click more function
-          this.dialogViewBenefit.close(); 
+          // this.dialogViewBenefit.close(); 
           this.handlEmployeeBenefit(event.text, 'edit', data);
         } else if (funcID == 'eSkill') {
           this.HandleEmployeeESkillsInfo(event.text, 'edit', data);
@@ -2420,6 +2419,19 @@ export class EmployeeInfoDetailComponent extends UIComponent{
       
 
       case 'SYS02': //delete
+        //Render data table when delete from popup (module benefit)
+        if(event.isRenderDelete === true){
+          this.hrService
+          .GetCurrentBenefit(this.employeeID)
+          .subscribe((res) => {
+            if (res) {
+              this.listCrrBenefit = res;
+              this.df.detectChanges();
+            }
+          });
+          break;
+        }
+
         this.notifySvr.alertCode('SYS030').subscribe((x) => {
           if (x.event?.status == 'Y') {
             if (funcID == 'passport') {
@@ -2428,17 +2440,16 @@ export class EmployeeInfoDetailComponent extends UIComponent{
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.updateGridView(this.passportGridview, 'delete', data);
-                    // let i = this.lstPassport.indexOf(data);
-                    // if (i != -1) {
-                    //   this.lstPassport.splice(i, 1);
-                    // }
-                    // this.df.detectChanges();
+                      this.hrService.GetEmpCurrentPassport(this.employeeID).subscribe((res) => {
+                        this.crrPassport = res;
+                      })
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            } else if (funcID == 'workpermit') {
+            }
+
+            else if (funcID == 'workpermit') {
               this.hrService
                 .DeleteEmployeeWorkPermitInfo(data.recID)
                 .subscribe((p) => {
@@ -2549,6 +2560,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
             } else if (funcID == 'eBenefit') {
               this.hrService.DeleteEBenefit(data).subscribe((p) => {
                 if (p != null) {
+                  console.log("Run else render")
                   this.notify.notifyCode('SYS008');
                   if (data.isCurrent == true) {
                     // const index = this.listCrrBenefit.indexOf(data);
@@ -2973,6 +2985,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
       '',
       option
     );
+    this.df.detectChanges();
     
   }
   // getDataAsync(funcID: string) {
@@ -3597,7 +3610,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
 
   handleEmployeePassportInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
-    option.DataService = this.passportGridview?.dataService;
+    //option.DataService = this.passportGridview?.dataService;
     option.FormModel = this.ePassportFormModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
@@ -3614,14 +3627,32 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event)
-        (this.passportGridview.dataService as CRUDService).clear();
+      if (!res?.event){
+        // (this.passportGridview.dataService as CRUDService).clear();
+      }
       else {
-        this.passportRowCount += this.updateGridView(
-          this.passportGridview,
-          actionType,
-          res?.event
-        );
+        if(actionType == 'add' || actionType == 'copy'){
+        if(res?.event.issuedDate > this.crrPassport.issuedDate){
+          this.crrPassport = res?.event;
+          this.df.detectChanges()
+        }
+      }
+        else if(actionType == 'edit'){
+        if(res?.event.issuedDate > this.crrPassport.issuedDate || res?.event.issuedDate > this.crrPassport.issuedDate){
+          //do nothing, old is current value is still is current
+        }
+        else{
+          this.hrService.GetEmpCurrentPassport(this.employeeID).subscribe((res) => {
+            this.crrPassport = res;
+            this.df.detectChanges()
+          })
+        }
+      }
+        // this.passportRowCount += this.updateGridView(
+        //   this.passportGridview,
+        //   actionType,
+        //   res?.event
+        // );
       }
       this.df.detectChanges();
     });
@@ -3640,7 +3671,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         dayoffObj: data,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.dayoffFuncID),
-        employeeId: this.employeeID,
+        employeeID: this.employeeID,
         funcID: this.dayoffFuncID,
       },
       option
@@ -3687,8 +3718,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     data: any
   ) {
     let option = new SidebarModel();
-    option.DataService = this.workPermitGridview.dataService;
-    option.FormModel = this.workPermitGridview.formModel;
+    // option.DataService = this.workPermitGridview.dataService;
+    // option.FormModel = this.workPermitGridview.formModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEWorkPermitsComponent,
@@ -3703,17 +3734,17 @@ export class EmployeeInfoDetailComponent extends UIComponent{
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event)
-        (this.workPermitGridview.dataService as CRUDService).clear();
-      else this.updateGridView(this.workPermitGridview, actionType, res.event);
-      this.df.detectChanges();
+      // if (!res?.event)
+      //   (this.workPermitGridview.dataService as CRUDService).clear();
+      // else this.updateGridView(this.workPermitGridview, actionType, res.event);
+      // this.df.detectChanges();
     });
   }
 
   handleEmployeeVisaInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
-    option.DataService = this.visaGridview.dataService;
-    option.FormModel = this.visaGridview.formModel;
+    //option.DataService = this.visaGridview.dataService;
+    //option.FormModel = this.visaGridview.formModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEVisasComponent,
@@ -4643,6 +4674,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   popupViewBenefit() {
    this.headerTextBenefit = this.getFormHeader(this.benefitFuncID) + ' | ' + "Tất cả";
    let option = new DialogModel();
+    option.zIndex = 999;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
    this.dialogViewBenefit = this.callfc.openForm(
@@ -4663,8 +4695,18 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     });
   }
 
-  clickEvent(event) {
-    this.clickMF(event?.event, event?.data, 'eBenefit');
+  RenderDataFromPopup(event) {
+    if(event.isRenderDelete === true){
+      this.hrService
+      .GetCurrentBenefit(this.employeeID)
+      .subscribe((res) => {
+        if (res) {
+          this.listCrrBenefit = res;
+          this.df.detectChanges();
+        }
+      });
+    }
+    // this.clickMF(event?.event, event?.data, 'eBenefit');
   }
 
   // HandleEBenefit(actionHeaderText, actionType: string, data: any) {
@@ -4746,13 +4788,17 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   }
 
   popupUpdateEJobSalaryStatus() {
-     this.dialogViewSalary = this.callfc.openForm(
+    let option = new DialogModel();
+    option.zIndex = 999; 
+    this.dialogViewSalary = this.callfc.openForm(
       this.templateViewSalary,
       null,
       850,
       550,
       null,
-      null
+      null,
+      '',
+      option
     );
     this.dialogViewSalary.closed.subscribe((res) => {
       // if (res?.event) {

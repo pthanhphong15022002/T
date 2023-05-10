@@ -48,6 +48,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   dataTree: any[] = [];
   dialog: any;
   favorite = '';
+  loaded = false ;
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() viewTask = new EventEmitter<any>();
 
@@ -97,6 +98,8 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
               title: this.favorite + ' (' + res[1] + ')',
             },
           ];
+
+          this.loaded = true ;
 
           this.pageTitle.setBreadcrumbs(breadCrumbs);
         }

@@ -771,7 +771,6 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       }
     });
     this.resources.splice(this.resources.indexOf(tempDelete), 1);
-    this.resources.splice(this.resources.indexOf(tempDelete), 1);
     this.attendeesNumber = this.resources.length + this.guestNumber;
     this.changeDetectorRef.detectChanges();
   }
@@ -1338,7 +1337,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   startRelease() {
     if (this.approvalRule != '0') {
       this.codxBookingService
-        .getCategoryByEntityName(this.formModel.entityName)
+      .getProcessByCategoryID('ES_EP001')
         .subscribe((res: any) => {
           this.codxBookingService
             .release(

@@ -198,6 +198,7 @@ export class PdfComponent
   lstFiles: Array<Object> = [];
   fileInfo: any;
   file: Object = { text: 'fileName', value: 'fileID' };
+  fileIdx = 0;
   curFileID;
   curFileUrl;
   //font
@@ -304,6 +305,7 @@ export class PdfComponent
                 fileUrl: environment.urlUpload + '/' + res.urls[index],
                 signers: res?.approvers,
                 areas: file.areas,
+                fileIdx: index,
               });
             });
             this.lstSigners = res.approvers;
