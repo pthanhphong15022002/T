@@ -1812,7 +1812,7 @@ codx-tabs {
   }
 
   .tab-footer {
-    margin-top: 7px;
+    margin-top: 5px;
   }
   .badge.badge-sm {
     margin-top: 4px;
@@ -2239,7 +2239,15 @@ lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled {
     }
   }
 }
+.card-job.stages-task{
+  .cdk-drop-list.task{
+    padding-top: 7px;
 
+    .cdk-drag.drap-drop:hover{
+      background-color: var(--gray-100);
+    }
+  }
+}
 .ava-edit .symbol {
   position: relative;
   .position-absolute {
@@ -2693,6 +2701,8 @@ codx-vll.badge.badge-md span::before{
   font-size: 12px!important;
   padding-top: 2px!important;
   line-height: 16px!important;
+}
+.aside-minimize-icon-title .aside.aside-extended .aside-primary .aside-menu .menu-link .menu-title{
   flex-grow: inherit;
 }
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link.active,
@@ -2703,8 +2713,9 @@ codx-vll.badge.badge-md span::before{
 .aside-minimize-icon-title .aside .menu-link {
   padding-left: 7px!important;
   padding-right: 7px!important;
+}
+.aside-minimize-icon-title .aside-extended .aside-primary .menu-link.active{
   border-radius: 0!important;
-  //width: 82px;
 }
 .toolbar{
   .e-control.e-inplaceeditor .e-editable-value-wrapper {

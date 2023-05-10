@@ -32,7 +32,6 @@ export class CardComponent implements OnInit , OnChanges {
   ) {
   }
   ngOnChanges(changes: SimpleChanges): void {
-    debugger
     if(changes["data"] && changes["data"].currentValue != changes["data"].previousValue )
     {
       this.data = changes["data"].currentValue ;

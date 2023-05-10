@@ -161,6 +161,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (e?.data != null && e?.data.trim() != '') {
       this.data[e.field] = e?.data;
       if (this.data.objectType && e.field == 'objectType') {
+        this.gridViewSetup['ContactType'].isRequire = true;
+        this.gridViewSetup['ObjectID'].isRequire = true;
         this.data.objectID = null;
         this.data.objectName = null;
         this.disableObjectID = false;

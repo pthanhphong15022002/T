@@ -20,6 +20,7 @@ export class CodxListContactsComponent implements OnInit{
   formModelContact: FormModel;
   moreFuncEdit = '';
   moreFuncAdd = '';
+  loaded: boolean;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -42,6 +43,7 @@ export class CodxListContactsComponent implements OnInit{
   }
 
   getListContactByObjectID(objectID) {
+    this.loaded = false;
     this.cmSv.getListContactByObjectID(objectID).subscribe((res) => {
       if (res && res.length > 0) {
         this.listContacts = res;
@@ -50,6 +52,8 @@ export class CodxListContactsComponent implements OnInit{
         );
         this.contactPerson.emit(contactPerson);
       }
+      this.loaded = true;
+
     });
   }
 
