@@ -129,7 +129,6 @@ export class AddSurveyComponent extends UIComponent {
   //Click morefunc
   clickMF(e:any)
   {
-    debugger
     switch(e?.functionID)
     {
       //Copy link

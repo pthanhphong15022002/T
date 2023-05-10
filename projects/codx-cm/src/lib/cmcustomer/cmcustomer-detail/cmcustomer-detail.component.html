@@ -321,6 +321,9 @@
           <ng-container *ngIf="name == 'Deal'">
            <codx-list-deals [customerID]="dataSelected.recID"></codx-list-deals>
           </ng-container>
+          <ng-container *ngIf="name == 'DealCompetitors'">
+            <codx-view-dealcompetitors [competitorID]="dataSelected.recID"></codx-view-dealcompetitors>
+          </ng-container>
           <ng-container *ngIf="name == 'Product'">
             <ng-container [ngTemplateOutlet]="product"> </ng-container>
           </ng-container>
@@ -336,7 +339,7 @@
         [funcID]="funcID"
         [dataTree]="treeTask"
         [funcIDQuotations]="'CM0202'"
-        [customerID]="dataSelected.customerID"
+        [customerID]="dataSelected.recID"
       ></codx-tabs>
     </ng-template>
   </codx-detail-tmp>

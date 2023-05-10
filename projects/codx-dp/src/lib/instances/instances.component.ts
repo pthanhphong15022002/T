@@ -720,9 +720,9 @@ export class InstancesComponent
         data.status = '2';
         data.startDate = res?.length > 0 ? res[0].startDate : null;
         this.dataSelected = data;
-        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected))
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.listInstanceStep = res;
-        
+
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
@@ -816,14 +816,7 @@ export class InstancesComponent
             //Copy
             case 'SYS104':
             case 'SYS04':
-              let isCopy = this.isCreate ? true : false;
-              if (
-                !isCopy ||
-                data.closed ||
-                data.status != '2' ||
-                !data.permissionCloseInstances
-              )
-                res.disabled = true;
+              if (!this.isCreate) res.disabled = true;
               break;
             //xóa
             case 'SYS102':
@@ -888,6 +881,22 @@ export class InstancesComponent
               if (!data.permissionCloseInstances) {
                 mf.disabled = true;
               }
+              break;
+            //edit
+            case 'SYS03':
+              let isUpdate = data.write;
+              if (!isUpdate || data.closed || !data.permissionCloseInstances)
+                mf.disabled = true;
+              break;
+            //Copy
+            case 'SYS04':
+              if (!this.isCreate) mf.disabled = true;
+              break;
+            //xóa
+            case 'SYS02':
+              let isDelete = data.delete;
+              if (!isDelete || data.closed || !data.permissionCloseInstances)
+                mf.disabled = true;
               break;
             case 'DP09':
             case 'DP10':

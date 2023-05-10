@@ -200,7 +200,7 @@ export class ResourcesComponent extends UIComponent {
         this.cardTrans(EPCONST.FUNCID.CA_Return, event?.text, data);
         break;
       case EPCONST.MFUNCID.CA_History:
-        this.historyCard(event?.data?.url + '/' + data?.recID);
+        this.historyCard(event?.data?.url + '/' + data?.resourceID);
         break;
       case EPCONST.MFUNCID.S_UpdateQuantity:
         this.updateQuantity(data);
@@ -516,7 +516,7 @@ export class ResourcesComponent extends UIComponent {
   addNew() {
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
-      option.Width = '550px';
+      option.Width = '800px';
       option.DataService = this.view?.dataService;
       option.FormModel = this.formModel;
       this.view.dataService.dataSelected=res;
@@ -553,7 +553,7 @@ export class ResourcesComponent extends UIComponent {
         .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
           let option = new SidebarModel();
-          option.Width = '550px';
+          option.Width = '800px';
           option.DataService = this.view?.dataService;
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
@@ -584,7 +584,7 @@ export class ResourcesComponent extends UIComponent {
         .copy(this.view.dataService.dataSelected)
         .subscribe((res) => {
           let option = new SidebarModel();
-          option.Width = '550px';
+          option.Width = '800px';
           option.DataService = this.view?.dataService;
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(

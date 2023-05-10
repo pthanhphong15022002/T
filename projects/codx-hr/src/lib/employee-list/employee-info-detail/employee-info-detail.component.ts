@@ -66,6 +66,7 @@ import { Sort } from '@syncfusion/ej2-angular-grids';
 import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 import { PopupEProcessContractComponent } from '../../employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { PopupForeignWorkerComponent } from '../../employee-profile/popup-foreign-worker/popup-foreign-worker.component';
+import { PopupViewallBenefitComponent } from './pop-up/popup-viewall-benefit/popup-viewall-benefit.component';
 
 
 @Component({
@@ -286,6 +287,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   eDiseasesColumnsGrid;
   eAccidentsColumnsGrid;
   //#endregion
+  
 
   filterByBenefitIDArr: any = [];
   filterEBenefitPredicates: string;
@@ -2346,6 +2348,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         } else if (funcID == 'evaccines') {
           this.HandleEVaccinesInfo(event.text, 'edit', data);
         } else if (funcID == 'basicSalary') {
+          //Close popup when click more function
+          this.dialogViewSalary.close(); 
           this.HandleEmployeeBasicSalariesInfo(event.text, 'edit', data);
           this.df.detectChanges();
         } else if (funcID == 'Assets') {
@@ -2367,6 +2371,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           this.HandleEmployeeEDiseasesInfo(event.text, 'edit', data);
           this.df.detectChanges();
         } else if (funcID == 'eBenefit') {
+          //Close popup when click more function
+          this.dialogViewBenefit.close(); 
           this.handlEmployeeBenefit(event.text, 'edit', data);
         } else if (funcID == 'eSkill') {
           this.HandleEmployeeESkillsInfo(event.text, 'edit', data);
@@ -4633,14 +4639,21 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     dialog.close();
   }
 
+  headerTextBenefit;
   popupViewBenefit() {
-    this.dialogViewBenefit = this.callfc.openForm(
+   this.headerTextBenefit = this.getFormHeader(this.benefitFuncID) + ' | ' + "Tất cả";
+   let option = new DialogModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+   this.dialogViewBenefit = this.callfc.openForm(
       this.templateViewBenefit,
-      null,
+      "",
       850,
       550,
+      "",
       null,
-      null
+      "",
+      option
     );
     this.dialogViewBenefit.closed.subscribe((res) => {
       // if (res?.event) {
@@ -4650,23 +4663,46 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     });
   }
 
+  clickEvent(event) {
+    this.clickMF(event?.event, event?.data, 'eBenefit');
+  }
+
+  // HandleEBenefit(actionHeaderText, actionType: string, data: any) {
+  //   let option = new SidebarModel();
+  //   option.Width = '550px';
+  //   option.FormModel = this.view.formModel;
+
+  //   let dialogAdd = this.callfc.openForm(
+  //     PopupViewallBenefitComponent,
+  //     null,
+  //     850,
+  //     550,
+  //     null,
+  //     {
+  //       funcID: this.view.funcID,
+  //       employeeId: this.employeeID,
+  //       headerText:
+  //       this.getFormHeader(this.benefitFuncID) + ' | ' + "Tất cả",
+  //       actionType: actionType,
+  //       dataObj: data,
+  //     },
+  //   );
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (res.event) {
+      
+  //     }
+  //     if (res?.event) this.view.dataService.clear();
+  //   });
+  // }
+
   valueChangeViewAllEBenefit(evt) {
     this.ViewAllEBenefitFlag = evt.isTrusted;
     this.popupViewBenefit();
-    let ins = setInterval(() => {
-      if (this.eBenefitGrid) {
-        clearInterval(ins);
-        let t = this;
-        this.eBenefitGrid.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type == 'loaded') {
-              t.eBenefitRowCount = res['data'].length;
-            }
-          }
-        });
-        this.eBenefitRowCount = this.eBenefitGrid.dataService.rowCount;
-      }
-    }, 100);
+    // this.HandleEBenefit(
+    //   ' ' + this.view.function.description,
+    //   'add',
+    //   null
+    // );
   }
 
   valueChangeViewAllEAsset(evt) {
@@ -4710,7 +4746,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   }
 
   popupUpdateEJobSalaryStatus() {
-    let dialogViewSalary = this.callfc.openForm(
+     this.dialogViewSalary = this.callfc.openForm(
       this.templateViewSalary,
       null,
       850,
@@ -4718,7 +4754,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
       null,
       null
     );
-    dialogViewSalary.closed.subscribe((res) => {
+    this.dialogViewSalary.closed.subscribe((res) => {
       // if (res?.event) {
       //   this.view.dataService.update(res.event[0]).subscribe((res) => {});
       // }

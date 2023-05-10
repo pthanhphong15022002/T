@@ -37,6 +37,7 @@
         [parentType]="'AD_Users'"
         [parentID]="adUser.userID"
         [imgOn]="date"
+        (handleInput)="changeAvatar()"
       >
       </codx-img>
     </div>
@@ -241,7 +242,7 @@
     <button
       type="button"
       class="btn btn-primary"
-      (click)="saveUser(true, false, false)"
+      (click)="saveUser('closePopup', false, false)"
       [disabled]="this.isSaving"
     >
       <codx-label

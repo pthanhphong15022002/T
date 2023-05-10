@@ -92,7 +92,7 @@ export class CodxBookingViewDetailComponent
     super(injector);
     this.routerRecID = this.router.snapshot.params['id'];
     if (this.routerRecID != null) {
-      this.hideFooter = true;
+      //this.hideFooter = true;
     }
   }
 
@@ -219,8 +219,8 @@ export class CodxBookingViewDetailComponent
       let funcID = event?.functionID;
       switch (funcID) {
         case EPCONST.MFUNCID.R_Approval:
-        case EPCONST.MFUNCID.R_Approval:
-        case EPCONST.MFUNCID.R_Approval:
+        case EPCONST.MFUNCID.C_Approval:
+        case EPCONST.MFUNCID.S_Approval:
           {
             this.approve.emit(data);
           }
