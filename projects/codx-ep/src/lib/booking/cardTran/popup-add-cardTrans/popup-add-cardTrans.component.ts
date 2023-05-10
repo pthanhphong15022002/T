@@ -27,6 +27,8 @@ export class PopupAddCardTransComponent extends UIComponent {
   headerText = '';
   fGroup: any;
   grView: any;
+  getCardFuncID=EPCONST.FUNCID.CA_Get;
+  returnCardFuncID=EPCONST.FUNCID.CA_Return;
   constructor(
     injector: Injector,
     private codxEpService: CodxEpService,
