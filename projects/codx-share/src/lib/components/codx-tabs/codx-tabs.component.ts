@@ -148,4 +148,9 @@ export class CodxTabsComponent implements OnInit {
         .subscribe();
     }
   }
+
+  changeCountFooter(value:number,key:string){
+    this.oCountFooter[key] = value;
+    this.changeDetectorRef.detectChanges();
+  }
 }
