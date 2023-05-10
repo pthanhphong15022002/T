@@ -70,9 +70,19 @@
       <div class="d-flex align-items-start">
         <div
           class="badge badge-sm d-flex align-items-center"
-          style="background-color: royalblue"
+          [ngStyle]="{
+            'background-color': getStep(data?.stepID)['backgroundColor']
+          }"
         >
-          <span [innerHTML]="getStep(data?.stepID)?.stepName"></span>
+          <span
+            [ngClass]="getStep(data?.stepID)['icon']"
+            [ngStyle]="{ color: getStep(data?.stepID)['iconColor'] }"
+            class="me-1 icon-14"
+          ></span>
+          <span
+            [ngStyle]="{ color: getStep(data?.stepID)['textColor'] }"
+            [innerHTML]="getStep(data?.stepID)?.stepName"
+          ></span>
         </div>
       </div>
     </div>

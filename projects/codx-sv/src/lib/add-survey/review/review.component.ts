@@ -271,7 +271,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   checkAnswer(seqNoSession, seqNoQuestion, seqNoAnswer, answerType = null) {
-    debugger
     if (this.lstQuestion) {
       let seqNo = 0;
       if (!answerType)
@@ -354,6 +353,9 @@ export class ReviewComponent extends UIComponent implements OnInit {
             document.getElementById("formError"+x.recID).innerHTML = html;
             document.getElementById("formId"+x.recID).className += " border-danger";
           }
+          else
+          {}
+
         });
         if (respondResult) {
           let objQ = {
@@ -394,15 +396,22 @@ export class ReviewComponent extends UIComponent implements OnInit {
     var a = this.itemSession;
   }
 
-  removeClass()
+  removeClass(id:any = null)
   {
-    var elems = document.querySelectorAll(".card-survey-question");
-    elems.forEach(el=>{
-      el.classList.remove("border-danger");
-    });
-    var elemss = document.querySelectorAll(".formError");
-    elemss.forEach(el=>{
-      el.classList.remove("border-danger");
-    });
+    if(!id)
+    {
+      var elems = document.querySelectorAll(".card-survey-question");
+      elems.forEach(el=>{
+        el.classList.remove("border-danger");
+      });
+      var elemss = document.querySelectorAll(".formError");
+      elemss.forEach(el=>{
+        el.remove();
+      });
+    }
+    else
+    {
+
+    }
   }
 }
