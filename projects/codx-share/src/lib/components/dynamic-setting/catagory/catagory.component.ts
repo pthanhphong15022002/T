@@ -588,6 +588,7 @@ export class CatagoryComponent implements OnInit {
 
   valueChange(evt: any, data: any, autoDefault: any = null) {
     var fieldName = data.fieldName;
+    var transType = data.transType;
     var field = evt.field;
     var value = evt.data;
     if (autoDefault) {
@@ -670,7 +671,9 @@ export class CatagoryComponent implements OnInit {
             return;
           }
         }
-        var dt = this.settingValue.find((x) => x.category == this.category);
+        var dt = this.settingValue.find(
+          (x) => x.category == this.category && x.transType == transType
+        );
         if (this.category == '1' || this.category == '4') {
           if (this.category == '4' && Array.isArray(this.dataValue)) {
             let dtvalue = this.dataValue.find(
