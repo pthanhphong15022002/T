@@ -62,7 +62,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     mode: 'Normal',
   };
 
-  quotationLines: Array<CM_QuotationsLines> = [];
+  quotationLines: Array<any> = [];
   lockFields = [];
   dataParent: any;
   gridViewSetupQL: any;
@@ -82,8 +82,11 @@ export class PopupAddQuotationsComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.quotations = JSON.parse(JSON.stringify(dt?.data?.data));
+    if (!this.quotations.recID) {
+      this.quotations.recID = Util.uid();
+    }
     this.action = dt?.data?.action;
-    this.disableRefID = dt?.data?.disableRefID;;
+    this.disableRefID = dt?.data?.disableRefID;
     this.quotationLines = [];
     this.cache
       .gridViewSetup(
@@ -147,14 +150,12 @@ export class PopupAddQuotationsComponent implements OnInit {
     }
   }
   //change Data
-  changeRefID(e){
-
-  }
+  changeRefID(e) {}
   valueChange(e) {
-    if(e?.data && e?.field) this.quotations[e.field] = e.data
+    if (e?.data && e?.field) this.quotations[e.field] = e.data;
   }
   valueChangeDate(e) {
-    if(e?.data && e?.field) this.quotations[e.field] = e.data?.fromDate
+    if (e?.data && e?.field) this.quotations[e.field] = e.data?.fromDate;
   }
   select(e) {}
   created(e) {}
@@ -191,7 +192,6 @@ export class PopupAddQuotationsComponent implements OnInit {
           };
           let opt = new DialogModel();
           opt.zIndex = 1000;
-          let dataModel = new FormModel();
           opt.FormModel = this.fmQuotationLines;
 
           let dialogQuotations = this.callFc.openForm(
@@ -207,10 +207,10 @@ export class PopupAddQuotationsComponent implements OnInit {
           dialogQuotations.closed.subscribe((res) => {
             if (res?.event) {
               data = res?.event;
-              // // this.gridQuationsLines.addRow(data, idx);
-              // this.quotationLines.push(data)
+              // this.gridQuationsLines.addRow(data, idx);
               this.quotationLinesAddNew.push(data);
               this.quotationLines.push(data);
+              // this.gridQuationsLines.dataSource = this.quotationLines
               this.loadTotal();
               this.changeDetector.detectChanges();
             }
@@ -227,6 +227,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   genData(idx) {
     let data = this.gridQuationsLines.formGroup.value; //ddooi tuong
     data.recID = Util.uid();
+    data.transID = this.quotations.recID;
     data.write = true;
     data.delete = true;
     data.read = true;
@@ -235,7 +236,10 @@ export class PopupAddQuotationsComponent implements OnInit {
     return data;
   }
 
-  quotionsLineChanged(e) {
+  loadModegrid() {}
+
+  quotationsLineChanged(e) {
+    //cái này change vào để xuất file
     //  const field = [
     //  'rowno',
     //  'itemid',

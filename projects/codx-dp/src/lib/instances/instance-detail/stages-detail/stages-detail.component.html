@@ -44,7 +44,7 @@
         </button>
       </div>
     </div>
-    <div class="mb-3 mt-1">
+    <div class="mb-3 mt-2">
       <div class="d-flex justify-content-between flex-wrap">
         <div class="d-flex align-items-center">
           <codx-label
@@ -583,14 +583,17 @@
       <codx-progress-layout [progress]="data?.value?.progress">
       </codx-progress-layout>
     </div>
-    <span>
-      <codx-img
-        [width]="25"
-        class="me-2"
-        [objectId]="getRole(data?.value, 'ID')"
-        objectType="AD_Users"
-        [objectName]="getRole(data?.value, 'name')"
-      ></codx-img>
+    <span class="d-flex align-items-center">
+      <codx-imgs
+      class="me-2 d-flex align-items-center"
+      [width]="25"
+      ojectType="AD_Users"
+      [numberImages]="1"
+      [isToolTip]="true"
+      [objectId]="getRole(data?.value, 'ID')"
+      [objectName]="getRole(data?.value, 'name')"
+    >
+    </codx-imgs>
     </span>
     <div class="notify">
       <span class="me-3">

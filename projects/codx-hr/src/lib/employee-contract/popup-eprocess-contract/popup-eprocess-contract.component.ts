@@ -233,6 +233,9 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
       // this.hrSevice.getEContractDefault().subscribe((res) => {
         this.hrSevice.getDataDefault(this.formModel.funcID, this.formModel.entityName, this.idField).subscribe((res) => {
         if (res) {
+          debugger
+          console.log('data default ne', res);
+          
           this.data = res?.data;
           this.data.employeeID = this.employeeId;
           this.data.signedDate = null;
@@ -281,10 +284,10 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     if(this.data.payForm == null) this.data.payForm = '';
     if(this.data.benefits == null) this.data.benefits = '';
 
-    // if (this.formGroup.invalid) {
-    //   this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
 
     if (this.data.effectedDate > this.data.expiredDate) {
       this.hrSevice.notifyInvalidFromTo(
@@ -367,7 +370,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         case 'contractTypeID': {
           this.data.limitMonths =
             event?.component?.itemsSelected[0]?.LimitMonths;
-          this.formGroup.patchValue({ limitMonths: this.data.limitMonths });
+          this.formGroup.patchValue({ limitMonths: this.data.limitMonths});
           this.setExpiredDate(this.data.limitMonths);
           break;
         }

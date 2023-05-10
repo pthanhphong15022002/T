@@ -512,7 +512,7 @@ export class EPApprovalComponent extends UIComponent {
       PopupAddCardTransComponent,
       '',
       550,
-      450,
+      500,
       EPCONST.FUNCID.CA_Get,
       [curTran, EPCONST.FUNCID.CA_Get, this.popupTitle]
     );

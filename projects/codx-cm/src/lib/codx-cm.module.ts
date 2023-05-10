@@ -35,7 +35,6 @@ import { DealsComponent } from './deals/deals.component';
 import { PopupAddDealComponent } from './deals/popup-add-deal/popup-add-deal.component';
 import { DealDetailComponent } from './deals/deal-detail/deal-detail.component';
 import { TabDetailCustomComponent } from './deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
-import { CodxTableComponent } from './contracts/codx-table/codx-table.component';
 import { AddContractsComponent } from './contracts/add-contracts/add-contracts.component';
 import { ListContractsComponent } from './contracts/list-contracts/list-contracts.component';
 import { QuotationsLinesComponent } from './quotations-lines/quotations-lines.component';
@@ -46,6 +45,10 @@ import { ProductComponent } from './contracts/product/product.component';
 import { TabsHeaderComponent } from './contracts/tabs-header/tabs-header.component';
 import { CodxTabDealcompetitorsComponent } from './deals/deal-detail/codx-tab-dealcompetitors/codx-tab-dealcompetitors.component';
 import { PopupAddDealcompetitorComponent } from './deals/deal-detail/codx-tab-dealcompetitors/popup-add-dealcompetitor/popup-add-dealcompetitor.component';
+import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/view-dealcompetitors/view-dealcompetitors.component';
+import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
+import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
+import { CodxTableComponent } from './contracts/component/codx-table/codx-table.component';
 
 const routes: Routes = [
   {
@@ -62,13 +65,14 @@ const routes: Routes = [
       },
       {
         // gán tạm để làm UI
-        path: 'sales/:funcID',
+        path: 'deals/:funcID',
         component: DealsComponent,
       },
-      // {
-      //   path: 'services/:funcID',
-      //   component: DealsComponent,
-      // },
+      {
+          // gán tạm để làm UI
+        path: 'quotations/:funcID',
+        component: QuotationsComponent,
+      },
       {
         path: '**',
         redirectTo: 'error/404',
@@ -98,7 +102,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddDealComponent,
     DealDetailComponent,
     TabDetailCustomComponent,
-    CodxTableComponent,
     AddContractsComponent,
     ListContractsComponent,
     QuotationsLinesComponent,
@@ -109,6 +112,10 @@ const T_Component: Type<any>[] = [LayoutComponent];
     TabsHeaderComponent,
     CodxTabDealcompetitorsComponent,
     PopupAddDealcompetitorComponent,
+    ViewDealcompetitorsComponent,
+    CodxComboboxComponent,
+    CodxTableComponent,
+    QuotationsViewDetailComponent
   ],
   imports: [
     RouterModule.forChild(routes),

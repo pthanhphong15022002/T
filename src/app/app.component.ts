@@ -1,5 +1,7 @@
 declare global {
-  interface Window { ng: any; }
+  interface Window {
+    ng: any;
+  }
 }
 import {
   Component,
@@ -30,7 +32,7 @@ declare var window: any;
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit,AfterViewInit ,OnDestroy {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
   private angularFireMessaging: AngularFireMessaging;
 
@@ -39,11 +41,8 @@ export class AppComponent implements OnInit,AfterViewInit ,OnDestroy {
     private tenant: TenantService,
     private layoutService: LayoutService,
     private titleService: Title,
-    private authSV : AuthService
-  )
-  {
-
-  }
+    private authSV: AuthService
+  ) {}
 
   ngOnInit() {
     if (environment.layoutCZ == 'qtsc') {
@@ -51,6 +50,11 @@ export class AppComponent implements OnInit,AfterViewInit ,OnDestroy {
       document
         .getElementById('appFavicon')
         .setAttribute('href', './assets/cz/qtsc/bg/favicon.ico');
+    } else if (environment.layoutCZ == 'lacviet') {
+      this.titleService.setTitle('QTSC@oms');
+      document
+        .getElementById('appFavicon')
+        .setAttribute('href', './assets/cz/lacviet/bg/favicon.ico');
     } else {
       this.titleService.setTitle('CodxUI');
       document
@@ -58,8 +62,6 @@ export class AppComponent implements OnInit,AfterViewInit ,OnDestroy {
         .setAttribute('href', './assets/logos/favicon.ico');
     }
     this.unsubscribe.push(this.tenant.init(this.router));
-
-
 
     // this.angularFireMessaging.requestToken.subscribe(
     //   (token) => {
@@ -82,9 +84,7 @@ export class AppComponent implements OnInit,AfterViewInit ,OnDestroy {
     //   });
   }
 
-
-  ngAfterViewInit(){
-  }
+  ngAfterViewInit() {}
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }

@@ -189,14 +189,19 @@
               </e-item>
               <e-item prefixIcon="e-icons icon-navigate_before" id="previous">
               </e-item>
+
               <e-item [template]="pageInput" type="Input"></e-item>
               <e-item prefixIcon="e-icons icon-navigate_next" id="next">
               </e-item>
               <e-item prefixIcon="e-icons icon-skip_next" id="lastPage">
               </e-item>
-
+              <e-item
+                *ngIf="lstFiles?.length > 1"
+                [template]="fileIdx"
+              ></e-item>
+              <!-- 
               <e-item id="viewThumbnail" prefixIcon="e-icons icon-article">
-              </e-item>
+              </e-item> -->
             </e-items>
           </ejs-toolbar>
         </div>
@@ -303,7 +308,7 @@
         [showToolbar]="false"
         *ngIf="curFileUrl"
         #ngxPdfView
-        [(src)]="curFileUrl"
+        [src]="curFileUrl"
         [(zoom)]="zoomValue"
         [(page)]="curPage"
         [handTool]="showHand"
@@ -325,13 +330,13 @@
       >
       </ngx-extended-pdf-viewer>
 
+      <!-- (click)="goToPage(PAGE_NUMBER)" -->
       <ng-template #ngxThumbnail let-PAGE_NUMBER>
         <a class="pdf-viewer-template">
           <div
             class="thumbnail"
             [classList]="PAGE_NUMBER == curPage ? 'border border-primary' : ''"
             data-page-number="PAGE_NUMBER"
-            (click)="goToPage(PAGE_NUMBER)"
           >
             <div class="image-container d-flex mb-2"></div>
           </div>
@@ -498,388 +503,393 @@
             </ng-template>
             <ng-template #content>
               <div class="px-3">
-              <ng-container>
-                <ejs-listview
-                  id="groupedList"
-                  [(dataSource)]="lstAreas"
-                  [cssClass]="cssClass"
-                  [showHeader]="true"
-                >
-                  <!-- ||                             area.signer == this.curSignerType -->
+                <ng-container>
+                  <ejs-listview
+                    id="groupedList"
+                    [(dataSource)]="lstAreas"
+                    [cssClass]="cssClass"
+                    [showHeader]="true"
+                  >
+                    <!-- ||                             area.signer == this.curSignerType -->
 
-                  <ng-template #template let-area="">
-                    <div
-                      class="annotationItem p-3"
-                      *ngIf="
-                        !this.isApprover ||
-                        (this.isApprover &&
-                          area.signer == this.curSignerID &&
-                          area.stepNo == this.stepNo)
-                      "
-                      (click)="goToSelectedAnnotation(area)"
-                    >
-                      <codx-temp-full
-                        [title]="
-                          (area.labelType | vll : 'ES015' : 'text' | async) +
-                          ' - ' +
-                          getAreaOwnerName(area.signer)
-                        "
-                        [resourceObjType]="'AD_Users'"
-                        [icoCss]="
-                          'symbol symbol-icon symbol-circle symbol-32px me-3 ' +
-                          (area.labelType | vll : 'ES015' : 'icon' | async)
-                        "
-                        [iconCss2]="
-                          area.recID != curSelectedAnnotID
-                            ? 'icon-expand_more'
-                            : 'icon-expand_less'
-                        "
-                        [subTitle]="'Trang ' + (+area.location.pageNumber + 1)"
-                        [subTitleCss]="'page-end text-gray-500 fs-7'"
-                      >
-                      </codx-temp-full>
+                    <ng-template #template let-area="">
                       <div
-                        [class.d-none]="
-                          !isPublic &&
-                          (inputUrl != null ||
-                            area.recID != curSelectedAnnotID ||
-                            area.isLock == true)
+                        class="annotationItem p-3"
+                        *ngIf="
+                          !this.isApprover ||
+                          (this.isApprover &&
+                            area.signer == this.curSignerID &&
+                            area.stepNo == this.stepNo)
                         "
-                        [formGroup]="formAnnot"
+                        (click)="goToSelectedAnnotation(area)"
                       >
-                        <div
-                          class="text-content  my-2 ms-13"
-                          *ngIf="
-                            area.labelType == 6 &&
-                            curAnnotFontSize &&
-                            curAnnotFontStyle
+                        <codx-temp-full
+                          [title]="
+                            (area.labelType | vll : 'ES015' : 'text' | async) +
+                            ' - ' +
+                            getAreaOwnerName(area.signer)
                           "
+                          [resourceObjType]="'AD_Users'"
+                          [icoCss]="
+                            'symbol symbol-icon symbol-circle symbol-32px me-3 ' +
+                            (area.labelType | vll : 'ES015' : 'icon' | async)
+                          "
+                          [iconCss2]="
+                            area.recID != curSelectedAnnotID
+                              ? 'icon-expand_more'
+                              : 'icon-expand_less'
+                          "
+                          [subTitle]="
+                            'Trang ' + (+area.location.pageNumber + 1)
+                          "
+                          [subTitleCss]="'page-end text-gray-500 fs-7'"
                         >
-                          <input
-                            type="text"
-                            formControlName="content"
-                            class="form-control w-100"
-                            [style]="
-                              'font-size: ' +
-                              curAnnotFontSize +
-                              'px;' +
-                              'font-family: ' +
-                              curAnnotFontStyle +
-                              ';'
-                            "
-                            [ngClass]="{
-                              'fw-bolder': isBold,
-                              'fst-italic': isItalic,
-                              'text-decoration-underline': isUnd
-                            }"
-                            [defaultValue]="area.labelValue"
-                          />
-                        </div>
-
+                        </codx-temp-full>
                         <div
-                          class="date-content my-2 ms-13"
-                          *ngIf="area.labelType == 5 && curAnnotDateFormat"
+                          [class.d-none]="
+                            !isPublic &&
+                            (inputUrl != null ||
+                              area.recID != curSelectedAnnotID ||
+                              area.isLock == true)
+                          "
+                          [formGroup]="formAnnot"
                         >
-                          <ejs-dropdownlist
-                            class="me-2 min-w-70px"
-                            id="dateFormatsDropdownList"
-                            [dataSource]="lstAnnotDateFormat"
-                            [(value)]="curAnnotDateFormat"
-                          >
-                          </ejs-dropdownlist>
-                          <!-- formControlName="dateFormat" -->
-                        </div>
-                        <div class="d-flex my-2 ms-13">
                           <div
-                            class="text-format d-flex align-items-center"
-                            *ngIf="imgConfig.includes(area.labelType)"
-                          >
-                            <img
-                              [id]="area.recID"
-                              *ngIf="!isPublic"
-                              class="img"
-                              [src]="env.urlUpload + '/' + area.labelValue"
-                              onerror="this.src = '/assets/themes/sys/default/img/Avatar_Default.svg'"
-                            />
-                            <codx-img
-                              *ngIf="isPublic && area.labelType == 'S1'"
-                              class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-                              [imageType]="'square'"
-                              [width]="80"
-                              [objectId]=""
-                              [objectType]=""
-                              data-kt-menu-trigger="click"
-                              data-kt-menu-attach="parent"
-                              data-kt-menu-placement="bottom-end"
-                              data-kt-menu-flip="bottom"
-                              [isAllowEdit]="true"
-                              [funcId]=""
-                              (handleInput)="
-                                changeSignature_StampImg_Area_Immediate(
-                                  area,
-                                  $event
-                                )
-                              "
-                            >
-                            </codx-img>
-                          </div>
-                          <div
-                            class="text-format d-flex align-items-center"
+                            class="text-content my-2 ms-13"
                             *ngIf="
-                              !imgConfig.includes(area.labelType) &&
-                              curAnnotFontStyle &&
-                              curAnnotFontSize
+                              area.labelType == 6 &&
+                              curAnnotFontSize &&
+                              curAnnotFontStyle
                             "
+                          >
+                            <input
+                              type="text"
+                              formControlName="content"
+                              class="form-control w-100"
+                              [style]="
+                                'font-size: ' +
+                                curAnnotFontSize +
+                                'px;' +
+                                'font-family: ' +
+                                curAnnotFontStyle +
+                                ';'
+                              "
+                              [ngClass]="{
+                                'fw-bolder': isBold,
+                                'fst-italic': isItalic,
+                                'text-decoration-underline': isUnd
+                              }"
+                              [defaultValue]="area.labelValue"
+                            />
+                          </div>
+
+                          <div
+                            class="date-content my-2 ms-13"
+                            *ngIf="area.labelType == 5 && curAnnotDateFormat"
                           >
                             <ejs-dropdownlist
                               class="me-2 min-w-70px"
-                              id="fontStylesDropdownList"
-                              [dataSource]="lstAnnotFontStyle"
-                              [(value)]="curAnnotFontStyle"
+                              id="dateFormatsDropdownList"
+                              [dataSource]="lstAnnotDateFormat"
+                              [(value)]="curAnnotDateFormat"
                             >
                             </ejs-dropdownlist>
-                            <!-- formControlName="fontStyle" -->
-                            <ejs-dropdownlist
-                              class="me-2 w-100px"
-                              id="fontSizesDropdownList"
-                              [dataSource]="lstAnnotFontSize"
-                              [(value)]="curAnnotFontSize"
-                            >
-                            </ejs-dropdownlist>
-                            <!-- formControlName="fontSize" -->
+                            <!-- formControlName="dateFormat" -->
                           </div>
-                          <div
-                            class="btn-format d-flex align-items-center"
-                            *ngIf="!imgConfig.includes(area.labelType)"
-                          >
-                            <button
-                              type="button"
-                              class="btn btn-sm btn-icon me-1"
-                              [ngClass]="{
-                                btn: true,
-                                'bg-white border': !isBold,
-                                'btn-success': isBold
-                              }"
-                              (click)="changeFontWeight(1)"
+                          <div class="d-flex my-2 ms-13">
+                            <div
+                              class="text-format d-flex align-items-center"
+                              *ngIf="imgConfig.includes(area.labelType)"
                             >
-                              <span class="icon-format_bold"></span>
-                            </button>
-                            <button
-                              type="button"
-                              class="btn btn-sm btn-icon me-1"
-                              [ngClass]="{
-                                btn: true,
-                                'bg-white border': !isItalic,
-                                'btn-success': isItalic
-                              }"
-                              (click)="changeFontWeight(2)"
+                              <img
+                                [id]="area.recID"
+                                *ngIf="!isPublic"
+                                class="img"
+                                [src]="env.urlUpload + '/' + area.labelValue"
+                                onerror="this.src = '/assets/themes/sys/default/img/Avatar_Default.svg'"
+                              />
+                              <codx-img
+                                *ngIf="isPublic && area.labelType == 'S1'"
+                                class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                                [imageType]="'square'"
+                                [width]="80"
+                                [objectId]=""
+                                [objectType]=""
+                                data-kt-menu-trigger="click"
+                                data-kt-menu-attach="parent"
+                                data-kt-menu-placement="bottom-end"
+                                data-kt-menu-flip="bottom"
+                                [isAllowEdit]="true"
+                                [funcId]=""
+                                (handleInput)="
+                                  changeSignature_StampImg_Area_Immediate(
+                                    area,
+                                    $event
+                                  )
+                                "
+                              >
+                              </codx-img>
+                            </div>
+                            <div
+                              class="text-format d-flex align-items-center"
+                              *ngIf="
+                                !imgConfig.includes(area.labelType) &&
+                                curAnnotFontStyle &&
+                                curAnnotFontSize
+                              "
                             >
-                              <span class="icon-format_italic"></span>
-                            </button>
-                            <button
-                              type="button"
-                              class="btn btn-sm btn-icon"
-                              [ngClass]="{
-                                btn: true,
-                                'bg-white border': !isUnd,
-                                'btn-success': isUnd
-                              }"
-                              (click)="changeFontWeight(3)"
+                              <ejs-dropdownlist
+                                class="me-2 min-w-70px"
+                                id="fontStylesDropdownList"
+                                [dataSource]="lstAnnotFontStyle"
+                                [(value)]="curAnnotFontStyle"
+                              >
+                              </ejs-dropdownlist>
+                              <!-- formControlName="fontStyle" -->
+                              <ejs-dropdownlist
+                                class="me-2 w-100px"
+                                id="fontSizesDropdownList"
+                                [dataSource]="lstAnnotFontSize"
+                                [(value)]="curAnnotFontSize"
+                              >
+                              </ejs-dropdownlist>
+                              <!-- formControlName="fontSize" -->
+                            </div>
+                            <div
+                              class="btn-format d-flex align-items-center"
+                              *ngIf="!imgConfig.includes(area.labelType)"
                             >
-                              <span class="icon-format_underlined"></span>
-                            </button>
+                              <button
+                                type="button"
+                                class="btn btn-sm btn-icon me-1"
+                                [ngClass]="{
+                                  btn: true,
+                                  'bg-white border': !isBold,
+                                  'btn-success': isBold
+                                }"
+                                (click)="changeFontWeight(1)"
+                              >
+                                <span class="icon-format_bold"></span>
+                              </button>
+                              <button
+                                type="button"
+                                class="btn btn-sm btn-icon me-1"
+                                [ngClass]="{
+                                  btn: true,
+                                  'bg-white border': !isItalic,
+                                  'btn-success': isItalic
+                                }"
+                                (click)="changeFontWeight(2)"
+                              >
+                                <span class="icon-format_italic"></span>
+                              </button>
+                              <button
+                                type="button"
+                                class="btn btn-sm btn-icon"
+                                [ngClass]="{
+                                  btn: true,
+                                  'bg-white border': !isUnd,
+                                  'btn-success': isUnd
+                                }"
+                                (click)="changeFontWeight(3)"
+                              >
+                                <span class="icon-format_underlined"></span>
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                        <div class="d-flex ms-12" *ngIf="area.labelType == 5">
-                          <!-- <div
+                          <div class="d-flex ms-12" *ngIf="area.labelType == 5">
+                            <!-- <div
                             class="date-type-space"
                             *ngFor="
                               let dateType of lstSignDateType;
                               let index = index
                             "
                           > -->
-                          <codx-input
-                            class="me-4 date-Type"
-                            name="date-Type"
-                            type="radio"
-                            [checked]="!useSignDate"
-                            labelPosition="After"
-                            (valueChange)="changeUseCreatedDate()"
-                          >
-                          </codx-input>
-                          <codx-label
-                            [name]="'lblSignDateType0'"
-                            [default]="lstSignDateType[0]"
-                            [formModel]=""
-                          >
-                          </codx-label>
-                          <codx-input
-                            class="me-4 date-Type"
-                            name="date-Type"
-                            type="radio"
-                            [checked]="useSignDate"
-                            labelPosition="After"
-                            (valueChange)="changeUseSignDate()"
-                          >
-                          </codx-input>
-                          <codx-label
-                            [name]="'lblSignDateType1'"
-                            [default]="lstSignDateType[1]"
-                            [formModel]=""
-                          >
-                          </codx-label>
-                          <!-- </div> -->
-                        </div>
-                        <div class="btn-apply d-flex justify-content-end">
-                          <button
-                            *ngIf="
-                              !isPublic && this.isEditable == false
-                                ? false
-                                : area.allowEditAreas == false
-                                ? false
-                                : area.isLock == true
-                                ? false
-                                : true
-                            "
-                            type="button"
-                            class="btn btn-sm btn-light-primary me-2"
-                            (click)="removeArea()"
-                          >
+                            <codx-input
+                              class="me-4 date-Type"
+                              name="date-Type"
+                              type="radio"
+                              [checked]="!useSignDate"
+                              labelPosition="After"
+                              (valueChange)="changeUseCreatedDate()"
+                            >
+                            </codx-input>
                             <codx-label
-                              name="lblSave"
-                              default="Xóa"
+                              [name]="'lblSignDateType0'"
+                              [default]="lstSignDateType[0]"
                               [formModel]=""
-                            ></codx-label>
-                          </button>
-                          <button
-                            type="button"
-                            class="btn btn-sm btn-primary me-2"
-                            *ngIf="
-                              isApprover &&
-                              isEditable &&
-                              imgConfig.includes(area.labelType) &&
-                              area.labelType != '8' &&
-                              !isPublic
-                            "
-                            (click)="changeSignature_StampImg(area)"
-                          >
+                            >
+                            </codx-label>
+                            <codx-input
+                              class="me-4 date-Type"
+                              name="date-Type"
+                              type="radio"
+                              [checked]="useSignDate"
+                              labelPosition="After"
+                              (valueChange)="changeUseSignDate()"
+                            >
+                            </codx-input>
                             <codx-label
-                              name="lblChange"
-                              default="Thay đổi"
+                              [name]="'lblSignDateType1'"
+                              [default]="lstSignDateType[1]"
                               [formModel]=""
-                            ></codx-label>
-                          </button>
-                          <button
-                            type="button"
-                            class="btn btn-sm btn-primary"
-                            *ngIf="
-                              isApprover &&
-                              isEditable &&
-                              imgConfig.includes(area.labelType) &&
-                              area.labelType != '8' &&
-                              isPublic
-                            "
-                            (click)="changeSignature_StampImg_Public(area)"
-                          >
-                            <codx-label
-                              name="lblSave"
-                              default="OK"
-                              [formModel]=""
-                            ></codx-label>
-                          </button>
-                          <button
-                            *ngIf="
-                              isEditable && !imgConfig.includes(area.labelType)
-                            "
-                            type="button"
-                            class="btn btn-sm btn-primary"
-                            (click)="changeAnnotPro(area.labelType, area.recID)"
-                          >
-                            <codx-label
-                              name="lblSave"
-                              default="OK"
-                              [formModel]=""
-                            ></codx-label>
-                          </button>
+                            >
+                            </codx-label>
+                            <!-- </div> -->
+                          </div>
+                          <div class="btn-apply d-flex justify-content-end">
+                            <button
+                              *ngIf="
+                                !isPublic && this.isEditable == false
+                                  ? false
+                                  : area.allowEditAreas == false
+                                  ? false
+                                  : area.isLock == true
+                                  ? false
+                                  : true
+                              "
+                              type="button"
+                              class="btn btn-sm btn-light-primary me-2"
+                              (click)="removeArea()"
+                            >
+                              <codx-label
+                                name="lblSave"
+                                default="Xóa"
+                                [formModel]=""
+                              ></codx-label>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-sm btn-primary me-2"
+                              *ngIf="
+                                isApprover &&
+                                isEditable &&
+                                imgConfig.includes(area.labelType) &&
+                                area.labelType != '8' &&
+                                !isPublic
+                              "
+                              (click)="changeSignature_StampImg(area)"
+                            >
+                              <codx-label
+                                name="lblChange"
+                                default="Thay đổi"
+                                [formModel]=""
+                              ></codx-label>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-sm btn-primary"
+                              *ngIf="
+                                isApprover &&
+                                isEditable &&
+                                imgConfig.includes(area.labelType) &&
+                                area.labelType != '8' &&
+                                isPublic
+                              "
+                              (click)="changeSignature_StampImg_Public(area)"
+                            >
+                              <codx-label
+                                name="lblSave"
+                                default="OK"
+                                [formModel]=""
+                              ></codx-label>
+                            </button>
+                            <button
+                              *ngIf="
+                                isEditable &&
+                                !imgConfig.includes(area.labelType)
+                              "
+                              type="button"
+                              class="btn btn-sm btn-primary"
+                              (click)="
+                                changeAnnotPro(area.labelType, area.recID)
+                              "
+                            >
+                              <codx-label
+                                name="lblSave"
+                                default="OK"
+                                [formModel]=""
+                              ></codx-label>
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </ng-template>
-                  <ng-template #groupTemplate let-dataSource="">
-                    <div class="e-list-wrapper">
-                      <span class="e-list-item-content">{{
-                        dataSource.items[0].location.pageNumber + 1
-                      }}</span>
-                    </div>
-                  </ng-template>
-                </ejs-listview>
+                    </ng-template>
+                    <ng-template #groupTemplate let-dataSource="">
+                      <div class="e-list-wrapper">
+                        <span class="e-list-item-content">{{
+                          dataSource.items[0].location.pageNumber + 1
+                        }}</span>
+                      </div>
+                    </ng-template>
+                  </ejs-listview>
 
-                <ng-container class="form-group mt-6" *ngIf="isPublic">
-                  <div class="text-center mb-6">
-                    <ul
-                      class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6"
-                    >
-                      <ng-container
-                        *ngFor="let spl of vllSupplier; let index = index"
+                  <ng-container class="form-group mt-6" *ngIf="isPublic">
+                    <div class="text-center mb-6">
+                      <ul
+                        class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6"
                       >
-                        <div class="nav-item m-0">
-                          <button
-                            [disabled]="index != 0"
-                            class="nav-link text-center flex-center rounded-0 min-w-100px"
-                            [ngClass]="currentTab == index ? 'active' : ''"
-                            data-bs-toggle="tab"
-                            id="'#pane_' + index"
-                            (click)="changeTab(index)"
-                          >
-                            <span class="d-flex flex-column">
-                              <span>
-                                <img
-                                  [class]="index != 0 ? 'opacity-25' : ''"
-                                  class="h-80px w-80px p-3 user-mini-icon mb-1"
-                                  [src]="
-                                    '../assets/themes/es/default/img/' +
-                                    spl.icon
-                                  "
-                                />
+                        <ng-container
+                          *ngFor="let spl of vllSupplier; let index = index"
+                        >
+                          <div class="nav-item m-0">
+                            <button
+                              [disabled]="index != 0"
+                              class="nav-link text-center flex-center rounded-0 min-w-100px"
+                              [ngClass]="currentTab == index ? 'active' : ''"
+                              data-bs-toggle="tab"
+                              id="'#pane_' + index"
+                              (click)="changeTab(index)"
+                            >
+                              <span class="d-flex flex-column">
+                                <span>
+                                  <img
+                                    [class]="index != 0 ? 'opacity-25' : ''"
+                                    class="h-80px w-80px p-3 user-mini-icon mb-1"
+                                    [src]="
+                                      '../assets/themes/es/default/img/' +
+                                      spl.icon
+                                    "
+                                  />
+                                </span>
+                                <span class="fs-6 fw-bold">
+                                  {{ spl.text }}
+                                </span>
                               </span>
-                              <span class="fs-6 fw-bold">
-                                {{ spl.text }}
-                              </span>
-                            </span>
-                          </button>
-                        </div>
-                      </ng-container>
-                    </ul>
-                  </div>
+                            </button>
+                          </div>
+                        </ng-container>
+                      </ul>
+                    </div>
 
-                  <div class="d-flex justify-content-end">
-                    <div>
+                    <div class="d-flex justify-content-end">
+                      <div>
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+                          [disabled]="!checkedConfirm"
+                        >
+                          <codx-vll
+                            [name]="'ES002'"
+                            [value]="signerInfo?.stepType"
+                            [showText]="true"
+                          >
+                          </codx-vll>
+                        </button>
+                      </div>
                       <button
                         type="button"
-                        class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+                        class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4"
                         [disabled]="!checkedConfirm"
                       >
-                        <codx-vll
-                          [name]="'ES002'"
-                          [value]="signerInfo?.stepType"
-                          [showText]="true"
-                        >
-                        </codx-vll>
+                        <codx-label
+                          name="lblRedo"
+                          [formModel]=""
+                          default="Làm lại"
+                        ></codx-label>
                       </button>
-                    </div>
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4"
-                      [disabled]="!checkedConfirm"
-                    >
-                      <codx-label
-                        name="lblRedo"
-                        [formModel]=""
-                        default="Làm lại"
-                      ></codx-label>
-                    </button>
 
-                    <!-- <button
+                      <!-- <button
                       type="button"
                       class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
                       [disabled]="!canOpenSubPopup"
@@ -891,10 +901,10 @@
                         default="USB"
                       ></codx-label>
                     </button> -->
-                  </div>
+                    </div>
+                  </ng-container>
                 </ng-container>
-              </ng-container>
-            </div>
+              </div>
             </ng-template>
           </e-tabitem>
 
@@ -972,14 +982,29 @@
               </div>
               <div class="p-3 pt-1 d-flex justify-content-between">
                 <div>
-                  <button type="button" class="btn btn-sm btn-light-primary" (click)="removeUnsaveHLA()">Hủy</button>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-light-primary"
+                    (click)="removeUnsaveHLA()"
+                  >
+                    <codx-label name="lblHLACancle" default="Hủy"></codx-label>
+                  </button>
                 </div>
                 <div class="d-flex">
-                  <button type="button" class="btn btn-sm btn-light-primary" (click)="confirmRemoveHLA()">
-                    Xóa
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-light-primary"
+                    (click)="confirmRemoveHLA()"
+                  >
+                    <codx-label name="lblHLADel" default="Xóa"></codx-label>
                   </button>
-                  <button type="button" class="btn btn-sm btn-primary ms-2" (click)="confirmHighlightText(false)">
-                    Lưu
+
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-primary ms-2"
+                    (click)="confirmHighlightText(false)"
+                  >
+                    <codx-label name="lblHLASave" default="Lưu"></codx-label>
                   </button>
                 </div>
               </div>
@@ -1000,6 +1025,11 @@
   ></codx-vll>
 </ng-template>
 
+<ng-template #fileIdx>
+  <div class="pageIndx d-flex">
+    <span>{{ fileInfo.fileIdx + 1 + "/" + lstFiles?.length }}</span>
+  </div>
+</ng-template>
 <ng-template #pageInput>
   <codx-input
     type="number"

@@ -188,6 +188,9 @@ export class ViewListComponent implements OnInit {
                 t.listTaskResousceSearch = res;
                 t.countResource = res.length;
                 if (t.isHoverPop && p) p.open();
+              }else{
+                this.listTaskResousceSearch = [];
+                this.countResource =0;
               }
               if (p) t.popoverCrr = p;
               t.isHoverPop = false;

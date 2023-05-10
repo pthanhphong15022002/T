@@ -238,4 +238,8 @@ export class CodxAcService {
       [recID, processID, entityName, funcID, title]
     );
   }
+  setPopupSize(dialog:any,width:any,height:any){
+    dialog.dialog.properties.height = width;
+    dialog.dialog.properties.width = height;
+  }
 }

@@ -216,7 +216,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
       block: 'start',
       inline: 'nearest',
     });
-    debugger
     this.itemSession = this.questions[pageNum];
     this.lstQuestion = JSON.parse(JSON.stringify(this.lstQuestionTemp));
     this.change.detectChanges();
@@ -224,7 +223,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
 
   lstAnswer: any = [];
   valueChange(e, itemSession, itemQuestion, itemAnswer) {
-    debugger
     //itemAnswer.choose = true
     if(itemQuestion.answerType == "L")
     {
@@ -273,7 +271,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   checkAnswer(seqNoSession, seqNoQuestion, seqNoAnswer, answerType = null) {
-    debugger
     if (this.lstQuestion) {
       let seqNo = 0;
       if (!answerType)
@@ -323,11 +320,14 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   onSubmit() {
+    this.checkRequired();
     let lstAnswers = [];
     this.lstQuestion.forEach((y) => {
       lstAnswers = [...lstAnswers, ...y.children];
     });
     let respondQuestion: any = [];
+    var check = false;
+    debugger
     lstAnswers.forEach((x) => {
       if (x.answerType) {
         let respondResult: any = [];
@@ -345,6 +345,17 @@ export class ReviewComponent extends UIComponent implements OnInit {
             columnNo: false,
           };
           respondResult.push(objR);
+
+          if(x.mandatory && !objR.answer)
+          {
+            check = true
+            var html = '<div class="text-required-rv ms-6 d-flex align-items-center"><i class="icon-error_outline text-danger"></i><span class="ms-2 text-danger">Đây là một câu hỏi bắt buộc</span></div>'
+            document.getElementById("formError"+x.recID).innerHTML = html;
+            document.getElementById("formId"+x.recID).className += " border-danger";
+          }
+          else
+          {}
+
         });
         if (respondResult) {
           let objQ = {
@@ -357,20 +368,50 @@ export class ReviewComponent extends UIComponent implements OnInit {
         }
       }
     });
-    this.respondents.email = this.user.email;
-    this.respondents.respondent = this.user.userName;
-    this.respondents.position = this.user.positionID;
-    this.respondents.department = this.user.departmentID;
-    this.respondents.responds = respondQuestion;
-    this.respondents.objectType = '';
-    this.respondents.objectID = '';
-    this.respondents.finishedOn = new Date();
-    this.respondents.transID = this.recID;
-    this.respondents.scores = 0;
-    this.respondents.duration = 20;
-    this.respondents.pending = true;
-    this.SVServices.onSubmit(this.respondents).subscribe((res:any) => {
-      if(res && res.status == 5) this.isSent = true
-    });
+    if(!check)
+    {
+      this.respondents.email = this.user.email;
+      this.respondents.respondent = this.user.userName;
+      this.respondents.position = this.user.positionID;
+      this.respondents.department = this.user.departmentID;
+      this.respondents.responds = respondQuestion;
+      this.respondents.objectType = '';
+      this.respondents.objectID = '';
+      this.respondents.finishedOn = new Date();
+      this.respondents.transID = this.recID;
+      this.respondents.scores = 0;
+      this.respondents.duration = 20;
+      this.respondents.pending = true;
+      this.SVServices.onSubmit(this.respondents).subscribe((res:any) => {
+        if(res && res.status == 5) this.isSent = true
+      });
+    }
+    
+  }
+
+
+  checkRequired()
+  {
+    debugger
+    var a = this.itemSession;
+  }
+
+  removeClass(id:any = null)
+  {
+    if(!id)
+    {
+      var elems = document.querySelectorAll(".card-survey-question");
+      elems.forEach(el=>{
+        el.classList.remove("border-danger");
+      });
+      var elemss = document.querySelectorAll(".formError");
+      elemss.forEach(el=>{
+        el.remove();
+      });
+    }
+    else
+    {
+
+    }
   }
 }
