@@ -291,7 +291,8 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
       .subscribe((res:any[]) => {
         let data = Array.from<any>(res[0]);
         if(data.length > 0){
-          this.arrMessages = data.reverse();;
+          this.arrMessages = data.reverse();
+          console.log( this.arrMessages)
         }
         this.page = Math.ceil(res[1]/20);
         this.pageIndex++;

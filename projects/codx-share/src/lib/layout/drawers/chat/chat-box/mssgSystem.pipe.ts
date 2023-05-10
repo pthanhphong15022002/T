@@ -12,6 +12,7 @@ export class MessageSystemPipe implements PipeTransform {
   )
   {}
   transform(item:any,...arg:any[]): Observable<any> {
+    debugger
     return this.cache.message(item.jsMessage.mssgCode).pipe(map((mssg:any) => {
      if(mssg.defaultName){
        switch(item.jsMessage.mssgCode){
