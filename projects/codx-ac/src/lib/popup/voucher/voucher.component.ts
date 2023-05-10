@@ -34,9 +34,9 @@ export class VoucherComponent implements OnInit {
   invoiceDueDate: any;
   gridHeight: number = 0;
   formModel: FormModel = {
-    gridViewName: 'grvSubLedgerOpen',
-    formName: 'SubLedgerOpen',
-    entityName: 'AC_SubLedgerOpen',
+    gridViewName: 'grvAC_SubInvoices',
+    formName: 'AC_SubInvoices',
+    entityName: 'AC_SubInvoices',
   };
   mapPredicates = new Map<string, string>();
   mapDataValues = new Map<string, string>();
@@ -76,6 +76,9 @@ export class VoucherComponent implements OnInit {
           }
         }
       });
+
+    this.mapPredicates.set('currencyID', 'CurrencyID = @0');
+    this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
   }
   ngAfterViewInit() {
     let hBody, hTab;
@@ -84,25 +87,6 @@ export class VoucherComponent implements OnInit {
     if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
 
     this.gridHeight = hBody - (hTab + 120);
-  }
-
-  loadData() {
-    this.gridModel.predicate = this.morefunction.predicate;
-    this.gridModel.dataValue = this.morefunction.dataValue;
-    this.gridModel.entityName = this.morefunction.entityName;
-    this.api
-      .exec<any>(
-        'AC',
-        'SettledInvoicesBusiness',
-        'LoadBySubInvoicesAsync',
-        this.gridModel
-      )
-      .subscribe((res) => {
-        if (res && res.length) {
-          if (this.payAmt && this.payAmt > 0) this.paymentAmt(res[0]);
-          this.sublegendOpen = res[0];
-        }
-      });
   }
   //#endregion
 
@@ -168,26 +152,32 @@ export class VoucherComponent implements OnInit {
       );
     }
 
-    if(field === 'payType'){
-      let sort:Array<SortModel> = [];
-      switch (e.data){
+    if (field === 'payType') {
+      let sort: Array<SortModel> = [];
+      switch (e.data) {
         case '1':
           break;
-          case '2':
-           sort = [{field:'InvoiceDueDate',dir:'asc'}];
+        case '2':
+          sort = [{ field: 'InvoiceDueDate', dir: 'asc' }];
           break;
-          case '3':
-            sort = [{field:'InvoiceDueDate',dir:'desc'}];
+        case '3':
+          sort = [{ field: 'InvoiceDueDate', dir: 'desc' }];
           break;
-          case '4':
-            sort = [{field:'BalAmt',dir:'asc'},{field:'InvoiceDueDate',dir:'asc'}];
+        case '4':
+          sort = [
+            { field: 'BalAmt', dir: 'asc' },
+            { field: 'InvoiceDueDate', dir: 'asc' },
+          ];
           break;
-          case '5':
-            sort = [{field:'BalAmt',dir:'desc'},{field:'InvoiceDueDate',dir:'asc'}];
+        case '5':
+          sort = [
+            { field: 'BalAmt', dir: 'desc' },
+            { field: 'InvoiceDueDate', dir: 'asc' },
+          ];
           break;
-          default:
-            sort = [];
-            break;
+        default:
+          sort = [];
+          break;
       }
       this.gridModel.sort = sort;
     }
@@ -299,5 +289,36 @@ export class VoucherComponent implements OnInit {
       }
     });
   }
+
+  loadData() {
+    this.gridModel.entityName = 'AC_SubInvoices';
+    this.api
+      .exec<any>(
+        'AC',
+        'SettledInvoicesBusiness',
+        'LoadBySubInvoicesAsync',
+        this.gridModel
+      )
+      .subscribe((res) => {
+        if (res && res.length) {
+          this.autoPay(res);
+          //if (this.payAmt && this.payAmt > 0) this.paymentAmt(res[0]);
+          //this.sublegendOpen = res[0];
+        }
+      });
+  }
+
+  autoPay(data: []) {
+    let accID = this.form.formGroup.controls.accountID.value;
+    this.api.exec<any>('AC', 'SettledInvoicesBusiness', 'SettlementAsync', [
+      data,
+      this.cashpayment,
+      accID,
+      this.payAmt,
+    ]);
+  }
   //#endregion
 }
+
+
+

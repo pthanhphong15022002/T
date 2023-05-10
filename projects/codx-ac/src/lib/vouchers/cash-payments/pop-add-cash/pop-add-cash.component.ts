@@ -382,7 +382,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       );
       return;
     }
-    this.checkValidate();
+    //this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
       return;

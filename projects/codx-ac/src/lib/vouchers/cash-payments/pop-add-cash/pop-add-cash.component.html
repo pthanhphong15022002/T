@@ -205,11 +205,7 @@
         [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
-<<<<<<< HEAD
-        [height]="gridHeight" [autoLoad]="false" rowHeight="30" (cellChanged)="lineChanged($event)"
-=======
         [height]="gridHeight"  [autoLoad]="false" rowHeight="30"(onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"
->>>>>>> aa9b97d50c92ec0133ce783e2cb543bd9565a442
         (created)="gridCreated($event, gridCashPaymentLine)"></codx-gridview-v2>
     </div>
     <div class="container w-90 h-90">
@@ -228,22 +224,6 @@
       </div>
     </div>
   </ng-container>
-<<<<<<< HEAD
-  <ng-container *ngIf="
-      form?.formGroup &&
-      (cashpayment.subType === '1' || cashpayment.subType === '3') &&
-      modegrid == '2'
-    ">
-    <div style="height: 430px" class="table-responsive mt-3">
-      <table style="table-layout: fixed" class="table table-hover table-row-bordered">
-        <thead>
-          <tr>
-            <th style="width: 10%" class="w-50px text-center">
-              <codx-label class="fw-bold" fiedName="RowNo" [formModel]="fmCashPaymentsLines">
-              </codx-label>
-            </th>
-            <th style="width: 50%">
-=======
   <ng-container
     *ngIf="form?.formGroup && (cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == '2'">
     <div style="height: 420px;" class="table-responsive mt-3">
@@ -255,7 +235,6 @@
               </codx-label>
             </th>
             <th style="width: 20%;">
->>>>>>> aa9b97d50c92ec0133ce783e2cb543bd9565a442
               <div class="d-flex">
                 <i class="icon-account_balance icon-16 me-2"></i>
                 <span class="fw-bold line-clamp line-clamp-1 fs-6">Tài khoản</span>
@@ -297,41 +276,14 @@
             <td style="width: 50px" class="text-center fw-bold">
               {{ item.rowNo }}
             </td>
-<<<<<<< HEAD
-            <td style="width: 560px">
-=======
             <td style="width: 285px;">
->>>>>>> aa9b97d50c92ec0133ce783e2cb543bd9565a442
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="item.accountID != null && item.accountID != ''">
                   <codx-label style="white-space: nowrap" class="fw-bold label-colon" default="Nợ"
                     [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
-<<<<<<< HEAD
-                  <span class="text-gray-700">{{ item.accountID }}</span>
-                  &nbsp;&nbsp;&nbsp;&#9656;&nbsp;&nbsp;&nbsp;
-                  <span [ngbTooltip]="popaccount" #accountID class="text-gray-700 line-clamp line-clamp-1" [innerHTML]="
-                      item.accountID
-                        | formatvalue
-                          : fmCashPaymentsLines
-                          : 'accountID'
-                          : accountID
-                        | async
-                    "></span>
-                  <ng-template #popaccount>
-                    <span class="fw-bold" #accountID [innerHTML]="
-                        item.accountID
-                          | formatvalue
-                            : fmCashPaymentsLines
-                            : 'accountID'
-                            : accountID
-                          | async
-                      "></span>
-                  </ng-template>
-=======
                   <span class="text-gray-700">{{item.accountID}}</span>
->>>>>>> aa9b97d50c92ec0133ce783e2cb543bd9565a442
                 </ng-container>
               </div>
               <div class="d-flex align-items-center justify-content-start">
@@ -340,39 +292,11 @@
                     [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
-<<<<<<< HEAD
-                  <span class="text-gray-700">{{ item.offsetAcctID }}</span>
-                  &nbsp;&nbsp;&nbsp;&#9656;&nbsp;&nbsp;&nbsp;
-                  <span [ngbTooltip]="popoffset" #offsetAcctID class="text-gray-700 line-clamp line-clamp-1"
-                    [innerHTML]="
-                      item.offsetAcctID
-                        | formatvalue
-                          : fmCashPaymentsLines
-                          : 'offsetAcctID'
-                          : offsetAcctID
-                        | async
-                    "></span>
-                  <ng-template #popoffset>
-                    <span [ngbTooltip]="popoffset" #offsetAcctID class="fw-bold" [innerHTML]="
-                        item.offsetAcctID
-                          | formatvalue
-                            : fmCashPaymentsLines
-                            : 'offsetAcctID'
-                            : offsetAcctID
-                          | async
-                      "></span>
-                  </ng-template>
-                </ng-container>
-              </div>
-            </td>
-            <td style="width: 167px">
-=======
                   <span class="text-gray-700">{{item.offsetAcctID}}</span>
                 </ng-container>
               </div>
             </td>
             <td style="width: 213px;">
->>>>>>> aa9b97d50c92ec0133ce783e2cb543bd9565a442
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="item.dr != null && item.dr != ''">
                   <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{ item.dr.toLocaleString("it-IT")
@@ -385,9 +309,6 @@
                 </ng-container>
               </div>
             </td>
-<<<<<<< HEAD
-            <td style="width: 500px">
-=======
             <td *ngIf="cashpayment.currencyID != baseCurr" style="width: 213px;">
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.dR2 != null && item.dR2 != '')">
@@ -400,7 +321,6 @@
               </div>
             </td>
             <td style="width: 641px;">
->>>>>>> aa9b97d50c92ec0133ce783e2cb543bd9565a442
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="item.diM2 != null && item.diM2 != ''">
                   <codx-label style="white-space: nowrap" class="fw-bold label-colon" fiedName="DIM2"
@@ -498,11 +418,7 @@
                 </ng-container>
               </div>
             </td>
-<<<<<<< HEAD
-            <td style="width: 223px">
-=======
             <td style="width: 285px;">
->>>>>>> aa9b97d50c92ec0133ce783e2cb543bd9565a442
               <div *ngIf="item.note != null && item.note != ''" class="d-flex flex-wrap">
                 <div class="d-flex align-items-center me-5 mb-1">
                   <span [ngbTooltip]="popnote" class="fw-bold line-clamp line-clamp-2">{{ item.note }}</span>
@@ -529,11 +445,7 @@
                 </div>
               </div>
             </td>
-<<<<<<< HEAD
-            <td style="width: 111px">
-=======
             <td style="width: 142px;">
->>>>>>> aa9b97d50c92ec0133ce783e2cb543bd9565a442
               <div class="d-flex align-items-center justify-content-start">
                 <span ngbTooltip="Sửa" placement="top" type="button" class="btn btn-icon btn-light-primary ms-1"
                   (click)="editRow(item)">
@@ -547,11 +459,7 @@
             </td>
           </tr>
         </tbody>
-<<<<<<< HEAD
-        <tfoot *ngIf="cashpaymentline.length > 0" style="background: #e8eaef">
-=======
         <tfoot *ngIf="cashpaymentline.length > 0" style="background: #e8eaef;position: sticky;bottom: 0;">
->>>>>>> aa9b97d50c92ec0133ce783e2cb543bd9565a442
           <tr>
             <th style="width: 10%"></th>
             <th style="width: 50%"></th>
@@ -560,15 +468,6 @@
                 <span class="fs-6 fw-bold">{{ total }}</span>
               </div>
             </th>
-<<<<<<< HEAD
-            <th style="width: 45%"></th>
-            <th style="width: 20%"></th>
-            <th *ngIf="cashpaymentline.length > 0" style="width: 10%"></th>
-          </tr>
-        </tfoot>
-      </table>
-      <ng-container *ngIf="cashpayment.subType === '1' || cashpayment.subType === '3'">
-=======
             <th *ngIf="cashpayment.currencyID != baseCurr" style="width: 15%;">
               <div class="d-flex align-items-center justify-content-start">
                 <span class="fs-6 fw-bold">{{ totaldr2 }}</span>
@@ -584,7 +483,6 @@
     <ng-container *ngIf="
           (cashpayment.subType === '1' || cashpayment.subType === '3')
         ">
->>>>>>> aa9b97d50c92ec0133ce783e2cb543bd9565a442
         <div class="container w-90 h-90">
           <div style="background: none" class="list-empty card card-flush h-100">
             <div class="d-flex flex-column flex-center justify-content-center mt-2">
