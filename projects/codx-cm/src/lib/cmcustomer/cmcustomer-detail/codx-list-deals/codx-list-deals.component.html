@@ -65,7 +65,7 @@
     </div>
     <div class="d-flex align-items-top">
       <div class="d-flex flex-column">
-        <div class="badge badge-primary">Giới thiệu sản phẩm</div>
+        <div class="badge badge-primary mb-1"><span [innerHTML]="getStep(data?.stepID)?.stepName"></span></div>
         <div class="ms-5">
           <span class="icon-money icon-16 me-1"></span>
           <span class="text-gray-500 my-2"  [innerHTML]="
@@ -73,7 +73,7 @@
         "></span>
         </div>
       </div>
-      <div class="ms-3">
+      <div class="ms-3" *ngIf="data.owner">
         <codx-imgs
           [isToolTip]="true"
           [width]="35"
