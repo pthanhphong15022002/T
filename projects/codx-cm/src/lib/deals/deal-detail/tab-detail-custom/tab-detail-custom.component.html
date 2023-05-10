@@ -157,7 +157,7 @@
 </ng-template>
 
 <ng-template #contact>
-  <div class="empty-data" *ngIf="tmpDataSelect == null">
+  <div class="empty-data" *ngIf="data.customerID == null">
     <div class="container h-100">
       <div class="list-empty card card-flush h-100">
         <div class="d-flex flex-column flex-center justify-content-center">
@@ -172,11 +172,10 @@
       </div>
     </div>
   </div>
-  <div *ngIf="tmpDataSelect">
+  <div *ngIf="data.customerID">
     <codx-list-contacts
       [funcID]="'CM0101'"
-      [objectID]="tmpDataSelect?.recID"
-      [objectName]="tmpDataSelect?.customerName"
+      [objectID]="data?.customerID"
       [hidenMF]="true"
     ></codx-list-contacts>
   </div>
