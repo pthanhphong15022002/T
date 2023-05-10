@@ -252,7 +252,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
     if (!this.isSaved) {
       // if (this.countOpenPopRoles == 1) this.addUserTemp();
-      this.saveUser(false, false, false, item);
+      this.saveUser('addUserRoles', false, item);
     } else {
       this.openPopupRoles(item);
     }
@@ -313,6 +313,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
     }
   }
 
+  avatarChange = false;
+  changeAvatar() {
+    //luu user roi
+    this.avatarChange = true;
+  }
+
   beforeSave(opt: RequestOption) {
     this.isSaving = true;
     opt.methodName = 'AddUpdateUserAsync';
@@ -321,8 +327,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   saveUser(
-    closeAddPopup: boolean,
-    addToGroup: boolean,
+    // closeAddPopup: boolean,
+    mode: string = 'addToGroup' ||
+      'addUserRoles' ||
+      'changeAvatar' ||
+      'closePopup',
+    // addToGroup: boolean,
     isOverrideRoles: boolean,
     item?: any
   ) {
@@ -342,31 +352,56 @@ export class AddUserComponent extends UIComponent implements OnInit {
             if (!this.isSaved) {
               this.getHTMLFirstPost(this.adUser);
               this.adService.createFirstPost(this.tmpPost).subscribe();
-              this.imageUpload
-                .updateFileDirectReload(res.save.userID)
-                .subscribe((result) => {
-                  if (result) {
-                    this.loadData.emit();
-                  }
-                });
               this.dataAfterSave = res.save;
+              this.adUser.userID = res.save.userID;
             }
             this.isSaved = true;
 
-            if (closeAddPopup) {
-              this.dialog.close(this.adUser);
-            } else {
-              this.adUser.userID = res.save.userID;
-              //add to group
-              if (addToGroup) {
-                this.addUserToGroup(this.adUser.userGroup, isOverrideRoles);
+            switch (mode) {
+              case 'closePopup': {
+                if (this.avatarChange) {
+                  this.imageUpload
+                    .updateFileDirectReload(this.adUser.userID)
+                    .subscribe((result) => {
+                      if (result) {
+                        this.loadData.emit();
+                      }
+                    });
+                }
+                this.dialog.close(this.adUser);
+                break;
               }
-              //add role
-              else {
+              case 'addToGroup': {
+                this.addUserToGroup(this.adUser.userGroup, isOverrideRoles);
+                break;
+              }
+              case 'addUserRoles': {
                 this.openPopupRoles(item);
+                break;
+              }
+              // case 'changeAvatar': {
+              //   this.changeAvatar();
+              //   break;
+              // }
+              default: {
+                break;
               }
             }
-            this.detectorRef.detectChanges();
+
+            // if (closeAddPopup) {
+            //   this.dialog.close(this.adUser);
+            // } else {
+            //   this.adUser.userID = res.save.userID;
+            //add to group
+            // if (addToGroup) {
+            //   this.addUserToGroup(this.adUser.userGroup, isOverrideRoles);
+            // }
+            //add role
+            // else {
+            //   this.openPopupRoles(item);
+            // }
+            //   }
+            //   this.detectorRef.detectChanges();
           }
 
           this.isSaving = false;
@@ -459,7 +494,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       if (this.isSaved) {
         this.addUserToGroup(data.data, isOverrideRoles);
       } else {
-        this.saveUser(false, true, isOverrideRoles);
+        this.saveUser('addToGroup', true, isOverrideRoles);
       }
     }
   }
@@ -469,7 +504,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.adService
         .addUserToGroupAsync(groupID, this.adUser.userID, isOverrideRoles)
         .subscribe((newRoles: tmpformChooseRole[]) => {
-          this.viewChooseRole = newRoles
+          this.viewChooseRole = newRoles;
           this.viewChooseRole.forEach((dt) => {
             dt['module'] = dt.functionID;
             dt['roleID'] = dt.roleID;
