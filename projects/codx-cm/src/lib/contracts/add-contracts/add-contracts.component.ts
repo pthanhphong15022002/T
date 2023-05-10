@@ -111,6 +111,8 @@ export class AddContractsComponent implements OnInit{
   }
 
   addContracts(){
+    console.log(this.contracts);
+    
     this.cmService.addContracts(this.contracts).subscribe( res => {
       if(res){
         this.dialog.close({ contract: res, action: this.action });
