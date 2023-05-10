@@ -556,13 +556,10 @@ export class DealsComponent
   //#endregion
 
   getCustomerName(customerID: any) {
-    return this.listCustomer.find((x) => x.customerID === customerID)
-      ?.customerName;
+    return this.listCustomer.find((x) => x.recID === customerID);
   }
 
   handleDataTmp(data) {
-    return {
-      customerName: this.getCustomerName(data.customerID),
-    };
+    return this.listCustomer.find((x) => x.recID === data?.customerID);
   }
 }
