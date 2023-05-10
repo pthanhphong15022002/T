@@ -338,19 +338,20 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt), 0, '', '', false)
         .subscribe((res) => {
+          
           if (!res?.error) {
             if (!this.isSaved) {
               this.getHTMLFirstPost(this.adUser);
               this.adService.createFirstPost(this.tmpPost).subscribe();
-              this.imageUpload
-                .updateFileDirectReload(res.save.userID)
-                .subscribe((result) => {
-                  if (result) {
-                    this.loadData.emit();
-                  }
-                });
               this.dataAfterSave = res.save;
             }
+            this.imageUpload
+            .updateFileDirectReload(res.update.userID)
+            .subscribe((result) => {
+              if (result) {
+                this.loadData.emit();
+              }
+            });
             this.isSaved = true;
 
             if (closeAddPopup) {
