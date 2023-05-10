@@ -76,7 +76,7 @@
 </ng-template>
 
 <!-- //--- temp list  //--- -->
-<ng-template #itemTemplate let-data> 
+<ng-template #itemTemplate let-data>
   <codx-temp-full
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
@@ -90,44 +90,44 @@
     [dataItem]="data"
   >
   </codx-temp-full>
-
 </ng-template>
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column py-2">
     <div class="d-flex justify-content-start py-1">
       <i class="icon-view_comfy pe-1"></i>
-      <div> {{data?.dealName}} </div>
-    </div>
-    <!-- <div class="d-flex justify-content-start py-1">
-      <i class="icon-k pe-1"></i>
-      <div> {{getCustomerName(data?.customerID)}} </div>
-    </div>
-    <div class="d-flex justify-content-star py-1">
-      <div class="d-flex align-items-start pe-4">
-        <i class="icon-monetization_on pe-1"></i>
-        <div>50,000,000 </div>
+      <div>
+        <span
+          [innerHTML]="
+            data?.customerID
+              | formatvalue : view.formModel : 'customerID'
+              | async
+          "
+        ></span>
       </div>
-      <div class="d-flex align-items-start pe-4">
-        <div>{{0.7 | percent}}</div>
+    </div>
+    <div class="flex-body d-flex justify-content-between my-2">
+      <div class="">
+        <codx-label
+          class="label-colon"
+          fiedName="VersionNo"
+          [formModel]="view.formModel"
+        ></codx-label>
+        <span
+          [innerHTML]="
+            data?.versionNo | formatvalue : view.formModel : 'versionNo' | async
+          "
+        ></span>
       </div>
-      <div class="d-flex align-items-start">
+      <div class="d-flex justify-content-end">
         <i class="icon-monetization_on pe-1"></i>
         <span
-        class="fs-7"
-        #endDate
-        [innerHTML]="
-          data.endDate
-            | formatvalue
-              : formModel
-              : 'endDate'
-              : endDate
-              : 'DPInstances'
-              : 'grvDPInstances'
-            | async
-        "
-      ></span>
+          [innerHTML]="
+            data?.totalAmt | formatvalue : view.formModel : 'totalAmt' | async
+          "
+        >
+        </span>
       </div>
-    </div> -->
+    </div>
   </div>
 </ng-template>
 
@@ -145,11 +145,9 @@
   </div>
 </ng-template>
 
-
-
 <!--#####  TemplateGridView  #####-->
 <ng-template #templateStatus let-data>
-  <div class="ms-4">
+  <div class="">
     <codx-vll
       [name]="vllStatus"
       [field]="'Status'"
@@ -163,19 +161,24 @@
 </ng-template>
 
 <ng-template #templateCustomer let-data>
-  <div class="ms-4">
+  <div class="">
     <span
       [innerHTML]="
-        data?.customerID | formatvalue : view.formModel : 'CustomerID' | async
+        data?.customerID | formatvalue : view.formModel : 'customerID' | async
       "
     ></span>
   </div>
 </ng-template>
 
 <ng-template #templateCreatedBy let-data>
-  <div class="ms-4">
-    <codx-img [objectId]="data?.createdBy" objectType="AD_Users" [width]="35">
-    </codx-img>
+  <div class="ms-5">
+    <codx-imgs
+      [objectId]="data?.createdBy"
+      objectType="AD_Users"
+      [width]="35"
+      [numberImages]="1"
+    >
+    </codx-imgs>
   </div>
 </ng-template>
 <!--##### End  #####-->

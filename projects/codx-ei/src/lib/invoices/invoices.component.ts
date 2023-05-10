@@ -170,7 +170,6 @@ export class InvoicesComponent extends UIComponent {
   }
 
   delete(data) {
-    debugger
     this.view.dataService.dataSelected = data;
     this.view.dataService
       .delete([this.view.dataService.dataSelected])

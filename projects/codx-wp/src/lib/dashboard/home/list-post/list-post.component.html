@@ -62,7 +62,7 @@
               }}</span>
             <span class="rounded-1 py-1 px-2 bg-gray-200 d-flex algin-items-center">
               <codx-vll [name]="'WP001'" [value]="item.shareControl" [showText]="true" [showIcon]="true"
-                [className]="'text-gray-600'" [icoCss]="'w-13px h-13px'" [path]="'assets/themes/sys/default/img/'"
+                [className]="'text-gray-600 vll-post'" [icoCss]="'w-13px h-13px'" [path]="'assets/themes/sys/default/img/'"
                 [showBgColor]="true">
               </codx-vll>
             </span>
@@ -117,7 +117,7 @@
       </ng-template>
     </div>
     <!-- contents -->
-    <div class="wp-contents">
+    <div class="wp-contents mt-3">
       <div class="wp-contents-text">
         <ng-container *ngIf="item.contents">
           <div [innerHTML]="item.isShowShortContent ? item.shortContent : item.contents | safe: 'html'"></div>
@@ -131,7 +131,7 @@
         </ng-container>
       </div>
       <ng-container *ngIf="item.attachments > 0">
-        <div class="wp-contents-files">
+        <div class="wp-contents-files mt-3">
           <codx-view-files 
             [objectID]="item.recID" 
             [objectType]="'WP_Comments'" 
@@ -208,7 +208,7 @@
           <div class="d-flex align-items-center justify-content-start ">
             <ng-container *ngIf="share.shareControl">
               <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
-                <codx-vll [name]="'WP001'" [value]="share.shareControl" [showText]="true" [className]="'text-gray-600'"
+                <codx-vll [name]="'WP001'" [value]="share.shareControl" [showText]="true" [className]="'text-gray-600 vll-post'"
                   [showIcon]="true" [path]="'assets/themes/sys/default/img/'" [icoCss]="'symbol-12px symbol-circle'"
                   [showBgColor]="true">
                 </codx-vll>

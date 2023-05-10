@@ -69,7 +69,8 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.dayoffObj = JSON.parse(JSON.stringify(data?.data?.dayoffObj));
-    this.fromListView = data?.data?.fromListView;
+    if(data?.data?.fromListView)
+      this.fromListView = data?.data?.fromListView;
     if (this.dayoffObj?.employeeID && this.fromListView) {
       this.employId = this.dayoffObj?.employeeID;
     } else this.employId = data?.data?.employeeID;
