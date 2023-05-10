@@ -61,7 +61,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   auth: AuthStore;
   okrService: CodxOmService;
   gridView: any;
-
+  showPlanMF=false;
   //Kỳ
   periodID: string;
   //Loại
@@ -320,6 +320,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   getOKRPlans(periodID: any, interval: any, year: any) {
     
+    this.showPlanMF=false;
     if (
       this.periodID != null &&
       this.interval != null &&
@@ -328,6 +329,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.interval != '' &&
       this.year != 0
     ) {
+      
       this.okrService
         .getOKRPlans(periodID, interval, year)
         .subscribe((item: any) => {
@@ -343,6 +345,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
               .getAllOKROfPlan(this.dataOKRPlans.recID)
               .subscribe((okrs: any) => {
                 if (okrs) {
+                  this.showPlanMF=true;
                   this.dataOKR = okrs;
                   this.isAfterRender = true;
                   this.getOrgTreeOKR();
@@ -648,6 +651,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
               .subscribe((res) => {
                 if (res) {
                   this.dataOKRPlans.status = status;
+                  this.getOKRPlans(this.periodID, this.interval, this.year);
                   this.notificationsService.notifyCode('SYS034'); //thành công
                 }
               });
@@ -659,6 +663,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         .subscribe((res) => {
           if (res) {
             this.dataOKRPlans.status = status;
+            this.getOKRPlans(this.periodID, this.interval, this.year);
             this.notificationsService.notifyCode('SYS034'); //thành công
             if ((status = OMCONST.VLL.PlanStatus.Ontracking)) {
               this.codxOmService

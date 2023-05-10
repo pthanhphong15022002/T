@@ -20,6 +20,7 @@ import {
 import { CashPaymentLine } from '../../../models/CashPaymentLine.model';
 import { CashPayment } from '../../../models/CashPayment.model';
 import { JournalService } from '../../../journals/journals.service';
+import { CodxAcService } from '../../../codx-ac.service';
 @Component({
   selector: 'lib-pop-add-linecash',
   templateUrl: './pop-add-linecash.component.html',
@@ -48,6 +49,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private notification: NotificationsService,
     private journalService: JournalService,
+    private acService: CodxAcService,
     @Optional() dialog?: DialogRef,
     @Optional() private dialogData?: DialogData
   ) {
@@ -133,7 +135,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   loadInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashpaymentline);
-    this.dialog.dialog.properties.height = 'auto';
+    this.acService.setPopupSize(this.dialog,'auto','40%')
     if (this.journal?.drAcctControl === '1') {
       (
         this.cbxAccountID.ComponentCurrent as CodxComboboxComponent

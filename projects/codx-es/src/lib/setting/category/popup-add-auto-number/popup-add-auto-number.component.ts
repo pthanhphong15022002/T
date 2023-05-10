@@ -343,7 +343,6 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
                 if(this.addedSegments.length){
                  this.api.execAction('AD_AutoNumberSegments',this.addedSegments,"SaveAsync").subscribe((res:any)=>{
                   if(res){
-                    debugger
                   }
                  })
                 }

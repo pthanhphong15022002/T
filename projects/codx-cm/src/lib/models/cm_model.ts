@@ -402,7 +402,7 @@ export class CM_Contracts {
   pmtMethodID: string;//Phương thức thanh toán
   pmtTermID: string;//Điều khoản thanh toán
   pmtStatus: string;//Tình trạng thanh toán
-  delModeID: string;//Hình thức giao hàng -- không có from
+  delModeID: string;//Hình thức giao hàng
   delTermID: string;//Điều khoản giao hàng
   delPrice: number;//Phí vận chuyển
   delStatus: string;//Tình trạng giao hàng
@@ -419,7 +419,7 @@ export class CM_Contracts {
   address: string;//Địa chỉ
   phone: string;//Số điện thoại
   faxNo: string;//Số Fax
-  representative: string;//Tên khách hàng
+  representative: string;//Người đại diện
   jobTitle: string;//Chức vụ
   bankAccount: string;//Tài khoản ngân hàng
   bankID: string;//Mở tại ngân hàng

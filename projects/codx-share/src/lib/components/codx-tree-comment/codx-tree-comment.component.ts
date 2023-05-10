@@ -99,6 +99,8 @@ export class CodxTreeCommentComponent implements OnInit, OnChanges {
   }
   // delete comment
   deleteComment(event: any) {
+    this.totalComment--;
+    this.totalCommentChange.emit(this.totalComment);
     this.removeNodeTree(event.recID);
     this.dt.detectChanges();
   }
@@ -108,6 +110,8 @@ export class CodxTreeCommentComponent implements OnInit, OnChanges {
     if (data) {
       data.showReply = false;
     }
+    this.totalComment++;
+    this.totalCommentChange.emit(this.totalComment);
     this.dicDatas[event['recID']] = event;
     this.setNodeTree(event);
     this.dt.detectChanges();

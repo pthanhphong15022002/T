@@ -259,6 +259,7 @@
   <div class="h-100">
     <codx-gridview-v2
       #gridQuationsLines
+      service="CM"
       [formName]="fmQuotationLines.formName"
       [gridViewName]="fmQuotationLines.gridViewName"
       [entityName]="fmQuotationLines.entityName"
@@ -267,7 +268,6 @@
       [allowFiltering]="true"
       [allowSorting]="true"
       [dataSource]="quotationLines"
-      service="CM"
       [height]="gridHeight"
       [autoLoad]="false"
       rowHeight="40"

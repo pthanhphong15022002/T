@@ -246,7 +246,6 @@ export class CopyComponent implements OnInit {
 
         // thu muc da tồn tại 
         if (res.status == 2) {
-          debugger
           that.fullName = res.data.folderName;
           var config = new AlertConfirmInputConfig();
           config.type = "YesNo";

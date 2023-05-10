@@ -1210,6 +1210,9 @@ export class CodxTasksComponent
 
                 if (t.isHoverPop && p) p.open();
                 if (p) t.popoverCrr = p;
+              }else{
+                this.listTaskResousceSearch = [];
+                this.countResource = 0;
               }
               t.isHoverPop = false;
             });
