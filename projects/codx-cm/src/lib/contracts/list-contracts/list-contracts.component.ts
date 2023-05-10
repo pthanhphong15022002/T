@@ -14,7 +14,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
   @Input() frmModelInstancesTask: FormModel;
   listContract = [];
   dateFomat = 'dd/MM/yyyy';
-
+  account: any;
   moreDefaut = {
     share: true,
     write: true,
@@ -22,6 +22,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
     download: true,
     delete: true,
   };
+  formModel = new FormModel;
 
   constructor(
     private cache: CacheService,
@@ -50,7 +51,10 @@ export class ListContractsComponent implements OnInit, OnChanges {
         console.log(this.frmModelInstancesTask);
       }
     });
-   
+    this.getAccount();
+    this.formModel.entityName = 'CM_Contracts';
+    this.formModel.formName = 'CMContracts';
+    this.formModel.gridViewName = 'grvCMContracts';
   }
 
 
@@ -137,10 +141,12 @@ export class ListContractsComponent implements OnInit, OnChanges {
       projectID,
       action,
       contract: contract || null,
+      account: this.account,
     }
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 1010;
+    option.FormModel = this.formModel;
     let popupContract = this.callFunc.openForm(
       AddContractsComponent,
       '',
@@ -157,4 +163,27 @@ export class ListContractsComponent implements OnInit, OnChanges {
     return dataPopupOutput;
   }
 
+  getAccount(){
+    this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'CompanySettingsBusiness',
+      'GetAsync'
+    ).subscribe(res => {
+      console.log(res);
+      if(res){
+        this.account = res;
+      }
+    })
+  }
+
+  async getForModel  (functionID) {
+    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let formModel = new FormModel;
+    formModel.formName = f?.formName;
+    formModel.gridViewName = f?.gridViewName;
+    formModel.entityName = f?.entityName;
+    formModel.funcID = functionID;
+    return formModel;
+  }
 }

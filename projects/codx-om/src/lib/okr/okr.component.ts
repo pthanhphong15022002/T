@@ -1,4 +1,4 @@
-import { FormGroup } from '@angular/forms';
+
 declare var window: any;
 import { OMCONST } from './../codx-om.constant';
 import {
@@ -61,7 +61,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   auth: AuthStore;
   okrService: CodxOmService;
   gridView: any;
-
+  showPlanMF=false;
   //Kỳ
   periodID: string;
   //Loại
@@ -92,9 +92,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     kr: null,
     skr: null,
   };
-  obFG: FormGroup;
-  krFG: FormGroup;
-  skrFG: FormGroup;
   funcID: any;
   obFuncID: any;
   krFuncID: any;
@@ -196,12 +193,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       if (krFM) {
         this.formModelKR = krFM;
         this.okrFM.krFM = this.formModelKR;
-
-        this.krFG = this.codxService.buildFormGroup(
-          this.formModelPlan?.formName,
-          this.formModelPlan?.gridViewName
-        );
-
         this.cache
           .gridViewSetup(
             this.formModelKR?.formName,
@@ -217,11 +208,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.codxOmService.getFormModel(this.skrFuncID).then((skrFM) => {
       if (skrFM) {
         this.formModelSKR = skrFM;
-        this.okrFM.skrFM = this.formModelSKR;
-        this.skrFG = this.codxService.buildFormGroup(
-          this.formModelSKR?.formName,
-          this.formModelSKR?.gridViewName
-        );
+        this.okrFM.skrFM = this.formModelSKR;        
         this.cache
           .gridViewSetup(
             this.formModelSKR?.formName,
@@ -237,11 +224,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.codxOmService.getFormModel(this.obFuncID).then((obFM) => {
       if (obFM) {
         this.formModelOB = obFM;
-        this.okrFM.obFM = this.formModelOB;
-        this.obFG = this.codxService.buildFormGroup(
-          this.formModelOB?.formName,
-          this.formModelOB?.gridViewName
-        );
+        this.okrFM.obFM = this.formModelOB;        
         this.cache
           .gridViewSetup(
             this.formModelOB?.formName,
@@ -337,6 +320,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   getOKRPlans(periodID: any, interval: any, year: any) {
     
+    this.showPlanMF=false;
     if (
       this.periodID != null &&
       this.interval != null &&
@@ -345,6 +329,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.interval != '' &&
       this.year != 0
     ) {
+      
       this.okrService
         .getOKRPlans(periodID, interval, year)
         .subscribe((item: any) => {
@@ -360,6 +345,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
               .getAllOKROfPlan(this.dataOKRPlans.recID)
               .subscribe((okrs: any) => {
                 if (okrs) {
+                  this.showPlanMF=true;
                   this.dataOKR = okrs;
                   this.isAfterRender = true;
                   this.getOrgTreeOKR();
@@ -665,6 +651,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
               .subscribe((res) => {
                 if (res) {
                   this.dataOKRPlans.status = status;
+                  this.getOKRPlans(this.periodID, this.interval, this.year);
                   this.notificationsService.notifyCode('SYS034'); //thành công
                 }
               });
@@ -676,6 +663,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         .subscribe((res) => {
           if (res) {
             this.dataOKRPlans.status = status;
+            this.getOKRPlans(this.periodID, this.interval, this.year);
             this.notificationsService.notifyCode('SYS034'); //thành công
             if ((status = OMCONST.VLL.PlanStatus.Ontracking)) {
               this.codxOmService

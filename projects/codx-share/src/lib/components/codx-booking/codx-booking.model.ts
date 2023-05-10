@@ -16,6 +16,7 @@ export class Equipments {
     resourceID: string;
     resourceName: string;
     capacity: number;
+    useCard: boolean;
     equipments: Array<object>;
   }
   

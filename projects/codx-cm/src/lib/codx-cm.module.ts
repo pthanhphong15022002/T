@@ -46,6 +46,8 @@ import { ProductComponent } from './contracts/product/product.component';
 import { TabsHeaderComponent } from './contracts/tabs-header/tabs-header.component';
 import { CodxTabDealcompetitorsComponent } from './deals/deal-detail/codx-tab-dealcompetitors/codx-tab-dealcompetitors.component';
 import { PopupAddDealcompetitorComponent } from './deals/deal-detail/codx-tab-dealcompetitors/popup-add-dealcompetitor/popup-add-dealcompetitor.component';
+import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/view-dealcompetitors/view-dealcompetitors.component';
+import { CodxComboboxComponent } from './contracts/codx-combobox/codx-combobox.component';
 
 const routes: Routes = [
   {
@@ -109,6 +111,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     TabsHeaderComponent,
     CodxTabDealcompetitorsComponent,
     PopupAddDealcompetitorComponent,
+    ViewDealcompetitorsComponent,
+    CodxComboboxComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

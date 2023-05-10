@@ -52,6 +52,7 @@ export class CM_Quotations {
   orderPoolID: string;
   customerID: string;
   salespersonID: string;
+  contactID : string;
   consultantID: string;
   delTermID: string;
   delModeID: string;
@@ -59,6 +60,7 @@ export class CM_Quotations {
   pmtMethodID: string;
   currencyID: string;
   status: string = '1';
+  exchangeRate:number ;
   deadline: Date;
   memo: string;
   totalAmt: number;
@@ -94,7 +96,7 @@ export class CM_QuotationsLines {
   iDIM1: string;
   iDIM2: string;
   iDIM3: string;
-  iDIM4: string;
+  IDIM4: string;
   quantity: number;
   uMID: string;
   conversion: number;
@@ -314,7 +316,6 @@ export class CM_Contacts {
   modifiedOn: Date;
   modifiedBy: string;
 }
-
 export class BS_AddressBook {
   recID: string;
   adressType: string;
@@ -382,11 +383,11 @@ export class CM_Contracts {
   currencyID: string;//Tiền tệ
   exchangeRate: number;//Tỷ giá hối đoái
   contractAmt: number;//Giá trị hợp đồng
-  vATID: string;//VAT
+  VATID: string;//VAT
   paymentStatus: string;//Trạng thái thanh toán
   paidAmt: number;//Số tiền đã thanh toán
   remainAmt: number;//Số tiền còn lại
-  terms: string;//Điều khoản hợp đồng
+  terms: string;//Điều khoản hợp đồng -- thiếu vll
   status: string;//Trạng thái
   periods: number;//Giai đoạn
   numbererval: string;//Khoảng thời gian
@@ -418,7 +419,7 @@ export class CM_Contracts {
   address: string;//Địa chỉ
   phone: string;//Số điện thoại
   faxNo: string;//Số Fax
-  representative: string;//Tên khách hàng
+  representative: string;//Người đại diện
   jobTitle: string;//Chức vụ
   bankAccount: string;//Tài khoản ngân hàng
   bankID: string;//Mở tại ngân hàng
@@ -429,6 +430,10 @@ export class CM_Contracts {
   modifiedOn: Date;//Ngày chỉnh sửa
   modifiedBy: string;//Người chỉnh sửa
 
+  contactName: string;//Người đại diện -- thiếu
+  // Hạn thanh toán
+  // Hạn giao hàng
+  // Điều khoản hồ sơ liên quan -- memo
 }
 
 export class CM_DealsCompetitors{
