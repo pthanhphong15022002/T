@@ -792,9 +792,10 @@ export class CatagoryComponent implements OnInit {
                       dt = res;
                       dt.dataValue = JSON.stringify(this.dataValue);
                       var setting = this.setting[0];
-                      dt.formName = setting.formName;
-                      dt.category = setting.category;
-                      dt.refModule = setting.moduleSales;
+                      dt.formName = data.formName;
+                      dt.category = data.category;
+                      dt.refModule = data.moduleSales;
+                      dt.transType = data.transType;
                       this.settingValue.push(dt);
                       this.api
                         .execAction('SYS_SettingValues', [dt], 'SaveAsync')
