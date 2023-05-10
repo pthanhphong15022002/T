@@ -47,6 +47,7 @@ import { TabsHeaderComponent } from './contracts/tabs-header/tabs-header.compone
 import { CodxTabDealcompetitorsComponent } from './deals/deal-detail/codx-tab-dealcompetitors/codx-tab-dealcompetitors.component';
 import { PopupAddDealcompetitorComponent } from './deals/deal-detail/codx-tab-dealcompetitors/popup-add-dealcompetitor/popup-add-dealcompetitor.component';
 import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/view-dealcompetitors/view-dealcompetitors.component';
+import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
 
 const routes: Routes = [
   {
@@ -66,10 +67,11 @@ const routes: Routes = [
         path: 'sales/:funcID',
         component: DealsComponent,
       },
-      // {
-      //   path: 'services/:funcID',
-      //   component: DealsComponent,
-      // },
+      {
+          // gán tạm để làm UI
+        path: 'quotations/:funcID',
+        component: QuotationsComponent,
+      },
       {
         path: '**',
         redirectTo: 'error/404',
@@ -111,6 +113,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxTabDealcompetitorsComponent,
     PopupAddDealcompetitorComponent,
     ViewDealcompetitorsComponent,
+    QuotationsViewDetailComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
