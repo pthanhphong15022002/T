@@ -1,9 +1,8 @@
-import { Targets } from './../../../../../codx-om/src/lib/model/okr.model';
 import { AfterViewInit, Component, Injector, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {data} from './data'
-import { CmcustomerDetailComponent } from '../../cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
 import { ButtonModel, CacheService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
+import { CmcustomerDetailComponent } from '../../../cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
 @Component({
   selector: 'codx-table',
   templateUrl: './codx-table.component.html',

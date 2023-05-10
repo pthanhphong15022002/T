@@ -23,6 +23,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   lstDealCompetitors = [];
   moreFuncAdd = '';
   formModel: FormModel;
+  loaded: boolean;
   lstCompetitorAddress = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -44,12 +45,15 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   }
 
   getListDealCompetitors(dealID) {
+    this.loaded = false;
     this.cmSv.getDealCompetitors(dealID).subscribe((res) => {
       if (res) {
         this.lstDealCompetitors = res;
         var lstID = this.lstDealCompetitors.map((x) => x.competitorID);
         this.getAddressCompetitors(lstID);
       }
+      this.loaded = true;
+
     });
   }
 

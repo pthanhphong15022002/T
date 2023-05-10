@@ -99,6 +99,26 @@
   </div>
   <div class="form-group row mt-5">
     <div class="col-6">
+      <span
+      [innerHTML]="
+        data?.status | formatvalue : formModel : 'status' | async
+      "
+    >
+    </span>
+    </div>
+    <div class="col-6">
+      <codx-input
+      [disabled]="'true'"
+      field="isCurrent"
+      [formModel]="formModel"
+      
+      [Group]="formGroup"
+    ></codx-input>
+      <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
+    </div>
+  </div>
+  <div class="form-group row mt-5">
+    <div class="col-6">
       <codx-label fiedName="ContractNo" [formModel]="formModel"></codx-label>
       <codx-input
         [disabled]="'true'"
@@ -132,6 +152,7 @@
     <div class="col-6">
       <codx-label fiedName="LimitMonths" [formModel]="formModel"></codx-label>
       <codx-input
+        [disabled]="'true'"
         field="limitMonths"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -193,26 +214,6 @@
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="Status" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="status"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
-      <div>
-        <codx-input
-          field="isCurrent"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
     </div>
   </div>
 

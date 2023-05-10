@@ -48,12 +48,12 @@
   </header>
 
   <main>
-    <tabs-header
+    <codx-taskbar
       [listTab]="listClicked"
       (tab)="changeTab($event)"
       size="22"
       class="mb-3"
-    ></tabs-header>
+    ></codx-taskbar>
     <hr />
     <container-element [ngSwitch]="tabClicked">
       <some-element
@@ -195,6 +195,7 @@
               [formModel]="dialog.formModel"
               field="contractID"
               type="text"
+              [crrValue]="contracts?.contractID"
               (valueChange)="valueChangeText($event)"
             >
             </codx-input>
@@ -214,8 +215,9 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="dealID"
-              type="text"
-              (valueChange)="valueChangeText($event)"
+              type="combobox"
+              [crrValue]="contracts?.dealID"
+              (valueChange)="valueChangeCombobox($event)"
             >
             </codx-input>
             <!-- <codx-combobox-select></codx-combobox-select> -->
@@ -233,8 +235,9 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="quotationID"
-              type="text"
-              (valueChange)="valueChangeText($event)"
+              type="combobox"
+              [crrValue]="contracts?.quotationID"
+              (valueChange)="valueChangeCombobox($event)"
             >
             </codx-input>
           </div>
@@ -251,8 +254,9 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="orderID"
-              type="text"
-              (valueChange)="valueChangeText($event)"
+              type="combobox"
+              [crrValue]="contracts?.orderID"
+              (valueChange)="valueChangeCombobox($event)"
             >
             </codx-input>
           </div>
@@ -319,6 +323,8 @@
               field="useType"
               type="valuelist"
               refValue="CRM033"
+              [crrValue]="contracts?.useType"
+              (valueChange)="valueChangeCombobox($event)"
             >
             </codx-input>
           </div>
@@ -337,6 +343,8 @@
               field="contractType"
               type="valuelist"
               refValue="CRM020"
+              [crrValue]="contracts?.contractType"
+              (valueChange)="valueChangeCombobox($event)"
             >
             </codx-input>
           </div>
@@ -600,8 +608,9 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="companyID"
-              type="text"
-              (valueChange)="valueChangeText($event)"
+              type="combobox"
+              (valueChange)="valueChangeCombobox($event)"
+              [crrValue]="contracts?.companyID"
             >
             </codx-input>
           </div>
@@ -621,6 +630,7 @@
               field="taxCode"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.taxCode"
             >
             </codx-input>
           </div>
@@ -629,7 +639,8 @@
 
       <div class="row form-group">
         <div class="col-12">
-          <div>
+          <div> 
+            <!-- TODO -->
             <codx-label
               [formModel]="dialog.formModel"
               fiedName="address"
@@ -642,6 +653,7 @@
               field="address"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.address"
             >
             </codx-input>
           </div>
@@ -661,8 +673,9 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="phone"
-              type="text"
+              type="number"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.phone"
             >
             </codx-input>
           </div>
@@ -681,6 +694,7 @@
               field="faxNo"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.faxNo"
             >
             </codx-input>
           </div>
@@ -692,16 +706,17 @@
           <div>
             <codx-label
               [formModel]="dialog.formModel"
-              fiedName=""
+              fiedName="contactName"
               default="Người đại diện"
             ></codx-label>
           </div>
           <div class="">
             <codx-input
               [formModel]="dialog.formModel"
-              field="taskName"
+              field="contactName"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.contactName"
             >
             </codx-input>
           </div>
@@ -720,6 +735,7 @@
               field="jobTitle"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.jobTitle"
             >
             </codx-input>
           </div>
@@ -741,6 +757,7 @@
               field="bankAccount"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.bankAccount"
             >
             </codx-input>
           </div>
@@ -759,6 +776,7 @@
               field="bankID"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.bankID"
             >
             </codx-input>
           </div>
@@ -791,7 +809,7 @@
               field="contractAmt"
               type="number"
               [min]="0"
-              [crrValue]="contracts?.contractName"
+              [crrValue]="contracts?.contractAmt"
               (valueChange)="valueChangeText($event)"
             >
             </codx-input>
@@ -813,6 +831,7 @@
               type="number"
               [min]="0"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.paidAmt"
             >
             </codx-input>
           </div>
@@ -833,6 +852,7 @@
               type="number"
               [min]="0"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.remainAmt"
             >
             </codx-input>
           </div>
@@ -843,16 +863,17 @@
           <div>
             <codx-label
               [formModel]="dialog.formModel"
-              fiedName="terms"
+              fiedName="pmtTermID"
               default="Điều khoản thanh toán"
             ></codx-label>
           </div>
           <div class="">
             <codx-input
               [formModel]="dialog.formModel"
-              field="terms"
+              field="pmtTermID"
               type="valuelist"
-              (valueChange)="valueChangeText($event)"
+              (valueChange)="valueChangeCombobox($event)"
+              [crrValue]="contracts?.pmtTermID"
             >
             </codx-input>
           </div>
@@ -870,8 +891,8 @@
               [formModel]="dialog.formModel"
               field="pmtMethodID"
               type="valuelist"
-              refValue="PaymentMethod"
-              (valueChange)="valueChangeText($event)"
+              (valueChange)="valueChangeCombobox($event)"
+              [crrValue]="contracts?.pmtMethodID"
             >
             </codx-input>
           </div>
@@ -892,8 +913,8 @@
               [formModel]="dialog.formModel"
               field="delTermID"
               type="valuelist"
-              refValue="PaymentMethod"
-              (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.delTermID"
+              (valueChange)="valueChangeCombobox($event)"
             >
             </codx-input>
           </div>
@@ -911,8 +932,9 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="delModeID"
-              type="text"
-              (valueChange)="valueChangeText($event)"
+              type="combobox"
+              (valueChange)="valueChangeCombobox($event)"
+              [crrValue]="contracts?.delModeID"
             >
             </codx-input>
           </div>
@@ -931,6 +953,7 @@
               field="delPrice"
               type="number"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.delPrice"
             >
             </codx-input>
           </div>
@@ -953,9 +976,8 @@
               [formModel]="dialog.formModel"
               field="currencyID"
               type="valuelist"
-              refValue="PaymentMethod"
-              [crrValue]="contracts?.effectiveFrom"
-              (valueChange)="changeValueDate($event)"
+              [crrValue]="contracts?.currencyID"
+              (valueChange)="valueChangeText($event)"
             >
             </codx-input>
           </div>
@@ -974,8 +996,8 @@
               [formModel]="dialog.formModel"
               field="exchangeRate"
               type="number"
-              [crrValue]="contracts?.effectiveTo"
-              (valueChange)="changeValueDate($event)"
+              [crrValue]="contracts?.exchangeRate"
+              (valueChange)="valueChangeText($event)"
             >
             </codx-input>
           </div>
@@ -988,8 +1010,7 @@
             <codx-label
               [formModel]="dialog.formModel"
               fiedName="paymentStatus"
-              default="Tình trạng thanh
-              toán"
+              default="Tình trạng thanh toán"
             >
             </codx-label>
           </div>
@@ -998,7 +1019,8 @@
               [formModel]="dialog.formModel"
               field="paymentStatus"
               type="valuelist"
-              refValue="CRM018"
+              (valueChange)="valueChangeCombobox($event)"
+              [crrValue]="contracts?.paymentStatus"
             >
             </codx-input>
           </div>
@@ -1017,6 +1039,8 @@
               [formModel]="dialog.formModel"
               field="taskName"
               type="datetime"
+              (valueChange)="changeValueDate($event)"
+              [crrValue]="contracts?.paymentStatus"
             >
             </codx-input>
           </div>
@@ -1038,6 +1062,8 @@
               field="delStatus"
               type="valuelist"
               refValue="CRM019"
+              (valueChange)="valueChangeCombobox($event)"
+              [crrValue]="contracts?.delStatus"
             >
             </codx-input>
           </div>
@@ -1056,6 +1082,8 @@
               [formModel]="dialog.formModel"
               field="taskName"
               type="datetime"
+              (valueChange)="changeValueDate($event)"
+              [crrValue]="contracts?.delStatus"
             >
             </codx-input>
           </div>

@@ -582,7 +582,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
         if (res && res.update) {
-          debugger
           this.dpService.upDataApprovalStep(
             this.listStepApprover,
             this.listStepApproverDelete
