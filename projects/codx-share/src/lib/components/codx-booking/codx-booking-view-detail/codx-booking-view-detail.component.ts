@@ -92,7 +92,7 @@ export class CodxBookingViewDetailComponent
     super(injector);
     this.routerRecID = this.router.snapshot.params['id'];
     if (this.routerRecID != null) {
-      this.hideFooter = true;
+      //this.hideFooter = true;
     }
   }
 
