@@ -117,17 +117,7 @@
                     </div>
                   </ng-container>
                 </div>
-                <div class="d-flex flex-row align-items-start">
-                  <codx-vll
-                    [name]="vllStatus"
-                    [field]="'Status'"
-                    [value]="itemSelected?.status"
-                    [showText]="true"
-                    [showBgColor]="true"
-                    class="badge badge-light badge-md fs-7"
-                  >
-                  </codx-vll>
-                </div>
+             
               </div>
             </div>
           </div>
@@ -153,7 +143,7 @@
         [allowSorting]="true"
         [dataSource]="dataSource"
         [height]="gridHeight"
-        [autoLoad]="true"
+        [autoLoad]="false"
         rowHeight="40"
         predicates="TransID=@0"
         [dataValues]="itemSelected.recID"

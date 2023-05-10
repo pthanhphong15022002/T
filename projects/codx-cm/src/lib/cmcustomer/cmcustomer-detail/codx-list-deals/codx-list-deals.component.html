@@ -1,29 +1,34 @@
-<div *ngIf="lstDeals != null && lstDeals.length > 0">
-  <div *ngFor="let item of lstDeals">
-    <ng-container
-      [ngTemplateOutlet]="deal"
-      [ngTemplateOutletContext]="{ $implicit: item }"
-    >
-    </ng-container>
+<ng-container *ngIf="loaded">
+  <div *ngIf="lstDeals != null && lstDeals.length > 0; else noData">
+    <div *ngFor="let item of lstDeals">
+      <ng-container
+        [ngTemplateOutlet]="deal"
+        [ngTemplateOutletContext]="{ $implicit: item }"
+      >
+      </ng-container>
+    </div>
   </div>
-</div>
-<div class="empty-data" *ngIf="lstDeals == null || lstDeals.length == 0">
-  <div class="container h-100">
-    <div class="list-empty card card-flush h-100">
-      <div class="d-flex flex-column flex-center justify-content-center">
-        <img
-          src="../assets/themes/sys/default/img/DataEmpty.svg"
-          class="w-200px"
-        />
-        <div class="fs-5 text-dark fw-bold mt-2 text-center">
-          {{ "SYS011" | mssg | async }}
+</ng-container>
+<ng-template #noData>
+  <div class="empty-data" *ngIf="lstDeals == null || lstDeals.length == 0">
+    <div class="container h-100">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+          />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            {{ "SYS011" | mssg | async }}
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</ng-template>
+
 <ng-template #deal let-data>
-  <div class="d-flex justify-content-between">
+  <div class="d-flex justify-content-between mb-3">
     <div class="d-flex flex-column">
       <div
         class="fw-bold fs-6 text-dark codx-text-overflow-1line"
@@ -65,12 +70,38 @@
     </div>
     <div class="d-flex align-items-top">
       <div class="d-flex flex-column">
-        <div class="badge badge-primary mb-1"><span [innerHTML]="getStep(data?.stepID)?.stepName"></span></div>
+        <div
+          class="badge badge-sm d-flex align-items-center mb-1"
+          [ngStyle]="{
+            'background-color':
+              getStep(data?.stepID)['backgroundColor'] != null
+                ? getStep(data?.stepID)['backgroundColor']
+                : '#0000ff'
+          }"
+        >
+          <span
+            [ngClass]="getStep(data?.stepID)['icon']"
+            [ngStyle]="{ color: getStep(data?.stepID)['iconColor'] }"
+            class="me-1 icon-14"
+          ></span>
+          <span
+            [ngStyle]="{
+              color:
+                getStep(data?.stepID)['textColor'] != null
+                  ? getStep(data?.stepID)['textColor']
+                  : '#ffffff'
+            }"
+            [innerHTML]="getStep(data?.stepID)?.stepName"
+          ></span>
+        </div>
         <div class="ms-5">
           <span class="icon-money icon-16 me-1"></span>
-          <span class="text-gray-500 my-2"  [innerHTML]="
-          data.endDate | formatvalue : formModel : 'EndDate' | async
-        "></span>
+          <span
+            class="text-gray-500 my-2"
+            [innerHTML]="
+              data.endDate | formatvalue : formModel : 'EndDate' | async
+            "
+          ></span>
         </div>
       </div>
       <div class="ms-3" *ngIf="data.owner">

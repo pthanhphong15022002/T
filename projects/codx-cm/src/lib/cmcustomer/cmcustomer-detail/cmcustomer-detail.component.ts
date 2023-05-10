@@ -88,6 +88,7 @@ export class CmcustomerDetailComponent implements OnInit {
   contactPerson = new CM_Contacts();
   viewTag = '';
   nameCbxCM = '';
+  loaded: boolean;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -122,6 +123,7 @@ export class CmcustomerDetailComponent implements OnInit {
 
   getOneCustomerDetail(id, funcID) {
     this.viewTag = '';
+    this.loaded = false;
     this.cmSv.getOneCustomer(id, funcID).subscribe((res) => {
       if (res) {
         this.dataSelected = res;
@@ -131,6 +133,7 @@ export class CmcustomerDetailComponent implements OnInit {
         this.getListAddress(this.entityName, this.dataSelected?.recID);
         this.listTab(this.funcID);
       }
+      this.loaded = true;
     });
   }
 
