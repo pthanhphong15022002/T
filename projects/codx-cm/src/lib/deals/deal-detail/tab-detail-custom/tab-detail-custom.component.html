@@ -157,51 +157,28 @@
 </ng-template>
 
 <ng-template #contact>
-  <div class="row mb-2">
-    <div class="col-4 d-flex">
-      <div class="me-3">
-        <codx-img
-          [objectId]="data.recID"
-          [objectName]="data?.processName"
-          objectType="AD_Users"
-          [width]="35"
-        >
-        </codx-img>
-      </div>
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="d-flex justify-content-between">
-          <div class="d-flex flex-column">
-            <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
-              Trần Quốc Hoàn
-            </div>
-            <div class="me-4">
-              <span class="text-gray-900"> Trưởng phòng mua hàng</span>
-            </div>
+  <div class="empty-data" *ngIf="tmpDataSelect == null">
+    <div class="container h-100">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+          />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            {{ "SYS011" | mssg | async }}
           </div>
         </div>
       </div>
     </div>
-    <div class="col-4 d-flex flex-column">
-      <div class="mb-1">
-        <span class="icon-phone_android text-primary icon-16 me-1"></span>
-        <span class="text-gray-900">0702411141</span>
-      </div>
-      <div>
-        <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
-        <span class="text-gray-900">tdnphuck42@gmail.com</span>
-      </div>
-    </div>
-    <div class="col-4 d-flex flex-column">
-      <div class="mb-1">Liên hệ đặt hàng</div>
-    </div>
   </div>
-
-  <div class="mb-2 mt-6">
-    <p class="bg-secondary text-white bg-opacity-25 p-2">
-      <button class="custom-icon-button" (click)="addContact()">
-        <i class="icons icon-group_add icon-24"> </i>
-      </button>
-    </p>
+  <div *ngIf="tmpDataSelect">
+    <codx-list-contacts
+      [funcID]="'CM0101'"
+      [objectID]="tmpDataSelect?.recID"
+      [objectName]="tmpDataSelect?.customerName"
+      [hidenMF]="true"
+    ></codx-list-contacts>
   </div>
 </ng-template>
 

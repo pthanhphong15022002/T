@@ -15,12 +15,12 @@
           <div></div>
           <div class="fs-2 ms-auto">250.000.000</div>
         </div>
-        <div class="d-flex justify-content-start pb-3">
+        <div class="d-flex justify-content-start pb-3" *ngIf="tmpDataSelect && tmpDataSelect?.customerName">
           <div>
             <codx-label default="Khách hàng:" class="fs-6"></codx-label>
           </div>
           <div class="fs-6">
-            {{tmpDataSelect.customerName}}
+            {{tmpDataSelect?.customerName}}
           </div>
           <div class="fs-6 ms-auto">
             <div class="d-flex flex-row">
@@ -151,7 +151,7 @@
   </codx-detail-tmp>
 </ng-container>
 <ng-template #body let-data>
-  <codx-tab-deal-detail [tabClicked]="nameDetail" [data]="dataSelected" ></codx-tab-deal-detail>
+  <codx-tab-deal-detail [tabClicked]="nameDetail" [data]="dataSelected" [tmpDataSelect]="tmpDataSelect"></codx-tab-deal-detail>
 </ng-template>
 <ng-template #tabs let-data>
   <codx-tabs
