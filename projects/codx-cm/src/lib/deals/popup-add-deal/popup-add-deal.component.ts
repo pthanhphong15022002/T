@@ -54,7 +54,6 @@ export class PopupAddDealComponent
   tabContent: any[] = [];
   listCbxProcess: any[] = [];
   listCbxCampaigns: any[] = [];
-  listCbxCustomers: any[] = [];
   listCbxChannels: any[] = [];
   listMemorySteps: any[] = [];
   listMemoryProcess: any[] = [];
@@ -70,7 +69,6 @@ export class PopupAddDealComponent
   readonly typeForDeal: string = '1';
   readonly fieldCbxProcess = { text: 'processName', value: 'recID' };
   readonly fieldCbxCampaigns = { text: 'campaignName', value: 'recID' };
-  // readonly fieldCbxCustomers = { text: 'customerName', value: 'recID' };
   readonly fieldCbxParticipants =  { text: 'userName', value: 'userID' };
   readonly fieldCbxChannels = { text: 'channelName', value: 'recID' };
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
@@ -194,6 +192,7 @@ export class PopupAddDealComponent
     this.convertDataInstance(this.deal,this.instance);
     this.insertInstance();
    // this.insertDeal();
+   this.updateDateDeal(this.instance,this.deal);
     this.onAdd();
 
 
@@ -289,9 +288,8 @@ export class PopupAddDealComponent
     try {
       await this.getGridView(this.formModel);
       await this.getListProcess(this.typeForDeal);
-      await this.getListCampaigns();
-      await this.getListCustomers();
-      await this.getListChannels();
+      // await this.getListCampaigns();
+      // await this.getListChannels();
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
@@ -314,30 +312,23 @@ export class PopupAddDealComponent
       }
     });
   }
-  async getListCampaigns() {
-    this.codxCmService.getListCbxCampaigns().subscribe((res) => {
-      if (res && res.length > 0) {
-        this.listCbxCampaigns = res[0];
-        this.changeDetectorRef.detectChanges();
-      }
-    });
-  }
-  async getListCustomers() {
-    this.codxCmService.getListCustomer().subscribe((res) => {
-      if (res && res.length > 0) {
-        this.listCbxCustomers = res[0];
-        this.changeDetectorRef.detectChanges();
-      }
-    });
-  }
-  async getListChannels() {
-    this.codxCmService.getListChannels().subscribe((res) => {
-      if (res && res.length > 0) {
-        this.listCbxChannels = res[0];
-        this.changeDetectorRef.detectChanges();
-      }
-    });
-  }
+  // Đợi chị khanh thiết lập xong
+  // async getListCampaigns() {
+  //   this.codxCmService.getListCbxCampaigns().subscribe((res) => {
+  //     if (res && res.length > 0) {
+  //       this.listCbxCampaigns = res[0];
+  //       this.changeDetectorRef.detectChanges();
+  //     }
+  //   });
+  // }
+  // async getListChannels() {
+  //   this.codxCmService.getListChannels().subscribe((res) => {
+  //     if (res && res.length > 0) {
+  //       this.listCbxChannels = res[0];
+  //       this.changeDetectorRef.detectChanges();
+  //     }
+  //   });
+  // }
 
   async getListInstanceSteps(processId: any) {
     this.codxCmService.getInstanceSteps(processId).subscribe(async (res) => {
@@ -369,7 +360,6 @@ export class PopupAddDealComponent
     });
   }
   insertDeal() {
-    this.updateDateDeal(this.instance,this.deal);
     //  this.onAdd();
     this.codxCmService.AddDeal(this.deal).subscribe((res) => {
       if (res) {

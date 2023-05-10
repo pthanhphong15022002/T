@@ -21,7 +21,6 @@ export class TabDetailCustomComponent
 {
   @Input() tabClicked: any;
   @Input() data: any;
-  @Input() tmpDataSelect: any;
   titleAction: string = '';
   listStep = [];
   isUpdate = true; //xư lý cho edit trung tuy chinh ko
