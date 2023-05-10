@@ -52,12 +52,12 @@ export class TabDetailCustomComponent
     this.getListInstanceStep();
   }
 
-  getListInstanceStep() {
-    let instanceID = this.data?.processID;
-    if (instanceID) {
-      this.cmService.getStepInstance([instanceID]).subscribe((res) => {
-        this.listStep = res;
-      });
+  getListInstanceStep(){
+    let instanceID = this.data?.refID;
+    if(instanceID){
+      this.cmService.getStepInstance([instanceID]).subscribe(res =>{
+        this.listStep = res;    
+      })
     }
   }
 

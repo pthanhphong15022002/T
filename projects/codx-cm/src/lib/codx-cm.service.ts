@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService, CacheService } from 'codx-core';
+import { ApiHttpService, CacheService, NotificationsService } from 'codx-core';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxCmService {
-  constructor(private api: ApiHttpService, private cache: CacheService) {}
+  constructor(private api: ApiHttpService, private cache: CacheService, private notification: NotificationsService) {}
 
   quickAddContacts(data) {
     return this.api.exec<any>(
@@ -203,6 +203,30 @@ export class CodxCmService {
 
     return listTmp;
   }
+
+  checkValidate(gridViewSetup, data) {
+    var keygrid = Object.keys(gridViewSetup);
+    var keymodel = Object.keys(data);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (gridViewSetup[keygrid[index]].isRequire == true) {
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              data[keymodel[i]] == null ||
+              String(data[keymodel[i]]).match(/^ *$/) !== null
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + gridViewSetup[keygrid[index]].headerText + '"'
+              );
+              return;
+            }
+          }
+        }
+      }
+    }
+  }
   // #region API OF BAO
 
   // Combox
@@ -213,6 +237,24 @@ export class CodxCmService {
       'ProcessesBusiness',
       'GetListCbxProcessesAsync',
       data
+    );
+  }
+
+  getInstancesByListID(lstIns) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetListInstanceByLstIDAsync',
+      [lstIns]
+    );
+  }
+
+  getStepsByListID(lstStepIDs, lstInsID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetListStepsByLstIDAsync',
+      [lstStepIDs, lstInsID]
     );
   }
 

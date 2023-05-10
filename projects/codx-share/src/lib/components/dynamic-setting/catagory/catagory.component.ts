@@ -588,6 +588,7 @@ export class CatagoryComponent implements OnInit {
 
   valueChange(evt: any, data: any, autoDefault: any = null) {
     var fieldName = data.fieldName;
+    var transType = data.transType;
     var field = evt.field;
     var value = evt.data;
     if (autoDefault) {
@@ -670,7 +671,9 @@ export class CatagoryComponent implements OnInit {
             return;
           }
         }
-        var dt = this.settingValue.find((x) => x.category == this.category);
+        var dt = this.settingValue.find(
+          (x) => x.category == this.category && x.transType == transType
+        );
         if (this.category == '1' || this.category == '4') {
           if (this.category == '4' && Array.isArray(this.dataValue)) {
             let dtvalue = this.dataValue.find(
@@ -789,9 +792,10 @@ export class CatagoryComponent implements OnInit {
                       dt = res;
                       dt.dataValue = JSON.stringify(this.dataValue);
                       var setting = this.setting[0];
-                      dt.formName = setting.formName;
-                      dt.category = setting.category;
-                      dt.refModule = setting.moduleSales;
+                      dt.formName = data.formName;
+                      dt.category = data.category;
+                      dt.refModule = data.moduleSales;
+                      dt.transType = data.transType;
                       this.settingValue.push(dt);
                       this.api
                         .execAction('SYS_SettingValues', [dt], 'SaveAsync')

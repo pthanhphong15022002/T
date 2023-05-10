@@ -252,7 +252,7 @@ export class InstanceDetailComponent implements OnInit {
     timelineUnitSize: 100,
   };
   //end gan
-
+  loaded: boolean;
   constructor(
     private callfc: CallFuncService,
     private dpSv: CodxDpService,
@@ -304,16 +304,18 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.loaded = false;
     if (changes['dataSelect']) {
       if (changes['dataSelect'].currentValue?.recID != null) {
         this.id = changes['dataSelect'].currentValue.recID;
         this.loadChangeData() ;
        // this.dataSelect = changes['dataSelect'].currentValue
       }
-    } 
+      this.loaded = true;
+    }
   }
 
-  loadChangeData(){   
+  loadChangeData(){
     this.instanceStatus = this.dataSelect.status;
     this.GetStepsByInstanceIDAsync();
     this.getDataGanttChart(
