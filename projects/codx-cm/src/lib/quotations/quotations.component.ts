@@ -152,8 +152,8 @@ export class QuotationsComponent extends UIComponent {
           headerText: grvSetup[key].headerText,
           width: grvSetup[key].width,
           template: template,
-          textAlign: 'center',
-        };
+          // textAlign: 'center',
+        };  
       } else {
         colums = {
           field: field,
