@@ -248,7 +248,6 @@ export class UserComponent extends UIComponent {
         option.Width = 'Auto';
         let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
         dialog.closed.subscribe((x) => {
-          debugger
           if (!x?.event) this.view.dataService.clear();
           if (x.event) {
             x.event.modifiedOn = new Date();

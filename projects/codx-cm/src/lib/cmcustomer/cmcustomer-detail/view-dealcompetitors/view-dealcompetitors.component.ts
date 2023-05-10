@@ -21,7 +21,7 @@ export class ViewDealcompetitorsComponent implements OnInit {
     gridViewName: 'grvCMDealsCompetitors',
     entityName: 'CM_DealsCompetitors',
   };
-
+  loaded: boolean;
   lstStep = [];
   constructor(private cmSv: CodxCmService) {}
 
@@ -30,6 +30,7 @@ export class ViewDealcompetitorsComponent implements OnInit {
   }
 
   getListDealAndDealCompetitor(competitorID) {
+    this.loaded = false;
     this.cmSv.getListDealAndDealCompetitor(competitorID).subscribe((res) => {
       if (res && res.length > 0) {
         this.lstDealCompetitor = res;
@@ -38,22 +39,23 @@ export class ViewDealcompetitorsComponent implements OnInit {
         if (lstRef != null && lstRef.length > 0)
           this.getStepsByListID(lstSteps, lstRef);
       }
+      this.loaded = true;
     });
   }
 
-  getStepsByListID(lstStepID, lstIns){
-    this.cmSv.getStepsByListID(lstStepID, lstIns).subscribe(res => {
-      if(res && res.length > 0){
+  getStepsByListID(lstStepID, lstIns) {
+    this.cmSv.getStepsByListID(lstStepID, lstIns).subscribe((res) => {
+      if (res && res.length > 0) {
         this.lstStep = res;
       }
-    })
+    });
   }
 
-  getStep(stepID){
-    if(this.lstStep != null && this.lstStep.length > 0){
-      var step = this.lstStep.find(x => x.stepID == stepID);
+  getStep(stepID) {
+    if (this.lstStep != null && this.lstStep.length > 0) {
+      var step = this.lstStep.find((x) => x.stepID == stepID);
       return step;
-    }else{
+    } else {
       return null;
     }
   }
