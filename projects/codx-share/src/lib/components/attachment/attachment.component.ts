@@ -911,7 +911,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       } else if (total == 1) {
         this.addPermissionA();
         //return this.addFileLargeLong(this.fileUploadList[0]);
-        return this.addFileObservable(this.fileUploadList[0]);
+        return this.addFileObservable(data[0]);
         // this.atSV.fileList.next(this.fileUploadList);
       } else {
         this.notificationsService.notify(this.title2);
