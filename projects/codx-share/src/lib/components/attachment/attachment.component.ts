@@ -1177,7 +1177,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
                 }
               }
             });
-        } else if (total == 1) {
+        } 
+        else if (total == 1) {
           
           if(!this.fileUploadList[0]) 
           {
@@ -1186,9 +1187,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
             return null;
           }
           
-          this.fileUploadList[0].description = this.description[0];
-          this.fileUploadList[0].data = '';
-          this.addFileLargeLong(this.fileUploadList[0]);
+          data[0].description = this.description[0];
+          data[0].data = '';
+          this.addFileLargeLong(data[0]);
           this.lstRawFile = [];
           //this.addFile(this.fileUploadList[0]);
     
