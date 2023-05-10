@@ -35,7 +35,7 @@ export class DealDetailComponent  implements OnInit {
 
   treeTask = [];
 
-  nameDetail = 'Information';
+  nameDetail = '';
 
   tabDetail = [
   ]
@@ -43,8 +43,8 @@ export class DealDetailComponent  implements OnInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {
 
-    this.nameDetail = 'Information'
-    this.listTab(this.funcID);
+    // this.nameDetail = 'Information'
+    // this.listTab(this.funcID);
   }
 
   ngOnInit(): void {
@@ -61,6 +61,8 @@ export class DealDetailComponent  implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.nameDetail = 'Information'
+    this.listTab(this.funcID);
   }
 
   listTab(funcID){
