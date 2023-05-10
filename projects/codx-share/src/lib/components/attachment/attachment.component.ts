@@ -845,7 +845,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       }
       let countFile = this.fileUploadList.length;
       if (total > 1) {
-        for(var i = 0 ; i< this.fileUploadList.length ; i++)
+        for(var i = 0 ; i< data.length ; i++)
         {
           data[i].source = null;
           data[i].item = null
