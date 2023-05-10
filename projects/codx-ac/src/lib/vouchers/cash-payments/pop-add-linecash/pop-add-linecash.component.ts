@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Injector,
   OnInit,
   Optional,
@@ -29,7 +30,8 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cbxAccountID') cbxAccountID: CodxInputComponent;
   @ViewChild('cbxOffsetAcctID') cbxOffsetAcctID: CodxInputComponent;
-  dialog!: DialogRef;
+  @ViewChild('cardbody') cardbody: ElementRef;
+  dialog!: any;
   headerText: string;
   formModel: FormModel;
   gridViewSetup: any;
@@ -39,6 +41,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   cashpayment: CashPayment;
   lockFields: any;
   journal : any;
+  baseCurr:any;
   objectcashpaymentline: Array<CashPaymentLine> = [];
   constructor(
     private inject: Injector,
@@ -68,14 +71,78 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.loadCompanySetting();
+  }
   ngAfterViewInit() {
+    this.loadInit();
+  }
+  //#endregion
+
+  //#region Event
+  lineChanged(e: any) {
+    this.cashpaymentline[e.field] = e.data;
+    const field = [
+      'accountid',
+      'offsetacctid',
+      'objecttype',
+      'objectid',
+      'dr',
+      'cr',
+      'dr2',
+      'cr2',
+      'reasonid',
+      'referenceno',
+    ];
+    if (field.includes(e.field.toLowerCase())) {
+      this.api
+        .exec('AC', 'CashPaymentsLinesBusiness', 'ValueChangedAsync', [
+          this.cashpayment,
+          this.cashpaymentline,
+          e.field,
+          e.data?.isAddNew,
+        ])
+        .subscribe((res: any) => {
+          if (res && res.line)
+            this.cashpaymentline = res.line;
+        });
+    }
+
+    if (e.field.toLowerCase() == 'sublgtype' && e.value) {
+      if (e.value === '3') {
+        //Set lock field
+      } else {
+        this.api
+          .exec<any>(
+            'AC',
+            'AC',
+            'CashPaymentsLinesBusiness',
+            'SetLockFieldAsync'
+          )
+          .subscribe((res) => {
+            if (res) {
+              //Set lock field
+            }
+          });
+      }
+    }
+  }
+  //#endregion
+
+  //#region Function
+  loadInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashpaymentline);
-    if (this.journal?.drAcctControl === '0') {
-      this.cbxAccountID.crrValue = this.journal?.drAcctID;
+    this.dialog.dialog.properties.height = 'auto';
+    if (this.journal?.drAcctControl === '1') {
+      (
+        this.cbxAccountID.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(
+        ['AccountID=@0'],
+        [this.journal?.drAcctID]
+      );
     }
-    if (['1', '2'].includes(this.journal?.drAcctControl)) {
+    if (this.journal?.drAcctControl === '2') {
       (
         this.cbxAccountID.ComponentCurrent as CodxComboboxComponent
       ).dataService.setPredicates(
@@ -83,27 +150,25 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
         [`[${this.journal?.drAcctID}]`]
       );
     }
+    if (this.journal?.crAcctControl === '1') {
+      (
+        this.cbxOffsetAcctID.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(
+        ['AccountID=@0'],
+        [this.journal?.crAcctID]
+      );
+    }
+    if (this.journal?.crAcctControl === '2') {
+      (
+        this.cbxOffsetAcctID.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(
+        ['@0.Contains(AccountID)'],
+        [`[${this.journal?.crAcctID}]`]
+      );
+    }
     this.dt.detectChanges();
-    // this.journalService.setAccountCbxDataSourceByJournal(
-    //   this.dialogData.data.journal,
-    //   this.cbxAccountID,
-    //   this.cbxOffsetAcctID
-    // );
 
-    // this.form.formGroup.patchValue({
-    //   accountID: this.cbxAccountID.crrValue,
-    //   offsetAcctID: this.cbxOffsetAcctID.crrValue,
-    // });
   }
-  //#endregion
-
-  //#region Event
-  valueChange(e: any) {
-    this.cashpaymentline[e.field] = e.data;
-  }
-  //#endregion
-
-  //#region Function
   close() {
     this.dialog.close();
   }
@@ -154,6 +219,13 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
       return false;
     }
   }
+  loadCompanySetting(){
+    this.api
+    .exec<any>('AC', 'CommonBusiness', 'GetCompanySettings')
+    .subscribe((res) => {
+      this.baseCurr = res.baseCurr;
+    });
+  }
   //#endregion
 
   //#region Method
@@ -193,11 +265,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
             )
             .subscribe((res) => {
               if (res) {
-                window.localStorage.setItem(
-                  'dataline',
-                  JSON.stringify(this.cashpaymentline)
-                );
-                this.dialog.close();
+                this.dialog.close({data:this.cashpaymentline});
               }
             });
           break;
@@ -210,11 +278,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
             )
             .subscribe((res) => {
               if (res) {
-                window.localStorage.setItem(
-                  'dataline',
-                  JSON.stringify(this.cashpaymentline)
-                );
-                this.dialog.close();
+                this.dialog.close({data:this.cashpaymentline});
               }
             });
           break;

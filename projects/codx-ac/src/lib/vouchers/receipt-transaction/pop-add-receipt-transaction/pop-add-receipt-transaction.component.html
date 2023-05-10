@@ -1,0 +1,261 @@
+<codx-form #form [subHeader]="subHeader" [body]="body" [footer]="footer" [formModel]="dialog.formModel"
+  [dialog]="dialog" [data]="inventoryJournal" [customToolbar]="subToolbar" [openMore]="false">
+</codx-form>
+
+<!-- Start: Sub header -->
+<ng-template #subHeader>
+  <ng-container *ngIf="form?.formGroup"> </ng-container>
+</ng-template>
+<!-- End: Sub header -->
+
+<!-- Start: Body -->
+<ng-template #body>
+  <div class="card-add mt-5" #cardbodyRef>
+    <ejs-tab #inventoryRef>
+      <e-tabitems>
+        <!-- Tab thông tin chứng từ -->
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2">
+              <i class="icon-info icon-20 me-2"></i>
+              <span [innerHTML]="'0' | vll : 'AC071' : 'text' | async" class="fw-bold fs-5-sm text-uppercase">
+              </span>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+    <ejs-tab>
+      <e-tabitems #tabObj>
+        <!-- Tab chi tiết -->
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2">
+              <i class="icon-format_list_numbered icon-20 me-2"></i>
+              <span [innerHTML]="'1' | vll : 'AC070' : 'text' | async" class="fw-bold fs-5-sm text-uppercase">
+              </span>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="tabLine"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+  </div>
+</ng-template>
+<!-- End: Body -->
+
+<!-- Start: Tab Basic -->
+<ng-template #tabBasic>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="row mt-5">
+      <div class="col-7 ac-left">
+        <div class="mw-750px">
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <!-- Mã Kho -->
+                <div class="form-group">
+                  <codx-label fiedName="WarehouseID" [formModel]="form.formModel">
+                  </codx-label>
+                  <codx-input [Group]="form.formGroup" field="warehouseID" [formModel]="form.formModel"
+                    (valueChange)="valueChange($event)">
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <!-- Lý do -->
+                <div class="form-group">
+                  <codx-label fiedName="ReasonID" [formModel]="form.formModel">
+                  </codx-label>
+                  <codx-input [Group]="form.formGroup" field="reasonID" [formModel]="form.formModel"
+                    (valueChange)="valueChange($event)">
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="form-group">
+                <!-- Đối tượng -->
+                <div class="form-group">
+                  <codx-label fiedName="ObjectID" [formModel]="form.formModel">
+                  </codx-label>
+                  <codx-input [Group]="form.formGroup" field="objectID" [formModel]="form.formModel"
+                    (valueChange)="valueChange($event)">
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div #noteRef class="form-group">
+              <codx-label fiedName="Memo" [formModel]="form.formModel">
+              </codx-label>
+              <codx-input [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
+                (valueChange)="valueChange($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-2 ac-bettween"></div>
+      <div class="col-3 ac-right d-flex justify-content-end">
+        <div class="d-flex flex-column mw-300px">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="voucherDate"
+                  (valueChange)="valueChange($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
+                  [disabled]="journal?.voucherNoRule != '0'" [placeholder]="
+                    journal?.voucherNoRule == '2'
+                      ? 'Số chứng từ được tạo tự động'
+                      : ''
+                  " (valueChange)="valueChange($event)">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<!-- End: Tab Basic -->
+
+<!-- Start:CashPaymentLine -->
+<ng-template #tabLine>
+  <ng-container>
+    <div class="h-100 w-100 border">
+      <codx-gridview-v2 #gridInventoryJournalLine [formName]="fmInventoryJournalLines.formName"
+        [gridViewName]="fmInventoryJournalLines.gridViewName" [entityName]="fmInventoryJournalLines.entityName"
+        [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
+        [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="inventoryJournalLines" service="IV"
+        [height]="gridHeight"  [autoLoad]="false" rowHeight="30" (cellChanged)="lineChanged($event)"
+        (created)="gridCreated($event, gridInventoryJournalLine)"></codx-gridview-v2>
+    </div>
+    <div class="d-flex flex-wrap mt-6">
+      <div class="d-flex align-items-center mb-1 bg-light me-5">
+        <span class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 me-2 bg-primary"></span>
+        <span class="text-dark fw-bold py-1 px-2">Tổng cộng: {{ total }}</span>
+      </div>
+    </div>
+    <div  class="container w-90 h-90">
+      <div style="background: none" class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center mt-2">
+          <div [ngbTooltip]="popContent" placement="bottom" style="width: 40px !important;height: 40px !important;"
+            class="btn btn-icon btn-bg btn-light-primary btn-circle me-4" (click)="addRow()">
+            <i class="icon-i-file-earmark-plus icon-18"></i>
+          </div>
+          <ng-template #popContent>
+            <span #popContent [ngbTooltip]="popContent" class="fs-6 fw-bold">Thêm dòng</span>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<!-- End: CashPaymentLine -->
+
+<!-- Start: More function -->
+<ng-template #morefunction let-data>
+  <span ngbTooltip="Xóa" placement="bottom" type="button" class="btn btn-icon btn-light-danger ms-1"
+    (click)="deleteRow(data)">
+    <i class="icon-delete icon-16"></i>
+  </span>
+</ng-template>
+<!-- End: More function -->
+
+<!-- Start: Footer -->
+<ng-template #footer>
+  <div class="codx-detail-footer dialog-footer" *ngIf="inventoryJournal">
+    <div class="btn btn-white btn-icon tab-action">
+      <span class="icon-unfold_more icon-20"></span>
+    </div>
+    <ng-container *ngTemplateOutlet="tabRef"></ng-container>
+  </div>
+</ng-template>
+<!-- End: Footer -->
+
+<!-- Start: Tab Referen -->
+<ng-template #tabRef>
+  <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="inventoryJournal.recID"
+    [funcID]="form.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+</ng-template>
+<!-- End: Tab Referen -->
+
+<!-- Start: Sub toolbar -->
+<ng-template #subToolbar>
+  <div class="w-100">
+    <div class="d-flex align-items-center justify-content-between pt-3">
+      <div class="d-flex justify-content-start align-items-center me-2">
+        <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
+          <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
+          <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
+        </div>
+        <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
+          {{ headerText }}
+        </div>
+        <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
+          <codx-input class="badge badge-danger" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
+          </codx-input>
+        </div>
+      </div>
+      <div class="d-flex align-items-center me-3">
+        <div *ngIf="formType != 'edit'" class="ms-2">
+          <button type="button" class="btn btn-sm btn-light-primary" (click)="onSaveAdd()" >
+            <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lưu & thêm"></codx-label>
+          </button>
+        </div>
+        <div class="ms-2 me-2">
+          <button type="button" class="btn btn-sm btn-primary" style="min-width: 60px" (click)="onSave()">
+            <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+          </button>
+        </div>
+        <div class="ms-2">
+          <div class="btn btn-icon btn-light-primary btn-circle bg" (click)="close()">
+            <i class="icon-close icon-18"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- End: Sub toolbar -->

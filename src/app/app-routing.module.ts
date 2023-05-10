@@ -85,27 +85,11 @@ var childAuthRoutes: Routes = [
       ),
   },
   {
-    path: 'ep4',
+    path: 'co',
     canActivate: [AuthGuard],
     loadChildren: () =>
-      import('projects/codx-ep/src/lib/room/codx-ep4.module').then(
-        (m) => m.CodxEp4Module
-      ),
-  },
-  {
-    path: 'ep7',
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('projects/codx-ep/src/lib/car/codx-ep7.module').then(
-        (m) => m.CodxEp7Module
-      ),
-  },
-  {
-    path: 'ep8',
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('projects/codx-ep/src/lib/stationery/codx-ep8.module').then(
-        (m) => m.CodxEp8Module
+      import('projects/codx-co/src/lib/codx-co.module').then(
+        (m) => m.CodxCoModule
       ),
   },
   {

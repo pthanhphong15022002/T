@@ -20,10 +20,10 @@
         >
         </codx-label>
         <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
+          type="text"
           field="dealID"
           [crrValue]="deal?.dealID"
+          [disabled]="true"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -97,21 +97,14 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-        <!-- <codx-input
+        <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="customerID"
-          [crrValue]="deal?.customerID"
+          [refValue]="'CMCustomers'"
           (valueChange)="valueChange($event)"
         >
-        </codx-input> -->
-        <ejs-combobox
-        id="recID"
-        [dataSource]="listCbxCustomers"
-        [fields]="fieldCbxCustomers"
-        (valueChange)="cbxChange($event,'customerID')"
-        [value]="deal?.customerID"
-      ></ejs-combobox>
+        </codx-input>
 
 
       </div>
@@ -186,14 +179,16 @@
         >
         </codx-label>
 
-    <codx-popup-participants
-      [lstParticipants]="lstParticipants"
+    <!-- <codx-popup-participants
+      [lstParticipants]="listParticipants"
       [dialog]="dialog"
       [isType]="'I'"
       (eventUser)="eventUser($event)"
       [owner]="owner"
-    ></codx-popup-participants>
-
+    ></codx-popup-participants> -->
+    <ejs-combobox [dataSource]="listParticipants"
+    (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
+    [allowFiltering]='true' [value]="owner"></ejs-combobox>
 
       </div>
     </div>
@@ -227,10 +222,11 @@
         >
         </codx-label>
         <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        fied="endDate"
-        (valueChange)="valueChange($event)"
+        type="datetime"
+        field="endDate"
+        format="d"
+        [crrValue]="deal?.endDate"
+        (valueChange)="valueChangeDate($event)"
       >
       </codx-input>
       </div>
@@ -312,9 +308,6 @@
     </button>
   </div>
 </ng-template>
-
-
-
 
 <ng-template #tabCustomFieldDetail let-form>
   <ng-container *ngIf="listInstanceSteps?.length > 0">

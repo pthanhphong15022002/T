@@ -17,7 +17,6 @@ import {
   ImageViewerComponent,
   FormModel,
   RequestOption,
-  CRUDService,
   UIComponent,
   DialogModel,
   NotificationsService,
@@ -31,8 +30,6 @@ import { AD_Roles } from '../../models/AD_Roles.models';
 import { AD_UserRoles } from '../../models/AD_UserRoles.models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
-import { Pos } from '@syncfusion/ej2-angular-progressbar';
-import { Post } from '@shared/models/post';
 
 @Component({
   selector: 'lib-add-user',
@@ -255,7 +252,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
     if (!this.isSaved) {
       // if (this.countOpenPopRoles == 1) this.addUserTemp();
-      this.saveUser(false, item);
+      this.saveUser(false, false, false, item);
     } else {
       this.openPopupRoles(item);
     }
@@ -323,7 +320,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
     return true;
   }
 
-  saveUser(closeAddPopup: boolean, item?: any) {
+  saveUser(
+    closeAddPopup: boolean,
+    addToGroup: boolean,
+    isOverrideRoles: boolean,
+    item?: any
+  ) {
     // if (!this.checkBtnAdd) {
     let formGroup = this.form.formGroup.controls;
     if (!this.adUser.buid) formGroup.buid.setValue(null);
@@ -337,23 +339,32 @@ export class AddUserComponent extends UIComponent implements OnInit {
         .save((opt: any) => this.beforeSave(opt), 0, '', '', false)
         .subscribe((res) => {
           if (!res?.error) {
+            if (!this.isSaved) {
+              this.getHTMLFirstPost(this.adUser);
+              this.adService.createFirstPost(this.tmpPost).subscribe();
+              this.imageUpload
+                .updateFileDirectReload(res.save.userID)
+                .subscribe((result) => {
+                  if (result) {
+                    this.loadData.emit();
+                  }
+                });
+              this.dataAfterSave = res.save;
+            }
             this.isSaved = true;
-            this.getHTMLFirstPost(this.adUser);
-            this.adService.createFirstPost(this.tmpPost).subscribe();
-            this.imageUpload
-              .updateFileDirectReload(res.save.userID)
-              .subscribe((result) => {
-                if (result) {
-                  this.loadData.emit();
-                }
-              });
-            this.dataAfterSave = res.save;
 
             if (closeAddPopup) {
               this.dialog.close(this.adUser);
             } else {
               this.adUser.userID = res.save.userID;
-              this.openPopupRoles(item);
+              //add to group
+              if (addToGroup) {
+                this.addUserToGroup(this.adUser.userGroup, isOverrideRoles);
+              }
+              //add role
+              else {
+                this.openPopupRoles(item);
+              }
             }
             this.detectorRef.detectChanges();
           }
@@ -443,7 +454,31 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (data.data) {
       this.checkValueChangeUG = true;
       this.adUser.userGroup = data.data;
-      this.loadUserRole(data.data);
+
+      let isOverrideRoles = true;
+      if (this.isSaved) {
+        this.addUserToGroup(data.data, isOverrideRoles);
+      } else {
+        this.saveUser(false, true, isOverrideRoles);
+      }
+    }
+  }
+
+  addUserToGroup(groupID, isOverrideRoles: boolean) {
+    if (groupID && groupID != '') {
+      this.adService
+        .addUserToGroupAsync(groupID, this.adUser.userID, isOverrideRoles)
+        .subscribe((newRoles: tmpformChooseRole[]) => {
+          this.viewChooseRole = newRoles
+          this.viewChooseRole.forEach((dt) => {
+            dt['module'] = dt.functionID;
+            dt['roleID'] = dt.roleID;
+            dt.userID = this.adUser.userID;
+          });
+          this.adUser.chooseRoles = this.viewChooseRole;
+          this.countListViewChooseRoleApp = this.viewChooseRole.length;
+          this.changeDetector.detectChanges();
+        });
     }
   }
 
@@ -490,6 +525,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
             dt['roleID'] = dt.roleID;
             dt.userID = this.adUser.userID;
           });
+          this.adUser.chooseRoles = this.viewChooseRole;
           this.countListViewChooseRoleApp = this.viewChooseRole.length;
           this.changeDetector.detectChanges();
         }

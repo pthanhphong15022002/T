@@ -14,7 +14,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
   @Input() frmModelInstancesTask: FormModel;
   listContract = [];
   dateFomat = 'dd/MM/yyyy';
-
+  account: any;
   moreDefaut = {
     share: true,
     write: true,
@@ -50,7 +50,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
         console.log(this.frmModelInstancesTask);
       }
     });
-   
+    this.getAccount();
   }
 
 
@@ -137,22 +137,38 @@ export class ListContractsComponent implements OnInit, OnChanges {
       projectID,
       action,
       contract: contract || null,
+      account: this.account,
     }
     let option = new DialogModel();
     option.IsFull = true;
-    option.zIndex = 999;
+    option.zIndex = 1010;
     let popupContract = this.callFunc.openForm(
       AddContractsComponent,
       '',
-      Util.getViewPort().width,
-      Util.getViewPort().height,
+      null,
+      null,
       '',
       data,
       '',
       option
     );
+    // Util.getViewPort().width,
+    // Util.getViewPort().height,
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
     return dataPopupOutput;
   }
 
+  getAccount(){
+    this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'CompanySettingsBusiness',
+      'GetAsync'
+    ).subscribe(res => {
+      console.log(res);
+      if(res){
+        this.account = res;
+      }
+    })
+  }
 }

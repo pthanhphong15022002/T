@@ -81,4 +81,5 @@ export class InventoryJournalLines{
     note: any;
     idiM6: any;
     rowNo: any;
+    itemName: any;
 }

@@ -106,7 +106,7 @@ export class UserGroupsComponent extends UIComponent {
     this.notifySvr.alertCode('AD009', config).subscribe((x) => {
       if (x.event.status == 'Y') {
         data.stop = true;
-        this.codxAdService.stopUser(data).subscribe((res) => {
+        this.codxAdService.stopUser(data.userID).subscribe((res) => {
           if (res) {
             // this.view.dataService.remove(res).subscribe();
             this.detectorRef.detectChanges();

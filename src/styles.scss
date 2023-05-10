@@ -10,6 +10,9 @@
   .e-grid .e-rowcell {
     font-size: var(--fs-body);
   }
+  .e-control, .e-css {
+    font-size: var(--fs-body);
+  }
 }
 
 .e-device .e-dlg-content,
@@ -776,7 +779,7 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 
 .e-sidebar {
   .codx-tab .tab-content {
-    width: 580px !important;
+    width: 578px !important;
   }
   
 }
@@ -1093,6 +1096,9 @@ codx-layout-add .card-header {
 }
 .badge.badge-sm {
   font-size: 11px;
+}
+.badge-md.fs-7{
+  font-size: 11px!important;
 }
 /*** list view srcoll ngang ***/
 .e-listview .e-content {
@@ -1973,11 +1979,11 @@ lib-dynamic-process .card-header.m-h-auto.p-0 {
 .card.rounded-2 .codx-image {
   border-radius: 0.4rem 0.4rem 0 0 !important;
 }
-.codx-form > .card-body,
-.e-dialog > .e-dlg-content .card-body {
-  margin-right: 2px;
-}
-//
+// .codx-form > .card-body,
+// .e-dialog > .e-dlg-content .card-body {
+//   margin-right: 2px;
+// }
+// //
 
 .btn-clean {
   .svg-icon.svg-icon-primary svg [fill]:not(.permanent):not(g) {
@@ -2332,10 +2338,12 @@ codx-calendar {
 
 //
 
- .btn:focus {
+ .btn:not(.btn-outline-default):focus {
    border-color: transparent !important;
  }
-
+ .btn.btn-outline-default:focus {
+  border-color: var(--gray-150);
+}
 // .form-control.codx-textarea {
 //   padding: 0;
 // }
@@ -2686,3 +2694,33 @@ codx-vll.badge.badge-md span::before{
   padding-right: 5px;
   width: 82px;
 }
+.toolbar{
+  .e-control.e-inplaceeditor .e-editable-value-wrapper {
+    min-height: 26px;
+    padding: 3px 8px 3px 8px;
+  }
+  input.e-input {
+    height: 26px !important;
+   // line-height: 26px;
+  }
+}
+a.layout-add-menuleft{
+  padding-top: .65rem!important;
+  padding-bottom: .65rem!important;
+}
+
+
+codx-instance-detail div.codx-detail-main{
+  padding-bottom: 0;
+}
+
+.card-ep-report{
+  .codx-image {
+    max-height: 120px !important;
+  }
+  .card-body{
+    min-height: 60px;
+    padding-top:7px!important;
+  }
+}
+

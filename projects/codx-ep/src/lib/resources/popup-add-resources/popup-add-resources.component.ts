@@ -61,7 +61,6 @@ export class PopupAddResourcesComponent extends UIComponent {
     c_FuncID=EPCONST.FUNCID.C_Category;
     dr_FuncID=EPCONST.FUNCID.DR_Category;
     ca_FuncID=EPCONST.FUNCID.CA_Category;
-  useCardCheck: any;
   autoNumDisable: boolean;
   constructor(
     injector: Injector,
@@ -185,8 +184,7 @@ export class PopupAddResourcesComponent extends UIComponent {
   }
   valueUseCardChange(evt:any){
     if(evt!=null){
-      this.data.useCard=evt.data;  
-      this.useCardCheck=evt.data;    
+      this.data.useCard=evt.data;   
       this.detectorRef.detectChanges();
     }
   }
@@ -274,6 +272,7 @@ export class PopupAddResourcesComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   
   openPopupDevice(template: any) {
+    let dialog = this.callfc.openForm(template, '', 550, 400);
     this.detectorRef.detectChanges();
   }
   
