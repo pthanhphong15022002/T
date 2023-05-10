@@ -80,18 +80,18 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit() {
-    this.dialog &&
-      this.dialog.closed.subscribe((res) => {
-        if (!res.event) {
-          if (this.successFlag == true) {
-            this.dialog.close(this.benefitObj);
-          } else {
-            this.dialog.close(null);
-          }
-        }
-      });
-  }
+  // ngAfterViewInit() {
+  //   this.dialog &&
+  //     this.dialog.closed.subscribe((res) => {
+  //       if (!res.event) {
+  //         if (this.successFlag == true) {
+  //           this.dialog.close(this.benefitObj);
+  //         } else {
+  //           this.dialog.close(null);
+  //         }
+  //       }
+  //     });
+  // }
 
   initForm() {
     if (this.actionType == 'add') {
@@ -117,8 +117,8 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
         this.formGroup.patchValue(this.benefitObj);
         this.formModel.currentData = this.benefitObj;
-        this.cr.detectChanges();
         this.isAfterRender = true;
+        this.cr.detectChanges();
       }
     }
   }

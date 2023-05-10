@@ -771,7 +771,6 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       }
     });
     this.resources.splice(this.resources.indexOf(tempDelete), 1);
-    this.resources.splice(this.resources.indexOf(tempDelete), 1);
     this.attendeesNumber = this.resources.length + this.guestNumber;
     this.changeDetectorRef.detectChanges();
   }

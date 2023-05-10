@@ -405,7 +405,9 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
 
   valueChangeMandatory(e, dataQuestion) {
     if (e) {
-      this.questions[dataQuestion.seqNo].mandatory = e.data;
+      this.SVServices.signalSave.next('saving');
+      this.questions[0].children[dataQuestion.seqNo].mandatory = e.data;
+      this.setTimeoutSaveData(this.questions[0].children, false);
     }
   }
 

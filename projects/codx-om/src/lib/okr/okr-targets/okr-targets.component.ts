@@ -490,8 +490,7 @@ export class OkrTargetsComponent implements OnInit {
           func.functionID == OMCONST.MFUNCID.SKRCheckIn
         ) {
           if (
-            (kr?.items != null && kr?.items.length > 0) ||
-            kr?.hasAssign != null
+            (kr?.items != null && kr?.items.length > 0) ||  kr?.hasAssign != null || this.dataOKRPlans.status !='2' 
           ) {
             func.disabled = true;
           } else {
@@ -511,7 +510,8 @@ export class OkrTargetsComponent implements OnInit {
           func.functionID == 'SYS004' ||
           func.functionID == 'SYS007' ||  
           func.functionID == 'SYS002' ||         
-          func.functionID == OMCONST.MFUNCID.OBDetail
+          func.functionID == OMCONST.MFUNCID.OBDetail ||
+          func.functionID == OMCONST.MFUNCID.OBDistribute
         ) {
           func.disabled = true;
         }
