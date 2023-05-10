@@ -1,6 +1,6 @@
 <div
   class="empty-data"
-  *ngIf="dataService && dataService.data.length == 0 && !itemSelected?.recID"
+  *ngIf="!itemSelected?.recID"
 >
   <div class="container h-100">
     <div class="list-empty card card-flush h-100">
@@ -22,7 +22,6 @@
     [formModel]="formModel"
     [body]="body"
     [footer]="footer"
-    [hideMF]="!showMoreFunc"
     (clickMF)="clickMF($event, itemSelected)"
     (changeDataMF)="changeDataMF($event, itemSelected)"
     [dataItem]="itemSelected"
@@ -144,22 +143,21 @@
         </codx-label>
       </div>
       <codx-gridview-v2
-      #gridQuationsLines
-      service="CM"
-      [formName]="fmQuotationLines.formName"
-      [gridViewName]="fmQuotationLines.gridViewName"
-      [entityName]="fmQuotationLines.entityName"
-      [editSettings]="editSettings"
-      [allowFiltering]="true"
-      [allowSorting]="true"
-      [dataSource]="dataSource"
-      [height]="gridHeight"
-      [autoLoad]="true"
-      rowHeight="40"
-      predicates="TransID=@0"
-      [dataValues]="itemSelected.recID"
-    ></codx-gridview-v2>
-      </div>
+        #gridQuationsLines
+        service="CM"
+        [formName]="fmQuotationLines.formName"
+        [gridViewName]="fmQuotationLines.gridViewName"
+        [entityName]="fmQuotationLines.entityName"
+        [editSettings]="editSettings"
+        [allowFiltering]="true"
+        [allowSorting]="true"
+        [dataSource]="dataSource"
+        [height]="gridHeight"
+        [autoLoad]="true"
+        rowHeight="40"
+        predicates="TransID=@0"
+        [dataValues]="itemSelected.recID"
+      ></codx-gridview-v2>
     </ng-template>
     <ng-template #footer>
       <codx-tabs
