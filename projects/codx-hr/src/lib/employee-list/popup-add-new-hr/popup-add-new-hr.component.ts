@@ -76,7 +76,6 @@ export class PopupAddNewHRComponent
     { field: 'trainFieldID', error: '' },
     { field: 'trainLevel', error: '' },
   ];
-
   constructor(
     private inject: Injector,
     private hrService: CodxHrService,
@@ -92,6 +91,7 @@ export class PopupAddNewHRComponent
     this.isEdit = dialogData?.data.isEdit != null ? true : false;
     this.oldEmployeeID = dialogData.data.oldEmployeeID;
     this.actionType = dialogData?.data?.actionType;
+    this.title = dialogData?.data?.text;
     this.funcID = this.dialog.formModel.funcID;
   }
 
@@ -125,7 +125,8 @@ export class PopupAddNewHRComponent
     console.log(e);
   }
   setTitle(e) {
-    this.title = e;
+    debugger
+    this.title += " " + e;
   }
   changeID(e) {}
 
