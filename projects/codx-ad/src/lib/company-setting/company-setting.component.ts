@@ -1,7 +1,5 @@
 import { PopupInfoComponent } from './popup-info/popup-info.component';
-import { I } from '@angular/cdk/keycodes';
 import {
-  AfterContentInit,
   AfterViewInit,
   ChangeDetectorRef,
   Component,
@@ -14,16 +12,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   AuthStore,
-  CodxService,
   DialogModel,
   DialogRef,
   FormModel,
   ImageViewerComponent,
   NotificationsService,
-  SidebarModel,
   UIComponent,
   UploadFile,
   ViewModel,
@@ -38,7 +33,6 @@ import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TN_OrderModule } from '../models/tmpModule.model';
 import { PopupModuleDetailComponent } from './popup-module-detail/popup-module-detail.component';
-import { map } from 'rxjs';
 
 @Component({
   selector: 'lib-company-setting',
