@@ -219,8 +219,8 @@ export class CodxBookingViewDetailComponent
       let funcID = event?.functionID;
       switch (funcID) {
         case EPCONST.MFUNCID.R_Approval:
-        case EPCONST.MFUNCID.R_Approval:
-        case EPCONST.MFUNCID.R_Approval:
+        case EPCONST.MFUNCID.C_Approval:
+        case EPCONST.MFUNCID.S_Approval:
           {
             this.approve.emit(data);
           }
