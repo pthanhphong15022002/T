@@ -2348,7 +2348,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           this.HandleEVaccinesInfo(event.text, 'edit', data);
         } else if (funcID == 'basicSalary') {
           //Close popup when click more function
-          this.dialogViewSalary.close(); 
+          // this.dialogViewSalary.close(); 
           this.HandleEmployeeBasicSalariesInfo(event.text, 'edit', data);
           this.df.detectChanges();
         } else if (funcID == 'Assets') {
@@ -2371,7 +2371,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           this.df.detectChanges();
         } else if (funcID == 'eBenefit') {
           //Close popup when click more function
-          this.dialogViewBenefit.close(); 
+          // this.dialogViewBenefit.close(); 
           this.handlEmployeeBenefit(event.text, 'edit', data);
         } else if (funcID == 'eSkill') {
           this.HandleEmployeeESkillsInfo(event.text, 'edit', data);
@@ -2419,6 +2419,19 @@ export class EmployeeInfoDetailComponent extends UIComponent{
       
 
       case 'SYS02': //delete
+        //Render data table when delete from popup (module benefit)
+        if(event.isRenderDelete === true){
+          this.hrService
+          .GetCurrentBenefit(this.employeeID)
+          .subscribe((res) => {
+            if (res) {
+              this.listCrrBenefit = res;
+              this.df.detectChanges();
+            }
+          });
+          break;
+        }
+
         this.notifySvr.alertCode('SYS030').subscribe((x) => {
           if (x.event?.status == 'Y') {
             if (funcID == 'passport') {
@@ -2547,6 +2560,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
             } else if (funcID == 'eBenefit') {
               this.hrService.DeleteEBenefit(data).subscribe((p) => {
                 if (p != null) {
+                  console.log("Run else render")
                   this.notify.notifyCode('SYS008');
                   if (data.isCurrent == true) {
                     // const index = this.listCrrBenefit.indexOf(data);
@@ -4660,6 +4674,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   popupViewBenefit() {
    this.headerTextBenefit = this.getFormHeader(this.benefitFuncID) + ' | ' + "Tất cả";
    let option = new DialogModel();
+    option.zIndex = 999;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
    this.dialogViewBenefit = this.callfc.openForm(
@@ -4680,8 +4695,18 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     });
   }
 
-  clickEvent(event) {
-    this.clickMF(event?.event, event?.data, 'eBenefit');
+  RenderDataFromPopup(event) {
+    if(event.isRenderDelete === true){
+      this.hrService
+      .GetCurrentBenefit(this.employeeID)
+      .subscribe((res) => {
+        if (res) {
+          this.listCrrBenefit = res;
+          this.df.detectChanges();
+        }
+      });
+    }
+    // this.clickMF(event?.event, event?.data, 'eBenefit');
   }
 
   // HandleEBenefit(actionHeaderText, actionType: string, data: any) {
@@ -4763,13 +4788,17 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   }
 
   popupUpdateEJobSalaryStatus() {
-     this.dialogViewSalary = this.callfc.openForm(
+    let option = new DialogModel();
+    option.zIndex = 999; 
+    this.dialogViewSalary = this.callfc.openForm(
       this.templateViewSalary,
       null,
       850,
       550,
       null,
-      null
+      null,
+      '',
+      option
     );
     this.dialogViewSalary.closed.subscribe((res) => {
       // if (res?.event) {

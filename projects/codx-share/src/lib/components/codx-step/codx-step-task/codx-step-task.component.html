@@ -22,7 +22,7 @@
               >
                 <ng-container
                   [ngTemplateOutlet]="groupTemplate"
-                  [ngTemplateOutletContext]="{groupTask: groupTask}"
+                  [ngTemplateOutletContext]="{ groupTask: groupTask }"
                 >
                 </ng-container>
                 <ng-container
@@ -47,7 +47,11 @@
                 (cdkDropListDropped)="drop($event, groupTask)"
                 [id]="id + groupTask?.recID"
                 class="task"
-                [ngStyle]="groupTask?.recID? { 'margin-left': '35px' }: { 'margin-left': '0px' }"
+                [ngStyle]="
+                  groupTask?.recID
+                    ? { 'margin-left': '35px' }
+                    : { 'margin-left': '0px' }
+                "
               >
                 <ng-container *ngFor="let task of groupTask?.task">
                   <div
@@ -57,17 +61,21 @@
                     [cdkDragDisabled]="true"
                     class="drap-drop"
                   >
-                    <div class="d-flex align-items-center justify-content-between">
+                    <div
+                      class="d-flex align-items-center justify-content-between"
+                    >
                       <div style="flex-grow: 1" class="has-action-menu">
                         <ng-container
                           [ngTemplateOutlet]="taskTemplate"
-                          [ngTemplateOutletContext]="{value: { task: task, group: groupTask }}"
+                          [ngTemplateOutletContext]="{
+                            value: { task: task, group: groupTask }
+                          }"
                         ></ng-container>
                         <div class="ms-5">
                           <ng-container
                             [ngTemplateOutlet]="fileTemplate"
-                            [ngTemplateOutletContext]="{value: task}"
-                        ></ng-container>
+                            [ngTemplateOutletContext]="{ value: task }"
+                          ></ng-container>
                         </div>
                       </div>
                       <div>
@@ -92,10 +100,10 @@
       </div>
     </div>
   </div>
-  <ng-container 
+  <ng-container
     *ngIf="isShowButton"
     [ngTemplateOutlet]="buttonTemplate"
-    [ngTemplateOutletContext]="{value: '' }"
+    [ngTemplateOutletContext]="{ value: '' }"
   ></ng-container>
 </div>
 
@@ -159,7 +167,9 @@
     <div class="steplist-hearder">
       <div class="text-dark fw-bold fs-6">
         <span>{{ data?.task?.taskName }}</span>
-        <span [ngClass]="checkExitsParentID(data?.group?.task, data?.task)" class="h4"
+        <span
+          [ngClass]="checkExitsParentID(data?.group?.task, data?.task)"
+          class="h4"
           >*</span
         >
       </div>
@@ -172,7 +182,10 @@
         >
         </codx-label>
         <span
-          >{{ data?.task?.modifiedOn || data?.task?.createdOn | date : dateTimeFomat }}
+          >{{
+            data?.task?.modifiedOn || data?.task?.createdOn
+              | date : dateTimeFomat
+          }}
         </span>
       </div>
     </div>
@@ -208,37 +221,35 @@
 </ng-template>
 
 <ng-template #buttonTemplate let-data="value">
-  <div
-  class="d-flex justify-content-center mt-3"
->
-  <button
-    type="button"
-    class="btn btn-outline-primary me-2"
-    (click)="addGroupTask()"
-  >
-    <i class="icon-add icon-18 text-primary"></i>
-    <codx-label
-      [name]="'lblAddGroup'"
-      [formName]="'DPStepsFields'"
-      [gridViewName]="'grvDPStepsFields'"
-      [default]="'Thêm nhóm công việc'"
-    ></codx-label>
-  </button>
-  <button
-    type="button"
-    class="btn btn-outline-primary ms-4"
-    (click)="addTask(null)"
-    style="min-width: 170px"
-  >
-    <i class="icon-add_task icon-18 text-primary"></i>
-    <codx-label
-      [name]="'lblAddTask'"
-      [formName]="'DPStepsFields'"
-      [gridViewName]="'grvDPStepsFields'"
-      [default]="'Thêm công việc'"
-    ></codx-label>
-  </button>
-</div>
+  <div class="d-flex justify-content-center mt-3">
+    <button
+      type="button"
+      class="btn btn-outline-primary me-2"
+      (click)="addGroupTask()"
+    >
+      <i class="icon-add icon-18 text-primary"></i>
+      <codx-label
+        [name]="'lblAddGroup'"
+        [formName]="'DPStepsFields'"
+        [gridViewName]="'grvDPStepsFields'"
+        [default]="'Thêm nhóm công việc'"
+      ></codx-label>
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-primary ms-4"
+      (click)="addTask(null)"
+      style="min-width: 170px"
+    >
+      <i class="icon-add_task icon-18 text-primary"></i>
+      <codx-label
+        [name]="'lblAddTask'"
+        [formName]="'DPStepsFields'"
+        [gridViewName]="'grvDPStepsFields'"
+        [default]="'Thêm công việc'"
+      ></codx-label>
+    </button>
+  </div>
 </ng-template>
 
 <ng-template #timeAndProgress let-data="value">
@@ -247,16 +258,19 @@
       {{ data?.value?.startDate | date : dateFomat }} -
       {{ data?.value?.endDate | date : dateFomat }}</span
     >
-    <span>
-      <codx-img
-        [width]="25"
-        class="mx-2"
-        [objectId]="getRole(data?.value, 'ID')"
-        objectType="AD_Users"
-        [objectName]="getRole(data?.value, 'name')"
-      ></codx-img>
+    <span class="d-flex align-items-center">
+      <codx-imgs
+      class="me-2 d-flex align-items-center"
+      [width]="25"
+      ojectType="AD_Users"
+      [numberImages]="1"
+      [isToolTip]="true"
+      [objectId]="getRole(data?.value, 'ID')"
+      [objectName]="getRole(data?.value, 'name')"
+    >
+    </codx-imgs>
     </span>
-    <div class="disabled-inline ">
+    <div class="disabled-inline">
       <codx-progress
         [progress]="data?.value?.progress"
         [dataSource]="data?.value"
@@ -267,15 +281,15 @@
         (valueChange)="changeProgress($event)"
       ></codx-progress>
     </div>
-    <div class="notify" style="min-width: 40px;" *ngIf="isShowFile">
-        <codx-attachment-temp
-          [objectID]="data?.value.refID"
-          [hideMoreF]="0"
-          [hideDelete]="1"
-        ></codx-attachment-temp>
+    <div class="notify" style="min-width: 40px" *ngIf="isShowFile">
+      <codx-attachment-temp
+        [objectID]="data?.value.refID"
+        [hideMoreF]="0"
+        [hideDelete]="1"
+      ></codx-attachment-temp>
     </div>
-    <div class="notify" style="min-width: 40px;" *ngIf="isShowComment">
-        <codx-comment-temp [objectID]="data?.value.recID"></codx-comment-temp>
+    <div class="notify" style="min-width: 40px" *ngIf="isShowComment">
+      <codx-comment-temp [objectID]="data?.value.recID"></codx-comment-temp>
     </div>
   </div>
 </ng-template>

@@ -9,33 +9,42 @@
     </button>
   </div>
 </div>
-<div *ngIf="lstDealCompetitors != null && lstDealCompetitors.length > 0">
-  <ng-container *ngFor="let item of lstDealCompetitors">
-    <ng-container
-      [ngTemplateOutlet]="dealCompetitors"
-      [ngTemplateOutletContext]="{ $implicit: item }"
-    >
+<ng-container *ngIf="loaded">
+  <div
+    *ngIf="
+      lstDealCompetitors != null && lstDealCompetitors.length > 0;
+      else noData
+    "
+  >
+    <ng-container *ngFor="let item of lstDealCompetitors">
+      <ng-container
+        [ngTemplateOutlet]="dealCompetitors"
+        [ngTemplateOutletContext]="{ $implicit: item }"
+      >
+      </ng-container>
     </ng-container>
-  </ng-container>
-</div>
-<div
-  class="empty-data"
-  *ngIf="lstDealCompetitors == null || lstDealCompetitors.length == 0"
->
-  <div class="container h-100">
-    <div class="list-empty card card-flush h-100">
-      <div class="d-flex flex-column flex-center justify-content-center">
-        <img
-          src="../assets/themes/sys/default/img/DataEmpty.svg"
-          class="w-200px"
-        />
-        <div class="fs-5 text-dark fw-bold mt-2 text-center">
-          {{ "SYS011" | mssg | async }}
+  </div>
+</ng-container>
+<ng-template #noData>
+  <div
+    class="empty-data"
+    *ngIf="lstDealCompetitors == null || lstDealCompetitors.length == 0"
+  >
+    <div class="container h-100">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+          />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            {{ "SYS011" | mssg | async }}
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</ng-template>
 
 <ng-template #dealCompetitors let-data>
   <div class="d-flex justify-content-between has-action-menu-od mt-2">
@@ -62,7 +71,10 @@
         ></div>
         <div class="mb-1" *ngIf="getAddress(data?.competitorID)">
           <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
-          <span class="text-gray-900" [innerHTML]="getAddress(data?.competitorID)"></span>
+          <span
+            class="text-gray-900"
+            [innerHTML]="getAddress(data?.competitorID)"
+          ></span>
         </div>
       </div>
     </div>

@@ -95,7 +95,7 @@
                             : 'content-wrapper'
                         "
                       >
-                        <form id="formId" class="form-horizontal example-box">
+                        <form [id]="'formId'+itemQuestion.recID" class="formId form-horizontal example-box card-survey-question">
                           <ng-container #body>
                             <div *ngIf="itemQuestion.category == 'Q'">
                               <div *ngIf="!itemQuestion.showAnswer">
@@ -263,6 +263,8 @@
                                 ></codx-label>
                               </button>
                             </div>
+                          </div>
+                          <div [id]="'formError'+itemQuestion.recID" class="formError">
                           </div>
                         </form>
                       </div>
@@ -611,6 +613,7 @@
     <div #header class="w-100">
       <div class="form-group question w-100 mt-3 ms-6">
         <div
+          class="d-flex align-items-center"
           [ngClass]="
             itemQuestion?.active ? 'title-des title-des-hover' : 'title-des'
           "
@@ -620,6 +623,7 @@
             [innerHTML]="itemQuestion.question"
           ></span>
           <span *ngIf="!itemQuestion.question">{{ "Câu hỏi" }}</span>
+          <span *ngIf="itemQuestion.mandatory" class="text-danger ms-2">*</span>
         </div>
       </div>
       <div class="form-group question w-100" *ngIf="itemQuestion.hideComment">

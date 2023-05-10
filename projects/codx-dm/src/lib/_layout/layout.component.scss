@@ -301,3 +301,10 @@ codx-views#dm .content-tree codx-mfunc .btn {
   padding-top: 8px !important;
   background-color: var(--bghover);
 }
+codx-layout[data-kt-aside-minimize="on"]{
+.btn-add.without-sub{
+  .label-addnew{
+    display: none;
+  }
+}
+}

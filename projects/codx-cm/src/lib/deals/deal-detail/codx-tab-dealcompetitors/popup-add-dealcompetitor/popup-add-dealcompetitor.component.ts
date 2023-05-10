@@ -36,9 +36,10 @@ export class PopupAddDealcompetitorComponent implements OnInit {
     this.lstDealCompetitors = dt?.data?.lstDealCompetitors;
   }
   ngOnInit(): void {
-    // if (this.action == 'add') {
-    //   this.data.recID = Guid.newGuid();
-    // }
+    if (this.action == 'copy') {
+      this.data.recID = '00000000-0000-0000-0000-000000000000';
+      this.data.competitorID = null;
+    }
   }
 
   onSave() {
@@ -67,7 +68,7 @@ export class PopupAddDealcompetitorComponent implements OnInit {
   }
 
   beforeSave() {
-    if (this.action == 'add') {
+    if (this.action == 'add' || this.action == 'copy') {
       this.cmSv.addDealCompetitor(this.data).subscribe((res) => {
         if (res) {
           this.dialog.close(res);
