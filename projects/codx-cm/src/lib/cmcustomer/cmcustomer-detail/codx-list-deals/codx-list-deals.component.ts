@@ -10,7 +10,8 @@ import { FormModel } from 'codx-core';
 export class CodxListDealsComponent implements OnInit{
   @Input() customerID: any;
   lstDeals = [];
-  formModel: FormModel
+  formModel: FormModel;
+  lstStep = [];
   constructor(
     private cmSv: CodxCmService,
 
@@ -27,11 +28,28 @@ export class CodxListDealsComponent implements OnInit{
     this.cmSv.getListDealsByCustomerID(customerID).subscribe((res) => {
       if (res && res.length > 0) {
         this.lstDeals = res;
+        var lstRef = this.lstDeals.map((x) => x.refID);
+        var lstSteps = this.lstDeals.map((x) => x.stepID);
+        if (lstRef != null && lstRef.length > 0)
+          this.getStepsByListID(lstSteps, lstRef);
       }
     });
   }
 
-  getListStepByStepID(stepID){
+  getStepsByListID(lstStepID, lstIns){
+    this.cmSv.getStepsByListID(lstStepID, lstIns).subscribe(res => {
+      if(res && res.length > 0){
+        this.lstStep = res;
+      }
+    })
+  }
 
+  getStep(stepID){
+    if(this.lstStep != null && this.lstStep.length > 0){
+      var step = this.lstStep.find(x => x.stepID == stepID);
+      return step;
+    }else{
+      return null;
+    }
   }
 }
