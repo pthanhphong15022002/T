@@ -1,32 +1,112 @@
-<div class="d-flex justify-content-between has-action-menu-od mt-2">
-  <div class="col-4 d-flex justify-content-start">
-    <div class="d-flex flex-column">
-      <div class="align-items-start text-dark fw-bold">Công ty văn vòng</div>
-      <div class="row mb-1">
-        <div class="col-6">
-          <div class="d-flex justify-content-start">
-            <span class="icon-money icon-16 me-1"></span>
-            <span class="ms-1 text-dark fw-bold">500000000</span>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="d-flex justify-content-end">
-            <span class="me-1">%</span>
-            <span class="ms-1 text-dark fw-bold">70%</span>
-          </div>
+<div
+  class="empty-data"
+  *ngIf="lstDealCompetitor == null || lstDealCompetitor.length == 0"
+>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-200px"
+        />
+        <div class="fs-5 text-dark fw-bold mt-2 text-center">
+          {{ "SYS011" | mssg | async }}
         </div>
       </div>
     </div>
   </div>
-  <div class="col-2">
-    <div class="d-flex align-items-start">Giới thiệu sản phẩm</div>
-  </div>
-  <div class="d-flex col-3 ustify-content-between align-items-start">
-    <span class="icon-star_purple500 icon-16 me-1"> </span>
-    <span class="text-dark fw-bold">Ưu điểm</span>
-  </div>
-  <div class="col-3 d-flex align-items-start">
-    <span class="icon-star_purple500 icon-16 me-1"> </span>
-    <span class="text-dark fw-bold">Ưu điểm</span>
-  </div>
 </div>
+<div *ngIf="lstDealCompetitor != null && lstDealCompetitor.length > 0">
+  <ng-container *ngFor="let item of lstDealCompetitor">
+    <ng-container
+      [ngTemplateOutlet]="dealCompetitors"
+      [ngTemplateOutletContext]="{ $implicit: item }"
+    >
+    </ng-container>
+  </ng-container>
+</div>
+<ng-template #dealCompetitors let-data>
+  <div class="d-flex justify-content-between has-action-menu-od mt-2">
+    <div class="col-4 d-flex justify-content-start">
+      <div class="d-flex flex-column">
+        <div
+          class="align-items-start text-dark fw-bold"
+          [innerHTML]="
+            data?.dealName | formatvalue : fromModelDeal : 'DealName' | async
+          "
+        ></div>
+        <div class="row mb-1">
+          <div class="col-6">
+            <div class="d-flex justify-content-start">
+              <span class="icon-money icon-16 me-1"></span>
+              <span
+                class="ms-1 text-dark fw-bold"
+                [innerHTML]="
+                  data?.dealValue
+                    | formatvalue : fromModelDeal : 'DealValue'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="d-flex justify-content-end">
+              <span class="me-2">%</span>
+              <span
+                class="text-dark fw-bold"
+                [innerHTML]="
+                  data?.probability
+                    | formatvalue : fromModelDeal : 'Probability'
+                    | async
+                "
+              ></span
+              ><span class="text-dark fw-bold">%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-2" *ngIf="getStep(data?.stepID)">
+      <div class="d-flex align-items-start">
+        <div
+          class="badge badge-sm d-flex align-items-center"
+          [ngStyle]="{
+            'background-color': getStep(data?.stepID)['backgroundColor']
+          }"
+        >
+          <span
+            [ngClass]="getStep(data?.stepID)['icon']"
+            [ngStyle]="{ color: getStep(data?.stepID)['iconColor'] }"
+            class="me-1 icon-14"
+          ></span>
+          <span
+            [ngStyle]="{ color: getStep(data?.stepID)['textColor'] }"
+            [innerHTML]="getStep(data?.stepID)?.stepName"
+          ></span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex col-3 ustify-content-between align-items-start">
+      <span class="icon-star_purple500 icon-16 me-1"> </span>
+      <span
+        class="text-dark fw-bold"
+        [innerHTML]="
+          data?.strengths
+            | formatvalue : fromModelDealCompetitor : 'Strengths'
+            | async
+        "
+      ></span>
+    </div>
+    <div class="col-3 d-flex align-items-start">
+      <span class="icon-star_border_purple500 icon-16 me-1"> </span>
+      <span
+        class="text-dark fw-bold"
+        [innerHTML]="
+          data?.weaknesses
+            | formatvalue : fromModelDealCompetitor : 'Weaknesses'
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+</ng-template>

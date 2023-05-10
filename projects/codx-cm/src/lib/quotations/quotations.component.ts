@@ -15,7 +15,9 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  RequestOption,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -32,16 +34,22 @@ export class QuotationsComponent extends UIComponent {
   @Input() customerID: string;
   @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
-  views: Array<ViewModel> = [];
-  readonly service = 'CM';
-  readonly assemblyName = 'ERM.Business.CM';
-  readonly entityName = 'CM_Quotations';
-  readonly className = 'QuotationsBusiness';
-  readonly methodLoadData = 'GetListQuotationsAsync';
-  requestTemp = new DataRequest();
-  //test
-  formModel: FormModel;
+  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
+  //temGird
+  @ViewChild('templateCreatedBy') templateCreatedBy: TemplateRef<any>;
+  @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
+  @ViewChild('templateCustomer') templateCustomer: TemplateRef<any>;
 
+  views: Array<ViewModel> = [];
+  button: any;
+  service = 'CM';
+  assemblyName = 'ERM.Business.CM';
+  entityName = 'CM_Quotations';
+  className = 'QuotationsBusiness';
+  methodLoadData = 'GetListQuotationsAsync';
+
+  //test
   moreDefaut = {
     share: true,
     write: true,
@@ -51,7 +59,19 @@ export class QuotationsComponent extends UIComponent {
   };
   grvSetup: any;
   vllStatus = '';
-  listDatas = [];
+  formModel: FormModel = {
+    formName: 'CMQuotations',
+    gridViewName: 'grvCMQuotations',
+    funcID: 'CM0202',
+  };
+  customerIDCrr = '';
+  requestData = new DataRequest();
+  listQuotations = [];
+  predicates = 'RefType==@0 && RefID==@1';
+  dataValues = '';
+  columnGrids: any;
+  arrFieldIsVisible = [];
+  itemSelected: any;
 
   constructor(
     private inject: Injector,
@@ -66,63 +86,131 @@ export class QuotationsComponent extends UIComponent {
         if (res) {
           this.grvSetup = res;
           this.vllStatus = res['Status'].referedValue;
+          //lay grid view
+          let arrField = Object.values(res).filter((x: any) => x.isVisible);
+          if (Array.isArray(arrField)) {
+            this.arrFieldIsVisible = arrField
+              .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+              .map((x: any) => x.fieldName);
+            this.getColumsGrid(res);
+          }
         }
       });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {}
-  onInit(): void {}
+  onInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
+  }
 
   ngAfterViewInit() {
-    this.loadDatas();
     // this.views = [
     //   {
-    //     type: ViewType.list,
+    //     type: ViewType.listdetail,
     //     active: true,
-    //     sameData: true, //true, fasle để test
+    //     sameData: true,
     //     model: {
-    //       template: this.itemViewList,
+    //       template: this.itemTemplate,
+    //       panelRightRef: this.templateDetail,
+    //     },
+    //   },
+    //   {
+    //     type: ViewType.grid,
+    //     active: true,
+    //     sameData: true,
+    //     model: {
+    //       resources: this.columnGrids,
+    //       template2: this.templateMore,
+    //       // frozenColumns: 1,
     //     },
     //   },
     // ];
   }
-  loadDatas() {
-    // this.requestTemp.idField='recID'
-    this.requestTemp.entityName = 'CM_Quotations';
-    this.requestTemp.formName = 'CMQuotations';
-    this.requestTemp.gridViewName = 'grvCMQuotations';
-    this.requestTemp.page = 0;
-    this.requestTemp.pageSize = 20;
-    this.requestTemp.funcID = 'CM0202';
-    this.requestTemp.predicate = 'CustomerID==@0';
-    this.requestTemp.dataValues = this.customerID;
-    this.fetch().subscribe((items) => {
-      this.listDatas = items;
+
+  getColumsGrid(grvSetup) {
+    this.columnGrids = [];
+    this.arrFieldIsVisible.forEach((key) => {
+      let field = Util.camelize(key);
+      let template: any;
+      let colums: any;
+      switch (key) {
+        case 'Status':
+          template = this.templateStatus;
+          break;
+        case 'CustomerID':
+          template = this.templateCustomer;
+          break;
+        case 'CreatedBy':
+          template = this.templateCreatedBy;
+          break;
+        default:
+          break;
+      }
+      if (template) {
+        colums = {
+          field: field,
+          headerText: grvSetup[key].headerText,
+          width: grvSetup[key].width,
+          template: template,
+        };
+      } else {
+        colums = {
+          field: field,
+          headerText: grvSetup[key].headerText,
+          width: grvSetup[key].width,
+        };
+      }
+
+      this.columnGrids.push(colums);
     });
+
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: true,
+        sameData: true,
+        model: {
+          resources: this.columnGrids,
+          template2: this.templateMore,
+          // frozenColumns: 1,
+        },
+      },
+    ];
   }
-  fetch(): Observable<any[]> {
-    return this.api
-      .execSv<Array<any>>(
-        this.service,
-        this.assemblyName,
-        this.className,
-        this.methodLoadData,
-        this.requestTemp
-      )
-      .pipe(
-        finalize(() => {
-          /*  this.onScrolling = this.loading = false;
-          this.loaded = true; */
-        }),
-        map((response: any) => {
-          return response[0];
-        })
-      );
+
+  click(e) {
+    switch (e.id) {
+      case 'add':
+        this.add();
+        break;
+    }
   }
-  changeItemDetail(e) {}
+
+  selectedChange(val: any) {
+    this.itemSelected = val?.data;
+    this.detectorRef.detectChanges();
+  }
+
+  // moreFunc
+  eventChangeMF(e) {
+    this.changeDataMF(e.e, e.data);
+  }
 
   changeDataMF(e, data) {}
 
+  clickMoreFunction(e) {
+    this.clickMF(e.e, e.data);
+  }
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
@@ -136,25 +224,67 @@ export class QuotationsComponent extends UIComponent {
         break;
     }
   }
-  delete(dt) {}
-  edit(e, data) {}
-  copy(e, data) {}
 
   add() {
     this.view.dataService.addNew().subscribe((res) => {
-      res.status = '1';
-      res.customerID = this.customerID;
-      debugger;
+      if (!res.quotationsID) {
+        this.api
+          .execSv<any>(
+            'SYS',
+            'AD',
+            'AutoNumbersBusiness',
+            'GenAutoNumberAsync',
+            [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
+          )
+          .subscribe((id) => {
+            res.quotationID = id;
+            this.openPopup(res);
+          });
+      } else this.openPopup(res);
+    });
+  }
+
+  openPopup(res) {
+    res.versionNo = 'V1.0';
+    res.status = '1';
+
+    var obj = {
+      data: res,
+      disableRefID: false,
+      action: 'add',
+      headerText: 'sdasdsadasdasd',
+    };
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    let dialog = this.callfc.openForm(
+      PopupAddQuotationsComponent,
+      '',
+      null,
+      null,
+      '',
+      obj,
+      '',
+      option
+    );
+  }
+
+  edit(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(data).subscribe((res) => {
       var obj = {
-        data: res,
-        action: 'add',
-        headerText: 'sdasdsadasdasd',
+        data: this.view.dataService.dataSelected,
+        action: 'edit',
+        headerText: e.text,
       };
       let option = new DialogModel();
       option.IsFull = true;
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      var dialog = this.callfc.openForm(
+      let dialog = this.callfc.openForm(
         PopupAddQuotationsComponent,
         '',
         null,
@@ -165,10 +295,92 @@ export class QuotationsComponent extends UIComponent {
         option
       );
     });
-    //   });
-    // });
   }
+
+  copy(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.copy(data).subscribe((res) => {
+      var obj = {
+        data: res,
+        action: 'copy',
+        headerText: e.text,
+      };
+      let option = new DialogModel();
+      option.IsFull = true;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let dialog = this.callfc.openForm(
+        PopupAddQuotationsComponent,
+        '',
+        null,
+        null,
+        '',
+        obj,
+        '',
+        option
+      );
+    });
+  }
+
+  delete(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data.recID)
+      )
+      .subscribe((res: any) => {
+        if (res) {
+        }
+      });
+  }
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteQuotationsByRecIDAsync';
+    opt.className = 'QuotationsBusiness';
+    opt.assemblyName = 'CM';
+    opt.service = 'CM';
+    opt.data = data;
+    return true;
+  }
+
   getIndex(recID) {
-    return this.view.dataService.data.findIndex((obj) => obj.recID == recID);
+    return (
+      this.view.dataService.data.findIndex((obj) => obj.recID == recID) + 1
+    );
   }
+
+  //tham khao
+  // getQuotations(){
+  //   this.requestData.predicates = 'RefType==@0 && RefID==@1';
+  //   this.requestData.dataValues= this.refType+";"+this.refID;
+  //   this.requestData.entityName = this.entityName;
+  //   this.requestData.funcID = this.funcID;
+  //   this.fetch().subscribe(res=>{
+  //     this.listQuotations = res ;
+  //    // this.view.dataService.data = this.listQuotations
+  //   })
+  // }
+
+  // fetch(): Observable<any[]> {
+  //   return this.api
+  //     .execSv<Array<any>>(
+  //       this.service,
+  //       this.assemblyName,
+  //       this.className,
+  //       this.methodLoadData,
+  //       this.requestData
+  //     )
+  //     .pipe(
+  //       finalize(() => {
+  //         /*  this.onScrolling = this.loading = false;
+  //         this.loaded = true; */
+  //       }),
+  //       map((response: any) => {
+  //         return response[0];
+  //       })
+  //     );
+  // }
 }

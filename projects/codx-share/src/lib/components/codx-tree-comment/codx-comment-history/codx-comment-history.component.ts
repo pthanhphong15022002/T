@@ -61,7 +61,6 @@ export class CodxCommentHistoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger
     if(this.data){
       this.getFileByObjectID();
     }
