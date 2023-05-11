@@ -18,7 +18,6 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
-import { TestComponetComponent } from './test-componet/test-componet.component';
 import { CmCustomerComponent } from './cmcustomer/cmcustomer.component';
 import { CmcustomerDetailComponent } from './cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -56,10 +55,6 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'test/:funcID',
-        component: TestComponetComponent,
-      },
-      {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
       },
@@ -87,7 +82,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
   declarations: [
     CodxCmComponent,
     LayoutComponent,
-    TestComponetComponent,
     CmCustomerComponent,
     CmcustomerDetailComponent,
     InformationComponent,
