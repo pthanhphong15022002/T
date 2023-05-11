@@ -34,6 +34,7 @@
 
 erm-quick-links-inner .dropdown-menu {
   width: 450px !important;
+  padding: 12px 0!important;
 }
 .place-holder {
   opacity: 0.65;
@@ -92,7 +93,7 @@ codx-view-list-detail {
   font-size: 1.275rem !important;
 }
 .fs-5-sm {
-  font-size: 1.175rem !important;
+  font-size: 1.15rem !important;
 }
 .fs-6 {
   //font-size: var(--fs-6) !important;
@@ -2582,12 +2583,14 @@ codx-toolbar {
   .card-header {
     margin-bottom: 10px;
   }
-  // .e-tab .e-content.e-lib{
-  //   padding-left: 15px!important;
-  //   padding-right: 15px!important;
-  // }
+  .e-tab .e-content.e-lib {
+    padding-left: 0px!important;
+  }
+  
 }
-
+.aside.aside-extended{
+  padding-left: 0px!important;
+}
 /**** end ac-dialog ***/
 
 .e-ddl.e-input-group.e-control-wrapper .e-ddl-icon::before {

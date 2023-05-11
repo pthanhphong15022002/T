@@ -35,7 +35,7 @@
 </ng-template>
 <ng-template #desc2Tmp let-data>
   <span #objectID [innerHTML]="
-            itemSelected?.objectID
+            data?.objectID
               | formatvalue : view.formModel : 'objectID' : objectID
               | async
           " class="text-gray-500 line-clamp line-clamp-1"></span>
@@ -45,7 +45,7 @@
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex align-items-center ac-cashID mt-n8 mb-5">
+    <div class="d-flex align-items-center ac-cashID mt-n8 mb-3">
       <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
         <i class="text-white icon-16" [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
       </div>
@@ -67,9 +67,9 @@
       </span>
       
     </div>
-    <div class="d-flex justify-content-between flex-grow-1 mb-5 mt-2">
+    <div class="d-flex justify-content-between flex-grow-1 mb-1 mt-2">
       <div class="d-flex align-items-center">
-        <span class="me-2 icon-apartment icon-16"></span>
+        <span class="me-2 icon-store icon-16"></span>
         <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5" #warehouseName [innerHTML]="
             itemSelected?.warehouseName
               | formatvalue : view.formModel : 'warehouseName' : warehouseName
@@ -86,7 +86,7 @@
 </ng-template>
 <ng-template #body>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex flex-wrap mb-5">
+    <div class="d-flex flex-wrap mb-1">
       <div class="d-flex align-items-center me-5">
         <span class="icon-apartment icon-16 me-2"></span>
         <codx-label class="fw-bold label-colon" default="Đối tượng" [formModel]="view.formModel">
@@ -98,7 +98,7 @@
           " class="text-gray-600"></span>
       </div>
     </div>
-    <div class="d-flex flex-wrap mb-5">
+    <div class="d-flex flex-wrap mb-1">
       <div class="d-flex align-items-center me-5">
         <span class="icon-i-wallet2 icon-16 me-2"></span>
         <codx-label class="fw-bold label-colon" fiedName="ReasonID" [formModel]="view.formModel">
@@ -113,7 +113,7 @@
           "></span>
       </div>
     </div>
-    <div class="d-flex align-items-center me-5 mb-5">
+    <div class="d-flex align-items-center me-5 mb-1">
       <span class="icon-brush icon-16 me-2"></span>
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="view.formModel">
       </codx-label>
@@ -188,6 +188,13 @@
             <th class="w-50 min-w-125px">
               <div class="d-flex">
                 <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="ItemID"
+                  [formModel]="fmInventoryJournalLines">
+                </codx-label>
+              </div>
+            </th>
+            <th class="w-50 min-w-125px">
+              <div class="d-flex">
+                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="ItemName" default="Tên mặt hàng"
                   [formModel]="fmInventoryJournalLines">
                 </codx-label>
               </div>
@@ -329,6 +336,10 @@
             <td>
               <span *ngIf="item.itemID != null && item.itemID != ''"
                 class="text-nowrap">{{item.itemID}}</span>
+            </td>
+            <td>
+              <span *ngIf="item.itemName != null && item.itemName != ''"
+                class="text-nowrap">{{item.itemName}}</span>
             </td>
             <td>
               <span *ngIf="item.idiM0!= null && item.idiM0 != ''"

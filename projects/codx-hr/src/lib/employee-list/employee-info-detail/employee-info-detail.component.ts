@@ -1,3 +1,4 @@
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import { PopupJobGeneralInfoComponent } from './../../employee-profile/popup-job-general-info/popup-job-general-info.component';
 import { PopupEbenefitComponent } from './../../employee-profile/popup-ebenefit/popup-ebenefit.component';
 import { PopupEdayoffsComponent } from './../../employee-profile/popup-edayoffs/popup-edayoffs.component';
@@ -67,6 +68,7 @@ import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-eco
 import { PopupEProcessContractComponent } from '../../employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { PopupForeignWorkerComponent } from '../../employee-profile/popup-foreign-worker/popup-foreign-worker.component';
 import { PopupViewallBenefitComponent } from './pop-up/popup-viewall-benefit/popup-viewall-benefit.component';
+import { PopupViewAllComponent } from './pop-up/popup-view-all/popup-view-all.component';
 
 @Component({
   selector: 'lib-employee-info-detail',
@@ -150,6 +152,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
+
+  dialogViewAll : any;
 
   infoPersonal: any;
   infoPersonalContract: any;
@@ -254,7 +258,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   reRenderGrid = true;
 
   //#region ColumnsGrid
-  passportColumnGrid;
   visaColumnGrid;
   workPermitColumnGrid;
   healthColumnsGrid;
@@ -360,10 +363,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   EExperienceTmp: TemplateRef<any>;
   @ViewChild('tempFromDate', { static: true }) tempFromDate;
   @ViewChild('tempToDate', { static: true }) tempToDate: TemplateRef<any>;
-
-  // ePassPort
-  @ViewChild('passportCol1', { static: true }) passportCol1: TemplateRef<any>;
-  @ViewChild('passportCol2', { static: true }) passportCol2: TemplateRef<any>;
 
   // ePassVisa
   @ViewChild('visaCol1', { static: true }) visaCol1: TemplateRef<any>;
@@ -664,6 +663,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }
   }
 
+  //Check loaded ESalary
+  loadedESalary: boolean;
+  loadEBenefit: boolean;
+
   initSalaryInfo() {
     if (this.employeeID) {
       //Job salaries Lương chức danh
@@ -691,8 +694,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         rqBSalary.predicates = 'EmployeeID=@0 and IsCurrent=@1';
         rqBSalary.page = 1;
         rqBSalary.pageSize = 1;
+        this.loadedESalary = false;
 
         this.hrService.loadData('HR', rqBSalary).subscribe((res) => {
+          this.loadedESalary = true;
           if (res && res[0]) {
             this.crrEBSalary = res[0][0];
             this.df.detectChanges();
@@ -702,11 +707,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
       // Benefit
       if (!this.listCrrBenefit)
+      this.loadEBenefit = false;
         this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
+          this.loadEBenefit = true;
           if (res?.length) {
             this.listCrrBenefit = res;
             this.df.detectChanges();
-          }
+          } 
         });
 
       // Asset
@@ -1217,50 +1224,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }
     //#endregion
 
-    //#region get columnGrid EPassport - Hộ chiếu
-    if (!this.passportColumnGrid) {
-      this.hrService.getHeaderText(this.ePassportFuncID).then((res) => {
-        let passportHeaderText = res;
-        this.passportColumnGrid = [
-          {
-            headerText:
-              passportHeaderText['PassportNo'] +
-              ' | ' +
-              passportHeaderText['IssuedPlace'],
-            template: this.passportCol1,
-            width: '150',
-          },
-          {
-            headerText:
-              passportHeaderText['IssuedDate'] +
-              ' | ' +
-              passportHeaderText['ExpiredDate'],
-            template: this.passportCol2,
-            width: '150',
-          },
-        ];
-      });
-  
-      // let insPassport = setInterval(() => {
-      //   if (this.passportGridview) {
-      //     clearInterval(insPassport);
-      //     let t = this;
-      //     this.passportGridview?.dataService.onAction.subscribe((res) => {
-      //       if (res) {
-      //         if (res.type == 'loaded') {
-      //           t.passportRowCount = res['data'].length;
-      //           if(res['data'].length > 0){
-      //             this.crrPassport = res.data[0]
-      //             // debugger
-      //           }
-      //         }
-      //       }
-      //     });
-      //     this.passportRowCount = this.passportGridview?.dataService.rowCount;
-      //   }
-      // }, 100);
-    }
-    //#endregion
 
     //#region get columnGrid EWorkPermit - Giấy phép lao động
     if (!this.workPermitColumnGrid) {
@@ -2411,8 +2374,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         }
         break;
 
-      case this.ePassportFuncID + 'ViewAll':
-        this.popupViewAll(this.ePassportFuncID);
+      case this.ePassportFuncID + 'ViewAll':        
+        // this.popupViewAll(this.ePassportFuncID)
+        this.popupViewAllPassport();
         break;
       case this.eVisaFuncID + 'ViewAll':
         this.popupViewAll(this.eVisaFuncID);
@@ -3000,6 +2964,38 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       option
     );
     this.df.detectChanges();
+
+  }
+
+  popupViewAllPassport(){
+    let opt = new DialogModel();
+    opt.zIndex = 999;
+    let popup = this.callfunc.openForm(
+      PopupViewAllComponent,
+      null,
+      850,
+      550,
+      this.ePassportFuncID,
+      {
+        funcID: this.ePassportFuncID,
+        employeeId: this.employeeID,
+        headerText: this.getFormHeader(this.ePassportFuncID),
+        sortModel: this.passportSortModel,
+        //columnGrid: this.passportColumnGrid,
+        formModel: this.ePassportFormModel,
+        hasFilter: false,
+      }
+      ,
+      null,
+      opt
+    )
+    popup.closed.subscribe((res) => {
+      debugger
+      if(res?.event){
+        this.crrPassport = res.event
+        this.df.detectChanges();
+      }
+    })
     
   }
   // getDataAsync(funcID: string) {

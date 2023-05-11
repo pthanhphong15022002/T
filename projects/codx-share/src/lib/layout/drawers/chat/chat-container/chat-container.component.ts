@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit, TemplateR
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { AuthService } from 'codx-core';
 import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
-
+import { ɵglobal as global } from '@angular/core';
 declare var window: any;
 
 @Component({
@@ -38,7 +38,7 @@ export class CodxChatContainerComponent implements OnInit,OnDestroy {
   
   @ViewChild("boxChats",{static:true}) boxChats:TemplateRef<any>;
   @ViewChild("boxChatItem",{static:true}) boxChatItem:TemplateRef<any>;
-
+  windowNg:any=global;
   ngOnInit(): void {
   }
   ngAfterViewInit(){
@@ -84,7 +84,7 @@ export class CodxChatContainerComponent implements OnInit,OnDestroy {
       let group = this.lstGroupActive.shift();
       let ele = document.getElementById(group.groupID);
       // get current instance của element trên DOM
-      let codxBoxChat = window.ng.getComponent(ele);
+      let codxBoxChat = this.windowNg.ng.getComponent(ele);
       if(codxBoxChat){
         this.lstGroupCollapse.push(codxBoxChat.group);
       }
@@ -113,7 +113,7 @@ export class CodxChatContainerComponent implements OnInit,OnDestroy {
     debugger
     let ele = document.getElementById(group.groupID);
     if(ele){
-      let codxBoxChat =  window.ng.getComponent(ele);
+      let codxBoxChat =  this.windowNg.ng.getComponent(ele);
       let index = this.lstGroupActive.findIndex(x => x.groupID == group.groupID); 
       if(index > -1 && codxBoxChat){
         this.lstGroupActive.splice(index, 1);
