@@ -20,8 +20,27 @@
       <ng-container *ngTemplateOutlet="dashboard3"> </ng-container>
     </div>
   </div>
-  <div class="w-100 h-100 bg-danger" *ngIf="!isLoaded">
-
+  <div class="w-100 h-100" *ngIf="!isLoaded">
+    <div class="d-flex justify-content-center align-items-center h-100 bg-light">
+      <div class="col-lg-3 col-md-3 col-3" align="center">
+        <div id="rounded-container">
+          <ejs-progressbar
+            #circular3
+            id="circular4"
+            [type]="'Circular'"
+            [maximum]="100"
+            [minimum]="0"
+            [value]="40"
+            [width]="'150'"
+            [height]="'150'"
+            [isIndeterminate]="true"
+            [progressThickness]="10"
+            [animation]="{ enable: true, duration: 2000, delay: 0 }"
+          >
+          </ejs-progressbar>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 
@@ -164,10 +183,9 @@
             style="display: block"
             [dataSource]="myDBData?.tasksByRef?.tasksRef"
             weightValuePath="quantity"
-            [leafItemSettings]=" {
-            labelPath: 'refName'
-          }
-          "
+            [leafItemSettings]="{
+              labelPath: 'refName'
+            }"
           >
           </ejs-treemap>
         </div>
@@ -208,7 +226,7 @@
               endAngle="360"
               [majorTicks]="{
                 height: 0
-            }"
+              }"
               [labelStyle]="{
                 position: 'Inside',
                 useRangeColor: true,
@@ -257,7 +275,7 @@
               endAngle="360"
               [majorTicks]="{
                 height: 0
-            }"
+              }"
               [labelStyle]="{
                 position: 'Inside',
                 useRangeColor: true,
