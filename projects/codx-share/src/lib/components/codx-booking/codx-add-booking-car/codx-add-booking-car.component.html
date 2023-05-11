@@ -244,10 +244,10 @@
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <div class="btn-group">
-      <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)"  [disabled]="viewOnly">
+      <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)"  [disabled]="viewOnly|| onSaving">
         <codx-label name="lblApprove" default="Gửi duyệt" [formModel]="formModel"></codx-label>
       </button>
-      <button class="btn btn-primary" (click)="onSaveForm()"  [disabled]="viewOnly">
+      <button class="btn btn-primary" (click)="onSaveForm()"  [disabled]="viewOnly|| onSaving">
         <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
       </button>
     </div>

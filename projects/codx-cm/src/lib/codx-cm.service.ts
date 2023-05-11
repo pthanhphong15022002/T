@@ -297,6 +297,14 @@ export class CodxCmService {
       data
     );
   }
+  editInstance(data:any){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'EditInstanceAsync',
+      data
+    );
+  }
 
   getListCbxCampaigns() {
     return this.api.exec<any>(
