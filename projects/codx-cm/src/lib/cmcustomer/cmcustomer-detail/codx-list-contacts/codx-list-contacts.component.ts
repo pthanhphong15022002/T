@@ -186,7 +186,6 @@ export class CodxListContactsComponent implements OnInit {
               );
               if (index != -1) {
                 if (e?.event?.contactType.split(';').some((x) => x == '1')) {
-                  console.log(this.listContacts[index].contactType.split(';'));
                   if (
                     this.listContacts[index].contactType.split(';').length == 1
                   ) {
@@ -268,7 +267,6 @@ export class CodxListContactsComponent implements OnInit {
               );
               if (index != -1) {
                 if (e?.event?.contactType.split(';').some((x) => x == '1')) {
-                  console.log(this.listContacts[index].contactType.split(';'));
                   if (
                     this.listContacts[index].contactType.split(';').length == 1
                   ) {

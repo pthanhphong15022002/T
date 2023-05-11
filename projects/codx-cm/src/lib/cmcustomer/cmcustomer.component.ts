@@ -360,7 +360,6 @@ export class CmCustomerComponent
   }
 
   viewChanged(e) {
-    console.log(e);
   }
 
   changeView(e) {
@@ -430,7 +429,6 @@ export class CmCustomerComponent
   }
 
   changeDataMF(e, data) {
-    console.log(e);
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
@@ -444,10 +442,10 @@ export class CmCustomerComponent
             res.disabled = true;
             break;
           case 'CM0101_1':
-            if (data.isBlackList) res.isblur = true;
+            if (data.isBlackList) res.disabled = true;
             break;
           case 'CM0101_3':
-            if (!data.isBlackList) res.isblur = true;
+            if (!data.isBlackList) res.disabled = true;
             break;
           case 'CM0102_2':
             if (
