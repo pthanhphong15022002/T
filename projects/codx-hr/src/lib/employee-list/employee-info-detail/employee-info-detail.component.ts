@@ -664,6 +664,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }
   }
 
+  //Check loaded ESalary
+  loadedESalary: boolean;
+  loadEBenefit: boolean;
+
   initSalaryInfo() {
     if (this.employeeID) {
       //Job salaries Lương chức danh
@@ -691,8 +695,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         rqBSalary.predicates = 'EmployeeID=@0 and IsCurrent=@1';
         rqBSalary.page = 1;
         rqBSalary.pageSize = 1;
+        this.loadedESalary = false;
 
         this.hrService.loadData('HR', rqBSalary).subscribe((res) => {
+          this.loadedESalary = true;
           if (res && res[0]) {
             this.crrEBSalary = res[0][0];
             this.df.detectChanges();
@@ -702,11 +708,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
       // Benefit
       if (!this.listCrrBenefit)
+      this.loadEBenefit = false;
         this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
+          this.loadEBenefit = true;
           if (res?.length) {
             this.listCrrBenefit = res;
             this.df.detectChanges();
-          }
+          } 
         });
 
       // Asset
@@ -2999,7 +3007,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       '',
       option
     );
-    this.df.detectChanges();
     
   }
   // getDataAsync(funcID: string) {
