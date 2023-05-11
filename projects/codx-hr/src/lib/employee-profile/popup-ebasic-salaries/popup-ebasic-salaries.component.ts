@@ -44,6 +44,8 @@ export class PopupEBasicSalariesComponent
   fromListView: boolean = false; //check where to open the form
   showEmpInfo: boolean = true;
   genderGrvSetup: any;
+  gridViewSetup: any;
+  validate = 0;
   //end
   constructor(
     injector: Injector,
@@ -54,8 +56,7 @@ export class PopupEBasicSalariesComponent
     @Optional() data?: DialogData
   ) {
     super(injector);
-    //catch input data
-    // debugger
+
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
@@ -93,19 +94,18 @@ export class PopupEBasicSalariesComponent
   }
 
   onInit(): void {
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
+    this.hrService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((fg) => {
+        if (fg) {
+          this.formGroup = fg;
+          this.initForm();
+        }
+      });
+    this.cache.gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+    .subscribe( res =>{
+      if(res) this.gridViewSetup = res;
+    })
     //get emp from beginning
     this.cache
       .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
@@ -119,13 +119,12 @@ export class PopupEBasicSalariesComponent
 
   //change employee
   handleSelectEmp(evt) {
-    switch (evt?.field){
+    switch (evt?.field) {
       case 'employeeID': //check if employee changed
-        if(evt?.data && evt?.data.length > 0){
+        if (evt?.data && evt?.data.length > 0) {
           this.employeeId = evt?.data;
           this.getEmployeeInfoById(this.employeeId, evt?.field);
-        }
-        else {
+        } else {
           delete this.employeeId;
           delete this.employeeObj;
           this.formGroup.patchValue({
@@ -134,10 +133,9 @@ export class PopupEBasicSalariesComponent
         }
         break;
       case 'signerID': // check if signer changed
-        if(evt?.data && evt?.data.length > 0){
+        if (evt?.data && evt?.data.length > 0) {
           this.getEmployeeInfoById(evt?.data, evt?.field);
-        }
-        else {
+        } else {
           this.formGroup.patchValue({
             signerID: null,
             signerPosition: null,
@@ -220,12 +218,22 @@ export class PopupEBasicSalariesComponent
   }
 
   onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    this.checkValidate();
+    if(this.validate > 0){
+      this.validate = 0;
       return;
     }
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
 
-    if (!this.dateCompare(this.EBasicSalaryObj.effectedDate, this.EBasicSalaryObj.expiredDate)) {
+    if (
+      !this.dateCompare(
+        this.EBasicSalaryObj.effectedDate,
+        this.EBasicSalaryObj.expiredDate
+      )
+    ) {
       this.hrService.notifyInvalidFromTo(
         'ExpiredDate',
         'EffectedDate',
@@ -265,6 +273,25 @@ export class PopupEBasicSalariesComponent
     return false;
   }
 
+  checkValidate() {
+    var keygrid = Object.keys(this.gridViewSetup);
+    var keymodel = Object.keys(this.EBasicSalaryObj);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              this.EBasicSalaryObj[keymodel[i]] == null ||
+              String(this.EBasicSalaryObj[keymodel[i]]).match(/^ *$/) !== null
+            ) {
+              this.notify.notifyCode('SYS009',0,'"' + this.gridViewSetup[keygrid[index]].headerText + '"');
+              this.validate++;
+            }
+          }
+        }
+      }
+    }
+  }
 
   // valueChange(event) {
   //   if (
