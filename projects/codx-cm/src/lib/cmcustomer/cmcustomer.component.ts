@@ -359,8 +359,7 @@ export class CmCustomerComponent
     // this.afterLoad();
   }
 
-  viewChanged(e) {
-  }
+  viewChanged(e) {}
 
   changeView(e) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -516,6 +515,9 @@ export class CmCustomerComponent
             dialog.closed.subscribe((e) => {
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
+                e.event.modifiedOn = new Date();
+                this.view.dataService.update(e?.event).subscribe();
+                this.detectorRef.detectChanges();
                 // this.customerDetail.listTab(this.funcID);
               }
             });

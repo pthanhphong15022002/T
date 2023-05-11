@@ -150,13 +150,29 @@ export class PopupAddQuotationsComponent implements OnInit {
     }
   }
   //change Data
-  changeRefID(e) {}
+  changeCombox(e) {
+    if (!e?.data || !e?.field) return;
+    this.quotations[e.field] = e.data;
+    switch (e?.field) {
+      case 'refID':
+        this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
+        break;
+      case 'customerID':
+        this.quotations.customerID = e?.data;
+        break;
+    }
+  }
+
   valueChange(e) {
-    if (e?.data && e?.field) this.quotations[e.field] = e.data;
+    if (!e?.data || !e?.field) return;
+    this.quotations[e.field] = e.data;
   }
+
   valueChangeDate(e) {
-    if (e?.data && e?.field) this.quotations[e.field] = e.data?.fromDate;
+    if (!e?.data || !e?.field) return;
+    this.quotations[e.field] = e.data?.fromDate;
   }
+
   select(e) {}
   created(e) {}
 
