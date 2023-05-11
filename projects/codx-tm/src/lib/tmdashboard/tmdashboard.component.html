@@ -9,7 +9,7 @@
 </codx-views>
 
 <ng-template #template>
-  <div class="w-100 h-100">
+  <div class="w-100 h-100" *ngIf="isLoaded">
     <div *ngIf="reportID == 'TMD001'">
       <ng-container *ngTemplateOutlet="dashboard1"> </ng-container>
     </div>
@@ -20,6 +20,28 @@
       <ng-container *ngTemplateOutlet="dashboard3"> </ng-container>
     </div>
   </div>
+  <div class="w-100 h-100" *ngIf="!isLoaded">
+    <div class="d-flex justify-content-center align-items-center h-100 bg-light">
+      <div class="col-lg-3 col-md-3 col-3" align="center">
+        <div id="rounded-container">
+          <ejs-progressbar
+            #circular3
+            id="circular4"
+            [type]="'Circular'"
+            [maximum]="100"
+            [minimum]="0"
+            [value]="40"
+            [width]="'150'"
+            [height]="'150'"
+            [isIndeterminate]="true"
+            [progressThickness]="10"
+            [animation]="{ enable: true, duration: 2000, delay: 0 }"
+          >
+          </ejs-progressbar>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #dashboard1>
@@ -27,6 +49,7 @@
     [templates]="templates1"
     [panels]="panels1"
     [datas]="datas1"
+    [isEditMode]="false"
   ></codx-dashboard>
 </ng-template>
 
@@ -35,6 +58,7 @@
     [templates]="templates2"
     [panels]="panels2"
     [datas]="datas2"
+    [isEditMode]="false"
   ></codx-dashboard>
 </ng-template>
 
@@ -43,6 +67,7 @@
     [templates]="templates3"
     [panels]="panels3"
     [datas]="datas3"
+    [isEditMode]="false"
   ></codx-dashboard
 ></ng-template>
 
@@ -153,16 +178,14 @@
         Theo nguồn công việc
       </div>
       <div class="control-section">
-        <div align="center">
+        <div align="center" *ngIf="myDBData?.tasksByRef?.tasksRef">
           <ejs-treemap
-            [id]="newGuid()"
             style="display: block"
             [dataSource]="myDBData?.tasksByRef?.tasksRef"
             weightValuePath="quantity"
-            [leafItemSettings]=" {
-            labelPath: 'refName'
-          }
-          "
+            [leafItemSettings]="{
+              labelPath: 'refName'
+            }"
           >
           </ejs-treemap>
         </div>
@@ -203,7 +226,7 @@
               endAngle="360"
               [majorTicks]="{
                 height: 0
-            }"
+              }"
               [labelStyle]="{
                 position: 'Inside',
                 useRangeColor: true,
@@ -252,7 +275,7 @@
               endAngle="360"
               [majorTicks]="{
                 height: 0
-            }"
+              }"
               [labelStyle]="{
                 position: 'Inside',
                 useRangeColor: true,
@@ -451,7 +474,7 @@
       </div>
       <div class="my-4">
         <div class="control-section">
-          <ejs-accumulationchart [id]="newGuid()" #pie1 style="display: block">
+          <ejs-accumulationchart  #pie1 style="display: block">
             <e-accumulation-series-collection>
               <e-accumulation-series
                 [dataSource]="myDBData?.tasksByGroup"
@@ -681,7 +704,7 @@
         Tỷ lệ công việc theo nhóm
       </div>
       <div class="control-section">
-        <ejs-accumulationchart [id]="newGuid()" #pie2 style="display: block">
+        <ejs-accumulationchart #pie2 style="display: block">
           <e-accumulation-series-collection>
             <e-accumulation-series
               name="TasksByGroup2"
@@ -934,7 +957,6 @@
         <ejs-chart
           style="display: block"
           align="center"
-          [id]="newGuid()"
           [title]="'Thống kê công việc hoàn thành và số giờ thực hiện'"
         >
           <e-series-collection>
@@ -964,13 +986,13 @@
 <ng-template #team_dashboard>
   <div id="11" title="Tỷ lệ hoàn thành đúng hạn giao việc">
     <div class="w-100 h-100">
-      <codx-chart
+      <!-- <codx-chart
         height="180"
         [title]="chartSettings5?.title"
         [seriesSetting]="chartSettings5?.seriesSetting"
         [dataSource]=""
       >
-      </codx-chart>
+      </codx-chart> -->
     </div>
   </div>
 </ng-template>
@@ -1160,7 +1182,7 @@
       </div>
       <div class="my-4">
         <div class="control-section">
-          <ejs-accumulationchart [id]="newGuid()" #pie1 style="display: block">
+          <ejs-accumulationchart  #pie1 style="display: block">
             <e-accumulation-series-collection>
               <e-accumulation-series
                 name="assignDB-tasksByRef"

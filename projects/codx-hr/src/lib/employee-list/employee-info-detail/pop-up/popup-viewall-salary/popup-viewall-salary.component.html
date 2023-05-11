@@ -1,0 +1,148 @@
+<codx-form
+  #form
+  [headerText]="headerTextNew"
+  [body]="body"
+  [formModel]="formModel"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div class="card-body">
+      <codx-gridview
+        *ngIf="basicSalaryColumnGrid"
+        #gridView
+        [formModel]="eBasicSalaryFormmodel"
+        [columnsGrid]="basicSalaryColumnGrid"
+        [sort]="[bSalarySortModel]"
+        [service]="'HR'"
+        [assemblyName]="'Core'"
+        [className]="'DataBusiness'"
+        [method]="'LoadDataAsync'"
+        [predicates]="'EmployeeID=@0'"
+        [dataValues]="employeeId"
+        [pageSize]="numPageSizeGridView"
+        height="auto"
+      ></codx-gridview>
+    </div>
+  </ng-template>
+
+  <!-- #region Lương cơ bản columnGrid templates-->
+  <ng-template #basicSalaryCol1 let-data>
+    <div class="d-flex align-items-center">
+      <span
+        class="bullet bullet-vertical d-flex align-items-center min-h-30px mh-100 me-3"
+        [class]="data.isCurrent ? 'bg-primary' : 'bg-transparent'"
+      ></span>
+      <div class="d-flex flex-column">
+        <div
+          class="d-flex align-items-center"
+          [ngClass]="
+            data.isCurrent
+              ? 'text-primary fs-6 fw-bold'
+              : 'text-dark fs-6 fw-bold'
+          "
+        >
+          <span class="icon-attach_money icon-16 me-1"></span>
+          <span class="">
+            <span
+              [innerHTML]="
+                data?.bSalary
+                  | formatvalue : eBasicSalaryFormmodel : 'bSalary'
+                  | async
+              "
+            ></span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #basicSalaryCol2 let-data>
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center">
+        <span
+          class="icon-monetization_on icon-16 me-2"
+          [ngClass]="
+            data.isCurrent
+              ? 'text-primary fs-6 fw-bold'
+              : 'text-dark fs-6 fw-bold'
+          "
+        ></span>
+        <span
+          [ngClass]="
+            data.isCurrent ? 'text-primary fw-bold' : 'text-dark fs-6 fw-bold'
+          "
+        >
+          <span
+            [innerHTML]="
+              data?.siSalary
+                | formatvalue : eBasicSalaryFormmodel : 'siSalary'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #basicSalaryCol3 let-data>
+    <div class="d-flex flex-column">
+      <div
+        class="d-flex align-items-center mb-5px"
+        [ngClass]="
+          data.isCurrent
+            ? 'text-primary fs-6 fw-bold'
+            : 'text-dark fs-6 fw-bold'
+        "
+      >
+        <span class="icon-attach_money icon-16 me-2"></span>
+        <span
+          [innerHTML]="
+            data?.jSalary
+              | formatvalue : eBasicSalaryFormmodel : 'jSalary'
+              | async
+          "
+        ></span>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #basicSalaryCol4 let-data>
+    <div class="has-action-menu">
+      <div class="d-flex flex-column">
+        <div
+          class="d-flex align-items-center"
+          [ngClass]="
+            data.isCurrent
+              ? 'text-primary fs-6 fw-bold'
+              : 'text-dark fs-6 fw-bold'
+          "
+        >
+          <span class="icon-event icon-16 text-gray-500 me-2"></span>
+          <span
+            [innerHTML]="
+              data?.effectedDate
+                | formatvalue : eBasicSalaryFormmodel : 'effectedDate'
+                | async
+            "
+          ></span>
+          <span class="mx-2">-</span>
+          <span
+            [innerHTML]="
+              data?.expiredDate
+                | formatvalue : eBasicSalaryFormmodel : 'expiredDate'
+                | async
+            "
+          ></span>
+        </div>
+      </div>
+      <codx-mfunc
+        [formModel]="eBasicSalaryFormmodel"
+        (clickMF)="clickMF($event, data, 'basicSalary')"
+        type="hover"
+        [dataItem]="data"
+      >
+      </codx-mfunc>
+    </div>
+  </ng-template>
+  <!-- #endregion -->
+</codx-form>

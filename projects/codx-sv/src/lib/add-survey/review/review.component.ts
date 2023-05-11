@@ -43,6 +43,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   lstQuestion: any;
   isSent:boolean = false;
   survey:any;
+  html = '<div class="text-required-rv ms-6 d-flex align-items-center"><i class="icon-error_outline text-danger"></i><span class="ms-2 text-danger">Đây là một câu hỏi bắt buộc</span></div>'
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -267,7 +268,11 @@ export class ReviewComponent extends UIComponent implements OnInit {
         this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));
+      
+      
     }
+
+    if(itemQuestion.mandatory) this.removeClass(itemQuestion.recID)
   }
 
   checkAnswer(seqNoSession, seqNoQuestion, seqNoAnswer, answerType = null) {
@@ -349,8 +354,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
           if(x.mandatory && !objR.answer)
           {
             check = true
-            var html = '<div class="text-required-rv ms-6 d-flex align-items-center"><i class="icon-error_outline text-danger"></i><span class="ms-2 text-danger">Đây là một câu hỏi bắt buộc</span></div>'
-            document.getElementById("formError"+x.recID).innerHTML = html;
+            document.getElementById("formError"+x.recID).innerHTML = this.html;
             document.getElementById("formId"+x.recID).className += " border-danger";
           }
           else
@@ -411,7 +415,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
     }
     else
     {
-
+      document.getElementById("formError"+id).remove();
+      document.getElementById("formId"+id).classList.remove("border-danger");
     }
   }
 }
