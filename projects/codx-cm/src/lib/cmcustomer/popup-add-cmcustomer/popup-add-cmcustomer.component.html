@@ -1,6 +1,6 @@
 <codx-form
   #form
-  [customToolbar]="header"
+  [customToolbar]="title"
   [subHeader]="subHeader"
   [body]="body"
   [openMore]="true"
@@ -112,6 +112,15 @@
     </div>
     <div class="row">
       <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" [fiedName]="'CustGroupID'">
+          </codx-label>
+          <codx-input
+            [field]="'custGroupID'"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
         <div class="form-group">
           <codx-label
             [formModel]="form.formModel"
