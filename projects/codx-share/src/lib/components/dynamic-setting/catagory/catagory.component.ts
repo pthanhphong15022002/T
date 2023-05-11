@@ -19,6 +19,7 @@ import {
   DialogRef,
   FormModel,
   SidebarModel,
+  Util,
 } from 'codx-core';
 //import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 //import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
@@ -735,42 +736,50 @@ export class CatagoryComponent implements OnInit {
                 .subscribe((res) => {
                   if (res) {
                     // update AD_CompanySettings
-                    const tempDataValue = JSON.parse(dt.dataValue);
-                    console.log(tempDataValue);
+                    if (
+                      this.category == '1' &&
+                      data.reference &&
+                      data.isCustomize
+                    ) {
+                      const tempDataValue = JSON.parse(dt.dataValue);
+                      this.updateCustom(tempDataValue, data);
+                    }
 
-                    const requestData = new DataRequest();
-                    requestData.entityName = 'AD_CompanySettings';
-                    requestData.pageLoading = false;
-                    this.api
-                      .execSv(
-                        'SYS',
-                        'Core',
-                        'DataBusiness',
-                        'LoadDataAsync',
-                        requestData
-                      )
-                      .pipe(
-                        tap((r) => console.log(r)),
-                        map((r) => r[0]),
-                        tap((r) => console.log(r))
-                      )
-                      .subscribe((res) => {
-                        const first = res[0];
+                    // console.log(tempDataValue);
 
-                        if (first) {
-                          first.baseCurr = tempDataValue.BaseCurr;
-                          first.secondCurr = tempDataValue.SecondCurr;
-                          first.conversionCurr = tempDataValue.LocalCurr;
+                    // const requestData = new DataRequest();
+                    // requestData.entityName = 'AD_CompanySettings';
+                    // requestData.pageLoading = false;
+                    // this.api
+                    //   .execSv(
+                    //     'SYS',
+                    //     'Core',
+                    //     'DataBusiness',
+                    //     'LoadDataAsync',
+                    //     requestData
+                    //   )
+                    //   .pipe(
+                    //     tap((r) => console.log(r)),
+                    //     map((r) => r[0]),
+                    //     tap((r) => console.log(r))
+                    //   )
+                    //   .subscribe((res) => {
+                    //     const first = res[0];
 
-                          this.api
-                            .execAction(
-                              'AD_CompanySettings',
-                              [first],
-                              'UpdateAsync'
-                            )
-                            .subscribe();
-                        }
-                      });
+                    //     if (first) {
+                    //       first.baseCurr = tempDataValue.BaseCurr;
+                    //       first.secondCurr = tempDataValue.SecondCurr;
+                    //       first.conversionCurr = tempDataValue.LocalCurr;
+
+                    //       this.api
+                    //         .execAction(
+                    //           'AD_CompanySettings',
+                    //           [first],
+                    //           'UpdateAsync'
+                    //         )
+                    //         .subscribe();
+                    //     }
+                    //   });
                   }
                   this.changeDetectorRef.detectChanges();
                   console.log(res);
@@ -797,6 +806,14 @@ export class CatagoryComponent implements OnInit {
                       dt.refModule = data.moduleSales;
                       dt.transType = data.transType;
                       this.settingValue.push(dt);
+                      if (
+                        this.category == '1' &&
+                        data.reference &&
+                        data.isCustomize
+                      ) {
+                        const tempDataValue = JSON.parse(dt.dataValue);
+                        this.updateCustom(tempDataValue, data);
+                      }
                       this.api
                         .execAction('SYS_SettingValues', [dt], 'SaveAsync')
                         .subscribe((res) => {
@@ -812,6 +829,29 @@ export class CatagoryComponent implements OnInit {
           }
         }
       }
+    }
+  }
+
+  //hàm dùng để custom xử lý sau khi lưu setting value cho các trường hợp đặc thù.
+  updateCustom(dataVale: any, setting: any) {
+    if (!dataVale || !setting) return;
+    switch (setting.reference.toLowerCase()) {
+      case 'updatecompanysettings':
+        this.cache.companySetting().subscribe((res) => {
+          const first = res[0];
+
+          if (first) {
+            var field = Util.camelize(setting.fieldName);
+            first[field] = dataVale[setting.fieldName];
+            // first.secondCurr = dataVale.SecondCurr;
+            // first.conversionCurr = dataVale.LocalCurr;
+
+            this.api
+              .execAction('AD_CompanySettings', [first], 'UpdateAsync')
+              .subscribe();
+          }
+        });
+        break;
     }
   }
 

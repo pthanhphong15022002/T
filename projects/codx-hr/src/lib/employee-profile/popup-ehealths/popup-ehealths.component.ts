@@ -133,10 +133,10 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    // if (this.formGroup.invalid) {
-    //   this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
 
     if(this.actionType === 'copy' || this.actionType === 'add'){
       delete this.healthObj.recID
