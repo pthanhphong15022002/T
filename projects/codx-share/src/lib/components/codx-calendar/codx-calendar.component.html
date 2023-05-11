@@ -15,14 +15,25 @@
           [value]="dateChange"
         >
         </ejs-calendar>
-        <codx-input
-          type="combobox"
-          [service]="'CO'"
-          [assemblyName]="'CO'"
-          [className]="'CalendarsBusiness'"
-          [method]="'GetOrgUnitByCbxAsync'"
-          (valueChange)="valueChange($event)"
-        ></codx-input>
+        <div class="my-2">
+          <ejs-dropdownlist
+            id="cbxChooseCalendar"
+            [dataSource]="celendarTypes"
+            [fields]="fields"
+            [allowFiltering]="true"
+            [itemTemplate]="itemTemplate"
+            [value]="defaultCalendar"
+            (filtering)="onFiltering($event)"
+            (change)="onChange($event)"
+          >
+            <ng-template #itemTemplate="" let-data="">
+              <div class="d-flex align-items-center p-2">
+                <img [src]="data.smallIcon" class="svg-icon" />
+                <span class="ms-2">{{ data.defaultName }}</span>
+              </div>
+            </ng-template>
+          </ejs-dropdownlist>
+        </div>
         <ng-container #listParam>
           <div class="d-flex align-items-center mt-3 title-calendar">
             <div class="w-100">
