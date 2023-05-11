@@ -366,6 +366,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
+  isLoaded:boolean=false;
   getMyDashboardData(predicates: string, dataValues: string) {
     let model = new GridModels();
     model.funcID = this.funcID;
@@ -376,6 +377,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('TM', 'TaskBusiness', 'GetDataMyDashboardAsync', [model])
       .subscribe((res) => {
         this.myDBData = res;
+        this.isLoaded=true;
       });
 
     this.detectorRef.detectChanges();
@@ -391,6 +393,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('TM', 'TaskBusiness', 'GetDataTeamDashboardAsync', [model])
       .subscribe((res) => {
         this.myDBData = res;
+        this.isLoaded=true;
       });
 
     this.detectorRef.detectChanges();
@@ -406,6 +409,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('TM', 'TaskBusiness', 'GetDataAssignDashboardAsync', [model])
       .subscribe((res) => {
         this.assignDBData = res;
+        this.isLoaded = true;
         console.log('assignDBData', this.assignDBData);
       });
 
@@ -435,6 +439,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   onActions(e: any) {
+    this.isLoaded=false;
     this.reportID = e.data;
     this.predicates = null;
     this.dataValues = null;
@@ -451,7 +456,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       default:
         break;
     }
-    this.detectorRef.detectChanges();
+
   }
 
   newGuid(): string {
