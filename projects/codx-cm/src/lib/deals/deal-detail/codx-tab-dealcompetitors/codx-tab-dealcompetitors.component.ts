@@ -142,18 +142,6 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     }
   }
 
-  changeDataMF(e) {
-    if (e != null) {
-      e.forEach((res) => {
-        switch (res.functionID) {
-          case 'SYS04':
-            res.disabled = false;
-            break;
-        }
-      });
-    }
-  }
-
   clickAddCompetitor(titleMore, action, data = new CM_DealsCompetitors()) {
     this.cache
       .gridViewSetup('CMDealsCompetitors', 'grvCMDealsCompetitors')
