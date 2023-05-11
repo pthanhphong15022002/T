@@ -6,9 +6,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./tabs-header.component.scss']
 })
 export class TabsHeaderComponent implements OnInit {
-  @Input() listTab = [];
-  @Input() size = 20;
-  @Output() tab = new EventEmitter();
+  @Input() listTab = []; // danh sách tab {icon, name, textDefault}
+  @Input() size = 20; // kích thước icon và chữ
+  @Output() tab = new EventEmitter(); // giá trị trả về khi chọn => name
 
   sizeIcon = '';
   sizeText = '';

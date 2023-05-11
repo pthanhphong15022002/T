@@ -188,7 +188,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   onSaveForm() {
-    debugger;
     if (this.form?.formGroup?.invalid == true) {
       this.esService.notifyInvalid(this.form?.formGroup, this.formModel);
       return;

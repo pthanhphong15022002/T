@@ -7,24 +7,21 @@ import { FormModel } from 'codx-core';
   templateUrl: './codx-list-deals.component.html',
   styleUrls: ['./codx-list-deals.component.css'],
 })
-export class CodxListDealsComponent implements OnInit{
+export class CodxListDealsComponent implements OnInit {
   @Input() customerID: any;
   lstDeals = [];
   formModel: FormModel;
   lstStep = [];
-  constructor(
-    private cmSv: CodxCmService,
-
-  ) {}
-
+  loaded: boolean;
+  constructor(private cmSv: CodxCmService) {}
 
   async ngOnInit() {
     this.getListDealsByCustomerID(this.customerID);
     this.formModel = await this.cmSv.getFormModel('CM0201');
-
   }
 
   getListDealsByCustomerID(customerID) {
+    this.loaded = false;
     this.cmSv.getListDealsByCustomerID(customerID).subscribe((res) => {
       if (res && res.length > 0) {
         this.lstDeals = res;
@@ -33,22 +30,23 @@ export class CodxListDealsComponent implements OnInit{
         if (lstRef != null && lstRef.length > 0)
           this.getStepsByListID(lstSteps, lstRef);
       }
+      this.loaded = true;
     });
   }
 
-  getStepsByListID(lstStepID, lstIns){
-    this.cmSv.getStepsByListID(lstStepID, lstIns).subscribe(res => {
-      if(res && res.length > 0){
+  getStepsByListID(lstStepID, lstIns) {
+    this.cmSv.getStepsByListID(lstStepID, lstIns).subscribe((res) => {
+      if (res && res.length > 0) {
         this.lstStep = res;
       }
-    })
+    });
   }
 
-  getStep(stepID){
-    if(this.lstStep != null && this.lstStep.length > 0){
-      var step = this.lstStep.find(x => x.stepID == stepID);
+  getStep(stepID) {
+    if (this.lstStep != null && this.lstStep.length > 0) {
+      var step = this.lstStep.find((x) => x.stepID == stepID);
       return step;
-    }else{
+    } else {
       return null;
     }
   }

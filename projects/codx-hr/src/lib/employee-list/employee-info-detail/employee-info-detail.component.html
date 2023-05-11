@@ -3695,53 +3695,34 @@
                 <span class="icon-add icon-18"></span>
               </button>
             </div>
-
-            <!-- <div class="d-flex justify-content-between mt-6 mb-3"> 
-              <div class="d-flex me-3">
-                <codx-dropdown-select
-                  *ngIf="eAssetGrvSetup"
-                  [cssClass]="'rounded-pill border-1'"
-                  cssPopup="h-350px w-300px"
-                  [isMulti]="true"
-                  type="combobox"
-                  [emptyText]="eAssetHeaderText['AssetCategory']"
-                  field="AssetCategory"
-                  [refValue]="eAssetGrvSetup?.AssetCategory?.referedValue"
-                  (valueChange)="valueChangeFilterAssetCategory($event)"
-                ></codx-dropdown-select>
-                <span class="ms-2">
-                  <codx-dropdown-calendar
-                    [cssPopup]="'w-600px h-400px'"
-                    emptyText="Năm"
-                    [firstChange]="false"
-                    [displayOption]="ops"
-                    [selectedType]="'y'"
-                    [cssClass]="'rounded-pill'"
-                    (change)="valueChangeYearFilterEAsset($event)"
-                  ></codx-dropdown-calendar
-                ></span>
-              </div>
-            </div> -->
           </div>
 
-          <!-- <div class="mb-1">
-            <div class="d-flex flex-wrap mt-3 mb-3">
-              <div *ngFor="let asset of lstAsset">
-                <div
-                  class="badge border-0 me-2 badge-primary"
-                  [style.background]="getAssetBackgroundColor(asset)"
-                  [style.color]="getAssetFontColor(asset)"
-                  [innerHTML]="
-                    asset
-                      | formatvalue : eAssetFormModel : 'assetCategory'
-                      | async
-                  "
-                ></div>
-              </div>
-            </div>
-          </div> -->
+          <div class="profile-grid">
+          <codx-gridview
+          *ngIf="eAssetColumnGrid" 
+          #eAssetGridView
+          [formModel]="eAssetFormModel"
+          [entityName]="'HR_EAssets'"
+          service="HR" 
+          assemblyName="ERM.Business.HR"
+          className="EAssetsBusiness"
+          method="LoadListEAssetAsync"
+          [dataValues]="employeeID"
+          idField="EmployeeID"
+          [columnsGrid]="eAssetColumnGrid">
+        </codx-gridview>
+      </div>
 
-          <div class="d-flex flex-wrap pt-5 ps-4">
+          <!-- <div class="profile-grid">
+
+            <codx-gridview *ngIf="eAssetColumnGrid" #eAssetGridView [sort]="[assetSortModel]"
+              [formModel]="eAssetFormModel" [columnsGrid]="eAssetColumnGrid" [service]="'HR'" [assemblyName]="'Core'"
+              [className]="'DataBusiness'" [method]="'LoadDataAsync'" [predicates]="'EmployeeID=@0'"
+              [dataValues]="employeeID" [pageSize]="numPageSizeGridView" [entityName]="'HR_EAssets'" [rowHeight]="30"
+              height="auto"></codx-gridview>
+          </div> -->
+          
+          <!-- <div class="d-flex flex-wrap pt-5 ps-4">
             <ng-container *ngFor="let asset of lstAsset">
               <div class="me-3 mb-3 w-100" *ngIf="asset != null">
                 <codx-temp-full
@@ -3802,8 +3783,13 @@
                         </codx-label>
                       </div>
                       <div class="mb-1">
-                        {{ data?.issuedDate | fmDT }}
-                        <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
+                       <span
+                        [innerHTML]="
+                          data?.issuedDate
+                            | formatvalue : eAssetFormModel : 'issuedDate'
+                            | async
+                        "
+                        ></span>
                       </div>
                       <div
                         *ngIf="data?.isAllowReturn == true"
@@ -3833,99 +3819,15 @@
                             <i class="icon-calendar_today icon-16 me-1"></i>
                             <span> {{ data?.returnedDate | fmDT }}</span>
                           </div>
-                        </div>
-                        <!-- <codx-mfunc
-                          [formModel]="eAssetFormModel"
-                          (clickMF)="clickMF($event, data, 'Assets')"
-                          [dataItem]="data"
-                          type="hover"
-                        >
-                        </codx-mfunc> -->
+                        </div> 
                       </div>
                     </div>
                   </div>
                 </ng-template>
               </div>
             </ng-container>
-          </div>
+          </div> -->
 
-          <div class="d-none">
-            <div class="d-flex justify-content-between mt-6 mb-3">
-              <div class="d-flex align-items-center">
-                <span class="icon-i-filter-right icon-20 me-2"></span>
-                <div class="d-flex align-items-center me-3">
-                  <codx-label
-                    default="Chi tiết"
-                    class="fw-bold text-uppercase fs-5 text-gray-600"
-                  >
-                  </codx-label>
-                  <span class="text-gray-500 mx-2"> | </span>
-                  <span class="text-gray-500">({{ eAssetRowCount }})</span>
-                </div>
-              </div>
-              <div class="d-flex me-3">
-                <codx-dropdown-select
-                  *ngIf="eAssetGrvSetup"
-                  [cssClass]="'rounded-pill border-1'"
-                  cssPopup="h-350px w-300px"
-                  [isMulti]="true"
-                  type="combobox"
-                  [emptyText]="eAssetHeaderText['AssetCategory']"
-                  field="AssetCategory"
-                  [refValue]="eAssetGrvSetup?.AssetCategory?.referedValue"
-                  (valueChange)="valueChangeFilterAssetCategory($event)"
-                ></codx-dropdown-select>
-                <span class="ms-2">
-                  <codx-dropdown-calendar
-                    [cssPopup]="'w-600px h-400px'"
-                    emptyText="Năm"
-                    [firstChange]="false"
-                    [displayOption]="ops"
-                    [selectedType]="'y'"
-                    [cssClass]="'rounded-pill'"
-                    (change)="valueChangeYearFilterEAsset($event)"
-                  ></codx-dropdown-calendar
-                ></span>
-              </div>
-            </div>
-            <div class="profile-grid">
-              <codx-gridview
-                *ngIf="eAssetColumnGrid"
-                #eAssetGridView
-                [sort]="[assetSortModel]"
-                [formModel]="eAssetFormModel"
-                [columnsGrid]="eAssetColumnGrid"
-                [service]="'HR'"
-                [assemblyName]="'Core'"
-                [className]="'DataBusiness'"
-                [method]="'LoadDataAsync'"
-                [predicates]="'EmployeeID=@0'"
-                [dataValues]="employeeID"
-                [pageSize]="numPageSizeGridView"
-                [entityName]="'HR_EAssets'"
-                [rowHeight]="30"
-                height="auto"
-              ></codx-gridview>
-              <!-- <div class="d-flex flex-wrap mt-6 mb-3">
-                <div
-                  [style.background]="'black'"
-                  class="badge border-0 me-2"
-                  *ngFor="let asset of lstAsset"
-                >
-                  <div class="has-action-menu">
-                    {{ asset.assetCategory }} gan cung
-                    <codx-mfunc
-                      [formModel]="formModel"
-                      (clickMF)="clickMF($event, asset, 'Assets')"
-                      type="hover"
-                      [dataItem]="asset"
-                    >
-                    </codx-mfunc>
-                  </div>
-                </div>
-              </div> -->
-            </div>
-          </div>
         </div>
       </div>
     </ng-container>
@@ -4019,76 +3921,49 @@
             >
             </codx-temp-full>
             <ng-template #footerEContract let-data>
-              <div class="row mb-4">
-                <div class="col">
-                  <div class="text-gray-600 pb-1">
+              <div class="row mb-5">
+                <div class="col-4">
+                  <div class="text-gray-600 pb-1 d-flex">
+                    <span
+                      class="icon-wysiwyg icon-16 text-gray-600 me-2"
+                    ></span>
                     <codx-label
                       fiedName="ContractTypeID"
                       [formModel]="eContractFormModel"
                     >
                     </codx-label>
                   </div>
-
-                  <div class="fw-bold fs-6 text-primary">
-                    <span
-                      [innerHTML]="
-                        data?.contractTypeID
-                          | formatvalue : eContractFormModel : 'contractTypeID'
-                          | async
-                      "
-                    ></span>
+                </div>
+                <div class="col-8">
+                  <div class="d-flex align-items-center">
+                    <div
+                    class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                    data?.contractTypeID
+                      | formatvalue : eContractFormModel : 'contractTypeID'
+                      | async
+                  "
+                  ></div>
                   </div>
                 </div>
-                <div class="col">
-                  <div class="d-flex align-items-center mb-1">
-                    <codx-label
-                      class="text-gray-600"
-                      fiedName="ContractNo"
-                      [formModel]="eContractFormModel"
-                    >
-                    </codx-label>
-                    <span class="mx-2">-</span>
-                    <codx-label
-                      class="text-gray-600"
-                      fiedName="SignedDate"
-                      [formModel]="eContractFormModel"
-                    >
-                    </codx-label>
-                  </div>
+              </div>
 
-                  <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center">
-                      <span
-                        class="icon-description icon-16 text-gray-600 me-1"
-                      ></span>
-                      <span class="text-dark fw-bold fs-6">
-                        <span>{{ crrEContract?.contractNo }}</span>
-                      </span>
-                    </div>
+              <div class="row mb-5">
+                <div class="col-4">
+                  <div class="text-gray-600 pb-1 d-flex">
                     <span
-                      class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 mx-2 text-gray-400"
+                      class="icon-wysiwyg icon-16 text-gray-600 me-2"
                     ></span>
-                    <div class="fw-bold fs-6 text-primary">
-                      <span
-                        [innerHTML]="
-                          data?.signedDate
-                            | formatvalue : eContractFormModel : 'signedDate'
-                            | async
-                        "
-                      ></span>
-                    </div>
+                    <codx-label
+                      [name]="'lblEContractMainTimeLimit'"
+                      [formModel]="eContractFormModel"
+                      [default]="'Thời hạn hợp đồng'"
+                    >
+                    </codx-label>
                   </div>
                 </div>
-                <div class="col">
-                  <div class="text-gray-600 pb-1">
-                    <codx-label
-                      fiedName="EffectedDate"
-                      [formModel]="eContractFormModel"
-                    >
-                    </codx-label>
-                  </div>
+                <div class="col-8">
                   <div class="d-flex align-items-center">
-                    <span class="icon-event icon-16 text-gray-600 me-1"></span>
                     <span class="fw-bold text-dark fs-6">
                       <span
                         [innerHTML]="
@@ -4108,6 +3983,50 @@
                         "
                       ></span>
                     </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-5">
+                <div class="col-4">
+                  <div class="text-gray-600 pb-1 d-flex">
+                    <span
+                      class="icon-wysiwyg icon-16 text-gray-600 me-2"
+                    ></span>
+                    <codx-label
+                    class="text-gray-600"
+                    fiedName="ContractNo"
+                    [formModel]="eContractFormModel"
+                  >
+                  </codx-label>
+                  <span class="mx-2">-</span>
+                  <codx-label
+                    class="text-gray-600"
+                    fiedName="SignedDate"
+                    [formModel]="eContractFormModel"
+                  >
+                  </codx-label>
+                  </div>
+                </div>
+                <div class="col-8">
+                  <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center">
+                      <span class="text-dark fw-bold fs-6">
+                        <span>{{ crrEContract?.contractNo }}</span>
+                      </span>
+                    </div>
+                    <span
+                      class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 mx-2 text-gray-400"
+                    ></span>
+                    <div class="fw-bold fs-6 text-primary">
+                      <span
+                        [innerHTML]="
+                          data?.signedDate
+                            | formatvalue : eContractFormModel : 'signedDate'
+                            | async
+                        "
+                      ></span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -4202,12 +4121,12 @@
                 <codx-dropdown-calendar
                   [cssPopup]="'w-600px h-400px'"
                   emptyText="Chọn năm..."
-                  [firstChange]="false"
                   [displayOption]="ops"
                   [selectedType]="'y'"
                   [cssClass]="'rounded-pill'"
                   (change)="valueChangeYearFilterDayOff($event)"
                 ></codx-dropdown-calendar>
+                  <!-- [firstChange]="false" -->
               </span>
               <span class="text-gray-500 mx-2">|</span>
               <button
@@ -4245,7 +4164,6 @@
           </div>
 
           <div class="mb-1 mt-5">
-            <div class="profile-grid">
               <codx-gridview
                 *ngIf="dayoffColumnGrid"
                 [sort]="[dayOffSortModel]"
@@ -4262,11 +4180,9 @@
                 [entityName]="'HR_EDayOffs'"
                 [rowHeight]="30"
                 height="auto"
-                [allowSorting]="true"
                 [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
-          </div>
         </div>
       </div>
       <!-- Nhật ký công tác -->
@@ -6016,8 +5932,15 @@
 
 <ng-template #templateEAssetCol2 let-data>
   <div class="mb-1">
-    {{ data?.issuedDate | fmDT }}
-    <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
+    <span
+    [innerHTML]="
+      data?.issuedDate
+        | formatvalue : eAssetFormModel : 'issuedDate'
+        | async
+    "
+    ></span>
+
+    <!-- {{ data?.issuedDate | fmDT }} -->
   </div>
   <div
     *ngIf="data?.isAllowReturn == true"
@@ -6035,7 +5958,15 @@
       </div>
       <div class="d-flex align-items-center">
         <i class="icon-calendar_today icon-16 me-1"></i>
-        <span> {{ data?.returnedDate | fmDT }}</span>
+        <span
+        [innerHTML]="
+          data?.returnedDate
+            | formatvalue : eAssetFormModel : 'returnedDate'
+            | async
+        "
+        ></span>
+
+        <!-- <span> {{ data?.returnedDate | fmDT }}</span> -->
       </div>
     </div>
     <codx-mfunc
@@ -6051,12 +5982,12 @@
 <!-- #region Hộ chiếu columnGrid templates-->
 <ng-template #passportCol1 let-data>
   <div class="d-flex align-items-center">
-    <span
+    <!-- <span
       class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
       [class]="
         data.recID == crrPassport?.recID ? ' bg-primary' : 'bg-transparent'
       "
-    ></span>
+    ></span> -->
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-5px">
         <span class="icon-description icon-16 text-gray-500 me-2"></span>
@@ -6112,7 +6043,7 @@
         </span>
         <codx-mfunc
           [formModel]="ePassportFormModel"
-          (clickMF)="clickMF($event, data, 'passport')"
+          (clickMF)="clickMF($event, data, 'passportGridView')"
           type="hover"
           [dataItem]="data"
         >
@@ -6127,10 +6058,10 @@
 <!-- #region Thị thực columnGrid templates-->
 <ng-template #visaCol1 let-data>
   <div class="d-flex align-items-center">
-    <span
+    <!-- <span
       class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
       [class]="data.recID == crrVisa?.recID ? ' bg-primary' : 'bg-transparent'"
-    ></span>
+    ></span> -->
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-5px">
         <span class="icon-email icon-16 text-gray-500 me-2"></span>
@@ -7480,7 +7411,7 @@
       <div class="card-body">
         <div class="mt-4 profile-grid">
           <codx-gridview
-            *ngIf="passportColumnGrid && ePassportFormModel"
+          
             #passportGridview
             [formModel]="ePassportFormModel"
             [columnsGrid]="passportColumnGrid"
@@ -7551,48 +7482,16 @@
 </ng-template>
 
 <!-- Salary modal view All -->
-<ng-template #templateViewSalary let-dialogSalary>
-  <div class="codx-form card w-100 h-100 rounded-0 border-0">
-    <div class="card-header flex-column">
-      <div class="d-flex align-items-center justify-content-between w-100">
-        <div class="card-title">
-          <codx-label
-            default="Mức lương"
-            class="dialog-title line-clamp line-clamp-1"
-          ></codx-label>
-          <span class="text-gray-500 mx-2"> | </span>
-          <span class="text-gray-500 mx-2"> Tất cả </span>
-          <span class="text-gray-500">{{ eBasicSalaryRowCount }}</span>
-        </div>
-        <div class="card-toolbar">
-          <button
-            type="button"
-            class="btn btn-flex text-dark-75 text-hover-primary px-0"
-            (click)="closeModelSalary(dialogSalary)"
-          >
-            <span class="icon-close icon-18"></span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="card-body">
-      <codx-gridview
-        *ngIf="basicSalaryColumnGrid && eBasicSalaryFormmodel"
-        #basicSalaryGridview
-        [formModel]="eBasicSalaryFormmodel"
-        [columnsGrid]="basicSalaryColumnGrid"
-        [sort]="[bSalarySortModel]"
-        [service]="'HR'"
-        [assemblyName]="'Core'"
-        [className]="'DataBusiness'"
-        [method]="'LoadDataAsync'"
-        [predicates]="'EmployeeID=@0'"
-        [dataValues]="employeeID"
-        [pageSize]="numPageSizeGridView"
-        height="auto"
-      ></codx-gridview>
-    </div>
-  </div>
+<ng-template #templateViewSalary let-dialogViewSalary>
+  <lib-popup-viewall-salary
+    [funcID]="view.funcID"
+    [employeeId]="employeeID"
+    [dialog]="dialogViewSalary"
+    [formModel]="view.formModel"
+    [headerText]="headerTextSalary"
+    (RenderUpdateData)="UpdateDataFromPopup($event)"
+  >
+  </lib-popup-viewall-salary>
 </ng-template>
 
 <ng-template #emptyDataTemplate>

@@ -120,9 +120,8 @@ export class QuotationsComponent extends UIComponent {
     //     active: true,
     //     sameData: true,
     //     model: {
-    //       resources: this.columnGrids,
     //       template2: this.templateMore,
-    //       // frozenColumns: 1,
+    //       frozenColumns: 1,
     //     },
     //   },
     // ];
@@ -153,7 +152,8 @@ export class QuotationsComponent extends UIComponent {
           headerText: grvSetup[key].headerText,
           width: grvSetup[key].width,
           template: template,
-        };
+          // textAlign: 'center',
+        };  
       } else {
         colums = {
           field: field,
@@ -177,7 +177,7 @@ export class QuotationsComponent extends UIComponent {
       },
       {
         type: ViewType.grid,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           resources: this.columnGrids,
@@ -186,6 +186,7 @@ export class QuotationsComponent extends UIComponent {
         },
       },
     ];
+    this.detectorRef.detectChanges() ;
   }
 
   click(e) {

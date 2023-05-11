@@ -8,7 +8,8 @@ import { CodxAddTaskComponent } from '../codx-add-stask/codx-add-task.component'
 import { TM_Tasks } from '../../codx-tasks/model/task.model';
 import { AssignTaskModel } from '../../../models/assign-task.model';
 import { AssignInfoComponent } from '../../assign-info/assign-info.component';
-import { DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
+import { DP_Instances_Steps_TaskGroups, DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
+import { CodxAddGroupTaskComponent } from '../codx-add-group-task/codx-add-group-task.component';
 
 @Component({
   selector: 'codx-step-task',
@@ -27,9 +28,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isShowComment = true;
   @Input() typeProgress = 1;
 
-  @Input() isOnlyView = false;
+  @Input() isOnlyView = true;
   @Input() isEditTimeDefault = true;
   @Input() isUpdateProgressGroup = true;
+  @Input() isRoleAll = true;
 
   @Output() valueChangeProgress = new EventEmitter<any>();
   id = ''
@@ -38,7 +40,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   user: any;
   dateFomat = 'dd/MM/yyyy';
   dateTimeFomat = 'HH:mm - dd/MM/yyyy';
-  isRoleAll = false;
   listTaskType = [];
   listTask = [];
   listGroupTask = [];
@@ -404,28 +405,28 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
 
-  clickMFTaskGroup(e: any, data?: any) {
-    // switch (e.functionID) {
-    //   case 'SYS02':
-    //     this.deleteGroupTask(data);
-    //     break;
-    //   case 'SYS03':
-    //     this.openPopupTaskGroup(data, 'edit');
-    //     break;
-    //   case 'SYS04':
-    //     this.openPopupTaskGroup(data, 'copy');
-    //     break;
-    //   case 'DP08':
-    //     this.groupTaskID = data?.refID;
-    //     this.openTypeTask();
-    //     break;
-    //   case 'DP12':
-    //     this.viewTask(data, 'G');
-    //     break;
-    //   case 'DP20':
-    //     this.openUpdateProgress(data);
-    //     break;
-    // }
+  clickMFTaskGroup(e: any, group: any) {
+    switch (e.functionID) {
+      case 'SYS02': //delete
+        this.deleteGroupTask(group);
+        break;
+      case 'SYS03': //edit
+        this.copyGroupTask(group);
+        break;
+      case 'SYS04': //copy
+        this.copyGroupTask(group);
+        break;
+      case 'DP08': //
+        // this.groupTaskID = group?.refID;
+        // this.openTypeTask();
+        break;
+      case 'DP12':
+        // this.viewTask(group, 'G');
+        break;
+      case 'DP20': //Progress
+        // this.openUpdateProgress(group);
+        break;
+    }
   }
 
   //task
@@ -446,7 +447,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task['isTaskDefault'] = false;
 
     let taskOutput = await this.openPopupTask('add',task);
-    console.log(taskOutput);
+    if(taskOutput?.event.task){
+      let data = taskOutput?.event;
+      this.currentStep?.tasks?.push(data.task);
+      this.currentStep['progress'] = data.progressStep;
+      let group = this.listGroupTask.find(group => group.refID == data.task.taskGroupID);
+      if(group){
+        group?.task.push(data.task);
+        group['progress'] = data.progressGroup;
+      }
+    }
     
   }
 
@@ -463,9 +473,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       let taskCopy = JSON.parse(JSON.stringify(task));
       taskCopy.recID = Util.uid();
       taskCopy.refID = Util.uid();
+      taskCopy.process = 0;
       task['isTaskDefault'] = false;
       this.taskType = this.listTaskType.find(type => type.value == taskCopy?.taskType)
-      let taskOutput = await this.openPopupTask('copy',taskCopy);
+      let taskOutput = await this.openPopupGroup('copy',taskCopy);
 
       if(taskOutput?.event.task){
         let data = taskOutput?.event;
@@ -565,11 +576,131 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       // this.saveAssign.emit(doneSave);
     });
   }
-  //group task
-  addGroupTask(){
 
+  //group task
+  async addGroupTask(){
+    let taskGroup = new DP_Instances_Steps_TaskGroups();
+    taskGroup.recID = Util.uid();
+    taskGroup.refID = Util.uid();
+    taskGroup['isTaskDefault'] = false;
+    taskGroup['progress'] = 0;
+    taskGroup['stepID'] = this.currentStep['recID'];
+    taskGroup['task'] = [];
+
+    let index = this.listGroupTask.length;
+    let taskBefore;
+    if (index > 0) {
+      taskBefore = this.listGroupTask[index - 2];
+    }
+    taskGroup['startDate'] = taskBefore?.endDate || this.currentStep?.startDate;
+    let taskOutput = await this.openPopupTask('add',taskGroup);
+
+    if(taskOutput?.event.task){
+      let data = taskOutput?.event;
+      this.currentStep?.tasks?.push(data.task);
+      this.currentStep['progress'] = data.progressStep;
+      let group = this.listGroupTask.find(group => group.refID == data.task.taskGroupID);
+      if(group){
+        group?.task.push(data.task);
+        group['progress'] = data.progressGroup;
+      }
+    }
   }
 
+  async copyGroupTask(group){
+    if(group){
+      let groupCopy = JSON.parse(JSON.stringify(group));
+      groupCopy.recID = Util.uid();
+      groupCopy.refID = Util.uid();
+      groupCopy['progress'] = 0;
+      group['isTaskDefault'] = false;
+
+      let index = this.listGroupTask.length;
+      let taskBefore;
+      if (index > 0) {
+        taskBefore = this.listGroupTask[index - 2];
+      }
+      groupCopy['startDate'] = taskBefore?.endDate || this.currentStep?.startDate;
+      let taskOutput = await this.openPopupTask('copy',groupCopy);
+
+      if(taskOutput?.event.task){
+        let data = taskOutput?.event;
+        this.currentStep?.tasks?.push(data.task);
+        this.currentStep['progress'] = data.progressStep;
+        let group = this.listGroupTask.find(group => group.refID == data.task.taskGroupID);
+        if(group){
+          group?.task.push(data.task);
+          group['progress'] = data.progressGroup;
+        }
+      }
+    }
+  }
+  async editGroupTask(group){
+    if(group){
+      let groupEdit = JSON.parse(JSON.stringify(group));
+      let taskOutput = await this.openPopupTask('copy',groupEdit);
+
+      if(taskOutput?.event.task){
+        let data = taskOutput?.event;
+        this.currentStep?.tasks?.push(data.task);
+        this.currentStep['progress'] = data.progressStep;
+        let group = this.listGroupTask.find(group => group.refID == data.task.taskGroupID);
+        if(group){
+          group?.task.push(data.task);
+          group['progress'] = data.progressGroup;
+        }
+      }
+    }
+  }
+  deleteGroupTask(group){
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.api.exec<any>(
+          'DP',
+          'InstanceStepsBusiness',
+          'DeleteTaskStepAsync',
+          group
+        ).subscribe(data => {
+          if(data){
+            let indexTask = this.currentStep?.tasks?.findIndex(taskFind => taskFind.recID == group.recID);
+            let group = this.listGroupTask.find(group => group.refID == group.taskGroupID);
+            let indexTaskGroup = -1;
+            if(group?.task?.length > 0){
+              indexTaskGroup = group?.task?.findIndex(taskFind => taskFind.recID == group.recID);
+            }
+            if(indexTask >= 0){
+              this.currentStep?.tasks?.splice(indexTask,1);
+            }
+            if(indexTaskGroup >= 0){
+              group?.task?.splice(indexTaskGroup,1);
+            }            
+            if(group){
+              group['progress'] = data[0];
+            }
+            this.currentStep['progress'] = data[1];
+          }
+        })
+      }
+    })
+  }
+
+  async openPopupGroup(action, group) {
+    let dataInput = {
+      action,
+      step: this.currentStep,
+      dataGroup: group || {},
+      isEditTimeDefault:this.currentStep?.leadtimeControl,
+    };
+    let popupTask = this.callfc.openForm(
+      CodxAddGroupTaskComponent,'',
+      500,
+      500,
+      '', 
+      dataInput);
+
+    let dataPopupOutput = await firstValueFrom(popupTask.closed);
+    return dataPopupOutput;
+  }
   // view
   viewTask(data){
 

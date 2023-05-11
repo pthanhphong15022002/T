@@ -27,6 +27,7 @@ import { PopupOKRWeightComponent } from '../popup/popup-okr-weight/popup-okr-wei
 import { PopupAddOKRPlanComponent } from '../popup/popup-add-okr-plan/popup-add-okr-plan.component';
 import { PopupShareOkrPlanComponent } from '../popup/popup-share-okr-plans/popup-share-okr-plans.component';
 import { PopupAddRoleComponent } from '../popup/popup-add-role/popup-add-role.component';
+import { loaded } from '@syncfusion/ej2-angular-charts';
 @Component({
   selector: 'lib-okr',
   templateUrl: './okr.component.html',
@@ -114,6 +115,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   refIDMeeting: any;
   isCollapsed = false;
   listUM = [];
+  loadedData: boolean;
+  loadedDataTree: boolean;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -321,6 +324,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   getOKRPlans(periodID: any, interval: any, year: any) {
     
     this.showPlanMF=false;
+    this.loadedData=false;
     if (
       this.periodID != null &&
       this.interval != null &&
@@ -348,7 +352,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                   this.showPlanMF=true;
                   this.dataOKR = okrs;
                   this.isAfterRender = true;
+                  this.loadedData=true;
                   this.getOrgTreeOKR();
+                  this.detectorRef.detectChanges();
                 }
               });
           } else {
@@ -357,16 +363,20 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             this.dataOKR = null;
             this.planNull = true;
             this.isAfterRender = true;
+            this.loadedData=true;
+            this.detectorRef.detectChanges();
           }
         });
     }
     else{
       
+      this.loadedData=true;
       this.orgUnitTree = [];
       this.dataOKRPlans = null;
       this.dataOKR = null;
       this.planNull = true;
       this.isAfterRender = true;
+      this.detectorRef.detectChanges();
     }
   }
   getOrgTreeOKR() {
@@ -396,6 +406,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         .subscribe((listOrg: any) => {
           if (listOrg) {
             this.orgUnitTree = [listOrg];
+            this.loadedDataTree=true;
+          }
+          else{
+            this.orgUnitTree=null;
+            this.loadedDataTree=true;
           }
         });
     }
@@ -625,6 +640,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   hiddenChartClick(evt: any) {
     this.isHiddenChart = evt;
     this.detectorRef.detectChanges();
+  }
+  clickTreeNode(evt: any) {
+    evt.stopPropagation();
+    evt.preventDefault();
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Validate Func---------------------------------//

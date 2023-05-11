@@ -33,6 +33,7 @@ export class PopupListContactsComponent implements OnInit {
   objectName = '';
   gridViewSetup: any;
   lstContactCm = [];
+  loaded: boolean;
   constructor(
     private cache: CacheService,
     private callFc: CallFuncService,
@@ -55,12 +56,15 @@ export class PopupListContactsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loaded = false;
     this.cmSv.getContacts().subscribe((res) => {
       if (res != null && res.length > 0) {
         this.lstContacts = res;
         this.lstSearch = this.lstContacts;
         this.changeContacts(0, this.lstSearch[0]);
       }
+      this.loaded = true;
+
     });
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -171,7 +175,7 @@ export class PopupListContactsComponent implements OnInit {
           moreFuncName: this.moreFuncAdd,
           action: 'add',
           dataContact: null,
-          type: 'formList',
+          type: this.type == 'formAdd' ? this.type : 'formList',
           gridViewSetup: res,
           contactType: this.contactType,
         };

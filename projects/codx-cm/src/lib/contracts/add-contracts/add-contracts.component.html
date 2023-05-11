@@ -48,13 +48,13 @@
   </header>
 
   <main>
-    <tabs-header
+    <codx-taskbar
       [listTab]="listClicked"
       (tab)="changeTab($event)"
       size="22"
       class="mb-3"
-    ></tabs-header>
-    <hr />
+    ></codx-taskbar>
+    <hr class="mt-0" />
     <container-element [ngSwitch]="tabClicked">
       <some-element
         *ngSwitchCase="'general'"
@@ -75,88 +75,11 @@
       <some-element *ngSwitchDefault></some-element>
     </container-element>
 
-    <!-- <article>
-      <div >
-        <div class="d-inline-flex align-items-center text-primary mb-3" style="border-bottom: 2px solid;">
-          <span class="icon-error_outline icon-20 title-icon"></span>
-          <codx-label
-            class="fs-5 font-weight-bold"
-            [name]="'lblAddGroup'"
-            [formName]="'DPStepsFields'"
-            [gridViewName]="'grvDPStepsFields'"
-            [default]="'Thông tin chung'"
-          ></codx-label>
-        </div>
-      </div>
-
-      <ng-container
-        [ngTemplateOutlet]="generalTemplate"
-        [ngTemplateOutletContext]="{}"
-      ></ng-container>
-    </article>
-
-    <article>
-      <div>
-        <div class="d-inline-flex align-items-center text-primary mb-3" style="border-bottom: 2px solid;">
-          <span class="icon-error_outline icon-20 title-icon"></span>
-          <codx-label
-            class="fs-5 font-weight-bold"
-            [name]="'lblAddGroup'"
-            [formName]="'DPStepsFields'"
-            [gridViewName]="'grvDPStepsFields'"
-            [default]="'Thông tin đại diện'"
-          ></codx-label>
-        </div>
-      </div>
-
-      <ng-container
-        [ngTemplateOutlet]="representativeTemplate"
-        [ngTemplateOutletContext]="{}"
-      ></ng-container>
-    </article>
-
-    <article>
-      <div>
-        <div class="d-inline-flex align-items-center text-primary mb-3" style="border-bottom: 2px solid;">
-          <span class="icon-format_list_numbered icon-20 title-icon"></span>
-          <codx-label
-            class="fs-5 font-weight-bold"
-            [name]="'lblAddGroup'"
-            [formName]="'DPStepsFields'"
-            [gridViewName]="'grvDPStepsFields'"
-            [default]="'Chi tiết mặt hàng'"
-          ></codx-label>
-        </div>
-      </div>
-
-      <ng-container
-        [ngTemplateOutlet]="itemsTemplate"
-        [ngTemplateOutletContext]="{}"
-      ></ng-container>
-    </article>
-
-    <article>
-      <div>
-        <div class="d-inline-flex align-items-center text-primary mb-3" style="border-bottom: 2px solid;">
-          <span class="icon-edit-one icon-20 me-2 title-icon"></span>
-          <codx-label
-            class="fs-5 font-weight-bold"
-            [name]="'lblAddGroup'"
-            [formName]="'DPStepsFields'"
-            [gridViewName]="'grvDPStepsFields'"
-            [default]="'Điều khoản hợp đồng'"
-          ></codx-label>
-        </div>
-      </div>
-      <ng-container
-        [ngTemplateOutlet]="contractTemplate"
-        [ngTemplateOutletContext]="{}"
-      ></ng-container>
-    </article> -->
   </main>
   <footer></footer>
 </div>
 
+<!-- Template chính -->
 <!-- thông tin chung -->
 <ng-template #generalTemplate let-data="value">
   <div class="d-flex justify-content-between">
@@ -195,6 +118,7 @@
               [formModel]="dialog.formModel"
               field="contractID"
               type="text"
+              [crrValue]="contracts?.contractID"
               (valueChange)="valueChangeText($event)"
             >
             </codx-input>
@@ -214,8 +138,9 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="dealID"
-              type="text"
-              (valueChange)="valueChangeText($event)"
+              type="combobox"
+              [crrValue]="contracts?.dealID"
+              (valueChange)="valueChangeCombobox($event)"
             >
             </codx-input>
             <!-- <codx-combobox-select></codx-combobox-select> -->
@@ -233,8 +158,9 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="quotationID"
-              type="text"
-              (valueChange)="valueChangeText($event)"
+              type="combobox"
+              [crrValue]="contracts?.quotationID"
+              (valueChange)="valueChangeCombobox($event)"
             >
             </codx-input>
           </div>
@@ -251,8 +177,9 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="orderID"
-              type="text"
-              (valueChange)="valueChangeText($event)"
+              type="combobox"
+              [crrValue]="contracts?.orderID"
+              (valueChange)="valueChangeCombobox($event)"
             >
             </codx-input>
           </div>
@@ -319,6 +246,8 @@
               field="useType"
               type="valuelist"
               refValue="CRM033"
+              [crrValue]="contracts?.useType"
+              (valueChange)="valueChangeCombobox($event)"
             >
             </codx-input>
           </div>
@@ -337,6 +266,8 @@
               field="contractType"
               type="valuelist"
               refValue="CRM020"
+              [crrValue]="contracts?.contractType"
+              (valueChange)="valueChangeCombobox($event)"
             >
             </codx-input>
           </div>
@@ -363,7 +294,13 @@
       </div>
     </div>
   </div>
-  <div>
+
+  <codx-taskbar
+    [listTab]="[{icon:'icon-error_outline', name:'contrac', textDefault:'Chủ thể hợp đồng' }]"
+    size="22"
+  ></codx-taskbar>
+  <hr class="mt-0" />
+  <!-- <div>
     <div
       class="d-inline-flex align-items-center text-primary mb-3"
       style="border-bottom: 2px solid"
@@ -377,13 +314,388 @@
         [default]="'Chủ thể hợp đồng'"
       ></codx-label>
     </div>
-  </div>
+  </div> -->
   <ng-container
     [ngTemplateOutlet]="representativeTemplate"
     [ngTemplateOutletContext]="{}"
   ></ng-container>
 </ng-template>
+<!-- chi tiết mặt hàng -->
+<ng-template #itemsTemplate let-data="value">
+  <product></product>
+</ng-template>
+<!-- phương thức thanh toán -->
+<ng-template #payTemplate let-data="value">
+  <div class="d-flex justify-content-between">
+    <div class="left" style="width: 50%">
+      <div class="row form-group">
+        <div class="col-4">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName="contractAmt"
+              default="Giá trị hợp đồng"
+            ></codx-label>
+          </div>
+          <div class="">
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="contractAmt"
+              type="number"
+              [min]="0"
+              [crrValue]="contracts?.contractAmt"
+              (valueChange)="valueChangeText($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-4">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName="paidAmt"
+              default="Số tiền thanh toán"
+            >
+            </codx-label>
+          </div>
+          <div class="">
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="paidAmt"
+              type="number"
+              [min]="0"
+              (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.paidAmt"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-4">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName="remainAmt"
+              default="Số tiền còn lại"
+            >
+            </codx-label>
+          </div>
+          <div class="">
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="remainAmt"
+              type="number"
+              [min]="0"
+              (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.remainAmt"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-4">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName="pmtTermID"
+              default="Điều khoản thanh toán"
+            ></codx-label>
+          </div>
+          <div class="">
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="pmtTermID"
+              type="valuelist"
+              (valueChange)="valueChangeCombobox($event)"
+              [crrValue]="contracts?.pmtTermID"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-8">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName="pmtMethodID"
+              default="Phương thức thanh toán"
+            ></codx-label>
+          </div>
+          <div class="">
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="pmtMethodID"
+              type="valuelist"
+              (valueChange)="valueChangeCombobox($event)"
+              [crrValue]="contracts?.pmtMethodID"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-4">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName="delTermID"
+              default="Điều khoản giao hàng"
+            ></codx-label>
+          </div>
+          <div class="">
+            <!-- TODO -->
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="delTermID"
+              type="valuelist"
+              [crrValue]="contracts?.delTermID"
+              (valueChange)="valueChangeCombobox($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-4">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName="delModeID"
+              default="Hình thức giao hàng"
+            ></codx-label>
+          </div>
+          <div class="">
+            <!-- TODO -->
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="delModeID"
+              type="combobox"
+              (valueChange)="valueChangeCombobox($event)"
+              [crrValue]="contracts?.delModeID"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-4">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName="delPrice"
+              default="Phí vận chuyển"
+            ></codx-label>
+          </div>
+          <div class="">
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="delPrice"
+              type="number"
+              (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.delPrice"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <div class="rigth" style="width: 40%">
+      <div class="row form-group">
+        <div class="col-6">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName="currencyID"
+              default="Tiền tệ"
+            ></codx-label>
+          </div>
+          <div class="">
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="currencyID"
+              type="valuelist"
+              [crrValue]="contracts?.currencyID"
+              (valueChange)="valueChangeText($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName="exchangeRate"
+              default="Tỷ giá"
+            >
+            </codx-label>
+          </div>
+          <div class="">
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="exchangeRate"
+              type="number"
+              [crrValue]="contracts?.exchangeRate"
+              (valueChange)="valueChangeText($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-6">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName="paymentStatus"
+              default="Tình trạng thanh toán"
+            >
+            </codx-label>
+          </div>
+          <div class="">
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="paymentStatus"
+              type="valuelist"
+              (valueChange)="valueChangeCombobox($event)"
+              [crrValue]="contracts?.paymentStatus"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div>
+            <!-- TODO -->
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName=""
+              default="Hạn thanh toán"
+            ></codx-label>
+          </div>
+          <div class="">
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="taskName"
+              type="datetime"
+              (valueChange)="changeValueDate($event)"
+              [crrValue]="contracts?.paymentStatus"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-6">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName="delStatus"
+              default="Tình trạng giao hàng"
+            ></codx-label>
+          </div>
+          <div class="">
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="delStatus"
+              type="valuelist"
+              refValue="CRM019"
+              (valueChange)="valueChangeCombobox($event)"
+              [crrValue]="contracts?.delStatus"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName=""
+              default="Hạn giao hàng"
+            >
+            </codx-label>
+          </div>
+          <div class="">
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="taskName"
+              type="datetime"
+              (valueChange)="changeValueDate($event)"
+              [crrValue]="contracts?.delStatus"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- điều khoản hợp đồng -->
+<ng-template #termsAndRelatedTemplate let-data="value">
+  <div>
+    <codx-input
+      [formModel]="dialog.formModel"
+      field="memo"
+      type="textarea"
+      headerposition="none"
+      format="ed"
+      height="150"
+    >
+    </codx-input>
+  </div>
+  <div class="d-flex justify-content-between mt-5">
+    <div
+      class="d-inline-flex align-items-center text-primary mb-3"
+      style="border-bottom: 2px solid"
+    >
+      <span class="icon-edit-one icon-22 title-icon"></span>
+      <codx-label
+        [ngStyle]="{ 'font-size': 14, 'font-weight': 500 }"
+        [name]="'lblAddGroup'"
+        [formName]="'SYS'"
+        [gridViewName]="'grvDPStepsFields'"
+        [default]="'Hồ sơ liên quan'"
+      ></codx-label>
+    </div>
+
+    <button
+      style="float: left"
+      type="button"
+      class="btn btn-light-primary"
+      (click)="addFile($event)"
+    >
+      <i class="icon-cloud_upload fs-5"></i
+      ><span>
+        <codx-label
+          name="UploadFile"
+          formName="Tasks"
+          default="Đính kèm"
+        ></codx-label>
+      </span>
+    </button>
+  </div>
+
+  <div>
+    <codx-attachment
+      #attachment
+      [objectType]=""
+      [objectId]="contracts?.recID"
+      hideFolder="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      [showMessage]="0"
+      hideDes="1"
+      type="inline"
+      allowMultiFile="1"
+      referType="source"
+      [formModel]="dialog.formModel"
+      displayThumb="full"
+    >
+    </codx-attachment>
+  </div>
+</ng-template>
+
+<!-- Template phụ -->
+<ng-template #tabTemplate let-data="value">
+
+</ng-template>
 <!-- chủ thể hợp đồng -->
 <ng-template #representativeTemplate let-data="value">
   <div class="d-flex justify-content-between">
@@ -600,8 +912,9 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="companyID"
-              type="text"
-              (valueChange)="valueChangeText($event)"
+              type="combobox"
+              (valueChange)="valueChangeCombobox($event)"
+              [crrValue]="contracts?.companyID"
             >
             </codx-input>
           </div>
@@ -621,6 +934,7 @@
               field="taxCode"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.taxCode"
             >
             </codx-input>
           </div>
@@ -629,7 +943,8 @@
 
       <div class="row form-group">
         <div class="col-12">
-          <div>
+          <div> 
+            <!-- TODO -->
             <codx-label
               [formModel]="dialog.formModel"
               fiedName="address"
@@ -642,6 +957,7 @@
               field="address"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.address"
             >
             </codx-input>
           </div>
@@ -661,8 +977,9 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="phone"
-              type="text"
+              type="number"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.phone"
             >
             </codx-input>
           </div>
@@ -681,6 +998,7 @@
               field="faxNo"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.faxNo"
             >
             </codx-input>
           </div>
@@ -692,16 +1010,17 @@
           <div>
             <codx-label
               [formModel]="dialog.formModel"
-              fiedName=""
+              fiedName="contactName"
               default="Người đại diện"
             ></codx-label>
           </div>
           <div class="">
             <codx-input
               [formModel]="dialog.formModel"
-              field="taskName"
+              field="contactName"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.contactName"
             >
             </codx-input>
           </div>
@@ -720,6 +1039,7 @@
               field="jobTitle"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.jobTitle"
             >
             </codx-input>
           </div>
@@ -741,6 +1061,7 @@
               field="bankAccount"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.bankAccount"
             >
             </codx-input>
           </div>
@@ -759,6 +1080,7 @@
               field="bankID"
               type="text"
               (valueChange)="valueChangeText($event)"
+              [crrValue]="contracts?.bankID"
             >
             </codx-input>
           </div>
@@ -767,365 +1089,6 @@
     </div>
   </div>
 </ng-template>
+<!-- lịch thanh toán -->
 
-<!-- chi tiết mặt hàng -->
-<ng-template #itemsTemplate let-data="value">
-  <product></product>
-</ng-template>
-<!-- phương thức thanh toán -->
-<ng-template #payTemplate let-data="value">
-  <div class="d-flex justify-content-between">
-    <div class="left" style="width: 50%">
-      <div class="row form-group">
-        <div class="col-4">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="contractAmt"
-              default="Giá trị hợp đồng"
-            ></codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="contractAmt"
-              type="number"
-              [min]="0"
-              [crrValue]="contracts?.contractName"
-              (valueChange)="valueChangeText($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="col-4">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="paidAmt"
-              default="Số tiền thanh toán"
-            >
-            </codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="paidAmt"
-              type="number"
-              [min]="0"
-              (valueChange)="valueChangeText($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="col-4">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="remainAmt"
-              default="Số tiền còn lại"
-            >
-            </codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="remainAmt"
-              type="number"
-              [min]="0"
-              (valueChange)="valueChangeText($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col-4">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="terms"
-              default="Điều khoản thanh toán"
-            ></codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="terms"
-              type="valuelist"
-              (valueChange)="valueChangeText($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="col-8">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="pmtMethodID"
-              default="Phương thức thanh toán"
-            ></codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="pmtMethodID"
-              type="valuelist"
-              refValue="PaymentMethod"
-              (valueChange)="valueChangeText($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col-4">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="delTermID"
-              default="Điều khoản giao hàng"
-            ></codx-label>
-          </div>
-          <div class="">
-            <!-- TODO -->
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="delTermID"
-              type="valuelist"
-              refValue="PaymentMethod"
-              (valueChange)="valueChangeText($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="col-4">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="delModeID"
-              default="Hình thức giao hàng"
-            ></codx-label>
-          </div>
-          <div class="">
-            <!-- TODO -->
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="delModeID"
-              type="text"
-              (valueChange)="valueChangeText($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="col-4">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="delPrice"
-              default="Phí vận chuyển"
-            ></codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="delPrice"
-              type="number"
-              (valueChange)="valueChangeText($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="rigth" style="width: 40%">
-      <div class="row form-group">
-        <div class="col-6">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="currencyID"
-              default="Tiền tệ"
-            ></codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="currencyID"
-              type="valuelist"
-              refValue="PaymentMethod"
-              [crrValue]="contracts?.effectiveFrom"
-              (valueChange)="changeValueDate($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="col-6">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="exchangeRate"
-              default="Tỷ giá"
-            >
-            </codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="exchangeRate"
-              type="number"
-              [crrValue]="contracts?.effectiveTo"
-              (valueChange)="changeValueDate($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-      </div>
-
-      <div class="row form-group">
-        <div class="col-6">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="paymentStatus"
-              default="Tình trạng thanh
-              toán"
-            >
-            </codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="paymentStatus"
-              type="valuelist"
-              refValue="CRM018"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="col-6">
-          <div>
-            <!-- TODO -->
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName=""
-              default="Hạn thanh toán"
-            ></codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="taskName"
-              type="datetime"
-            >
-            </codx-input>
-          </div>
-        </div>
-      </div>
-
-      <div class="row form-group">
-        <div class="col-6">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="delStatus"
-              default="Tình trạng giao hàng"
-            ></codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="delStatus"
-              type="valuelist"
-              refValue="CRM019"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="col-6">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName=""
-              default="Hạn giao hàng"
-            >
-            </codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="taskName"
-              type="datetime"
-            >
-            </codx-input>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>
-<!-- điều khoản hợp đồng -->
-<ng-template #termsAndRelatedTemplate let-data="value">
-  <div>
-    <codx-input
-      [formModel]="dialog.formModel"
-      field="memo"
-      type="textarea"
-      headerposition="none"
-      format="ed"
-      height="150"
-    >
-    </codx-input>
-  </div>
-  <div class="d-flex justify-content-between mt-5">
-    <div
-      class="d-inline-flex align-items-center text-primary mb-3"
-      style="border-bottom: 2px solid"
-    >
-      <span class="icon-edit-one icon-22 title-icon"></span>
-      <codx-label
-        [ngStyle]="{ 'font-size': 14, 'font-weight': 500 }"
-        [name]="'lblAddGroup'"
-        [formName]="'SYS'"
-        [gridViewName]="'grvDPStepsFields'"
-        [default]="'Hồ sơ liên quan'"
-      ></codx-label>
-    </div>
-
-    <button
-      style="float: left"
-      type="button"
-      class="btn btn-light-primary"
-      (click)="addFile($event)"
-    >
-      <i class="icon-cloud_upload fs-5"></i
-      ><span>
-        <codx-label
-          name="UploadFile"
-          formName="Tasks"
-          default="Đính kèm"
-        ></codx-label>
-      </span>
-    </button>
-  </div>
-
-  <div>
-    <codx-attachment
-      #attachment
-      [objectType]=""
-      [objectId]="contracts?.recID"
-      hideFolder="1"
-      hideImageUpload="0"
-      hideImageThumb="0"
-      hideUploadBtn="1"
-      [showMessage]="0"
-      hideDes="1"
-      type="inline"
-      allowMultiFile="1"
-      referType="source"
-      [formModel]="dialog.formModel"
-      displayThumb="full"
-    >
-    </codx-attachment>
-  </div>
-</ng-template>
+<!-- thông tin giao hàng -->

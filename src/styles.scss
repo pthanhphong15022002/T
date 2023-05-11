@@ -791,7 +791,7 @@ codx-layout-add{
 }
 .e-appointment {
   text-align: left !important;
-  padding-left: 7px !important;
+  padding-left: 2px !important;
 }
 
 .container-md {
@@ -1812,7 +1812,7 @@ codx-tabs {
   }
 
   .tab-footer {
-    margin-top: 7px;
+    margin-top: 5px;
   }
   .badge.badge-sm {
     margin-top: 4px;
@@ -2142,7 +2142,7 @@ codx-instances codx-view-list-detail {
       .codx-detail-footer {
         position: absolute;
         z-index: 101;
-        left: 30px;
+        left: 20px;
         right: 20px;
         bottom: 0;
         height: 42px;
@@ -2239,7 +2239,15 @@ lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled {
     }
   }
 }
+.card-job.stages-task{
+  .cdk-drop-list.task{
+    padding-top: 7px;
 
+    .cdk-drag.drap-drop:hover{
+      background-color: var(--gray-100);
+    }
+  }
+}
 .ava-edit .symbol {
   position: relative;
   .position-absolute {
@@ -2694,16 +2702,20 @@ codx-vll.badge.badge-md span::before{
   padding-top: 2px!important;
   line-height: 16px!important;
 }
+.aside-minimize-icon-title .aside.aside-extended .aside-primary .aside-menu .menu-link .menu-title{
+  flex-grow: inherit;
+}
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link.active,
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link:hover {
   // box-shadow:none;
   background-color: #ffffff25!important;
 }
-.aside-minimize-icon-title .aside .aside-primary .aside-menu .menu-link, 
-.aside-minimize-icon-title .aside .aside-primary .aside-footer .menu-link {
-  padding-left: 5px;
-  padding-right: 5px;
-  width: 82px;
+.aside-minimize-icon-title .aside .menu-link {
+  padding-left: 7px!important;
+  padding-right: 7px!important;
+}
+.aside-minimize-icon-title .aside-extended .aside-primary .menu-link.active{
+  border-radius: 0!important;
 }
 .toolbar{
   .e-control.e-inplaceeditor .e-editable-value-wrapper {
@@ -2746,4 +2758,11 @@ codx-tmmeetings{
   font-size: 16px;
   }
 
+}
+codx-vll.vll-post{
+  display: flex;
+  align-items: baseline;
+  img{
+    margin-right: 4px;
+  }
 }

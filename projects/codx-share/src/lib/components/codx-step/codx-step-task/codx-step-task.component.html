@@ -150,6 +150,7 @@
       [dataItem]="moreDefaut"
       [type]="'hover'"
       (clickMF)="clickMFTask($event, groupTask)"
+      (changeDataMF)="changeDataMFGroupTask($event, groupTask)"
     >
     </codx-mfunc>
   </div>
@@ -196,6 +197,7 @@
       [dataItem]="moreDefaut"
       [type]="'hover'"
       (clickMF)="clickMFTask($event, data?.group, data?.task)"
+      (changeDataMF)="changeDataMFTask($event, data?.task, data?.group)"
     >
     </codx-mfunc>
   </div>
@@ -277,6 +279,7 @@
         [step]="currentStep"
         [type]="data?.type"
         [isSave]="isSaveProgress"
+        [typeProgress]="2"
         [typeProgress]="typeProgress"
         (valueChange)="changeProgress($event)"
       ></codx-progress>

@@ -89,10 +89,10 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @Input() dataValue!: string;
   @Input() panels: any = [];
   @Input() datas: any = [];
-
+  @Input() isEditMode: boolean = true;
   ngCmp: any = global;
   dialog: any;
-  isEditMode: boolean = true;
+
 
   annotations: ChartAnnotationSettingsModel[] = [];
 
@@ -566,7 +566,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   }
 
   onCreate(evt: any) {
-    document.getElementsByClassName('icon-close icon-18')[0].remove();
+    document.getElementsByClassName('icon-close icon-18')[0]?.remove();
     //let itemData = JSON.parse('{"id":"cff7b1a6-4b3a-4b9a-8d3c-bd33d99b2e66","panels":[{"id":"0.678896381234823_layout","row":0,"col":4,"sizeX":6,"sizeY":5,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.1257922786025789_layout","row":0,"col":0,"sizeX":4,"sizeY":5,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}],"panelDatas":[{"panelId":"0.678896381234823_layout","data":"{\"serieSetting\":{\"type\":\"StepArea\",\"marker\":{\"visible\":true,\"width\":10,\"height\":10},\"border\":{\"width\":2},\"tooltip\":{\"enable\":true},\"xName\":\"bookingNo\",\"yName\":\"attendees\",\"name\":\"a rê a chạc\"},\"axisX\":{\"valueType\":\"Category\",\"majorTickLines\":{\"width\":0}},\"axisY\":{\"title\":\"\",\"minimum\":0,\"maximum\":30,\"interval\":4,\"lineStyle\":{\"width\":0},\"majorTickLines\":{\"width\":0}},\"legendSetting\":{\"visible\":true,\"enableHighlight\":true}}"},{"panelId":"0.1257922786025789_layout","data":"TextCLGT"}]}')
     //this.panels = JSON.parse('[{"id":"0.9272112695591359_layout","row":0,"col":3,"sizeX":7,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.2912252785831644_layout","row":0,"col":0,"sizeX":3,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]');
 
@@ -577,9 +577,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (!this.objDashboard) {
         let component = document.getElementsByTagName('ejs-dashboardlayout')[0];
 
-        this.objDashboard = this.ngCmp.ng.getComponent(
-          component
-        ) as DashboardLayoutComponent;
+        this.objDashboard = (component as any).ej2_instances[0]
       }
       this.objDashboard.panels = this.panels;
       let iGenPanels = setInterval(() => {
@@ -691,11 +689,15 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       (x: any) => x.id == panelID.split('_content')[0]
     )[0];
     if (chartType) {
+      debugger
       let component = elePanel?.getElementsByTagName('layout-panel')[0];
       if (component) {
         let instance = this.ngCmp.ng.getComponent(
           component
         ) as LayoutPanelComponent;
+        // let instance = this.ngCmp.ng.getComponent(
+        //   component
+        // ) as LayoutPanelComponent;
         instance.isChart = true;
       }
       if (objPanel) {
