@@ -36,6 +36,15 @@ export class CodxBookingService {
       [categoryID]
     );
   }
+  getCardTranInfo(recID: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourceTransBusiness',
+      'GetCardTranInfoAsync',
+      [recID]
+    );
+  }
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
       this.cache.functionList(functionID).subscribe((funcList) => {
