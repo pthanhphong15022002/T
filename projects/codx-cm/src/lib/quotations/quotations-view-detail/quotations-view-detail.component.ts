@@ -6,6 +6,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { FormModel } from 'codx-core';
 
@@ -63,16 +64,16 @@ export class QuotationsViewDetailComponent implements OnChanges {
     entityName: 'CM_QuotationsLines',
     funcID: 'CM02021',
   };
-  gridHeight: number = 300;
+  gridHeight: number = 250;
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
     allowDeleting: true,
     mode: 'Normal',
   };
-  dataSource= []
+  dataSource = [];
 
-  constructor() {}
+  constructor(protected sanitizer: DomSanitizer) {}
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['itemSelected']) {
     }

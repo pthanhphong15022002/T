@@ -428,7 +428,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
           if (approval) {
             if (this.approvalRule != '0') {
               this.codxBookingService
-                .getCategoryByEntityName(this.formModel.entityName)
+              .getProcessByCategoryID('ES_EP003')
                 .subscribe((category: any) => {
                   this.returnData.forEach((item) => {
                     this.codxBookingService

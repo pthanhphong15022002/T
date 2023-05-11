@@ -5,6 +5,7 @@ import {
   Injector,
   OnInit,
   Optional,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -163,7 +164,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.cashpayment);
   }
-
   //#endregion
 
   //#region Event
@@ -344,8 +344,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           e.data?.isAddNew,
         ])
         .subscribe((res: any) => {
-          if (res && res.line) res.line.isAddNew = e.data?.isAddNew;
-          this.setDataGrid(res.line.updateColumns, res.line);
+          if (res && res.line){
+            res.line.isAddNew = e.data?.isAddNew;
+            this.setDataGrid(res.line.updateColumns, res.line);
+          }      
         });
     }
 
@@ -607,7 +609,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                   this.cashpaymentline[index] = dataline;
                   this.hasSaved = true;
                   this.loadTotal();
-                  if (Number(this.total) > this.cashpayment.paymentAmt) {
+                  if (parseInt(this.total.replace(/\D/g,'')) > this.cashpayment.paymentAmt) {
                     this.notification.notifyCode('AC0012');
                   }
                 }
@@ -659,7 +661,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               var dataline = res.event['data'];
               this.cashpaymentline.push(dataline);
               this.loadTotal();
-              if (Number(this.total) > this.cashpayment.paymentAmt) {
+              if (parseInt(this.total.replace(/\D/g,'')) > this.cashpayment.paymentAmt) {
                 this.notification.notifyCode('AC0012');
               }
             }
@@ -684,6 +686,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         });
     }
   }
+  
   onAddNew(e: any) {
     this.checkValidateLine(e);
     if (this.validate > 0) {

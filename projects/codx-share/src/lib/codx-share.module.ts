@@ -185,6 +185,7 @@ import { CodxRescheduleBookingRoomComponent } from './components/codx-booking/co
 import { CodxInputCustomFieldComponent } from './components/codx-input-custom-field/codx-input-custom-field.component';
 import { CodxFieldsDetailTempComponent } from './components/codx-fields-detail-temp/codx-fields-detail-temp.component';
 import { PopupCustomFieldComponent } from './components/codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
+import { CodxTaskbarComponent } from './components/codx-step/codx-taskbar/codx-taskbar.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -323,6 +324,7 @@ const T_Component: Type<any>[] = [
   CodxRoleComponent,
   CodxTypeTaskComponent,
   CodxViewTaskComponent,
+  CodxTaskbarComponent,
 
   CodxQuotationsComponent,
   CodxInputCustomFieldComponent,

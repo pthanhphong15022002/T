@@ -34,6 +34,7 @@ import { CodxInviteRoomAttendeesComponent } from './codx-invite-room-attendees/c
 // import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add-booking-room.component';
 // import { PopupRescheduleBookingComponent } from './popup-reschedule-booking/popup-reschedule-booking.component';
 import { ɵglobal as global } from '@angular/core';
+import { CodxBookingService } from './codx-booking.service';
 
 @Component({
   selector: 'codx-booking',
@@ -99,9 +100,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   popupBookingComponent: any;
   crrViewMode:any;
   allocateFuncID=EPCONST.FUNCID.S_Allocate;
+  categoryIDProcess='';
   constructor(
     injector: Injector,
-    private codxEpService: CodxEpService,
+    private codxEpService: CodxBookingService,
     private notificationsService: NotificationsService,
     private authService: AuthService,
     private activatedRoute: ActivatedRoute
@@ -270,19 +272,21 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.funcIDName = res.customName.toString().toLowerCase();
       }
     });
-    if (this.resourceType == null) {
       switch (this.funcID) {
         case EPCONST.FUNCID.R_Bookings:
           this.resourceType = '1';
+          this.categoryIDProcess="ES_EP001";
           break;
         case EPCONST.FUNCID.C_Bookings:
           this.resourceType = '2';
+          this.categoryIDProcess="ES_EP002";
           break;
 
         case EPCONST.FUNCID.S_Bookings:
           this.resourceType = '6';
+          this.categoryIDProcess="ES_EP003";
           break;
-      }
+      
     }
     if (this.funcID == EPCONST.FUNCID.S_Allocate) {
       this.isAllocateStationery = true;
@@ -643,9 +647,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       this.notificationsService.notifyCode('TM052');
       return;
     }
+    
     if (data.approval != '0') {
       this.codxEpService
-        .getCategoryByEntityName(this.formModel.entityName)
+        .getProcessByCategoryID(this.categoryIDProcess)
         .subscribe((res: any) => {
           this.codxEpService
             .release(data, res?.processID, 'EP_Bookings', this.funcID)
@@ -1023,34 +1028,5 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         });
     }
   }
-  connectToMeeting(
-    meetingTitle: string,
-    meetingDescription: string,
-    meetingDuration: number,
-    meetingPassword: string,
-    userName: string,
-    isManager: boolean,
-    meetingUrl?: string,
-    meetingStartDate?: string,
-    meetingStartTime?: string
-  ) {
-    this.codxEpService
-      .connectMeetingNow(
-        meetingTitle,
-        meetingDescription,
-        meetingDuration,
-        meetingPassword,
-        userName,
-        '@',
-        isManager,
-        meetingUrl,
-        meetingStartDate,
-        meetingStartTime
-      )
-      .then((url) => {
-        if (url) {
-          window.open(url, '_blank');
-        }
-      });
-  }
+  
 }

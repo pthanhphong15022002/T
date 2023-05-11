@@ -88,48 +88,84 @@
     [formModel]="view.formModel"
     [titleCss]="'fw-bold fs-4'"
     [dataItem]="data"
+    [footer]="footerTmp"
   >
   </codx-temp-full>
 </ng-template>
 <ng-template #descTmp let-data>
-  <div class="d-flex flex-column py-2">
-    <div class="d-flex justify-content-start py-1">
-      <i class="icon-view_comfy pe-1"></i>
-      <div>{{ data?.dealName }}</div>
-    </div>
-    <!-- <div class="d-flex justify-content-start py-1">
-      <i class="icon-k pe-1"></i>
-      <div> {{getCustomerName(data?.customerID)}} </div>
-    </div>
-    <div class="d-flex justify-content-star py-1">
-      <div class="d-flex align-items-start pe-4">
-        <i class="icon-monetization_on pe-1"></i>
-        <div>50,000,000 </div>
-      </div>
-      <div class="d-flex align-items-start pe-4">
-        <div>{{0.7 | percent}}</div>
-      </div>
-      <div class="d-flex align-items-start">
-        <i class="icon-monetization_on pe-1"></i>
-        <span
-        class="fs-7"
-        #endDate
-        [innerHTML]="
-          data.endDate
-            | formatvalue
-              : formModel
-              : 'endDate'
-              : endDate
-              : 'DPInstances'
-              : 'grvDPInstances'
-            | async
-        "
-      ></span>
-      </div>
-    </div> -->
+  <div class="py-2">
+    <span class="icon-view_comfy pe-1"></span>
+    <span
+      [innerHTML]="
+        data?.customerID | formatvalue : view.formModel : 'customerID' | async
+      "
+    ></span>
   </div>
 </ng-template>
-
+<ng-template #footerTmp let-data>
+  <div class="d-flex justify-content-between align-items-center py-2">
+    <div class="d-flex align-items-end codx-badge">
+      <div class="d-flex align-items-center">
+        <span>
+          <codx-label
+            class="label-colon"
+            fiedName="VersionNo"
+            [formModel]="view.formModel"
+          ></codx-label
+        ></span>
+        <span
+          [innerHTML]="
+            data?.versionNo | formatvalue : view.formModel : 'versionNo' | async
+          "
+        ></span>
+      </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-end me-3">
+      <span>
+        <span class="icon-monetization_on pe-1" style="color: gold;"></span>
+        <span
+          [innerHTML]="
+            data?.totalAmt | formatvalue : view.formModel : 'totalAmt' | async
+          "
+        >
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-end codx-badge">
+      <div class="d-flex align-items-center text-gray-600">
+        <codx-vll
+          [name]="vllStatus"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7"
+        >
+        </codx-vll>
+      </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-center">
+      <span class="me-2">
+        <span class="icon-16 icon-av_timer me-1"></span>
+        <span
+          class="fs-7"
+          [innerHTML]="
+            data.deadline | formatvalue : view.formModel : 'deadline' | async
+          "
+        ></span>
+      </span>
+      <codx-imgs
+        [width]="25"
+        [objectId]="data.createdBy"
+        ojectType="AD_Users"
+        [numberImages]="1"
+      >
+      </codx-imgs>
+    </div>
+  </div>
+</ng-template>
 <!-- //---end-temp-list ---// -->
 
 <ng-template #templateMore let-data>
@@ -163,7 +199,9 @@
   <div class="">
     <span
       [innerHTML]="
-        data?.customerID | formatvalue : view.formModel : 'customerID' | async"></span>
+        data?.customerID | formatvalue : view.formModel : 'customerID' | async
+      "
+    ></span>
   </div>
 </ng-template>
 

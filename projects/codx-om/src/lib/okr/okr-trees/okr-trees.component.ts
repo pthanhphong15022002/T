@@ -1,19 +1,13 @@
 declare var window: any;
 import { CodxOmService } from '../../codx-om.service';
-import { OMCONST } from '../../codx-om.constant';
 import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
   Input,
   OnInit,
-  ViewEncapsulation,
 } from '@angular/core';
 import {
-  CacheService,
-  CallFuncService,
-  ApiHttpService,
-  NotificationsService,
   AuthStore,
 } from 'codx-core';
 
@@ -35,6 +29,7 @@ export class OkrTreesComponent implements OnInit, AfterViewInit {
   isAfterRender: boolean;
   curUser: any;
   openAccordionAlign = [];
+  loadedData=false;
   constructor(
     private codxOmService: CodxOmService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -54,13 +49,18 @@ export class OkrTreesComponent implements OnInit, AfterViewInit {
     }
   }
   getOrgTreeOKR() {
+    this.loadedData=false;
     this.codxOmService
       .getOrgTreeOKR(this.dataOKRPlans?.recID, this.currentOrgID)
       .subscribe((listOrg: any) => {
         if (listOrg) {
           this.orgUnitTree = [listOrg];
-          this.changeDetectorRef.detectChanges();
           this.isAfterRender = true;
+          this.loadedData=true;
+          this.changeDetectorRef.detectChanges();
+        }
+        else{          
+          this.loadedData=true;
         }
       });
   }

@@ -952,12 +952,12 @@ export class CodxAddBookingCarComponent
           if (approval) {
             if (this.approvalRule != '0') {
               this.codxBookingService
-                .getCategoryByEntityName(this.formModel.entityName)
+                .getProcessByCategoryID('ES_EP002')
                 .subscribe((res: any) => {
                   this.codxBookingService
                     .release(
                       this.returnData,
-                      res.processID,
+                      res?.processID,
                       'EP_Bookings',
                       this.formModel.funcID
                     )

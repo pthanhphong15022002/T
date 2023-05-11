@@ -620,20 +620,22 @@
           </div>
         </ng-template>
         <ng-template #content>
+          <div class="w-100 h-100 bg-body rounded-2 p-9 scroll-y">
+            <codx-listview
+              [service]="'Tenant'"
+              [assemblyName]="'Tenant'"
+              [entityName]="'TN_Orders'"
+              [className]="'OrdersBusiness'"
+              [method]="'GetListPurchaseGridModelAsync'"
+              [predicate]="'CreatedBy=@0'"
+              [dataValue]="userID"
+              [funcId]=""
+              [itemTemplate]="orderTmp"
+            >
+            </codx-listview>
+          </div>
           <!-- [predicate]="'ResourceType=@0'" -->
 
-          <codx-listview
-            [service]="'Tenant'"
-            [assemblyName]="'Tenant'"
-            [entityName]="'TN_Orders'"
-            [className]="'OrdersBusiness'"
-            [method]="'GetListPurchaseGridModelAsync'"
-            [predicate]="'CreatedBy=@0'"
-            [dataValue]="userID"
-            [funcId]=""
-            [itemTemplate]="orderTmp"
-          >
-          </codx-listview>
           <ng-template #orderTmp let-item>
             <div class="d-flex">
               <codx-temp-full
