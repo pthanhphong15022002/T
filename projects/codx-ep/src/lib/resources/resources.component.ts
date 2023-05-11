@@ -516,7 +516,7 @@ export class ResourcesComponent extends UIComponent {
   addNew() {
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
-      option.Width = '800px';
+      option.Width = this.funcID == EPCONST.FUNCID.S_Category? '800px' : '550px';
       option.DataService = this.view?.dataService;
       option.FormModel = this.formModel;
       this.view.dataService.dataSelected=res;
@@ -553,7 +553,7 @@ export class ResourcesComponent extends UIComponent {
         .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
           let option = new SidebarModel();
-          option.Width = '800px';
+          option.Width = this.funcID == EPCONST.FUNCID.S_Category? '800px' : '550px';
           option.DataService = this.view?.dataService;
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
@@ -584,7 +584,7 @@ export class ResourcesComponent extends UIComponent {
         .copy(this.view.dataService.dataSelected)
         .subscribe((res) => {
           let option = new SidebarModel();
-          option.Width = '800px';
+          option.Width = this.funcID == EPCONST.FUNCID.S_Category? '800px' : '550px';
           option.DataService = this.view?.dataService;
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
@@ -639,7 +639,7 @@ export class ResourcesComponent extends UIComponent {
       PopupAddCardTransComponent,
       '',
       550,
-      500,
+      550,
       funcID,
       [curTran, funcID, popupTitle, null]
     );

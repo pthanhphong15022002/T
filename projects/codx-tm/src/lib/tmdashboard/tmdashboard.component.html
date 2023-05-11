@@ -9,7 +9,7 @@
 </codx-views>
 
 <ng-template #template>
-  <div class="w-100 h-100">
+  <div class="w-100 h-100" *ngIf="isLoaded">
     <div *ngIf="reportID == 'TMD001'">
       <ng-container *ngTemplateOutlet="dashboard1"> </ng-container>
     </div>
@@ -20,6 +20,9 @@
       <ng-container *ngTemplateOutlet="dashboard3"> </ng-container>
     </div>
   </div>
+  <div class="w-100 h-100 bg-danger" *ngIf="!isLoaded">
+
+  </div>
 </ng-template>
 
 <ng-template #dashboard1>
@@ -27,6 +30,7 @@
     [templates]="templates1"
     [panels]="panels1"
     [datas]="datas1"
+    [isEditMode]="false"
   ></codx-dashboard>
 </ng-template>
 
@@ -35,6 +39,7 @@
     [templates]="templates2"
     [panels]="panels2"
     [datas]="datas2"
+    [isEditMode]="false"
   ></codx-dashboard>
 </ng-template>
 
@@ -43,6 +48,7 @@
     [templates]="templates3"
     [panels]="panels3"
     [datas]="datas3"
+    [isEditMode]="false"
   ></codx-dashboard
 ></ng-template>
 

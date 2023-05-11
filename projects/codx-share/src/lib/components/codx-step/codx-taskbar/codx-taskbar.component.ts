@@ -28,9 +28,11 @@ export class CodxTaskbarComponent implements OnInit {
   }
 
   clickMenu(item) {
-   item.isActive = true;
-   this.tabOld.isActive = false;
-   this.tabOld = item;
-   this.tab.emit(item.name);
+    if(item.name != this.tabOld?.name){
+      item.isActive = true;
+      this.tabOld.isActive = false;
+      this.tabOld = item;
+    }
+    this.tab.emit(item.name);
   }
 }
