@@ -6,25 +6,25 @@
       <div class="w-250px me-5">
         <ejs-calendar
           #ejCalendar
-          [firstDayOfWeek]="1"
-          (change)="changeDayOfMonth($event)"
           cssClass="width-calendar"
           class="e-customStyle"
+          [firstDayOfWeek]="1"
+          [value]="dateChange"
+          (change)="changeDayOfMonth($event)"
           (navigated)="changeNewMonth($event)"
           (renderDayCell)="onLoad($event)"
-          [value]="dateChange"
         >
         </ejs-calendar>
         <div class="my-2">
           <ejs-dropdownlist
             id="cbxChooseCalendar"
-            [dataSource]="celendarTypes"
+            [dataSource]="calendarTypes"
             [fields]="fields"
             [allowFiltering]="true"
             [itemTemplate]="itemTemplate"
             [value]="defaultCalendar"
             (filtering)="onFiltering($event)"
-            (change)="onChange($event)"
+            (change)="getCalendarData($event)"
           >
             <ng-template #itemTemplate="" let-data="">
               <div class="d-flex align-items-center p-2">
