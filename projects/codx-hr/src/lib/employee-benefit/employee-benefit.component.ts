@@ -326,7 +326,6 @@ export class EmployeeBenefitComponent extends UIComponent {
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.view.formModel;
-
     let dialogAdd = this.callfc.openSide(
       PopupEmployeeBenefitComponent,
       {

@@ -1,6 +1,6 @@
 <codx-form
   #form
-  [customToolbar]="header"
+  [headerText]="title"
   [subHeader]="subHeader"
   [body]="body"
   [openMore]="true"
@@ -9,28 +9,6 @@
   [footer]="footer"
   [data]="data"
 ></codx-form>
-<ng-template #header>
-  <div class="d-flex justify-content-between w-100">
-    <div class="d-flex justify-content-start">
-      <div class="h3">
-        {{ title }}
-      </div>
-      <div class="ms-3" *ngIf="funcID == 'CM0101'">
-        <codx-input
-          [field]="'custGroupID'"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </div>
-    </div>
-    <div class="d-flex justify-content-end">
-      <i
-        class="icon-close icon-18 text-hover-danger"
-        (click)="dialog.close()"
-      ></i>
-    </div>
-  </div>
-</ng-template>
 <ng-template #subHeader>
   <codx-tag
     field="tags"
@@ -110,6 +88,15 @@
     </div>
     <div class="row">
       <div class="col-6">
+        <div class="form-group" *ngIf="funcID == 'CM0101'">
+          <codx-label [formModel]="form.formModel" [fiedName]="'CustGroupID'">
+          </codx-label>
+          <codx-input
+            [field]="'custGroupID'"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
         <div class="form-group">
           <codx-label
             [formModel]="form.formModel"
@@ -134,6 +121,7 @@
                 ? 'partnerID'
                 : 'competitorID'
             "
+            [disabled]="true"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
           >
@@ -227,7 +215,7 @@
                 default="Liên hệ chính"
               >
               </codx-label>
-              <span style="color: red; margin-right: 2px;">*</span>
+              <span style="color: red; margin-right: 2px">*</span>
             </div>
             <div class="d-flex justify-content-end">
               <div class="me-3">
@@ -431,7 +419,23 @@
             name="lblAvatar"
             default="Ảnh đại diện"
           ></codx-label>
-          <ng-container [ngTemplateOutlet]="avata"></ng-container>
+          <div>
+            <codx-img
+              #imageUpload
+              class="image-inpt-wrapper fullImage"
+              [referType]="'avt'"
+              [width]="90"
+              [funcId]="funcID"
+              [objectId]="data?.recID"
+              [objectType]="form.formModel.entityName"
+              [objectName]="getNameCrm(data)"
+              [isAllowEdit]="true"
+              [isDefaulImg]="true"
+              [imgOn]="data?.modifiedOn"
+              (handleInput)="changeAvatar()"
+            >
+            </codx-img>
+          </div>
         </div>
         <div class="form-group" *ngIf="funcID != 'CM0102'">
           <codx-label [formModel]="form.formModel" fiedName="TaxCode">
@@ -860,45 +864,21 @@
 </ng-template>
 
 <ng-template #avata>
-  <div class="position-relative">
-    <div class="avatar-container position-relative">
-      <div class="avatar" (click)="addAvatar()">
-        <ng-container *ngIf="linkAvatar">
-          <img [src]="linkAvatar" />
-        </ng-container>
-        <ng-container *ngIf="linkAvatar == null || linkAvatar == ''">
-          <img src="../../../assets/codx/user/avatar.jpg" alt="" />
-        </ng-container>
-      </div>
-    </div>
-    <div class="icon">
-      <i
-        class="icon-edit icon-edit1 icon-18 text-primary d-flex justify-content-center align-items-center"
-        (click)="addAvatar()"
-      >
-      </i>
-    </div>
-  </div>
-  <codx-attachment
-    #imageAvatar
+  <codx-img
+    #imageUpload
+    class="image-inpt-wrapper fullImage"
+    [width]="90"
+    [funcId]="funcID"
     [objectId]="data.recID"
     [objectType]="form.formModel.entityName"
-    hideFolder="1"
-    hideImageUpload="1"
-    hideImageThumb="1"
-    hideUploadBtn="1"
-    hideDes="1"
-    type="inline"
-    allowMultiFile="0"
-    [formModel]="dialog.formModel"
-    allowExtensions=".jpg,.png"
-    [isSaveSelected]="0"
-    (fileAdded)="fileImgAdded($event)"
-    displayThumb="full"
-    showMessage="0"
-    category="0"
+    [isAllowEdit]="true"
+    [isDefaulImg]="true"
+    [parentType]="'AD_Users'"
+    [parentID]="data.recID"
+    [imgOn]="data?.modifiedOn"
+    (handleInput)="changeAvatar()"
   >
-  </codx-attachment>
+  </codx-img>
 </ng-template>
 
 <ng-template #contacts>

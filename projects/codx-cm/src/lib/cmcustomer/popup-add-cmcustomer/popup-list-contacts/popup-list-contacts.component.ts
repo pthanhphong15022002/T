@@ -175,7 +175,7 @@ export class PopupListContactsComponent implements OnInit {
           moreFuncName: this.moreFuncAdd,
           action: 'add',
           dataContact: null,
-          type: 'formList',
+          type: this.type == 'formAdd' ? this.type : 'formList',
           gridViewSetup: res,
           contactType: this.contactType,
         };

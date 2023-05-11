@@ -21,6 +21,7 @@ import { CashPaymentLine } from '../../../models/CashPaymentLine.model';
 import { CashPayment } from '../../../models/CashPayment.model';
 import { JournalService } from '../../../journals/journals.service';
 import { CodxAcService } from '../../../codx-ac.service';
+import { CashReceiptsLines } from '../../../models/CashReceiptsLines.model';
 @Component({
   selector: 'lib-pop-add-linecash',
   templateUrl: './pop-add-linecash.component.html',
@@ -43,7 +44,8 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   lockFields: any;
   journal : any;
   baseCurr:any;
-  objectcashpaymentline: Array<CashPaymentLine> = [];
+  showPlan:any = true;
+  objectcashpaymentline: Array<any> = [];
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -63,7 +65,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.lockFields = dialogData.data?.lockFields;
     this.journal = this.dialogData.data.journal;
     this.cache
-      .gridViewSetup('CashPaymentsLines', 'grvCashPaymentsLines')
+      .gridViewSetup(dialog.formModel.formName, dialog.formModel.gridViewName)
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
@@ -83,6 +85,15 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
 
   //#region Event
   lineChanged(e: any) {
+    let classname;
+    switch(this.dialog.formModel.formName){
+      case 'CashPaymentsLines':
+        classname = 'CashPaymentsLinesBusiness';
+        break;
+      case 'CashReceiptsLines':
+        classname = 'CashReceiptsLinesBusiness';
+        break;
+    }
     this.cashpaymentline[e.field] = e.data;
     const field = [
       'accountid',
@@ -98,7 +109,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     ];
     if (field.includes(e.field.toLowerCase())) {
       this.api
-        .exec('AC', 'CashPaymentsLinesBusiness', 'ValueChangedAsync', [
+        .exec('AC', classname, 'ValueChangedAsync', [
           this.cashpayment,
           this.cashpaymentline,
           e.field,
@@ -110,32 +121,31 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
         });
     }
 
-    if (e.field.toLowerCase() == 'sublgtype' && e.value) {
-      if (e.value === '3') {
-        //Set lock field
-      } else {
-        this.api
-          .exec<any>(
-            'AC',
-            'AC',
-            'CashPaymentsLinesBusiness',
-            'SetLockFieldAsync'
-          )
-          .subscribe((res) => {
-            if (res) {
-              //Set lock field
-            }
-          });
-      }
-    }
+    // if (e.field.toLowerCase() == 'sublgtype' && e.value) {
+    //   if (e.value === '3') {
+    //     //Set lock field
+    //   } else {
+    //     this.api
+    //       .exec<any>(
+    //         'AC',
+    //         'AC',
+    //         'CashPaymentsLinesBusiness',
+    //         'SetLockFieldAsync'
+    //       )
+    //       .subscribe((res) => {
+    //         if (res) {
+    //           //Set lock field
+    //         }
+    //       });
+    //   }
+    // }
   }
   //#endregion
 
   //#region Function
   loadInit() {
-    this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashpaymentline);
-    this.acService.setPopupSize(this.dialog,'auto','40%')
+    this.acService.setPopupSize(this.dialog,'auto','40%');
     if (this.journal?.drAcctControl === '1') {
       (
         this.cbxAccountID.ComponentCurrent as CodxComboboxComponent
@@ -199,9 +209,19 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   }
   clearCashpayment() {
     let idx = this.objectcashpaymentline.length;
-    let data = new CashPaymentLine();
+    let classname,data;
+    switch(this.dialog.formModel.formName){
+      case 'CashPaymentsLines':
+        data = new CashPaymentLine();
+        classname = 'CashPaymentsLinesBusiness';
+        break;
+      case 'CashReceiptsLines':
+        data = new CashReceiptsLines();
+        classname = 'CashReceiptsLinesBusiness';
+        break;
+    }
     this.api
-      .exec<any>('AC', 'CashPaymentsLinesBusiness', 'SetDefaultAsync', [
+      .exec<any>('AC', classname, 'SetDefaultAsync', [
         this.cashpayment,
         data,
       ])
@@ -239,7 +259,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     } else {
       this.api
         .execAction<any>(
-          'AC_CashPaymentsLines',
+          this.dialog.formModel.entityName,
           [this.cashpaymentline],
           'SaveAsync'
         )
@@ -261,7 +281,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
         case 'add':
           this.api
             .execAction<any>(
-              'AC_CashPaymentsLines',
+              this.dialog.formModel.entityName,
               [this.cashpaymentline],
               'SaveAsync'
             )
@@ -274,7 +294,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
         case 'edit':
           this.api
             .execAction<any>(
-              'AC_CashPaymentsLines',
+              this.dialog.formModel.entityName,
               [this.cashpaymentline],
               'UpdateAsync'
             )

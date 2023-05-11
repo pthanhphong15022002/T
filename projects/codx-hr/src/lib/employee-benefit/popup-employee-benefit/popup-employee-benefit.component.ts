@@ -236,10 +236,8 @@ export class PopupEmployeeBenefitComponent
     }
 
     this.currentEJobSalaries.employeeID = this.employeeId;
-
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrSevice.AddEBenefit(this.currentEJobSalaries).subscribe((p) => {
-        console.log(p);
         if (p != null) {
           this.notify.notifyCode('SYS006');
           this.dialog && this.dialog.close(p);

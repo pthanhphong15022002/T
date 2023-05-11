@@ -36,7 +36,6 @@ export class ReceiptTransactionComponent extends UIComponent{
   oData: any;
   page: any = 1;
   pageSize = 5;
-  itemName: any;
   lsVatCode: any;
   gridViewLines: any;
   fmInventoryJournalLines: FormModel = {
@@ -79,13 +78,6 @@ export class ReceiptTransactionComponent extends UIComponent{
   //#region Init
 
   onInit(): void {
-    this.api
-      .exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.itemName = res;
-        }
-      });
   }
 
   ngAfterViewInit() {
@@ -134,6 +126,9 @@ export class ReceiptTransactionComponent extends UIComponent{
         break;
       case 'SYS04':
         this.copy(e, data);
+        break;
+      case 'SYS002':
+        this.export(data);
         break;
     }
   }
@@ -219,6 +214,29 @@ export class ReceiptTransactionComponent extends UIComponent{
     }
     this.view.dataService.delete([data], true).subscribe((res: any) => {});
   }
+  export(data) {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //Chưa có group
+    gridModel.groupFields = 'createdBy';
+    this.callfunc.openForm(
+      CodxExportComponent,
+      null,
+      900,
+      700,
+      '',
+      [gridModel, data.recID],
+      null
+    );
+  }
   //#endregion
 
   //#region Function
@@ -237,13 +255,6 @@ export class ReceiptTransactionComponent extends UIComponent{
       .subscribe((res: any) => {
         this.inventoryJournalLines = res;
       });
-    if(data.warehouseID)
-    {
-      this.api.exec('IV', 'InventoryJournalsBusiness', 'GetWarehouseNameAsync', [data.warehouseID])
-      .subscribe((res: any) => {
-        this.itemSelected.warehouseName = res;
-      });
-    }
   }
   changeItemDetail(event) {
     if (event?.data.data || event?.data.error) {

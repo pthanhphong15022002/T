@@ -72,66 +72,100 @@
     </div>
     <div class="mb-3">
       <div class="row py-2">
-        <div class="col-2"><codx-label default="Tên cơ hội"></codx-label>:</div>
-        <div class="col-4">Lạc Việt - Thuê VP</div>
-        <div class="col-2"><codx-label default="Doanh số"></codx-label>:</div>
-        <div class="col-4">40,000,000 VND</div>
-      </div>
-      <div class="row py-2">
-        <div class="col-2"><codx-label default="Khách hàng"></codx-label>:</div>
-        <div class="col-4">Công ty CPTH Lạc Việt</div>
-        <div class="col-2">
-          <codx-label default="Ngày dự kiến đóng"></codx-label>:
-        </div>
-        <div class="col-4">31/10/2022</div>
-      </div>
-      <div class="row py-2">
-        <div class="col-2">
-          <codx-label default="Loại cơ hội"></codx-label>:
-        </div>
-        <div class="col-4">Khách hàng mới</div>
-        <div class="col-2">
-          <codx-label default="Tỷ lệ thành công"></codx-label>:
-        </div>
-        <div class="col-4">70%</div>
-      </div>
+        <div class="col-2"><codx-label default="Mã cơ hội"></codx-label>:</div>
+        <div class="col-4">{{dataSelected?.dealID }}</div>
 
-      <div class="row py-2">
-        <div class="col-2">
-          <codx-label default="Nguồn cơ hội"></codx-label>:
-        </div>
-        <div class="col-4">Tìm kiếm trên google</div>
-        <div class="col-2"><codx-label default="Quy trình"></codx-label>:</div>
-        <div class="col-4">Dịch vụ văn phòng cho thuê</div>
-      </div>
-
-      <div class="row py-2">
         <div class="col-2"><codx-label default="Chiến dịch"></codx-label>:</div>
-        <div class="col-4">Chiến dịch A</div>
-        <div class="col-2">
-          <codx-label default="Giai đoạn hiện tại"></codx-label>:
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #campaignID
+          [innerHTML]="
+          dataSelected?.campaignID
+              | formatvalue
+                : formModel
+                : 'campaignID'
+                : campaignID
+                : 'CMDeals'
+                : 'grvCMDeals'
+              | async
+          "
+        ></span>
         </div>
-        <div class="col-4">Giới thiệu sản phẩm</div>
+      </div>
+
+      <div class="row py-2">
+        <div class="col-2"><codx-label default="Loại cơ hội"></codx-label>:</div>
+        <div class="col-4">
+          {{ getNameCategory(dataSelected?.category) }}
+        </div>
+        <div class="col-2"><codx-label default="Kênh"></codx-label>:</div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #channelID
+          [innerHTML]="
+          dataSelected?.channelID
+              | formatvalue
+                : formModel
+                : 'channelID'
+                : channelID
+                : 'CMDeals'
+                : 'grvCMDeals'
+              | async
+          "
+        ></span>
+          </div>
       </div>
       <div class="row py-2">
         <div class="col-2">
           <codx-label default="Nhân viên bán hàng"></codx-label>:
         </div>
-        <div class="col-4">Nguyễn Văn Khoa</div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #salespersonID
+          [innerHTML]="
+          dataSelected?.salespersonID
+              | formatvalue
+                : formModel
+                : 'salespersonID'
+                : salespersonID
+                : 'CMDeals'
+                : 'grvCMDeals'
+              | async
+          "
+        ></span>
+      </div>
         <div class="col-2">
-          <codx-label default="Bước tiếp theo"></codx-label>:
+          <codx-label default="Nhân viến tư vấn"></codx-label>:
         </div>
-        <div class="col-4">Báo giá</div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #consultantID
+          [innerHTML]="
+          dataSelected?.consultantID
+              | formatvalue
+                : formModel
+                : 'consultantID'
+                : consultantID
+                : 'CMDeals'
+                : 'grvCMDeals'
+              | async
+          "
+        ></span>
+      </div>
       </div>
       <div class="row py-2">
         <div class="col-2">
-          <codx-label default="Nhân viên tư vấn"></codx-label>:
+          <codx-label default="Doanh số"></codx-label>:
         </div>
-        <div class="col-4">Nguyễn Văn Khoa</div>
+        <div class="col-4">{{dataSelected?.dealValue}}  VNĐ</div>
         <div class="col-2">
-          <codx-label default="Ngày cập nhật"></codx-label>:
+          <codx-label default="Tỷ lệ thành công"></codx-label>:
         </div>
-        <div class="col-4">31/01/20222</div>
+        <div class="col-4">{{dataSelected?.probability}}%</div>
       </div>
     </div>
     <div class="mt-5">
@@ -139,25 +173,16 @@
         <h2><codx-label default="Mô tả nhu cầu"></codx-label></h2>
       </div>
       <span class="py-2"
-        >Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nemo harum
-        error nisi magni iusto pariatur hic tempora nihil sapiente beatae?
-        Soluta adipisci necessitatibus voluptate, quaerat exercitationem
-        similique obcaecati eveniet repellat totam unde repellendus est voluptas
-        sapiente incidunt natus doloribus deleniti sunt ex repudiandae
-        blanditiis atque. Corporis dolor vel, voluptatem quo laudantium ea
-        libero soluta quidem officiis molestiae molestias eum alias ut
-        praesentium aliquid optio, voluptatum enim non explicabo. Suscipit autem
-        deleniti aliquam atque delectus at earum laudantium natus provident
-        optio aspernatur numquam sequi, explicabo voluptatibus! Quas maxime
-        asperiores quibusdam, reprehenderit ea eaque mollitia quis nobis, omnis
-        amet placeat ipsum veniam?</span
+        >
+        {{dataSelected.memo}}
+        </span
       >
     </div>
   </div>
 </ng-template>
 
 <ng-template #contact>
-  <div class="empty-data" *ngIf="data.customerID == null">
+  <div class="empty-data" *ngIf="dataSelected.customerID == null">
     <div class="container h-100">
       <div class="list-empty card card-flush h-100">
         <div class="d-flex flex-column flex-center justify-content-center">
@@ -172,10 +197,10 @@
       </div>
     </div>
   </div>
-  <div *ngIf="data.customerID">
+  <div *ngIf="dataSelected.customerID">
     <codx-list-contacts
       [funcID]="'CM0101'"
-      [objectID]="data?.customerID"
+      [objectID]="dataSelected?.customerID"
       [hidenMF]="true"
     ></codx-list-contacts>
   </div>
@@ -196,7 +221,7 @@
 </ng-template>
 
 <ng-template #opponent>
-  <codx-tab-dealcompetitors [dealID]="data.recID"></codx-tab-dealcompetitors>
+  <codx-tab-dealcompetitors [dealID]="dataSelected.recID"></codx-tab-dealcompetitors>
 </ng-template>
 
 <ng-template #opportunity>
