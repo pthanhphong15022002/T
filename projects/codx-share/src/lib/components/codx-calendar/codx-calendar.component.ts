@@ -81,7 +81,6 @@ export class CodxCalendarComponent
   public fields: Object = { text: 'defaultName', value: 'functionID' };
   //Bind the filter event
   public onFiltering = (e: FilteringEventArgs) => {
-    debugger;
     let query = new Query();
     //frame the query based on search string with filter type.
     query =
@@ -89,10 +88,45 @@ export class CodxCalendarComponent
         ? query.where('defaultName', 'startswith', e.text, true)
         : query;
     //pass the filter data source, filter query to updateData method.
-    e.updateData(this.celendarTypes, query);
+    e.updateData(this.calendarTypes, query);
   };
 
-  celendarTypes = [];
+  calendarTypes = [];
+  calendarData: any;
+
+  //Để tạm
+  resources: any = [
+    {
+      color: '#E9F0FD',
+      borderColor: '#4E86EC',
+      text: 'TM_MyTasks',
+      status: 'TM_MyTasks',
+    },
+    {
+      color: '#FEF8E6',
+      borderColor: '#FFC107',
+      text: 'WP_Notes',
+      status: 'WP_Notes',
+    },
+    {
+      color: '#FFEEE9',
+      borderColor: '#E23900',
+      text: 'CO_Meetings',
+      status: 'CO_Meetings',
+    },
+    {
+      color: '#FFEEE9',
+      borderColor: '#E23900',
+      text: 'EP_BookingRooms',
+      status: 'EP_BookingRooms',
+    },
+    {
+      color: '#FAF1FF',
+      borderColor: '#4A0077',
+      text: 'EP_BookingCars',
+      status: 'EP_BookingCars',
+    },
+  ];
 
   constructor(injector: Injector, private codxShareSV: CodxShareService) {
     super(injector);
@@ -130,9 +164,13 @@ export class CodxCalendarComponent
       .exec('CO', 'CalendarsBusiness', 'GetListCalendarAsync')
       .subscribe((res: any) => {
         if (res) {
-          this.celendarTypes = res;
+          this.calendarTypes = res;
           this.defaultCalendar = 'COT03';
-          console.log('Calendars', this.celendarTypes);
+          this.api
+            .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
+              this.defaultCalendar,
+            ])
+            .subscribe();
         }
         this.detectorRef.detectChanges();
       });
@@ -697,8 +735,6 @@ export class CodxCalendarComponent
     }
   }
 
-  resource: any;
-
   getCalendarNotes(TM_, WP_, CO_, EP_Room_, EP_Ca_) {
     let TM_Params = [
       {
@@ -763,17 +799,6 @@ export class CodxCalendarComponent
     });
   }
 
-  getCalendarSetting() {
-    //let a = this.calendar_setting.createComponent(CalendarCenterComponent);
-    //a.instance.resources = resource;
-    //a.instance.resourceModel = dataResourceModel;
-    // this.codxShareSV.dataResourceModel.subscribe((res) => {
-    //   if (res) {
-    //     a.instance.updateData(res);
-    //   }
-    // });
-  }
-
   onLoad(args) {
     let myInterval = setInterval(() => {
       if (this.dataResourceModel.length > 0) {
@@ -800,8 +825,14 @@ export class CodxCalendarComponent
     });
   }
 
-  onChange(event): void {
+  getCalendarData(event): void {
     let calendarType = event.value;
-    this.api.exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync');
+    this.api
+      .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [calendarType])
+      .subscribe((res: any) => {
+        if (res) {
+          this.calendarData = res;
+        }
+      });
   }
 }
