@@ -72,7 +72,7 @@ export class PopupAddSprintsComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.master = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
-    
+
     this.action = dt?.data[1];
     this.titleAction = dt?.data[2];
     this.dialog = dialog;

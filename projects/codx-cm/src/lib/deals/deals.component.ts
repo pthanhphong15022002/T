@@ -40,19 +40,6 @@ export class DealsComponent
   itemTemplate: TemplateRef<any>;
   @ViewChild('itemViewList', { static: true })
   itemViewList: TemplateRef<any>;
-  @ViewChild('itemCustomerName', { static: true })
-  itemCustomerName: TemplateRef<any>;
-  @ViewChild('itemContact', { static: true })
-  itemContact: TemplateRef<any>;
-  @ViewChild('itemAddress', { static: true }) itemAddress: TemplateRef<any>;
-  @ViewChild('itemPriority', { static: true }) itemPriority: TemplateRef<any>;
-  @ViewChild('itemCreatedBy', { static: true }) itemCreatedBy: TemplateRef<any>;
-  @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
-  @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
-  @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
-  @ViewChild('dealsComponent') dealsComponent: DealsComponent;
-  @ViewChild('itemContactName', { static: true })
-  itemContactName: TemplateRef<any>;
   @ViewChild('itemMoreFunc', { static: true })
   itemMoreFunc: TemplateRef<any>;
   @ViewChild('itemFields', { static: true })
@@ -85,6 +72,7 @@ export class DealsComponent
 
   // type of string
   customerName: string = '';
+  oldIdDeal: string = '';
 
   @Input() showButtonAdd = false;
 
@@ -118,7 +106,7 @@ export class DealsComponent
       this.funcID = this.activedRouter.snapshot.params['funcID'];
 
     // Get API
-    this.getListCustomer();
+   // this.getListCustomer();
   }
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
@@ -149,7 +137,6 @@ export class DealsComponent
       id: this.btnAdd,
     };
 
-
     this.views = [
       {
         type: ViewType.listdetail,
@@ -157,13 +144,6 @@ export class DealsComponent
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
-        },
-      },
-      {
-        type: ViewType.list,
-        sameData: true,
-        model: {
-          template: this.itemViewList,
         },
       },
       {
@@ -184,85 +164,12 @@ export class DealsComponent
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
         this.funcID = param.funcID;
-        this.afterLoad();
       }
     });
   }
 
   ngAfterViewInit(): void {
     this.crrFuncID = this.funcID;
-    let formModel = this.view?.formModel;
-    this.columnGrids = [];
-    if (this.funcID == 'CM0201') {
-      this.cacheSv
-        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
-        .subscribe((gv) => {
-          this.columnGrids = [
-            {
-              field: 'customerName',
-              headerText: gv
-                ? gv['CustomerName']?.headerText || 'Tên khách hàng'
-                : 'Tên khách hàng',
-              width: 250,
-              template: this.itemCustomerName,
-            },
-            {
-              field: 'address',
-              headerText: gv
-                ? gv['Address']?.headerText || 'Địa chỉ'
-                : 'Địa chỉ',
-              template: this.itemAddress,
-              width: 250,
-            },
-            {
-              field: 'contact',
-              headerText: gv
-                ? gv['Contact']?.headerText || 'Liên hệ chính'
-                : 'Liên hệ chính',
-              template: this.itemContact,
-              width: 250,
-            },
-            {
-              field: 'priority',
-              headerText: gv
-                ? gv['Piority']?.headerText || 'Độ ưu tiên'
-                : 'Độ ưu tiên',
-              template: this.itemPriority,
-              width: 100,
-            },
-            {
-              field: 'createdBy',
-              headerText: gv
-                ? gv['CreatedBy']?.headerText || 'Người tạo'
-                : 'Người tạo',
-              template: this.itemCreatedBy,
-              width: 100,
-            },
-            {
-              field: 'createdOn',
-              headerText: gv
-                ? gv['CreatedOn']?.headerText || 'Ngày tạo'
-                : 'Ngày tạo',
-              template: this.itemCreatedOn,
-              width: 180,
-            },
-            {
-              width: 30,
-              template: this.itemMoreFunc,
-            },
-          ];
-          this.views.push({
-            sameData: true,
-            type: ViewType.grid,
-            model: {
-              resources: this.columnGrids,
-              hideMoreFunc: true,
-            },
-          });
-          this.changeDetectorRef.detectChanges();
-        });
-    }
-
     this.changeDetectorRef.detectChanges();
   }
 
@@ -271,101 +178,20 @@ export class DealsComponent
   }
 
   //#region  get data
-  getListCustomer() {
-    this.codxCmService.getListCustomer().subscribe((res) => {
-      if (res) {
-        this.listCustomer = res[0];
-      }
-    });
-  }
+  // getListCustomer() {
+  //   this.codxCmService.getListCustomer().subscribe((res) => {
+  //     if (res) {
+  //       this.listCustomer = res[0];
+  //     }
+  //   });
+  // }
   //#endregion
 
   changeView(e) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     if (this.crrFuncID != this.funcID) {
-      this.afterLoad();
       this.crrFuncID = this.funcID;
     }
-  }
-
-  afterLoad() {
-    // this.showButtonAdd = [
-    //   'CM0201',
-    //   'CM0101',
-    //   'CM02',
-    //   'CM0102',
-    //   'CM0103',
-    //   'CM0104',
-    // ].includes(this.funcID);
-    // let formModel = this.view?.formModel;
-    // if (this.funcID == 'CM0101') {
-    //   this.cacheSv
-    //     .gridViewSetup(formModel?.formName, formModel?.gridViewName)
-    //     .subscribe((gv) => {
-    //       this.columnGrids = [
-    //         {
-    //           field: 'customerName',
-    //           headerText: gv
-    //             ? gv['CustomerName']?.headerText || 'Tên khách hàng'
-    //             : 'Tên khách hàng',
-    //           width: 250,
-    //           template: this.itemCustomerName,
-    //         },
-    //         {
-    //           field: 'address',
-    //           headerText: gv
-    //             ? gv['Address']?.headerText || 'Địa chỉ'
-    //             : 'Địa chỉ',
-    //           template: this.itemAddress,
-    //           width: 250,
-    //         },
-    //         {
-    //           field: 'contact',
-    //           headerText: gv
-    //             ? gv['Contact']?.headerText || 'Liên hệ chính'
-    //             : 'Liên hệ chính',
-    //           template: this.itemContact,
-    //           width: 250,
-    //         },
-    //         {
-    //           field: 'priority',
-    //           headerText: gv
-    //             ? gv['Piority']?.headerText || 'Độ ưu tiên'
-    //             : 'Độ ưu tiên',
-    //           template: this.itemPriority,
-    //           width: 100,
-    //         },
-    //         {
-    //           field: 'createdBy',
-    //           headerText: gv
-    //             ? gv['CreatedBy']?.headerText || 'Người tạo'
-    //             : 'Người tạo',
-    //           template: this.itemCreatedBy,
-    //           width: 100,
-    //         },
-    //         {
-    //           field: 'createdOn',
-    //           headerText: gv
-    //             ? gv['CreatedOn']?.headerText || 'Ngày tạo'
-    //             : 'Ngày tạo',
-    //           template: this.itemCreatedOn,
-    //           width: 180,
-    //         },
-    //         {
-    //           field: '',
-    //           headerText: '',
-    //           width: 30,
-    //           template: this.itemMoreFunc,
-    //           textAlign: 'center',
-    //         },
-    //       ];
-    //       var i = this.views.findIndex((x) => x.type == 11);
-    //       if (i != -1) {
-    //         this.views[i].model.resources = this.columnGrids;
-    //       }
-    //       this.changeDetectorRef.detectChanges();
-    //     });
-    // }
   }
 
   click(evt: ButtonModel) {
@@ -445,8 +271,7 @@ export class DealsComponent
 
   addDeal() {
     this.view.dataService.addNew().subscribe((res) => {
-      // const funcIDApplyFor = this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
-      // const applyFor = this.process.applyFor;
+
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
@@ -481,51 +306,65 @@ export class DealsComponent
     });
   }
 
-  addPartner(funcID) {
-    // this.view.dataService.addNew().subscribe((res: any) => {
-    //   let option = new SidebarModel();
-    //   option.DataService = this.view?.dataService;
-    //   option.FormModel = this.view?.formModel;
-    //   option.Width = '800px';
-    //   var headerText = this.titleAction +' '+this.view?.function.description;
-    //   var dataObj = {
-    //     action:'add',
-    //     headerText: headerText,
-    //   }
-    //   var dialog = this.callfc.openSide(
-    //     PopupAddCrmPartnerComponent,
-    //     dataObj,
-    //     option
-    //   );
-    //   dialog.closed.subscribe((e) => {
-    //     if (!e?.event) this.view.dataService.clear();
-    //   });
-    // });
-  }
-
   edit(data) {
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .edit(this.view.dataService.dataSelected)
-    //   .subscribe((res) => {
-    //     let option = new SidebarModel();
-    //     option.DataService = this.view.dataService;
-    //     option.FormModel = this.view.formModel;
-    //     option.Width = '800px';
-    //     this.titleAction = this.titleAction +' '+this.view?.function.description;
-    //     var dialog = this.callfc.openSide(
-    //       this.funcID == 'CM0101'
-    //         ? PopupAddCrmcustomerComponent
-    //         : PopupAddCrmcontactsComponent,
-    //       ['edit', this.titleAction],
-    //       option
-    //     );
-    //   });
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+    .edit(this.view.dataService.dataSelected)
+    .subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '800px';
+      option.zIndex = 1001;
+      var formMD = new FormModel();
+      // formMD.funcID = funcIDApplyFor;
+      // formMD.entityName = fun.entityName;
+      // formMD.formName = fun.formName;
+      // formMD.gridViewName = fun.gridViewName;
+      var obj = {
+        action: 'edit',
+        formMD: formMD,
+        titleAction: 'Chỉnh sửa cơ hội',
+      };
+      let dialogCustomDeal = this.callfc.openSide(
+        PopupAddDealComponent,
+        obj,
+        option
+      );
+      dialogCustomDeal.closed.subscribe((e) => {
+        if (e && e.event != null) {
+          this.view.dataService.update(e.event).subscribe();
+         this.changeDetectorRef.detectChanges();
+        }
+      });
+    });
   }
 
-  copy(data) {}
+  copy(data) {
+    if (data) {
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
+      this.oldIdDeal= data.recID;
+    }
+    this.view.dataService.copy().subscribe((res) => {
+
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+
+      var formMD = new FormModel();
+      // formMD.funcID = funcIDApplyFor;
+      // formMD.entityName = fun.entityName;
+      // formMD.formName = fun.formName;
+      // formMD.gridViewName = fun.gridViewName;
+      option.Width = '800px';
+      option.zIndex = 1001;
+      this.openFormDeal(formMD, option, 'copy');
+    });
+
+
+  }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
@@ -559,7 +398,4 @@ export class DealsComponent
     return this.listCustomer.find((x) => x.recID === customerID);
   }
 
-  handleDataTmp(data) {
-    return this.listCustomer.find((x) => x.recID === data?.customerID);
-  }
 }

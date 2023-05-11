@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { ApiHttpService, CacheService, NotificationsService } from 'codx-core';
-import { firstValueFrom } from 'rxjs';
+import { Observable, Subject, firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxCmService {
-  constructor(private api: ApiHttpService, private cache: CacheService, private notification: NotificationsService) {}
+  constructor(
+    private api: ApiHttpService,
+    private cache: CacheService,
+    private notification: NotificationsService
+  ) {}
 
   quickAddContacts(data) {
     return this.api.exec<any>(
@@ -68,7 +72,7 @@ export class CodxCmService {
     );
   }
 
-  getListDealsByCustomerID(customerID){
+  getListDealsByCustomerID(customerID) {
     return this.api.exec<any>(
       'CM',
       'DealsBusiness',
@@ -77,7 +81,7 @@ export class CodxCmService {
     );
   }
 
-  countDealsByCustomerID(customerID){
+  countDealsByCustomerID(customerID) {
     return this.api.exec<any>(
       'CM',
       'DealsBusiness',
@@ -119,7 +123,7 @@ export class CodxCmService {
     ]);
   }
 
-  getDealCompetitors(dealID){
+  getDealCompetitors(dealID) {
     return this.api.exec<any>(
       'CM',
       'DealsBusiness',
@@ -128,16 +132,13 @@ export class CodxCmService {
     );
   }
 
-  addDealCompetitor(dealCompetitor){
-    return this.api.exec<any>(
-      'CM',
-      'DealsBusiness',
-      'AddDealCompetitorAsync',
-      [dealCompetitor]
-    );
+  addDealCompetitor(dealCompetitor) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealCompetitorAsync', [
+      dealCompetitor,
+    ]);
   }
 
-  updateDealCompetitorAsync(dealCompetitor){
+  updateDealCompetitorAsync(dealCompetitor) {
     return this.api.exec<any>(
       'CM',
       'DealsBusiness',
@@ -146,7 +147,7 @@ export class CodxCmService {
     );
   }
 
-  deleteDealCompetitorAsync(recID){
+  deleteDealCompetitorAsync(recID) {
     return this.api.exec<any>(
       'CM',
       'DealsBusiness',
@@ -155,7 +156,7 @@ export class CodxCmService {
     );
   }
 
-  getListAddressByListID(lstID){
+  getListAddressByListID(lstID) {
     return this.api.exec<any>(
       'CM',
       'CustomersBusiness',
@@ -164,7 +165,7 @@ export class CodxCmService {
     );
   }
 
-  getListDealAndDealCompetitor(competitorID){
+  getListDealAndDealCompetitor(competitorID) {
     return this.api.exec<any>(
       'CM',
       'DealsBusiness',
@@ -204,7 +205,8 @@ export class CodxCmService {
     return listTmp;
   }
 
-  checkValidate(gridViewSetup, data) {
+  checkValidate(gridViewSetup, data, count = 0) {
+    var countValidate = count;
     var keygrid = Object.keys(gridViewSetup);
     var keymodel = Object.keys(data);
     for (let index = 0; index < keygrid.length; index++) {
@@ -220,18 +222,38 @@ export class CodxCmService {
                 0,
                 '"' + gridViewSetup[keygrid[index]].headerText + '"'
               );
-              return;
+              countValidate++;
+              return countValidate;
             }
           }
         }
       }
     }
+    return countValidate;
   }
+
+  getAutonumber(functionID, entityName, fieldName): Observable<any> {
+    var subject = new Subject<any>();
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.AD',
+        'AutoNumbersBusiness',
+        'GenAutoNumberAsync',
+        [functionID, entityName, fieldName]
+      )
+      .subscribe((item) => {
+        if (item) subject.next(item);
+        else subject.next(null);
+      });
+    return subject.asObservable();
+  }
+
   // #region API OF BAO
 
   // Combox
 
-  getListCbxProcess(data:any) {
+  getListCbxProcess(data: any) {
     return this.api.exec<any>(
       'DP',
       'ProcessesBusiness',
@@ -258,7 +280,7 @@ export class CodxCmService {
     );
   }
 
-  getInstanceSteps(data:any){
+  getInstanceSteps(data: any) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
@@ -267,11 +289,19 @@ export class CodxCmService {
     );
   }
 
-  addInstance(data:any){
+  addInstance(data: any) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
       'AddInstanceAsync',
+      data
+    );
+  }
+  editInstance(data:any){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'EditInstanceAsync',
       data
     );
   }
@@ -280,18 +310,22 @@ export class CodxCmService {
     return this.api.exec<any>(
       'CM',
       'CampaignsBusiness',
-      'GetListCbxCampaignsAsync',
+      'GetListCbxCampaignsAsync'
     );
   }
 
   getListCustomer() {
-    return this.api.exec<any>('CM', 'CustomersBusiness', 'GetListCustomersAsync');
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'GetListCustomersAsync'
+    );
   }
   getListChannels() {
     return this.api.exec<any>('CM', 'ChannelsBusiness', 'GetListChannelsAsync');
   }
   AddDeal(data) {
-    return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealAsync',data);
+    return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealAsync', data);
   }
   async getListUserByOrg(list = []) {
     var lstOrg = [];

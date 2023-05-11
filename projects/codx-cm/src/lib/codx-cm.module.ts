@@ -41,13 +41,13 @@ import { PopupAddQuotationsLinesComponent } from './quotations-lines/popup-add-q
 import { CodxListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CodxListDealsComponent } from './cmcustomer/cmcustomer-detail/codx-list-deals/codx-list-deals.component';
 import { ProductComponent } from './contracts/product/product.component';
-import { TabsHeaderComponent } from './contracts/tabs-header/tabs-header.component';
 import { CodxTabDealcompetitorsComponent } from './deals/deal-detail/codx-tab-dealcompetitors/codx-tab-dealcompetitors.component';
 import { PopupAddDealcompetitorComponent } from './deals/deal-detail/codx-tab-dealcompetitors/popup-add-dealcompetitor/popup-add-dealcompetitor.component';
 import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/view-dealcompetitors/view-dealcompetitors.component';
 import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
 import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
 import { CodxTableComponent } from './contracts/component/codx-table/codx-table.component';
+import { NoDataComponent } from './contracts/component/no-data/no-data.component';
 
 const routes: Routes = [
   {
@@ -103,13 +103,13 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxListContactsComponent,
     CodxListDealsComponent,
     ProductComponent,
-    TabsHeaderComponent,
     CodxTabDealcompetitorsComponent,
     PopupAddDealcompetitorComponent,
     ViewDealcompetitorsComponent,
     CodxComboboxComponent,
     CodxTableComponent,
-    QuotationsViewDetailComponent
+    QuotationsViewDetailComponent,
+    NoDataComponent
   ],
   imports: [
     RouterModule.forChild(routes),

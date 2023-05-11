@@ -55,9 +55,10 @@ export class CashPaymentsComponent extends UIComponent {
   journal: IJournal;
   approval: any;
   total: any = 0;
-  cashpaymentline: Array<CashPaymentLine> = [];
-  settledInvoices: Array<SettledInvoices> = [];
-  acctTrans : Array<any> = [];
+  classNameLine:any;
+  cashpaymentline: any;
+  settledInvoices: any;
+  acctTrans : any;
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
@@ -133,7 +134,14 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
     ];
-
+    switch (this.view.funcID) {
+      case 'ACT0410':
+        this.classNameLine = 'CashPaymentsLinesBusiness';
+        break;
+      case 'ACT0401':
+        this.classNameLine = 'CashReceiptsLinesBusiness';
+        break;
+    }
     this.detectorRef.detectChanges();
   }
 
@@ -364,7 +372,9 @@ export class CashPaymentsComponent extends UIComponent {
       case '1':
       case '3':
         this.api
-          .exec('AC', 'CashPaymentsLinesBusiness', 'LoadDataAsync', [
+          .exec('AC', 
+          this.classNameLine, 
+          'LoadDataAsync', [
             data.recID,
           ])
           .subscribe((res: any) => {

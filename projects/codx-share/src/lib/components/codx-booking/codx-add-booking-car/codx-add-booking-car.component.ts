@@ -84,7 +84,7 @@ export class CodxAddBookingCarComponent
   tempDriver: any;
   title: string;
   attendeesList = [];
-  saveCheck: boolean;
+  onSaving =false;
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('form') form: any;
   @ViewChild('cusCBB') cusCBB: any;
@@ -115,6 +115,7 @@ export class CodxAddBookingCarComponent
     },
   ];
   viewOnly=false;
+  cardTransInfo: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -154,6 +155,7 @@ export class CodxAddBookingCarComponent
   //---------------------------------------------------------------------------------//
   onInit(): void {
     this.getCacheData();
+    this.getCardTranInfo();
   }
   ngAfterViewInit(): void {}
 
@@ -408,7 +410,14 @@ export class CodxAddBookingCarComponent
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
-
+    getCardTranInfo(){
+      this.codxBookingService.getCardTranInfo(this.data?.recID).subscribe(res=>{
+        if(res){
+          this.cardTransInfo=res;          
+          this.detectorRef.detectChanges();
+        }
+      })
+    }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Event-----------------------------------------//
   //---------------------------------------------------------------------------------//
@@ -513,7 +522,7 @@ export class CodxAddBookingCarComponent
     }
   }
   cbxResourceChange(evt: any) {
-    if (evt) {
+    if (evt && !this.onSaving) {
       this.data.resourceID = evt;
       let selectResource = this.cbbResource.filter((obj) => {
         return obj.resourceID == evt;
@@ -774,7 +783,8 @@ export class CodxAddBookingCarComponent
     return true;
   }
   onSaveForm(approval: boolean = false) {
-    if (true) {
+    if (!this.onSaving) {
+      this.onSaving=true;
       this.data.bookingOn = this.data.startDate;
       this.data.stopOn = this.data.endDate;
       if (this.data.startDate < new Date()) {
@@ -785,7 +795,7 @@ export class CodxAddBookingCarComponent
       }
       if (this.data.startDate >= this.data.endDate) {
         this.notificationsService.notifyCode('TM036');
-        this.saveCheck = false;
+        this.onSaving = false;
         return;
       }
       this.form?.formGroup.patchValue(this.data);
@@ -794,13 +804,13 @@ export class CodxAddBookingCarComponent
           this.form?.formGroup,
           this.formModel
         );
-        this.saveCheck = false;
+        this.onSaving = false;
         return;
       }
       if (this.data.phone != null && this.data.phone != '') {
         if (!this.validatePhoneNumber(this.data.phone)) {
           this.notificationsService.notify('EP014');
-          this.saveCheck = false;
+          this.onSaving = false;
           return;
         }
       }
@@ -853,10 +863,12 @@ export class CodxAddBookingCarComponent
         .subscribe((result) => {
           if (result == '1') {
             this.notificationsService.notifyCode('EP007');
+            this.onSaving=false;
             return;
           } else if (result == '2') {
             this.notificationsService.alertCode('EP018').subscribe((x) => {
               if (x.event.status == 'N') {
+                this.onSaving=false;
                 return;
               } else {
                 this.capacityCheck(approval);
@@ -867,8 +879,8 @@ export class CodxAddBookingCarComponent
           }
         });
 
-      this.saveCheck = true;
-    } else {
+    } else {      
+      this.onSaving=false;
       return;
     }
   }
@@ -876,7 +888,7 @@ export class CodxAddBookingCarComponent
     if (this.data.attendees > this.carCapacity) {
       this.notificationsService.alertCode('EP010').subscribe((x) => {
         if (x.event.status == 'N') {
-          this.saveCheck = false;
+          this.onSaving = false;
           return;
         } else {
           this.attendeesValidateStep(approval);
@@ -909,7 +921,7 @@ export class CodxAddBookingCarComponent
             .alertCode('EP005', null, '"' + this.busyAttendees + '"')
             .subscribe((x) => {
               if (x.event.status == 'N') {
-                this.saveCheck = false;
+                this.onSaving = false;
                 return;
               } else {
                 this.startSave(approval);
@@ -995,7 +1007,7 @@ export class CodxAddBookingCarComponent
             this.dialogRef && this.dialogRef.close(this.returnData);
           }
         } else {
-          this.saveCheck = false;
+          this.onSaving = false;
           return;
         }
       });
