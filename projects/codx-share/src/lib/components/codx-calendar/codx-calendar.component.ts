@@ -88,10 +88,11 @@ export class CodxCalendarComponent
         ? query.where('defaultName', 'startswith', e.text, true)
         : query;
     //pass the filter data source, filter query to updateData method.
-    e.updateData(this.celendarTypes, query);
+    e.updateData(this.calendarTypes, query);
   };
 
-  celendarTypes = [];
+  calendarTypes = [];
+  calendarData: any;
 
   //Để tạm
   resources: any = [
@@ -163,7 +164,7 @@ export class CodxCalendarComponent
       .exec('CO', 'CalendarsBusiness', 'GetListCalendarAsync')
       .subscribe((res: any) => {
         if (res) {
-          this.celendarTypes = res;
+          this.calendarTypes = res;
           this.defaultCalendar = 'COT03';
           this.api
             .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
@@ -824,10 +825,14 @@ export class CodxCalendarComponent
     });
   }
 
-  onChange(event): void {
+  getCalendarData(event): void {
     let calendarType = event.value;
     this.api
       .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [calendarType])
-      .subscribe();
+      .subscribe((res: any) => {
+        if (res) {
+          this.calendarData = res;
+        }
+      });
   }
 }
