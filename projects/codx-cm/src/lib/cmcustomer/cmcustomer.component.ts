@@ -636,7 +636,8 @@ export class CmCustomerComponent
         this.cmSv.setIsBlackList(data.recID, isBlacklist).subscribe((res) => {
           if (res) {
             this.dataSelected.isBlackList = isBlacklist;
-            this.customerDetail.getOneCustomerDetail(this.dataSelected.recID, this.funcID);
+            this.customerDetail.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+            // this.customerDetail.getOneCustomerDetail(this.dataSelected.recID, this.funcID);
             this.view.dataService.update(this.dataSelected).subscribe();
             this.notiService.notifyCode('SYS007');
             this.detectorRef.detectChanges();
