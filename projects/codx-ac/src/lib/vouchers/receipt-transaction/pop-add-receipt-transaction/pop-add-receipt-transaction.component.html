@@ -10,7 +10,7 @@
 
 <!-- Start: Body -->
 <ng-template #body>
-  <div class="card-add mt-5" #cardbodyRef>
+  <div class="card-add mt-3" #cardbodyRef>
     <ejs-tab #inventoryRef>
       <e-tabitems>
         <!-- Tab thông tin chứng từ -->
@@ -114,7 +114,7 @@
               <div class="form-group">
                 <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
+                <codx-input [disabled]="true" [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
                   (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
@@ -123,7 +123,7 @@
               <div class="form-group">
                 <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel"
+                <codx-input [disabled]="true" [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel"
                   (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
@@ -144,11 +144,7 @@
                 <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
-                  [disabled]="journal?.voucherNoRule != '0'" [placeholder]="
-                    journal?.voucherNoRule == '2'
-                      ? 'Số chứng từ được tạo tự động'
-                      : ''
-                  " (valueChange)="valueChange($event)">
+                  (valueChange)="valueChange($event)" [disabled]="journal?.voucherNoRule != '0'">
                 </codx-input>
               </div>
             </div>
@@ -164,11 +160,11 @@
 <ng-template #tabLine>
   <ng-container>
     <div class="h-100 w-100 border">
-      <codx-gridview-v2 #gridInventoryJournalLine [formName]="fmInventoryJournalLines.formName"
+      <codx-gridview-v2 #gridInventoryJournalLine class="tabLine" [formName]="fmInventoryJournalLines.formName"
         [gridViewName]="fmInventoryJournalLines.gridViewName" [entityName]="fmInventoryJournalLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="inventoryJournalLines" service="IV"
-        [height]="gridHeight"  [autoLoad]="false" rowHeight="30" (cellChanged)="lineChanged($event)"
+        [height]="gridHeight"  [autoLoad]="false" rowHeight="30" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"
         (created)="gridCreated($event, gridInventoryJournalLine)"></codx-gridview-v2>
     </div>
     <div class="d-flex flex-wrap mt-6">
@@ -196,6 +192,9 @@
 
 <!-- Start: More function -->
 <ng-template #morefunction let-data>
+  <span *ngIf="modeGrid == '2'" ngbTooltip="Sửa" placement="top" type="button" class="btn btn-icon btn-light-primary ms-1" (click)="editRow(data)">
+    <i class="icon-edit icon-16"></i>
+  </span>
   <span ngbTooltip="Xóa" placement="bottom" type="button" class="btn btn-icon btn-light-danger ms-1"
     (click)="deleteRow(data)">
     <i class="icon-delete icon-16"></i>
@@ -228,6 +227,7 @@
       <div class="d-flex justify-content-start align-items-center me-2">
         <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
           <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
+          <i *ngIf="formType == 'copy'" class="icon-content_copy icon-16"></i>
           <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
         </div>
         <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
@@ -240,17 +240,17 @@
       </div>
       <div class="d-flex align-items-center me-3">
         <div *ngIf="formType != 'edit'" class="ms-2">
-          <button type="button" class="btn btn-sm btn-light-primary" (click)="onSaveAdd()" >
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lưu & thêm"></codx-label>
+          <button type="button" class="btn btn-md btn-light-primary" (click)="onSaveAdd()" >
+            <codx-label class="fw-normal" fiedName="lblSave" default="Lưu & thêm"></codx-label>
           </button>
         </div>
         <div class="ms-2 me-2">
-          <button type="button" class="btn btn-sm btn-primary" style="min-width: 60px" (click)="onSave()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+          <button type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
+            <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
           </button>
         </div>
         <div class="ms-2">
-          <div class="btn btn-icon btn-light-primary btn-circle bg" (click)="close()">
+          <div class="btn btn-icon btn-light-danger btn-circle bg" (click)="close()">
             <i class="icon-close icon-18"></i>
           </div>
         </div>

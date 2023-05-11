@@ -48,12 +48,10 @@ export class ApprovalHrComponent implements OnInit, AfterViewInit, OnChanges {
     private hrService: CodxHrService,
     private router: ActivatedRoute
   ) {
-    debugger;
   }
 
   ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {
-    debugger
     this.router.params.subscribe((params) => {
       this.funcID = params['FuncIDs'];
       console.log('funcccc id', this.funcID);
@@ -88,7 +86,6 @@ export class ApprovalHrComponent implements OnInit, AfterViewInit, OnChanges {
       this.hrService.loadData('HR', request).subscribe((res) => {
         if (res) {
           console.log('object hdld',res);
-          debugger
           this.data = res[0][0];
           console.log('data hdld', this.data);
           

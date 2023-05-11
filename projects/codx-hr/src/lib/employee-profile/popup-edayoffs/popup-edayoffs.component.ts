@@ -49,7 +49,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   //@ViewChild('listView') listView: CodxListviewComponent;
 
   fromListView: boolean = false;
-
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,
@@ -112,21 +111,8 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         this.genderGrvSetup = res?.Gender;
       });
-    if (this.employId) this.getEmployeeInfoById(this.employId, 'employeeID');
 
-    // this.hrSevice.getFormModel(this.funcID).then((formModel) => {
-    //   if (formModel) {
-    //     this.formModel = formModel;
-    //     this.hrSevice
-    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    //       .then((fg) => {
-    //         if (fg) {
-    //           this.formGroup = fg;
-    //           this.initForm();
-    //         }
-    //       });
-    //   }
-    // });
+    if (this.employId) this.getEmployeeInfoById(this.employId, 'employeeID');
   }
 
   ngAfterViewInit() {
@@ -202,6 +188,10 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
+    if(this.formGroup.invalid){
+      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
     if (this.isnormalPregnant == true && this.isNotNormalPregnant == false) {
       this.dayoffObj.newChildBirthType = this.lstPregnantType[0].value;
     } else if (
@@ -225,17 +215,9 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         if (p != null) {
           this.dayoffObj.recID = p.recID;
           this.notify.notifyCode('SYS006');
-          // if(p[0]){
-          //   p[0].emp = this.empObj;
-          // }else p.emp = this.empObj;
           p.emp = this.empObj;
           this.successFlag = true;
           this.dialog && this.dialog.close(p);
-
-          // this.lstDayoffs.push(JSON.parse(JSON.stringify(this.dayoffObj)));
-          // if(this.listView){
-          //   (this.listView.dataService as CRUDService).add(this.dayoffObj).subscribe();
-          // }
         } else this.notify.notifyCode('SYS023');
       });
     } else {

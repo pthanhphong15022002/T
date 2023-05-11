@@ -1337,7 +1337,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   startRelease() {
     if (this.approvalRule != '0') {
       this.codxBookingService
-        .getCategoryByEntityName(this.formModel.entityName)
+      .getProcessByCategoryID('ES_EP001')
         .subscribe((res: any) => {
           this.codxBookingService
             .release(
