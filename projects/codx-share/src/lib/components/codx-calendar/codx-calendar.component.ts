@@ -21,6 +21,8 @@ import {
 import moment from 'moment';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CalendarCenterComponent } from './calendar-center/calendar-center.component';
+import { Query } from '@syncfusion/ej2-data';
+import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'app-codx-calendar',
@@ -73,15 +75,30 @@ export class CodxCalendarComponent
   lstDOWeek = [];
   typeNavigate = 'Month';
   isCollapsed = false;
+  defaultCalendar;
+
+  // maps the appropriate column to fields property
+  public fields: Object = { text: 'defaultName', value: 'functionID' };
+  //Bind the filter event
+  public onFiltering = (e: FilteringEventArgs) => {
+    debugger;
+    let query = new Query();
+    //frame the query based on search string with filter type.
+    query =
+      e.text != ''
+        ? query.where('defaultName', 'startswith', e.text, true)
+        : query;
+    //pass the filter data source, filter query to updateData method.
+    e.updateData(this.celendarTypes, query);
+  };
+
+  celendarTypes = [];
 
   constructor(injector: Injector, private codxShareSV: CodxShareService) {
     super(injector);
   }
 
   onInit(): void {
-    this.api
-      .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync')
-      .subscribe();
     let myInterVal = setInterval(() => {
       if (this.ejCalendar) {
         clearInterval(myInterVal);
@@ -108,6 +125,17 @@ export class CodxCalendarComponent
         );
       }
     }, 200);
+
+    this.api
+      .exec('CO', 'CalendarsBusiness', 'GetListCalendarAsync')
+      .subscribe((res: any) => {
+        if (res) {
+          this.celendarTypes = res;
+          this.defaultCalendar = 'COT03';
+          console.log('Calendars', this.celendarTypes);
+        }
+        this.detectorRef.detectChanges();
+      });
   }
 
   ngAfterViewInit() {
@@ -772,5 +800,8 @@ export class CodxCalendarComponent
     });
   }
 
-  valueChange(event) {}
+  onChange(event): void {
+    let calendarType = event.value;
+    this.api.exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync');
+  }
 }

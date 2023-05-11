@@ -321,7 +321,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
     this.gridHeight = hBody - (hTab + hNote + 140);
   }
-
   lineChanged(e: any) {
     const field = [
       'accountid',
@@ -390,7 +389,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  openVoucher() {
+  openVoucher(type:number) {
     if (!this.cashpayment.objectID) {
       this.notification.notifyCode(
         'SYS009',
@@ -399,7 +398,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       );
       return;
     }
-    this.checkValidate();
+    //this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -415,7 +414,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               .save(null, 0, '', '', false)
               .subscribe((res) => {
                 if (res && res.update.data != null) {
-                  this.loadformSettledInvoices();
+                  this.loadformSettledInvoices(type);
                 }
               });
           } else {
@@ -432,7 +431,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                   .subscribe((res) => {
                     if (res && res.save.data != null) {
                       this.hasSaved = true;
-                      this.loadformSettledInvoices();
+                      this.loadformSettledInvoices(type);
                     }
                   });
               }
@@ -448,7 +447,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             .save(null, 0, '', '', false)
             .subscribe((res) => {
               if (res && res.update.data != null) {
-                this.loadformSettledInvoices();
+                this.loadformSettledInvoices(type);
               }
             });
           break;
@@ -1063,11 +1062,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
         }
       });
-  }
+  }crea
 
-  loadformSettledInvoices() {
+  loadformSettledInvoices(type:number) {
     var obj = {
       cashpayment: this.cashpayment,
+      type
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -1080,7 +1080,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       VoucherComponent,
       '',
       1200,
-      700,
+      800,
       '',
       obj,
       '',

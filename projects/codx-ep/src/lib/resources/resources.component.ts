@@ -639,7 +639,7 @@ export class ResourcesComponent extends UIComponent {
       PopupAddCardTransComponent,
       '',
       550,
-      500,
+      550,
       funcID,
       [curTran, funcID, popupTitle, null]
     );
