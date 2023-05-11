@@ -94,7 +94,7 @@
 </ng-template>
 <ng-template #descTmp let-data>
   <div class="py-2">
-    <span class="icon-corporate_fare text-primary icon-16"></span>
+    <span class="icon-corporate_fare text-primary icon-16 me-2"></span>
     <span
       [innerHTML]="
         data?.customerID | formatvalue : view.formModel : 'customerID' | async
@@ -197,6 +197,7 @@
 
 <ng-template #templateCustomer let-data>
   <div class="">
+    <span class="icon-corporate_fare text-primary icon-16 me-2"></span>
     <span
       [innerHTML]="
         data?.customerID | formatvalue : view.formModel : 'customerID' | async
@@ -207,7 +208,6 @@
 
 <ng-template #templateCreatedBy let-data>
   <div class="ms-5">
-    <span class="icon-corporate_fare text-primary icon-16"></span>
     <codx-imgs
       [objectId]="data?.createdBy"
       objectType="AD_Users"

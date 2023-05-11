@@ -24,12 +24,14 @@ import {
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import {
+  CM_Deals,
   CM_Products,
   CM_Quotations,
   CM_QuotationsLines,
 } from '../../models/cm_model';
 import { PopupAddQuotationsLinesComponent } from '../../quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
 import { CodxCmService } from '../../codx-cm.service';
+import { CM_Contacts } from '../../models/tmpCrm.model';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -69,8 +71,8 @@ export class PopupAddQuotationsComponent implements OnInit {
   quotationLinesAddNew = [];
   quotationLinesEdit = [];
   disableRefID = false;
-  modelObjectIDContacs: any;
-  modelCustomerIDDeals: any;
+  modelObjectIDContacs = new CM_Contacts;
+  modelCustomerIDDeals = new CM_Deals;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -158,11 +160,11 @@ export class PopupAddQuotationsComponent implements OnInit {
     switch (e?.field) {
       case 'refID':
         this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-        this.modelObjectIDContacs = { ObjectID: this.quotations.customerID };
+        this.modelObjectIDContacs.objectID = this.quotations.customerID 
         break;
       case 'customerID':
-        this.modelCustomerIDDeals = { CustomerID: this.quotations.customerID };
-        this.modelObjectIDContacs = { ObjectID: this.quotations.customerID };
+        this.modelCustomerIDDeals.customerID = this.quotations.customerID 
+        this.modelObjectIDContacs.objectID = this.quotations.customerID 
         break;
     }
     this.changeDetector.detectChanges()
