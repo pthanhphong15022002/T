@@ -438,6 +438,7 @@
             <codx-img
               #imageUpload
               class="image-inpt-wrapper fullImage"
+              [referType]="'avt'"
               [width]="90"
               [funcId]="funcID"
               [objectId]="data.recID"
@@ -445,9 +446,6 @@
               [objectName]="getNameCrm(data)"
               [isAllowEdit]="true"
               [isDefaulImg]="true"
-              [parentType]="form.formModel.entityName"
-              [parentID]="data.recID"
-              [imgOn]="data?.modifiedOn"
               (handleInput)="changeAvatar()"
             >
             </codx-img>
