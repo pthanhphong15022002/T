@@ -64,7 +64,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   contactType: any;
   count = 0;
   avatarChange = false;
-
+  autoNumber: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -78,8 +78,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
-    this.action = dt.data[0];
-    this.title = dt.data[1];
+    this.action = dt?.data?.action;
+    this.title = dt?.data?.title;
+    this.autoNumber = dt?.data?.autoNumber;
     if (this.action == 'copy') {
       this.recID = dt?.data[2];
       this.getListAddress(this.dialog.formModel.entityName, this.recID);
@@ -95,6 +96,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.action == 'add' || this.action == 'copy')
+      this.getAutoNumber(this.autoNumber);
     if (this.data?.objectID) {
       this.getListContactByObjectID(this.data?.objectID);
     }
@@ -118,11 +121,22 @@ export class PopupAddCmCustomerComponent implements OnInit {
         if (edit) this.moreFuncEdit = edit.customName;
       }
     });
-    if (this.action == 'copy') {
-      this.data.customerID = null;
-      this.data.contactID = null;
-      this.data.competitorID = null;
-      this.data.partnerID = null;
+  }
+
+  getAutoNumber(autoNumber) {
+    switch (this.funcID) {
+      case 'CM0101':
+        this.data.customerID = autoNumber;
+        break;
+      case 'CM0102':
+        this.data.contactID = autoNumber;
+        break;
+      case 'CM0103':
+        this.data.partnerID = autoNumber;
+        break;
+      case 'CM0104':
+        this.data.competitorID = autoNumber;
+        break;
     }
   }
 
@@ -228,7 +242,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         if (res) {
-          this.dialog.close([res.save]);
+          var recID = res?.save?.recID;
+          if (this.avatarChange) {
+            this.imageUpload
+              .updateFileDirectReload(recID)
+              .subscribe((result) => {
+                if (result) {
+                  this.dialog.close([res.save]);
+                }
+              });
+          }else{
+            this.dialog.close([res.save]);
+          }
         }
       });
   }
@@ -242,11 +267,21 @@ export class PopupAddCmCustomerComponent implements OnInit {
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res && res.update) {
+          var recID = res.update?.recID;
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
-
-          this.dialog.close(res.update);
+            if (this.avatarChange) {
+              this.imageUpload
+                .updateFileDirectReload(recID)
+                .subscribe((result) => {
+                  if (result) {
+                    this.dialog.close(res.update);
+                  }
+                });
+            }else{
+              this.dialog.close(res.update);
+            }
         }
       });
   }
@@ -309,36 +344,22 @@ export class PopupAddCmCustomerComponent implements OnInit {
             config.type = 'YesNo';
             this.notiService.alertCode('CM001').subscribe((x) => {
               if (x.event.status == 'Y') {
-                this.saveFileAndSaveCM();
+                this.hanleSave();
               }
             });
           } else {
-            this.saveFileAndSaveCM();
+            this.hanleSave();
           }
         } else {
           if (!this.data.contactType.split(';').some((x) => x == '1')) {
             this.notiService.notifyCode('CM002');
           } else {
-            this.saveFileAndSaveCM();
+            this.hanleSave();
           }
         }
       } else {
-        this.saveFileAndSaveCM();
+        this.hanleSave();
       }
-    } else {
-      this.saveFileAndSaveCM();
-    }
-  }
-
-  async saveFileAndSaveCM() {
-    if (this.avatarChange) {
-      this.imageUpload
-        .updateFileDirectReload(this.data.recID)
-        .subscribe((result) => {
-          if (result) {
-            this.hanleSave();
-          }
-        });
     } else {
       this.hanleSave();
     }

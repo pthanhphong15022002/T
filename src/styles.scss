@@ -2573,6 +2573,7 @@ codx-toolbar {
       padding-left: 25px;
       padding-right: 15px;
     }
+   
   }
   .card-footer {
     padding: 5px !important;
@@ -2581,6 +2582,10 @@ codx-toolbar {
   .card-header {
     margin-bottom: 10px;
   }
+  // .e-tab .e-content.e-lib{
+  //   padding-left: 15px!important;
+  //   padding-right: 15px!important;
+  // }
 }
 
 /**** end ac-dialog ***/
@@ -2726,6 +2731,9 @@ codx-vll.badge.badge-md span::before{
     height: 26px !important;
    // line-height: 26px;
   }
+  codx-dropdown-calendar .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
+    height: 26px !important;
+  }
 }
 a.layout-add-menuleft{
   padding-top: .65rem!important;
@@ -2765,4 +2773,8 @@ codx-vll.vll-post{
   img{
     margin-right: 4px;
   }
+}
+
+.content-tree .menu-nav li.menu-item{
+  display: block!important;
 }
