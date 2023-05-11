@@ -442,10 +442,10 @@ export class CmCustomerComponent
             res.disabled = true;
             break;
           case 'CM0101_1':
-            if (data.isBlackList) res.isblur = true;
+            if (data.isBlackList) res.disabled = true;
             break;
           case 'CM0101_3':
-            if (!data.isBlackList) res.isblur = true;
+            if (!data.isBlackList) res.disabled = true;
             break;
           case 'CM0102_2':
             if (

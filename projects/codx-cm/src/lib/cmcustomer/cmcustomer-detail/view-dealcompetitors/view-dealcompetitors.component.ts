@@ -33,8 +33,10 @@ export class ViewDealcompetitorsComponent implements OnInit {
   method = 'GetListDealAndDealCompetitorAsync';
   constructor(private cmSv: CodxCmService, private api: ApiHttpService) {}
 
-  ngOnInit(): void {
+  async ngOnInit(){
     this.getListDealAndDealCompetitor();
+    this.fromModelDealCompetitor = await this.cmSv.getFormModel('CM02011');
+    this.fromModelDeal = await this.cmSv.getFormModel('CM0201');
   }
 
   getListDealAndDealCompetitor() {
