@@ -1,3 +1,4 @@
+
 import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import {
   AfterViewInit,
@@ -116,6 +117,9 @@ export class PopupAddDealComponent
     this.action = dt?.data?.action;
     this.executeApiCalls();
     this.deal.status = '1';
+    if(this.action != this.actionAdd) {
+      this.deal = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    }
   }
 
   onInit(): void {}
@@ -128,12 +132,6 @@ export class PopupAddDealComponent
   valueChangeDate($event) {
     if ($event) {
       this.deal[$event.field] = $event.data.fromDate ;
-    }
-  }
-  eventUser(e) {
-    if (e != null) {
-      this.owner = e?.id; // thêm check null cái
-      this.deal.owner = this.owner;
     }
   }
 
@@ -190,12 +188,15 @@ export class PopupAddDealComponent
         return;
       }
     this.convertDataInstance(this.deal,this.instance);
-    this.insertInstance();
-   // this.insertDeal();
-   this.updateDateDeal(this.instance,this.deal);
-    this.onAdd();
-
-
+    this.updateDateDeal(this.instance,this.deal);
+    if( this.action !== this.actionEdit ) {
+      this.insertInstance();
+      this.onAdd();
+    }
+    else {
+       this.editInstance();
+       this.onEdit();
+    }
   }
   cbxChange($event, field) {
     if ($event) {
@@ -256,7 +257,7 @@ export class PopupAddDealComponent
   }
   valueChangeOwner($event){
     if ($event != null) {
-      this.owner = $event?.id;
+      this.owner = $event;
       this.deal.owner = this.owner;
     }
   }
@@ -265,19 +266,25 @@ export class PopupAddDealComponent
       .save((option: any) => this.beforeSave(option),0)
       .subscribe((res) => {
         if (res) {
-          this.dialog.close(res.save);
+          this.dialog.close(res.save[0]);
         } else this.dialog.close();
       });
   }
+  onEdit() {
+    this.dialog.dataService
+    .save((option: any) => this.beforeSave(option))
+    .subscribe((res) => {
+      if (res.update) {
+        this.dialog.close(res.update[0]);
+      }
+    });
+  }
   beforeSave(option: RequestOption) {
     var data = this.deal;
-    if (this.action == this.actionAdd || this.action == this.actionCopy) {
-      option.methodName = 'AddDealAsync';
-      option.className = 'DealsBusiness';
-      option.data = data;
-      return true;
-    }
-    return false;
+    option.methodName = this.action !== this.actionEdit ? 'AddDealAsync' : 'EditDealAsync';
+    option.className = 'DealsBusiness';
+    option.data = data;
+    return true;
   }
 
   ngAfterViewInit(): void {
@@ -304,7 +311,8 @@ export class PopupAddDealComponent
       });
   }
   async getListProcess(applyFor) {
-    var data = [applyFor];
+    var processID = this.action !== this.actionEdit ? '' : this.deal.processID;
+    var data = [applyFor,processID];
     this.codxCmService.getListCbxProcess(data).subscribe((res) => {
       if (res && res.length > 0) {
         this.listCbxProcess = res[0];
@@ -331,22 +339,30 @@ export class PopupAddDealComponent
   // }
 
   async getListInstanceSteps(processId: any) {
-    this.codxCmService.getInstanceSteps(processId).subscribe(async (res) => {
+    processId = this.action === this.actionCopy ? this.deal.processID : processId;
+    var data = [processId , this.deal.refID, this.action ]
+    this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
         var obj = {
           id: processId,
           steps: res[0],
           permissions: (await this.getListPermission(res[1])),
-          dealId: res[2]
+          dealId: this.action !== this.actionEdit ? this.deal.dealID: res[2],
         };
         var isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        this.deal.endDate = this.HandleEndDate(this.listInstanceSteps, this.action, null);
-        this.deal.dealID = res[2];
         this.listParticipants = obj.permissions;
+        if(this.action === this.actionEdit){
+          this.owner = this.deal.owner;
+        }
+        else {
+          this.deal.endDate = this.HandleEndDate(this.listInstanceSteps, this.action, null);
+          this.deal.dealID = res[2];
+        }
+
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -359,13 +375,10 @@ export class PopupAddDealComponent
       }
     });
   }
-  insertDeal() {
-    //  this.onAdd();
-    this.codxCmService.AddDeal(this.deal).subscribe((res) => {
-      if (res) {
-        this.deal = res;
-        this.dialog.dataService.update(res).subscribe();
-        this.dialog.close(res);
+  editInstance() {
+    var data = [this.instance, this.listCustomFile];
+    this.codxCmService.editInstance(data).subscribe((instance)=> {
+      if(instance){
       }
     });
   }
@@ -382,20 +395,26 @@ export class PopupAddDealComponent
   // covnert data CM -> data DP
 
   convertDataInstance(deal:CM_Deals, instance:tmpInstances){
-
+    if(this.action === this.actionEdit) {
+      instance.recID = this.deal.refID
+    }
     instance.title = deal.dealName;
     instance.memo = deal.memo;
     instance.endDate = deal.endDate;
     instance.instanceNo = deal.dealID;
-    instance.owner = deal.owner;
+    instance.owner = this.owner;
     instance.processID = deal.processID;
     instance.stepID = deal.stepID;
   }
   updateDateDeal(instance:tmpInstances,deal:CM_Deals){
-    deal.stepID = this.listInstanceSteps[0].stepID;
-    deal.nextStep = this.listInstanceSteps[1].stepID;
-    deal.status = "1";
-    deal.refID = instance.recID;
+
+    if(this.action !== this.actionEdit) {
+      deal.stepID = this.listInstanceSteps[0].stepID;
+      deal.nextStep = this.listInstanceSteps[1].stepID;
+      deal.status = "1";
+      deal.refID = instance.recID;
+    }
+    deal.owner = this.owner;
   }
   checkFormat(field) {
     if (field.dataType == 'T') {

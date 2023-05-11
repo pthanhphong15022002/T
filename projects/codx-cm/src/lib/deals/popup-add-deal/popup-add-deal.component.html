@@ -42,6 +42,7 @@
         id="recID"
         [dataSource]="listCbxProcess"
         [fields]="fieldCbxProcess"
+        [enabled]=" actionEdit !== action "
         [value]="deal?.processID"
         (valueChange)="cbxProcessChange($event,'processID')"
       ></ejs-combobox>
