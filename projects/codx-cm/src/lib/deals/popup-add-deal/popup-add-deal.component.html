@@ -310,7 +310,7 @@
 </ng-template>
 
 <ng-template #tabCustomFieldDetail let-form>
-  <ng-container *ngIf="listInstanceSteps?.length > 0 ">
+  <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty ">
     <ng-container *ngFor="let step of listInstanceSteps">
       <ng-container *ngIf="step?.fields?.length > 0">
         <ng-container *ngFor="let item of step.fields">
@@ -363,6 +363,12 @@
     ></ng-container>
   </ng-template>
 </ng-container>
+
+<ng-template #dataIsEmpty>
+<codx-no-data>
+
+</codx-no-data>
+</ng-template>
 
 <!-- <ng-container *ngIf="addFieldsControl == '2'"> </ng-container>
 
