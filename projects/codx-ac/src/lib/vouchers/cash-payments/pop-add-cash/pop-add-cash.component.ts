@@ -108,6 +108,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   gridViewNameLine : any;
   entityNameLine :any;
   classNameLine:any;
+  className:any;
   dataLine:any;
   authStore: AuthStore;
   constructor(
@@ -130,17 +131,21 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.formType = dialogData.data?.formType;
     this.cashpayment = dialog.dataService.dataSelected;
     switch (this.dialog.formModel.funcID) {
+      case 'ACT0429':
       case 'ACT0410':
         this.formNameLine = 'CashPaymentsLines';
         this.gridViewNameLine = 'grvCashPaymentsLines';
         this.entityNameLine = 'AC_CashPaymentsLines';
+        this.className = 'CashPaymentsBusiness';
         this.classNameLine = 'CashPaymentsLinesBusiness';
         this.dataLine = new CashPaymentLine();
         break;
+      case 'ACT0428':
       case 'ACT0401':
         this.formNameLine = 'CashReceiptsLines';
         this.gridViewNameLine = 'grvCashReceiptsLines';
         this.entityNameLine = 'AC_CashReceiptsLines';
+        this.className = 'CashReceiptsBusiness';
         this.classNameLine = 'CashReceiptsLinesBusiness';
         this.dataLine = new CashReceiptsLines();
         break;
@@ -258,15 +263,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       'journalno',
       'objectid',
     ];
-    let classname;
-    switch (this.form.formModel.funcID) {
-      case 'ACT0410':
-        classname = 'CashPaymentsBusiness';
-        break;
-      case 'ACT0401':
-        classname = 'CashReceiptsBusiness';
-        break;
-    }
     if (e.data) {
       switch (field) {
         case 'currencyid':
@@ -280,9 +276,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             this.api
               .exec<any>(
                 'AC',
-                this.form.formModel.funcID == 'ACT0410'
-                  ? 'CashPaymentsLinesBusiness'
-                  : 'CashReceiptsLinesBusiness',
+                this.classNameLine,
                 'ChangeExchangeRateAsync',
                 [this.cashpayment, this.cashpaymentline]
               )
@@ -307,7 +301,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
       if (sArray.includes(field)) {
         this.api
-          .exec<any>('AC', classname, 'ValueChangedAsync', [
+          .exec<any>('AC', this.className, 'ValueChangedAsync', [
             e.field,
             this.cashpayment,
           ])
@@ -1045,6 +1039,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   loadFuncid() {
     switch (this.dialog.formModel.funcID) {
+      case 'ACT0428':
       case 'ACT0410':
       case 'ACT0401':
         this.loadvll('AC091');
