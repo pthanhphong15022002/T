@@ -8,6 +8,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class CodxTaskbarComponent implements OnInit {
   @Input() listTab = []; // danh sách tab {icon, name, textDefault}
   @Input() size = 20; // kích thước icon và chữ
+  @Input() color = '';
+  @Input() class = ''; 
   @Output() tab = new EventEmitter(); // giá trị trả về khi chọn => name
 
   sizeIcon = '';
@@ -24,7 +26,7 @@ export class CodxTaskbarComponent implements OnInit {
     })
     this.listTaskConvert[0].isActive = true;
     this.tabOld = this.listTaskConvert[0];
-    this.tab.emit(this.listTaskConvert[0].name);
+    this.tab.emit(this.listTaskConvert[0].name);   
   }
 
   clickMenu(item) {
