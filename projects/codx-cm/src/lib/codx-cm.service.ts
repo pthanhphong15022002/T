@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiHttpService, CacheService, NotificationsService } from 'codx-core';
-import { firstValueFrom } from 'rxjs';
+import { Observable, Subject, firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -231,6 +231,24 @@ export class CodxCmService {
     }
     return countValidate;
   }
+
+  getAutonumber(functionID, entityName, fieldName): Observable<any> {
+    var subject = new Subject<any>();
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.AD',
+        'AutoNumbersBusiness',
+        'GenAutoNumberAsync',
+        [functionID, entityName, fieldName]
+      )
+      .subscribe((item) => {
+        if (item) subject.next(item);
+        else subject.next(null);
+      });
+    return subject.asObservable();
+  }
+
   // #region API OF BAO
 
   // Combox

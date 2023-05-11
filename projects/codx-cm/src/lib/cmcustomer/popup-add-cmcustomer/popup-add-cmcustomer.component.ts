@@ -64,7 +64,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   contactType: any;
   count = 0;
   avatarChange = false;
-
+  autoNumber: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -78,8 +78,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
-    this.action = dt.data[0];
-    this.title = dt.data[1];
+    this.action = dt?.data?.action;
+    this.title = dt?.data?.title;
+    this.autoNumber = dt?.data?.autoNumber;
     if (this.action == 'copy') {
       this.recID = dt?.data[2];
       this.getListAddress(this.dialog.formModel.entityName, this.recID);
@@ -95,6 +96,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.action == 'add' || this.action == 'copy')
+      this.getAutoNumber(this.autoNumber);
     if (this.data?.objectID) {
       this.getListContactByObjectID(this.data?.objectID);
     }
@@ -118,11 +121,22 @@ export class PopupAddCmCustomerComponent implements OnInit {
         if (edit) this.moreFuncEdit = edit.customName;
       }
     });
-    if (this.action == 'copy') {
-      this.data.customerID = null;
-      this.data.contactID = null;
-      this.data.competitorID = null;
-      this.data.partnerID = null;
+  }
+
+  getAutoNumber(autoNumber) {
+    switch (this.funcID) {
+      case 'CM0101':
+        this.data.customerID = autoNumber;
+        break;
+      case 'CM0102':
+        this.data.contactID = autoNumber;
+        break;
+      case 'CM0103':
+        this.data.partnerID = autoNumber;
+        break;
+      case 'CM0104':
+        this.data.competitorID = autoNumber;
+        break;
     }
   }
 
