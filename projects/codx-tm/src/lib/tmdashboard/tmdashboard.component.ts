@@ -424,10 +424,10 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   filterChange(e: any) {
+    this.isLoaded = false;
     const { predicates, dataValues } = e[0];
     this.predicates = predicates;
     this.dataValues = dataValues;
-
     switch (this.reportID) {
       case 'TMD001':
         this.getMyDashboardData(this.predicates, this.dataValues);
