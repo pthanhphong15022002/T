@@ -266,7 +266,6 @@ export class PopupAddSignFileComponent implements OnInit {
     this.esService.getEmployee(this.user?.userID).subscribe((emp) => {
       if (emp) {
         this.user.employee = emp;
-        console.log(this.user);
       }
 
       this.esService
@@ -366,7 +365,6 @@ export class PopupAddSignFileComponent implements OnInit {
                     'RefNo'
                   )
                   .subscribe((res) => {
-                    console.log('autoNumber', res);
                     if (res) {
                       this.data.refNo = res;
                       this.dialogSignFile.patchValue({
@@ -588,9 +586,6 @@ export class PopupAddSignFileComponent implements OnInit {
               this.esService
                 .getAutoNumberByCategory(category?.AutoNumber)
                 .subscribe((autoNum) => {
-                  console.log(this.data);
-                  console.log(this.dialogSignFile.value);
-
                   if (autoNum != null) {
                     this.data.refNo = autoNum;
                   } else if (this.autoNo) {
@@ -886,8 +881,6 @@ export class PopupAddSignFileComponent implements OnInit {
   //#region Change Tab
 
   clickTab(tabNo) {
-    console.log('clickTab', this.data);
-    console.log('clickTab', this.dialogSignFile.value);
     let newNo = tabNo;
     let oldNo = this.currentTab;
 
@@ -905,6 +898,7 @@ export class PopupAddSignFileComponent implements OnInit {
         }
       });
     }
+    if (tabNo != 0 && this.disableContinue) return;
 
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
       this.updateNodeStatus(oldNo, newNo);
@@ -913,14 +907,10 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   async continue(currentTab) {
-    console.log('continue', this.data);
-    console.log('continue', this.dialogSignFile.value);
-
     if (this.currentTab > 3) return;
 
     let oldNode = currentTab;
     let newNode = oldNode + 1;
-
     switch (currentTab) {
       case 0:
         if (
@@ -1091,7 +1081,11 @@ export class PopupAddSignFileComponent implements OnInit {
         this.isSaved == false)
     ) {
       this.dialog && this.dialog.close();
-    } else if (this.processTab > 0 && this.isAddNew == true) {
+    } else if (
+      this.processTab > 0 &&
+      this.isAddNew == true &&
+      this.data?.files?.length > 0
+    ) {
       this.notify.alertCode('ES004').subscribe((x) => {
         if (x.event.status == 'Y') {
           this.clickIsSave(true);
@@ -1190,13 +1184,25 @@ export class PopupAddSignFileComponent implements OnInit {
         let i = this.data?.files?.findIndex((p) => p.fileID == file.recID);
         if (i > -1) {
           this.data.files.splice(i, 1);
+          console.log(this.data.files);
+
           this.dialogSignFile.patchValue({ files: this.data.files });
-          this.esService.editSignFile(this.data).subscribe((res) => {
-            console.log('edit sf', res);
-          });
+          this.esService
+            .deleteFileInSignFile(this.data.recID, file.recID)
+            .subscribe((res) => {
+              console.log('edit sf', res);
+            });
           this.cr.detectChanges();
         }
       }
     }
+  }
+  fileCount(event) {
+    if (event?.length == 0) {
+      this.disableContinue = true;
+    } else {
+      this.disableContinue = false;
+    }
+    console.log('count sf', event);
   }
 }
