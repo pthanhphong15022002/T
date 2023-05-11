@@ -99,10 +99,10 @@
                 <lib-okr-trees [okrVll]="okrVll" [okrFM]="okrFM" [funcID]="funcID" [dataOKRPlans]="dataOKRPlans"
                   [orgUnitTree]="orgUnitTree" [okrGrv]="okrGrv" [currentOrgID]="curOrgID"></lib-okr-trees>
               </div> -->
-              <div class="okr-treeview w-100 h-100 container mx-auto">
+              <div class="okr-treeview w-100 h-100 container "*ngIf="!planNull && orgUnitTree!=null  ;else defaultEmpty">
                 <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="orgUnitTree" [enableCheck]="false"
                 idField="orgUnitID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="true"
-                *ngIf="isAfterRender ;else defaultEmpty">
+                >
             </codx-treeview>
             </div>
             

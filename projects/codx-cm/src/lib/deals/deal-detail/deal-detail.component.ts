@@ -16,7 +16,6 @@ export class DealDetailComponent  implements OnInit {
   @Output() clickMoreFunc = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
-  @Input() tmpDataSelect: any;
   @ViewChild('tabDetailViewDetail') tabDetailViewDetail: TabDetailCustomComponent;
   @ViewChild('quotations')quotations: TemplateRef<any>;
   @ViewChild('contract')contract: TemplateRef<any>;
@@ -36,6 +35,7 @@ export class DealDetailComponent  implements OnInit {
   treeTask = [];
 
   nameDetail = '';
+  tabClicked = '';
 
   tabDetail = [
   ]
@@ -43,8 +43,6 @@ export class DealDetailComponent  implements OnInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {
 
-    // this.nameDetail = 'Information'
-    // this.listTab(this.funcID);
   }
 
   ngOnInit(): void {
@@ -75,15 +73,13 @@ export class DealDetailComponent  implements OnInit {
       ]
   }
 
-  clickMenu(item) {
-    this.nameDetail = item?.name;
-    this.tabDetail = this.tabDetail.map(tabItem => ({
-      ...tabItem,
-      isActive: tabItem.name === this.nameDetail,
-    }));
-    this.changeDetectorRef.detectChanges();
+  changeTab(e){
+    this.tabClicked = e;
+    // this.tabDetail = this.tabDetail.map(tabItem => ({
+    //   ...tabItem,
+    //   isActive: tabItem.name === this.tabClicked,
+    // }));
   }
-
 
   clickMF(e, data){
     this.clickMoreFunc.emit({e: e, data: data});

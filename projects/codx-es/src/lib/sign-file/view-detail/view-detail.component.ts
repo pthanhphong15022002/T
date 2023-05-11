@@ -701,6 +701,7 @@ export class ViewDetailComponent implements OnInit {
     if (event?.field && event?.component) {
       if (event?.field == 'comment') {
         this.comment = event?.data;
+        this.df.detectChanges();
       }
     }
   }
@@ -717,7 +718,7 @@ export class ViewDetailComponent implements OnInit {
     } else if (this.cancelControl == '3') {
       //comment bat buoc
       if (this.comment == '') {
-        this.notify.notifyCode('ES012');
+        this.notify.notifyCode('ES031');
         return;
       }
       this.cancel(this.oCancelSF);

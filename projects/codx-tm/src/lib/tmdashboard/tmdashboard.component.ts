@@ -377,7 +377,9 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('TM', 'TaskBusiness', 'GetDataMyDashboardAsync', [model])
       .subscribe((res) => {
         this.myDBData = res;
-        this.isLoaded=true;
+        setTimeout(()=>{
+          this.isLoaded = true;
+        },500)
       });
 
     this.detectorRef.detectChanges();
@@ -393,7 +395,9 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('TM', 'TaskBusiness', 'GetDataTeamDashboardAsync', [model])
       .subscribe((res) => {
         this.myDBData = res;
-        this.isLoaded=true;
+        setTimeout(()=>{
+          this.isLoaded = true;
+        },500)
       });
 
     this.detectorRef.detectChanges();
@@ -409,7 +413,10 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('TM', 'TaskBusiness', 'GetDataAssignDashboardAsync', [model])
       .subscribe((res) => {
         this.assignDBData = res;
-        this.isLoaded = true;
+        setTimeout(()=>{
+          this.isLoaded = true;
+        },500)
+
         console.log('assignDBData', this.assignDBData);
       });
 
@@ -417,10 +424,10 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   filterChange(e: any) {
+    this.isLoaded = false;
     const { predicates, dataValues } = e[0];
     this.predicates = predicates;
     this.dataValues = dataValues;
-
     switch (this.reportID) {
       case 'TMD001':
         this.getMyDashboardData(this.predicates, this.dataValues);

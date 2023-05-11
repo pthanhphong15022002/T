@@ -593,7 +593,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       taskBefore = this.listGroupTask[index - 2];
     }
     taskGroup['startDate'] = taskBefore?.endDate || this.currentStep?.startDate;
-    let taskOutput = await this.openPopupTask('add',taskGroup);
+    let taskOutput = await this.openPopupGroup('add',taskGroup);
 
     if(taskOutput?.event.task){
       let data = taskOutput?.event;
@@ -621,7 +621,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         taskBefore = this.listGroupTask[index - 2];
       }
       groupCopy['startDate'] = taskBefore?.endDate || this.currentStep?.startDate;
-      let taskOutput = await this.openPopupTask('copy',groupCopy);
+      let taskOutput = await this.openPopupGroup('copy',groupCopy);
 
       if(taskOutput?.event.task){
         let data = taskOutput?.event;
@@ -638,7 +638,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async editGroupTask(group){
     if(group){
       let groupEdit = JSON.parse(JSON.stringify(group));
-      let taskOutput = await this.openPopupTask('copy',groupEdit);
+      let taskOutput = await this.openPopupGroup('copy',groupEdit);
 
       if(taskOutput?.event.task){
         let data = taskOutput?.event;

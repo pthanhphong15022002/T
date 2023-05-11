@@ -34,6 +34,7 @@
 
 erm-quick-links-inner .dropdown-menu {
   width: 450px !important;
+  padding: 10px 0;
 }
 .place-holder {
   opacity: 0.65;
@@ -92,7 +93,7 @@ codx-view-list-detail {
   font-size: 1.275rem !important;
 }
 .fs-5-sm {
-  font-size: 1.175rem !important;
+  font-size: 1.15rem !important;
 }
 .fs-6 {
   //font-size: var(--fs-6) !important;
@@ -2573,6 +2574,7 @@ codx-toolbar {
       padding-left: 25px;
       padding-right: 15px;
     }
+   
   }
   .card-footer {
     padding: 5px !important;
@@ -2581,8 +2583,14 @@ codx-toolbar {
   .card-header {
     margin-bottom: 10px;
   }
+  .e-tab .e-content.e-lib {
+    padding-left: 0px!important;
+  }
+  
 }
-
+.aside.aside-extended{
+  padding-left: 0px!important;
+}
 /**** end ac-dialog ***/
 
 .e-ddl.e-input-group.e-control-wrapper .e-ddl-icon::before {
@@ -2726,6 +2734,9 @@ codx-vll.badge.badge-md span::before{
     height: 26px !important;
    // line-height: 26px;
   }
+  codx-dropdown-calendar .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
+    height: 26px !important;
+  }
 }
 a.layout-add-menuleft{
   padding-top: .65rem!important;
@@ -2765,4 +2776,8 @@ codx-vll.vll-post{
   img{
     margin-right: 4px;
   }
+}
+
+.content-tree .menu-nav li.menu-item{
+  display: block!important;
 }
