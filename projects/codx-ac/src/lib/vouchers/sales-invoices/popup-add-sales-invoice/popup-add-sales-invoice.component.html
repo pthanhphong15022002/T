@@ -610,7 +610,7 @@
       <button
         *ngIf="!isEdit"
         type="button"
-        class="btn btn-sm btn-light-primary ms-2"
+        class="btn btn-md btn-light-primary ms-2"
         (click)="onClickSave(false)"
       >
         <codx-label
@@ -624,7 +624,7 @@
       <button
         type="button"
         style="min-width: 60px"
-        class="btn btn-sm btn-primary ms-2 me-2"
+        class="btn btn-md btn-primary ms-2 me-2"
         (click)="onClickSave(true)"
       >
         <codx-label
@@ -636,7 +636,7 @@
       </button>
 
       <button
-        class="btn btn-sm btn-danger"
+        class="btn btn-md btn-danger"
         (click)="onDiscard()"
         *ngIf="masterService.hasSaved && salesInvoice.status == '0'"
       >
@@ -649,7 +649,7 @@
       </button>
 
       <div
-        class="btn btn-icon btn-light-primary btn-circle bg ms-2"
+        class="btn btn-icon btn-light-danger btn-circle bg ms-2"
         (click)="onClickClose()"
       >
         <i class="icon-close icon-18"></i>
