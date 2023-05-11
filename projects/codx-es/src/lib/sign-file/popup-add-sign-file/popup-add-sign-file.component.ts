@@ -460,7 +460,8 @@ export class PopupAddSignFileComponent implements OnInit {
 
   fileAdded(event) {
     this.isEdit = true;
-    let files = [];
+    // let files = [];
+    let files = this.data.files ?? [];
     if (event) {
       if (event?.length > 0) {
         event.forEach((element) => {
@@ -1183,12 +1184,16 @@ export class PopupAddSignFileComponent implements OnInit {
 
   fileDelete(event) {
     if (event && event?.length > 0) {
-      let file = event[0].data;
+      let file = event[0].data ?? event[0];
+      // let file = event[0];
       if (file) {
         let i = this.data?.files?.findIndex((p) => p.fileID == file.recID);
         if (i > -1) {
           this.data.files.splice(i, 1);
           this.dialogSignFile.patchValue({ files: this.data.files });
+          this.esService.editSignFile(this.data).subscribe((res) => {
+            console.log('edit sf', res);
+          });
           this.cr.detectChanges();
         }
       }

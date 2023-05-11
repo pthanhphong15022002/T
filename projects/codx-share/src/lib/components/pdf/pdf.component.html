@@ -1035,8 +1035,8 @@
     type="number"
     id="pageNumber"
     min="1"
-    [(max)]="pageMax"
-    [(crrValue)]="curPage"
+    [max]="pageMax"
+    [crrValue]="curPage"
     (valueChange)="goToPage($event)"
     [showSpinButton]="false"
   >
