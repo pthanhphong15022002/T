@@ -7,6 +7,7 @@ import {
   CodxFormComponent,
   CodxListviewComponent,
   CRUDService,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -32,40 +33,19 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   idField = 'RecID';
   funcID;
   isAfterRender = false;
-  employId;
+  employId: string;
+  genderGrvSetup: any;
+  isUseEmployee: boolean;
+  employeeObj: any;
   @ViewChild('form') form: CodxFormComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
-
-  onInit(): void {
-    this.hrService
-    .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    .then((fg) => {
-      if (fg) {
-        this.formGroup = fg;
-        this.initForm();
-      }
-    });
-
-    // this.hrService.getFormModel(this.funcID).then((formModel) => {
-    //   if (formModel) {
-    //     this.formModel = formModel;
-    //     this.hrService
-    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    //       .then((fg) => {
-    //         if (fg) {
-    //           this.formGroup = fg;
-    //           this.initForm();
-    //         }
-    //       });
-    //   }
-    // });
-  }
 
   constructor(
     private injector: Injector,
     private notify: NotificationsService,
     private cr: ChangeDetectorRef,
     private hrService: CodxHrService,
+    private df: ChangeDetectorRef,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   ) {
@@ -80,9 +60,11 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
-    this.EAppointionObj = data?.data?.appointionObj;
+    this.EAppointionObj = JSON.parse(JSON.stringify(data?.data?.appointionObj));
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    this.employeeObj = JSON.parse(JSON.stringify(data.data.empObj ? data.data.empObj : null));
+    this.isUseEmployee = data?.data?.isUseEmployee;
     this.formModel = dialog.formModel;
     //this.lstEAppointions = data?.data?.lstEAppointions;
 
@@ -142,15 +124,122 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     }
   }
 
+  getEmployeeInfoById(empId: string, fieldName: string) {
+    let empRequest = new DataRequest();
+    empRequest.entityName = 'HR_Employees';
+    empRequest.dataValues = empId;
+    empRequest.predicates = 'EmployeeID=@0';
+    empRequest.pageLoading = false;
+    this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+      if (emp[1] > 0) {
+        if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
+        if (fieldName === 'SignerID') {
+          this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+            if (emp[1] > 0) {
+              let positionID = emp[0][0].positionID;
+
+              if (positionID) {
+                this.hrService.getPositionByID(positionID).subscribe((res) => {
+                  if (res) {
+                    this.EAppointionObj.signerPosition = res.positionName;
+                    this.formGroup.patchValue({
+                      signerPosition: this.EAppointionObj.signerPosition,
+                    });
+                    this.cr.detectChanges();
+                  }
+                });
+              } else {
+                this.EAppointionObj.signerPosition = null;
+                this.formGroup.patchValue({
+                  signerPosition: this.EAppointionObj.signerPosition,
+                });
+              }
+              this.df.detectChanges();
+            }
+          });
+        }
+      }
+      this.cr.detectChanges();
+    });
+  }
+
+  onInit(): void {
+    this.hrService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((fg) => {
+        if (fg) {
+          this.formGroup = fg;
+          this.initForm();
+        }
+      });
+    //Load data field gender from database
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
+      });
+
+    //Update Employee Information when CRUD then render
+    if (this.employId != null)
+      this.getEmployeeInfoById(this.employId, 'employeeID');
+
+    // this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //   if (formModel) {
+    //     this.formModel = formModel;
+    //     this.hrService
+    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //       .then((fg) => {
+    //         if (fg) {
+    //           this.formGroup = fg;
+    //           this.initForm();
+    //         }
+    //       });
+    //   }
+    // });
+  }
+
+  handleSelectEmp(evt) {
+    if (!!evt.data) {
+      this.employId = evt.data;
+      this.getEmployeeInfoById(this.employId, evt.field);
+    } else {
+      delete this.employeeObj;
+    }
+  }
+
+  valueChange(event) {
+    if (!event.data) {
+      this.EAppointionObj.signerPosition = '';
+      this.formGroup.patchValue({
+        signerPosition: '',
+      });
+    }
+
+    if (event?.field && event?.component && event?.data != '') {
+      switch (event.field) {
+        case 'SignerID': {
+          let employee = event.data;
+
+          if (employee) {
+            this.getEmployeeInfoById(employee, 'SignerID');
+          }
+          break;
+        }
+      }
+
+      this.cr.detectChanges();
+    }
+  }
+
   onSaveForm() {
     // if (this.formGroup.invalid) {
     //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
     //   return;
     // }
 
-    if (this.actionType === 'copy' || this.actionType === 'add') {
-      delete this.EAppointionObj.recID;
-    }
+    // if (this.actionType === 'copy' || this.actionType === 'add') {
+    //   delete this.EAppointionObj.recID;
+    // }
     this.EAppointionObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
@@ -158,9 +247,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS006');
-            this.EAppointionObj = p;
-            this.successFlag = true;
-          this.dialog && this.dialog.close(this.EAppointionObj);
+            // this.successFlag = true;
+            this.dialog && this.dialog.close(p);
+            p.emp = this.employeeObj;
           } else this.notify.notifyCode('SYS023');
         });
     } else {
@@ -169,7 +258,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-          this.dialog && this.dialog.close(this.EAppointionObj);
+            this.dialog && this.dialog.close(this.EAppointionObj);
 
             // this.lstEAppointions[this.indexSelected] = p;
             // if (this.listView) {
@@ -181,48 +270,5 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
           } else this.notify.notifyCode('SYS021');
         });
     }
-    }
-
-    valueChange(event) {
-      if (event?.field && event?.component && event?.data != '') {
-        switch (event.field) {
-          case 'signerID': {
-            let employee = event?.component?.itemsSelected[0];
-            if (employee) {
-              if (employee?.PositionID) {
-                this.hrService
-                  .getPositionByID(employee.PositionID)
-                  .subscribe((res) => {
-                    if (res) {
-                      this.EAppointionObj.signerPosition = res.positionName;
-                      this.formGroup.patchValue({
-                        signerPosition: this.EAppointionObj.signerPosition,
-                      });
-                      this.cr.detectChanges();
-                    }
-                  });
-              } else {
-                this.EAppointionObj.signerPosition = null;
-                this.formGroup.patchValue({
-                  signerPosition: this.EAppointionObj.signerPosition,
-                });
-              }
-            }
-            break;
-          }
-        }
-        this.cr.detectChanges();
-      }
-    }
-
-  ngAfterViewInit(){
-    this.dialog && this.dialog.closed.subscribe(res => {
-      if(!res.event){
-        if(this.successFlag == true){
-          this.dialog.close(this.EAppointionObj);
-        }
-        else this.dialog.close(null)
-      }
-    })
   }
 }

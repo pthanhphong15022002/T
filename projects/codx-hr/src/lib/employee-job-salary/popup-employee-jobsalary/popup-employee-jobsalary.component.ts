@@ -279,7 +279,7 @@ export class PopupEmployeeJobsalaryComponent
           if (p != null) {
             this.notify.notifyCode('SYS006');
             this.dialog && this.dialog.close(p);
-            p[0].emp = this.employeeObj;
+            // p[0].emp = this.employeeObj;
           } else this.notify.notifyCode('SYS023');
         });
     } else {
