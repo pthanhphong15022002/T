@@ -10,7 +10,7 @@
 
 <!-- Start: Body -->
 <ng-template #body>
-  <div class="card-add mt-5" #cardbodyRef>
+  <div class="card-add mt-3" #cardbodyRef>
     <ejs-tab #inventoryRef>
       <e-tabitems>
         <!-- Tab thông tin chứng từ -->
@@ -163,7 +163,7 @@
 <!-- Start:CashPaymentLine -->
 <ng-template #tabLine>
   <ng-container>
-    <div class="h-100 w-100 border">
+    <div class="h-100 w-100 border mt-5">
       <codx-gridview-v2 #gridInventoryJournalLine [formName]="fmInventoryJournalLines.formName"
         [gridViewName]="fmInventoryJournalLines.gridViewName" [entityName]="fmInventoryJournalLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
@@ -240,17 +240,17 @@
       </div>
       <div class="d-flex align-items-center me-3">
         <div *ngIf="formType != 'edit'" class="ms-2">
-          <button type="button" class="btn btn-sm btn-light-primary" (click)="onSaveAdd()" >
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lưu & thêm"></codx-label>
+          <button type="button" class="btn btn-md btn-light-primary" (click)="onSaveAdd()" >
+            <codx-label class="fw-normal" fiedName="lblSave" default="Lưu & thêm"></codx-label>
           </button>
         </div>
         <div class="ms-2 me-2">
-          <button type="button" class="btn btn-sm btn-primary" style="min-width: 60px" (click)="onSave()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+          <button type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
+            <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
           </button>
         </div>
         <div class="ms-2">
-          <div class="btn btn-icon btn-light-primary btn-circle bg" (click)="close()">
+          <div class="btn btn-icon btn-light-danger btn-circle bg" (click)="close()">
             <i class="icon-close icon-18"></i>
           </div>
         </div>

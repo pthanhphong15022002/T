@@ -11,7 +11,7 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-info icon-20 me-2"></i>
-              <span [innerHTML]="'0' | vll : 'AC071' : 'text' | async" class="fw-bold fs-6 text-uppercase">
+              <span [innerHTML]="'0' | vll : 'AC071' : 'text' | async" class="fw-bold fs-5-sm text-uppercase">
               </span>
             </div>
           </ng-template>
@@ -28,7 +28,7 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-format_list_numbered icon-20 me-2"></i>
-              <span [innerHTML]="'1' | vll : 'AC070' : 'text' | async" class="fw-bold fs-6 text-uppercase">
+              <span [innerHTML]="'1' | vll : 'AC070' : 'text' | async" class="fw-bold fs-5-sm text-uppercase">
               </span>
             </div>
           </ng-template>
@@ -222,7 +222,7 @@
   </ng-container>
   <ng-container
     *ngIf="form?.formGroup && (cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == '2'">
-    <div style="height: 420px;" class="table-responsive mt-3">
+    <div class="table-responsive mt-3">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
         <thead style="position: sticky;top: 0;background-color: white;z-index: 15;">
           <tr class="border-bottom">
@@ -591,13 +591,13 @@
           </button>
         </div>
         <div class="ms-2">
-          <button type="button" class="btn btn-sm btn-primary" style="min-width: 60px" (click)="onSave()">
+          <button type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
             <codx-label class="fw-normal" fiedName="lblSave"
                 default="Lưu"></codx-label>
           </button>
         </div>
         <div *ngIf="cashpayment?.status == '0' && hasSaved" class="ms-2">
-          <button type="button" class="btn btn-lg btn-danger" (click)="onDiscard()">
+          <button type="button" class="btn btn-md btn-danger" (click)="onDiscard()">
             <div class="d-flex align-items-center">
               <i class="icon-settings_backup_restore icon-18"></i>
               <codx-label class="fs-6 fw-normal" fiedName="lblDiscard" default="Hủy bỏ"
