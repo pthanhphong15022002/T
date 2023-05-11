@@ -76,13 +76,13 @@ export class TabDetailCustomComponent
   async getValueList() {
     this.cache.valueList('CRM010').subscribe((res) => {
       if (res.datas) {
-        this.listCategory = res.datas;
+        this.listCategory = res?.datas;
       }
     });
   }
 
   getNameCategory(categoryId:string) {
-    return this.listCategory.filter(x=> x.value == categoryId)[0].text;
+    return this.listCategory.filter(x=> x.value == categoryId)[0]?.text;
   }
 
 

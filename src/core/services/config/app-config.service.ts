@@ -24,6 +24,7 @@ export class AppConfigService extends AppConfig {
         environment.office365 = res.office365;
         environment.saas = res.saas;
         environment.layoutCZ = res.layoutCZ;
+        environment.layout = res.layout;
         environment.themeMode = res.themeMode;
         environment.hideFavCount = res.hideFavCount;
         environment.singleExec = res.singleExec;
