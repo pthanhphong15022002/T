@@ -109,7 +109,7 @@ export class CodxDpService {
     });
   }
 
-  getAutonumber(functionID, entityName, fieldName): Observable<any> {
+  getAutonumber(formName, functionID, entityName, fieldName): Observable<any> {
     var subject = new Subject<any>();
     this.api
       .execSv<any>(
@@ -117,7 +117,7 @@ export class CodxDpService {
         'ERM.Business.AD',
         'AutoNumbersBusiness',
         'GenAutoNumberAsync',
-        [functionID, entityName, fieldName, null]
+        [formName, functionID, entityName, fieldName]
       )
       .subscribe((item) => {
         if (item) subject.next(item);
@@ -732,7 +732,7 @@ export class CodxDpService {
       data
     );
   }
-  //#endregion 
+  //#endregion
 
   copyAvatarById(data) {
     return this.api.exec<any>(
@@ -751,5 +751,5 @@ export class CodxDpService {
     );
   }
 
- 
+
 }

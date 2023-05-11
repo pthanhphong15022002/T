@@ -135,6 +135,9 @@ export class ReceiptTransactionComponent extends UIComponent{
       case 'SYS04':
         this.copy(e, data);
         break;
+      case 'SYS002':
+        this.export(data);
+        break;
     }
   }
   //#endregion
@@ -218,6 +221,29 @@ export class ReceiptTransactionComponent extends UIComponent{
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.delete([data], true).subscribe((res: any) => {});
+  }
+  export(data) {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //Chưa có group
+    gridModel.groupFields = 'createdBy';
+    this.callfunc.openForm(
+      CodxExportComponent,
+      null,
+      900,
+      700,
+      '',
+      [gridModel, data.recID],
+      null
+    );
   }
   //#endregion
 

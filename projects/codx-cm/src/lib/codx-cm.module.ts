@@ -18,7 +18,6 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
-import { TestComponetComponent } from './test-componet/test-componet.component';
 import { CmCustomerComponent } from './cmcustomer/cmcustomer.component';
 import { CmcustomerDetailComponent } from './cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -42,23 +41,19 @@ import { PopupAddQuotationsLinesComponent } from './quotations-lines/popup-add-q
 import { CodxListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CodxListDealsComponent } from './cmcustomer/cmcustomer-detail/codx-list-deals/codx-list-deals.component';
 import { ProductComponent } from './contracts/product/product.component';
-import { TabsHeaderComponent } from './contracts/tabs-header/tabs-header.component';
 import { CodxTabDealcompetitorsComponent } from './deals/deal-detail/codx-tab-dealcompetitors/codx-tab-dealcompetitors.component';
 import { PopupAddDealcompetitorComponent } from './deals/deal-detail/codx-tab-dealcompetitors/popup-add-dealcompetitor/popup-add-dealcompetitor.component';
 import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/view-dealcompetitors/view-dealcompetitors.component';
 import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
 import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
 import { CodxTableComponent } from './contracts/component/codx-table/codx-table.component';
+import { NoDataComponent } from './contracts/component/no-data/no-data.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-      {
-        path: 'test/:funcID',
-        component: TestComponetComponent,
-      },
       {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
@@ -87,7 +82,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
   declarations: [
     CodxCmComponent,
     LayoutComponent,
-    TestComponetComponent,
     CmCustomerComponent,
     CmcustomerDetailComponent,
     InformationComponent,
@@ -109,13 +103,13 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxListContactsComponent,
     CodxListDealsComponent,
     ProductComponent,
-    TabsHeaderComponent,
     CodxTabDealcompetitorsComponent,
     PopupAddDealcompetitorComponent,
     ViewDealcompetitorsComponent,
     CodxComboboxComponent,
     CodxTableComponent,
-    QuotationsViewDetailComponent
+    QuotationsViewDetailComponent,
+    NoDataComponent
   ],
   imports: [
     RouterModule.forChild(routes),

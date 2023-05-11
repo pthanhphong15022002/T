@@ -6,23 +6,34 @@
       <div class="w-250px me-5">
         <ejs-calendar
           #ejCalendar
-          [firstDayOfWeek]="1"
-          (change)="changeDayOfMonth($event)"
           cssClass="width-calendar"
           class="e-customStyle"
+          [firstDayOfWeek]="1"
+          [value]="dateChange"
+          (change)="changeDayOfMonth($event)"
           (navigated)="changeNewMonth($event)"
           (renderDayCell)="onLoad($event)"
-          [value]="dateChange"
         >
         </ejs-calendar>
-        <codx-input
-          type="combobox"
-          [service]="'CO'"
-          [assemblyName]="'CO'"
-          [className]="'CalendarsBusiness'"
-          [method]="'GetOrgUnitByCbxAsync'"
-          (valueChange)="valueChange($event)"
-        ></codx-input>
+        <div class="my-2">
+          <ejs-dropdownlist
+            id="cbxChooseCalendar"
+            [dataSource]="calendarTypes"
+            [fields]="fields"
+            [allowFiltering]="true"
+            [itemTemplate]="itemTemplate"
+            [value]="defaultCalendar"
+            (filtering)="onFiltering($event)"
+            (change)="getCalendarData($event)"
+          >
+            <ng-template #itemTemplate="" let-data="">
+              <div class="d-flex align-items-center p-2">
+                <img [src]="data.smallIcon" class="svg-icon" />
+                <span class="ms-2">{{ data.customName }}</span>
+              </div>
+            </ng-template>
+          </ejs-dropdownlist>
+        </div>
         <ng-container #listParam>
           <div class="d-flex align-items-center mt-3 title-calendar">
             <div class="w-100">
@@ -228,7 +239,7 @@
       <div class="w-100">
         <lib-calendar-center
           #calendarCenter
-          [resources]="resource"
+          [resources]="resources"
           [resourceModel]="dataResourceModel"
         ></lib-calendar-center>
       </div>
