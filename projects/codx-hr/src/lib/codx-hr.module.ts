@@ -473,6 +473,7 @@ import { ViewDayOffDetailComponent } from './employee-day-off/view-day-off-detai
 import { EmployeeInfoDetailComponent } from './employee-list/employee-info-detail/employee-info-detail.component';
 import { PopupForeignWorkerComponent } from './employee-profile/popup-foreign-worker/popup-foreign-worker.component';
 import { PopupViewallBenefitComponent } from './employee-list/employee-info-detail/pop-up/popup-viewall-benefit/popup-viewall-benefit.component';
+import { PopupAddEmployeeComponent } from './employee-list/popup/popup-add-employee/popup-add-employee.component';
 export const routes: Routes = [
       {
         path: '',
@@ -482,10 +483,6 @@ export const routes: Routes = [
             path: 'contactbook/:funcID',
             component: EmpContactsComponent,
           },
-          // {
-          //   path: 'employeelist/:funcID',
-          //   component: EmployeeListComponent,
-          // },
         ],
       },
       {
@@ -498,27 +495,10 @@ export const routes: Routes = [
           },
           {
             path: 'employeedetail/:funcID',
-            //component: EmployeeProfileComponent,
-            // component: EmployeeDetailComponent,
             component: EmployeeInfoDetailComponent,
           },
         ],
       },
-      
-      // {
-      //   path:'',
-      //   component: LayoutComponent,
-      //   children:[
-      //     {
-      //       path: 'approvals/:funcID',
-      //       loadChildren: () =>
-      //         import('projects/codx-hr/src/lib/codx-approvel.module').then(
-      //           (m) => m.CodxApprovelModule
-      //         ),
-      //       data: { noReuse: true },
-      //     },
-      //   ]
-      // },
       {
         path: '',
         component: LayoutComponent,
@@ -541,12 +521,6 @@ export const routes: Routes = [
             path: 'employeelist/:funcID',
             data: { noReuse: true },
             component: EmployeeListComponent,
-          },
-
-          {
-            path: 'employeeleave/:funcID',
-            data: { noReuse: true },
-            component: EmployeesLeaveComponent,
           },
           {
             path: 'reportingline/:funcID',
@@ -585,23 +559,12 @@ export const routes: Routes = [
             path: 'edayoffs/:funcID',
             component: EmployeeDayOffComponent
           },
-          // {
-          //   path: 'employeeinfomation/:funcID',
-          //   component: EmployeeInfomationComponent,
-          // },
           {
             path: 'approvals/:funcID',
             loadChildren: () =>
               import('projects/codx-hr/src/lib/codx-approvel.module').then(
                 (m) => m.CodxApprovelModule
               ),
-            // component: CodxApprovalComponent,
-            // children: [
-            //   {
-            //     path: 'econtracts/:FuncID/:id',
-            //     component: ApprovalHrComponent,
-            //   },
-            // ],
             data: { noReuse: true },
           },
 
@@ -755,7 +718,8 @@ const T_Component: Type<any>[] = [
   ViewDetailEmployeeBusinessComponent,
   EmployeeInfoDetailComponent,
   PopupForeignWorkerComponent,
-  PopupViewallBenefitComponent
+  PopupViewallBenefitComponent,
+  PopupAddEmployeeComponent
 ];
 @NgModule({
   imports: [

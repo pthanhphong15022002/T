@@ -70,7 +70,6 @@ export class CodxCommentTempComponent implements OnInit {
       );
       popup.closed.subscribe((res: any) => {
         if (res){
-          debugger
           this.totalComment = res.event;
           let ele = document.getElementsByTagName("codx-tabs");
           if(ele)
