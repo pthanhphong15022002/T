@@ -28,10 +28,12 @@
       ></codx-input>
     </div>
     <div class="d-flex justify-content-end">
-      <i
-        class="icon-close icon-18 text-hover-danger"
+      <button
+        style="border: none; outline: none; background: none"
         (click)="dialog.close()"
-      ></i>
+      >
+        <i class="icon-close icon-18 text-hover-danger"></i>
+      </button>
     </div>
   </div>
 </ng-template>
@@ -129,13 +131,14 @@
             <div class="text-dark fw-bold">
               {{ item?.contactName }}
             </div>
-            <div class="text-gray-500 fs-7" [innerHTML]="
-            item?.department
-              | formatvalue : dialog.formModel : 'Department'
-              | async
-          ">
-
-            </div>
+            <div
+              class="text-gray-500 fs-7"
+              [innerHTML]="
+                item?.department
+                  | formatvalue : dialog.formModel : 'Department'
+                  | async
+              "
+            ></div>
           </div>
         </div>
       </div>

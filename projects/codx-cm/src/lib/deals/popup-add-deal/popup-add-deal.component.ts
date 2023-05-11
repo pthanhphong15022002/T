@@ -58,9 +58,8 @@ export class PopupAddDealComponent
   listMemorySteps: any[] = [];
   listMemoryProcess: any[] = [];
   listCustomFile: any[] = [];
-  listParticipants:any[] = [];
-  listOrgs:any[] = [];
-
+  listParticipants: any[] = [];
+  listOrgs: any[] = [];
 
   // const
   readonly actionAdd: string = 'add';
@@ -69,7 +68,7 @@ export class PopupAddDealComponent
   readonly typeForDeal: string = '1';
   readonly fieldCbxProcess = { text: 'processName', value: 'recID' };
   readonly fieldCbxCampaigns = { text: 'campaignName', value: 'recID' };
-  readonly fieldCbxParticipants =  { text: 'userName', value: 'userID' };
+  readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
   readonly fieldCbxChannels = { text: 'channelName', value: 'recID' };
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
@@ -93,7 +92,9 @@ export class PopupAddDealComponent
   //type any
   gridViewSetup: any;
   listProcess: any;
-  owner:any;
+  owner: any;
+  dateMessage:any;
+  dateMax:any;
 
   // model of DP
   instance: tmpInstances = new tmpInstances();
@@ -116,6 +117,9 @@ export class PopupAddDealComponent
     this.action = dt?.data?.action;
     this.executeApiCalls();
     this.deal.status = '1';
+    if (this.action != this.actionAdd) {
+      this.deal = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    }
   }
 
   onInit(): void {}
@@ -127,13 +131,7 @@ export class PopupAddDealComponent
   }
   valueChangeDate($event) {
     if ($event) {
-      this.deal[$event.field] = $event.data.fromDate ;
-    }
-  }
-  eventUser(e) {
-    if (e != null) {
-      this.owner = e?.id; // thêm check null cái
-      this.deal.owner = this.owner;
+      this.deal[$event.field] = $event.data.fromDate;
     }
   }
 
@@ -154,48 +152,66 @@ export class PopupAddDealComponent
       );
       return;
     }
-      var ischeck = true;
-      var ischeckFormat = true;
-      var title = '';
-      var messageCheckFormat = '';
+    if(!this.deal?.owner){
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Owner']?.headerText + '"'
+      );
+      return;
+    }
+    if (this.checkEndDayInstance(this.deal?.endDate, this.dateMax)) {
+      this.notificationsService.notifyCode(
+        'DP032',
+        0,
+        '"' + this.gridViewSetup['EndDate']?.headerText + '"', '"' + this.dateMessage + '"'
+      );
+      return;
+    }
+    var ischeck = true;
+    var ischeckFormat = true;
+    var title = '';
+    var messageCheckFormat = '';
 
-      for(let items of this.listInstanceSteps) {
-        for (let item of items.fields) {
-          if (
-            item.isRequired &&
-            (!item.dataValue || item.dataValue?.toString().trim() == '')
-          ) {
-            title = item.title;
-            ischeck = false;
-            break;
-          }
-          if (item) {
-            messageCheckFormat = this.checkFormat(item);
-            if (messageCheckFormat) {
-              ischeckFormat = false;
-              break;
-            }
-          }
-        }
-        if(!ischeck ||!ischeckFormat ) {
+    for (let items of this.listInstanceSteps) {
+      for (let item of items.fields) {
+        if (
+          item.isRequired &&
+          (!item.dataValue || item.dataValue?.toString().trim() == '')
+        ) {
+          title = item.title;
+          ischeck = false;
           break;
         }
+        if (item) {
+          messageCheckFormat = this.checkFormat(item);
+          if (messageCheckFormat) {
+            ischeckFormat = false;
+            break;
+          }
+        }
       }
-      if (!ischeck) {
-        this.notificationsService.notifyCode('SYS009', 0, '"' + title + '"');
-        return;
+      if (!ischeck || !ischeckFormat) {
+        break;
       }
-      if (!ischeckFormat) {
-        this.notificationsService.notifyCode(messageCheckFormat);
-        return;
-      }
-    this.convertDataInstance(this.deal,this.instance);
-    this.insertInstance();
-   // this.insertDeal();
-   this.updateDateDeal(this.instance,this.deal);
-    this.onAdd();
-
-
+    }
+    if (!ischeck) {
+      this.notificationsService.notifyCode('SYS009', 0, '"' + title + '"');
+      return;
+    }
+    if (!ischeckFormat) {
+      this.notificationsService.notifyCode(messageCheckFormat);
+      return;
+    }
+    this.convertDataInstance(this.deal, this.instance);
+    this.updateDateDeal(this.instance, this.deal);
+    if (this.action !== this.actionEdit) {
+      this.insertInstance();
+      this.onAdd();
+    } else {
+      this.editInstance();
+      this.onEdit();
+    }
   }
   cbxChange($event, field) {
     if ($event) {
@@ -210,8 +226,8 @@ export class PopupAddDealComponent
         if (result) {
           this.listInstanceSteps = result?.steps;
           this.listParticipants = result?.permissions;
-          this.deal.endDate = this.HandleEndDate(this.listInstanceSteps, this.action, null);
           this.deal.dealID = result?.dealId;
+          this.deal.endDate =this.HandleEndDate(this.listInstanceSteps, this.action, null);
           this.changeDetectorRef.detectChanges();
         } else {
           this.getListInstanceSteps($event);
@@ -233,7 +249,9 @@ export class PopupAddDealComponent
           result = event.e;
           break;
       }
-      var index = this.listInstanceSteps.findIndex((x) => x.recID == field.stepID);
+      var index = this.listInstanceSteps.findIndex(
+        (x) => x.recID == field.stepID
+      );
       if (index != -1) {
         if (this.listInstanceSteps[index].fields?.length > 0) {
           let idxField = this.listInstanceSteps[index].fields.findIndex(
@@ -242,42 +260,52 @@ export class PopupAddDealComponent
           if (idxField != -1) {
             this.listInstanceSteps[index].fields[idxField].dataValue = result;
             let idxEdit = this.listCustomFile.findIndex(
-              (x) => x.recID == this.listInstanceSteps[index].fields[idxField].recID
+              (x) =>
+                x.recID == this.listInstanceSteps[index].fields[idxField].recID
             );
             if (idxEdit != -1) {
               this.listCustomFile[idxEdit] =
                 this.listInstanceSteps[index].fields[idxField];
             } else
-              this.listCustomFile.push(this.listInstanceSteps[index].fields[idxField]);
+              this.listCustomFile.push(
+                this.listInstanceSteps[index].fields[idxField]
+              );
           }
         }
       }
     }
   }
-  valueChangeOwner($event){
+  valueChangeOwner($event) {
     if ($event != null) {
-      this.owner = $event?.id;
+      this.owner = $event;
       this.deal.owner = this.owner;
     }
   }
   onAdd() {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option),0)
+      .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         if (res) {
-          this.dialog.close(res.save);
+          this.dialog.close(res.save[0]);
         } else this.dialog.close();
+      });
+  }
+  onEdit() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res.update) {
+          this.dialog.close(res.update[0]);
+        }
       });
   }
   beforeSave(option: RequestOption) {
     var data = this.deal;
-    if (this.action == this.actionAdd || this.action == this.actionCopy) {
-      option.methodName = 'AddDealAsync';
-      option.className = 'DealsBusiness';
-      option.data = data;
-      return true;
-    }
-    return false;
+    option.methodName =
+      this.action !== this.actionEdit ? 'AddDealAsync' : 'EditDealAsync';
+    option.className = 'DealsBusiness';
+    option.data = data;
+    return true;
   }
 
   ngAfterViewInit(): void {
@@ -300,11 +328,13 @@ export class PopupAddDealComponent
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
+          console.table(res);
         }
       });
   }
   async getListProcess(applyFor) {
-    var data = [applyFor];
+    var processID = this.action !== this.actionEdit ? '' : this.deal.processID;
+    var data = [applyFor, processID];
     this.codxCmService.getListCbxProcess(data).subscribe((res) => {
       if (res && res.length > 0) {
         this.listCbxProcess = res[0];
@@ -331,41 +361,50 @@ export class PopupAddDealComponent
   // }
 
   async getListInstanceSteps(processId: any) {
-    this.codxCmService.getInstanceSteps(processId).subscribe(async (res) => {
+    processId =
+      this.action === this.actionCopy ? this.deal.processID : processId;
+    var data = [processId, this.deal.refID, this.action];
+    this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
         var obj = {
           id: processId,
           steps: res[0],
-          permissions: (await this.getListPermission(res[1])),
-          dealId: res[2]
+          permissions: await this.getListPermission(res[1]),
+          dealId: this.action !== this.actionEdit ? this.deal.dealID : res[2],
         };
         var isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        this.deal.endDate = this.HandleEndDate(this.listInstanceSteps, this.action, null);
-        this.deal.dealID = res[2];
         this.listParticipants = obj.permissions;
+        if (this.action === this.actionEdit) {
+          this.owner = this.deal.owner;
+        } else {
+          this.deal.endDate = this.HandleEndDate(
+            this.listInstanceSteps,
+            this.action,
+            null
+          );
+          this.deal.dealID = res[2];
+        }
+        this.dateMax = this.HandleEndDate(this.listInstanceSteps, this.action, this.action != this.actionEdit ? null: this.deal.createdOn );
         this.changeDetectorRef.detectChanges();
       }
     });
   }
 
   insertInstance() {
-    var data = [this.instance, this.listInstanceSteps,null];
-    this.codxCmService.addInstance(data).subscribe((instance)=> {
-      if(instance){
+    var data = [this.instance, this.listInstanceSteps, null];
+    this.codxCmService.addInstance(data).subscribe((instance) => {
+      if (instance) {
       }
     });
   }
-  insertDeal() {
-    //  this.onAdd();
-    this.codxCmService.AddDeal(this.deal).subscribe((res) => {
-      if (res) {
-        this.deal = res;
-        this.dialog.dataService.update(res).subscribe();
-        this.dialog.close(res);
+  editInstance() {
+    var data = [this.instance, this.listCustomFile];
+    this.codxCmService.editInstance(data).subscribe((instance) => {
+      if (instance) {
       }
     });
   }
@@ -381,33 +420,44 @@ export class PopupAddDealComponent
 
   // covnert data CM -> data DP
 
-  convertDataInstance(deal:CM_Deals, instance:tmpInstances){
-
+  convertDataInstance(deal: CM_Deals, instance: tmpInstances) {
+    if (this.action === this.actionEdit) {
+      instance.recID = this.deal.refID;
+    }
     instance.title = deal.dealName;
     instance.memo = deal.memo;
     instance.endDate = deal.endDate;
     instance.instanceNo = deal.dealID;
-    instance.owner = deal.owner;
+    instance.owner = this.owner;
     instance.processID = deal.processID;
     instance.stepID = deal.stepID;
   }
-  updateDateDeal(instance:tmpInstances,deal:CM_Deals){
-    deal.stepID = this.listInstanceSteps[0].stepID;
-    deal.nextStep = this.listInstanceSteps[1].stepID;
-    deal.status = "1";
-    deal.refID = instance.recID;
+  updateDateDeal(instance: tmpInstances, deal: CM_Deals) {
+    if (this.action !== this.actionEdit) {
+      deal.stepID = this.listInstanceSteps[0].stepID;
+      deal.nextStep = this.listInstanceSteps[1].stepID;
+      deal.status = '1';
+      deal.refID = instance.recID;
+    }
+    deal.owner = this.owner;
   }
   checkFormat(field) {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {
         var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (!field?.dataValue?.toLowerCase().match(validEmail) && field?.dataValue) {
+        if (
+          !field?.dataValue?.toLowerCase().match(validEmail) &&
+          field?.dataValue
+        ) {
           return 'SYS037';
         }
       }
       if (field.dataFormat == 'P') {
         var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-        if (!field?.dataValue?.toLowerCase().match(validPhone) && field?.dataValue) {
+        if (
+          !field?.dataValue?.toLowerCase().match(validPhone) &&
+          field?.dataValue
+        ) {
           return 'RS030';
         }
       }
@@ -459,16 +509,26 @@ export class PopupAddDealComponent
     return endDay;
   }
 
-  async getListPermission(permissions){
-    this.listParticipants = permissions.filter(
-      (x) => x.roleType === 'P'
-    );
-    // if (this.listParticipants != null && this.listParticipants.length > 0) {
-    //   this.listParticipants = await this.codxCmService.getListUserByOrg(
-    //     this.listParticipants
-    //   );
-    // }
-    return this.listParticipants != null && this.listParticipants.length > 0 ? await this.codxCmService.getListUserByOrg( this.listParticipants) : this.listParticipants;
+  async getListPermission(permissions) {
+    this.listParticipants = permissions.filter((x) => x.roleType === 'P');
+    return this.listParticipants != null && this.listParticipants.length > 0
+      ? await this.codxCmService.getListUserByOrg(this.listParticipants)
+      : this.listParticipants;
   }
+
+  //#region  check RequiredDeal
+  checkEndDayInstance(endDate, endDateCondition) {
+    var date1 = new Date(endDate);
+    var date2 = new Date(endDateCondition);
+    this.dateMessage = new Date(date2).toLocaleDateString('en-AU');
+    date1.setHours(0, 0, 0, 0);
+    date2.setHours(0, 0, 0, 0);
+
+    return date1 < date2;
+  }
+
+  //#endregion
+
+
 
 }

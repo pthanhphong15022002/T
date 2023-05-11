@@ -85,6 +85,7 @@ export class DealsComponent
 
   // type of string
   customerName: string = '';
+  oldIdDeal: string = '';
 
   @Input() showButtonAdd = false;
 
@@ -118,7 +119,7 @@ export class DealsComponent
       this.funcID = this.activedRouter.snapshot.params['funcID'];
 
     // Get API
-    this.getListCustomer();
+   // this.getListCustomer();
   }
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
@@ -271,13 +272,13 @@ export class DealsComponent
   }
 
   //#region  get data
-  getListCustomer() {
-    this.codxCmService.getListCustomer().subscribe((res) => {
-      if (res) {
-        this.listCustomer = res[0];
-      }
-    });
-  }
+  // getListCustomer() {
+  //   this.codxCmService.getListCustomer().subscribe((res) => {
+  //     if (res) {
+  //       this.listCustomer = res[0];
+  //     }
+  //   });
+  // }
   //#endregion
 
   changeView(e) {
@@ -445,8 +446,7 @@ export class DealsComponent
 
   addDeal() {
     this.view.dataService.addNew().subscribe((res) => {
-      // const funcIDApplyFor = this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
-      // const applyFor = this.process.applyFor;
+
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
@@ -504,28 +504,64 @@ export class DealsComponent
   }
 
   edit(data) {
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .edit(this.view.dataService.dataSelected)
-    //   .subscribe((res) => {
-    //     let option = new SidebarModel();
-    //     option.DataService = this.view.dataService;
-    //     option.FormModel = this.view.formModel;
-    //     option.Width = '800px';
-    //     this.titleAction = this.titleAction +' '+this.view?.function.description;
-    //     var dialog = this.callfc.openSide(
-    //       this.funcID == 'CM0101'
-    //         ? PopupAddCrmcustomerComponent
-    //         : PopupAddCrmcontactsComponent,
-    //       ['edit', this.titleAction],
-    //       option
-    //     );
-    //   });
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+    .edit(this.view.dataService.dataSelected)
+    .subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '800px';
+      option.zIndex = 1001;
+      var formMD = new FormModel();
+      // formMD.funcID = funcIDApplyFor;
+      // formMD.entityName = fun.entityName;
+      // formMD.formName = fun.formName;
+      // formMD.gridViewName = fun.gridViewName;
+      var obj = {
+        action: 'edit',
+        formMD: formMD,
+        titleAction: 'Chỉnh sửa cơ hội',
+      };
+      let dialogCustomDeal = this.callfc.openSide(
+        PopupAddDealComponent,
+        obj,
+        option
+      );
+      dialogCustomDeal.closed.subscribe((e) => {
+        if (e && e.event != null) {
+          this.view.dataService.update(e.event).subscribe();
+         this.changeDetectorRef.detectChanges();
+        }
+      });
+    });
   }
 
-  copy(data) {}
+  copy(data) {
+    if (data) {
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
+      this.oldIdDeal= data.recID;
+    }
+    this.view.dataService.copy().subscribe((res) => {
+
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+
+      var formMD = new FormModel();
+      // formMD.funcID = funcIDApplyFor;
+      // formMD.entityName = fun.entityName;
+      // formMD.formName = fun.formName;
+      // formMD.gridViewName = fun.gridViewName;
+      option.Width = '800px';
+      option.zIndex = 1001;
+      this.openFormDeal(formMD, option, 'copy');
+    });
+
+
+  }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
@@ -559,7 +595,4 @@ export class DealsComponent
     return this.listCustomer.find((x) => x.recID === customerID);
   }
 
-  handleDataTmp(data) {
-    return this.listCustomer.find((x) => x.recID === data?.customerID);
-  }
 }

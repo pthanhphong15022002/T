@@ -349,7 +349,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   viewChanged(evt: any) {
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
     this.getBaseVariable();
-    this.onLoading(evt);
+    //this.onLoading(evt);
 
   }
   click(evt: ButtonModel) {
@@ -592,7 +592,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
-
+  
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
