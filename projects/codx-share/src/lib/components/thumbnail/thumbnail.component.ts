@@ -160,6 +160,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
             if (this.isDeleteTemp == '0') {
               this.fileService.deleteFileToTrash(file.recID, "", true,this.objectID).subscribe(item => {
                 if (item) {
+                  debugger
                   let list = this.files;
                   var index = -1;
                   if (list.length > 0) {

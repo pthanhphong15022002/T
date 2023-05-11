@@ -77,6 +77,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() frmModelInstancesTask: FormModel;
   @Output() saveAssign = new EventEmitter<any>();
   @Output() outDataStep = new EventEmitter<any>();
+  @Output() isChangeData = new EventEmitter<any>();
 
   stepID: any;
   isDelete: boolean = false;
@@ -437,6 +438,7 @@ export class StagesDetailComponent implements OnInit {
     dialog.closed.subscribe(async (e) => {
       this.groupTaskID = null; //set lại
       if (e?.event) {
+        this.isChangeData.emit(true);
         let taskData = e?.event?.data;
         if (e.event?.status === 'add' || e.event?.status === 'copy') {
           let groupTask = this.taskGroupList?.find(
@@ -509,6 +511,7 @@ export class StagesDetailComponent implements OnInit {
               1
             );
             this.saveAssign.emit(true);
+            this.isChangeData.emit(true);
             this.notiService.notifyCode('SYS008');
             this.calculateProgressStep();
           }
@@ -755,6 +758,7 @@ export class StagesDetailComponent implements OnInit {
     this.popupTaskGroup.closed.subscribe(async (value) => {
       if (value?.event) {
         await this.saveGroupTask(value.event, type, data);
+        this.isChangeData.emit(true);       
       }
     });
   }
@@ -831,6 +835,7 @@ export class StagesDetailComponent implements OnInit {
             this.notiService.notifyCode('SYS008');
             this.calculateProgressStep();
             this.saveAssign.emit(true);
+            this.isChangeData.emit(true);
           }
         });
       }

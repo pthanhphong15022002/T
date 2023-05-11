@@ -837,20 +837,20 @@ export class CatagoryComponent implements OnInit {
     if (!dataVale || !setting) return;
     switch (setting.reference.toLowerCase()) {
       case 'updatecompanysettings':
-        this.cache.companySetting().subscribe((res) => {
-          const first = res[0];
+        // this.cache.companySetting().subscribe((res) => {
+        //   const first = res[0];
 
-          if (first) {
-            var field = Util.camelize(setting.fieldName);
-            first[field] = dataVale[setting.fieldName];
-            // first.secondCurr = dataVale.SecondCurr;
-            // first.conversionCurr = dataVale.LocalCurr;
+        //   if (first) {
+        //     var field = Util.camelize(setting.fieldName);
+        //     first[field] = dataVale[setting.fieldName];
+        //     // first.secondCurr = dataVale.SecondCurr;
+        //     // first.conversionCurr = dataVale.LocalCurr;
 
-            this.api
-              .execAction('AD_CompanySettings', [first], 'UpdateAsync')
-              .subscribe();
-          }
-        });
+        //     this.api
+        //       .execAction('AD_CompanySettings', [first], 'UpdateAsync')
+        //       .subscribe();
+        //   }
+        // });
         break;
     }
   }
