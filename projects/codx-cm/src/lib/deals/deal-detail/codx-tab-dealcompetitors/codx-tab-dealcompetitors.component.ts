@@ -42,9 +42,9 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     private cache: CacheService,
     private cmSv: CodxCmService
   ) {}
-  ngOnInit(): void {
+  async ngOnInit() {
     this.getListDealAndDealCompetitor();
-    this.getFormModel();
+    this.formModel = await this.cmSv.getFormModel('CM02011');
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');
