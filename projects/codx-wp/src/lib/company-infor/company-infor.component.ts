@@ -18,7 +18,7 @@ export class CompanyInforComponent extends UIComponent {
   data :any = null;
   views: Array<ViewModel> = [];
   userPermission:any = null;
-  loaded:boolean = true;
+  loaded:boolean = false;
   @ViewChild('panelLeftRef') panelLefRef :  TemplateRef<any>;
   constructor(
     private injector:Injector,
@@ -77,8 +77,7 @@ export class CompanyInforComponent extends UIComponent {
             this.data = JSON.parse(JSON.stringify(res));
             this.detectorRef.detectChanges();
           }
-          else
-            this.loaded = false;
+          this.loaded = true;
       });
     }
   }

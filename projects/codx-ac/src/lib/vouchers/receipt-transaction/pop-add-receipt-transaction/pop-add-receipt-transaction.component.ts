@@ -34,6 +34,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   @ViewChild('warehouse') warehouse: CodxInputComponent;
 
   keymodel: any = [];
+  warehouseName: any;
   headerText: string;
   dialog!: DialogRef;
   inventoryJournal: InventoryJournals;
@@ -134,27 +135,45 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   valueChange(e: any){
     if(e.data)
     {
-      switch(e)
+      switch(e.field.toLowerCase())
       {
-        case e.field.toLowerCase() === 'warehouseID':
-          this.inventoryJournal.warehouseID = e.data;
+        case'warehouseid':
+          {
+            this.inventoryJournal.warehouseID = e.data;
+            this.api.exec('IV', 'InventoryJournalsBusiness', 'GetWarehouseNameAsync', [e.data])
+            .subscribe((res: any) => {
+              this.inventoryJournal.warehouseName = res;
+              this.form.formGroup.patchValue(this.inventoryJournal);
+            });
+          }
           break;
-        case e.field.toLowerCase() === 'objectid':
+        case 'warehousename':
+          this.inventoryJournal.warehouseName = e.data;
+          break;
+        case 'objectid':
           this.inventoryJournal.objectID = e.data;
           break;
-        case e.field.toLowerCase() === 'reasonid':
+        case 'reasonid':
           this.inventoryJournal.reasonID = e.data;
           break;
-        case e.field.toLowerCase() === 'memo':
+        case 'memo':
           this.inventoryJournal.memo = e.data;
           break;
-        case e.field.toLowerCase() === 'currencyid':
-          this.inventoryJournal.currencyID = e.data;
+        case 'currencyid':
+          {
+            this.inventoryJournal.currencyID = e.data;
+            this.api.exec('IV', 'InventoryJournalsBusiness', 'GetExchangeRateAsync', [this.inventoryJournal])
+            .subscribe((res: any) => {
+              this.inventoryJournal.exchangeRate = res.exchangeRate;
+              this.form.formGroup.patchValue(this.inventoryJournal);
+            });
+          }
           break;
-        case e.field.toLowerCase() === 'voucherdate':
+          break;
+        case 'voucherdate':
           this.inventoryJournal.voucherDate = e.data;
           break;
-        case e.field.toLowerCase() === 'exchangerate':
+        case 'exchangerate':
           this.inventoryJournal.voucherDate = e.data;
           break;
       }
@@ -313,6 +332,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   var dataline = res.event['data'];
                   this.inventoryJournalLines[index] = dataline;
                   this.hasSaved = true;
+                  this.gridInventoryJournalLine.refresh();
                   this.loadTotal();
                 }
               });
@@ -362,6 +382,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   [this.inventoryJournalLines]
                 )
                 .subscribe((res) => {
+                  this.gridInventoryJournalLine.refresh();
                   this.loadTotal();
                 });
             }
@@ -402,8 +423,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           dialogs.closed.subscribe((res) => {
             if (res.event != null) {
               var dataline = res.event['data'];
-              this.inventoryJournalLines.push(dataline);
               this.loadTotal();
+              this.inventoryJournalLines.push(dataline);
+              this.gridInventoryJournalLine.refresh();
             }
           });
         }
@@ -711,6 +733,19 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             this.inventoryJournalLines.forEach((element) => {
               this.loadTotal();
             });
+          }
+        });
+    }
+    if(this.formType == 'copy' && this.inventoryJournal.warehouseID)
+    {
+      this.api
+        .exec('IV', 'InventoryJournalsBusiness', 'GetWarehouseNameAsync', [
+          this.inventoryJournal.warehouseID,
+        ])
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            this.inventoryJournal.warehouseName = res;
+            this.form.formGroup.patchValue(this.inventoryJournal);
           }
         });
     }
