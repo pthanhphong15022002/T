@@ -135,25 +135,7 @@ export class PopupViewallBenefitComponent
           template: this.templateBenefitEffected,
           width: '150',
         },
-      ];
-
-      // let ins = setInterval(() => {
-      //   if (this.eBenefitGrid) {
-      //     console.log(this.eBenefitGrid)
-      //     clearInterval(ins);
-      //     let t = this;
-      //     this.eBenefitGrid.dataService.onAction.subscribe((res) => {
-      //       if (res) {
-      //         if (res.type == 'loaded') {
-      //           t.eBenefitRowCount = res['data'].length;
-      //         }
-      //       }
-      //     });
-      //     this.eBenefitRowCount = this.eBenefitGrid.dataService.rowCount;
-      //     console.log(this.eBenefitGrid.dataService.rowCount)
-      //     this.headerText = this.headerText + this.eBenefitGrid.dataService.rowCount;
-      //   }
-      // }, 100);
+      ]; 
     });
 
     this.hrService.getFormModel(this.benefitFuncID).then((res) => {
