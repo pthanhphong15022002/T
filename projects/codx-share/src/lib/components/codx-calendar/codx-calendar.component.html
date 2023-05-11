@@ -29,7 +29,7 @@
             <ng-template #itemTemplate="" let-data="">
               <div class="d-flex align-items-center p-2">
                 <img [src]="data.smallIcon" class="svg-icon" />
-                <span class="ms-2">{{ data.defaultName }}</span>
+                <span class="ms-2">{{ data.customName }}</span>
               </div>
             </ng-template>
           </ejs-dropdownlist>
@@ -239,7 +239,7 @@
       <div class="w-100">
         <lib-calendar-center
           #calendarCenter
-          [resources]="resource"
+          [resources]="resources"
           [resourceModel]="dataResourceModel"
         ></lib-calendar-center>
       </div>
