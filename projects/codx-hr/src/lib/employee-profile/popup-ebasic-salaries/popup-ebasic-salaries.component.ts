@@ -54,8 +54,7 @@ export class PopupEBasicSalariesComponent
     @Optional() data?: DialogData
   ) {
     super(injector);
-    //catch input data
-    // debugger
+
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
@@ -93,19 +92,14 @@ export class PopupEBasicSalariesComponent
   }
 
   onInit(): void {
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
+    this.hrService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((fg) => {
+        if (fg) {
+          this.formGroup = fg;
+          this.initForm();
+        }
+      });
     //get emp from beginning
     this.cache
       .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
@@ -119,13 +113,12 @@ export class PopupEBasicSalariesComponent
 
   //change employee
   handleSelectEmp(evt) {
-    switch (evt?.field){
+    switch (evt?.field) {
       case 'employeeID': //check if employee changed
-        if(evt?.data && evt?.data.length > 0){
+        if (evt?.data && evt?.data.length > 0) {
           this.employeeId = evt?.data;
           this.getEmployeeInfoById(this.employeeId, evt?.field);
-        }
-        else {
+        } else {
           delete this.employeeId;
           delete this.employeeObj;
           this.formGroup.patchValue({
@@ -134,10 +127,9 @@ export class PopupEBasicSalariesComponent
         }
         break;
       case 'signerID': // check if signer changed
-        if(evt?.data && evt?.data.length > 0){
+        if (evt?.data && evt?.data.length > 0) {
           this.getEmployeeInfoById(evt?.data, evt?.field);
-        }
-        else {
+        } else {
           this.formGroup.patchValue({
             signerID: null,
             signerPosition: null,
@@ -225,7 +217,12 @@ export class PopupEBasicSalariesComponent
       return;
     }
 
-    if (!this.dateCompare(this.EBasicSalaryObj.effectedDate, this.EBasicSalaryObj.expiredDate)) {
+    if (
+      !this.dateCompare(
+        this.EBasicSalaryObj.effectedDate,
+        this.EBasicSalaryObj.expiredDate
+      )
+    ) {
       this.hrService.notifyInvalidFromTo(
         'ExpiredDate',
         'EffectedDate',
