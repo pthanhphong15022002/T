@@ -44,6 +44,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   lockFields: any;
   journal : any;
   baseCurr:any;
+  showPlan:any = true;
   objectcashpaymentline: Array<any> = [];
   constructor(
     private inject: Injector,
