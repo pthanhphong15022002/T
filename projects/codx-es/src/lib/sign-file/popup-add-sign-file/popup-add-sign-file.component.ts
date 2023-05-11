@@ -1081,18 +1081,20 @@ export class PopupAddSignFileComponent implements OnInit {
         this.isSaved == false)
     ) {
       this.dialog && this.dialog.close();
-    } else if (
-      this.processTab > 0 &&
-      this.isAddNew == true &&
-      this.data?.files?.length > 0
-    ) {
-      this.notify.alertCode('ES004').subscribe((x) => {
-        if (x.event.status == 'Y') {
-          this.clickIsSave(true);
-        } else {
+    } else if (this.processTab > 0 && this.isAddNew == true) {
+      if (this.data?.files.length == 0) {
+        if (this.isSaved && this.isEdit) {
           this.clickIsSave(false);
         }
-      });
+      } else {
+        this.notify.alertCode('ES004').subscribe((x) => {
+          if (x.event.status == 'Y') {
+            this.clickIsSave(true);
+          } else {
+            this.clickIsSave(false);
+          }
+        });
+      }
     } else {
       this.dialog && this.dialog.close();
     }
