@@ -725,8 +725,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (eleBody && eleBody.length > 0) {
         eleBody[0].innerHTML = '';
         elePanel
-          ?.getElementsByClassName('card-header')[0]
-          .classList.add('d-none');
+          ?.getElementsByClassName('card-header')[0]?.classList.add('d-none');
         this.showHideButton(elePanel);
         eleBody[0].appendChild(html);
         this.replaceChart(elePanel);
@@ -845,27 +844,27 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       iterations: 1,
     };
 
-    elePanel?.getElementsByClassName('card-header')[0].classList.add('d-none');
+    elePanel?.getElementsByClassName('card-header')[0]?.classList.add('d-none');
     (elePanel as HTMLElement).onmouseover = (evt) => {
       //elePanel?.getElementsByClassName('card-header')[0].animate(newspaperSpinning, newspaperTiming);
       if (
         elePanel
           ?.getElementsByClassName('card-header')[0]
-          .classList.contains('d-none')
+          ?.classList.contains('d-none')
       ) {
         elePanel
           ?.getElementsByClassName('card-header')[0]
-          .classList.remove('d-none');
+          ?.classList.remove('d-none');
       }
     };
     (elePanel as HTMLElement).onmouseout = (evt) => {
       //elePanel?.getElementsByClassName('card-header')[0].animate(newspaperSpinning, newspaperTiming);
       !elePanel
         ?.getElementsByClassName('card-header')[0]
-        .classList.contains('d-none') &&
+        ?.classList.contains('d-none') &&
         elePanel
           ?.getElementsByClassName('card-header')[0]
-          .classList.add('d-none');
+          ?.classList.add('d-none');
     };
   }
 
