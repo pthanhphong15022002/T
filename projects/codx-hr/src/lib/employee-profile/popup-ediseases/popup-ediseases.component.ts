@@ -116,6 +116,10 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
+    if(this.formGroup.invalid){
+      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
     if(this.actionType === 'copy') delete this.ediseasesObj.recID;
     if(this.actionType === 'add' || this.actionType === 'copy'){
       this.hrSevice.AddEmployeeDiseasesInfo(this.ediseasesObj).subscribe(p => {
