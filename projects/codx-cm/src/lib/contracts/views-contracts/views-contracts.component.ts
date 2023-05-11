@@ -35,6 +35,8 @@ import { ListContractsComponent } from '../list-contracts/list-contracts.compone
 export class ViewsContractsComponent extends UIComponent{
   @Input() funcID: string;
   @Input() customerID: string;
+  @ViewChild('contract')contract: TemplateRef<any>;
+
   @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
@@ -43,6 +45,9 @@ export class ViewsContractsComponent extends UIComponent{
   @ViewChild('templateCreatedBy') templateCreatedBy: TemplateRef<any>;
   @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
   @ViewChild('templateCustomer') templateCustomer: TemplateRef<any>;
+
+  listClicked =[]
+  tabClicked = '';
 
   views: Array<ViewModel> = [];
   service = 'CM';
@@ -75,6 +80,17 @@ export class ViewsContractsComponent extends UIComponent{
   arrFieldIsVisible = [];
   itemSelected: any;
   button?: ButtonModel;
+  tabControl = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+    { name: 'Comment', textDefault: 'Thảo luận', isActive: false, template: null },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false, template: null },
+    { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
+    { name: 'Approve', textDefault: 'Ký duyệt', isActive: false, template: null },
+    { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
+    { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
+    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
+    { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: null},
+  ];
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -83,51 +99,66 @@ export class ViewsContractsComponent extends UIComponent{
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    this.cache
-      .gridViewSetup('CMQuotations', 'grvCMQuotations')
-      .subscribe((res) => {
-        if (res) {
-          this.grvSetup = res;
-          this.vllStatus = res['Status'].referedValue;
-          //lay grid view
-          let arrField = Object.values(res).filter((x: any) => x.isVisible);
-          if (Array.isArray(arrField)) {
-            this.arrFieldIsVisible = arrField
-              .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-              .map((x: any) => x.fieldName);
-            this.getColumsGrid(res);
-          }
-        }
-      });
+    // this.cache
+    //   .gridViewSetup('CMQuotations', 'grvCMQuotations')
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.grvSetup = res;
+    //       this.vllStatus = res['Status'].referedValue;
+    //       //lay grid view
+    //       let arrField = Object.values(res).filter((x: any) => x.isVisible);
+    //       if (Array.isArray(arrField)) {
+    //         this.arrFieldIsVisible = arrField
+    //           .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+    //           .map((x: any) => x.fieldName);
+    //         this.getColumsGrid(res);
+    //       }
+    //     }
+    //   });
   }
 
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
+    this.listClicked = [
+      { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+      { name: 'detailItem', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
+      { name: 'pay', textDefault: 'Phương thức và tiến độ thanh toán', icon: 'icon-tune', isActive: false },
+      { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-more', isActive: false },
+    ]
   }
 
   ngAfterViewInit() {
-    // this.views = [
-    //   {
-    //     type: ViewType.listdetail,
-    //     active: true,
-    //     sameData: true,
-    //     model: {
-    //       template: this.itemTemplate,
-    //       panelRightRef: this.templateDetail,
-    //     },
-    //   },
-    //   {
-    //     type: ViewType.grid,
-    //     active: true,
-    //     sameData: true,
-    //     model: {
-    //       template2: this.templateMore,
-    //       frozenColumns: 1,
-    //     },
-    //   },
-    // ];
+    let index = this.tabControl.findIndex(item => item.name == 'Contract');
+    if(index >= 0){
+      let contract = { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract};
+      this.tabControl.splice(index,1,contract)
+    }
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: true,
+        sameData: true,
+        model: {
+          template2: this.templateMore,
+          frozenColumns: 1,
+        },
+      },
+    ];
+  }
+
+  changeTab(e){
+    this.tabClicked = e;
   }
 
   getColumsGrid(grvSetup) {
