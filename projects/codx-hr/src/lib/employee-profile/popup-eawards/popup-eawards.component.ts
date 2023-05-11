@@ -42,8 +42,6 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
 
   fromListView: boolean = false; //check where to open the form
   genderGrvSetup: any;
-  gridViewSetup: any;
-  validate = 0;
   constructor(
     private injector: Injector,
     private notify: NotificationsService,
@@ -196,12 +194,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
           this.formGroup = fg;
           this.initForm();
         }
-      });
-    this.cache
-      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-      .subscribe((res) => {
-        if (res) this.gridViewSetup = res;
-      });
+      }); 
 
     this.cache
       .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
@@ -214,40 +207,39 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
-    } else {
-      //Check valid
-      if (this.formGroup.invalid) {
-        this.hrService.notifyInvalid(this.formGroup, this.formModel);
-        return;
-      }
-      if (this.actionType === 'copy') delete this.awardObj.recID;
+    }
 
-      if (this.actionType === 'add' || this.actionType === 'copy') {
-        this.hrService
-          .AddEmployeeAwardInfo(this.formModel.currentData)
-          .subscribe((p) => {
-            if (p != null) {
-              this.notify.notifyCode('SYS006');
-              p[0].emp = this.empObj;
-              this.dialog && this.dialog.close(p);
-            } else this.notify.notifyCode('SYS023');
-            this.awardObj.isSuccess = true;
-          });
-      } else {
-        this.hrService
-          .UpdateEmployeeAwardInfo(this.formModel.currentData)
-          .subscribe((p) => {
-            if (p != null) {
-              this.notify.notifyCode('SYS007');
-              p[0].emp = this.empObj;
-              this.dialog && this.dialog.close(p);
-            } else this.notify.notifyCode('SYS021');
-          });
-      }
+    //Check valid
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+    if (this.actionType === 'copy') delete this.awardObj.recID;
+
+    if (this.actionType === 'add' || this.actionType === 'copy') {
+      this.hrService
+        .AddEmployeeAwardInfo(this.formModel.currentData)
+        .subscribe((p) => {
+          if (p != null) {
+            this.notify.notifyCode('SYS006');
+            p[0].emp = this.empObj;
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS023');
+          this.awardObj.isSuccess = true;
+        });
+    } else {
+      this.hrService
+        .UpdateEmployeeAwardInfo(this.formModel.currentData)
+        .subscribe((p) => {
+          if (p != null) {
+            this.notify.notifyCode('SYS007');
+            p[0].emp = this.empObj;
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS021');
+        });
     }
   }
 
@@ -325,27 +317,4 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     }
   }
 
-  checkValidate() {
-    var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.awardObj);
-    for (let index = 0; index < keygrid.length; index++) {
-      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
-        for (let i = 0; i < keymodel.length; i++) {
-          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-            if (
-              this.awardObj[keymodel[i]] == null ||
-              String(this.awardObj[keymodel[i]]).match(/^ *$/) !== null
-            ) {
-              this.notify.notifyCode(
-                'SYS009',
-                0,
-                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
-              );
-              this.validate++;
-            }
-          }
-        }
-      }
-    }
-  }
 }
