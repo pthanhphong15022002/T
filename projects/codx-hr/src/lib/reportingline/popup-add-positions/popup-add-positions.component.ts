@@ -34,8 +34,8 @@ export class PopupAddPositionsComponent implements OnInit {
   formGroup;
   blocked: boolean = false;
   isAfterRender = false;
-  gridViewSetup: any;
-  validate: any = 0;
+  // gridViewSetup: any;
+  // validate: any = 0;
   @Output() Savechange = new EventEmitter();
 
   tabInfo: any[] = [
@@ -85,14 +85,14 @@ export class PopupAddPositionsComponent implements OnInit {
           this.isAfterRender = true;
         }
       });
-    this.cacheService
-      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-          console.log(Object.keys(this.gridViewSetup));
-        }
-      });
+    // this.cacheService
+    //   .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.gridViewSetup = res;
+    //       console.log(Object.keys(this.gridViewSetup));
+    //     }
+    //   });
     this.getFucnName(this.functionID);
     if (this.isAdd)
       this.blocked = this.dialogRef.dataService.keyField ? true : false;
@@ -150,26 +150,25 @@ export class PopupAddPositionsComponent implements OnInit {
 
   // click save
   OnSaveForm() {
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
-    } else {
-      let _method = this.isAdd ? 'SaveAsync' : 'UpdateAsync';
-      this.api
-        .execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', _method, [
-          this.data,
-          this.functionID,
-        ])
-        .subscribe((res) => {
-          if (this.isAdd) this.dialogRef.dataService.add(res, 0).subscribe();
-          else {
-            this.notifiSV.notifyCode('SYS007');
-            this.dialogRef.dataService.update(res).subscribe();
-          }
-          this.dialogRef.close(res);
-        });
     }
+
+    let _method = this.isAdd ? 'SaveAsync' : 'UpdateAsync';
+    this.api
+      .execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', _method, [
+        this.data,
+        this.functionID,
+      ])
+      .subscribe((res) => {
+        if (this.isAdd) this.dialogRef.dataService.add(res, 0).subscribe();
+        else {
+          this.notifiSV.notifyCode('SYS007');
+          this.dialogRef.dataService.update(res).subscribe();
+        }
+        this.dialogRef.close(res);
+      });
   }
 
   closePanel() {
@@ -180,27 +179,27 @@ export class PopupAddPositionsComponent implements OnInit {
     form.title = this.title;
     this.cr.detectChanges();
   }
-  checkValidate() {
-    var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.data);
-    for (let index = 0; index < keygrid.length; index++) {
-      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
-        for (let i = 0; i < keymodel.length; i++) {
-          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-            if (
-              this.data[keymodel[i]] == null ||
-              String(this.data[keymodel[i]]).match(/^ *$/) !== null
-            ) {
-              this.notifiSV.notifyCode(
-                'SYS009',
-                0,
-                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
-              );
-              this.validate++;
-            }
-          }
-        }
-      }
-    }
-  }
+  // checkValidate() {
+  //   var keygrid = Object.keys(this.gridViewSetup);
+  //   var keymodel = Object.keys(this.data);
+  //   for (let index = 0; index < keygrid.length; index++) {
+  //     if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+  //       for (let i = 0; i < keymodel.length; i++) {
+  //         if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+  //           if (
+  //             this.data[keymodel[i]] == null ||
+  //             String(this.data[keymodel[i]]).match(/^ *$/) !== null
+  //           ) {
+  //             this.notifiSV.notifyCode(
+  //               'SYS009',
+  //               0,
+  //               '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+  //             );
+  //             this.validate++;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 }
