@@ -11,7 +11,8 @@
         </div>
         <div class="card-title">
           <div class="d-flex flex-column">
-            <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">{{'1' | vll : 'AC070' : 'text' | async}}</div>
+            <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">{{'1' | vll : 'AC070' : 'text' |
+              async}}</div>
           </div>
         </div>
       </div>
@@ -73,42 +74,6 @@
           </codx-input>
         </div>
       </div>
-      <div *ngIf="loadControl('DIM3')" class="col-6 ac-line">
-        <div class="form-group">
-          <codx-label fiedName="DIM3" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input [Group]="form.formGroup" field="diM3" [formModel]="form.formModel"
-            (valueChange)="lineChanged($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div *ngIf="loadControl('DIM1')" class="col-6 ac-line">
-        <div class="form-group">
-          <codx-label fiedName="DIM1" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input [Group]="form.formGroup" field="diM1" [formModel]="form.formModel"
-            (valueChange)="lineChanged($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div *ngIf="loadControl('DIM2')" class="col-6 ac-line">
-        <div class="form-group">
-          <codx-label fiedName="DIM2" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input [Group]="form.formGroup" field="diM2" [formModel]="form.formModel"
-            (valueChange)="lineChanged($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div *ngIf="loadControl('ProjectID')" class="col-6 ac-line">
-        <div class="form-group">
-          <codx-label fiedName="ProjectID" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input [Group]="form.formGroup" field="projectID" [formModel]="form.formModel"
-            (valueChange)="lineChanged($event)">
-          </codx-input>
-        </div>
-      </div>
       <div class="col-6 ac-line">
         <div class="form-group">
           <codx-label fiedName="AssetType" [formModel]="form.formModel">
@@ -127,6 +92,60 @@
           </codx-input>
         </div>
       </div>
+    </div>
+    <div *ngIf="lockFields.length != 4" class="extend-function pt-0">
+      <hr />
+      <div class="d-flex justify-content-center" (click)="showPlan = !showPlan">
+        <div class="d-flex align-items-center w-auto extend-title">
+          <span class="text-primary text-hover-primary_darker fw-bold me-1">
+            <codx-label default="Thông tin phân tích"></codx-label>
+          </span>
+          <span *ngIf="showPlan" class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
+          <span *ngIf="!showPlan" class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="showPlan && lockFields.length != 4" class="p-5 bg-gray-100 border rounded-1">
+      <div class="row">
+        <div *ngIf="loadControl('DIM3')" class="col-6 ac-line">
+          <div class="form-group">
+            <codx-label fiedName="DIM3" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input [Group]="form.formGroup" field="diM3" [formModel]="form.formModel"
+              (valueChange)="lineChanged($event)">
+            </codx-input>
+          </div>
+        </div>
+        <div *ngIf="loadControl('DIM1')" class="col-6 ac-line">
+          <div class="form-group">
+            <codx-label fiedName="DIM1" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input [Group]="form.formGroup" field="diM1" [formModel]="form.formModel"
+              (valueChange)="lineChanged($event)">
+            </codx-input>
+          </div>
+        </div>
+        <div *ngIf="loadControl('DIM2')" class="col-6 ac-line">
+          <div class="form-group">
+            <codx-label fiedName="DIM2" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input [Group]="form.formGroup" field="diM2" [formModel]="form.formModel"
+              (valueChange)="lineChanged($event)">
+            </codx-input>
+          </div>
+        </div>
+        <div *ngIf="loadControl('ProjectID')" class="col-6 ac-line">
+          <div class="form-group">
+            <codx-label fiedName="ProjectID" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input [Group]="form.formGroup" field="projectID" [formModel]="form.formModel"
+              (valueChange)="lineChanged($event)">
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-5">
       <div class="form-group ac-line">
         <codx-label fiedName="Note" [formModel]="form.formModel">
         </codx-label>

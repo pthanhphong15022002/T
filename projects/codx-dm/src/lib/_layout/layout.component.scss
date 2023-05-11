@@ -35,6 +35,9 @@
 
 #kt_aside_menu_header+div {
   margin-bottom: 0 !important;
+  height: calc(100vh - 220px)!important;
+  padding-left: 10px;
+  //border: 1px aqua solid;
 }
 
 .progress {
@@ -300,4 +303,11 @@ codx-views#dm .content-tree {
 codx-views#dm .content-tree codx-mfunc .btn {
   padding-top: 8px !important;
   background-color: var(--bghover);
+}
+codx-layout[data-kt-aside-minimize="on"]{
+.btn-add.without-sub{
+  .label-addnew{
+    display: none;
+  }
+}
 }

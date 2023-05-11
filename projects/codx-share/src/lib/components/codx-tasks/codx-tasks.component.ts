@@ -64,8 +64,8 @@ export class CodxTasksComponent
   @Input() calendarID: string;
   @Input() resourceModel!: any;
   @Input() viewPreset: string = 'weekAndDay';
-  @Input() predicate?: string ;  //truyen predicate dạng 'Status==@0 && Priority=@1'
-  @Input() dataValue?: string ; //truyen dataValue dạng  "90;1"
+  @Input() predicate?: string; //truyen predicate dạng 'Status==@0 && Priority=@1'
+  @Input() dataValue?: string; //truyen dataValue dạng  "90;1"
   @Input() service = 'TM';
   @Input() entityName = 'TM_Tasks';
   @Input() idField = 'taskID';
@@ -173,12 +173,19 @@ export class CodxTasksComponent
         this.listRoles = res.datas;
       }
     });
-    // this.api.callSv(
-    //   'TM',
-    //   'TM',
-    //   'TaskBusiness',
-    //   'RPASendAlertMailIsOverDue1Async'
-    // ).subscribe();
+    //test send
+    // this.api
+    //   .exec<any>('TM', 'TaskBusiness', 'RPASendAlertMailUpCommingAsync')
+    //   .subscribe();
+    // this.api
+    //   .exec<any>('TM', 'TaskBusiness', 'RPASendAlertInCommingMailAsync')
+    //   .subscribe();
+    // this.api
+    //   .exec<any>('TM', 'TaskBusiness', 'RPASendAlertMailIsOverDue1Async')
+    //   .subscribe();
+    // this.api
+    //   .exec<any>('TM', 'TaskBusiness', 'RPASendAlertMailIsOverDue2Async')
+    //   .subscribe();
   }
 
   //#region Init
@@ -223,7 +230,7 @@ export class CodxTasksComponent
       };
       this.dataObj = Object.assign({}, this.dataObj, object);
     }
-   
+
     this.dataObj = JSON.stringify(this.dataObj);
     this.detectorRef.detectChanges();
   }
@@ -439,7 +446,6 @@ export class CodxTasksComponent
 
   //#region CRUD
   add() {
-    //this.api.exec<any>("TM","TaskBusiness","RPASendAlertMailIsOverDue1Async",).subscribe();
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
@@ -1210,6 +1216,9 @@ export class CodxTasksComponent
 
                 if (t.isHoverPop && p) p.open();
                 if (p) t.popoverCrr = p;
+              } else {
+                this.listTaskResousceSearch = [];
+                this.countResource = 0;
               }
               t.isHoverPop = false;
             });

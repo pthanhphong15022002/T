@@ -82,7 +82,7 @@ export class InstanceDetailComponent implements OnInit {
   listStepInstance: any;
   instanceStatus: any;
   currentStep = 0;
-
+  isChangeData = false;
   listTypeTask = [];
 
   dialogPopupDetail: DialogRef;
@@ -252,7 +252,7 @@ export class InstanceDetailComponent implements OnInit {
     timelineUnitSize: 100,
   };
   //end gan
-
+  loaded: boolean;
   constructor(
     private callfc: CallFuncService,
     private dpSv: CodxDpService,
@@ -304,16 +304,19 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.loaded = false;
     if (changes['dataSelect']) {
       if (changes['dataSelect'].currentValue?.recID != null) {
         this.id = changes['dataSelect'].currentValue.recID;
         this.loadChangeData() ;
+        this.isChangeData = false;
        // this.dataSelect = changes['dataSelect'].currentValue
       }
-    } 
+      this.loaded = true;
+    }
   }
 
-  loadChangeData(){   
+  loadChangeData(){
     this.instanceStatus = this.dataSelect.status;
     this.GetStepsByInstanceIDAsync();
     this.getDataGanttChart(
@@ -718,6 +721,15 @@ export class InstanceDetailComponent implements OnInit {
     this.viewModelDetail = e;
     this.isSaving = false;
     this.currentElmID = null;
+    if(this.viewModelDetail == 'G' && this.isChangeData){
+      this.getDataGanttChart(
+        this.dataSelect.recID,
+        this.dataSelect.processID
+      );
+    }
+  }
+  changeDataStep(e){
+    this.isChangeData = e;
   }
 
   startInstances() {

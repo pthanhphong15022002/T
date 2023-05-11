@@ -193,9 +193,8 @@ export class PopupAddResourcesComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
 
   beforeSave(option: RequestOption) {
-    let itemData = this.fGroupAddRoom.value;
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAdd];
+    option.data = [this.data, this.isAdd];
     return true;
   }
   //---------------------------------------------------------------------------------//

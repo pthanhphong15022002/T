@@ -140,7 +140,7 @@ export class PdfComponent
   pageMax;
   getSignAreas;
   pageStep;
-  curPage = 0;
+  curPage = 1;
 
   //zoom
   zoomValue: any = 100;
@@ -198,6 +198,7 @@ export class PdfComponent
   lstFiles: Array<Object> = [];
   fileInfo: any;
   file: Object = { text: 'fileName', value: 'fileID' };
+  fileIdx = 0;
   curFileID;
   curFileUrl;
   //font
@@ -304,6 +305,7 @@ export class PdfComponent
                 fileUrl: environment.urlUpload + '/' + res.urls[index],
                 signers: res?.approvers,
                 areas: file.areas,
+                fileIdx: index,
               });
             });
             this.lstSigners = res.approvers;
@@ -544,15 +546,18 @@ export class PdfComponent
   }
 
   goToPage(e) {
-    if (e.data != this.curPage) {
+    if (e.data == 0) {
+      this.curPage = 1;
+    } else if (e.data != this.curPage) {
       this.curPage = e.data;
 
-      if (this.curPage < 1) {
-        this.curPage = 1;
-      } else if (this.curPage > this.pageMax) {
+      if (this.curPage > this.pageMax) {
         this.curPage = this.pageMax;
       }
+
+      this.detectorRef.detectChanges();
     }
+    console.log('this.curPage', this.curPage);
   }
 
   goToSelectedAnnotation(area: tmpSignArea) {
@@ -714,7 +719,7 @@ export class PdfComponent
       new NgxExtendedPdfViewerService();
 
     if (this.isSignMode) {
-      if (this.curPage == 0) {
+      if (this.curPage == 1) {
         this.curPage = this.pageMax;
       }
     }
@@ -2003,6 +2008,7 @@ export class PdfComponent
     this.fileInfo = e.itemData;
     this.curFileID = this.fileInfo.fileID;
     this.autoSignState = false;
+    this.curPage = 1;
     this.lstAreas = [];
     this.getListCA();
     this.esService
@@ -2016,10 +2022,9 @@ export class PdfComponent
       .subscribe((res) => {
         if (res) {
           this.lstAreas = res;
-          this.curPage = 0;
-          // this.detectorRef.detectChanges();
         }
         this.curFileUrl = this.fileInfo.fileUrl;
+        this.detectorRef.detectChanges();
       });
     this.esService
       .changeSFCacheBytes(

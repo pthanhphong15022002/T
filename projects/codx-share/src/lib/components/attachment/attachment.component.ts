@@ -730,6 +730,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       var tenants = from(check);
       return tenants.pipe(
         mergeMap((value : any, i) => { 
+          debugger
           if(typeof value == 'object' && value.AppId)
           {
             return from(this.fileService.getTotalHdd()).pipe(mergeMap(hdd=>{
@@ -845,7 +846,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       }
       let countFile = this.fileUploadList.length;
       if (total > 1) {
-        for(var i = 0 ; i< this.fileUploadList.length ; i++)
+        for(var i = 0 ; i< data.length ; i++)
         {
           data[i].source = null;
           data[i].item = null
@@ -870,7 +871,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                 var addList = res.filter((x) => x.status == 0 || x.status == 9);
 
                 for (var i = 0; i < addList.length; i++) {
-                  this.data.push(Object.assign({}, addList[i]));
+                  this.data.push(Object.assign({}, addList[i].data));
                   this.atSV.fileListAdded.push(Object.assign({}, addList[i]));
                 }
 
@@ -911,7 +912,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       } else if (total == 1) {
         this.addPermissionA();
         //return this.addFileLargeLong(this.fileUploadList[0]);
-        return this.addFileObservable(this.fileUploadList[0]);
+        return this.addFileObservable(data[0]);
         // this.atSV.fileList.next(this.fileUploadList);
       } else {
         this.notificationsService.notify(this.title2);
@@ -1018,7 +1019,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                 if (addList.length > 0) {
                   this.fileSave.emit(addList);
                   addList.forEach((item) => {
-                    this.data.push(Object.assign({}, item));
+                    this.data.push(Object.assign({}, item.data));
                     if (item.status == 0)
                       this.dmSV.updateHDD.next(item.messageHddUsed);
                     var files = this.dmSV.listFiles;
@@ -1177,7 +1178,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
                 }
               }
             });
-        } else if (total == 1) {
+        } 
+        else if (total == 1) {
           
           if(!this.fileUploadList[0]) 
           {
@@ -1186,9 +1188,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
             return null;
           }
           
-          this.fileUploadList[0].description = this.description[0];
-          this.fileUploadList[0].data = '';
-          this.addFileLargeLong(this.fileUploadList[0]);
+          data[0].description = this.description[0];
+          data[0].data = '';
+          this.addFileLargeLong(data[0]);
           this.lstRawFile = [];
           //this.addFile(this.fileUploadList[0]);
     
@@ -1290,7 +1292,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         Password: ""
       }
     }
-    return await lvFileClientAPI.postAsync(`api/${tenant}/apps/register`,data);
+    return await lvFileClientAPI.postAsync(`api/admin/apps/register`,data);
   }
 
   addFileObservable(
@@ -1342,7 +1344,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                       this.notificationsService.notify(item2.message);
                     this.fileUploadList[0].recID = item2.data.recID;
                     this.atSV.fileListAdded.push(Object.assign({}, item2));
-                    this.data.push(Object.assign({}, item2));
+                    this.data.push(Object.assign({}, item2.data));
                     this.fileUploadList = [];
                     return of(item2);
                   } else if (item2.status == 6) {
@@ -1373,7 +1375,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                             this.notificationsService.notify(item.message);
                           this.fileUploadList[0].recID = item.data.recID;
                           this.atSV.fileListAdded.push(Object.assign({}, item));
-                          this.data.push(Object.assign({}, item));
+                          this.data.push(Object.assign({}, item.data));
                           this.fileUploadList = [];
                           return item;
                          
@@ -1583,7 +1585,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             }
             else  this.dmSV.addFile.next(true);
             this.atSV.fileListAdded.push(Object.assign({}, item));
-            this.data.push(Object.assign({}, item));
+            this.data.push(Object.assign({}, item.data));
             this.dmSV.updateHDD.next(item.messageHddUsed);
             this.notificationsService.notify(item.message);
             this.changeDetectorRef.detectChanges();

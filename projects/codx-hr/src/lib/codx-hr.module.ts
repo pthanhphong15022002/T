@@ -474,6 +474,9 @@ import { EmployeeInfoDetailComponent } from './employee-list/employee-info-detai
 import { PopupForeignWorkerComponent } from './employee-profile/popup-foreign-worker/popup-foreign-worker.component';
 import { PopupViewallBenefitComponent } from './employee-list/employee-info-detail/pop-up/popup-viewall-benefit/popup-viewall-benefit.component';
 import { PopupAddEmployeeComponent } from './employee-list/popup/popup-add-employee/popup-add-employee.component';
+import { PopupViewallSalaryComponent } from './employee-list/employee-info-detail/pop-up/popup-viewall-salary/popup-viewall-salary.component';
+import { PopupViewAllComponent } from './employee-list/employee-info-detail/pop-up/popup-view-all/popup-view-all.component';
+import { EmployeeAppointionsComponent } from './employee-appointions/employee-appointions.component';
 export const routes: Routes = [
       {
         path: '',
@@ -559,6 +562,14 @@ export const routes: Routes = [
             path: 'edayoffs/:funcID',
             component: EmployeeDayOffComponent
           },
+          {
+            path: 'eappointions/:funcID',
+            component: EmployeeAppointionsComponent
+          },
+          // {
+          //   path: 'employeeinfomation/:funcID',
+          //   component: EmployeeInfomationComponent,
+          // },
           {
             path: 'approvals/:funcID',
             loadChildren: () =>
@@ -719,6 +730,9 @@ const T_Component: Type<any>[] = [
   EmployeeInfoDetailComponent,
   PopupForeignWorkerComponent,
   PopupViewallBenefitComponent,
+  PopupViewallSalaryComponent,
+  PopupViewAllComponent,
+  EmployeeAppointionsComponent,
   PopupAddEmployeeComponent
 ];
 @NgModule({

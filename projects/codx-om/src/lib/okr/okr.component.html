@@ -68,6 +68,8 @@
               </div>
             </ng-template>
             <ng-template #content>
+              
+            <ng-container *ngIf="loadedData">
               <div class="h-100" *ngIf="!planNull ; else elseOKR">
                 <div class="h-100" >
                   <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel"
@@ -79,29 +81,8 @@
 
                 </div>
               </div>
-              <ng-template #elseOKR>
-                <div class="w-100 py-10  text-center d-flex flex-row justify-content-center align-item-center">
-                  <div class="col-2"></div>
-                  <div
-                    class=" col-7 pb-10 bg-primary-lighter my-5 text-center d-flex flex-column justify-content-center align-item-center  border border-2 border-primary">
-
-                    <span inlineSVG="./assets/themes/om/default/img/OKRs.svg"></span>
-                    <span *ngIf="funcID==compFuncID" [innerHTML]="compPlanNull"></span>
-                    <span *ngIf="funcID==deptFuncID" [innerHTML]="deptPlanNull"></span>
-                    <span *ngIf="funcID==orgFuncID" [innerHTML]="orgPlanNull"></span>
-                    <span *ngIf="funcID==persFuncID" [innerHTML]="persPlanNull"></span>
-                    <div class="d-flex justify-content-center">
-                      <span type="button" (click)="click({ id: 'btnAddPlan' })"
-                        class="w-110px d-flex mt-3 py-2 px-4 bg-color rounded justify-content-center align-items-center">
-                        <span class="fa-solid fa-bullseye btn-text-primary text-light me-1"></span>
-                        <codx-label class="text-light" fiedName="lbl" default="Tạo bộ mục tiêu"></codx-label>
-                      </span>
-                    </div>
-
-                  </div>
-                  <div class="col-2"></div>
-                </div>
-              </ng-template>
+            </ng-container>
+              
             </ng-template>
           </e-tabitem>
           <e-tabitem>
@@ -112,10 +93,20 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="w-100 tab-okr-trees">
+              
+            <ng-container *ngIf="loadedDataTree">
+              <!-- <div class="w-100 tab-okr-trees" *ngIf="orgUnitTree!=null; else orgUnitTreeNull">
                 <lib-okr-trees [okrVll]="okrVll" [okrFM]="okrFM" [funcID]="funcID" [dataOKRPlans]="dataOKRPlans"
                   [orgUnitTree]="orgUnitTree" [okrGrv]="okrGrv" [currentOrgID]="curOrgID"></lib-okr-trees>
-              </div>
+              </div> -->
+              <div class="okr-treeview w-100 h-100 container "*ngIf="!planNull && orgUnitTree!=null  ;else defaultEmpty">
+                <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="orgUnitTree" [enableCheck]="false"
+                idField="orgUnitID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="true"
+                >
+            </codx-treeview>
+            </div>
+            
+            </ng-container>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
@@ -126,8 +117,14 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <codx-tasks-share class="tasks-share-content w-100" [funcID]="'OMT014'" [dataValue]="dataOKRPlans.recID"
+
+              <ng-container *ngIf="loadedData">
+                <div class="h-100" *ngIf="!planNull ; else defaultEmpty">
+                  <codx-tasks-share class="tasks-share-content w-100" [funcID]="'OMT014'" [dataValue]="dataOKRPlans.recID"
                 [predicate]="'SessionID==@0'" [showButtonAdd]="true" [showMoreFunc]="true"></codx-tasks-share>
+                </div>
+              </ng-container>
+              
             </ng-template>
           </e-tabitem>
           <e-tabitem>
@@ -139,21 +136,17 @@
             </ng-template>
             <ng-template #content>
               <div>
+                <ng-container *ngIf="loadedData">
+                  <div class="h-100" *ngIf="!planNull ; else defaultEmpty">
+                    <codx-tmmeetings funcID="OMT017" [dataObj]="refIDMeeting"
+                    [projectID]="dataOKRPlans?.recID"></codx-tmmeetings>
+                  </div>
+                </ng-container>
 
-                <codx-tmmeetings funcID="OMT017" [dataObj]="refIDMeeting"
-                  [projectID]="dataOKRPlans?.recID"></codx-tmmeetings>
+                
               </div>
             </ng-template>
           </e-tabitem>
-          <!-- <e-tabitem>
-            <ng-template #headerText>
-              <div class="d-flex align-items-center">
-                <i class="fa-regular fa-square-check me-2"></i>
-                <codx-label default="Đánh giá" fiedName="lblmeeting" class="fw-bold"></codx-label>
-              </div>
-            </ng-template>
-            <ng-template #content> Đánh giá </ng-template>
-          </e-tabitem> -->
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-center">
@@ -162,17 +155,82 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="h-100  d-block mt-5">
-                <div class="mw-1000px mx-auto">
-                  <codx-history [objectID]="dataOKRPlans?.recID" [formModel]="formModelPlan"
-                    [funcID]="funcID"></codx-history>
+              <ng-container *ngIf="loadedData">
+                <div class="h-100" *ngIf="!planNull ; else defaultEmpty">
+                  <div class="h-100  d-block mt-5">
+                    <div class="mw-1000px mx-auto">
+                      <codx-history [objectID]="dataOKRPlans?.recID" [formModel]="formModelPlan"
+                        [funcID]="funcID"></codx-history>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </ng-container>
+              
 
             </ng-template>
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #elseOKR>
+  <div class="w-100 py-10  text-center d-flex flex-row justify-content-center align-item-center">
+    <div class="col-2"></div>
+    <div
+      class=" col-7 pb-10 bg-primary-lighter my-5 text-center d-flex flex-column justify-content-center align-item-center  border border-2 border-primary">
+
+      <span inlineSVG="./assets/themes/om/default/img/OKRs.svg"></span>
+      <span *ngIf="funcID==compFuncID" [innerHTML]="compPlanNull"></span>
+      <span *ngIf="funcID==deptFuncID" [innerHTML]="deptPlanNull"></span>
+      <span *ngIf="funcID==orgFuncID" [innerHTML]="orgPlanNull"></span>
+      <span *ngIf="funcID==persFuncID" [innerHTML]="persPlanNull"></span>
+      <div class="d-flex justify-content-center">
+        <span type="button" (click)="click({ id: 'btnAddPlan' })"
+          class="w-110px d-flex mt-3 py-2 px-4 bg-color rounded justify-content-center align-items-center">
+          <span class="fa-solid fa-bullseye btn-text-primary text-light me-1"></span>
+          <codx-label class="text-light" fiedName="lbl" default="Tạo bộ mục tiêu"></codx-label>
+        </span>
+      </div>
+
+    </div>
+    <div class="col-2"></div>
+  </div>
+</ng-template>
+
+<ng-template #templateTreeView let-item>
+  <div (click)="clickTreeNode($event)" class="mb-2">
+      <div class="d-flex flex-row align-items-center h-50px" >
+          <div *ngIf="item?.orgUnitType=='1'" class="d-flex justify-content-center align-items-center rounded-1" style="height:30px;width:30px;background:#3699FF">
+              <span class="icon-home justify-content-center align-items-center text-light"></span>
+          </div>       
+          <div *ngIf="item?.orgUnitType=='4'" class="d-flex justify-content-center align-items-center rounded-circle" style="height:30px;width:30px;background:#ff3636">            
+              <span class="icon-account_balance_wallet justify-content-center align-items-center text-light"></span>
+          </div>  
+          <div *ngIf="item?.orgUnitType=='6'" class="d-flex justify-content-center align-items-center rounded-circle" style="height:30px;width:30px;background:#3699FF">            
+              <span class="icon-groups justify-content-center align-items-center text-light"></span>
+          </div>   
+          <span class="ps-3 fs-4 fw-bold">{{item?.orgUnitName}}</span>
+      </div>
+      <!--Content-->
+      <div class="me-2" *ngIf="item?.listOKR !=null && item?.listOKR.length>0">
+  
+        <view-okr [okrVll]="okrVll" [okrFM]="okrFM" [okrGrv]="okrGrv" [dataOKR]="item?.listOKR" [isCollapsedAll]="false" [allowShowDetail]="true">
+        </view-okr>
+      </div>
+  </div>    
+</ng-template>
+
+<ng-template #defaultEmpty>
+  <div class="container h-100 ">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center  pt-10">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>

@@ -153,7 +153,7 @@ export class CardTransComponent
         PopupAddCardTransComponent,
         '',
         550,
-        500,
+        550,
         this.funcID,
         [curTran, this.funcID, this.popupTitle, null]
       );

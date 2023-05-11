@@ -168,11 +168,12 @@
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
-            field="RefID"
+            field="refID"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="disableRefID"
-            (valueChange)="changeRefID($event)"
+            [model]="quotations?.customerID"
+            (valueChange)="changeCombox($event)"
           ></codx-input>
         </div>
       </div>
@@ -185,7 +186,7 @@
               [formModel]="form.formModel"
             ></codx-label>
             <codx-input
-              field="CreatedOn"
+              field="createdOn"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               (valueChange)="valueChangeDate($event)"
@@ -218,12 +219,21 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="disableRefID"
+            (valueChange)="valueChange($event)"
           ></codx-input>
         </div>
         <div class="form-group col-6">
-          <codx-label default="Liên hệ"></codx-label>
-          <codx-input type="text" placeholder="test thôi dung la"
-          [disabled]="disableRefID"></codx-input>
+          <codx-label
+            fiedName="ContactID"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            field="contactID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [model]="quotations?.customerID"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
         </div>
       </div>
       <div class="col-6 row">
@@ -238,13 +248,19 @@
               field="currencyID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
+              (valueChange)="valueChange($event)"
             ></codx-input>
           </div>
           <div class="form-group col-6">
-            <codx-label default="Tỷ giá"></codx-label>
+            <codx-label
+              fiedName="ExchangeRate"
+              [formModel]="form.formModel"
+            ></codx-label>
             <codx-input
-              type="text"
-              placeholder="Field nao Khanh oi"
+              field="exchangeRate"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="valueChange($event)"
             ></codx-input>
           </div>
         </div>
@@ -259,6 +275,7 @@
   <div class="h-100">
     <codx-gridview-v2
       #gridQuationsLines
+      service="CM"
       [formName]="fmQuotationLines.formName"
       [gridViewName]="fmQuotationLines.gridViewName"
       [entityName]="fmQuotationLines.entityName"
@@ -267,7 +284,6 @@
       [allowFiltering]="true"
       [allowSorting]="true"
       [dataSource]="quotationLines"
-      service="CM"
       [height]="gridHeight"
       [autoLoad]="false"
       rowHeight="40"

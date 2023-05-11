@@ -72,7 +72,6 @@ export class CodxBookingViewDetailComponent
     new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
 
-  tabControl: TabModel[] = [];
   firstLoad = true;
   id: string;
   active = 1;
@@ -82,7 +81,13 @@ export class CodxBookingViewDetailComponent
   listFilePermission = [];
   allowUploadFile = false;
   grView: any;
-
+  loadedData:boolean;
+  tabControl: TabModel[]= [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+    { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+  ];
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -90,10 +95,10 @@ export class CodxBookingViewDetailComponent
     private authService: AuthService
   ) {
     super(injector);
-    this.routerRecID = this.router.snapshot.params['id'];
-    if (this.routerRecID != null) {
-      //this.hideFooter = true;
-    }
+    // this.routerRecID = this.router.snapshot.params['id'];
+    // if (this.routerRecID != null) {
+    //   //this.hideFooter = true;
+    // }
   }
 
   //---------------------------------------------------------------------------------//
@@ -107,25 +112,21 @@ export class CodxBookingViewDetailComponent
           this.grView = Util.camelizekeyObj(grv);
         }
       });
-    let tempRecID: any;
-    if (this.routerRecID != null) {
-      tempRecID = this.routerRecID;
-    } else {
-      tempRecID = this.itemDetail?.currentValue?.recID;
-    }
+    // let tempRecID: any;
+    // if (this.routerRecID != null) {
+    //   tempRecID = this.routerRecID;
+    // } else {
+    //   tempRecID = this.itemDetail?.currentValue?.recID;
+    // }
     this.detectorRef.detectChanges();
     this.setHeight();
   }
   ngAfterViewInit(): void {
-    this.tabControl = [
-      { name: 'History', textDefault: 'Lịch sử', isActive: true },
-      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
-    ];
+    
   }
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.itemDetail) {
+      this.loadedData=false;
       if (this.viewMode == '1') {
         this.codxEpService
           .getBookingByRecID(changes.itemDetail?.currentValue?.recID)
@@ -133,6 +134,7 @@ export class CodxBookingViewDetailComponent
             if (res) {
               this.itemDetail = res;
               this.refeshData(this.itemDetail);
+              this.loadedData=true;
               this.detectorRef.detectChanges();
             }
           });
@@ -146,6 +148,7 @@ export class CodxBookingViewDetailComponent
             if (res) {
               this.itemDetail = res;
               this.refeshData(this.itemDetail);
+              this.loadedData=true;
               this.detectorRef.detectChanges();
             }
           });

@@ -54,9 +54,11 @@ export class CashPaymentsComponent extends UIComponent {
   dataCategory: any;
   journal: IJournal;
   approval: any;
-  cashpaymentline: Array<CashPaymentLine> = [];
-  settledInvoices: Array<SettledInvoices> = [];
-  acctTrans : Array<any> = [];
+  total: any = 0;
+  classNameLine:any;
+  cashpaymentline: any;
+  settledInvoices: any;
+  acctTrans : any;
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
@@ -132,7 +134,14 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
     ];
-
+    switch (this.view.funcID) {
+      case 'ACT0410':
+        this.classNameLine = 'CashPaymentsLinesBusiness';
+        break;
+      case 'ACT0401':
+        this.classNameLine = 'CashReceiptsLinesBusiness';
+        break;
+    }
     this.detectorRef.detectChanges();
   }
 
@@ -196,7 +205,6 @@ export class CashPaymentsComponent extends UIComponent {
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         option.isFull = true;
-        option.Type = 'Push';
         this.dialog = this.callfunc.openSide(
           PopAddCashComponent,
           obj,
@@ -213,6 +221,7 @@ export class CashPaymentsComponent extends UIComponent {
         });
       });
   }
+  
   edit(e, data) {
     if (data) {
       this.view.dataService.dataSelected = { ...data };
@@ -363,11 +372,21 @@ export class CashPaymentsComponent extends UIComponent {
       case '1':
       case '3':
         this.api
-          .exec('AC', 'CashPaymentsLinesBusiness', 'LoadDataAsync', [
+          .exec('AC', 
+          this.classNameLine, 
+          'LoadDataAsync', [
             data.recID,
           ])
           .subscribe((res: any) => {
             this.cashpaymentline = res;
+            this.loadTotal();
+          });
+        this.api
+          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [
+            data.recID,
+          ])
+          .subscribe((res: any) => {
+            this.acctTrans = res;
           });
         break;
       case '2':
@@ -437,6 +456,14 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((res) => {
         this.journal = res[0];
       });
+  }
+
+  loadTotal() {
+    var totals = 0;
+    this.cashpaymentline.forEach((element) => {
+      totals = totals + element.dr;
+    });
+    this.total = totals.toLocaleString('it-IT');
   }
 
   //#endregion

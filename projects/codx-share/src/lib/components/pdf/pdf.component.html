@@ -189,14 +189,16 @@
               </e-item>
               <e-item prefixIcon="e-icons icon-navigate_before" id="previous">
               </e-item>
+
               <e-item [template]="pageInput" type="Input"></e-item>
               <e-item prefixIcon="e-icons icon-navigate_next" id="next">
               </e-item>
               <e-item prefixIcon="e-icons icon-skip_next" id="lastPage">
               </e-item>
 
+              <!-- 
               <e-item id="viewThumbnail" prefixIcon="e-icons icon-article">
-              </e-item>
+              </e-item> -->
             </e-items>
           </ejs-toolbar>
         </div>
@@ -217,6 +219,10 @@
         >
           <ejs-toolbar>
             <e-items>
+              <e-item
+                *ngIf="lstFiles?.length > 1"
+                [template]="fileIdx"
+              ></e-item>
               <e-item
                 prefixIcon="e-icons e-zoom-out"
                 (click)="changeZoom('out', $event)"
@@ -982,7 +988,7 @@
                     class="btn btn-sm btn-light-primary"
                     (click)="removeUnsaveHLA()"
                   >
-                    Hủy
+                    <codx-label name="lblHLACancle" default="Hủy"></codx-label>
                   </button>
                 </div>
                 <div class="d-flex">
@@ -991,14 +997,15 @@
                     class="btn btn-sm btn-light-primary"
                     (click)="confirmRemoveHLA()"
                   >
-                    Xóa
+                    <codx-label name="lblHLADel" default="Xóa"></codx-label>
                   </button>
+
                   <button
                     type="button"
                     class="btn btn-sm btn-primary ms-2"
                     (click)="confirmHighlightText(false)"
                   >
-                    Lưu
+                    <codx-label name="lblHLASave" default="Lưu"></codx-label>
                   </button>
                 </div>
               </div>
@@ -1019,13 +1026,18 @@
   ></codx-vll>
 </ng-template>
 
+<ng-template #fileIdx>
+  <div class="pageIndx d-flex">
+    <span>{{ fileInfo.fileIdx + 1 + "/" + lstFiles?.length }}</span>
+  </div>
+</ng-template>
 <ng-template #pageInput>
   <codx-input
     type="number"
     id="pageNumber"
     min="1"
-    [(max)]="pageMax"
-    [(crrValue)]="curPage"
+    [max]="pageMax"
+    [crrValue]="curPage"
     (valueChange)="goToPage($event)"
     [showSpinButton]="false"
   >
