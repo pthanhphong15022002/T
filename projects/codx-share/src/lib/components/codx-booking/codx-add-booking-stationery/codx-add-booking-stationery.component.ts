@@ -71,6 +71,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   approvalRule: any;
   isPriceVisible: boolean = false;
   funcType: any;
+  onSaving=false;
 
   constructor(
     private injector: Injector,
@@ -329,54 +330,61 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   //#endregion "Validate function before booking stationery"
 
   onSaveForm(approval: boolean = false) {
-    if (this.dialogAddBookingStationery.invalid == true) {
-      this.codxBookingService.notifyInvalid(
-        this.dialogAddBookingStationery,
-        this.formModel
-      );
-      return;
+    if (!this.onSaving) {
+      this.onSaving=true;
+      if (this.dialogAddBookingStationery.invalid == true) {
+        this.codxBookingService.notifyInvalid(
+          this.dialogAddBookingStationery,
+          this.formModel
+        );
+        this.onSaving=false;
+        return;
+      }
+      this.data.approval = this.approvalRule;
+      let bDay = new Date(this.dialogAddBookingStationery.value.bookingOn);
+      let tmpDay = new Date();
+      if (
+        bDay <
+        new Date(
+          tmpDay.getFullYear(),
+          tmpDay.getMonth(),
+          tmpDay.getDate(),
+          0,
+          0,
+          0,
+          0
+        )
+      ) {
+        this.notificationsService.notifyCode('TM036');
+  
+        this.onSaving=false;
+        return;
+      }
+  
+      if (!this.isEmptyCart(this.cart) && this.checkCartItems(this.cart)) {
+        this.api
+          .exec('EP', 'BookingsBusiness', 'QuotaCheckAsync', [
+            this.cart,
+            this.dialogAddBookingStationery.value.bookingOn,
+          ])
+          .subscribe((res: any) => {
+            if (res && res.length > 0) {
+              let unAvailResource = res.join(', ');
+              this.notificationsService.notifyCode(
+                'EP006',
+                null,
+                unAvailResource
+              );
+  
+              this.onSaving=false;
+              return;
+            } else {
+              this.startSave(approval);
+            }
+          });
+      }
     }
-    this.data.approval = this.approvalRule;
-    let bDay = new Date(this.dialogAddBookingStationery.value.bookingOn);
-    let tmpDay = new Date();
-    if (
-      bDay <
-      new Date(
-        tmpDay.getFullYear(),
-        tmpDay.getMonth(),
-        tmpDay.getDate(),
-        0,
-        0,
-        0,
-        0
-      )
-    ) {
-      this.notificationsService.notifyCode('TM036');
-
-      return;
-    }
-
-    if (!this.isEmptyCart(this.cart) && this.checkCartItems(this.cart)) {
-      this.api
-        .exec('EP', 'BookingsBusiness', 'QuotaCheckAsync', [
-          this.cart,
-          this.dialogAddBookingStationery.value.bookingOn,
-        ])
-        .subscribe((res: any) => {
-          if (res && res.length > 0) {
-            let unAvailResource = res.join(', ');
-            this.notificationsService.notifyCode(
-              'EP006',
-              null,
-              unAvailResource
-            );
-
-            return;
-          } else {
-            this.startSave(approval);
-          }
-        });
-    }
+    
   }
 
   startSave(approval) {
@@ -481,7 +489,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
           }
         } else {
           this.dialogRef && this.dialogRef.close();
-
+          this.onSaving=false;
           return;
         }
       });
