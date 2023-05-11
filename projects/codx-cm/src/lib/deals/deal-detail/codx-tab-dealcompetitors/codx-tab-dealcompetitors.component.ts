@@ -5,12 +5,14 @@ import {
   ApiHttpService,
   CacheService,
   CallFuncService,
+  DataRequest,
   DialogModel,
   FormModel,
   NotificationsService,
 } from 'codx-core';
 import { PopupAddDealcompetitorComponent } from './popup-add-dealcompetitor/popup-add-dealcompetitor.component';
 import { CM_DealsCompetitors } from '../../../models/cm_model';
+import { Observable, finalize, map } from 'rxjs';
 
 @Component({
   selector: 'codx-tab-dealcompetitors',
@@ -25,6 +27,13 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   formModel: FormModel;
   loaded: boolean;
   lstCompetitorAddress = [];
+  request = new DataRequest();
+  predicates = 'DealID=@0';
+  dataValues = '';
+  service = 'CM';
+  assemblyName = 'ERM.Business.CM';
+  className = 'DealsBusiness';
+  method = 'GetListDealAndDealCompetitorAsync';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -34,7 +43,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     private cmSv: CodxCmService
   ) {}
   ngOnInit(): void {
-    this.getListDealCompetitors(this.dealID);
+    this.getListDealAndDealCompetitor();
     this.getFormModel();
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -44,17 +53,39 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     });
   }
 
-  getListDealCompetitors(dealID) {
+  getListDealAndDealCompetitor() {
     this.loaded = false;
-    this.cmSv.getDealCompetitors(dealID).subscribe((res) => {
-      if (res) {
-        this.lstDealCompetitors = res;
-        var lstID = this.lstDealCompetitors.map((x) => x.competitorID);
-        this.getAddressCompetitors(lstID);
-      }
-      this.loaded = true;
+    this.request.predicates = 'DealID=@0';
+    this.request.dataValues = this.dealID;
+    this.request.entityName = 'CM_DealsCompetitors';
+    this.request.funcID = 'CM0201';
+    this.className = 'DealsBusiness';
+    this.fetch().subscribe((item) => {
+      this.lstDealCompetitors = item;
+      var lstID = this.lstDealCompetitors.map((x) => x.competitorID);
+      this.getAddressCompetitors(lstID);
 
+      this.loaded = true;
     });
+  }
+  private fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.service,
+        this.assemblyName,
+        this.className,
+        this.method,
+        this.request
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response[0];
+        })
+      );
   }
 
   getAddressCompetitors(lstId) {
@@ -150,18 +181,28 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
         dialog.closed.subscribe((e) => {
           if (e && e.event != null) {
             if (e?.event?.recID) {
-              if(!this.lstDealCompetitors.some(x => x.recID == e.event.recID) && this.getCompetitorName(e?.event?.competitorID) == null){
-                this.api.exec<any>('CM','CustomersBusiness','GetOneAsync',[e?.event?.competitorID, 'CM0104']).subscribe(res =>{
-                  if(res){
-                    var address = res?.address;
-                    if(address){
-                      var tmp = {};
-                      tmp['recID'] = e.event.competitorID;
-                      tmp['address'] = address;
-                      this.lstCompetitorAddress.push(Object.assign({}, tmp));
+              if (
+                !this.lstDealCompetitors.some(
+                  (x) => x.recID == e.event.recID
+                ) &&
+                this.getCompetitorName(e?.event?.competitorID) == null
+              ) {
+                this.api
+                  .exec<any>('CM', 'CustomersBusiness', 'GetOneAsync', [
+                    e?.event?.competitorID,
+                    'CM0104',
+                  ])
+                  .subscribe((res) => {
+                    if (res) {
+                      var address = res?.address;
+                      if (address) {
+                        var tmp = {};
+                        tmp['recID'] = e.event.competitorID;
+                        tmp['address'] = address;
+                        this.lstCompetitorAddress.push(Object.assign({}, tmp));
+                      }
                     }
-                  }
-                })
+                  });
               }
               this.lstDealCompetitors = this.cmSv.loadList(
                 e?.event,

@@ -64,7 +64,7 @@
 <!-- Start: Tab Basic -->
 <ng-template #tabBasic>
   <ng-container *ngIf="form?.formGroup">
-    <div class="row mt-5">
+    <div class="row mt-2">
       <div class="col-7 ac-left">
         <div class="mw-750px">
           <div class="row">
@@ -79,9 +79,13 @@
             <div class="col-3 ps-0">
               <!-- Số tiền -->
               <div class="form-group">
-                <codx-label fiedName="PaymentAmt" [formModel]="form.formModel">
+                <codx-label *ngIf="form.formModel.funcID == 'ACT0410'" fiedName="PaymentAmt" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="paymentAmt" [min]="0"
+                <codx-label *ngIf="form.formModel.funcID == 'ACT0401'" fiedName="ReceiptAmt" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input *ngIf="form.formModel.funcID == 'ACT0410'" [Group]="form.formGroup" [formModel]="form.formModel" field="paymentAmt" [min]="0"
+                  (controlBlur)="controlBlur($event)"></codx-input>
+                  <codx-input *ngIf="form.formModel.funcID == 'ACT0401'" [Group]="form.formGroup" [formModel]="form.formModel" field="receiptAmt" [min]="0"
                   (controlBlur)="controlBlur($event)"></codx-input>
               </div>
             </div>
@@ -226,8 +230,8 @@
   </ng-container>
   <ng-container
     *ngIf="form?.formGroup && (cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == '2'">
-    <div class="table-responsive mt-3">
-      <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
+    <div style="max-height: 370px;" class="table-responsive mt-3">
+      <table style="table-layout: fixed;" class="table table-hover table-row-bordered mb-2">
         <thead style="position: sticky;top: 0;background-color: white;z-index: 15;">
           <tr class="border-bottom">
             <th style="width: 10%;" class="w-50px text-center">
@@ -459,25 +463,6 @@
             </td>
           </tr>
         </tbody>
-        <tfoot *ngIf="cashpaymentline.length > 0" style="background: #e8eaef;position: sticky;bottom: 0;">
-          <tr>
-            <th style="width: 10%"></th>
-            <th style="width: 50%"></th>
-            <th style="width: 15%">
-              <div class="d-flex align-items-center justify-content-start">
-                <span class="fs-6 fw-bold">{{ total }}</span>
-              </div>
-            </th>
-            <th *ngIf="cashpayment.currencyID != baseCurr" style="width: 15%;">
-              <div class="d-flex align-items-center justify-content-start">
-                <span class="fs-6 fw-bold">{{ totaldr2 }}</span>
-              </div>
-            </th>
-            <th style="width: 45%;"></th>
-            <th style="width: 20%;"></th>
-            <th *ngIf="cashpaymentline.length > 0" style="width: 10%;"></th>
-          </tr>
-        </tfoot>
       </table>
     </div>
     <ng-container *ngIf="
@@ -500,6 +485,16 @@
           </div>
         </div>
       </ng-container>
+      <div class="d-flex flex-wrap mt-6 mb-5">
+        <!-- <div class="d-flex align-items-center mb-1 bg-light me-5">
+          <span class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 me-2 bg-primary"></span>
+          <span class="py-1 px-2">Tổng Nợ HT: {{ totaldr2 }}</span>
+        </div> -->
+        <div class="d-flex align-items-center mb-1 bg-light me-5">
+          <span class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 me-2 bg-primary"></span>
+          <span class="text-dark fw-bold py-1 px-2">Tổng cộng: {{ total }}</span>
+        </div>
+      </div>
   </ng-container>
 </ng-template>
 <!-- End: CashPaymentLine -->
