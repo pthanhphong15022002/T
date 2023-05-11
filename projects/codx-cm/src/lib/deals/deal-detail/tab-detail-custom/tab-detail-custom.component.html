@@ -97,26 +97,8 @@
       <div class="row py-2">
         <div class="col-2"><codx-label default="Loại cơ hội"></codx-label>:</div>
         <div class="col-4">
-          <span
-          class="fs-7"
-          #category
-          [innerHTML]="
-          dataSelected?.category
-              | formatvalue
-                : formModel
-                : 'category'
-                : category
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
-          "
-        ></span>
-
-
           {{ getNameCategory(dataSelected?.category) }}
-
         </div>
-
         <div class="col-2"><codx-label default="Kênh"></codx-label>:</div>
         <div class="col-4">
           <span
