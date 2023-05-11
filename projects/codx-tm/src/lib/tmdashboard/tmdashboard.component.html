@@ -159,9 +159,8 @@
         Theo nguồn công việc
       </div>
       <div class="control-section">
-        <div align="center">
+        <div align="center" *ngIf="myDBData?.tasksByRef?.tasksRef">
           <ejs-treemap
-            [id]="newGuid()"
             style="display: block"
             [dataSource]="myDBData?.tasksByRef?.tasksRef"
             weightValuePath="quantity"
@@ -457,7 +456,7 @@
       </div>
       <div class="my-4">
         <div class="control-section">
-          <ejs-accumulationchart [id]="newGuid()" #pie1 style="display: block">
+          <ejs-accumulationchart  #pie1 style="display: block">
             <e-accumulation-series-collection>
               <e-accumulation-series
                 [dataSource]="myDBData?.tasksByGroup"
@@ -687,7 +686,7 @@
         Tỷ lệ công việc theo nhóm
       </div>
       <div class="control-section">
-        <ejs-accumulationchart [id]="newGuid()" #pie2 style="display: block">
+        <ejs-accumulationchart #pie2 style="display: block">
           <e-accumulation-series-collection>
             <e-accumulation-series
               name="TasksByGroup2"
@@ -940,7 +939,6 @@
         <ejs-chart
           style="display: block"
           align="center"
-          [id]="newGuid()"
           [title]="'Thống kê công việc hoàn thành và số giờ thực hiện'"
         >
           <e-series-collection>
@@ -970,13 +968,13 @@
 <ng-template #team_dashboard>
   <div id="11" title="Tỷ lệ hoàn thành đúng hạn giao việc">
     <div class="w-100 h-100">
-      <codx-chart
+      <!-- <codx-chart
         height="180"
         [title]="chartSettings5?.title"
         [seriesSetting]="chartSettings5?.seriesSetting"
         [dataSource]=""
       >
-      </codx-chart>
+      </codx-chart> -->
     </div>
   </div>
 </ng-template>
@@ -1166,7 +1164,7 @@
       </div>
       <div class="my-4">
         <div class="control-section">
-          <ejs-accumulationchart [id]="newGuid()" #pie1 style="display: block">
+          <ejs-accumulationchart  #pie1 style="display: block">
             <e-accumulation-series-collection>
               <e-accumulation-series
                 name="assignDB-tasksByRef"
