@@ -315,7 +315,9 @@ export class VoucherComponent implements OnInit {
       this.cashpayment,
       accID,
       this.payAmt,
-    ]);
+    ]).subscribe(res=>{
+console.log(res);
+    });
   }
   //#endregion
 }
