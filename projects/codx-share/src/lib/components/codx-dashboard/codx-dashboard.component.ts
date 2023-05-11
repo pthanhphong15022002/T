@@ -577,9 +577,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (!this.objDashboard) {
         let component = document.getElementsByTagName('ejs-dashboardlayout')[0];
 
-        this.objDashboard = this.ngCmp.ng.getComponent(
-          component
-        ) as DashboardLayoutComponent;
+        this.objDashboard = (component as any).ej2_instances[0]
       }
       this.objDashboard.panels = this.panels;
       let iGenPanels = setInterval(() => {

@@ -722,7 +722,6 @@ export class PopupMoveStageComponent implements OnInit {
 
   convertTmpDataInTask(list, type) {
     var listTmp = [];
-    debugger;
     for (let item of list) {
       var obj = this.handleTmpInTask(item, type);
       listTmp.push(obj);

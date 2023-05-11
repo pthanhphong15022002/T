@@ -634,6 +634,16 @@ export class CodxEpService {
     );
   }
 
+  getProcessByCategoryID(categoryID: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'CategoriesBusiness',
+      'GetProcessByCategoryIDAsync',
+      [categoryID]
+    );
+  }
+
   getApprovalTransByTransID(booking: any) {
     return this.api.execSv(
       'ES',

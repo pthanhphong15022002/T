@@ -27,21 +27,30 @@ export class CodxBookingService {
       resourceID
     );
   }
-  // getFormModel(functionID): Promise<FormModel> {
-  //   return new Promise<FormModel>((resolve, rejects) => {
-  //     this.cache.functionList(functionID).subscribe((funcList) => {
-  //       var formModel = new FormModel();
-  //       if (funcList) {
-  //         formModel.entityName = funcList?.entityName;
-  //         formModel.formName = funcList?.formName;
-  //         formModel.gridViewName = funcList?.gridViewName;
-  //         formModel.funcID = funcList?.functionID;
-  //         formModel.entityPer = funcList?.entityPer;
-  //       }
-  //       resolve(formModel);
-  //     });
-  //   });
-  // }
+  getProcessByCategoryID(categoryID: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'CategoriesBusiness',
+      'GetProcessByCategoryIDAsync',
+      [categoryID]
+    );
+  }
+  getFormModel(functionID): Promise<FormModel> {
+    return new Promise<FormModel>((resolve, rejects) => {
+      this.cache.functionList(functionID).subscribe((funcList) => {
+        var formModel = new FormModel();
+        if (funcList) {
+          formModel.entityName = funcList?.entityName;
+          formModel.formName = funcList?.formName;
+          formModel.gridViewName = funcList?.gridViewName;
+          formModel.funcID = funcList?.functionID;
+          formModel.entityPer = funcList?.entityPer;
+        }
+        resolve(formModel);
+      });
+    });
+  }
 
   // getModelPage(functionID): Promise<ModelPage> {
   //   return new Promise<ModelPage>((resolve, rejects) => {

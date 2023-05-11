@@ -162,6 +162,35 @@ export class PopupSignForApprovalComponent extends UIComponent {
     }
   }
 
+  beforeOpenPopupADR(mf) {
+    let morefuncID = mf.functionID;
+    //sign mf = /Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204
+    switch (morefuncID) {
+      case 'SYS201':
+      case 'SYS202':
+      case 'SYS203': {
+        //nhieu file
+        if (this.pdfView?.lstFiles?.length > 1) {
+          this.notify.alertCode('ES019').subscribe((x) => {
+            if (x.event.status == 'Y') {
+              this.clickOpenPopupADR(mf);
+            } else {
+              return;
+            }
+          });
+        }
+        //1 file
+        else {
+          this.clickOpenPopupADR(mf);
+        }
+        break;
+      }
+      default: {
+        this.clickOpenPopupADR(mf);
+        break;
+      }
+    }
+  }
   imgAreaConfig = ['S1', 'S2', 'S3'];
   clickOpenPopupADR(mf) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206, Chỉnh sửa SYS208
@@ -175,10 +204,10 @@ export class PopupSignForApprovalComponent extends UIComponent {
     if (!this.canOpenSubPopup) {
       return;
     }
-    if ((morefuncID != 'SYS206') && this.isInteractPDF) {
+    if (morefuncID != 'SYS206' && this.isInteractPDF) {
       return;
     }
-    if((morefuncID != 'SYS206') && (morefuncID != 'SYS208')  && this.isEdited){
+    if (morefuncID != 'SYS206' && morefuncID != 'SYS208' && this.isEdited) {
       return;
     }
 
@@ -264,7 +293,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
       //   }
       // });
     } else {
-
       let subTitle = 'Comment khi duyệt';
       this.subTitle = subTitle;
       if (
@@ -494,8 +522,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     });
   }
 
-  changeActiveOpenPopup(e) {
-  }
+  changeActiveOpenPopup(e) {}
 
   changeSignerInfo(event) {
     if (event) {
@@ -516,15 +543,15 @@ export class PopupSignForApprovalComponent extends UIComponent {
     }
   }
 
-  eventHighlightText(event){
+  eventHighlightText(event) {
     console.log('eventHighlightText', event);
-    if(event){
-      switch(event.event){
-        case 'cancel':{
+    if (event) {
+      switch (event.event) {
+        case 'cancel': {
           this.isInteractPDF = event.isInteractPDF;
           break;
         }
-        case 'save':{
+        case 'save': {
           this.isEdited = event.isEdited;
           break;
         }
@@ -533,6 +560,5 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 }
