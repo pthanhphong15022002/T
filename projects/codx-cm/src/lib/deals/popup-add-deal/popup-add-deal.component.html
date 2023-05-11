@@ -272,8 +272,6 @@
           (valueChange)="valueChange($event)"
         >
         </codx-input>
-
-
       </div>
     </div>
     <div class="col-6">
@@ -312,7 +310,7 @@
 </ng-template>
 
 <ng-template #tabCustomFieldDetail let-form>
-  <ng-container *ngIf="listInstanceSteps?.length > 0">
+  <ng-container *ngIf="listInstanceSteps?.length > 0 ">
     <ng-container *ngFor="let step of listInstanceSteps">
       <ng-container *ngIf="step?.fields?.length > 0">
         <ng-container *ngFor="let item of step.fields">

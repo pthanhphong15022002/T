@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'codx-taskbar',
@@ -24,11 +24,13 @@ export class CodxTaskbarComponent implements OnInit {
     this.listTaskConvert = this.listTab.map((item) => {
       return {...item, isActive: false}
     })
+  }
+
+  ngOnChanges(changes: SimpleChanges){
     this.listTaskConvert[0].isActive = true;
     this.tabOld = this.listTaskConvert[0];
     this.tab.emit(this.listTaskConvert[0].name);   
   }
-
   clickMenu(item) {
     if(item.name != this.tabOld?.name){
       item.isActive = true;
