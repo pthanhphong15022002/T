@@ -115,6 +115,7 @@ export class CodxAddBookingCarComponent
     },
   ];
   viewOnly=false;
+  cardTransInfo: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -154,6 +155,7 @@ export class CodxAddBookingCarComponent
   //---------------------------------------------------------------------------------//
   onInit(): void {
     this.getCacheData();
+    this.getCardTranInfo();
   }
   ngAfterViewInit(): void {}
 
@@ -408,7 +410,14 @@ export class CodxAddBookingCarComponent
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
-
+    getCardTranInfo(){
+      this.codxBookingService.getCardTranInfo(this.data?.recID).subscribe(res=>{
+        if(res){
+          this.cardTransInfo=res;          
+          this.detectorRef.detectChanges();
+        }
+      })
+    }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Event-----------------------------------------//
   //---------------------------------------------------------------------------------//
