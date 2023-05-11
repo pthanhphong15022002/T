@@ -360,7 +360,6 @@ export class CmCustomerComponent
   }
 
   viewChanged(e) {
-    console.log(e);
   }
 
   changeView(e) {
@@ -430,7 +429,6 @@ export class CmCustomerComponent
   }
 
   changeDataMF(e, data) {
-    console.log(e);
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
