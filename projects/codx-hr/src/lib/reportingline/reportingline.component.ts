@@ -213,17 +213,17 @@ export class ReportinglineComponent extends UIComponent {
   copy(event: any, data: any) {
     if (event && data) {
       this.view.dataService.dataSelected = data;
-      this.view.dataService.copy(data).subscribe((res) => {
+      this.view.dataService.copy().subscribe((res) => {
         if (res) {
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
           option.FormModel = this.view.formModel;
-          option.Width = '550px';
+          option.Width = '800px';
           let object = {
             //dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: res,
-            function: this.view.formModel.funcID,
+            funcID: this.view.formModel.funcID,
             isAdd: true,
             title: event.text,
           };
@@ -237,6 +237,7 @@ export class ReportinglineComponent extends UIComponent {
         }
       });
     }
+    
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];

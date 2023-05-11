@@ -359,9 +359,7 @@ export class CmCustomerComponent
     // this.afterLoad();
   }
 
-  viewChanged(e) {
-    console.log(e);
-  }
+  viewChanged(e) {}
 
   changeView(e) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -430,7 +428,6 @@ export class CmCustomerComponent
   }
 
   changeDataMF(e, data) {
-    console.log(e);
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
@@ -444,10 +441,10 @@ export class CmCustomerComponent
             res.disabled = true;
             break;
           case 'CM0101_1':
-            if (data.isBlackList) res.isblur = true;
+            if (data.isBlackList) res.disabled = true;
             break;
           case 'CM0101_3':
-            if (!data.isBlackList) res.isblur = true;
+            if (!data.isBlackList) res.disabled = true;
             break;
           case 'CM0102_2':
             if (
@@ -518,6 +515,9 @@ export class CmCustomerComponent
             dialog.closed.subscribe((e) => {
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
+                e.event.modifiedOn = new Date();
+                this.view.dataService.update(e?.event).subscribe();
+                this.detectorRef.detectChanges();
                 // this.customerDetail.listTab(this.funcID);
               }
             });

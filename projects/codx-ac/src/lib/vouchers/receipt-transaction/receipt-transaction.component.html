@@ -35,7 +35,7 @@
 </ng-template>
 <ng-template #desc2Tmp let-data>
   <span #objectID [innerHTML]="
-            itemSelected?.objectID
+            data?.objectID
               | formatvalue : view.formModel : 'objectID' : objectID
               | async
           " class="text-gray-500 line-clamp line-clamp-1"></span>
@@ -69,7 +69,7 @@
     </div>
     <div class="d-flex justify-content-between flex-grow-1 mb-1 mt-2">
       <div class="d-flex align-items-center">
-        <span class="me-2 icon-apartment icon-16"></span>
+        <span class="me-2 icon-store icon-16"></span>
         <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5" #warehouseName [innerHTML]="
             itemSelected?.warehouseName
               | formatvalue : view.formModel : 'warehouseName' : warehouseName
@@ -188,6 +188,13 @@
             <th class="w-50 min-w-125px">
               <div class="d-flex">
                 <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="ItemID"
+                  [formModel]="fmInventoryJournalLines">
+                </codx-label>
+              </div>
+            </th>
+            <th class="w-50 min-w-125px">
+              <div class="d-flex">
+                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="ItemName" default="Tên mặt hàng"
                   [formModel]="fmInventoryJournalLines">
                 </codx-label>
               </div>
@@ -329,6 +336,10 @@
             <td>
               <span *ngIf="item.itemID != null && item.itemID != ''"
                 class="text-nowrap">{{item.itemID}}</span>
+            </td>
+            <td>
+              <span *ngIf="item.itemName != null && item.itemName != ''"
+                class="text-nowrap">{{item.itemName}}</span>
             </td>
             <td>
               <span *ngIf="item.idiM0!= null && item.idiM0 != ''"
