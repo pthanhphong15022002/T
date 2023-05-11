@@ -492,17 +492,36 @@ export class CmCustomerComponent
         option.Width = '800px';
         this.titleAction =
           this.titleAction + ' ' + this.view?.function.customName;
-        var dialog = this.callfc.openSide(
-          PopupAddCmCustomerComponent,
-          ['add', this.titleAction],
-          option
-        );
-        dialog.closed.subscribe((e) => {
-          if (!e?.event) this.view.dataService.clear();
-          if (e && e.event != null) {
-            // this.customerDetail.listTab(this.funcID);
-          }
-        });
+        this.cmSv
+          .getAutonumber(
+            this.funcID,
+            fun.entityName,
+            this.funcID == 'CM0101'
+              ? 'CustomerID'
+              : this.funcID == 'CM0102'
+              ? 'ContactID'
+              : this.funcID == 'CM0103'
+              ? 'PartnerID'
+              : 'CompetitorID'
+          )
+          .subscribe((x) => {
+            var obj = {
+              action: 'add',
+              title: this.titleAction,
+              autoNumber: x,
+            };
+            var dialog = this.callfc.openSide(
+              PopupAddCmCustomerComponent,
+              obj,
+              option
+            );
+            dialog.closed.subscribe((e) => {
+              if (!e?.event) this.view.dataService.clear();
+              if (e && e.event != null) {
+                // this.customerDetail.listTab(this.funcID);
+              }
+            });
+          });
       });
     });
   }
@@ -526,15 +545,20 @@ export class CmCustomerComponent
           option.Width = '800px';
           this.titleAction =
             this.titleAction + ' ' + this.view?.function.customName;
+          var obj = {
+            action: 'edit',
+            title: this.titleAction,
+          };
           var dialog = this.callfc.openSide(
             PopupAddCmCustomerComponent,
-            ['edit', this.titleAction],
+            obj,
             option
           );
           dialog.closed.subscribe((e) => {
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event != null) {
-              this.dataSelected = JSON.parse(JSON.stringify(e.event));
+              this.dataSelected = e.event;
+              // this.dataSelected.recID = this.dataSelected.recID;
               this.view.dataService.update(this.dataSelected).subscribe();
               // this.customerDetail.recID = this.dataSelected.recID;
               this.customerDetail.getOneCustomerDetail(
@@ -566,28 +590,48 @@ export class CmCustomerComponent
         option.Width = '800px';
         this.titleAction =
           this.titleAction + ' ' + this.view?.function.customName;
-        var dialog = this.callfc.openSide(
-          PopupAddCmCustomerComponent,
-          ['copy', this.titleAction, this.dataSelected.recID],
-          option
-        );
-        dialog.closed.subscribe((e) => {
-          if (!e?.event) this.view.dataService.clear();
-          if (e && e.event != null) {
-            this.view.dataService.update(e.event).subscribe();
-            this.dataSelected = JSON.parse(
-              JSON.stringify(this.view.dataService.data[0])
+        this.cmSv
+          .getAutonumber(
+            this.funcID,
+            fun.entityName,
+            this.funcID == 'CM0101'
+              ? 'CustomerID'
+              : this.funcID == 'CM0102'
+              ? 'ContactID'
+              : this.funcID == 'CM0103'
+              ? 'PartnerID'
+              : 'CompetitorID'
+          )
+          .subscribe((x) => {
+            var obj = {
+              action: 'copy',
+              title: this.titleAction,
+              recIdOld: this.dataSelected.recID,
+              autoNumber: x,
+            };
+            var dialog = this.callfc.openSide(
+              PopupAddCmCustomerComponent,
+              obj,
+              option
             );
-            // this.customerDetail.getListContactByObjectID(
-            //   this.dataSelected?.recID
-            // );
-            this.customerDetail.getListAddress(
-              this.entityName,
-              this.dataSelected?.recID
-            );
-            this.detectorRef.detectChanges();
-          }
-        });
+            dialog.closed.subscribe((e) => {
+              if (!e?.event) this.view.dataService.clear();
+              if (e && e.event != null) {
+                this.view.dataService.update(e.event).subscribe();
+                this.dataSelected = JSON.parse(
+                  JSON.stringify(this.view.dataService.data[0])
+                );
+                // this.customerDetail.getListContactByObjectID(
+                //   this.dataSelected?.recID
+                // );
+                this.customerDetail.getListAddress(
+                  this.entityName,
+                  this.dataSelected?.recID
+                );
+                this.detectorRef.detectChanges();
+              }
+            });
+          });
       });
     });
   }

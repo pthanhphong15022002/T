@@ -20,11 +20,13 @@ export class TabDetailCustomComponent
   implements OnInit, AfterViewInit
 {
   @Input() tabClicked: any;
-  @Input() data: any;
+  @Input() dataSelected: any;
+  @Input() formModel: any;
   titleAction: string = '';
   listStep = [];
   isUpdate = true; //xư lý cho edit trung tuy chinh ko
   listStepsProcess = [];
+  listCategory = [];
   // titleDefault= "Trường tùy chỉnh"//truyen vay da
   readonly tabInformation: string = 'Information';
   readonly tabField: string = 'Field';
@@ -46,20 +48,43 @@ export class TabDetailCustomComponent
 
   constructor(private inject: Injector, private cmService: CodxCmService) {
     super(inject);
+    this.executeApiCalls();
   }
   ngAfterViewInit() {}
   onInit(): void {
-    this.getListInstanceStep();
+    //this.getListInstanceStep();
   }
 
-  getListInstanceStep(){
-    let instanceID = this.data?.refID;
-    if(instanceID){
-      this.cmService.getStepInstance([instanceID]).subscribe(res =>{
-        this.listStep = res;    
-      })
+  async executeApiCalls() {
+    try {
+      await this.getListInstanceStep();
+      await this.getValueList();
+    } catch (error) {
+      console.error('Error executing API calls:', error);
     }
   }
+
+  async getListInstanceStep() {
+    let instanceID = this.dataSelected?.refID;
+    if (instanceID) {
+      this.cmService.getStepInstance([instanceID]).subscribe((res) => {
+        this.listStep = res;
+      });
+    }
+  }
+
+  async getValueList() {
+    this.cache.valueList('CRM010').subscribe((res) => {
+      if (res.datas) {
+        this.listCategory = res?.datas;
+      }
+    });
+  }
+
+  getNameCategory(categoryId:string) {
+    return this.listCategory.filter(x=> x.value == categoryId)[0]?.text;
+  }
+
 
   addContact() {
     var contact = 'CM0103'; // contact

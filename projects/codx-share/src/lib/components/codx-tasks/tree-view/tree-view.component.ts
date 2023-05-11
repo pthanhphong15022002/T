@@ -81,7 +81,8 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     gridModel.gridViewName = this.formModel.gridViewName;
     gridModel.treeField = 'ParentID';
     gridModel.dataObj = JSON.stringify(this.dataObj);
-
+    
+    this.loaded = false ;
     this.api
       .execSv<any>(
         'TM',

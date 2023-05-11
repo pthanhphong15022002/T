@@ -45,22 +45,36 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    if (environment.layoutCZ == 'qtsc') {
-      this.titleService.setTitle('QTSC@oms');
-      document
-        .getElementById('appFavicon')
-        .setAttribute('href', './assets/cz/qtsc/bg/favicon.ico');
-    } else if (environment.layoutCZ == 'lacviet') {
-      this.titleService.setTitle('QTSC@oms');
-      document
-        .getElementById('appFavicon')
-        .setAttribute('href', './assets/cz/lacviet/bg/favicon.ico');
-    } else {
-      this.titleService.setTitle('CodxUI');
-      document
-        .getElementById('appFavicon')
-        .setAttribute('href', './assets/logos/favicon.ico');
+    if (environment.layout) {
+      if (environment.layout.title)
+        this.titleService.setTitle(environment.layout.title);
+      else this.titleService.setTitle('CodxUI');
+      if (environment.layout.icon)
+        document
+          .getElementById('appFavicon')
+          .setAttribute('href', environment.layout.icon);
+      else
+        document
+          .getElementById('appFavicon')
+          .setAttribute('href', './assets/logos/favicon.ico');
     }
+
+    // if (environment.layoutCZ == 'qtsc') {
+    //   this.titleService.setTitle('QTSC@oms');
+    //   document
+    //     .getElementById('appFavicon')
+    //     .setAttribute('href', './assets/cz/qtsc/bg/favicon.ico');
+    // } else if (environment.layoutCZ == 'lacviet') {
+    //   this.titleService.setTitle('QTSC@oms');
+    //   document
+    //     .getElementById('appFavicon')
+    //     .setAttribute('href', './assets/cz/lacviet/bg/favicon.ico');
+    // } else {
+    //   this.titleService.setTitle('CodxUI');
+    //   document
+    //     .getElementById('appFavicon')
+    //     .setAttribute('href', './assets/logos/favicon.ico');
+    // }
     this.unsubscribe.push(this.tenant.init(this.router));
 
     // this.angularFireMessaging.requestToken.subscribe(
