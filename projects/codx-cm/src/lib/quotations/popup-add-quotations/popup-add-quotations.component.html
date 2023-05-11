@@ -56,7 +56,7 @@
 </ng-template>
 <!-- End: Sub toolbar -->
 <!-- Start: Body -->
-<ng-template #body>
+<ng-template #body let-data>
   <div class="card-add mt-5" #cardbodyGeneral>
     <ejs-tab #quotationGeneral>
       <e-tabitems>
@@ -76,7 +76,7 @@
             </div>
           </ng-template>
           <ng-template #content>
-            <ng-container *ngTemplateOutlet="tabBasicGeneral"></ng-container>
+            <ng-container *ngTemplateOutlet="tabBasicGeneral ; context: { $implicit: data }"></ng-container>
           </ng-template>
         </e-tabitem>
       </e-tabitems>
@@ -113,7 +113,7 @@
 <!-- End: Body -->
 
 <!-- Start: Thông tin chung -->
-<ng-template #tabBasicGeneral>
+<ng-template #tabBasicGeneral let-data>
   <div class="m-5">
     <div class="row">
       <div class="col-6 row">
@@ -172,7 +172,6 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="disableRefID"
-            [model]="quotations?.customerID"
             (valueChange)="changeCombox($event)"
           ></codx-input>
         </div>
@@ -219,7 +218,8 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="disableRefID"
-            (valueChange)="valueChange($event)"
+            [crrValue]="data?.customerID"
+            (valueChange)="changeCombox($event)"
           ></codx-input>
         </div>
         <div class="form-group col-6">
@@ -231,7 +231,8 @@
             field="contactID"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            [model]="quotations?.customerID"
+            [model]="modelObjectIDContacs"
+            [crrValue]="data?.customerID"
             (valueChange)="valueChange($event)"
           ></codx-input>
         </div>

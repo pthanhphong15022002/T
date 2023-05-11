@@ -67,6 +67,7 @@ const routes: Routes = [
           // gán tạm để làm UI
         path: 'quotations/:funcID',
         component: QuotationsComponent,
+        // data: { noReuse: true },
       },
       {
         path: '**',

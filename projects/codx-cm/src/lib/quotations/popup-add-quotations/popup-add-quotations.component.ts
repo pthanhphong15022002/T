@@ -69,6 +69,8 @@ export class PopupAddQuotationsComponent implements OnInit {
   quotationLinesAddNew = [];
   quotationLinesEdit = [];
   disableRefID = false;
+  modelObjectIDContacs: any;
+  modelCustomerIDDeals: any;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -156,11 +158,14 @@ export class PopupAddQuotationsComponent implements OnInit {
     switch (e?.field) {
       case 'refID':
         this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
+        this.modelObjectIDContacs = { ObjectID: this.quotations.customerID };
         break;
       case 'customerID':
-        this.quotations.customerID = e?.data;
+        this.modelCustomerIDDeals = { CustomerID: this.quotations.customerID };
+        this.modelObjectIDContacs = { ObjectID: this.quotations.customerID };
         break;
     }
+    this.changeDetector.detectChanges()
   }
 
   valueChange(e) {
