@@ -82,7 +82,7 @@ export class InstanceDetailComponent implements OnInit {
   listStepInstance: any;
   instanceStatus: any;
   currentStep = 0;
-
+  isChangeData = false;
   listTypeTask = [];
 
   dialogPopupDetail: DialogRef;
@@ -309,6 +309,7 @@ export class InstanceDetailComponent implements OnInit {
       if (changes['dataSelect'].currentValue?.recID != null) {
         this.id = changes['dataSelect'].currentValue.recID;
         this.loadChangeData() ;
+        this.isChangeData = false;
        // this.dataSelect = changes['dataSelect'].currentValue
       }
       this.loaded = true;
@@ -720,6 +721,15 @@ export class InstanceDetailComponent implements OnInit {
     this.viewModelDetail = e;
     this.isSaving = false;
     this.currentElmID = null;
+    if(this.viewModelDetail == 'G' && this.isChangeData){
+      this.getDataGanttChart(
+        this.dataSelect.recID,
+        this.dataSelect.processID
+      );
+    }
+  }
+  changeDataStep(e){
+    this.isChangeData = e;
   }
 
   startInstances() {

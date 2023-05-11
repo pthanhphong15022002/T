@@ -286,6 +286,7 @@
                   [frmModelInstancesTask]="frmModelInstancesTask"
                   [lstStepProcess]="lstStepProcess"
                   [isOnlyView]="isOnlyView"
+                  (isChangeData)="changeDataStep($event)"
                 ></codx-stages-detail>
                 <!-- [stepID]="dataSelect.stepID"
               [permissionCloseInstances]="dataSelect?.permissionCloseInstances"
