@@ -317,7 +317,7 @@ export class CodxApproveStepsComponent
                   if (this.lstStep[i].transID != this.recID) {
                     delete this.lstStep[i].recID;
                     delete this.lstStep[i].id;
-                    this.lstStep[i].transID = this.recID;
+                    this.lstStep[i].transID = this.transId;
                   }
                 }
               }
