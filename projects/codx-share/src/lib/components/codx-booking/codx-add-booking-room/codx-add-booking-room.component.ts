@@ -136,6 +136,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   guestControl: any;
   viewOnly = false;
   onSaving=false;
+  categoryID: any;
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -352,17 +353,25 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           this.guestControl = roomSetting_1?.GuestControl;
         }
       });
-    this.codxBookingService
-      .getDataValueOfSettingAsync(_EPParameters, _EPRoomParameters, '4')
+    
+      this.codxBookingService
+      .getDataValueOfSettingAsync(_EPParameters, null, '4')
       .subscribe((res: string) => {
         if (res) {
           let roomSetting_4 = JSON.parse(res);
           if (roomSetting_4 != null && roomSetting_4.length > 0) {
-            this.approvalRule = roomSetting_4[0]?.ApprovalRule;
+            let setting= roomSetting_4.filter((x:any) => x.Category == EPCONST.ENTITY.R_Bookings);
+            if(setting!=null){
+              this.approvalRule = setting[0]?.ApprovalRule;
+              this.categoryID=setting[0]?.CategoryID;
+            }
+            else{
+              this.approvalRule='1';//Đề phòng trường hợp setting lỗi/ thì lấy duyệt theo quy trình
+              this.categoryID='ES_EP001';
+            }
           }
         }
       });
-
     // Lấy list role người tham gia
     this.cache.valueList('EP009').subscribe((res) => {
       if (res && res?.datas.length > 0) {
@@ -1347,7 +1356,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   startRelease() {
     if (this.approvalRule != '0') {
       this.codxBookingService
-        .getProcessByCategoryID('ES_EP001')
+        .getProcessByCategoryID(this.categoryID)
         .subscribe((res: any) => {
           this.codxBookingService
             .release(
