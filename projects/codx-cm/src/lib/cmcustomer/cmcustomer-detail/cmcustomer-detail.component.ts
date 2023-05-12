@@ -107,7 +107,7 @@ export class CmcustomerDetailComponent implements OnInit {
       if (changes['recID'].currentValue) {
         if (this.recID == this.id) return;
         this.id = this.recID;
-        this.getOneCustomerDetail(this.id, this.funcID);
+        this.getOneCustomerDetail();
       }
     }
   }
@@ -121,10 +121,10 @@ export class CmcustomerDetailComponent implements OnInit {
     });
   }
 
-  getOneCustomerDetail(id, funcID) {
+  getOneCustomerDetail() {
     this.viewTag = '';
     this.loaded = false;
-    this.cmSv.getOneCustomer(id, funcID).subscribe((res) => {
+    this.cmSv.getOneCustomer(this.id, this.funcID).subscribe((res) => {
       if (res) {
         this.dataSelected = res;
         this.viewTag = this.dataSelected?.tags;
