@@ -22,17 +22,21 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-quotations.component';
+
 import { Observable, finalize, map } from 'rxjs';
+import { PopupAddQuotationsComponent } from '../../quotations/popup-add-quotations/popup-add-quotations.component';
+import { ListContractsComponent } from '../list-contracts/list-contracts.component';
 
 @Component({
-  selector: 'lib-quotations',
-  templateUrl: './quotations.component.html',
-  styleUrls: ['./quotations.component.css'],
+  selector: 'lib-views-contracts',
+  templateUrl: './views-contracts.component.html',
+  styleUrls: ['./views-contracts.component.scss']
 })
-export class QuotationsComponent extends UIComponent {
+export class ViewsContractsComponent extends UIComponent{
   @Input() funcID: string;
   @Input() customerID: string;
+  @ViewChild('contract')contract: TemplateRef<any>;
+
   @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
@@ -42,11 +46,14 @@ export class QuotationsComponent extends UIComponent {
   @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
   @ViewChild('templateCustomer') templateCustomer: TemplateRef<any>;
 
+  listClicked =[]
+  tabClicked = '';
+
   views: Array<ViewModel> = [];
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
-  entityName = 'CM_Quotations';
-  className = 'QuotationsBusiness';
+  entityName = 'CM_Contracts';
+  className = 'ContractsBusiness';
   methodLoadData = 'GetListQuotationsAsync';
 
   //test
@@ -73,59 +80,85 @@ export class QuotationsComponent extends UIComponent {
   arrFieldIsVisible = [];
   itemSelected: any;
   button?: ButtonModel;
-
+  tabControl = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+    { name: 'Comment', textDefault: 'Thảo luận', isActive: false, template: null },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false, template: null },
+    { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
+    { name: 'Approve', textDefault: 'Ký duyệt', isActive: false, template: null },
+    { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
+    { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
+    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
+    { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: null},
+  ];
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
+    // private listContracts: ListContractsComponent,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    this.cache
-      .gridViewSetup('CMQuotations', 'grvCMQuotations')
-      .subscribe((res) => {
-        if (res) {
-          this.grvSetup = res;
-          this.vllStatus = res['Status'].referedValue;
-          //lay grid view
-          let arrField = Object.values(res).filter((x: any) => x.isVisible);
-          if (Array.isArray(arrField)) {
-            this.arrFieldIsVisible = arrField
-              .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-              .map((x: any) => x.fieldName);
-            this.getColumsGrid(res);
-          }
-        }
-      });
+    // this.cache
+    //   .gridViewSetup('CMQuotations', 'grvCMQuotations')
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.grvSetup = res;
+    //       this.vllStatus = res['Status'].referedValue;
+    //       //lay grid view
+    //       let arrField = Object.values(res).filter((x: any) => x.isVisible);
+    //       if (Array.isArray(arrField)) {
+    //         this.arrFieldIsVisible = arrField
+    //           .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+    //           .map((x: any) => x.fieldName);
+    //         this.getColumsGrid(res);
+    //       }
+    //     }
+    //   });
   }
 
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
+    this.listClicked = [
+      { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+      { name: 'detailItem', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
+      { name: 'pay', textDefault: 'Phương thức và tiến độ thanh toán', icon: 'icon-tune', isActive: false },
+      { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-more', isActive: false },
+    ]
   }
 
   ngAfterViewInit() {
-    // this.views = [
-    //   {
-    //     type: ViewType.listdetail,
-    //     active: true,
-    //     sameData: true,
-    //     model: {
-    //       template: this.itemTemplate,
-    //       panelRightRef: this.templateDetail,
-    //     },
-    //   },
-    //   {
-    //     type: ViewType.grid,
-    //     active: true,
-    //     sameData: true,
-    //     model: {
-    //       template2: this.templateMore,
-    //       frozenColumns: 1,
-    //     },
-    //   },
-    // ];
+    let index = this.tabControl.findIndex(item => item.name == 'Contract');
+    if(index >= 0){
+      let contract = { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract};
+      this.tabControl.splice(index,1,contract)
+    }
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: true,
+        sameData: true,
+        model: {
+          template2: this.templateMore,
+          frozenColumns: 1,
+        },
+      },
+    ];
+  }
+
+  changeTab(e){
+    this.tabClicked = e;
   }
 
   getColumsGrid(grvSetup) {
@@ -193,7 +226,7 @@ export class QuotationsComponent extends UIComponent {
   click(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.add();
+        // this.listContracts.addContract();
         break;
     }
   }
@@ -249,7 +282,6 @@ export class QuotationsComponent extends UIComponent {
   openPopup(res) {
     res.versionNo = 'V1.0';
     res.status = '1';
-    res.exchangeRate = 1;
 
     var obj = {
       data: res,
@@ -354,36 +386,4 @@ export class QuotationsComponent extends UIComponent {
       this.view.dataService.data.findIndex((obj) => obj.recID == recID) + 1
     );
   }
-
-  //tham khao
-  // getQuotations(){
-  //   this.requestData.predicates = 'RefType==@0 && RefID==@1';
-  //   this.requestData.dataValues= this.refType+";"+this.refID;
-  //   this.requestData.entityName = this.entityName;
-  //   this.requestData.funcID = this.funcID;
-  //   this.fetch().subscribe(res=>{
-  //     this.listQuotations = res ;
-  //    // this.view.dataService.data = this.listQuotations
-  //   })
-  // }
-
-  // fetch(): Observable<any[]> {
-  //   return this.api
-  //     .execSv<Array<any>>(
-  //       this.service,
-  //       this.assemblyName,
-  //       this.className,
-  //       this.methodLoadData,
-  //       this.requestData
-  //     )
-  //     .pipe(
-  //       finalize(() => {
-  //         /*  this.onScrolling = this.loading = false;
-  //         this.loaded = true; */
-  //       }),
-  //       map((response: any) => {
-  //         return response[0];
-  //       })
-  //     );
-  // }
 }

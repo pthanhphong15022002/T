@@ -1,0 +1,120 @@
+<codx-views
+  #view
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="methodLoadData"
+  idField="recID"
+  [funcID]="'CM0204'"
+  [views]="views"
+  [button]="button"
+  (buttonClick)="click($event)"
+  [toolbarDisplay]="true"
+  [selectedFirst]="true"
+  [autoLoad]="true"
+  [autoSearch]="true"
+  (selectedChange)="selectedChange($event)"
+></codx-views>
+<!-- temp left -->
+<ng-template #itemTemplate let-data>
+  <codx-temp-full
+    cardCss="card-template border-bottom p-3 list-task"
+    (clickMF)="clickMF($event, data)"
+    [moreFuncCss]="'me-15'"
+    (changeDataMF)="changeDataMF($event, data)"
+    [typeMF]="'hover'"
+    [title]="data.contractName"
+    [descTmp]="descTmp"
+    [formModel]="view.formModel"
+    [titleCss]="'fw-bold fs-4'"
+    [dataItem]="data"
+    [footer]="footerTmp"
+  >
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #descTmp let-data>
+  <div class="py-2">
+    <span class="icon-business pe-1"></span>
+    <span>{{ data?.companyName || "Cty cổ phần tin học lạc việt" }}</span>
+  </div>
+</ng-template>
+
+<ng-template #footerTmp let-data>
+  <div class="d-flex justify-content-between align-items-center">
+    <div>Loại hợp đồng: Mới</div>
+    <div class="d-flex justify-content-end align-items-center">
+      <span class="icon-monetization_on pe-1" style="color: gold"></span>
+      <span class="fs-5 fw-bold">25.000.000</span>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between align-items-center">
+    <div><span>Mới tạo</span></div>
+    <div class="d-flex justify-content-end align-items-center">
+      <span class="icon-16 icon-av_timer me-1"></span>
+      <span>{{ data.createdOn | date : "dd/MM/yyyy" }}</span>
+      <codx-imgs
+        [width]="25"
+        [objectId]="data.createdBy"
+        ojectType="AD_Users"
+        [numberImages]="1"
+      >
+      </codx-imgs>
+    </div>
+  </div>
+</ng-template>
+
+<!-- temp right -->
+<ng-template #templateDetail>
+  <codx-detail-tmp
+    [header]="headerRightTemp"
+    [formModel]="formModel"
+    [body]="mainRightTemp"
+    [footer]="footerRightTemp"
+    (clickMF)="clickMF($event, itemSelected)"
+    (changeDataMF)="changeDataMF($event, itemSelected)"
+    [dataItem]="itemSelected"
+  ></codx-detail-tmp>
+</ng-template>
+
+<ng-template #headerRightTemp>
+  <div>
+    <span>{{ itemSelected?.contractName }}</span>
+  </div>
+  <div>
+    <span>{{ itemSelected?.contractName }}</span>
+  </div>
+  <div>
+    <span>{{ itemSelected?.contractName }}</span>
+  </div>
+  <div>
+    <span>{{ itemSelected?.contractName }}</span>
+  </div>
+  <div>
+    <span>{{ itemSelected?.contractName }}</span>
+  </div>
+</ng-template>
+
+<ng-template #mainRightTemp>
+  <codx-taskbar
+    [listTab]="listClicked"
+    (tab)="changeTab($event)"
+    size="22"
+  ></codx-taskbar>
+  <hr class="mt-0" />
+</ng-template>
+
+<ng-template #footerRightTemp>
+  <codx-tabs
+  [entityName]="formModel.entityName"
+  [formModel]="formModel"
+  [TabControl]="tabControl"
+  [objectID]="itemSelected.recID"
+  [funcID]="formModel.funcID"
+></codx-tabs>
+</ng-template>
+
+<ng-template #contract let-data>
+  <list-contracts [projectID]="itemSelected?.recID"></list-contracts>
+</ng-template>
