@@ -56,6 +56,7 @@ export class ReceiptTransactionComponent extends UIComponent{
   ];
   constructor(
     private inject: Injector,
+    private notification: NotificationsService,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
     @Optional() dialog?: DialogRef
@@ -220,7 +221,9 @@ export class ReceiptTransactionComponent extends UIComponent{
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.delete([data], true).subscribe((res: any) => {});
+    this.view.dataService.delete([data], true).subscribe((res: any) => {
+      this.notification.notifyCode('SYS008', 0, '');
+    });
   }
   export(data) {
     var gridModel = new DataRequest();
