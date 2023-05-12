@@ -221,6 +221,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
               } else {
                 this.isAdd = true;
                 res.autoNoCode = this.autoNoCode;
+                this.data.gridViewName = this.formModel.gridViewName;
                 this.formModel.currentData = this.data;
                 this.dialogAutoNum.patchValue(res);
                 this.isAfterRender = true;

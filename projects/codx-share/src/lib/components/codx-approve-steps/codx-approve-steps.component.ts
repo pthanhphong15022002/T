@@ -291,6 +291,7 @@ export class CodxApproveStepsComponent
   }
 
   openPopupAddAppStep(data) {
+    debugger
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         var model = new DialogModel();
@@ -308,6 +309,7 @@ export class CodxApproveStepsComponent
         );
 
         dialog.closed.subscribe((res) => {
+          debugger
           if (res?.event) {
             if (this.type == '1') {
               if (this.lstStep?.length > 0) {

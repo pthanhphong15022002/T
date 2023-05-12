@@ -470,7 +470,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   close() {
     if (this.hasSaved) {
-      this.onEditInventory();
+      this.onEditInventory(false);
     } else {
       this.dialog.close();
     }
@@ -620,7 +620,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           }
           break;
         case 'edit':
-          this.onEditInventory();
+          this.onEditInventory(true);
           break;
       }
     }
@@ -852,7 +852,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.pageCount = '(' + this.inventoryJournalLines.length + ')';
   }
 
-  onEditInventory(){
+  onEditInventory(notification: boolean){
     this.journalService.handleVoucherNoAndSave(
       this.journal,
       this.inventoryJournal,
@@ -868,7 +868,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.inventoryJournal['_uuid'],
           this.inventoryJournal
         );
-        this.dialog.dataService.save().subscribe((res) => {
+        this.dialog.dataService.save(null, 0, '', '', notification).subscribe((res) => {
           if (res && res.update.data != null) {
             this.dialog.close({
               update: true,
