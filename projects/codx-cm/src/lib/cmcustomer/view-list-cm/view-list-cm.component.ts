@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CallFuncService, DialogModel, DialogRef, Util } from 'codx-core';
 
@@ -96,6 +104,12 @@ export class ViewListCmComponent implements OnInit {
       '',
       option
     );
-    this.dialogDetail.closed.subscribe();
+    this.dialogDetail.closed.subscribe((e) => {
+      if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
+        this.getListContactByObjectID(this.dataSelected.recID);
+      if (this.funcID == 'CM0101') {
+        this.countDealsByCustomerID(this.dataSelected.recID);
+      }
+    });
   }
 }
