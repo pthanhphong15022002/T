@@ -56,7 +56,7 @@ export class ViewsContractsComponent extends UIComponent{
   assemblyName = 'ERM.Business.CM';
   entityName = 'CM_Contracts';
   className = 'ContractsBusiness';
-  methodLoadData = 'GetListQuotationsAsync';
+  methodLoadData = 'GetListContractsAsync';
 
   //test
   moreDefaut = {
@@ -122,7 +122,6 @@ export class ViewsContractsComponent extends UIComponent{
       'CompanySettingsBusiness',
       'GetAsync'
     ).subscribe(res => {
-      console.log(res);
       if(res){
         this.account = res;
       }
@@ -137,6 +136,7 @@ export class ViewsContractsComponent extends UIComponent{
       let contract = { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract};
       this.tabControl.splice(index,1,contract)
     }
+
     this.views = [
       {
         type: ViewType.listdetail,
@@ -192,138 +192,21 @@ export class ViewsContractsComponent extends UIComponent{
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(e, data);
+        this.edit(data);
         break;
       case 'SYS04':
-        this.copy(e, data);
+        this.copy(data);
         break;
     }
   }
 
   add() {
-    this.view.dataService.addNew().subscribe((res) => {
-      if (!res.quotationsID) {
-        this.api
-          .execSv<any>(
-            'SYS',
-            'AD',
-            'AutoNumbersBusiness',
-            'GenAutoNumberAsync',
-            [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
-          )
-          .subscribe((id) => {
-            res.quotationID = id;
-            this.openPopup(res);
-          });
-      } else this.openPopup(res);
-    });
-  }
 
-  openPopup(res) {
-    res.versionNo = 'V1.0';
-    res.status = '1';
+  }
+  copy(data){
 
-    var obj = {
-      data: res,
-      disableRefID: false,
-      action: 'add',
-      headerText: 'sdasdsadasdasd',
-    };
-    let option = new DialogModel();
-    option.IsFull = true;
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    let dialog = this.callfc.openForm(
-      PopupAddQuotationsComponent,
-      '',
-      null,
-      null,
-      '',
-      obj,
-      '',
-      option
-    );
   }
-
-  edit(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService.edit(data).subscribe((res) => {
-      var obj = {
-        data: this.view.dataService.dataSelected,
-        action: 'edit',
-        headerText: e.text,
-      };
-      let option = new DialogModel();
-      option.IsFull = true;
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      let dialog = this.callfc.openForm(
-        PopupAddQuotationsComponent,
-        '',
-        null,
-        null,
-        '',
-        obj,
-        '',
-        option
-      );
-    });
-  }
-
-  copy(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService.copy(data).subscribe((res) => {
-      var obj = {
-        data: res,
-        action: 'copy',
-        headerText: e.text,
-      };
-      let option = new DialogModel();
-      option.IsFull = true;
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      let dialog = this.callfc.openForm(
-        PopupAddQuotationsComponent,
-        '',
-        null,
-        null,
-        '',
-        obj,
-        '',
-        option
-      );
-    });
-  }
-
-  delete(data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .delete([data], true, (option: RequestOption) =>
-        this.beforeDelete(option, data.recID)
-      )
-      .subscribe((res: any) => {
-        if (res) {
-        }
-      });
-  }
-  beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteQuotationsByRecIDAsync';
-    opt.className = 'QuotationsBusiness';
-    opt.assemblyName = 'CM';
-    opt.service = 'CM';
-    opt.data = data;
-    return true;
-  }
-
-  getIndex(recID) {
-    return (
-      this.view.dataService.data.findIndex((obj) => obj.recID == recID) + 1
-    );
-  }
+  edit(data){}
+  delete(data){}
+  
 }
