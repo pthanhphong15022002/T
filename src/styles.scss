@@ -2761,16 +2761,6 @@ codx-instance-detail div.codx-detail-main{
   padding-bottom: 0;
 }
 
-.card-ep-report{
-  .codx-image {
-    max-height: 120px !important;
-  }
-  .card-body{
-    min-height: 60px;
-    padding-top:7px!important;
-  }
-}
-
 codx-tmmeetings{
 .list-empty.card.card-flush {
   height: calc(100vh - 128px)!important;
@@ -2812,4 +2802,7 @@ codx-vll.vll-post{
 
 .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
   color: var(--gray-700);
+}
+.text-primary-dark{
+  color: var(--primary-dark);
 }
