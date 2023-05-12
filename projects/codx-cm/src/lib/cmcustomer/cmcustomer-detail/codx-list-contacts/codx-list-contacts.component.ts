@@ -102,7 +102,7 @@ export class CodxListContactsComponent implements OnInit {
     this.moreFuncEdit = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        if (this.isButton = true)
+        if ((this.isButton = true))
           this.clickAddContact('edit', data, this.moreFuncEdit);
         break;
       case 'CM0102_2':
@@ -113,10 +113,10 @@ export class CodxListContactsComponent implements OnInit {
         // this.copy(data);
         break;
       case 'CM0102_1':
-        if (this.isButton = true) this.clickAddContact('editType', data, this.moreFuncEdit);
+        if ((this.isButton = true))
+          this.clickAddContact('editType', data, this.moreFuncEdit);
         break;
     }
-    this.isButton = false;
   }
 
   changeDataMFContact(e, data) {
@@ -143,6 +143,7 @@ export class CodxListContactsComponent implements OnInit {
 
   //#region Crud contacts crm
   clickAddContact(action, data, title) {
+    this.isButton = false;
     let opt = new DialogModel();
     let dataModel = new FormModel();
     var title = title;
@@ -233,6 +234,7 @@ export class CodxListContactsComponent implements OnInit {
 
   //Open list contacts
   clickPopupContacts() {
+    this.isButton = false;
     let opt = new DialogModel();
     let dataModel = new FormModel();
     dataModel.formName = 'CMContacts';
