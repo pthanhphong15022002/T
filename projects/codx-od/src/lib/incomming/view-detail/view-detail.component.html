@@ -138,7 +138,7 @@
           <ng-template ngbNavContent>
             <ng-container *ngIf="
                 data?.listInformationRel && data?.listInformationRel.length > 0;
-                else defaulEmpt
+               
               ">
               <ng-container *ngFor="let item of data?.listInformationRel">
                 <ng-container *ngIf="formModel?.funcID != 'ODT41' || (formModel?.funcID == 'ODT41' && ((item.relationType != '1' && data?.listInformationRel.length >1) || (item.relationType == '1' && data?.listInformationRel.length ==1)))">

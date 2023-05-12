@@ -202,17 +202,14 @@ export class ViewDetailComponent implements OnInit {
               this.esService
                 .getEntity(this.itemDetail?.refType)
                 .subscribe((oEntity) => {
+                  debugger
                   if (oEntity) {
                     this.esService
                       .getod(this.itemDetail?.recID)
                       .subscribe((res) => {
                         res.refType = this.itemDetail?.refType;
-                        let item = this.dataReferences.filter((p) => {
-                          p.recID == res.recID;
-                        });
-                        if (item?.length == 0) {
-                          this.dataReferences.push(res);
-                        }
+                        let index = this.dataReferences.findIndex(x=>x.recID == res.recID);
+                        if (index < 0) this.dataReferences.push(res);
                         this.df.detectChanges();
                       });
                   }
