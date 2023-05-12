@@ -117,7 +117,7 @@ export class ViewDetailComponent implements OnInit {
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      // { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
       { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
     ];
   }
