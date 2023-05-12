@@ -7,7 +7,7 @@
   entityName="AC_CashTranfers"
   predicates="JournalNo=@0"
   [dataValues]="journalNo"
-  (buttonClick)="handleClickAdd($event)"
+  (buttonClick)="onClickAdd($event)"
 >
 </codx-views>
 
@@ -15,7 +15,7 @@
   <codx-mfunc
     [dataItem]="data"
     [formModel]="view.formModel"
-    (clickMF)="handleClickMoreFuncs($event, data)"
+    (clickMF)="onClickMoreFuncs($event, data)"
     [isBookMark]="true"
     type="view"
   ></codx-mfunc>

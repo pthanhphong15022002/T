@@ -75,7 +75,7 @@ export class PopupAddItemStyleComponent extends UIComponent {
   //#endregion
 
   //#region Method
-  save(closeAfterSaving: boolean) {
+  save(closeAfterSave: boolean) {
     console.log(this.itemStyle);
 
     if (
@@ -100,7 +100,7 @@ export class PopupAddItemStyleComponent extends UIComponent {
 
           this.savedItemStyles.push(res);
 
-          if (closeAfterSaving) {
+          if (closeAfterSave) {
             this.dialogRef.close();
           } else {
             // clear form
