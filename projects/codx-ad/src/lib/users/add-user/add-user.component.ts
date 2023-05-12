@@ -368,8 +368,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
                         this.dialog.close(this.adUser);
                       }
                     });
-                }
-                else this.dialog.close(this.adUser);
+                } else this.dialog.close(this.adUser);
                 break;
               }
               case 'addToGroup': {
@@ -521,6 +520,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   valueBU(data) {
     if (data.data) {
       this.adUser[data.field] = data.data;
+      this.adUser.buName = data?.component?.itemsSelected[0]?.BUName;
     }
   }
 
