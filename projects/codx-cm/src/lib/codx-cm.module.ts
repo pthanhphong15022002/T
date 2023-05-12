@@ -49,6 +49,10 @@ import { CodxTableComponent } from './contracts/component/codx-table/codx-table.
 import { NoDataComponent } from './contracts/component/no-data/no-data.component';
 import { ViewsContractsComponent } from './contracts/views-contracts/views-contracts.component';
 import { ProductComponent } from './contracts/component/product/product.component';
+import { CasesComponent } from './cases/cases.component';
+import { CaseDetailComponent } from './cases/case-detail/case-detail.component';
+import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.component';
+import { TabCaseDetailComponent } from './cases/case-detail/tab-case-detail/tab-case-detail.component';
 
 const routes: Routes = [
   {
@@ -60,12 +64,10 @@ const routes: Routes = [
         component: CmCustomerComponent,
       },
       {
-        // gán tạm để làm UI
         path: 'deals/:funcID',
         component: DealsComponent,
       },
       {
-          // gán tạm để làm UI
         path: 'quotations/:funcID',
         component: QuotationsComponent,
         // data: { noReuse: true },
@@ -74,6 +76,10 @@ const routes: Routes = [
           // gán tạm để làm UI
         path: 'contracts/:funcID',
         component: ViewsContractsComponent,
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
       },
       {
         path: '**',
@@ -117,7 +123,11 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxTableComponent,
     QuotationsViewDetailComponent,
     NoDataComponent,
-    ViewsContractsComponent
+    ViewsContractsComponent,
+    CasesComponent,
+    CaseDetailComponent,
+    PopupAddCaseComponent,
+    TabCaseDetailComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

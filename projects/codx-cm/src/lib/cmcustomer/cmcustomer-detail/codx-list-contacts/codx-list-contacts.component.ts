@@ -73,8 +73,8 @@ export class CodxListContactsComponent implements OnInit {
     this.className = 'ContactsBusiness';
     this.fetch().subscribe((item) => {
       this.listContacts = item;
+      this.loaded = true;
     });
-    this.loaded = true;
   }
   private fetch(): Observable<any[]> {
     return this.api
