@@ -22,7 +22,7 @@
   </div>
 </ng-template>
 <ng-template #customers let-data>
-  <div class="d-flex justify-content-between border-bottom">
+  <div class="d-flex justify-content-between border-bottom" (dblclick)="dbClick(data)">
     <div class="col-4 justify-content-start">
       <codx-temp-full
         cardCss="card-template p-3 list-task"
@@ -275,4 +275,23 @@
       </codx-mfunc>
     </div>
   </div>
+</ng-template>
+
+<ng-template #popDetail>
+  <codx-form [body]="dbClickDetail" [dialog]="dialogDetail">
+  </codx-form>
+</ng-template>
+
+<ng-template #dbClickDetail>
+  <codx-cmcustomer-detail
+    #customerDetail
+    [formModel]="formModel"
+    [recID]="dataSelected.recID"
+    [dataSelected]="dataSelected"
+    [funcID]="funcID"
+    (clickMoreFunc)="clickMoreFuncDetail($event)"
+    [entityName]="entityName"
+    (changeMoreMF)="changeDataDetailMF($event)"
+  >
+  </codx-cmcustomer-detail>
 </ng-template>

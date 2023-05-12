@@ -173,192 +173,100 @@
   </div>
 </ng-template>
 <ng-template #tabBasic>
-  <ng-container>
-    <div class="table-responsive mt-2 h-400px">
+  <ng-container *ngIf="inventoryJournalLines">
+    <div class="table-responsive mt-2">
       <table class="table table-hover table-row-bordered">
         <thead style="position: sticky; top: 0">
           <tr class="border-bottom">
-            <th class="w-50 min-w-125px">
+            <th class="w-50 min-w-350px">
               <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="RowNo"
+                <!-- <i class="icon-i-box icon-16 me-2"></i> -->
+                <codx-label class="fw-bold line-clamp line-clamp-1 text-dark" fiedName="ItemID"
                   [formModel]="fmInventoryJournalLines">
                 </codx-label>
               </div>
             </th>
-            <th class="w-50 min-w-125px">
+            <th class="min-w-100px">
               <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="ItemID"
+                <!-- <i class="icon-i-bar-chart icon-16 me-2"></i> -->
+                <codx-label class="fw-bold line-clamp line-clamp-1 text-dark" fiedName="Quantity"
                   [formModel]="fmInventoryJournalLines">
                 </codx-label>
               </div>
             </th>
-            <th class="w-50 min-w-125px">
+            <th class="min-w-125px">
               <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="ItemName" default="Tên mặt hàng"
+                <!-- <i class="icon-payments icon-16 me-2"></i> -->
+                <codx-label class="fw-bold line-clamp line-clamp-1 text-dark" fiedName="CostPrice"
                   [formModel]="fmInventoryJournalLines">
                 </codx-label>
               </div>
             </th>
-            <th class="w-50 min-w-125px">
+            <th class="min-w-125px">
               <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="IDIM0"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="IDIM1"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="IDIM2"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="IDIM3"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="IDIM4"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="IDIM5"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="IDIM6"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="IDIM7"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="IDIM8"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="IDIM9"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="UMID"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="Quantity"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="CostPrice"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="CostAmt"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="DIM3"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="DIM1"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="DIM2"
-                  [formModel]="fmInventoryJournalLines">
-                </codx-label>
-              </div>
-            </th>
-            <th class="w-50 min-w-125px">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="AssetGroupID"
+                <!-- <i class="icon-i-cash-stack icon-16 me-2"></i> -->
+                <codx-label class="fw-bold line-clamp line-clamp-1 text-dark" fiedName="CostAmt"
                   [formModel]="fmInventoryJournalLines">
                 </codx-label>
               </div>
             </th>
           </tr>
         </thead>
-        <tbody class="border-bottom">
-          <tr *ngFor="let item of inventoryJournalLines">
+        <tbody *ngFor="let item of inventoryJournalLines | slice : (page - 1) * pageSize : page * pageSize">
+          <tr>
             <td>
-              <span *ngIf="item.rowNo != null && item.rowNo != ''"
-                class="text-nowrap">{{item.rowNo}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.itemID != null && item.itemID != ''"
-                class="text-nowrap">{{item.itemID}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.itemName != null && item.itemName != ''"
-                class="text-nowrap">{{item.itemName}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.idiM0!= null && item.idiM0 != ''"
-                class="text-nowrap">{{item.idiM0}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.idiM1 != null && item.idiM1 != ''"
-                class="text-nowrap">{{item.idiM1}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.idiM2 != null && item.idiM2 != ''"
-                class="text-nowrap">{{item.idiM2}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.idiM3 != null && item.idiM3 != ''"
-                class="text-nowrap">{{item.idiM3}}</span>
-            </td>
-            <td>
-                <span *ngIf="item.idiM4 != null && item.idiM4 != ''" #idiM4 class="fs-6 fw-bold" [innerHTML]="
+              <div class="d-flex align-items-center me-5 mb-1">
+                <span [ngbTooltip]="item.itemName" class="fw-bold line-clamp line-clamp-2">{{ item.itemName }}</span>
+              </div>
+              <div class="d-flex flex-wrap text-nowrap">
+                <ng-container *ngIf="item.idiM0 != null && item.idiM0 != ''">
+                  
+                  <div class="d-flex align-items-center mb-1 me-6">
+                    <!-- <span class="icon-i-dot icon-22"></span> -->
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM0" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">{{item.idiM0}}</span>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="item.idiM1 != null && item.idiM1 != ''">
+                  
+                  <div class="d-flex align-items-center mb-1 me-6">
+                    <!-- <span class="icon-i-dot icon-22"></span> -->
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM1" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">{{item.idiM1}}</span>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="item.idiM2 != null && item.idiM2 != ''">
+                  
+                  <div class="d-flex align-items-center mb-1 me-6">
+                    <!-- <span class="icon-i-dot icon-22"></span> -->
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM2" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">{{item.idiM2}}</span>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="item.idiM3 != null && item.idiM3 != ''">
+                  
+                  <div class="d-flex align-items-center mb-1 me-6">
+                    <!-- <span class="icon-i-dot icon-22"></span> -->
+                  <codx-label class="text-gray-700 label-colon" fiedName="IDIM3" [formModel]="fmInventoryJournalLines">
+                  </codx-label>
+                  <span class="fs-6 fw-bold">{{item.idiM3}}</span>
+                </div>
+                </ng-container>
+
+                <ng-container *ngIf="item.idiM4 != null && item.idiM4 != ''">
+                  
+                  <div class="d-flex align-items-center mb-1 me-6">
+                    <!-- <span class="icon-i-dot icon-22"></span> -->
+                  <codx-label class="text-gray-700 label-colon" fiedName="IDIM4" [formModel]="fmInventoryJournalLines">
+                  </codx-label>
+                  
+                  <span #idiM4 class="fs-6 fw-bold" [innerHTML]="
                       item.idiM4
                         | formatvalue
                           : fmInventoryJournalLines
@@ -366,30 +274,65 @@
                           : idiM4
                         | async
                     "></span>
-            </td>
-            <td>
-              <span *ngIf="item.idiM5 != null && item.idiM5 != ''"
-                class="text-nowrap">{{item.idiM5}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.idiM6 != null && item.idiM6 != ''"
-                class="text-nowrap">{{item.idiM6}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.idiM7 != null && item.idiM7 != ''"
-                class="text-nowrap">{{item.idiM7}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.idiM8 != null && item.idiM8 != ''"
-                class="text-nowrap">{{item.idiM8}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.idiM9 != null && item.idiM9 != ''"
-                class="text-nowrap">{{item.idiM9}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.umid != null && item.umid != ''"
-                class="text-nowrap">{{item.umid}}</span>
+                  </div>
+                </ng-container>
+              </div>
+              <div class="d-flex flex-wrap text-nowrap">
+                <div class="d-flex flex-column mb-1">
+                  <span *ngIf="item.lineType != null && item.lineType != ''" class="badge badge-light-primary badge-sm me-3">
+                    <span>{{item.lineType | vll : 'AC089' : 'text' | async}}</span>
+                  </span>
+                </div>
+                <ng-container *ngIf="item.idiM5 != null && item.idiM5 != ''">
+                 
+                  <div class="d-flex align-items-center mb-1 me-6">
+                    <!-- <span class="icon-i-dot icon-22"></span> -->
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM5" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">{{item.idiM5}}</span>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="item.idiM6 != null && item.idiM6 != ''">
+                  
+                  <div class="d-flex align-items-center mb-1 me-6">
+                    <!-- <span class="icon-i-dot icon-22"></span> -->
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM6" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">{{item.idiM6}}</span>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="item.idiM7 != null && item.idiM7 != ''">
+                  
+                  <div class="d-flex align-items-center mb-1 me-6">
+                    <!-- <span class="icon-i-dot icon-22"></span> -->
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM7" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">{{item.idiM7}}</span>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="item.idiM8 != null && item.idiM8 != ''">
+                  
+                  <div class="d-flex align-items-center mb-1 me-6">
+                    <!-- <span class="icon-i-dot icon-22"></span> -->
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM8" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">{{item.idiM8}}</span>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="item.idiM9 != null && item.idiM9 != ''">
+                  
+                  <div class="d-flex align-items-center mb-1 me-6">
+                    <!-- <span class="icon-i-dot icon-22"></span> -->
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM9" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">{{item.idiM9}}</span>
+                  </div>
+                </ng-container>
+              </div>
             </td>
             <td>
               <span *ngIf="item.quantity != null && item.quantity != ''"
@@ -403,35 +346,17 @@
               <span *ngIf="item.costAmt != null && item.costAmt != ''" class="text-nowrap">{{
                 item.costAmt.toLocaleString("it-IT") }}</span>
             </td>
-            <td>
-              <span *ngIf="item.diM3 != null && item.diM3 != ''"
-                class="text-nowrap">{{item.diM3}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.diM1 != null && item.diM1 != ''"
-                class="text-nowrap">{{item.diM1}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.diM2 != null && item.diM2 != ''"
-                class="text-nowrap">{{item.diM2}}</span>
-            </td>
-            <td>
-              <span *ngIf="item.AssetGroupID != null && item.AssetGroupID != ''"
-                class="text-nowrap">{{item.AssetGroupID}}</span>
-            </td>
           </tr>
         </tbody>
       </table>
-      <div *ngIf="inventoryJournalLines.length == 0" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100 mt-20">
-          <div class="d-flex flex-column flex-center justify-content-center">
-            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
-            <div class="fs-5 text-dark fw-bold mt-2 text-center">
-              {{ "SYS011" | mssg | async }}
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </ng-container>
+  <div *ngIf="inventoryJournalLines.length > 0" class="container w-90 h-90">
+    <div class="list-empty card card-flush h-100 mt-3">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize"
+          [collectionSize]="inventoryJournalLines.length"></ngb-pagination>
+      </div>
+    </div>
+  </div>
 </ng-template>

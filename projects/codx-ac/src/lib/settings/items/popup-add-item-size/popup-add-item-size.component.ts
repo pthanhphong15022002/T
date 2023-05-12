@@ -111,7 +111,7 @@ export class PopupAddItemSizeComponent
   //#endregion
 
   //#region Method
-  save(closeAfterSaving: boolean): void {
+  save(closeAfterSave: boolean): void {
     console.log(this.itemSize);
 
     if (
@@ -138,7 +138,7 @@ export class PopupAddItemSizeComponent
 
           this.savedItemSizes.push(res);
 
-          if (closeAfterSaving) {
+          if (closeAfterSave) {
             this.dialogRef.close();
           } else {
             // clear form

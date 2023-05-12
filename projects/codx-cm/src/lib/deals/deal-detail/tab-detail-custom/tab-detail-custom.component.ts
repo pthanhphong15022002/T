@@ -52,7 +52,6 @@ export class TabDetailCustomComponent
 
   }
   ngAfterViewInit() {}
-  
   onInit(): void {
     this.executeApiCalls();
   }

@@ -45,6 +45,8 @@ export class PopupAddDealComponent
   // type string
   titleAction: string = '';
   action: string = '';
+  autoName: string = '';
+  title: string = '';
 
   // Data struct Opportunity
   deal: CM_Deals = new CM_Deals();
@@ -113,6 +115,7 @@ export class PopupAddDealComponent
     super(inject);
     this.dialog = dialog;
     this.formModel = dialog.formModel;
+    debugger;
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
     this.executeApiCalls();
@@ -152,6 +155,22 @@ export class PopupAddDealComponent
       );
       return;
     }
+    if (!this.deal?.customerID) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['CustomerID']?.headerText + '"'
+      );
+      return;
+    }
+    if (!this.deal?.category) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Category']?.headerText + '"'
+      );
+      return;
+    }
     if(!this.deal?.owner){
       this.notificationsService.notifyCode(
         'SYS009',
@@ -175,14 +194,6 @@ export class PopupAddDealComponent
 
     for (let items of this.listInstanceSteps) {
       for (let item of items.fields) {
-        if (
-          item.isRequired &&
-          (!item.dataValue || item.dataValue?.toString().trim() == '')
-        ) {
-          title = item.title;
-          ischeck = false;
-          break;
-        }
         if (item) {
           messageCheckFormat = this.checkFormat(item);
           if (messageCheckFormat) {
@@ -207,10 +218,8 @@ export class PopupAddDealComponent
     this.updateDateDeal(this.instance, this.deal);
     if (this.action !== this.actionEdit) {
       this.insertInstance();
-      this.onAdd();
     } else {
       this.editInstance();
-      this.onEdit();
     }
   }
   cbxChange($event, field) {
@@ -328,7 +337,6 @@ export class PopupAddDealComponent
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
-          console.table(res);
         }
       });
   }
@@ -398,6 +406,7 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listInstanceSteps, null];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
+        this.onAdd();
       }
     });
   }
@@ -405,6 +414,7 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
+        this.onEdit();
       }
     });
   }
@@ -529,6 +539,19 @@ export class PopupAddDealComponent
 
   //#endregion
 
+  isRequired(field:string){
+    return this.gridViewSetup[field]?.h
+  }
 
+  setTitle(e: any) {
+      // if (this.autoName) {
+      //   this.title = this.titleAction + ' ' + this.autoName;
+      // } else {
+      //   this.title = this.titleAction + ' ' + e;
+      //   this.autoName = e;
+      // }
+      this.title = this.titleAction;
+    this.changeDetectorRef.detectChanges();
+  }
 
 }

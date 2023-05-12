@@ -73,11 +73,6 @@ export class CodxListContactsComponent implements OnInit {
     this.className = 'ContactsBusiness';
     this.fetch().subscribe((item) => {
       this.listContacts = item;
-      var contactPerson = this.listContacts.find((x) =>
-        x.contactType.split(';').some((x) => x == '1')
-      );
-      this.contactPerson.emit(contactPerson);
-
       this.loaded = true;
     });
   }
@@ -220,6 +215,10 @@ export class CodxListContactsComponent implements OnInit {
                   'update'
                 );
               }
+              var contactPerson = this.listContacts.find((x) =>
+                x.contactType.split(';').some((x) => x == '1')
+              );
+              this.contactPerson.emit(contactPerson);
               this.changeDetectorRef.detectChanges();
             }
           }
@@ -301,6 +300,10 @@ export class CodxListContactsComponent implements OnInit {
                   'update'
                 );
               }
+              var contactPerson = this.listContacts.find((x) =>
+                x.contactType.split(';').some((x) => x == '1')
+              );
+              this.contactPerson.emit(contactPerson);
               this.changeDetectorRef.detectChanges();
             }
           }

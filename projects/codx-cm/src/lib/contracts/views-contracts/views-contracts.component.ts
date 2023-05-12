@@ -48,6 +48,8 @@ export class ViewsContractsComponent extends UIComponent{
 
   listClicked =[]
   tabClicked = '';
+  fomatDate = 'dd/MM/yyyy';
+  account:any;
 
   views: Array<ViewModel> = [];
   service = 'CM';
@@ -95,26 +97,9 @@ export class ViewsContractsComponent extends UIComponent{
     private inject: Injector,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
-    // private listContracts: ListContractsComponent,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    // this.cache
-    //   .gridViewSetup('CMQuotations', 'grvCMQuotations')
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.grvSetup = res;
-    //       this.vllStatus = res['Status'].referedValue;
-    //       //lay grid view
-    //       let arrField = Object.values(res).filter((x: any) => x.isVisible);
-    //       if (Array.isArray(arrField)) {
-    //         this.arrFieldIsVisible = arrField
-    //           .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-    //           .map((x: any) => x.fieldName);
-    //         this.getColumsGrid(res);
-    //       }
-    //     }
-    //   });
   }
 
   onInit(): void {
@@ -127,6 +112,23 @@ export class ViewsContractsComponent extends UIComponent{
       { name: 'pay', textDefault: 'Phương thức và tiến độ thanh toán', icon: 'icon-tune', isActive: false },
       { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-more', isActive: false },
     ]
+    this.getAccount();
+  }
+
+  getAccount(){
+    this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'CompanySettingsBusiness',
+      'GetAsync'
+    ).subscribe(res => {
+      console.log(res);
+      if(res){
+        this.account = res;
+      }
+    })
+  }
+  async ngOnChanges(changes: SimpleChanges) {
   }
 
   ngAfterViewInit() {
@@ -159,68 +161,6 @@ export class ViewsContractsComponent extends UIComponent{
 
   changeTab(e){
     this.tabClicked = e;
-  }
-
-  getColumsGrid(grvSetup) {
-    this.columnGrids = [];
-    this.arrFieldIsVisible.forEach((key) => {
-      let field = Util.camelize(key);
-      let template: any;
-      let colums: any;
-      switch (key) {
-        case 'Status':
-          template = this.templateStatus;
-          break;
-        case 'CustomerID':
-          template = this.templateCustomer;
-          break;
-        case 'CreatedBy':
-          template = this.templateCreatedBy;
-          break;
-        default:
-          break;
-      }
-      if (template) {
-        colums = {
-          field: field,
-          headerText: grvSetup[key].headerText,
-          width: grvSetup[key].width,
-          template: template,
-          // textAlign: 'center',
-        };  
-      } else {
-        colums = {
-          field: field,
-          headerText: grvSetup[key].headerText,
-          width: grvSetup[key].width,
-        };
-      }
-
-      this.columnGrids.push(colums);
-    });
-
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        active: true,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.templateDetail,
-        },
-      },
-      {
-        type: ViewType.grid,
-        active: false,
-        sameData: true,
-        model: {
-          resources: this.columnGrids,
-          template2: this.templateMore,
-          // frozenColumns: 1,
-        },
-      },
-    ];
-    this.detectorRef.detectChanges() ;
   }
 
   click(e) {
