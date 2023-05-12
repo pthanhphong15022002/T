@@ -47,7 +47,7 @@ export class TabCaseDetailComponent extends UIComponent
 
   async executeApiCalls() {
     try {
-      await this.getListInstanceStep();
+    //  await this.getListInstanceStep();
       await this.getValueList();
     } catch (error) {
       console.error('Error executing API calls:', error);
