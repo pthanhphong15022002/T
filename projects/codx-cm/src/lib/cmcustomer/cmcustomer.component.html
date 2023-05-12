@@ -34,13 +34,13 @@
 </ng-template>
 <ng-template #itemPhone let-data>
   <div>
-    <span class="icon-phone_android text-primary icon-16 me-1"></span>
+    <span class="icon-phone_android text-primary icon-16 me-2"></span>
     <span class="text-gray-900 text-primary">0702411141</span>
   </div>
 </ng-template>
 <ng-template #itemEmail let-data>
   <div>
-    <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
+    <span class="icon-print_disabled icon-16 me-2 text-gray-500"></span>
     <span class="text-gray-900">tdnphuck42@gmail.com</span>
   </div>
 </ng-template>
@@ -54,18 +54,18 @@
   <div class="d-flex flex-column">
     <span class="text-dark fw-bold mb-2"> Trương Đặng Ngọc Phúc </span>
     <div class="mb-2">
-      <span class="icon-phone_android text-primary icon-16 me-1"></span>
+      <span class="icon-phone_android text-primary icon-16 me-2"></span>
       <span class="text-gray-900 text-primary">0702411141</span>
     </div>
     <div class="mb-2">
-      <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
+      <span class="icon-print_disabled icon-16 me-2 text-gray-500"></span>
       <span class="text-gray-900">tdnphuck42@gmail.com</span>
     </div>
   </div>
 </ng-template>
 <ng-template #itemPriority let-data>
   <span
-    class="icon-14 me-1"
+    class="icon-14 me-2"
     [class]="'1' | vll : vllPriority : 'icon' | async"
     [style.color]="'1' | vll : vllPriority : 'textColor' | async"
   >
@@ -153,7 +153,7 @@
             ? 'icon-phone_android text-primary'
             : 'icon-phonelink_erase'
         "
-        class="icon-16 me-1"
+        class="icon-16 me-2"
       ></span>
       <span
         [ngClass]="data.allowCall ? 'text-primary' : ''"
@@ -166,7 +166,7 @@
         [ngClass]="
           data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'
         "
-        class="icon-16 me-1 text-gray-900"
+        class="icon-16 me-2 text-gray-900"
       ></span>
       <span
         [ngClass]="data.allowEmail ? 'text-primary' : ''"
@@ -174,12 +174,12 @@
       >
     </div>
     <div class="mb-1 d-flex align-items-top" *ngIf="data.address">
-      <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
+      <span class="icon-location_on icon-16 me-2 text-gray-700"></span>
       <span class="fs-7 text-gray-600">{{ data.address }}</span>
     </div>
     <div *ngIf="funcID == 'CM0101'">
       <div class="mb-1 d-flex align-items-center">
-        <span class="icon-corporate_fare icon-14 me-1"></span>
+        <span class="icon-corporate_fare icon-14 me-2"></span>
         <span class="fs-7"
           [innerHTML]="
             data?.custGroupID
@@ -190,24 +190,26 @@
       </div>
     </div>
     <div
-      class="mb-1 d-flex flex-wrap align-items-top"
+      class="mb-1 d-flex align-items-top"
       *ngIf="(funcID == 'CM0103' || funcID == 'CM0104') && data.industries"
     >
-      <span class="icon-work_outline icon-16 me-1 text-gray-700"></span>
+      <span class="icon-work_outline icon-16 me-2 text-gray-700"></span>
+      <span class="">
       <span
         *ngFor="let item of data?.industries.split(';'); index as i"
         
-      >
-        <span class="text-nowrap"
-          [innerHTML]="
-            item | formatvalue : view.formModel : 'Industries' | async
-          "
-        ></span
-        ><span class="me-1 text-nowrap" *ngIf="i < data?.industries.split(';').length - 1"
-          >, </span
-        >
-        <!-- {{ dataSelected?.segmentID }} -->
-  </span>
+          >
+            <span
+              [innerHTML]="
+                item | formatvalue : view.formModel : 'Industries' | async
+              "
+            ></span
+            ><span class="me-1" *ngIf="i < data?.industries.split(';').length - 1"
+              >, </span
+            >
+            <!-- {{ dataSelected?.segmentID }} -->
+      </span>
+    </span>
     </div>
   </div>
 </ng-template>
