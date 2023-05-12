@@ -393,6 +393,7 @@ export class CmCustomerComponent
         if (this.isButton) this.add();
         break;
     }
+    this.isButton = false;
   }
 
   clickMF(e, data) {
@@ -419,6 +420,7 @@ export class CmCustomerComponent
         this.deleteContactToCM(data);
         break;
     }
+    this.isButton = false;
   }
 
   clickMoreFunc(e) {
