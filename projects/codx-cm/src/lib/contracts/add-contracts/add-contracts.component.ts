@@ -47,7 +47,7 @@ export class AddContractsComponent implements OnInit{
 
   setData(data){
     if(this.action == 'add'){
-      this.contracts = new CM_Contracts();
+      this.contracts = data;
       this.contracts.recID = Util.uid();
       this.contracts.projectID = this.projectID;
     }

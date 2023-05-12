@@ -9,6 +9,7 @@
     (clickMF)="clickMF($event, dataSelected)"
   >
   <ng-template #header let-data>
+    <h2> Sự cố</h2>
     <div class="container_detail mt-3">
       <div class="d-flex justify-content-start pb-3">
         <div class="fs-2">{{ dataSelected?.dealName }}</div>
@@ -297,10 +298,10 @@
   </codx-detail-tmp>
 </ng-container>
 <ng-template #body let-data>
-  <codx-tab-deal-detail
+  <codx-tab-case-detail
     [tabClicked]="tabClicked"
     [dataSelected]="dataSelected"
-  ></codx-tab-deal-detail>
+  ></codx-tab-case-detail>
 </ng-template>
 <ng-template #tabs let-data>
   <codx-tabs

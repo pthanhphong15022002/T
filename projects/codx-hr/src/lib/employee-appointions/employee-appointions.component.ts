@@ -250,7 +250,6 @@ export class EmployeeAppointionsComponent extends UIComponent {
     this.hrService
       .EditEmployeeAppointionsMoreFunc(this.editStatusObj)
       .subscribe((res) => {
-        console.log(res)
         if (res != null) {
           this.notify.notifyCode('SYS007');
           let data  = {
@@ -427,14 +426,6 @@ export class EmployeeAppointionsComponent extends UIComponent {
   }
 
   //#region Handle detail data
-  getDetailESalary(event, data) {
-    if (data) {
-      this.itemDetail = data;
-
-      this.df.detectChanges();
-    }
-  }
-
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }

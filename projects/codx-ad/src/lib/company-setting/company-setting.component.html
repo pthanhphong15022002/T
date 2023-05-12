@@ -621,28 +621,31 @@
         </ng-template>
         <ng-template #content>
           <div class="w-100 h-100 bg-body rounded-2 p-9 scroll-y">
-            <codx-listview
-              [service]="'Tenant'"
-              [assemblyName]="'Tenant'"
-              [entityName]="'TN_Orders'"
-              [className]="'OrdersBusiness'"
-              [method]="'GetListPurchaseGridModelAsync'"
-              [predicate]="'CreatedBy=@0'"
-              [dataValue]="userID"
-              [funcId]=""
-              [itemTemplate]="orderTmp"
-            >
-            </codx-listview>
+            <div class="container w-100 h-100 p-0">
+              <codx-listview
+                [service]="'Tenant'"
+                [assemblyName]="'Tenant'"
+                [entityName]="'TN_Orders'"
+                [className]="'OrdersBusiness'"
+                [method]="'GetListPurchaseGridModelAsync'"
+                [predicate]="'CreatedBy=@0 and TenantID=@1'"
+                [dataValue]="userID + ';' + tenant"
+                [funcId]=""
+                [itemTemplate]="orderTmp"
+              >
+              </codx-listview>
+            </div>
+            <!-- [predicate]="'ResourceType=@0'" -->
           </div>
-          <!-- [predicate]="'ResourceType=@0'" -->
 
           <ng-template #orderTmp let-item>
-            <div class="d-flex">
+            <div class="d-flex w-100 h-100 p-2">
               <codx-temp-full
                 [typeMF]="'hover'"
                 [titleTmp]="oTitleTmp"
                 typeMF="hover"
                 [dataItem]="item"
+                [hideMF]="false"
               >
               </codx-temp-full>
               <codx-temp-full

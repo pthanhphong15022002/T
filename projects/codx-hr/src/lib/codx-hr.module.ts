@@ -477,6 +477,7 @@ import { PopupAddEmployeeComponent } from './employee-list/popup/popup-add-emplo
 import { PopupViewallSalaryComponent } from './employee-list/employee-info-detail/pop-up/popup-viewall-salary/popup-viewall-salary.component';
 import { PopupViewAllComponent } from './employee-list/employee-info-detail/pop-up/popup-view-all/popup-view-all.component';
 import { EmployeeAppointionsComponent } from './employee-appointions/employee-appointions.component';
+import { ViewDetailEappointionsComponent } from './employee-appointions/view-detail-eappointions/view-detail-eappointions.component';
 export const routes: Routes = [
       {
         path: '',
@@ -733,7 +734,8 @@ const T_Component: Type<any>[] = [
   PopupViewallSalaryComponent,
   PopupViewAllComponent,
   EmployeeAppointionsComponent,
-  PopupAddEmployeeComponent
+  PopupAddEmployeeComponent,
+  ViewDetailEappointionsComponent
 ];
 @NgModule({
   imports: [
