@@ -1,44 +1,72 @@
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { Component, Input, OnInit, ViewChild, Injector, ChangeDetectorRef, Optional, TemplateRef, AfterViewInit } from '@angular/core';
-import { CRUDService, CallFuncService, CodxFormComponent, CodxGridviewComponent, DataService, DialogData, DialogRef, NotificationsService, SidebarModel, SortModel, UIComponent } from 'codx-core';
+import {
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+  Injector,
+  ChangeDetectorRef,
+  Optional,
+  TemplateRef,
+  AfterViewInit,
+} from '@angular/core';
+import {
+  CRUDService,
+  CallFuncService,
+  CodxFormComponent,
+  CodxGridviewComponent,
+  DataService,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  SidebarModel,
+  SortModel,
+  UIComponent,
+} from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { PopupEPassportsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-epassports/popup-epassports.component';
+import { PopupEVisasComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-evisas/popup-evisas.component';
+import { PopupEWorkPermitsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ework-permits/popup-ework-permits.component';
 
 @Component({
   selector: 'lib-popup-view-all',
   templateUrl: './popup-view-all.component.html',
-  styleUrls: ['./popup-view-all.component.css']
+  styleUrls: ['./popup-view-all.component.css'],
 })
-export class PopupViewAllComponent  extends UIComponent implements OnInit{
+export class PopupViewAllComponent extends UIComponent implements OnInit {
   rowCount: any;
   funcID: any;
   employeeId: any;
   sortModel: SortModel;
-  headerText : any;
+  headerText: any;
   dataService: DataService;
   columnGrid: any;
   hasFilter: any;
   formModel: any;
   formGroup: any;
-  
+
   //#region funcID
   ePassportFuncID = 'HRTEM0202';
-
+  eVisaFuncID = 'HRTEM0203';
+  eWorkPermitFuncID = 'HRTEM0204';
   //#endregion
 
   //#region columnGrid
-  passportColumnGrid: any
+  passportColumnGrid: any;
+  visaColumnGrid: any;
+  workPermitColumnGrid: any;
   //#endregion
 
   //#region headerText
-  passportHeaderText: any
+  passportHeaderText: any;
   //#endregion
 
   ops = ['y'];
 
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('gridView') gridView: CodxGridviewComponent;
-  @ViewChild('filterPassport', { static: true }) filterPassport: TemplateRef<any>;
+  @ViewChild('filterPassport', { static: true })
+  filterPassport: TemplateRef<any>;
   @ViewChild('customeHeader', { static: true }) customeHeader: TemplateRef<any>;
   @ViewChild('filter', { static: true }) filter: TemplateRef<any>;
 
@@ -46,6 +74,15 @@ export class PopupViewAllComponent  extends UIComponent implements OnInit{
   @ViewChild('passportCol1', { static: true }) passportCol1: TemplateRef<any>;
   @ViewChild('passportCol2', { static: true }) passportCol2: TemplateRef<any>;
 
+  // eWorkPermit grid viewchild
+  @ViewChild('workPermitCol1', { static: true })
+  workPermitCol1: TemplateRef<any>;
+  @ViewChild('workPermitCol2', { static: true })
+  workPermitCol2: TemplateRef<any>;
+
+  //Column grid visa viewChild
+  @ViewChild('visaCol1', { static: true }) visaCol1: TemplateRef<any>;
+  @ViewChild('visaCol2', { static: true }) visaCol2: TemplateRef<any>;
   dialogRef: any;
 
   constructor(
@@ -57,8 +94,7 @@ export class PopupViewAllComponent  extends UIComponent implements OnInit{
     private df: ChangeDetectorRef,
     @Optional() data?: DialogData,
     @Optional() dataRef?: DialogRef
-
-  ){
+  ) {
     super(injector);
     this.dialogRef = dataRef;
     this.funcID = data?.data?.funcID;
@@ -71,7 +107,7 @@ export class PopupViewAllComponent  extends UIComponent implements OnInit{
 
   onInit(): void {
     //#region columnGrid EPassport - Hộ chiếu
-    if(!this.passportColumnGrid){
+    if (!this.passportColumnGrid) {
       this.hrService.getHeaderText(this.ePassportFuncID).then((res) => {
         this.passportHeaderText = res;
         this.passportColumnGrid = [
@@ -92,89 +128,201 @@ export class PopupViewAllComponent  extends UIComponent implements OnInit{
             width: '150',
           },
         ];
-        if(this.funcID == this.ePassportFuncID){
+        if (this.funcID == this.ePassportFuncID) {
           this.columnGrid = this.passportColumnGrid;
           this.filter = this.filterPassport;
+          //Get row count
+          this.getRowCount();
         }
       });
-  
-      //Get row count
-      let ins = setInterval(() => {
-        if (this.gridView) {
-          clearInterval(ins);
-          let t = this;
+    }
+    //#endregion
 
-          this.gridView.dataService.onAction.subscribe((res) => {
-            if(res){
-              if (res.type != null && res.type == 'loaded') {
-                t.rowCount = res['data'].length;
-              this.df.detectChanges();
-              }
-            }
-          })
+    //#region get columnGrid EVisa - Thị thực
+    if (!this.visaColumnGrid) {
+      this.hrService.getHeaderText(this.eVisaFuncID).then((res) => {
+        let visaHeaderText = res;
+        this.visaColumnGrid = [
+          {
+            headerText:
+              visaHeaderText['VisaNo'] + ' | ' + visaHeaderText['IssuedPlace'],
+            template: this.visaCol1,
+            width: '150',
+          },
+          {
+            headerText: 'Thời hạn' + ' | ' + 'Quốc gia đến',
+            template: this.visaCol2,
+            width: '150',
+          },
+        ];
+        if (this.funcID == this.eVisaFuncID) {
+          this.columnGrid = this.visaColumnGrid;
+          this.filter = null;
+          //Get row count
+          this.getRowCount()
         }
-      }, 200);
+      });
+    }
+    //#endregion
+
+    //#region get columnGrid EWorkPermit - Giấy phép lao động
+    if (!this.workPermitColumnGrid) {
+      this.hrService.getHeaderText(this.funcID).then((res) => {
+        let workHeaderText = res;
+        this.workPermitColumnGrid = [
+          {
+            headerText:
+              workHeaderText['WorkPermitNo'] +
+              ' | ' +
+              workHeaderText['IssuedPlace'],
+            template: this.workPermitCol1,
+            width: '150',
+          },
+          {
+            headerText:
+              workHeaderText['IssuedDate'] + ' | ' + workHeaderText['ToDate'],
+            template: this.workPermitCol2,
+            width: '150',
+          },
+        ];
+        if (this.funcID == this.eWorkPermitFuncID) {
+          this.columnGrid = this.workPermitColumnGrid;
+          this.filter = null;
+          //Get row count
+          this.getRowCount()
+        }
+      });
     }
     //#endregion
   }
 
-  closeDialog(){
-    if(this.funcID == this.ePassportFuncID){
+  getRowCount(){
+    let ins = setInterval(() => {
+      if (this.gridView) {
+        clearInterval(ins);
+        let t = this;
+        this.gridView.dataService.onAction.subscribe((res) => {
+          if (res) {
+            if (res.type != null && res.type == 'loaded') {
+              t.rowCount = res['data'].length;
+              this.df.detectChanges();
+            }
+          }
+        });
+      }
+    }, 100);
+  }
+
+  closeDialog() {
+    //return isCurrent Passport value
+    if (
+      this.funcID == this.ePassportFuncID ||
+      this.funcID == this.eVisaFuncID ||
+      this.funcID == this.eWorkPermitFuncID
+    ) {
       // this.dialogRef.close(this.gridView.dataService.data[0]);
       let lstData = this.gridView.dataService.data;
       let sortedList = lstData.sort((a, b) => {
-        if(a.issuedDate < b.issuedDate){
+        if (a.issuedDate < b.issuedDate) {
           return 1;
         }
-        if(a.issuedDate > b.issuedDate){
+        if (a.issuedDate > b.issuedDate) {
           return -1;
         }
         return 0;
-      })
-      debugger
-      this.dialogRef.close(sortedList[0]);
-    }
-    else{
+      });
+      if (sortedList.length > 0) {
+        this.dialogRef.close(sortedList[0]);
+      } else {
+        this.dialogRef.close('none');
+      }
+    } else {
       this.dialogRef.close();
     }
   }
 
-  clickMF(event: any, data: any, funcID = null){
-    switch(event.functionID){
-      case 'SYS03': //edit
-        if(funcID == this.ePassportFuncID) {
-          this.handleEmployeePassportInfo(event.text, 'edit', data);
-        }
+  handleShowHideMf(event, data) {
+    for (let i = 0; i < event.length; i++) {
+      if (
+        event[i].functionID.substr(event[i].functionID.length - 7) == 'ViewAll'
+      ) {
+        event[i].disabled = true;
         break;
-      case 'SYS04': //copy
-        if(funcID == this.ePassportFuncID){
-          this.copyValue(event.text, data);
-        }
-        break;
-      case 'SYS02': //delete
-      this.notify.alertCode('SYS030').subscribe((x) => {
-        if(x.event?.status == 'Y'){
-          if(funcID == this.ePassportFuncID){
-            this.hrService.DeleteEmployeePassportInfo(data.recID).subscribe((p) => {
-              if(p == true){
-                this.notify.notifyCode('SYS008');
-                this.updateGridView(this.gridView, 'delete', data);
-              }
-              else {
-                this.notify.notifyCode('SYS022');
-              }
-            })
-          }
-        }
-      })
+      }
     }
   }
 
-  copyValue(actionHeaderText, data){
+  clickMF(event: any, data: any, funcID = null) {
+    switch (event.functionID) {
+      case 'SYS03': //edit
+        if (funcID == this.ePassportFuncID) {
+          this.handleEmployeePassportInfo(event.text, 'edit', data);
+        } else if (funcID == this.eVisaFuncID) {
+          this.handleEmployeeVisaInfo(event.text, 'edit', data);
+        } else if(funcID == this.eWorkPermitFuncID){
+          this.handleEmployeeWorkingPermitInfo(event.text, 'edit', data);
+        }
+        break;
+      case 'SYS04': //copy
+        this.copyValue(event.text, data);
+        break;
+      case 'SYS02': //delete
+        this.notify.alertCode('SYS030').subscribe((x) => {
+          if (x.event?.status == 'Y') {
+            if (funcID == this.ePassportFuncID) {
+              this.hrService
+                .DeleteEmployeePassportInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    this.updateGridView(this.gridView, 'delete', data);
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            } else if (funcID == this.eVisaFuncID) {
+              this.hrService
+                .DeleteEmployeeVisaInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    this.updateGridView(this.gridView, 'delete', data);
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            } else if (funcID == this.eWorkPermitFuncID) {
+              this.hrService
+                .DeleteEmployeeWorkPermitInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    this.updateGridView(this.gridView, 'delete', data);
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            }
+          }
+        });
+    }
+  }
+
+  copyValue(actionHeaderText, data) {
     this.gridView.dataService.dataSelected = data;
-    (this.gridView.dataService as CRUDService).copy().subscribe((res) => {
-      this.handleEmployeePassportInfo(actionHeaderText, 'copy', res);
-    })
+    if (this.funcID == this.ePassportFuncID) {
+      (this.gridView.dataService as CRUDService).copy().subscribe((res) => {
+        this.handleEmployeePassportInfo(actionHeaderText, 'copy', res);
+      });
+    } else if (this.funcID == this.eVisaFuncID) {
+      (this.gridView.dataService as CRUDService).copy().subscribe((res) => {
+        this.handleEmployeeVisaInfo(actionHeaderText, 'copy', res);
+      });
+    } else if (this.funcID == this.eWorkPermitFuncID) {
+      (this.gridView.dataService as CRUDService).copy().subscribe((res) => {
+        this.handleEmployeeWorkingPermitInfo(actionHeaderText, 'copy', res);
+      });
+    } 
   }
 
   updateGridView(
@@ -190,7 +338,7 @@ export class PopupViewAllComponent  extends UIComponent implements OnInit{
         returnVal = 1;
       } else if (actionType == 'edit') {
         (gridView?.dataService as CRUDService)?.update(dataItem).subscribe();
-      } else if (actionType = 'delete') {
+      } else if ((actionType = 'delete')) {
         (gridView?.dataService as CRUDService)?.remove(dataItem).subscribe();
         returnVal = -1;
       }
@@ -210,8 +358,7 @@ export class PopupViewAllComponent  extends UIComponent implements OnInit{
       {
         actionType: actionType,
         funcID: this.ePassportFuncID,
-        headerText:
-          actionHeaderText + ' ' + this.headerText,
+        headerText: actionHeaderText + ' ' + this.headerText,
         employeeId: this.employeeId,
         passportObj: data,
       },
@@ -226,4 +373,56 @@ export class PopupViewAllComponent  extends UIComponent implements OnInit{
     });
   }
 
+  handleEmployeeVisaInfo(actionHeaderText, actionType: string, data: any) {
+    let option = new SidebarModel();
+    //option.DataService = this.visaGridview.dataService;
+    option.FormModel = this.formModel;
+    option.Width = '550px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEVisasComponent,
+      {
+        actionType: actionType,
+        headerText: actionHeaderText + ' ' + this.headerText,
+        employeeId: this.employeeId,
+        funcID: this.eVisaFuncID,
+        visaObj: data,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res.event) {
+        this.updateGridView(this.gridView, actionType, res.event);
+      }
+      this.df.detectChanges();
+    });
+  }
+
+  handleEmployeeWorkingPermitInfo(
+    actionHeaderText,
+    actionType: string,
+    data: any
+  ) {
+    let option = new SidebarModel();
+    // option.DataService = this.workPermitGridview.dataService;
+    option.FormModel = this.formModel;
+    option.Width = '550px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEWorkPermitsComponent,
+      {
+        actionType: actionType,
+        headerText:
+          actionHeaderText + ' ' + this.headerText,
+        employeeId: this.employeeId,
+        funcID: this.eWorkPermitFuncID,
+        workPermitObj: data,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res.event) {
+        this.updateGridView(this.gridView, actionType, res.event);
+      }
+      this.df.detectChanges();
+    });
+  }
 }

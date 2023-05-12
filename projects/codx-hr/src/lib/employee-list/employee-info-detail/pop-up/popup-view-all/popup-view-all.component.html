@@ -94,6 +94,7 @@
           ></span>
         </span>
         <codx-mfunc
+          (changeDataMF)="handleShowHideMf($event, data)"
           [formModel]="formModel"
           (clickMF)="clickMF($event, data, funcID)"
           type="hover"
@@ -101,6 +102,176 @@
         >
         </codx-mfunc>
       </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- #endregion -->
+
+<!-- #region Giấy phép lao động columnGrid templates-->
+<ng-template #workPermitCol1 let-data>
+  <div class="d-flex align-items-center">
+    <!-- <span
+      class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
+      [class]="
+        data.recID == crrWorkpermit?.recID ? ' bg-primary' : 'bg-transparent'
+      "
+    ></span> -->
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.workPermitNo
+                | formatvalue : formModel : 'workPermitNo'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.issuedPlace
+                | formatvalue : formModel : 'issuedPlace'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #workPermitCol2 let-data>
+  <div class="has-action-menu">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-event icon-16 text-primary me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.issuedDate
+                | formatvalue : formModel : 'issuedDate'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 text-danger me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.fromDate
+                | formatvalue : formModel : 'fromDate'
+                | async
+            "
+          ></span>
+        </span>
+        <span class="mx-2">-</span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.toDate
+                | formatvalue : formModel : 'toDate'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+      <codx-mfunc
+        [formModel]="formModel"
+        (clickMF)="clickMF($event, data, funcID)"
+        type="hover"
+        (changeDataMF)="handleShowHideMf($event, data)"
+        [dataItem]="data"
+      >
+      </codx-mfunc>
+    </div>
+  </div>
+</ng-template>
+
+<!-- #endregion -->
+
+<!-- #region Thị thực columnGrid templates-->
+<ng-template #visaCol1 let-data>
+  <div class="d-flex align-items-center">
+    <!-- <span
+      class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
+      [class]="data.recID == crrVisa?.recID ? ' bg-primary' : 'bg-transparent'"
+    ></span> -->
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.visaNo | formatvalue : formModel : 'visaNo' | async
+            "
+          ></span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.visaType | formatvalue : formModel : 'visaType' | async
+            "
+          ></span>
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #visaCol2 let-data>
+  <div class="has-action-menu">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 text-danger me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.effectedDate
+                | formatvalue : formModel : 'effectedDate'
+                | async
+            "
+          ></span>
+        </span>
+        <span class="me-1 ms-1">-</span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.expiredDate
+                | formatvalue : formModel : 'expiredDate'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.nationalityID | formatvalue : formModel : 'nationalityID' | async
+            "
+          ></span>
+        </span>
+      </div>
+      <codx-mfunc
+        (changeDataMF)="handleShowHideMf($event, data)"
+        [formModel]="formModel"
+        (clickMF)="clickMF($event, data, funcID)"
+        type="hover"
+        [dataItem]="data"
+      >
+      </codx-mfunc>
     </div>
   </div>
 </ng-template>

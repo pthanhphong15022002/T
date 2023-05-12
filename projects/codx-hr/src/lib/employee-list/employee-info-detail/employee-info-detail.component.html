@@ -1805,18 +1805,20 @@
                 <div class="col" *ngIf="infoPersonal?.foNationalities">
                   <span class="me-2">
                     <codx-input
-                      field="FoNationalities"
-                      [formModel]="eInfoFormModel"
-                      [crrValue]="infoPersonal?.foNationalities"
-                      [disabled]="true"
+                    [type]="'checkbox'"
+                    [checked]="'true'"
                     ></codx-input>
                   </span>
-
-                  <codx-label
-                    fiedName="FoNationalities"
-                    [formModel]="eInfoFormModel"
+                  <span class="me-2"
+                    [innerHTML]="
+                    infoPersonal?.foNationalities
+                      | formatvalue
+                        : eInfoFormModel
+                        : 'foNationalities'
+                      | async
+                  "
                   >
-                  </codx-label>
+                  </span>
                 </div>
               </div>
 
@@ -5977,166 +5979,6 @@
   </div>
 </ng-template>
 
-
-
-<!-- #region Thị thực columnGrid templates-->
-<ng-template #visaCol1 let-data>
-  <div class="d-flex align-items-center">
-    <!-- <span
-      class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
-      [class]="data.recID == crrVisa?.recID ? ' bg-primary' : 'bg-transparent'"
-    ></span> -->
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-5px">
-        <span class="icon-email icon-16 text-gray-500 me-2"></span>
-        <span class="text-dark">
-          <span
-            [innerHTML]="
-              data?.visaNo | formatvalue : eVisaFormModel : 'visaNo' | async
-            "
-          ></span>
-        </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span class="icon-email icon-16 text-gray-500 me-2"></span>
-        <span class="text-dark">
-          <span
-            [innerHTML]="
-              data?.visaType | formatvalue : eVisaFormModel : 'visaType' | async
-            "
-          ></span>
-        </span>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #visaCol2 let-data>
-  <div class="has-action-menu">
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center">
-        <span class="icon-event icon-16 text-danger me-2"></span>
-        <span class="text-dark">
-          <span
-            [innerHTML]="
-              data?.effectedDate
-                | formatvalue : eVisaFormModel : 'effectedDate'
-                | async
-            "
-          ></span>
-        </span>
-        <span class="me-1 ms-1">-</span>
-        <span class="text-dark">
-          <span
-            [innerHTML]="
-              data?.expiredDate
-                | formatvalue : eVisaFormModel : 'expiredDate'
-                | async
-            "
-          ></span>
-        </span>
-      </div>
-      <codx-mfunc
-        [formModel]="ePassportFormModel"
-        (clickMF)="clickMF($event, data, 'visa')"
-        type="hover"
-        [dataItem]="data"
-      >
-      </codx-mfunc>
-    </div>
-  </div>
-</ng-template>
-
-<!-- #endregion -->
-
-<!-- #region Giấy phép lao động columnGrid templates-->
-<ng-template #workPermitCol1 let-data>
-  <div class="d-flex align-items-center">
-    <!-- <span
-      class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
-      [class]="
-        data.recID == crrWorkpermit?.recID ? ' bg-primary' : 'bg-transparent'
-      "
-    ></span> -->
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-5px">
-        <span class="icon-email icon-16 text-gray-500 me-2"></span>
-        <span class="text-dark">
-          <span
-            [innerHTML]="
-              data?.workPermitNo
-                | formatvalue : eWorkPermitFormModel : 'workPermitNo'
-                | async
-            "
-          ></span>
-        </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span class="icon-email icon-16 text-gray-500 me-2"></span>
-        <span class="text-dark">
-          <span
-            [innerHTML]="
-              data?.issuedPlace
-                | formatvalue : eWorkPermitFormModel : 'issuedPlace'
-                | async
-            "
-          ></span>
-        </span>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #workPermitCol2 let-data>
-  <div class="has-action-menu">
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-5px">
-        <span class="icon-event icon-16 text-primary me-2"></span>
-        <span class="text-dark">
-          <span
-            [innerHTML]="
-              data?.issuedDate
-                | formatvalue : eWorkPermitFormModel : 'issuedDate'
-                | async
-            "
-          ></span>
-        </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span class="icon-event icon-16 text-danger me-2"></span>
-        <span class="text-dark">
-          <span
-            [innerHTML]="
-              data?.fromDate
-                | formatvalue : eWorkPermitFormModel : 'fromDate'
-                | async
-            "
-          ></span>
-        </span>
-        <span class="mx-2">-</span>
-        <span class="text-dark">
-          <span
-            [innerHTML]="
-              data?.toDate
-                | formatvalue : eWorkPermitFormModel : 'toDate'
-                | async
-            "
-          ></span>
-        </span>
-      </div>
-      <codx-mfunc
-        [formModel]="eWorkPermitFormModel"
-        (clickMF)="clickMF($event, data, 'workpermit')"
-        type="hover"
-        [dataItem]="data"
-      >
-      </codx-mfunc>
-    </div>
-  </div>
-</ng-template>
-
-<!-- #endregion -->
-
 <!-- #region Lương cơ bản columnGrid templates-->
 <ng-template #basicSalaryCol1 let-data>
   <div class="d-flex align-items-center">
@@ -7188,7 +7030,7 @@
 
 <!-- #endregion -->
 
-<ng-template #tmpViewAllVisa let-dialog1>
+<!-- <ng-template #tmpViewAllVisa let-dialog1>
   <div class="">
     <div class="codx-form card w-100 h-100 rounded-0 border-0">
       <div class="card-header flex-column">
@@ -7246,20 +7088,12 @@
       </div>
       <div class="card-footer border-0">
         <div class="d-flex justify-content-end">
-          <!-- <button class="btn btn-primary" (click)="onSaveUpdateForm()">
-            <i class="icon-save"></i>
-            <codx-label
-              default="Lưu"
-              name="lblSave"
-              [formModel]="view.formModel"
-            ></codx-label>
-          </button> -->
         </div>
       </div>
     </div>
   </div>
 
-  <!-- <div class="d-flex align-items-center mb-3 mt-5">
+  <div class="d-flex align-items-center mb-3 mt-5">
     <span class="icon-i-filter-right icon-20 me-2"></span>
     <div class="d-flex align-items-center me-3">
       <codx-label
@@ -7293,11 +7127,11 @@
     height="auto"
     [sort]="[visaSortModel]"
   ></codx-gridview>
-</div> -->
+</div> 
 </ng-template>
 
 <ng-template #tmpViewAllPassport let-dialog1>
-</ng-template>
+</ng-template> -->
 
 <!-- Salary modal view All -->
 <ng-template #templateViewSalary let-dialogViewSalary>
@@ -7320,7 +7154,7 @@
   </div>
 </ng-template>
 
-<ng-template #tmpViewAllWorkpermit let-dialog1>
+<!-- <ng-template #tmpViewAllWorkpermit let-dialog1>
   <div class="">
     <div class="codx-form card w-100 h-100 rounded-0 border-0">
       <div class="card-header flex-column">
@@ -7386,9 +7220,9 @@
               [formModel]="view.formModel"
             ></codx-label>
           </button> -->
-        </div>
+        <!-- </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- <div class="d-flex align-items-center mb-3 mt-5">
       <span class="icon-i-filter-right icon-20 me-2"></span>
@@ -7425,8 +7259,8 @@
       [sort]="[passportSortModel]"
     ></codx-gridview>
   </div> -->
-  </div>
-</ng-template>
+  <!-- </div>
+</ng-template> --> -->
 
 <ng-template #tmpViewAllContract let-dialog1>
   <div class="">
