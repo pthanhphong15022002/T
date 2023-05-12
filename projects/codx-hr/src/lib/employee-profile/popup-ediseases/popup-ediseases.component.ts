@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 import { CodxHrService } from '../../codx-hr.service'
 import { Injector, ChangeDetectorRef } from '@angular/core';
@@ -118,6 +119,22 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   onSaveForm() {
     if(this.formGroup.invalid){
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+    if (this.ediseasesObj.diseaseDate && this.ediseasesObj.diseaseDate > this.ediseasesObj.fromDate) {
+      this.hrSevice.notifyInvalidFromTo(
+        'FromDate',
+        'DiseaseDate',
+        this.formModel
+      );
+      return;
+    }
+    if (this.ediseasesObj.fromDate > this.ediseasesObj.toDate) {
+      this.hrSevice.notifyInvalidFromTo(
+        'ToDate',
+        'FromDate',
+        this.formModel
+      );
       return;
     }
     if(this.actionType === 'copy') delete this.ediseasesObj.recID;

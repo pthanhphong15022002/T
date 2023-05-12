@@ -44,6 +44,8 @@ export class CodxListContactsComponent implements OnInit {
   assemblyName = 'ERM.Business.CM';
   className = 'ContactsBusiness';
   method = 'GetListContactAsync';
+  isButton = true;
+
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -73,11 +75,6 @@ export class CodxListContactsComponent implements OnInit {
     this.className = 'ContactsBusiness';
     this.fetch().subscribe((item) => {
       this.listContacts = item;
-      var contactPerson = this.listContacts.find((x) =>
-        x.contactType.split(';').some((x) => x == '1')
-      );
-      this.contactPerson.emit(contactPerson);
-
       this.loaded = true;
     });
   }
@@ -96,7 +93,7 @@ export class CodxListContactsComponent implements OnInit {
           this.loaded = true; */
         }),
         map((response: any) => {
-          return response[0];
+          return response ? response[0] : [];
         })
       );
   }
@@ -105,7 +102,8 @@ export class CodxListContactsComponent implements OnInit {
     this.moreFuncEdit = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        this.clickAddContact('edit', data, this.moreFuncEdit);
+        if (this.isButton = true)
+          this.clickAddContact('edit', data, this.moreFuncEdit);
         break;
       case 'CM0102_2':
       case 'CM0102_3':
@@ -115,9 +113,10 @@ export class CodxListContactsComponent implements OnInit {
         // this.copy(data);
         break;
       case 'CM0102_1':
-        this.clickAddContact('editType', data, this.moreFuncEdit);
+        if (this.isButton = true) this.clickAddContact('editType', data, this.moreFuncEdit);
         break;
     }
+    this.isButton = false;
   }
 
   changeDataMFContact(e, data) {
@@ -177,6 +176,7 @@ export class CodxListContactsComponent implements OnInit {
           opt
         );
         dialog.closed.subscribe((e) => {
+          this.isButton = true;
           if (e && e.event != null) {
             if (e.event?.recID) {
               var index = this.listContacts.findIndex(
@@ -220,6 +220,10 @@ export class CodxListContactsComponent implements OnInit {
                   'update'
                 );
               }
+              var contactPerson = this.listContacts.find((x) =>
+                x.contactType.split(';').some((x) => x == '1')
+              );
+              this.contactPerson.emit(contactPerson);
               this.changeDetectorRef.detectChanges();
             }
           }
@@ -258,6 +262,7 @@ export class CodxListContactsComponent implements OnInit {
           opt
         );
         dialog.closed.subscribe((e) => {
+          this.isButton = true;
           if (e && e.event != null) {
             if (e.event?.recID) {
               var index = this.listContacts.findIndex(
@@ -301,6 +306,10 @@ export class CodxListContactsComponent implements OnInit {
                   'update'
                 );
               }
+              var contactPerson = this.listContacts.find((x) =>
+                x.contactType.split(';').some((x) => x == '1')
+              );
+              this.contactPerson.emit(contactPerson);
               this.changeDetectorRef.detectChanges();
             }
           }

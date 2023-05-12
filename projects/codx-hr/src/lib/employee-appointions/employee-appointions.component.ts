@@ -190,23 +190,16 @@ export class EmployeeAppointionsComponent extends UIComponent {
         headerText: actionHeaderText,
         empObj: actionType == 'add' ? null : this.currentEmpObj,
         isUseEmployee: true,
-        // funcID: this.view.funcID,
-        // employeeId: data?.employeeID,
-        // headerText: actionHeaderText,
-        // empObj: actionType == 'add' ? null : this.currentEmpObj,
-        // actionType: actionType,
-        // dataObj: data,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          console.log(res)
           this.view.dataService.add(res.event).subscribe((res) => {});
           this.df.detectChanges();
         } else if (actionType == 'copy') {
-          this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
+          this.view.dataService.add(res.event).subscribe((res) => {});
           this.df.detectChanges();
         } else if (actionType == 'edit') {
           this.view.dataService.update(res.event).subscribe((res) => {});
@@ -255,11 +248,14 @@ export class EmployeeAppointionsComponent extends UIComponent {
 
   onSaveUpdateForm() {
     this.hrService
-      .EditEmployeeJobSalariesMoreFunc(this.editStatusObj)
+      .EditEmployeeAppointionsMoreFunc(this.editStatusObj)
       .subscribe((res) => {
         if (res != null) {
           this.notify.notifyCode('SYS007');
-          res[0].emp = this.currentEmpObj;
+          let data  = {
+            ...res[0],
+            emp : this.currentEmpObj
+          } 
           this.view.formModel.entityName;
           this.hrService
             .addBGTrackLog(
@@ -268,12 +264,12 @@ export class EmployeeAppointionsComponent extends UIComponent {
               this.view.formModel.entityName,
               'C1',
               null,
-              'EJobSalariesBusiness'
+              'EAppointionsBusiness'
             )
             .subscribe((res) => {
               console.log('kq luu track log', res);
             });
-          this.dialogEditStatus && this.dialogEditStatus.close(res);
+          this.dialogEditStatus && this.dialogEditStatus.close(data);
         }
       });
   }
@@ -288,7 +284,6 @@ export class EmployeeAppointionsComponent extends UIComponent {
 
   popupUpdateEJobSalaryStatus(funcID, data) {
     this.hrService.handleUpdateRecordStatus(funcID, data);
-
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;
     this.formGroup.patchValue(this.editStatusObj);
@@ -302,7 +297,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
-        this.view.dataService.update(res.event[0]).subscribe((res) => {});
+        this.view.dataService.update(res.event).subscribe((res) => {});
       }
       this.df.detectChanges();
     });
@@ -321,7 +316,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
               this.processID.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> Lương chức danh - ' + this.itemDetail.decisionNo + '</div>'
+              '<div> Bổ nhiệm điều chuyển - ' + this.itemDetail.decisionNo + '</div>'
             )
             .subscribe((result) => {
               console.log(result);
@@ -384,7 +379,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
         break;
       //Propose increase salaries
       case this.actionAddNew:
-        this.HandleEJobSalary(event.text, 'add', data);
+        this.HandleEJobSalary(event.text + ' ' + this.view.function.description, 'add', data);
         break;
       //Delete
       case 'SYS02':
@@ -431,14 +426,6 @@ export class EmployeeAppointionsComponent extends UIComponent {
   }
 
   //#region Handle detail data
-  getDetailESalary(event, data) {
-    if (data) {
-      this.itemDetail = data;
-
-      this.df.detectChanges();
-    }
-  }
-
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }

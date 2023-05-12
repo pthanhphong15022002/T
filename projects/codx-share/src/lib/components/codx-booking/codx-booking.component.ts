@@ -115,7 +115,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
   onInit(): void {
     this.getBaseVariable();
-    this.roleCheck();    
+    this.roleCheck();
 
     this.buttons = {
       id: 'btnAdd',
@@ -126,7 +126,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     if (this.formModel) {
       if (
         this.funcID == EPCONST.FUNCID.S_Allocate ||
-        this.funcID == EPCONST.FUNCID.S_Bookings 
+        this.funcID == EPCONST.FUNCID.S_Bookings
       ) {
         this.crrViewMode=this.viewType.listdetail;
         this.views = [
@@ -286,7 +286,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           this.resourceType = '6';
           this.categoryIDProcess="ES_EP003";
           break;
-      
+
     }
     if (this.funcID == EPCONST.FUNCID.S_Allocate) {
       this.isAllocateStationery = true;
@@ -424,7 +424,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.allocate(data);
     }
   }
- 
+
   changeDataMF(event, data: any) {
     if (event != null && data != null && this.funcID!=EPCONST.FUNCID.S_Allocate) {
       if (data.approveStatus == EPCONST.A_STATUS.New) {
@@ -559,12 +559,12 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           if (
             func.functionID == EPCONST.MFUNCID.Delete ||
             func.functionID == EPCONST.MFUNCID.Edit ||
-            func.functionID == EPCONST.MFUNCID.Copy 
+            func.functionID == EPCONST.MFUNCID.Copy
           ) {
             func.disabled = true;
           }
         });
-      
+
       if (data?.issueStatus =='3') {
         event.forEach((func) => {
           if (func.functionID == EPCONST.MFUNCID.S_Allocate /*MF cấp phát*/) {
@@ -592,7 +592,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
-  
+
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
@@ -611,15 +611,21 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     if (!this.navigated) {
       let ele = document.getElementsByTagName('codx-schedule')[0];
       if (ele) {
-        if (
-          (this.ngCmp.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj
-            .first.element.id == 'Schedule'
-        ) {
-          (
-            this.ngCmp.ng.getComponent(ele) as CodxScheduleComponent
-          ).scheduleObj.first.selectedDate = new Date(date);
+
+        let scheduleEle =  ele.querySelector('ejs-schedule');
+        if((scheduleEle as any).ej2_instances[0]){
+          (scheduleEle as any).ej2_instances[0].selectedDate = new Date(date);
           this.navigated = true;
         }
+        //  if (
+        //   (this.ngCmp.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj
+        //     .first.element.id == 'Schedule'
+        // ) {
+        //   (
+        //     this.ngCmp.ng.getComponent(ele) as CodxScheduleComponent
+        //   ).scheduleObj.first.selectedDate = new Date(date);
+        //   this.navigated = true;
+        // }
       }
     }
   }
@@ -647,7 +653,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       this.notificationsService.notifyCode('TM052');
       return;
     }
-    
+
     if (data.approval != '0') {
       this.codxEpService
         .getProcessByCategoryID(this.categoryIDProcess)
@@ -1028,5 +1034,5 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         });
     }
   }
-  
+
 }
