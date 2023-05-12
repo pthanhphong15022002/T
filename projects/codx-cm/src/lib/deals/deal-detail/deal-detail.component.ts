@@ -42,7 +42,7 @@ export class DealDetailComponent  implements OnInit {
   constructor(
     private changeDetectorRef: ChangeDetectorRef
   ) {
-
+    this.listTab(this.funcID);
   }
 
   ngOnInit(): void {
@@ -59,26 +59,22 @@ export class DealDetailComponent  implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.nameDetail = 'Information'
-    this.listTab(this.funcID);
+    this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
   }
 
   listTab(funcID){
-      this.tabDetail = [
-        { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-        { name: 'Field', textDefault: 'Thông tin mở rộng', icon: 'icon-contact_phone', isActive: false },
-        { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-add_shopping_cart', isActive: false },
-        { name: 'Opponent', textDefault: 'Đối thủ', icon: 'icon-shopping_bag', isActive: false },
-        { name: 'Task', textDefault: 'Quy trình', icon: 'icon-shopping_bag', isActive: false },
-      ]
+    this.tabDetail = [
+      { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+      { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-contact_phone', isActive: false },
+      { name: 'Opponent', textDefault: 'Đối thủ', icon: 'icon-people_alt', isActive: false },
+      { name: 'Task', textDefault: 'Quy trình', icon: 'icon-more', isActive: false },
+      { name: 'Field', textDefault: 'Thông tin mở rộng', icon: 'icon-add_to_photos', isActive: false },
+    ]
   }
 
   changeTab(e){
     this.tabClicked = e;
-    // this.tabDetail = this.tabDetail.map(tabItem => ({
-    //   ...tabItem,
-    //   isActive: tabItem.name === this.tabClicked,
-    // }));
+    this.nameDetail = e;
   }
 
   clickMF(e, data){

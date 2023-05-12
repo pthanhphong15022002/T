@@ -29,6 +29,7 @@ export class PopupAddCardTransComponent extends UIComponent {
   grView: any;
   getCardFuncID=EPCONST.FUNCID.CA_Get;
   returnCardFuncID=EPCONST.FUNCID.CA_Return;
+  disableEdit=false;
   constructor(
     injector: Injector,
     private codxEpService: CodxEpService,
@@ -99,9 +100,18 @@ export class PopupAddCardTransComponent extends UIComponent {
     }
   }
   transIDChange(evt:any){
-    if(evt!=null){
+    if(evt!=null && evt?.data!=''){
       this.data.transID=evt?.data;
       this.detectorRef.detectChanges();
+      // if(this.funcID==this.returnCardFuncID){
+      //   this.codxEpService.getCardTranInfo(this.data.transID).subscribe((res:any)=>{
+      //     if(res){
+      //       this.data.resourceID=res?.resourceID;
+      //       this.disableEdit=true;
+      //       this.detectorRef.detectChanges();
+      //     }
+      //   })
+      // }      
     }
   }
 }

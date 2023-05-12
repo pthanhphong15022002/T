@@ -125,14 +125,15 @@
           <div class="d-flex flex-row">
             <div class="d-flex align-items-stretch">
               <div class="pe-2">
-                <codx-imgs
-                  [isToolTip]="true"
+                <codx-img
                   [width]="25"
                   [objectId]="dataSelected?.contacts?.recId"
                   objectType="CM_Contacts"
-                  [numberImages]="1"
+                  [imgOn]="dataSelected?.contacts?.modifiedOn"
+                  [objectName]="dataSelected?.contacts?.contactName"
+
                 >
-                </codx-imgs>
+                </codx-img>
               </div>
               <div>
                 <div

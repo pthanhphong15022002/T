@@ -117,7 +117,7 @@ export class ViewDetailComponent implements OnInit {
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      // { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
       { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
     ];
   }
@@ -198,21 +198,20 @@ export class ViewDetailComponent implements OnInit {
         .getDetailSignFile(this.itemDetail?.recID)
         .subscribe((res) => {
           if (res) {
+            debugger
+            let x= res;
             if (res.refType != null) {
               this.esService
                 .getEntity(this.itemDetail?.refType)
                 .subscribe((oEntity) => {
+                  debugger
                   if (oEntity) {
                     this.esService
                       .getod(this.itemDetail?.recID)
                       .subscribe((res) => {
                         res.refType = this.itemDetail?.refType;
-                        let item = this.dataReferences.filter((p) => {
-                          p.recID == res.recID;
-                        });
-                        if (item?.length == 0) {
-                          this.dataReferences.push(res);
-                        }
+                        let index = this.dataReferences.findIndex(x=>x.recID == res.recID);
+                        if (index < 0) this.dataReferences.push(res);
                         this.df.detectChanges();
                       });
                   }
@@ -486,33 +485,34 @@ export class ViewDetailComponent implements OnInit {
   }
 
   beforeCancel(datas: any) {
-    let mssgCode = 'ES015';
-    this.notify.alertCode(mssgCode).subscribe((x) => {
-      if (x.event?.status == 'Y') {
-        if (datas.approveStatus == '1') {
-          this.cancel(datas);
-        } else {
-          this.esService
-            .getApprovalTransActive(datas.recID)
-            .subscribe((lstTrans) => {
-              if (lstTrans && lstTrans?.length > 0) {
-                this.cancelControl = lstTrans[0]?.cancelControl;
-                if (this.cancelControl == '0') {
-                } else if (this.cancelControl == '1') {
-                  this.cancel(datas);
-                } else if (
-                  this.cancelControl == '2' ||
-                  this.cancelControl == '3'
-                ) {
-                  this.oCancelSF = datas;
-                  this.callfunc.openForm(this.addCancelComment, '', 650, 380);
-                }
-                return;
-              }
-            });
-        }
-      }
-    });
+    // let mssgCode = 'ES015';
+    // this.notify.alertCode(mssgCode).subscribe((x) => {
+    //   if (x.event?.status == 'Y') {
+        
+    //   }
+    // });
+    if (datas.approveStatus == '1') {
+      this.cancel(datas);
+    } else {
+      this.esService
+        .getApprovalTransActive(datas.recID)
+        .subscribe((lstTrans) => {
+          if (lstTrans && lstTrans?.length > 0) {
+            this.cancelControl = lstTrans[0]?.cancelControl;
+            if (this.cancelControl == '0') {
+            } else if (this.cancelControl == '1') {
+              this.cancel(datas);
+            } else if (
+              this.cancelControl == '2' ||
+              this.cancelControl == '3'
+            ) {
+              this.oCancelSF = datas;
+              this.callfunc.openForm(this.addCancelComment, '', 650, 380);
+            }
+            return;
+          }
+        });
+    }
   }
 
   cancel(datas: any) {

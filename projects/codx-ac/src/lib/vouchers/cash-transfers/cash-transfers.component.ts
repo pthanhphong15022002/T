@@ -13,6 +13,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { CashTransferService } from './cash-transfers.service';
 import { PopupAddCashTransferComponent } from './popup-add-cash-transfer/popup-add-cash-transfer.component';
 
 @Component({
@@ -33,8 +34,11 @@ export class CashTransfersComponent
   functionName: string;
   journalNo: string;
 
-  constructor(inject: Injector) {
-    super(inject);
+  constructor(
+    injector: Injector,
+    private cashTransferService: CashTransferService
+  ) {
+    super(injector);
 
     this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
@@ -67,7 +71,7 @@ export class CashTransfersComponent
   //#endregion
 
   //#region Event
-  handleClickMoreFuncs(e, data) {
+  onClickMoreFuncs(e, data) {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -84,7 +88,7 @@ export class CashTransfersComponent
     }
   }
 
-  handleClickAdd(e): void {
+  onClickAdd(e): void {
     this.view.dataService
       .addNew(() =>
         this.api.exec('AC', 'CashTranfersBusiness', 'SetDefaultAsync', [
@@ -107,7 +111,7 @@ export class CashTransfersComponent
                 PopupAddCashTransferComponent,
                 {
                   formType: 'add',
-                  parentID: this.journalNo,
+                  journalNo: this.journalNo,
                   formTitle: `${e.text} ${this.functionName}`,
                 },
                 options,
@@ -117,12 +121,15 @@ export class CashTransfersComponent
           });
       });
   }
+  //#endregion
 
+  //#region Method
   edit(e, data): void {
     console.log('edit', { data });
 
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.edit(data).subscribe((res: any) => {
+    const copiedData = { ...data };
+    this.view.dataService.dataSelected = copiedData;
+    this.view.dataService.edit(copiedData).subscribe((res: any) => {
       console.log({ res });
 
       let options = new SidebarModel();
@@ -139,6 +146,7 @@ export class CashTransfersComponent
               {
                 formType: 'edit',
                 formTitle: `${e.text} ${this.functionName}`,
+                journalNo: this.journalNo,
               },
               options,
               this.view.funcID
@@ -177,21 +185,11 @@ export class CashTransfersComponent
         });
     });
   }
-  //#endregion
 
-  //#region Method
   delete(data): void {
-    this.view.dataService.delete([data], true).subscribe((res: any) => {
-      console.log({ res });
+    this.view.dataService.delete([data]).subscribe((res: any) => {
       if (res?.data) {
-        this.api
-          .exec(
-            'ERM.Business.AC',
-            'VATInvoicesBusiness',
-            'DeleteVATInvoiceAsync',
-            data
-          )
-          .subscribe((res) => console.log(res));
+        this.cashTransferService.deleteVatInvoiceByTransID(data.recID);
       }
     });
   }

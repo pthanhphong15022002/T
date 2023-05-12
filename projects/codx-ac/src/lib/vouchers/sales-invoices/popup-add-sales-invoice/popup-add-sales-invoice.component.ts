@@ -164,7 +164,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  onClickSave(closeAfterSaving: boolean): void {
+  onClickSave(closeAfterSave: boolean): void {
     console.log(this.salesInvoice);
     console.log(this.salesInvoicesLines);
 
@@ -198,7 +198,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
       'SM_SalesInvoices',
       this.form,
       this.masterService.hasSaved,
-      () => this.save(closeAfterSaving)
+      () => this.save(closeAfterSave)
     );
   }
 
@@ -285,7 +285,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   //#endregion
 
   //#region Method
-  save(closeAfterSaving: boolean): void {
+  save(closeAfterSave: boolean): void {
     this.salesInvoice.status = '1';
 
     if (this.masterService.hasSaved) {
@@ -297,7 +297,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
 
     this.masterService.save().subscribe((res: any) => {
       if (res.save.data || res.update.data) {
-        if (closeAfterSaving) {
+        if (closeAfterSave) {
           this.dialogRef.close();
         } else {
           this.resetForm();

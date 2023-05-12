@@ -203,7 +203,22 @@ textarea:focus,
 .e-input[readonly]:focus {
   border-color: #ced4da !important;
 }
-
+.aside-secondary{
+  .menu-sub.menu-sub-accordion{
+    padding-left: 27px;
+    padding-top: 5px;
+  }
+  .tab-content > .tab-pane {
+    padding-right: 0px;
+  }
+  .aside-workspace.px-4{
+    padding-left: 10px!important;
+    padding-right: 5px!important;
+  }
+  .menu-fit {
+    width: 240px;
+  }
+}
 /***END Khong duoc xoa***/
 .user-mini-icon {
   width: 36px;
@@ -2257,9 +2272,7 @@ lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled {
   }
 }
 
-.aside-secondary .menu-fit {
-  width: 225px;
-}
+
 .codx_cardcenter .popover {
   white-space: nowrap;
 }
@@ -2780,4 +2793,23 @@ codx-vll.vll-post{
 
 .content-tree .menu-nav li.menu-item{
   display: block!important;
+}
+
+/*TBChung thêm á đừng xóa tội em*/
+.text-highlight >em
+{
+  color: #1A73EC;
+}
+/*TBChung thêm á đừng xóa tội em*/
+.e-checkbox-wrapper .e-checkbox {
+  opacity: 1;
+}
+
+//calendar
+.codx_title_sub_primary {
+  color:var(--primary-dark);
+}
+
+.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
+  color: var(--gray-700);
 }

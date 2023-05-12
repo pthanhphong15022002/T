@@ -78,7 +78,7 @@ export class CmcustomerDetailComponent implements OnInit {
     { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
   ];
   treeTask = [];
-  dataSelected: any;
+  @Input() dataSelected: any;
   name = 'Information';
   id = '';
   tabDetail = [];
@@ -103,11 +103,11 @@ export class CmcustomerDetailComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['recID']) {
-      if (changes['recID'].currentValue) {
-        if (this.recID == this.id) return;
-        this.id = this.recID;
-        this.getOneCustomerDetail(this.id, this.funcID);
+    if (changes['dataSelected']) {
+      if (changes['dataSelected'].currentValue != null && changes['dataSelected'].currentValue?.recID) {
+        if (changes['dataSelected'].currentValue?.recID == this.id) return;
+        this.id = changes['dataSelected'].currentValue?.recID;
+        this.getOneCustomerDetail();
       }
     }
   }
@@ -121,33 +121,28 @@ export class CmcustomerDetailComponent implements OnInit {
     });
   }
 
-  getOneCustomerDetail(id, funcID) {
+  getOneCustomerDetail() {
     this.viewTag = '';
     this.loaded = false;
-    this.cmSv.getOneCustomer(id, funcID).subscribe((res) => {
-      if (res) {
-        this.dataSelected = res;
-        this.viewTag = this.dataSelected?.tags;
-        // this.getListContactByObjectID(this.dataSelected?.recID);
-        this.getContactByObjectID(this.dataSelected?.recID);
-        this.getListAddress(this.entityName, this.dataSelected?.recID);
-        this.listTab(this.funcID);
-      }
-      this.loaded = true;
-    });
+    this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+    // this.getListContactByObjectID(this.dataSelected?.recID);
+    this.getContactByObjectID(this.dataSelected?.recID);
+    this.getListAddress(this.entityName, this.dataSelected?.recID);
+    this.listTab(this.funcID);
+    this.loaded = true;
   }
 
   getContactByObjectID(objectID) {
     this.cmSv.getContactByObjectID(objectID).subscribe((res) => {
       if (res) this.contactPerson = res;
+      this.viewTag = this.dataSelected?.tags;
+
     });
   }
 
   contactPersonEvent(e) {
     if (e.recID != this.contactPerson.recID) this.contactPerson = e;
   }
-
-
 
   getGridviewSetup() {
     this.cache
