@@ -359,8 +359,7 @@ export class CmCustomerComponent
     // this.afterLoad();
   }
 
-  viewChanged(e) {
-  }
+  viewChanged(e) {}
 
   changeView(e) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -442,10 +441,10 @@ export class CmCustomerComponent
             res.disabled = true;
             break;
           case 'CM0101_1':
-            if (data.isBlackList) res.isblur = true;
+            if (data.isBlackList) res.disabled = true;
             break;
           case 'CM0101_3':
-            if (!data.isBlackList) res.isblur = true;
+            if (!data.isBlackList) res.disabled = true;
             break;
           case 'CM0102_2':
             if (
@@ -453,7 +452,7 @@ export class CmCustomerComponent
               data.objectType.trim() == '' ||
               data.objectType != '1'
             )
-              res.isblur = true;
+              res.disabled = true;
             break;
           case 'CM0102_3':
             if (
@@ -461,7 +460,7 @@ export class CmCustomerComponent
               data.objectType.trim() == '' ||
               data.objectType != '3'
             )
-              res.isblur = true;
+              res.disabled = true;
             break;
         }
       });
@@ -516,6 +515,9 @@ export class CmCustomerComponent
             dialog.closed.subscribe((e) => {
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
+                e.event.modifiedOn = new Date();
+                this.view.dataService.update(e?.event).subscribe();
+                this.detectorRef.detectChanges();
                 // this.customerDetail.listTab(this.funcID);
               }
             });
@@ -555,15 +557,10 @@ export class CmCustomerComponent
           dialog.closed.subscribe((e) => {
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event != null) {
-              this.dataSelected = e.event;
-              // this.dataSelected.recID = this.dataSelected.recID;
-              this.view.dataService.update(this.dataSelected).subscribe();
-              // this.customerDetail.recID = this.dataSelected.recID;
-              this.customerDetail.getOneCustomerDetail(
-                this.dataSelected.recID,
-                this.funcID
-              );
-              // this.customerDetail.listTab(this.funcID);
+              this.view.dataService.update(e.event).subscribe();
+              this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+              this.customerDetail.recID = JSON.parse(JSON.stringify(this.dataSelected.recID));
+              this.customerDetail.getOneCustomerDetail();
               this.detectorRef.detectChanges();
             }
           });

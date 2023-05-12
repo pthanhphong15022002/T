@@ -5,9 +5,7 @@
   ></ng-container>
 </div>
 <ng-template #noData>
-  <div
-    class="empty-data"
-  >
+  <div class="empty-data">
     <div class="container h-100">
       <div class="list-empty card card-flush h-100">
         <div class="d-flex flex-column flex-center justify-content-center">
@@ -54,9 +52,9 @@
                 : data.competitorName
             }}
           </div>
-          <!-- <div class="d-flex align-items-center" *ngIf="funcID == 'CM0102' && data.contactType == '1'">
-            <span class="icon-person_outline text-danger icon-16 me-1"></span>
-          </div> -->
+          <div class="d-flex align-items-center" *ngIf="data.isBlackList">
+            <span class="icon-do_disturb_alt icon-16"></span>
+          </div>
         </div>
       </ng-template>
       <ng-template #descTmp let-data>
@@ -252,7 +250,7 @@
       <span
         *ngIf="funcID == 'CM0101'"
         class="icon-add_shopping_cart icon-18 text-gray-700 me-2"
-        >{{countDeal}}</span
+        >{{ countDeal }}</span
       >
       <span
         *ngIf="funcID == 'CM0101'"
