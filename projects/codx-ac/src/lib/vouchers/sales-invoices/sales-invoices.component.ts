@@ -176,8 +176,10 @@ export class SalesInvoicesComponent
   edit(e, data): void {
     console.log('edit', { data });
 
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.edit(data).subscribe((res) => {
+    const copiedData = { ...data };
+
+    this.view.dataService.dataSelected = copiedData;
+    this.view.dataService.edit(copiedData).subscribe((res) => {
       let options = new SidebarModel();
       options.DataService = this.view.dataService;
       options.FormModel = this.view.formModel;

@@ -52,4 +52,5 @@ export interface IVATInvoice {
   createdBy: string;
   modifiedOn: string | null;
   modifiedBy: string;
+  isTaxDetail: boolean | null;
 }
