@@ -10,16 +10,16 @@
   </div>
 </ng-container>
 <ng-template #panelLeftRef>
-  <ng-container *ngIf="loaded;else empty" >
+  <ng-container *ngIf="loaded" >
     <div class="container container-md h-100 bg-body rounded-4 scroll-y">
-      <ng-container *ngIf="data;else empty">
+      <ng-container *ngIf="data;else noData">
         <div class="w-larger p-9" [innerHTML]="data.contents | safe:'html'">
         </div>
       </ng-container>
   </div>
   </ng-container>
 </ng-template>
-<ng-template #empty>
+<ng-template #noData>
   <div class="w-100 h-100 d-flex flex-center">
     <img class="w-100 h-100 w-250px" src="assets/themes/sys/default/img/DataEmpty.svg" />
   </div>

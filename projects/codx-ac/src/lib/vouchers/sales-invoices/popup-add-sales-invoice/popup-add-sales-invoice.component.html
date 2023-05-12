@@ -16,12 +16,12 @@
         <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-center">
-              <span class="icon-info icon-18 me-2"></span>
+              <span class="icon-info icon-20 me-2"></span>
               <codx-label
                 fiedName="lblGeneralInfoTab"
                 default="Thông tin chứng từ"
                 [formModel]="form.formModel"
-                class="fw-bold fs-6"
+                class="fw-bold fs-5-sm text-uppercase"
               ></codx-label>
             </div>
           </ng-template>
@@ -215,12 +215,12 @@
         <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-center">
-              <i class="icon-receipt_long icon-18 me-2"></i>
+              <i class="icon-receipt_long icon-20 me-2"></i>
               <codx-label
                 fiedName="lblReceiptInfo"
                 [formModel]="form.formModel"
                 default="Thông tin hóa đơn"
-                class="fw-bold fs-6"
+                class="fw-bold fs-5-sm text-uppercase"
               ></codx-label>
             </div>
           </ng-template>
@@ -354,12 +354,12 @@
         <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-center">
-              <i class="icon-low_priority icon-18 me-2"></i>
+              <i class="icon-low_priority icon-20 me-2"></i>
               <codx-label
                 fiedName="lblRef"
                 [formModel]="form.formModel"
                 default="Tham chiếu"
-                class="fw-bold fs-6"
+                class="fw-bold fs-5-sm text-uppercase"
               ></codx-label>
             </div>
           </ng-template>
@@ -460,12 +460,12 @@
         <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-center">
-              <i class="icon-i-files-alt icon-18 me-2"></i>
+              <i class="icon-i-files-alt icon-20 me-2"></i>
               <codx-label
                 fiedName="lblOtherInfo"
                 [formModel]="form.formModel"
                 default="Thông tin khác"
-                class="fw-bold fs-6"
+                class="fw-bold fs-5-sm text-uppercase"
               ></codx-label>
             </div>
           </ng-template>
@@ -492,9 +492,9 @@
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
-            <i class="icon-format_list_numbered icon-18 me-2"></i>
+            <i class="icon-format_list_numbered icon-20 me-2"></i>
             <codx-label
-              class="fw-bold fs-6"
+              class="fw-bold fs-5-sm text-uppercase"
               fiedName="lblDetail"
               [formModel]="form.formModel"
               default="Chi tiết"
@@ -534,20 +534,20 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-
-    <button
-      class="btn btn-light-primary btn-sm mt-3 d-flex align-items-center"
-      (click)="onClickAddRow()"
-    >
-      <i class="icon-add icon-16 me-1"></i>
-      <codx-label
-        fiedName="lblAddLine"
-        [formModel]="fmSalesInvoicesLines"
-        default="Thêm dòng"
-      ></codx-label>
-    </button>
-
-    <div class="row mt-3">
+    <div class="d-flex justify-content-center my-3">
+      <button
+        class="btn btn-light-primary btn-sm mt-3 d-flex align-items-center"
+        (click)="onClickAddRow()"
+      >
+        <i class="icon-add icon-16 ms-n1"></i>
+        <codx-label 
+          fiedName="lblAddLine"
+          [formModel]="fmSalesInvoicesLines"
+          default="Thêm dòng"
+        ></codx-label>
+      </button>
+    </div>
+    <div class="row mt-5">
       <div class="col-5 form-group">
         <codx-label fiedName="memo" [formModel]="form.formModel"></codx-label>
         <codx-input

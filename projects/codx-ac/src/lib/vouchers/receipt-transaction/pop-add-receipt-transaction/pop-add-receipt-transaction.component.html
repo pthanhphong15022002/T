@@ -68,6 +68,16 @@
                 </div>
               </div>
             </div>
+            <div class="col-8">
+              <div class="form-group">
+                <!-- Tên Kho -->
+                <div class="form-group">
+                  <codx-label field="WarehouseName" default="Tên kho" [formModel]="form.formModel">
+                  </codx-label>
+                  <codx-input type="text" field="warehouseName" [disabled]="true" [crrValue]="inventoryJournal.warehouseName"></codx-input>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="row">
             <div class="col-4">
@@ -114,7 +124,7 @@
               <div class="form-group">
                 <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [disabled]="true" [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
+                <codx-input disabled="true" [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
                   (valueChange)="valueChange($event)">
                 </codx-input>
               </div>

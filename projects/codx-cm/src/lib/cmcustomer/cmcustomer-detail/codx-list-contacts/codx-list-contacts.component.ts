@@ -96,7 +96,7 @@ export class CodxListContactsComponent implements OnInit {
           this.loaded = true; */
         }),
         map((response: any) => {
-          return response[0];
+          return response ? response[0] : [];
         })
       );
   }

@@ -136,9 +136,16 @@
     [formModel]="view.formModel"
     [footer]="footer"
     [dataItem]="data"
+    [baseHeaderRightTmp]="baseHeaderRightTmp"
   >
   </codx-temp-full>
 </ng-template>
+<ng-template #baseHeaderRightTmp let-data>
+  <div class="d-flex justify-content-end" *ngIf="data.isBlackList">
+    <span class="icon-do_disturb_alt icon-20"></span>
+  </div>
+</ng-template>
+
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column">
     <div class="mt-1" *ngIf="funcID == 'CM0102' && data?.mobile">
@@ -175,7 +182,7 @@
     </div>
     <div *ngIf="funcID == 'CM0101'">
       <div class="mb-1">
-        <span class="icon-corporate_fare text-primary icon-20 me-1"></span>
+        <span class="icon-corporate_fare icon-16 me-1"></span>
         <span
           [innerHTML]="
             data?.custGroupID
@@ -190,13 +197,16 @@
       *ngIf="(funcID == 'CM0103' || funcID == 'CM0104') && data.industries"
     >
       <span class="icon-work_outline icon-16 me-1 text-gray-500"></span>
-      <div *ngFor="let item of data?.industries.split(';'); index as i" class="d-inline">
+      <div
+        *ngFor="let item of data?.industries.split(';'); index as i"
+        class="d-inline"
+      >
         <span
-          [innerHTML]="item | formatvalue : view.formModel : 'Industries' | async"
+          [innerHTML]="
+            item | formatvalue : view.formModel : 'Industries' | async
+          "
         ></span
-        ><span
-          class="me-1"
-          *ngIf="i < data?.industries.split(';').length - 1"
+        ><span class="me-1" *ngIf="i < data?.industries.split(';').length - 1"
           >,</span
         >
         <!-- {{ dataSelected?.segmentID }} -->
@@ -228,6 +238,7 @@
     [dataService]="view.dataService"
     [formModel]="view.formModel"
     [recID]="dataSelected.recID"
+    [dataSelected]="dataSelected"
     [funcID]="funcID"
     (clickMoreFunc)="clickMoreFunc($event)"
     [entityName]="entityName"

@@ -24,12 +24,14 @@ import {
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import {
+  CM_Deals,
   CM_Products,
   CM_Quotations,
   CM_QuotationsLines,
 } from '../../models/cm_model';
 import { PopupAddQuotationsLinesComponent } from '../../quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
 import { CodxCmService } from '../../codx-cm.service';
+import { CM_Contacts } from '../../models/tmpCrm.model';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -69,6 +71,8 @@ export class PopupAddQuotationsComponent implements OnInit {
   quotationLinesAddNew = [];
   quotationLinesEdit = [];
   disableRefID = false;
+  modelObjectIDContacs = new CM_Contacts;
+  modelCustomerIDDeals = new CM_Deals;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -150,13 +154,32 @@ export class PopupAddQuotationsComponent implements OnInit {
     }
   }
   //change Data
-  changeRefID(e) {}
+  changeCombox(e) {
+    if (!e?.data || !e?.field) return;
+    this.quotations[e.field] = e.data;
+    switch (e?.field) {
+      case 'refID':
+        this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
+        this.modelObjectIDContacs.objectID = this.quotations.customerID 
+        break;
+      case 'customerID':
+        this.modelCustomerIDDeals.customerID = this.quotations.customerID 
+        this.modelObjectIDContacs.objectID = this.quotations.customerID 
+        break;
+    }
+    this.changeDetector.detectChanges()
+  }
+
   valueChange(e) {
-    if (e?.data && e?.field) this.quotations[e.field] = e.data;
+    if (!e?.data || !e?.field) return;
+    this.quotations[e.field] = e.data;
   }
+
   valueChangeDate(e) {
-    if (e?.data && e?.field) this.quotations[e.field] = e.data?.fromDate;
+    if (!e?.data || !e?.field) return;
+    this.quotations[e.field] = e.data?.fromDate;
   }
+
   select(e) {}
   created(e) {}
 
