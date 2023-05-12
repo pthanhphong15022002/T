@@ -22,6 +22,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
   formModel: FormModel;
   gridViewSetup: any;
   validate: any = 0;
+  hasSave: boolean = false;
   type: any;
   lsVatCode: any;
   journals: any;
@@ -63,7 +64,13 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
   }
 
   close() {
-    this.dialog.close();
+    if(this.hasSave == false)
+    {
+      this.dialog.close();
+    }
+    this.dialog.close({
+      add: true
+    });
   }
 
   onSave() {
@@ -117,6 +124,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
         )
         .subscribe((res) => {
           if (res) {
+            this.hasSave = true;
             this.objectInventoryJournalLines.push({ ...this.inventoryJournalLine });
             this.clearInventoryJournalLines();
           }

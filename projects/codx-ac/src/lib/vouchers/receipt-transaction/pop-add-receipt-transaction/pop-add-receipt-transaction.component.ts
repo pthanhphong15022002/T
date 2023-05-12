@@ -449,7 +449,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           dialogs.closed.subscribe((res) => {
             if (res.event != null) {
               var dataline = res.event['data'];
-              this.inventoryJournalLines.push(dataline);
+              if(dataline)
+              {
+                this.inventoryJournalLines.push(dataline);
+              }
               this.loadPageCount();
               this.hasSaved = true;
               this.loadTotal();
