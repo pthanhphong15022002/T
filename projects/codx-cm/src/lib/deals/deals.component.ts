@@ -291,7 +291,7 @@ export class DealsComponent
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
-      titleAction: action === 'add' ? 'Thêm cơ hội' : 'Copy cơ hội',
+      titleAction: action === 'add' ? 'Thêm cơ hội' : 'Sao chép cơ hội',
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
