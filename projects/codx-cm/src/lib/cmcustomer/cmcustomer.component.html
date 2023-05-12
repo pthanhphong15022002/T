@@ -170,7 +170,6 @@
       ></span>
       <span
         [ngClass]="data.allowEmail ? 'text-primary' : ''"
-        class="text-gray-700 fs-7"
         >{{ data.personalEmail }}</span
       >
     </div>
@@ -191,7 +190,7 @@
       </div>
     </div>
     <div
-      class="mb-1 d-flex align-items-top"
+      class="mb-1 d-flex flex-wrap align-items-top"
       *ngIf="(funcID == 'CM0103' || funcID == 'CM0104') && data.industries"
     >
       <span class="icon-work_outline icon-16 me-1 text-gray-700"></span>
@@ -205,7 +204,7 @@
           "
         ></span
         ><span class="me-1 text-nowrap" *ngIf="i < data?.industries.split(';').length - 1"
-          >,</span
+          >, </span
         >
         <!-- {{ dataSelected?.segmentID }} -->
   </span>
