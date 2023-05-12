@@ -77,7 +77,7 @@ export class PopupAddAPPostingAccountComponent
   //#endregion
 
   //#region Method
-  save(closeAfterSaving: boolean): void {
+  save(closeAfterSave: boolean): void {
     console.log(this.apPostingAccount);
     console.log(this.form.formGroup);
 
@@ -125,7 +125,7 @@ export class PopupAddAPPostingAccountComponent
         console.log({ res });
 
         if (res.save || res.update) {
-          if (closeAfterSaving) {
+          if (closeAfterSave) {
             this.dialogRef.close();
           } else {
             this.form.formGroup.reset();
