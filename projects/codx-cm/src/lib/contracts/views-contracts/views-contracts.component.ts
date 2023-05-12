@@ -48,6 +48,8 @@ export class ViewsContractsComponent extends UIComponent{
 
   listClicked =[]
   tabClicked = '';
+  fomatDate = 'dd/MM/yyyy';
+  account:any
 
   views: Array<ViewModel> = [];
   service = 'CM';
@@ -127,6 +129,23 @@ export class ViewsContractsComponent extends UIComponent{
       { name: 'pay', textDefault: 'Phương thức và tiến độ thanh toán', icon: 'icon-tune', isActive: false },
       { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-more', isActive: false },
     ]
+    this.getAccount();
+  }
+
+  getAccount(){
+    this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'CompanySettingsBusiness',
+      'GetAsync'
+    ).subscribe(res => {
+      console.log(res);
+      if(res){
+        this.account = res;
+      }
+    })
+  }
+  async ngOnChanges(changes: SimpleChanges) {
   }
 
   ngAfterViewInit() {
