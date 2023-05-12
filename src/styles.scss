@@ -1464,20 +1464,20 @@ a {
   padding-top: 5px !important;
 }
 
-.label-colon {
-  position: relative;
-  padding-right: 10px;
+.label-colon span{
+  //position: relative;
+  //padding-right: 10px;
   min-height: 18px;
-  display: block;
+ // display: block;
   line-height: 18px;
 }
 
 .label-colon::after {
   content: ":";
-  position: absolute;
-  right: 6px;
-  top: 0;
-  height: 18px;
+  //position: absolute;
+  //right: 6px;
+  //top: 0;
+  //height: 18px;
 }
 
 .codx-label.required::after {

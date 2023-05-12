@@ -30,7 +30,8 @@
       }}</span>
   </div>
   <div>
-    <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{data?.totalAmt.toLocaleString('it-IT')}}</span>
+    <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{data?.totalAmt?.toLocaleString('it-IT') +'
+      '+data?.currencyID }}</span>
   </div>
 </ng-template>
 <ng-template #desc2Tmp let-data>
@@ -47,7 +48,7 @@
   <ng-container *ngIf="itemSelected">
     <div class="d-flex align-items-center ac-cashID mt-n8 mb-3">
       <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
-        <i class="text-white icon-16" [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
+        <i class="icon-i-file-earmark-text text-white icon-16"></i>
       </div>
       <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase me-3">
         {{ itemSelected?.voucherNo }}
@@ -78,7 +79,8 @@
       </div>
       <div class="d-flex align-self-center">
         <span class="badge badge-pill badge-primary me-3">
-          <span class="fw-bold fs-6">{{itemSelected?.totalAmt?.toLocaleString('it-IT')}}</span>
+          <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{itemSelected?.totalAmt?.toLocaleString('it-IT') +'
+            '+itemSelected?.currencyID }}</span>
         </span>
       </div>
     </div>
