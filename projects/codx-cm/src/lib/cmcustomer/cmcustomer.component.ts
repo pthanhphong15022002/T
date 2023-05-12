@@ -452,7 +452,7 @@ export class CmCustomerComponent
               data.objectType.trim() == '' ||
               data.objectType != '1'
             )
-              res.isblur = true;
+              res.disabled = true;
             break;
           case 'CM0102_3':
             if (
@@ -460,7 +460,7 @@ export class CmCustomerComponent
               data.objectType.trim() == '' ||
               data.objectType != '3'
             )
-              res.isblur = true;
+              res.disabled = true;
             break;
         }
       });
@@ -557,15 +557,10 @@ export class CmCustomerComponent
           dialog.closed.subscribe((e) => {
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event != null) {
-              this.dataSelected = e.event;
-              // this.dataSelected.recID = this.dataSelected.recID;
-              this.view.dataService.update(this.dataSelected).subscribe();
-              // this.customerDetail.recID = this.dataSelected.recID;
-              this.customerDetail.getOneCustomerDetail(
-                this.dataSelected.recID,
-                this.funcID
-              );
-              // this.customerDetail.listTab(this.funcID);
+              this.view.dataService.update(e.event).subscribe();
+              this.dataSelected = e?.event;
+              this.customerDetail.recID = this.dataSelected.recID;
+              this.customerDetail.getOneCustomerDetail();
               this.detectorRef.detectChanges();
             }
           });
