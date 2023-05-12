@@ -128,10 +128,10 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   edit(e, data): void {
     console.log('editRow', data);
 
-    const temp: ISalesInvoicesLine = { ...data };
+    const copiedData: ISalesInvoicesLine = { ...data };
 
-    this.dataService.dataSelected = temp;
-    this.dataService.edit(temp).subscribe(() => {
+    this.dataService.dataSelected = copiedData;
+    this.dataService.edit(copiedData).subscribe(() => {
       const dialogModel = new DialogModel();
       dialogModel.FormModel = this.fmSalesInvoicesLines;
       dialogModel.DataService = this.dataService;
@@ -165,10 +165,10 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   copy(e, data): void {
     console.log('copy', data);
 
-    let temp: ISalesInvoicesLine = { ...data };
+    const copiedData: ISalesInvoicesLine = { ...data };
 
-    temp.rowNo = this.salesInvoicesLines.length + 1;
-    this.dataService.dataSelected = temp;
+    copiedData.rowNo = this.salesInvoicesLines.length + 1;
+    this.dataService.dataSelected = copiedData;
     this.dataService.copy().subscribe(() => {
       const dialogModel = new DialogModel();
       dialogModel.FormModel = this.fmSalesInvoicesLines;

@@ -33,9 +33,9 @@ export class JournalService {
     );
   }
 
-  /** 
-   * If this model.voucherNo already exists, the system will automatically suggest another voucherNo 
-   * @param isEdit A boolean value that indicates whether you are in edit mode*/
+  /**
+   * If this model.voucherNo already exists, the system will automatically suggest another voucherNo.
+   * @param isEdit A boolean value that indicates whether you are in edit mode.*/
   handleVoucherNoAndSave(
     journal: IJournal,
     model: any,
@@ -108,24 +108,17 @@ export class JournalService {
       hiddenFields.push('DIM3');
     }
 
-    if (!Boolean(journal?.projectControl)) {
+    if (journal?.projectControl == '0') {
       hiddenFields.push('ProjectID');
     }
 
-    if (!Boolean(journal?.assetControl)) {
+    if (journal?.assetControl == '0') {
       hiddenFields.push('AssetID');
     }
 
-    const tempIDIMControls: any[] = journal?.idimControl
-      ? JSON.parse(journal?.idimControl)
-      : [];
-
-    if (tempIDIMControls.length > 0) {
-      for (let i = 0; i < 10; i++) {
-        if (!tempIDIMControls.some((t) => t.value == i)) {
-          hiddenFields.push('IDIM' + i);
-        }
-      }
+    const idimControls: string[] = journal?.idimControl?.split(',');
+    for (let i = 0; i < idimControls.length; i++) {
+      hiddenFields.push('IDIM' + idimControls[i]);
     }
 
     return hiddenFields;

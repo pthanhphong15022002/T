@@ -56,6 +56,7 @@ export class ReceiptTransactionComponent extends UIComponent{
   ];
   constructor(
     private inject: Injector,
+    private notification: NotificationsService,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
     @Optional() dialog?: DialogRef
@@ -183,6 +184,14 @@ export class ReceiptTransactionComponent extends UIComponent{
           option,
           this.view.funcID
         );
+        this.dialog.closed.subscribe((res) => {
+          if (res.event != null) {
+            if (res.event['update']) {
+              this.itemSelected = res.event['data'];
+              this.loadDatadetail(this.itemSelected);
+            }
+          }
+        });
       });
   }
   copy(e, data) {
@@ -212,7 +221,9 @@ export class ReceiptTransactionComponent extends UIComponent{
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.delete([data], true).subscribe((res: any) => {});
+    this.view.dataService.delete([data], true).subscribe((res: any) => {
+      this.notification.notifyCode('SYS008', 0, '');
+    });
   }
   export(data) {
     var gridModel = new DataRequest();

@@ -143,7 +143,7 @@ export class PopupAddSalesInvoicesLineComponent
     }
   }
 
-  onClickSave(closeAfterSaving: boolean) {
+  onClickSave(closeAfterSave: boolean) {
     console.log(this.salesInvoicesLine);
 
     if (
@@ -161,7 +161,7 @@ export class PopupAddSalesInvoicesLineComponent
         this.salesInvoicesLines.push({ ...this.salesInvoicesLine });
         this.index++;
 
-        if (closeAfterSaving) {
+        if (closeAfterSave) {
           this.dialogRef.close();
         } else {
           this.dataService.addNew().subscribe((res: ISalesInvoicesLine) => {

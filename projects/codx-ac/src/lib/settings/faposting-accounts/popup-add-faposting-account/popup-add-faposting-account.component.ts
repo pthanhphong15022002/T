@@ -66,7 +66,7 @@ export class PopupAddFAPostingAccountComponent extends UIComponent {
   //#endregion
 
   //#region Method
-  save(closeAfterSaving: boolean): void {
+  save(closeAfterSave: boolean): void {
     console.log(this.faPostingAccount);
     console.log(this.form.formGroup);
 
@@ -110,7 +110,7 @@ export class PopupAddFAPostingAccountComponent extends UIComponent {
         console.log({ res });
 
         if (res.save || res.update) {
-          if (closeAfterSaving) {
+          if (closeAfterSave) {
             this.dialogRef.close();
           } else {
             this.form.formGroup.reset();
