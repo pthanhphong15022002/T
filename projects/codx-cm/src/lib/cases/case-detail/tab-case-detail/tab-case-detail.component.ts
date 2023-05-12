@@ -4,7 +4,7 @@ import { UIComponent, FormModel } from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
 
 @Component({
-  selector: 'lib-tab-case-detail',
+  selector: 'codx-tab-case-detail',
   templateUrl: './tab-case-detail.component.html',
   styleUrls: ['./tab-case-detail.component.scss']
 })
@@ -22,10 +22,8 @@ export class TabCaseDetailComponent extends UIComponent
   // titleDefault= "Trường tùy chỉnh"//truyen vay da
   readonly tabInformation: string = 'Information';
   readonly tabField: string = 'Field';
-  readonly tabContact: string = 'Contact';
-  readonly tabOpponent: string = 'Opponent';
   readonly tabTask: string = 'Task';
-  readonly tabProduct: string = 'Product';
+
 
   fmProcductsLines: FormModel = {
     formName: 'CMProducts',
@@ -49,7 +47,7 @@ export class TabCaseDetailComponent extends UIComponent
 
   async executeApiCalls() {
     try {
-      await this.getListInstanceStep();
+    //  await this.getListInstanceStep();
       await this.getValueList();
     } catch (error) {
       console.error('Error executing API calls:', error);

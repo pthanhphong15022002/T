@@ -387,5 +387,5 @@
 </ng-template>
 
 <ng-template #contract let-data>
-  <list-contracts [projectID]="dataSelected?.recID"></list-contracts>
+  <list-contracts [projectID]="dataSelected?.recID" [customers]="dataSelected" [contactPerson]="contactPerson"></list-contracts>
 </ng-template>
