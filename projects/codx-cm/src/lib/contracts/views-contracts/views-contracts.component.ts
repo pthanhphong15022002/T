@@ -10,12 +10,15 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  ApiHttpService,
   ButtonModel,
+  CacheService,
   CallFuncService,
   DataRequest,
   DialogModel,
   DialogRef,
   FormModel,
+  NotificationsService,
   RequestOption,
   UIComponent,
   Util,
@@ -23,9 +26,11 @@ import {
   ViewType,
 } from 'codx-core';
 
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { PopupAddQuotationsComponent } from '../../quotations/popup-add-quotations/popup-add-quotations.component';
 import { ListContractsComponent } from '../list-contracts/list-contracts.component';
+import { AddContractsComponent } from '../add-contracts/add-contracts.component';
+import { CM_Contracts } from '../../models/cm_model';
 
 @Component({
   selector: 'lib-views-contracts',
@@ -97,6 +102,8 @@ export class ViewsContractsComponent extends UIComponent{
     private inject: Injector,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
+    private callFunc: CallFuncService,
+    private notiService: NotificationsService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -115,18 +122,6 @@ export class ViewsContractsComponent extends UIComponent{
     this.getAccount();
   }
 
-  getAccount(){
-    this.api.execSv<any>(
-      'SYS',
-      'AD',
-      'CompanySettingsBusiness',
-      'GetAsync'
-    ).subscribe(res => {
-      if(res){
-        this.account = res;
-      }
-    })
-  }
   async ngOnChanges(changes: SimpleChanges) {
   }
 
@@ -189,24 +184,113 @@ export class ViewsContractsComponent extends UIComponent{
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        this.delete(data);
+        this.deleteContract(data);
         break;
       case 'SYS03':
-        this.edit(data);
+        this.editContract(data);
         break;
       case 'SYS04':
-        this.copy(data);
+        this.copyContract(data);
         break;
     }
   }
 
-  add() {
-
+  async addContract(){
+    let contracts = new CM_Contracts();
+    // let contractOutput = await this.openPopupContract(this.projectID, "add",contracts);
+    // if(contractOutput?.event?.contract){
+    //   this.listContract.push(contractOutput?.event?.contract);
+    // }
   }
-  copy(data){
 
+  async editContract(contract){
+    let dataEdit = JSON.parse(JSON.stringify(contract));
+    // let dataOutput = await this.openPopupContract(this.projectID,"edit",dataEdit);
+    // let contractOutput = dataOutput?.event?.contract;
+    // if(contractOutput){
+    //   let index = this.listContract.findIndex(x => x.recID == contractOutput?.recID);
+    //   if(index >= 0){
+    //     this.listContract.splice(index, 1, contractOutput);
+    //   }
+    // }
   }
-  edit(data){}
-  delete(data){}
-  
+
+  async copyContract(contract){
+    let dataCopy = JSON.parse(JSON.stringify(contract));
+    // let contractOutput = await this.openPopupContract(this.projectID,"copy",dataCopy);
+    // if(contractOutput?.event?.contract){
+    //   this.listContract.push(contractOutput?.event?.contract);
+    // }
+  }
+
+  deleteContract(contract){
+    if(contract?.recID){
+      this.notiService.alertCode('SYS030').subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.api.exec<any>(
+            'CM',
+            'ContractsBusiness',
+            'DeleteContactAsync',
+            contract?.recID
+          ).subscribe(res => {
+            // if(res){
+            //   let index = this.listContract.findIndex(x => x.recID==contract.recID);
+            //   if(index >= 0){
+            //     this.listContract.splice(index, 1);
+            //   }
+            // }
+          });
+        }
+      })
+    }
+  }
+
+  async openPopupContract(projectID,action, contract?){
+    let data = {
+      projectID,
+      action,
+      contract: contract || null,
+      account: this.account,
+    }
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1010;
+    option.FormModel = this.formModel;
+    let popupContract = this.callFunc.openForm(
+      AddContractsComponent,
+      '',
+      null,
+      null,
+      '',
+      data,
+      '',
+      option
+    );
+    let dataPopupOutput = await firstValueFrom(popupContract.closed);
+    return dataPopupOutput;
+  }
+
+  getAccount(){
+    this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'CompanySettingsBusiness',
+      'GetAsync'
+    ).subscribe(res => {
+      console.log(res);
+      if(res){
+        this.account = res;
+      }
+    })
+  }
+
+  async getForModel  (functionID) {
+    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let formModel = new FormModel;
+    formModel.formName = f?.formName;
+    formModel.gridViewName = f?.gridViewName;
+    formModel.entityName = f?.entityName;
+    formModel.funcID = functionID;
+    return formModel;
+  }
 }

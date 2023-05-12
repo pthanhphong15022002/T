@@ -183,8 +183,6 @@ export class ListContractsComponent implements OnInit, OnChanges {
       '',
       option
     );
-    // Util.getViewPort().width,
-    // Util.getViewPort().height,
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
     return dataPopupOutput;
   }
