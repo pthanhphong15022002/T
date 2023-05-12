@@ -49,6 +49,10 @@ import { QuotationsViewDetailComponent } from './quotations/quotations-view-deta
 import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
 import { CodxTableComponent } from './contracts/component/codx-table/codx-table.component';
 import { NoDataComponent } from './contracts/component/no-data/no-data.component';
+import { CasesComponent } from './cases/cases.component';
+import { CaseDetailComponent } from './cases/case-detail/case-detail.component';
+import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.component';
+import { TabCaseDetailComponent } from './cases/case-detail/tab-case-detail/tab-case-detail.component';
 
 const routes: Routes = [
   {
@@ -64,14 +68,16 @@ const routes: Routes = [
         component: CmCustomerComponent,
       },
       {
-        // gán tạm để làm UI
         path: 'deals/:funcID',
         component: DealsComponent,
       },
       {
-          // gán tạm để làm UI
         path: 'quotations/:funcID',
         component: QuotationsComponent,
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
       },
       {
         path: '**',
@@ -115,7 +121,11 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxComboboxComponent,
     CodxTableComponent,
     QuotationsViewDetailComponent,
-    NoDataComponent
+    NoDataComponent,
+    CasesComponent,
+    CaseDetailComponent,
+    PopupAddCaseComponent,
+    TabCaseDetailComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

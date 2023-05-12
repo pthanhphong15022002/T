@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { CRUDService } from 'codx-core';
-import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.component';
+import { TabDetailCustomComponent } from '../../deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
 
 @Component({
-  selector: 'codx-deal-detail',
-  templateUrl: './deal-detail.component.html',
-  styleUrls: ['./deal-detail.component.scss']
+  selector: 'codx-case-detail',
+  templateUrl: './case-detail.component.html',
+  styleUrls: ['./case-detail.component.scss']
 })
-export class DealDetailComponent  implements OnInit {
+export class CaseDetailComponent  implements OnInit {
 
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
@@ -27,9 +27,6 @@ export class DealDetailComponent  implements OnInit {
     { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
     { name: 'Approve', textDefault: 'Ký duyệt', isActive: false, template: null },
     { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
-    { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
-    { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: null},
   ];
 
   treeTask = [];
@@ -65,11 +62,10 @@ export class DealDetailComponent  implements OnInit {
 
   listTab(funcID){
       this.tabDetail = [
-        { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-        { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-contact_phone', isActive: false },
-        { name: 'Opponent', textDefault: 'Đối thủ', icon: 'icon-people_alt', isActive: false },
-        { name: 'Task', textDefault: 'Quy trình', icon: 'icon-more', isActive: false },
-        { name: 'Field', textDefault: 'Thông tin mở rộng', icon: 'icon-add_to_photos', isActive: false },
+        { name: 'Information', textDefault: 'Chi tiết sự cố', icon: 'icon-info', isActive: true },
+        { name: 'Task', textDefault: 'Quy trình', icon: 'icon-shopping_bag', isActive: false },
+        { name: 'Field', textDefault: 'Thông tin mở rộng', icon: 'icon-contact_phone', isActive: false },
+
       ]
   }
 
@@ -90,4 +86,5 @@ export class DealDetailComponent  implements OnInit {
 
   }
 }
+
 
