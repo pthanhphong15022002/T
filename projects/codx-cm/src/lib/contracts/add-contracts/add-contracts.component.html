@@ -172,8 +172,8 @@
             ></codx-label>
           </div>
           <div class="">
+            <!-- [formModel]="dialog.formModel" -->
             <codx-input
-              [formModel]="dialog.formModel"
               field="orderID"
               type="combobox"
               [crrValue]="contracts?.orderID"
@@ -592,15 +592,15 @@
           <div>
             <codx-label
               [formModel]="dialog.formModel"
-              fiedName="companyID"
+              fiedName="customerID"
               default="Bên B"
             ></codx-label>
           </div>
           <div class="">
-            <!-- [formModel]="dialog.formModel" -->
             <codx-input
-              field="companyName"
-              type="text"
+              [formModel]="dialog.formModel"
+              field="customerID"
+            
               (valueChange)="valueChangeCombobox($event)"
               [crrValue]="contracts?.companyName"
             >

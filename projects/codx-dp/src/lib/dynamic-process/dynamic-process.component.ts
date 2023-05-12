@@ -116,6 +116,7 @@ export class DynamicProcessComponent
   isCopy: boolean = false;
   dataCopy: any;
   oldIdProccess: any;
+  isButton = true;
   // Call API Dynamic Proccess
   readonly service = 'DP';
   readonly assemblyName = 'ERM.Business.DP';
@@ -192,9 +193,12 @@ export class DynamicProcessComponent
     this.titleAction = evt.text;
     switch (evt.id) {
       case this.btnAdd:
-        this.add();
-        break;
+        if (this.isButton) {
+          this.add();
+          break;
+        }
     }
+    this.isButton = false;
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -255,6 +259,7 @@ export class DynamicProcessComponent
               dialogModel
             );
             dialog.closed.subscribe((e) => {
+              this.isButton = true;
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
                 e.event.totalInstance = this.totalInstance;
@@ -310,6 +315,7 @@ export class DynamicProcessComponent
                 dialogModel
               );
               dialog.closed.subscribe((e) => {
+                this.isButton = true;
                 if (!e?.event) this.view.dataService.clear();
                 if (e && e.event != null) {
                   this.view.dataService.update(e.event).subscribe();
@@ -377,6 +383,7 @@ export class DynamicProcessComponent
       dialogModel
     );
     dialog.closed.subscribe((e) => {
+      this.isButton = true;
       if (!e?.event) this.view.dataService.clear();
       if (e && e.event != null) {
         e.event.totalInstance = this.totalInstance;
@@ -509,13 +516,12 @@ export class DynamicProcessComponent
     this.itemSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
-
     switch (e.functionID) {
       case 'SYS01':
         this.add();
         break;
       case 'SYS03':
-        this.edit(data);
+        if (this.isButton) this.edit(data);
         break;
       case 'SYS04':
         this.OpenFormCopy(data);
@@ -527,7 +533,7 @@ export class DynamicProcessComponent
       case 'DP02014':
       case 'DP02024':
       case 'DP02034':
-        this.roles(data);
+        if (this.isButton) this.roles(data);
         break;
       case 'DP01011':
       case 'DP02011':
@@ -540,7 +546,7 @@ export class DynamicProcessComponent
       case 'DP02033':
       case 'DP02023':
       case 'DP02013':
-        this.properties(data);
+        if (this.isButton) this.properties(data);
         break;
       case 'DP01012': // edit name
       case 'DP02012':
@@ -554,6 +560,7 @@ export class DynamicProcessComponent
         this.settingSubmit(data.processNo);
         break;
     }
+    this.isButton = false;
   }
 
   changeDataMF(e, data) {
@@ -664,6 +671,7 @@ export class DynamicProcessComponent
         dialogModel
       )
       .closed.subscribe((e) => {
+        this.isButton = true;
         if (e?.event && e?.event != null) {
           this.view.dataService.update(e?.event).subscribe();
           this.detectorRef.detectChanges();
@@ -678,6 +686,7 @@ export class DynamicProcessComponent
     option.Width = '550px';
     this.dialog = this.callfc.openSide(PopupPropertiesComponent, data, option);
     this.dialog.closed.subscribe((e) => {
+      this.isButton = true;
       if (!e.event) this.view.dataService.clear();
     });
   }
@@ -823,7 +832,7 @@ export class DynamicProcessComponent
 
   changeValueInput(event) {
     let value = event?.data;
-    if(typeof event?.data === 'string') {
+    if (typeof event?.data === 'string') {
       value = value.trim();
     }
     this.processName = value;

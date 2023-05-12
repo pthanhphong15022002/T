@@ -155,6 +155,7 @@ export class CompanySettingComponent
         sameData: true,
         model: {
           panelRightRef: this.templateRight,
+          widthLeft: '100%',
         },
       },
     ];
