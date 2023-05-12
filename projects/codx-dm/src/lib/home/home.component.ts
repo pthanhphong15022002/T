@@ -163,6 +163,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   ]
 
   vllDM003:any;
+
+  loaded = false;
   constructor(
     inject: Injector,
     public dmSV: CodxDMService,
@@ -202,7 +204,11 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.folderService.options.srtDirections = "desc"
     
     this.dmSV.ChangeDataView.subscribe(res =>{
-      if(res) this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
+      if(res) {
+        this.loaded = false
+        this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
+        if(this.data && this.data.length == 0) this.loaded = true;
+      }
     })
     this.dmSV.isAddFolder.subscribe((item) => {
       if (item) {
@@ -222,6 +228,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.dmSV.isNodeSelect.subscribe((res) => {
       
       if (res) {
+        this.loaded = false;
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
           tree.textField = 'folderName';
@@ -262,6 +269,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.dmSV.isChangeClickData.subscribe(res=>{
       if(res)
       {
+        this.loaded = false;
         if(this.funcID == "DMT00")
         {
           this.folderService.getFolder(res.recID).subscribe((res2) => {
@@ -362,6 +370,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
     this.dmSV.isNodeDeleted.subscribe((res) => {
       if (res) {
+        
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
           try
@@ -397,11 +406,13 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           }
 
           if (breadcumbLink.length <= 1) {
+            this.loaded = false;
             this.refeshData();
             this.getDataFolder(this.dmSV.folderID)
           }
         }
         this.data = this.data.filter((x) => x.recID != res);
+        if(this.data && this.data.length == 0) this.loaded = true;
         this.view.dataService.data = this.view.dataService.data.filter(
           (x) => x.recID != res
         );
@@ -424,12 +435,13 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.view.dataService.data = this.view.dataService.data.filter(
           (x) => x.recID != item
         );
+        if(this.data && this.data.length == 0) this.loaded = true;
       }
     })
     //Thay đổi tên Folder
     this.dmSV.isNodeChange.subscribe((res) => {
       if (res) {
-        
+        this.loaded = false;
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree != null) tree.setNodeTree(res);
         //  that.dmSV.folderId.next(res.recID);
@@ -445,6 +457,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.dmSV.isRefeshData.subscribe(res=>{
       if(res)
       {
+        this.loaded = false;
         this.refeshData();
         this.getDataFolder(this.dmSV.folderID);
         if(this.fileService.options.favoriteID == "3") this.hideMF = true;
@@ -580,6 +593,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.route.params.subscribe((params) => {
       if (params?.funcID) {
         this.refeshData();
+        this.loaded = false;
         this.hideMF = false;
         this.funcID = params?.funcID;
         this.dmSV.folderID = '';
@@ -699,6 +713,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
   getDataByFuncID00()
   {
+    this.loaded = false;
     this.refeshData();
     this.disableMark();
     this.folderService.options.funcID = this.funcID;
@@ -1035,6 +1050,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         });
       } 
       else {
+        this.loaded = false;
         var breadcumb = [];
         var breadcumbLink = [];
         this.dmSV.page = 1;
@@ -1234,6 +1250,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         if(item.data.length <= 0 || item.data.length < this.modelSearch.pageSize)
           this.isScrollSearch = false;
         this.data = this.data.concat(item.data);
+        if(this.data && this.data.length == 0) this.loaded = true;
       } 
     });
   }
@@ -1279,6 +1296,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
                 this.dmSV.listFiles = item.data;
                 this.totalSearch = item.total;
                 this.data = [...this.data, ...this.dmSV.listFiles];
+                if(this.data && this.data.length == 0) this.loaded = true;
                 this.changeDetectorRef.detectChanges();
               } else {
                 this.totalSearch = 0;
@@ -1434,6 +1452,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
     if(!this.isScrollFile) return;
     this.fileService.options.funcID = this.funcID;
+    this.loaded = false
     //this.fileService.options.srtColumns = this.sortColumn;
     //this.fileService.options.srtDirections = this.sortDirection;
     this.fileService.GetFiles(id).subscribe((res) => {
@@ -1445,6 +1464,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.dmSV.totalPage = parseInt(res[1]);
           this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
         }
+        if(this.data && this.data.length == 0) this.loaded = true;
       }
       this.unableMark();
       this.detectorRef.detectChanges();
@@ -1454,12 +1474,15 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
   getDataFolder(id: any) {
     if(!this.isScrollFolder) return;
+    this.loaded = false;
     this.folderService.options.funcID = this.funcID;
     this.folderService.getFolders(id).subscribe((res) => {
       if (res && res[0]){
+        debugger
         this.dmSV.listFolder = this.dmSV.listFolder.concat(res[0]);
         this.listFolders = res[0];
         this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
+        if(this.data && this.data.length == 0) this.loaded = true;
         if(res[0].length <=0 || (res[0].length < this.folderService.options.pageSize))
         {
           this.isScrollFolder = false;
