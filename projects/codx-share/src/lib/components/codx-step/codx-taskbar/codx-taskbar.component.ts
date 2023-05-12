@@ -10,6 +10,7 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
   @Input() size = 20; // kích thước icon và chữ
   @Input() color = '';
   @Input() class = ''; 
+  @Input() change: any; 
   @Output() tab = new EventEmitter(); // giá trị trả về khi chọn => name
 
   sizeIcon = '';
@@ -22,17 +23,17 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
   ngOnInit(): void {
     this.size = this.size%2 == 0 ? this.size : this.size + 1;
     this.sizeIcon = this.size.toString();
-    this.sizeText = (this.size - 8).toString() + 'px';
-    this.tab.emit(this.listTaskConvert[0].name);  
+    this.sizeText = (this.size - 8).toString() + 'px'; 
   }
 
   ngOnChanges(changes: SimpleChanges){
-    if(changes.listTab){
+    if(changes.listTab || changes.change){
       this.listTaskConvert = this.listTab.map((item) => {
         return {...item, isActive: false}
       })
       this.listTaskConvert[0].isActive = true;
       this.tabOld = this.listTaskConvert[0];
+      this.tab.emit(this.listTaskConvert[0].name); 
     }
   }
   clickMenu(item) {
