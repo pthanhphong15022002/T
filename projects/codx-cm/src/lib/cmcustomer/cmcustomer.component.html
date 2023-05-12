@@ -115,9 +115,7 @@
 <!--list details tempfull-->
 <ng-template #itemTemplate let-data>
   <codx-temp-full
-    cardCss="card-template border-bottom p-3 list-task"
-    [moreFuncCss]="'me-15'"
-    [moreFuncCss]="'me-15'"
+    cardCss="card-template border-bottom p-3 list-cm"
     [typeMF]="'hover'"
     [imageId]="data.recID"
     [imageObjName]="getNameCrm(data)"
@@ -125,13 +123,13 @@
     (changeDataMF)="changeDataMF($event, data)"
     [imageReferType]="'avt'"
     [imageWidth]="35"
-    imgCss="me-3"
+    imgCss="me-4"
     [imageObjType]="entityName"
     [title]="getNameCrm(data)"
-    [titleCss]="'fs-6'"
+    [titleCss]="'fs-6 mb-1'"
     [descTmp]="descTmp"
     (clickMF)="clickMF($event, data)"
-    [moreFuncCss]="'me-15'"
+    [moreFuncCss]="'me-9'"
     [typeMF]="'hover'"
     [formModel]="view.formModel"
     [footer]="footer"
@@ -142,13 +140,13 @@
 </ng-template>
 <ng-template #baseHeaderRightTmp let-data>
   <div class="d-flex justify-content-end" *ngIf="data.isBlackList">
-    <span class="icon-do_disturb_alt icon-20"></span>
+    <span class="icon-do_disturb_alt icon-16 text-gray-700"></span>
   </div>
 </ng-template>
 
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column">
-    <div class="mt-1" *ngIf="funcID == 'CM0102' && data?.mobile">
+    <div class="mb-1 d-flex align-items-center" *ngIf="funcID == 'CM0102' && data?.mobile">
       <span
         [ngClass]="
           data.allowCall
@@ -159,11 +157,11 @@
       ></span>
       <span
         [ngClass]="data.allowCall ? 'text-primary' : ''"
-        class="text-gray-900"
+        class="text-gray-700"
         >{{ data.mobile }}</span
       >
     </div>
-    <div class="mt-1" *ngIf="funcID == 'CM0102' && data?.personalEmail">
+    <div class="mb-1 d-flex align-items-center" *ngIf="funcID == 'CM0102' && data?.personalEmail">
       <span
         [ngClass]="
           data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'
@@ -172,18 +170,18 @@
       ></span>
       <span
         [ngClass]="data.allowEmail ? 'text-primary' : ''"
-        class="text-gray-900"
+        class="text-gray-700 fs-7"
         >{{ data.personalEmail }}</span
       >
     </div>
-    <div class="mt-1" *ngIf="data.address">
-      <span class="icon-location_on icon-16 me-1 text-gray-500"></span>
-      <span>{{ data.address }}</span>
+    <div class="mb-1 d-flex align-items-top" *ngIf="data.address">
+      <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
+      <span class="fs-7 text-gray-600">{{ data.address }}</span>
     </div>
     <div *ngIf="funcID == 'CM0101'">
-      <div class="mb-1">
-        <span class="icon-corporate_fare icon-16 me-1"></span>
-        <span
+      <div class="mb-1 d-flex align-items-center">
+        <span class="icon-corporate_fare icon-14 me-1"></span>
+        <span class="fs-7"
           [innerHTML]="
             data?.custGroupID
               | formatvalue : view.formModel : 'CustGroupID'
@@ -193,7 +191,7 @@
       </div>
     </div>
     <div
-      class="mt-1"
+      class="mb-1 d-flex align-items-center"
       *ngIf="(funcID == 'CM0103' || funcID == 'CM0104') && data.industries"
     >
       <span class="icon-work_outline icon-16 me-1 text-gray-500"></span>
@@ -215,13 +213,13 @@
   </div>
 </ng-template>
 <ng-template #footer let-data>
-  <div class="d-flex justify-content-end">
-    <span class="d-flex align-items-center me-1 text-gray-700">{{
+  <div class="d-flex align-items-center justify-content-end">
+    <span class="me-3 text-gray-700">{{
       data?.createdOn | date : "dd/MM/yyyy"
     }}</span>
-    <codx-imgs
+    <codx-imgs class="h-25px"
       [isToolTip]="true"
-      [width]="30"
+      [width]="25"
       [objectId]="data.createdBy"
       [objectType]="'AD_Users'"
       [numberImages]="1"
@@ -238,7 +236,6 @@
     [dataService]="view.dataService"
     [formModel]="view.formModel"
     [recID]="dataSelected.recID"
-    [dataSelected]="dataSelected"
     [funcID]="funcID"
     (clickMoreFunc)="clickMoreFunc($event)"
     [entityName]="entityName"
