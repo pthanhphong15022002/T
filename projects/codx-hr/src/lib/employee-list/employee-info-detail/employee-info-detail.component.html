@@ -3216,7 +3216,7 @@
       scrollSpy
       (sectionChange)="onSectionChange($event)"
     > -->
-    <ng-container>
+    
       <!-- Lương -->
       <div class="user-profile overview d-block" [id]="eBasicSalaryFuncID">
         <div class="rounded-2 p-5 bg-white mb-4">
@@ -3274,17 +3274,11 @@
             </div>
           </div>
 
-          <div class="mt-3">
-            <!-- <div *ngIf="!crrEBSalary && !eBasicSalaryFormmodel">
-              <div class="d-flex ms-1">
-                <span class="text-gray-500 fw-bold">
-                  {{ "SYS011" | mssg | async }}
-                </span>
-              </div>
-            </div> -->
+          <ng-container *ngIf="loadedESalary">
+          <div class="mt-3"> 
             <div
               class="mb-2"
-              *ngIf="crrEBSalary != null; else emptyDataTemplate"
+              *ngIf="crrEBSalary; else emptyDataTemplate"
             >
               <codx-temp-full
                 (clickMF)="clickMF($event, crrEBSalary, 'basicSalary')"
@@ -3368,6 +3362,8 @@
               </ng-template>
             </div>
           </div>
+    </ng-container>
+
         </div>
       </div>
       <!--Removed Lương chức danh -->
@@ -3574,6 +3570,7 @@
               </button>
             </div>
           </div>
+          <ng-container *ngIf="loadEBenefit">
           <div class="d-flex flex-wrap pt-5 ps-4">
             <div class="w-100" *ngIf="listCrrBenefit; else emptyDataTemplate">
             <ng-container *ngFor="let benefit of listCrrBenefit">
@@ -3637,6 +3634,7 @@
             </ng-container>
            </div>
           </div>
+        </ng-container>
         </div>
       </div>
       <!-- Tài sản cấp phát -->
@@ -3644,7 +3642,7 @@
         class="user-profile overview d-block user-family"
         [id]="eAssetFuncID"
       >
-        <div class="rounded-2 p-5 bg-white mb-1" *ngIf="eAssetFormModel">
+        <div class="rounded-2 p-5 bg-white mb-1">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <div class="user-status d-flex align-items-center">
@@ -3696,12 +3694,12 @@
               </button>
             </div>
           </div>
-
           <div class="profile-grid">
           <codx-gridview
           *ngIf="eAssetColumnGrid" 
           #eAssetGridView
           [formModel]="eAssetFormModel"
+          [emptyTemplate]="emptyDataTemplate"
           [entityName]="'HR_EAssets'"
           service="HR" 
           assemblyName="ERM.Business.HR"
@@ -3830,7 +3828,7 @@
 
         </div>
       </div>
-    </ng-container>
+    
     <!-- </div> -->
   </div>
 </ng-template>
@@ -5979,81 +5977,7 @@
   </div>
 </ng-template>
 
-<!-- #region Hộ chiếu columnGrid templates-->
-<ng-template #passportCol1 let-data>
-  <div class="d-flex align-items-center">
-    <!-- <span
-      class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
-      [class]="
-        data.recID == crrPassport?.recID ? ' bg-primary' : 'bg-transparent'
-      "
-    ></span> -->
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-5px">
-        <span class="icon-description icon-16 text-gray-500 me-2"></span>
-        <div
-          class="text-dark"
-          [innerHTML]="
-            data?.passportNo
-              | formatvalue : ePassportFormModel : 'passportNo'
-              | async
-          "
-        ></div>
-      </div>
-      <div class="d-flex align-items-center">
-        <span class="icon-home_work icon-16 text-gray-500 me-2"></span>
-        <div
-          class="text-dark"
-          [innerHTML]="
-            data?.issuedPlace
-              | formatvalue : ePassportFormModel : 'issuedPlace'
-              | async
-          "
-        ></div>
-      </div>
-    </div>
-  </div>
-</ng-template>
 
-<ng-template #passportCol2 let-data>
-  <div class="has-action-menu">
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-5px">
-        <span class="icon-event icon-16 text-primary me-2"></span>
-        <span class="text-dark">
-          <span
-            [innerHTML]="
-              data?.issuedDate
-                | formatvalue : ePassportFormModel : 'issuedDate'
-                | async
-            "
-          ></span>
-        </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span class="icon-event icon-16 text-danger me-2"></span>
-        <span class="text-dark">
-          <span
-            [innerHTML]="
-              data?.expiredDate
-                | formatvalue : ePassportFormModel : 'expiredDate'
-                | async
-            "
-          ></span>
-        </span>
-        <codx-mfunc
-          [formModel]="ePassportFormModel"
-          (clickMF)="clickMF($event, data, 'passportGridView')"
-          type="hover"
-          [dataItem]="data"
-        >
-        </codx-mfunc>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<!-- #endregion -->
 
 <!-- #region Thị thực columnGrid templates-->
 <ng-template #visaCol1 let-data>
@@ -7373,112 +7297,6 @@
 </ng-template>
 
 <ng-template #tmpViewAllPassport let-dialog1>
-  <div class="">
-    <div class="codx-form card w-100 h-100 rounded-0 border-0">
-      <div class="card-header flex-column">
-        <div class="d-flex align-items-center justify-content-between w-100">
-          <div class="card-title">
-            <div class="d-flex flex-column">
-              <div class="d-flex align-items-center mb-3 mt-5">
-                <span class="icon-i-filter-right icon-20 me-2"></span>
-                <div class="d-flex align-items-center me-3">
-                  <codx-label
-                    [formModel]="ePassportFormModel"
-                    [name]="'lblViewAllEPassport'"
-                    default="Hộ chiếu"
-                    class="fw-bold text-uppercase fs-5 text-gray-600"
-                  >
-                  </codx-label>
-                  <span class="text-gray-500 mx-2"> | </span>
-                  <span class="text-gray-500"
-                    >Tất cả ({{ passportRowCount }})</span
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-toolbar">
-            <button
-              type="button"
-              class="btn btn-flex text-dark-75 text-hover-primary px-0"
-              (click)="close2(dialog1)"
-            >
-              <span class="icon-close icon-18"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="mt-4 profile-grid">
-          <codx-gridview
-          
-            #passportGridview
-            [formModel]="ePassportFormModel"
-            [columnsGrid]="passportColumnGrid"
-            [service]="'HR'"
-            [assemblyName]="'Core'"
-            [className]="'DataBusiness'"
-            [method]="'LoadDataAsync'"
-            [predicates]="'EmployeeID=@0'"
-            [dataValues]="employeeID"
-            [dataService]="dataService"
-            [pageSize]="numPageSizeGridView"
-            [rowHeight]="40"
-            height="auto"
-            [sort]="[passportSortModel]"
-          ></codx-gridview>
-        </div>
-      </div>
-      <div class="card-footer border-0">
-        <div class="d-flex justify-content-end">
-          <!-- <button class="btn btn-primary" (click)="onSaveUpdateForm()">
-            <i class="icon-save"></i>
-            <codx-label
-              default="Lưu"
-              name="lblSave"
-              [formModel]="view.formModel"
-            ></codx-label>
-          </button> -->
-        </div>
-      </div>
-    </div>
-
-    <!-- <div class="d-flex align-items-center mb-3 mt-5">
-      <span class="icon-i-filter-right icon-20 me-2"></span>
-      <div class="d-flex align-items-center me-3">
-        <codx-label
-          [formModel]="ePassportFormModel"
-          [name]="'lblViewAllEPassport'"
-          default="Hộ chiếu"
-          class="fw-bold text-uppercase fs-5 text-gray-600"
-        >
-        </codx-label>
-        <span class="text-gray-500 mx-2"> | </span>
-        <span class="text-gray-500">({{ passportRowCount }})</span>
-      </div>
-</div>
-
-
-  <div class="mt-4 profile-grid">
-    <codx-gridview
-      *ngIf="passportColumnGrid && ePassportFormModel"
-      #passportGridview
-      [formModel]="ePassportFormModel"
-      [columnsGrid]="passportColumnGrid"
-      [service]="'HR'"
-      [assemblyName]="'Core'"
-      [className]="'DataBusiness'"
-      [method]="'LoadDataAsync'"
-      [predicates]="'EmployeeID=@0'"
-      [dataValues]="employeeID"
-      [dataService]="dataService"
-      [pageSize]="numPageSizeGridView"
-      [rowHeight]="40"
-      height="auto"
-      [sort]="[passportSortModel]"
-    ></codx-gridview>
-  </div> -->
-  </div>
 </ng-template>
 
 <!-- Salary modal view All -->

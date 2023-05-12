@@ -195,10 +195,7 @@
               </e-item>
               <e-item prefixIcon="e-icons icon-skip_next" id="lastPage">
               </e-item>
-              <e-item
-                *ngIf="lstFiles?.length > 1"
-                [template]="fileIdx"
-              ></e-item>
+
               <!-- 
               <e-item id="viewThumbnail" prefixIcon="e-icons icon-article">
               </e-item> -->
@@ -222,6 +219,10 @@
         >
           <ejs-toolbar>
             <e-items>
+              <e-item
+                *ngIf="lstFiles?.length > 1"
+                [template]="fileIdx"
+              ></e-item>
               <e-item
                 prefixIcon="e-icons e-zoom-out"
                 (click)="changeZoom('out', $event)"
@@ -1035,8 +1036,8 @@
     type="number"
     id="pageNumber"
     min="1"
-    [(max)]="pageMax"
-    [(crrValue)]="curPage"
+    [max]="pageMax"
+    [crrValue]="curPage"
     (valueChange)="goToPage($event)"
     [showSpinButton]="false"
   >

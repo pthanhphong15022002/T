@@ -20,6 +20,7 @@ export class CodxCommentTempComponent implements OnInit {
   @Input() viewType = '0'; // Thảo customview
   @Input() zIndex: number = 0; // Thảo truyền z index
   @Input() openViewPopup = true ;// Thảo truyền ko cho click
+  @Input() isComment = true ;// thuận truyền vào để không cho bình luận chỉ xem.
   @Input() formModel: FormModel = null;
   lstData: any[] = [];
   dVll: any = {};
@@ -70,7 +71,6 @@ export class CodxCommentTempComponent implements OnInit {
       );
       popup.closed.subscribe((res: any) => {
         if (res){
-          debugger
           this.totalComment = res.event;
           let ele = document.getElementsByTagName("codx-tabs");
           if(ele)

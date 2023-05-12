@@ -55,9 +55,12 @@ export class CashPaymentsComponent extends UIComponent {
   journal: IJournal;
   approval: any;
   total: any = 0;
-  cashpaymentline: Array<CashPaymentLine> = [];
-  settledInvoices: Array<SettledInvoices> = [];
-  acctTrans : Array<any> = [];
+  className: any;
+  classNameLine: any;
+  entityName: any;
+  cashpaymentline: any;
+  settledInvoices: any;
+  acctTrans: any;
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
@@ -133,7 +136,20 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
     ];
-
+    switch (this.view.funcID) {
+      case 'ACT0429':
+      case 'ACT0410':
+        this.classNameLine = 'CashPaymentsLinesBusiness';
+        this.entityName = 'AC_CashPayments';
+        this.className = 'CashPaymentsBusiness';
+        break;
+      case 'ACT0428':
+      case 'ACT0401':
+        this.classNameLine = 'CashReceiptsLinesBusiness';
+        this.entityName = 'AC_CashReceipts';
+        this.className = 'CashReceiptsBusiness';
+        break;
+    }
     this.detectorRef.detectChanges();
   }
 
@@ -170,16 +186,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   //#region Method
   setDefault(o) {
-    let classname;
-    switch(this.view.funcID){
-      case 'ACT0410':
-        classname = 'CashPaymentsBusiness'
-        break;
-      case 'ACT0401':
-        classname = 'CashReceiptsBusiness'
-        break;
-    }
-    return this.api.exec('AC', classname, 'SetDefaultAsync', [
+    return this.api.exec('AC', this.className, 'SetDefaultAsync', [
       this.journalNo,
     ]);
   }
@@ -213,7 +220,7 @@ export class CashPaymentsComponent extends UIComponent {
         });
       });
   }
-  
+
   edit(e, data) {
     if (data) {
       this.view.dataService.dataSelected = { ...data };
@@ -320,26 +327,28 @@ export class CashPaymentsComponent extends UIComponent {
         x.functionID == 'ACT041002' ||
         x.functionID == 'ACT041004'
     );
-    // check có hay ko duyệt trước khi ghi sổ
-    if (data?.status == '1') {
-      if (this.approval == '0') {
-        bm.forEach((element) => {
-          element.disabled = true;
-        });
-      } else {
-        bm[1].disabled = true;
-        bm[2].disabled = true;
+    if (bm.length > 0) {
+      // check có hay ko duyệt trước khi ghi sổ
+      if (data?.status == '1') {
+        if (this.approval == '0') {
+          bm.forEach((element) => {
+            element.disabled = true;
+          });
+        } else {
+          bm[1].disabled = true;
+          bm[2].disabled = true;
+        }
       }
-    }
-    //Chờ duyệt
-    if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
-      bm[1].disabled = true;
-      bm[0].disabled = true;
-    }
-    //hủy duyệt
-    if (data?.approveStatus == '4' || data?.status == '0') {
-      for (var i = 0; i < bm.length; i++) {
-        bm[i].disabled = true;
+      //Chờ duyệt
+      if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
+        bm[1].disabled = true;
+        bm[0].disabled = true;
+      }
+      //hủy duyệt
+      if (data?.approveStatus == '4' || data?.status == '0') {
+        for (var i = 0; i < bm.length; i++) {
+          bm[i].disabled = true;
+        }
       }
     }
   }
@@ -355,7 +364,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.itemSelected = event?.data;
           this.loadDatadetail(this.itemSelected);
         }
-      } 
+      }
     }
   }
 
@@ -364,33 +373,25 @@ export class CashPaymentsComponent extends UIComponent {
       case '1':
       case '3':
         this.api
-          .exec('AC', 'CashPaymentsLinesBusiness', 'LoadDataAsync', [
-            data.recID,
-          ])
+          .exec('AC', this.classNameLine, 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
             this.cashpaymentline = res;
             this.loadTotal();
           });
         this.api
-          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [
-            data.recID,
-          ])
+          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
             this.acctTrans = res;
           });
         break;
       case '2':
         this.api
-          .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [
-            data.recID,
-          ])
+          .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
             this.settledInvoices = res;
           });
         this.api
-          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [
-            data.recID,
-          ])
+          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
             this.acctTrans = res;
           });
@@ -430,18 +431,18 @@ export class CashPaymentsComponent extends UIComponent {
     //   });
   }
 
-  formatDate(date){
-    return new Date(date).toLocaleDateString();;
+  formatDate(date) {
+    return new Date(date).toLocaleDateString();
   }
 
-  loadjounal(){
+  loadjounal() {
     const options = new DataRequest();
     options.entityName = 'AC_Journals';
     options.predicates = 'JournalNo=@0';
     options.dataValues = this.journalNo;
     options.pageLoading = false;
     this.api
-      .execSv<any>('AC','Core','DataBusiness', 'LoadDataAsync',options)
+      .execSv<any>('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
       .pipe(map((r) => r[0]))
       .subscribe((res) => {
         this.journal = res[0];

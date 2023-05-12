@@ -36,7 +36,6 @@ export class ReceiptTransactionComponent extends UIComponent{
   oData: any;
   page: any = 1;
   pageSize = 5;
-  itemName: any;
   lsVatCode: any;
   gridViewLines: any;
   fmInventoryJournalLines: FormModel = {
@@ -79,13 +78,6 @@ export class ReceiptTransactionComponent extends UIComponent{
   //#region Init
 
   onInit(): void {
-    this.api
-      .exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.itemName = res;
-        }
-      });
   }
 
   ngAfterViewInit() {
@@ -191,6 +183,14 @@ export class ReceiptTransactionComponent extends UIComponent{
           option,
           this.view.funcID
         );
+        this.dialog.closed.subscribe((res) => {
+          if (res.event != null) {
+            if (res.event['update']) {
+              this.itemSelected = res.event['data'];
+              this.loadDatadetail(this.itemSelected);
+            }
+          }
+        });
       });
   }
   copy(e, data) {
@@ -263,13 +263,6 @@ export class ReceiptTransactionComponent extends UIComponent{
       .subscribe((res: any) => {
         this.inventoryJournalLines = res;
       });
-    if(data.warehouseID)
-    {
-      this.api.exec('IV', 'InventoryJournalsBusiness', 'GetWarehouseNameAsync', [data.warehouseID])
-      .subscribe((res: any) => {
-        this.itemSelected.warehouseName = res;
-      });
-    }
   }
   changeItemDetail(event) {
     if (event?.data.data || event?.data.error) {

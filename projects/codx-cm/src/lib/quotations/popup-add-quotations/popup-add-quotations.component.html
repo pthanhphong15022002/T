@@ -56,7 +56,7 @@
 </ng-template>
 <!-- End: Sub toolbar -->
 <!-- Start: Body -->
-<ng-template #body>
+<ng-template #body let-data>
   <div class="card-add mt-5" #cardbodyGeneral>
     <ejs-tab #quotationGeneral>
       <e-tabitems>
@@ -76,7 +76,7 @@
             </div>
           </ng-template>
           <ng-template #content>
-            <ng-container *ngTemplateOutlet="tabBasicGeneral"></ng-container>
+            <ng-container *ngTemplateOutlet="tabBasicGeneral ; context: { $implicit: data }"></ng-container>
           </ng-template>
         </e-tabitem>
       </e-tabitems>
@@ -113,7 +113,7 @@
 <!-- End: Body -->
 
 <!-- Start: Thông tin chung -->
-<ng-template #tabBasicGeneral>
+<ng-template #tabBasicGeneral let-data>
   <div class="m-5">
     <div class="row">
       <div class="col-6 row">
@@ -168,11 +168,11 @@
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
-            field="RefID"
+            field="refID"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="disableRefID"
-            (valueChange)="changeRefID($event)"
+            (valueChange)="changeCombox($event)"
           ></codx-input>
         </div>
       </div>
@@ -185,7 +185,7 @@
               [formModel]="form.formModel"
             ></codx-label>
             <codx-input
-              field="CreatedOn"
+              field="createdOn"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               (valueChange)="valueChangeDate($event)"
@@ -218,12 +218,23 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="disableRefID"
+            [crrValue]="data?.customerID"
+            (valueChange)="changeCombox($event)"
           ></codx-input>
         </div>
         <div class="form-group col-6">
-          <codx-label default="Liên hệ"></codx-label>
-          <codx-input type="text" placeholder="test thôi dung la"
-          [disabled]="disableRefID"></codx-input>
+          <codx-label
+            fiedName="ContactID"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            field="contactID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [model]="modelObjectIDContacs"
+            [crrValue]="data?.customerID"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
         </div>
       </div>
       <div class="col-6 row">
@@ -238,13 +249,19 @@
               field="currencyID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
+              (valueChange)="valueChange($event)"
             ></codx-input>
           </div>
           <div class="form-group col-6">
-            <codx-label default="Tỷ giá"></codx-label>
+            <codx-label
+              fiedName="ExchangeRate"
+              [formModel]="form.formModel"
+            ></codx-label>
             <codx-input
-              type="text"
-              placeholder="Field nao Khanh oi"
+              field="exchangeRate"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="valueChange($event)"
             ></codx-input>
           </div>
         </div>

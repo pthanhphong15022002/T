@@ -36,17 +36,17 @@
           </codx-input>
         </div>
       </div>
-      <!-- <div class="col-8">
+      <div class="col-8">
         <div class="form-group">
           <codx-label fiedName="ItemName" default="Tên mặt hàng" [formModel]="form.formModel"></codx-label>
-          <codx-input [disabled]="true" [Group]="form.formGroup" [formModel]="form.formModel" field="itemName">
+          <codx-input type="text" [disabled]="true" [crrValue]="inventoryJournalLine.itemName" field="itemName">
           </codx-input>
         </div>
-      </div> -->
+      </div>
     </div>
    
     <div class="p-5 bg-gray-100 border rounded-1">
-    <div class="row">
+    <div class="row tabLine">
       <div *ngIf="loadControl('IDIM0')" class="col-4">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="IDIM0"></codx-label>
@@ -163,6 +163,48 @@
       </div>
     </div>
 <hr />
+<div class="row">
+  <div *ngIf="loadControl('DIM1')" class="col-4">
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="DIM1"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+        field="diM1">
+      </codx-input>
+    </div>
+  </div>
+  <div *ngIf="loadControl('DIM2')" class="col-4">
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="DIM2"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+        field="diM2">
+      </codx-input>
+    </div>
+  </div>
+  <div *ngIf="loadControl('DIM3')" class="col-4">
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="DIM3"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+        field="diM3">
+      </codx-input>
+    </div>
+  </div>
+  <div *ngIf="loadControl('ProjectID')" class="col-4">
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="ProjectID"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+        field="projectID">
+      </codx-input>
+    </div>
+  </div>
+  <div *ngIf="loadControl('AssetGroupID')" class="col-8">
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="AssetGroupID"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+        field="assetGroupID">
+      </codx-input>
+    </div>
+  </div>
+</div>
   </ng-container>
 </ng-template>
 <ng-template #footer>

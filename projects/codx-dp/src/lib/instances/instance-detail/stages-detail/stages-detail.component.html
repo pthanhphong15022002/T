@@ -606,7 +606,7 @@
     </div>
     <div class="notify">
       <span class="me-3">
-        <codx-comment-temp [objectID]="data?.value.recID"></codx-comment-temp>
+        <codx-comment-temp [objectID]="data?.value.recID" [isComment]="!isClosed"></codx-comment-temp>
       </span>
     </div>
   </div>
@@ -881,7 +881,7 @@
 </ng-template>
 
 <ng-template #bodyFormReName>
-  <div class="form-group mt-3">
+  <div class="form-group mt-3" *ngIf="listStepReason.length > 0 && listStepReason !== null; else dataIsEmpty">
     <div *ngFor="let item of listStepReason">
       <div class="form-check py-2">
         <input
@@ -901,4 +901,24 @@
   <button type="button" class="btn btn-primary" (click)="onSaveReason()">
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
+</ng-template>
+
+
+<ng-template #dataIsEmpty>
+  <div class="empty-data">
+    <div class="container h-100">
+       <div class="list-empty card card-flush h-100">
+       <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+             src="../assets/themes/sys/default/img/DataEmpty.svg"
+             class="w-200px"
+          />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+             {{ "SYS011" | mssg | async }}
+          </div>
+       </div>
+       </div>
+    </div>
+ </div>
+
 </ng-template>

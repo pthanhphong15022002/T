@@ -18,6 +18,10 @@ export const environment = {
   hideFavCount: false,
   singleExec: false,
   asideMinimize: 'icon-title',
+  layout: {
+    title: '',
+    icon: '',
+  },
   externalLogin: {
     amazonId: '',
     facebookId: '',

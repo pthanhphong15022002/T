@@ -34,6 +34,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   @ViewChild('warehouse') warehouse: CodxInputComponent;
 
   keymodel: any = [];
+  reason: Array<Reason> = [];
+  warehouseName: any;
   headerText: string;
   dialog!: DialogRef;
   inventoryJournal: InventoryJournals;
@@ -49,6 +51,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   pageCount: any;
   tab: number = 0;
   total: any = 0;
+  page: any = 1;
+  pageSize = 5;
   hasSaved: any = false;
   journal: IJournal;
   voucherNoPlaceholderText$: Observable<string>;
@@ -125,36 +129,77 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.inventoryJournal);
+    this.pageCount = '(' + this.inventoryJournalLines.length + ')';
   }
 
   //#endregion
 
   //#region Event
 
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteRow(data);
+        break;
+      case 'SYS03':
+        this.editRow(data);
+        break;
+      case 'SYS04':
+        //this.copyRow(data);
+        break;
+    }
+  }
+
   valueChange(e: any){
+    let field = e.field.toLowerCase();
     if(e.data)
     {
-      switch(e)
+      switch(field)
       {
-        case e.field.toLowerCase() === 'warehouseID':
-          this.inventoryJournal.warehouseID = e.data;
+        case'warehouseid':
+          {
+            this.inventoryJournal.warehouseID = e.data;
+            this.api.exec('IV', 'InventoryJournalsBusiness', 'GetWarehouseNameAsync', [e.data])
+            .subscribe((res: any) => {
+              this.inventoryJournal.warehouseName = res;
+              this.form.formGroup.patchValue(this.inventoryJournal);
+            });
+          }
           break;
-        case e.field.toLowerCase() === 'objectid':
+        case 'warehousename':
+          this.inventoryJournal.warehouseName = e.data;
+          break;
+
+          case 'reasonid':
+            this.inventoryJournal.reasonID = e.data;
+          let text = e?.component?.itemsSelected[0]?.ReasonName;
+          this.setReason(field, text, 0);
+          break;
+        case 'objectid':
           this.inventoryJournal.objectID = e.data;
+          let data = e.component.itemsSelected[0];
+          this.inventoryJournal.objectType = data['ObjectType'];
+          this.inventoryJournal.objectName = data['ObjectName'];
+          this.setReason(field, data['ObjectName'], 1);
           break;
-        case e.field.toLowerCase() === 'reasonid':
-          this.inventoryJournal.reasonID = e.data;
-          break;
-        case e.field.toLowerCase() === 'memo':
+        case 'memo':
           this.inventoryJournal.memo = e.data;
           break;
-        case e.field.toLowerCase() === 'currencyid':
-          this.inventoryJournal.currencyID = e.data;
+        case 'currencyid':
+          {
+            this.inventoryJournal.currencyID = e.data;
+            this.api.exec('IV', 'InventoryJournalsBusiness', 'GetExchangeRateAsync', [this.inventoryJournal])
+            .subscribe((res: any) => {
+              this.inventoryJournal.exchangeRate = res.exchangeRate;
+              this.form.formGroup.patchValue(this.inventoryJournal);
+            });
+          }
           break;
-        case e.field.toLowerCase() === 'voucherdate':
+          break;
+        case 'voucherdate':
           this.inventoryJournal.voucherDate = e.data;
           break;
-        case e.field.toLowerCase() === 'exchangerate':
+        case 'exchangerate':
           this.inventoryJournal.voucherDate = e.data;
           break;
       }
@@ -227,7 +272,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               this.inventoryJournal
             );
             this.dialog.dataService
-              .save(null, 0, '', 'SYS006', false)
+              .save(null, 0, '', '', false)
               .subscribe((res) => {
                 if (res && res.update.data != null) {
                   this.loadModegrid();
@@ -243,7 +288,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               this.formType === 'edit',
               () => {
                 this.dialog.dataService
-                  .save(null, 0, '', 'SYS006', false)
+                  .save(null, 0, '', '', false)
                   .subscribe((res) => {
                     if (res && res.save.data != null) {
                       this.hasSaved = true;
@@ -347,6 +392,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             for (let i = 0; i < this.inventoryJournalLines.length; i++) {
               this.inventoryJournalLines[i].rowNo = i + 1;
             }
+            this.loadPageCount();
             break;
         }
         this.api
@@ -403,6 +449,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             if (res.event != null) {
               var dataline = res.event['data'];
               this.inventoryJournalLines.push(dataline);
+              this.loadPageCount();
               this.loadTotal();
             }
           });
@@ -602,6 +649,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.inventoryJournalLines.forEach((element) => {
       totals = totals + element.costAmt;
     });
+    this.inventoryJournal.totalAmt = totals;
     this.total = totals.toLocaleString('it-IT', {
       style: 'currency',
       currency: 'VND',
@@ -714,6 +762,19 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           }
         });
     }
+    if(this.formType == 'copy' && this.inventoryJournal.warehouseID)
+    {
+      this.api
+        .exec('IV', 'InventoryJournalsBusiness', 'GetWarehouseNameAsync', [
+          this.inventoryJournal.warehouseID,
+        ])
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            this.inventoryJournal.warehouseName = res;
+            this.form.formGroup.patchValue(this.inventoryJournal);
+          }
+        });
+    }
     if (
       this.inventoryJournal &&
       this.inventoryJournal.unbounds &&
@@ -763,7 +824,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   
   loadItemID(value) {
     let sArray = [
-      'specifications',
+      'packingspecifications',
       'styles',
       'itemcolors',
       'itembatchs',
@@ -781,5 +842,29 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       }
     });
   }
+
+  setReason(field, text, idx) {
+    if (!this.reason.some((x) => x.field == field)) {
+      let transText = new Reason();
+      transText.field = field;
+      transText.value = text;
+      transText.index = idx;
+      this.reason.push(transText);
+    } else {
+      let iTrans = this.reason.find((x) => x.field == field);
+      if (iTrans) iTrans.value = text;
+    }
+
+    this.inventoryJournal.memo = this.acService.setMemo(
+      this.inventoryJournal,
+      this.reason
+    );
+    this.form.formGroup.patchValue(this.inventoryJournal);
+  }
+
+  loadPageCount() {
+    this.pageCount = '(' + this.inventoryJournalLines.length + ')';
+  }
+
   //#endregion
 }

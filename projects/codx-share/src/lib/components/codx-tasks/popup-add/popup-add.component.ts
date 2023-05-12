@@ -59,7 +59,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   action = '';
   title = '';
   contentTodoEdit = '';
-  recIDTodoDelete = '';
+  recIDTodoDelete = [];
   indexEditTodo = -1;
   countTodoByGroup = 0;
   isConfirm = true;
@@ -360,7 +360,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   onDeleteTodo(index) {
     if (this.listTodo[index]?.recID) {
-      this.recIDTodoDelete += this.listTodo[index].recID + ';';
+      this.recIDTodoDelete.push(this.listTodo[index].recID);
     }
     this.listTodo.splice(index, 1); //remove element from array
     if (this.listTodo.length == 0) {
@@ -589,7 +589,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTaskResources,
         this.listTodo,
         null,
-        this.recIDTodoDelete,
+        this.recIDTodoDelete.join(";"),
       ];
     } else {
       op.method = 'AddTaskAsync';

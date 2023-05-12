@@ -1,3 +1,8 @@
+:host ::ng-deep {
+  codx-page-title .breadcrumb {
+    display: none;
+  }
+}
 .menu {
   list-style: none;
 }

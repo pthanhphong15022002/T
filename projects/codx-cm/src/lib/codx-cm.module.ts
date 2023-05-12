@@ -18,7 +18,6 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
-import { TestComponetComponent } from './test-componet/test-componet.component';
 import { CmCustomerComponent } from './cmcustomer/cmcustomer.component';
 import { CmcustomerDetailComponent } from './cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -41,14 +40,19 @@ import { QuotationsLinesComponent } from './quotations-lines/quotations-lines.co
 import { PopupAddQuotationsLinesComponent } from './quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
 import { CodxListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CodxListDealsComponent } from './cmcustomer/cmcustomer-detail/codx-list-deals/codx-list-deals.component';
-import { ProductComponent } from './contracts/product/product.component';
-import { TabsHeaderComponent } from './contracts/tabs-header/tabs-header.component';
 import { CodxTabDealcompetitorsComponent } from './deals/deal-detail/codx-tab-dealcompetitors/codx-tab-dealcompetitors.component';
 import { PopupAddDealcompetitorComponent } from './deals/deal-detail/codx-tab-dealcompetitors/popup-add-dealcompetitor/popup-add-dealcompetitor.component';
 import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/view-dealcompetitors/view-dealcompetitors.component';
 import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
 import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
 import { CodxTableComponent } from './contracts/component/codx-table/codx-table.component';
+import { NoDataComponent } from './contracts/component/no-data/no-data.component';
+import { ViewsContractsComponent } from './contracts/views-contracts/views-contracts.component';
+import { ProductComponent } from './contracts/component/product/product.component';
+import { CasesComponent } from './cases/cases.component';
+import { CaseDetailComponent } from './cases/case-detail/case-detail.component';
+import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.component';
+import { TabCaseDetailComponent } from './cases/case-detail/tab-case-detail/tab-case-detail.component';
 
 const routes: Routes = [
   {
@@ -56,22 +60,26 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'test/:funcID',
-        component: TestComponetComponent,
-      },
-      {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
       },
       {
-        // gán tạm để làm UI
         path: 'deals/:funcID',
         component: DealsComponent,
       },
       {
-          // gán tạm để làm UI
         path: 'quotations/:funcID',
         component: QuotationsComponent,
+        // data: { noReuse: true },
+      },
+      {
+          // gán tạm để làm UI
+        path: 'contracts/:funcID',
+        component: ViewsContractsComponent,
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
       },
       {
         path: '**',
@@ -87,7 +95,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
   declarations: [
     CodxCmComponent,
     LayoutComponent,
-    TestComponetComponent,
     CmCustomerComponent,
     CmcustomerDetailComponent,
     InformationComponent,
@@ -109,13 +116,18 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxListContactsComponent,
     CodxListDealsComponent,
     ProductComponent,
-    TabsHeaderComponent,
     CodxTabDealcompetitorsComponent,
     PopupAddDealcompetitorComponent,
     ViewDealcompetitorsComponent,
     CodxComboboxComponent,
     CodxTableComponent,
-    QuotationsViewDetailComponent
+    QuotationsViewDetailComponent,
+    NoDataComponent,
+    ViewsContractsComponent,
+    CasesComponent,
+    CaseDetailComponent,
+    PopupAddCaseComponent,
+    TabCaseDetailComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -133,7 +145,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     DragDropModule,
     CodxDpModule,
   ],
-  exports: [RouterModule],
+  exports: [RouterModule,ListContractsComponent],
   providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

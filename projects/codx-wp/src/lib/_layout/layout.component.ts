@@ -17,6 +17,7 @@ export class LayoutComponent extends LayoutBaseComponent {
     this.module = 'WP';
     this.layoutModel.asideDisplay = false;
     this.layoutModel.toolbarFixed = false;
+    this.layoutModel.toolbarDisplay = false;
   }
 
   onInit(): void {}

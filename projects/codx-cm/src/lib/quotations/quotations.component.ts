@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  ButtonModel,
   CallFuncService,
   DataRequest,
   DialogModel,
@@ -42,7 +43,6 @@ export class QuotationsComponent extends UIComponent {
   @ViewChild('templateCustomer') templateCustomer: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
-  button: any;
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
   entityName = 'CM_Quotations';
@@ -72,6 +72,7 @@ export class QuotationsComponent extends UIComponent {
   columnGrids: any;
   arrFieldIsVisible = [];
   itemSelected: any;
+  button?: ButtonModel;
 
   constructor(
     private inject: Injector,
@@ -191,7 +192,7 @@ export class QuotationsComponent extends UIComponent {
 
   click(e) {
     switch (e.id) {
-      case 'add':
+      case 'btnAdd':
         this.add();
         break;
     }
@@ -248,6 +249,7 @@ export class QuotationsComponent extends UIComponent {
   openPopup(res) {
     res.versionNo = 'V1.0';
     res.status = '1';
+    res.exchangeRate = 1;
 
     var obj = {
       data: res,

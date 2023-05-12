@@ -2,16 +2,16 @@
    [data]="data" *ngIf="formModel && isAfterRender">
   <ng-template #body let-dialog>
     <div>
-      
       <div class="form-group">
         <codx-label fiedName="ResourceID" [formModel]="formModel"></codx-label>
-        <codx-input ControlName="resourceID" [formModel]="formModel" [Group]="form?.formGroup">
+        <codx-input ControlName="resourceID" [formModel]="formModel" [Group]="form?.formGroup" [disabled]="disableEdit">
         </codx-input>
-      </div>
+      </div>      
       <div class="form-group">
         <codx-label fiedName="TransID" [formModel]="formModel"></codx-label>
-        <codx-input ControlName="transID" [formModel]="formModel" [Group]="form?.formGroup"></codx-input>
+        <codx-input ControlName="transID" [formModel]="formModel" [Group]="form?.formGroup" (valueChange)="transIDChange($event)"></codx-input>
       </div>
+      
       <div class="form-group">
         <codx-label fiedName="UserID" [formModel]="formModel"></codx-label>
         <codx-input ControlName="userID" [formModel]="formModel" [Group]="form?.formGroup">

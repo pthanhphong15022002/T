@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CodxCmService } from '../../../codx-cm.service';
-import { FormModel } from 'codx-core';
+import { ApiHttpService, DataRequest, FormModel } from 'codx-core';
+import { Observable, finalize, map, pipe } from 'rxjs';
 
 @Component({
   selector: 'codx-list-deals',
@@ -13,10 +14,17 @@ export class CodxListDealsComponent implements OnInit {
   formModel: FormModel;
   lstStep = [];
   loaded: boolean;
-  constructor(private cmSv: CodxCmService) {}
+  request = new DataRequest();
+  predicates = 'CustomerID=@0';
+  dataValues = '';
+  service = 'CM';
+  assemblyName = 'ERM.Business.CM';
+  className = 'DealsBusiness';
+  method = 'GetListDealsByCustomerIDAsync';
+  constructor(private cmSv: CodxCmService, private api: ApiHttpService) {}
 
   async ngOnInit() {
-    this.getListDealsByCustomerID(this.customerID);
+    this.getListContacts();
     this.formModel = await this.cmSv.getFormModel('CM0201');
   }
 
@@ -32,6 +40,43 @@ export class CodxListDealsComponent implements OnInit {
       }
       this.loaded = true;
     });
+  }
+
+  getListContacts() {
+    this.loaded = false;
+    this.request.predicates = 'CustomerID=@0';
+    this.request.dataValues = this.customerID;
+    this.request.entityName = 'CM_Deals';
+    this.request.funcID = 'CM0201';
+    this.className = 'DealsBusiness';
+    this.fetch().subscribe((item) => {
+      this.lstDeals = item;
+      var lstRef = this.lstDeals.map((x) => x.refID);
+      var lstSteps = this.lstDeals.map((x) => x.stepID);
+      if (lstRef != null && lstRef.length > 0)
+        this.getStepsByListID(lstSteps, lstRef);
+
+      this.loaded = true;
+    });
+  }
+  private fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.service,
+        this.assemblyName,
+        this.className,
+        this.method,
+        this.request
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response ? response[0] : [];
+        })
+      );
   }
 
   getStepsByListID(lstStepID, lstIns) {

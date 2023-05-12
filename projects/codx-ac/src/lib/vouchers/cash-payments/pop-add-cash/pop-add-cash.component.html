@@ -79,9 +79,17 @@
             <div class="col-3 ps-0">
               <!-- Số tiền -->
               <div class="form-group">
-                <codx-label fiedName="PaymentAmt" [formModel]="form.formModel">
+                <codx-label *ngIf="form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'"
+                  fiedName="PaymentAmt" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="paymentAmt" [min]="0"
+                <codx-label *ngIf="form.formModel.funcID == 'ACT0401' || form.formModel.funcID == 'ACT0428'" fiedName="ReceiptAmt"
+                  [formModel]="form.formModel">
+                </codx-label>
+                <codx-input *ngIf="form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'"
+                  [Group]="form.formGroup" [formModel]="form.formModel" field="paymentAmt" [min]="0"
+                  (controlBlur)="controlBlur($event)"></codx-input>
+                <codx-input *ngIf="form.formModel.funcID == 'ACT0401' || form.formModel.funcID == 'ACT0428'" [Group]="form.formGroup"
+                  [formModel]="form.formModel" field="receiptAmt" [min]="0"
                   (controlBlur)="controlBlur($event)"></codx-input>
               </div>
             </div>
@@ -149,8 +157,8 @@
               <div class="form-group">
                 <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)">
+                <codx-input [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
+                  field="currencyID" [formModel]="form.formModel" (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
             </div>
@@ -159,8 +167,8 @@
               <div class="form-group">
                 <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)">
+                <codx-input [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
+                  field="exchangeRate" [formModel]="form.formModel" (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
             </div>
@@ -205,8 +213,8 @@
         [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
-        [height]="gridHeight"  [autoLoad]="false" rowHeight="30" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"
-        (created)="gridCreated($event, gridCashPaymentLine)"></codx-gridview-v2>
+        [height]="gridHeight" [autoLoad]="false" rowHeight="30" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
+        (cellChanged)="lineChanged($event)" (created)="gridCreated($event, gridCashPaymentLine)"></codx-gridview-v2>
     </div>
     <div class="container w-90 h-90">
       <div style="background: none" class="list-empty card card-flush h-100">
@@ -217,7 +225,8 @@
           </div>
           <ng-template #popContent>
             <span #popContent [ngbTooltip]="popContent" class="fs-6 fw-bold">
-              <codx-label [formModel]="form.formModel" fiedName="lblAddCashPaymentsLines" default="Thêm dòng"></codx-label>
+              <codx-label [formModel]="form.formModel" fiedName="lblAddCashPaymentsLines"
+                default="Thêm dòng"></codx-label>
             </span>
           </ng-template>
         </div>
@@ -226,8 +235,8 @@
   </ng-container>
   <ng-container
     *ngIf="form?.formGroup && (cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == '2'">
-    <div class="table-responsive mt-3">
-      <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
+    <div style="max-height: 370px;" class="table-responsive mt-3">
+      <table style="table-layout: fixed;" class="table table-hover table-row-bordered mb-2">
         <thead style="position: sticky;top: 0;background-color: white;z-index: 15;">
           <tr class="border-bottom">
             <th style="width: 10%;" class="w-50px text-center">
@@ -459,47 +468,38 @@
             </td>
           </tr>
         </tbody>
-        <tfoot *ngIf="cashpaymentline.length > 0" style="background: #e8eaef;position: sticky;bottom: 0;">
-          <tr>
-            <th style="width: 10%"></th>
-            <th style="width: 50%"></th>
-            <th style="width: 15%">
-              <div class="d-flex align-items-center justify-content-start">
-                <span class="fs-6 fw-bold">{{ total }}</span>
-              </div>
-            </th>
-            <th *ngIf="cashpayment.currencyID != baseCurr" style="width: 15%;">
-              <div class="d-flex align-items-center justify-content-start">
-                <span class="fs-6 fw-bold">{{ totaldr2 }}</span>
-              </div>
-            </th>
-            <th style="width: 45%;"></th>
-            <th style="width: 20%;"></th>
-            <th *ngIf="cashpaymentline.length > 0" style="width: 10%;"></th>
-          </tr>
-        </tfoot>
       </table>
     </div>
     <ng-container *ngIf="
           (cashpayment.subType === '1' || cashpayment.subType === '3')
         ">
-        <div class="container w-90 h-90">
-          <div style="background: none" class="list-empty card card-flush h-100">
-            <div class="d-flex flex-column flex-center justify-content-center mt-2">
-              <div [ngbTooltip]="popContent" placement="bottom" style="width: 40px !important; height: 40px !important"
-                class="btn btn-icon btn-bg btn-light-primary btn-circle me-4" (click)="addRow()">
-                <i class="icon-i-file-earmark-plus icon-18"></i>
-              </div>
-              <ng-template #popContent>
-                <span #popContent [ngbTooltip]="popContent" class="fs-6 fw-bold">
-                  <codx-label [formModel]="form.formModel" fiedName="lblAddCashPaymentsLines"
-                    default="Thêm dòng"></codx-label>
-                </span>
-              </ng-template>
+      <div class="container w-90 h-90">
+        <div style="background: none" class="list-empty card card-flush h-100">
+          <div class="d-flex flex-column flex-center justify-content-center mt-2">
+            <div [ngbTooltip]="popContent" placement="bottom" style="width: 40px !important; height: 40px !important"
+              class="btn btn-icon btn-bg btn-light-primary btn-circle me-4" (click)="addRow()">
+              <i class="icon-i-file-earmark-plus icon-18"></i>
             </div>
+            <ng-template #popContent>
+              <span #popContent [ngbTooltip]="popContent" class="fs-6 fw-bold">
+                <codx-label [formModel]="form.formModel" fiedName="lblAddCashPaymentsLines"
+                  default="Thêm dòng"></codx-label>
+              </span>
+            </ng-template>
           </div>
         </div>
-      </ng-container>
+      </div>
+    </ng-container>
+    <div class="d-flex flex-wrap mt-6 mb-5">
+      <!-- <div class="d-flex align-items-center mb-1 bg-light me-5">
+          <span class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 me-2 bg-primary"></span>
+          <span class="py-1 px-2">Tổng Nợ HT: {{ totaldr2 }}</span>
+        </div> -->
+      <div class="d-flex align-items-center mb-1 bg-light me-5">
+        <span class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 me-2 bg-primary"></span>
+        <span class="text-dark fw-bold py-1 px-2">Tổng cộng: {{ total }}</span>
+      </div>
+    </div>
   </ng-container>
 </ng-template>
 <!-- End: CashPaymentLine -->
@@ -516,13 +516,15 @@
   <div class="container w-90 h-90">
     <div style="background: none" class="list-empty card card-flush h-100">
       <div class="d-flex flex-center justify-content-center mt-2">
-        <button class="btn btn-sm btn-success mr-2"  (click)="openVoucher(0)">
+        <button class="btn btn-sm btn-success mr-2" (click)="openVoucher(0)">
           <i class="icon-i-clipboard-plus icon-18"></i>
-          <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice1" default="Đề xuất thanh toán"></codx-label>
+          <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice1"
+            default="Đề xuất thanh toán"></codx-label>
         </button>
-        <button class="btn btn-sm btn-danger"  (click)="openVoucher(1)">
+        <button class="btn btn-sm btn-danger" (click)="openVoucher(1)">
           <i class="icon-i-clipboard-plus icon-18"></i>
-          <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice" default="Thanh toán tự động"></codx-label>
+          <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice"
+            default="Thanh toán tự động"></codx-label>
         </button>
       </div>
     </div>
@@ -570,20 +572,22 @@
         <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
           {{ headerText }}
         </div>
-        <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
+        <ng-container *ngIf="form.formGroup">
+          <div *ngIf="formType == 'add' && !hasSaved" class="me-3 input-circle input-border-0 w-350px">
+            <codx-input [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
+              (valueChange)="changeType($event)">
+            </codx-input>
+          </div>
+          <span *ngIf="(formType == 'edit' && cashpayment?.subType) || hasSaved" class="me-3">
+            <codx-vll [name]="'AC063'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
+              [showText]="true" [showBgColor]="true" class="badge badge-light-primary badge-lg">
+            </codx-vll>
+          </span>
+        </ng-container>
+        <div class="input-circle input-sm" *ngIf="form?.formGroup">
           <span class="me-2">
             <codx-vll [name]="'AC040'" [formModel]="form.formModel" [field]="'Status'" [value]="cashpayment?.status"
               [showText]="true" [showBgColor]="true" class="badge badge-light badge-lg lg">
-            </codx-vll>
-          </span>
-        </div>
-        <div class="ms-3 input-circle input-border-0 w-225px" *ngIf="form?.formGroup">
-          <codx-input *ngIf="formType == 'add' && !hasSaved" [Group]="form.formGroup" field="subType"
-            [formModel]="form.formModel" (valueChange)="changeType($event)">
-          </codx-input>
-          <span *ngIf="(formType == 'edit' && cashpayment?.subType) || hasSaved" class="me-2">
-            <codx-vll [name]="'AC063'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
-              [showText]="true" [showBgColor]="true" class="badge badge-pill badge-primary badge-lg lg">
             </codx-vll>
           </span>
         </div>
@@ -591,22 +595,19 @@
       <div class="d-flex align-items-center me-3">
         <div *ngIf="formType != 'edit'" class="ms-2">
           <button type="button" class="btn btn-md btn-light-primary" (click)="onSaveAdd()">
-            <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"
-                ></codx-label>
+            <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
           </button>
         </div>
         <div class="ms-2">
           <button type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
-            <codx-label class="fw-normal" fiedName="lblSave"
-                default="Lưu"></codx-label>
+            <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
           </button>
         </div>
         <div *ngIf="cashpayment?.status == '0' && hasSaved" class="ms-2">
           <button type="button" class="btn btn-md btn-danger" (click)="onDiscard()">
             <div class="d-flex align-items-center">
               <i class="icon-settings_backup_restore icon-18"></i>
-              <codx-label class="fs-6 fw-normal" fiedName="lblDiscard" default="Hủy bỏ"
-              ></codx-label>
+              <codx-label class="fs-6 fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
             </div>
           </button>
         </div>

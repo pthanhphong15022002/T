@@ -6,7 +6,7 @@ import {
   TemplateRef,
   Input,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewType,ViewsComponent } from 'codx-core';
+import { UIComponent, ViewModel, ViewType, ViewsComponent } from 'codx-core';
 import { CodxShareService } from '../../../codx-share.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class CalendarCenterComponent
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
   @ViewChild('eventTemplate') eventTemplate?: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
-  @Input() resources!: any;
+  @Input() resources: any;
   @Input() resourceModel!: any;
 
   views: Array<ViewModel> | any = [];
@@ -39,7 +39,6 @@ export class CalendarCenterComponent
   btnAdd = {
     id: 'btnAdd',
   };
-  vllPriority = 'TM005';
   calendar_center: any;
 
   constructor(injector: Injector, private shareService: CodxShareService) {
