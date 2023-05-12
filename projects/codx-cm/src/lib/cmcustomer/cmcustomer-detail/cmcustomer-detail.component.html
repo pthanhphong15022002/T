@@ -39,9 +39,9 @@
             ></codx-mfunc>
           </div>
         </div>
-        <div class="container_detail mt-3">
-          <div class="d-flex flex-grow-1 mb-4">
-            <div class="me-3">
+        <div class="container_detail">
+          <div class="d-flex flex-grow-1 mb-2">
+            <div class="me-4">
               <codx-img
                 [objectId]="dataSelected.recID"
                 [objectName]="getNameCrm(dataSelected)"
@@ -55,7 +55,7 @@
             <div class="d-flex flex-column flex-grow-1">
               <div class="d-flex justify-content-between">
                 <div class="d-flex flex-column">
-                  <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+                  <div class="fw-bold fs-5 text-dark codx-text-overflow-1line mb-2">
                     {{
                       funcID == "CM0101"
                         ? dataSelected.customerName
@@ -67,17 +67,17 @@
                     }}
                   </div>
                   <div
-                    class="d-flex align-items-start me-4 mb-1"
+                    class="d-flex flex-wrap me-4 mb-1"
                     *ngIf="funcID == 'CM0102'"
                   >
-                    <div class="me-3" *ngIf="dataSelected?.mobile">
+                    <div class="me-3 d-flex align-items-center" *ngIf="dataSelected?.mobile">
                       <span
                         [ngClass]="
                           dataSelected?.allowCall
                             ? 'icon-phone_android text-primary'
                             : 'icon-phonelink_erase'
                         "
-                        class="icon-16 me-1"
+                        class="icon-16 me-2"
                       ></span>
                       <span
                         [ngClass]="
@@ -87,14 +87,14 @@
                         >{{ dataSelected?.mobile }}</span
                       >
                     </div>
-                    <div *ngIf="dataSelected?.personalEmail">
+                    <div class="d-flex align-items-center" *ngIf="dataSelected?.personalEmail">
                       <span
                         [ngClass]="
                           dataSelected?.allowEmail
                             ? 'icon-email text-primary'
                             : 'icon-print_disabled'
                         "
-                        class="icon-16 me-1 text-gray-900"
+                        class="icon-16 me-2 text-gray-900"
                       ></span>
                       <span
                         [ngClass]="
@@ -105,9 +105,9 @@
                       >
                     </div>
                   </div>
-                  <div class="me-4 mb-1" *ngIf="dataSelected.address">
+                  <div class="d-flex align-items-center mb-1" *ngIf="dataSelected.address">
                     <span
-                      class="icon-location_on icon-16 me-1 text-gray-700"
+                      class="icon-location_on icon-16 me-2 text-gray-700"
                     ></span>
                     <span class="text-gray-900">{{
                       dataSelected.address
@@ -165,7 +165,7 @@
                                 ? 'icon-phone_android text-primary'
                                 : 'icon-phonelink_erase'
                             "
-                            class="icon-16 me-1"
+                            class="icon-16 me-2"
                           ></span>
                           <span
                             [ngClass]="
@@ -182,7 +182,7 @@
                                 ? 'icon-email text-primary'
                                 : 'icon-print_disabled'
                             "
-                            class="icon-16 me-1 text-gray-900"
+                            class="icon-16 me-2 text-gray-900"
                           ></span>
                           <span
                             [ngClass]="
