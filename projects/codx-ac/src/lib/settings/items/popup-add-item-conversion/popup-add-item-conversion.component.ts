@@ -80,7 +80,7 @@ export class PopupAddItemConversionComponent extends UIComponent {
   //#endregion
 
   //#region Method
-  save(closeAfterSaving: boolean): void {
+  save(closeAfterSave: boolean): void {
     console.log(this.itemConversion);
     this.itemConversion.inverted = this.itemConversion.inverted ? 1 : 0;
 
@@ -110,7 +110,7 @@ export class PopupAddItemConversionComponent extends UIComponent {
 
           this.savedItemConversions.push(res);
 
-          if (closeAfterSaving) {
+          if (closeAfterSave) {
             this.dialogRef.close();
           } else {
             // clear form

@@ -1,76 +1,58 @@
 <codx-layout-add
   #form
-  [title]="title"
-  [tabInfo]="tabInfo"
-  [formModel]="dialog.formModel"
+  [formModel]="dialogRef.formModel"
   [subHeader]=""
   [footer]="footer"
-  [dialog]="dialog"
+  [dialog]="dialogRef"
   [openMore]="true"
-  (buttonClick)="buttonClick($event)"
+  [tabInfo]="tabInfo"
   [tabContent]="[emmployeeInfo, personalInfo, legalInfo]"
+  [title]="title"
   (setTitle)="setTitle($event)"
   [data]="data"
 >
 </codx-layout-add>
-<ng-template #footer>
-  <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="onSaveForm()">
-      Lưu
-    </button>
-  </div>
-</ng-template>
 
+<!-- tab Employee -->
 <ng-template #emmployeeInfo>
-  <ng-container *ngIf="form && form.formGroup">
+  <ng-container *ngIf="form?.formGroup">
     <div>
-      <div
-        id="avatar_id"
-        class="d-flex justify-content-between form-group align-items-center form-group pb-4"
-      >
-        <div id="eAvartar">
+      <div class="d-flex justify-content-between form-group align-items-center form-group pb-4">
+        <div>
           <codx-img
-            class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-            [imageType]="'circle'"
-            [width]="80"
-            [objectId]="data?.employeeID"
-            [objectType]=""
-            data-kt-menu-trigger="click"
-            data-kt-menu-attach="parent"
-            data-kt-menu-placement="bottom-end"
-            data-kt-menu-flip="bottom"
+            [objectId]="data.employeeID"
+            [objectType]="'HR_Employees'"
             [funcId]="funcID"
             [isAllowEdit]="true"
-          >
+            [width]="80"
+            [imageType]="'circle'"
+            class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage">
           </codx-img>
         </div>
-        <div id="employeeID">
-          <codx-label [formModel]="form.formModel" fiedName="employeeID">
+        <div>
+          <codx-label [formModel]="dialogRef.formModel" fiedName="EmployeeID">
           </codx-label>
           <codx-input
-            type="text"
-            [crrValue]="data?.employeeID"
-            (valueChange)="valueChange($event)"
-            field="employeeID"
-            [placeholder]="'Mã nhân viên'"
-          >
+              [Group]="form.formGroup"
+              [formModel]="dialogRef.formModel"
+              field="EmployeeID"
+              (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
 
-      <div id="employeeName" class="employeeName form-group">
-        <codx-label [formModel]="form.formModel" fiedName="employeeName">
+      <div>
+        <codx-label [formModel]="dialogRef.formModel" fiedName="employeeName">
         </codx-label>
         <codx-input
-          [formModel]="form.formModel"
           [Group]="form.formGroup"
+          [formModel]="dialogRef.formModel"
           field="employeeName"
-          [disabled]="false"
-        >
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
 
-      <div id="joinedOn-employeeTypeID" class="row form-group">
+      <div class="row form-group">
         <div class="col-6">
           <div id="joinedOn">
             <codx-label fiedName="joinedOn" [formModel]="form.formModel">
@@ -265,8 +247,9 @@
   </ng-container>
 </ng-template>
 
+<!-- tab  PersonalInfo-->
 <ng-template #personalInfo>
-  <ng-container *ngIf="form && form.formGroup">
+  <ng-container *ngIf="form?.formGroup">
     <div class="form-group">
       <div id="gender-maritalStatus" class="row form-group">
         <div class="col-6">
@@ -649,8 +632,9 @@
   </ng-container>
 </ng-template>
 
+<!-- tab  LegalInfo-->
 <ng-template #legalInfo>
-  <ng-container *ngIf="form && form.formGroup">
+  <ng-container *ngIf="form?.formGroup">
     <div>
       <div class="row form-group">
         <div class="col-6">
@@ -704,4 +688,14 @@
       </div>
     </div>
   </ng-container>
+</ng-template>
+
+<!-- footer -->
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" (click)="onSaveForm()">
+      <codx-label [formModel]="form.formModel" name="lblSubmit" [default]="'Lưu'">
+      </codx-label>
+    </button>
+  </div>
 </ng-template>

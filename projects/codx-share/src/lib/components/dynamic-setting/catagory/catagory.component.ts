@@ -331,7 +331,10 @@ export class CatagoryComponent implements OnInit {
           break;
         case 'cpnscheduledtasks':
           var schedule = this.schedules[value];
-          if (!schedule || schedule.stop) return;
+          var id = null;
+          if (schedule) id = schedule.recID;
+          if (schedule && schedule.stop) return;
+
           // data['formGroup'] = null;
           // data['templateID'] = rule.emailTemplate;
           this.callfc.openForm(
@@ -340,7 +343,7 @@ export class CatagoryComponent implements OnInit {
             800,
             screen.height,
             '',
-            schedule.recID,
+            id,
             '',
             dialogModel
           );
@@ -651,20 +654,47 @@ export class CatagoryComponent implements OnInit {
           });
       } else if (this.category === '6') {
         var schedule = this.schedules[fieldName];
-        if (!schedule) return;
         if (typeof value == 'string') {
           value = value === '1';
         }
-        if (!value === schedule[field]) return;
-        schedule[field] = !value;
-        this.api
-          .execAction('BG_ScheduleTasks', [schedule], 'UpdateAsync')
-          .subscribe((res) => {
-            if (res) {
-            }
-            this.changeDetectorRef.detectChanges();
-            console.log(res);
-          });
+        if (!schedule) {
+          this.api
+            .execSv(
+              'BG',
+              'ERM.Business.Core',
+              'DataBusiness',
+              'GetDefaultEntityAsync',
+              'BG_ScheduleTasks'
+            )
+            .subscribe((res) => {
+              if (res) {
+                dt = res;
+                dt.scheduleID = fieldName;
+                dt[field] = !value;
+                this.schedules[fieldName] = dt;
+
+                this.api
+                  .execAction('BG_ScheduleTasks', [dt], 'SaveAsync')
+                  .subscribe((res) => {
+                    if (res) {
+                    }
+                    this.changeDetectorRef.detectChanges();
+                    console.log(res);
+                  });
+              }
+            });
+        } else {
+          if (!value === schedule[field]) return;
+          schedule[field] = !value;
+          this.api
+            .execAction('BG_ScheduleTasks', [schedule], 'UpdateAsync')
+            .subscribe((res) => {
+              if (res) {
+              }
+              this.changeDetectorRef.detectChanges();
+              console.log(res);
+            });
+        }
       } else {
         if (this.category != '4') {
           if (this.dataValue[field] == value) {

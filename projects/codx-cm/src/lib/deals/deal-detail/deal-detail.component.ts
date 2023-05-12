@@ -75,10 +75,10 @@ export class DealDetailComponent  implements OnInit {
 
   changeTab(e){
     this.tabClicked = e;
-    this.tabDetail = this.tabDetail.map(tabItem => ({
-      ...tabItem,
-      isActive: tabItem.name === this.tabClicked,
-    }));
+    // this.tabDetail = this.tabDetail.map(tabItem => ({
+    //   ...tabItem,
+    //   isActive: tabItem.name === this.tabClicked,
+    // }));
   }
 
   clickMF(e, data){

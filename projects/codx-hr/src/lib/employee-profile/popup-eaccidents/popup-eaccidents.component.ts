@@ -13,6 +13,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'lib-popup-eaccidents',
@@ -45,7 +46,7 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.dialog = dialog;
-    this.formModel = dialog?.FormModel;
+    this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
@@ -79,6 +80,13 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
           }
         });
     }
+    if (this.formModel) {
+      this.cache
+        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+        .subscribe((grv) => {
+          this.grvSetup = grv;
+        });
+    }
   }
 
   initForm() {
@@ -104,17 +112,29 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
 
   onSaveForm() {
     this.accidentObj.employeeID = this.employeeId;
-    if(this.formGroup.invalid){
+    if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
-
+    if (this.accidentObj.accidentDate) {
+      if (this.compareToDate(this.accidentObj.accidentDate)) {
+        let toDate =  new Date().toLocaleDateString('en-AU');;
+        let header = this.grvSetup['AccidentDate']?.headerText ??'AccidentDate';
+        this.notitfy.notifyCode(
+          'HR003',
+          0,
+          '"' + toDate + '"',
+          '"' + header + '"'
+        );
+        return;
+      }
+    }
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrSevice.AddEmployeeAccidentInfo(this.accidentObj).subscribe((p) => {
         if (p != null) {
           this.accidentObj = p;
           this.notitfy.notifyCode('SYS006');
-          this.dialog && this.dialog.close(p)
+          this.dialog && this.dialog.close(p);
         } else this.notitfy.notifyCode('SYS023');
       });
     } else {
@@ -136,4 +156,9 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
     }
   }
 
+  compareToDate(date: any) {
+    var compareDate = new Date(date).getTime();
+    var toDate = new Date().getTime();
+    return compareDate > toDate;
+  }
 }

@@ -730,6 +730,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       var tenants = from(check);
       return tenants.pipe(
         mergeMap((value : any, i) => { 
+          debugger
           if(typeof value == 'object' && value.AppId)
           {
             return from(this.fileService.getTotalHdd()).pipe(mergeMap(hdd=>{
@@ -1291,7 +1292,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         Password: ""
       }
     }
-    return await lvFileClientAPI.postAsync(`api/${tenant}/apps/register`,data);
+    return await lvFileClientAPI.postAsync(`api/admin/apps/register`,data);
   }
 
   addFileObservable(

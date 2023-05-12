@@ -1,5 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { CodxCmService } from '../../codx-cm.service';
+import { CallFuncService, DialogModel, DialogRef, Util } from 'codx-core';
 
 @Component({
   selector: 'codx-view-list-cm',
@@ -14,11 +23,14 @@ export class ViewListCmComponent implements OnInit {
   @Input() entityName: any;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMoreMF = new EventEmitter<any>();
+  @ViewChild('popDetail') popDetail: TemplateRef<any>;
+
+  dialogDetail: DialogRef;
 
   listContacts = [];
   countDeal = 0;
   contactPerson: any;
-  constructor(private cmSv: CodxCmService) {}
+  constructor(private cmSv: CodxCmService, private callFunc: CallFuncService) {}
 
   ngOnInit(): void {
     if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
@@ -34,6 +46,14 @@ export class ViewListCmComponent implements OnInit {
 
   changeDataMF(e, data) {
     this.changeMoreMF.emit({ e: e, data: data });
+  }
+
+  clickMoreFuncDetail(e) {
+    this.clickMF(e.e, e.data);
+  }
+
+  changeDataDetailMF(e) {
+    this.changeDataMF(e.e, e.data);
   }
 
   getListContactByObjectID(objectID) {
@@ -67,5 +87,29 @@ export class ViewListCmComponent implements OnInit {
     } else {
       return data.opponentName;
     }
+  }
+
+  dbClick(data) {
+    this.dataSelected = data;
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 999;
+    this.dialogDetail = this.callFunc.openForm(
+      this.popDetail,
+      '',
+      Util.getViewPort().width,
+      Util.getViewPort().height,
+      '',
+      null,
+      '',
+      option
+    );
+    this.dialogDetail.closed.subscribe((e) => {
+      if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
+        this.getListContactByObjectID(this.dataSelected.recID);
+      if (this.funcID == 'CM0101') {
+        this.countDealsByCustomerID(this.dataSelected.recID);
+      }
+    });
   }
 }

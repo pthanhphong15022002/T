@@ -73,13 +73,8 @@ export class CodxListContactsComponent implements OnInit {
     this.className = 'ContactsBusiness';
     this.fetch().subscribe((item) => {
       this.listContacts = item;
-      var contactPerson = this.listContacts.find((x) =>
-        x.contactType.split(';').some((x) => x == '1')
-      );
-      this.contactPerson.emit(contactPerson);
-
-      this.loaded = true;
     });
+    this.loaded = true;
   }
   private fetch(): Observable<any[]> {
     return this.api
@@ -96,7 +91,7 @@ export class CodxListContactsComponent implements OnInit {
           this.loaded = true; */
         }),
         map((response: any) => {
-          return response[0];
+          return response ? response[0] : [];
         })
       );
   }
@@ -186,7 +181,6 @@ export class CodxListContactsComponent implements OnInit {
               );
               if (index != -1) {
                 if (e?.event?.contactType.split(';').some((x) => x == '1')) {
-                  console.log(this.listContacts[index].contactType.split(';'));
                   if (
                     this.listContacts[index].contactType.split(';').length == 1
                   ) {
@@ -221,6 +215,10 @@ export class CodxListContactsComponent implements OnInit {
                   'update'
                 );
               }
+              var contactPerson = this.listContacts.find((x) =>
+                x.contactType.split(';').some((x) => x == '1')
+              );
+              this.contactPerson.emit(contactPerson);
               this.changeDetectorRef.detectChanges();
             }
           }
@@ -268,7 +266,6 @@ export class CodxListContactsComponent implements OnInit {
               );
               if (index != -1) {
                 if (e?.event?.contactType.split(';').some((x) => x == '1')) {
-                  console.log(this.listContacts[index].contactType.split(';'));
                   if (
                     this.listContacts[index].contactType.split(';').length == 1
                   ) {
@@ -303,6 +300,10 @@ export class CodxListContactsComponent implements OnInit {
                   'update'
                 );
               }
+              var contactPerson = this.listContacts.find((x) =>
+                x.contactType.split(';').some((x) => x == '1')
+              );
+              this.contactPerson.emit(contactPerson);
               this.changeDetectorRef.detectChanges();
             }
           }
