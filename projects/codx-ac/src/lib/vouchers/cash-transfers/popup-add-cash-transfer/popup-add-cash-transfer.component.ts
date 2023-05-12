@@ -18,6 +18,7 @@ import { JournalService } from '../../../journals/journals.service';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
 import { CashTransferService } from '../cash-transfers.service';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-popup-add-cash-transfer',
@@ -51,6 +52,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
     gridViewName: 'grvVATInvoices',
     entityPer: 'AC_VATInvoices',
   };
+  fgVatInvoice: FormGroup;
   cashBooks: any[];
   gvsCashTransfers: any;
   gvsVATInvoices: any;
@@ -86,7 +88,11 @@ export class PopupAddCashTransferComponent extends UIComponent {
       'AC'
     );
 
-    console.log(this.invoiceService);
+    this.fgVatInvoice = this.codxService.buildFormGroup(
+      this.fmVATInvoice.formName,
+      this.fmVATInvoice.gridViewName,
+      this.fmVATInvoice.entityName
+    );
   }
   //#endregion
 
@@ -169,28 +175,32 @@ export class PopupAddCashTransferComponent extends UIComponent {
             this.vatInvoice = res;
             this.invoiceService.dataSelected = res;
             this.invoiceService.edit(res).subscribe();
+            this.vatInvoice = this.fmVATInvoice.currentData = res;
+            this.fgVatInvoice.patchValue(res);
           } else {
             this.invoiceService.addNew().subscribe((res) => {
-              this.vatInvoice = res;
+              this.vatInvoice = this.fmVATInvoice.currentData = res;
+              this.fgVatInvoice.patchValue(res);
             });
           }
         });
     } else {
       this.invoiceService.addNew().subscribe((res) => {
-        this.vatInvoice = res;
+        this.vatInvoice = this.fmVATInvoice.currentData = res;
+        this.fgVatInvoice.patchValue(res);
       });
     }
   }
 
   ngAfterViewInit(): void {
-    console.log(this.form);
+    console.log(this.form.formGroup);
+    console.log(this.fgVatInvoice);
+    console.log(this.fmVATInvoice);
   }
   //#endregion
 
   //#region Event
   onInputChange(e, prop: string = 'cashTransfer'): void {
-    this[prop][e.field] = e.field === 'invoiceDate' ? e.data?.fromDate : e.data;
-
     if (e.field.toLowerCase() === 'cashbookid2') {
       this.cashBookName2 = e.component.itemsSelected[0]?.CashBookName;
       return;
@@ -200,7 +210,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
       this.cashBookName1 = e.component.itemsSelected[0]?.CashBookName;
     }
 
-    const fields: string[] = ['currencyid', 'cashbookid'];
+    const fields: string[] = ['currencyid', 'cashbookid', 'exchangeamt'];
     if (fields.includes(e.field.toLowerCase())) {
       this.api
         .exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
@@ -268,25 +278,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
     }
   }
 
-  payAmountChanged(e) {
-    console.log(e);
-
-    this.api
-      .exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
-        e.field.toLowerCase(),
-        this.cashTransfer,
-      ])
-      .subscribe((res: ICashTransfer) => {
-        if (res) {
-          this.form.formGroup.patchValue({
-            exchangeRate: res.exchangeRate,
-            multi: res.multi,
-            exchangeAmt2: res.exchangeAmt2,
-          });
-        }
-      });
-  }
-
   onClickClose() {
     this.dialogRef.close();
   }
@@ -317,8 +308,8 @@ export class PopupAddCashTransferComponent extends UIComponent {
   onClickSave(closeAfterSave: boolean): void {
     console.log(this.cashTransfer);
     console.log(this.vatInvoice);
-    console.log(this.masterService);
     console.log(this.form);
+    console.log(this.fgVatInvoice);
 
     if (
       !this.acService.validateFormData(
@@ -333,10 +324,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
     if (
       this.hasInvoice &&
-      !this.acService.validateFormDataUsingGvs(
-        this.gvsVATInvoices,
-        this.vatInvoice
-      )
+      !this.acService.validateFormData(this.fgVatInvoice, this.gvsVATInvoices)
     ) {
       return;
     }
@@ -424,7 +412,8 @@ export class PopupAddCashTransferComponent extends UIComponent {
           this.switchHasInvoice.toggle();
         }
         this.invoiceService.addNew().subscribe((res) => {
-          this.vatInvoice = res;
+          this.vatInvoice = this.fmVATInvoice.currentData = res;
+          this.fgVatInvoice.patchValue(res);
         });
       });
   }
