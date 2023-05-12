@@ -198,6 +198,8 @@ export class ViewDetailComponent implements OnInit {
         .getDetailSignFile(this.itemDetail?.recID)
         .subscribe((res) => {
           if (res) {
+            debugger
+            let x= res;
             if (res.refType != null) {
               this.esService
                 .getEntity(this.itemDetail?.refType)
@@ -486,33 +488,34 @@ export class ViewDetailComponent implements OnInit {
   }
 
   beforeCancel(datas: any) {
-    let mssgCode = 'ES015';
-    this.notify.alertCode(mssgCode).subscribe((x) => {
-      if (x.event?.status == 'Y') {
-        if (datas.approveStatus == '1') {
-          this.cancel(datas);
-        } else {
-          this.esService
-            .getApprovalTransActive(datas.recID)
-            .subscribe((lstTrans) => {
-              if (lstTrans && lstTrans?.length > 0) {
-                this.cancelControl = lstTrans[0]?.cancelControl;
-                if (this.cancelControl == '0') {
-                } else if (this.cancelControl == '1') {
-                  this.cancel(datas);
-                } else if (
-                  this.cancelControl == '2' ||
-                  this.cancelControl == '3'
-                ) {
-                  this.oCancelSF = datas;
-                  this.callfunc.openForm(this.addCancelComment, '', 650, 380);
-                }
-                return;
-              }
-            });
-        }
-      }
-    });
+    // let mssgCode = 'ES015';
+    // this.notify.alertCode(mssgCode).subscribe((x) => {
+    //   if (x.event?.status == 'Y') {
+        
+    //   }
+    // });
+    if (datas.approveStatus == '1') {
+      this.cancel(datas);
+    } else {
+      this.esService
+        .getApprovalTransActive(datas.recID)
+        .subscribe((lstTrans) => {
+          if (lstTrans && lstTrans?.length > 0) {
+            this.cancelControl = lstTrans[0]?.cancelControl;
+            if (this.cancelControl == '0') {
+            } else if (this.cancelControl == '1') {
+              this.cancel(datas);
+            } else if (
+              this.cancelControl == '2' ||
+              this.cancelControl == '3'
+            ) {
+              this.oCancelSF = datas;
+              this.callfunc.openForm(this.addCancelComment, '', 650, 380);
+            }
+            return;
+          }
+        });
+    }
   }
 
   cancel(datas: any) {
