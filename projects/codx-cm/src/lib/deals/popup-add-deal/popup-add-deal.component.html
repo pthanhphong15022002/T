@@ -4,7 +4,6 @@
     [entityName]="formModel.entityName"
     [isEdit]="true"
     [disabled]="false"
-    [title]="titleAction"
     (valueChange)="valueChange($event)"
   ></codx-tag>
 </ng-template>
@@ -335,7 +334,7 @@
 <ng-container *ngIf="addFieldsControl == '1'">
   <codx-layout-add
     #formlayoutadd
-    [title]="titleAction"
+    [title]="title"
     [subHeader]="subHeader"
     [tabInfo]="tabInfo"
     [tabContent]="tabContent"
@@ -344,6 +343,7 @@
     [formModel]="formModel"
     [footer]="footer"
     [data]="deal"
+    (setTitle)="setTitle($event)"
   ></codx-layout-add>
 
   <ng-template #tabGeneralInfoDetail>
