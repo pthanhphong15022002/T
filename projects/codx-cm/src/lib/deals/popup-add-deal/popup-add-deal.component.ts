@@ -215,10 +215,8 @@ export class PopupAddDealComponent
     this.updateDateDeal(this.instance, this.deal);
     if (this.action !== this.actionEdit) {
       this.insertInstance();
-      this.onAdd();
     } else {
       this.editInstance();
-      this.onEdit();
     }
   }
   cbxChange($event, field) {
@@ -336,7 +334,6 @@ export class PopupAddDealComponent
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
-          console.table(res);
         }
       });
   }
@@ -406,6 +403,7 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listInstanceSteps, null];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
+        this.onAdd();
       }
     });
   }
@@ -413,6 +411,7 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
+        this.onEdit();
       }
     });
   }
