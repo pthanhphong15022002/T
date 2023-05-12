@@ -305,7 +305,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             this.inventoryJournal
           );
           this.dialog.dataService
-            .save(null, 0, '', '', true)
+            .save(null, 0, '', '', false)
             .subscribe((res) => {
               if (res && res.update.data != false) {
                 this.loadModegrid();
@@ -382,7 +382,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               }
             }
             this.inventoryJournalLines = this.gridInventoryJournalLine.dataSource;
-            this.loadTotal();
             break;
           case '2':
             let index = this.inventoryJournalLines.findIndex(
@@ -408,6 +407,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   [this.inventoryJournalLines]
                 )
                 .subscribe((res) => {
+                  this.notification.notifyCode('SYS008', 0, '');
+                  this.hasSaved = true;
                   this.loadTotal();
                 });
             }
@@ -450,6 +451,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               var dataline = res.event['data'];
               this.inventoryJournalLines.push(dataline);
               this.loadPageCount();
+              this.hasSaved = true;
               this.loadTotal();
             }
           });
@@ -464,7 +466,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   close() {
-    this.dialog.close();
+    if (this.hasSaved) {
+      this.onEditInventory();
+    } else {
+      this.dialog.close();
+    }
   }
 
   onEdit(e: any) {
@@ -479,6 +485,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         .subscribe((save) => {
           if (save) {
             this.notification.notifyCode('SYS007', 0, '');
+            this.hasSaved = true;
             this.loadTotal();
           }
         });
@@ -497,6 +504,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         .subscribe((save) => {
           if (save) {
             this.notification.notifyCode('SYS006', 0, '');
+            this.hasSaved = true;
             this.loadTotal();
           }
         });
@@ -609,32 +617,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           }
           break;
         case 'edit':
-          this.journalService.handleVoucherNoAndSave(
-            this.journal,
-            this.inventoryJournal,
-            'IV',
-            'IV_InventoryJournals',
-            this.form,
-            this.formType === 'edit',
-            () => {
-              if (this.inventoryJournal.status == '0') {
-                this.inventoryJournal.status = '1';
-              }
-              this.dialog.dataService.updateDatas.set(
-                this.inventoryJournal['_uuid'],
-                this.inventoryJournal
-              );
-              this.dialog.dataService.save().subscribe((res) => {
-                if (res && res.update.data != null) {
-                  this.dialog.close({
-                    update: true,
-                    data: res.update,
-                  });
-                  this.dt.detectChanges();
-                }
-              });
-            }
-          );
+          this.onEditInventory();
           break;
       }
     }
@@ -864,6 +847,35 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   loadPageCount() {
     this.pageCount = '(' + this.inventoryJournalLines.length + ')';
+  }
+
+  onEditInventory(){
+    this.journalService.handleVoucherNoAndSave(
+      this.journal,
+      this.inventoryJournal,
+      'IV',
+      'IV_InventoryJournals',
+      this.form,
+      this.formType === 'edit',
+      () => {
+        if (this.inventoryJournal.status == '0') {
+          this.inventoryJournal.status = '1';
+        }
+        this.dialog.dataService.updateDatas.set(
+          this.inventoryJournal['_uuid'],
+          this.inventoryJournal
+        );
+        this.dialog.dataService.save().subscribe((res) => {
+          if (res && res.update.data != null) {
+            this.dialog.close({
+              update: true,
+              data: res.update,
+            });
+            this.dt.detectChanges();
+          }
+        });
+      }
+    );
   }
 
   //#endregion
