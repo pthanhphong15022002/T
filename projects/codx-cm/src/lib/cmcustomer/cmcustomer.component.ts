@@ -559,7 +559,6 @@ export class CmCustomerComponent
             if (e && e.event != null) {
               this.view.dataService.update(e.event).subscribe();
               this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-              this.customerDetail.recID = JSON.parse(JSON.stringify(this.dataSelected.recID));
               this.customerDetail.getOneCustomerDetail();
               this.detectorRef.detectChanges();
             }
