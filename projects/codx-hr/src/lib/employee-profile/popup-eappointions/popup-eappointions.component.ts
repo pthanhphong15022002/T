@@ -110,16 +110,16 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
             this.EAppointionObj.employeeID = this.employId;
             this.formModel.currentData = this.EAppointionObj;
             this.formGroup.patchValue(this.EAppointionObj);
-            this.cr.detectChanges();
             this.isAfterRender = true;
+            this.cr.detectChanges();
           }
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
         this.formGroup.patchValue(this.EAppointionObj);
         this.formModel.currentData = this.EAppointionObj;
-        this.cr.detectChanges();
         this.isAfterRender = true;
+        this.cr.detectChanges();
       }
     }
   }
