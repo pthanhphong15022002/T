@@ -141,6 +141,14 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
+    if (this.data.injectDate > this.data.nextInjectDate) {
+      this.hrService.notifyInvalidFromTo(
+        'NextInjectDate',
+        'InjectDate',
+        this.formModel
+      );
+      return;
+    }
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrService.addEVaccine(this.data).subscribe((res) => {
         if (res) {
