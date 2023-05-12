@@ -291,9 +291,7 @@
   </ng-container>
 </ng-template>
 <ng-template #nodata>
-  <ng-container *ngIf="
-      (!data || data.length <= 0)
-    ">
+  <ng-container *ngIf="loaded">
     <div class="container h-100">
       <div class="list-empty card card-flush h-100">
         <div class="d-flex flex-column flex-center justify-content-center">
