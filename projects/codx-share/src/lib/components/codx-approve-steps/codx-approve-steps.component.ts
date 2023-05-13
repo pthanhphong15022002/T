@@ -314,7 +314,7 @@ export class CodxApproveStepsComponent
             if (this.type == '1') {
               if (this.lstStep?.length > 0) {
                 for (let i = 0; i < this.lstStep.length; i++) {
-                  if (this.lstStep[i].transID != this.recID) {
+                  if (this.lstStep[i].transID != this.transId) {
                     delete this.lstStep[i].recID;
                     delete this.lstStep[i].id;
                     this.lstStep[i].transID = this.transId;
