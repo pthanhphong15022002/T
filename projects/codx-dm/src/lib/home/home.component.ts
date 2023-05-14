@@ -226,13 +226,27 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     });
 
     this.dmSV.isNodeSelect.subscribe((res) => {
-      
       if (res) {
+        this.disableMark();
         this.loaded = false;
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
           tree.textField = 'folderName';
-          if (res.recID) tree.getCurrentNode(res.recID);
+          if (res.recID) {
+            if(this.funcID == 'DMT00')
+            {
+              this.folderService.getFolder(res.recID).subscribe((res2) => {
+                if(res)
+                {
+                  this.dmSV.folderID = res2.recID
+                  this.dmSV.getRight(res2);
+                  this.refeshData();
+                  this.getDataFolder(res2.recID);
+                }
+              });
+            }
+            else tree.getCurrentNode(res.recID);
+          }
           else tree.getCurrentNode(res);
         
           this.scrollTop();
@@ -272,6 +286,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.loaded = false;
         if(this.funcID == "DMT00")
         {
+          this.disableMark();
           this.folderService.getFolder(res.recID).subscribe((res2) => {
             if(res)
             {
@@ -1478,7 +1493,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.folderService.options.funcID = this.funcID;
     this.folderService.getFolders(id).subscribe((res) => {
       if (res && res[0]){
-        debugger
         this.dmSV.listFolder = this.dmSV.listFolder.concat(res[0]);
         this.listFolders = res[0];
         this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
