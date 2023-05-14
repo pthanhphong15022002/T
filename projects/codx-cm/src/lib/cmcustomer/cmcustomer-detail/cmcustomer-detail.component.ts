@@ -141,7 +141,7 @@ export class CmcustomerDetailComponent implements OnInit {
   }
 
   contactPersonEvent(e) {
-    if (e.recID != this.contactPerson.recID) this.contactPerson = e;
+    if (e) this.contactPerson = e;
   }
 
   getGridviewSetup() {

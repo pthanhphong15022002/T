@@ -11,7 +11,7 @@
       (clickMF)="clickMF($event, dataSelected)"
     >
       <ng-template #header let-data>
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between mb-2">
           <div *ngIf="funcID == 'CM0101'">
             <div class="mb-1">
               <span
@@ -39,9 +39,9 @@
             ></codx-mfunc>
           </div>
         </div>
-        <div class="container_detail mt-3">
-          <div class="d-flex flex-grow-1 mb-4">
-            <div class="me-3">
+        <div class="container_detail">
+          <div class="d-flex w-100 mb-2">
+            <div class="me-4">
               <codx-img
                 [objectId]="dataSelected.recID"
                 [objectName]="getNameCrm(dataSelected)"
@@ -52,10 +52,10 @@
               >
               </codx-img>
             </div>
-            <div class="d-flex flex-column flex-grow-1">
+            <div class="d-flex flex-column w-100">
               <div class="d-flex justify-content-between">
                 <div class="d-flex flex-column">
-                  <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+                  <div class="fw-bold fs-5-sm text-dark line-clamp line-clamp-1 mb-1">
                     {{
                       funcID == "CM0101"
                         ? dataSelected.customerName
@@ -67,34 +67,34 @@
                     }}
                   </div>
                   <div
-                    class="d-flex align-items-start me-4 mb-1"
+                    class="d-flex flex-wrap me-4 mb-1"
                     *ngIf="funcID == 'CM0102'"
                   >
-                    <div class="me-3" *ngIf="dataSelected?.mobile">
+                    <div class="me-3 d-flex align-items-center" *ngIf="dataSelected?.mobile">
                       <span
                         [ngClass]="
                           dataSelected?.allowCall
                             ? 'icon-phone_android text-primary'
                             : 'icon-phonelink_erase'
                         "
-                        class="icon-16 me-1"
+                        class="icon-16 me-2"
                       ></span>
                       <span
                         [ngClass]="
                           dataSelected?.allowCall ? 'text-primary' : ''
                         "
-                        class="text-gray-900"
+                        class="text-gray-700"
                         >{{ dataSelected?.mobile }}</span
                       >
                     </div>
-                    <div *ngIf="dataSelected?.personalEmail">
+                    <div class="d-flex align-items-center" *ngIf="dataSelected?.personalEmail">
                       <span
                         [ngClass]="
                           dataSelected?.allowEmail
                             ? 'icon-email text-primary'
                             : 'icon-print_disabled'
                         "
-                        class="icon-16 me-1 text-gray-900"
+                        class="icon-16 me-2 text-gray-900"
                       ></span>
                       <span
                         [ngClass]="
@@ -105,11 +105,11 @@
                       >
                     </div>
                   </div>
-                  <div class="me-4 mb-1" *ngIf="dataSelected.address">
+                  <div class="d-flex align-items-center mb-1" *ngIf="dataSelected.address">
                     <span
-                      class="icon-location_on icon-16 me-1 text-gray-700"
+                      class="icon-location_on icon-16 me-2 text-gray-700"
                     ></span>
-                    <span class="text-gray-900">{{
+                    <span class="text-gray-700">{{
                       dataSelected.address
                     }}</span>
                   </div>
@@ -119,94 +119,91 @@
                     class="d-flex justify-content-end w-100 mb-5"
                     *ngIf="dataSelected.isBlackList"
                   >
-                    <span class="icon-do_disturb_alt icon-20"></span>
+                    <span class="icon-do_disturb_alt text-gray-700"></span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div [ngClass]="funcID == 'CM0101' ? 'd-flex align-items-start' : ''">
+          <div [ngClass]="funcID == 'CM0101' ? 'd-flex flex-wrap align-items-start' : ''">
             <div
-              class="d-flex col-6"
+              class="d-flex flex-column w-50 mt-1 pe-9"
               *ngIf="funcID == 'CM0101' && contactPerson != null"
             >
               <div class="me-3" style="white-space: nowrap">
                 <codx-label
-                  class="text-dark"
+                  class="fw-bold text-primary"
                   name="lblContact"
                   [formModel]="formModel"
-                  default="Liên hệ chính: "
+                  default="Liên hệ chính"
                 ></codx-label>
               </div>
-              <div class="d-flex flex-grow-1 mb-4">
+              <div class="d-flex mt-2">
                 <div class="me-3">
                   <codx-img
                     [objectId]="contactPerson.recID"
                     [objectName]="contactPerson.contactName"
                     [imgOn]="contactPerson?.modifiedOn"
                     [objectType]="'CM_Contacts'"
-                    [width]="35"
+                    [width]="30"
                   >
                   </codx-img>
                 </div>
                 <div class="d-flex flex-column flex-grow-1">
-                  <div>
-                    <div class="d-flex flex-column">
-                      <div
-                        class="fw-bold fs-6 text-dark codx-text-overflow-1line"
-                      >
-                        {{ contactPerson?.contactName }}
+                  <div class="d-flex flex-column">
+                    <div
+                      class="fw-bold fs-6 text-dark line-clamp line-clamp-1 mb-1"
+                    >
+                      {{ contactPerson?.contactName }}
+                    </div>
+                    <div class="d-flex flex-wrap mb-1">
+                      <div class="d-flex align-items-center me-3" *ngIf="contactPerson?.mobile">
+                        <span
+                          [ngClass]="
+                            contactPerson.allowCall
+                              ? 'icon-phone_android text-primary'
+                              : 'icon-phonelink_erase'
+                          "
+                          class="icon-16 me-2"
+                        ></span>
+                        <span
+                          [ngClass]="
+                            contactPerson.allowCall ? 'text-primary' : ''
+                          "
+                          class="text-gray-900"
+                          >{{ contactPerson?.mobile }}</span
+                        >
                       </div>
-                      <div class="d-flex align-items-start me-4 mb-1">
-                        <div class="me-3" *ngIf="contactPerson?.mobile">
-                          <span
-                            [ngClass]="
-                              contactPerson.allowCall
-                                ? 'icon-phone_android text-primary'
-                                : 'icon-phonelink_erase'
-                            "
-                            class="icon-16 me-1"
-                          ></span>
-                          <span
-                            [ngClass]="
-                              contactPerson.allowCall ? 'text-primary' : ''
-                            "
-                            class="text-gray-900"
-                            >{{ contactPerson?.mobile }}</span
-                          >
-                        </div>
-                        <div *ngIf="contactPerson?.personalEmail">
-                          <span
-                            [ngClass]="
-                              contactPerson.allowEmail
-                                ? 'icon-email text-primary'
-                                : 'icon-print_disabled'
-                            "
-                            class="icon-16 me-1 text-gray-900"
-                          ></span>
-                          <span
-                            [ngClass]="
-                              contactPerson.allowEmail ? 'text-primary' : ''
-                            "
-                            class="text-gray-900"
-                            >{{ contactPerson.personalEmail }}</span
-                          >
-                        </div>
+                      <div class="d-flex align-items-center" *ngIf="contactPerson?.personalEmail">
+                        <span
+                          [ngClass]="
+                            contactPerson.allowEmail
+                              ? 'icon-email text-primary'
+                              : 'icon-print_disabled'
+                          "
+                          class="icon-16 me-2 text-gray-900"
+                        ></span>
+                        <span
+                          [ngClass]="
+                            contactPerson.allowEmail ? 'text-primary' : ''
+                          "
+                          class="text-gray-900"
+                          >{{ contactPerson.personalEmail }}</span
+                        >
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="d-flex mt-1" *ngIf="dataSelected.industries">
-              <span> </span>
+            <div class="d-flex flex-column w-50 mt-1" *ngIf="dataSelected.industries">
               <codx-label
                 style="white-space: nowrap"
-                class="label-colon text-dark"
+                class="fw-bold text-primary"
                 fiedName="Industries"
                 [formModel]="formModel"
               ></codx-label>
-              <div>
+              <div class="mt-2">
                 <div
                   *ngFor="
                     let item of dataSelected?.industries.split(';');
@@ -215,7 +212,7 @@
                   class="d-inline"
                 >
                   <span
-                    class="text-dark fw-bold"
+                    class="text-gray-700"
                     [innerHTML]="
                       item | formatvalue : formModel : 'Industries' | async
                     "
@@ -231,7 +228,7 @@
             </div>
           </div>
           <div
-            class="d-flex align-items-start"
+            class="d-flex align-items-start mt-3"
             *ngIf="viewTag && viewTag != ''"
           >
             <codx-tag
@@ -387,5 +384,5 @@
 </ng-template>
 
 <ng-template #contract let-data>
-  <list-contracts [projectID]="dataSelected?.recID"></list-contracts>
+  <list-contracts [projectID]="dataSelected?.recID" [customers]="dataSelected" [contactPerson]="contactPerson"></list-contracts>
 </ng-template>

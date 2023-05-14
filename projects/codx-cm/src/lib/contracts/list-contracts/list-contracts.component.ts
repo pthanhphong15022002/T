@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewCh
 import { ApiHttpService, CacheService, CallFuncService, DialogModel, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
 import { AddContractsComponent } from '../add-contracts/add-contracts.component';
 import { firstValueFrom } from 'rxjs';
+import { CM_Contracts } from '../../models/cm_model';
 
 @Component({
   selector: 'list-contracts',
@@ -11,10 +12,13 @@ import { firstValueFrom } from 'rxjs';
 export class ListContractsComponent implements OnInit, OnChanges {
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @Input() projectID: any;
+  @Input() customers: any;
+  @Input() contactPerson: any;
   @Input() frmModelInstancesTask: FormModel;
   listContract = [];
   dateFomat = 'dd/MM/yyyy';
   account: any;
+  customersData:any;
   moreDefaut = {
     share: true,
     write: true,
@@ -36,6 +40,9 @@ export class ListContractsComponent implements OnInit, OnChanges {
   async ngOnChanges(changes: SimpleChanges) {
     if(changes.projectID){
       this.getContracts(this.projectID); 
+    }
+    if(changes.customers){
+      this.customersData = this.customers;
     }
   }
 
@@ -87,8 +94,27 @@ export class ListContractsComponent implements OnInit, OnChanges {
     })
   }
 
+  setCustomer(){
+    let contracts = new CM_Contracts();
+    contracts.companyID = this.customersData?.recID;
+    contracts.companyName = this.customersData?.customerName;
+    contracts.taxCode = this.customersData?.taxCode;
+    contracts.address = this.customersData?.address;
+    contracts.phone = this.customersData?.phone;
+    contracts.faxNo = this.customersData?.faxNo;
+    contracts.representative = this.contactPerson?.contactName;
+    contracts.jobTitle = this.contactPerson?.jobTitle;
+    contracts.bankAccount = this.customersData?.bankAccount;
+    contracts.bankID = this.customersData?.bankID;
+    return contracts;
+  }
+
   async addContract(){
-    let contractOutput = await this.openPopupContract(this.projectID, "add");
+    let contracts = new CM_Contracts();
+    if(this.customersData){
+      contracts = this.setCustomer();
+    }
+    let contractOutput = await this.openPopupContract(this.projectID, "add",contracts);
     if(contractOutput?.event?.contract){
       this.listContract.push(contractOutput?.event?.contract);
     }
@@ -157,8 +183,6 @@ export class ListContractsComponent implements OnInit, OnChanges {
       '',
       option
     );
-    // Util.getViewPort().width,
-    // Util.getViewPort().height,
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
     return dataPopupOutput;
   }

@@ -10,12 +10,15 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  ApiHttpService,
   ButtonModel,
+  CacheService,
   CallFuncService,
   DataRequest,
   DialogModel,
   DialogRef,
   FormModel,
+  NotificationsService,
   RequestOption,
   UIComponent,
   Util,
@@ -23,9 +26,11 @@ import {
   ViewType,
 } from 'codx-core';
 
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { PopupAddQuotationsComponent } from '../../quotations/popup-add-quotations/popup-add-quotations.component';
 import { ListContractsComponent } from '../list-contracts/list-contracts.component';
+import { AddContractsComponent } from '../add-contracts/add-contracts.component';
+import { CM_Contracts } from '../../models/cm_model';
 
 @Component({
   selector: 'lib-views-contracts',
@@ -48,13 +53,15 @@ export class ViewsContractsComponent extends UIComponent{
 
   listClicked =[]
   tabClicked = '';
+  fomatDate = 'dd/MM/yyyy';
+  account:any;
 
   views: Array<ViewModel> = [];
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
   entityName = 'CM_Contracts';
   className = 'ContractsBusiness';
-  methodLoadData = 'GetListQuotationsAsync';
+  methodLoadData = 'GetListContractsAsync';
 
   //test
   moreDefaut = {
@@ -95,26 +102,11 @@ export class ViewsContractsComponent extends UIComponent{
     private inject: Injector,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
-    // private listContracts: ListContractsComponent,
+    private callFunc: CallFuncService,
+    private notiService: NotificationsService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    // this.cache
-    //   .gridViewSetup('CMQuotations', 'grvCMQuotations')
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.grvSetup = res;
-    //       this.vllStatus = res['Status'].referedValue;
-    //       //lay grid view
-    //       let arrField = Object.values(res).filter((x: any) => x.isVisible);
-    //       if (Array.isArray(arrField)) {
-    //         this.arrFieldIsVisible = arrField
-    //           .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-    //           .map((x: any) => x.fieldName);
-    //         this.getColumsGrid(res);
-    //       }
-    //     }
-    //   });
   }
 
   onInit(): void {
@@ -127,6 +119,10 @@ export class ViewsContractsComponent extends UIComponent{
       { name: 'pay', textDefault: 'Phương thức và tiến độ thanh toán', icon: 'icon-tune', isActive: false },
       { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-more', isActive: false },
     ]
+    this.getAccount();
+  }
+
+  async ngOnChanges(changes: SimpleChanges) {
   }
 
   ngAfterViewInit() {
@@ -135,6 +131,7 @@ export class ViewsContractsComponent extends UIComponent{
       let contract = { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract};
       this.tabControl.splice(index,1,contract)
     }
+
     this.views = [
       {
         type: ViewType.listdetail,
@@ -159,68 +156,6 @@ export class ViewsContractsComponent extends UIComponent{
 
   changeTab(e){
     this.tabClicked = e;
-  }
-
-  getColumsGrid(grvSetup) {
-    this.columnGrids = [];
-    this.arrFieldIsVisible.forEach((key) => {
-      let field = Util.camelize(key);
-      let template: any;
-      let colums: any;
-      switch (key) {
-        case 'Status':
-          template = this.templateStatus;
-          break;
-        case 'CustomerID':
-          template = this.templateCustomer;
-          break;
-        case 'CreatedBy':
-          template = this.templateCreatedBy;
-          break;
-        default:
-          break;
-      }
-      if (template) {
-        colums = {
-          field: field,
-          headerText: grvSetup[key].headerText,
-          width: grvSetup[key].width,
-          template: template,
-          // textAlign: 'center',
-        };  
-      } else {
-        colums = {
-          field: field,
-          headerText: grvSetup[key].headerText,
-          width: grvSetup[key].width,
-        };
-      }
-
-      this.columnGrids.push(colums);
-    });
-
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        active: true,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.templateDetail,
-        },
-      },
-      {
-        type: ViewType.grid,
-        active: false,
-        sameData: true,
-        model: {
-          resources: this.columnGrids,
-          template2: this.templateMore,
-          // frozenColumns: 1,
-        },
-      },
-    ];
-    this.detectorRef.detectChanges() ;
   }
 
   click(e) {
@@ -249,141 +184,113 @@ export class ViewsContractsComponent extends UIComponent{
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        this.delete(data);
+        this.deleteContract(data);
         break;
       case 'SYS03':
-        this.edit(e, data);
+        this.editContract(data);
         break;
       case 'SYS04':
-        this.copy(e, data);
+        this.copyContract(data);
         break;
     }
   }
 
-  add() {
-    this.view.dataService.addNew().subscribe((res) => {
-      if (!res.quotationsID) {
-        this.api
-          .execSv<any>(
-            'SYS',
-            'AD',
-            'AutoNumbersBusiness',
-            'GenAutoNumberAsync',
-            [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
-          )
-          .subscribe((id) => {
-            res.quotationID = id;
-            this.openPopup(res);
-          });
-      } else this.openPopup(res);
-    });
+  async addContract(){
+    let contracts = new CM_Contracts();
+    // let contractOutput = await this.openPopupContract(this.projectID, "add",contracts);
+    // if(contractOutput?.event?.contract){
+    //   this.listContract.push(contractOutput?.event?.contract);
+    // }
   }
 
-  openPopup(res) {
-    res.versionNo = 'V1.0';
-    res.status = '1';
+  async editContract(contract){
+    let dataEdit = JSON.parse(JSON.stringify(contract));
+    // let dataOutput = await this.openPopupContract(this.projectID,"edit",dataEdit);
+    // let contractOutput = dataOutput?.event?.contract;
+    // if(contractOutput){
+    //   let index = this.listContract.findIndex(x => x.recID == contractOutput?.recID);
+    //   if(index >= 0){
+    //     this.listContract.splice(index, 1, contractOutput);
+    //   }
+    // }
+  }
 
-    var obj = {
-      data: res,
-      disableRefID: false,
-      action: 'add',
-      headerText: 'sdasdsadasdasd',
-    };
+  async copyContract(contract){
+    let dataCopy = JSON.parse(JSON.stringify(contract));
+    // let contractOutput = await this.openPopupContract(this.projectID,"copy",dataCopy);
+    // if(contractOutput?.event?.contract){
+    //   this.listContract.push(contractOutput?.event?.contract);
+    // }
+  }
+
+  deleteContract(contract){
+    if(contract?.recID){
+      this.notiService.alertCode('SYS030').subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.api.exec<any>(
+            'CM',
+            'ContractsBusiness',
+            'DeleteContactAsync',
+            contract?.recID
+          ).subscribe(res => {
+            // if(res){
+            //   let index = this.listContract.findIndex(x => x.recID==contract.recID);
+            //   if(index >= 0){
+            //     this.listContract.splice(index, 1);
+            //   }
+            // }
+          });
+        }
+      })
+    }
+  }
+
+  async openPopupContract(projectID,action, contract?){
+    let data = {
+      projectID,
+      action,
+      contract: contract || null,
+      account: this.account,
+    }
     let option = new DialogModel();
     option.IsFull = true;
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    let dialog = this.callfc.openForm(
-      PopupAddQuotationsComponent,
+    option.zIndex = 1010;
+    option.FormModel = this.formModel;
+    let popupContract = this.callFunc.openForm(
+      AddContractsComponent,
       '',
       null,
       null,
       '',
-      obj,
+      data,
       '',
       option
     );
+    let dataPopupOutput = await firstValueFrom(popupContract.closed);
+    return dataPopupOutput;
   }
 
-  edit(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService.edit(data).subscribe((res) => {
-      var obj = {
-        data: this.view.dataService.dataSelected,
-        action: 'edit',
-        headerText: e.text,
-      };
-      let option = new DialogModel();
-      option.IsFull = true;
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      let dialog = this.callfc.openForm(
-        PopupAddQuotationsComponent,
-        '',
-        null,
-        null,
-        '',
-        obj,
-        '',
-        option
-      );
-    });
+  getAccount(){
+    this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'CompanySettingsBusiness',
+      'GetAsync'
+    ).subscribe(res => {
+      console.log(res);
+      if(res){
+        this.account = res;
+      }
+    })
   }
 
-  copy(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService.copy(data).subscribe((res) => {
-      var obj = {
-        data: res,
-        action: 'copy',
-        headerText: e.text,
-      };
-      let option = new DialogModel();
-      option.IsFull = true;
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      let dialog = this.callfc.openForm(
-        PopupAddQuotationsComponent,
-        '',
-        null,
-        null,
-        '',
-        obj,
-        '',
-        option
-      );
-    });
-  }
-
-  delete(data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .delete([data], true, (option: RequestOption) =>
-        this.beforeDelete(option, data.recID)
-      )
-      .subscribe((res: any) => {
-        if (res) {
-        }
-      });
-  }
-  beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteQuotationsByRecIDAsync';
-    opt.className = 'QuotationsBusiness';
-    opt.assemblyName = 'CM';
-    opt.service = 'CM';
-    opt.data = data;
-    return true;
-  }
-
-  getIndex(recID) {
-    return (
-      this.view.dataService.data.findIndex((obj) => obj.recID == recID) + 1
-    );
+  async getForModel  (functionID) {
+    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let formModel = new FormModel;
+    formModel.formName = f?.formName;
+    formModel.gridViewName = f?.gridViewName;
+    formModel.entityName = f?.entityName;
+    formModel.funcID = functionID;
+    return formModel;
   }
 }

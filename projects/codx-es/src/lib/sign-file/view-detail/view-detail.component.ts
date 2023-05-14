@@ -198,13 +198,11 @@ export class ViewDetailComponent implements OnInit {
         .getDetailSignFile(this.itemDetail?.recID)
         .subscribe((res) => {
           if (res) {
-            debugger
             let x= res;
             if (res.refType != null) {
               this.esService
                 .getEntity(this.itemDetail?.refType)
                 .subscribe((oEntity) => {
-                  debugger
                   if (oEntity) {
                     this.esService
                       .getod(this.itemDetail?.recID)
