@@ -284,9 +284,9 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       if(res)
       {
         this.loaded = false;
+        this.disableMark();
         if(this.funcID == "DMT00")
         {
-          this.disableMark();
           this.folderService.getFolder(res.recID).subscribe((res2) => {
             if(res)
             {
