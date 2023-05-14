@@ -216,17 +216,19 @@
             <div class="d-flex justify-content-between">
               <div class="d-flex flex-column">
                 <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
-                  <span #contactName
-                  [innerHTML]="
-                    contact?.contactName
-                      | formatvalue
-                        : formModel
-                        : 'contactName'
-                        : contactName
-                        : 'CMContacts'
-                        : 'grvCmContacts'
-                      | async
-                  "></span>
+                  <span
+                    #contactName
+                    [innerHTML]="
+                      contact?.contactName
+                        | formatvalue
+                          : formModel
+                          : 'contactName'
+                          : contactName
+                          : 'CMContacts'
+                          : 'grvCmContacts'
+                        | async
+                    "
+                  ></span>
                 </div>
                 <div class="text-gray-500 me-4 mb-1"></div>
                 <ng-container>
@@ -303,6 +305,22 @@
         predicates="TransID=@0"
         [dataValues]="itemSelected.recID"
       ></codx-gridview-v2>
+      <!-- <codx-gridview-v2
+        idField="recID"
+        [service]="'CM'"
+        [gridViewName]="fmQuotationLines.gridViewName"
+        [formName]="fmQuotationLines.formName"
+        [entityName]="fmQuotationLines.entityName"
+        [assemblyName]="'Core'"
+        [className]="'DataBusiness'"
+        [method]="'LoadDataAsync'"
+        predicates="TransID=@0"
+        [autoLoad]="true"
+        [height]="gridHeight"
+        [dataValues]="itemSelected.recID"
+        [contentEditable]="false"
+        [allowResizing]="true"
+      ></codx-gridview-v2> -->
 
       <div #tabsNote class="row mt-5">
         <div class="form-group col-7">

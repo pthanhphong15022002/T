@@ -92,7 +92,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     if (!this.quotations.recID) {
       this.quotations.recID = Util.uid();
     }
-    this.headerText = dt?.data?.headerText ;
+    this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
     this.disableRefID = dt?.data?.disableRefID;
     this.quotationLines = [];
@@ -112,11 +112,11 @@ export class PopupAddQuotationsComponent implements OnInit {
     let data = [];
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddQuotationsAsync';
-      data = [this.quotations];
+      data = [this.quotations, this.quotationLines];
     }
     if (this.action == 'edit') {
       op.methodName = 'EditQuotationsAsync';
-      data = [this.quotations];
+      data = [this.quotations, this.quotationLines];
     }
     op.data = data;
     return true;
@@ -131,17 +131,15 @@ export class PopupAddQuotationsComponent implements OnInit {
               .update(res.save)
               .subscribe();
             this.dialog.close(res.save);
-         
           } else {
             this.dialog.close();
-          
           }
           this.changeDetector.detectChanges();
         });
     } else {
       this.api
         .exec<any>('CM', 'QuotationsBusiness', 'AddQuotationsAsync', [
-          this.quotations,
+          [this.quotations, this.quotationLines],
         ])
         .subscribe((res) => {
           if (res) {
@@ -165,24 +163,22 @@ export class PopupAddQuotationsComponent implements OnInit {
               .update(res.update)
               .subscribe();
             this.dialog.close(res.update);
-       
           } else {
             this.dialog.close();
-          
           }
           this.changeDetector.detectChanges();
         });
     } else {
       this.api
         .exec<any>('CM', 'QuotationsBusiness', 'EditQuotationsAsync', [
-          this.quotations,
+          [this.quotations, this.quotationLines],
         ])
         .subscribe((res) => {
           if (res) {
-           this.notiService.notifyCode('SYS007');
+            this.notiService.notifyCode('SYS007');
             this.dialog.close(res);
           } else {
-           this.notiService.notifyCode('SYS021');
+            this.notiService.notifyCode('SYS021');
             this.dialog.close();
           }
         });
@@ -208,7 +204,7 @@ export class PopupAddQuotationsComponent implements OnInit {
       case 'customerID':
         this.quotations.refID = null;
         this.modelObjectIDContacs = { objectID: this.quotations.customerID };
-      break;
+        break;
     }
   }
 
@@ -371,15 +367,17 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   loadTotal() {
-    var totals = 0;
-    var totalsdr = 0;
-    this.quotationLines.forEach((element) => {
-      //tisnh tong tien
-      // totals = totals + element.dr;
-      // totalsdr = totalsdr + element.dR2;
-    });
-    // this.total = totals.toLocaleString('it-IT');
-    // this.totaldr2 = totalsdr.toLocaleString('it-IT');
+    if (this.quotationLines?.length > 0) {
+      var totals = 0;
+      var totalsdr = 0;
+      this.quotationLines.forEach((element) => {
+        //tisnh tong tien
+        totals = totals + element.netAmt ?? 0;
+        // totalsdr = totalsdr + element.dR2;
+      });
+      this.quotations.totalAmt = totals;
+      // this.totaldr2 = totalsdr.toLocaleString('it-IT');
+    } else this.quotations.totalAmt = 0;
   }
 
   clearQuotationsLines() {

@@ -9,6 +9,7 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { ApiHttpService, FormModel } from 'codx-core';
+import { CodxCmService } from '../../codx-cm.service';
 
 @Component({
   selector: 'lib-quotations-view-detail',
@@ -75,7 +76,11 @@ export class QuotationsViewDetailComponent implements OnChanges {
   dataSource = [];
   crrContactID: any;
 
-  constructor(private api: ApiHttpService, protected sanitizer: DomSanitizer) {}
+  constructor(
+    private api: ApiHttpService,
+    private codxCM: CodxCmService,
+    protected sanitizer: DomSanitizer
+  ) {}
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['itemSelected']) {
     }
@@ -83,6 +88,13 @@ export class QuotationsViewDetailComponent implements OnChanges {
       this.crrContactID = this.itemSelected.contactID;
       this.loadDetailContactByID(this.crrContactID);
     }
+    this.codxCM
+      .getQuotationsLinesByTransID(this.itemSelected.recID)
+      .subscribe((res) => {
+        if (res) {
+          this.dataSource = res;
+        }
+      });
   }
 
   loadDetailContactByID(contactID) {
