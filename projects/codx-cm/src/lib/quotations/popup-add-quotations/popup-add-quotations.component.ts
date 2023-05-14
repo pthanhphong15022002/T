@@ -72,8 +72,8 @@ export class PopupAddQuotationsComponent implements OnInit {
   quotationLinesAddNew = [];
   quotationLinesEdit = [];
   disableRefID = false;
-  modelObjectIDContacs :any
-  modelCustomerIDDeals :any;
+  modelObjectIDContacs: any;
+  modelCustomerIDDeals: any;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -130,10 +130,10 @@ export class PopupAddQuotationsComponent implements OnInit {
               .update(res.save)
               .subscribe();
             this.dialog.close(res.save);
-            this.notiService.notifyCode('SYS006');
+         
           } else {
             this.dialog.close();
-            this.notiService.notifyCode('SYS023');
+          
           }
           this.changeDetector.detectChanges();
         });
@@ -164,10 +164,10 @@ export class PopupAddQuotationsComponent implements OnInit {
               .update(res.update)
               .subscribe();
             this.dialog.close(res.update);
-            this.notiService.notifyCode('SYS007');
+       
           } else {
             this.dialog.close();
-            this.notiService.notifyCode('SYS021');
+          
           }
           this.changeDetector.detectChanges();
         });
@@ -178,10 +178,10 @@ export class PopupAddQuotationsComponent implements OnInit {
         ])
         .subscribe((res) => {
           if (res) {
-            this.notiService.notifyCode('SYS007');
+           this.notiService.notifyCode('SYS007');
             this.dialog.close(res);
           } else {
-            this.notiService.notifyCode('SYS021');
+           this.notiService.notifyCode('SYS021');
             this.dialog.close();
           }
         });
@@ -202,13 +202,12 @@ export class PopupAddQuotationsComponent implements OnInit {
     switch (e?.field) {
       case 'refID':
         this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-        this.modelObjectIDContacs = {objectID :this.quotations.customerID}  
-     
+        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
         break;
-      //   case 'customerID':
-      //     // this.modelCustomerIDDeals.customerID = this.quotations.customerID;
-      //     // this.modelObjectIDContacs.objectID = this.quotations.customerID;
-      //     break;
+      case 'customerID':
+        this.quotations.refID = null;
+        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+      break;
     }
   }
 
