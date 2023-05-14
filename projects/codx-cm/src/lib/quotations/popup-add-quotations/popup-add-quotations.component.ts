@@ -18,6 +18,7 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  NotificationsService,
   RequestOption,
   Util,
 } from 'codx-core';
@@ -71,24 +72,27 @@ export class PopupAddQuotationsComponent implements OnInit {
   quotationLinesAddNew = [];
   quotationLinesEdit = [];
   disableRefID = false;
-  modelObjectIDContacs = new CM_Contacts;
-  modelCustomerIDDeals = new CM_Deals;
+  modelObjectIDContacs: any;
+  modelCustomerIDDeals: any;
 
   constructor(
     public sanitizer: DomSanitizer,
     private api: ApiHttpService,
     private codxCM: CodxCmService,
     private cache: CacheService,
+    private notiService: NotificationsService,
     private changeDetector: ChangeDetectorRef,
     private callFc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
+    // this.quotations = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
     this.quotations = JSON.parse(JSON.stringify(dt?.data?.data));
     if (!this.quotations.recID) {
       this.quotations.recID = Util.uid();
     }
+    this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
     this.disableRefID = dt?.data?.disableRefID;
     this.quotationLines = [];
@@ -108,43 +112,77 @@ export class PopupAddQuotationsComponent implements OnInit {
     let data = [];
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddQuotationsAsync';
-      data = [this.quotations];
+      data = [this.quotations, this.quotationLines];
     }
     if (this.action == 'edit') {
       op.methodName = 'EditQuotationsAsync';
-      data = [this.quotations];
+      data = [this.quotations, this.quotationLines];
     }
     op.data = data;
     return true;
   }
   onAdd() {
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt), 0)
-      .subscribe((res) => {
-        if (res.save) {
-          (this.dialog.dataService as CRUDService).update(res.save).subscribe();
-          this.dialog.close(res.save);
-        } else {
-          this.dialog.close();
-        }
-        this.changeDetector.detectChanges();
-      });
+    if (this.dialog.dataService) {
+      this.dialog.dataService
+        .save((opt: any) => this.beforeSave(opt), 0)
+        .subscribe((res) => {
+          if (res.save) {
+            (this.dialog.dataService as CRUDService)
+              .update(res.save)
+              .subscribe();
+            this.dialog.close(res.save);
+          } else {
+            this.dialog.close();
+          }
+          this.changeDetector.detectChanges();
+        });
+    } else {
+      this.api
+        .exec<any>('CM', 'QuotationsBusiness', 'AddQuotationsAsync', [
+          [this.quotations, this.quotationLines],
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.notiService.notifyCode('SYS006');
+            this.dialog.close(res);
+          } else {
+            this.notiService.notifyCode('SYS023');
+            this.dialog.close();
+          }
+        });
+    }
   }
 
   onUpdate() {
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res) => {
-        if (res.update) {
-          (this.dialog.dataService as CRUDService)
-            .update(res.update)
-            .subscribe();
-          this.dialog.close(res.update);
-        } else {
-          this.dialog.close();
-        }
-        this.changeDetector.detectChanges();
-      });
+    if (this.dialog.dataService) {
+      this.dialog.dataService
+        .save((opt: any) => this.beforeSave(opt))
+        .subscribe((res) => {
+          if (res.update) {
+            (this.dialog.dataService as CRUDService)
+              .update(res.update)
+              .subscribe();
+            this.dialog.close(res.update);
+          } else {
+            this.dialog.close();
+          }
+          this.changeDetector.detectChanges();
+        });
+    } else {
+      this.api
+        .exec<any>('CM', 'QuotationsBusiness', 'EditQuotationsAsync', [
+          [this.quotations, this.quotationLines],
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.notiService.notifyCode('SYS007');
+            this.dialog.close(res);
+          } else {
+            this.notiService.notifyCode('SYS021');
+            this.dialog.close();
+          }
+        });
+    }
   }
   onSave() {
     if (this.action == 'add' || this.action == 'copy') {
@@ -153,6 +191,7 @@ export class PopupAddQuotationsComponent implements OnInit {
       this.onUpdate();
     }
   }
+
   //change Data
   changeCombox(e) {
     if (!e?.data || !e?.field) return;
@@ -160,20 +199,20 @@ export class PopupAddQuotationsComponent implements OnInit {
     switch (e?.field) {
       case 'refID':
         this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-        this.modelObjectIDContacs.objectID = this.quotations.customerID 
+        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
         break;
       case 'customerID':
-        this.modelCustomerIDDeals.customerID = this.quotations.customerID 
-        this.modelObjectIDContacs.objectID = this.quotations.customerID 
+        this.quotations.refID = null;
+        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
         break;
     }
-    this.changeDetector.detectChanges()
   }
 
   valueChange(e) {
     if (!e?.data || !e?.field) return;
     this.quotations[e.field] = e.data;
   }
+  controlBlur(e) {}
 
   valueChangeDate(e) {
     if (!e?.data || !e?.field) return;
@@ -328,15 +367,17 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   loadTotal() {
-    var totals = 0;
-    var totalsdr = 0;
-    this.quotationLines.forEach((element) => {
-      //tisnh tong tien
-      // totals = totals + element.dr;
-      // totalsdr = totalsdr + element.dR2;
-    });
-    // this.total = totals.toLocaleString('it-IT');
-    // this.totaldr2 = totalsdr.toLocaleString('it-IT');
+    if (this.quotationLines?.length > 0) {
+      var totals = 0;
+      var totalsdr = 0;
+      this.quotationLines.forEach((element) => {
+        //tisnh tong tien
+        totals = totals + element.netAmt ?? 0;
+        // totalsdr = totalsdr + element.dR2;
+      });
+      this.quotations.totalAmt = totals;
+      // this.totaldr2 = totalsdr.toLocaleString('it-IT');
+    } else this.quotations.totalAmt = 0;
   }
 
   clearQuotationsLines() {
