@@ -92,6 +92,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     if (!this.quotations.recID) {
       this.quotations.recID = Util.uid();
     }
+    this.headerText = dt?.data?.headerText ;
     this.action = dt?.data?.action;
     this.disableRefID = dt?.data?.disableRefID;
     this.quotationLines = [];

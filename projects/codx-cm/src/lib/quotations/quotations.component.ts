@@ -73,6 +73,7 @@ export class QuotationsComponent extends UIComponent {
   arrFieldIsVisible = [];
   itemSelected: any;
   button?: ButtonModel;
+  titleAction= ''
 
   constructor(
     private inject: Injector,
@@ -191,6 +192,7 @@ export class QuotationsComponent extends UIComponent {
   }
 
   click(e) {
+    this.titleAction = e.text;
     switch (e.id) {
       case 'btnAdd':
         this.add();
@@ -214,6 +216,7 @@ export class QuotationsComponent extends UIComponent {
     this.clickMF(e.e, e.data);
   }
   clickMF(e, data) {
+    this.titleAction = e.text
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -256,7 +259,7 @@ export class QuotationsComponent extends UIComponent {
       data: res,
       disableRefID: false,
       action: 'add',
-      headerText: 'sdasdsadasdasd',
+      headerText: this.titleAction,
     };
     let option = new DialogModel();
     option.IsFull = true;
