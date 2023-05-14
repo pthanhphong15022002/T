@@ -186,6 +186,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
     res.salespersonID = res.salespersonID ?? this.salespersonID;
     res.consultantID = res.consultantID ?? this.consultantID;
     res.totalAmt = res.totalAmt ?? 0;
+    res.exchangeRate = res.exchangeRate??1;
 
     var obj = {
       data: res,

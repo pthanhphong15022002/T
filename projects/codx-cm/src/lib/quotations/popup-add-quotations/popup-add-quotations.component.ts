@@ -72,8 +72,8 @@ export class PopupAddQuotationsComponent implements OnInit {
   quotationLinesAddNew = [];
   quotationLinesEdit = [];
   disableRefID = false;
-  modelObjectIDContacs = new CM_Contacts();
-  modelCustomerIDDeals = new CM_Deals();
+  modelObjectIDContacs :any
+  modelCustomerIDDeals :any;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -87,6 +87,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
+    // this.quotations = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
     this.quotations = JSON.parse(JSON.stringify(dt?.data?.data));
     if (!this.quotations.recID) {
       this.quotations.recID = Util.uid();
@@ -129,10 +130,10 @@ export class PopupAddQuotationsComponent implements OnInit {
               .update(res.save)
               .subscribe();
             this.dialog.close(res.save);
-            this.notiService.notifyCode('SYS006')
+            this.notiService.notifyCode('SYS006');
           } else {
             this.dialog.close();
-            this.notiService.notifyCode('SYS023')         
+            this.notiService.notifyCode('SYS023');
           }
           this.changeDetector.detectChanges();
         });
@@ -142,14 +143,13 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.quotations,
         ])
         .subscribe((res) => {
-          if(res){
-            this.notiService.notifyCode('SYS006')
+          if (res) {
+            this.notiService.notifyCode('SYS006');
             this.dialog.close(res);
-          }else{
-            this.notiService.notifyCode('SYS023')
+          } else {
+            this.notiService.notifyCode('SYS023');
             this.dialog.close();
           }
-         
         });
     }
   }
@@ -164,10 +164,10 @@ export class PopupAddQuotationsComponent implements OnInit {
               .update(res.update)
               .subscribe();
             this.dialog.close(res.update);
-            this.notiService.notifyCode('SYS007') 
+            this.notiService.notifyCode('SYS007');
           } else {
             this.dialog.close();
-            this.notiService.notifyCode('SYS021')
+            this.notiService.notifyCode('SYS021');
           }
           this.changeDetector.detectChanges();
         });
@@ -177,14 +177,13 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.quotations,
         ])
         .subscribe((res) => {
-          if(res){
-            this.notiService.notifyCode('SYS007')
+          if (res) {
+            this.notiService.notifyCode('SYS007');
             this.dialog.close(res);
-          }else {
-            this.notiService.notifyCode('SYS021')
+          } else {
+            this.notiService.notifyCode('SYS021');
             this.dialog.close();
           }
-       
         });
     }
   }
@@ -195,6 +194,7 @@ export class PopupAddQuotationsComponent implements OnInit {
       this.onUpdate();
     }
   }
+
   //change Data
   changeCombox(e) {
     if (!e?.data || !e?.field) return;
@@ -202,20 +202,21 @@ export class PopupAddQuotationsComponent implements OnInit {
     switch (e?.field) {
       case 'refID':
         this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-        this.modelObjectIDContacs.objectID = this.quotations.customerID;
+        this.modelObjectIDContacs = {objectID :this.quotations.customerID}  
+     
         break;
-      case 'customerID':
-        this.modelCustomerIDDeals.customerID = this.quotations.customerID;
-        this.modelObjectIDContacs.objectID = this.quotations.customerID;
-        break;
+      //   case 'customerID':
+      //     // this.modelCustomerIDDeals.customerID = this.quotations.customerID;
+      //     // this.modelObjectIDContacs.objectID = this.quotations.customerID;
+      //     break;
     }
-    this.changeDetector.detectChanges();
   }
 
   valueChange(e) {
     if (!e?.data || !e?.field) return;
     this.quotations[e.field] = e.data;
   }
+  controlBlur(e) {}
 
   valueChangeDate(e) {
     if (!e?.data || !e?.field) return;
