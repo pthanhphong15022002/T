@@ -100,16 +100,6 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   onInit(): void {}
 
   ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.list,
-        active: true,
-        sameData: true,
-        model: {
-          template: this.itemViewList,
-        },
-      },
-    ];
   }
 
   getQuotations() {

@@ -1,5 +1,5 @@
-<ng-container>
-  <div class="d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2">
+<div>
+  <div class="custom-toolbar d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2">
     <div>
       <button
         type="button"
@@ -10,36 +10,27 @@
       </button>
     </div>
   </div>
-  <ng-container
-    *ngIf="listQuotations?.length > 0"
-    [ngTemplateOutlet]="itemViewList"
-  ></ng-container>
-  <!-- <codx-views
-    #view
-    [service]="service"
-    [assemblyName]="assemblyName"
-    [entityName]="entityName"
-    [className]="className"
-    [method]="methodLoadData"
-    idField="recID"
-    [funcID]="'CM0202'"
-    [predicates]="predicates"
-    [dataValues]="dataValues"
-    [views]="views"
-    [toolbarDisplay]="false"
-    [selectedFirst]="true"
-    [autoLoad]="true"
-    (selectedChange)="changeItemDetail($event)"
-  >
-  </codx-views> -->
-</ng-container>
+  <!-- <div
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-height="auto"
+    data-kt-scroll-dependencies=".custom-toolbar"
+    data-kt-scroll-wrappers=".tab-pane"
+    [attr.data-kt-scroll-offset]="'0px'"
+  > -->
+    <ng-container
+      *ngIf="listQuotations?.length > 0"
+      [ngTemplateOutlet]="itemViewList"
+    ></ng-container>
+  <!-- </div> -->
+</div>
 
 <ng-template #itemViewList>
-  <ng-container *ngFor="let data of listQuotations;let i = index">
+  <ng-container *ngFor="let data of listQuotations; let i = index">
     <div class="has-action-menu my-5 py-3">
       <div class="row">
         <div class="col-1 d-flex justify-content-center align-items-center">
-          <span>{{i+1}}</span>
+          <span>{{ i + 1 }}</span>
           <!-- <span
             #rowNo
             [innerHTML]="
