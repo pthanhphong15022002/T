@@ -295,7 +295,8 @@
         [formName]="fmQuotationLines.formName"
         [gridViewName]="fmQuotationLines.gridViewName"
         [entityName]="fmQuotationLines.entityName"
-        [editSettings]="editSettings"
+       
+        [contentEditable]="false"
         [allowFiltering]="true"
         [allowSorting]="true"
         [dataSource]="dataSource"
@@ -305,6 +306,7 @@
         predicates="TransID=@0"
         [dataValues]="itemSelected.recID"
       ></codx-gridview-v2>
+       <!-- [editSettings]="editSettings" -->
       <!-- <codx-gridview-v2
         idField="recID"
         [service]="'CM'"

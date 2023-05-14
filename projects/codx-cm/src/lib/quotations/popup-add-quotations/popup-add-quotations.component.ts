@@ -71,6 +71,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   gridViewSetupQL: any;
   quotationLinesAddNew = [];
   quotationLinesEdit = [];
+  quotationLinesDeleted = [];
   disableRefID = false;
   modelObjectIDContacs: any;
   modelCustomerIDDeals: any;
@@ -116,7 +117,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     }
     if (this.action == 'edit') {
       op.methodName = 'EditQuotationsAsync';
-      data = [this.quotations, this.quotationLines];
+      data = [this.quotations, this.quotationLinesAddNew,this.quotationLinesEdit,this.quotationLinesDeleted];
     }
     op.data = data;
     return true;
@@ -171,7 +172,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     } else {
       this.api
         .exec<any>('CM', 'QuotationsBusiness', 'EditQuotationsAsync', [
-          [this.quotations, this.quotationLines],
+          [this.quotations, this.quotationLinesAddNew,this.quotationLinesEdit,this.quotationLinesDeleted],
         ])
         .subscribe((res) => {
           if (res) {

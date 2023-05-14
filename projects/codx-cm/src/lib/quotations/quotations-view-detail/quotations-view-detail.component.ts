@@ -68,9 +68,9 @@ export class QuotationsViewDetailComponent implements OnChanges {
   };
   gridHeight: number = 250;
   editSettings: EditSettingsModel = {
-    allowEditing: true,
-    allowAdding: true,
-    allowDeleting: true,
+    allowEditing: false,
+    allowAdding: false,
+    allowDeleting: false,
     mode: 'Normal',
   };
   dataSource = [];
