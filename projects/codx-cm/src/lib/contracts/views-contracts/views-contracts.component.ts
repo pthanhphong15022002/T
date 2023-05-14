@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   Injector,
   Input,
@@ -12,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
   ButtonModel,
+  CRUDService,
   CacheService,
   CallFuncService,
   DataRequest,
@@ -31,6 +33,7 @@ import { PopupAddQuotationsComponent } from '../../quotations/popup-add-quotatio
 import { ListContractsComponent } from '../list-contracts/list-contracts.component';
 import { AddContractsComponent } from '../add-contracts/add-contracts.component';
 import { CM_Contracts } from '../../models/cm_model';
+import { PaymentsComponent } from '../component/payments/payments.component';
 
 @Component({
   selector: 'lib-views-contracts',
@@ -104,6 +107,7 @@ export class ViewsContractsComponent extends UIComponent{
     private routerActive: ActivatedRoute,
     private callFunc: CallFuncService,
     private notiService: NotificationsService,
+    private changeDetector: ChangeDetectorRef,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -161,7 +165,7 @@ export class ViewsContractsComponent extends UIComponent{
   click(e) {
     switch (e.id) {
       case 'btnAdd':
-        // this.listContracts.addContract();
+        this.addContract();
         break;
     }
   }
@@ -196,52 +200,44 @@ export class ViewsContractsComponent extends UIComponent{
   }
 
   async addContract(){
-    let contracts = new CM_Contracts();
-    // let contractOutput = await this.openPopupContract(this.projectID, "add",contracts);
-    // if(contractOutput?.event?.contract){
-    //   this.listContract.push(contractOutput?.event?.contract);
-    // }
+    this.view.dataService.addNew().subscribe(async (res) => {
+      let contracts = new CM_Contracts();
+      let contractOutput = await this.openPopupContract(null, "add",contracts);
+    })    
   }
 
   async editContract(contract){
     let dataEdit = JSON.parse(JSON.stringify(contract));
-    // let dataOutput = await this.openPopupContract(this.projectID,"edit",dataEdit);
-    // let contractOutput = dataOutput?.event?.contract;
-    // if(contractOutput){
-    //   let index = this.listContract.findIndex(x => x.recID == contractOutput?.recID);
-    //   if(index >= 0){
-    //     this.listContract.splice(index, 1, contractOutput);
-    //   }
-    // }
+    this.view.dataService.edit(dataEdit).subscribe(async (res) => {
+      let dataOutput = await this.openPopupContract(null,"edit",dataEdit);
+    })
   }
 
   async copyContract(contract){
-    let dataCopy = JSON.parse(JSON.stringify(contract));
-    // let contractOutput = await this.openPopupContract(this.projectID,"copy",dataCopy);
-    // if(contractOutput?.event?.contract){
-    //   this.listContract.push(contractOutput?.event?.contract);
-    // }
+    this.view.dataService.addNew().subscribe(async (res) => {
+      let dataCopy = JSON.parse(JSON.stringify(contract));
+      let contractOutput = await this.openPopupContract(null,"copy",dataCopy);
+    });
+  }
+
+  beforeDelete(option: RequestOption, data) {
+    option.methodName = 'DeleteContactAsync';
+    option.className = 'ContractsBusiness';
+    option.assemblyName = 'CM';
+    option.service = 'CM';
+    option.data = data;
+    return true;
   }
 
   deleteContract(contract){
     if(contract?.recID){
-      this.notiService.alertCode('SYS030').subscribe((x) => {
-        if (x.event && x.event.status == 'Y') {
-          this.api.exec<any>(
-            'CM',
-            'ContractsBusiness',
-            'DeleteContactAsync',
-            contract?.recID
-          ).subscribe(res => {
-            // if(res){
-            //   let index = this.listContract.findIndex(x => x.recID==contract.recID);
-            //   if(index >= 0){
-            //     this.listContract.splice(index, 1);
-            //   }
-            // }
-          });
+      this.view.dataService
+      .delete([contract], true, (option: RequestOption) =>
+      this.beforeDelete(option, contract.recID))
+      .subscribe((res: any) => {
+        if (res) {
         }
-      })
+      });     
     }
   }
 
@@ -251,10 +247,12 @@ export class ViewsContractsComponent extends UIComponent{
       action,
       contract: contract || null,
       account: this.account,
+      type: 'view',
     }
     let option = new DialogModel();
     option.IsFull = true;
-    option.zIndex = 1010;
+    option.zIndex = 1001;
+    option.DataService = this.view.dataService;
     option.FormModel = this.formModel;
     let popupContract = this.callFunc.openForm(
       AddContractsComponent,
@@ -293,4 +291,37 @@ export class ViewsContractsComponent extends UIComponent{
     formModel.funcID = functionID;
     return formModel;
   }
+
+  addPayHistory(){
+    this.openPopupPay('add', 'payHistory', null);
+  }
+  addPay(){
+    this.openPopupPay('add', 'pay', null);
+  }
+
+  async openPopupPay(action,type,data) {
+    let dataInput = {
+      action,
+      data,
+      type,
+    };
+    let option = new DialogModel();
+    option.IsFull = false;
+    option.zIndex = 1001;
+    option.DataService = this.view.dataService;
+    option.FormModel = this.formModel;
+    let popupTask = this.callfc.openForm(
+      PaymentsComponent,'',
+      600,
+      400,
+      '', 
+      dataInput,
+      '',
+      option,
+      );
+
+    let dataPopupOutput = await firstValueFrom(popupTask.closed);
+    return dataPopupOutput;
+  }
+
 }

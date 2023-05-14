@@ -323,10 +323,12 @@
   <div>
     <codx-input
       [formModel]="dialog.formModel"
-      field=""
+      field="note"
       type="textarea"
       format="ed"
       height="150"
+      (valueChange)="valueChangeText($event)"
+      [crrValue]="contracts?.note"
     >
     </codx-input>
   </div>

@@ -168,6 +168,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
       action,
       contract: contract || null,
       account: this.account,
+      type:'list'
     }
     let option = new DialogModel();
     option.IsFull = true;

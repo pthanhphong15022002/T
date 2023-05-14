@@ -267,6 +267,7 @@
         style="height: 28px"
         type="button"
         class="btn btn-outline-primary btn-sm"
+        (click)="addPay()"
       >
         <codx-label
           [formModel]=""
@@ -290,11 +291,12 @@
           style="height: 28px"
           type="button"
           class="btn btn-outline-primary btn-sm"
+          (click)="addPayHistory()"
         >
           <codx-label
             [formModel]=""
             fiedName=""
-            default="Thêm lịch thanh toán"
+            default="Thêm lịch sử thanh toán"
           ></codx-label>
         </button>
       </div>
@@ -342,7 +344,10 @@
   </div>
 </ng-template>
 
-<ng-template #termsAndRelatedTemplate></ng-template>
+<ng-template #termsAndRelatedTemplate let-data="data">
+  <div [innerHTML]="itemSelected?.note">
+  </div>
+</ng-template>
 
 <ng-template #general let-data="data">
   <div class="row fs-6 my-2">
