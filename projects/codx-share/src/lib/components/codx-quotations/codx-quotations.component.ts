@@ -93,7 +93,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
     if (changes['customerID']) {
       if (changes['customerID'].currentValue === this.customerIDCrr) return;
       this.customerIDCrr = changes['customerID'].currentValue;
-      //this.getQuotations();
+      this.getQuotations();
     }
   }
 
@@ -117,9 +117,10 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
     this.requestData.dataValues = this.refType + ';' + this.refID;
     this.requestData.entityName = this.entityName;
     this.requestData.funcID = this.funcID;
+    this.requestData.pageLoading = false;
+ 
     this.fetch().subscribe((res) => {
       this.listQuotations = res;
-      // this.view.dataService.data = this.listQuotations
     });
   }
 
