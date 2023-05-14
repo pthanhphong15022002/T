@@ -10,11 +10,11 @@
       </button>
     </div>
   </div>
-  <!-- <ng-container
+  <ng-container
     *ngIf="listQuotations?.length > 0"
     [ngTemplateOutlet]="itemViewList"
-  ></ng-container> -->
-  <codx-views
+  ></ng-container>
+  <!-- <codx-views
     #view
     [service]="service"
     [assemblyName]="assemblyName"
@@ -31,48 +31,98 @@
     [autoLoad]="true"
     (selectedChange)="changeItemDetail($event)"
   >
-  </codx-views>
+  </codx-views> -->
 </ng-container>
 
-<ng-template #itemViewList let-data>
-  <!-- <ng-template #itemViewList> 
-   <ng-container *ngFor="let data of listQuotations; let i = index"> -->
-  <div class="has-action-menu my-5 py-3">
-    <div class="row">
-      <div class="col-1 d-flex justify-content-center align-items-center">
-        {{ getIndex(data.recID) }}
-        <!-- {{i+1}} -->
+<ng-template #itemViewList>
+  <ng-container *ngFor="let data of listQuotations;let i = index">
+    <div class="has-action-menu my-5 py-3">
+      <div class="row">
+        <div class="col-1 d-flex justify-content-center align-items-center">
+          <span>{{i+1}}</span>
+          <!-- <span
+            #rowNo
+            [innerHTML]="
+              data?.rowNo
+                | formatvalue
+                  : formModel
+                  : 'rowNo'
+                  : rowNo
+                  : 'CMQuotations'
+                  : 'grvCMQuotations'
+                | async
+            "
+          ></span> -->
+        </div>
+        <div class="col-3 d-flex flex-column justify-content-center">
+          <span
+            class="fs-6 fw-bold"
+            #quotationName
+            [innerHTML]="
+              data.quotationName
+                | formatvalue
+                  : formModel
+                  : 'quotationName'
+                  : quotationName
+                  : 'CMQuotations'
+                  : 'grvCMQuotations'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="col-2 d-flex justify-content-end align-items-center">
+          <span
+            class="fs-6"
+            #totalAmt
+            [innerHTML]="
+              data.quotationName
+                | formatvalue
+                  : formModel
+                  : 'totalAmt'
+                  : totalAmt
+                  : 'CMQuotations'
+                  : 'grvCMQuotations'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="col-2 d-flex justify-content-end align-items-center">
+          <span
+            class="fs-6"
+            #createdOn
+            [innerHTML]="
+              data.createdOn
+                | formatvalue
+                  : formModel
+                  : 'createdOn'
+                  : createdOn
+                  : 'CMQuotations'
+                  : 'grvCMQuotations'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="col-2 d-flex justify-content-end align-items-center">
+          <codx-vll
+            [name]="vllStatus"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-md fs-7"
+          >
+          </codx-vll>
+        </div>
       </div>
-      <div class="col-3 d-flex flex-column justify-content-center">
-        <span class="fs-6 fw-bold">{{ data.quotationName }}</span>
-      </div>
-      <div class="col-2 d-flex justify-content-end align-items-center">
-        <span class="fs-6">50.000.000 VND</span>
-      </div>
-      <div class="col-2 d-flex justify-content-end align-items-center">
-        <span class="fs-6">15/1/2016</span>
-      </div>
-      <div class="col-2 d-flex justify-content-end align-items-center">
-        <codx-vll
-          [name]="vllStatus"
-          [field]="'Status'"
-          [value]="data?.status"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-light badge-md fs-7"
-        >
-        </codx-vll>
-      </div>
+      <codx-mfunc
+        [formModel]="formModel"
+        (clickMF)="clickMF($event, data)"
+        (changeDataMF)="changeDataMF($event, data)"
+        [isBookMark]="true"
+        [dataItem]="data"
+        type="hover"
+      >
+      </codx-mfunc>
     </div>
-    <codx-mfunc
-      [formModel]="formModel"
-      (clickMF)="clickMF($event, data)"
-      (changeDataMF)="changeDataMF($event, data)"
-      [isBookMark]="true"
-      [dataItem]="data"
-      type="hover"
-    >
-    </codx-mfunc>
-  </div>
-  <!-- </ng-container> -->
+  </ng-container>
 </ng-template>

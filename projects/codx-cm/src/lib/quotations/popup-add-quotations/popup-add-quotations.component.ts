@@ -18,6 +18,7 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  NotificationsService,
   RequestOption,
   Util,
 } from 'codx-core';
@@ -71,14 +72,15 @@ export class PopupAddQuotationsComponent implements OnInit {
   quotationLinesAddNew = [];
   quotationLinesEdit = [];
   disableRefID = false;
-  modelObjectIDContacs = new CM_Contacts;
-  modelCustomerIDDeals = new CM_Deals;
+  modelObjectIDContacs = new CM_Contacts();
+  modelCustomerIDDeals = new CM_Deals();
 
   constructor(
     public sanitizer: DomSanitizer,
     private api: ApiHttpService,
     private codxCM: CodxCmService,
     private cache: CacheService,
+    private notiService: NotificationsService,
     private changeDetector: ChangeDetectorRef,
     private callFc: CallFuncService,
     @Optional() dt?: DialogData,
@@ -118,33 +120,73 @@ export class PopupAddQuotationsComponent implements OnInit {
     return true;
   }
   onAdd() {
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt), 0)
-      .subscribe((res) => {
-        if (res.save) {
-          (this.dialog.dataService as CRUDService).update(res.save).subscribe();
-          this.dialog.close(res.save);
-        } else {
-          this.dialog.close();
-        }
-        this.changeDetector.detectChanges();
-      });
+    if (this.dialog.dataService) {
+      this.dialog.dataService
+        .save((opt: any) => this.beforeSave(opt), 0)
+        .subscribe((res) => {
+          if (res.save) {
+            (this.dialog.dataService as CRUDService)
+              .update(res.save)
+              .subscribe();
+            this.dialog.close(res.save);
+            this.notiService.notifyCode('SYS006')
+          } else {
+            this.dialog.close();
+            this.notiService.notifyCode('SYS023')         
+          }
+          this.changeDetector.detectChanges();
+        });
+    } else {
+      this.api
+        .exec<any>('CM', 'QuotationsBusiness', 'AddQuotationsAsync', [
+          this.quotations,
+        ])
+        .subscribe((res) => {
+          if(res){
+            this.notiService.notifyCode('SYS006')
+            this.dialog.close(res);
+          }else{
+            this.notiService.notifyCode('SYS023')
+            this.dialog.close();
+          }
+         
+        });
+    }
   }
 
   onUpdate() {
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res) => {
-        if (res.update) {
-          (this.dialog.dataService as CRUDService)
-            .update(res.update)
-            .subscribe();
-          this.dialog.close(res.update);
-        } else {
-          this.dialog.close();
-        }
-        this.changeDetector.detectChanges();
-      });
+    if (this.dialog.dataService) {
+      this.dialog.dataService
+        .save((opt: any) => this.beforeSave(opt))
+        .subscribe((res) => {
+          if (res.update) {
+            (this.dialog.dataService as CRUDService)
+              .update(res.update)
+              .subscribe();
+            this.dialog.close(res.update);
+            this.notiService.notifyCode('SYS007') 
+          } else {
+            this.dialog.close();
+            this.notiService.notifyCode('SYS021')
+          }
+          this.changeDetector.detectChanges();
+        });
+    } else {
+      this.api
+        .exec<any>('CM', 'QuotationsBusiness', 'EditQuotationsAsync', [
+          this.quotations,
+        ])
+        .subscribe((res) => {
+          if(res){
+            this.notiService.notifyCode('SYS007')
+            this.dialog.close(res);
+          }else {
+            this.notiService.notifyCode('SYS021')
+            this.dialog.close();
+          }
+       
+        });
+    }
   }
   onSave() {
     if (this.action == 'add' || this.action == 'copy') {
@@ -160,14 +202,14 @@ export class PopupAddQuotationsComponent implements OnInit {
     switch (e?.field) {
       case 'refID':
         this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-        this.modelObjectIDContacs.objectID = this.quotations.customerID 
+        this.modelObjectIDContacs.objectID = this.quotations.customerID;
         break;
       case 'customerID':
-        this.modelCustomerIDDeals.customerID = this.quotations.customerID 
-        this.modelObjectIDContacs.objectID = this.quotations.customerID 
+        this.modelCustomerIDDeals.customerID = this.quotations.customerID;
+        this.modelObjectIDContacs.objectID = this.quotations.customerID;
         break;
     }
-    this.changeDetector.detectChanges()
+    this.changeDetector.detectChanges();
   }
 
   valueChange(e) {

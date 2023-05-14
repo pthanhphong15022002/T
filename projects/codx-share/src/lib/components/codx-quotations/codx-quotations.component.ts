@@ -15,8 +15,10 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  NotificationsService,
   RequestOption,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -31,11 +33,11 @@ import { Observable, finalize, map } from 'rxjs';
 export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   @Input() funcID: string;
   @Input() customerID: string;
-  @Input() refType: string ='CM_Deals';
+  @Input() refType: string = 'CM_Deals';
   @Input() refID: string;
   @Input() salespersonID: string;
   @Input() consultantID: string;
-  @Input() disableRefID = true ;
+  @Input() disableRefID = true;
 
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -56,19 +58,22 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   grvSetup: any;
   vllStatus = '';
   formModel: FormModel = {
+    entityName: 'CM_Quotations',
     formName: 'CMQuotations',
     gridViewName: 'grvCMQuotations',
     funcID: 'CM0202',
   };
-  customerIDCrr =''
+  customerIDCrr = '';
   requestData = new DataRequest();
-  listQuotations = [] ;
+  listQuotations = [];
   predicates = 'RefType==@0 && RefID==@1';
-  dataValues= '';
+  dataValues = '';
+  quotation: any;
 
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
+    private notiServer: NotificationsService,
     private routerActive: ActivatedRoute,
     @Optional() dialog?: DialogRef
   ) {
@@ -84,7 +89,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.dataValues= this.refType+";"+this.refID;
+    this.dataValues = this.refType + ';' + this.refID;
     if (changes['customerID']) {
       if (changes['customerID'].currentValue === this.customerIDCrr) return;
       this.customerIDCrr = changes['customerID'].currentValue;
@@ -99,7 +104,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
       {
         type: ViewType.list,
         active: true,
-        sameData: true, 
+        sameData: true,
         model: {
           template: this.itemViewList,
         },
@@ -107,15 +112,15 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
     ];
   }
 
-  getQuotations(){
+  getQuotations() {
     this.requestData.predicates = 'RefType==@0 && RefID==@1';
-    this.requestData.dataValues= this.refType+";"+this.refID;
+    this.requestData.dataValues = this.refType + ';' + this.refID;
     this.requestData.entityName = this.entityName;
     this.requestData.funcID = this.funcID;
-    this.fetch().subscribe(res=>{
-      this.listQuotations = res ;
-     // this.view.dataService.data = this.listQuotations
-    })
+    this.fetch().subscribe((res) => {
+      this.listQuotations = res;
+      // this.view.dataService.data = this.listQuotations
+    });
   }
 
   fetch(): Observable<any[]> {
@@ -137,7 +142,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
         })
       );
   }
- 
+
   changeItemDetail(e) {}
 
   changeDataMF(e, data) {}
@@ -157,41 +162,50 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   }
 
   add() {
-    this.view.dataService.addNew().subscribe((res) => {
-      if(!res.quotationsID){
-        this.api.execSv<any>(
-          'SYS',
-          'AD',
-          'AutoNumbersBusiness',
-          'GenAutoNumberAsync',
-          [this.formModel.funcID, this.formModel.entityName, "QuotationsID"]
-        ).subscribe(id=>{
-          res.quotationID = id ;
-          this.openPopup(res)
-        })
-      }else  this.openPopup(res)
-    
+    this.getDefault().subscribe((res) => {
+      if (res) {
+        let data = res.data;
+        data['_uuid'] = data['quotationsID'] ?? Util.uid();
+        data['idField'] = 'quotationsID';
+        this.quotation = data;
+        if (!this.quotation.quotationsID) {
+          this.api
+            .execSv<any>(
+              'SYS',
+              'AD',
+              'AutoNumbersBusiness',
+              'GenAutoNumberAsync',
+              [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
+            )
+            .subscribe((id) => {
+              this.quotation.quotationID = id;
+              this.openPopup(this.quotation, 'add');
+            });
+        } else this.openPopup(this.quotation, 'add');
+      }
     });
   }
 
-  openPopup(res){
-    res.versionNo ='V1.0'
-    res.status = '1';
-    res.customerID = this.customerID;
-    res.refType = this.refType ;
-    res.refID = this.refID ;
-    res.salespersonID = this.salespersonID ;
-    res.consultantID = this.consultantID ;
+  openPopup(res, action) {
+    res.versionNo = res.versionNo ?? 'V1.0';
+    res.status = res.status ?? '0';
+    res.customerID = res.customerID ?? this.customerID;
+    res.refType = res.refType ?? this.refType;
+    res.refID = res.refID ?? this.refID;
+    res.salespersonID = res.salespersonID ?? this.salespersonID;
+    res.consultantID = res.consultantID ?? this.consultantID;
+    res.totalAmt = res.totalAmt ?? 0;
+
     var obj = {
       data: res,
-      disableRefID : this.disableRefID ,
-      action: 'add',
+      disableRefID: this.disableRefID,
+      action: action,
       headerText: 'sdasdsadasdasd',
     };
     let option = new DialogModel();
     option.IsFull = true;
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
+    // option.DataService = this.view.dataService;
+    option.FormModel = this.formModel;
     let dialog = this.callfc.openForm(
       PopupAddQuotationsComponent,
       '',
@@ -202,87 +216,123 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
       '',
       option
     );
+    dialog.closed.subscribe((e) => {
+      if (e?.event) {
+        this.listQuotations.push(e.event);
+      }
+    });
   }
 
   edit(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService.edit(data).subscribe((res) => {
-      var obj = {
-        data: this.view.dataService.dataSelected,
-        action: 'edit',
-        headerText: e.text,
-      };
-      let option = new DialogModel();
-      option.IsFull = true;
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      let dialog = this.callfc.openForm(
-        PopupAddQuotationsComponent,
-        '',
-        null,
-        null,
-        '',
-        obj,
-        '',
-        option
-      );
+    let quotation = JSON.parse(JSON.stringify(data));
+
+    var obj = {
+      data: quotation,
+      action: 'edit',
+      headerText: e.text,
+    };
+    let option = new DialogModel();
+    option.IsFull = true;
+
+    option.FormModel = this.formModel;
+    let dialog = this.callfc.openForm(
+      PopupAddQuotationsComponent,
+      '',
+      null,
+      null,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialog.closed.subscribe((e) => {
+      if (e?.event) {
+        let dataUp = e?.event;
+        let idxUp = this.listQuotations.findIndex(
+          (x) => x.recID == dataUp?.recID
+        );
+        if (idxUp != -1) this.listQuotations[idxUp] = dataUp;
+      }
     });
   }
 
   copy(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService.copy(data).subscribe((res) => {
-      var obj = {
-        data: res,
-        action: 'copy',
-        headerText: e.text,
-      };
-      let option = new DialogModel();
-      option.IsFull = true;
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      let dialog = this.callfc.openForm(
-        PopupAddQuotationsComponent,
-        '',
-        null,
-        null,
-        '',
-        obj,
-        '',
-        option
-      );
+    //gọi alow copy
+    this.getDefault().subscribe((res) => {
+      let data = res.data;
+      data['_uuid'] = data['quotationsID'] ?? Util.uid();
+      data['idField'] = 'quotationsID';
+      Object.values(map(this.grvSetup)).forEach((v) => {
+        if (v.allowCopy) {
+          let field = Util.camelize(v.fieldName);
+          data[field] = data[field];
+        }
+      });
+      this.quotation = data;
+      if (!this.quotation.quotationsID) {
+        this.api
+          .execSv<any>(
+            'SYS',
+            'AD',
+            'AutoNumbersBusiness',
+            'GenAutoNumberAsync',
+            [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
+          )
+          .subscribe((id) => {
+            res.quotationID = id;
+            this.openPopup(this.quotation, 'copy');
+          });
+      } else this.openPopup(this.quotation, 'copy');
     });
   }
 
   delete(data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .delete([data], true, (option: RequestOption) =>
-        this.beforeDelete(option, data.recID)
-      )
-      .subscribe((res: any) => {
-        if (res) {
-        }
-      });
-  }
-  beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteQuotationsByRecIDAsync';
-    opt.className = 'QuotationsBusiness';
-    opt.assemblyName = 'CM';
-    opt.service = 'CM';
-    opt.data = data;
-    return true;
+    this.notiServer.alertCode('SYS030').subscribe((res) => {
+      if (res.event.status === 'Y') {
+        this.api
+          .exec<any>(
+            'CM',
+            'QuotationsBusiness',
+            'DeleteQuotationsByRecIDAsync',
+            data.recID
+          )
+          .subscribe((res) => {
+            if (res) {
+              let idxDeleted = this.listQuotations.findIndex(
+                (x) => x.recID == data.recID
+              );
+              if (idxDeleted != -1) this.listQuotations.splice(idxDeleted, 1);
+              this.notiServer.notifyCode('SYS008');
+            } else {
+              this.notiServer.notifyCode('SYS022');
+            }
+          });
+      }
+    });
   }
 
   getIndex(recID) {
     return (
-       this.view.dataService.data.findIndex((obj) => obj.recID == recID) + 1
+      this.view.dataService.data.findIndex((obj) => obj.recID == recID) + 1
     );
+  }
+
+  getDefault() {
+    return this.api.execSv<any>(
+      'CM',
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [this.formModel.funcID, this.formModel.entityName, 'quotationsID']
+    );
+    // .subscribe((response: any) => {
+    //   if (response) {
+    //     var data = response.data;
+    //     data['_uuid'] = data['quotationsID'] ?? Util.uid();
+    //     data['idField'] = 'quotationsID';
+    //     this.quotation = data;
+    //   }
+    //   return this.quotation
+    // });
   }
 }
