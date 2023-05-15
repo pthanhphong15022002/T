@@ -478,7 +478,7 @@ export class CodxAddBookingCarComponent
       }
     });
     this.resources.splice(this.resources.indexOf(tempDelete), 1);
-    this.data.attendees = this.resources.length + 1;
+    this.data.attendees = this.resources.length ;
     this.detectorRef.detectChanges();
   }
 
@@ -740,7 +740,7 @@ export class CodxAddBookingCarComponent
             }
           });
           this.resources = this.filterArray(this.resources);
-          this.data.attendees = this.resources.length + 1;
+          this.data.attendees = this.resources.length ;
           this.detectorRef.detectChanges();
         }
       });

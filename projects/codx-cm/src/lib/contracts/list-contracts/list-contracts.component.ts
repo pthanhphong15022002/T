@@ -168,6 +168,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
       action,
       contract: contract || null,
       account: this.account,
+      type:'list'
     }
     let option = new DialogModel();
     option.IsFull = true;
@@ -183,8 +184,6 @@ export class ListContractsComponent implements OnInit, OnChanges {
       '',
       option
     );
-    // Util.getViewPort().width,
-    // Util.getViewPort().height,
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
     return dataPopupOutput;
   }

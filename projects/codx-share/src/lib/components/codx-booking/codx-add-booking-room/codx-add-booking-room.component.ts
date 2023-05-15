@@ -763,7 +763,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             }
           });
           this.resources = this.filterArray(this.resources);
-          this.data.attendees = this.resources.length + 1;
+          this.data.attendees = this.resources.length;
+          this.attendeesNumber =this.data.attendees+this.guestNumber;
           this.detectorRef.detectChanges();
         }
       });
@@ -1032,7 +1033,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       this.data.resourceType = this.data.resourceType ?? '1';
       this.data.approval = this.approvalRule;
       this.data.requester = this.curUser.userName;
-      this.data.attendees = this.tmpAttendeesList.length + this.guestNumber;
+      this.data.attendees = this.resources.length + this.guestNumber;
       this.data.attachments = this.attachment.fileUploadList.length;
       //check
       this.codxBookingService

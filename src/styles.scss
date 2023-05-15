@@ -1472,8 +1472,9 @@ a {
   line-height: 18px;
 }
 
-.label-colon::after {
+.label-colon span::after {
   content: ":";
+  margin-left: -1px;
   //position: absolute;
   //right: 6px;
   //top: 0;
