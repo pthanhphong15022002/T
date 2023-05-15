@@ -442,6 +442,14 @@ export class CodxCmService {
       [id]
     );
   }
+  getListContactByCustomerID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContactsBusiness',
+      'GetListContactByCusomerIDAsync',
+      data
+    );
+  }
 
   genAutoNumber(funcID: any, entityName: string, key: any) {
     return this.api.execSv<any>(

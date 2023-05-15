@@ -1375,6 +1375,7 @@ export class InstancesComponent
               item.actualStart = new Date();
             } else if (item.stepStatus == '1') {
               item.stepStatus = '3';
+              item.actualEnd = new Date();
             }
           }
           dataInstance.instance.stepID = instanceStepId.find(
@@ -1385,13 +1386,14 @@ export class InstancesComponent
           this.codxDpService.autoMoveStage(data).subscribe((res) => {
             if (res) {
               var stepsUpdate = dataInstance.listStep.map((item1) => {
-                var item2 = instanceStepId.find(
-                  (item2) => item1.stepID === item2.stepID
-                );
+                var item2 = instanceStepId.find((item2) => item1.stepID === item2.stepID);
                 if (item2) {
-                  return { ...item1, status: item2.status };
+                  return { ...item2 };
+                } else {
+                  return item1;
                 }
               });
+
               this.listStepInstances = stepsUpdate;
               this.dataSelected = dataInstance.instance;
               this.view.dataService.update(this.dataSelected).subscribe();
