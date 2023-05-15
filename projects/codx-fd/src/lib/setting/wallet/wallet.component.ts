@@ -129,8 +129,6 @@ export class WalletComponent extends UIComponent implements OnInit {
     });
   }
 
-
-
   valueChangeVoucher(e) {
     if (e) {
       this.objectUpdateCoin[e.field] = e.data;

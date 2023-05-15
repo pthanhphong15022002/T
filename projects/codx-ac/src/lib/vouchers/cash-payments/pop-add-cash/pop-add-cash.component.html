@@ -82,14 +82,14 @@
                 <codx-label *ngIf="form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'"
                   fiedName="PaymentAmt" [formModel]="form.formModel">
                 </codx-label>
-                <codx-label *ngIf="form.formModel.funcID == 'ACT0401' || form.formModel.funcID == 'ACT0428'" fiedName="ReceiptAmt"
-                  [formModel]="form.formModel">
+                <codx-label *ngIf="form.formModel.funcID == 'ACT0401' || form.formModel.funcID == 'ACT0428'"
+                  fiedName="ReceiptAmt" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input *ngIf="form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'"
                   [Group]="form.formGroup" [formModel]="form.formModel" field="paymentAmt" [min]="0"
                   (controlBlur)="controlBlur($event)"></codx-input>
-                <codx-input *ngIf="form.formModel.funcID == 'ACT0401' || form.formModel.funcID == 'ACT0428'" [Group]="form.formGroup"
-                  [formModel]="form.formModel" field="receiptAmt" [min]="0"
+                <codx-input *ngIf="form.formModel.funcID == 'ACT0401' || form.formModel.funcID == 'ACT0428'"
+                  [Group]="form.formGroup" [formModel]="form.formModel" field="receiptAmt" [min]="0"
                   (controlBlur)="controlBlur($event)"></codx-input>
               </div>
             </div>
@@ -235,7 +235,7 @@
   </ng-container>
   <ng-container
     *ngIf="form?.formGroup && (cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == '2'">
-    <div style="max-height: 370px;" class="table-responsive mt-3">
+    <!-- <div style="max-height: 370px;" class="table-responsive mt-3">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered mb-2">
         <thead style="position: sticky;top: 0;background-color: white;z-index: 15;">
           <tr class="border-bottom">
@@ -249,24 +249,45 @@
                 <span class="fw-bold line-clamp line-clamp-1 fs-6">Tài khoản</span>
               </div>
             </th>
-            <th style="width: 15%">
+            <th *ngIf="cashpayment?.currencyID == baseCurr" style="width: 15%">
               <div class="d-flex">
                 <i class="icon-i-cash icon-16 me-2 text-gray-700"></i>
-                <codx-label class="fw-bold" fiedName="DR" [formModel]="fmCashPaymentsLines">
+                <codx-label class="fw-bold" default="Nợ" [formModel]="fmCashPaymentsLines">
+                </codx-label>
+              </div>
+            </th>
+            <th *ngIf="cashpayment?.currencyID != baseCurr" style="width: 15%;">
+              <div class="d-flex">
+                <i class="icon-i-cash icon-16 me-2 text-gray-700"></i>
+                <codx-label class="fw-bold" default="Nợ,HT" [formModel]="fmCashPaymentsLines">
+                </codx-label>
+              </div>
+            </th>
+            <th *ngIf="cashpayment?.currencyID == baseCurr" style="width: 15%">
+              <div class="d-flex">
+                <i class="icon-i-cash icon-16 me-2 text-gray-700"></i>
+                <codx-label class="fw-bold" default="Có" [formModel]="fmCashPaymentsLines">
+                </codx-label>
+              </div>
+            </th>
+            <th *ngIf="cashpayment?.currencyID != baseCurr" style="width: 15%;">
+              <div class="d-flex">
+                <i class="icon-i-cash icon-16 me-2 text-gray-700"></i>
+                <codx-label class="fw-bold" default="Có,HT" [formModel]="fmCashPaymentsLines">
                 </codx-label>
               </div>
             </th>
             <th *ngIf="cashpayment.currencyID != baseCurr" style="width: 15%;">
               <div class="d-flex">
                 <i class="icon-i-cash icon-16 me-2 text-gray-700"></i>
-                <codx-label class="fw-bold" fiedName="DR2" [formModel]="fmCashPaymentsLines">
+                <codx-label class="fw-bold" default="Số tiền,NT" [formModel]="fmCashPaymentsLines">
                 </codx-label>
               </div>
             </th>
             <th style="width: 45%">
               <div class="d-flex">
                 <i class="icon-i-graph-up icon-16 me-2 text-gray-700"></i>
-                <span class="fw-bold">Thông tin phân tích</span>
+                <span class="fw-bold">Thông tin khác</span>
               </div>
             </th>
             <th style="width: 20%">
@@ -286,7 +307,7 @@
               {{ item.rowNo }}
             </td>
             <td style="width: 285px;">
-              <div class="d-flex align-items-center justify-content-start">
+              <div class="d-flex align-items-center justify-content-start mb-2">
                 <ng-container *ngIf="item.accountID != null && item.accountID != ''">
                   <codx-label style="white-space: nowrap" class="fw-bold label-colon" default="Nợ"
                     [formModel]="fmCashPaymentsLines">
@@ -307,24 +328,52 @@
             </td>
             <td style="width: 213px;">
               <div class="d-flex align-items-center justify-content-start">
-                <ng-container *ngIf="item.dr != null && item.dr != ''">
+                <ng-container *ngIf="cashpayment?.currencyID == baseCurr">
                   <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{ item.dr.toLocaleString("it-IT")
                     }}</span>
                   <ng-template #popdr>
-                    <span [ngbTooltip]="popdr" class="fw-bold">{{
+                    <span class="fw-bold">{{
                       item.dr.toLocaleString("it-IT")
                       }}</span>
                   </ng-template>
                 </ng-container>
-              </div>
-            </td>
-            <td *ngIf="cashpayment.currencyID != baseCurr" style="width: 213px;">
-              <div class="d-flex align-items-center justify-content-start">
-                <ng-container *ngIf="(item.dR2 != null && item.dR2 != '')">
+                <ng-container *ngIf="cashpayment?.currencyID != baseCurr">
                   <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{item.dR2.toLocaleString("it-IT")
                     }}</span>
                   <ng-template #popdr>
-                    <span [ngbTooltip]="popdr" class="fw-bold">{{item.dR2.toLocaleString("it-IT")}}</span>
+                    <span class="fw-bold">{{item.dR2.toLocaleString("it-IT")}}</span>
+                  </ng-template>
+                </ng-container>
+              </div>
+            </td>
+            <td style="width: 213px;">
+              <div class="d-flex align-items-center justify-content-start mb-1 h-20px"></div>
+              <div class="d-flex align-items-center justify-content-start">
+                <ng-container *ngIf="cashpayment?.currencyID == baseCurr">
+                  <span [ngbTooltip]="popcr" class="fw-bold line-clamp line-clamp-1">{{ item.cr.toLocaleString("it-IT")
+                    }}</span>
+                  <ng-template #popcr>
+                    <span class="fw-bold">{{
+                      item.dr.toLocaleString("it-IT")
+                      }}</span>
+                  </ng-template>
+                </ng-container>
+                <ng-container *ngIf="cashpayment?.currencyID != baseCurr">
+                  <span [ngbTooltip]="popcr" class="fw-bold line-clamp line-clamp-1">{{item.cR2.toLocaleString("it-IT")
+                    }}</span>
+                  <ng-template #popcr>
+                    <span class="fw-bold">{{item.cR2.toLocaleString("it-IT")}}</span>
+                  </ng-template>
+                </ng-container>
+              </div>
+            </td>
+            <td style="width: 213px;">
+              <div class="d-flex align-items-center justify-content-start">
+                <ng-container *ngIf="cashpayment?.currencyID != baseCurr">
+                  <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{(item.dr + item.cr).toLocaleString("it-IT")
+                    }}</span>
+                  <ng-template #popdr>
+                    <span class="fw-bold">{{(item.dr + item.cr).toLocaleString("it-IT")}}</span>
                   </ng-template>
                 </ng-container>
               </div>
@@ -342,7 +391,7 @@
                         | async
                     "></span>
                   <ng-template #popdiM2>
-                    <span [ngbTooltip]="popdiM2" #diM2 class="fw-bold" [innerHTML]="
+                    <span #diM2 class="fw-bold" [innerHTML]="
                         item.diM2
                           | formatvalue : fmCashPaymentsLines : 'diM2' : diM2
                           | async
@@ -367,7 +416,7 @@
                         | async
                     "></span>
                   <ng-template #popdiM3>
-                    <span [ngbTooltip]="popdiM3" #diM3 class="fw-bold" [innerHTML]="
+                    <span #diM3 class="fw-bold" [innerHTML]="
                         item.diM3
                           | formatvalue : fmCashPaymentsLines : 'diM3' : diM3
                           | async
@@ -387,7 +436,7 @@
                         | async
                     "></span>
                   <ng-template #popdiM1>
-                    <span [ngbTooltip]="popdiM1" #diM1 class="fw-bold" [innerHTML]="
+                    <span #diM1 class="fw-bold" [innerHTML]="
                         item.diM1
                           | formatvalue : fmCashPaymentsLines : 'diM1' : diM1
                           | async
@@ -415,7 +464,7 @@
                         | async
                     "></span>
                   <ng-template #popproject>
-                    <span [ngbTooltip]="popproject" #projectID class="fw-bold" [innerHTML]="
+                    <span #projectID class="fw-bold" [innerHTML]="
                         item.projectID
                           | formatvalue
                             : fmCashPaymentsLines
@@ -438,21 +487,6 @@
                     }}</span>
                 </ng-template>
               </div>
-              <div *ngIf="item.reasonID != null && item.reasonID != ''" class="d-flex flex-wrap">
-                <div class="d-flex align-items-center me-5 mb-1">
-                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" fiedName="ReasonID"
-                    [formModel]="fmCashPaymentsLines">
-                  </codx-label>
-                  <span #reasonID class="text-gray-700" [innerHTML]="
-                      item.reasonID
-                        | formatvalue
-                          : fmCashPaymentsLines
-                          : 'reasonID'
-                          : reasonID
-                        | async
-                    "></span>
-                </div>
-              </div>
             </td>
             <td style="width: 142px;">
               <div class="d-flex align-items-center justify-content-start">
@@ -469,7 +503,11 @@
           </tr>
         </tbody>
       </table>
-    </div>
+    </div> -->
+    <codx-gridview-v2  [formName]="fmCashPaymentsLines.formName" [gridViewName]="fmCashPaymentsLines.gridViewName"
+      predicates="TransID=@0" [entityName]="fmCashPaymentsLines.entityName" [editSettings]="editSettings"
+      [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline"
+      service="AC" [autoLoad]="false" rowHeight="50" [columnsGrid]="columnsGrid"></codx-gridview-v2>
     <ng-container *ngIf="
           (cashpayment.subType === '1' || cashpayment.subType === '3')
         ">
@@ -538,6 +576,18 @@
     (click)="deleteRow(data)">
     <i class="icon-delete icon-16"></i>
   </span>
+</ng-template>
+<ng-template #morefunction2 let-data>
+  <div class="d-flex align-items-center justify-content-start">
+    <span ngbTooltip="Sửa" placement="top" type="button" class="btn btn-icon btn-light-primary ms-1"
+      (click)="editRow(data)">
+      <i class="icon-edit icon-16"></i>
+    </span>
+    <span ngbTooltip="Xóa" placement="top" type="button" class="btn btn-icon btn-light-danger ms-1"
+      (click)="deleteRow(data)">
+      <i class="icon-delete icon-16"></i>
+    </span>
+  </div>
 </ng-template>
 <!-- End: More function -->
 
@@ -634,3 +684,46 @@
   </ng-container>
 </ng-template>
 <!-- End: addline -->
+<ng-template #rowNo let-data>
+  {{data.rowNo}}
+</ng-template>
+<ng-template #account let-data>
+  <div class="d-flex align-items-center justify-content-start mb-2">
+    <ng-container *ngIf="data.accountID != null && data.accountID != ''">
+      <codx-label style="white-space: nowrap" class="fw-bold label-colon" default="Nợ"
+        [formModel]="fmCashPaymentsLines">
+      </codx-label>
+      &nbsp;
+      <span class="text-gray-700">{{data.accountID}}</span>
+    </ng-container>
+  </div>
+  <div class="d-flex align-items-center justify-content-start">
+    <ng-container *ngIf="data.offsetAcctID != null && data.offsetAcctID != ''">
+      <codx-label style="white-space: nowrap" class="fw-bold label-colon" default="Có"
+        [formModel]="fmCashPaymentsLines">
+      </codx-label>
+      &nbsp;
+      <span class="text-gray-700">{{data.offsetAcctID}}</span>
+    </ng-container>
+  </div>
+</ng-template>
+<ng-template #dr let-data>
+  <div class="d-flex align-items-center justify-content-start">
+    <ng-container *ngIf="cashpayment?.currencyID == baseCurr">
+      <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{ data.dr.toLocaleString("it-IT")
+        }}</span>
+      <ng-template #popdr>
+        <span class="fw-bold">{{
+          data.dr.toLocaleString("it-IT")
+          }}</span>
+      </ng-template>
+    </ng-container>
+    <ng-container *ngIf="cashpayment?.currencyID != baseCurr">
+      <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{data.dR2.toLocaleString("it-IT")
+        }}</span>
+      <ng-template #popdr>
+        <span class="fw-bold">{{data.dR2.toLocaleString("it-IT")}}</span>
+      </ng-template>
+    </ng-container>
+  </div>
+</ng-template>
