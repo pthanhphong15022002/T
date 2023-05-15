@@ -163,10 +163,12 @@
 <!-- End: Tab basic -->
 <!-- Start: Grid voucher -->
 <ng-template #tabVoucher>
-  <div class="h-100">
+  <div class="h-100px">
     <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="formModel.formName"
       [gridViewName]="formModel.gridViewName" [entityName]="formModel.entityName" [dataSource]="subInvoices"
-      service="AC" [height]="gridHeight" [autoLoad]="false" rowHeight="40"></codx-gridview-v2>
+      service="AC" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
+      (onSelected)="onSelected($event)"
+      ></codx-gridview-v2>
   </div>
 </ng-template>
 <!-- End: Grid voucher -->
