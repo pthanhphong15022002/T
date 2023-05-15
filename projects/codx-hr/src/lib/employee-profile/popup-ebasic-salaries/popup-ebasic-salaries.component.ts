@@ -217,7 +217,7 @@ export class PopupEBasicSalariesComponent
       return;
     }
 
-    if (
+    if (this.EBasicSalaryObj.expiredDate &&
       !this.dateCompare(
         this.EBasicSalaryObj.effectedDate,
         this.EBasicSalaryObj.expiredDate
@@ -261,7 +261,6 @@ export class PopupEBasicSalariesComponent
     }
     return false;
   }
-
 
   // valueChange(event) {
   //   if (

@@ -1,14 +1,15 @@
-<codx-form
+<codx-layout-add
   #form
   [headerText]="title"
   [subHeader]="subHeader"
-  [body]="body"
+  [tabInfo]="tabInfo"
+  [tabContent]="[tabGeneralInfo, tabAddress, tabContacts, tabDefault]"
   [openMore]="true"
   [dialog]="dialog"
   [formModel]="dialog.formModel"
   [footer]="footer"
   [data]="data"
-></codx-form>
+></codx-layout-add>
 <ng-template #subHeader>
   <codx-tag
     field="tags"
@@ -19,6 +20,12 @@
     (valueChange)="valueTagChange($event)"
   ></codx-tag>
 </ng-template>
+
+<ng-template #tabGeneralInfo></ng-template>
+<ng-template #tabAddress></ng-template>
+<ng-template #tabContacts></ng-template>
+<ng-template #tabDefault></ng-template>
+
 <ng-template #body>
   <div class="mb-3" *ngIf="funcID == 'CM0102'">
     <div class="mb-4">

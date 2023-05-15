@@ -1466,7 +1466,7 @@ a {
 
 .label-colon span{
   //position: relative;
-  //padding-right: 10px;
+  padding-right: 7px;
   min-height: 18px;
  // display: block;
   line-height: 18px;
@@ -2803,11 +2803,24 @@ codx-vll.vll-post{
 
 
 // boostraps\
+.e-multi-select-wrapper .e-delim-values{
+  font-size: 13px!important;
+}
 .e-multi-select-wrapper .e-chips {
+  
+  .e-delim-values{
+    font-size: 13px!important;
+    font-weight: normal!important;
+
+  }
   background-color: var(--primary);
   border-radius: 2px;
-  height: 20px;
+  span{
+    font-size: 13px!important;
+    font-weight: normal!important;
+  }
 }
+
 //calendar
 .codx_title_sub_primary {
   color:var(--primary-dark);
@@ -2818,4 +2831,9 @@ codx-vll.vll-post{
 }
 .text-primary-dark{
   color: var(--primary-dark);
+}
+
+
+.cal-notes .checkbox-list {
+  padding: 7px 16px;
 }
