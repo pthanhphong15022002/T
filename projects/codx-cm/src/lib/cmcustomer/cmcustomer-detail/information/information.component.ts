@@ -23,17 +23,9 @@ export class InformationComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getFormModelAddress();
   }
 
-  getFormModelAddress() {
-    let dataModel = new FormModel();
-    dataModel.formName = 'CMAddressBook';
-    dataModel.gridViewName = 'grvCMAddressBook';
-    dataModel.entityName = 'BS_AddressBook';
-    dataModel.funcID = this.funcID;
-    this.formModelAddress = dataModel;
-  }
+
 
 
 }
