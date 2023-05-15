@@ -1029,11 +1029,11 @@ export class CodxTasksComponent
               v.active = false;
             }
           });
-          if (!this.views.some((x) => x.active)) {
-            if (idxActive != -1) this.views[idxActive].active = true;
-            else this.views[0].active = true;
-            //  this.viewMode = idxActive != -1 ? this.views[idxActive].type : this.views[0].type;
-          }
+          // if (!this.views.some((x) => x.active)) {
+          //   if (idxActive != -1) this.views[idxActive].active = true;
+          //   else this.views[0].active = true;
+          //   //  this.viewMode = idxActive != -1 ? this.views[idxActive].type : this.views[0].type;
+          // }
           this.afterLoad();
           this.crrFuncID = this.funcID;
           this.detectorRef.detectChanges();
