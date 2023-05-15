@@ -636,10 +636,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       totals = totals + element.costAmt;
     });
     this.inventoryJournal.totalAmt = totals;
-    this.total = totals.toLocaleString('it-IT', {
-      style: 'currency',
-      currency: 'VND',
-    });
+    this.total = totals.toLocaleString('it-IT')
   }
 
   clearInventoryJournal() {
