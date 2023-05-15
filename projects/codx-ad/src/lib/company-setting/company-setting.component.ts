@@ -33,6 +33,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TN_OrderModule } from '../models/tmpModule.model';
 import { PopupModuleDetailComponent } from './popup-module-detail/popup-module-detail.component';
+import { PopupOrderDetailComponent } from './popup-order-detail/popup-order-detail.component';
 
 @Component({
   selector: 'lib-company-setting',
@@ -446,5 +447,21 @@ export class CompanySettingComponent
       this.lstInstalledModule.push(module);
       this.detectorRef.detectChanges();
     });
+  }
+
+  popupOrderInfo(order) {
+    let data = {
+      grvView: this.grvTNOrders,
+      formModel: this.orderFormodel,
+      orderRecID: order.recID,
+    };
+    let orderDialog = this.callfc.openForm(
+      PopupOrderDetailComponent,
+      '',
+      650,
+      900,
+      '',
+      data
+    );
   }
 }
