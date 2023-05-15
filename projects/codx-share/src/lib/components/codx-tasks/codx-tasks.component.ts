@@ -1051,10 +1051,12 @@ export class CodxTasksComponent
         }
       });
     } else {
+      //con loi daon nay khi select cung viewModel giua 2 componant
       // if (this.view.currentView.funcID != this.funcID) {
-      //   this.view.currentView.funcID = this.funcID();
+      //   this.view.currentView.funcID = this.funcID
+      //   this.view.load();
       // }
-      // this.view.currentView.refesh();
+      // this.view.currentView.refesh()
     }
   }
 
