@@ -172,7 +172,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
         .subscribe((res) => {
           if (res) {
             this.hasInvoice = true;
-            this.vatInvoice = res;
             this.invoiceService.dataSelected = res;
             this.invoiceService.edit(res).subscribe();
             this.vatInvoice = this.fmVATInvoice.currentData = res;
@@ -194,27 +193,29 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     console.log(this.form.formGroup);
+    console.log(this.form.formModel);
     console.log(this.fgVatInvoice);
     console.log(this.fmVATInvoice);
   }
   //#endregion
 
   //#region Event
-  onInputChange(e, prop: string = 'cashTransfer'): void {
-    if (e.field.toLowerCase() === 'cashbookid2') {
+  onInputChange(e): void {
+    let field: string = e.field.toLowerCase();
+
+    if (field === 'cashbookid2') {
       this.cashBookName2 = e.component.itemsSelected[0]?.CashBookName;
       return;
     }
 
-    if (e.field.toLowerCase() === 'cashbookid') {
+    if (field === 'cashbookid') {
       this.cashBookName1 = e.component.itemsSelected[0]?.CashBookName;
     }
 
-    const fields: string[] = ['currencyid', 'cashbookid', 'exchangeamt'];
-    if (fields.includes(e.field.toLowerCase())) {
+    if (['currencyid', 'cashbookid', 'exchangeamt'].includes(field)) {
       this.api
         .exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
-          e.field,
+          field,
           this.cashTransfer,
         ])
         .subscribe((res: ICashTransfer) => {
@@ -234,6 +235,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
   onSwitchChange(e): void {
     console.log('onSwitchChange', e);
 
+    // on off on => loi
     if (e.checked) {
       if (
         !this.acService.validateFormData(
@@ -346,22 +348,20 @@ export class PopupAddCashTransferComponent extends UIComponent {
   //#region Method
   save(closeAfterSave: boolean): void {
     this.cashTransfer.status = '1';
+
     if (this.masterService.hasSaved) {
       this.masterService.updateDatas.set(
         this.cashTransfer.recID,
         this.cashTransfer
       );
     }
+
     this.masterService.save().subscribe((res: any) => {
       console.log(res);
       if (res.save.data || res.update.data) {
-        const tempCashTransfer = res.save.data || res.update.data;
-
         // handle invoice
         if (this.hasInvoice) {
           // add or update
-          this.vatInvoice.transID = tempCashTransfer.recID;
-          this.vatInvoice.lineID = tempCashTransfer.recID;
           this.invoiceService
             .save(null, null, null, null, false)
             .subscribe((res) => console.log(res));

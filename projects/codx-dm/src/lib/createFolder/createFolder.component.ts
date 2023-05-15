@@ -373,6 +373,7 @@ export class CreateFolderComponent implements OnInit {
         if (this.edit) {
           this.noeditName = false;
           this.checkPermission();
+          this.updateRight = res.write
           this.fileEditing = res;
           this.assignRight = res.assign;
           this.folderName = res.folderName;
@@ -606,6 +607,7 @@ export class CreateFolderComponent implements OnInit {
   }
 
   checkPermission() {
+    debugger
     //this.isSystem = false;
     this.readRight = this.dmSV.parentRead;
     this.createRight = this.dmSV.parentCreate;
@@ -887,6 +889,7 @@ export class CreateFolderComponent implements OnInit {
   }
 
   disableRight(item: string) {
+    debugger
     var ret = false;
     if (this.updateRight == false) return true;
     if (this.propertiesFolder) return true;

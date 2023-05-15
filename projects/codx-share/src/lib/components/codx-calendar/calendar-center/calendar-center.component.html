@@ -9,35 +9,39 @@
 >
 </codx-views>
 
+<ng-template #cellTemplate let-data>
+  <div [innerHtml]="getCellContent(data.date)"></div>
+</ng-template>
+
 <ng-template #contentTmp let-data>
   <ng-container #tmpTM_Tasks *ngIf="data?.transType == 'TM_MyTasks'">
     <div>
-      <h5>{{ data?.data?.taskName }}</h5>
+      <h5>{{ data.title }}</h5>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
       <i class="icon-person me-1"></i>
       <span class="text-gray-600 text-break">
-        {{ data?.data?.userNameCreate }}
+        {{ data.userNameCreate }}
       </span>
     </div>
     <div class="d-flex justify-content-between mt-1 flex-grow-1 mb-2 me-6">
       <div class="d-flex mt-1 flex-grow-1">
-        <div *ngIf="data?.data?.priority">
+        <div *ngIf="data.priority">
           <codx-vll
             [showText]="true"
             [showBgColor]="true"
             [showIcon]="true"
             name="TM005"
-            [value]="data?.data?.priority"
+            [value]="data.priority"
             class="icon-14 me-1"
           >
           </codx-vll>
         </div>
         <div
           #priority
-          *ngIf="!data?.data?.priority"
+          *ngIf="!data.priority"
           [innerHTML]="
-            data?.data?.priority
+            data.priority
               | formatvalue
                 : view.formModel
                 : 'priority'
@@ -48,7 +52,7 @@
           "
         ></div>
       </div>
-      <div *ngIf="data?.data?.alert">
+      <div *ngIf="data.alert">
         <span
           class="icon-notifications expired"
           [ngbPopover]="popOverDue"
@@ -111,7 +115,7 @@
         </codx-label>
         <div class="d-flex justify-content-end">
           <codx-imgs
-            [objectId]="data?.data?.owner"
+            [objectId]="data.owner"
             objectType="AD_Users"
             [numberImages]="4"
             [width]="30"
@@ -121,9 +125,9 @@
       </div>
     </div>
     <ng-template #tempHtml>
-      <ng-container *ngIf="data?.data?.category == '2'">
+      <ng-container *ngIf="data.category == '2'">
         <span
-          [innerHTML]="data?.data?.memo2"
+          [innerHTML]="data.memo2"
           (mouseenter)="popoverMemo2.open()"
           (mouseover)="popoverMemo2.close()"
           [ngbPopover]="tooltipMemo2"
@@ -134,9 +138,9 @@
         ></span>
         <span
           #memo2
-          *ngIf="!data?.data?.memo2"
+          *ngIf="!data.memo2"
           [innerHTML]="
-            data?.data?.memo2
+            data.memo2
               | formatvalue
                 : view.formModel
                 : 'memo2'
@@ -147,9 +151,9 @@
           "
         ></span>
       </ng-container>
-      <ng-container *ngIf="data?.data?.category != '2'">
+      <ng-container *ngIf="data.category != '2'">
         <span
-          [innerHTML]="data?.data?.memo"
+          [innerHTML]="data.memo"
           (mouseenter)="popoverMemo.open()"
           (mouseover)="popoverMemo.close()"
           [ngbPopover]="tooltipMemo"
@@ -160,9 +164,9 @@
         ></span>
         <span
           #memo
-          *ngIf="!data?.data?.memo"
+          *ngIf="!data.memo"
           [innerHTML]="
-            data?.data?.memo
+            data.memo
               | formatvalue
                 : view.formModel
                 : 'memo'
@@ -175,10 +179,10 @@
       </ng-container>
     </ng-template>
     <ng-template #tooltipMemo>
-      <div [innerHTML]="data?.data?.memo"></div>
+      <div [innerHTML]="data.memo"></div>
     </ng-template>
     <ng-template #tooltipMemo2>
-      <div [innerHTML]="data?.data?.memo2"></div>
+      <div [innerHTML]="data.memo2"></div>
     </ng-template>
   </ng-container>
 
@@ -198,62 +202,40 @@
 
   <ng-container #CO_Meetings *ngIf="data?.transType == 'CO_Meetings'">
     <div>
-      <h5
-        #meetingName
-        [innerHTML]="
-          data?.data?.meetingName
-            | formatvalue
-              : view.formModel
-              : 'meetingName'
-              : meetingName
-              : 'Meetings'
-              : 'grvMeetings'
-            | async
-        "
-      ></h5>
+      <h5>{{ data.title }}</h5>
     </div>
+
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6">
         <i class="icon-calendar_today icon-16 me-2"></i>
         <span class="ms-1 fw-bold">
-          <span
-            #startDate
-            class="text-gray-600"
-            [innerHTML]="
-              data?.data?.startDate
-                | formatvalue
-                  : view.formModel
-                  : 'startDate'
-                  : startDate
-                  : 'Meetings'
-                  : 'grvMeetings'
-                | async
-            "
-          ></span>
-          <span
-            *ngIf="data?.data?.startDate"
-            class="text-gray-600 p-2"
-            [innerHtml]="'( ' + getDate(data?.data) + ')'"
-          ></span>
+          <span class="text-gray-700">
+            {{ showHour(data?.startDate) }}
+          </span>
+
+          <span *ngIf="data.endDate" class="fw-bold p-2">{{
+            showHour(data?.endDate)
+          }}</span>
         </span>
       </div>
     </div>
+
     <hr />
 
     <div class="mb-2 text-dark me-6">
       <span>
         <codx-label
-          default="Nội dung cuộc họp:"
+          default="Nội dung cuộc họp :"
           name="lblMemo"
           [formModel]="view.formModel"
-          class="fw-bold text-nowrap"
+          class="text-gray-600"
         >
         </codx-label>
       </span>
-      <span class="text-gray-800 text-break">
+      <span class="ms-2 fw-bold">
         <span class="text-gray-700 size-content-schedule cursor-pointer">
           <span
-            [innerHTML]="data?.data?.memo"
+            [innerHTML]="data?.memo"
             (mouseenter)="popoverMemo.open()"
             (mouseover)="popoverMemo.close()"
             [ngbPopover]="tooltipMemo"
@@ -263,17 +245,9 @@
             container="body"
           ></span>
           <span
-            #memo
-            *ngIf="!data?.data?.memo"
+            *ngIf="!data?.memo"
             [innerHTML]="
-              data?.data?.memo
-                | formatvalue
-                  : view.formModel
-                  : 'memo'
-                  : memo
-                  : 'Meetings'
-                  : 'grvMeetings'
-                | async
+              data.memo | formatvalue : view.formModel : 'Memo' | async
             "
           ></span>
         </span>
@@ -282,15 +256,14 @@
     <div class="d-flex mb-2">
       <div class="d-flex text-dark me-6">
         <codx-label
-          name="lblResources"
-          default="Người tham gia"
-          class="fw-bold text-nowrap"
+          name="lblPermissions"
+          default="Người tham gia : "
+          class="text-gray-600 me-4"
         >
         </codx-label>
-        <span class="me-2 fw-bold">:</span>
         <div class="d-flex justify-content-end">
           <codx-imgs
-            [objectId]="getResourceID(data?.data)"
+            [objectId]="getResourceID(data)"
             objectType="AD_Users"
             [width]="30"
             [numberImages]="3"
@@ -299,32 +272,29 @@
         </div>
       </div>
     </div>
+
     <ng-template #tooltipMemo>
-      <div [innerHTML]="data?.data?.memo"></div>
+      <div
+        [innerHTML]="data.memo | formatvalue : view.formModel : 'Memo' | async"
+      ></div>
     </ng-template>
   </ng-container>
   <ng-container #WP_Notes *ngIf="data?.transType == 'WP_Notes'">
     <div class="checkbox-list">
-      <div *ngIf="data?.data.noteType == 'text'">
-        <div
-          *ngIf="data?.data.isPin == true || data?.data.isPin == '1'"
-          class="active"
-        >
+      <div *ngIf="data.noteType == 'text'">
+        <div *ngIf="data.isPin == true || data.isPin == '1'" class="active">
           <span class="icon-push_pin icon-16" type="button"></span>
         </div>
         <div class="d-flex flex-column note-option">
-          <span [innerHTML]="data?.data.memo"></span>
+          <span [innerHTML]="data.memo"></span>
         </div>
       </div>
-      <div *ngIf="data?.data.noteType != 'text'">
-        <div
-          *ngIf="data?.data.isPin == true || data?.data.isPin == '1'"
-          class="active"
-        >
+      <div *ngIf="data.noteType != 'text'">
+        <div *ngIf="data.isPin == true || data.isPin == '1'" class="active">
           <span class="icon-push_pin icon-16" type="button"></span>
         </div>
         <div class="d-flex flex-column note-option">
-          <div *ngFor="let itemList of data?.data.checkList; index as i">
+          <div *ngFor="let itemList of data.checkList; index as i">
             <div *ngIf="itemList.status == null">
               <div class="my-2 note-list">
                 <ul>
@@ -363,8 +333,7 @@
   <ng-container *ngIf="data.transType == 'EP_BookingCars'">
     <div class="d-flex flex-column w-100">
       <span class="d-flex flex-start"
-        >{{ showHour(data.data.startDate) }} -
-        {{ showHour(data.data.endDate) }}</span
+        >{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span
       >
       <span
         class="d-flex flex-start fw-bold"
@@ -376,8 +345,7 @@
   <ng-container *ngIf="data.transType == 'EP_BookingRooms'">
     <div class="d-flex flex-column w-100">
       <span class="d-flex flex-start"
-        >{{ showHour(data.data.startDate) }} -
-        {{ showHour(data.data.endDate) }}</span
+        >{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span
       >
       <span
         class="d-flex flex-start fw-bold"
@@ -391,8 +359,7 @@
   >
     <div class="d-flex flex-column w-100">
       <span class="d-flex flex-start"
-        >{{ showHour(data.data.startDate) }} -
-        {{ showHour(data.data.endDate) }}</span
+        >{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span
       >
       <span
         class="d-flex flex-start fw-bold"

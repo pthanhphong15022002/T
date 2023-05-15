@@ -38,27 +38,29 @@
   </div>
 </ng-template>
 <ng-template #body>
-  <div class="d-flex justify-content-end mb-3">
-    <div class="">
+  <div class="d-flex justify-content-between mb-2">
+    <div class="w-100">
+      <codx-searchbar (searchEvent)="searchName($event)"></codx-searchbar>
+    </div>
+    <div class="ms-3">
       <button
         type="button"
         (click)="clickAddContact()"
-        class="btn btn-outline-primary"
+        class="btn btn-sm btn-light-primary"
       >
+        <i class="icon-add icon-16 ms-n1"></i>
         <codx-label
           name="lblAdd"
           [formModel]="dialog.formModel"
-          default="+ Thêm"
+          default="Thêm"
         ></codx-label>
       </button>
     </div>
   </div>
-  <div class="mb-3">
-    <codx-searchbar (searchEvent)="searchName($event)"></codx-searchbar>
-  </div>
+
   <ng-container *ngIf="loaded">
     <div
-      class="scroll mb-3"
+      class="scroll"
       *ngIf="lstSearch != null && lstSearch.length > 0; else noData"
     >
       <ng-container
@@ -88,7 +90,7 @@
       <button
         type="button"
         (click)="dialog.close()"
-        class="btn btn-outline-primary"
+        class="btn btn-light-primary"
       >
         <codx-label
           name="lblCancel"
@@ -134,8 +136,8 @@
             <div
               class="text-gray-500 fs-7"
               [innerHTML]="
-                item?.department
-                  | formatvalue : dialog.formModel : 'Department'
+                item?.jobTitle
+                  | formatvalue : dialog.formModel : 'JobTitle'
                   | async
               "
             ></div>

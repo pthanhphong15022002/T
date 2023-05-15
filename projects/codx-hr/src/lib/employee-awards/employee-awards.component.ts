@@ -70,7 +70,7 @@ export class EmployeeAwardsComponent extends UIComponent {
 
   funcID: string;
   grvSetup: any;
-  genderGrvSetup: any;
+  // genderGrvSetup: any;
   views: Array<ViewModel> = [];
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
@@ -94,11 +94,11 @@ export class EmployeeAwardsComponent extends UIComponent {
         this.grvSetup = res;
       }
     });
-    this.cache
-      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-      .subscribe((res) => {
-        this.genderGrvSetup = res?.Gender;
-      });
+    // this.cache
+    //   .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+    //   .subscribe((res) => {
+    //     this.genderGrvSetup = res?.Gender;
+    //   });
     if (!this.funcID) {
       this.funcID = this.activatedRoute.snapshot.params['funcID'];
     }
