@@ -222,7 +222,6 @@ export class ReceiptTransactionComponent extends UIComponent{
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.delete([data], true).subscribe((res: any) => {
-      this.notification.notifyCode('SYS008', 0, '');
     });
   }
   export(data) {
