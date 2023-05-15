@@ -65,8 +65,19 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('tabObj') tabObj: TabComponent;
   @ViewChild('cashBook') cashBook: CodxInputComponent;
   @ViewChild('rowNo', {static: true}) rowNo: TemplateRef<any>;
+  @ViewChild('rowNoTmp', {static: true}) rowNoTmp: TemplateRef<any>;
   @ViewChild('account', {static: true}) account: TemplateRef<any>;
+  @ViewChild('accountTmp', {static: true}) accountTmp: TemplateRef<any>;
   @ViewChild('dr', {static: true}) dr: TemplateRef<any>;
+  @ViewChild('drTmp', {static: true}) drTmp: TemplateRef<any>;
+  @ViewChild('crTmp', {static: true}) crTmp: TemplateRef<any>;
+  @ViewChild('cr', {static: true}) cr: TemplateRef<any>;
+  @ViewChild('ocr', {static: true}) ocr: TemplateRef<any>;
+  @ViewChild('infoTmp', {static: true}) infoTmp: TemplateRef<any>;
+  @ViewChild('info', {static: true}) info: TemplateRef<any>;
+  @ViewChild('noteTmp', {static: true}) noteTmp: TemplateRef<any>;
+  @ViewChild('note', {static: true}) note: TemplateRef<any>;
+  @ViewChild('morfun', {static: true}) morfun: TemplateRef<any>;
   headerText: string;
   dialog!: DialogRef;
   cashpayment: any;
@@ -97,6 +108,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     allowEditing: true,
     allowAdding: true,
     allowDeleting: true,
+    mode: 'Normal',
+  };
+  editSettingsM2: EditSettingsModel = {
+    allowEditing: false,
+    allowAdding: false,
+    allowDeleting: false,
     mode: 'Normal',
   };
   tabInfo: TabModel[] = [
@@ -190,7 +207,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.loadFuncid();
     this.loadReason();
     this.loadjounal();
-    this.loadCompanySetting();
+    
   }
 
   ngAfterViewInit() {
@@ -315,6 +332,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             if (res) {
               this.columnChange = res.updateColumns;
               this.form.formGroup.patchValue(res);
+              this.loadcolumnsGrid();
             }
           });
       }
@@ -651,6 +669,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                   ) {
                     this.notification.notifyCode('AC0012');
                   }
+                  this.gridCashPaymentLine.refresh();
+                  this.dialog.dataService.updateDatas.set(
+                    this.cashpayment['_uuid'],
+                    this.cashpayment
+                  );
+                  this.dialog.dataService
+                    .save(null, 0, '', '', false)
+                    .subscribe((res) => {});
                 }
               });
             }
@@ -705,6 +731,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             ) {
               this.notification.notifyCode('AC0012');
             }
+            this.gridCashPaymentLine.refresh();
+            this.dialog.dataService.updateDatas.set(
+              this.cashpayment['_uuid'],
+              this.cashpayment
+            );
+            this.dialog.dataService
+              .save(null, 0, '', '', false)
+              .subscribe((res) => {});
           }
         });
       }
@@ -749,10 +783,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   //#region Method
   onSave() {
-    // if (this.cashpaymentline.length == 0) {
-    //   this.notification.notifyCode('AC0013', 0, '');
-    //   return;
-    // }
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
@@ -761,7 +791,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       switch (this.formType) {
         case 'add':
         case 'copy':
-          this.cashpayment.status = '1';
           if (this.hasSaved) {
             this.dialog.dataService.updateDatas.set(
               this.cashpayment['_uuid'],
@@ -789,6 +818,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.form,
               this.formType === 'edit',
               () => {
+                this.cashpayment.status = "1";
                 this.dialog.dataService.save().subscribe((res) => {
                   if (res && res.save.data != null) {
                     this.dialog.close();
@@ -841,7 +871,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      this.cashpayment.status = '1';
       if (this.hasSaved) {
         this.dialog.dataService.updateDatas.set(
           this.cashpayment['_uuid'],
@@ -871,6 +900,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.form,
           this.formType === 'edit',
           () => {
+            this.cashpayment.status = '1';
             this.dialog.dataService.save().subscribe((res) => {
               if (res && res.save.data != null) {
                 this.clearCashpayment();
@@ -1109,7 +1139,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
         }
       });
-  }crea
+  }
 
   loadformSettledInvoices(type:number) {
     var obj = {
@@ -1209,32 +1239,61 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       });
   }
 
-  loadCompanySetting() {
-    this.api
-      .exec<any>('AC', 'CommonBusiness', 'GetCompanySettings')
-      .subscribe((res) => {
-        this.baseCurr = res.baseCurr;
-      });
-  }
-
   loadcolumnsGrid(){
     this.columnsGrid = [
       {
-        headerText: 'STT',
+        headerText:'STT',
         template: this.rowNo,
         width: '30',
       },
       {
-        headerText: 'Tài khoản',
+        headerText : 'Tài khoản',
         template: this.account,
+        width: '50',
+      },
+      {
+        headerText:'Nợ',
+        template: this.dr,
+        width: '80',
+      },
+      {
+        headerText:'Có',
+        template: this.cr,
+        width: '80',
+      },
+      {
+        headerText:'Số tiền,NT',
+        template: this.ocr,
+        width: '80',
+      },
+      {
+        headerText:'Thông tin khác',
+        template: this.info,
+        width: '200',
+      },
+      {
+        headerText:'Ghi chú',
+        template: this.note,
         width: '100',
       },
       {
-        headerText: 'Nợ',
-        template: this.dr,
-        width: '100',
+        headerText: '',
+        template: this.morfun,
+        width: '50',
       },
     ]
+    this.api
+      .exec<any>('AC', 'CommonBusiness', 'GetCompanySettings')
+      .subscribe((res) => {
+        this.baseCurr = res.baseCurr;
+        if (this.cashpayment.currencyID == this.baseCurr) {
+          let index = this.columnsGrid.findIndex(
+            (x) => x.headerText == 'Số tiền,NT'
+          );
+          this.columnsGrid.splice(index,1);
+          this.gridCashPaymentLine.refresh();
+        }
+      });
   }
 
   onDrop(event: CdkDragDrop<string[]>) {

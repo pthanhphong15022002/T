@@ -33,12 +33,12 @@
 </ng-template>
 
 <ng-template #item let-data>
-  <div class="tm-viewlist justify-content-between d-flex">
-    <div class="d-flex flex-row align-items-top p-3 border-bottom">
-      <div class="w-100 min-w-200px ps-3">
+  <div class="tm-viewlist justify-content-between d-flex border-bottom px-3">
+    <div class="d-flex flex-row align-items-top w-100">
+      <div class="w-100">
         <codx-temp-full
-          cardCss="card-template border-bottom px-2 pt-4 pb-2"
-          [imageId]="data.recID"
+          cardCss="card-template px-2 pt-4 pb-2"
+          [imageId]="data.groupName"
           [imageObjType]="view.formModel?.entityName"
           [titleTmp]="titleTmp"
           [subTitleTmp]="subTitleTmp"
@@ -52,7 +52,7 @@
         ></codx-temp-full>
       </div>
     </div>
-    <div class="mb-3 d-flex">
+    <div class="d-flex min-w-200px">
       <div class="d-flex flex-wrap align-items-center">
         <div class="flex">
           <div class="" *ngIf="data.groupRoles && data.groupRoles.length <= 5">
@@ -140,16 +140,17 @@
           </codx-mfunc>
         </div> -->
       </div>
-      <div class="w-10px min-w-10px">
-        <codx-mfunc
-          [formModel]="view.formModel"
-          [isBookMark]="false"
-          [dataItem]="data"
-          (clickMF)="moreFunction($event, data)"
-          type="hover"
-        >
-        </codx-mfunc>
-      </div>
+      
+    </div>
+    <div class="w-100px min-w-100px">
+      <codx-mfunc
+        [formModel]="view.formModel"
+        [isBookMark]="false"
+        [dataItem]="data"
+        (clickMF)="moreFunction($event, data)"
+        type="hover"
+      >
+      </codx-mfunc>
     </div>
   </div>
 </ng-template>
@@ -194,7 +195,7 @@
 
 <ng-template #lstGroupMems let-data>
   <div
-    class="w-150px min-w-150px"
+    class="mt-2"
     [ngbPopover]="popEmpList"
     #popoverList="ngbPopover"
     placement="right bottom"
@@ -205,7 +206,7 @@
     <ng-container *ngIf="data.members && data.members.length">
       <codx-imgs
         [isToolTip]="false"
-        [width]="30"
+        [width]="25"
         [objectId]="data.memberIDs"
         [objectType]="data.memberType == 'U' ? 'AD_Users' : 'HR_Positions'"
         [numberImages]="10"
