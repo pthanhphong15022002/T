@@ -581,17 +581,17 @@
     <div class="header-info py-3 px-5">
       <div class="fw-bold fs-4 text-dark">{{ dataStep?.stepName }}</div>
       <div class="d-flex justify-content-start py-2">
-        <codx-label class="label-colon" default="Ngày đánh dấu"></codx-label>
+        <codx-label class="label-colon me-2" default="Ngày đánh dấu"></codx-label>
         <span class="text-dark fw-bold">{{
           dataStep?.actualStart | date : "HH:mm - dd/MM/yyyy"
         }}</span>
       </div>
       <div class="d-flex justify-content-start">
-        <codx-label class="label-colon" default="Giai đoạn đánh dấu"></codx-label>
+        <codx-label class="label-colon me-2" default="Giai đoạn đánh dấu"></codx-label>
         <span class="text-dark fw-bold">{{ stepNameEnd }}</span>
       </div>
       <div class="d-flex justify-content-start py-2" *ngIf="!!proccesNameMove">
-        <codx-label class="label-colon" default="Quy trình được chuyển đến"></codx-label>
+        <codx-label class="label-colon me-2" default="Quy trình được chuyển đến"></codx-label>
         <span class="text-dark fw-bold">{{ proccesNameMove }}</span>
       </div>
     </div>
