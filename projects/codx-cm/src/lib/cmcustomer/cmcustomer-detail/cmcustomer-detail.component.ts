@@ -72,8 +72,8 @@ export class CmcustomerDetailComponent implements OnInit {
     {
       name: 'Quotations',
       textDefault: 'Báo giá',
+      icon: 'icon-monetization_on',
       isActive: false,
-      template: null,
     },
     { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
   ];
@@ -104,7 +104,10 @@ export class CmcustomerDetailComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
-      if (changes['dataSelected'].currentValue != null && changes['dataSelected'].currentValue?.recID) {
+      if (
+        changes['dataSelected'].currentValue != null &&
+        changes['dataSelected'].currentValue?.recID
+      ) {
         if (changes['dataSelected'].currentValue?.recID == this.id) return;
         this.id = changes['dataSelected'].currentValue?.recID;
         this.getOneCustomerDetail();
@@ -112,14 +115,7 @@ export class CmcustomerDetailComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    this.tabControl.push({
-      name: 'Contract',
-      textDefault: 'Hợp đồng',
-      isActive: false,
-      template: this.contract,
-    });
-  }
+  ngAfterViewInit(): void {}
 
   getOneCustomerDetail() {
     this.viewTag = '';
@@ -136,7 +132,6 @@ export class CmcustomerDetailComponent implements OnInit {
     this.cmSv.getContactByObjectID(objectID).subscribe((res) => {
       if (res) this.contactPerson = res;
       this.viewTag = this.dataSelected?.tags;
-
     });
   }
 
@@ -190,6 +185,12 @@ export class CmcustomerDetailComponent implements OnInit {
           isActive: false,
         },
         {
+          name: 'Address',
+          textDefault: 'Địa chỉ',
+          icon: 'icon-location_on',
+          isActive: false,
+        },
+        {
           name: 'Deal',
           textDefault: 'Cơ hội',
           icon: 'icon-add_shopping_cart',
@@ -201,6 +202,18 @@ export class CmcustomerDetailComponent implements OnInit {
           icon: 'icon-shopping_bag',
           isActive: false,
         },
+        {
+          name: 'Quotations',
+          textDefault: 'Báo giá',
+          icon: 'icon-monetization_on',
+          isActive: false,
+        },
+        {
+          name: 'Contract',
+          textDefault: 'Hợp đồng',
+          icon: 'icon-shopping_bag',
+          isActive: false,
+        },
       ];
     } else if (funcID == 'CM0102') {
       this.tabDetail = [
@@ -209,6 +222,12 @@ export class CmcustomerDetailComponent implements OnInit {
           textDefault: 'Thông tin chung',
           icon: 'icon-info',
           isActive: true,
+        },
+        {
+          name: 'Address',
+          textDefault: 'Địa chỉ',
+          icon: 'icon-location_on',
+          isActive: false,
         },
       ];
     } else if (funcID == 'CM0103') {
@@ -225,6 +244,12 @@ export class CmcustomerDetailComponent implements OnInit {
           icon: 'icon-contact_phone',
           isActive: false,
         },
+        {
+          name: 'Address',
+          textDefault: 'Địa chỉ',
+          icon: 'icon-location_on',
+          isActive: false,
+        },
       ];
     } else {
       this.tabDetail = [
@@ -233,6 +258,12 @@ export class CmcustomerDetailComponent implements OnInit {
           textDefault: 'Thông tin chung',
           icon: 'icon-info',
           isActive: true,
+        },
+        {
+          name: 'Address',
+          textDefault: 'Địa chỉ',
+          icon: 'icon-location_on',
+          isActive: false,
         },
         {
           name: 'DealCompetitors',

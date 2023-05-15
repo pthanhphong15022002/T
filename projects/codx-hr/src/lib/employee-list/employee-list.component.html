@@ -11,7 +11,7 @@
 
 <!--column Nhân viên -->
 <ng-template #colEmployee let-data>
-  <div class="d-flex align-items-center " (dblclick)="doubleClick(data)">
+  <div class="d-flex align-items-center cursor-pointer hover-active" (dblclick)="doubleClick(data)">
     <div class="d-flex flex-column me-2">
       <codx-img
         [funcId]="funcID"
@@ -29,7 +29,7 @@
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-1">
         <ng-container *ngIf="data.employeeName">
-          <span class="fw-bold fs-6 me-3 text-nowrap">{{ data.employeeName }}</span>
+          <span class="fw-bold fs-6 me-3 text-nowrap item-active">{{ data.employeeName }}</span>
         </ng-container>
       </div>
 
