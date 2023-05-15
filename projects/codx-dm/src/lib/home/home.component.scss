@@ -83,7 +83,7 @@ codx-treeview .no-permission {
 }
 .home
 {
-  height: 100%;
+  height: 100% !important;
 }
 .result-group-dm:hover
 {
@@ -93,7 +93,7 @@ codx-treeview .no-permission {
 {
   overflow-x:auto;
   max-width: 100%;
-  height: 100%;
+  //height: 100%;
 }
 .tabel-div> table
 {
@@ -144,4 +144,7 @@ codx-treeview .no-permission {
 .containerScroll
 {
   //height: calc(100% - 88px);
+}
+.h-tabel-div{
+  height: calc(100% - 58px);
 }

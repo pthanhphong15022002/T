@@ -712,6 +712,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   setHeight()
   {
     this.maxHeightScroll = window.innerHeight - 250;
+    if(this.funcID == "DMT08") this.maxHeightScroll = window.innerHeight - 250
   }
   //Refesh lại data
   refeshData()
