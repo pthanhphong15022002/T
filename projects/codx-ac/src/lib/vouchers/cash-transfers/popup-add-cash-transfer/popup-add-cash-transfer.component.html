@@ -19,7 +19,11 @@
           <div class="d-flex align-items-top">
             <i class="icon-info icon-18 me-2"></i>
             <div class="fw-bold fs-5-sm text-uppercase">
-              {{ tabName$ | async }}
+              <codx-label
+                fiedName="lblGeneralInfoTab"
+                [formModel]="form.formModel"
+                default="Thông tin chung"
+              ></codx-label>
             </div>
           </div>
         </ng-template>
@@ -37,7 +41,7 @@
                       field="cashBookID"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
-                      (valueChange)="handleInputChange($event)"
+                      (valueChange)="onInputChange($event)"
                     ></codx-input>
                   </div>
                   <div class="col-4 form-group">
@@ -77,7 +81,7 @@
                       field="cashBookID2"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
-                      (valueChange)="handleInputChange($event)"
+                      (valueChange)="onInputChange($event)"
                     ></codx-input>
                   </div>
                   <div class="col-8 form-group">
@@ -144,7 +148,7 @@
                       field="exchangeAmt"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
-                      (controlBlur)="payAmountChanged($event)"
+                      (controlBlur)="onInputChange($event)"
                     ></codx-input>
                   </div>
                   <div class="col-2 form-group">
@@ -187,7 +191,7 @@
                       field="currencyID"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
-                      (valueChange)="handleInputChange($event)"
+                      (valueChange)="onInputChange($event)"
                     ></codx-input>
                   </div>
                   <div class="col-6 form-group">
@@ -238,13 +242,12 @@
           <hr />
           <!-- #region Cập nhật hóa đơn -->
           <div class="d-flex gap-2 align-items-top mt-5">
-            <codx-input
+            <ejs-switch
+              #switchHasInvoice
               class="me-1"
-              type="switch"
-              [formModel]="form.formModel"
-              [checked]="hasInvoice"
-              (valueChange)="handleInputChange($event, 'hasInvoice')"
-            ></codx-input>
+              [(checked)]="hasInvoice"
+              (change)="onSwitchChange($event)"
+            ></ejs-switch>
             <codx-label
               class="fw-bold fs-6"
               fiedName="hasInvoice"
@@ -263,8 +266,7 @@
                   <codx-input
                     field="objectID"
                     [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.objectID"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
+                    [Group]="fgVatInvoice"
                     [disabled]="!hasInvoice"
                   ></codx-input>
                 </div>
@@ -279,8 +281,7 @@
                     <codx-input
                       field="invoiceForm"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.invoiceForm"
-                      (valueChange)="handleInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -292,8 +293,7 @@
                     <codx-input
                       field="invoiceSeri"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.invoiceSeri"
-                      (valueChange)="handleInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -305,8 +305,7 @@
                     <codx-input
                       field="invoiceNo"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.invoiceNo"
-                      (valueChange)="handleInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -318,8 +317,7 @@
                     <codx-input
                       field="invoiceDate"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.invoiceDate"
-                      (valueChange)="handleInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -337,8 +335,7 @@
                   <codx-input
                     field="goods"
                     [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.goods"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
+                    [Group]="fgVatInvoice"
                     [disabled]="!hasInvoice"
                   ></codx-input>
                 </div>
@@ -353,8 +350,7 @@
                     <codx-input
                       field="taxBase"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.taxBase"
-                      (valueChange)="handleInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -366,8 +362,7 @@
                     <codx-input
                       field="vatid"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.vatid"
-                      (valueChange)="handleInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -379,8 +374,7 @@
                     <codx-input
                       field="taxAmt"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.taxAmt"
-                      (valueChange)="handleInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -399,8 +393,7 @@
                   <codx-input
                     field="taxNote"
                     [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.taxNote ?? ''"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
+                    [Group]="fgVatInvoice"
                     [disabled]="!hasInvoice"
                   ></codx-input>
                 </div>
@@ -418,8 +411,7 @@
                     <codx-input
                       field="diM3"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.diM3"
-                      (valueChange)="handleInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -434,8 +426,7 @@
                     <codx-input
                       field="diM1"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.diM1"
-                      (valueChange)="handleInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -450,8 +441,7 @@
                     <codx-input
                       field="diM2"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.diM2"
-                      (valueChange)="handleInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -484,22 +474,18 @@
 </ng-template>
 
 <ng-template #footer>
-
   <div class="ac-dialog-footer">
     <div class="btn btn-white btn-icon tab-action">
       <span class="icon-unfold_more icon-20"></span>
     </div>
     <codx-tabs
-    [entityName]="form.formModel.entityName"
-    [formModel]="form.formModel"
-    [objectID]="cashTransfer?.recID"
-    [funcID]="form.formModel.funcID"
-    [TabControl]="tabs"
-  ></codx-tabs>
-    
+      [entityName]="form.formModel.entityName"
+      [formModel]="form.formModel"
+      [objectID]="cashTransfer?.recID"
+      [funcID]="form.formModel.funcID"
+      [TabControl]="tabs"
+    ></codx-tabs>
   </div>
-
-  
 </ng-template>
 
 <ng-template #customToolbar>
@@ -510,19 +496,20 @@
           class="icon-16"
           [ngClass]="isEdit ? 'icon-edit_square' : 'icon-add_box'"
         ></i>
-      </div> 
-      <div
-        class="dialog-title line-clamp line-clamp-1 me-3 fw-bold"
-      >
+      </div>
+      <div class="dialog-title line-clamp line-clamp-1 me-3 fw-bold">
         {{ formTitle }}
       </div>
-      <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
-        <codx-input
-          field="status"
+      <div class="ms-3 input-circle input-sm">
+        <codx-vll
           [formModel]="form.formModel"
-          [Group]="form.formGroup"
+          field="Status"
+          [value]="cashTransfer.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md"
         >
-        </codx-input>
+        </codx-vll>
       </div>
     </div>
 
@@ -530,8 +517,8 @@
       <ng-container *ngIf="!isEdit">
         <button
           type="button"
-          class="btn btn-md btn-light-primary"
-          (click)="handleClickSave(false)"
+          class="btn btn-sm btn-light-primary"
+          (click)="onClickSave(false)"
         >
           <codx-label
             class="fs-6 fw-normal"
@@ -544,8 +531,8 @@
 
       <button
         type="button"
-        class="btn btn-md btn-primary ms-2 me-2"
-        (click)="handleClickSave(true)"
+        class="btn btn-sm btn-primary ms-2 me-2"
+        (click)="onClickSave(true)"
       >
         <codx-label
           class="fs-6 fw-normal"
@@ -555,9 +542,22 @@
         ></codx-label>
       </button>
 
+      <button
+        class="btn btn-sm btn-danger"
+        (click)="onDiscard()"
+        *ngIf="masterService.hasSaved && cashTransfer.status == '0'"
+      >
+        <codx-label
+          class="fs-6 fw-normal"
+          fiedName="lblDiscard"
+          [formModel]="form.formModel"
+          default="Hủy bỏ"
+        ></codx-label>
+      </button>
+
       <div
         class="ms-2 btn btn-icon btn-light-danger btn-circle"
-        (click)="close()"
+        (click)="onClickClose()"
       >
         <i class="icon-close icon-18"></i>
       </div>

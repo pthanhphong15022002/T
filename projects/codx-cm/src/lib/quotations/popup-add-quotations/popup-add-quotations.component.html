@@ -126,7 +126,8 @@
             field="quotationName"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
+            [crrValue]="quotations.quotationName"
+            (valueChange)="controlBlur($event)"
           ></codx-input>
         </div>
         <div class="form-group col-3">
@@ -172,7 +173,6 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="disableRefID"
-            [model]="quotations?.customerID"
             (valueChange)="changeCombox($event)"
           ></codx-input>
         </div>
@@ -219,7 +219,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="disableRefID"
-            (valueChange)="valueChange($event)"
+            (valueChange)="changeCombox($event)"
           ></codx-input>
         </div>
         <div class="form-group col-6">
@@ -231,7 +231,6 @@
             field="contactID"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            [model]="quotations?.customerID"
             (valueChange)="valueChange($event)"
           ></codx-input>
         </div>

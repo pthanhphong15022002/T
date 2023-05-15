@@ -1,0 +1,329 @@
+<ng-container *ngIf="dataSelected?.recID">
+  <codx-detail-tmp
+    [header]="header"
+    [formModel]="formModel"
+    [body]="body"
+    [dataItem]="dataSelected"
+    [hideMF]="false"
+    [footer]="tabs"
+    (clickMF)="clickMF($event, dataSelected)"
+  >
+  <ng-template #header let-data>
+    <h2> Sự cố</h2>
+    <div class="container_detail mt-3">
+      <div class="d-flex justify-content-start pb-3">
+        <div class="fs-2">{{ dataSelected?.dealName }}</div>
+        <div class="fs-2 ms-auto">
+          <div class="badge badge-primary">
+            <span>
+              {{ dataSelected?.currentStepName }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between pb-3">
+        <div class="d-flex flex-row">
+          <div class="d-flex align-items-stretch">
+            <div class="pe-2">
+              <codx-imgs
+                [isToolTip]="true"
+                [width]="25"
+                [objectId]="dataSelected.createdBy"
+                objectType="AD_Users"
+                [numberImages]="1"
+              >
+              </codx-imgs>
+            </div>
+            <div>
+              <div
+                class="fw-bold fs-6 text-dark codx-text-overflow-1line pb-2"
+              >
+                {{ dataSelected?.createdBy }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="d-flex justify-content-start">
+            <codx-label default="Ngày tạo:" class="fs-6 me-1"></codx-label>
+            <div class="fs-6">
+              <span
+                class="fs-7"
+                #createdOn
+                [innerHTML]="
+                  dataSelected?.createdOn
+                    | formatvalue
+                      : formModel
+                      : 'createdOn'
+                      : createdOn
+                      : 'CMDeals'
+                      : 'grvCMDeals'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="d-flex justify-content-start">
+            <codx-label
+              default="Ngày bắt đầu:"
+              class="fs-6 me-1"
+            ></codx-label>
+            <div class="fs-6">
+              <span
+                class="fs-7"
+                #startDate
+                [innerHTML]="
+                  dataSelected?.startDate
+                    | formatvalue
+                      : formModel
+                      : 'startDate'
+                      : createdOn
+                      : 'CMDeals'
+                      : 'grvCMDeals'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="d-flex justify-content-start">
+            <codx-label
+              default="Ngày đến hạn:"
+              class="fs-6 me-1"
+            ></codx-label>
+            <div class="fs-6">
+              <span
+                class="fs-7"
+                #endDate
+                [innerHTML]="
+                  dataSelected?.endDate
+                    | formatvalue
+                      : formModel
+                      : 'endDate'
+                      : createdOn
+                      : 'CMDeals'
+                      : 'grvCMDeals'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <codx-imgs
+          [isToolTip]="true"
+          [width]="25"
+          [objectId]="dataSelected.owner"
+          objectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-8">
+            <div >
+              <div class="d-flex justify-content-start py-2">
+                <codx-label default="Khách hàng:" class="fs-6 me-1"></codx-label>
+                <div class="fs-6">{{ dataSelected?.customerName }}</div>
+              </div>
+            </div>
+            <div>
+              <div class="d-flex justify-content-start py-2">
+                <codx-label default="Liên hệ chính:" class="fs-6 me-1"></codx-label>
+                <div class="fs-6">
+                  <div class="d-flex align-items-stretch">
+                    <div class="pe-2 avatar-center">
+                      <codx-imgs
+                        [isToolTip]="true"
+                        [width]="25"
+                        [objectId]="dataSelected?.contacts?.recId"
+                        objectType="CM_Contacts"
+                        [numberImages]="1"
+                      >
+                      </codx-imgs>
+                    </div>
+                    <div>
+                      <div
+                      class="fw-bold fs-6 text-dark codx-text-overflow-1line pb-2"
+                      >
+                      {{ dataSelected?.contacts?.contactName }}
+                      </div>
+                      <div class="d-flex align-items-start me-4 mb-1">
+                        <div class="me-3 pe-5">
+                          <span
+                          class="icon-phone_android text-primary icon-16 me-1"
+                        ></span>
+                        <span class="text-gray-900">
+                          {{ dataSelected?.contacts?.mobile }}</span
+                        >
+                        </div>
+                        <div>
+                          <span
+                            class="icon-print_disabled icon-16 me-1 text-gray-500"
+                          ></span>
+                          <span class="text-gray-900">
+                            {{ dataSelected?.contacts?.personalEmail }}</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-4">
+            <div >
+              <div class="d-flex justify-content-start py-2">
+                <codx-label default="Quy trình:" class="fs-6 me-1"></codx-label>
+                <div class="fs-6">{{ dataSelected?.processName }}</div>
+              </div>
+            </div>
+
+            <div>
+              <div class="d-flex justify-content-start py-2">
+                <codx-label default="Mức độ nghiêm trọng:" class="fs-6 me-1"></codx-label>
+                <div class="fs-6">{{ dataSelected?.processName }}</div>
+              </div>
+              <div class="d-flex justify-content-start py-2">
+                <codx-label default="Mức độ nghiêm trọng:" class="fs-6 me-1"></codx-label>
+                <div class="fs-6">{{ dataSelected?.processName }}</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <!-- <div class="d-flex justify-content-start pb-3">
+        <div class="d-flex justify-content-start">
+          <codx-label default="Khách hàng:" class="fs-6 me-1"></codx-label>
+          <div class="fs-6">{{ dataSelected?.customerName }}</div>
+        </div>
+        <div></div>
+        <div class="fs-6 ms-auto">
+          <div class="d-flex justify-content-start">
+            <codx-label default="Quy trình:" class="fs-6 me-1"></codx-label>
+            <div class="fs-6">{{ dataSelected?.processName }}</div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- <div class="d-flex justify-content-between pb-3">
+        <div class="d-flex flex-row">
+          <div class="d-flex align-items-stretch">
+            <div class="pe-2 avatar-center">
+              <codx-imgs
+                [isToolTip]="true"
+                [width]="25"
+                [objectId]="dataSelected?.contacts?.recId"
+                objectType="CM_Contacts"
+                [numberImages]="1"
+              >
+              </codx-imgs>
+            </div>
+            <div>
+              <div
+              class="fw-bold fs-6 text-dark codx-text-overflow-1line pb-2"
+              >
+              {{ dataSelected?.contacts?.contactName }}
+              </div>
+              <div class="d-flex align-items-start me-4 mb-1">
+                <div class="me-3 pe-5">
+                  <span
+                  class="icon-phone_android text-primary icon-16 me-1"
+                ></span>
+                <span class="text-gray-900">
+                  {{ dataSelected?.contacts?.mobile }}</span
+                >
+                </div>
+                <div>
+                  <span
+                    class="icon-print_disabled icon-16 me-1 text-gray-500"
+                  ></span>
+                  <span class="text-gray-900">
+                    {{ dataSelected?.contacts?.personalEmail }}</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="d-flex align-items-stretch">
+            <div class="d-flex justify-content-start">
+              <codx-label default="Mức độ nghiêm trọng:" class="fs-6 me-1"></codx-label>
+              <div class="fs-6"> Bình thường</div>
+            </div>
+            <div >
+              <codx-label default="Mức độ độ ưu tiên:" class="fs-6 me-1"></codx-label>
+              <div class="fs-6">Bình thường</div>
+            </div>
+          </div>
+
+        </div>
+        <div></div>
+      </div> -->
+      <div class="d-flex justify-content-start">
+        <codx-tag
+          [entityName]="formModel.entityName"
+          [disabled]="true"
+          [isEdit]="false"
+          [value]="dataSelected?.tags"
+        >
+        </codx-tag>
+      </div>
+
+      <div class="view-details-header bg-body scroll-y me-3 h-100">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex tab-header">
+            <codx-taskbar
+              [listTab]="tabDetail"
+              (tab)="changeTab($event)"
+              size="22"
+              class="mb-3"
+            ></codx-taskbar>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  </codx-detail-tmp>
+</ng-container>
+<ng-template #body let-data>
+  <codx-tab-case-detail
+    [tabClicked]="tabClicked"
+    [dataSelected]="dataSelected"
+  ></codx-tab-case-detail>
+</ng-template>
+<ng-template #tabs let-data>
+  <codx-tabs
+    [entityName]="formModel.entityName"
+    [formModel]="formModel"
+    [TabControl]="tabControl"
+    [objectID]="dataSelected.recID"
+    [funcID]="formModel.funcID"
+    [dataTree]="treeTask"
+    [funcIDQuotations]="'CM0202'"
+    [refType]="formModel.entityName"
+    [refID]="dataSelected.recID"
+    [customerID]="dataSelected.customerID"
+    [salespersonID]="dataSelected.salespersonID"
+    [consultantID]="dataSelected.consultantID"
+    (tabChange)="changeFooter($event)"
+  ></codx-tabs>
+</ng-template>
+
+<ng-template #contract let-data>
+  <list-contracts [projectID]="dataSelected?.recID"></list-contracts>
+</ng-template>
+<!-- <ng-template #quotations let-data>
+ <lib-quotations [funcID]="'CM0202'" [customerID]="dataSelected.customerID" ></lib-quotations>
+</ng-template> -->

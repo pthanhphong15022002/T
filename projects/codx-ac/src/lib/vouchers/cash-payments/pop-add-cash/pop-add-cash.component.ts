@@ -6,6 +6,7 @@ import {
   OnInit,
   Optional,
   SimpleChanges,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -63,6 +64,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
   @ViewChild('cashBook') cashBook: CodxInputComponent;
+  @ViewChild('rowNo', {static: true}) rowNo: TemplateRef<any>;
+  @ViewChild('account', {static: true}) account: TemplateRef<any>;
+  @ViewChild('dr', {static: true}) dr: TemplateRef<any>;
   headerText: string;
   dialog!: DialogRef;
   cashpayment: any;
@@ -108,7 +112,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   gridViewNameLine : any;
   entityNameLine :any;
   classNameLine:any;
+  className:any;
   dataLine:any;
+  columnsGrid:any;
   authStore: AuthStore;
   constructor(
     inject: Injector,
@@ -130,17 +136,21 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.formType = dialogData.data?.formType;
     this.cashpayment = dialog.dataService.dataSelected;
     switch (this.dialog.formModel.funcID) {
+      case 'ACT0429':
       case 'ACT0410':
         this.formNameLine = 'CashPaymentsLines';
         this.gridViewNameLine = 'grvCashPaymentsLines';
         this.entityNameLine = 'AC_CashPaymentsLines';
+        this.className = 'CashPaymentsBusiness';
         this.classNameLine = 'CashPaymentsLinesBusiness';
         this.dataLine = new CashPaymentLine();
         break;
+      case 'ACT0428':
       case 'ACT0401':
         this.formNameLine = 'CashReceiptsLines';
         this.gridViewNameLine = 'grvCashReceiptsLines';
         this.entityNameLine = 'AC_CashReceiptsLines';
+        this.className = 'CashReceiptsBusiness';
         this.classNameLine = 'CashReceiptsLinesBusiness';
         this.dataLine = new CashReceiptsLines();
         break;
@@ -175,6 +185,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#region Init
   onInit(): void {
     this.loadInit();
+    this.loadcolumnsGrid();
     this.loadTotal();
     this.loadFuncid();
     this.loadReason();
@@ -258,15 +269,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       'journalno',
       'objectid',
     ];
-    let classname;
-    switch (this.form.formModel.funcID) {
-      case 'ACT0410':
-        classname = 'CashPaymentsBusiness';
-        break;
-      case 'ACT0401':
-        classname = 'CashReceiptsBusiness';
-        break;
-    }
     if (e.data) {
       switch (field) {
         case 'currencyid':
@@ -280,9 +282,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             this.api
               .exec<any>(
                 'AC',
-                this.form.formModel.funcID == 'ACT0410'
-                  ? 'CashPaymentsLinesBusiness'
-                  : 'CashReceiptsLinesBusiness',
+                this.classNameLine,
                 'ChangeExchangeRateAsync',
                 [this.cashpayment, this.cashpaymentline]
               )
@@ -307,7 +307,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
       if (sArray.includes(field)) {
         this.api
-          .exec<any>('AC', classname, 'ValueChangedAsync', [
+          .exec<any>('AC', this.className, 'ValueChangedAsync', [
             e.field,
             this.cashpayment,
           ])
@@ -489,6 +489,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   addRow() {
+    //this.loadModegrid();
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
@@ -697,6 +698,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             var dataline = res.event['data'];
             this.cashpaymentline.push(dataline);
             this.loadTotal();
+            this.hasSaved = true;
             if (
               parseInt(this.total.replace(/\D/g, '')) >
               this.cashpayment.paymentAmt
@@ -830,10 +832,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   onSaveAdd() {
-    if (this.cashpaymentline.length == 0) {
-      this.notification.notifyCode('AC0013', 0, '');
-      return;
-    }
+    // if (this.cashpaymentline.length == 0) {
+    //   this.notification.notifyCode('AC0013', 0, '');
+    //   return;
+    // }
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
@@ -1045,6 +1047,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   loadFuncid() {
     switch (this.dialog.formModel.funcID) {
+      case 'ACT0428':
       case 'ACT0410':
       case 'ACT0401':
         this.loadvll('AC091');
@@ -1212,6 +1215,26 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         this.baseCurr = res.baseCurr;
       });
+  }
+
+  loadcolumnsGrid(){
+    this.columnsGrid = [
+      {
+        headerText: 'STT',
+        template: this.rowNo,
+        width: '30',
+      },
+      {
+        headerText: 'Tài khoản',
+        template: this.account,
+        width: '100',
+      },
+      {
+        headerText: 'Nợ',
+        template: this.dr,
+        width: '100',
+      },
+    ]
   }
 
   onDrop(event: CdkDragDrop<string[]>) {

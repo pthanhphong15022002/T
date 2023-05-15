@@ -1,12 +1,12 @@
 <codx-views
   #view
+  idField="recID"
+  [funcID]="'CM0202'"
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
   [className]="className"
   [method]="methodLoadData"
-  idField="recID"
-  [funcID]="'CM0202'"
   [views]="views"
   [button]="button"
   (buttonClick)="click($event)"
@@ -17,7 +17,7 @@
   (selectedChange)="selectedChange($event)"
 ></codx-views>
 
-<ng-template #itemViewList let-data>
+<!-- <ng-template #itemViewList let-data>
   <div class="has-action-menu my-5 py-3">
     <div class="row">
       <div class="col-1 d-flex justify-content-center align-items-center">
@@ -63,7 +63,7 @@
     >
     </codx-mfunc>
   </div>
-</ng-template>
+</ng-template> -->
 <!-- view detail -->
 <ng-template #templateDetail>
   <lib-quotations-view-detail
@@ -94,7 +94,7 @@
 </ng-template>
 <ng-template #descTmp let-data>
   <div class="py-2">
-    <span class="icon-view_comfy pe-1"></span>
+    <span class="icon-corporate_fare text-primary icon-16 me-2"></span>
     <span
       [innerHTML]="
         data?.customerID | formatvalue : view.formModel : 'customerID' | async
@@ -197,6 +197,7 @@
 
 <ng-template #templateCustomer let-data>
   <div class="">
+    <span class="icon-corporate_fare text-primary icon-16 me-2"></span>
     <span
       [innerHTML]="
         data?.customerID | formatvalue : view.formModel : 'customerID' | async

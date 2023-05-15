@@ -19,6 +19,7 @@ const _EPParameters = 'EPParameters';
 const _EPStationeryParameters = 'EPStationeryParameters';
 import { CodxBookingService } from '../codx-booking.service';
 import { BookingItems, GridModels } from '../codx-booking.model';
+import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 
 @Component({
   selector: 'codx-add-booking-stationery',
@@ -71,7 +72,8 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   approvalRule: any;
   isPriceVisible: boolean = false;
   funcType: any;
-  onSaving=false;
+  onSaving = false;
+  categoryID: any;
 
   constructor(
     private injector: Injector,
@@ -93,9 +95,11 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
     }
     this.formModel = dialogRef?.formModel;
     if (!this.isAddNew) {
-      if ((this.data.category = '1')) {
+      if (this.data?.category == '1') {
         this.radioPersonalCheck = true;
+        this.radioGroupCheck = false;
       } else {
+        this.radioPersonalCheck = false;
         this.radioGroupCheck = true;
       }
     }
@@ -109,28 +113,33 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
       this.totalStationery = res[1];
     });
 
-    
     this.codxBookingService
       .getDataValueOfSettingAsync(_EPParameters, _EPStationeryParameters, '1')
       .subscribe((res: string) => {
         if (res) {
           let StationerySetting_1 = JSON.parse(res);
-          
           this.nagetivePhysical = StationerySetting_1.NagetivePhysical;
           this.isPriceVisible = StationerySetting_1.ShowUnitPrice ?? false;
         }
-      });
-    this.codxBookingService
-      .getDataValueOfSettingAsync(_EPParameters, _EPStationeryParameters, '4')
+      });    
+      this.codxBookingService
+      .getDataValueOfSettingAsync(_EPParameters, null, '4')
       .subscribe((res: string) => {
         if (res) {
-          let StationerySetting_4 = JSON.parse(res);
-          if (StationerySetting_4 != null && StationerySetting_4.length > 0) {
-            this.approvalRule = StationerySetting_4[0]?.ApprovalRule ;
+          let stationerySetting_4 = JSON.parse(res);
+          if (stationerySetting_4 != null && stationerySetting_4.length > 0) {
+            let setting= stationerySetting_4.filter((x:any) => x.Category == EPCONST.ENTITY.S_Bookings);
+            if(setting!=null){
+              this.approvalRule = setting[0]?.ApprovalRule;
+              this.categoryID=setting[0]?.CategoryID;
+            }
+            else{
+              this.approvalRule='1';//Đề phòng trường hợp setting lỗi/ thì lấy duyệt theo quy trình
+              this.categoryID='ES_EP003';
+            }
           }
         }
       });
-
     this.cache
       .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
       .subscribe((gv) => {
@@ -140,8 +149,6 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
     this.initForm();
 
     if (!this.isAddNew) {
-      this.radioPersonalCheck = true;
-      this.radioGroupCheck = false;
       this.codxBookingService
         .getBookingItems(this.data?.recID)
         .subscribe((res: any) => {
@@ -164,14 +171,6 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
             this.detectorRef.detectChanges();
           }
         });
-    } else {
-      if (this.data?.category == '1') {
-        this.radioPersonalCheck = true;
-        this.radioGroupCheck = false;
-      } else {
-        this.radioPersonalCheck = false;
-        this.radioGroupCheck = true;
-      }
     }
   }
 
@@ -229,6 +228,21 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
     this.currentTab = tabNo;
     this.detectorRef.detectChanges();
   }
+  personBooking(event) {
+    if (event) {
+      this.data.attendees = 1;
+      this.data.category = '1';
+      this.dialogAddBookingStationery.patchValue({ category: '1' });
+      this.detectorRef.detectChanges();
+    }
+  }
+  groupBooking(event) {
+    if (event) {
+      this.data.category = '2';
+      this.dialogAddBookingStationery.patchValue({ category: '2' });
+      this.detectorRef.detectChanges();
+    }
+  }
 
   valueChange(event) {
     if (event?.field) {
@@ -238,25 +252,17 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
         this.data[event.field] = event.data;
       }
     }
-
     if (event?.field === 'orgUnitID') {
       this.dialogAddBookingStationery.patchValue({ bUID: event?.data });
       this.codxBookingService
         .getEmployeeByOrgUnitID(event.data)
         .subscribe((res: any) => {
           if (res) {
-            this.qtyEmp = res;
+            this.data.attendees = res;
           }
         });
     }
 
-    if (event?.field === 'category') {
-      if (event?.data) {
-        this.dialogAddBookingStationery.patchValue({ category: '1' });
-      } else {
-        this.dialogAddBookingStationery.patchValue({ category: '2' });
-      }
-    }
     this.detectorRef.detectChanges();
   }
 
@@ -331,13 +337,13 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
 
   onSaveForm(approval: boolean = false) {
     if (!this.onSaving) {
-      this.onSaving=true;
+      this.onSaving = true;
       if (this.dialogAddBookingStationery.invalid == true) {
         this.codxBookingService.notifyInvalid(
           this.dialogAddBookingStationery,
           this.formModel
         );
-        this.onSaving=false;
+        this.onSaving = false;
         return;
       }
       this.data.approval = this.approvalRule;
@@ -356,11 +362,11 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
         )
       ) {
         this.notificationsService.notifyCode('TM036');
-  
-        this.onSaving=false;
+
+        this.onSaving = false;
         return;
       }
-  
+
       if (!this.isEmptyCart(this.cart) && this.checkCartItems(this.cart)) {
         this.api
           .exec('EP', 'BookingsBusiness', 'QuotaCheckAsync', [
@@ -375,8 +381,8 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                 null,
                 unAvailResource
               );
-  
-              this.onSaving=false;
+
+              this.onSaving = false;
               return;
             } else {
               this.startSave(approval);
@@ -384,7 +390,6 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
           });
       }
     }
-    
   }
 
   startSave(approval) {
@@ -436,7 +441,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
           if (approval) {
             if (this.approvalRule != '0') {
               this.codxBookingService
-              .getProcessByCategoryID('ES_EP003')
+                .getProcessByCategoryID(this.categoryID)
                 .subscribe((category: any) => {
                   this.returnData.forEach((item) => {
                     this.codxBookingService
@@ -489,7 +494,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
           }
         } else {
           this.dialogRef && this.dialogRef.close();
-          this.onSaving=false;
+          this.onSaving = false;
           return;
         }
       });

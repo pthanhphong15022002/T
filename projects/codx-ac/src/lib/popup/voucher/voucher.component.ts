@@ -34,13 +34,13 @@ export class VoucherComponent implements OnInit {
   invoiceDueDate: any;
   gridHeight: number = 0;
   formModel: FormModel = {
-    gridViewName: 'grvAC_SubInvoices',
-    formName: 'AC_SubInvoices',
-    entityName: 'AC_SubInvoices',
+    gridViewName: 'grvSettledInvoices',
+    formName: 'SettledInvoices',
+    entityName: 'AC_SettledInvoices',
   };
   mapPredicates = new Map<string, string>();
   mapDataValues = new Map<string, string>();
-  sublegendOpen: Array<any> = [];
+  subInvoices: Array<any> = [];
   predicates: string;
   dataValues: string;
   @ViewChild('grid') public grid: CodxGridviewV2Component;
@@ -281,7 +281,7 @@ export class VoucherComponent implements OnInit {
         e.settledDisc = settledDisc;
         if (i == len - 1) {
           //  this.grid.gridRef.refresh();
-          this.sublegendOpen = data;
+          this.subInvoices = data;
           setTimeout(() => {
             this.grid.gridRef?.selectRows(indexes);
           }, 100);
@@ -291,36 +291,42 @@ export class VoucherComponent implements OnInit {
   }
 
   loadData() {
+    // this.gridModel.predicate = this.morefunction.predicate;
+    // this.gridModel.dataValue = this.morefunction.dataValue;
     this.gridModel.entityName = 'AC_SubInvoices';
+    let accID = this.form.formGroup.controls.accountID.value;
     this.api
-      .exec<any>(
-        'AC',
-        'SettledInvoicesBusiness',
-        'LoadBySubInvoicesAsync',
-        this.gridModel
-      )
+      .exec<any>('AC', 'SettledInvoicesBusiness', 'LoadSettledAsync', [
+        this.gridModel,
+        this.cashpayment,
+        accID,
+        this.payAmt,
+      ])
       .subscribe((res) => {
         if (res && res.length) {
-          this.autoPay(res);
-          //if (this.payAmt && this.payAmt > 0) this.paymentAmt(res[0]);
-          //this.sublegendOpen = res[0];
+          this.subInvoices = res[0];
+          setTimeout(() => {
+            this.grid.gridRef?.selectRows(res[2]);
+          }, 100);
         }
       });
   }
 
   autoPay(data: []) {
     let accID = this.form.formGroup.controls.accountID.value;
-    this.api.exec<any>('AC', 'SettledInvoicesBusiness', 'SettlementAsync', [
-      data,
-      this.cashpayment,
-      accID,
-      this.payAmt,
-    ]).subscribe(res=>{
-console.log(res);
-    });
+    this.api
+      .exec<any>('AC', 'SettledInvoicesBusiness', 'SettlementAsync', [
+        data,
+        this.cashpayment,
+        accID,
+        this.payAmt,
+      ])
+      .subscribe((res) => {
+        this.subInvoices = res[0];
+        setTimeout(() => {
+          this.grid.gridRef?.selectRows(res[1]);
+        }, 100);
+      });
   }
   //#endregion
 }
-
-
-

@@ -4,8 +4,10 @@ import {
   Input,
   OnInit,
   Optional,
+  QueryList,
   TemplateRef,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import {
   AxisModel,
@@ -75,6 +77,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('dfPie') dfPie?: TemplateRef<any>;
   @ViewChild('dfPyramid') dfPyramid?: TemplateRef<any>;
   @ViewChild('dfFunnel') dfFunnel?: TemplateRef<any>;
+  @ViewChildren('eleLayout') elesLayout!: QueryList<LayoutPanelComponent>;
 
   @Input() columns: number = 48;
   @Input() cellSpacing: number[] = [0, 0];
@@ -689,7 +692,6 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       (x: any) => x.id == panelID.split('_content')[0]
     )[0];
     if (chartType) {
-      debugger
       let component = elePanel?.getElementsByTagName('layout-panel')[0];
       if (component) {
         let instance = this.ngCmp.ng.getComponent(
@@ -798,6 +800,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
         }
       }
     }, 100);
+
     let insChart = setInterval(() => {
       if (
         (elePanel as any)
@@ -818,19 +821,71 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
         }
       }
     }, 100);
+
+    let inCirGauce = setInterval(()=>{
+      if((elePanel as any).querySelector('ejs-circulargauge') &&
+      (elePanel as any).querySelector('ejs-circulargauge').ej2_instances[0]
+      )
+      {
+        clearInterval(inCirGauce);
+        const gaugeObj = (elePanel as any).querySelector('ejs-circulargauge').ej2_instances[0];
+        gaugeObj.height = '80%';
+        gaugeObj.width = '80%';
+      }
+    },100)
+    setTimeout(()=> {
+      clearInterval( insAcc );
+      clearInterval( insChart );
+      clearInterval(inCirGauce);
+     }, 2000);
   }
 
   private replaceChart(elePanel: any) {
-    if (elePanel && elePanel.getElementsByTagName('codx-chart').length > 0) {
-      let oldItem = elePanel.getElementsByClassName('chart-item');
-      //oldItem.remove();
-      if (oldItem.length > 1) {
-        for (let i = 0; i < oldItem.length - 1; i++) {
-          !oldItem[i].classList.contains('d-none') &&
-            oldItem[i].classList.add('d-none');
+    setTimeout(()=>{
+      if (elePanel && elePanel.getElementsByTagName('codx-chart').length > 0) {
+        let oldItem = elePanel.getElementsByClassName('chart-item');
+        //oldItem.remove();
+        if (oldItem.length > 1) {
+          for (let i = 0; i < oldItem.length - 1; i++) {
+            !oldItem[i].classList.contains('d-none') &&
+              oldItem[i].classList.add('d-none');
+          }
         }
       }
-    }
+      else if(elePanel.querySelector('ejs-chart') &&
+              elePanel.querySelector('ejs-chart').ej2_instances[0]
+              ){
+                const chartObj = elePanel.querySelector('ejs-chart').ej2_instances[0];
+                chartObj.height = '80%';
+                chartObj.width = '100%';
+                chartObj.chartResize();
+              }
+      else if(elePanel.querySelector('ejs-accumulationchart') &&
+          elePanel.querySelector('ejs-accumulationchart').ej2_instances[0]){
+            const chartObj = elePanel.querySelector('ejs-accumulationchart').ej2_instances[0];
+            chartObj.height = '80%';
+            chartObj.width = '100%';
+            chartObj.refreshChart();
+      }
+      else if(elePanel.querySelector('ejs-circulargauge') &&
+      elePanel.querySelector('ejs-circulargauge').ej2_instances[0]){
+            const chartObj = elePanel.querySelector('ejs-circulargauge').ej2_instances[0];
+            //chartObj.height = elePanel.offsetHeight -50 +'px';
+            //chartObj.width = elePanel.offsetWidth -50 +'px';
+            chartObj.height = '80%';
+            chartObj.width='80%';
+            elePanel.querySelector('.card-body')?.classList.add('overflow-hidden');
+            chartObj.refresh();
+      }
+      else if(elePanel.querySelector('ejs-treemap') &&
+      elePanel.querySelector('ejs-treemap').ej2_instances[0]){
+        const chartObj = elePanel.querySelector('ejs-treemap').ej2_instances[0];
+        chartObj.height = elePanel.offsetHeight -50 +'px';
+        chartObj.width = elePanel.offsetWidth -50 +'px';
+        (chartObj as TreeMapComponent).refresh();
+      }
+    },100)
+
   }
 
   private showHideButton(elePanel: any) {

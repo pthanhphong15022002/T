@@ -4,6 +4,7 @@ import {
   Injector,
   Input,
   OnInit,
+  SimpleChanges,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-gantt';
 import { UIComponent, FormModel, SidebarModel } from 'codx-core';
@@ -48,23 +49,29 @@ export class TabDetailCustomComponent
 
   constructor(private inject: Injector, private cmService: CodxCmService) {
     super(inject);
-    this.executeApiCalls();
+
   }
   ngAfterViewInit() {}
   onInit(): void {
-    //this.getListInstanceStep();
+    this.executeApiCalls();
+  }
+
+  ngOnChanges(changes: SimpleChanges){
+    //nvthuan
+    if(changes.dataSelected){
+      this.getListInstanceStep();
+    }
   }
 
   async executeApiCalls() {
     try {
-      await this.getListInstanceStep();
       await this.getValueList();
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
   }
-
-  async getListInstanceStep() {
+  //nvthuan
+  getListInstanceStep() {
     let instanceID = this.dataSelected?.refID;
     if (instanceID) {
       this.cmService.getStepInstance([instanceID]).subscribe((res) => {

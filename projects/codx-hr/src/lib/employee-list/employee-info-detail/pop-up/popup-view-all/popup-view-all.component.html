@@ -1,0 +1,340 @@
+<codx-form
+    #form
+    [body]="body"
+    [formModel]="formModel"
+    [dialog]="dialogRef"
+    [customToolbar]="customeHeader"
+    [subHeader]="filter"
+>
+<ng-template #body>
+    <!-- <ng-container *ngIf="true">
+        <ng-container *ngComponentOutlet="filter"></ng-container>
+    </ng-container> -->
+
+    <div class="card-body" >
+      <codx-gridview
+        #gridView
+        [funcId]="funcID"
+        service="HR"
+        [sort]="[sortModel]"
+        [predicates]="'EmployeeID=@0'"
+        [assemblyName]="'Core'"
+        [className]="'DataBusiness'"
+        [method]="'LoadDataAsync'"
+        [dataValues]="employeeId"
+        [formModel]="formModel"
+        [columnsGrid]="columnGrid"
+        height="auto"
+      ></codx-gridview>
+    </div>
+  </ng-template>
+</codx-form>
+
+
+<!-- #region Hộ chiếu columnGrid templates-->
+<ng-template #passportCol1 let-data>
+  <div class="d-flex align-items-center">
+    <!-- <span
+      class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
+      [class]="
+        data.recID == crrPassport?.recID ? ' bg-primary' : 'bg-transparent'
+      "
+    ></span> -->
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-description icon-16 text-gray-500 me-2"></span>
+        <div
+          class="text-dark"
+          [innerHTML]="
+            data?.passportNo
+              | formatvalue : formModel : 'passportNo'
+              | async
+          "
+        ></div>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-home_work icon-16 text-gray-500 me-2"></span>
+        <div
+          class="text-dark"
+          [innerHTML]="
+            data?.issuedPlace
+              | formatvalue : formModel : 'issuedPlace'
+              | async
+          "
+        ></div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #passportCol2 let-data>
+  <div class="has-action-menu">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-event icon-16 text-primary me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.issuedDate
+                | formatvalue : formModel : 'issuedDate'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 text-danger me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.expiredDate
+                | formatvalue : formModel : 'expiredDate'
+                | async
+            "
+          ></span>
+        </span>
+        <codx-mfunc
+          (changeDataMF)="handleShowHideMf($event, data)"
+          [formModel]="formModel"
+          (clickMF)="clickMF($event, data, funcID)"
+          type="hover"
+          [dataItem]="data"
+        >
+        </codx-mfunc>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- #endregion -->
+
+<!-- #region Giấy phép lao động columnGrid templates-->
+<ng-template #workPermitCol1 let-data>
+  <div class="d-flex align-items-center">
+    <!-- <span
+      class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
+      [class]="
+        data.recID == crrWorkpermit?.recID ? ' bg-primary' : 'bg-transparent'
+      "
+    ></span> -->
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.workPermitNo
+                | formatvalue : formModel : 'workPermitNo'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.issuedPlace
+                | formatvalue : formModel : 'issuedPlace'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #workPermitCol2 let-data>
+  <div class="has-action-menu">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-event icon-16 text-primary me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.issuedDate
+                | formatvalue : formModel : 'issuedDate'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 text-danger me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.fromDate
+                | formatvalue : formModel : 'fromDate'
+                | async
+            "
+          ></span>
+        </span>
+        <span class="mx-2">-</span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.toDate
+                | formatvalue : formModel : 'toDate'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+      <codx-mfunc
+        [formModel]="formModel"
+        (clickMF)="clickMF($event, data, funcID)"
+        type="hover"
+        (changeDataMF)="handleShowHideMf($event, data)"
+        [dataItem]="data"
+      >
+      </codx-mfunc>
+    </div>
+  </div>
+</ng-template>
+
+<!-- #endregion -->
+
+<!-- #region Thị thực columnGrid templates-->
+<ng-template #visaCol1 let-data>
+  <div class="d-flex align-items-center">
+    <!-- <span
+      class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
+      [class]="data.recID == crrVisa?.recID ? ' bg-primary' : 'bg-transparent'"
+    ></span> -->
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.visaNo | formatvalue : formModel : 'visaNo' | async
+            "
+          ></span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.visaType | formatvalue : formModel : 'visaType' | async
+            "
+          ></span>
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #visaCol2 let-data>
+  <div class="has-action-menu">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 text-danger me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.effectedDate
+                | formatvalue : formModel : 'effectedDate'
+                | async
+            "
+          ></span>
+        </span>
+        <span class="me-1 ms-1">-</span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.expiredDate
+                | formatvalue : formModel : 'expiredDate'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.nationalityID | formatvalue : formModel : 'nationalityID' | async
+            "
+          ></span>
+        </span>
+      </div>
+      <codx-mfunc
+        (changeDataMF)="handleShowHideMf($event, data)"
+        [formModel]="formModel"
+        (clickMF)="clickMF($event, data, funcID)"
+        type="hover"
+        [dataItem]="data"
+      >
+      </codx-mfunc>
+    </div>
+  </div>
+</ng-template>
+
+<!-- #endregion -->
+
+<!-- #region customeHeader html-->
+<ng-template #customeHeader>
+    <div class="card-header flex-column w-100">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <div class="card-title">
+            <div class="d-flex flex-column">
+              <div class="d-flex align-items-center mb-3 mt-5">
+                <span class="icon-i-filter-right icon-20 me-2"></span>
+                <div class="d-flex align-items-center me-3">
+                  <codx-label
+                    [formModel]="formModel"
+                    [default]="headerText"
+                    name='lblViewAllHeader'
+                    class="fw-bold fs-5 text-gray-600"
+                  >
+                  </codx-label>
+                  <span class="text-gray-500 mx-2"> | </span>
+                  <span class="text-gray-500">Tất cả ({{ rowCount }})</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-toolbar">
+            <button
+              type="button"
+              class="btn btn-flex text-dark-75 text-hover-primary px-0"
+              (click)="closeDialog()"
+            >
+              <span class="icon-close icon-18"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+</ng-template>
+<!--#endregion -->
+
+<ng-template #filterPassport>
+    <div class="d-flex align-items-center">
+        <span class="ms-2" *ngIf="hasFilter">
+          <codx-dropdown-select
+            [cssClass]="'rounded-pill border-1'"
+            cssPopup="h-350px w-300px"
+            [emptyText]="passportHeaderText['PassportNo']"
+            [isMulti]="true"
+            type="combobox"
+            field="BenefitID"
+          ></codx-dropdown-select>
+        </span>
+        <span class="ms-2">
+          <codx-dropdown-calendar
+            [cssPopup]="'w-600px h-400px'"
+            emptyText="Chọn năm"
+            [firstChange]="false"
+            [displayOption]="ops"
+            [selectedType]="'y'"
+            [cssClass]="'rounded-pill'"
+          ></codx-dropdown-calendar>
+        </span>
+      </div> 
+</ng-template>

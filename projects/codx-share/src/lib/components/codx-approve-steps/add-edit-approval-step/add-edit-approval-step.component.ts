@@ -431,7 +431,9 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     this.data.approvers = this.lstApprover;
     if (this.isAdd) {
       this.lstStep.push(this.data);
+
       this.dialog && this.dialog.close(this.data);
+
     } else {
       let i = this.lstStep.indexOf(this.dataEdit);
       if (i != -1) {

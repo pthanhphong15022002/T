@@ -6,7 +6,7 @@ export const EPCONST = {
     Bookings:'EP_Bookings',
     R_Bookings:'EP_BookingRooms',
     C_Bookings:'EP_BookingCars',
-    S_Bookings:'EP_Bookings',
+    S_Bookings:'EP_BookingStationery',
 
     Resources:'EP_Resources',
     R_Resources:'EP_Rooms',

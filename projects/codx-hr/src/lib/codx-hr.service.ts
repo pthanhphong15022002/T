@@ -951,6 +951,16 @@ export class CodxHrService {
     );
   }
 
+  EditEmployeeAppointionsMoreFunc(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EAppointionsBusiness',
+      'EditEAppointionsMoreFuncAsync',
+      data
+    );
+  }
+
   //#endregion
 
   //#region ECertificateBusiness

@@ -79,7 +79,7 @@ export class PopupAddItemColorComponent extends UIComponent {
   //#endregion
 
   //#region Method
-  save(closeAfterSaving: boolean): void {
+  save(closeAfterSave: boolean): void {
     console.log(this.itemColor);
 
     if (
@@ -99,7 +99,7 @@ export class PopupAddItemColorComponent extends UIComponent {
 
           this.savedItemColors.push(res as ItemColor);
 
-          if (closeAfterSaving) {
+          if (closeAfterSave) {
             this.dialogRef.close();
           } else {
             // clear form

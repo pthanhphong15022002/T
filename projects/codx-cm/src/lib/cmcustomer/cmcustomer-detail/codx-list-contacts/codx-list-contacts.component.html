@@ -6,7 +6,7 @@
     <button
       type="button"
       class="btn btn-clean btn-sm btn-icon btn-icon-md"
-      (click)="clickPopupContacts()"
+      (click)="isButton ? clickPopupContacts() : null"
     >
       <i class="icon-check-correct icon-18 text-primary"></i>
     </button>
@@ -15,7 +15,7 @@
     <button
       type="button"
       class="btn btn-clean btn-sm btn-icon btn-icon-md"
-      (click)="clickAddContact('add', null, moreFuncAdd)"
+      (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
     >
       <i class="icon-person_add_alt_1 icon-18 text-primary"></i>
     </button>

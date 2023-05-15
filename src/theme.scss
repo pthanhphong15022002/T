@@ -128,8 +128,9 @@
     --primary-darker: #5710b2;
     --primary-dark: #6011c7;
     --primary-light: #e9cefa;
-    --primary-lighter: #ede0f7;
-    --primary-lightest: #f5ebfc;
+    --primary-lighter: #f4eafc;
+    --primary-lightest: #f7eefd;
+    
 
     --text-primary: #5710b2;
     --bs-active-primary: #5710b2;
@@ -190,6 +191,9 @@
     .btn.btn-pill:hover {
       background-color: #435689 !important;
     }
+    .chat-box{
+      background-color:var(--white);
+  }
   }
 
   &.dark {
