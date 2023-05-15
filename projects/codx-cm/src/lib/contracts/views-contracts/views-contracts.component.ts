@@ -58,6 +58,8 @@ export class ViewsContractsComponent extends UIComponent{
   tabClicked = '';
   fomatDate = 'dd/MM/yyyy';
   account:any;
+  listPayment = [];
+  listPaymentHistory = [];
 
   views: Array<ViewModel> = [];
   service = 'CM';

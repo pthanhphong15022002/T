@@ -259,6 +259,30 @@
   <div>
     <div class="fs-6 fw-bold"><span>Lịch thanh toán</span></div>
     <!-- <product></product> -->
+    <table class="table table-striped">
+      <thead>
+        <tr class="fw-bold" >
+          <th>STT</th>
+          <th>Ngày thanh toán</th>
+          <th>Số tiền thanh toán</th>
+          <th>Trạng thái</th>
+          <th>Đã thanh toán</th>
+          <th>Dư nợ còn lại</th>
+          <th>Ghi chú</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let paymemnt of  listPayment">
+          <td>{{paymemnt}}</td>
+          <td>{{paymemnt}}</td>
+          <td>{{paymemnt}}</td>
+          <td>{{paymemnt}}</td>
+          <td>{{paymemnt}}</td>
+          <td>{{paymemnt}}</td>
+          <td>{{paymemnt}}</td>
+        </tr>>
+      </tbody>
+    </table>
     <div class="d-flex align-items-center">
       <div class="content-icon">
         <span class="icon-add text-primary"></span>

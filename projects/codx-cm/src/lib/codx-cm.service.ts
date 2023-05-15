@@ -497,4 +497,36 @@ export class CodxCmService {
       transID
     );
   }
+  getPaymentsByContract(contractID){
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'GetPaymentsAsync',
+      contractID
+    );
+  }
+  addPayments(contracts){
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'AddPaymentsAsync',
+      contracts
+    );
+  }
+  editPayments(contracts){
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'UpdatePaymentsAsync',
+      contracts
+    );
+  }
+  deletePayments(contractsID){
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'DeletePaymentsAsync',
+      contractsID
+    );
+  }
 }
