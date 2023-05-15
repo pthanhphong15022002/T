@@ -163,7 +163,15 @@ export class CodxEpService {
       });
     });
   }
-
+  getCardTranInfo(recID: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourceTransBusiness',
+      'GetCardTranInfoAsync',
+      [recID]
+    );
+  }
   getFormGroupBooking(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
       this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {

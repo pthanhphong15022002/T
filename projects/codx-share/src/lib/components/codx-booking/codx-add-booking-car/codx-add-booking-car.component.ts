@@ -26,6 +26,7 @@ import {
 } from '../codx-booking.model';
 import { CodxBookingService } from '../codx-booking.service';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
+import { OMCONST } from 'projects/codx-om/src/lib/codx-om.constant';
 const _addMF = EPCONST.MFUNCID.Add;
 const _copyMF = EPCONST.MFUNCID.Copy;
 const _editMF = EPCONST.MFUNCID.Edit;
@@ -116,6 +117,7 @@ export class CodxAddBookingCarComponent
   ];
   viewOnly=false;
   cardTransInfo: any;
+  categoryID: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -271,12 +273,20 @@ export class CodxAddBookingCarComponent
         }
       });
     this.codxBookingService
-      .getDataValueOfSettingAsync(_EPParameters, _EPCarParameters, '4')
+      .getDataValueOfSettingAsync(_EPParameters, null, '4')
       .subscribe((res: string) => {
         if (res) {
           let carSetting_4 = JSON.parse(res);
           if (carSetting_4 != null && carSetting_4.length > 0) {
-            this.approvalRule = carSetting_4[0]?.ApprovalRule;
+            let setting= carSetting_4.filter((x:any) => x.Category == EPCONST.ENTITY.C_Bookings);
+            if(setting!=null){
+              this.approvalRule = setting[0]?.ApprovalRule;
+              this.categoryID=setting[0]?.CategoryID;
+            }
+            else{
+              this.approvalRule='1';//Đề phòng trường hợp setting lỗi/ thì lấy duyệt theo quy trình
+              this.categoryID='ES_EP002';
+            }
           }
         }
       });
@@ -468,7 +478,7 @@ export class CodxAddBookingCarComponent
       }
     });
     this.resources.splice(this.resources.indexOf(tempDelete), 1);
-    this.data.attendees = this.resources.length + 1;
+    this.data.attendees = this.resources.length ;
     this.detectorRef.detectChanges();
   }
 
@@ -730,7 +740,7 @@ export class CodxAddBookingCarComponent
             }
           });
           this.resources = this.filterArray(this.resources);
-          this.data.attendees = this.resources.length + 1;
+          this.data.attendees = this.resources.length ;
           this.detectorRef.detectChanges();
         }
       });
@@ -964,7 +974,7 @@ export class CodxAddBookingCarComponent
           if (approval) {
             if (this.approvalRule != '0') {
               this.codxBookingService
-                .getProcessByCategoryID('ES_EP002')
+                .getProcessByCategoryID(this.categoryID)
                 .subscribe((res: any) => {
                   this.codxBookingService
                     .release(

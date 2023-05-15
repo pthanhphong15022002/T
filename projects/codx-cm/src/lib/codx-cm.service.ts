@@ -471,4 +471,13 @@ export class CodxCmService {
       data
     );
   }
+ //quotation lines test
+  getQuotationsLinesByTransID(transID){
+    return this.api.exec<any>(
+      'CM',
+      'QuotationsLinesBusiness',
+      'GetQuotationsLinesByTransIDAsync',
+      transID
+    );
+  }
 }
