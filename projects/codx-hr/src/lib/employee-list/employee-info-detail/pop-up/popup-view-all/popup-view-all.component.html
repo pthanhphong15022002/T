@@ -25,6 +25,7 @@
         [formModel]="formModel"
         [columnsGrid]="columnGrid"
         height="auto"
+        [emptyTemplate]="emptyDataTemplate"
       ></codx-gridview>
     </div>
   </ng-template>
@@ -314,6 +315,149 @@
 </ng-template>
 <!--#endregion -->
 
+<!-- #region Hợp đồng lao động column template  -->
+<ng-template #eContractCol1 let-data>
+  <div class="d-flex align-items-center" [ngClass]="data?.isCurrent ? 'text-primary' : ''">
+    <!-- <span
+      class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-4"
+      [class]="
+        !data.isAppendix && data.isCurrent ? 'bg-primary' : 'bg-transparent'
+      "
+    ></span> -->
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center" *ngIf="data.isAppendix">
+        <div class="d-flex flex-wrap mb-1">
+          <div class="d-flex align-items-center">
+            <span class="badge border-0 me-2 badge-primary">
+              <codx-label
+                [formModel]="formModel"
+                [name]="'lblIsAppendix'"
+                [default]="'Phụ lục hợp đồng'"
+              ></codx-label>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex align-items-center mb-2" *ngIf="!data.isAppendix">
+        <span class="fw-bolder">
+          <span
+            [innerHTML]="
+              data?.contractTypeID
+                | formatvalue : formModel : 'contractTypeID'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-event icon-16 text-gray-800 me-1"></span>
+        <span class="fw-bold fs-6">
+          <span
+            [innerHTML]="
+              data?.effectedDate
+                | formatvalue : formModel : 'effectedDate'
+                | async
+            "
+          ></span>
+        </span>
+        <span class="me-1 ms-1 fw-bolder">-</span>
+        <span class="fw-bold fs-6">
+          <span
+            [innerHTML]="
+              data?.expiredDate
+                | formatvalue : formModel : 'expiredDate'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+
+
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #eContractCol2 let-data>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center">
+      <div class="d-flex flex-wrap mb-1" >
+        <div class="d-flex align-items-center" *ngIf="data.isAppendix">
+          <span class="fw-bold">
+            <span
+            class="me-1 icon-i-layout-text-sidebar-reverse icon-10 text-gray-800"
+          ></span>
+            <span
+          [title]="eContractHeaderText.CefContractNo"
+              [innerHTML]="
+                data?.refContractNo
+                  | formatvalue : formModel : 'refContractNo'
+                  | async
+              "
+            ></span>
+          </span>
+        </div>
+
+        <div class="d-flex align-items-center">
+          <span
+            class="me-1 icon-i-layout-text-sidebar-reverse icon-10 text-gray-800"
+          ></span>
+          <span class="text-dark">
+            <span
+          [title]="eContractHeaderText.ContractNo"
+
+            >{{ data?.contractNo }}</span>
+          </span>
+        </div>
+        <div class="d-flex align-items-center">
+          <span
+            class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+          ></span>
+          <span class="fw-bold">
+            <span
+          [title]="eContractHeaderText.SignedDate"
+
+              [innerHTML]="
+                data?.signedDate
+                  | formatvalue : formModel : 'signedDate'
+                  | async
+              "
+            ></span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #eContractCol3 let-data>
+  <div class="has-action-menu min-h-40px">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-edit icon-16 text-gray-800 me-1"></span>
+        <span class="fw-bold fs-6">
+          <span
+            [innerHTML]="
+              data?.note | formatvalue : formModel : 'note' | async
+            "
+          ></span>
+        </span>
+      </div>
+      <codx-mfunc
+        (changeDataMF)="handleShowHideMf($event, data)"
+        [formModel]="formModel"
+        (clickMF)="clickMF($event, data, funcID)"
+        type="hover"
+        [dataItem]="data"
+      >
+      </codx-mfunc>
+    </div>
+  </div>
+</ng-template>
+
+<!-- #endregion -->
+
+
 <ng-template #filterPassport>
     <div class="d-flex align-items-center">
         <span class="ms-2" *ngIf="hasFilter">
@@ -337,4 +481,12 @@
           ></codx-dropdown-calendar>
         </span>
       </div> 
+</ng-template>
+
+<ng-template #emptyDataTemplate>
+  <div class="d-flex ms-1">
+    <span class="text-gray-500 fw-bold">
+      {{ "SYS011" | mssg | async }}
+    </span>
+  </div>
 </ng-template>

@@ -3894,7 +3894,7 @@
 
               <button
               class="btn btn-white text-primary"
-              (click)="valueChangeViewAllEContract()"
+              (click)="popupViewAllContract()"
             >
               <u>
                 <codx-label
@@ -4049,8 +4049,8 @@
                     </codx-label> -->
                 {{ getFormHeader(appointionFuncID) }}
               </div>
-              <span class="text-gray-500 mx-2">|</span>
-              <span class="text-gray-800">({{ appointionRowCount }})</span>
+              <!-- <span class="text-gray-500 mx-2">|</span>
+              <span class="text-gray-800">({{ appointionRowCount }})</span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <button
@@ -4079,7 +4079,6 @@
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_EAppointions'"
-                [rowHeight]="30"
                 height="auto"
                 [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
@@ -4270,10 +4269,10 @@
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                 {{ getFormHeader(awardFuncID) }}
               </div>
-              <span class="text-gray-500 mx-2"> | </span>
+              <!-- <span class="text-gray-500 mx-2"> | </span>
               <span class="text-dark">
                 <span>({{ awardRowCount }})</span>
-              </span>
+              </span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <codx-dropdown-calendar
@@ -4298,7 +4297,7 @@
           </div>
 
           <div class="mb-1 mt-5">
-            <div class="profile-grid">
+            <div class="">
               <codx-gridview
                 *ngIf="awardColumnsGrid && awardFormModel"
                 #eAwardGridView
@@ -4311,8 +4310,8 @@
                 [predicates]="'EmployeeID=@0'"
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
+                [sort]="[eAwardsSortModel1, eAwardsSortModel2]"
                 [entityName]="'HR_EAwards'"
-                [rowHeight]="40"
                 height="auto"
                 [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
@@ -4357,10 +4356,10 @@
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                 {{ getFormHeader("HRTEM0702") }}
               </div>
-              <span class="text-gray-500 mx-2">|</span>
+              <!-- <span class="text-gray-500 mx-2">|</span>
               <span class="text-dark">
                 <span>({{ eDisciplineRowCount }})</span>
-              </span>
+              </span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <button
@@ -4383,6 +4382,7 @@
                 [formModel]="eDisciplineFormModel"
                 [columnsGrid]="eDisciplineColumnsGrid"
                 [service]="'HR'"
+                [sort] = "[disciplinesSortModel]"
                 [assemblyName]="'Core'"
                 [className]="'DataBusiness'"
                 [method]="'LoadDataAsync'"
@@ -4390,7 +4390,6 @@
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_EDisciplines'"
-                [rowHeight]="40"
                 height="auto"
                 [emptyTemplate]="emptyDataTemplate"
               >
@@ -6456,13 +6455,13 @@
 
 <!--region Award - Khen thưởng-->
 <ng-template #templateAwardGridCol1 let-data>
-  <div
-    class="mb-5px"
+    <div  
     [innerHTML]="
       data?.awardID | formatvalue : awardFormModel : 'awardID' | async
-    "
-  ></div>
-  <div
+    ">
+    </div>
+
+    <div
     class="text-primary"
     [innerHTML]="
       data?.awardFormCategory
@@ -6517,25 +6516,20 @@
 </ng-template>
 
 <ng-template #templateAwardGridCol3 let-data>
-  <div
-    class="has-action-menu min-h-40px"
+  <div class="has-action-menu">
+    <div
+    class=" min-h-40px"
     [innerHTML]="data?.reason | formatvalue : awardFormModel : 'reason' | async"
   >
-    <!-- <<<<<< -->
-    <!-- <codx-mfunc
-      [formModel]="awardFormModel"
-      (clickMF)="clickMF($event, data, 'eAwards')"
-      [dataItem]="data"
-      type="hover"
-    >
-    </codx-mfunc> -->
-    <codx-mfunc
-      [formModel]="awardFormModel"
-      (clickMF)="clickMF($event, data, 'eAwards')"
-      type="hover"
-      [dataItem]="data"
-    >
-    </codx-mfunc>
+
+  </div>
+  <codx-mfunc
+  [formModel]="awardFormModel"
+  (clickMF)="clickMF($event, data, 'eAwards')"
+  type="hover"
+  [dataItem]="data"
+>
+</codx-mfunc>
   </div>
 </ng-template>
 <!--#end region-->
@@ -6548,7 +6542,8 @@
         | formatvalue : eDisciplineFormModel : 'DisciplineID'
         | async
     "
-  ></div>
+  >
+  </div>
   <div
     class="text-warning"
     [innerHTML]="
@@ -7312,7 +7307,6 @@
             [emptyTemplate]="emptyDataTemplate"
             [dataService]="dataService"
             [pageSize]="numPageSizeGridView"
-            [rowHeight]="40"
             height="auto"
             [sort]="[eContractSortModel]"
           ></codx-gridview>
