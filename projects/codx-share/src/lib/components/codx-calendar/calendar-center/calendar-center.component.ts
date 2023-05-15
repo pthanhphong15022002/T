@@ -21,7 +21,9 @@ export class CalendarCenterComponent
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
   @ViewChild('eventTemplate') eventTemplate?: TemplateRef<any>;
-  @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('cellTemplate') cellTemplate?: TemplateRef<any>;
+  @ViewChild('view')
+  viewBase: ViewsComponent;
   @Input() resources: any;
   @Input() resourceModel!: any;
 
@@ -40,12 +42,16 @@ export class CalendarCenterComponent
     id: 'btnAdd',
   };
   calendar_center: any;
+  dayoff: any;
+  calendarID = 'STD';
 
   constructor(injector: Injector, private shareService: CodxShareService) {
     super(injector);
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.getDayOff();
+  }
 
   ngAfterViewInit(): void {
     this.views = [
@@ -58,6 +64,7 @@ export class CalendarCenterComponent
           resources: this.resources,
           resourceModel: this.resourceModel,
           template: this.eventTemplate,
+          template3: this.cellTemplate,
           template6: this.headerTemp,
           template8: this.contentTmp,
         },
@@ -111,13 +118,16 @@ export class CalendarCenterComponent
   // }
 
   //region EP
-  showHour(date: any) {
-    let temp = new Date(date);
-    let time =
-      ('0' + temp.getHours()).toString().slice(-2) +
-      ':' +
-      ('0' + temp.getMinutes()).toString().slice(-2);
-    return time;
+  showHour(stringDate: any) {
+    const date: Date = new Date(stringDate);
+    const hours: number = date.getHours();
+    const minutes: number = date.getMinutes();
+
+    const timeString: string = `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}`;
+
+    return timeString;
   }
 
   //endRegion EP
@@ -156,4 +166,55 @@ export class CalendarCenterComponent
     return res;
   }
   //endRegion CO
+
+  getCellContent(evt: any) {
+    if (this.dayoff && this.dayoff.length > 0) {
+      for (let i = 0; i < this.dayoff.length; i++) {
+        let day = new Date(this.dayoff[i].startDate);
+        if (
+          day &&
+          evt.getFullYear() === day.getFullYear() &&
+          evt.getMonth() === day.getMonth() &&
+          evt.getDate() === day.getDate()
+        ) {
+          let time = evt.getTime();
+          let ele = document.querySelectorAll('[data-date="' + time + '"]');
+          if (ele.length > 0) {
+            ele.forEach((item) => {
+              (item as any).style.backgroundColor = this.dayoff[i].color;
+            });
+            return (
+              '<icon class="' +
+              this.dayoff[i].symbol +
+              '"></icon>' +
+              '<span>' +
+              this.dayoff[i].note +
+              '</span>'
+            );
+          } else {
+            return '';
+          }
+        }
+      }
+    }
+
+    return ''; // Return a default value if no conditions are met
+  }
+
+  getDayOff(id = null) {
+    if (id) this.calendarID = id;
+    this.api
+      .execSv<any>(
+        'BS',
+        'ERM.Business.BS',
+        'CalendarsBusiness',
+        'GetDayWeekAsync',
+        [this.calendarID]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dayoff = res;
+        }
+      });
+  }
 }
