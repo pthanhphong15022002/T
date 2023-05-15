@@ -870,16 +870,19 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       else if(elePanel.querySelector('ejs-circulargauge') &&
       elePanel.querySelector('ejs-circulargauge').ej2_instances[0]){
             const chartObj = elePanel.querySelector('ejs-circulargauge').ej2_instances[0];
-            chartObj.height = '50%';
-            chartObj.width = '100%';
+            //chartObj.height = elePanel.offsetHeight -50 +'px';
+            //chartObj.width = elePanel.offsetWidth -50 +'px';
+            chartObj.height = '80%';
+            chartObj.width='80%';
+            elePanel.querySelector('.card-body')?.classList.add('overflow-hidden');
             chartObj.refresh();
       }
       else if(elePanel.querySelector('ejs-treemap') &&
       elePanel.querySelector('ejs-treemap').ej2_instances[0]){
         const chartObj = elePanel.querySelector('ejs-treemap').ej2_instances[0];
-        chartObj.height = '60%';
-        chartObj.width = '80%';
-        (chartObj as TreeMapComponent);
+        chartObj.height = elePanel.offsetHeight -50 +'px';
+        chartObj.width = elePanel.offsetWidth -50 +'px';
+        (chartObj as TreeMapComponent).refresh();
       }
     },100)
 
