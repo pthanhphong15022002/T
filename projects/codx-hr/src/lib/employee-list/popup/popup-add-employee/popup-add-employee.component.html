@@ -25,9 +25,12 @@
             [objectType]="'HR_Employees'"
             [funcId]="formModel.funcID"
             [isAllowEdit]="true"
+            [imgOn]="codxModifiedOn"
             [width]="80"
             [imageType]="'circle'"
-            class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage">
+            class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+            [updateDirect]="action === 'edit'"
+            (reloadChanged)="action === 'edit' ? changeAvatar($event) : null">
           </codx-img>
         </div>
         <div>

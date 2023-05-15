@@ -397,11 +397,98 @@ export class CodxBookingViewDetailComponent
     } else if (this.viewMode == '2') {
       if (event != null && data != null) {
         event.forEach((func) => {
-          if (func.functionID == EPCONST.MFUNCID.Copy) {
+          if (
+            func.functionID == EPCONST.MFUNCID.Copy ||
+            func.functionID == EPCONST.MFUNCID.C_CardTrans
+          ) {
             func.disabled = true;
           }
         });
         if (data.approveStatus == '3') {
+          event.forEach((func) => {
+            if (
+              func.functionID == EPCONST.MFUNCID.R_Approval ||
+              func.functionID == EPCONST.MFUNCID.C_Approval ||
+              func.functionID == EPCONST.MFUNCID.S_Approval ||
+              func.functionID == EPCONST.MFUNCID.R_Reject ||
+              func.functionID == EPCONST.MFUNCID.C_Reject ||
+              func.functionID == EPCONST.MFUNCID.S_Reject
+            ) {
+              func.disabled = false;
+            }
+            if (
+              func.functionID == EPCONST.MFUNCID.R_Undo ||
+              func.functionID == EPCONST.MFUNCID.C_Undo ||
+              func.functionID == EPCONST.MFUNCID.S_Undo ||
+              func.functionID == EPCONST.MFUNCID.C_DriverAssign
+            ) {
+              func.disabled = true;
+            }
+          });
+        } else if (data.approveStatus == '4') {
+          event.forEach((func) => {
+            if (
+              func.functionID == EPCONST.MFUNCID.R_Undo ||
+              func.functionID == EPCONST.MFUNCID.C_Undo ||
+              func.functionID == EPCONST.MFUNCID.S_Undo
+            ) {
+              func.disabled = false;
+            }
+            if (
+              func.functionID == EPCONST.MFUNCID.R_Approval ||
+              func.functionID == EPCONST.MFUNCID.C_Approval ||
+              func.functionID == EPCONST.MFUNCID.S_Approval ||
+              func.functionID == EPCONST.MFUNCID.R_Reject ||
+              func.functionID == EPCONST.MFUNCID.C_Reject ||
+              func.functionID == EPCONST.MFUNCID.S_Reject ||
+              func.functionID == EPCONST.MFUNCID.C_DriverAssign
+            ) {
+              func.disabled = true;
+            }
+          });
+        } else if (data?.approveStatus == '5' && data?.stepType != 'I') {
+          event.forEach((func) => {
+            if (
+              func.functionID == EPCONST.MFUNCID.R_Approval ||
+              func.functionID == EPCONST.MFUNCID.C_Approval ||
+              func.functionID == EPCONST.MFUNCID.S_Approval ||
+              func.functionID == EPCONST.MFUNCID.R_Reject ||
+              func.functionID == EPCONST.MFUNCID.C_Reject ||
+              func.functionID == EPCONST.MFUNCID.S_Reject
+            ) {
+              func.disabled = true;
+            }
+            if (
+              func.functionID == EPCONST.MFUNCID.R_Undo ||
+              func.functionID == EPCONST.MFUNCID.C_Undo ||
+              func.functionID == EPCONST.MFUNCID.S_Undo
+            ) {
+              func.disabled = false;
+            }
+            if (func.functionID == EPCONST.MFUNCID.C_DriverAssign) {
+              if (data?.resources) {
+                let driver = Array.from(data?.resources).filter((item: any) => {
+                  return item.roleType == '2';
+                });
+                if (
+                  (driver != null && driver.length > 0) ||
+                  data?.driverName != null
+                ) {
+                  func.disabled = false; //true
+                } else {
+                  func.disabled = false;
+                }
+              }
+            }
+          });
+        }
+        // Xử lí cấp phát VPP là bước duyệt cuối (stepType=='I')
+        else if (
+          data?.approveStatus == '5' &&
+          data?.stepType == 'I' &&
+          data?.issueStatus == '1'
+        ) {
+          //Chưa cấp phát
           event.forEach((func) => {
             if (
               func.functionID == EPCONST.MFUNCID.R_Approval ||
@@ -421,7 +508,13 @@ export class CodxBookingViewDetailComponent
               func.disabled = true;
             }
           });
-        } else {
+        } else if (
+          (data?.approveStatus == '5' &&
+            data?.stepType == 'I' &&
+            data?.issueStatus == '3') ||
+          (data?.approveStatus == '4' && data?.stepType == 'I')
+        ) {
+          //Đã cấp phát
           event.forEach((func) => {
             if (
               func.functionID == EPCONST.MFUNCID.R_Approval ||
@@ -429,16 +522,12 @@ export class CodxBookingViewDetailComponent
               func.functionID == EPCONST.MFUNCID.S_Approval ||
               func.functionID == EPCONST.MFUNCID.R_Reject ||
               func.functionID == EPCONST.MFUNCID.C_Reject ||
-              func.functionID == EPCONST.MFUNCID.S_Reject
-            ) {
-              func.disabled = true;
-            }
-            if (
+              func.functionID == EPCONST.MFUNCID.S_Reject ||
               func.functionID == EPCONST.MFUNCID.R_Undo ||
               func.functionID == EPCONST.MFUNCID.C_Undo ||
               func.functionID == EPCONST.MFUNCID.S_Undo
             ) {
-              func.disabled = false;
+              func.disabled = true;
             }
           });
         }

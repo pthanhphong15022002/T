@@ -338,9 +338,9 @@
                 </ng-container>
               </div>
             </td>
-            <td>
+            <td *ngIf="itemSelected?.currencyID != baseCurr">
               <div class="d-flex align-items-center justify-content-start mb-2">
-                <ng-container *ngIf="itemSelected?.currencyID != baseCurr">
+                <ng-container>
                   <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{(item.dr + item.cr).toLocaleString("it-IT")
                     }}</span>
                   <ng-template #popdr>
@@ -349,7 +349,7 @@
                 </ng-container>
               </div>
               <div class="d-flex align-items-center justify-content-start">
-                <ng-container *ngIf="itemSelected?.currencyID != baseCurr">
+                <ng-container>
                   <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{(item.dr + item.cr).toLocaleString("it-IT")
                     }}</span>
                   <ng-template #popdr>
