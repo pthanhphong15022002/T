@@ -53,6 +53,7 @@ import { CasesComponent } from './cases/cases.component';
 import { CaseDetailComponent } from './cases/case-detail/case-detail.component';
 import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.component';
 import { TabCaseDetailComponent } from './cases/case-detail/tab-case-detail/tab-case-detail.component';
+import { PaymentsComponent } from './contracts/component/payments/payments.component';
 
 const routes: Routes = [
   {
@@ -128,6 +129,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CaseDetailComponent,
     PopupAddCaseComponent,
     TabCaseDetailComponent,
+    PaymentsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
