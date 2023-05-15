@@ -706,13 +706,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         });
 
       // Asset
-      if (!this.lstAsset)
-        this.hrService.LoadListEAsset(this.employeeID).subscribe((res) => {
-          if (res) {
-            this.lstAsset = res;
-            this.df.detectChanges();
-          }
-        });
+      // if (!this.lstAsset)
+      //   this.hrService.LoadListEAsset(this.employeeID).subscribe((res) => {
+      //     if (res) {
+      //       this.lstAsset = res;
+      //       this.df.detectChanges();
+      //     }
+      //   });
     }
     if (!this.jobSalaryColumnGrid) {
       //#region get columnGrid EJobSalary - Lương chức danh
