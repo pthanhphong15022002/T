@@ -33,12 +33,12 @@
 </ng-template>
 
 <ng-template #item let-data>
-  <div class="tm-viewlist justify-content-between d-flex border-bottom">
+  <div class="tm-viewlist justify-content-between d-flex border-bottom px-3">
     <div class="d-flex flex-row align-items-top w-100">
       <div class="w-100">
         <codx-temp-full
           cardCss="card-template px-2 pt-4 pb-2"
-          [imageId]="data.recID"
+          [imageId]="data.groupName"
           [imageObjType]="view.formModel?.entityName"
           [titleTmp]="titleTmp"
           [subTitleTmp]="subTitleTmp"
@@ -209,7 +209,7 @@
         [width]="25"
         [objectId]="data.memberIDs"
         [objectType]="data.memberType == 'U' ? 'AD_Users' : 'HR_Positions'"
-        [numberImages]="4"
+        [numberImages]="10"
       >
       </codx-imgs>
     </ng-container>

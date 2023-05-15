@@ -30,48 +30,48 @@
 		<div class="row form-group">
 			<div class="" style="width: 10%;">
 				<div>
-					<codx-label [formModel]="dialog.formModel" fiedName="contractAmt" default="STT"></codx-label>
+					<codx-label [formModel]="dialog.formModel" fiedName="rowNo" default="STT"></codx-label>
 				</div>
 				<div class="">
-					<codx-input [formModel]="dialog.formModel" field="contractAmt" type="number" [min]="0">
-						<!-- [crrValue]="contracts?.contractAmt"
-					  (valueChange)="valueChangeText($event)" -->
+					<codx-input [formModel]="dialog.formModel" field="rowNo" type="number" [min]="0">
+						[crrValue]="payment?.rowNo"
+					  (valueChange)="valueChangeText($event)"
 					</codx-input>
 				</div>
 			</div>
 			<div class="" style="width: 45%;">
 				<div>
-					<codx-label [formModel]="dialog.formModel" fiedName="contractAmt"
+					<codx-label [formModel]="dialog.formModel" fiedName="scheduleDate"
 						default="Ngày hẹn thanh toán"></codx-label>
 				</div>
 				<div class="">
-					<codx-input field="contractAmt" type="datetime">
-						<!-- [crrValue]="contracts?.contractAmt"
-						(valueChange)="valueChangeText($event)" -->
+					<codx-input field="scheduleDate" type="datetime">
+						[crrValue]="payment?.scheduleDate"
+						(valueChange)="valueChangeText($event)"
 					</codx-input>
 				</div>
 			</div>
 			<div class="" style="width: 45%;">
 				<div>
-					<codx-label [formModel]="dialog.formModel" fiedName="contractAmt"
+					<codx-label [formModel]="dialog.formModel" fiedName="scheduleAmt"
 						default="Số tiền thanh toán"></codx-label>
 				</div>
 				<div class="">
-					<codx-input [formModel]="dialog.formModel" field="contractAmt" type="number" [min]="0">
-						<!-- [crrValue]="contracts?.contractAmt"
-						(valueChange)="valueChangeText($event)" -->
+					<codx-input [formModel]="dialog.formModel" field="scheduleAmt" type="number" [min]="0">
+						[crrValue]="payment?.scheduleAmt"
+						(valueChange)="valueChangeText($event)"
 					</codx-input>
 				</div>
 			</div>
 		</div>
 		<div class="row form-group">
 			<div>
-				<codx-label [formModel]="dialog.formModel" fiedName="contractAmt" default="Ghi chú"></codx-label>
+				<codx-label [formModel]="dialog.formModel" fiedName="memo" default="Ghi chú"></codx-label>
 			</div>
 			<div class="">
-				<codx-input [formModel]="dialog.formModel" field="contractAmt" type="text" [min]="0">
-					<!-- [crrValue]="contracts?.contractAmt"
-						(valueChange)="valueChangeText($event)" -->
+				<codx-input [formModel]="dialog.formModel" field="memo" type="text" [min]="0">
+					[crrValue]="payment?.memo"
+						(valueChange)="valueChangeText($event)"
 				</codx-input>
 			</div>
 		</div>
@@ -82,48 +82,48 @@
 		<div class="row form-group">
 			<div class="" style="width: 10%;">
 				<div>
-					<codx-label [formModel]="dialog.formModel" fiedName="contractAmt" default="STT"></codx-label>
+					<codx-label [formModel]="dialog.formModel" fiedName="rowNo" default="STT"></codx-label>
 				</div>
 				<div class="">
-					<codx-input [formModel]="dialog.formModel" field="contractAmt" type="number" [min]="0">
-						<!-- [crrValue]="contracts?.contractAmt"
-						  (valueChange)="valueChangeText($event)" -->
+					<codx-input [formModel]="dialog.formModel" field="rowNo" type="number" [min]="0">
+						[crrValue]="payment?.rowNo"
+						  (valueChange)="valueChangeText($event)"
 					</codx-input>
 				</div>
 			</div>
 			<div class="" style="width: 30%;">
 				<div>
-					<codx-label [formModel]="dialog.formModel" fiedName="contractAmt"
+					<codx-label [formModel]="dialog.formModel" fiedName="scheduleDate"
 						default="Ngày hẹn thanh toán"></codx-label>
 				</div>
 				<div class="">
-					<codx-input field="contractAmt" type="datetime">
-						<!-- [crrValue]="contracts?.contractAmt"
-							(valueChange)="valueChangeText($event)" -->
+					<codx-input field="scheduleDate" type="datetime">
+						[crrValue]="payment?.scheduleDate"
+							(valueChange)="valueChangeText($event)"
 					</codx-input>
 				</div>
 			</div>
 			<div class="" style="width: 30%;">
 				<div>
-					<codx-label [formModel]="dialog.formModel" fiedName="contractAmt"
+					<codx-label [formModel]="dialog.formModel" fiedName="scheduleAmt"
 						default="Số tiền hẹn thanh toán"></codx-label>
 				</div>
 				<div class="">
-					<codx-input [formModel]="dialog.formModel" field="contractAmt" type="number" [min]="0">
-						<!-- [crrValue]="contracts?.contractAmt"
-							(valueChange)="valueChangeText($event)" -->
+					<codx-input [formModel]="dialog.formModel" field="scheduleAmt" type="number" [min]="0">
+						[crrValue]="payment?.scheduleAmt"
+							(valueChange)="valueChangeText($event)"
 					</codx-input>
 				</div>
 			</div>
 			<div class="" style="width: 30%;">
 				<div>
-					<codx-label [formModel]="dialog.formModel" fiedName="contractAmt"
+					<codx-label [formModel]="dialog.formModel" fiedName="remainAmt"
 						default="Dư nợ còn lại"></codx-label>
 				</div>
 				<div class="">
-					<codx-input [formModel]="dialog.formModel" field="contractAmt" type="number" [min]="0">
-						<!-- [crrValue]="contracts?.contractAmt"
-							(valueChange)="valueChangeText($event)" -->
+					<codx-input [formModel]="dialog.formModel" field="remainAmt" type="number" [min]="0">
+						[crrValue]="payment?.remainAmt"
+							(valueChange)="valueChangeText($event)"
 					</codx-input>
 				</div>
 			</div>
@@ -131,48 +131,48 @@
 		<div class="row form-group">
 			<div class="col-4">
 				<div>
-					<codx-label [formModel]="dialog.formModel" fiedName="contractAmt" default="Mã giao dịch"></codx-label>
+					<codx-label [formModel]="dialog.formModel" fiedName="transID" default="Mã giao dịch"></codx-label>
 				</div>
 				<div class="">
-					<codx-input [formModel]="dialog.formModel" field="contractAmt" type="text" [min]="0">
-						<!-- [crrValue]="contracts?.contractAmt"
-						  (valueChange)="valueChangeText($event)" -->
+					<codx-input [formModel]="dialog.formModel" field="transID" type="text" [min]="0">
+						[crrValue]="payment?.transID"
+						  (valueChange)="valueChangeText($event)"
 					</codx-input>
 				</div>
 			</div>
 			<div class="col-4">
 				<div>
-					<codx-label [formModel]="dialog.formModel" fiedName="contractAmt"
+					<codx-label [formModel]="dialog.formModel" fiedName="paidDate"
 						default="Ngày giao dịch"></codx-label>
 				</div>
 				<div class="">
-					<codx-input field="contractAmt" type="datetime">
-						<!-- [crrValue]="contracts?.contractAmt"
-							(valueChange)="valueChangeText($event)" -->
+					<codx-input field="paidDate" type="datetime">
+						[crrValue]="payment?.contractAmt"
+							(valueChange)="valueChangeText($event)"
 					</codx-input>
 				</div>
 			</div>
 			<div class="col-4">
 				<div>
-					<codx-label [formModel]="dialog.formModel" fiedName="contractAmt"
-						default="Đã giao dịch"></codx-label>
+					<codx-label [formModel]="dialog.formModel" fiedName="paidAmt"
+						default="Đã thanh toán"></codx-label>
 				</div>
 				<div class="">
-					<codx-input [formModel]="dialog.formModel" field="contractAmt" type="number" [min]="0">
-						<!-- [crrValue]="contracts?.contractAmt"
-							(valueChange)="valueChangeText($event)" -->
+					<codx-input [formModel]="dialog.formModel" field="paidAmt" type="number" [min]="0">
+						[crrValue]="payment?.paidAmt"
+							(valueChange)="valueChangeText($event)"
 					</codx-input>
 				</div>
 			</div>
 		</div>
 		<div class="row form-group">
 			<div>
-				<codx-label [formModel]="dialog.formModel" fiedName="contractAmt" default="Ghi chú"></codx-label>
+				<codx-label [formModel]="dialog.formModel" fiedName="memo" default="Ghi chú"></codx-label>
 			</div>
 			<div class="">
-				<codx-input [formModel]="dialog.formModel" field="contractAmt" type="text" [min]="0">
-					<!-- [crrValue]="contracts?.contractAmt"
-							(valueChange)="valueChangeText($event)" -->
+				<codx-input [formModel]="dialog.formModel" field="memo" type="text" [min]="0">
+					[crrValue]="payment?.contractAmt"
+							(valueChange)="valueChangeText($event)"
 				</codx-input>
 			</div>
 		</div>
