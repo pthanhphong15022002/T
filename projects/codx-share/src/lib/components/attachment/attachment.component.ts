@@ -3224,8 +3224,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         // var arrName = files[i].name.split(".");
         // arrName.splice((arrName.length - 1), 1);
         // var name = arrName.join('.');
-        debugger
-        fileUpload.entityName = this.formModel.entityName
+        fileUpload.entityName = this.formModel?.entityName
         fileUpload.mimeType = this.GetMimeType(files[i].type);
         fileUpload.type = files[i].type;
         fileUpload.objectType = this.objectType;
