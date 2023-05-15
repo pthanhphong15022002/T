@@ -157,6 +157,7 @@ export class CodxTasksComponent
   crrFuncID = '';
   isHoverPop = false;
   timeoutId: any;
+  viewCrr: any;
 
   constructor(
     inject: Injector,
@@ -1012,16 +1013,16 @@ export class CodxTasksComponent
   //#endregion
   //#region Event đã có dùng clickChildrenMenu truyền về
   changeView(evt: any) {
-
+    //  this.viewCrr = evt.view.type
     if (this.crrFuncID != this.funcID) {
       this.cache.viewSettings(this.funcID).subscribe((views) => {
         if (views) {
           let idxActive = -1;
-          this.views.forEach((v,index) => {
+          this.views.forEach((v, index) => {
             let idx = views.findIndex((x) => x.view == v.type);
             if (idx != -1) {
               v.hide = false;
-              //if (v.type == this.crrViews) v.active = true;
+              //  if (v.type != this.viewCrr) v.active = false; else v.active =true;
               if (views[idx].isDefault) idxActive = index;
             } else {
               v.hide = true;
@@ -1031,6 +1032,7 @@ export class CodxTasksComponent
           if (!this.views.some((x) => x.active)) {
             if (idxActive != -1) this.views[idxActive].active = true;
             else this.views[0].active = true;
+            //  this.viewMode = idxActive != -1 ? this.views[idxActive].type : this.views[0].type;
           }
           this.afterLoad();
           this.crrFuncID = this.funcID;
