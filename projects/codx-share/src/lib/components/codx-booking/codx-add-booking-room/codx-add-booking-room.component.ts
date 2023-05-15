@@ -362,12 +362,12 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           if (roomSetting_4 != null && roomSetting_4.length > 0) {
             let setting= roomSetting_4.filter((x:any) => x.Category == EPCONST.ENTITY.R_Bookings);
             if(setting!=null){
-              this.approvalRule = setting[0]?.ApprovalRule;
-              this.categoryID=setting[0]?.CategoryID;
+              this.approvalRule = setting[0]?.ApprovalRule !=null? setting[0]?.ApprovalRule :'1';
+              this.categoryID=setting[0]?.CategoryID !=null? setting[0]?.CategoryID:EPCONST.ES_CategoryID.Room;
             }
             else{
               this.approvalRule='1';//Đề phòng trường hợp setting lỗi/ thì lấy duyệt theo quy trình
-              this.categoryID='ES_EP001';
+              this.categoryID=EPCONST.ES_CategoryID.Room;
             }
           }
         }
