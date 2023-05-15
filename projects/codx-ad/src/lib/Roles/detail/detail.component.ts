@@ -90,9 +90,9 @@ export class RoleDetailComponent
       //this.roleName = this.tempService.roleName;
       if (params) this.funcIDPara = params['funcID'];
     });
-    this.tempService.roleName.subscribe((res) => {
-      this.roleName = res;
-    });
+    // this.tempService.roleName.subscribe((res) => {
+    //   this.roleName = res;
+    // });
     this.tenant = this.tenantStore.get()?.tenant;
   }
   ngOnChanges(changes: SimpleChanges): void {}
@@ -134,12 +134,13 @@ export class RoleDetailComponent
         if (res) {
           var data = res;
           this.role = data[0];
+          this.roleName = this.role?.roleName;
           // if (this.role && this.role.administrator) {
           //   this.active = false;
           // }
           this.myTree = data[1];
           this.df.detectChanges();
-          this.asideClick(null, 0, data[0]);
+          this.asideClick(null, 0, this.myTree[0]);
         }
       });
   }

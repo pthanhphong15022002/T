@@ -639,22 +639,33 @@
           </div>
 
           <ng-template #orderTmp let-item>
-            <div class="d-flex w-100 h-100 p-2">
-              <codx-temp-full
-                [typeMF]="'hover'"
-                [titleTmp]="oTitleTmp"
-                typeMF="hover"
-                [dataItem]="item"
-                [hideMF]="false"
-              >
-              </codx-temp-full>
-              <codx-temp-full
-                [typeMF]="'hover'"
-                [titleTmp]="oAmtStt"
-                typeMF="hover"
-                [dataItem]="item"
-              >
-              </codx-temp-full>
+            <div class="d-flex w-125 row h-100 p-2">
+              <div class="info col-8 d-flex justify-content-between">
+                <codx-temp-full
+                  [typeMF]="'hover'"
+                  [titleTmp]="oTitleTmp"
+                  typeMF="hover"
+                  [dataItem]="item"
+                  [hideMF]="false"
+                >
+                </codx-temp-full>
+                <codx-temp-full
+                  [typeMF]="'hover'"
+                  [titleTmp]="oAmtStt"
+                  typeMF="hover"
+                  [dataItem]="item"
+                >
+                </codx-temp-full>
+              </div>
+              <div class="moreInfo col-4">
+                <button
+                  class="btn btn-outline-primary"
+                  (click)="popupOrderInfo(item)"
+                >
+                  <codx-label name="lblOderInfo" default="Thông tin chi tiết">
+                  </codx-label>
+                </button>
+              </div>
             </div>
           </ng-template>
           <ng-template #oTitleTmp let-order>

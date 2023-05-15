@@ -65,6 +65,26 @@ export class PopupAddCmCustomerComponent implements OnInit {
   count = 0;
   avatarChange = false;
   autoNumber: any;
+
+  tabInfo: any[] = [
+    { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
+    {
+      icon: 'icon-location_on',
+      text: 'Danh sách địa chỉ',
+      name: 'Address',
+    },
+    {
+      icon: 'icon-contact_phone',
+      text: 'Người liên hệ',
+      name: 'Contacts',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Thông tin khác',
+      name: 'InformationDefault',
+    },
+  ];
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -249,6 +269,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
               .subscribe((result) => {
                 if (result) {
                   this.dialog.close([res.save]);
+                }else{
+                  this.dialog.close([res.save]);
+
                 }
               });
           }else{
@@ -496,7 +519,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           var dialog = this.callFc.openForm(
             PopupAddressComponent,
             '',
-            500,
+            650,
             550,
             '',
             obj,
@@ -576,7 +599,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         var dialog = this.callFc.openForm(
           PopupListContactsComponent,
           '',
-          500,
+          650,
           550,
           '',
           obj,

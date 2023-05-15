@@ -145,7 +145,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         this.editRow(data);
         break;
       case 'SYS04':
-        //this.copyRow(data);
+        this.copyRow(data);
         break;
     }
   }
@@ -200,7 +200,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.inventoryJournal.voucherDate = e.data;
           break;
         case 'exchangerate':
-          this.inventoryJournal.voucherDate = e.data;
+          this.inventoryJournal.exchangeRate = e.data;
           break;
       }
     }
@@ -366,6 +366,35 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         break;
     }
   }
+
+  copyRow(data) {
+    let idx;
+    this.api
+      .exec<any>('IV', 'InventoryJournalLinesBusiness', 'SetDefaultAsync', [
+        this.inventoryJournal,
+        data,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          switch (this.modeGrid) {
+            case '1':
+              idx = this.gridInventoryJournalLine.dataSource.length;
+              res.rowNo = idx + 1;
+              res.recID = Util.uid();
+              this.gridInventoryJournalLine.addRow(res, idx);
+      
+              break;
+            case '2':
+              idx = this.inventoryJournalLines.length;
+              res.rowNo = idx + 1;
+              res.recID = Util.uid();
+              this.openPopupLine(res, 'copy');
+              break;
+          }
+        }
+      });
+  }
+  
   deleteRow(data) {
     this.notification.alertCode('SYS030', null).subscribe((res) => {
       if (res.event.status === 'Y') {
@@ -417,14 +446,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     });
   }
 
-  openPopupLine(data) {
+  openPopupLine(data, type: string) {
     var obj = {
       headerText: this.headerText,
       data: { ...data },
       dataline: this.inventoryJournalLines,
       dataInventoryJournal: this.inventoryJournal,
       lockFields: this.lockFields,
-      type: 'add',
+      type: type,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -474,6 +503,16 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     } else {
       this.dialog.close();
     }
+  }
+  onDiscard(){
+    this.dialog.dataService
+      .delete([this.inventoryJournal], true, null, '', 'AC0010', null, null, false)
+      .subscribe((res) => {
+        if (res.data != null) {
+          this.dialog.close();
+          this.dt.detectChanges();
+        }
+      });
   }
 
   onEdit(e: any) {
@@ -636,10 +675,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       totals = totals + element.costAmt;
     });
     this.inventoryJournal.totalAmt = totals;
-    this.total = totals.toLocaleString('it-IT', {
-      style: 'currency',
-      currency: 'VND',
-    });
+    this.total = totals.toLocaleString('it-IT')
   }
 
   clearInventoryJournal() {
@@ -725,7 +761,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             case '2':
               idx = this.inventoryJournalLines.length;
               res.rowNo = idx + 1;
-              this.openPopupLine(res);
+              this.openPopupLine(res, 'add');
               break;
           }
         }

@@ -97,7 +97,7 @@ export class PopupAddDealComponent
   owner: any;
   dateMessage:any;
   dateMax:any;
-
+  customerIDOld: any;
   // model of DP
   instance: tmpInstances = new tmpInstances();
   instanceSteps: any;
@@ -122,6 +122,7 @@ export class PopupAddDealComponent
     this.deal.status = '1';
     if (this.action != this.actionAdd) {
       this.deal = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+      this.customerIDOld = this.deal?.customerID;
     }
   }
 
@@ -313,7 +314,7 @@ export class PopupAddDealComponent
     option.methodName =
       this.action !== this.actionEdit ? 'AddDealAsync' : 'EditDealAsync';
     option.className = 'DealsBusiness';
-    option.data = data;
+    option.data = this.action != this.actionEdit ? data : [data, this.customerIDOld];
     return true;
   }
 

@@ -13,18 +13,15 @@
         </div>
         <div class="w-40 text-dark fw-bold p-3">
             <codx-label fiedName="lblAwardID" [formModel]="view.formModel"
-            [default]="grvSetup?.AwardID?.description"></codx-label>
+                [default]="grvSetup?.AwardID?.description"></codx-label>
             <span> | </span>
             <codx-label fiedName="lblAwardFormCategory" [formModel]="view.formModel"
-            [default]="grvSetup?.AwardFormCategory?.description"></codx-label>
+                [default]="grvSetup?.AwardFormCategory?.description"></codx-label>
         </div>
         <div class="w-20 text-dark fw-bold p-3">
-            <codx-label name="lblAwardDate" [formModel]="view.formModel" 
-            [default]="grvSetup?.AwardDate?.description"></codx-label>
+            <codx-label name="lblAwardDate" [formModel]="view.formModel"
+                [default]="grvSetup?.AwardDate?.description"></codx-label>
         </div>
-        <!-- <div class="w-25 text-primary p-3 fw-500">
-            <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
-        </div> -->
     </div>
 </ng-template>
 <!-- end header -->
@@ -39,9 +36,9 @@
                     <codx-img [width]="35" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
                         [objectName]="data?.emp?.employeeName" [objectType]="'HR_Employees'">
                     </codx-img>
-                    <codx-vll class="badge badge-sm badge-light me-0" [name]="genderGrvSetup?.referedValue"
+                    <!-- <codx-vll class="badge badge-sm badge-light me-0" [name]="genderGrvSetup?.referedValue"
                         [value]="data?.emp?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
-                    </codx-vll>
+                    </codx-vll> -->
                 </div>
                 <div class="d-flex flex-column">
                     <div class="d-flex align-items-center">
@@ -117,18 +114,12 @@
                     </div>
                 </div>
                 <div class="d-flex flex-row">
-                    <div>
-                        <div class="d-flex flex-row me-2" *ngIf="data?.attachments > 0">
-                            <!-- <i class="icon-attach_file text-primary icon-15"></i>
-                            <div class="align-self-center badge badge-sm badge-circle badge-primary me-10">
-                                {{ data?.attachments }}
-                            </div> -->
-                            <codx-attachment-temp [objectID]="data.recID" [formModel]="view.formModel">
-                            </codx-attachment-temp>
-                        </div>
+                    <div class="d-flex flex-row me-2" *ngIf="data?.attachments > 0">
+                        <codx-attachment-temp [objectID]="data.recID" [formModel]="view.formModel">
+                        </codx-attachment-temp>
                     </div>
-                    <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
-                        [showIcon]="false" [showBgColor]="true" ngClass="badge badge-sm">
+                    <codx-vll *ngIf="data.status" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
+                        [showText]="true" [showIcon]="false" [showBgColor]="true" ngClass="badge badge-sm">
                     </codx-vll>
                 </div>
             </div>
@@ -139,14 +130,6 @@
             </codx-attachment>
         </div>
         <!-- end award date -->
-
-        <!-- approve status -->
-        <!-- <div class="w-25 p-3">
-            <codx-vll [formModel]="view.formModel" [field]="'ApproveStatus'" [value]="data?.approveStatus"
-                [showText]="true" [showIcon]="false" [showBgColor]="true" ngClass="badge badge-sm">
-            </codx-vll>
-        </div> -->
-        <!-- end approve status -->
 
         <!-- moreMF -->
         <div class="align-self-center">
@@ -169,11 +152,11 @@
             [formModel]="view.formModel" [titleTmp]="titleTmp" [dataItem]="data" [imgOn]="data?.modifiedOn"
             [typeMF]="'hover'" (changeDataMF)="changeDataMF($event, data)">
         </codx-temp-full>
-        <div class="d-flex flex-center vll-badge">
+        <!-- <div class="d-flex flex-center vll-badge">
             <codx-vll class="badge badge-sm me-0 badge-light" [name]="genderGrvSetup?.referedValue"
                 [value]="data?.emp?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
             </codx-vll>
-        </div>
+        </div> -->
     </div>
 </ng-template>
 <!-- info view -->
@@ -215,9 +198,6 @@
                 </span>
                 <span class="mx-1"> - </span>
                 <span class="icon-event_notes icon-14 align-self-center me-1"></span>
-                <!-- <span class="align-self-center" [ngbTooltip]="grvSetup?.InYear?.headerText"
-                    [innerHTML]=" data?.inYear | formatvalue : view.formModel : 'inYear' | async">
-                </span> -->
                 <span class="align-self-center" [ngbTooltip]="grvSetup?.InYear?.headerText">
                     {{data?.inYear}}
                 </span>
@@ -274,7 +254,6 @@
                     <div class="p-disabled">
                         <codx-input field="status" [formModel]="view.formModel" [Group]="formGroup"></codx-input>
                     </div>
-                    <!-- <codx-input [disabled]="true" field="status" [formModel]="view.formModel" [Group]="formGroup"></codx-input> -->
                 </div>
                 <div class="form-group">
                     <label>

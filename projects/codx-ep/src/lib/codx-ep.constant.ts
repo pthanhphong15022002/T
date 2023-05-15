@@ -17,6 +17,12 @@ export const EPCONST = {
     CA_History:'EP_HistoryCards',
 
   },
+
+  ES_CategoryID:{
+    Room:'ES_EP001',
+    Car:'ES_EP002',
+    Stationery:'ES_EP003',
+  },
   
   BUSINESS: {
     Bookings: 'BookingsBusiness',
