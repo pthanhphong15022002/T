@@ -174,9 +174,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         break;
     }
     if (
-      this.cashpayment?.unbounds &&
-      this.cashpayment?.unbounds.lockFields &&
-      this.cashpayment?.unbounds.lockFields.length
+      this.cashpayment.unbounds &&
+      this.cashpayment.unbounds.lockFields &&
+      this.cashpayment.unbounds.lockFields.length
     ) {
       this.lockFields = this.cashpayment.unbounds.lockFields as Array<string>;
     }
@@ -505,62 +505,61 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   addRow() {
-    this.loadModegrid();
-    // this.checkValidate();
-    // if (this.validate > 0) {
-    //   this.validate = 0;
-    //   return;
-    // } else {
-    //   switch (this.formType) {
-    //     case 'add':
-    //       if (this.hasSaved) {
-    //         this.dialog.dataService.updateDatas.set(
-    //           this.cashpayment['_uuid'],
-    //           this.cashpayment
-    //         );
-    //         this.dialog.dataService
-    //           .save(null, 0, '', '', false)
-    //           .subscribe((res) => {
-    //             if (res && res.update.data != null) {
-    //               this.loadModegrid();
-    //             }
-    //           });
-    //       } else {
-    //         this.journalService.handleVoucherNoAndSave(
-    //           this.journal,
-    //           this.cashpayment,
-    //           'AC',
-    //           'AC_CashPayments',
-    //           this.form,
-    //           this.formType === 'edit',
-    //           () => {
-    //             this.dialog.dataService
-    //               .save(null, 0, '', '', false)
-    //               .subscribe((res) => {
-    //                 if (res && res.save.data != null) {
-    //                   this.hasSaved = true;
-    //                   this.loadModegrid();
-    //                 }
-    //               });
-    //           }
-    //         );
-    //       }
-    //       break;
-    //     case 'edit':
-    //       this.dialog.dataService.updateDatas.set(
-    //         this.cashpayment['_uuid'],
-    //         this.cashpayment
-    //       );
-    //       this.dialog.dataService
-    //         .save(null, 0, '', '', false)
-    //         .subscribe((res) => {
-    //           if (res && res.update.data != null) {
-    //             this.loadModegrid();
-    //           }
-    //         });
-    //       break;
-    //   }
-    // }
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      switch (this.formType) {
+        case 'add':
+          if (this.hasSaved) {
+            this.dialog.dataService.updateDatas.set(
+              this.cashpayment['_uuid'],
+              this.cashpayment
+            );
+            this.dialog.dataService
+              .save(null, 0, '', '', false)
+              .subscribe((res) => {
+                if (res && res.update.data != null) {
+                  this.loadModegrid();
+                }
+              });
+          } else {
+            this.journalService.handleVoucherNoAndSave(
+              this.journal,
+              this.cashpayment,
+              'AC',
+              'AC_CashPayments',
+              this.form,
+              this.formType === 'edit',
+              () => {
+                this.dialog.dataService
+                  .save(null, 0, '', '', false)
+                  .subscribe((res) => {
+                    if (res && res.save.data != null) {
+                      this.hasSaved = true;
+                      this.loadModegrid();
+                    }
+                  });
+              }
+            );
+          }
+          break;
+        case 'edit':
+          this.dialog.dataService.updateDatas.set(
+            this.cashpayment['_uuid'],
+            this.cashpayment
+          );
+          this.dialog.dataService
+            .save(null, 0, '', '', false)
+            .subscribe((res) => {
+              if (res && res.update.data != null) {
+                this.loadModegrid();
+              }
+            });
+          break;
+      }
+    }
   }
 
   deleteRow(data) {
@@ -744,12 +743,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.checkValidateLine(e.data);
       if (this.validate > 0) {
         this.validate = 0;
-        this.notification.notifyCode('SYS023', 0, '');
+        this.notification.notifyCode('SYS021', 0, '');
         this.gridCashPaymentLine.gridRef.selectRow(e.rowIndex);
         return;
       } else {
         this.api
-          .execAction<any>(this.entityNameLine, [e], 'SaveAsync')
+          .execAction<any>(this.entityNameLine, [e], 'UpdateAsync')
           .subscribe((save) => {
             if (save) {
               this.notification.notifyCode('SYS007', 0, '');
@@ -757,6 +756,25 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             }
           });
       }
+    }
+  }
+
+  onAddNew(e: any) {
+    this.checkValidateLine(e);
+    if (this.validate > 0) {
+      this.validate = 0;
+      e.isAddNew = true;
+      this.notification.notifyCode('SYS023', 0, '');
+      return;
+    } else {
+      this.api
+        .execAction<any>(this.entityNameLine, [e], 'SaveAsync')
+        .subscribe((save) => {
+          if (save) {
+            this.notification.notifyCode('SYS006', 0, '');
+            this.hasAddrow = true;
+          }
+        });
     }
   }
   //#endregion
