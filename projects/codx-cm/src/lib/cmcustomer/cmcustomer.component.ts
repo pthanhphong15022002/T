@@ -123,6 +123,7 @@ export class CmCustomerComponent
 
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
+        // this.view.dataService = JSON.parse(JSON.stringify(this.view.dataService));
         this.funcID = param.funcID;
         this.afterLoad();
       }
@@ -563,6 +564,7 @@ export class CmCustomerComponent
             this.isButton = true;
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event != null) {
+              e.event.modifiedOn = new Date();
               this.view.dataService.update(e.event).subscribe();
               this.dataSelected = JSON.parse(JSON.stringify(e?.event));
               this.customerDetail.getOneCustomerDetail();
@@ -618,6 +620,7 @@ export class CmCustomerComponent
               this.isButton = true;
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
+                e.event.modifiedOn = new Date();
                 this.view.dataService.update(e.event).subscribe();
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.view.dataService.data[0])

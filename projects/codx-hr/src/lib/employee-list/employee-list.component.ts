@@ -13,10 +13,9 @@ import {
   ViewType,
   UIComponent,
   CRUDService,
+  Util,
+  RequestOption,
 } from 'codx-core';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { HR_Employees } from '../model/HR_Employees.model';
-import { PopupAddNewHRComponent } from './popup-add-new-hr/popup-add-new-hr.component';
 import { PopupAddEmployeeComponent } from './popup/popup-add-employee/popup-add-employee.component';
 
 @Component({
@@ -26,19 +25,12 @@ import { PopupAddEmployeeComponent } from './popup/popup-add-employee/popup-add-
 })
 export class EmployeeListComponent extends UIComponent {
   views: Array<ViewModel> = [];
-  button?: ButtonModel;
+  button: ButtonModel = null;
   columnsGrid = [];
-  currentEmployee: boolean = true;
-  dataValue = '90';
-  predicate = 'Status < @0';
   funcID: string = "";
-  employee: HR_Employees = new HR_Employees();
   itemSelected: any;
-  employStatus: any;
-  urlView: string;
-  listMoreFunc = [];
+  function:any = null;
   sysMoreFunc:any[] = [];
-
   // template columns grid
   @ViewChild('colEmployee', { static: true }) colEmployee: TemplateRef<any>;
   @ViewChild('colContact', { static: true }) colContact: TemplateRef<any>;
@@ -60,7 +52,12 @@ export class EmployeeListComponent extends UIComponent {
       this.funcID = param.funcID;
       // xử lý ẩn hiện button thêm trên toolbar
       this.funcID == "HRT03a2" ? this.button = null : this.button = { id: 'btnAdd'}; 
-      
+      this.getFunction(this.funcID);
+    });
+    // get more funtion hệ thống
+    this.cache.moreFunction("CoDXSystem","")
+    .subscribe((mFuc:any) => {
+      if(mFuc) this.sysMoreFunc = mFuc;
     });
   }
 
@@ -115,51 +112,54 @@ export class EmployeeListComponent extends UIComponent {
         },
       },
     ];
-    // get more funtion default
-    this.cache.moreFunction("CoDXSystem","")
-    .subscribe((mFuc:any) => {
-      if(mFuc) this.sysMoreFunc = mFuc;
-    });
     this.detectorRef.detectChanges();
   }
 
   // click more func
   clickMF(moreFunc: any, data: any) {
-    // debugger
-    // this.itemSelected = data;
-    // switch (moreFunc.functionID) {
-    //   case 'SYS01': // thêm
-    //     this.add(moreFunc);
-    //     break;
-    //   case 'SYS02': // xóa
-    //     this.delete(data);
-    //     break;
-    //   case 'SYS03': // sửa
-    //     this.edit(data,moreFunc);
-    //     break;
-    //   case 'SYS04': // sao chép
-    //     this.copy(data,moreFunc);
-    //     break;
-    //   case 'HR0031': // cập nhật tình trạng
-    //     this.updateStatus(data, moreFunc.functionID);
-    //     break;
-    //   case 'HR0032': // xem chi tiết
-
-    //     break;
-    //   case 'SYS002':
-    //     this.exportFile();
-    //     break;
-    // }
+    this.itemSelected = data;
+    switch (moreFunc.functionID) {
+      case 'SYS01': // thêm
+        this.add(moreFunc);
+        break;
+      case 'SYS02': // xóa
+        this.delete(data);
+        break;
+      case 'SYS03': // sửa
+        this.edit(data,moreFunc);
+        break;
+      case 'SYS04': // sao chép
+        this.copy(data,moreFunc);
+        break;
+      case 'HR0031': // cập nhật tình trạng
+        // this.updateStatus(data, moreFunc.functionID);
+        break;
+      case 'HR0032': // xem chi tiết
+        break;
+      case 'SYS002':
+        // this.exportFile();
+        break;
+    }
   }
 
+  //get function 
+  getFunction(funcID:string){
+    if(funcID){
+      this.cache.functionList(funcID)
+      .subscribe((func:any) =>{
+        if(func) this.function = func;
+      });
+    }
+  }
 
-  // open popup add
+  // add Employee
   add(moreFunc:any = null) {
     debugger
     if(!moreFunc)
       moreFunc = this.sysMoreFunc.find(x => x.functionID == "SYS01");
     this.view.dataService.addNew()
     .subscribe((res: any) => {
+      debugger
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
@@ -167,7 +167,7 @@ export class EmployeeListComponent extends UIComponent {
       let popup = this.callfc.openSide(
         PopupAddEmployeeComponent,
         {
-          actionType: 'add',
+          action: 'add',
           text:moreFunc.defaultName ?? moreFunc.text,
           data: res,
         },
@@ -175,10 +175,11 @@ export class EmployeeListComponent extends UIComponent {
       );
       popup.closed.subscribe((e) => {
         debugger
-        if(e.event){
+        if(e.event)
+        {
           (this.view.dataService as CRUDService).add(e.event).subscribe();
+          this.detectorRef.detectChanges();
         }
-        this.detectorRef.detectChanges();
       });
     });
   }
@@ -186,57 +187,71 @@ export class EmployeeListComponent extends UIComponent {
   //edit Employee
   edit(data:any,moreFunc:any) {
     debugger
-    if(!moreFunc)
-      moreFunc = this.sysMoreFunc.find(x => x.functionID == "SYS03");
-    this.view.dataService
-      .edit(data)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '800px';
-        var dialog = this.callfc.openSide(
-          PopupAddNewHRComponent,
-          {
-            isEdit: true,
-            oldEmployeeID: data.employeeID,
-            actionType: 'edit',
-            text:moreFunc.defaultName ?? moreFunc.text,
-            data: res,
-          },
-          option
-        );
-        dialog.closed.subscribe((res2) => {
-          if(res2.event){
-            (this.view.dataService as CRUDService).update(res2.event).subscribe();
-          }
-          this.detectorRef.detectChanges();
+    if(data)
+    {
+      if(!moreFunc) moreFunc = this.sysMoreFunc.find(x => x.functionID == "SYS03");
+      this.view.dataService
+        .edit(data)
+        .subscribe((res: any) => {
+          debugger
+          let option = new SidebarModel();
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.view?.formModel;
+          option.Width = '800px';
+          var dialog = this.callfc.openSide(
+            PopupAddEmployeeComponent,
+            {
+              action: 'edit',
+              text:moreFunc.defaultName ?? moreFunc.text,
+              data: res
+            },
+            option
+          );
+          dialog.closed.subscribe((e) => {
+            debugger
+            if(e.event)
+            {
+              (this.view.dataService as CRUDService).update(e.event).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
         });
-      });
+    }
+    
   }
 
   // coppy employee
   copy(data:any,moreFunc:any) {
-    if(!moreFunc)
-      moreFunc = this.sysMoreFunc.find(x => x.functionID == "SYS04");
-    this.view.dataService
-      .copy(data)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.Width = '800px';
-        let popup = this.callfc.openSide(
-          PopupAddNewHRComponent,
-          {
-            actionType: 'copy',
-            text:moreFunc.defaultName ?? moreFunc.text,
-            data: res,
-          },
-          option
-        );
-      });
-    this.detectorRef.detectChanges();
+    debugger
+    if(data)
+    {
+      if(!moreFunc) moreFunc = this.sysMoreFunc.find(x => x.functionID == "SYS04");
+      this.view.dataService
+        .copy(data)
+        .subscribe((res: any) => {
+          debugger
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.Width = '800px';
+          let popup = this.callfc.openSide(
+            PopupAddEmployeeComponent,
+            {
+              action: 'copy',
+              text:moreFunc.defaultName ?? moreFunc.text,
+              data: res
+            },
+            option
+          );
+          popup.closed.subscribe((e) => {
+            debugger
+            if(e.event){
+              (this.view.dataService as CRUDService).add(e.event).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
+        });
+    }
   }
 
   //delete Employee
@@ -244,65 +259,67 @@ export class EmployeeListComponent extends UIComponent {
     debugger
     if(data)
     {
-      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","DeleteAsync",[data])
-      .subscribe((res:boolean) => {
-        if(res)
-        {
-          (this.view.dataService as CRUDService).remove(data).subscribe();
-          this.notifiSV.notifyCode("SYS008");
-        }
-        else
-          this.notifiSV.notifyCode("SYS022");
-      });
+      this.view.dataService
+      .delete([data], true, (opt: any) => this.beforDelete(opt, data))
+      .subscribe();
     }
   }
 
-  // update status
-  updateStatus(data: any, funcID: string) {
-    debugger
-    let popup = this.callfc.openForm(
-      PopupAddNewHRComponent,
-      'Cập nhật tình trạng',
-      350,
-      200,
-      funcID,
-      data
-    );
-    popup.closed.subscribe((e) => {
-      if (e?.event) {
-        var emp = e.event;
-        if (emp.status == '90') 
-          this.view.dataService.remove(emp).subscribe();
-        else 
-          this.view.dataService.update(emp).subscribe();
-      }
-      this.detectorRef.detectChanges();
-    });
+  beforDelete(option: RequestOption, employee: any) {
+    option.service = 'HR';
+    option.assemblyName = 'ERM.Business.HR';
+    option.className = 'EmployeesBusiness';
+    option.methodName = 'DeleteAsync';
+    option.data = employee;
+    return true;
   }
 
+  // update status
+  // updateStatus(data: any, funcID: string) {
+  //   debugger
+  //   let popup = this.callfc.openForm(
+  //     PopupAddNewHRComponent,
+  //     'Cập nhật tình trạng',
+  //     350,
+  //     200,
+  //     funcID,
+  //     data
+  //   );
+  //   popup.closed.subscribe((e) => {
+  //     if (e?.event) {
+  //       var emp = e.event;
+  //       if (emp.status == '90') 
+  //         this.view.dataService.remove(emp).subscribe();
+  //       else 
+  //         this.view.dataService.update(emp).subscribe();
+  //     }
+  //     this.detectorRef.detectChanges();
+  //   });
+  // }
+
   // export File
-  exportFile() {
-    var gridModel = new DataRequest();
-    gridModel.formName = this.view.formModel.formName;
-    gridModel.entityName = this.view.formModel.entityName;
-    gridModel.funcID = this.view.formModel.funcID;
-    gridModel.gridViewName = this.view.formModel.gridViewName;
-    gridModel.page = this.view.dataService.request.page;
-    gridModel.pageSize = this.view.dataService.request.pageSize;
-    gridModel.predicate = this.view.dataService.request.predicates;
-    gridModel.dataValue = this.view.dataService.request.dataValues;
-    gridModel.entityPermission = this.view.formModel.entityPer;
-    gridModel.groupFields = 'createdBy';
-    this.callfc.openForm(
-      CodxExportComponent,
-      null,
-      null,
-      800,
-      '',
-      [gridModel, this.itemSelected.employeeID],
-      null
-    );
-  }
+  // exportFile() {
+  //   var gridModel = new DataRequest();
+  //   gridModel.formName = this.view.formModel.formName;
+  //   gridModel.entityName = this.view.formModel.entityName;
+  //   gridModel.funcID = this.view.formModel.funcID;
+  //   gridModel.gridViewName = this.view.formModel.gridViewName;
+  //   gridModel.page = this.view.dataService.request.page;
+  //   gridModel.pageSize = this.view.dataService.request.pageSize;
+  //   gridModel.predicate = this.view.dataService.request.predicates;
+  //   gridModel.dataValue = this.view.dataService.request.dataValues;
+  //   gridModel.entityPermission = this.view.formModel.entityPer;
+  //   gridModel.groupFields = 'createdBy';
+  //   this.callfc.openForm(
+  //     CodxExportComponent,
+  //     null,
+  //     null,
+  //     800,
+  //     '',
+  //     [gridModel, this.itemSelected.employeeID],
+  //     null
+  //   );
+  // }
 
   
   //selected Change
@@ -311,6 +328,15 @@ export class EmployeeListComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   // view imployee infor
-  doubleClick(data) {
+  doubleClick(data:any){
+    debugger
+    this.cache.functionList("HRT0301")
+    .subscribe(func => {
+      let queryParams =  {
+        employeeID: data.employeeID,
+        page: this.view.dataService.page
+      };
+      this.codxService.navigate(func.funcID,func.url,queryParams);
+    });
   }
 }

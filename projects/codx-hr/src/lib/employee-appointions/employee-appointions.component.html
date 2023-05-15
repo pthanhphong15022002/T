@@ -12,9 +12,9 @@
           <codx-img [width]="35" class="me-3" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
             [objectName]="data?.emp?.employeeName" [objectType]="'HR_Employees'">
           </codx-img>
-          <codx-vll class="badge badge-sm" [name]="genderGrvSetup?.referedValue" [value]="data?.emp?.gender"
+          <!-- <codx-vll class="badge badge-sm" [name]="genderGrvSetup?.referedValue" [value]="data?.emp?.gender"
             [showText]="true" [showIcon]="false" [showBgColor]="false">
-          </codx-vll>
+          </codx-vll> -->
         </div>
         <div class="d-flex flex-column">
           <div>
@@ -219,11 +219,11 @@
       [imageObjType]="'HR_Employees'" [imageWidth]="40" [formModel]="view.formModel" [titleTmp]="titleTmp"
       [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'" (changeDataMF)="changeDataMF($event, data)">
     </codx-temp-full>
-    <div class="d-flex flex-center vll-badge">
+    <!-- <div class="d-flex flex-center vll-badge">
       <codx-vll class="badge badge-sm me-0 badge-light" [name]="genderGrvSetup?.referedValue"
         [value]="data?.emp?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
       </codx-vll>
-    </div>
+    </div> -->
   </div>
 
   <ng-template #titleTmp let-data>
