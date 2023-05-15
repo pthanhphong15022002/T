@@ -170,7 +170,11 @@ export class CodxCalendarComponent
             .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
               this.defaultCalendar,
             ])
-            .subscribe();
+            .subscribe((res: any) => {
+              if (res) {
+                this.calendarData = res;
+              }
+            });
         }
         this.detectorRef.detectChanges();
       });
@@ -443,7 +447,8 @@ export class CodxCalendarComponent
             this.ejCalendar.refresh();
             this.ejCalendar.value = this.FDdate;
           }
-          this.codxShareSV.dataResourceModel.next(this.dataResourceModel);
+
+          this.codxShareSV.dataResourceModel.next(this.calendarData[0]);
         }
       });
   }
@@ -710,7 +715,8 @@ export class CodxCalendarComponent
         this.EP_BookingCarsTemp = JSON.parse(
           JSON.stringify(this.EP_BookingCars)
         );
-        this.codxShareSV.dataResourceModel.next(this.dataResourceModel);
+
+        this.codxShareSV.dataResourceModel.next(this.calendarData[0]);
       }
     }
   }
@@ -801,11 +807,11 @@ export class CodxCalendarComponent
 
   onLoad(args) {
     let myInterval = setInterval(() => {
-      if (this.dataResourceModel.length > 0) {
+      if (this.calendarData) {
         clearInterval(myInterval);
-        if (this.dataResourceModel.length > 0) {
-          for (let i = 0; i < this.dataResourceModel.length; i++) {
-            let day = new Date(this.dataResourceModel[i].startDate);
+        if (this.calendarData[1] > 0) {
+          for (let i = 0; i < this.calendarData[1]; i++) {
+            let day = new Date(this.calendarData[0][i].startDate);
             if (
               day &&
               args.date.getFullYear() == day.getFullYear() &&
