@@ -89,6 +89,7 @@ export class CodxTasksComponent
 
   @Input() viewsInput: Array<ViewModel> = [];
   views: Array<ViewModel> = [];
+  viewsDefault: Array<ViewModel> = [];
 
   button?: ButtonModel = {
     id: 'btnAdd',
@@ -339,7 +340,7 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
-    this.views = [
+    this.viewsDefault = [
       {
         type: ViewType.list,
         active: false,
@@ -425,9 +426,9 @@ export class CodxTasksComponent
         if (res && res.length > 0) {
           var viewFunc = [];
           res.forEach((x) => {
-            var idx = this.views.findIndex((obj) => obj.type == x.view);
+            var idx = this.viewsDefault.findIndex((obj) => obj.type == x.view);
             if (idx != -1) {
-              viewFunc.push(this.views[idx]);
+              viewFunc.push(this.viewsDefault[idx]);
               if (x.isDefault && !this.viewMode) this.viewMode = x.view;
             }
           });
@@ -436,7 +437,7 @@ export class CodxTasksComponent
           });
         }
       });
-    }
+    } else this.views = this.viewsDefault;
 
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
@@ -1013,32 +1014,49 @@ export class CodxTasksComponent
   //#endregion
   //#region Event đã có dùng clickChildrenMenu truyền về
   changeView(evt: any) {
-    //  this.viewCrr = evt.view.type
+    this.viewCrr = evt?.view?.type;
+
     if (this.crrFuncID != this.funcID) {
       this.cache.viewSettings(this.funcID).subscribe((views) => {
         if (views) {
+          this.afterLoad();
+          this.crrFuncID = this.funcID;
+          this.views = [];
           let idxActive = -1;
-          this.views.forEach((v, index) => {
+          this.viewsDefault.forEach((v, index) => {
             let idx = views.findIndex((x) => x.view == v.type);
             if (idx != -1) {
               v.hide = false;
-              //  if (v.type != this.viewCrr) v.active = false; else v.active =true;
+              if (v.type != this.viewCrr) v.active = false;
+              else v.active = true;
               if (views[idx].isDefault) idxActive = index;
             } else {
               v.hide = true;
               v.active = false;
             }
+            this.views.push(v);
           });
-          // if (!this.views.some((x) => x.active)) {
-          //   if (idxActive != -1) this.views[idxActive].active = true;
-          //   else this.views[0].active = true;
-          //   //  this.viewMode = idxActive != -1 ? this.views[idxActive].type : this.views[0].type;
-          // }
-          this.afterLoad();
-          this.crrFuncID = this.funcID;
+          if (!this.views.some((x) => x.active)) {
+            if (idxActive != -1) this.views[idxActive].active = true;
+            else this.views[0].active = true;
+
+            let viewModel =
+              idxActive != -1 ? this.views[idxActive] : this.views[0];
+            //this.view.viewActiveType = viewModel.type;
+            this.view.viewChange(viewModel);
+            this.view.load();
+          }
+
           this.detectorRef.detectChanges();
         }
       });
+    } else {
+      //con loi daon nay khi select cung viewModel giua 2 componant
+      // if (this.view.currentView.funcID != this.funcID) {
+      //   this.view.currentView.funcID = this.funcID
+      //   this.view.load();
+      // }
+      // this.view.currentView.refesh()
     }
   }
 
