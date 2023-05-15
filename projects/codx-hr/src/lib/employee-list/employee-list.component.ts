@@ -226,8 +226,9 @@ export class EmployeeListComponent extends UIComponent {
     if(data)
     {
       if(!moreFunc) moreFunc = this.sysMoreFunc.find(x => x.functionID == "SYS04");
+      this.view.dataService.dataSelected = data;
       this.view.dataService
-        .copy(data)
+        .copy()
         .subscribe((res: any) => {
           debugger
           let option = new SidebarModel();
