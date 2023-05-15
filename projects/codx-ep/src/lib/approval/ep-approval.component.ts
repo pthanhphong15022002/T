@@ -276,7 +276,8 @@ export class EPApprovalComponent extends UIComponent {
       event.forEach((func) => {
         if (
           func.functionID == EPCONST.MFUNCID.Copy ||
-          func.functionID == EPCONST.MFUNCID.C_CardTrans
+          func.functionID == EPCONST.MFUNCID.C_CardTrans ||
+          func.functionID == EPCONST.MFUNCID.C_DriverAssign
         ) {
           func.disabled = true;
         }
@@ -517,7 +518,9 @@ export class EPApprovalComponent extends UIComponent {
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
-
+  setPopupTitleOption(mfunc) {
+    this.popupTitle = mfunc;
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//

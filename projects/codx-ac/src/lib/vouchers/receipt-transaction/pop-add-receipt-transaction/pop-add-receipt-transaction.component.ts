@@ -200,7 +200,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.inventoryJournal.voucherDate = e.data;
           break;
         case 'exchangerate':
-          this.inventoryJournal.voucherDate = e.data;
+          this.inventoryJournal.exchangeRate = e.data;
           break;
       }
     }

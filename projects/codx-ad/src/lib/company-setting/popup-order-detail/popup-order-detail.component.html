@@ -1,6 +1,6 @@
-<ng-template *ngIf="order" [ngTemplateOutlet]="popupOrder"> </ng-template>
+<!-- <ng-template *ngIf="order" [ngTemplateOutlet]="popupOrder"> </ng-template> -->
 
-<ng-template #popupOrder class="container w-100 h-100">
+<div *ngIf="order" class="container w-100 h-100">
   <div class="close d-flex justify-content-end">
     <button
       type="button"
@@ -20,7 +20,19 @@
   <div class="orderTitle">
     <ng-template [ngTemplateOutlet]="orderTmp"> </ng-template>
   </div>
-</ng-template>
+  <div class="modules">
+    <ng-template [ngTemplateOutlet]="gridModules"> </ng-template>
+  </div>
+  <div class="close d-flex justify-content-end">
+    <button
+      type="button"
+      class="btn btn-light-primary me-4"
+      (click)="onClose()"
+    >
+      <codx-label formName="" default="OK"></codx-label>
+    </button>
+  </div>
+</div>
 
 <ng-template #orderTmp>
   <div class="d-flex justify-content-between h-100 p-2 orderInfo">
@@ -216,7 +228,57 @@
   </div>
 </ng-template>
 
-<ng-template #module let-module>
+<ng-template #moduleOperatorDescTmp let-module>
+  <div class="d-flex" *ngIf="module.price">
+    <codx-label name="lblPriceForOperator" default="Nhân viên nghiệp vụ: ">
+    </codx-label>
+    <span>
+      {{ module.price + " " + order.currencyID + "/" + module.umid }}
+    </span>
+  </div>
+</ng-template>
+<ng-template #moduleEmplDescTmp let-module>
+  <div class="d-flex" *ngIf="module.childPrice">
+    <codx-label name="lblPriceForEmpl" default="Nhân viên thường: ">
+    </codx-label>
+    <span>
+      {{ module.childPrice + " " + order.currencyID + "/" + module.umid }}
+    </span>
+  </div>
+</ng-template>
+
+<!-- Column Name -->
+<ng-template #moduleHT>
+  <codx-label [name]="'lblModuleHT'" [default]="'Ứng dụng'"> </codx-label>
+</ng-template>
+<ng-template #operatorHT>
+  <codx-label [name]="'lblOperatorHeaderText'" [default]="'Nghiệp vụ'">
+  </codx-label>
+</ng-template>
+<ng-template #employeeHT>
+  <codx-label [name]="'lblemployeeHeaderText'" [default]="'Nhân viên'">
+  </codx-label>
+</ng-template>
+<ng-template #totalHT>
+  <codx-label [name]="'lblOrderTotalHeaderText'" [default]="'Thành tiền'">
+  </codx-label>
+</ng-template>
+
+<!-- Column Content -->
+<ng-template #emplTmp let-module>
+  <span *ngIf="module.childQty">
+    {{ module.childQty + " " + module.umid }}
+  </span>
+</ng-template>
+
+<ng-template #operatorTmp let-module>
+  <span>
+    {{ module.qty + " " + module.umid }}
+  </span>
+</ng-template>
+
+<ng-template #moduleTmp let-module>
+  <!-- {{ module.moduleName }}{{ log(module) }} -->
   <codx-temp-full
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     [typeMF]="'hover'"
@@ -236,21 +298,33 @@
   </codx-temp-full>
 </ng-template>
 
-<ng-template #moduleOperatorDescTmp let-module>
+<ng-template #totalTmp let-module>
   <div class="d-flex">
-    <codx-label name="lblPriceForOperator" default="Nhân viên nghiệp vụ: ">
-    </codx-label>
+    <span *ngIf="order.orderType == '1'; else hireModule"> 0 </span>
+    <ng-template #hireModule>
+      {{ module.quantity }}
+    </ng-template>
     <span>
-      {{ module.price + " " + order.currencyID + "/" + module.umid }}
+      {{ " " + order.currencyID }}
     </span>
   </div>
 </ng-template>
-<ng-template #moduleEmplDescTmp let-module>
-  <div class="d-flex">
-    <codx-label name="lblPriceForEmpl" default="Nhân viên thường: ">
-    </codx-label>
-    <span>
-      {{ module.childPrice + " " + order.currencyID + "/" + module.umid }}
-    </span>
+
+<!-- Gridview -->
+<ng-template #gridModules>
+  <div class="row d-flex">
+    <!-- [formName]="fmUserRole?.formName"
+  [gridViewName]="fmUserRole?.gridViewName"
+  [entityName]="fmUserRole?.entityName" -->
+    <!-- [predicates]="predicate"
+  [dataValues]="dataValue" -->
+    <codx-gridview-v2
+      #grid
+      [dataSource]="lstModule"
+      [hideMoreFunc]="true"
+      [columnsGrid]="clmnGrid"
+      [autoLoad]="false"
+      rowHeight="40"
+    ></codx-gridview-v2>
   </div>
 </ng-template>

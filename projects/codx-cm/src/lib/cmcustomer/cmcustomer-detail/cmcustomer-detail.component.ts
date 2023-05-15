@@ -83,6 +83,7 @@ export class CmcustomerDetailComponent implements OnInit {
   id = '';
   tabDetail = [];
   formModelContact: FormModel;
+  formModelAddress: FormModel;
   gridViewSetup: any;
   listAddress = [];
   contactPerson = new CM_Contacts();
@@ -100,6 +101,7 @@ export class CmcustomerDetailComponent implements OnInit {
   async ngOnInit() {
     // this.getGridviewSetup();
     // this.getVllByGridViewSetupContact();
+    this.getFormModelAddress();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -197,12 +199,6 @@ export class CmcustomerDetailComponent implements OnInit {
           isActive: false,
         },
         {
-          name: 'Product',
-          textDefault: 'Sản phẩm đã mua',
-          icon: 'icon-shopping_bag',
-          isActive: false,
-        },
-        {
           name: 'Quotations',
           textDefault: 'Báo giá',
           icon: 'icon-monetization_on',
@@ -274,7 +270,14 @@ export class CmcustomerDetailComponent implements OnInit {
       ];
     }
   }
-
+  getFormModelAddress() {
+    let dataModel = new FormModel();
+    dataModel.formName = 'CMAddressBook';
+    dataModel.gridViewName = 'grvCMAddressBook';
+    dataModel.entityName = 'BS_AddressBook';
+    dataModel.funcID = this.funcID;
+    this.formModelAddress = dataModel;
+  }
   getFunctionlist(funcID) {
     this.cache.functionList(funcID).subscribe((fun) => {
       var formMD = new FormModel();
