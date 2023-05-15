@@ -184,6 +184,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   //#region sortModels
   dayOffSortModel: SortModel;
+  disciplinesSortModel: SortModel;
   assetSortModel: SortModel;
   experienceSortModel: SortModel;
   businessTravelSortModel: SortModel;
@@ -202,6 +203,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   diseasesFromDateSortModel: SortModel;
   accidentDateSortModel: SortModel;
   eContractSortModel: SortModel;
+
+  eAwardsSortModel1: SortModel;
+  eAwardsSortModel2: SortModel;
   //#endregion
 
   reRenderGrid = true;
@@ -802,6 +806,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     this.eContractSortModel.field = 'EffectedDate';
     this.eContractSortModel.dir = 'desc';
 
+    this.disciplinesSortModel = new SortModel()
+    this.disciplinesSortModel.field = 'DisciplineDate';
+    this.disciplinesSortModel.dir = 'desc'
+
     // #region Sức khỏe sort model
 
     this.injectDateSortModel = new SortModel();
@@ -821,6 +829,16 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     this.healthDateSortModel.dir = 'desc';
 
     //#endregion
+
+    // #region Khen thưởng sort model
+    this.eAwardsSortModel1 = new SortModel();
+    this.eAwardsSortModel1.field = 'InYear';
+    this.eAwardsSortModel1.dir = 'desc';
+
+    this.eAwardsSortModel2 = new SortModel();
+    this.eAwardsSortModel2.field = 'AwardDate';
+    this.eAwardsSortModel2.dir = 'desc';
+    // #endregion
 
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       this.addHeaderText = res[0].customName;
@@ -2412,6 +2430,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.HandlemployeeAssetInfo(this.addHeaderText, 'add', null);
         break;
       case this.eContractFuncID:
+        this.HandleEContractInfo(this.addHeaderText, 'add', null);
         break;
       case this.appointionFuncID:
         this.HandleEmployeeAppointionInfo(this.addHeaderText, 'add', null);
@@ -2550,8 +2569,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         break;
       case this.eWorkPermitFuncID + 'ViewAll':
         this.popupViewAllWorkPermit();
-
         // this.popupViewAll(this.eWorkPermitFuncID);
+        break;
+      case this.eContractFuncID + 'ViewAll':
+        this.popupViewAllContract();
         break;
 
       case 'SYS02': //delete
@@ -2981,19 +3002,19 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
       case 'SYS04': //copy
         if (funcID == 'passport') {
-          this.handleEmployeePassportInfo(event.text, 'copy', data);
+          this.copyValue(event.text, data, 'ePassport')
           this.df.detectChanges();
         } else if (funcID == 'eDayoff') {
           this.copyValue(event.text, data, 'eDayoff');
           this.df.detectChanges();
         } else if (funcID == 'workpermit') {
-          this.handleEmployeeWorkingPermitInfo(event.text, 'copy', data);
+          this.copyValue(event.text, data, 'eWorkPermit');
           this.df.detectChanges();
         } else if (funcID == 'visa') {
-          this.handleEmployeeVisaInfo(event.text, 'copy', data);
+          this.copyValue(event.text, data, 'eVisa');
           this.df.detectChanges();
         } else if (funcID == 'family') {
-          this.handleEFamilyInfo(event.text, 'copy', data);
+          this.copyValue(event.text, data, 'eFamilies');
           this.df.detectChanges();
         } else if (funcID == 'jobSalary') {
           this.copyValue(event.text, data, 'jobSalary');
@@ -3041,7 +3062,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           this.HandleEmployeeEAwardsInfo(event.text, 'copy', data);
           this.df.detectChanges();
         } else if (funcID == 'eDisciplines') {
-          this.HandleEmployeeEDisciplinesInfo(event.text, 'copy', data);
+          this.copyValue(event.text, data, 'eDisciplines')
+          // this.HandleEmployeeEDisciplinesInfo(event.text, 'copy', data);
           this.df.detectChanges();
         } else if (funcID == 'eDiseases') {
           this.HandleEmployeeEDiseasesInfo(event.text, 'copy', data);
@@ -3127,6 +3149,41 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   }
 
+  popupViewAllContract(){
+    let opt = new DialogModel();
+    opt.zIndex = 999;
+    let popup = this.callfunc.openForm(
+      PopupViewAllComponent,
+      null,
+      850,
+      550,
+      this.eContractFuncID,
+      {
+        funcID: this.eContractFuncID,
+        employeeId: this.employeeID,
+        headerText: this.getFormHeader(this.eContractFuncID),
+        sortModel: this.eContractSortModel,
+        //columnGrid: this.passportColumnGrid,
+        formModel: this.eContractFormModel,
+        hasFilter: false,
+      }
+      ,
+      null,
+      opt
+    )
+    popup.closed.subscribe((res) => {
+      if(res?.event){
+        if(res?.event == 'none'){
+          this.crrEContract = null;
+        }
+        else{
+          this.crrEContract = res.event
+        }
+        this.df.detectChanges();
+      }
+    })
+  }
+
   popupViewAllWorkPermit(){
     let opt = new DialogModel();
     opt.zIndex = 999;
@@ -3156,8 +3213,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         }
         else{
           this.crrWorkpermit = res.event
-          this.df.detectChanges();
         }
+        this.df.detectChanges();
       }
     })
   }
@@ -3191,8 +3248,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         }
         else{
           this.crrVisa = res.event
-          this.df.detectChanges();
         }
+        this.df.detectChanges();
       }
     })
   }
@@ -3226,8 +3283,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         }
         else{
           this.crrPassport = res.event
-          this.df.detectChanges();
         }
+        this.df.detectChanges();
       }
     })
   }
@@ -4929,10 +4986,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }
   }
 
-  valueChangeViewAllEContract() {
-    this.popupViewAll(this.eContractFuncID);
-  }
-
   copyValue(actionHeaderText, data, flag) {
     if (flag == 'benefit') {
       if (this.eBenefitGrid) {
@@ -4949,14 +5002,51 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.handlEmployeeBenefit(actionHeaderText, 'copy', res);
           });
       }
-    } else if (flag == 'eAppointions') {
+    }
+     else if (flag == 'eDisciplines') {
+      if (this.eDisciplineGrid) {
+        this.eDisciplineGrid.dataService.dataSelected = data;
+        (this.eDisciplineGrid.dataService as CRUDService)
+          .copy()
+          .subscribe((res: any) => {
+            this.HandleEmployeeEDisciplinesInfo(actionHeaderText, 'copy', res);
+          });
+      } else {
+        this.hrService
+          .copy(data, this.eDisciplineFormModel, 'RecID')
+          .subscribe((res) => {
+            this.HandleEmployeeEDisciplinesInfo(actionHeaderText, 'copy', res);
+          });
+      }} 
+    else if (flag == 'eAppointions') {
       this.appointionGridView.dataService.dataSelected = data;
       (this.appointionGridView.dataService as CRUDService)
         .copy()
         .subscribe((res: any) => {
           this.HandleEmployeeAppointionInfo(actionHeaderText, 'copy', res);
         });
-    } else if (flag == 'eExperiences') {
+    }
+    else if (flag == 'ePassport') {
+      this.hrService.copy(data, this.ePassportFormModel, 'RecID').subscribe((res) => {
+        this.handleEmployeePassportInfo(actionHeaderText, 'copy', res);
+      })
+    } 
+    else if (flag == 'eWorkPermit') {
+      this.hrService.copy(data, this.eWorkPermitFormModel, 'RecID').subscribe((res) => {
+        this.handleEmployeeWorkingPermitInfo(actionHeaderText, 'copy', res);
+      })
+    }
+    else if (flag == 'eFamilies') {
+      this.hrService.copy(data, this.eFamilyFormModel, 'RecID').subscribe((res) => {
+        this.handleEFamilyInfo(actionHeaderText, 'copy', res);
+      })
+    }
+    else if (flag == 'eVisa') {
+      this.hrService.copy(data, this.eVisaFormModel, 'RecID').subscribe((res) => {
+        this.handleEmployeeVisaInfo(actionHeaderText, 'copy', res);
+      })
+    }
+    else if (flag == 'eExperiences') {
       this.eExperienceGrid.dataService.dataSelected = data;
       (this.eExperienceGrid.dataService as CRUDService)
         .copy()

@@ -15,6 +15,7 @@ import {
   CallFuncService,
   CodxFormComponent,
   CodxGridviewComponent,
+  DataRequest,
   DataService,
   DialogData,
   DialogRef,
@@ -27,6 +28,8 @@ import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { PopupEPassportsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-epassports/popup-epassports.component';
 import { PopupEVisasComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-evisas/popup-evisas.component';
 import { PopupEWorkPermitsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ework-permits/popup-ework-permits.component';
+import { PopupSubEContractComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-sub-econtract/popup-sub-econtract.component';
+import { PopupEProcessContractComponent } from 'projects/codx-hr/src/lib/employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 
 @Component({
   selector: 'lib-popup-view-all',
@@ -45,20 +48,27 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   formModel: any;
   formGroup: any;
 
+  //#region declare empInfo
+  infoPersonal: any;
+  //#endregion
+
   //#region funcID
   ePassportFuncID = 'HRTEM0202';
   eVisaFuncID = 'HRTEM0203';
   eWorkPermitFuncID = 'HRTEM0204';
+  eContractFuncID = 'HRTEM0501';
   //#endregion
 
   //#region columnGrid
   passportColumnGrid: any;
   visaColumnGrid: any;
   workPermitColumnGrid: any;
+  eContractColumnGrid;
   //#endregion
 
   //#region headerText
   passportHeaderText: any;
+  eContractHeaderText: any;
   //#endregion
 
   ops = ['y'];
@@ -84,6 +94,11 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   @ViewChild('visaCol1', { static: true }) visaCol1: TemplateRef<any>;
   @ViewChild('visaCol2', { static: true }) visaCol2: TemplateRef<any>;
   dialogRef: any;
+
+  // EContract grid 
+  @ViewChild('eContractCol1', { static: true }) eContractCol1: TemplateRef<any>;
+  @ViewChild('eContractCol2', { static: true }) eContractCol2: TemplateRef<any>;
+  @ViewChild('eContractCol3', { static: true }) eContractCol3: TemplateRef<any>;
 
   constructor(
     private injector: Injector,
@@ -193,6 +208,43 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         }
       });
     }
+
+    if (!this.eContractColumnGrid) {
+      this.hrService.getHeaderText(this.eContractFuncID).then((res) => {
+        this.eContractHeaderText = res;
+        this.eContractColumnGrid = [
+          {
+            headerText:
+              this.eContractHeaderText['ContractTypeID'] +
+              ' | ' +
+              this.eContractHeaderText['EffectedDate'],
+
+            template: this.eContractCol1,
+            width: '250',
+          },
+          {
+            // headerText: this.eContractHeaderText['ContractNo'] +
+            // ' - ' +
+            // this.eContractHeaderText['SignedDate'],
+            headerText: 'Hợp đồng',
+            template: this.eContractCol2,
+            width: '150',
+          },
+          {
+            headerText: this.eContractHeaderText['Note'],
+            template: this.eContractCol3,
+            width: '150',
+          },
+        ];
+        if (this.funcID == this.eContractFuncID) {
+          this.columnGrid = this.eContractColumnGrid;
+          this.filter = null;
+          this.getEmpInfo();
+          //Get row count
+          this.getRowCount()
+        }
+      });
+    }
     //#endregion
   }
 
@@ -236,7 +288,22 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       } else {
         this.dialogRef.close('none');
       }
-    } else {
+    }
+    if(this.funcID == this.eContractFuncID){
+      debugger
+      let lstData = this.gridView.dataService.data;
+      let found = lstData.find(
+        (val) => val.isCurrent == true
+      )
+        if(found){
+          debugger
+          this.dialogRef.close(found)
+        }
+        else{
+          this.dialogRef.close('none');
+        }
+    } 
+    else {
       this.dialogRef.close();
     }
   }
@@ -250,6 +317,9 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         break;
       }
     }
+    if(this.funcID == this.eContractFuncID){
+      this.hrService.handleShowHideMF(event, data, this.formModel);
+    }
   }
 
   clickMF(event: any, data: any, funcID = null) {
@@ -261,6 +331,8 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
           this.handleEmployeeVisaInfo(event.text, 'edit', data);
         } else if(funcID == this.eWorkPermitFuncID){
           this.handleEmployeeWorkingPermitInfo(event.text, 'edit', data);
+        } else if(funcID == this.eContractFuncID){
+          this.handleEContractInfo(event.text, 'edit', data);
         }
         break;
       case 'SYS04': //copy
@@ -302,7 +374,18 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            }
+            } else if (funcID == this.eContractFuncID) {
+              this.hrService
+                .deleteEContract(data)
+                .subscribe((p) => {
+                  if (p[0] != null) {
+                    this.notify.notifyCode('SYS008');
+                    this.updateGridView(this.gridView, 'delete', data);
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            } 
           }
         });
     }
@@ -322,6 +405,10 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       (this.gridView.dataService as CRUDService).copy().subscribe((res) => {
         this.handleEmployeeWorkingPermitInfo(actionHeaderText, 'copy', res);
       });
+    } else if (this.funcID == this.eContractFuncID) {
+      (this.gridView.dataService as CRUDService).copy().subscribe((res) => {
+        this.handleEContractInfo(actionHeaderText, 'copy', res);
+      });
     } 
   }
 
@@ -332,19 +419,23 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   ) {
     if (!dataItem) (gridView?.dataService as CRUDService)?.clear();
     else {
+      debugger
       let returnVal = 0;
       if (actionType == 'add' || actionType == 'copy') {
-        (gridView?.dataService as CRUDService)?.add(dataItem, 0).subscribe();
+        (gridView?.dataService as CRUDService)?.add(dataItem).subscribe();
+      this.df.detectChanges();
+      debugger
         returnVal = 1;
       } else if (actionType == 'edit') {
         (gridView?.dataService as CRUDService)?.update(dataItem).subscribe();
-      } else if ((actionType = 'delete')) {
+        this.df.detectChanges();
+      } else if ((actionType == 'delete')) {
         (gridView?.dataService as CRUDService)?.remove(dataItem).subscribe();
+        this.df.detectChanges();
         returnVal = -1;
       }
       // return returnVal;
       this.rowCount += returnVal;
-      this.df.detectChanges();
     }
   }
 
@@ -415,6 +506,55 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         employeeId: this.employeeId,
         funcID: this.eWorkPermitFuncID,
         workPermitObj: data,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res.event) {
+        this.updateGridView(this.gridView, actionType, res.event);
+      }
+      this.df.detectChanges();
+    });
+  }
+
+  getEmpInfo(){
+    if (!this.infoPersonal) {
+      let empRequest = new DataRequest();
+      empRequest.entityName = 'HR_Employees';
+      empRequest.dataValues = this.employeeId;
+      empRequest.predicates = 'EmployeeID=@0';
+      empRequest.pageLoading = false;
+      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+        if (emp[1] > 0) {
+          this.infoPersonal = emp[0][0];
+        }
+      });
+    }
+  }
+
+  handleEContractInfo(actionHeaderText, actionType: string, data: any) {
+    debugger
+    let option = new SidebarModel();
+    option.Width = '850px';
+    option.FormModel = this.formModel;
+    let isAppendix = false;
+    debugger
+    if (
+      (actionType == 'edit' || actionType == 'copy') &&
+      data.isAppendix == true
+    ) {
+      isAppendix = true;
+    }
+    let dialogAdd = this.callfunc.openSide(
+      isAppendix ? PopupSubEContractComponent : PopupEProcessContractComponent,
+      {
+        actionType: actionType,
+        dataObj: data,
+        empObj: this.infoPersonal,
+        headerText:
+          actionHeaderText + ' ' + this.headerText,
+        employeeId: this.employeeId,
+        funcID: this.eContractFuncID,
       },
       option
     );

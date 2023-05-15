@@ -27,7 +27,7 @@
               <codx-input type="number"  [min]="0"  [showSpinButton]="false" field="cummulated" (valueChange)="valueChange($event)"  [crrValue]="checkIns?.cummulated"></codx-input>
             </div>
             <div class="col-4" *ngIf="dataKR?.checkInMode!='1'">
-              <codx-label class="fw-bold mb-1" default="Kết quả thực hiện" fiedName="Value" [formModel]="form.formModel"></codx-label>
+              <codx-label class="fw-bold mb-1"  fiedName="Value" [formModel]="form.formModel"></codx-label>
               <codx-input type="number" [min]="0"  [showSpinButton]="false" field="value"  (valueChange)="valueChange($event)" [crrValue]="checkIns?.value"></codx-input>
             </div>
             <div class="col-4">

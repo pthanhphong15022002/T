@@ -55,6 +55,7 @@ export class PopupCheckInComponent
     this.dialogRef = dialogRef;
     this.oldDataKR = dialogData.data[0];
     this.checkIns = dialogData.data[2];
+    this.checkIns.status ='1';
     this.okrFM = dialogData.data[2];
   }
   //---------------------------------------------------------------------------------//

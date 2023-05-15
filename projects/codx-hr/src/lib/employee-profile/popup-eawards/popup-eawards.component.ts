@@ -38,7 +38,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   defaultAwardDate: string = '0001-01-01T00:00:00';
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
+  // @ViewChild('listView') listView: CodxListviewComponent;
 
   fromListView: boolean = false; //check where to open the form
   // genderGrvSetup: any;
