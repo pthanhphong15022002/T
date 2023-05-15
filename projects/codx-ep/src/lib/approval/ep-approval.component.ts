@@ -326,7 +326,7 @@ export class EPApprovalComponent extends UIComponent {
           }
         });
       }      
-      else if (data.approveStatus == '5') {
+      else if (data?.approveStatus == '5' && data?.stepType!='I') {
         event.forEach((func) => {
           if (
             func.functionID == EPCONST.MFUNCID.R_Approval ||
@@ -357,6 +357,48 @@ export class EPApprovalComponent extends UIComponent {
               }
             }
           }
+        });
+      }
+      // Xử lí cấp phát VPP là bước duyệt cuối (stepType=='I')
+      else if (data?.approveStatus == '5' && data?.stepType=='I' && data?.issueStatus=='1') {//Chưa cấp phát
+        event.forEach((func) => {
+          if (
+            func.functionID == EPCONST.MFUNCID.R_Approval ||
+            func.functionID == EPCONST.MFUNCID.C_Approval ||
+            func.functionID == EPCONST.MFUNCID.S_Approval ||
+            func.functionID == EPCONST.MFUNCID.R_Reject ||
+            func.functionID == EPCONST.MFUNCID.C_Reject ||
+            func.functionID == EPCONST.MFUNCID.S_Reject
+          ) {
+            func.disabled = false;
+          }
+          if (
+            func.functionID == EPCONST.MFUNCID.R_Undo ||
+            func.functionID == EPCONST.MFUNCID.C_Undo ||
+            func.functionID == EPCONST.MFUNCID.S_Undo
+          ) {
+            func.disabled = true;
+          }
+          
+        });
+      }
+      else if (data?.approveStatus == '5' && data?.stepType=='I' && data?.issueStatus=='3' || data?.approveStatus == '4' && data?.stepType=='I') {//Đã cấp phát
+        event.forEach((func) => {
+          if (
+            func.functionID == EPCONST.MFUNCID.R_Approval ||
+            func.functionID == EPCONST.MFUNCID.C_Approval ||
+            func.functionID == EPCONST.MFUNCID.S_Approval ||
+            func.functionID == EPCONST.MFUNCID.R_Reject ||
+            func.functionID == EPCONST.MFUNCID.C_Reject ||
+            func.functionID == EPCONST.MFUNCID.S_Reject ||
+            func.functionID == EPCONST.MFUNCID.R_Undo ||
+            func.functionID == EPCONST.MFUNCID.C_Undo ||
+            func.functionID == EPCONST.MFUNCID.S_Undo
+          ) {
+            func.disabled = true;
+          }
+          
+          
         });
       }
     }

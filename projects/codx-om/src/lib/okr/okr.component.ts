@@ -349,9 +349,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
               .getAllOKROfPlan(this.dataOKRPlans.recID)
               .subscribe((okrs: any) => {
                 if (okrs) {
-                  this.showPlanMF=true;
                   this.dataOKR = okrs;
                   this.isAfterRender = true;
+                  this.showPlanMF=true;
                   this.loadedData=true;
                   this.getOrgTreeOKR();
                   this.detectorRef.detectChanges();
@@ -653,7 +653,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   changePlanStatus(status) {
+    this.showPlanMF=false;
     if (status == OMCONST.VLL.PlanStatus.NotStarted) {
+      
       this.codxOmService
         .beforeUnReleasePlan(this.dataOKRPlans?.recID)
         .subscribe((res) => {
@@ -673,6 +675,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                   this.getOKRPlans(this.periodID, this.interval, this.year);
                   this.notificationsService.notifyCode('SYS034'); //thành công
                 }
+                // else{
+                  
+                //   this.notificationsService.notifyCode('SYS034'); //thành công
+                // }
               });
           }
         });

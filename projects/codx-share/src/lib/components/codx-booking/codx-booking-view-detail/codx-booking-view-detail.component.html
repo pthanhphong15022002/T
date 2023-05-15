@@ -431,7 +431,7 @@
   <!----------------------------------Footer---------------------------------->
   <ng-template #footer>
     <codx-tabs #tabModel [entityName]="'EP_Bookings'" [objectID]="itemDetail?.recID" [funcID]="formModel?.funcID"
-      [dataTree]="[]" [TabControl]="tabControl" [transID]="itemDetail?.recID" [dataTree]="data?.tasks ? data.tasks : []"
+      [dataTree]="[]" [TabControl]="tabControl" [transID]="itemDetail?.recID" 
       [approveStatus]="itemDetail?.approveStatus" [addPermissions]="listFilePermission"
       [isEdit]="allowUploadFile"></codx-tabs>
   </ng-template>
