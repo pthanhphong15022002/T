@@ -1464,20 +1464,21 @@ a {
   padding-top: 5px !important;
 }
 
-.label-colon {
-  position: relative;
-  padding-right: 10px;
+.label-colon span{
+  //position: relative;
+  //padding-right: 10px;
   min-height: 18px;
-  display: block;
+ // display: block;
   line-height: 18px;
 }
 
-.label-colon::after {
+.label-colon span::after {
   content: ":";
-  position: absolute;
-  right: 6px;
-  top: 0;
-  height: 18px;
+  margin-left: -1px;
+  //position: absolute;
+  //right: 6px;
+  //top: 0;
+  //height: 18px;
 }
 
 .codx-label.required::after {
@@ -2761,16 +2762,6 @@ codx-instance-detail div.codx-detail-main{
   padding-bottom: 0;
 }
 
-.card-ep-report{
-  .codx-image {
-    max-height: 120px !important;
-  }
-  .card-body{
-    min-height: 60px;
-    padding-top:7px!important;
-  }
-}
-
 codx-tmmeetings{
 .list-empty.card.card-flush {
   height: calc(100vh - 128px)!important;
@@ -2803,4 +2794,16 @@ codx-vll.vll-post{
 /*TBChung thêm á đừng xóa tội em*/
 .e-checkbox-wrapper .e-checkbox {
   opacity: 1;
+}
+
+//calendar
+.codx_title_sub_primary {
+  color:var(--primary-dark);
+}
+
+.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
+  color: var(--gray-700);
+}
+.text-primary-dark{
+  color: var(--primary-dark);
 }

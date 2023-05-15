@@ -45,6 +45,8 @@ export class PopupAddDealComponent
   // type string
   titleAction: string = '';
   action: string = '';
+  autoName: string = '';
+  title: string = '';
 
   // Data struct Opportunity
   deal: CM_Deals = new CM_Deals();
@@ -113,6 +115,7 @@ export class PopupAddDealComponent
     super(inject);
     this.dialog = dialog;
     this.formModel = dialog.formModel;
+    debugger;
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
     this.executeApiCalls();
@@ -215,10 +218,8 @@ export class PopupAddDealComponent
     this.updateDateDeal(this.instance, this.deal);
     if (this.action !== this.actionEdit) {
       this.insertInstance();
-      this.onAdd();
     } else {
       this.editInstance();
-      this.onEdit();
     }
   }
   cbxChange($event, field) {
@@ -336,7 +337,6 @@ export class PopupAddDealComponent
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
-          console.table(res);
         }
       });
   }
@@ -406,6 +406,7 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listInstanceSteps, null];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
+        this.onAdd();
       }
     });
   }
@@ -413,6 +414,7 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
+        this.onEdit();
       }
     });
   }
@@ -539,6 +541,17 @@ export class PopupAddDealComponent
 
   isRequired(field:string){
     return this.gridViewSetup[field]?.h
+  }
+
+  setTitle(e: any) {
+      // if (this.autoName) {
+      //   this.title = this.titleAction + ' ' + this.autoName;
+      // } else {
+      //   this.title = this.titleAction + ' ' + e;
+      //   this.autoName = e;
+      // }
+      this.title = this.titleAction;
+    this.changeDetectorRef.detectChanges();
   }
 
 }

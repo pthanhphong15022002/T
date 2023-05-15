@@ -44,6 +44,8 @@ export class CodxListContactsComponent implements OnInit {
   assemblyName = 'ERM.Business.CM';
   className = 'ContactsBusiness';
   method = 'GetListContactAsync';
+  isButton = true;
+
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -100,7 +102,8 @@ export class CodxListContactsComponent implements OnInit {
     this.moreFuncEdit = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        this.clickAddContact('edit', data, this.moreFuncEdit);
+        if ((this.isButton = true))
+          this.clickAddContact('edit', data, this.moreFuncEdit);
         break;
       case 'CM0102_2':
       case 'CM0102_3':
@@ -110,7 +113,8 @@ export class CodxListContactsComponent implements OnInit {
         // this.copy(data);
         break;
       case 'CM0102_1':
-        this.clickAddContact('editType', data, this.moreFuncEdit);
+        if ((this.isButton = true))
+          this.clickAddContact('editType', data, this.moreFuncEdit);
         break;
     }
   }
@@ -139,6 +143,7 @@ export class CodxListContactsComponent implements OnInit {
 
   //#region Crud contacts crm
   clickAddContact(action, data, title) {
+    this.isButton = false;
     let opt = new DialogModel();
     let dataModel = new FormModel();
     var title = title;
@@ -172,6 +177,7 @@ export class CodxListContactsComponent implements OnInit {
           opt
         );
         dialog.closed.subscribe((e) => {
+          this.isButton = true;
           if (e && e.event != null) {
             if (e.event?.recID) {
               var index = this.listContacts.findIndex(
@@ -228,6 +234,7 @@ export class CodxListContactsComponent implements OnInit {
 
   //Open list contacts
   clickPopupContacts() {
+    this.isButton = false;
     let opt = new DialogModel();
     let dataModel = new FormModel();
     dataModel.formName = 'CMContacts';
@@ -257,6 +264,7 @@ export class CodxListContactsComponent implements OnInit {
           opt
         );
         dialog.closed.subscribe((e) => {
+          this.isButton = true;
           if (e && e.event != null) {
             if (e.event?.recID) {
               var index = this.listContacts.findIndex(

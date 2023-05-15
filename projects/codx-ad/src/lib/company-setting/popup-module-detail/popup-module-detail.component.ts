@@ -100,19 +100,19 @@ export class PopupModuleDetailComponent extends UIComponent {
     this.clmnGrid = [
       {
         field: 'UserID',
-        width: 30,
+        width: 150,
         template: this.tmplUserInfo,
         textAlign: 'center',
       },
       {
         headerTemplate: this.operatorHT,
-        width: 30,
+        width: 45,
         template: this.operRoleEndDate,
         textAlign: 'center',
       },
       {
         headerTemplate: this.employeeHT,
-        width: 30,
+        width: 45,
         template: this.emplRoleEndDate,
         textAlign: 'center',
       },
@@ -139,5 +139,13 @@ export class PopupModuleDetailComponent extends UIComponent {
 
   closePopup() {
     this.dialog.close();
+  }
+
+  extendAllUser() {
+    console.log('click extend all user');
+  }
+
+  extendModule() {
+    console.log('click extend module');
   }
 }

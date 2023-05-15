@@ -291,6 +291,7 @@ export class CodxApproveStepsComponent
   }
 
   openPopupAddAppStep(data) {
+    debugger
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         var model = new DialogModel();
@@ -308,14 +309,15 @@ export class CodxApproveStepsComponent
         );
 
         dialog.closed.subscribe((res) => {
+          debugger
           if (res?.event) {
             if (this.type == '1') {
               if (this.lstStep?.length > 0) {
                 for (let i = 0; i < this.lstStep.length; i++) {
-                  if (this.lstStep[i].transID != this.recID) {
+                  if (this.lstStep[i].transID != this.transId) {
                     delete this.lstStep[i].recID;
                     delete this.lstStep[i].id;
-                    this.lstStep[i].transID = this.recID;
+                    this.lstStep[i].transID = this.transId;
                   }
                 }
               }

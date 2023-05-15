@@ -13,7 +13,10 @@
         <div class="d-flex justify-content-start pb-3">
           <div class="fs-2">{{ dataSelected?.dealName }}</div>
           <div></div>
-          <div class="fs-2 ms-auto">{{dataSelected?.dealValue}}</div>
+          <div class="fs-2 ms-auto">
+            <span class="icon-monetization_on pe-1" style="color: gold"></span>
+            {{dataSelected?.dealValue}}
+          </div>
         </div>
         <div class="d-flex justify-content-between pb-3">
           <div class="d-flex flex-row">
@@ -107,6 +110,7 @@
         <div class="d-flex justify-content-start pb-3" >
           <div class=" d-flex justify-content-start">
             <codx-label default="Khách hàng:" class="fs-6 me-1"></codx-label>
+            <i class="icon-business pe-1"></i>
             <div class="fs-6">{{dataSelected?.customerName}}</div>
           </div>
           <div>
@@ -125,14 +129,15 @@
           <div class="d-flex flex-row">
             <div class="d-flex align-items-stretch">
               <div class="pe-2">
-                <codx-imgs
-                  [isToolTip]="true"
+                <codx-img
                   [width]="25"
                   [objectId]="dataSelected?.contacts?.recId"
                   objectType="CM_Contacts"
-                  [numberImages]="1"
+                  [imgOn]="dataSelected?.contacts?.modifiedOn"
+                  [objectName]="dataSelected?.contacts?.contactName"
+
                 >
-                </codx-imgs>
+                </codx-img>
               </div>
               <div>
                 <div
@@ -229,7 +234,7 @@
 </ng-template>
 
 <ng-template #contract let-data>
-  <list-contracts [projectID]="dataSelected?.recID"></list-contracts>
+  <list-contracts [projectID]="dataSelected?.recID" [customers]=""></list-contracts>
 </ng-template>
 <!-- <ng-template #quotations let-data>
  <lib-quotations [funcID]="'CM0202'" [customerID]="dataSelected.customerID" ></lib-quotations>

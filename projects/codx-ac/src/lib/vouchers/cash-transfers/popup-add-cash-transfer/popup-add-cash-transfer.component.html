@@ -148,7 +148,7 @@
                       field="exchangeAmt"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
-                      (controlBlur)="payAmountChanged($event)"
+                      (controlBlur)="onInputChange($event)"
                     ></codx-input>
                   </div>
                   <div class="col-2 form-group">
@@ -266,8 +266,7 @@
                   <codx-input
                     field="objectID"
                     [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.objectID"
-                    (valueChange)="onInputChange($event, 'vatInvoice')"
+                    [Group]="fgVatInvoice"
                     [disabled]="!hasInvoice"
                   ></codx-input>
                 </div>
@@ -282,8 +281,7 @@
                     <codx-input
                       field="invoiceForm"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.invoiceForm"
-                      (valueChange)="onInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -295,8 +293,7 @@
                     <codx-input
                       field="invoiceSeri"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.invoiceSeri"
-                      (valueChange)="onInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -308,8 +305,7 @@
                     <codx-input
                       field="invoiceNo"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.invoiceNo"
-                      (valueChange)="onInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -321,8 +317,7 @@
                     <codx-input
                       field="invoiceDate"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.invoiceDate"
-                      (valueChange)="onInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -340,8 +335,7 @@
                   <codx-input
                     field="goods"
                     [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.goods"
-                    (valueChange)="onInputChange($event, 'vatInvoice')"
+                    [Group]="fgVatInvoice"
                     [disabled]="!hasInvoice"
                   ></codx-input>
                 </div>
@@ -356,8 +350,7 @@
                     <codx-input
                       field="taxBase"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.taxBase"
-                      (valueChange)="onInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -369,8 +362,7 @@
                     <codx-input
                       field="vatid"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.vatid"
-                      (valueChange)="onInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -382,8 +374,7 @@
                     <codx-input
                       field="taxAmt"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.taxAmt"
-                      (valueChange)="onInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -402,8 +393,7 @@
                   <codx-input
                     field="taxNote"
                     [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.taxNote ?? ''"
-                    (valueChange)="onInputChange($event, 'vatInvoice')"
+                    [Group]="fgVatInvoice"
                     [disabled]="!hasInvoice"
                   ></codx-input>
                 </div>
@@ -421,8 +411,7 @@
                     <codx-input
                       field="diM3"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.diM3"
-                      (valueChange)="onInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -437,8 +426,7 @@
                     <codx-input
                       field="diM1"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.diM1"
-                      (valueChange)="onInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -453,8 +441,7 @@
                     <codx-input
                       field="diM2"
                       [formModel]="fmVATInvoice"
-                      [crrValue]="vatInvoice?.diM2"
-                      (valueChange)="onInputChange($event, 'vatInvoice')"
+                      [Group]="fgVatInvoice"
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
@@ -513,13 +500,16 @@
       <div class="dialog-title line-clamp line-clamp-1 me-3 fw-bold">
         {{ formTitle }}
       </div>
-      <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
-        <codx-input
-          field="status"
+      <div class="ms-3 input-circle input-sm">
+        <codx-vll
           [formModel]="form.formModel"
-          [Group]="form.formGroup"
+          field="Status"
+          [value]="cashTransfer.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md"
         >
-        </codx-input>
+        </codx-vll>
       </div>
     </div>
 

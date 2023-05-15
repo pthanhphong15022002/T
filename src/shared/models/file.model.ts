@@ -169,7 +169,8 @@ export class FileUpload {
     assign: boolean;
     write: boolean;
     viewThumb:boolean = false;
-    rawFile:any
+    rawFile:any;
+    entityName:any;
 }
 
 

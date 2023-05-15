@@ -124,7 +124,7 @@
               <div class="form-group">
                 <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input disabled="true" [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
+                <codx-input [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
                   (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
@@ -133,7 +133,7 @@
               <div class="form-group">
                 <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [disabled]="true" [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel"
+                <codx-input [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel"
                   (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
