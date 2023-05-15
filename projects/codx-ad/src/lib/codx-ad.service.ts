@@ -132,7 +132,7 @@ export class CodxAdService {
       }
     }
     if (invalid.length == 0) return;
-    let fieldName = Util.camelize(invalid[0]); //invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+    let fieldName = invalid[0]?.charAt(0)?.toUpperCase() + invalid[0]?.slice(1);
     if (gridViewSetup == null) {
       this.cache
         .gridViewSetup(formModel.formName, formModel.gridViewName)
