@@ -219,7 +219,7 @@
   <ng-template #body>
     <div *ngIf="fromListView" class="form-group row d-flex flex-row">
       <div class="col-6">
-        <div *ngIf="employId" class="d-flex align-items-start">
+        <div class="d-flex align-items-start">
           <div class="d-flex flex-column me-2">
             <codx-img [width]="35" [objectId]="empObj?.employeeID" [referType]="'avt'"
               [objectName]="empObj?.employeeName" [objectType]="'HR_Employees'">
@@ -306,8 +306,8 @@
     <div class="form-group row">
       <div class="d-flex flex-stack">
         <codx-label fiedName="Signer" [formModel]="formModel"></codx-label>
-        <codx-input field="signerID" [Group]="formGroup" [formModel]="formModel" [showInput]="true" 
-          [multiple]="false" (valueChange)="handleSelectEmp($event)">
+        <codx-input field="signerID" [Group]="formGroup" [formModel]="formModel" [showInput]="true" [multiple]="false"
+          (valueChange)="handleSelectEmp($event)">
         </codx-input>
       </div>
 
