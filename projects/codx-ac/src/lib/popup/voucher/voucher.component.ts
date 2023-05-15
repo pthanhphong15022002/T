@@ -291,42 +291,42 @@ export class VoucherComponent implements OnInit {
   }
 
   loadData() {
-    this.gridModel.predicate = this.morefunction.predicate;
-    this.gridModel.dataValue = this.morefunction.dataValue;
+    // this.gridModel.predicate = this.morefunction.predicate;
+    // this.gridModel.dataValue = this.morefunction.dataValue;
     this.gridModel.entityName = 'AC_SubInvoices';
+    let accID = this.form.formGroup.controls.accountID.value;
     this.api
-      .execSv<any>(
-        'AC',
-        'Core',
-        'DataBusiness',
-        'LoadDataAsync',
-        this.gridModel
-      )
+      .exec<any>('AC', 'SettledInvoicesBusiness', 'LoadSettledAsync', [
+        this.gridModel,
+        this.cashpayment,
+        accID,
+        this.payAmt,
+      ])
       .subscribe((res) => {
         if (res && res.length) {
-          this.autoPay(res[0]);
-          //if (this.payAmt && this.payAmt > 0) this.paymentAmt(res[0]);
-          //this.sublegendOpen = res[0];
+          this.subInvoices = res[0];
+          setTimeout(() => {
+            this.grid.gridRef?.selectRows(res[2]);
+          }, 100);
         }
       });
   }
 
   autoPay(data: []) {
     let accID = this.form.formGroup.controls.accountID.value;
-    this.api.exec<any>('AC', 'SettledInvoicesBusiness', 'SettlementAsync', [
-      data,
-      this.cashpayment,
-      accID,
-      this.payAmt,
-    ]).subscribe(res=>{
-      this.subInvoices = res.subInvoices;
-      setTimeout(() => {
-        this.grid.gridRef?.selectRows(res.listCheck);
-      }, 100);
-    });
+    this.api
+      .exec<any>('AC', 'SettledInvoicesBusiness', 'SettlementAsync', [
+        data,
+        this.cashpayment,
+        accID,
+        this.payAmt,
+      ])
+      .subscribe((res) => {
+        this.subInvoices = res[0];
+        setTimeout(() => {
+          this.grid.gridRef?.selectRows(res[1]);
+        }, 100);
+      });
   }
   //#endregion
 }
-
-
-
