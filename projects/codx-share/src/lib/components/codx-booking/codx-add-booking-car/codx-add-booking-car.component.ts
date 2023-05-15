@@ -280,12 +280,12 @@ export class CodxAddBookingCarComponent
           if (carSetting_4 != null && carSetting_4.length > 0) {
             let setting= carSetting_4.filter((x:any) => x.Category == EPCONST.ENTITY.C_Bookings);
             if(setting!=null){
-              this.approvalRule = setting[0]?.ApprovalRule;
-              this.categoryID=setting[0]?.CategoryID;
+              this.approvalRule = setting[0]?.ApprovalRule !=null? setting[0]?.ApprovalRule :'1';
+              this.categoryID=setting[0]?.CategoryID !=null? setting[0]?.CategoryID:EPCONST.ES_CategoryID.Car;
             }
             else{
               this.approvalRule='1';//Đề phòng trường hợp setting lỗi/ thì lấy duyệt theo quy trình
-              this.categoryID='ES_EP002';
+              this.categoryID=EPCONST.ES_CategoryID.Car;
             }
           }
         }

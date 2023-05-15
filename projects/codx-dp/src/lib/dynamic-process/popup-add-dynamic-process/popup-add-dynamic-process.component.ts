@@ -2723,12 +2723,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  updateStepChange(stepID){
+  updateStepChange(stepID,isChangeTime = false) {
     if(stepID){
       let check = this.listStepEdit.some((id) => id == stepID);
-        if (!check) {
+        if (!check) {          
           this.listStepEdit.push(stepID);
         }
+        let step = this.stepList.find(x => x.recID == stepID);
+        if(step){
+          let listDrop = this.stepList.filter(x => x.stepNo > step.stepNo);
+          if(listDrop?.length > 0){
+            listDrop.forEach((stepDrop) => {
+              let check = this.listStepDrop.some((id) => stepDrop.recID == id);
+              if(!check){
+                this.listStepDrop.push(stepDrop.recID);
+              }
+            })           
+          }
+        }
+
     }
   }
 

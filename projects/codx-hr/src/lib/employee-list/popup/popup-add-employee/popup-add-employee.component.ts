@@ -78,9 +78,11 @@ export class PopupAddEmployeeComponent implements OnInit{
   valueChange(event: any) {
     if (event) {
       let field = Util.camelize(event.field);
-      this.data[field] = event.data;
-      if(field === 'birthday'){
-        if(!this.validateBirthday(event.data)){
+      let value = event.data;
+      this.data[field] = value;
+      if(field === 'birthday' && value){
+        if(!this.validateBirthday(value))
+        {
           this.notifySV.notifyCode("HR001");
           this.data[field] = null;
           // this.form.formGroup.controls[field].patchValue({field : null});
