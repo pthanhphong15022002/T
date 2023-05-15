@@ -330,13 +330,14 @@ export class EmployeeListComponent extends UIComponent {
   // view imployee infor
   doubleClick(data:any){
     debugger
-    this.cache.functionList("HRT0301")
+    this.cache.functionList("HRT03b")
     .subscribe(func => {
       let queryParams =  {
         employeeID: data.employeeID,
-        page: this.view.dataService.page
+        page: this.view.dataService.page,
+        filter: JSON.stringify(this.view.dataService?.filter),
       };
-      this.codxService.navigate(func.funcID,func.url,queryParams);
+      this.codxService.navigate("",func.url,queryParams);
     });
   }
 }
