@@ -62,10 +62,7 @@ export class PopupAddEmployeeComponent implements OnInit{
   //get grvSetup
   getGrvSetup(fromName:string , grdViewName:string){
     this.cache.gridViewSetup(fromName,grdViewName).subscribe((grv:any) => {
-      if(grv)
-      {
-        this.grvSetUp = grv;
-      }
+      if(grv) this.grvSetUp = grv;
     });
   }
   //set header text
@@ -139,7 +136,6 @@ export class PopupAddEmployeeComponent implements OnInit{
     if(this.checkValidate())
     {
       this.action != "edit" ? this.save(this.data,this.formModel.funcID) : this.update(this.data); 
-      this.dt.detectChanges();
     }
   }
 
