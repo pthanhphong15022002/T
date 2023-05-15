@@ -156,9 +156,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         break;
     }
     if (
-      this.cashpayment.unbounds &&
-      this.cashpayment.unbounds.lockFields &&
-      this.cashpayment.unbounds.lockFields.length
+      this.cashpayment?.unbounds &&
+      this.cashpayment?.unbounds.lockFields &&
+      this.cashpayment?.unbounds.lockFields.length
     ) {
       this.lockFields = this.cashpayment.unbounds.lockFields as Array<string>;
     }
