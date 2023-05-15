@@ -86,7 +86,9 @@
                   </a>
                   <ng-template ngbNavContent>
                     <div class="detail-scroll">
-                      <table class="w-100 table table-row-bordered g-3 table-sticky">
+                      <table
+                        class="w-100 table table-row-bordered g-3 table-sticky"
+                      >
                         <thead>
                           <tr class="fw-bold text-dark bg-gray-100">
                             <th scope="col" class="w-150px">
@@ -153,7 +155,8 @@
                               </codx-label>
                             </th>
                             <th scope="col" class="w-125px">
-                              <codx-label class="text-nowrap"
+                              <codx-label
+                                class="text-nowrap"
                                 name="lblExport"
                                 formName="Roles"
                                 default="
@@ -220,7 +223,7 @@
                                   type="checkbox"
                                   [disabled]="
                                     !active ||
-                                    (item.listTemplate | active : '2' : true)
+                                    (item.listTemplate | active : '2')
                                   "
                                   [checked]="
                                     dataRole[item.functionID]?.DataPer

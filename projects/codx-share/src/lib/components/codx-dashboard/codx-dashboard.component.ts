@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  HostListener,
   Input,
   OnInit,
   Optional,
@@ -43,6 +44,86 @@ import { ɵglobal as global } from '@angular/core';
   styleUrls: ['codx-dashboard.component.scss'],
 })
 export class CodxDashboardComponent implements OnInit, AfterViewInit {
+  @HostListener('window:resize', ['$event'])
+  onWindowResize(event?: any) {
+    if(this.objDashboard){
+      setTimeout(()=>{
+      (this.objDashboard as any).panelCollection.forEach((elePanel:any)=>{
+
+          if (elePanel && elePanel.getElementsByTagName('codx-chart').length > 0) {
+            // let oldItem = elePanel.getElementsByClassName('chart-item');
+            // //oldItem.remove();
+            // if (oldItem.length > 1) {
+            //   for (let i = 0; i < oldItem.length - 1; i++) {
+            //     !oldItem[i].classList.contains('d-none') &&
+            //       oldItem[i].classList.add('d-none');
+            //   }
+            // }
+          }
+          else if(elePanel.querySelector('ejs-chart') &&
+                  elePanel.querySelector('ejs-chart').ej2_instances[0]
+                  ){
+                    const chartObj = elePanel.querySelector('ejs-chart').ej2_instances[0];
+                    if(event.target.innerWidth < window.screen.width || event.target.innerHeight < window.screen.height){
+                      chartObj.height = '60%';
+                      chartObj.width = '80%';
+                    }
+                    else{
+                      chartObj.height = '80%';
+                    chartObj.width = '100%';
+                    }
+                    chartObj.chartResize();
+                  }
+          else if(elePanel.querySelector('ejs-accumulationchart') &&
+              elePanel.querySelector('ejs-accumulationchart').ej2_instances[0]){
+                const chartObj = elePanel.querySelector('ejs-accumulationchart').ej2_instances[0];
+                if(event.target.innerWidth < window.screen.width){
+                  chartObj.height = '60%';
+                  chartObj.width = '80%';
+                }
+                else{
+                  chartObj.height = '80%';
+                chartObj.width = '100%';
+                }
+                chartObj.refreshChart();
+          }
+          else if(elePanel.querySelector('ejs-circulargauge') &&
+          elePanel.querySelector('ejs-circulargauge').ej2_instances[0]){
+                const chartObj = elePanel.querySelector('ejs-circulargauge').ej2_instances[0];
+                //chartObj.height = elePanel.offsetHeight -50 +'px';
+                //chartObj.width = elePanel.offsetWidth -50 +'px';
+                if(event.target.innerWidth < window.screen.width ){
+                  chartObj.height = elePanel.querySelector('.card-body')?.offsetHeight -10+'px';
+                  chartObj.width = elePanel.querySelector('.card-body')?.offsetWidth -10+'px';
+                }
+                else{
+                  chartObj.height = '100%';
+                  chartObj.width = '100%';
+                }
+                //elePanel.querySelector('.card-body')?.classList.add('overflow-hidden');
+                chartObj.refresh();
+          }
+          else if(elePanel.querySelector('ejs-treemap') &&
+          elePanel.querySelector('ejs-treemap').ej2_instances[0]){
+            const chartObj = elePanel.querySelector('ejs-treemap').ej2_instances[0];
+            if(event.target.innerWidth < window.innerWidth ){
+              chartObj.height = elePanel.offsetHeight -20 +'px';
+             chartObj.width = elePanel.offsetWidth -20 +'px';
+            }
+            else{
+              chartObj.height = elePanel.offsetHeight -50 +'px';
+              chartObj.width = elePanel.offsetWidth -50 +'px';
+            }
+
+            (chartObj as TreeMapComponent).refresh();
+          }
+
+      });
+    },100)
+    }
+  }
+
+
   @ViewChild('dashboard') objDashboard!: DashboardLayoutComponent;
   @ViewChild('panelLayout') panelLayout?: TemplateRef<any>;
   @ViewChild('chart') chart?: TemplateRef<any>;
@@ -545,11 +626,10 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (args.element.querySelector('ejs-treemap')) {
         let component = args.element.getElementsByTagName('ejs-treemap')[0];
         if (component) {
-          let instance = this.ngCmp.ng.getComponent(
-            component
-          ) as TreeMapComponent;
-          instance.width = '80%';
-          instance.height = '50%';
+          debugger
+          let instance =component.ej2_instances[0] as TreeMapComponent;
+          instance.width = args.element.offsetWidth -50 +'px';
+          instance.height = args.element.offsetHeight -50 +'px';
           instance.refresh();
         }
       }
@@ -557,9 +637,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
         let component =
           args.element.getElementsByTagName('ejs-circulargauge')[0];
         if (component) {
-          let instance = this.ngCmp.ng.getComponent(
-            component
-          ) as CircularGaugeComponent;
+          let instance = component.ej2_instances[0] as CircularGaugeComponent;
           instance.width = '80%';
           instance.height = '80%';
           instance.refresh();
@@ -870,16 +948,19 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       else if(elePanel.querySelector('ejs-circulargauge') &&
       elePanel.querySelector('ejs-circulargauge').ej2_instances[0]){
             const chartObj = elePanel.querySelector('ejs-circulargauge').ej2_instances[0];
-            chartObj.height = '50%';
-            chartObj.width = '100%';
+            //chartObj.height = elePanel.offsetHeight -50 +'px';
+            //chartObj.width = elePanel.offsetWidth -50 +'px';
+            chartObj.height = '80%';
+            chartObj.width='80%';
+            elePanel.querySelector('.card-body')?.classList.add('overflow-hidden');
             chartObj.refresh();
       }
       else if(elePanel.querySelector('ejs-treemap') &&
       elePanel.querySelector('ejs-treemap').ej2_instances[0]){
         const chartObj = elePanel.querySelector('ejs-treemap').ej2_instances[0];
-        chartObj.height = '60%';
-        chartObj.width = '80%';
-        (chartObj as TreeMapComponent);
+        chartObj.height = elePanel.offsetHeight -50 +'px';
+        chartObj.width = elePanel.offsetWidth -50 +'px';
+        (chartObj as TreeMapComponent).refresh();
       }
     },100)
 
