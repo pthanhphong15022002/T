@@ -677,6 +677,9 @@
 
   a.nav-link:hover {
     color: var(--primary-dark);
+    i, span{
+      color: var(--primary-dark);
+    }
   }
 
   .bg-hover-light {

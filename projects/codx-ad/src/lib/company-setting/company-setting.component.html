@@ -639,7 +639,7 @@
           </div>
 
           <ng-template #orderTmp let-item>
-            <div class="d-flex w-100 h-100 p-2">
+            <div class="d-flex w-125 h-100 p-2">
               <codx-temp-full
                 [typeMF]="'hover'"
                 [titleTmp]="oTitleTmp"
@@ -655,6 +655,13 @@
                 [dataItem]="item"
               >
               </codx-temp-full>
+              <button
+                class="btn btn-outline-primary"
+                (click)="popupOrderInfo(item)"
+              >
+                <codx-label name="lblOderInfo" default="Thông tin chi tiết">
+                </codx-label>
+              </button>
             </div>
           </ng-template>
           <ng-template #oTitleTmp let-order>

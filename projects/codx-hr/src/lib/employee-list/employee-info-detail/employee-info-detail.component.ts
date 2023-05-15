@@ -104,6 +104,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   infoPersonal: any;
   infoPersonalContract: any;
 
+  lineManager: any;
+  indirectManager: any;
+
   crrEContract: any;
   lstContractType: any; //phân loại HĐ không xác định
 
@@ -657,11 +660,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.employeeID = params.employeeID;
         if (history.state.empInfo) {
           this.infoPersonal = history.state.empInfo;
+          this.getManagerEmployeeInfoById();
         }
         if (history.state?.empInfo) {
           this.infoPersonal = JSON.parse(history.state?.empInfo);
+          this.getManagerEmployeeInfoById();
         }
-        console.log('thong tin nhan vien ne', this.infoPersonal);
 
         this.listEmp = history.state?.data;
         this.request = history.state?.request;
@@ -696,14 +700,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         let index = this.listEmp?.findIndex(
           (p) => p.employeeID == params.employeeID
         );
-        console.log('lst 1', this.listEmp);
 
         if (index > -1 && !this.listEmp[index + 1]?.employeeID) {
           this.request.page += 1;
           this.hrService.loadData('HR', this.request).subscribe((res) => {
             if (res && res[0]) {
               this.listEmp.push(...res[0]);
-              console.log('lst 2', this.listEmp);
             }
           });
         }
@@ -722,6 +724,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           this.hrService.loadData('HR', empRequest).subscribe((emp) => {
             if (emp[1] > 0) {
               this.infoPersonal = emp[0][0];
+              this.getManagerEmployeeInfoById();
               this.initForm();
             }
           });
@@ -2374,13 +2377,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         .subscribe((res) => {
           if (res) {
             this.lstOrg = res;
-            console.log('lst Org', this.lstOrg);
           }
         });
     }
 
     this.initHRProcess();
-    console.log('hdhd ht', this.crrEContract);
   }
 
   add(functionID) {
@@ -3425,6 +3426,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             });
         }
         this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.getManagerEmployeeInfoById();
         this.df.detectChanges();
       }
     });
@@ -5656,5 +5658,42 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   close2(dialog: DialogRef) {
     dialog.close();
+  }
+
+  getManagerEmployeeInfoById() {
+    if(this.infoPersonal?.lineManager){
+      let empRequest = new DataRequest();
+      empRequest.entityName = 'HR_Employees';
+      empRequest.dataValues = this.infoPersonal.lineManager;
+      empRequest.predicates = 'EmployeeID=@0';
+      empRequest.pageLoading = false;
+      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+        if (emp[1] > 0) {
+          this.lineManager = emp[0][0];
+        } 
+      });
+      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+        if (emp[1] > 0) {
+          this.lineManager = emp[0][0];
+        } 
+      });
+    }
+    if(this.infoPersonal?.indirectManager){
+      let empRequest = new DataRequest();
+      empRequest.entityName = 'HR_Employees';
+      empRequest.dataValues = this.infoPersonal.indirectManager;
+      empRequest.predicates = 'EmployeeID=@0';
+      empRequest.pageLoading = false;
+      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+        if (emp[1] > 0) {
+          this.indirectManager = emp[0][0];
+        } 
+      });
+      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+        if (emp[1] > 0) {
+          this.indirectManager = emp[0][0];
+        } 
+      });
+    }
   }
 }
