@@ -157,6 +157,7 @@ export class CodxTasksComponent
   crrFuncID = '';
   isHoverPop = false;
   timeoutId: any;
+  crrViews = 2;
 
   constructor(
     inject: Injector,
@@ -419,7 +420,7 @@ export class CodxTasksComponent
       },
     ];
 
-    if (this.funcID == 'TMT03011')
+    if (this.funcID == 'TMT03011') {
       this.cache.viewSettings(this.funcID).subscribe((res) => {
         if (res && res.length > 0) {
           var viewFunc = [];
@@ -435,6 +436,7 @@ export class CodxTasksComponent
           });
         }
       });
+    }
 
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
@@ -960,63 +962,7 @@ export class CodxTasksComponent
             this.itemSelected = res[0];
             this.detectorRef.detectChanges();
             this.notiService.notifyCode('TM009');
-            //send mail BE
-            // if (taskAction.category == '3' && status == '80')
-            //   this.tmSv
-            //     .sendAlertMail(taskAction.recID, 'TM_0004', this.funcID)
-            //     .subscribe();
-            // if (status == '90') {
-            //   if (this.itemSelected.taskGroupID) {
-            //     this.api
-            //       .execSv<any>(
-            //         'TM',
-            //         'ERM.Business.TM',
-            //         'TaskGroupBusiness',
-            //         'GetAsync',
-            //         taskAction.taskGroupID
-            //       )
-            //       .subscribe((res) => {
-            //         if (res && res.approveControl == '1') {
-            //           this.tmSv
-            //             .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
-            //             .subscribe();
-            //         } else
-            //           this.tmSv
-            //             .sendAlertMail(taskAction.recID, 'TM_0005', this.funcID)
-            //             .subscribe();
-            //       });
-            //   } else {
-            //     this.api
-            //       .execSv<any>(
-            //         'SYS',
-            //         'ERM.Business.SYS',
-            //         'SettingValuesBusiness',
-            //         'GetByModuleWithCategoryAsync',
-            //         ['TMParameters', '1']
-            //       )
-            //       .subscribe((res) => {
-            //         if (res) {
-            //           let param = JSON.parse(res.dataValue);
-            //           if (param?.ApproveControl == '1') {
-            //             this.tmSv
-            //               .sendAlertMail(
-            //                 taskAction.recID,
-            //                 'TM_0012',
-            //                 this.funcID
-            //               )
-            //               .subscribe();
-            //           } else
-            //             this.tmSv
-            //               .sendAlertMail(
-            //                 taskAction.recID,
-            //                 'TM_0005',
-            //                 this.funcID
-            //               )
-            //               .subscribe();
-            //         }
-            //       });
-            //   }
-            // }
+
             if (kanban) kanban.updateCard(taskAction);
           } else this.notiService.notifyCode('SYS021');
         });
@@ -1067,9 +1013,31 @@ export class CodxTasksComponent
   //#endregion
   //#region Event đã có dùng clickChildrenMenu truyền về
   changeView(evt: any) {
+    this.crrViews = evt.type;
     if (this.crrFuncID != this.funcID) {
-      this.afterLoad();
-      this.crrFuncID = this.funcID;
+      this.cache.viewSettings(this.funcID).subscribe((views) => {
+        if (views) {
+          let idxActive = -1;
+          this.views.forEach((v,index) => {
+            let idx = views.findIndex((x) => x.view == v.type);
+            if (idx != -1) {
+              v.hide = false;
+              //if (v.type == this.crrViews) v.active = true;
+              if (views[idx].isDefault) idxActive = index;
+            } else {
+              v.hide = true;
+              v.active = false;
+            }
+          });
+          if (!this.views.some((x) => x.active)) {
+            if (idxActive != -1) this.views[idxActive].active = true;
+            else this.views[0].active = true;
+          }
+          this.afterLoad();
+          this.crrFuncID = this.funcID;
+          this.detectorRef.detectChanges();
+        }
+      });
     }
   }
 
