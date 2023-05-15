@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import axios from 'axios';
 //import axios from 'axios';
 import {
   ApiHttpService,
@@ -58,7 +59,7 @@ export class CodxEpService {
   //temp environment
   environment = {
     SureMeet: {
-      baseUrl: 'http://localhost:8011/suremeet/',
+      baseUrl: 'https://api.suremeet.vn/',
       tokenUrl: 'api/auth/token',
       addUpdateMeetingUrl: 'PublicMeeting/AddUpdate',
       connectMettingUrl: 'PublicMeeting/Verify',
@@ -162,7 +163,15 @@ export class CodxEpService {
       });
     });
   }
-
+  getCardTranInfo(recID: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourceTransBusiness',
+      'GetCardTranInfoAsync',
+      [recID]
+    );
+  }
   getFormGroupBooking(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
       this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
@@ -311,7 +320,6 @@ export class CodxEpService {
       [recID]
     );
   }
-
   getListReason(entity: string) {
     return this.api.execSv(
       'BS',
@@ -319,6 +327,15 @@ export class CodxEpService {
       'ReasonCodesBusiness',
       'GetListReasonByEntityAsync',
       [entity]
+    );
+  }
+  getListUM() {
+    return this.api.execSv(
+      'BS',
+      'ERM.Business.BS',
+      'UnitsOfMearsureBusiness',
+      'GetAsync',
+      []
     );
   }
 
@@ -625,6 +642,16 @@ export class CodxEpService {
     );
   }
 
+  getProcessByCategoryID(categoryID: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'CategoriesBusiness',
+      'GetProcessByCategoryIDAsync',
+      [categoryID]
+    );
+  }
+
   getApprovalTransByTransID(booking: any) {
     return this.api.execSv(
       'ES',
@@ -730,6 +757,19 @@ export class CodxEpService {
       [recID, driverID]
     );
   }
+  //old
+
+  getListUserIDByListOrgIDAsync(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'OrganizationUnitsBusiness',
+      'GetListUserIDByListOrgIDAsync',
+      data
+    );
+  }
+
+  //new
 
   getUserByListDepartmentID(listDepID) {
     return this.api.execSv<any>(
@@ -740,14 +780,22 @@ export class CodxEpService {
       listDepID
     );
   }
-
-  getListUserIDByListOrgIDAsync(data) {
+  getListUserIDByListPositionsID(listPositionID) {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'OrganizationUnitsBusiness',
-      'GetListUserIDByListOrgIDAsync',
-      data
+      'EmployeesBusiness',
+      'GetListUserIDByListPositionsIDAsync',
+      listPositionID
+    );
+  }
+  getListUserIDByListEmployeeID(listEmployeeID) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDbyListEmployeeIDAsync',
+      listEmployeeID
     );
   }
 
@@ -760,17 +808,6 @@ export class CodxEpService {
       listGroupID
     );
   }
-
-  getListUserIDByListPositionsID(listPositionID) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EmployeesBusiness',
-      'GetListUserIDByListPositionsIDAsync',
-      listPositionID
-    );
-  }
-
   afterApprovedManual(entity: string, recID: string, status: string) {
     return this.api.execSv(
       'EP',
@@ -788,6 +825,15 @@ export class CodxEpService {
       'ResourcesBusiness',
       'GetResourceEquipmentsAsync',
       resourceID
+    );
+  }
+  createResourceTrans(trans: any) {
+    return this.api.execSv<any>(
+      'EP',
+      'ERM.Business.EP',
+      'ResourceTransBusiness',
+      'AddResourceTransAsync',
+      trans
     );
   }
   //#Setting SYS
@@ -861,8 +907,6 @@ export class CodxEpService {
     );
   }
   //#endregion
-
-  //#region EmailTemplate
   createMeeting(
     meetingUrl,
     meetingTitle,
@@ -871,49 +915,48 @@ export class CodxEpService {
     meetingStartTime,
     meetingDuration,
     meetingPassword
-  ): Observable<string> {
+  ): Promise<string> {
     if (meetingUrl) {
-      return of(meetingUrl);
+      return meetingUrl;
     }
-    return this.http
-      .post(
-        this.environment.SureMeet.baseUrl + this.environment.SureMeet.tokenUrl,
-        {
-          client_id: this.environment.SureMeet.client_id,
-          client_secret: this.environment.SureMeet.client_secret,
-        }
-      )
-      .pipe(
-        mergeMap((x) => {
-          let data = {
-            app_id: this.environment.SureMeet.app_id,
-            app_secret: this.environment.SureMeet.app_secret,
-            meetingschedule_id: 0,
-            meetingschedule_title: meetingTitle,
-            meetingschedule_description: meetingDescription,
-            meetingschedule_startdate: this.datePipe
-              .transform(meetingStartDate, 'yyyy-MM-dd')
-              .toString(),
-            meetingschedule_starttime: meetingStartTime,
-            meetingschedule_duration: meetingDuration,
-            meetingschedule_password: meetingPassword,
-          };
-          return this.http
-            .post(
-              this.environment.SureMeet.baseUrl +
-                this.environment.SureMeet.addUpdateMeetingUrl,
-              data
-            )
-            .pipe(
-              map((meeting: any) => {
-                return meeting.data.url as string;
-              })
-            );
-        })
-      );
+    return axios
+      .create({
+        baseURL: this.environment.SureMeet.baseUrl,
+      })
+      .post(this.environment.SureMeet.tokenUrl, {
+        client_id: this.environment.SureMeet.client_id,
+        client_secret: this.environment.SureMeet.client_secret,
+      })
+      .then((res: any) => {
+        let data = {
+          app_id: this.environment.SureMeet.app_id,
+          app_secret: this.environment.SureMeet.app_secret,
+          meetingschedule_id: 0,
+          meetingschedule_title: meetingTitle,
+          meetingschedule_description: meetingDescription,
+          meetingschedule_startdate: this.datePipe
+            .transform(meetingStartDate, 'yyyy-MM-dd')
+            .toString(),
+          meetingschedule_starttime: meetingStartTime,
+          meetingschedule_duration: meetingDuration,
+          meetingschedule_password: meetingPassword,
+        };
+
+        return axios
+          .create({
+            baseURL: this.environment.SureMeet.baseUrl,
+          })
+          .post(this.environment.SureMeet.addUpdateMeetingUrl, data)
+          .then((meeting: any) => {
+            return meeting.data.url;
+          })
+          .catch((err: any) => {});
+      })
+      .catch((err: any) => {});
+    return null;
   }
 
-  connectMeetingNow(
+  async connectMeetingNow(
     meetingTitle: string,
     meetingDescription: string,
     meetingDuration: number,
@@ -935,9 +978,9 @@ export class CodxEpService {
       meetingStartTime ??
       this.datePipe.transform(new Date().toString(), 'HH:mm');
 
-    let url = meetingUrl;
-    if (url && url != '') {
-      this.createMeeting(
+    let url =
+      meetingUrl ??
+      (await this.createMeeting(
         meetingUrl,
         meetingTitle,
         meetingDescription,
@@ -945,20 +988,19 @@ export class CodxEpService {
         meetingStartTime,
         meetingDuration,
         meetingPassword
-      ).subscribe((returnUrl) => {
-        url = returnUrl;
-      });
-    }
+      ).then((url) => {
+        return url;
+      }));
 
-    return this.http
-      .post(
-        this.environment.SureMeet.baseUrl + this.environment.SureMeet.tokenUrl,
-        {
-          client_id: this.environment.SureMeet.client_id,
-          client_secret: this.environment.SureMeet.client_secret,
-        }
-      )
-      .pipe((res: any) => {
+    return axios
+      .create({
+        baseURL: this.environment.SureMeet.baseUrl,
+      })
+      .post(this.environment.SureMeet.tokenUrl, {
+        client_id: this.environment.SureMeet.client_id,
+        client_secret: this.environment.SureMeet.client_secret,
+      })
+      .then((res: any) => {
         let data = {
           app_id: this.environment.SureMeet.app_id,
           app_secret: this.environment.SureMeet.app_secret,
@@ -968,20 +1010,142 @@ export class CodxEpService {
           email: mail,
           manager: isManager == true ? 1 : 0,
         };
-        return this.http
-          .post(
-            this.environment.SureMeet.baseUrl +
-              this.environment.SureMeet.connectMettingUrl,
-            data
-          )
-          .pipe(
-            map((connectData: any) => {
-              if (connectData?.data?.url) {
-                return connectData?.data?.url;
-              }
-            })
-          );
-      });
+        return axios
+          .create({
+            baseURL: this.environment.SureMeet.baseUrl,
+          })
+          .post(this.environment.SureMeet.connectMettingUrl, data)
+          .then((connectData: any) => {
+            if (connectData?.data?.url) {
+              return connectData?.data?.url;
+            }
+          })
+          .catch((err: any) => {});
+      })
+      .catch((err: any) => {});
   }
+  //#endregion
+
+  //#region EmailTemplate
+  // createMeeting(
+  //   meetingUrl,
+  //   meetingTitle,
+  //   meetingDescription,
+  //   meetingStartDate,
+  //   meetingStartTime,
+  //   meetingDuration,
+  //   meetingPassword
+  // ): Observable<string> {
+  //   if (meetingUrl) {
+  //     return of(meetingUrl);
+  //   }
+  //   return this.http
+  //     .post(
+  //       this.environment.SureMeet.baseUrl + this.environment.SureMeet.tokenUrl,
+  //       {
+  //         client_id: this.environment.SureMeet.client_id,
+  //         client_secret: this.environment.SureMeet.client_secret,
+  //       }
+  //     )
+  //     .pipe(
+  //       mergeMap((x) => {
+  //         let data = {
+  //           app_id: this.environment.SureMeet.app_id,
+  //           app_secret: this.environment.SureMeet.app_secret,
+  //           meetingschedule_id: 0,
+  //           meetingschedule_title: meetingTitle,
+  //           meetingschedule_description: meetingDescription,
+  //           meetingschedule_startdate: this.datePipe
+  //             .transform(meetingStartDate, 'yyyy-MM-dd')
+  //             .toString(),
+  //           meetingschedule_starttime: meetingStartTime,
+  //           meetingschedule_duration: meetingDuration,
+  //           meetingschedule_password: meetingPassword,
+  //         };
+  //         return this.http
+  //           .post(
+  //             this.environment.SureMeet.baseUrl +
+  //               this.environment.SureMeet.addUpdateMeetingUrl,
+  //             data
+  //           )
+  //           .pipe(
+  //             map((meeting: any) => {
+  //               return meeting.data.url as string;
+  //             })
+  //           );
+  //       })
+  //     );
+  // }
+
+  // connectMeetingNow(
+  //   meetingTitle: string,
+  //   meetingDescription: string,
+  //   meetingDuration: number,
+  //   meetingPassword: string,
+  //   userName: string,
+  //   mail: string,
+  //   isManager: boolean,
+  //   meetingUrl?: string,
+  //   meetingStartDate?: string,
+  //   meetingStartTime?: string
+  // ) {
+  //   meetingStartDate = meetingStartDate ?? new Date().toString();
+
+  //   meetingStartDate = this.datePipe
+  //     .transform(meetingStartDate, 'yyyy-MM-dd')
+  //     .toString();
+
+  //   meetingStartTime =
+  //     meetingStartTime ??
+  //     this.datePipe.transform(new Date().toString(), 'HH:mm');
+
+  //   let url = meetingUrl;
+  //   if (url && url != '') {
+  //     this.createMeeting(
+  //       meetingUrl,
+  //       meetingTitle,
+  //       meetingDescription,
+  //       meetingStartDate,
+  //       meetingStartTime,
+  //       meetingDuration,
+  //       meetingPassword
+  //     ).subscribe((returnUrl) => {
+  //       url = returnUrl;
+  //     });
+  //   }
+
+  //   return this.http
+  //     .post(
+  //       this.environment.SureMeet.baseUrl + this.environment.SureMeet.tokenUrl,
+  //       {
+  //         client_id: this.environment.SureMeet.client_id,
+  //         client_secret: this.environment.SureMeet.client_secret,
+  //       }
+  //     )
+  //     .pipe((res: any) => {
+  //       let data = {
+  //         app_id: this.environment.SureMeet.app_id,
+  //         app_secret: this.environment.SureMeet.app_secret,
+  //         key: (url as string).split('/').reverse().at(0),
+  //         password: null,
+  //         name: userName,
+  //         email: mail,
+  //         manager: isManager == true ? 1 : 0,
+  //       };
+  //       return this.http
+  //         .post(
+  //           this.environment.SureMeet.baseUrl +
+  //             this.environment.SureMeet.connectMettingUrl,
+  //           data
+  //         )
+  //         .pipe(
+  //           map((connectData: any) => {
+  //             if (connectData?.data?.url) {
+  //               return connectData?.data?.url;
+  //             }
+  //           })
+  //         );
+  //     });
+  // }
   //#endregion
 }

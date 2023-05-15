@@ -33,7 +33,7 @@
   <div *ngIf="isSearch">
   </div>
   <div #divHome  (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
-    class="w-100 scroll-y home rounded-2 h-100 bg-white containerScroll" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+    class="w-100 scroll-y home rounded-2  bg-white containerScroll" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
     data-kt-scroll-height="auto" data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
     data-kt-scroll-offset="0">
     <ng-container *ngTemplateOutlet="empty"></ng-container>
@@ -50,17 +50,19 @@
             (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(file, 'float-start')" [imageWidth]="20"
             [imageSrc]="dmSV.getImage(file)" imgCss="w-20px me-3 cursor-pointer" [title]="
               file.folderName != undefined ? file.folderName : file.fileName
-            " cardCss="w-250px" [typeMF]="'hover'" [baseHeaderRightTmp]="rightSecurity">
+            " cardCss="w-100" [typeMF]="'hover'" [baseHeaderRightTmp]="rightSecurity">
           </codx-temp-full>
           <ng-template #rightSecurity>
             <span *ngIf="dmSV.checkView(file?.read) == false" class="icon-security text-primary icon-18"></span>
+            <span *ngIf="file?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+            <span *ngIf="file?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
           </ng-template>
         </div>
         <div class="d-flex align-items-center text-primary font-size-md mt-1">
           <span>{{ file.filePath }}</span>
         </div>
         <div class="text-dark-50 font-size-md mt-1">
-          <div class="text-dark" [innerHtml]="file.highlight"></div>
+          <div class="text-dark text-highlight" [innerHtml]="file.highlight"></div>
         </div>
         <div class="d-flex align-items-center font-size-md mt-1">
           <div class="d-flex text-dark-75">
@@ -127,6 +129,8 @@
       </codx-temp-full>
       <ng-template #rightSecurity>
         <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18"></span>
+        <span *ngIf="item?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+        <span *ngIf="item?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
       </ng-template>
     </ng-container>
 
@@ -134,7 +138,7 @@
 </ng-template>
 <ng-template #templateList>
   <ng-container *ngIf="data && data.length > 0">
-    <div class="tabel-div">
+    <div id="tabel-div" class="tabel-div">
       <table class="table tb-dm">
         <thead >
           <tr>
@@ -148,6 +152,9 @@
             </th>
             <ng-container *ngIf="funcID == 'DMT06' || funcID == 'DMT05'">
               <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark text-center">Tình trạng</div>
+              </th>
+              <th scope="col" class="w-200px">
                 <div class="fw-bold text-dark">Đối tượng được cấp quyền</div>
               </th>
               <th scope="col" class="w-200px">
@@ -156,7 +163,6 @@
               <th scope="col" class="w-200px">
                 <div class="fw-bold text-dark">Người yêu cầu</div>
               </th>
-              
               <th scope="col" class="w-200px">
                 <div class="fw-bold text-dark">Ngày yêu cầu</div>
               </th>
@@ -166,57 +172,79 @@
               <th scope="col" class="w-200px">
                 <div class="fw-bold text-dark">Mô tả lý do yêu cầu</div>
               </th>
-              
+             
+            </ng-container>
+            <ng-container *ngIf="funcID == 'DMT07'">
               <th scope="col" class="w-200px">
-                <div class="fw-bold text-dark">Tình trạng</div>
+                <div class="fw-bold text-dark text-center">Tình trạng</div>
               </th>
             </ng-container>
-          
             <th scope="col" class="w-200px">
               <div class="fw-bold text-dark">{{ titleCreatedBy }}</div>
             </th>
             <th scope="col" class="w-200px">
               <div class="fw-bold text-dark">{{ titleCreatedOn }}</div>
             </th>
-            <th scope="col" class="w-300px">
+            <th *ngIf="funcID != 'DMT06' && funcID != 'DMT05'" scope="col" class="w-300px">
               <div class="fw-bold text-dark">{{ titleDisc }}</div>
             </th>
           </tr>
         </thead>
         <tbody (scroll)="onScroll($event)"  [ngStyle]="{'max-height.px': maxHeightScroll}">
-          <tr class="border-top dms-list align-items-center" *ngFor="let item of data" [title]="
-              item.folderName != undefined ? item.folderName : item.fileName
-            ">
+          <tr class="border-top dms-list align-items-center" *ngFor="let item of data" [title]="item.folderName != undefined ? item.folderName : item.fileName">
             <td class="w-50px">
-              <codx-mfunc  *ngIf="!hideMF" (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+              <codx-mfunc  *ngIf="!hideMF && item?.approvalStatus != '5' && item?.approvalStatus != '6' && item?.approvalStatus != '4' && item?.approvalStatus != '7'" (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+                type="hover" [formModel]="view.formModel"></codx-mfunc>
+                <codx-mfunc  *ngIf="item?.approvalStatus == '5' || item?.approvalStatus == '6' ||  item?.approvalStatus == '8'" (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
                 type="hover" [formModel]="view.formModel"></codx-mfunc>
             </td>
             <td class="w-300px cursor-pointer" (dblclick)="dbView(item)">
-              <codx-temp-full appDragDropFileFolder [dataDrapDrop]="item"
-                (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(item, 'float-start')"
-                [imageWidth]="20" [imageSrc]="dmSV.getImage(item)" imgCss="w-20px me-3" [title]="
-                  item.folderName != undefined ? item.folderName : item.fileName
-                " cardCss="w-250px" titleCss="dms-title pe-6" [baseHeaderRightTmp]="rightSecurity">
+              <codx-temp-full 
+                appDragDropFileFolder 
+                [dataDrapDrop]="item"
+                cardCss="w-250px" 
+                imgCss="w-20px me-3" 
+                titleCss="dms-title pe-6" 
+                [class]="classFile(item, 'float-start')"
+                [title]="item.folderName  ? item.folderName : item.fileName" 
+                [imageSrc]="dmSV.getImage(item)" 
+                [imageWidth]="20" 
+                [baseHeaderRightTmp]="rightSecurity"
+                [footer]="footerTmp"
+                [dataItem]="item"
+                (fileFolderDropped)="fileFolderDropped($event)" 
+              >
               </codx-temp-full>
+              <ng-template #footerTmp>
+                <div *ngIf="(funcID == 'DMT06' || funcID == 'DMT05' || funcID == 'DMT07') && item?.filePath" [title]="item?.filePath" class="div-dm-overflow"><span>{{item?.filePath}}</span></div>
+              </ng-template>
               <ng-template #rightSecurity>
-                <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18"></span>
+                <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18" title="Tài liệu bảo mật"></span>
+                <span *ngIf="funcID == 'DMT00' && item?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+                <span *ngIf="funcID == 'DMT00' && item?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
               </ng-template>
             </td>
             <td class="w-100px">
               {{dmSV.getSizeKB(item)}}
             </td>
             <ng-container *ngIf="funcID == 'DMT06' || funcID == 'DMT05'">
+              <td class="w-200px text-center">
+                <span class="badge badge-square" [style.background]="convertStatus(item.approvalStatus,'class')">{{convertStatus(item.approvalStatus)}}</span>
+              </td>
               <td class="w-200px">
-                {{item.approverName}}
+                <codx-temp-full [imageId]="item.approverID" imageObjType="AD_Users" imgCss="me-3 cursor-pointer" [imageWidth]="25" [subTitle]="item.approverName">
+                </codx-temp-full>
               </td>
               <td class="w-200px">
                 {{viewPermiss(item.permissions)}}
               </td>
               <td class="w-200px">
-                {{item.requestPermissionName}}
+                <codx-temp-full [imageId]="item.requestPermissionID" imageObjType="AD_Users" imgCss="me-3 cursor-pointer"
+                  [imageWidth]="25" [subTitle]="item.requestPermissionName">
+                </codx-temp-full>
               </td>
               <td class="w-200px">
-                {{getDUser(item) | date: "dd/MM/yyyy"}}
+                {{getDUser(item) | date: "dd/MM/yyyy HH:mm"}}
               </td>
               <td class="w-200px">
                 {{item.permissions[0].title}}
@@ -224,8 +252,11 @@
               <td class="w-200px" >
                 {{extractContent(item.permissions[0].description)}}
               </td>
-              <td class="w-200px">
-                {{item.approvalStatus == "3" ? "Chờ xét duyệt" : "Đã duyệt" }}
+             
+            </ng-container>
+            <ng-container *ngIf="funcID == 'DMT07'">
+              <td class="w-200px text-center">
+                <span class="badge badge-square" [style.background]="convertStatus(item.approvalStatus,'class')">{{convertStatus(item.approvalStatus)}}</span>
               </td>
             </ng-container>
             <td class="w-200px">
@@ -235,10 +266,10 @@
             </td>
             <td class="w-200px">
               <div class="erm-date">
-                {{ item.createdOn | date: "dd/MM/yyyy" }}
+                {{ item.createdOn | date: "dd/MM/yyyy HH:mm" }}
               </div>
             </td>
-            <td class="w-300px">
+            <td *ngIf="funcID != 'DMT06' && funcID != 'DMT05'" class="w-300px">
               <span>{{item.description}}</span><!-- item.revisionNote -->
             </td>
           </tr>
@@ -260,9 +291,7 @@
   </ng-container>
 </ng-template>
 <ng-template #nodata>
-  <ng-container *ngIf="
-      (!data || data.length <= 0)
-    ">
+  <ng-container *ngIf="loaded">
     <div class="container h-100">
       <div class="list-empty card card-flush h-100">
         <div class="d-flex flex-column flex-center justify-content-center">

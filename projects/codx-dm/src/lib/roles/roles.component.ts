@@ -246,6 +246,7 @@ export class RolesComponent implements OnInit {
     else this.modePermission = false;
     if(this.data[2]) this.codxView = this.data[2];
     if(this.data[4]) this.propertiesFolder = true;
+    if(this.data[5]) this.titleDialog = this.data[5];
     this.fileEditing = JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));
     this.id = this.fileEditing.recID;
     this.folderName = this.fileEditing.folderName
@@ -282,14 +283,7 @@ export class RolesComponent implements OnInit {
   onSaveRightChanged($event, ctrl) {
     var value = $event.data;
     switch (ctrl) {
-      case 'checkFolder':
-        this.createSubFolder = value;
-        this.changeDetectorRef.detectChanges();
-        break;
 
-      case 'checkSecurity':
-        this.security = value;
-        break;
       case "full":
         this.full = value;
         if (this.isSetFull) {
@@ -308,30 +302,7 @@ export class RolesComponent implements OnInit {
           this.download = value;
           this.assign = value;
         }
-        break;
-      case "approval":
-        this.approval = value;
-        //    if (!this.approval)
-        this.approvers = "";
-        break;
-      case "physical":
-        this.physical = value;
-        break;
-      case "revision":
-        this.revision = value;
-        break;
-      case "copyrightsControl":
-        this.copyrightsControl = value;
-        break;
-      case "sentemail":
-        this.sendEmail = value;
-        break;
-      case "postBlob":
-        this.postblog = value;
-        break;
-      case "assign":
-        this.assign = value;
-        break;
+        break;      
       case "fromdate":
         if (value != null)
           this.startDate = value.fromDate;

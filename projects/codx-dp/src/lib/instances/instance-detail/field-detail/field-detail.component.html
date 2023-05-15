@@ -1,22 +1,23 @@
 <div class="back-info">
   <div
-    class="header-info py-2 px-4 d-flex align-items-center justify-content-between mb-0"
+    class="header-info py-1 px-3 d-flex align-items-center justify-content-between mb-0"
   >
     <div class="d-flex align-items-center">
       <span class="fs-" *ngIf="titleDefault">
-        <!-- <codx-label
+        <codx-label
+          class="title"
           name="titleDefault"
           formName="DPInstancesSteps"
           grvName="grvDPInstancesSteps"
-          [default]="titleDefault"
-        ></codx-label> -->
-        <codx-label
+          default="Thông tin nhập liệu"
+        ></codx-label>
+        <!-- <codx-label
           class="title"
           [formModel]="formModelDefault"
           fiedName="titleDefault"
           [default]="titleDefault"
         >
-        </codx-label>
+        </codx-label> -->
       </span>
       <span class="title" *ngIf="!titleDefault">{{ dataStep.stepName }}</span>
     </div>
@@ -56,17 +57,18 @@
     [ngClass]="'show-main'"
   >
     <div
-      class="d-flex row class-field m-5"
+      class="d-flex row class-field p-4"
       *ngIf="dataStep.fields != null && dataStep.fields.length > 0"
     >
       <ng-container *ngFor="let field of dataStep.fields">
         <div
           class="col-{{
             12 / showColumnControl
-          }} p-3 has-action-menu crr-fiels mb-5"
+          }} has-action-menu crr-fiels mb-1"
         >
+          <!-- p-3 -->
           <ng-container
-            [ngTemplateOutlet]="viewCustomFields"
+            [ngTemplateOutlet]="viewDetailFieldCurrent"
             [ngTemplateOutletContext]="{ $implicit: field }"
           ></ng-container>
         </div>
@@ -134,6 +136,163 @@
           *ngIf="data.dataType == 'N' && data.dataFormat && data.dataValue"
           [innerHTML]="formatNumber(data)"
         >
+        </span>
+
+        <span class="text-dark margin-l" *ngIf="data.dataType == 'D'">
+          <span
+            *ngIf="
+              data?.dataFormat == '1' ||
+              data?.dataFormat == '2' ||
+              data.dataFormat == '3'
+            "
+          >
+            {{ data.dataValue | date : fomatvalue(data.dataFormat) }}</span
+          >
+          <span *ngIf="data.dataFormat == '4' || data.dataFormat == '5'">
+            {{
+              getFormatTime(data.dataValue) | date : fomatvalue(data.dataFormat)
+            }}</span
+          >
+        </span>
+        <ng-container *ngIf="data.dataType == 'R'">
+          <ngb-rating
+            [rate]="partNum(data.dataValue)"
+            [max]="data?.rank"
+            [readonly]="true"
+            [starTemplate]="temp"
+          >
+            <ng-template #temp let-fill="fill" let-index="index">
+              <span
+                class="rankIcon {{ data?.rankIcon }} filled"
+                [class.filled]="fill === 100"
+                [class.bad]="index < data?.rank"
+              ></span>
+            </ng-template>
+          </ngb-rating>
+        </ng-container>
+
+        <ng-container *ngIf="data.dataType == 'P'">
+          <codx-imgs
+            [width]="35"
+            [objectId]="data.dataValue"
+            [objectType]="'AD_Users'"
+            [numberImages]="5"
+          ></codx-imgs>
+        </ng-container>
+
+        <ng-container *ngIf="data.dataType == 'A' && data.dataValue">
+          <codx-attachment
+            #attachment
+            [objectId]="data.dataValue.split(';')[0]"
+            [objectType]="data.dataValue.split(';')[1]"
+            hideFolder="1"
+            hideImageUpload="0"
+            hideImageThumb="0"
+            hideUploadBtn="1"
+            hideDes="1"
+            type="inline"
+            [allowMultiFile]="data.multiple ? '1' : '0'"
+            displayThumb="full"
+            showMessage="0"
+            [hideDelete]="'1'"
+            [hideMoreF]="'0'"
+            [referType]="'source'"
+          >
+          </codx-attachment>
+        </ng-container>
+      </ng-container>
+
+      <!-- <ng-container *ngIf="dataStep?.stepStatus < 3">
+        <codx-mfunc
+          [formModel]="formModel"
+          (clickMF)="clickMF($event, data)"
+          [isBookMark]="true"
+          [dataItem]="data"
+          [type]="'hover'"
+          (changeDataMF)="changeFieldMF($event)"
+        >
+        </codx-mfunc>
+      </ng-container> -->
+    </div>
+  </div>
+
+  <ng-container>
+    <div
+      id="fr-{{
+        viewsCurrent + (titleDefault ? data.recID : 'v-' + data.recID)
+      }}"
+      class="form-group hidden-main border border-gray-200 rounded px-6 py-4"
+    >
+      <codx-input-custom-field
+        [customField]="data"
+        [objectId]="data?.recID"
+        [objectType]="'DP_Instances_Steps'"
+        [formModel]="formModelDefault"
+        [checkValid]="false"
+        (valueChangeCustom)="valueChangeCustom($event)"
+      ></codx-input-custom-field>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #viewDetailFieldCurrent let-data>
+  <div class="d-flex">
+    <span class="">
+      <span class="fw-bold mb-1">{{ data.title }}</span>
+      <span *ngIf="data.isRequired">
+        <codx-label
+          class="text-danger"
+          name="attentionIsRequired"
+          formName="DPInstancesStepsFields"
+          gridViewName="grvDPInstancesStepsFields"
+          default="*"
+        >
+        </codx-label>
+      </span>
+      <span>
+        <codx-label
+          class="fw-bold mb-1"
+          name="separation"
+          formName="DPInstancesStepsFields"
+          gridViewName="grvDPInstancesStepsFields"
+          default=":"
+        >
+        </codx-label>
+      </span>
+    </span>
+
+    <span class="">
+      <ng-container *ngIf="!data.dataValue">
+        <span class="place-holder margin-l" *ngIf="data.dataType != 'R'">
+          {{ data.title }}
+        </span>
+        <ng-container *ngIf="data.dataType == 'R'">
+          <ngb-rating
+            rate="0"
+            [max]="data?.rank"
+            [readonly]="true"
+            [starTemplate]="temp"
+          >
+            <ng-template #temp let-fill="fill" let-index="index">
+              <span
+                class="rankIcon {{ data?.rankIcon }} filled"
+                [class.filled]="fill === 100"
+                [class.bad]="index < data?.rank"
+              ></span>
+            </ng-template>
+          </ngb-rating>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="data.dataValue">
+        <span class="text-dark margin-l" *ngIf="data.dataType == 'T'">
+          {{ data.dataValue }}
+        </span>
+
+        <span
+          class="text-dark margin-l"
+          *ngIf="data.dataType == 'N' && data.dataFormat && data.dataValue"
+          [innerHTML]="formatNumber(data)"
+        >
           <span *ngIf="data.dataFormat == 'P'">%</span>
         </span>
         <span class="text-dark margin-l" *ngIf="data.dataType == 'D'">
@@ -169,7 +328,7 @@
           </ngb-rating>
         </ng-container>
 
-        <ng-container *ngIf="data.dataType == 'P' ">
+        <ng-container *ngIf="data.dataType == 'P'">
           <codx-imgs
             [width]="35"
             [objectId]="data.dataValue"
@@ -194,39 +353,11 @@
             showMessage="0"
             [hideDelete]="'1'"
             [hideMoreF]="'0'"
+            [referType]="'source'"
           >
           </codx-attachment>
         </ng-container>
       </ng-container>
-
-      <!-- <ng-container *ngIf="dataStep?.stepStatus < 3">
-        <codx-mfunc
-          [formModel]="formModel"
-          (clickMF)="clickMF($event, data)"
-          [isBookMark]="true"
-          [dataItem]="data"
-          [type]="'hover'"
-          (changeDataMF)="changeFieldMF($event)"
-        >
-        </codx-mfunc>
-      </ng-container> -->
-    </div>
+    </span>
   </div>
-
-  <ng-container>
-    <div
-      id="fr-{{
-        viewsCurrent + (titleDefault ? data.recID : 'v-' + data.recID)
-      }}"
-      class="form-group hidden-main border border-gray-200 rounded px-6 py-4"
-    >
-      <codx-input-custom-field
-        [customField]="data"
-        [objectId]="data?.recID"
-        [objectType]="'DP_Instances'"
-        [formModel]="formModelDefault"
-        (valueChangeCustom)="valueChangeCustom($event)"
-      ></codx-input-custom-field>
-    </div>
-  </ng-container>
 </ng-template>

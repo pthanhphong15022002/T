@@ -141,8 +141,6 @@ import { ImageViewerComponent2 } from './components/ImageViewer2/imageViewer2.co
 import { CodxHistoryTempComponent } from './components/codx-history-temp/codx-history-temp.component';
 import { NotifyDrawerPopupComponent } from './layout/drawers/notify-drawer/notify-drawer-popup/notify-drawer-popup.component';
 import { NotifyBodyComponent } from './layout/drawers/notify-drawer/notify-body/notify-body.component';
-import { CodxBookingCarScheduleContentComponent } from './components/codx-booking-car-schedule-content/codx-booking-car-schedule-content.component';
-import { CodxBookingRoomScheduleContentComponent } from './components/codx-booking-room-schedule-content/codx-booking-room-schedule-content.component';
 import { CountChartComponent } from './components/codx-dashboard/template-chart/count-chart/count-chart.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { TopChartComponent } from './components/codx-dashboard/template-chart/top-chart/top-chart.component';
@@ -161,6 +159,34 @@ import { CodxChatBoxComponent } from './layout/drawers/chat/chat-box/chat-box.co
 import { MessageSystemPipe } from './layout/drawers/chat/chat-box/mssgSystem.pipe';
 import { ScrollPipe } from './layout/drawers/chat/chat-box/scrollPipe.pipe';
 import { AddGroupChatComponent } from './layout/drawers/chat/popup/popup-add-group/popup-add-group.component';
+import { SearchPipe } from './pipe/search.pipe';
+import { PostShareComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/post-share/post-share.component';
+import { CodxStepTaskComponent } from './components/codx-step/codx-step-task/codx-step-task.component';
+import { UpdateProgressComponent } from './components/codx-step/codx-progress/codx-progress.component';
+import { ProgressbarComponent } from './components/codx-step/codx-progressbar/codx-progressbar.component';
+import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
+import { FillterReferType } from './components/codx-view-files/filterReferPipe.pipe';
+import { CodxQuotationsComponent } from './components/codx-quotations/codx-quotations.component';
+import { CodxBookingComponent } from './components/codx-booking/codx-booking.component';
+import { CodxBookingCarScheduleContentComponent } from './components/codx-booking/codx-booking-car-schedule-content/codx-booking-car-schedule-content.component';
+import { CodxBookingRoomScheduleContentComponent } from './components/codx-booking/codx-booking-room-schedule-content/codx-booking-room-schedule-content.component';
+import { CodxBookingViewDetailComponent } from './components/codx-booking/codx-booking-view-detail/codx-booking-view-detail.component';
+import { CodxMeetingOnlineComponent } from './components/codx-meeting-online/codx-meeting-online.component';
+import { CodxAddGroupTaskComponent } from './components/codx-step/codx-add-group-task/codx-add-group-task.component';
+import { CodxAddTaskComponent } from './components/codx-step/codx-add-stask/codx-add-task.component';
+import { CodxRoleComponent } from './components/codx-step/codx-role/codx-role.component';
+import { CodxTypeTaskComponent } from './components/codx-step/codx-type-task/codx-type-task.component';
+import { CodxViewTaskComponent } from './components/codx-step/codx-view-task/codx-view-task.component';
+import { CodxAddBookingCarComponent } from './components/codx-booking/codx-add-booking-car/codx-add-booking-car.component';
+import { CodxAddBookingRoomComponent } from './components/codx-booking/codx-add-booking-room/codx-add-booking-room.component';
+import { CodxAddBookingStationeryComponent } from './components/codx-booking/codx-add-booking-stationery/codx-add-booking-stationery.component';
+import { CodxInviteRoomAttendeesComponent } from './components/codx-booking/codx-invite-room-attendees/codx-invite-room-attendees.component';
+import { CodxRescheduleBookingRoomComponent } from './components/codx-booking/codx-reschedule-booking-room/codx-reschedule-booking-room.component';
+import { CodxInputCustomFieldComponent } from './components/codx-input-custom-field/codx-input-custom-field.component';
+import { CodxFieldsDetailTempComponent } from './components/codx-fields-detail-temp/codx-fields-detail-temp.component';
+import { PopupCustomFieldComponent } from './components/codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
+import { CodxTaskbarComponent } from './components/codx-step/codx-taskbar/codx-taskbar.component';
+import { GroupModulePipe } from './pipe/groupmodoule.pipe';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -245,6 +271,7 @@ const T_Component: Type<any>[] = [
   CodxAttachmentTempComponent,
   CodxAssignTempComponent,
   ListPostComponent,
+  PostShareComponent,
 
   CodxHistoryComponent,
   CodxHistoryItemComponent,
@@ -259,11 +286,6 @@ const T_Component: Type<any>[] = [
   CodxHistoryTempComponent,
   NotifyDrawerPopupComponent,
   NotifyBodyComponent,
-  //booking
-  CodxBookingCarScheduleContentComponent,
-  CodxBookingRoomScheduleContentComponent,
-  CountChartComponent,
-  TopChartComponent,
   //meetings
   CodxTmmeetingsComponent,
   ViewListMeetComponent,
@@ -280,8 +302,35 @@ const T_Component: Type<any>[] = [
   CodxChatListComponent,
   CodxChatBoxComponent,
   AddGroupChatComponent,
+  //booking
+  CodxBookingComponent,
+  CodxAddBookingCarComponent,
+  CodxAddBookingRoomComponent,
+  CodxAddBookingStationeryComponent,
+  CodxInviteRoomAttendeesComponent,
+  CodxRescheduleBookingRoomComponent,
+  CodxBookingCarScheduleContentComponent,
+  CodxBookingRoomScheduleContentComponent,
+  CodxBookingViewDetailComponent,
+  CountChartComponent,
+  TopChartComponent,
+  CodxMeetingOnlineComponent,
 
-  
+  //CM+DP
+  CodxStepTaskComponent,
+  UpdateProgressComponent,
+  ProgressbarComponent,
+  CodxAddGroupTaskComponent,
+  CodxAddTaskComponent,
+  CodxRoleComponent,
+  CodxTypeTaskComponent,
+  CodxViewTaskComponent,
+  CodxTaskbarComponent,
+
+  CodxQuotationsComponent,
+  CodxInputCustomFieldComponent,
+  CodxFieldsDetailTempComponent,
+  PopupCustomFieldComponent,
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -292,6 +341,9 @@ const T_Pipe: Type<any>[] = [
   // chatting
   ScrollPipe,
   MessageSystemPipe,
+  SearchPipe,
+  FillterReferType,
+  GroupModulePipe,
 ];
 
 @NgModule({
@@ -307,6 +359,7 @@ const T_Pipe: Type<any>[] = [
     CodxClearCacheComponent,
     CalendarCenterComponent,
   ],
+  exports: [T_Component, T_Pipe],
   imports: [
     CommonModule,
     NgbModule,
@@ -336,8 +389,8 @@ const T_Pipe: Type<any>[] = [
     SliderModule,
     LazyLoadImageModule,
     DragDropModule,
+    ProgressBarAllModule,
   ],
-  exports: [T_Component, T_Pipe],
 })
 export class CodxShareModule {
   // public static forRoot(

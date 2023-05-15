@@ -1,1 +1,15 @@
-<router-outlet></router-outlet>
+<div class="tm-report">
+  <codx-views
+  #view
+  [views]="views"
+  [funcID]="funcID"
+  [selectedFirst]="false"
+  [autoLoad]="false"
+  (onActions)="onActions($event)"
+  [toolbarDisplay]="true"
+  [button]="button"
+  (viewChanged)="viewChanged($event)"
+  (buttonClick)="buttonClick($event)"
+>
+</codx-views>
+</div>

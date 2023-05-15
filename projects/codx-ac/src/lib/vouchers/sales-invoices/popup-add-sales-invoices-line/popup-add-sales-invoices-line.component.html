@@ -1,0 +1,253 @@
+<codx-form
+  #form
+  [headerText]="formTitle"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="dialogRef.formModel"
+  [data]="salesInvoicesLine"
+>
+</codx-form>
+
+<ng-template #body>
+  <div class="row">
+    <div class="col-2 form-group">
+      <codx-label fiedName="rowNo" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="rowNo"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        [disabled]="true"
+      ></codx-input>
+    </div>
+    <div class="col-3 form-group">
+      <codx-label fiedName="itemID" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="itemID"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        (valueChange)="onInputChange($event)"
+      ></codx-input>
+    </div>
+    <div class="col-7 form-group">
+      <codx-label fiedName="itemName" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="itemName"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="col-6 form-group" *ngIf="!hiddenFields.includes('IDIM0')">
+      <codx-label fiedName="idiM0" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        #idiM0
+        field="idiM0"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6 form-group" *ngIf="!hiddenFields.includes('IDIM1')">
+      <codx-label fiedName="idiM1" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        #idiM1
+        field="idiM1"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="col-6 form-group" *ngIf="!hiddenFields.includes('IDIM2')">
+      <codx-label fiedName="idiM2" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        #idiM2
+        field="idiM2"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6 form-group" *ngIf="!hiddenFields.includes('IDIM3')">
+      <codx-label fiedName="idiM3" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        #idiM3
+        field="idiM3"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="col-4 form-group">
+      <codx-label fiedName="umid" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="umid"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-8 form-group" *ngIf="!hiddenFields.includes('IDIM4')">
+      <codx-label fiedName="idiM4" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="idiM4"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        (valueChange)="onInputChange($event)"
+      ></codx-input>
+    </div>
+
+    <div class="col-4 form-group" *ngIf="!hiddenFields.includes('IDIM5')">
+      <codx-label fiedName="idiM5" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        #idiM5
+        field="idiM5"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-8 form-group" *ngIf="!hiddenFields.includes('IDIM6')">
+      <codx-label fiedName="idiM6" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        #idiM6
+        field="idiM6"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="col-4 form-group" *ngIf="!hiddenFields.includes('IDIM7')">
+      <codx-label fiedName="idiM7" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        #idiM7
+        field="idiM7"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-8 form-group" *ngIf="!hiddenFields.includes('IDIM8')">
+      <codx-label fiedName="idiM8" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="idiM8"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="col-6 form-group" *ngIf="!hiddenFields.includes('IDIM9')">
+      <codx-label fiedName="idiM9" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="idiM9"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6 form-group">
+      <codx-label fiedName="lineType" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="lineType"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="col-4 form-group">
+      <codx-label fiedName="quantity" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="quantity"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-4 form-group">
+      <codx-label
+        fiedName="costPrice"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="costPrice"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-4 form-group">
+      <codx-label fiedName="netAmt" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="netAmt"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="col-4 form-group">
+      <codx-label fiedName="discAmt" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="discAmt"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-4 form-group">
+      <codx-label fiedName="vatid" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="vatid"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-4 form-group">
+      <codx-label fiedName="vatAmt" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="vatAmt"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM1')">
+      <codx-label fiedName="diM1" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="diM1"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM2')">
+      <codx-label fiedName="diM2" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="diM2"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM3')">
+      <codx-label fiedName="diM3" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="diM3"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <ng-container *ngIf="!isEdit">
+    <button
+      type="button"
+      class="btn btn-outline-primary me-3"
+      (click)="onClickSave(false)"
+    >
+      <codx-label
+        fiedName="lblSaveAndClear"
+        [formModel]="dialogRef.formModel"
+        default="Lưu & Thêm"
+      ></codx-label>
+    </button>
+  </ng-container>
+
+  <button type="button" class="btn btn-primary" (click)="onClickSave(true)">
+    <codx-label
+      fiedName="lblSave"
+      [formModel]="dialogRef.formModel"
+      default="Lưu"
+    ></codx-label>
+  </button>
+</ng-template>

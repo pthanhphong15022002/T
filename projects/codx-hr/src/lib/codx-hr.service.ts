@@ -39,6 +39,18 @@ export class CodxHrService {
   expression: RegExp =
     /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
 
+  //#region moreFuncAction
+  actionEdit = 'S03';
+  actionDelete = 'S02';
+  actionAddNew = 'A01';
+  actionSubmit = 'A03';
+  actionUpdateCanceled = 'AU0';
+  actionUpdateInProgress = 'AU3';
+  actionUpdateRejected = 'AU4';
+  actionUpdateApproved = 'AU5';
+  actionUpdateClosed = 'AU9';
+  //#endregion
+
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -129,11 +141,18 @@ export class CodxHrService {
       );
   }
 
-  addBGTrackLog(objectID, comment, objectType, actionType, createdBy){
+  addBGTrackLog(
+    objectID,
+    comment,
+    objectType,
+    actionType,
+    createdBy,
+    Bussiness
+  ) {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EContractsBusiness',
+      Bussiness,
       'ReceiveToAddBGTrackLog',
       [objectID, comment, objectType, actionType, createdBy]
     );
@@ -146,6 +165,16 @@ export class CodxHrService {
       'MoreFunctionsBusiness',
       'GetWithPermAsync',
       data
+    );
+  }
+
+  getListApprovalAsync(dtRequest, bussiness){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      bussiness,
+      'GetListApprovalAsync',
+      dtRequest
     );
   }
 
@@ -225,6 +254,15 @@ export class CodxHrService {
 
   //#region EPassportsBusiness
 
+  getEmpTotalPassportNum(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EPassportsBusiness',
+      'CountEmpTotalRecordAsync'
+    );
+  }
+
   getEmployeePassportModel() {
     return this.api.execSv<any>(
       'HR',
@@ -240,6 +278,16 @@ export class CodxHrService {
       'HR',
       'EPassportsBusiness',
       'GetListPassportByEmpIDAsync',
+      [empID]
+    );
+  }
+
+  GetEmpCurrentPassport(empID: string){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EPassportsBusiness',
+      'GetEmpCrrPassportAsync',
       [empID]
     );
   }
@@ -299,6 +347,15 @@ export class CodxHrService {
   //#endregion
 
   //#region EmpVisasBusiness
+  getEmpTotalVisaNum(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'CountEmpTotalRecordAsync'
+    );
+  }
+
   getEmployeeVisaModel() {
     return this.api.execSv<any>(
       'HR',
@@ -345,6 +402,16 @@ export class CodxHrService {
       'EmpVisasBusiness',
       'GetListByEmployeeIDAsync',
       data
+    );
+  }
+
+  GetEmpCurrentVisa(empID: string){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'GetEmpCrrVisaAsync',
+      [empID]
     );
   }
 
@@ -434,6 +501,18 @@ export class CodxHrService {
   //   );
   // }
 
+  GetEmpCurrentWorkpermit(empID: string){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EWorkPermitsBusiness',
+      'GetEmpCrrWorkPermitAsync',
+      [empID]
+    );
+  }
+
+  
+
   getListWorkPermitByEmployeeID(data) {
     return this.api.execSv<any>(
       'HR',
@@ -459,6 +538,16 @@ export class CodxHrService {
       'HR',
       'EDisciplinesBusiness',
       'GetEmployeeDisciplinesInfoAsync',
+      data
+    );
+  }
+
+  loadDataEDisciplines(data){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDisciplinesBusiness',
+      'LoadEDisciplineWithEmpInfoAsync',
       data
     );
   }
@@ -573,9 +662,10 @@ export class CodxHrService {
       data
     );
   }
+
   //#endregion
 
-  //#region EAwardBusiness
+  //#region EDisciplinesBusiness
   getEmployeeDisciplineModel() {
     return this.api.execSv<any>(
       'HR',
@@ -789,6 +879,16 @@ export class CodxHrService {
       data
     );
   }
+
+  LoadListEAsset(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'LoadListEAssetAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region EAppointionsBusiness
@@ -847,6 +947,16 @@ export class CodxHrService {
       'HR',
       'EAppointionsBusiness',
       'DeleteEmployeeAppointionsInfoAsync',
+      data
+    );
+  }
+
+  EditEmployeeAppointionsMoreFunc(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EAppointionsBusiness',
+      'EditEAppointionsMoreFuncAsync',
       data
     );
   }
@@ -977,6 +1087,16 @@ export class CodxHrService {
     );
   }
 
+  // countEFamilyMembers(empID: string) {
+  //   return this.api.execSv<any>(
+  //     'HR',
+  //     'HR',
+  //     'EFamiliesBusiness',
+  //     'CountEmpFamilyMemberAsync',
+  //     [empID]
+  //   );
+  // }
+
   getEFamilyWithDataRequest(data) {
     return this.api.execSv<any>(
       'HR',
@@ -1026,6 +1146,18 @@ export class CodxHrService {
     );
   }
 
+  //#endregion
+
+  //#region ForeignWorker
+  saveEmployeeForeignWorkerInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'UpdateEmployeeForeignWorkerInfoAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region #EJobSalaries
@@ -1084,6 +1216,26 @@ export class CodxHrService {
       'HR',
       'EJobSalariesBusiness',
       'UpdateEmployeeJobSalaryInfoAsync',
+      data
+    );
+  }
+
+  EditEmployeeJobSalariesMoreFunc(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EJobSalariesBusiness',
+      'EditEJobSalaryMoreFuncAsync',
+      data
+    );
+  }
+
+  GetOldSalaries(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'GetOldSalariesAsync',
       data
     );
   }
@@ -1196,6 +1348,15 @@ export class CodxHrService {
       'HR',
       'EBasicSalariesBusiness',
       'UpdateEmployeeBasicSalariesInfoAsync',
+      data
+    );
+  }
+  getOldBasicSalary(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'GetOldBasicSalaryAsync',
       data
     );
   }
@@ -1545,15 +1706,17 @@ export class CodxHrService {
     );
   }
 
-  loadDataEContract(dataRequest: DataRequest) {
+  loadDataEContract(data) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'LoadDataEContractAsync',
-      dataRequest
+      data
     );
   }
+
+
 
   addEContract(data: any) {
     return this.api.execSv<any>(
@@ -1650,6 +1813,15 @@ export class CodxHrService {
     );
   }
 
+  EditEmployeeBenefitMoreFunc(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBenefitsBusiness',
+      'EditEmployeeBenefitMoreFunc',
+      data
+    );
+  }
   //#endregion
 
   //#region HR_EBusinessTravels
@@ -1670,7 +1842,7 @@ export class CodxHrService {
       'ERM.Business.HR',
       'EBusinessTravelsBusiness',
       'AddEBusinessTravelsAsync',
-      [data]
+      data
     );
   }
 
@@ -1690,6 +1862,16 @@ export class CodxHrService {
       'ERM.Business.HR',
       'EBusinessTravelsBusiness',
       'DeleteEBusinessTravelsAsync',
+      data
+    );
+  }
+
+  EditEmployeeContactMoreFunc(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'EditEBusinessTravelMoreFuncAsync',
       data
     );
   }
@@ -1928,7 +2110,158 @@ export class CodxHrService {
     return this.expression.test(email);
   }
 
+  // actionAddNew = 'A01'
+  // actionSubmit = 'A03'
+  // actionUpdateCanceled = 'AU0'
+  // actionUpdateInProgress = 'AU3'
+  // actionUpdateRejected = 'AU4'
+  // actionUpdateApproved = 'AU5'
+  // actionUpdateClosed = 'AU9'
+
+  handleShowHideMF(evt, data, formModel) {
+    // Kiem tra document co ap dung quy trinh xet duyet hay khong, neu khong thi hide di 1 so more func
+    let category = '4';
+    let formName = 'HRParameters';
+    this.getSettingValue(formName, category).subscribe((res) => {
+      if (res) {
+        let parsedJSON = JSON.parse(res?.dataValue);
+        let index = parsedJSON.findIndex(
+          (p) => p.Category == formModel.entityName
+        );
+        if (index > -1) {
+          let typeDocObj = parsedJSON[index];
+          if (typeDocObj['ApprovalRule'] != '1') {
+            let found = evt.find(
+              (val) =>
+                val.functionID.substr(val.functionID.length - 3) ==
+                this.actionSubmit
+            );
+            found.disabled = true;
+
+            let found2 = evt.find(
+              (val) =>
+                val.functionID.substr(val.functionID.length - 3) ==
+                this.actionUpdateRejected
+            );
+            found2.disabled = true;
+          }
+        } else {
+          let found = evt.find(
+            (val) =>
+              val.functionID.substr(val.functionID.length - 3) ==
+              this.actionSubmit
+          );
+          found.disabled = true;
+
+          let found2 = evt.find(
+            (val) =>
+              val.functionID.substr(val.functionID.length - 3) ==
+              this.actionUpdateRejected
+          );
+          found2.disabled = true;
+        }
+      }
+    });
+
+    if (formModel.entityName == 'HR_EContracts') {
+      //Xu li rieng cho HDLD
+    }
+
+    //#region code cũ
+      if (
+        data.status == '0' ||
+        data.status == '2' ||
+        data.status == '4' ||
+        data.status == '5' ||
+        data.status == '6' ||
+        data.status == '9'
+      ) {
+        for (let i = 0; i < evt.length; i++) {
+          let funcIDStr = evt[i].functionID;
+          let IDCompare = funcIDStr.substr(funcIDStr.length - 3)
+          switch (IDCompare) {
+            case this.actionSubmit:
+            case this.actionUpdateCanceled:
+            case this.actionUpdateInProgress:
+            case this.actionUpdateRejected:
+            case this.actionUpdateApproved:
+            case this.actionUpdateClosed:
+            case this.actionEdit:
+            case this.actionDelete:
+              evt[i].disabled = true;
+              break;
+          }
+          if(IDCompare == this.actionDelete && (data.status == '0' || data.status == '4')){
+              evt[i].disabled = false;
+          }
+          else if(IDCompare == this.actionSubmit && data.status == '6'){
+            evt[i].disabled = false;
+          }
+        }
+      } else if (data.status == '3') {
+        for (let i = 0; i < evt.length; i++) {
+          let funcIDStr = evt[i].functionID;
+          let IDCompare = funcIDStr.substr(funcIDStr.length - 3)
+          switch (IDCompare) {
+            case this.actionSubmit:
+            case this.actionUpdateInProgress:
+            case this.actionEdit:
+            case this.actionDelete:
+              evt[i].disabled = true;
+              break;
+          }
+          // let found = evt.find(
+          //   (val) =>
+          //     val.functionID.substr(val.functionID.length - 3) == this.actionSubmit
+          // );
+          // found.disabled = true;
+  
+          // let found2 = evt.find(
+          //   (val) =>
+          //     val.functionID.substr(val.functionID.length - 3) ==
+          //     this.actionUpdateInProgress
+          // );
+          // found2.disabled = true;
+        }
+      } 
+  }
+
+  handleUpdateRecordStatus(functionID, data) {
+    let funcIDRecognize = functionID.substr(functionID.length - 3);
+    switch (funcIDRecognize) {
+      case this.actionUpdateCanceled:
+        data.status = '0';
+        break;
+
+      case this.actionUpdateInProgress:
+        data.status = '3';
+        break;
+
+      case this.actionUpdateRejected:
+        data.status = '4';
+        break;
+
+      case this.actionUpdateApproved:
+        data.status = '5';
+        break;
+
+      case this.actionUpdateClosed:
+        data.status = '9';
+        break;
+    }
+  }
+
   //#endregion
+
+  countEmpTotalRecord(empId, business){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      business,
+      'CountEmpTotalRecordAsync',
+      empId
+    );
+  }
 
   getFunctionList(funcID: string) {
     return this.api.execSv<any>(
@@ -2046,3 +2379,4 @@ export class CodxHrService {
 
 import { Pipe, PipeTransform } from '@angular/core';
 import { mergeMap } from 'rxjs';
+import { disableDebugTools } from '@angular/platform-browser';

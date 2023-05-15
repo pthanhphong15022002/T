@@ -1,14 +1,9 @@
 import {
-  ConnectorModel,
-  Diagram,
   DiagramTools,
-  NodeModel,
   SnapConstraints,
   SnapSettingsModel,
 } from '@syncfusion/ej2-angular-diagrams';
-import { Permission } from '@shared/models/file.model';
 import { DistributeOKR } from './../../model/distributeOKR.model';
-import { C } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
@@ -17,21 +12,13 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import {
-  CircularGaugeComponent,
-  GaugeTheme,
-  IAxisLabelRenderEventArgs,
-  ILoadedEventArgs,
-} from '@syncfusion/ej2-angular-circulargauge';
 
 import {
   AuthService,
   AuthStore,
   CallFuncService,
   DialogData,
-  DialogModel,
   DialogRef,
-  FormModel,
   NotificationsService,
   UIComponent,
   ViewModel,
@@ -69,10 +56,9 @@ export class PopupDistributeOKRComponent
   headerText = '';
   okrName = '';
   okrRecID: any;
-  curUser: any;
   userInfo: any;
   orgUnitTree: any;
-  isAfterRender = false;
+  isAfterRender = true;
   dataOKR: any;
   isAdd: boolean;
   funcID: '';
@@ -81,6 +67,7 @@ export class PopupDistributeOKRComponent
   distributeToType: any;
   distributeType: any;
   listDistribute = [];
+  currentUser: import('codx-core').UserModel;
 
   constructor(
     private injector: Injector,
@@ -99,7 +86,7 @@ export class PopupDistributeOKRComponent
     this.distributeType = dialogData.data[2];
     this.funcID = dialogData.data[3];
     this.headerText = dialogData?.data[4];
-    this.curUser = authStore.get();
+    this.currentUser = dialogData?.data[5];
     this.distributeToType = this.distributeType;
     if (this.distributeToType == this.typeKR) {
       this.radioKRCheck = true;
@@ -109,7 +96,9 @@ export class PopupDistributeOKRComponent
       this.radioOBCheck = true;
     }
   }
-  //-----------------------Base Func-------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -128,42 +117,32 @@ export class PopupDistributeOKRComponent
   onInit(): void {
     this.getOKRAssign();
   }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Cache Data--------------------------------//
+  //---------------------------------------------------------------------------------//
+  // getCacheData(){
 
-  //-----------------------End-------------------------------//
+  // }
 
-  //-----------------------Base Event------------------------//
-  click(event: any) {
-    switch (event) {
-    }
-  }
-  valueTypeChange(event) {
-    if (event?.field == this.typeKR) {
-      this.distributeToType = OMCONST.VLL.OKRType.KResult;
-    } else if (event?.field == this.typeOB) {
-      this.distributeToType = OMCONST.VLL.OKRType.Obj;
-    }
-    this.detectorRef.detectChanges();
-  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Data Func---------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //-----------------------End-------------------------------//
-
-  //-----------------------Get Data Func---------------------//
-  
   getOKRAssign() {
-    if (this.curUser?.employee != null) {
+    if (this.currentUser?.employee != null) {
       let tempOrgID = '';
       switch (this.funcID) {
         case OMCONST.FUNCID.COMP:
-          tempOrgID = this.curUser?.employee.companyID;
+          tempOrgID = this.currentUser?.employee.companyID;
           break;
         case OMCONST.FUNCID.DEPT:
-          tempOrgID = this.curUser?.employee.departmentID;
+          tempOrgID = this.currentUser?.employee.departmentID;
           break;
         case OMCONST.FUNCID.ORG:
-          tempOrgID = this.curUser?.employee.orgUnitID;
+          tempOrgID = this.currentUser?.employee.orgUnitID;
           break;
         case OMCONST.FUNCID.PERS:
-          tempOrgID = this.curUser?.employee.employeeID;
+          tempOrgID = this.currentUser?.employee.employeeID;
           break;
       }
       this.codxOmService.getOKRByID(this.okrRecID).subscribe((res: any) => {
@@ -175,7 +154,7 @@ export class PopupDistributeOKRComponent
               if (listOrg) {
                 this.orgUnitTree = listOrg;
                 this.codxOmService
-                  .getOKRDistributed(this.okrRecID)
+                  .getOKRHavedLinks(this.okrRecID)
                   .subscribe((links: any) => {
                     //Tạo sơ đồ tổ chức có okr đã phân bổ
                     if (links && links.length > 0) {
@@ -186,21 +165,21 @@ export class PopupDistributeOKRComponent
                           let oldLink = oldLinks.filter((itemLink) => {
                             return itemLink?.orgUnitID == item.orgUnitID;
                           });
-                          if (oldLink != null && oldLink.length>0) {
-                            oldLink= oldLink.pop();
-                            temp.okrName = oldLink.okrName;
-                            temp.orgUnitID = oldLink.orgUnitID;
-                            temp.orgUnitName = oldLink.orgUnitName;
-                            temp.umid = oldLink.umid;
-                            temp.isActive = true;
-                            temp.distributePct = oldLink.distributePct;
-                            temp.distributeValue = oldLink.distributePct;
-                            this.listDistribute.push(temp);
+                          if (oldLink != null && oldLink.length > 0) {
+                            oldLink = oldLink.pop();
+                            this.listDistribute.push(oldLink);
                           } else {
-                            temp.okrName = this.dataOKR.okrName;
-                            temp.orgUnitID = item.orgUnitID;
-                            temp.orgUnitName = item.orgUnitName;
-                            temp.umid = this.dataOKR.umid;
+                            temp.okrName = this.dataOKR?.okrName;
+                            temp.orgUnitID = item?.orgUnitID;
+                            temp.orgUnitName = item?.orgUnitName;
+                            temp.umid = this.dataOKR?.umid;
+                            temp.refType = '1'; //Phân bổ
+                            temp.objectID = item?.orgUnitID;
+                            temp.objectType = this.orgTypeToObjectType(
+                              item?.orgUnitType
+                            );
+                            temp.okrID = this.dataOKR?.recID;
+                            temp.okrType = this.dataOKR?.okrType;
                             temp.isActive = false;
                             temp.distributePct = 0;
                             temp.distributeValue = 0;
@@ -219,6 +198,13 @@ export class PopupDistributeOKRComponent
                           temp.orgUnitID = item.orgUnitID;
                           temp.orgUnitName = item.orgUnitName;
                           temp.umid = this.dataOKR.umid;
+                          temp.refType = '1'; //Phân bổ
+                          temp.objectID = item?.orgUnitID;
+                          temp.objectType = this.orgTypeToObjectType(
+                            item?.orgUnitType
+                          );
+                          temp.okrID = this.dataOKR?.recID;
+                          temp.okrType = this.dataOKR?.okrType;
                           temp.isActive = false;
                           temp.distributePct = 0;
                           temp.distributeValue = 0;
@@ -236,43 +222,25 @@ export class PopupDistributeOKRComponent
       });
     }
   }
-  //-----------------------End-------------------------------//
-
-  //-----------------------Validate Func---------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Logic Func------------------------//
-
-  onSaveForm() {
-    let lastListDistribute = this.listDistribute.filter((item) => {
-      return item?.isActive == true;
-    });
-    this.codxOmService
-      .distributeOKR(
-        this.dataOKR.recID,
-        this.distributeToType,
-        lastListDistribute,
-        this.isAdd
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.notificationsService.notifyCode('SYS034');
-        }
-        this.dialogRef && this.dialogRef.close();
-      });
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Event------------------------------------//
+  //---------------------------------------------------------------------------------//
+  click(event: any) {
+    switch (event) {
+    }
   }
-  //-----------------------End-------------------------------//
+  valueTypeChange(event) {
+    if (event?.field == this.typeKR) {
+      this.distributeToType = OMCONST.VLL.OKRType.KResult;
+    } else if (event?.field == this.typeOB) {
+      this.distributeToType = OMCONST.VLL.OKRType.Obj;
+    }
+    this.detectorRef.detectChanges();
+  }
 
-  //-----------------------Logic Event-----------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Custom Func-----------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Custom Event-----------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Event----------------------------------//
+  //---------------------------------------------------------------------------------//
   cancel() {
     this.dialogRef.close();
   }
@@ -324,38 +292,73 @@ export class PopupDistributeOKRComponent
     //await this.setEmployeePredicate($event.dataItem.orgUnitID);
     // this.employList.onChangeSearch();
   }
-  public connDefaults(
-    connector: ConnectorModel,
-    diagram: Diagram
-  ): ConnectorModel {
-    connector.targetDecorator.shape = 'None';
-    connector.type = 'Orthogonal';
-    connector.constraints = 0;
-    connector.cornerRadius = 5;
-    connector.style.strokeColor = '#6d6d6d';
-    return connector;
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Validate Func---------------------------------//
+  //---------------------------------------------------------------------------------//
+
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Logic Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
+  onSaveForm() {
+    let lastListDistribute = this.listDistribute.filter((item) => {
+      return item?.isActive == true;
+    });
+    this.codxOmService
+      .distributeOKR(this.dataOKR.recID, lastListDistribute)
+      .subscribe((res) => {
+        if (res) {
+          this.notificationsService.notifyCode('SYS034');
+        }
+        this.dialogRef && this.dialogRef.close();
+      });
   }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Func-----------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  public nodeDefaults(obj: NodeModel): NodeModel {
-    obj.expandIcon = {
-      height: 15,
-      width: 15,
-      shape: 'Minus',
-      fill: 'lightgray',
-      offset: { x: 0.5, y: 1 },
-    };
-    obj.collapseIcon = {
-      height: 15,
-      width: 15,
-      shape: 'Plus',
-      fill: 'lightgray',
-      offset: { x: 0.5, y: 1 },
-    };
-    return obj;
+  orgTypeToObjectType(orgUnitType: string) {
+    switch (orgUnitType) {
+      case '1':
+        return OMCONST.OBJECT_TYPE.COMP;
+      case '4':
+        return OMCONST.OBJECT_TYPE.DEPT;
+      case '6':
+        return OMCONST.OBJECT_TYPE.ORG;
+      default:
+        return null;
+    }
   }
-  //-----------------------End-------------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Popup-----------------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //-----------------------Popup-----------------------------//
+  // public connDefaults(
+  //   connector: ConnectorModel,
+  //   diagram: Diagram
+  // ): ConnectorModel {
+  //   connector.targetDecorator.shape = 'None';
+  //   connector.type = 'Orthogonal';
+  //   connector.constraints = 0;
+  //   connector.cornerRadius = 5;
+  //   connector.style.strokeColor = '#6d6d6d';
+  //   return connector;
+  // }
 
-  //-----------------------End-------------------------------//
+  // public nodeDefaults(obj: NodeModel): NodeModel {
+  //   obj.expandIcon = {
+  //     height: 15,
+  //     width: 15,
+  //     shape: 'Minus',
+  //     fill: 'lightgray',
+  //     offset: { x: 0.5, y: 1 },
+  //   };
+  //   obj.collapseIcon = {
+  //     height: 15,
+  //     width: 15,
+  //     shape: 'Plus',
+  //     fill: 'lightgray',
+  //     offset: { x: 0.5, y: 1 },
+  //   };
+  //   return obj;
+  // }
 }

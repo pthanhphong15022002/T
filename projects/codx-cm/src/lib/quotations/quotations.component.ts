@@ -4,28 +4,76 @@ import {
   Input,
   OnInit,
   Optional,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  ButtonModel,
   CallFuncService,
+  DataRequest,
+  DialogModel,
   DialogRef,
+  FormModel,
+  RequestOption,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-quotations.component';
+import { Observable, finalize, map } from 'rxjs';
 
 @Component({
-  selector: 'codx-quotations',
+  selector: 'lib-quotations',
   templateUrl: './quotations.component.html',
   styleUrls: ['./quotations.component.css'],
 })
 export class QuotationsComponent extends UIComponent {
   @Input() funcID: string;
-  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @Input() customerID: string;
+  @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
+  //temGird
+  @ViewChild('templateCreatedBy') templateCreatedBy: TemplateRef<any>;
+  @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
+  @ViewChild('templateCustomer') templateCustomer: TemplateRef<any>;
+
   views: Array<ViewModel> = [];
+  service = 'CM';
+  assemblyName = 'ERM.Business.CM';
+  entityName = 'CM_Quotations';
+  className = 'QuotationsBusiness';
+  methodLoadData = 'GetListQuotationsAsync';
+
+  //test
+  moreDefaut = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
+  grvSetup: any;
+  vllStatus = '';
+  formModel: FormModel = {
+    formName: 'CMQuotations',
+    gridViewName: 'grvCMQuotations',
+    funcID: 'CM0202',
+  };
+  customerIDCrr = '';
+  requestData = new DataRequest();
+  listQuotations = [];
+  predicates = 'RefType==@0 && RefID==@1';
+  dataValues = '';
+  columnGrids: any;
+  arrFieldIsVisible = [];
+  itemSelected: any;
+  button?: ButtonModel;
+  titleAction= ''
 
   constructor(
     private inject: Injector,
@@ -34,22 +82,312 @@ export class QuotationsComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.cache
+      .gridViewSetup('CMQuotations', 'grvCMQuotations')
+      .subscribe((res) => {
+        if (res) {
+          this.grvSetup = res;
+          this.vllStatus = res['Status'].referedValue;
+          //lay grid view
+          let arrField = Object.values(res).filter((x: any) => x.isVisible);
+          if (Array.isArray(arrField)) {
+            this.arrFieldIsVisible = arrField
+              .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+              .map((x: any) => x.fieldName);
+            this.getColumsGrid(res);
+          }
+        }
+      });
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
+  }
+
   ngAfterViewInit() {
+    // this.views = [
+    //   {
+    //     type: ViewType.listdetail,
+    //     active: true,
+    //     sameData: true,
+    //     model: {
+    //       template: this.itemTemplate,
+    //       panelRightRef: this.templateDetail,
+    //     },
+    //   },
+    //   {
+    //     type: ViewType.grid,
+    //     active: true,
+    //     sameData: true,
+    //     model: {
+    //       template2: this.templateMore,
+    //       frozenColumns: 1,
+    //     },
+    //   },
+    // ];
+  }
+
+  getColumsGrid(grvSetup) {
+    this.columnGrids = [];
+    this.arrFieldIsVisible.forEach((key) => {
+      let field = Util.camelize(key);
+      let template: any;
+      let colums: any;
+      switch (key) {
+        case 'Status':
+          template = this.templateStatus;
+          break;
+        case 'CustomerID':
+          template = this.templateCustomer;
+          break;
+        case 'CreatedBy':
+          template = this.templateCreatedBy;
+          break;
+        default:
+          break;
+      }
+      if (template) {
+        colums = {
+          field: field,
+          headerText: grvSetup[key].headerText,
+          width: grvSetup[key].width,
+          template: template,
+          // textAlign: 'center',
+        };  
+      } else {
+        colums = {
+          field: field,
+          headerText: grvSetup[key].headerText,
+          width: grvSetup[key].width,
+        };
+      }
+
+      this.columnGrids.push(colums);
+    });
+
     this.views = [
       {
-        type: ViewType.grid,
+        type: ViewType.listdetail,
         active: true,
         sameData: true,
         model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          resources: this.columnGrids,
           template2: this.templateMore,
-          frozenColumns: 1,
+          // frozenColumns: 1,
         },
       },
     ];
+    this.detectorRef.detectChanges() ;
   }
 
-  clickMF(e, data) {}
+  click(e) {
+    this.titleAction = e.text;
+    switch (e.id) {
+      case 'btnAdd':
+        this.add();
+        break;
+    }
+  }
+
+  selectedChange(val: any) {
+    this.itemSelected = val?.data;
+    this.detectorRef.detectChanges();
+  }
+
+  // moreFunc
+  eventChangeMF(e) {
+    this.changeDataMF(e.e, e.data);
+  }
+
+  changeDataMF(e, data) {}
+
+  clickMoreFunction(e) {
+    this.clickMF(e.e, e.data);
+  }
+  clickMF(e, data) {
+    this.titleAction = e.text
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'SYS03':
+        this.edit(e, data);
+        break;
+      case 'SYS04':
+        this.copy(e, data);
+        break;
+    }
+  }
+
+  add() {
+    this.view.dataService.addNew().subscribe((res) => {
+      if (!res.quotationsID) {
+        this.api
+          .execSv<any>(
+            'SYS',
+            'AD',
+            'AutoNumbersBusiness',
+            'GenAutoNumberAsync',
+            [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
+          )
+          .subscribe((id) => {
+            res.quotationID = id;
+            this.openPopup(res);
+          });
+      } else this.openPopup(res);
+    });
+  }
+
+  openPopup(res) {
+    res.versionNo = res.versionNo??'V1.0';
+    res.status = res.status??'1';
+    res.exchangeRate = res.exchangeRate??1;
+    res.totalAmt = res.totalAmt ?? 0;
+
+    var obj = {
+      data: res,
+      disableRefID: false,
+      action: 'add',
+      headerText: this.titleAction,
+    };
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    let dialog = this.callfc.openForm(
+      PopupAddQuotationsComponent,
+      '',
+      null,
+      null,
+      '',
+      obj,
+      '',
+      option
+    );
+  }
+
+  edit(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(data).subscribe((res) => {
+      var obj = {
+        data: this.view.dataService.dataSelected,
+        action: 'edit',
+        headerText: e.text,
+      };
+      let option = new DialogModel();
+      option.IsFull = true;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let dialog = this.callfc.openForm(
+        PopupAddQuotationsComponent,
+        '',
+        null,
+        null,
+        '',
+        obj,
+        '',
+        option
+      );
+    });
+  }
+
+  copy(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.copy(data).subscribe((res) => {
+      var obj = {
+        data: res,
+        action: 'copy',
+        headerText: e.text,
+      };
+      let option = new DialogModel();
+      option.IsFull = true;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let dialog = this.callfc.openForm(
+        PopupAddQuotationsComponent,
+        '',
+        null,
+        null,
+        '',
+        obj,
+        '',
+        option
+      );
+    });
+  }
+
+  delete(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data.recID)
+      )
+      .subscribe((res: any) => {
+        if (res) {
+        }
+      });
+  }
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteQuotationsByRecIDAsync';
+    opt.className = 'QuotationsBusiness';
+    opt.assemblyName = 'CM';
+    opt.service = 'CM';
+    opt.data = data;
+    return true;
+  }
+
+  getIndex(recID) {
+    return (
+      this.view.dataService.data.findIndex((obj) => obj.recID == recID) + 1
+    );
+  }
+
+  //tham khao
+  // getQuotations(){
+  //   this.requestData.predicates = 'RefType==@0 && RefID==@1';
+  //   this.requestData.dataValues= this.refType+";"+this.refID;
+  //   this.requestData.entityName = this.entityName;
+  //   this.requestData.funcID = this.funcID;
+  //   this.fetch().subscribe(res=>{
+  //     this.listQuotations = res ;
+  //    // this.view.dataService.data = this.listQuotations
+  //   })
+  // }
+
+  // fetch(): Observable<any[]> {
+  //   return this.api
+  //     .execSv<Array<any>>(
+  //       this.service,
+  //       this.assemblyName,
+  //       this.className,
+  //       this.methodLoadData,
+  //       this.requestData
+  //     )
+  //     .pipe(
+  //       finalize(() => {
+  //         /*  this.onScrolling = this.loading = false;
+  //         this.loaded = true; */
+  //       }),
+  //       map((response: any) => {
+  //         return response[0];
+  //       })
+  //     );
+  // }
 }

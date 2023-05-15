@@ -11,8 +11,64 @@
       [ngClass]="buttonIconClass"
     ></span>
   </button>
-  <div ngbDropdownMenu class="w-250px">
-    <div class="row g-0">
+  <div ngbDropdownMenu class="w-300px">
+    <ng-container *ngFor="let group of lstGroup">
+      <div class="d-flex">
+        <div
+          class="fw-bolder ms-7 fs-6 mt-5 px-1 mb-2 text-uppercase text-primary-dark"
+          *ngIf="group.groupID"
+        >
+          {{ group.groupName || group.groupID }}
+        </div>
+      </div>
+      <div class="px-5 ms-3">
+        <div class="row g-0">
+          <div
+            class="col-6"
+            *ngFor="let md of lstModule | groupmodoule : group.groupID"
+          >
+            <!-- <a
+              *ngIf="md._itemHome"
+              href="javascript:;"
+              (click)="codxService.navigate(null, '/')"
+              class="d-flex align-items-center hover-light py-2"
+            >
+              <img
+                class="w-25px"
+                lazyLoad="../../../assets/Icons_Final/home.svg"
+                alt=""
+              />
+              <span class="text-nowrap text-gray-700 text-center ms-2">
+                <codx-label
+                  name="lblHome"
+                  formName="System"
+                  default="Trang chủ"
+                ></codx-label>
+              </span>
+            </a> -->
+            <a
+              *ngIf="!md._itemHome"
+              (click)="
+                codxService.navigate(md.functionID, null, null, null, true)
+              "
+              href="javascript:;"
+              class="d-flex align-items-center bg-hover-light p-2"
+            >
+              <img
+                class="w-25px h-25px"
+                lazyLoad="../../../{{ md.smallIcon }}"
+                alt=""
+              />
+              <span class="text-nowrap text-gray-700 mt-1 text-center ms-2">{{
+                md.customName
+              }}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- <div class="row g-0">     
       <div class="col-4">
         <a
           href="javascript:;"
@@ -45,6 +101,6 @@
           }}</span>
         </a>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>

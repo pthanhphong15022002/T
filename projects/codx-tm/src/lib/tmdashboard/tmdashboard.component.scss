@@ -1,0 +1,39 @@
+.assignchart-task {
+  border-radius: 4px 0 0 4px;
+  margin-bottom: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 34px;
+}
+
+.assignchart-task {
+  codx-vll {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: right;
+  }
+}
+
+.topchart-user {
+  border-radius: 4px 0 0 4px;
+  margin-bottom: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 34px;
+}
+
+.topchart-user span {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
+}

@@ -29,16 +29,15 @@
   <div class="card-form">
     <!-- Link group -->
     <div class="form-group">
-      <div class="text-primary mb-1">
+      <div class="mb-1 line-clamp line-clamp-1">
         <codx-label
-          fiedName="StepName"      
+          class="text-primary"
+          fiedName="StepName"
           [formModel]="form?.formModel"
-          default="Thuộc giai đoạn"
+          default="Thuộc giai đoạn: "
         >
         </codx-label>
-      </div>
-      <div>
-        <codx-label [default]="stepName"> </codx-label>
+        <span style="font-weight: 500;"> {{stepName}} </span>
       </div>
     </div>
     <!--End Link group -->
@@ -60,7 +59,7 @@
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
             (valueChange)="changeCombobox($event, 'taskGroupID')"
-            [readonly]="taskGroupID"
+            [readonly]="taskGroupID || taskGroupList.length === 0"
           ></ejs-dropdownlist>
         </div>
       </div>
@@ -168,6 +167,7 @@
         <codx-label
           fiedName="Reference"
           [formModel]="form?.formModel"
+          default="Tên khảo sát"
         ></codx-label>
         <a
           class="d-flex justify-content-end align-items-center cursor-pointer"
@@ -186,35 +186,8 @@
         (valueChange)="changeQuestion($event)"
       >
       </codx-input>
-      <a
-        *ngIf="linkQuesiton"
-        class="cursor-pointer text-primary"
-        (click)="viewDetailSurveys()"
-      >
-        {{ linkQuesiton }}</a
-      >
     </div>
     <!-- Khảo sát -->
-
-    <div class="form-group" *ngIf="taskType == 'Q'">
-      <div class="d-flex justify-content-between align-items-center mail">
-        <codx-label name="Reference" default="Tên khảo sát"></codx-label>
-        <a class="d-flex justify-content-end align-items-center cursor-pointer">
-          <span
-            class="icon-insert_link icon-20 text-primary-600 me-2 m-2"
-          ></span>
-        </a>
-      </div>
-      <codx-input
-        field="stepName"
-        [formModel]="form?.formModel"
-        type="text"
-        [Group]=""
-        (valueChange)="valueChangeText($event)"
-      >
-      </codx-input>
-      <a class="cursor-pointer text-primary"> {{ linkQuesiton }}</a>
-    </div>
 
     <div class="form-group">
       <div class="d-flex justify-content-between row">
@@ -231,6 +204,7 @@
                 field="durationDay"
                 [crrValue]="stepsTasks?.durationDay"
                 [min]="0"
+                [max]="100"
                 type="number"
                 (valueChange)="valueChangeText($event)"
                 [showSpinButton]="false"
@@ -349,49 +323,18 @@
       <codx-user
         [fiedName]="'roles'"
         [formModel]="form?.formModel"
-        [default]="taskType == 'M' ? 'Người tham gia' : 'Vai trò/bộ phận thực hiện'"
-        [dataSource]="participant"
+        [default]="
+          taskType == 'M' ? 'Người tham gia' : 'Vai trò/bộ phận thực hiện'
+        "
+        [dataSource]="taskType == 'M' ? participant : owner"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event, participant, 'P')"
+        (valueList)="changeRoler($event)"
         [vllShare]="'DP0331'"
-        [multiple]="taskType == 'M' ? true :false"
+        [multiple]="taskType == 'M' ? true : false"
         [listCombobox]="listCombobox"
         [type]="'all'"
       ></codx-user>
-      <!-- <div class="d-flex justify-content-between align-item-center"> -->
-        <!-- <codx-label
-          *ngIf="taskType == 'M'"
-          fiedName="roles"
-          [formModel]="form?.formModel"
-          default="Người tham gia"
-        >
-        </codx-label>
-        <codx-label
-          *ngIf="taskType != 'M'"
-          fiedName="roles"
-          [formModel]="form?.formModel"
-          default="Vai trò/bộ phận thực hiện"
-        >
-        </codx-label> -->
-        <!-- <codx-input
-          class="w-100"
-          type="Share"
-          [refValue]="vllShare"
-          field="roles"
-          [dataShared]="[]"
-          [multiple]="false"
-          [showInput]="false"
-          [listCombobox]="listCombobox"
-          (valueChange)="changeRoler($event, participant, 'P')"
-        >
-        </codx-input> -->
-      <!-- </div> -->
-      <!-- <ng-container
-        *ngIf="participant.length > 0"
-        [ngTemplateOutlet]="showUser"
-        [ngTemplateOutletContext]="{ users: participant }"
-      ></ng-container> -->
     </div>
 
     <div class="form-group">
@@ -473,16 +416,16 @@
 
   <ng-container>
     <div
-      class="d-flex align-items-center justify-content-between mt-4"
+      class="d-flex align-items-center nav-item w-100 mb-1"
       *ngIf="showLabelAttachment"
-      style="float: left"
     >
       <div class="d-flex align-items-center mb-2">
+        <span class="icon-attach_file icon-18 me-2 text-primary"></span>
         <div class="fw-bold text-primary">
           <codx-label
-            fiedName="lblAttachments"
-            [formModel]="form?.formModel"
-            default="Tài liệu"
+            name="lblAttachments"
+            [formModel]="form.formModel"
+            default="Tài liệu đính kèm"
           >
           </codx-label>
         </div>
@@ -491,24 +434,21 @@
     <div>
       <codx-attachment
         #attachment
+        [objectType]="dialog.formModel.entityName"
         [objectId]="stepsTasks?.recID"
         hideFolder="1"
         hideImageUpload="0"
         hideImageThumb="0"
         hideUploadBtn="1"
+        [showMessage]="0"
         hideDes="1"
         type="inline"
         allowMultiFile="1"
+        referType="source"
+        [formModel]="dialog.formModel"
         (fileAdded)="fileAdded($event)"
         (fileCount)="getfileCount($event)"
-        (viewFile)="getfileDelete($event)"
-        (fileDelete)="fileAdded($event)"
         displayThumb="full"
-        showMessage="0"
-        [fdID]="folderID"
-        [fdName]="stepsTasks?.stepID"
-        [parentID]="folderID"
-        [dataSelected]="stepsTasks"
       >
       </codx-attachment>
     </div>
@@ -537,41 +477,17 @@
   </button>
 </ng-template>
 
-<ng-template #showUser let-data="users">
-  <div class="mt-3" style="display: block">
-    <ng-container *ngFor="let item of data; index as i">
-      <div class="user-mini-nav" style="background-color: #f4f7ff">
-        <span>
-          <codx-img
-            [width]="25"
-            class="me-2"
-            [objectId]="item?.objectID"
-            objectType="AD_Users"
-            [objectName]="item?.objectName"
-          ></codx-img>
-        </span>
-        <span class="text-dark fw-bold"> {{ item?.objectName }} </span>
-        <span class="mt-1">
-          <a
-            (click)="onDeleteOwner(item?.objectID, data)"
-            style="cursor: pointer"
-          >
-            <span class="icon-close icon-16 text-danger ms-3"></span>
-          </a>
-        </span>
-      </div>
-    </ng-container>
-  </div>
-</ng-template>
-
 <ng-template #comboboxMulti let-data="dataSource">
   <div class="combobox-multi" #inputContainer>
     <div>
-      <div class="e-float-input e-input-group cursor-pointer m-0" (click)="showCombobox()">
-        <input type="text" [value]="valueInput" class="cursor-pointer">
+      <div
+        class="e-float-input e-input-group cursor-pointer m-0"
+        (click)="data?.length > 0 ? showCombobox() : ''"
+      >
+        <input type="text" [value]="valueInput" [disabled]="data?.length == 0" class="cursor-pointer" />
         <span class="e-float-line"></span>
-        <span class="e-input-group-icon e-spin-down" ></span>
-    </div>
+        <span class="e-input-group-icon e-spin-down"></span>
+      </div>
     </div>
     <div class="select" *ngIf="show">
       <ul>

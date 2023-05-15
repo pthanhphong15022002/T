@@ -1,3 +1,4 @@
+<div #screen>
 <codx-views
   #view
   [funcID]="funcID"
@@ -6,6 +7,7 @@
   [viewActiveType]="viewType.content"
   (onLoading)="onLoading($event)"
 ></codx-views>
+</div>
 <ng-template #itemTemplate>
   <div
     class="bg-white p-2 subheader d-flex align-items-center justify-content-between"
@@ -50,20 +52,25 @@
           ></path>
         </g>
       </svg>
-      <span class="title ps-3">{{ title }}</span>
-      <span class="icon-bookmarks icon-20 ps-6"></span>
-      <codx-label
-        *ngIf="signal == 'done'"
-        fiedName="Saving"
-        [default]="'Đã lưu tất cả trong thay đổi'"
-        class="pt-16px ps-6"
-      ></codx-label>
-      <codx-label
-        *ngIf="signal == 'saving'"
-        fiedName="Saving"
-        [default]="'Đang lưu...'"
-        class="pt-16px ps-6"
-      ></codx-label>
+      <codx-input type="text" [crrValue]="title" ngClass="add-sv-title" (valueChange)="onChangeTitle($event)" [ngbTooltip]="title"></codx-input>
+      <span class="icon-bookmarks icon-20"></span>
+      <ng-container  *ngIf="signal == 'saving' , else saving">
+        <codx-label
+          fiedName="Saving"
+          [default]="'Đang lưu...'"
+          class=" ps-6"
+        ></codx-label>
+      </ng-container>
+      <ng-template #saving >
+        <ng-container *ngIf="signal == 'done'">
+            <codx-label
+            fiedName="Done"
+            [default]="'Đã lưu tất cả thay đổi'"
+            class="ps-6"
+          ></codx-label>
+        </ng-container>
+      </ng-template>
+     
     </div>
     <div class="justify-content-end d-flex align-items-center">
       <span
@@ -73,7 +80,7 @@
         placement="bottom"
         [autoClose]="'outside'"
       >
-        <i class="icon icon-color_lens icon-22"></i>
+        <i class="icon icon-color_lens icon-20"></i>
       </span>
       <ng-template #customUI>
         <codx-label
@@ -102,7 +109,7 @@
         placement="bottom"
         [autoClose]="'outside'"
       >
-        <i class="icon icon-undo icon-22"></i>
+        <i class="icon icon-i-arrow-90deg-left icon-22"></i>
       </span>
       <ng-template #undo>
         <codx-label fiedName="Undo" default="Hủy"></codx-label>
@@ -114,21 +121,19 @@
         placement="bottom"
         [autoClose]="'outside'"
       >
-        <i class="icon icon-redo icon-22"></i>
+        <i class="icon icon-i-arrow-90deg-right icon-22"></i>
       </span>
       <ng-template #redo>
         <codx-label fiedName="Redo" default="Làm lại"></codx-label>
       </ng-template>
-      <button
+      <!-- <button
         type="button"
         class="btn btn-primary btn-submit ms-2"
         (click)="onSubmit()"
       >
         <codx-label fiedName="Submit" default="Gửi"></codx-label>
-      </button>
-      <span class="btn btn-icon btn-white w-36px h-30px ms-2 me-9">
-        <i class="icon icon-more_vert icon-22"></i>
-      </span>
+      </button> -->
+     <codx-mfunc [formModel]="view?.formModel" (clickMF)="clickMF($event)"></codx-mfunc>
     </div>
   </div>
   <ejs-tab class="ejstab-survey" headerPlacement="Top" (selected)="onSelected($event)">
@@ -154,7 +159,6 @@
               #app_question
               [formModel]="view.formModel"
               [dataService]="view.dataService"
-              [title]="title"
               [recID]="recID"
               [funcID]="funcID"
             ></app-questions>

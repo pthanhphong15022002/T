@@ -1,19 +1,4 @@
 
-.bgEDEDED
-{
-    background-color: #EDEDED !important;
-}
-.pt-15px{
-  padding-top: 15px !important;
-}
-
-.ob-name{
-  font-size: 1.04em; 
-  font-weight: 500;
-}
-.kr-name{
-  font-weight: 450;
-}
 
 .okr-treeview{
   .content-tree{
@@ -28,4 +13,8 @@
       }
   }
  
+}
+.ob-kr:hover {
+    cursor: pointer;
+    color: var(--text-primary) !important;
 }

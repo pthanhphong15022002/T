@@ -192,7 +192,7 @@
               <div class="text-center">
                 <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
                   hideBtnSave="1" hideFolder="1" hideUploadBtn="0" [functionID]="formModelCustom.funcID" type="inline"
-                  (fileDelete)="fileDelete($event)" (fileCount)="fileDelete($event)" referType="sign">
+                  (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="sign">
                 </codx-attachment>
               </div>
               <div class="d-flex align-items-center" *ngIf="lstDataFile.length > 0">
@@ -358,7 +358,7 @@
       </div>
     </div>
     <div class="stepper-body no-header pt-2 w-100" *ngIf="currentTab == 3 && data.files?.length > 0">
-      <lib-pdf [recID]="data.recID" [isApprover]="false" [isEditable]="
+      <lib-pdf [recID]="data.recID" [isApprover]="false" [oApprovalTrans]="data" [isEditable]="
           (data?.approveStatus == '1' || data?.approveStatus == '2') &&
           modeView != '1'
             ? true
@@ -409,7 +409,6 @@
           <codx-label name="lblOk" default="OK" [formModel]="formModelCustom">
           </codx-label>
         </a>
-
       </div>
     </div>
   </div>

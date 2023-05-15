@@ -6,17 +6,87 @@
       <codx-aside *ngIf="asideDisplay"> </codx-aside>
 
       <div class="wrapper d-flex flex-column flex-row-fluid">
-        <codx-header
-          [class]="headerCSSClasses"
-          [headerBar]="null"
-          class="header align-items-stretch"
-          [headerRightBar]="headerRightBar"
-          #codxHeader
-        >
-        </codx-header>
+        <div class="header align-items-stretch">
+          <div class="page-title d-flex align-items-center flex-wrap ms-3">
+            <div class="d-flex align-items-center flex-wrap mt-3">
+              <div ngbDropdown class="nav-item dropdown mr-1">
+                <button
+                  ngbDropdownToggle
+
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <span class="icon-dashboard icon-20"></span>
+                </button>
+                <div
+                  ngbDropdownMenu
+                  class="dropdown-menu"
+                  aria-labelledby="dropdownMenuButton"
+                >
+                  <container-element [ngSwitch]="submenu">
+                    <!-- the same view can be shown in more than one case
+                              *ngSwitchCase="'multi-choice' || 'singe-choice'"
+                          -->
+
+                    <!--default case when there are no matches -->
+                    <some-element *ngSwitchDefault>
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <codx-label
+                          fiedName="lblMyRequest"
+                          [formName]="'fmLayOutDM'"
+                          default="Yêu cầu của tôi"
+                        >
+                        </codx-label>
+                        </div>
+                      </a>
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <codx-label
+                          fiedName="lblRequestWaitForMeToGrant"
+                          [formName]="'fmLayOutDM'"
+                          default="Yêu cầu chờ tôi cấp"
+                        >
+                        </codx-label>
+                        </div>
+                      </a>
+                    </some-element>
+                  </container-element>
+                </div>
+              </div>
+              <a>
+                <h4
+                  class="text-dark font-weight-bold my-0 mr-2 cursor-pointer"
+
+                >
+                  hahahahah
+                </h4>
+              </a>
+              <codx-breadcumb
+                notTree="true"
+                link="true"
+                end="2"
+                start="1"
+                max="4"
+              ></codx-breadcumb>
+            </div>
+            <!-- <a>
+                <h4 class="text-dark font-weight-bold my-0 mr-2">{{this.dmSV.menuActive.getValue()}}</h4>
+            </a> -->
+          </div>
+          <div class="d-flex align-items-stretch flex-shrink-0 mright">
+            <ng-container *ngTemplateOutlet="headerRightBar"></ng-container>
+          </div>
+        </div>
+        <!-- <codx-header [class]="headerCSSClasses" [headerBar]="null" class="header align-items-stretch"
+          [headerRightBar]="headerRightBar" #codxHeader>
+        </codx-header> -->
         <!-- <codx-wrapper class="d-flex flex-column flex-column-fluid" (resizedEvent)="contentResized($event)">
         </codx-wrapper> -->
-        <codx-wrapper class="d-flex flex-column flex-column-fluid">
+        <codx-wrapper class="d-flex flex-column flex-column-fluid dm-wrapper">
         </codx-wrapper>
       </div>
     </div>
@@ -38,7 +108,7 @@
     <!-- CHAT -->
     <codx-chat></codx-chat>
     <!-- NOTES -->
-    <div class="d-flex align-items-center" (click)="openFormNoteDrawer()">
+    <div class="d-flex align-items-center ms-1 ms-lg-3" (click)="openFormNoteDrawer()">
       <!-- begin::Menu wrapper -->
       <div
         class="btn btn-icon btn-clean position-relative"

@@ -1,0 +1,154 @@
+<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entity"
+  [views]="views" [button]="funcID != allocateFuncID ? buttons : ''" (buttonClick)="click($event)" [moreFuncs]="moreFunc" [idField]="idField"
+  [className]="className" [method]="method" (selectedChange)="changeItemDetail($event)" [selectedFirst]="true"
+  [autoLoad]="true" (onActions)="onActionClick($event)" (onLoading)="onLoading($event)" 
+  (viewChanged)="viewChanged($event)" [viewActiveType]="crrViewMode">
+</codx-views>
+
+
+<!----------------------------------Schedule---------------------------------->
+<ng-template #cardTemplate let-data>
+  <div class="d-flex flex-row justify-content-start align-items-center w-100 ">
+    <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
+    </codx-img>
+    <div class="ps-3 d-flex w-100 flex-column pe-12">
+      <span class="w-100 text-truncate fw-bold">{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span>
+      <span class="w-100 text-truncate fw-bold">{{data?.title}}</span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #resourceHeader let-data>
+  <div class="d-flex flex-row ms-5 align-items-center">
+    <codx-img [objectId]="data?.resourceData?.recID" imageType="circle" width="40" [objectType]="'EP_Resources'"
+      [objectName]="data?.resourceData?.resourceName"></codx-img>
+    <div class="ms-4 d-flex flex-column" style="width: 160px">
+      <span class="fw-bold text-truncate" [title]="data?.resourceData?.resourceName">{{ data?.resourceData?.resourceName
+        }}</span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #contentTmp let-data>
+  <div *ngIf="resourceType=='1'">
+    <codx-booking-room-schedule-content [recID]="data?.recID"></codx-booking-room-schedule-content>
+  </div>
+  <div *ngIf="resourceType=='2'">
+    <codx-booking-car-schedule-content [recID]="data?.recID"></codx-booking-car-schedule-content>
+  </div>
+</ng-template>
+
+<!----------------------------------List---------------------------------->
+<ng-template #subTitleTmp let-data>
+  <div class="">
+    <div class="text-gray-600">
+      <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
+    </div>
+    <div class="">
+      <span [innerHTML]="data?.title "></span>
+    </div>
+    <div class="d-flex mt-1 flex-grow-1 mb-2 " *ngIf="resourceType!='6'">
+      <div class="d-flex me-6 justify-content-center align-items-center">
+        <i class="icon-calendar_today icon-16 me-2"></i>
+        <span class="text-gray-800" [innerHTML]="data?.bookingOn | fmDT : 'dmy'">
+
+        </span>
+      </div>
+      <div class="d-flex me-6">
+        <i class="icon-access_time me-1"></i>
+        <span class="text-gray-800">
+          {{ showHour(data?.startDate) }}
+        </span>
+        <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
+          "-"
+          }}</span>
+        <span class="text-gray-800">
+          {{ showHour(data?.endDate) }}
+        </span>
+      </div>
+    </div>
+    <div class="d-flex align-items-center pt-2">
+      <codx-vll [showText]="true" [showBgColor]="true" [name]="'EP022'" [value]="data?.approveStatus"
+        class="badge badge-light badge-md fs-7">
+      </codx-vll>
+
+      <codx-vll *ngIf="resourceType=='6' || (resourceType=='2' && data?.issueControl)" [showText]="true" [showBgColor]="true" [name]="'EP020'"
+        [value]="data?.issueStatus" class="badge badge-light badge-md ">
+      </codx-vll>
+      <div [innerHTML]=" data?.bookingOn | formatvalue : formModel : 'BookingOn' | async "></div>
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+  <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2 card codx_cardcenter p-3 " [typeMF]="'hover'"
+    [title]="data?.requester " [subTitleTmp]="subTitleTmp" [icoCss]="
+      'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
+    " [imageId]="data?.createdBy" imageObjType="AD_Users" [titleLine]="2" [dataItem]="data" [formModel]="formModel"
+    [footer]="footerTmp" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)" typeMF="hover"
+    [dataItem]="data">
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #footerTmp let-data> </ng-template>
+
+<ng-template #panelRightRef>
+  <codx-booking-view-detail #viewdetail [viewMode]="'1'" [itemDetail]="itemDetail" [funcID]="funcID"
+    [formModel]="formModel" [resourceType]="resourceType" (reschedule)="reschedule($event)" (cancel)="cancel($event)"
+    (invite)="invite($event)" (edit)="edit($event)" (copy)="copy($event)" (release)="release($event)"
+    (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"  (allocate)="allocate($event)"
+    (setPopupTitleOption)="setPopupTitleOption($event)"></codx-booking-view-detail>
+</ng-template>
+
+<!----------------------------------Grid---------------------------------->
+<ng-template #gridMF let-data>
+  <codx-mfunc [type]="'hover'" [formModel]="formModel" (clickMF)="clickMF($event, data)" [dataItem]="data"
+    (changeDataMF)="changeDataMF($event, data)">
+  </codx-mfunc>
+</ng-template>
+<ng-template #gridResourceName let-data>
+  <div>
+    <span [innerHTML]="data?.resourceName  | formatvalue : formModel : 'ResourceID' | async"></span>
+  </div>
+</ng-template>
+<ng-template #gridHost let-data>
+  <div>{{data?.host}}</div>
+</ng-template>
+<ng-template #gridBookingOn let-data>
+  <div>
+    <span [innerHTML]="data?.bookingOn | formatvalue : formModel : 'BookingOn' | async"></span>
+  </div>
+</ng-template>
+<ng-template #gridStartDate let-data>
+  <div>
+    <span [innerHTML]="data?.startDate | formatvalue : formModel : 'StartDate' | async"></span>
+  </div>
+</ng-template>
+<ng-template #gridEndDate let-data>
+  <div>
+    <span [innerHTML]="data?.endDate | formatvalue : formModel : 'EndDate' | async"></span>
+  </div>
+</ng-template>
+<ng-template #gridNote let-data>
+  <div>
+    <span [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"></span>
+  </div>
+</ng-template>
+<ng-template #gridPhone let-data>
+  <div>
+    <span [innerHTML]="data?.phone | formatvalue : formModel : 'Phone' | async"></span>
+  </div>
+</ng-template>
+<ng-template #gridAddress let-data>
+  <div>
+    <span [innerHTML]="data?.address | formatvalue : formModel : 'Address' | async"></span>
+  </div>
+</ng-template>
+<!-- Other -->
+<ng-template #mfButton let-data>
+  <div class="mt-1 me-1">
+    <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover"
+      (changeDataMF)="changeDataMF($event, data)"></codx-mfunc>
+  </div>
+</ng-template>

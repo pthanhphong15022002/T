@@ -34,7 +34,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() vllRefType: any = 'TM018';
   //update quyen cho file tai TM
   @Input() isUpPermission = false;
-  @Input() isEdit = true ;  //mac dinh bằn true - Thao them sua ngay 23/2/2023
+  @Input() isEdit = true; //mac dinh bằn true - Thao them sua ngay 23/2/2023
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';
@@ -42,12 +42,22 @@ export class CodxTabsComponent implements OnInit {
   @Input() allowMultiFile: string = '1';
   @Input() displayThumb: string = 'full';
   @Input() addPermissions: Permission[] = [];
+  @Input() dataSelected: any;
   opened = false;
   @Output() tabChange = new EventEmitter();
   //ApprovalProcess
   @Input() transID: string;
   @Input() approveStatus: string;
   @Input() referType: string = ''; //de mac định the any moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
+
+  //Quotations - CM
+  @Input() customerID : string ;
+  @Input() funcIDQuotations ='CM0202' ;
+  @Input() refType : string ;
+  @Input() refID :string;
+  @Input() salespersonID: string;
+  @Input() consultantID: string;
+  
   private all: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
@@ -61,11 +71,10 @@ export class CodxTabsComponent implements OnInit {
   constructor(
     injector: Injector,
     private api: ApiHttpService,
-    private dt: ChangeDetectorRef,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {  
     // this.api
     //   .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
     //     this.objectID,
@@ -134,9 +143,16 @@ export class CodxTabsComponent implements OnInit {
       this.api
         .execSv<any>('TM', 'TM', 'TaskBusiness', 'AddPermissionFileAsync', [
           this.objectID,
-          createdBy
+          createdBy,
         ])
         .subscribe();
     }
+  }
+
+  changeCountFooter(value:number,key:string){
+    let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
+    oCountFooter[key] = value;
+    this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
+    this.changeDetectorRef.detectChanges();
   }
 }

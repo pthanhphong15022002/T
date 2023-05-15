@@ -18,43 +18,69 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
-import { TestComponetComponent } from './test-componet/test-componet.component';
-import { PopupTaskComponent } from './task/popup-task/popup-task.component';
-import { CrmCustomerComponent } from './crmcustomer/crmcustomer.component';
-import { CrmcustomerDetailComponent } from './crmcustomer/crmcustomer-detail/crmcustomer-detail.component';
-import { CodxShowTaskComponent } from './task/codx-show-task/codx-show-task.component';
+import { CmCustomerComponent } from './cmcustomer/cmcustomer.component';
+import { CmcustomerDetailComponent } from './cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CodxTaskComponent } from './task/codx-task/codx-task.component';
-import { InformationComponent } from './crmcustomer/crmcustomer-detail/information/information.component';
-import { PopupAddCrmcustomerComponent } from './crmcustomer/popup-add-crmcustomer/popup-add-crmcustomer.component';
-import { PopupAddressComponent } from './crmcustomer/popup-address/popup-address.component';
-import { ViewListCrmComponent } from './crmcustomer/view-list-crm/view-list-crm.component';
-import { PopupListContactsComponent } from './crmcustomer/popup-add-crmcustomer/popup-list-contacts/popup-list-contacts.component';
-import { PopupQuickaddContactComponent } from './crmcustomer/popup-add-crmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
-import { CodxTableComponent } from './task/codx-table/codx-table.component';
-import { OpportunityComponent } from './opportunity/opportunity.component';
-import { OpportunityDetailComponent } from './opportunity/opportunity-detail/opportunity-detail.component';
-import { TabDetailCustomComponent } from './opportunity/opportunity-detail/tab-detail-custom/tab-detail-custom.component';
+import { InformationComponent } from './cmcustomer/cmcustomer-detail/information/information.component';
+import { PopupAddCmCustomerComponent } from './cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
+import { PopupAddressComponent } from './cmcustomer/popup-address/popup-address.component';
+import { ViewListCmComponent } from './cmcustomer/view-list-cm/view-list-cm.component';
+import { PopupListContactsComponent } from './cmcustomer/popup-add-cmcustomer/popup-list-contacts/popup-list-contacts.component';
+import { PopupQuickaddContactComponent } from './cmcustomer/popup-add-cmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
 import { QuotationsComponent } from './quotations/quotations.component';
 import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/popup-add-quotations.component';
-import { PopupAddOpportunityComponent } from './opportunity/popup-add-opportunity/popup-add-opportunity.component';
+import { CodxDpModule } from 'projects/codx-dp/src/lib/codx-dp.module';
+import { DealsComponent } from './deals/deals.component';
+import { PopupAddDealComponent } from './deals/popup-add-deal/popup-add-deal.component';
+import { DealDetailComponent } from './deals/deal-detail/deal-detail.component';
+import { TabDetailCustomComponent } from './deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
+import { AddContractsComponent } from './contracts/add-contracts/add-contracts.component';
+import { ListContractsComponent } from './contracts/list-contracts/list-contracts.component';
+import { QuotationsLinesComponent } from './quotations-lines/quotations-lines.component';
+import { PopupAddQuotationsLinesComponent } from './quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
+import { CodxListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
+import { CodxListDealsComponent } from './cmcustomer/cmcustomer-detail/codx-list-deals/codx-list-deals.component';
+import { CodxTabDealcompetitorsComponent } from './deals/deal-detail/codx-tab-dealcompetitors/codx-tab-dealcompetitors.component';
+import { PopupAddDealcompetitorComponent } from './deals/deal-detail/codx-tab-dealcompetitors/popup-add-dealcompetitor/popup-add-dealcompetitor.component';
+import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/view-dealcompetitors/view-dealcompetitors.component';
+import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
+import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
+import { CodxTableComponent } from './contracts/component/codx-table/codx-table.component';
+import { NoDataComponent } from './contracts/component/no-data/no-data.component';
+import { ViewsContractsComponent } from './contracts/views-contracts/views-contracts.component';
+import { ProductComponent } from './contracts/component/product/product.component';
+import { CasesComponent } from './cases/cases.component';
+import { CaseDetailComponent } from './cases/case-detail/case-detail.component';
+import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.component';
+import { TabCaseDetailComponent } from './cases/case-detail/tab-case-detail/tab-case-detail.component';
+import { PaymentsComponent } from './contracts/component/payments/payments.component';
+
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
       {
-        path: 'test/:funcID',
-        component: TestComponetComponent,
-      },
-      {
         path: 'customers/:funcID',
-        component: CrmCustomerComponent,
+        component: CmCustomerComponent,
       },
       {
-        // gán tạm để làm UI
-        path: 'sales/:funcID',
-        component: OpportunityComponent,
+        path: 'deals/:funcID',
+        component: DealsComponent,
+      },
+      {
+        path: 'quotations/:funcID',
+        component: QuotationsComponent,
+        // data: { noReuse: true },
+      },
+      {
+          // gán tạm để làm UI
+        path: 'contracts/:funcID',
+        component: ViewsContractsComponent,
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
       },
       {
         path: '**',
@@ -70,25 +96,40 @@ const T_Component: Type<any>[] = [LayoutComponent];
   declarations: [
     CodxCmComponent,
     LayoutComponent,
-    TestComponetComponent,
-    PopupTaskComponent,
-    CrmCustomerComponent,
-    CrmcustomerDetailComponent,
-    CodxShowTaskComponent,
+    CmCustomerComponent,
+    CmcustomerDetailComponent,
     InformationComponent,
-    CodxTaskComponent,
-    PopupAddCrmcustomerComponent,
+    PopupAddCmCustomerComponent,
     PopupAddressComponent,
-    ViewListCrmComponent,
+    ViewListCmComponent,
     PopupListContactsComponent,
     PopupQuickaddContactComponent,
-    CodxTableComponent,
-    OpportunityComponent,
-    OpportunityDetailComponent,
-    TabDetailCustomComponent,
     QuotationsComponent,
     PopupAddQuotationsComponent,
-    PopupAddOpportunityComponent,
+    DealsComponent,
+    PopupAddDealComponent,
+    DealDetailComponent,
+    TabDetailCustomComponent,
+    AddContractsComponent,
+    ListContractsComponent,
+    QuotationsLinesComponent,
+    PopupAddQuotationsLinesComponent,
+    CodxListContactsComponent,
+    CodxListDealsComponent,
+    ProductComponent,
+    CodxTabDealcompetitorsComponent,
+    PopupAddDealcompetitorComponent,
+    ViewDealcompetitorsComponent,
+    CodxComboboxComponent,
+    CodxTableComponent,
+    QuotationsViewDetailComponent,
+    NoDataComponent,
+    ViewsContractsComponent,
+    CasesComponent,
+    CaseDetailComponent,
+    PopupAddCaseComponent,
+    TabCaseDetailComponent,
+    PaymentsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -104,8 +145,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     NgbModule,
     SliderModule,
     DragDropModule,
+    CodxDpModule,
   ],
-  exports: [RouterModule],
+  exports: [RouterModule,ListContractsComponent],
   providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

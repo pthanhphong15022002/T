@@ -6,7 +6,7 @@
   [dialog]="dialog"
   [formModel]="dialog?.formModel"
   [data]="field"
-  [openMore]="true"
+  [openMore]="false"
 >
   <ng-template #body>
     <div class="card-form">
@@ -18,13 +18,13 @@
         >
         </codx-label>
         <ejs-combobox
+          [enabled]="enabled"
           [dataSource]="stepList"
           [fields]="fieldsResource"
           [value]="field.stepID"
-          [allowFiltering]='true'
+          [allowFiltering]="true"
           [placeholder]="grvSetup['StepID'].description"
           (valueChange)="cbxChange($event)"
-          [disabled]="true"
         ></ejs-combobox>
       </div>
       <div class="form-group row">
@@ -203,14 +203,15 @@
           >
           </codx-label>
           <div class="mt-1">
-            <codx-valuelist
-              field="rankIcon"
-              [name]="'L1470'"
-              [iconOnly]="true"
-              [crrValue]="field?.rankIcon"
-              (valueChange)="valueChangeIcon($event)"
-            >
-            </codx-valuelist>
+            <codx-input
+            type="vllicon"
+            field="rankIcon"
+            [refValue]="'L1470'"
+            [iconOnly]="true"
+            [crrValue]="field?.rankIcon"
+            (valueChange)="valueChangeIcon($event)"
+          >
+          </codx-input>
           </div>
         </div>
         <div class="form-group col-8">

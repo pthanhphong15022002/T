@@ -71,7 +71,6 @@ export class CodxOmService {
   //     .gridViewSetup(formName, gridView)
   //     .subscribe((gv: any) => {
   //       if (gv) {
-  //         debugger;
   //         var gridview = Util.camelizekeyObj(gv);
   //         var arrgv = Object.values(gridview) as any[];
 
@@ -79,7 +78,6 @@ export class CodxOmService {
   //         for (const key in gridview) {
   //           const element = gridview[key];
   //           var keytmp = Util.camelize(gridview[element].fieldName);
-  //           console.log(gridview[element].fieldName,":", keytmp);
   //           var value = null;
   //           var type = element.dataType.toLowerCase();
   //           if (type === 'bool') value = false;
@@ -328,6 +326,28 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
   //-----------------------------------OKR Plan--------------------------------------//
   //---------------------------------------------------------------------------------//
+
+  //Lấy Emp theo UserID
+  getUser(userID:any) {
+    return this.api.execSv(
+      'SYS',
+      'AD',
+      'UsersBusiness',
+      'GetUserByIDAsync',
+      [userID]
+    );
+  }
+  getEmployee(userID:any) {
+    return this.api.execSv(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetEmployeeInforAsync',
+      [userID]
+    );
+  }
+
+
   //Lấy Task theo OKR recID
   getListOKRTasks(recID:string) {
     return this.api.execSv(
@@ -336,6 +356,36 @@ export class CodxOmService {
       OMCONST.BUSINESS.OKR,
       'GetListOKRTasksAsync',
       [recID]
+    );
+  }
+  //Lấy ds UM
+  getListUM() {
+    return this.api.execSv(
+      "BS", 
+      "ERM.Business.BS", 
+      "UnitsOfMearsureBusiness", 
+      "GetAsync", 
+      []
+    );
+  }
+  //KTra trc khi thu hồi plan
+  beforeUnReleasePlan(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'BeforeUnReleaseOKRPlanAsync',
+      [recID]
+    );
+  }
+  //Gửi mail khi phát hành
+  sendMailAfterRelease(planRecID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'SendMailAfterReleasePlanAsync',
+      [planRecID]
     );
   }
   //Lấy model
@@ -421,15 +471,7 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
   //-----------------------------------KR--------------------------------------------//
   //---------------------------------------------------------------------------------//
-  getCheckInModel() {
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR,
-      'GetCheckInModelAsync',
-      []
-    );
-  }
+  
   calculatorProgressOfPlan(listRecID: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
@@ -512,16 +554,14 @@ export class CodxOmService {
 
   distributeOKR(
     recID: string,
-    distributeToType: string,
     listDistribute: any,
-    isAdd: boolean
   ) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'DistributeOKRAsync',
-      [recID, distributeToType, listDistribute, isAdd]
+      [recID, listDistribute]
     );
   }
   assignmentOKR( recID: string, distributeToType: string, okrAssign: any, isUpdateAll: boolean,funcID:string ) {
@@ -645,12 +685,12 @@ export class CodxOmService {
     );
   }
   //Lấy ds OKR_Links theo OKR RecID
-  getOKRDistributed(recID: string) {    
+  getOKRHavedLinks(recID: string) {    
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
-      'GetOKRDistributedAsync',
+      'GetOKRHavedLinksAsync',
       [recID]
     );
   }

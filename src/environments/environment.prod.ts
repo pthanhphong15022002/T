@@ -14,8 +14,15 @@ export const environment = {
   appName: 'hps-file-test', // Tam thoi de hard
   saas: 0,
   tenantFirst: true,
-  layoutCZ: 'qtsc',
+  layoutCZ: 'lacviet',
   themeMode: 'body', //layout
+  hideFavCount: false,
+  singleExec: false,
+  asideMinimize: 'icon-title',
+  layout: {
+    title: '',
+    icon: '',
+  },
   externalLogin: {
     amazonId: '',
     facebookId: '',

@@ -1,5 +1,5 @@
-import { Component, Injector, OnInit } from '@angular/core';
-import { CodxService } from 'codx-core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { AsideComponent, CodxService } from 'codx-core';
 import {
   CallFuncService,
   DialogRef,
@@ -8,23 +8,23 @@ import {
 } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.css'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  module = 'AC';
-  override aside = true;
-  override asideFixed = true;
   dialog!: DialogRef;
-
+  @ViewChild('aside') asideRef: AsideComponent;
   constructor(
     inject: Injector,
     private codxShareService: CodxShareService,
     private callfc: CallFuncService
   ) {
     super(inject);
+
+    this.module = 'AC';
   }
 
   onInit(): void {}

@@ -45,7 +45,16 @@ import { PopupPropertiesComponent } from './dynamic-process/popup-properties/pop
 import { PopupUserPropertiesComponent } from './dynamic-process/popup-properties/popup-user-properties/popup-user-properties.component';
 import { PopupParticipantsComponent } from './dynamic-process/popup-participants/popup-participants.component';
 import { LayoutInstancesComponent } from './layout-instances/layout-instances.component';
-import { ProgressComponent } from './instances/instance-detail/stages-detail/progress/progress.component';
+import { ProgressComponent } from './instances/instance-detail/stages-detail/progress-layout/progress.component';
+import { CarouselStageComponent } from './instances/instance-detail/carousel-stage/carousel-stage.component';
+
+import { CodxTaskComponent } from './componnent-task/codx-task/codx-task.component';
+import { UpdateProgressComponent } from './componnent-task/update-progress/update-progress.component';
+import { TestComponent } from './componnent-task/test/test.component';
+import { InputNumberDurationComponent } from './dynamic-process/popup-add-dynamic-process/input-number-duration/input-number-duration.component';
+import { ApprovalsComponent } from './approvals/approvals.component';
+import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
+import { PopupEditOwnerstepComponent } from './instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 
 
 const routes: Routes = [
@@ -59,29 +68,48 @@ const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'instances/:funcID/:processID',
+        component: InstancesComponent,
+        data: { noReuse: true },
+      },
+      //dp/approvals/DPT0501
+      {
+        path: 'approvals/:funcID',
+        loadChildren: () =>
+          import('projects/codx-dp/src/lib/codx-dp-approver.module').then(
+            (m) => m.ApprovelModule
+          ),
+        data: { noReuse: true },
+      },
+      {
+        path: 'test',
+        component: TestComponent,
+        data: { noReuse: true },
+      },
+      {
         path: '**',
         redirectTo: 'error/404',
       },
     ],
   },
   //thao tesst chuyen popup sang page
-  {
-    path: '',
-    //component: LayoutNoAsideComponent,
-    component: LayoutInstancesComponent,
-    children: [
-      {
-        path: 'instances/:funcID/:processID',
-        component: InstancesComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: '**',
-        redirectTo: 'dynamicprocess/DP0101',
-        pathMatch: 'full',
-      },
-    ],
-  },
+  // {
+  //   path: '',
+  //   //component: LayoutNoAsideComponent,
+  //   component: LayoutInstancesComponent,
+  //   children: [
+  //     {
+  //       path: 'instances/:funcID/:processID',
+  //       component: InstancesComponent,
+  //       data: { noReuse: true },
+  //     },
+  //     {
+  //       path: '**',
+  //       redirectTo: 'dynamicprocess/DP0101',
+  //       pathMatch: 'full',
+  //     },
+  //   ],
+  // },
 ];
 
 const T_Component: Type<any>[] = [LayoutComponent];
@@ -115,7 +143,14 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupPropertiesComponent,
     PopupUserPropertiesComponent,
     PopupParticipantsComponent,
-    ProgressComponent,  
+    ProgressComponent,
+    CarouselStageComponent,
+    UpdateProgressComponent,
+    CodxTaskComponent,
+    TestComponent,
+    InputNumberDurationComponent,
+    ApprovalsComponent,
+    PopupEditOwnerstepComponent
   ],
   imports: [
     RouterModule.forChild(routes),

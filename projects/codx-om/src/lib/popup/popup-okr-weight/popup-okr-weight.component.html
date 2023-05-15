@@ -2,67 +2,66 @@
 </codx-form>
 
 <ng-template #editWeightTmp>
-  <div class="w-1000px mx-auto h-100 bg-white rounded-3 p-7 d-flex flex-column mt-5">
-
-    <div class="d-flex align-items-center justify-content-between pb-2 px-2 mb-4 border-bottom">
-      <div class="fw-bold fs-4 text-dark">{{subTitle}}</div>
-      <div class="fs-4 text-primary">{{dataOKR?.periodID}}</div>
-    </div>
-
-    <table class="w-100 table table-bordered gs-3 gy-3">
-      <thead>
-        <tr class="fw-bold text-dark bg-gray-100">
-          <th scope="col">
-            <div class="text-center">
-              <codx-label *ngIf="dataOKR?.okrType==obType" default="Kết quả chính" name="lblKeyResults"></codx-label>
-              <codx-label *ngIf="dataOKR?.okrType==krType" default="Kết quả phụ" name="lblSubKeyResults"></codx-label>
-              <codx-label *ngIf="dataOKR?.okrType!=krType && dataOKR?.okrType!=obType" default="Mục tiêu" name="lblObjectives"></codx-label>
-            </div>
-          </th>
-          <th scope="col" class="w-150px text-center">
-            <codx-label default="Trọng số" name="lblWeight"></codx-label>
-          </th>
-          <th scope="col" class="w-150px text-center">
-            <codx-label default="Tiến độ" name="lblProgress"></codx-label>
-          </th>
-          <th scope="col" class="w-150px text-center">
-            <codx-label default="Tiến độ theo trọng số" name="lblProgressByWeight"></codx-label>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let child of okrChild;let i=index;" class="red">
-          <td>
-            <div class="d-flex align-items-center">
-              <span *ngIf="child?.okrType==krType" [inlineSVG]="okrVll?.kr?.icon" class="me-3 w-20px h-20px"></span>
-              <span *ngIf="child?.okrType==skrType" [inlineSVG]="okrVll?.skr?.icon" class="me-3 w-20px h-20px"></span>
-              <span *ngIf="child?.okrType==obType" [inlineSVG]="okrVll?.ob?.icon" class="me-3 w-20px h-20px"></span>
-            <span>
-              <codx-inplace [type]="'text'" emptyText="" cssClass="pe-3 fw-bold" [disabled]="true"
-                [value]="child?.okrName">
-  
-              </codx-inplace></span>
-            </div>
-          </td>
-            
-          <td class="text-center">
-            <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
+  <div class="pt-5 h-100">
+    <div class="w-100 mw-1200px mx-auto h-100 bg-white rounded-3 p-7 d-flex flex-column">
+      <div class="d-flex align-items-center justify-content-between pb-2 px-2 mb-4 border-bottom">
+        <div class="fw-bold fs-4 text-dark">{{subTitle}}</div>
+        <div class="fs-4 text-primary">{{dataOKR?.periodID}}</div>
+      </div>
+<div class="w-100">
+      <table class="w-100 table table-bordered gy-3 gx-5">
+        <thead>
+          <tr class="fw-bold text-dark bg-gray-100">
+            <th scope="col">
+              <div class="">
+                <codx-label *ngIf="dataOKR?.okrType==obType" default="Kết quả chính" name="lblKeyResults"></codx-label>
+                <codx-label *ngIf="dataOKR?.okrType==krType" default="Kết quả phụ" name="lblSubKeyResults"></codx-label>
+                <codx-label *ngIf="dataOKR?.okrType!=krType && dataOKR?.okrType!=obType" default="Mục tiêu" name="lblObjectives"></codx-label>
+              </div>
+            </th>
+            <th scope="col" class="w-150px text-center">
+              <codx-label default="Trọng số" name="lblWeight"></codx-label>
+            </th>
+            <th scope="col" class="w-150px text-center">
+              <codx-label default="Tiến độ" name="lblProgress"></codx-label>
+            </th>
+            <th scope="col" class="w-150px text-center">
+              <codx-label default="Tiến độ theo trọng số" name="lblProgressByWeight"></codx-label>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let child of okrChild;let i=index;">
+            <td>
+              <div class="d-flex align-items-center w-100">
+                <span *ngIf="child?.okrType==krType" [inlineSVG]="okrVll?.kr?.icon" class="w-25px h-25px"></span>
+                <span *ngIf="child?.okrType==skrType" [inlineSVG]="okrVll?.skr?.icon" class="w-25px h-25px"></span>
+                <span *ngIf="child?.okrType==obType" [inlineSVG]="okrVll?.ob?.icon" class="w-25px h-25px"></span>
+                <div class="ms-3 d-flex w-100 align-items-center ">
+                  <codx-inplace [type]="'text'" emptyText="" cssClass="fw-bold" [disabled]="true"
+                    [value]="child?.okrName">
+      
+                  </codx-inplace></div>
+              </div>
+            </td>
+              
+            <td class="text-center">
+              <codx-inplace (valueChange)="valueChange($event)" locale="en" format="00.00" [field]="i"
+                [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
+                [value]="child?.weight ">
+              </codx-inplace>
+            </td>
+            <td class="text-center" >
+              <codx-inplace (valueChange)="valueChange($event)" locale="en" format="00.00" [field]="i"
               [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
-              [value]="child?.weight ">
+              [value]="child?.progress " [disabled]="true">
             </codx-inplace>
-          </td>
-          <td class="text-center" >
-            <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
-            [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
-            [value]="child?.progress ">
-          </codx-inplace>
-          </td>
-          
+          </td>         
 
           <td class="text-center " >
-            <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
+            <codx-inplace (valueChange)="valueChange($event)" locale="en" format="00.00" [field]="i"
             [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
-            [value]="child?.weight* child?.progress ">
+            [value]="child?.weight* child?.progress"  [disabled]="true">
           </codx-inplace>
           </td>         
 
@@ -73,28 +72,28 @@
         </tr>
         <tr>
           <td  class="text-center">
-            <codx-label default="Tổng cộng" name="lblTotal" class="fs-5"></codx-label>
+            <codx-label default="Tổng cộng" name="lblTotal" class="fs-5 fw-bold"></codx-label>
           </td>
-          <td class="d-flex flex-row justify-content-center align-items-center">
-            <span class="fs-3 fw-bold "  [innerHTML]="totalWeight | formatvalue : okrFM?.krFM : 'progress' | async"></span>
+          <td class="">
+            <span class="fs-5 fw-bold text-center h-100 w-100 d-block"  [innerHTML]="totalWeight"></span>
           </td>
           <td class="text-center">
           </td>
-          <td class="d-flex flex-row justify-content-center align-items-center">
-            <span class="fs-4 fw-bold text-primary" *ngIf="totalProgress!=0"
-              [innerHTML]="totalProgress | formatvalue : okrFM?.krFM : 'progress' | async"></span>
-            <span class="fs-4 fw-bold text-primary" *ngIf="totalProgress==0" [innerHTML]="totalProgress"></span>
+          <td class="">
+            <span class="w-100 d-block fs-5 fw-bold text-center text-primary h-100" 
+              [innerHTML]="totalProgress"></span>
           </td>
         </tr>
       </tbody>
-    </table>
+      </table>
+    </div>
 
+      <div class="d-flex justify-content-end w-100 my-5">
+        <span type="button" (click)="onSaveForm()" class="btn btn-primary pe-5">
+          <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
+        </span>
 
-    <div class="d-flex justify-content-end w-100 my-5">
-      <span type="button" (click)="onSaveForm()" class="btn btn-primary pe-5">
-        <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
-      </span>
-
+      </div>
     </div>
   </div>
 </ng-template>

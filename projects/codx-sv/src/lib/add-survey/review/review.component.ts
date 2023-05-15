@@ -1,5 +1,5 @@
 import { I } from '@angular/cdk/keycodes';
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, HostBinding } from '@angular/core';
 import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
@@ -20,6 +20,8 @@ import { SV_Respondents } from '../../models/SV_Respondents';
   providers: [RteService, MultiSelectService],
 })
 export class ReviewComponent extends UIComponent implements OnInit {
+
+  @HostBinding('class.h-100') someField: boolean = false;
   respondents: SV_Respondents = new SV_Respondents();
   questions: any = [];
   functionList: any;
@@ -39,7 +41,9 @@ export class ReviewComponent extends UIComponent implements OnInit {
   empty = '';
   lstQuestionTemp: any;
   lstQuestion: any;
-  isSent:boolean = false
+  isSent:boolean = false;
+  survey:any;
+  html = '<div class="text-required-rv ms-6 d-flex align-items-center"><i class="icon-error_outline text-danger"></i><span class="ms-2 text-danger">Đây là một câu hỏi bắt buộc</span></div>'
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -88,6 +92,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    this.someField = true
     this.SVServices.getFormModel(this.funcID).then((res) => {
       if (res) this.formModel = res;
     });
@@ -101,7 +106,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
         this.recID,
       ])
       .subscribe((res: any) => {
-        if (res[0] && res[0].length > 0) {
+        if(res && res[2]) this.survey = res[2];
+        if (res && res[0] && res[0].length > 0) {
           this.questions = this.getHierarchy(res[0], res[1]);
           if (this.questions) {
             this.lstQuestionTemp = JSON.parse(JSON.stringify(this.questions));
@@ -127,6 +133,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
           });
           this.getDataAnswer(this.lstQuestionTemp);
         }
+       
       });
   }
 
@@ -217,8 +224,16 @@ export class ReviewComponent extends UIComponent implements OnInit {
 
   lstAnswer: any = [];
   valueChange(e, itemSession, itemQuestion, itemAnswer) {
-    debugger
     //itemAnswer.choose = true
+    if(itemQuestion.answerType == "L")
+    {
+      this.lstQuestion[itemSession.seqNo].children[
+        itemQuestion.seqNo
+      ].answers[0].answer = itemAnswer;
+
+      return;
+    }
+
     if (!e.data && !e.component) return;
     if (e.component) {
       if (
@@ -236,7 +251,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
           other: 0,
           columnNo: 0,
         };
-        this.lstQuestionTemp[itemSession.seqNo].children[
+        this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers[0] = results;
       } else if (e.field == 'C') {
@@ -245,18 +260,22 @@ export class ReviewComponent extends UIComponent implements OnInit {
           this.lstAnswer = this.lstAnswer.filter((x) => {
             x.seqNo == itemAnswer.seqNo;
           });
-        this.lstQuestionTemp[itemSession.seqNo].children[
+        this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers = this.lstAnswer;
-      } else
-        this.lstQuestionTemp[itemSession.seqNo].children[
+      }
+       else
+        this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));
+      
+      
     }
+
+    if(itemQuestion.mandatory) this.removeClass(itemQuestion.recID)
   }
 
   checkAnswer(seqNoSession, seqNoQuestion, seqNoAnswer, answerType = null) {
-    debugger
     if (this.lstQuestion) {
       let seqNo = 0;
       if (!answerType)
@@ -298,7 +317,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   getValue(seqNoSession, seqNoQuestion, seqNoAnswer) {
-    if (this.lstQuestion) {
+    if (this.lstQuestion && this.lstQuestion[seqNoSession].children[seqNoQuestion].answers != null) {
       return this.lstQuestion[seqNoSession].children[seqNoQuestion].answers[
         seqNoAnswer
       ].answer;
@@ -306,11 +325,14 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   onSubmit() {
+    this.checkRequired();
     let lstAnswers = [];
     this.lstQuestion.forEach((y) => {
       lstAnswers = [...lstAnswers, ...y.children];
     });
     let respondQuestion: any = [];
+    var check = false;
+    debugger
     lstAnswers.forEach((x) => {
       if (x.answerType) {
         let respondResult: any = [];
@@ -328,6 +350,16 @@ export class ReviewComponent extends UIComponent implements OnInit {
             columnNo: false,
           };
           respondResult.push(objR);
+
+          if(x.mandatory && !objR.answer)
+          {
+            check = true
+            document.getElementById("formError"+x.recID).innerHTML = this.html;
+            document.getElementById("formId"+x.recID).className += " border-danger";
+          }
+          else
+          {}
+
         });
         if (respondResult) {
           let objQ = {
@@ -340,20 +372,51 @@ export class ReviewComponent extends UIComponent implements OnInit {
         }
       }
     });
-    this.respondents.email = this.user.email;
-    this.respondents.respondent = this.user.userName;
-    this.respondents.position = this.user.positionID;
-    this.respondents.department = this.user.departmentID;
-    this.respondents.responds = respondQuestion;
-    this.respondents.objectType = '';
-    this.respondents.objectID = '';
-    this.respondents.finishedOn = new Date();
-    this.respondents.transID = this.recID;
-    this.respondents.scores = 0;
-    this.respondents.duration = 20;
-    this.respondents.pending = true;
-    this.SVServices.onSubmit(this.respondents).subscribe((res:any) => {
-      if(res && res.status == 5) this.isSent = true
-    });
+    if(!check)
+    {
+      this.respondents.email = this.user.email;
+      this.respondents.respondent = this.user.userName;
+      this.respondents.position = this.user.positionID;
+      this.respondents.department = this.user.departmentID;
+      this.respondents.responds = respondQuestion;
+      this.respondents.objectType = '';
+      this.respondents.objectID = '';
+      this.respondents.finishedOn = new Date();
+      this.respondents.transID = this.recID;
+      this.respondents.scores = 0;
+      this.respondents.duration = 20;
+      this.respondents.pending = true;
+      this.SVServices.onSubmit(this.respondents).subscribe((res:any) => {
+        if(res && res.status == 5) this.isSent = true
+      });
+    }
+    
+  }
+
+
+  checkRequired()
+  {
+    debugger
+    var a = this.itemSession;
+  }
+
+  removeClass(id:any = null)
+  {
+    if(!id)
+    {
+      var elems = document.querySelectorAll(".card-survey-question");
+      elems.forEach(el=>{
+        el.classList.remove("border-danger");
+      });
+      var elemss = document.querySelectorAll(".formError");
+      elemss.forEach(el=>{
+        el.remove();
+      });
+    }
+    else
+    {
+      document.getElementById("formError"+id).remove();
+      document.getElementById("formId"+id).classList.remove("border-danger");
+    }
   }
 }

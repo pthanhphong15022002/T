@@ -1,6 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { CallFuncService, LayoutBaseComponent, SidebarModel } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'lib-nosub-aside',
@@ -8,21 +9,25 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
   styleUrls: ['./nosub-aside.component.css']
 })
 export class NosubAsideComponent extends LayoutBaseComponent {
-  module = 'AC';
-  override aside = true;
-  override asideFixed = true;
   // toolbar = false;
+  childMenu = new BehaviorSubject<any>(null);
   constructor(
     inject: Injector,
     private callfc: CallFuncService
   ) { 
     super(inject);
+    this.module = 'AC';
+    this.layoutModel.toolbarFixed = true;
   }
 
   onInit(): void { }
 
   onAfterViewInit(): void { }
 
+  childMenuClick(e) {
+    this.childMenu.next(e);
+  }
+  menuClick(e) {}
   openFormNoteDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';

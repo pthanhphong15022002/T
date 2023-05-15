@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiHttpService, AuthStore, CacheService, Util } from 'codx-core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxDpService {
   dataProcess = new BehaviorSubject<any>(null);
-  
+
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -109,7 +109,7 @@ export class CodxDpService {
     });
   }
 
-  getAutonumber(functionID, entityName, fieldName): Observable<any> {
+  getAutonumber(formName, functionID, entityName, fieldName): Observable<any> {
     var subject = new Subject<any>();
     this.api
       .execSv<any>(
@@ -117,7 +117,7 @@ export class CodxDpService {
         'ERM.Business.AD',
         'AutoNumbersBusiness',
         'GenAutoNumberAsync',
-        [functionID, entityName, fieldName, null]
+        [formName, functionID, entityName, fieldName]
       )
       .subscribe((item) => {
         if (item) subject.next(item);
@@ -538,10 +538,218 @@ export class CodxDpService {
     );
   }
 
-  getAdminRoleDP(userID){
+  getAdminRoleDP(userID) {
     return this.api.exec<any>(
-      'AD', 'UserRolesBusiness', 'CheckUserRolesAsync',
+      'AD',
+      'UserRolesBusiness',
+      'CheckUserRolesAsync',
       [userID, 'DP']
     );
   }
+
+  async getListUserByOrg(list = []) {
+    var lstOrg = [];
+    if (list != null && list.length > 0) {
+      var userOrgID = list
+        .filter((x) => x.objectType == 'O')
+        .map((x) => x.objectID);
+      if (userOrgID != null && userOrgID.length > 0) {
+        let o = await firstValueFrom(
+          this.getListUserByListOrgUnitIDAsync(userOrgID, 'O')
+        );
+        if (o != null && o.length > 0) {
+          if (lstOrg != null && lstOrg.length > 0) {
+            lstOrg = this.getUserArray(lstOrg, o);
+          } else {
+            lstOrg = o;
+          }
+        }
+      }
+      var userDepartmentID = list
+        .filter((x) => x.objectType == 'D')
+        .map((x) => x.objectID);
+
+      if (userDepartmentID != null && userDepartmentID.length > 0) {
+        let d = await firstValueFrom(
+          this.getListUserByListOrgUnitIDAsync(userDepartmentID, 'D')
+        );
+        if (d != null && d.length > 0) {
+          if (lstOrg != null && lstOrg.length > 0) {
+            lstOrg = this.getUserArray(lstOrg, d);
+          } else {
+            lstOrg = d;
+          }
+        }
+      }
+      var userPositionID = list
+        .filter((x) => x.objectType == 'P')
+        .map((x) => x.objectID);
+      if (userPositionID != null && userPositionID.length > 0) {
+        let p = await firstValueFrom(
+          this.getListUserByListOrgUnitIDAsync(userPositionID, 'P')
+        );
+        if (p != null && p.length > 0) {
+          if (lstOrg != null && lstOrg.length > 0) {
+            lstOrg = this.getUserArray(lstOrg, p);
+          } else {
+            lstOrg = p;
+          }
+        }
+      }
+
+      var userRoleID = list
+        .filter((x) => x.objectType == 'R')
+        .map((x) => x.objectID);
+      if (userRoleID != null && userRoleID.length > 0) {
+        let r = await firstValueFrom(this.getListUserByRoleID(userRoleID));
+        if (r != null && r.length > 0) {
+          if (lstOrg != null && lstOrg.length > 0) {
+            lstOrg = this.getUserArray(lstOrg, r);
+          } else {
+            lstOrg = r;
+          }
+        }
+      }
+      var lstUser = list.filter(
+        (x) => x.objectType == 'U' || x.objectType == '1'
+      );
+      if (lstUser != null && lstUser.length > 0) {
+        var tmpList = [];
+        lstUser.forEach((element) => {
+          var tmp = {};
+          if (element != null) {
+            tmp['userID'] = element.objectID;
+            tmp['userName'] = element.objectName;
+            tmpList.push(tmp);
+          }
+        });
+        if (tmpList != null && tmpList.length > 0) {
+          lstOrg = this.getUserArray(lstOrg, tmpList);
+        }
+      }
+    }
+    return lstOrg;
+  }
+
+  getUserArray(arr1, arr2) {
+    const arr3 = arr1.concat(arr2).reduce((acc, current) => {
+      const duplicateIndex = acc.findIndex(
+        (el) => el.userID === current.userID
+      );
+      if (duplicateIndex === -1) {
+        acc.push(current);
+      } else {
+        acc[duplicateIndex] = current;
+      }
+      return acc;
+    }, []);
+    return arr3;
+  }
+
+  updateOwnerStepAsync(step){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateOwnerStepAsync',
+      step
+    );
+  }
+
+  //check trinfh ki
+  checkApprovalStep(recID) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'CheckApprovalStepByTranIDAsync',
+      recID
+    );
+  }
+  //delete ApproverStep DeleteByTransIDAsync
+  removeApprovalStep(tranID) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'DeleteByTransIDAsync',
+      tranID
+    );
+  }
+  getESCategoryByCategoryID(categoryID) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDAsync',
+      categoryID
+    );
+  }
+
+  getListAproverStepByCategoryID(categoryID) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'GetListStepByCategoryIDAsync',
+      categoryID
+    );
+  }
+  removeListApprovalStep(listAppoverStep) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'DeleteListApprovalStepAsync',
+      listAppoverStep
+    );
+  }
+  //#region up + add + delete es tại DP
+  upDataApprovalStep(listStep, listStepDelete) {
+    if (listStep?.length > 0)
+      this.api
+        .execSv(
+          'ES',
+          'ES',
+          'ApprovalStepsBusiness',
+          'UpdateApprovalStepsAsync',
+          [listStep]
+        )
+        .subscribe();
+
+    if (listStepDelete?.length > 0) {
+      this.api
+        .execSv(
+          'ES',
+          'ES',
+          'ApprovalStepsBusiness',
+          'DeleteListApprovalStepAsync',
+          [listStepDelete]
+        )
+        .subscribe();
+    }
+  }
+  updateApproverStatusInstance(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'UpdateApproverStatusByRecIDAsync',
+      data
+    );
+  }
+  //#endregion
+
+  copyAvatarById(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'CopyAvatarByIdProcessAsync',
+      data
+    );
+  }
+  getInstanceStepsCopy(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetListStepsOldAsync',
+      data
+    );
+  }
+
+
 }

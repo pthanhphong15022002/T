@@ -10,7 +10,18 @@
   [data]="adUser"
 >
 </codx-layout-add>
-
+<ng-template #tabDescription1>
+  <ng-container>
+    <codx-input
+      field="employeeID"
+      refValue="Users"
+      crrValue="VVQUANG"
+      type="Combobox"
+      refType="4"
+    >
+    </codx-input>
+  </ng-container>
+</ng-template>
 <ng-template #tabDescription>
   <ng-container *ngIf="form?.formGroup">
     <div class="mt-3 pb-5">
@@ -26,6 +37,7 @@
         [parentType]="'AD_Users'"
         [parentID]="adUser.userID"
         [imgOn]="date"
+        (handleInput)="changeAvatar()"
       >
       </codx-img>
     </div>
@@ -35,8 +47,9 @@
           <codx-label fiedName="UserID" [formModel]="form.formModel">
           </codx-label>
           <codx-input
-            field="UserID"
             [disabled]="true"
+            field="UserID"
+            [disabled]="(dialog?.dataService)!.keyField === 'UserID'"
             [Group]="form.formGroup"
             [formModel]="form.formModel"
           >
@@ -53,17 +66,17 @@
             (valueChange)="valueEmp($event)"
             [Group]="form.formGroup"
             [formModel]="form.formModel"
-            *ngIf="formType == 'edit'"
           >
+            <!-- *ngIf="formType == 'edit'" -->
           </codx-input>
-          <codx-input
+          <!-- <codx-input
             field="employeeID"
             (valueChange)="valueEmp($event)"
             *ngIf="formType == 'add' || formType == 'copy'"
             [Group]="form.formGroup"
             [formModel]="form.formModel"
           >
-          </codx-input>
+          </codx-input> -->
         </div>
       </div>
     </div>
@@ -109,8 +122,8 @@
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           (valueChange)="valueChangeM($event)"
-          [disabled]="!adUser.email ? false : true"
-          *ngIf="formType == 'edit'"
+          [disabled]="true"
+          *ngIf="formType == 'edit' || formType == 'invite'"
         >
         </codx-input>
         <codx-input
@@ -118,7 +131,7 @@
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           (valueChange)="valueChangeM($event)"
-          [disabled]="false"
+          [disabled]="isSaas"
           *ngIf="formType == 'add' || formType == 'copy'"
         >
         </codx-input>
@@ -148,8 +161,7 @@
         <codx-label
           fiedName="titleUserRoles"
           [formModel]="form?.formModel"
-          default="Chỉnh sửa
-        quyền"
+          default="Chỉnh sửa quyền"
         >
         </codx-label>
       </button>
@@ -230,8 +242,8 @@
     <button
       type="button"
       class="btn btn-primary"
-      (click)="onSave()"
-      [disabled]="this.saveSuccess"
+      (click)="saveUser('closePopup', false, false)"
+      [disabled]="this.isSaving"
     >
       <codx-label
         fiedName="Save"

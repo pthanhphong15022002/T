@@ -265,8 +265,6 @@ export class CodxApprovalComponent
         (p) => p.data.functionID == 'SYS208' || p.disabled == false
       );
 
-      console.log(this.listApproveMF);
-
       //Ẩn thêm xóa sửa
       var list2 = data.filter(
         (x) =>

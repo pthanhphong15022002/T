@@ -16,6 +16,8 @@ import {
 } from 'codx-core';
 import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
 import { MessageSystemPipe } from '../chat-box/mssgSystem.pipe';
+import { GRID_CLASS } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
+import { tmpMessage } from '../models/WP_Messages.model';
 
 @Component({
   selector: 'codx-chat-list',
@@ -80,18 +82,35 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // add mesage
     this.signalRSV.chat.subscribe((res: any) => {
-      if (res.data.groupID){
-        let data = this.codxListView.dataService.data;
-        let _index = data.findIndex(e => e['groupID'] === res.groupID);
-        if(_index > -1){
-          let group = data[_index]; 
-          if(res.messageType !== "3"){
-            group.message = res.message;
-            group.modifiedOn = res.modifiedOn;
-            group.isRead = res.status.some(x => x["UserID"] === this.user.UserID);
-            (this.codxListView.dataService as CRUDService).removeIndex(_index).subscribe();
-            (this.codxListView.dataService as CRUDService).add(group).subscribe();
-          }
+      if (res)
+      {
+        let mssg = res.mssg;
+        let lstData = this.codxListView.dataService.data;
+        let idx = lstData.findIndex((x:any) => x.groupID === res.groupID);
+        if(idx != -1){
+          let group = JSON.parse(JSON.stringify(lstData[idx])); 
+          mssg.message = (mssg.messageType === "3" || mssg.messageType === "5") ? "" : mssg.message;
+          mssg.isRead = mssg.status.some((x:any) => x.userID === this.user.userID);
+          group.message = JSON.parse(JSON.stringify(mssg));
+          lstData.splice(idx,1);
+          (this.codxListView.dataService as CRUDService).add(group).subscribe();
+          this.dt.detectChanges();
+        }
+      }
+    });
+    this.signalRSV.undoMssg.subscribe((res: any) => {
+      if (res)
+      {
+        let lstData = this.codxListView.dataService.data;
+        let idx = lstData.findIndex((x:any) => x.groupID === res.groupID);
+        if(idx != -1){
+          let group = JSON.parse(JSON.stringify(lstData[idx])); 
+          let mssg = JSON.parse(JSON.stringify(group.message));
+          mssg.message = "";
+          group.message = JSON.parse(JSON.stringify(mssg));
+          lstData.splice(idx,1);
+          (this.codxListView.dataService as CRUDService).add(group).subscribe();
+          this.dt.detectChanges();
         }
       }
     });
@@ -132,13 +151,13 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
    selectItem(group: any){
     group.isRead = true;
     group.messageMissed = 0;
-    this.signalRSV.sendData("ActiveGroupAsync",group);
+    this.signalRSV.sendData("OpenGroupAsync",group.groupID);
   }
    // select item search
    selectItemSeach(item: any) {
-    if(item.type != 'H'){
-      item.type = item.type == 'U' ? '1':'2';
-      this.signalRSV.sendData("GetGroupSearch",item);
+    if(item.type != 'H')
+    {
+      this.signalRSV.sendData("GetGroupSearch",item.id,item.type == 'U' ? '1':'2');
     }
   }
   

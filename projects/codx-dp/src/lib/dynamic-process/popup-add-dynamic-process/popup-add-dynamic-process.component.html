@@ -210,7 +210,7 @@
           [ngClass]="
             currentTab == 1 || currentTab == 3 ? 'scroll-stask' : 'scroll-y'
           "
-          class="dp-step pt-4 px-5 mx-1"
+          class="dp-step step-content"
           data-kt-scroll="true"
           data-kt-scroll-activate="{default: true}"
           data-kt-scroll-height="auto"
@@ -273,7 +273,7 @@
               *ngIf="currentTab != 3"
               type="button"
               [ngClass]="checkSaveNow() ? '' : 'disabled'"
-              class="btn btn-primary me-5"
+              class="btn btn-primary me-2"
               (click)="onSaveNow()"
             >
               <codx-label
@@ -498,7 +498,7 @@
           <button
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="clickRoles()"
+            (click)="clickRoles('O')"
           >
             <i class="icon-settings icon-16"></i>
           </button>
@@ -560,7 +560,7 @@
           <button
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="clickRoles()"
+            (click)="clickRoles('P')"
           >
             <i class="icon-settings icon-16"></i>
           </button>
@@ -623,7 +623,7 @@
           <button
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="clickRoles()"
+            (click)="clickRoles('F')"
           >
             <i class="icon-settings icon-16"></i>
           </button>
@@ -665,6 +665,145 @@
           </div>
         </ng-container>
       </div>
+      <hr />
+      <div class="d-flex flex-column mb-4">
+        <div class="d-flex align-items-center mb-2">
+          <codx-label
+            class="fw-bold fs-5 text-dark me-3"
+            fiedName="ApproveRule"
+            [formModel]="dialog.formModel"
+          >
+          </codx-label>
+          <div class="me-3 pt-2">
+            <codx-input
+              type="switch"
+              class="test-check"
+              [checked]="process?.approveRule"
+              field="approveRule"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+          <button
+            type="button"
+            class="btn btn-icon btn-sm btn-light-primary me-2"
+            [disabled]="!process?.approveRule"
+            (click)="clickSettingApprove()"
+          >
+            <i class="icon-settings icon-16"></i>
+          </button>
+        </div>
+        <ng-container *ngIf="process?.approveRule">
+          <div class="mb-2 mt-2">
+            <codx-label
+              class="fw-normal text-gray-400"
+              name="lblDescriptionApproveRule"
+              [formModel]="dialog.formModel"
+              default="Các bước duyệt khi thực hiện trình kí"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="progress-approval ms-3 mx-3"
+            *ngIf="listStepApproverView?.length > 0"
+          >
+            <ng-container
+              *ngFor="let item of listStepApproverView; let i = index"
+            >
+              <div class="process-step" placement="top">
+                <div
+                  class="step-node cursor-pointer d-flex flex-center"
+                  [style.color]="''"
+                  [ngStyle]="{ border: '2px solid ' + '' }"
+                  #popoverDetails="ngbPopover"
+                  [ngbPopover]="popupViewApproverStep"
+                  (mouseenter)="popoverApproverStep(popoverDetails, item)"
+                  (mouseleave)="popoverApproverStep(popoverDetails, null)"
+                  popoverClass="approverStepClass"
+                  container="body"
+                  placement="top bottom"
+                >
+                  {{ i + 1 }}
+                </div>
+                <div class="text-gray-700 mt-3">
+                  {{ item.stepType | vll : "ES002" : "text" | async }}
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <div
+            class="center w-400 mt-5 mb-3"
+            *ngIf="listStepApproverView && listStepApproverView.length == 0"
+          >
+            <codx-label
+              name="lblNotSetup"
+              default="Chưa thiết lập"
+              [formModel]="dialog.formModel"
+            >
+            </codx-label>
+          </div>
+        </ng-container>
+      </div>
+      <ng-template #popupViewApproverStep>
+        <div class="">
+          <div class="text-gray-600 fw-bold">
+            {{ viewApproverStep.stepName }}
+          </div>
+          <div class="d-flex flex-wrap">
+            <ng-container *ngFor="let approver of viewApproverStep.approvers">
+              <div
+                class="border border-1 border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
+              >
+                <codx-temp-full
+                  cardCss="card-template p-3"
+                  *ngIf="
+                    approver.roleType?.length == 1 || approver.roleType == 'PA'
+                  "
+                  [imageId]="approver.approver"
+                  [title]="approver.name"
+                  [subTitle]="approver.position"
+                  [imageObjType]="'AD_Users'"
+                  [modeImgs]="true"
+                  [titleLine]="3"
+                >
+                </codx-temp-full>
+
+                <codx-temp-full
+                  cardCss="card-template p-3"
+                  *ngIf="
+                    approver.roleType.length > 1 && approver.roleType != 'PA'
+                  "
+                  [imageSrc]="
+                    './assets/themes/sys/default/img/' +
+                    (viewApproverStep.icon
+                      ? viewApproverStep.icon
+                      : 'share_default.svg')
+                  "
+                  imgCss="me-3 p-3 user-mini-icon w-40px h-40px"
+                  [title]="approver.approver | vll : 'ES014' : 'text' | async"
+                  [subTitle]="
+                    approver.approver | vll : 'ES014' : 'text' | async
+                  "
+                  [modeImgs]="true"
+                  [titleLine]="3"
+                >
+                </codx-temp-full>
+
+                <!-- <ng-template #footer1 let-data>
+                <div
+                  class="d-flex align-items-center justify-content-end"
+                >
+                  <span
+                    class="icon-access_time icon-14 me-1"
+                  ></span
+                  >{{ data.leadtime }} giờ
+                </div>
+              </ng-template> -->
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </ng-template>
     </div>
   </div>
   <!--Tùy chỉnh quy trình-->
@@ -716,25 +855,39 @@
           </div>
           <div class="col-6 row">
             <div #autoNumberSetting class="position-relative col-6">
-              <codx-input
+              <!-- <codx-input
                 type="text"
                 [crrValue]="instanceNoSetting"
                 [placeholder]="gridViewSetup['InstanceNoSetting']?.description"
                 (valueChange)="valueChangeAutoNoCode($event)"
                 field="instanceNoSetting"
               >
+              </codx-input> -->
+              <codx-input
+                type="text"
+                [crrValue]="instanceNoEx"
+                [placeholder]="gridViewSetup['InstanceNoSetting']?.description"
+                [disabled]="true"
+              >
               </codx-input>
               <div
-                class="position-absolute cursor-pointer"
+                class="position-absolute cursor-pointer text-primary form-control-feedback"
                 style="top: 7px; right: 13px"
               >
+                <!-- <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-2 "
+                  (click)="openAutoNumPopup()"
+                >
+                  <i class="icon-settings icon-16"></i>
+                </button> -->
                 <i
-                  class="icon-settings form-control-feedback"
+                  class="icon-settings form-control-feedback text-hover-primary"
                   (click)="openAutoNumPopup()"
                 ></i>
               </div>
             </div>
-            <div *ngIf="instanceNoEx" class="col-6 fs-6 mt-2 mb-2">
+            <!-- <div *ngIf="instanceNoEx" class="col-6 fs-6 mt-2 mb-2">
               <codx-label
                 class=""
                 name="lblPreview"
@@ -742,7 +895,7 @@
                 default="Xem trước: "
               ></codx-label>
               <span class="text-gray-600">{{ instanceNoEx }}</span>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -889,27 +1042,27 @@
               <div class="d-flex align-items-center">
                 <div class="me-5">
                   <codx-input
-                    name="success-radio"
+                    name="copy-radio"
                     type="radio"
                     style="width: 100%"
                     field="yes"
                     [label]="titleRadioYes"
                     [checked]="process?.allowCopy ?? false"
                     [crrValue]="process?.allowCopy"
-                    (valueChange)="valueChangeRadio($event, 'AllowCopyView')"
+                    (valueChange)="valueRadioInfo($event, 'AllowCopyView')"
                   >
                   </codx-input>
                 </div>
                 <div class="me-5">
                   <codx-input
-                    name="success-radio"
+                    name="copy-radio"
                     type="radio"
                     style="width: 100%"
                     field="no"
                     [label]="titleRadioNo"
                     [checked]="!process?.allowCopy ?? false"
                     [crrValue]="process?.allowCopy"
-                    (valueChange)="valueChangeRadio($event, 'AllowCopyView')"
+                    (valueChange)="valueRadioInfo($event, 'AllowCopyView')"
                     readonly
                   >
                   </codx-input>
@@ -922,7 +1075,7 @@
     </div>
   </div>
   <!--Hướng dẫn làm việc với quy trình-->
-  <div class="background">
+  <div class="background mb-0">
     <div
       class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
@@ -962,13 +1115,10 @@
       </div>
     </div>
     <div id="memo-main" class="main" [ngClass]="'show-main'">
-      <div class="form-group margin-form mb-4">
+      <div class="form-group mb-0">
         <codx-input
           field="memo"
           type="textarea"
-          headerposition="none"
-          format="ed"
-          height="150"
           [crrValue]="process?.memo"
           (valueChange)="valueChange($event)"
         >
@@ -992,6 +1142,23 @@
         <div class="dropzone-msg-title mb-2">
           <i class="icon-image icon-30"></i>
         </div>
+        <div class="dropzone-msg-title mb-2">
+          <codx-label
+            name="lblContentAddAvatar"
+            [formModel]="dialog.formModel"
+            default="Chọn hình ảnh"
+            class="fw-bold"
+          >
+          </codx-label>
+        </div>
+        <span class="dropzone-msg-desc">
+          <codx-label
+            name="lblRequiredAvatar"
+            [formModel]="dialog.formModel"
+            default="(Nên chọn hình ảnh có kích thước ...px đến ...px)"
+            class="fw-bold"
+          ></codx-label>
+        </span>
       </ng-container>
     </div>
   </div>
@@ -1042,13 +1209,6 @@
 
 <!-- Quy trình động - All in ------------------------------------------------------------------------------- -->
 <ng-template #dynamicFieldsAllSteps>
-  <!-- <ng-container *ngFor="let st of stepList">
-    <ng-container
-      *ngIf="!st.isFailStep && !st.isSuccessStep"
-      [ngTemplateOutlet]="dynamicFields"
-      [ngTemplateOutletContext]="{ $implicit: st }"
-    ></ng-container>
-  </ng-container> -->
   <ng-container
     *ngIf="stepList?.length > 0"
     [ngTemplateOutlet]="dynamicFields"
@@ -1107,7 +1267,9 @@
                 <button
                   type="button"
                   class="btn btn-icon btn-sm btn-light-primary ms-2"
-                  (click)="addCustomField(item.recID, item.processID)"
+                  (click)="
+                    addCustomField(item.recID, item.processID, !haveTitle)
+                  "
                 >
                   <i class="icon-add icon-18"></i>
                 </button>
@@ -1154,7 +1316,9 @@
                     <button
                       type="button"
                       class="btn btn-outline-primary"
-                      (click)="addCustomField(item.recID, item.processID)"
+                      (click)="
+                        addCustomField(item.recID, item.processID, !haveTitle)
+                      "
                     >
                       <i class="icon-add icon-18 text-primary"></i>
                       <codx-label
@@ -1216,8 +1380,8 @@
                       >
                       </codx-input-custom-field>
                       <codx-mfunc
-                        [formModel]="dialog.formModel"
-                        (clickMF)="clickMFFields($event, item1)"
+                        [formModel]="formModelField"
+                        (clickMF)="clickMFFields($event, item1, !haveTitle)"
                         [dataItem]="action != 'edit' ? moreDefaut : item"
                         [type]="'hover'"
                       >
@@ -1264,7 +1428,7 @@
         </codx-label>
       </span>
     </div>
-    <div
+    <!-- <div
       class="d-flex m-3 text-hover-primary cursor-pointer"
       (click)="selectView(3)"
     >
@@ -1278,7 +1442,7 @@
         >
         </codx-label>
       </span>
-    </div>
+    </div> -->
   </ng-template>
 </ng-template>
 
@@ -1288,20 +1452,226 @@
     <div class="stage-body d-flex">
       <div class="stage-body-left w-300px minw-300px pe-1">
         <div class="example-list stage-body-left-main">
-          <div
-            *ngFor="let itemTemp of listTemp; let i = index"
-            class="list-stage example-box drap-drop cursor-pointer border-bottom has-action-menu"
-            [ngClass]="itemTemp?.recID === tempCrr?.recID ? 'click' : ''"
-            (click)="clickViewTemp(itemTemp)"
+          <ul
+            ngbNav
+            #nav="ngbNav"
+            [(activeId)]="active"
+            class="nav-export h-100 p-0 m-0"
+            orientation="vertical"
+            (navChange)="navChanged($event)"
           >
-            <div class="order">{{ i + 1 }}</div>
-            <div class="d-flex flex-column">
-              <div class="fw-bold text-dark">
-                {{ itemTemp?.templateName }}
-              </div>
+            <li class="p-0 m-0" ngbNavItem="1">
+              <a ngbNavLink
+                ><div class="d-flex align-items-center py-2">
+                  <i
+                    class="fa-solid fa-file-excel fs-2 me-3"
+                    style="color: #347442"
+                  ></i
+                  ><codx-label
+                    [default]="'Excel Template'"
+                    [class]="
+                      'fw-bold ' + (type == 'excel' ? 'text-primary' : '')
+                    "
+                  ></codx-label></div
+              ></a>
+            </li>
+            <li class="p-0 m-0" ngbNavItem="2">
+              <a ngbNavLink
+                ><div class="d-flex align-items-center py-2">
+                  <i
+                    class="fa-solid fa-file-word fs-2 me-3"
+                    style="color: #005dc7"
+                  ></i
+                  ><codx-label
+                    [default]="'Word Template'"
+                    [class]="
+                      'fw-bold ' + (type == 'word' ? 'text-primary' : '')
+                    "
+                  ></codx-label></div
+              ></a>
+            </li>
+          </ul>
+          <div
+            [ngbNavOutlet]="nav"
+            class="tmp-content ms-4 ps-6 border-start w-100 h-100"
+          ></div>
+        </div>
+      </div>
+      <div class="stage-body-right w-100 ps-6">
+        <ng-container *ngIf="type == 'excel'">
+          <div class="mb-4">
+            <div>
+              <codx-label
+                [default]="'Excel Template'"
+                class="fs-4 fw-bold"
+              ></codx-label>
+            </div>
+            <div class="fs-7 text-gray-500">
+              <codx-label
+                [default]="'Danh sách file excel đã import'"
+              ></codx-label>
             </div>
           </div>
-        </div>
+          <div (scroll)="onScroll($event)" class="export-content mt-3">
+            <ng-container
+              [ngTemplateOutlet]="
+                dataEx?.length > 0 ? tempDataEx : emptyTemplate
+              "
+            >
+            </ng-container>
+            <ng-template #tempDataEx>
+              <div
+                class="d-flex align-items-start justify-content-between py-2 border-bottom"
+                *ngFor="let item of dataEx"
+              >
+                <div class="d-flex align-items-top w-100">
+                  <!-- <div class="w-20px h-20px me-2">
+                  <codx-input type="radio" name="format"  ControlName="format" [crrValue]="'excelTemp_' + item.recID" ></codx-input>
+                </div> -->
+                  <div class="d-flex flex-column w-100">
+                    <div class="fw-bold text-dark">
+                      {{ item.templateName }}
+                    </div>
+                    <div class="fs-7 text-gray-500 text-italic">
+                      {{ item.description }}
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-start ms-6">
+                  <button
+                    type="button"
+                    class="btn btn-icon btn-sm btn-outline-primary"
+                    triggers="click"
+                    [autoClose]="true"
+                    [ngbTooltip]="tool"
+                    ngClass="border-0"
+                  >
+                    <span class="icon-more_vert icon-16"></span>
+                  </button>
+                  <ng-template #tool>
+                    <ng-container *ngFor="let x of moreFunction">
+                      <div
+                        class="d-flex p-2 cursor-pointer dropdown-item"
+                        (click)="openFormTemplet(x?.id, item)"
+                      >
+                        <span
+                          class="icon-16 me-2"
+                          [ngClass]="x?.icon"
+                          [style.color]="x?.textColor"
+                        ></span>
+                        <codx-label
+                          [name]="x?.id"
+                          [formModel]="dialog.formModel"
+                          [default]="x?.text"
+                        ></codx-label>
+                      </div>
+                    </ng-container>
+                  </ng-template>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="type == 'word'">
+          <div class="mb-4">
+            <div>
+              <codx-label
+                [default]="'Word Template'"
+                class="fs-4 fw-bold"
+              ></codx-label>
+            </div>
+            <div class="fs-7 text-gray-500">
+              <codx-label
+                [default]="'Danh sách file word đã import'"
+              ></codx-label>
+            </div>
+          </div>
+          <div class="export-content mt-3">
+            <ng-container
+              [ngTemplateOutlet]="
+                dataWord?.length > 0 ? tempDataWord : emptyTemplate
+              "
+            >
+            </ng-container>
+            <ng-template #tempDataWord>
+              <div
+                class="d-flex align-items-start justify-content-between py-2 border-bottom"
+                *ngFor="let item of dataWord"
+              >
+                <div class="d-flex align-items-top w-100">
+                  <!-- <div class="w-20px h-20px me-2">
+                  <codx-input type="radio" name="format" ControlName="format" [crrValue]="item.recID" ></codx-input>
+                </div> -->
+                  <div class="d-flex flex-column w-100">
+                    <div class="fw-bold text-dark">
+                      {{ item.templateName }}
+                    </div>
+                    <div class="fs-7 text-gray-500 text-italic">
+                      {{ item.description }}
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-start ms-6">
+                  <div ngbDropdown class="dropdown ms-6">
+                    <button
+                      ngbDropdownToggle
+                      class="btn"
+                      type="button"
+                      id="dropdownMenuButton1"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <span class="icon-more_vert icon-18"></span>
+                    </button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                      <a ngbDropdownItem class="dropdown-item">
+                        <div
+                          class="d-flex align-items-center cursor-pointer"
+                          (click)="openFormTemplet('edit', item)"
+                        >
+                          <span class="icon-edit text-primary icon-16"></span>
+                          <span class="ms-2">
+                            <codx-label
+                              name="lblEdit"
+                              default="Chỉnh sửa"
+                            ></codx-label>
+                          </span>
+                        </div>
+                      </a>
+                      <a ngbDropdownItem class="dropdown-item">
+                        <div
+                          class="d-flex align-items-center cursor-pointer"
+                          (click)="openFormTemplet('delete', item)"
+                        >
+                          <span class="icon-delete text-danger icon-16"></span>
+                          <codx-label
+                            name="lblDelete"
+                            default="Xóa"
+                          ></codx-label>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            <!-- <ng-template #elseWord>
+              <div class="export-container">
+                <div
+                  class="d-flex flex-column flex-center justify-content-center"
+                >
+                  <img
+                    src="../assets/themes/sys/default/img/DataEmpty.svg"
+                    class="w-200px"
+                  />
+                  <div class="fw-bold mt-1 text-center">
+                    <div class="mt-2 text-center">Chưa có dữ liệu word</div>
+                  </div>
+                </div>
+              </div>
+            </ng-template> -->
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>
@@ -1319,7 +1689,7 @@
     <button
       type="button"
       class="btn btn-sm btn-outline-primary"
-      (click)="addTemplet()"
+      (click)="openFormTemplet('add', null)"
     >
       <i class="icon-add icon-14 text-primary ms-n1"></i>
       <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
@@ -1340,17 +1710,18 @@
 <ng-template #stage>
   <div class="background-stage dp-step">
     <div class="stage-body d-flex">
-      <div class="stage-body-left w-300px minw-300px pe-1">
+      <div class="stage-body-left w-300px minw-300px">
         <div
-          class="fw-bold fs-5 text-dark pb-2 mb-1 border-bottom stage-header d-flex align-items-center justify-content-between"
+          class="py-2 px-3 border-bottom stage-header d-flex align-items-center justify-content-between"
         >
-          <codx-label fiedName="step" default="Giai đoạn"></codx-label>
+          <span class="fw-bold fs-5 text-dark ">
+          <codx-label fiedName="step" default="Giai đoạn"></codx-label></span>
           <button
             type="button"
-            class="btn btn-sm btn-outline-primary"
+            class="btn btn-sm btn-light-primary"
             (click)="openPopupStep('add')"
           >
-            <i class="icon-add icon-14 text-primary ms-n1"></i>
+            <i class="icon-add icon-14 ms-n1"></i>
             <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
           </button>
         </div>
@@ -1393,7 +1764,7 @@
                     </span>
                   </div>
 
-                  <div class="fs-7" [ngStyle]="{ color: itemStep?.textColor }">
+                  <div class="fs-7 text-gray-500" [ngStyle]="{ color: itemStep?.textColor }">
                     <codx-label
                       fiedName="durationTime"
                       [formModel]="dialog.formModel"
@@ -1413,7 +1784,7 @@
                       [default]="strHour"
                     ></codx-label>
                   </div>
-                  <div class="fs-7" [ngStyle]="{ color: itemStep?.textColor }">
+                  <div class="fs-7 text-gray-500" [ngStyle]="{ color: itemStep?.textColor }">
                     <codx-label
                       fiedName="task"
                       [formModel]="dialog.formModel"
@@ -1436,7 +1807,7 @@
           </div>
           <div class="stage-fix">
             <!-- Step Reason successs -->
-            <div class="fw-bold fs-5 text-dark pt-2 pb-1 mb-1 border-top">
+            <div class="fw-bold fs-5 text-dark pt-2 px-3 pb-1 border-top">
               {{ noteResult }}
             </div>
             <div
@@ -1494,7 +1865,7 @@
       </div>
       <div class="stage-body-right w-100 ps-6">
         <div
-          class="d-flex align-items-center justify-content-between pe-1 pb-2 mb-1 border-bottom stage-header"
+          class="d-flex align-items-center justify-content-between pe-1 pb-2 mb-1 stage-header"
         >
           <div class="fw-bold fs-4 text-dark w-100">{{ titleViewStepCrr }}</div>
           <div class="d-flex align-items-center">
@@ -1738,15 +2109,16 @@
                             <div class="mx-3">
                               <codx-img
                                 [width]="30"
-                                [objectId]="task?.roles[0]?.objectID"
+                                [objectId]="getRole(task, 'ID')"
                                 objectType="AD_Users"
-                                [objectName]="task?.roles[0]?.objectName"
+                                [objectName]="getRole(task, 'name')"
                               >
                               </codx-img>
                             </div>
                             <div class="steplist-hearder">
                               <div class="text-dark fw-bold fs-6">
-                                {{ task?.taskName }}
+                                <span>{{ task?.taskName?.trim() }}</span>
+                                <span *ngIf="task?.requireCompleted" class="text-danger fw-bold">*</span>
                               </div>
                               <div class="d-flex align-items-center fs-7">
                                 <span class="text-gray-600 me-1">
@@ -1773,21 +2145,6 @@
                               </div>
                             </div>
                           </div>
-                          <div class="task-att">
-                            <codx-attachment
-                              #attachment
-                              hideFolder="1"
-                              hideImageUpload="0"
-                              hideImageThumb="0"
-                              hideUploadBtn="1"
-                              hideDes="1"
-                              type="inline"
-                              allowMultiFile="1"
-                              displayThumb="full"
-                              showMessage="1"
-                            >
-                            </codx-attachment>
-                          </div>
                           <codx-mfunc
                             [formModel]="grvMoreFunction"
                             (clickMF)="
@@ -1803,18 +2160,19 @@
                         <div class="task-att">
                           <codx-attachment
                             #attachment
+                            [objectType]="'DP_Steps_Tasks'"
                             [objectId]="task?.recID"
                             hideFolder="1"
                             hideImageUpload="0"
                             hideImageThumb="0"
                             hideUploadBtn="1"
+                            [showMessage]="0"
                             hideDes="1"
                             type="inline"
                             allowMultiFile="1"
+                            referType="source"
+                            [formModel]="dialog.formModel"
                             displayThumb="full"
-                            showMessage="0"
-                            [fdName]="task?.stepID"
-                            [dataSelected]="task"
                           >
                           </codx-attachment>
                         </div>
@@ -1974,15 +2332,16 @@
       >
       </codx-label>
       <div class="d-flex">
-        <codx-valuelist
+        <codx-input
           class="me-4"
           field="icon"
-          [name]="'Sys008'"
+          type="vllicon"
+          [refValue]="'L1470'"
           [iconOnly]="true"
           [crrValue]="stepNew?.icon"
-          (valueChange)="changeIcon($event, 'icon', stepNew)"
+          (valueChange)="changeIcon($event, stepNew)"
         >
-        </codx-valuelist>
+        </codx-input>
         <codx-input
           field="iconColor"
           class="ms-4"
@@ -2095,7 +2454,7 @@
             <div class="text-dark fw-bold">
               <codx-label
                 field="ReasonControl"
-                [default]="gridViewSetupStep['ReasonControl']?.headerText"
+                default="Cho phép chọn lý do thành công"
               ></codx-label>
             </div>
           </div>
@@ -2315,7 +2674,7 @@
             <div class="text-dark fw-bold">
               <codx-label
                 fiedName="ReasonControl"
-                [default]="gridViewSetupStep['ReasonControl']?.headerText"
+                default="Cho phép chọn lý do thất bại"
               >
               </codx-label>
             </div>
@@ -2375,7 +2734,7 @@
               [placeholder]="'Chọn quy trình kìa'"
               (valueChange)="cbxChange($event, viewStepReasonFail)"
               [readonly]="stepFail?.isUsed ? false : true"
-              [value]="stepFail?.newProcessID"
+              [value]="moveProccessIsNull(stepFail?.newProcessID)"
             ></ejs-combobox>
             <codx-label
               class="text-danger fst-italic fs-7"
@@ -2568,7 +2927,7 @@
                 >
                 </codx-img>
               </div>
-              <div class="text-gray-600">{{ perm.objectName }}</div>
+              <div class="text-dark fw-bold">{{ perm.objectName }}</div>
               <ng-container>
                 <div class="action-menu-od" (click)="removeRole(perm.objectID)">
                   <i class="icon-close text-danger icon-16"></i>
@@ -2612,9 +2971,9 @@
           class="col-6 group-permission witdh-roles scroll-user"
           *ngIf="step.roles != null && step.roles?.length > 0"
         >
-          <ng-container *ngFor="let perm of step.roles; index as i">
+          <ng-container *ngFor="let role of step.roles; index as i">
             <div
-              *ngIf="perm.roleType == 'R'"
+              *ngIf="role.roleType == 'R'"
               class="me-4 d-flex align-items-center margin-form mb-4"
             >
               <div class="roles-step d-flex align-items-center">
@@ -2622,18 +2981,18 @@
                   <codx-img
                     class="me-2"
                     [width]="25"
-                    [objectId]="perm.objectName"
+                    [objectId]="role.objectName"
                     objectType="AD_Users"
                   >
                   </codx-img>
                 </div>
-                <div class="text-dark fw-bold">{{ perm.objectName }}</div>
-                <span class="mt-1">
+                <div class="text-dark fw-bold">{{ role.objectName }}</div>
+                <span class="mt-1 d-none" >
                   <a
-                    (click)="deleteRoleTypeR(perm, step)"
+                    (click)="deleteRoleInstep(step, role, true)"
                     style="cursor: pointer"
                   >
-                    <span class="icon-close icon-16 text-danger ms-3"></span>
+                    <span class="icon-close icon-16 text-danger ms-2"></span>
                   </a>
                 </span>
               </div>
@@ -2716,7 +3075,7 @@
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
               <codx-label
-                fiedName=""
+                fiedName="TransferControl"
                 default="Tự động chuyển nhiệm vụ qua giai đoạn tiếp theo
                 khi"
                 [formModel]="dialog.formModel"
@@ -2725,7 +3084,6 @@
             </div>
           </div>
           <div class="col-6">
-            <!-- Gán tạm chờ refvalue -->
             <codx-input
               field="transferControl"
               crrValue="1"
@@ -2800,59 +3158,11 @@
             </div>
           </div>
           <div class="col-6">
-            <div class="row">
-              <div class="col-6">
-                <div class="position-relative">
-                  <codx-input
-                    field="DurationDay"
-                    [formModel]=""
-                    [Group]=""
-                    type="text"
-                    [height]="'100'"
-                    [min]="0"
-                    [placeholder]="step?.durationDay"
-                    [crrValue]="step?.durationDay"
-                    (valueChange)="valueChangeDuraDay($event)"
-                  ></codx-input>
-                  <div
-                    class="position-absolute text-muted"
-                    style="top: 7px; right: 7px"
-                  >
-                    <codx-label
-                      fiedName="StepName"
-                      [formModel]=""
-                      [default]="strDay"
-                    ></codx-label>
-                  </div>
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="position-relative">
-                  <codx-input
-                    field="durationHour"
-                    [formModel]=""
-                    [Group]=""
-                    type="text"
-                    [height]="'100'"
-                    [min]="0"
-                    [placeholder]="'00.00'"
-                    [crrValue]="step?.durationHour"
-                    (valueChange)="valueChangeDuraHour($event)"
-                  >
-                  </codx-input>
-                  <div
-                    class="position-absolute text-gray-400"
-                    style="top: 7px; right: 7px"
-                  >
-                    <codx-label
-                      fiedName="StepName"
-                      [formModel]=""
-                      [default]="strHour"
-                    ></codx-label>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <codx-input-number-duration [dayMax]="dayStep" [hourMax]="hourStep" [dayOld]="step?.durationDay" [hourOld]="step?.durationHour" [textDay]="strDay" [textHour]="strHour"
+          [noteDay]="noteDay" [noteHour]="noteHour"
+
+            (eventInput)="valueChangeDuration($event)">
+            </codx-input-number-duration>
           </div>
         </div>
         <hr />
@@ -2980,7 +3290,7 @@
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
-                  [checked]="true"
+                  [checked]="step?.leadtimeControl"
                   [crrValue]="step?.leadtimeControl"
                   (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
                 >
@@ -3223,3 +3533,18 @@
   </div>
 </ng-template>
 <!-- End Thiết lập giai đoạn -->
+<ng-template #emptyTemplate>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-250px"
+        />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

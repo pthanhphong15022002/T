@@ -34,7 +34,7 @@
             [isAllowEdit]="true"
             [width]="60"
             (reloadChanged)="avatarChanged($event)"
-            [imgOn]="_user?.modifiedOn"
+            [imgOn]="modifiedOn"
           >
           </codx-img>
           <div class="d-flex flex-column">
@@ -219,7 +219,10 @@
         </span>
       </div>
 
-      <div class="menu-item" *ngIf="user && user.tenant == 'default'">
+      <div
+        class="menu-item"
+        *ngIf="user && user.tenant == 'default' && user.userID == 'CODXAMIN'"
+      >
         <span (click)="runCompare()" class="menu-link px-5">
           <codx-label
             fiedName="lblCompare"
@@ -228,6 +231,25 @@
           ></codx-label>
         </span>
       </div>
+
+      <!-- <div class="menu-item" *ngIf="user && user.tenant == 'default'">
+        <span (click)="clearTenant()" class="menu-link px-5">
+          <codx-label
+            fiedName="lblClearTenant"
+            [formModel]="formModel"
+            default="Xóa Tenant"
+          ></codx-label>
+        </span>
+      </div> -->
+      <!-- <div class="menu-item" *ngIf="user && user.tenant == 'default'">
+        <span (click)="testFormatString()" class="menu-link px-5">
+          <codx-label
+            fiedName="lblFormat"
+            [formModel]="formModel"
+            default="Format"
+          ></codx-label>
+        </span>
+      </div> -->
       <div class="menu-item">
         <a (click)="logout()" class="menu-link px-5 cursor-pointer">
           <codx-label

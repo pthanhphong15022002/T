@@ -7,7 +7,11 @@ export abstract class AppConfig {
   office365: string;
   saas: number;
   layoutCZ: string;
+  layout: any;
   themeMode: string;
+  hideFavCount: boolean;
+  singleExec: boolean;
+  asideMinimize: string;
   sureMeet: any;
   firebase: any;
   captchaKey: string;

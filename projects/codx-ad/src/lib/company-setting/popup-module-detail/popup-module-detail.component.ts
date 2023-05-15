@@ -13,9 +13,12 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  ViewType,
+  ViewModel,
 } from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
 import { TN_OrderModule } from '../../models/tmpModule.model';
+import { tmpUserRoleInfo } from '../../models/AD_UserRoles.models';
 
 @Component({
   selector: 'lib-popup-module-detail',
@@ -44,6 +47,7 @@ export class PopupModuleDetailComponent extends UIComponent {
         md.boughtModule?.refID == this.module?.boughtModule?.moduleID
     );
   }
+
   dialog;
   module;
   childMD;
@@ -52,7 +56,10 @@ export class PopupModuleDetailComponent extends UIComponent {
   vllL1449;
   tenantID;
 
+  lstADUserRoles: tmpUserRoleInfo[] = [];
+
   //userRole
+  //chị Thương kêu viết chếc
   fmUserRole: FormModel = {
     formName: 'TNUserRoles',
     gridViewName: 'grvTNUserRoles',
@@ -62,46 +69,69 @@ export class PopupModuleDetailComponent extends UIComponent {
   predicate = '';
   dataValue = '';
   clmnGrid;
-  @ViewChild('itemAction', { static: true }) tmplUserInfo: TemplateRef<any>;
+  @ViewChild('tmplUserInfo', { static: true }) tmplUserInfo: TemplateRef<any>;
+  @ViewChild('operatorHT', { static: true }) operatorHT: TemplateRef<any>;
+  @ViewChild('employeeHT', { static: true }) employeeHT: TemplateRef<any>;
+  @ViewChild('operRoleEndDate', { static: true })
+  operRoleEndDate: TemplateRef<any>;
+  @ViewChild('emplRoleEndDate', { static: true })
+  emplRoleEndDate: TemplateRef<any>;
 
   onInit(): void {
     console.log('md', this.module);
     console.log('child md', this.childMD);
     this.predicate = 'TenantID=@0 and Module=@1';
     this.dataValue = this.module?.boughtModule?.moduleID + ';' + this.tenantID;
-
-    this.clmnGrid = [
-      {
-        field: 'userID',
-        headerText: 'Nhân viên',
-        width: 30,
-        template: this.tmplUserInfo,
-        textAlign: 'center',
-      },
-      {
-        field: 'EndDate',
-        headerText: 'Nghiệp vụ',
-        width: 30,
-        template: this.tmplUserInfo,
-        textAlign: 'center',
-      },
-      {
-        field: 'EndDate',
-        headerText: 'Thường',
-        width: 30,
-        template: this.tmplUserInfo,
-        textAlign: 'center',
-      },
-    ];
-
-    this.api
-      .execSv('Tenant', 'Tenant', 'UserRolesBusiness', 'GetListUserRoleAsync', [
+    this.adService
+      .getLstAD_UserRolesByModuleIDs([
         this.module?.boughtModule?.moduleID,
         this.childMD?.boughtModule?.moduleID,
       ])
-      .subscribe((res: any) => {
-        console.log('res', res);
+      .subscribe((lstReturn: tmpUserRoleInfo[]) => {
+        this.lstADUserRoles = lstReturn;
+        this.detectorRef.detectChanges();
       });
+
+    this.cache
+      .gridViewSetup(this.fmUserRole.formName, this.fmUserRole.gridViewName)
+      .subscribe((lstHeaderTexts) => {
+        console.log('hText', lstHeaderTexts);
+      });
+    this.clmnGrid = [
+      {
+        field: 'UserID',
+        width: 150,
+        template: this.tmplUserInfo,
+        textAlign: 'center',
+      },
+      {
+        headerTemplate: this.operatorHT,
+        width: 45,
+        template: this.operRoleEndDate,
+        textAlign: 'center',
+      },
+      {
+        headerTemplate: this.employeeHT,
+        width: 45,
+        template: this.emplRoleEndDate,
+        textAlign: 'center',
+      },
+    ];
+  }
+
+  ngAfterViewInit() {
+    // this.views = [
+    //   {
+    //     id: '1',
+    //     type: ViewType.grid,
+    //     active: true,
+    //     sameData: true,
+    //     model: {
+    //       resources: this.clmnGrid,
+    //       hideMoreFunc: false,
+    //     },
+    //   },
+    // ];
   }
   getInterval(interval) {
     return this.vllL1449?.find((x) => x.value == interval)?.text;
@@ -109,5 +139,13 @@ export class PopupModuleDetailComponent extends UIComponent {
 
   closePopup() {
     this.dialog.close();
+  }
+
+  extendAllUser() {
+    console.log('click extend all user');
+  }
+
+  extendModule() {
+    console.log('click extend module');
   }
 }

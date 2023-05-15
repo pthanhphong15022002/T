@@ -64,7 +64,7 @@
     [title]="data.userNameCreate"
     [titleCss]="'fs-6'"
     [subTitle]="data.positionNameCreate"
-    [desc]="data.taskName"
+    [descTmp]="descTmp"
     [formModel]="view.formModel"
     [footer]="footerList"
     [dataItem]="data"
@@ -75,7 +75,9 @@
   [icoStatus2]="data?.priority"
   [icoStatusVll2]="vllPriority" -->
 </ng-template>
-
+<ng-template #descTmp let-item>
+  <div class="line-clamp line-clamp-2 text-dark">{{item.taskName}}</div>
+</ng-template>
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
     cardCss="border h-100"
@@ -105,7 +107,7 @@
 </ng-template>
 
 <ng-template #cardImgFooter let-data let-setting="setting">
-  <div class="d-flex flex-column flex-grow-1 mb-2">
+  <div class="d-flex flex-column flex-grow-1">
     <div
       *ngIf="setting?.tags"
       class="d-flex align-items-center mb-2 float-left"
@@ -116,7 +118,7 @@
         [value]="data.tags"
       ></codx-tag>
     </div>
-    <div class="w-100 mb-5" *ngIf="setting?.processBar">
+    <div class="w-100 mb-3" *ngIf="setting?.processBar">
       <div class="d-flex flex-column justify-content-start">
         <div class="progress w-100 h-5px">
           <div
@@ -132,10 +134,10 @@
     </div>
 
     <!--begin::Item-->
-    <div class="d-flex justify-content-between align-items-end mt-2">
+    <div class="d-flex justify-content-between align-items-top mt-3">
       <div
         *ngIf="setting?.countObjects"
-        class="d-flex align-items-end me-2 codx-badge"
+        class="d-flex align-items-center me-2 codx-badge"
       >
         <codx-comment-temp
           [objectID]="data.recID"
@@ -144,8 +146,8 @@
         ></codx-comment-temp>
 
         <div class="d-flex align-items-center position-relative me-4">
-          <span class="icon-check_box icon-20 text-gray-400"></span>
-          <span
+          <span class="icon-i-check2-square icon-18 text-gray-400"></span>
+          <span *ngIf="data?.todo > 0"
             class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
             >{{ data?.todo }}</span
           >
@@ -158,7 +160,7 @@
         ></codx-attachment-temp>
       </div>
       <div
-        class="symbol-group symbol-hover justify-content-end"
+        class="ms-3 h-25px"
         id="{{ data.taskID }}"
       >
         <ng-container
@@ -171,7 +173,7 @@
           "
         >
           <codx-imgs
-            [width]="30"
+            [width]="25"
             [objectId]="data.assignTo"
             objectType="AD_Users"
             [numberImages]="3"

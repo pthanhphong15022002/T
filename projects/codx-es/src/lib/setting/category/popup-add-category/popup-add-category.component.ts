@@ -78,6 +78,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   oUpdate: any = null; //update item in grid
 
   hasModuleES: boolean = false;
+  dataType = ''; //Anh Thao thêm để lấy data khi không có dataService --sau nay nếu sửa thì báo anh Thảo với!! Thank - Huế ngày 14/04/2023
 
   constructor(
     private esService: CodxEsService,
@@ -89,7 +90,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
+    this.dataType = data?.data?.dataType;
+    if (this.dataType != 'auto') {
+      this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
+    } else this.data = JSON.parse(JSON.stringify(data?.data?.data));
+
     this.signatureType = dialog?.dataService?.dataSelected?.signatureType;
     this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
@@ -212,7 +217,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
             });
         });
     } else {
-      
     }
     this.form?.formGroup?.addControl(
       'countStep',
@@ -374,7 +378,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.dialog.dataService.dataSelected = this.data;
+    if (this.dataType != 'auto')
+      this.dialog.dataService.dataSelected = this.data;
     if (
       (this.isAdd && this.isSaved == false) ||
       (this.isSaved == false && this.type == 'copy')
@@ -383,7 +388,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (res) {
           this.isSaved = true;
           if (isClose) {
-            this.notify.notifyCode('SYS006')
+            this.notify.notifyCode('SYS006');            
+            (this.dialog?.dataService as CRUDService).add(res).subscribe();
             this.dialog && this.dialog.close(res);
           }
         }
@@ -393,7 +399,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (res) {
           this.isSaved = true;
           if (isClose) {
-            this.notify.notifyCode('SYS007')
+            this.notify.notifyCode('SYS007');
             this.dialog && this.dialog.close(res);
           }
         }
@@ -424,7 +430,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           description: this.formModel?.entityName,
           newAutoNoCode: this.data.categoryID ?? this.data.recID,
           isSaveNew: '1',
-        }
+        },'', {isFull:true} as any
       );
       popupAutoNum.closed.subscribe((res) => {
         if (res?.event) {
@@ -467,7 +473,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       return;
     }
     if (
-      this.dialog.dataService.keyField != 'CategoryID' &&
+      this.dataType != 'auto' &&
+      this.dialog.dataService?.keyField != 'CategoryID' &&
       (this.data.categoryID == '' || this.data.categoryID == null)
     ) {
       let headerText = this.grvSetup['CategoryID']?.headerText ?? 'CategoryID';
@@ -491,6 +498,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
             });
             this.cr.detectChanges();
           }
+          
+          (this.dialog?.dataService as CRUDService).add(this.data).subscribe();
           this.isSaved = true;
 
           //openForm add process
@@ -529,7 +538,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.esService.updateCategory(this.data).subscribe((res) => {
         if (res) {
           this.data = res;
-          
+
           let transID = this.data.recID;
           let data = {
             type: '0',
@@ -749,4 +758,5 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       });
     });
   }
+
 }

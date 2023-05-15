@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -60,27 +61,35 @@ export class StagesDetailComponent implements OnInit {
   @Input() dataStep: any;
   @Input() formModel: any;
   @Input() currentStep: any;
-  @Input() stepID: any;
   @Input() titleDefault = '';
-  @Input() isDelete: boolean = false;
-  @Input() isEdit: boolean = false;
-  @Input() isUpdate: boolean = false;
-  @Input() isCreate: boolean = false;
   @Input() listStepReason: any;
   @Input() instance: any;
   @Input() stepNameEnd: any;
   @Input() proccesNameMove: any;
   @Input() lstIDInvo: any;
-  @Input() isClosed = false;
   @Input() showColumnControl = 1;
   @Input() listStep: any;
   @Input() viewsCurrent = '';
   @Input() currentElmID: string;
+  @Input() listUserIdRole: string[] = [];
+  @Input() lstStepProcess: any;
+  @Input() isOnlyView: any;
   @Input() frmModelInstancesTask: FormModel;
   @Output() saveAssign = new EventEmitter<any>();
+  @Output() outDataStep = new EventEmitter<any>();
+  @Output() isChangeData = new EventEmitter<any>();
+  @Output() progressEmit = new EventEmitter<any>();
 
+  stepID: any;
+  isDelete: boolean = false;
+  isEdit: boolean = false;
+  isUpdate: boolean = false;
+  isCreate: boolean = false;
+  permissionCloseInstances: boolean = false;
+  isClosed = false;
   dateActual: any;
   startDate: any;
+  endDate: any;
   progress: string = '0';
   lstFields = [];
   comment: string;
@@ -132,17 +141,27 @@ export class StagesDetailComponent implements OnInit {
   dialogPopupReason: DialogRef;
   viewCrr = '';
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
-  titleReason: any;
+  titleReason: string = '';
   stepNameSuccess: string = '';
-  stepNameFail : string = '';
-  stepNameReason : string = '';
-
+  stepNameFail: string = '';
+  stepNameReason: string = '';
+  idTaskEnd: string = '';
+  isContinueTaskEnd = false;
+  isContinueTaskAll = false;
+  isShowFromTaskEnd = false;
+  isShowFromTaskAll = false;
+  isRoleAll = false;
+  leadtimeControl = false; //sửa thời hạn công việc mặc định
+  progressTaskGroupControl = false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
+  progressStepControl = false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
+  ownerStepProcess: any;
   constructor(
     private callfc: CallFuncService,
     private notiService: NotificationsService,
     private cache: CacheService,
     private authStore: AuthStore,
     private dpService: CodxDpService,
+    private changeDetectorRef: ChangeDetectorRef,
     private serviceInstance: InstancesComponent
   ) {
     this.user = this.authStore.get();
@@ -178,8 +197,13 @@ export class StagesDetailComponent implements OnInit {
       formName: 'DPInstancesStepsTaskGroups',
       gridViewName: 'grvDPInstancesStepsTaskGroups',
     };
+    this.frmModelInstancesTask = {
+      entityName: 'DP_Instances_Steps_Tasks',
+      formName: 'DPInstancesStepsTasks',
+      funcID: 'DPT040102',
+      gridViewName: 'grvDPInstancesStepsTasks',
+    };
     this.getgridViewSetup(this.frmModelInstancesGroup);
-    this.getValueListReason();
     this.frmModelInstancesSteps = await this.getFormModel('DPT0402');
   }
 
@@ -194,6 +218,10 @@ export class StagesDetailComponent implements OnInit {
         }
       });
   }
+  saveDataStep(e) {
+    this.dataStep = e;
+    this.outDataStep.emit(this.dataStep);
+  }
 
   ngAfterViewInit(): void {
     this.cache.gridViewSetup('DPSteps', 'grvDPSteps').subscribe((res) => {
@@ -206,19 +234,37 @@ export class StagesDetailComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
+
+    this.stepID= this.instance.stepID
+    this.permissionCloseInstances=this.instance?.permissionCloseInstances
+    this.isDelete=this.instance.delete
+    this.isEdit=this.instance.edit
+    this.isUpdate=
+    this.instance.write &&
+      !this.instance.closed &&
+      (this.instance.status == '1' || this.instance.status == '2') &&
+      this.dataStep.stepStatus < '2'
+    this.isCreate=this.instance.create
+    this.isClosed=this.instance.closed
+    this.isStart = this.instance?.status == 2 ? true : false;
     if (changes['dataStep']) {
       if (changes['dataStep'].currentValue != null) {
-        if (changes['dataStep'].currentValue?.actualStart != null) {
-          this.dateActual = new Date(
-            changes['dataStep'].currentValue?.actualStart
-          );
+        if (this.lstStepProcess != null && this.lstStepProcess.length > 0) {
+          this.lstStepProcess.forEach((element) => {
+            if (element.stepID == this.dataStep.stepID) {
+              this.ownerStepProcess =
+                element.roles != null && element.roles.length > 0
+                  ? this.checkOwnerRoleProcess(element.roles)
+                  : null;
+            }
+          });
         }
         if (changes['dataStep'].currentValue?.startDate != null) {
           var date = new Date(changes['dataStep'].currentValue?.startDate);
           this.startDate =
-            date.getHours() +
+            this.padTo2Digits(date.getHours()) +
             ':' +
-            date.getMinutes() +
+            this.padTo2Digits(date.getMinutes()) +
             ' ' +
             date.getDate() +
             '/' +
@@ -226,22 +272,39 @@ export class StagesDetailComponent implements OnInit {
             '/' +
             date.getFullYear();
         }
+        if (changes['dataStep'].currentValue?.endDate != null) {
+          var endDate = new Date(changes['dataStep'].currentValue?.endDate);
+          this.endDate =
+            this.padTo2Digits(endDate.getHours()) +
+            ':' +
+            this.padTo2Digits(endDate.getMinutes()) +
+            ' ' +
+            endDate.getDate() +
+            '/' +
+            (endDate.getMonth() + 1) +
+            '/' +
+            endDate.getFullYear();
+        }
         var tasks = changes['dataStep'].currentValue?.tasks;
         var taskGroups = changes['dataStep'].currentValue?.taskGroups;
         this.lstFields = changes['dataStep'].currentValue?.fields;
         //nvthuan
         this.groupByTask(changes['dataStep'].currentValue);
+        this.checkRole(changes['dataStep'].currentValue?.roles || []);
         this.step = changes['dataStep'].currentValue;
         this.progress = this.step?.progress.toString();
       } else {
         this.dataStep = null;
       }
-      this.titleReason = changes['dataStep'].currentValue?.isSuccessStep
-        ?  this.LowercaseFirstPipe(this.joinTwoString(this.stepNameReason, this.stepNameSuccess))
-        : changes['dataStep'].currentValue?.isFailStep
-        ? this.LowercaseFirstPipe(this.joinTwoString(this.stepNameReason, this.stepNameFail))
-        : '';
+      if(!this.titleReason){
+        this.getValueListReason(changes['dataStep']);
+      }
+
     }
+  }
+
+  padTo2Digits(num) {
+    return String(num).padStart(2, '0');
   }
 
   clickMF(e, data) {
@@ -376,6 +439,7 @@ export class StagesDetailComponent implements OnInit {
     dialog.closed.subscribe(async (e) => {
       this.groupTaskID = null; //set lại
       if (e?.event) {
+        this.isChangeData.emit(true);
         let taskData = e?.event?.data;
         if (e.event?.status === 'add' || e.event?.status === 'copy') {
           let groupTask = this.taskGroupList?.find(
@@ -383,7 +447,7 @@ export class StagesDetailComponent implements OnInit {
           );
           let role = new DP_Instances_Steps_Tasks_Roles();
           this.setRole(role);
-          taskData['roles'] = [role];
+          taskData['roles'] = [role, ...taskData['roles']];
           taskData['createdOn'] = new Date();
           taskData['modifiedOn'] = null;
           taskData['modifiedBy'] = null;
@@ -448,6 +512,7 @@ export class StagesDetailComponent implements OnInit {
               1
             );
             this.saveAssign.emit(true);
+            this.isChangeData.emit(true);
             this.notiService.notifyCode('SYS008');
             this.calculateProgressStep();
           }
@@ -535,10 +600,29 @@ export class StagesDetailComponent implements OnInit {
     value['name'] = value['taskName'] || value['taskGroupName'];
     value['type'] = value['taskType'] || type;
     if (data) {
-      this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      let frmModel: FormModel = {
+        entityName: 'DP_Instances_Steps_Tasks',
+        formName: 'DPInstancesStepsTasks',
+        gridViewName: 'grvDPInstancesStepsTasks',
+      };
+      let listData = {
         value: value,
         listValue: listTaskConvert,
-      });
+        step: this.dataStep,
+        isRoleAll: this.isRoleAll,
+        isUpdate: this.isUpdate,
+      };
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      let dialog = this.callfc.openSide(ViewJobComponent, listData, option);
+
+      // this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      //   value: value,
+      //   listValue: listTaskConvert,
+      //   step: this.dataStep,
+      // });
     }
   }
 
@@ -565,7 +649,6 @@ export class StagesDetailComponent implements OnInit {
   //taskGroup
   groupByTask(data) {
     let step = JSON.parse(JSON.stringify(data));
-    this.isStart = step?.endDate && step?.startDate ? true : false;
     if (!step['isSuccessStep'] && !step['isFailStep']) {
       const taskGroupList = step?.tasks.reduce((group, product) => {
         const { taskGroupID } = product;
@@ -591,6 +674,33 @@ export class StagesDetailComponent implements OnInit {
         this.taskGroupList.push(taskGroup);
       }
       this.taskList = step['tasks'];
+      this.getTaskEnd();
+    }
+  }
+
+  getTaskEnd() {
+    let countGroup = this.taskGroupList?.length;
+    if (countGroup > 0) {
+      for (let i = countGroup - 1; i >= 0; i--) {
+        let countTask = 0;
+
+        try {
+          countTask = this.taskGroupList[i]['task']?.length;
+        } catch (error) {
+          countTask = 0;
+        }
+
+        if (countTask > 0) {
+          for (let j = countTask - 1; j >= 0; j--) {
+            let task = this.taskGroupList[i]['task'][j];
+            if (task?.isTaskDefault) {
+              this.idTaskEnd =
+                this.taskGroupList[i]['task'][countTask - 1].recID;
+              return;
+            }
+          }
+        }
+      }
     }
   }
 
@@ -649,6 +759,7 @@ export class StagesDetailComponent implements OnInit {
     this.popupTaskGroup.closed.subscribe(async (value) => {
       if (value?.event) {
         await this.saveGroupTask(value.event, type, data);
+        this.isChangeData.emit(true);       
       }
     });
   }
@@ -725,6 +836,7 @@ export class StagesDetailComponent implements OnInit {
             this.notiService.notifyCode('SYS008');
             this.calculateProgressStep();
             this.saveAssign.emit(true);
+            this.isChangeData.emit(true);
           }
         });
       }
@@ -776,11 +888,25 @@ export class StagesDetailComponent implements OnInit {
       450
     );
   }
-  checkEventProgress(data) {
-    if (data?.task) {
-      return data?.task.length == 0 ? true : false;
+  checkEventProgress(data, group) {
+    if (group) {
+      let isGroup = false;
+      let isTask = false;
+      if (!this.isRoleAll) {
+        isGroup = this.checRoleTask(group, 'O');
+        if (!isGroup) {
+          isTask = this.checRoleTask(data, 'O');
+        }
+      }
+      return this.isRoleAll || isGroup || isTask ? true : false;
     } else {
-      return true;
+      let isGroup = false;
+      if (!this.isRoleAll) {
+        isGroup = this.checRoleTask(data, 'O');
+      }
+      return this.progressTaskGroupControl && (this.isRoleAll || isGroup)
+        ? true
+        : false;
     }
   }
 
@@ -830,11 +956,15 @@ export class StagesDetailComponent implements OnInit {
   updateProgressStep() {
     let idStep = this.dataProgress['recID'];
     let progress = this.dataProgress['progress'];
+    let actualEnd = this.dataProgress['actualEnd'];
+    let note = this.dataProgress['note'];
     this.dpService
-      .updateProgressStep([idStep, Number(progress)])
+      .updateProgressStep([idStep, Number(progress), actualEnd, note])
       .subscribe((res) => {
         if (res) {
           this.step.progress = Number(progress);
+          this.step.actualEnd = actualEnd;
+          this.step.note = note;
           this.progress = progress;
           this.notiService.notifyCode('SYS006');
           this.popupUpdateProgress.close();
@@ -897,6 +1027,7 @@ export class StagesDetailComponent implements OnInit {
             this.popupUpdateProgress.close();
             this.calculateProgressStep();
             this.saveAssign.emit(true);
+            this.checkContinueStep();
           } else {
             this.popupUpdateProgress.close();
           }
@@ -913,12 +1044,98 @@ export class StagesDetailComponent implements OnInit {
             this.notiService.notifyCode('SYS007');
             this.popupUpdateProgress.close();
             this.saveAssign.emit(true);
+            this.checkContinueStep();
           } else {
             this.popupUpdateProgress.close();
           }
         });
       }
     });
+  }
+
+  checkContinueStep() {
+    if (this.dataProgress['progress'] == 100) {
+      this.isContinueTaskAll = this.checkSuccessTaskRequired('', '', true);
+      this.isShowFromTaskEnd = !this.checkSuccessTaskRequired(
+        this.dataProgress?.recID
+      );
+      this.isContinueTaskEnd =
+        this.dataProgress?.recID == this.idTaskEnd
+          ? true
+          : this.checkSuccessTaskRequired('', this.idTaskEnd, true);
+      this.isShowFromTaskAll = !this.isContinueTaskAll;
+      var isAuto = {
+        isShowFromTaskAll: this.isShowFromTaskAll,
+        isShowFromTaskEnd: this.isShowFromTaskEnd,
+        isContinueTaskEnd: this.isContinueTaskEnd,
+        isContinueTaskAll: this.isContinueTaskAll,
+      };
+
+      let dataInstance = {
+        instance: this.instance,
+        listStep: this.listStep,
+        step: this.step,
+        isAuto: isAuto,
+      };
+      this.serviceInstance.autoMoveStage(dataInstance);
+    } else {
+      this.isShowFromTaskAll = false;
+      this.isShowFromTaskEnd = false;
+      this.isContinueTaskEnd = false;
+      this.isContinueTaskAll = false;
+    }
+  }
+
+  checkSuccessTaskRequired(
+    taskID?: string,
+    taskEnd?: string,
+    isAllTask = false
+  ) {
+    for (let group of this.taskGroupList) {
+      if (group['task']?.length > 0) {
+        for (let task of group['task']) {
+          if (isAllTask) {
+            if (taskEnd) {
+              if (task?.recID == taskEnd && task?.progress == 100) {
+                return true;
+              }
+            } else {
+              if (task?.progress != 100) {
+                return false;
+              }
+            }
+          } else {
+            if (task?.recID != taskID) {
+              if (task?.requireCompleted && task?.progress != 100) {
+                return false;
+              } else {
+                continue;
+              }
+            }
+          }
+        }
+      }
+    }
+    return taskEnd ? false : true;
+    // const taskList = isAllTask
+    // ? [].concat(...this.taskGroupList.map((group) => group['task']))
+    // : this.taskGroupList.flatMap((group) => group['task']);
+
+    // for (const task of taskList) {
+    //   if (!isAllTask) {
+    //     if (task?.recID != taskID) {
+    //       return task?.requireCompleted && task?.progress != 100 ? false : continue;
+    //     }
+    //   } else {
+    //     return taskEnd && task?.recID == taskEnd && task?.progress == 100 || task?.progress == 100;
+    //   }
+
+    //   if (!isAllTask && task.recID !== taskID) continue;
+    //   if (taskEnd && task.recID !== taskEnd) continue;
+    //   if (task.progress !== 100) return false;
+    //   if (!isAllTask && task.requireCompleted) return false;
+    //   if (isAllTask && taskEnd && !task.requireCompleted) return true;
+    // }
   }
 
   checkExitsParentID(taskList, task): string {
@@ -988,17 +1205,6 @@ export class StagesDetailComponent implements OnInit {
         if (res) {
           this.step.progress = Number(medium);
           this.progress = medium;
-
-          // tiến độ của nhiệm vụ 100% thì cho auto chuyển tiếp
-          // sửa false thành điều kiện
-          if (false) {
-            let dataInstance = {
-              instance: this.instance,
-              listStep: this.listStep,
-              step: this.step,
-            };
-            this.serviceInstance.autoMoveStage(dataInstance);
-          }
         }
       });
   }
@@ -1009,8 +1215,42 @@ export class StagesDetailComponent implements OnInit {
     role['objectID'] = this.user['userID'];
     role['createdOn'] = new Date();
     role['createdBy'] = this.user['userID'];
+    role['roleType'] = 'O';
     return role;
   }
+
+  getRole(task, type) {
+    let role =
+      task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
+    return type == 'ID' ? role?.objectID : role?.objectName;
+  }
+
+  // getObjectIdRole(task, group) {
+  //   if (task?.taskType != 'M' && group) {
+  //     let objectId =
+  //       task?.roles.find((role) => role?.roleType == 'P')?.objectID ||
+  //       task?.roles[0]?.objectID;
+  //     return objectId;
+  //   } else {
+  //     let objectId =
+  //       task?.roles.find((role) => role?.roleType == 'O')?.objectID||
+  //       task?.roles[0]?.objectID;
+  //     return objectId;
+  //   }
+  // }
+  // getObjectNameRole(task, group) {
+  //   if (task?.taskType != 'M' && group) {
+  //     let objectName =
+  //       task?.roles.find((role) => role?.roleType == 'P')?.objectName ||
+  //       task?.roles[0]?.objectName;
+  //     return objectName;
+  //   } else {
+  //     let objectName =
+  //       task?.roles.find((role) => role?.roleType == 'O')?.objectName ||
+  //       task?.roles[0]?.objectName;
+  //     return objectName;
+  //   }
+  // }
 
   copyValue(dataCopy, data) {
     if (typeof data === 'object') {
@@ -1157,6 +1397,152 @@ export class StagesDetailComponent implements OnInit {
     this.disabledProgressInput = event?.data;
   }
 
+  checkRole(listRoleStep) {
+    if (
+      this.permissionCloseInstances ||
+      this.listUserIdRole?.some((id) => id == this.user.userID) ||
+      listRoleStep?.some(
+        (role) => role.objectID == this.user.userID && role.roleType == 'S'
+      )
+    ) {
+      this.isRoleAll = true;
+    } else if (this.dataStep?.roles?.length > 0) {
+      this.isRoleAll =
+        this.dataStep?.roles?.some(
+          (element) =>
+            element?.objectID == this.user.userID && element.roleType == 'S'
+        ) || false;
+    }
+    this.leadtimeControl = this.dataStep?.leadtimeControl || false; //sửa thời hạn công việc mặc định
+    this.progressTaskGroupControl =
+      this.dataStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
+    this.progressStepControl = this.dataStep?.progressStepControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
+  }
+
+  checRoleTask(data, type) {
+    return (
+      data.roles?.some(
+        (element) =>
+          element?.objectID == this.user.userID && element.roleType == type
+      ) || false
+    );
+  }
+
+  async changeDataMFTask(event, task, groupTask) {
+    if (event != null) {
+      let isGroup = false;
+      let isTask = false;
+      if (!this.isRoleAll) {
+        isGroup = this.checRoleTask(groupTask, 'O');
+        if (!isGroup) {
+          isTask = this.checRoleTask(task, 'O');
+        }
+      }
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02': //xóa
+            if (!(!task?.isTaskDefault && (this.isRoleAll || isGroup) && this.isOnlyView)) {
+              res.disabled = true;
+            }
+            break;
+          case 'SYS03': //sửa
+            if (!this.isOnlyView) {
+              res.disabled = true;
+            } else {
+              if (!(this.isRoleAll || isGroup || isTask)) {
+                res.disabled = true;
+              } else {
+                if (task?.isTaskDefault && !this.leadtimeControl) {
+                  res.disabled = true;
+                }
+              }
+            }
+            break;
+          case 'SYS04': //copy
+            if (!((this.isRoleAll || isGroup) && this.isOnlyView)) {
+              res.disabled = true;
+            }
+            break;
+          case 'SYS003': //đính kèm file
+            if (!task?.isTaskDefault && !this.isOnlyView) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP20': // tiến độ
+            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP13': //giao việc
+            if (!(task?.createTask && this.isOnlyView && (this.isRoleAll || isGroup || isTask))) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP12':
+            res.disabled = true;
+            break;
+          case 'DP08':
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
+  async changeDataMFGroupTask(event, group) {
+    if (event != null) {
+      let isGroup = false;
+      if (!this.isRoleAll) {
+        isGroup = this.checRoleTask(group, 'O');
+      }
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'DP13':
+          case 'DP07':
+            res.disabled = true;
+            break;
+          case 'SYS02': //xóa
+            if (!(!group?.isTaskDefault && (this.isRoleAll ||isGroup ) && this.isOnlyView)) {
+              res.disabled = true;
+            }
+            break;
+          case 'SYS04': //copy
+            if (!this.isRoleAll || !this.isOnlyView) {
+              res.disabled = true;
+            }
+            break;
+          case 'SYS03': //sửa
+            if (!this.isOnlyView) {
+              res.disabled = true;
+            } else {
+              if (!(this.isRoleAll || isGroup)) {
+                res.disabled = true;
+              } else {
+                if (group?.isTaskDefault && !this.leadtimeControl) {
+                  res.disabled = true;
+                }
+              }
+            }
+            break;
+          case 'SYS003': //đính kèm file
+            if (group?.isTaskDefault && !this.isOnlyView) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP08': // thêm công việc
+            if (!((this.isRoleAll || isGroup) && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP20': // tiến độ
+            if (!(this.progressTaskGroupControl && (this.isRoleAll || isGroup) && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            break;
+        }
+      });
+    }
+  }
+
   async changeDataMF(e, type, data = null) {
     if (e != null) {
       e.forEach((res) => {
@@ -1253,16 +1639,10 @@ export class StagesDetailComponent implements OnInit {
     this.attachment.uploadFile();
   }
 
-  fileAdded(e) {}
-
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
-  }
-
-  getfileDelete(event) {
-    event.data.length;
   }
 
   async getFormModel(functionID) {
@@ -1291,7 +1671,14 @@ export class StagesDetailComponent implements OnInit {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS02':
+            if (this.isClosed) {
+              res.disabled = true;
+            }
+            break;
           case 'SYS102':
+            if (this.isClosed) {
+              res.disabled = true;
+            }
             // this.deleteReason();
             break;
           default:
@@ -1356,7 +1743,7 @@ export class StagesDetailComponent implements OnInit {
       }
     });
   }
-  getValueListReason() {
+  getValueListReason(dataChange) {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
         for (let item of res.datas) {
@@ -1368,6 +1755,12 @@ export class StagesDetailComponent implements OnInit {
             this.stepNameReason = item?.text;
           }
         }
+        this.titleReason = dataChange.currentValue?.isSuccessStep
+        ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
+       : dataChange.currentValue?.isFailStep
+       ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
+       : '';
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -1380,7 +1773,15 @@ export class StagesDetailComponent implements OnInit {
     if (!value) return '';
     return value.charAt(0).toLowerCase() + value.slice(1);
   }
+  checkOwnerRoleProcess(roles) {
+    if (roles != null && roles.length > 0) {
+      var checkOwner = roles.find((x) => x.roleType == 'S');
 
+      return checkOwner != null ? checkOwner.objectID : null;
+    } else {
+      return null;
+    }
+  }
   //detail field
   // inputElmIDCustomField(e){
   //   this.currentElmID = e ;

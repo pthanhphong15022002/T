@@ -269,7 +269,6 @@ export class CreateFolderComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    debugger
     this.user = this.auth.get();
     this.dialog = dialog;
     this.titleDialog = data.data.title;
@@ -374,6 +373,7 @@ export class CreateFolderComponent implements OnInit {
         if (this.edit) {
           this.noeditName = false;
           this.checkPermission();
+          this.updateRight = res.write
           this.fileEditing = res;
           this.assignRight = res.assign;
           this.folderName = res.folderName;
@@ -381,16 +381,11 @@ export class CreateFolderComponent implements OnInit {
           this.icon = res.icon;
           this.listSubFolder = this.fileEditing.subFolder;
           //  this.checkSecurity = this.fileEditing.checkSecurity;
-          if (this.fileEditing.hasSubFolder == true) {
-            this.createSubFolder = true;
-          } else {
-            this.createSubFolder = false;
-          }
+          if (this.fileEditing.hasSubFolder == true) this.createSubFolder = true;
+          else this.createSubFolder = false;
 
-          if (
-            this.fileEditing.location != null &&
-            this.fileEditing.location != ''
-          ) {
+          if (this.fileEditing.location) 
+          {
             let list = this.fileEditing.location.split('|');
             this.floor = list[0];
             this.range = list[1];
@@ -421,7 +416,34 @@ export class CreateFolderComponent implements OnInit {
           this.fileEditing = new FileUpload();
           this.fileEditing.folderID = res.recID;
           this.fileEditing.permissions = res.permissions;
-          //alert(1);
+
+          
+          var check = this.fileEditing.permissions.filter(x=>x.objectType == "1")
+          if(check.length == 0)
+          {
+            var check2 = this.fileEditing.permissions.filter(x=> x.objectID == this.user.userID)
+            if(check2 && check2.length > 0) this.fileEditing.permissions = this.fileEditing.permissions.filter(x=>x.id != check2[0].id)
+            var perm = new Permission();
+            perm.objectType = '1';
+            perm.objectID = this.user.userID;
+            perm.objectName = 'Owner (' + this.user.userName + ')';
+            perm.isSystem = true;
+            perm.isActive = true;
+            perm.isSharing = false;
+            perm.read = true;
+            perm.download = true;
+            perm.full = true;
+            perm.share = true;
+            perm.update = true;
+            perm.create = true;
+            perm.delete = true;
+            perm.upload = true;
+            perm.assign = true;
+            this.fileEditing.permissions.push(perm);
+          }
+          
+        
+          
           this.startDate = null;
           this.endDate = null;
           if (this.parentFolder != null) {
@@ -585,6 +607,7 @@ export class CreateFolderComponent implements OnInit {
   }
 
   checkPermission() {
+    debugger
     //this.isSystem = false;
     this.readRight = this.dmSV.parentRead;
     this.createRight = this.dmSV.parentCreate;
@@ -861,11 +884,12 @@ export class CreateFolderComponent implements OnInit {
       ''
     );
     dialog.closed.subscribe((item) => {
-      if (item && item.event) this.fileEditing.location = item.event;
+      if (item && item.event) this.location = item.event;
     });
   }
 
   disableRight(item: string) {
+    debugger
     var ret = false;
     if (this.updateRight == false) return true;
     if (this.propertiesFolder) return true;

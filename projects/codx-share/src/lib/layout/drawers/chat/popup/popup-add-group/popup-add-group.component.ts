@@ -146,19 +146,23 @@ export class AddGroupChatComponent implements OnInit,AfterViewInit {
           "WP", 
           "ERM.Business.WP", 
           "GroupBusiness", 
-          "InsertGroupAsync",[this.group])
-          .subscribe((res:any) => {
+          "InsertGroupAsync",
+          [this.group])
+          .subscribe((res:boolean) => {
             if(res){
-              this.signalRSV.sendData("ActiveNewGroup",res);
+              this.signalRSV.sendData("AddNewGroup",this.group.groupID);
               this.dialogRef.close(res);
-              this.notifiSV.notify("Tạo nhóm chat thành công");
-
+              this.notifiSV.notify("CHAT001");
             }
-            else{
-              this.dialogRef.close(null);
+            else
+            {
               this.notifiSV.notify("Tạo nhóm chat không thành công");
             }
           });
+        }
+        else
+        {
+          this.notifiSV.notify("Tạo nhóm chat không thành công");
         }
       });
     }

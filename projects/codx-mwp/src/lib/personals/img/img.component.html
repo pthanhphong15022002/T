@@ -2,12 +2,23 @@
   <div class="hover-scroll-overlay-y home-img" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
     data-kt-scroll-height="auto" data-kt-scroll-dependencies=".pw-profile,.pw-menu"
     data-kt-scroll-wrappers=".codx-wrapper, .wrapper, .pw-storgae, .pw-content" data-kt-scroll-offset="0px">
-    <codx-listview #listView [dataService]="dtService" [predicate]="predicate" [dataValue]="dataValue"
-      [itemTemplate]="templateListCard" type="cardView" service="DM">
+    <codx-listview #listView 
+      [predicate]="predicate" 
+      [dataValue]="dataValue"
+      entityName="DM_FileInfo"
+      gridViewName="grvFileInfo"
+      formName="FileInfo"
+      [itemTemplate]="templateListCard" 
+      type="cardView" 
+      service="DM">
     </codx-listview>
 
     <ng-template #templateListCard let-item>
-       <codx-card-img cardCss="border rounded-4 w-200px pt-6" (dblclick)="openImg(item)" [imageSrc]="getThumb(urlUpload + '/' + item.pathDisk)" imageWidth="200" imgCss="h-150px" >
+       <codx-card-img 
+       cardCss="border rounded-4 w-200px pt-6" 
+       (dblclick)="openImg(item)" 
+       [imageSrc]="getThumb(item)" 
+       imgCss="h-150px" >
       </codx-card-img>
     </ng-template>
   </div>

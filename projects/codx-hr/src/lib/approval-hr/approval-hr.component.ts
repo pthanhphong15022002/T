@@ -41,19 +41,21 @@ export class ApprovalHrComponent implements OnInit, AfterViewInit, OnChanges {
   ms020: any;
   ms021: any;
   active = 1;
+  referType = 'source'
+
   constructor(
     private cache: CacheService,
     private hrService: CodxHrService,
     private router: ActivatedRoute
   ) {
-    debugger;
   }
 
   ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {
-    debugger;
     this.router.params.subscribe((params) => {
       this.funcID = params['FuncIDs'];
+      console.log('funcccc id', this.funcID);
+      
       if (params['id']) this.getGridViewSetup(this.funcID, params['id']);
     });
     console.log('asdasdasdasd');
@@ -83,9 +85,10 @@ export class ApprovalHrComponent implements OnInit, AfterViewInit, OnChanges {
       request.pageLoading = false;
       this.hrService.loadData('HR', request).subscribe((res) => {
         if (res) {
-          console.log(res);
-
+          console.log('object hdld',res);
           this.data = res[0][0];
+          console.log('data hdld', this.data);
+          
         }
       });
     }

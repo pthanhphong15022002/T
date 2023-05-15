@@ -2,39 +2,45 @@
   <div class="d-flex w-100 justify-content-center">
     <div class="d-flex flex-column">
       <div class="box">
-        <ng-container *ngIf="!isSent ;else tmpIsSent">
-          <div *ngIf="itemSession">
-            <div class="card-survey" [id]="'card-survey-' + itemSession.seqNo">
-              <div
-                class="control-section inplace-editor-control-section form-lafyout"
-                id="inplace-editor-control"
-              >
+        <ng-container *ngIf="survey?.stop ;else elseStop">
+          <div class="card-survey">
+            <div class="control-section inplace-editor-control-section form-lafyout">
+              <div class="content-wrapper b-t">
+                <form id="formSession" class="form-horizontal example-box">
+                  <div class="ms-6 title-des-index0 mb-5">
+                    <span
+                      *ngIf="itemSession.question"
+                      [innerHTML]="itemSession.question"
+                    ></span>
+                    <span class="mt-5" *ngIf="!itemSession.question">Mẫu không có tiêu đề</span>
+                    <div class="fs-6 mt-5">Khảo sát đã đóng.</div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #elseStop>
+          <ng-container *ngIf="!isSent ;else tmpIsSent">
+            <div *ngIf="itemSession">
+              <div class="card-survey" [id]="'card-survey-' + itemSession.seqNo">
                 <div
-                  [ngClass]="
-                    itemSession.active
-                      ? 'content-wrapper b-t b-l-session'
-                      : 'content-wrapper b-t'
-                  "
+                  class="control-section inplace-editor-control-section form-lafyout"
+                  id="inplace-editor-control"
                 >
-                  <form
-                    id="formSession"
-                    class="form-horizontal example-box"
-                    *ngIf="itemSession.seqNo == 0"
+                  <div
+                    [ngClass]="
+                      itemSession.active
+                        ? 'content-wrapper b-t b-l-session'
+                        : 'content-wrapper b-t'
+                    "
                   >
-                    <ng-container #body>
-                      <ng-container
-                        *ngTemplateOutlet="
-                          template_card_session_index_0;
-                          context: {
-                            itemSession: itemSessionFirst
-                          }
-                        "
-                      ></ng-container>
-                    </ng-container>
-                  </form>
-                  <div *ngIf="itemSession.seqNo > 0">
-                    <ng-container #body>
-                      <form id="formSession" class="form-horizontal example-box">
+                    <form
+                      id="formSession"
+                      class="form-horizontal example-box"
+                      *ngIf="itemSession.seqNo == 0"
+                    >
+                      <ng-container #body>
                         <ng-container
                           *ngTemplateOutlet="
                             template_card_session_index_0;
@@ -43,243 +49,258 @@
                             }
                           "
                         ></ng-container>
-                      </form>
-                      <div class="formSession2 d-flex align-items-center b-t-index">
-                        <span
-                          *ngIf="itemSession.question"
-                          style="color: white"
-                          [innerHTML]="itemSession.question"
-                        ></span>
-                        <span *ngIf="!itemSession.question" style="color: white">
-                          {{"Mẫu không có tiêu đề"}}</span>
-                      </div>
-                    </ng-container>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="list example-boundary">
-              <div *ngFor="let itemQuestion of itemSession.children ; let i = index">
-                <div
-                  class="card-survey"
-                  [ngClass]="i==0?'div-f-c':''"
-                  [id]="'card-survey-question-' + itemQuestion.recID"
-                >
-                  <div
-                    class="col-lg-8 control-section inplace-editor-control-section form-layout"
-                    id="inplace-editor-control"
-                  >
-                    <div
-                      [ngClass]="
-                        itemQuestion.active
-                          ? 'content-wrapper b-l'
-                          : 'content-wrapper'
-                      "
-                    >
-                      <form id="formId" class="form-horizontal example-box">
-                        <ng-container #body>
-                          <div *ngIf="itemQuestion.category == 'Q'">
-                            <div *ngIf="!itemQuestion.showAnswer">
-                              <ng-container
-                                *ngTemplateOutlet="
-                                  template_card_question;
-                                  context: {
-                                    itemSession: itemSession,
-                                    itemQuestion: itemQuestion
-                                  }
-                                "
-                              ></ng-container>
-                            </div>
-                            <div *ngIf="itemQuestion.showAnswer">
-                              <ng-container
-                                *ngTemplateOutlet="
-                                  template_card_question_showAnswer;
-                                  context: {
-                                    itemSession: itemSession,
-                                    itemQuestion: itemQuestion
-                                  }
-                                "
-                              ></ng-container>
-                            </div>
-                          </div>
-                          <div
-                            *ngIf="
-                              itemQuestion.category == 'P' ||
-                              itemQuestion.category == 'V'
+                      </ng-container>
+                    </form>
+                    <div *ngIf="itemSession.seqNo > 0">
+                      <ng-container #body>
+                        <form id="formSession" class="form-horizontal example-box">
+                          <ng-container
+                            *ngTemplateOutlet="
+                              template_card_session_index_0;
+                              context: {
+                                itemSession: itemSessionFirst
+                              }
                             "
-                            class="ms-6"
-                          >
-                            <ng-container
-                              *ngTemplateOutlet="
-                                template_card_image_video;
-                                context: {
-                                  itemSession: itemSession,
-                                  itemQuestion: itemQuestion
-                                }
-                              "
-                            ></ng-container>
-                          </div>
-                          <div *ngIf="itemQuestion.category == 'T'" class="ms-6">
-                            <ng-container
-                              *ngTemplateOutlet="
-                                template_card_title;
-                                context: {
-                                  itemSession: itemSession,
-                                  itemQuestion: itemQuestion
-                                }
-                              "
-                            ></ng-container>
-                          </div>
-                        </ng-container>
-                        <ng-container
-                          #footer
-                          *ngIf="
-                            (itemQuestion?.active &&
-                              !itemQuestion?.showAnswer &&
-                              itemQuestion.category == 'Q') ||
-                            itemQuestion.category == 'R' ||
-                            itemQuestion.category == 'O2' ||
-                            itemQuestion.category == 'C2'
-                          "
-                        >
-                          <hr />
-                          <div class="row pt-6 ps-3 pe-3 pb-3">
-                            <div
-                              class="col-md-8 d-flex justify-content-start pointer"
-                            >
-                              <span
-                                class="icon-check-correct icon-24 primary"
-                                ngbPopover="Đáp án và điểm"
-                                triggers="mouseenter:mouseleave"
-                                placement="bottom"
-                                [autoClose]="'outside'"
-                              ></span>
-                              &nbsp;
-                              <codx-label
-                                fiedName="Answer"
-                                default="Đáp án"
-                                class="primary"
-                                [formModel]="formModel"
-                              ></codx-label>
-                              <span>
-                                &nbsp; (&nbsp; {{ itemQuestion.scores }} &nbsp;
-                                <codx-label
-                                  fiedName="Scores"
-                                  default="điểm"
-                                  class=""
-                                  [formModel]="formModel"
-                                ></codx-label>
-                                )
-                              </span>
-                            </div>
-                            <div class="col-md-4 d-flex justify-content-end">
-                              <span
-                                class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-                              ></span>
-                              <span
-                                class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-                              ></span>
-                              <span class="split"></span>
-                              <codx-label
-                                fiedName=""
-                                default="Bắt buộc"
-                                class="pd-10"
-                              ></codx-label>
-                              <codx-input
-                                type="switch"
-                                class="pd-t-10"
-                                [crrValue]="itemQuestion.mandatory"
-                              ></codx-input>
-                              <div ngbDropdown class="dropdown" container="body">
-                                <a
-                                  href="javascript:void(0)"
-                                  class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
-                                  ngbDropdownToggle
-                                  id="dropdownMenuButton1"
-                                  aria-expanded="false"
-                                >
-                                  <span
-                                    class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-                                  >
-                                  </span>
-                                </a>
-                                <ul
-                                  ngbDropdownMenu
-                                  aria-labelledby="dropdownMenuButton1"
-                                  class="MF"
-                                >
-                                  <li>
-                                    <a
-                                      ngbDropdownItem
-                                      href="javascript:void(0)"
-                                      class="mt-30px"
-                                    >
-                                      <div class="d-flex">
-                                        <span
-                                          *ngIf="itemQuestion?.hideComment"
-                                          class="icon-check icon-24 ps-6 pe-6"
-                                        ></span>
-                                        <codx-label
-                                          fiedName="formatAlignLeft"
-                                          default="Mô tả"
-                                        ></codx-label>
-                                      </div>
-                                    </a>
-                                  </li>
-                                </ul>
-                              </div>
-                            </div>
-                          </div>
-                        </ng-container>
-                        <div
-                          #footer_active_showAnswer
-                          *ngIf="itemQuestion?.active && itemQuestion?.showAnswer"
-                        >
-                          <hr />
-                          <div class="d-flex justify-content-end pe-6 pb-6 pt-6">
-                            <button type="button" class="btn btn-primary">
-                              <codx-label
-                                fiedName="Done"
-                                default="Xong"
-                              ></codx-label>
-                            </button>
-                          </div>
+                          ></ng-container>
+                        </form>
+                        <div class="formSession2 d-flex align-items-center b-t-index">
+                          <span
+                            *ngIf="itemSession.question"
+                            style="color: white"
+                            [innerHTML]="itemSession.question"
+                          ></span>
+                          <span *ngIf="!itemSession.question" style="color: white">
+                            {{"Mẫu không có tiêu đề"}}</span>
                         </div>
-                      </form>
+                      </ng-container>
                     </div>
                   </div>
                 </div>
               </div>
+              <div class="list example-boundary">
+                <div *ngFor="let itemQuestion of itemSession.children ; let i = index">
+                  <div
+                    class="card-survey"
+                    [ngClass]="i==0?'div-f-c':''"
+                    [id]="'card-survey-question-' + itemQuestion.recID"
+                  >
+                    <div
+                      class="col-lg-8 control-section inplace-editor-control-section form-layout"
+                      id="inplace-editor-control"
+                    >
+                      <div
+                        [ngClass]="
+                          itemQuestion.active
+                            ? 'content-wrapper b-l'
+                            : 'content-wrapper'
+                        "
+                      >
+                        <form [id]="'formId'+itemQuestion.recID" class="formId form-horizontal example-box card-survey-question">
+                          <ng-container #body>
+                            <div *ngIf="itemQuestion.category == 'Q'">
+                              <div *ngIf="!itemQuestion.showAnswer">
+                                <ng-container
+                                  *ngTemplateOutlet="
+                                    template_card_question;
+                                    context: {
+                                      itemSession: itemSession,
+                                      itemQuestion: itemQuestion
+                                    }
+                                  "
+                                ></ng-container>
+                              </div>
+                              <div *ngIf="itemQuestion.showAnswer">
+                                <ng-container
+                                  *ngTemplateOutlet="
+                                    template_card_question_showAnswer;
+                                    context: {
+                                      itemSession: itemSession,
+                                      itemQuestion: itemQuestion
+                                    }
+                                  "
+                                ></ng-container>
+                              </div>
+                            </div>
+                            <div
+                              *ngIf="
+                                itemQuestion.category == 'P' ||
+                                itemQuestion.category == 'V'
+                              "
+                              class="ms-6"
+                            >
+                              <ng-container
+                                *ngTemplateOutlet="
+                                  template_card_image_video;
+                                  context: {
+                                    itemSession: itemSession,
+                                    itemQuestion: itemQuestion
+                                  }
+                                "
+                              ></ng-container>
+                            </div>
+                            <div *ngIf="itemQuestion.category == 'T'" class="ms-6">
+                              <ng-container
+                                *ngTemplateOutlet="
+                                  template_card_title;
+                                  context: {
+                                    itemSession: itemSession,
+                                    itemQuestion: itemQuestion
+                                  }
+                                "
+                              ></ng-container>
+                            </div>
+                          </ng-container>
+                          <ng-container
+                            #footer
+                            *ngIf="
+                              (itemQuestion?.active &&
+                                !itemQuestion?.showAnswer &&
+                                itemQuestion.category == 'Q') ||
+                              itemQuestion.category == 'R' ||
+                              itemQuestion.category == 'O2' ||
+                              itemQuestion.category == 'C2'
+                            "
+                          >
+                            <hr />
+                            <div class="row pt-6 ps-3 pe-3 pb-3">
+                              <div
+                                class="col-md-8 d-flex justify-content-start pointer"
+                              >
+                                <span
+                                  class="icon-check-correct icon-24 primary"
+                                  ngbPopover="Đáp án và điểm"
+                                  triggers="mouseenter:mouseleave"
+                                  placement="bottom"
+                                  [autoClose]="'outside'"
+                                ></span>
+                                &nbsp;
+                                <codx-label
+                                  fiedName="Answer"
+                                  default="Đáp án"
+                                  class="primary"
+                                  [formModel]="formModel"
+                                ></codx-label>
+                                <span>
+                                  &nbsp; (&nbsp; {{ itemQuestion.scores }} &nbsp;
+                                  <codx-label
+                                    fiedName="Scores"
+                                    default="điểm"
+                                    class=""
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                  )
+                                </span>
+                              </div>
+                              <div class="col-md-4 d-flex justify-content-end">
+                                <span
+                                  class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                                ></span>
+                                <span
+                                  class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                                ></span>
+                                <span class="split"></span>
+                                <codx-label
+                                  fiedName=""
+                                  default="Bắt buộc"
+                                  class="pd-10"
+                                ></codx-label>
+                                <codx-input
+                                  type="switch"
+                                  class="pd-t-10"
+                                  [crrValue]="itemQuestion.mandatory"
+                                ></codx-input>
+                                <div ngbDropdown class="dropdown" container="body">
+                                  <a
+                                    href="javascript:void(0)"
+                                    class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                                    ngbDropdownToggle
+                                    id="dropdownMenuButton1"
+                                    aria-expanded="false"
+                                  >
+                                    <span
+                                      class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                                    >
+                                    </span>
+                                  </a>
+                                  <ul
+                                    ngbDropdownMenu
+                                    aria-labelledby="dropdownMenuButton1"
+                                    class="MF"
+                                  >
+                                    <li>
+                                      <a
+                                        ngbDropdownItem
+                                        href="javascript:void(0)"
+                                        class="mt-30px"
+                                      >
+                                        <div class="d-flex">
+                                          <span
+                                            *ngIf="itemQuestion?.hideComment"
+                                            class="icon-check icon-24 ps-6 pe-6"
+                                          ></span>
+                                          <codx-label
+                                            fiedName="formatAlignLeft"
+                                            default="Mô tả"
+                                          ></codx-label>
+                                        </div>
+                                      </a>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                          <div
+                            #footer_active_showAnswer
+                            *ngIf="itemQuestion?.active && itemQuestion?.showAnswer"
+                          >
+                            <hr />
+                            <div class="d-flex justify-content-end pe-6 pb-6 pt-6">
+                              <button type="button" class="btn btn-primary">
+                                <codx-label
+                                  fiedName="Done"
+                                  default="Xong"
+                                ></codx-label>
+                              </button>
+                            </div>
+                          </div>
+                          <div [id]="'formError'+itemQuestion.recID" class="formError">
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-start mb-5" #footer>
+                <button
+                  *ngIf="itemSession.seqNo > 0"
+                  type="button"
+                  class="btn btn-submit-white text-purple me-6"
+                  (click)="continue(itemSession.seqNo - 1)"
+                >
+                  <codx-label fiedName="Back" default="Quay lại" class="text-bolder"></codx-label>
+                </button>
+                <button
+                  *ngIf="itemSession.seqNo != questions.length - 1"
+                  type="button"
+                  class="btn btn-submit-white text-purple"
+                  (click)="continue(itemSession.seqNo + 1)"
+                >
+                  <codx-label fiedName="lblContinue" default="Tiếp" class="text-bolder" formName="fmReview"></codx-label>
+                </button>
+                <button
+                  *ngIf="itemSession.seqNo == questions.length - 1"
+                  type="button"
+                  class="btn btn-submit text-white"
+                  (click)="onSubmit()"
+                >
+                  <codx-label fiedName="Sumbit" default="Gửi"></codx-label>
+                </button>
+              </div>
             </div>
-            <div class="d-flex justify-content-start mb-5" #footer>
-              <button
-                *ngIf="itemSession.seqNo > 0"
-                type="button"
-                class="btn btn-submit-white text-purple me-6"
-                (click)="continue(itemSession.seqNo - 1)"
-              >
-                <codx-label fiedName="Back" default="Quay lại" class="text-bolder"></codx-label>
-              </button>
-              <button
-                *ngIf="itemSession.seqNo != questions.length - 1"
-                type="button"
-                class="btn btn-submit-white text-purple"
-                (click)="continue(itemSession.seqNo + 1)"
-              >
-                <codx-label fiedName="Continue" default="Tiếp" class="text-bolder"></codx-label>
-              </button>
-              <button
-                *ngIf="itemSession.seqNo == questions.length - 1"
-                type="button"
-                class="btn btn-submit text-white"
-                (click)="onSubmit()"
-              >
-                <codx-label fiedName="Sumbit" default="Gửi"></codx-label>
-              </button>
-            </div>
-          </div>
-        </ng-container>
-        
+          </ng-container>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -339,7 +360,6 @@
       [label]="itemAnswer.answer"
       field="O"
       [crrValue]="itemAnswer.answer"
-     
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>
     <div class="d-flex align-items-center " *ngIf="itemAnswer.other">
@@ -593,6 +613,7 @@
     <div #header class="w-100">
       <div class="form-group question w-100 mt-3 ms-6">
         <div
+          class="d-flex align-items-center"
           [ngClass]="
             itemQuestion?.active ? 'title-des title-des-hover' : 'title-des'
           "
@@ -602,6 +623,7 @@
             [innerHTML]="itemQuestion.question"
           ></span>
           <span *ngIf="!itemQuestion.question">{{ "Câu hỏi" }}</span>
+          <span *ngIf="itemQuestion.mandatory" class="text-danger ms-2">*</span>
         </div>
       </div>
       <div class="form-group question w-100" *ngIf="itemQuestion.hideComment">
@@ -674,9 +696,10 @@
   </div>
   <ng-template #tmpL>
     <ng-container *ngIf="itemQuestion.answerType == 'L' ; else tmpO">
-      <select class="form-select w-200px ms-6 rounded" aria-label="Default select example" (change)="valueChange($event, itemSession, itemQuestion, $event.value)">
+      <!-- //(change)="valueChange($event.target.value, itemSession, itemQuestion, item)" -->
+      <select class="form-select w-200px ms-6 rounded" aria-label="Default select example" (change)="valueChange( $event, itemSession, itemQuestion, $event.target.value)"> 
         <option selected >Chọn</option>
-        <option *ngFor="let item of itemQuestion.answers" value="">{{item.answer}}</option>
+        <option *ngFor="let item of itemQuestion.answers" [value]="item.answer">{{item.answer}}</option>
       </select>
     </ng-container>
   </ng-template>
@@ -975,7 +998,7 @@
   </div>
   <div class="d-flex align-items-center mt-3 border-top py-3">
     <span class="ms-6 icon-i-eye-slash icon-24"></span>
-    <span class="ms-3">{{ user.email }}</span>
+    <span class="ms-3">{{ user?.email ? user?.email : "Guest" }}</span>
   </div>
 </ng-template>
 

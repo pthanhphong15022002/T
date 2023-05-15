@@ -1,7 +1,5 @@
 import { PopupInfoComponent } from './popup-info/popup-info.component';
-import { I } from '@angular/cdk/keycodes';
 import {
-  AfterContentInit,
   AfterViewInit,
   ChangeDetectorRef,
   Component,
@@ -14,16 +12,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   AuthStore,
-  CodxService,
   DialogModel,
   DialogRef,
   FormModel,
   ImageViewerComponent,
   NotificationsService,
-  SidebarModel,
   UIComponent,
   UploadFile,
   ViewModel,
@@ -160,6 +155,7 @@ export class CompanySettingComponent
         sameData: true,
         model: {
           panelRightRef: this.templateRight,
+          widthLeft: '100%',
         },
       },
     ];
@@ -262,7 +258,7 @@ export class CompanySettingComponent
           let image = this.sanitizer.bypassSecurityTrustUrl(url);
           this.imageLogo = image;
         }
-        if (this.data.storage < 0) {
+        if ((this.data.storage as number) < 0) {
           this.maxStorage = Number(this.data.memory);
           this.cache.message('AD016').subscribe((res) => {
             this.inner = res.customName;
@@ -432,5 +428,23 @@ export class CompanySettingComponent
 
   viewChanged(e) {
     console.log(e);
+  }
+
+  installModule(module: TN_OrderModule) {
+    console.log('install module', module);
+    //1 = trial - 2 = hire - 0 = extend
+    let mode = '1';
+    let mapMD: Map<string, number> = new Map();
+    mapMD.set(module.boughtModule.moduleID, 1);
+    let md_qty = JSON.stringify(Object.fromEntries(mapMD));
+    this.adService.buyNewModule(md_qty, mode).subscribe((endDate: string) => {
+      this.lstNotInstallModule = this.lstNotInstallModule.filter(
+        (x) => x.boughtModule.moduleID != module.boughtModule.moduleID
+      );
+      module.bought = true;
+      module.expiredOn = endDate;
+      this.lstInstalledModule.push(module);
+      this.detectorRef.detectChanges();
+    });
   }
 }

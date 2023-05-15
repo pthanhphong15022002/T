@@ -3558,6 +3558,7 @@ export class EmployeeDetailComponent extends UIComponent {
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eDisciplineFuncID),
         employeeId: this.employeeID,
+        empObj: this.infoPersonal,
         funcID: this.eDisciplineFuncID,
         dataInput: data,
       },
@@ -4074,6 +4075,7 @@ export class EmployeeDetailComponent extends UIComponent {
           actionHeaderText + ' ' + this.getFormHeader(this.eContractFuncID),
         employeeId: this.employeeID,
         funcID: this.eContractFuncID,
+        openFrom: "empDetail",
       },
       option
     );
@@ -4579,7 +4581,8 @@ export class EmployeeDetailComponent extends UIComponent {
         .subscribe((res: any) => {
           this.HandleEmployeeAppointionInfo(actionHeaderText, 'copy', res);
         });
-    } else if (flag == 'eExperiences') {
+    }  
+    else if (flag == 'eExperiences') {
       this.eExperienceGrid.dataService.dataSelected = data;
       (this.eExperienceGrid.dataService as CRUDService)
         .copy()

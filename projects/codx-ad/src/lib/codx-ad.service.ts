@@ -9,6 +9,8 @@ import {
 } from 'codx-core';
 import { lstat } from 'fs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { tmpTNMD } from './models/tmpTenantModules.models';
+import { tmpformChooseRole } from './models/tmpformChooseRole.models';
 
 @Injectable({
   providedIn: 'root',
@@ -315,6 +317,8 @@ export class CodxAdService {
     );
   }
 
+  //#region Module
+
   //get lst bought module
   getLstBoughtModule() {
     return this.api.execSv(
@@ -323,6 +327,27 @@ export class CodxAdService {
       'UsersBusiness',
       'GetListBoughtModuleAsync',
       ''
+    );
+  }
+
+  //1 = trial - 2 = hire - 0 = extend
+  buyNewModule(moduleSales: string, mode: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'BuyNewModuleAsync',
+      [moduleSales, mode]
+    );
+  }
+
+  getLstAD_UserRolesByModuleIDs(lstMDSales: string[]) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListUserRoleByModulesAsync',
+      [lstMDSales]
     );
   }
 
@@ -335,6 +360,9 @@ export class CodxAdService {
       ''
     );
   }
+
+  //#endregion
+
   sendMail(userID, tenant, mailType) {
     return this.api.execSv<any>(
       'SYS',
@@ -344,4 +372,106 @@ export class CodxAdService {
       [userID, tenant, mailType]
     );
   }
+
+  //#region AD_User new process
+  removeAD_UserRoles(
+    lstModuleIDs: string[],
+    lstModuleSales: string[],
+    lstUserIDs: string[]
+  ) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'RemoveAD_UserRolesAsync',
+      [lstModuleIDs, lstModuleSales, lstUserIDs]
+    );
+  }
+
+  addUpdateAD_UserRoles(
+    lstAD_UserRoles: tmpformChooseRole[],
+    lstUserIDs: string[],
+    needValidate: boolean,
+    autoCreated: boolean
+  ) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'AddUserRolesAsync',
+      [lstAD_UserRoles, lstUserIDs, needValidate, autoCreated]
+    );
+  }
+
+  addUserToGroupAsync(
+    groupID: string,
+    userID: string,
+    isOverrideRoles: boolean
+  ) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'AddUserToGroupAsync',
+      [groupID, userID, isOverrideRoles]
+    );
+  }
+  //#endregion
+
+  //#region UserGroupBusiness
+  addUserGroupAsync(userGroupModel) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserGroupsBusiness',
+      'AddAsync',
+      [userGroupModel]
+    );
+  }
+
+  addUserGroupMemberAsync(userGroupModel, isOverrideRoles: boolean) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserGroupsBusiness',
+      'AddGroupMembersAsync',
+      [userGroupModel, isOverrideRoles]
+    );
+  }
+
+  validateGroupMemberRoles(sLstMemberIDs: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserGroupsBusiness',
+      'ValidateMemberRolesAsync',
+      [sLstMemberIDs]
+    );
+  }
+
+  removeGroupMember(
+    lstMDID: string[],
+    lstMDSales: string[],
+    groupID: string,
+    lstMemberIDs: string[]
+  ) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserGroupsBusiness',
+      'RemoveGroupMembersAsync',
+      [lstMDID, lstMDSales, groupID, lstMemberIDs]
+    );
+  }
+
+  removeGroupAsync(groupID: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserGroupsBusiness',
+      'RemoveGroupAsync',
+      [groupID]
+    );
+  }
+  //#endregion
 }

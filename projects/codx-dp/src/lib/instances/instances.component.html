@@ -19,6 +19,7 @@
   [viewActiveType]="viewMode"
 >
 </codx-views>
+
 <!-- KANBAN -->
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
@@ -35,7 +36,7 @@
     [rootData]="data"
     (dblclick)="dblClick($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
-  >
+  >c
   </codx-card-img>
 </ng-template>
 
@@ -48,11 +49,10 @@
       <span
         [ngClass]="getPropertiesHeader(data, 'icon')"
         [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
-        style="font-size: 18px"
-        class="me-3"
+        class="me-1 icon-16"
       >
       </span>
-      <span [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
+      <span class="fs-6" [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
         {{ data.headerText }}
       </span>
     </div>
@@ -76,16 +76,18 @@
           [value]="data?.status"
           [showText]="true"
           [showBgColor]="true"
-          class="badge badge-light badge-md fs-7"
+          class="badge badge-light badge-sm"
         >
         </codx-vll>
       </div>
       <div class="d-flex justify-content-end">
-        <span
+        <div
+          class="d-flex align-items-center"
           #pCr="ngbPopover"
           [ngbPopover]="popperCreatedOn"
           (mouseenter)="pCr.open()"
           (mouseleave)="pCr.close()"
+          container="body"
           placement="left right"
         >
           <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
@@ -103,7 +105,7 @@
                 | async
             "
           ></span>
-        </span>
+        </div>
       </div>
     </div>
   </ng-template>
@@ -118,11 +120,13 @@
         </codx-vll>
       </ng-container> -->
       <span
+        class="d-flex align-items-center"
         #pEd="ngbPopover"
         [ngbPopover]="popperEndDate"
         (mouseenter)="pEd.open()"
         (mouseleave)="pEd.close()"
-        placement="right top botom left"
+        container="body"
+        placement="top right bottom"
       >
         <span class="text-gray-600 icon-16 icon-av_timer me-1"></span>
         <span
@@ -141,44 +145,57 @@
         ></span>
       </span>
     </div>
-    <!-- <div class="d-flex justify-content-center">
-      <codx-imgs [isToolTip]="true" [width]="25" [objectId]="data.owner" ojectType="AD_Users" [numberImages]="1">
+    <div class="d-flex justify-content-end">
+      <span *ngIf="data.ownerStepInstances && data.ownerStepInstances != data.owner">
+        <codx-imgs
+          [isToolTip]="true"
+          [width]="25"
+          [objectId]="data.ownerStepInstances"
+          ojectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </span>
+      <codx-imgs
+        [isToolTip]="true"
+        [width]="25"
+        [objectId]="data.owner"
+        ojectType="AD_Users"
+        [numberImages]="1"
+      >
       </codx-imgs>
-    </div> -->
-    <codx-imgs
-      [isToolTip]="true"
-      [width]="25"
-      [objectId]="data.owner"
-      ojectType="AD_Users"
-      [numberImages]="1"
-    >
-    </codx-imgs>
+    </div>
   </div>
 </ng-template>
 
-<ng-template #popDetail let-dialog>
-  <codx-form [body]="detailPopupClick" [dialog]="dialog">
-    <ng-template #detailPopupClick>
-      <codx-instance-detail
-        #detailViewPopup
-        [dataService]="view.dataService"
-        [formModel]="view.formModel"
-        [dataSelect]="dataSelected"
-        (moreFunctionEvent)="clickMoreFunc($event)"
-        (changeMF)="changeMF($event)"
-        [listStepsProcess]="process.steps"
-        [listCbxProccess]="listProccessCbx"
-        [viewModelDetail]="this.process.viewModeDetail"
-        [tabInstances]="tabInstances"
-        [moreFunc]="moreFuncStart"
-        (clickStartInstances)="clickStartInstances($event)"
-        [viewsCurrent]="'k-'"
-        [reloadData]="reloadData"
-        [listSteps]="listInstanceStep"
-      >
-      </codx-instance-detail>
-    </ng-template>
+<ng-template #popDetail >
+  <codx-form [body]="detailPopupClick" [dialog]="popup">
   </codx-form>
+</ng-template>
+<ng-template #detailPopupClick>
+  <codx-instance-detail
+    #detailViewPopup
+    [dataService]="view.dataService"
+    [formModel]="view.formModel"
+    [dataSelect]="dataSelected"
+    (moreFunctionEvent)="clickMoreFunc($event)"
+    (changeMF)="changeMF($event)"
+    [listStepsProcess]="process.steps"
+    [listCbxProccess]="listProccessCbx"
+    [viewModelDetail]="this.process.viewModeDetail"
+    [tabInstances]="tabInstances"
+    [moreFunc]="moreFuncStart"
+    (clickStartInstances)="clickStartInstances($event)"
+    [viewsCurrent]="'k-'"
+    [listSteps]="listInstanceStep"
+    (outStepInstance)="outStepInstance($event)"
+    (saveDatasInstance)="saveDatasInstance($event)"
+    [lstStepProcess]="listSteps"
+    [colorSuccesss]="colorReasonSuccess?.color"
+    [colorFail]="colorReasonFail?.color"
+    [reasonStepsObject]="reasonStepsObject"
+  >
+  </codx-instance-detail>
 </ng-template>
 <!-- end kanban -->
 
@@ -187,7 +204,7 @@
   <codx-temp-full
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
-    [moreFuncCss]="'me-15'"
+    [moreFuncCss]="'me-9'"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
     [title]="data.title"
@@ -253,17 +270,24 @@
           <div *ngFor="let item of listSteps">
             <div
               *ngIf="item.stepID === data.stepID"
-              [ngStyle]="{ 'background-color': item['backgroundColor'] }"
-              class="me-2 badge badge-primary"
+              [ngStyle]="{
+                'background-color':
+                  data.status == '3' || data.status == '4'
+                    ? colorReasonSuccess?.color
+                    : data.status == '5' || data.status == '6'
+                    ? colorReasonFail?.color
+                    : item['backgroundColor']
+              }"
+              class="me-2 badge badge-sm d-flex align-items-center"
             >
               <span
                 [ngClass]="item['icon']"
                 [ngStyle]="{ color: item['iconColor'] }"
-                class="me-2"
+                class="me-1 icon-14"
               ></span>
-              <span [ngStyle]="{ color: item['textColor'] }">
-                {{ item.stepName }}</span
-              >
+              <span [ngStyle]="{ color: item['textColor'] }">{{
+                item.stepName
+              }}</span>
             </div>
           </div>
         </ng-container>
@@ -274,7 +298,7 @@
             [value]="data?.status"
             [showText]="true"
             [showBgColor]="true"
-            class="badge badge-light badge-md fs-7"
+            class="badge badge-light badge-sm"
           >
           </codx-vll>
         </ng-container>
@@ -285,7 +309,8 @@
         [ngbPopover]="popperEndDate"
         (mouseenter)="pEdDT.open()"
         (mouseleave)="pEdDT.close()"
-        placement="right top botom left"
+        container="body"
+        placement="top right bottom"
       >
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
@@ -305,14 +330,26 @@
       </div>
     </div>
     <div class="d-flex justify-content-center">
-      <codx-imgs
-        [isToolTip]="true"
-        [width]="25"
-        [objectId]="data.owner"
-        ojectType="AD_Users"
-        [numberImages]="1"
-      >
-      </codx-imgs>
+      <div *ngIf="data.ownerStepInstances">
+        <codx-imgs
+          [isToolTip]="true"
+          [width]="25"
+          [objectId]="data.ownerStepInstances"
+          ojectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
+      <div *ngIf="data.ownerStepInstances == null">
+        <codx-imgs
+          [isToolTip]="true"
+          [width]="25"
+          [objectId]="data?.owner"
+          ojectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -334,6 +371,11 @@
     (clickStartInstances)="clickStartInstances($event)"
     [viewsCurrent]="'d-'"
     [reasonStepsObject]="reasonStepsObject"
+    (outStepInstance)="outStepInstance($event)"
+    (saveDatasInstance)="saveDatasInstance($event)"
+    [lstStepProcess]="listSteps"
+    [colorSuccesss]="colorReasonSuccess?.color"
+    [colorFail]="colorReasonFail?.color"
   >
   </codx-instance-detail>
 </ng-template>
@@ -344,6 +386,7 @@
       [fiedName]="'CreatedOn'"
       [formName]="'DPInstances'"
       [gridViewName]="'grvDPInstances'"
+      [default]="this.grvSetup['CreatedOn'].headerText"
       [setRequire]="false"
     ></codx-label>
   </span>
@@ -354,6 +397,7 @@
       [fiedName]="'EndDate'"
       [formName]="'DPInstances'"
       [gridViewName]="'grvDPInstances'"
+      [default]="this.grvSetup['EndDate'].headerText"
       [setRequire]="false"
     ></codx-label>
   </span>
@@ -371,9 +415,8 @@
       (valueChange)="valueChangeFilter($event)"
     ></codx-dropdown-select>
   </span>
-  <span class="mx-1">
+  <span class="mx-1" *ngIf="process && viewsCurrent != 'k-'">
     <codx-dropdown-select
-      *ngIf="process"
       [cssClass]="'rounded-pill border-1'"
       cssPopup="h-350px w-300px"
       [isMulti]="false"
@@ -386,7 +429,6 @@
   </span>
   <span class="mx-1">
     <codx-dropdown-select
-      *ngIf="process"
       [cssClass]="'rounded-pill border-1'"
       cssPopup="h-350px w-300px"
       [isMulti]="false"
@@ -397,20 +439,6 @@
       (valueChange)="valueChangeFilter($event)"
     ></codx-dropdown-select>
   </span>
-  <!--<span class="mx-1">
-    <codx-dropdown-select
-      *ngIf="process"
-      [cssClass]="'rounded-pill border-1'"
-      cssPopup="h-350px w-300px"
-      [isMulti]="false"
-      type="valuelist"
-      [emptyText]="grvSetup.Permissions.headerText"
-      field="Permissions"
-      [dataSource]="stepsResource"
-      (valueChange)="valueChangeFilter($event)"
-    ></codx-dropdown-select>
-  </span> -->
-
   <!-- <codx-dropdown-select
     (valueChange)="valueToolbarChange($event, item.fieldName)"
     [field]="item.fieldName"
@@ -425,4 +453,97 @@
     cssPopup="h-450px w-300px"
     [isToolbar]="true"
   ></codx-dropdown-select> -->
+</ng-template>
+
+<ng-template #popupTemplate>
+  <codx-form
+    #form
+    [headerText]="titleAction"
+    [formModel]="view.formModel"
+    [body]="bodyTemplate"
+    [footer]="footerTemplate"
+    [dialog]="dialogTemplate"
+  ></codx-form>
+
+  <ng-template #bodyTemplate>
+    <div style="height: 350px">
+      <ng-container
+        *ngIf="!(dataEx?.length > 0)"
+        [ngTemplateOutlet]="emptyTemplate"
+      >
+      </ng-container>
+      <ng-container *ngIf="dataEx?.length > 0">
+        <div *ngFor="let item of dataEx">
+          <div class="d-flex w-100">
+            <div class="w-20px h-20px me-2">
+              <codx-input
+                type="radio"
+                name="format"
+                [formModel]="form.formModel"
+                ControlName="format"
+                [crrValue]="item.recID"
+                (valueChange)="selectTemp(item.recID, item.templateName)"
+              ></codx-input>
+            </div>
+            <div class="d-flex align-items-center py-2">
+              <span>
+                <i
+                  class="fa-solid fa-file-excel fs-2 me-3"
+                  style="color: #347442"
+                ></i>
+              </span>
+              <span>
+                <div class="d-flex flex-column w-100">
+                  <div class="fw-bold text-dark">
+                    {{ item.templateName }}
+                  </div>
+                  <div class="fs-7 text-gray-500 text-italic">
+                    {{ item.description }}
+                  </div>
+                </div>
+              </span>
+              <!-- <span class="fw-bold text-dark">{{ item.templateName }}</span> -->
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-template>
+  <ng-template #footerTemplate>
+    <div class="d-flex justify-content-end">
+      <div class="">
+        <button
+          type="button"
+          class="btn btn-primary ms-1"
+          [disabled]="isLockButton"
+          (click)="
+            isFormExport ? exportFileDynamic() : documentApproval(dataSelected)
+          "
+        >
+          <codx-label
+            [name]="isFormExport ? 'ExportTemplate' : 'SubmitTemplate'"
+            [formModel]="view.formModel"
+            [default]="isFormExport ? 'Xuất File' : 'Ký số'"
+          >
+          </codx-label>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #emptyTemplate>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-250px"
+        />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>

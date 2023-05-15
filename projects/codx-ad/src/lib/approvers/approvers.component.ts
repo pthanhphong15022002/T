@@ -49,7 +49,6 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');
         if (m) this.moreFuncName = m.defaultName;
-        console.log(this.moreFuncName);
       }
     });
   }
@@ -82,7 +81,6 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
   }
 
   moreFunction(e: any, data) {
-    console.log(e);
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -148,9 +146,7 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
           } else {
             this.view.dataService.dataSelected.members = x.event.members;
             this.view.dataService.dataSelected.memberIDs = x.event.memberIDs;
-            this.view.dataService
-              .update(this.view.dataService.dataSelected)
-              .subscribe();
+            this.view.dataService.add(x.event).subscribe();
           }
           this.view.dataService.hasSaved = false;
 
@@ -175,7 +171,10 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
         option
       );
       side.closed.subscribe((x) => {
-        if (x.event == null) this.view.dataService.clear;
+        if (x.event == null) this.view.dataService.clear();
+        else {
+          this.view.dataService.update(x.event).subscribe();
+        }
       });
     });
   }

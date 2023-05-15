@@ -61,6 +61,7 @@
         [allowMultiFile]="allowMultiFile"
         [formModel]="formModel"
         [functionID]="funcID"
+        [dataSelected]="dataSelected"
         (fileAdded)="fileAdded($event)"
         (fileCount)="getfileCount($event)"
         (fileSave)="fileSave($event)"
@@ -69,7 +70,7 @@
         [isTab]="true"
         [hideDelete]="isEdit ? 0 : 1"
         [hideMoreF]="isEdit ? 1 : 0"
-        [referType]="!referType ? 'attach':referType"
+        [referType]="!referType ? 'attach' : referType"
         [addPermissions]="addPermissions"
         [isReferType]="true"
       >
@@ -85,7 +86,8 @@
             [actionType]="'C'"
             [addNew]="true"
             [funcID]="funcID"
-          >
+            (totalCommentChange)="changeCountFooter($event,'comment')"
+            >
           </codx-tree-comment>
         </div>
       </div>
@@ -122,10 +124,38 @@
     </ng-container>
     <ng-container *ngSwitchCase="'approve'">
       <ng-container>
-        <codx-view-approval-step [transID]="transID" [approveStatus]="approveStatus">
+        <codx-view-approval-step
+          [transID]="transID"
+          [approveStatus]="approveStatus"
+        >
         </codx-view-approval-step>
       </ng-container>
     </ng-container>
+    <ng-container *ngSwitchCase="'quotations'">
+      <!-- <ng-container
+        [ngTemplateOutlet]="tab.template"
+        [ngTemplateOutletContext]="{}"
+      ></ng-container>  -->
+      <ng-container>
+        <codx-quotations
+          [funcID]="funcIDQuotations"
+          [customerID]="customerID"
+          [refType]="refType"
+          [refID]="refID"
+          [salespersonID]="salespersonID"
+          [consultantID]="consultantID"
+        >
+        </codx-quotations>
+      </ng-container>
+    </ng-container>
+    <!-- nvthuan add contracts -->
+    <ng-container *ngSwitchCase="'contract'">
+      <ng-container
+        [ngTemplateOutlet]="tab.template"
+        [ngTemplateOutletContext]="{}"
+      ></ng-container>
+    </ng-container>
+
     <ng-container *ngSwitchDefault>
       <ng-container *ngIf="tab.template">
         <ng-container

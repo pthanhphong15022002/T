@@ -36,7 +36,6 @@ import { PopupAddKRComponent } from '../popup-add-kr/popup-add-kr.component';
 export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   views: Array<ViewModel> | any = [];
   @ViewChild('checkin') checkin: TemplateRef<any>;
-  @ViewChild('alignKR') alignKR: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   dialogRef: DialogRef;
@@ -49,7 +48,42 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   dataKR: any;
   progressHistory = [];
   krCheckIn = [];
-  listAlign=[];
+  listAlign = [];
+
+  offset: string;
+  activeTab = 'CheckIns';
+  tabControl = [
+    {
+      name: 'CheckIns',
+      textDefault: 'Check-In',
+      isActive: true,
+      icon: 'icon-i-bullseye',
+    },
+    {
+      name: 'Links',
+      textDefault: 'Liên kết',
+      isActive: false,
+      icon: 'icon-account_tree',
+    },
+    {
+      name: 'Tasks',
+      textDefault: 'Công việc',
+      isActive: false,
+      icon: 'icon-format_list_numbered',
+    },
+    {
+      name: 'Comments',
+      textDefault: 'Ghi chú',
+      isActive: false,
+      icon: 'icon-i-chat',
+    },
+    {
+      name: 'History',
+      textDefault: 'Cập nhật',
+      isActive: false,
+      icon: 'icon-history',
+    },
+  ];
   chartSettings: ChartSettings = {
     primaryXAxis: {
       valueType: 'Category',
@@ -117,12 +151,13 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   };
   listAssign: any;
   groupModel: any;
-  isCollapsed=false;
+  isCollapsed = false;
   okrFM: any;
   oldKR: any;
   popupTitle: any;
   okrVll: any;
-  isHiddenChart=false;
+  isHiddenChart = false;
+  okrGrv: any;
 
   load(args: ILoadedEventArgs): void {
     // custom code start
@@ -147,121 +182,81 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   ) {
     super(injector);
     this.dialogRef = dialogRef;
-    this.oldKR=dialogData.data[0];
+    this.oldKR = dialogData.data[0];
     this.popupTitle = dialogData?.data[1];
     this.okrFM = dialogData?.data[2];
     this.okrVll = dialogData?.data[3];
-    this.formModel=dialogRef.formModel;
+    this.okrGrv = dialogData?.data[4];
+    this.formModel = dialogRef.formModel;
+  }
 
-    
-  }
-  //-----------------------Base Func-------------------------//
-  ngAfterViewInit(): void {
-    this.views = [
-      {
-        id: '1',
-        type: ViewType.content,
-        active: true,
-        sameData: true,
-        model: {
-          panelRightRef: this.alignKR,
-          contextMenu: '',
-        },
-      },
-    ];
-  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
+  ngAfterViewInit(): void {}
 
   onInit(): void {
-    
-    this.getKRData();    
+    this.getKRData();
     this.getListAlign();
-    this.getListAssign()
+    this.getListAssign();
+    this.loadTabView();
   }
 
-  //-----------------------End-------------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Cache Data--------------------------------//
+  //---------------------------------------------------------------------------------//
+  // getCacheData(){
 
-  //-----------------------Base Event------------------------//
-  click(event: any) {
-    switch (event) {
-    }
-  }
+  // }
 
-  //-----------------------End-------------------------------//
-
-  //-----------------------Get Data Func---------------------//
-  getKRData(){
-    this.codxOmService
-        .getOKRByID(this.oldKR.recID)
-        .subscribe((res: any) => {
-          if (res) {
-            this.dataKR = res;      
-            //tính giá trị progress theo các lần checkIn
-            this.totalProgress = this.dataKR.progress;
-            if (this.dataKR?.checkIns) {
-              this.dataKR.checkIns = Array.from(this.dataKR?.checkIns).reverse();
-              this.krCheckIn = Array.from(this.dataKR?.checkIns);
-              this.krCheckIn.forEach((element) => {
-                if (this.krCheckIn.indexOf(element) == 0) {
-                  this.progressHistory.push(this.totalProgress);
-                } else {
-                  this.totalProgress -=
-                    this.krCheckIn[this.krCheckIn.indexOf(element) - 1].value;
-                  this.progressHistory.push(this.totalProgress);
-                }
-              });
-            }
-            this.getChartData();
-            this.detectorRef.detectChanges();
-          }
-        });
-  }
-  getListAlign(){
-    this.codxOmService
-        .getListAlign(this.oldKR?.recID)
-        .subscribe((res: any) => {
-          if (res) {
-            this.listAlign = res;           
-          }
-        });
-  }
-  getListAssign(){
-    this.codxOmService
-        .getListAssign(this.oldKR?.recID)
-        .subscribe((res: any) => {
-          if (res) {
-            this.listAssign = res;           
-          }
-        });
-  }
-  getItemOKRAlign(i: any, recID: any) {
-    this.openAccordionAlign[i] = !this.openAccordionAlign[i];
-    // if(this.dataOKR[i].items && this.dataOKR[i].items.length<=0)
-    //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
-    //     if(item) this.dataOKR[i].items = item
-    //   });
-  }
-  getItemOKRAssign(i: any, recID: any) {
-    this.openAccordionAssign[i] = !this.openAccordionAssign[i];
-  }
-  collapeKR(collapsed: boolean) {
-    this.collapedData(this.listAlign,collapsed);
-    this.collapedData(this.listAssign,collapsed);
-    
-    this.isCollapsed = collapsed;
-  }
-  collapedData(data:any,collapsed:any){
-    data.forEach((ob) => {
-      ob.isCollapse = collapsed;
-    });
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Data Func---------------------------------//
+  //---------------------------------------------------------------------------------//
+  loadTabView() {
+    this.activeTab = 'CheckIns';
+    if (this.activeTab == 'Tasks') this.offset = '65px';
+    else this.offset = '0px';
     this.detectorRef.detectChanges();
-    data.forEach((ob) => {
-      if (ob.items != null && ob.items.length > 0) {
-        ob.items.forEach((kr) => {
-          kr.isCollapse = collapsed;
-        });
+  }
+  getKRData() {
+    this.codxOmService.getOKRByID(this.oldKR.recID).subscribe((res: any) => {
+      if (res) {
+        this.dataKR = res;
+        //tính giá trị progress theo các lần checkIn
+        this.totalProgress = this.dataKR.progress;
+        if (this.dataKR?.checkIns) {
+          this.dataKR.checkIns = Array.from(this.dataKR?.checkIns).reverse();
+          this.krCheckIn = Array.from(this.dataKR?.checkIns);
+          this.krCheckIn.forEach((element) => {
+            if (this.krCheckIn.indexOf(element) == 0) {
+              this.progressHistory.push(this.totalProgress);
+            } else {
+              this.totalProgress -=
+                this.krCheckIn[this.krCheckIn.indexOf(element) - 1].value;
+              this.progressHistory.push(this.totalProgress);
+            }
+          });
+        }
+        this.getChartData();
+        this.detectorRef.detectChanges();
       }
     });
-    this.detectorRef.detectChanges();
+  }
+  getListAlign() {
+    this.codxOmService.getListAlign(this.oldKR?.recID).subscribe((res: any) => {
+      if (res) {
+        this.listAlign = res;
+      }
+    });
+  }
+  getListAssign() {
+    this.codxOmService
+      .getListAssign(this.oldKR?.recID)
+      .subscribe((res: any) => {
+        if (res) {
+          this.listAssign = res;
+        }
+      });
   }
   //#region Chart
   getChartData() {
@@ -349,55 +344,64 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
   //#endregion Chart
 
-  //-----------------------End-------------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Event------------------------------------//
+  //---------------------------------------------------------------------------------//
+  click(event: any) {
+    switch (event) {
+    }
+  }
+  clickMenu(item) {
+    this.activeTab = item.name;
+    for (let i = 0; i < this.tabControl.length; i++) {
+      if (this.tabControl[i].isActive == true) {
+        this.tabControl[i].isActive = false;
+      }
+    }
+    item.isActive = true;
+    this.detectorRef.detectChanges();
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Event----------------------------------//
+  //---------------------------------------------------------------------------------//
+  hiddenChartClick(evt: any) {
+    this.isHiddenChart = evt;
+    this.detectorRef.detectChanges();
+  }
+  closeDialog() {
+    this.dialogRef && this.dialogRef.close();
+  }
+  collapeKR(collapsed: boolean) {
+    this.collapedData(this.listAlign, collapsed);
+    this.collapedData(this.listAssign, collapsed);
 
-  //-----------------------Validate Func---------------------//
+    this.isCollapsed = collapsed;
+  }
+  collapedData(data: any, collapsed: any) {
+    data.forEach((ob) => {
+      ob.isCollapse = collapsed;
+    });
+    this.detectorRef.detectChanges();
+    data.forEach((ob) => {
+      if (ob.items != null && ob.items.length > 0) {
+        ob.items.forEach((kr) => {
+          kr.isCollapse = collapsed;
+        });
+      }
+    });
+    this.detectorRef.detectChanges();
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Validate Func---------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //-----------------------End-------------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Logic Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //-----------------------Logic Func------------------------//
-  // checkIn(evt: any, kr: any) {
-  //   this.formModelCheckin.entityName = 'OM_OKRs.CheckIns';
-  //   this.formModelCheckin.entityPer = 'OM_OKRs.CheckIns';
-  //   this.formModelCheckin.gridViewName = 'grvOKRs.CheckIns';
-  //   this.formModelCheckin.formName = 'OKRs.CheckIns';
-  //   this.dialogCheckIn = this.callfc.openForm(
-  //     PopupCheckInComponent,
-  //     '',
-  //     800,
-  //     500,
-  //     'OMT01',
-  //     [kr, this.formModelCheckin]
-  //   );
-  //   this.dialogCheckIn.closed.subscribe((res) => {
-  //     if (res && res.event) {
-  //       this.dataKR = res.event;
-  //       this.totalProgress = this.dataKR.progress;
-  //       this.progressHistory.unshift(this.totalProgress);
-  //       this.dataKR.map((item: any) => {
-  //         if (item.recID == res.event.parentID) {
-  //           item = res.event;
-  //         }
-  //       });
-  //     }
-  //     this.detectorRef.detectChanges();
-  //   });
-  // }
-  // checkIn(kr: any) {
-  //   let popupTitle= 'Cập nhật tiến độ';
-  //   let dialogCheckIn = this.callfc.openForm(
-  //     PopupCheckInComponent,
-  //     '',
-  //     800,
-  //     500,
-  //     '',
-  //     [kr, popupTitle, { ...this.groupModel?.checkInsModel }]
-  //   );
-  //   dialogCheckIn.closed.subscribe((res) => {
-  //     if (res && res.event) {
-  //     }
-  //   });
-  // }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Func-----------------------------------//
+  //---------------------------------------------------------------------------------//
 
   calculatorProgress() {
     this.totalProgress = this.dataKR.progress;
@@ -416,47 +420,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  editKR(kr: any, o: any, popupTitle: any) {
-    let option = new SidebarModel();
-    option.FormModel = this.formModel;
-
-    let dialogKR = this.callfc.openSide(
-      PopupAddKRComponent,
-      [OMCONST.MFUNCID.Edit, popupTitle, o, kr],
-      option
-    );
-  }
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Logic Event-----------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Custom Func-----------------------//
-hiddenChartClick(evt: any) {
-    this.isHiddenChart = evt;
-    this.detectorRef.detectChanges();
-  }
-  //-----------------------End-------------------------------//
-
-  //-----------------------Custom Event-----------------------//
-  checkinSave() {}
-
-  checkinCancel() {
-    this.dialogCheckIn.close();
-  }
-
-  popupUploadFile(evt: any) {
-    this.attachment.uploadFile();
-  }
-  fileCount(evt: any) {}
-
-  fileAdded(evt: any) {}
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Popup-----------------------------//
-  
-  //-----------------------End-------------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Popup-----------------------------------------//
+  //---------------------------------------------------------------------------------//
 }

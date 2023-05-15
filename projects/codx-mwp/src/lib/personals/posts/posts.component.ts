@@ -42,7 +42,8 @@ export class PostsComponent extends UIComponent implements OnInit {
     funcID: 'WP',
   };
   dataService: any;
-
+  predicate:string = "";
+  dataValue:string = "";
   viewComponents: ViewsComponent;
 
   constructor(private injector: Injector,
@@ -50,21 +51,13 @@ export class PostsComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.user = this.authStore.get();
-    this.dataService = new CRUDService(injector);
   }
 
   onInit(): void {
-    this.dataService.predicate = `CreatedBy="${this.user?.userID}" && Stop="false" && Category!="2"`;
+    this.predicate = `CreatedBy=@0 && Stop="false" && (Category = @1 || Category = @2 || Category = @3)`;
+    this.dataValue = `${this.user.userID};1;3;4`;
   }
 
   ngAfterViewInit() {
-    this.loadListPostComponent();
-  }
-
-  loadListPostComponent() {
-    var a = this.lstComment.createComponent(ListPostComponent);
-    a.instance.dataService = this.dataService;
-    a.instance.isShowCreate = false;
-    a.instance.formModel = this.formModel;
   }
 }

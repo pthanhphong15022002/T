@@ -77,14 +77,26 @@ export class PopupCustomFieldComponent implements OnInit {
       if (field.dataFormat == 'E') {
         var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (!field.dataValue.toLowerCase().match(validEmail)) {
-          this.notiService.notifyCode('SYS037');
+          //this.notiService.notifyCode('SYS037');
+          this.cache.message('SYS037').subscribe((res) => {
+            if (res) {
+              let errorMessage = res.customName || res.defaultName;
+              this.notiService.notify(errorMessage, '2');
+            }
+          });
           return false;
         }
       }
       if (field.dataFormat == 'P') {
         var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
         if (!field.dataValue.toLowerCase().match(validPhone)) {
-          this.notiService.notifyCode('RS030');
+          // this.notiService.notifyCode('RS030');
+          this.cache.message('RS030').subscribe((res) => {
+            if (res) {
+              let errorMessage = res.customName || res.defaultName;
+              this.notiService.notify(errorMessage, '2');
+            }
+          });
           return false;
         }
       }
@@ -97,22 +109,22 @@ export class PopupCustomFieldComponent implements OnInit {
     let check = true;
     let checkFormat = true;
     this.fiels.forEach((f) => {
-      if (
-        f.isRequired &&
-        (!f.dataValue || f.dataValue?.toString().trim() == '')
-      ) {
-        this.notiService.notifyCode('SYS009', 0, '"' + f.title + '"');
-        check = false;
-      }
-      checkFormat = this.checkFormat(f);
+      if (!f.dataValue || f.dataValue?.toString().trim() == '') {
+        if (f.isRequired) {
+          this.notiService.notifyCode('SYS009', 0, '"' + f.title + '"');
+          check = false;
+        }
+      } else checkFormat = this.checkFormat(f);
     });
     if (!check || !checkFormat) return;
     if (this.isSaving) return;
     this.isSaving = true;
     var data = [this.fiels[0]?.stepID, this.fiels];
     this.dpService.updateFiels(data).subscribe((res) => {
-      if (res) this.dialog.close(this.fiels);
-      else this.dialog.close();
+      if (res) {
+        this.dialog.close(this.fiels);
+        this.notiService.alertCode('SYS007');
+      } else this.dialog.close();
     });
   }
 }

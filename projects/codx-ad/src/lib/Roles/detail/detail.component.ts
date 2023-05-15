@@ -167,7 +167,7 @@ export class RoleDetailComponent
             this.active = false;
           } else this.active = true;
           var funtion = res[0] as any[];
-          if (funtion.length > 0) {
+          if (funtion && funtion.length > 0) {
             this.dataAuthorize = funtion.filter(
               (x) => x.functionType != 'R' && x.functionType != 'D'
             );
@@ -308,6 +308,7 @@ export class RoleDetailComponent
         roleID,
         pers,
         this.dataFuncRole,
+        this.dataReport,
       ])
       .subscribe((res) => {
         t.dataFuncRole = {};

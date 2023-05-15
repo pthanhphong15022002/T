@@ -56,6 +56,8 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   answers: any = new Array();
   isModeAdd = true;
   functionList: any;
+  emptyText = 'Mẫu không có tiêu đề'
+  en = environment;
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -180,12 +182,11 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   indexSessionA = 0;
   indexQuestionA = 0;
   idSession = "";
-  @Input() title: any = "Mẫu không có tiêu đề";
   @Input() changeModeQ: any;
   @Input() formModel: any;
   @Input() dataService: any;
   @Input() recID = "";
-  @Input() funcID = "";
+  @Input() funcID = "";signal
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
@@ -230,7 +231,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     this.questions = [
       {
         seqNo: 0,
-        question: this.title,
+        question: this.emptyText,
         answers: null,
         other: false,
         mandatory: false,
@@ -321,6 +322,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         } else {
           this.questions = [
             {
+              recID: crypto.randomUUID(),
               seqNo: 0,
               question: null,
               answers: null,
@@ -331,6 +333,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
               transID:this.recID,
               children: [
                 {
+                  recID: crypto.randomUUID(),
                   seqNo: 0,
                   question: 'Câu hỏi 1',
                   answers: [
@@ -395,13 +398,16 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       }
       if(dtS[0].children && dtS[0].children.length>0)
         dtS[0].children[0]['active'] = true;
+      
       return dtS;
     }
   }
 
   valueChangeMandatory(e, dataQuestion) {
     if (e) {
-      this.questions[dataQuestion.seqNo].mandatory = e.data;
+      this.SVServices.signalSave.next('saving');
+      this.questions[0].children[dataQuestion.seqNo].mandatory = e.data;
+      this.setTimeoutSaveData(this.questions[0].children, false);
     }
   }
 
@@ -411,6 +417,9 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       event.previousIndex,
       event.currentIndex
     );
+    this.questions[seqNoSession].children.forEach((x,index)=> (x.seqNo = index));
+    this.SVServices.signalSave.next('saving');
+    this.setTimeoutSaveData(this.questions[seqNoSession].children, false);
   }
 
   dropAnswer(event: CdkDragDrop<string[]>, idParent) {
@@ -419,6 +428,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     moveItemInArray(this.dataAnswer, event.previousIndex, event.currentIndex);
     this.dataAnswer.forEach((x, index) => (x.seqNo = index));
     this.questions[0].children[idParent].answers = this.dataAnswer;
+    this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveData(this.questions[0].children, false);
   }
 
@@ -428,6 +438,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     seqNoQuestion,
     answerType
   ) {
+    
     var dataTemp = JSON.parse(
       JSON.stringify(
         this.questions[seqNoSession].children[seqNoQuestion].answers
@@ -448,12 +459,9 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     var dataMerge = [...dataAnswerR, ...dataAnswerC];
     if (dataMerge.length > 0) {
       this.questions[seqNoSession].children[seqNoQuestion].answers = dataMerge;
-      console.log(
-        'check dropAnswerRC',
-        this.questions[seqNoSession].children[seqNoQuestion].answers
-      );
     }
     this.questions[seqNoSession].children[seqNoQuestion].answers = dataMerge;
+    this.setTimeoutSaveData(this.questions[seqNoSession].children, false);
   }
 
   public focusIn(target: HTMLElement): void {
@@ -1035,6 +1043,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     );
     dialog.closed.subscribe((res) => {
       if (res.event) {
+        debugger
         if (inline) {
           let myInterval = setInterval(() => {
             if (this.questions && this.questions.length > 0) {
@@ -1171,7 +1180,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   addCard(itemActive, seqNoSession = null, category) {
-    debugger
     if (itemActive) {
       if (category == 'S') this.addSession(itemActive, seqNoSession);
       else this.addNoSession(itemActive, seqNoSession, category);
@@ -1288,9 +1296,16 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       lstDown = lstMain.slice(itemActive.seqNo + 1, lstMain.length);
       //Update lại parentID cho đúng với session mới tạo
       lstUp.forEach((x) => (x.parentID = this.questions[seqNoSession].recID));
-      lstDown.forEach(
-        (x) => (x.parentID = this.questions[seqNoSession + 1].recID)
-      );
+     
+      if(lstDown.length > 0)
+      {
+        for(var i = 0 ; i < lstDown.length ; i++)
+        {
+          lstDown[i].parentID = this.questions[seqNoSession + 1].recID;
+          lstDown[i].seqNo = i ;
+        }
+      }
+    
       this.questions[seqNoSession + 1]['children'] = lstDown;
       this.questions[seqNoSession]['children'] = lstUp;
     }
@@ -1653,9 +1668,8 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   getSrcImage(data) {
-    return (data['srcImage'] = `${environment.urlUpload}/${
-      data.urlPath ? data.urlPath : data.pathDisk
-    }`);
+    if(data?.avatar) return data?.avatar
+    return environment.urlUpload + "/" +data?.pathDisk;
   }
 
   getSrcVideo(data) {
@@ -1822,13 +1836,11 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   valueChangeQuestionEJS(e, itemSession, itemQuestion, field) {
-    debugger
     if (e && e != itemQuestion[field]) {
-      let dataTemp = JSON.parse(JSON.stringify(this.questions));
-      dataTemp[itemSession.seqNo].children[itemQuestion.seqNo][field] = e;
+      this.questions[itemSession.seqNo].children[itemQuestion.seqNo][field] = e;
       this.SVServices.signalSave.next('saving');
       this.setTimeoutSaveData(
-        [dataTemp[itemSession.seqNo].children[itemQuestion.seqNo]],
+        [this.questions[itemSession.seqNo].children[itemQuestion.seqNo]],
         false
       );
     }

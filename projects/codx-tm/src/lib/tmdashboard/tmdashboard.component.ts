@@ -8,16 +8,13 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
 import {
-  IItemClickEventArgs,
-  IItemMoveEventArgs,
-  ILoadEventArgs,
-  TreeMapTheme,
-} from '@syncfusion/ej2-angular-treemap';
-import { UIComponent, ViewModel, ViewType, DataRequest } from 'codx-core';
+  AnimationModel,
+  ProgressBar,
+  RangeColorModel,
+} from '@syncfusion/ej2-angular-progressbar';
+import { UIComponent, ViewModel, ViewType } from 'codx-core';
 import { ChartSettings } from './models/chart.model';
-
 export class GridModels {
   pageSize: number;
   entityName: string;
@@ -38,23 +35,28 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChildren('my_dashboard') templates1: QueryList<any>;
   @ViewChildren('team_dashboard') templates2: QueryList<any>;
-  @ViewChildren('asign_dashboard') templates3: QueryList<any>;
+  @ViewChildren('assign_dashboard') templates3: QueryList<any>;
+
+  @ViewChild('annotation1') annotation: ProgressBar;
 
   @Input() panels1: any;
   @Input() datas1: any;
-
   @Input() panels2: any;
   @Input() datas2: any;
+  @Input() panels3: any;
+  @Input() datas3: any;
 
   viewType = ViewType;
   views: Array<ViewModel> = [];
   dashboard = [];
   funcID: string = 'TMD';
-  reportID: string = 'TMD002';
+  reportID: string = 'TMD001';
 
   templates: QueryList<any>;
 
-  dashboardData: any;
+  myDBData: any;
+  teamDBData: any;
+  assignDBData: any;
 
   chartSettings6: ChartSettings = {
     seriesSetting: [
@@ -79,74 +81,20 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         type: 'Column',
         name: 'Tasks',
         xName: 'label',
-        yName: 'value',
+        yName: 'value1',
+        cornerRadius: { topLeft: 10, topRight: 10 },
+      },
+      {
+        type: 'Line',
+        name: 'WorkHours',
+        xName: 'label',
+        yName: 'value2',
         cornerRadius: { topLeft: 10, topRight: 10 },
       },
     ],
   };
 
   // dataSource: any;
-  dataSource2: any = [{ Country: 'Canada', GDP: 3.05, WorldShare: 2.04 }];
-
-  CarSales: object[] = [
-    { Continent: 'China', Company: 'Volkswagen', Sales: 3005994 },
-    { Continent: 'China', Company: 'General Motors', Sales: 1230044 },
-    { Continent: 'China', Company: 'Honda', Sales: 1197023 },
-    { Continent: 'United States', Company: 'General Motors', Sales: 3042775 },
-    { Continent: 'United States', Company: 'Ford', Sales: 2599193 },
-    { Continent: 'United States', Company: 'Toyota', Sales: 2449587 },
-    { Continent: 'Japan', Company: 'Toyota', Sales: 1527977 },
-    { Continent: 'Japan', Company: 'Honda', Sales: 706982 },
-    { Continent: 'Japan', Company: 'Suzuki', Sales: 623041 },
-    { Continent: 'Germany', Company: 'Volkswagen', Sales: 655977 },
-    { Continent: 'Germany', Company: 'Mercedes', Sales: 310845 },
-    { Continent: 'Germany', Company: 'BMW', Sales: 261931 },
-    { Continent: 'United Kingdom', Company: 'Ford ', Sales: 319442 },
-    { Continent: 'United Kingdom', Company: 'Vauxhall', Sales: 251146 },
-    { Continent: 'United Kingdom', Company: 'Volkswagen', Sales: 206994 },
-    { Continent: 'India', Company: 'Maruti Suzuki', Sales: 1443654 },
-    { Continent: 'India', Company: 'Hyundai', Sales: 476241 },
-    { Continent: 'India', Company: 'Mahindra', Sales: 205041 },
-    { Continent: 'France', Company: 'Renault', Sales: 408183 },
-    { Continent: 'France', Company: 'Peugeot', Sales: 336242 },
-    { Continent: 'France', Company: 'Citroen', Sales: 194986 },
-    { Continent: 'Brazil', Company: 'Flat Chrysler', Sales: 368842 },
-    { Continent: 'Brazil', Company: 'General Motors', Sales: 348351 },
-    { Continent: 'Brazil', Company: 'Volkswagen', Sales: 245895 },
-    { Continent: 'Italy', Company: 'Flat Chrysler', Sales: 386260 },
-    { Continent: 'Italy', Company: 'Volkswagen', Sales: 138984 },
-    { Continent: 'Italy', Company: 'Ford', Sales: 125144 },
-    { Continent: 'Canada', Company: 'Ford', Sales: 305086 },
-    { Continent: 'Canada', Company: 'FCA', Sales: 278011 },
-    { Continent: 'Canada', Company: 'GM', Sales: 266884 },
-  ];
-
-  public itemMove = (args: IItemMoveEventArgs) => {
-    args.item['data'].Sales = args.item['weight'];
-    args.treemap.tooltipSettings.format =
-      args.item['groupIndex'] === 0
-        ? 'Country: ${Continent}<br>Sales: ${Sales}'
-        : 'Country: ${Continent}<br>Company: ${Company}<br>Sales: ${Sales}';
-  };
-
-  public itemClick = (args: IItemClickEventArgs) => {
-    args.item['data'].Sales = args.item['weight'];
-    args.treemap.tooltipSettings.format =
-      args.item['groupIndex'] === 0
-        ? 'Country: ${Continent}<br>Sales: ${Sales}'
-        : 'Country: ${Continent}<br>Company: ${Company}<br>Sales: ${Sales}';
-  };
-
-  // // custom code start
-  public load = (args: ILoadEventArgs) => {
-    let theme: string = location.hash.split('/')[1];
-    theme = theme ? theme : 'Material';
-    args.treemap.theme = <TreeMapTheme>(
-      (theme.charAt(0).toUpperCase() + theme.slice(1))
-        .replace(/-dark/i, 'Dark')
-        .replace(/contrast/i, 'Contrast')
-    );
-  };
 
   // // custom code end
   titleSettings: object = {
@@ -168,24 +116,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   };
 
   weightValuePath: string = 'Sales';
-
-  palette: string[] = [
-    '#C33764',
-    '#AB3566',
-    '#993367',
-    '#853169',
-    '#742F6A',
-    '#632D6C',
-    '#532C6D',
-    '#412A6F',
-    '#312870',
-    '#1D2671',
-  ];
-
-  leafItemSettings: object = {
-    labelPath: 'Company',
-    border: { color: 'white', width: 0.5 },
-  };
 
   border: object = {
     color: 'white',
@@ -326,8 +256,8 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     seriesSetting: [
       {
         type: 'Pie',
-        xName: 'status',
-        yName: 'value',
+        xName: 'taskGroupName',
+        yName: 'percentage',
         innerRadius: '80%',
         radius: '70%',
         startAngle: 0,
@@ -336,10 +266,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         endAngle: 360,
       },
     ],
-    service: 'OM',
-    assembly: 'ERM.Business.OM',
-    className: 'DashBoardBusiness',
-    method: 'GetChartData1Async',
   };
 
   chartSettings5: ChartSettings = {
@@ -354,8 +280,46 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       },
     ],
   };
+
+  stacked_data: Object[] = [
+    {
+      Year: '2013',
+      General: 9628912,
+      Honda: 4298390,
+    },
+    {
+      Year: '2014',
+      General: 9609326,
+      Honda: 4513769,
+    },
+  ];
+
   predicates: any;
   dataValues: any;
+
+  public animation: AnimationModel = {
+    enable: true,
+    duration: 2000,
+    delay: 0,
+  };
+
+  public annotaions: Object = [
+    {
+      content:
+        '<div id="pointervalue" style="font-size:35px;width:120px;text-align:center;">' +
+        '60' +
+        '/100</div>',
+      angle: 0,
+      zIndex: '1',
+      radius: '0%',
+    },
+    {
+      content: '<div id="slider" style="height:70px;width:250px;"></div>',
+      angle: 0,
+      zIndex: '1',
+      radius: '-100%',
+    },
+  ];
 
   constructor(inject: Injector) {
     super(inject);
@@ -367,15 +331,20 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       '[{"id":"0.1636284528927885_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5801149283702021_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.6937258303982936_layout","row":4,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5667390469747078_layout","row":4,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.4199281088325755_layout","row":0,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.4592017601751599_layout","row":0,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.14683256767762543_layout","row":16,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.36639064171709834_layout","row":16,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.06496875406606994_layout","row":8,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.21519762020962552_layout","row":8,"col":0,"sizeX":16,"sizeY":12,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.3516224838830073_layout","row":20,"col":0,"sizeX":32,"sizeY":12,"minSizeX":32,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.36601875176456145_layout","row":8,"col":32,"sizeX":16,"sizeY":24,"minSizeX":16,"minSizeY":24,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datas1 = JSON.parse(
-      '[{"panelId":"0.1636284528927885_layout","data":"1"},{"panelId":"0.5801149283702021_layout","data":"2"},{"panelId":"0.6937258303982936_layout","data":"3"},{"panelId":"0.5667390469747078_layout","data":"4"},{"panelId":"0.4199281088325755_layout","data":""},{"panelId":"0.4592017601751599_layout","data":""},{"panelId":"0.14683256767762543_layout","data":""},{"panelId":"0.36639064171709834_layout","data":""},{"panelId":"0.06496875406606994_layout","data":""},{"panelId":"0.21519762020962552_layout","data":""},{"panelId":"0.3516224838830073_layout","data":""},{"panelId":"0.36601875176456145_layout","data":""}]'
+      '[{"panelId":"0.1636284528927885_layout","data":"1"},{"panelId":"0.5801149283702021_layout","data":"2"},{"panelId":"0.6937258303982936_layout","data":"3"},{"panelId":"0.5667390469747078_layout","data":"4"},{"panelId":"0.4199281088325755_layout","data":"5"},{"panelId":"0.4592017601751599_layout","data":"6"},{"panelId":"0.21519762020962552_layout","data":"7"},{"panelId":"0.06496875406606994_layout","data":"8"},{"panelId":"0.14683256767762543_layout","data":"9"},{"panelId":"0.36639064171709834_layout","data":"10"},{"panelId":"0.36601875176456145_layout","data":"11"},{"panelId":"0.3516224838830073_layout","data":"12"}]'
     );
     this.panels2 = JSON.parse(
-      '[{"id":"dfeb663a-185a-4fef-85b0-25613979133d","row":4,"col":0,"sizeX":17,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"30a29412-9253-4033-a5e4-617246359357","row":4,"col":33,"sizeX":15,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"fe57aaa2-4606-49a0-a8da-de9f0b190ef7","row":4,"col":17,"sizeX":16,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"002dce4b-87c8-4c07-8c58-ed65a84e08ae","row":14,"col":0,"sizeX":26,"sizeY":6,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"5abdc8fe-de06-4c77-81c0-f1d05128ec2f","row":14,"col":26,"sizeX":22,"sizeY":6,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.9435262123249284_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.31200119842251084_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5547337482348278_layout","row":0,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.4533692938771181_layout","row":0,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.23559424577365373_layout","row":0,"col":32,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5314304532149856_layout","row":0,"col":40,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"0.7158772861178662_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.6630241925546723_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.2853680268255028_layout","row":0,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.007499361474228472_layout","row":0,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.023172028709681936_layout","row":0,"col":32,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.31080209919803936_layout","row":0,"col":40,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.8927326695370017_layout","row":4,"col":0,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.8302215091444525_layout","row":4,"col":16,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.7731673204748104_layout","row":4,"col":32,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.9527549374583961_layout","row":20,"col":0,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"0.7371661853933429_layout","row":20,"col":32,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datas2 = JSON.parse(
-      '[{"panelId":"dfeb663a-185a-4fef-85b0-25613979133d","data":"1"},{"panelId":"30a29412-9253-4033-a5e4-617246359357","data":"2"},{"panelId":"fe57aaa2-4606-49a0-a8da-de9f0b190ef7","data":"3"},{"panelId":"002dce4b-87c8-4c07-8c58-ed65a84e08ae","data":"4"},{"panelId":"5abdc8fe-de06-4c77-81c0-f1d05128ec2f","data":"5"},{"panelId":"0.9435262123249284_layout","data":"6"},{"panelId":"0.31200119842251084_layout","data":"7"},{"panelId":"0.5547337482348278_layout","data":"8"},{"panelId":"0.4533692938771181_layout","data":"9"},{"panelId":"0.23559424577365373_layout","data":"10"},{"panelId":"0.5314304532149856_layout","data":"11"}]'
+      '[{"panelId":"0.7158772861178662_layout","data":"1"},{"panelId":"0.6630241925546723_layout","data":"2"},{"panelId":"0.2853680268255028_layout","data":"3"},{"panelId":"0.007499361474228472_layout","data":"4"},{"panelId":"0.023172028709681936_layout","data":"5"},{"panelId":"0.31080209919803936_layout","data":"6"},{"panelId":"0.8927326695370017_layout","data":"7"},{"panelId":"0.8302215091444525_layout","data":"8"},{"panelId":"0.7731673204748104_layout","data":"9"},{"panelId":"0.9527549374583961_layout","data":"10"},{"panelId":"0.7371661853933429_layout","data":"11"}]'
     );
-    this.getTeamDashboardData(this.predicates, this.dataValues);
+    this.panels3 = JSON.parse(
+      '[{"id":"0.0014514686635016538_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.19694528981098758_layout","row":0,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.9240829789281733_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.3905464098807283_layout","row":0,"col":32,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.6324365355784578_layout","row":0,"col":40,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.7307926980008612_layout","row":4,"col":0,"sizeX":16,"sizeY":32,"minSizeX":16,"minSizeY":32,"maxSizeX":null,"maxSizeY":null},{"id":"0.7062776900074157_layout","row":0,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.09230805583161117_layout","row":4,"col":16,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.4142359240869473_layout","row":4,"col":32,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.13567559377635385_layout","row":20,"col":16,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.0919781174656844_layout","row":20,"col":32,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null}]'
+    );
+    this.datas3 = JSON.parse(
+      '[{"panelId":"0.9240829789281733_layout","data":"1"},{"panelId":"0.0014514686635016538_layout","data":"2"},{"panelId":"0.7062776900074157_layout","data":"3"},{"panelId":"0.19694528981098758_layout","data":"4"},{"panelId":"0.3905464098807283_layout","data":"5"},{"panelId":"0.6324365355784578_layout","data":"6"},{"panelId":"0.7307926980008612_layout","data":"7"},{"panelId":"0.09230805583161117_layout","data":"8"},{"panelId":"0.4142359240869473_layout","data":"9"},{"panelId":"0.13567559377635385_layout","data":"10"},{"panelId":"0.0919781174656844_layout","data":"11"}]'
+    );
   }
 
   ngAfterViewInit(): void {
@@ -397,6 +366,25 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
+  isLoaded:boolean=false;
+  getMyDashboardData(predicates: string, dataValues: string) {
+    let model = new GridModels();
+    model.funcID = this.funcID;
+    model.entityName = 'TM_Tasks';
+    model.predicates = predicates;
+    model.dataValues = dataValues;
+    this.api
+      .exec('TM', 'TaskBusiness', 'GetDataMyDashboardAsync', [model])
+      .subscribe((res) => {
+        this.myDBData = res;
+        setTimeout(()=>{
+          this.isLoaded = true;
+        },500)
+      });
+
+    this.detectorRef.detectChanges();
+  }
+
   getTeamDashboardData(predicates: string, dataValues: string) {
     let model = new GridModels();
     model.funcID = this.funcID;
@@ -404,35 +392,88 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     model.predicates = predicates;
     model.dataValues = dataValues;
     this.api
-      .exec('TM', 'TaskBusiness', 'GetDataTeamDashboardAsync', model)
+      .exec('TM', 'TaskBusiness', 'GetDataTeamDashboardAsync', [model])
       .subscribe((res) => {
-        this.dashboardData = res;
+        this.myDBData = res;
+        setTimeout(()=>{
+          this.isLoaded = true;
+        },500)
       });
 
     this.detectorRef.detectChanges();
   }
 
-  valueChange(evt: any) {
-    if (evt?.field) {
-      let field = evt.field;
+  getAssignDashboardData(predicates: string, dataValues: string) {
+    let model = new GridModels();
+    model.funcID = this.funcID;
+    model.entityName = 'TM_Tasks';
+    model.predicates = predicates;
+    model.dataValues = dataValues;
+    this.api
+      .exec('TM', 'TaskBusiness', 'GetDataAssignDashboardAsync', [model])
+      .subscribe((res) => {
+        this.assignDBData = res;
+        setTimeout(()=>{
+          this.isLoaded = true;
+        },500)
 
-      if (field === 'employee') {
-      }
+        console.log('assignDBData', this.assignDBData);
+      });
 
-      if (field === 'organization') {
-      }
-    }
+    this.detectorRef.detectChanges();
   }
+
   filterChange(e: any) {
-    const [predicates, dataValues] = e[0];
+    this.isLoaded = false;
+    const { predicates, dataValues } = e[0];
     this.predicates = predicates;
     this.dataValues = dataValues;
-    this.getTeamDashboardData(predicates, dataValues);
+    switch (this.reportID) {
+      case 'TMD001':
+        this.getMyDashboardData(this.predicates, this.dataValues);
+        break;
+      case 'TMD002':
+        this.getTeamDashboardData(this.predicates, this.dataValues);
+        break;
+      case 'TMD003':
+        this.getAssignDashboardData(this.predicates, this.dataValues);
+        break;
+      default:
+        break;
+    }
+
     this.detectorRef.detectChanges();
   }
+
   onActions(e: any) {
+    this.isLoaded=false;
     this.reportID = e.data;
-    this.getTeamDashboardData(this.predicates, this.dataValues);
-    this.detectorRef.detectChanges();
+    this.predicates = null;
+    this.dataValues = null;
+    switch (this.reportID) {
+      case 'TMD001':
+        this.getMyDashboardData(null, null);
+        break;
+      case 'TMD002':
+        this.getTeamDashboardData(null, null);
+        break;
+      case 'TMD003':
+        this.getAssignDashboardData(null, null);
+        break;
+      default:
+        break;
+    }
+
+  }
+
+  newGuid(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
 }

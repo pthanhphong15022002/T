@@ -7,11 +7,6 @@ import { ApiHttpService, CacheService, LayoutBaseComponent } from 'codx-core';
   styleUrls: ['./layout-news.component.scss'],
 })
 export class LayoutNewsComponent extends LayoutBaseComponent {
-  module = 'WP2';
-  override toolbar = false;
-  override aside = false;
-  override asideFixed = false;
-  //override asideKeepActive = false;
   valueList: [];
   category: string = 'home';
   funcID: string | null = '';
@@ -27,6 +22,9 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
   ) 
   {
     super(inject);
+    this.module = 'WP2';
+    this.layoutModel.asideDisplay = false;
+    this.layoutModel.toolbarDisplay = false;
   }
 
   onInit(): void {

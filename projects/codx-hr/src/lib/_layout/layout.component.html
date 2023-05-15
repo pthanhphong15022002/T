@@ -3,7 +3,7 @@
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root layout-hr">
     <div class="page d-flex flex-row flex-column-fluid">
-      <codx-aside *ngIf="asideDisplay" [hasSecond]="true"> </codx-aside>
+      <codx-aside [hasSecond]="true"> </codx-aside>
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header
           [class]="headerCSSClasses"
@@ -35,7 +35,7 @@
     <!-- CHAT -->
     <codx-chat></codx-chat>
     <!-- NOTES -->
-    <div class="d-flex align-items-center" (click)="openFormNoteDrawer()">
+    <div class="d-flex align-items-center ms-1 ms-lg-3" (click)="openFormNoteDrawer()">
       <!-- begin::Menu wrapper -->
       <div
         class="btn btn-icon btn-clean position-relative"

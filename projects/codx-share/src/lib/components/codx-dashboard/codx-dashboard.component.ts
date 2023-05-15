@@ -1,12 +1,13 @@
-declare var window: any;
 import {
   AfterViewInit,
   Component,
   Input,
   OnInit,
   Optional,
+  QueryList,
   TemplateRef,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import {
   AxisModel,
@@ -31,7 +32,11 @@ import { LayoutPanelComponent } from './layout-panel/layout-panel.component';
 import { PopupAddChartComponent } from './popup-add-chart/popup-add-chart.component';
 import { PopupAddPanelComponent } from './popup-add-panel/popup-add-panel.component';
 import { PopupSelectTemplateComponent } from './popup-select-template/popup-select-template.component';
-
+import {
+  CircularGauge,
+  CircularGaugeComponent,
+} from '@syncfusion/ej2-angular-circulargauge';
+import { ɵglobal as global } from '@angular/core';
 @Component({
   selector: 'codx-dashboard',
   templateUrl: 'codx-dashboard.component.html',
@@ -72,6 +77,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('dfPie') dfPie?: TemplateRef<any>;
   @ViewChild('dfPyramid') dfPyramid?: TemplateRef<any>;
   @ViewChild('dfFunnel') dfFunnel?: TemplateRef<any>;
+  @ViewChildren('eleLayout') elesLayout!: QueryList<LayoutPanelComponent>;
 
   @Input() columns: number = 48;
   @Input() cellSpacing: number[] = [0, 0];
@@ -86,9 +92,10 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @Input() dataValue!: string;
   @Input() panels: any = [];
   @Input() datas: any = [];
-
+  @Input() isEditMode: boolean = true;
+  ngCmp: any = global;
   dialog: any;
-  isEditMode: boolean = true;
+
 
   annotations: ChartAnnotationSettingsModel[] = [];
 
@@ -101,11 +108,6 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     minimum: 0,
     maximum: 10,
     interval: 1,
-    // lineStyle: { width: 0 },
-    // labelFormat: '{value}°C',
-
-    // majorTickLines: { width: 0 },
-    // minorTickLines: { width: 0 }
   };
   legendSetting: Object = {
     visible: true,
@@ -253,7 +255,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
             (this.objDashboard as any).panelCollection.forEach((item: any) => {
               let component = item.getElementsByTagName('codx-chart')[0];
               if (component) {
-                let instance = window.ng.getComponent(
+                let instance = this.ngCmp.ng.getComponent(
                   component
                 ) as CodxChartsComponent;
                 instance.dataSource = this.dataSource.slice();
@@ -521,8 +523,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (args.element.querySelector('ejs-accumulationchart')) {
         const chartObj = args.element.querySelector('ejs-accumulationchart')
           .ej2_instances[0];
-        chartObj.height = '80%';
-        chartObj.width = '100%';
+        chartObj.height = '50%';
+        chartObj.width = '50%';
         // if (args.element.offsetHeight < chartObj.element.offsetHeight) {
         //   chartObj.height = '80%';
         //   chartObj.width = '80%';
@@ -543,7 +545,21 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (args.element.querySelector('ejs-treemap')) {
         let component = args.element.getElementsByTagName('ejs-treemap')[0];
         if (component) {
-          let instance = window.ng.getComponent(component) as TreeMapComponent;
+          let instance = this.ngCmp.ng.getComponent(
+            component
+          ) as TreeMapComponent;
+          instance.width = '80%';
+          instance.height = '50%';
+          instance.refresh();
+        }
+      }
+      if (args.element.querySelector('ejs-circulargauge')) {
+        let component =
+          args.element.getElementsByTagName('ejs-circulargauge')[0];
+        if (component) {
+          let instance = this.ngCmp.ng.getComponent(
+            component
+          ) as CircularGaugeComponent;
           instance.width = '80%';
           instance.height = '80%';
           instance.refresh();
@@ -553,7 +569,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   }
 
   onCreate(evt: any) {
-    document.getElementsByClassName('icon-close icon-18')[0].remove();
+    document.getElementsByClassName('icon-close icon-18')[0]?.remove();
     //let itemData = JSON.parse('{"id":"cff7b1a6-4b3a-4b9a-8d3c-bd33d99b2e66","panels":[{"id":"0.678896381234823_layout","row":0,"col":4,"sizeX":6,"sizeY":5,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.1257922786025789_layout","row":0,"col":0,"sizeX":4,"sizeY":5,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}],"panelDatas":[{"panelId":"0.678896381234823_layout","data":"{\"serieSetting\":{\"type\":\"StepArea\",\"marker\":{\"visible\":true,\"width\":10,\"height\":10},\"border\":{\"width\":2},\"tooltip\":{\"enable\":true},\"xName\":\"bookingNo\",\"yName\":\"attendees\",\"name\":\"a rê a chạc\"},\"axisX\":{\"valueType\":\"Category\",\"majorTickLines\":{\"width\":0}},\"axisY\":{\"title\":\"\",\"minimum\":0,\"maximum\":30,\"interval\":4,\"lineStyle\":{\"width\":0},\"majorTickLines\":{\"width\":0}},\"legendSetting\":{\"visible\":true,\"enableHighlight\":true}}"},{"panelId":"0.1257922786025789_layout","data":"TextCLGT"}]}')
     //this.panels = JSON.parse('[{"id":"0.9272112695591359_layout","row":0,"col":3,"sizeX":7,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.2912252785831644_layout","row":0,"col":0,"sizeX":3,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]');
 
@@ -563,15 +579,14 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     if (this.panels && this.panels.length > 0) {
       if (!this.objDashboard) {
         let component = document.getElementsByTagName('ejs-dashboardlayout')[0];
-        this.objDashboard = window.ng.getComponent(
-          component
-        ) as DashboardLayoutComponent;
+
+        this.objDashboard = (component as any).ej2_instances[0]
       }
       this.objDashboard.panels = this.panels;
       let iGenPanels = setInterval(() => {
         if (
           this.objDashboard &&
-          this.objDashboard.element.childElementCount > 0
+          this.objDashboard?.element?.childElementCount > 0
         ) {
           clearInterval(iGenPanels);
           this.panels.forEach((ele: any) => {
@@ -679,9 +694,12 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     if (chartType) {
       let component = elePanel?.getElementsByTagName('layout-panel')[0];
       if (component) {
-        let instance = window.ng.getComponent(
+        let instance = this.ngCmp.ng.getComponent(
           component
         ) as LayoutPanelComponent;
+        // let instance = this.ngCmp.ng.getComponent(
+        //   component
+        // ) as LayoutPanelComponent;
         instance.isChart = true;
       }
       if (objPanel) {
@@ -709,8 +727,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (eleBody && eleBody.length > 0) {
         eleBody[0].innerHTML = '';
         elePanel
-          ?.getElementsByClassName('card-header')[0]
-          .classList.add('d-none');
+          ?.getElementsByClassName('card-header')[0]?.classList.add('d-none');
         this.showHideButton(elePanel);
         eleBody[0].appendChild(html);
         this.replaceChart(elePanel);
@@ -753,7 +770,9 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     this.createPanelContent(panelId, this.chart!, chartSetting.type);
     let component = elePanel?.getElementsByTagName('layout-panel')[0];
     if (component) {
-      let instance = window.ng.getComponent(component) as LayoutPanelComponent;
+      let instance = this.ngCmp.ng.getComponent(
+        component
+      ) as LayoutPanelComponent;
       instance.isChart = true;
     }
     //delete old setting of panel
@@ -781,6 +800,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
         }
       }
     }, 100);
+
     let insChart = setInterval(() => {
       if (
         (elePanel as any)
@@ -801,19 +821,68 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
         }
       }
     }, 100);
+
+    let inCirGauce = setInterval(()=>{
+      if((elePanel as any).querySelector('ejs-circulargauge') &&
+      (elePanel as any).querySelector('ejs-circulargauge').ej2_instances[0]
+      )
+      {
+        clearInterval(inCirGauce);
+        const gaugeObj = (elePanel as any).querySelector('ejs-circulargauge').ej2_instances[0];
+        gaugeObj.height = '80%';
+        gaugeObj.width = '80%';
+      }
+    },100)
+    setTimeout(()=> {
+      clearInterval( insAcc );
+      clearInterval( insChart );
+      clearInterval(inCirGauce);
+     }, 2000);
   }
 
   private replaceChart(elePanel: any) {
-    if (elePanel && elePanel.getElementsByTagName('codx-chart').length > 0) {
-      let oldItem = elePanel.getElementsByClassName('chart-item');
-      //oldItem.remove();
-      if (oldItem.length > 1) {
-        for (let i = 0; i < oldItem.length - 1; i++) {
-          !oldItem[i].classList.contains('d-none') &&
-            oldItem[i].classList.add('d-none');
+    setTimeout(()=>{
+      if (elePanel && elePanel.getElementsByTagName('codx-chart').length > 0) {
+        let oldItem = elePanel.getElementsByClassName('chart-item');
+        //oldItem.remove();
+        if (oldItem.length > 1) {
+          for (let i = 0; i < oldItem.length - 1; i++) {
+            !oldItem[i].classList.contains('d-none') &&
+              oldItem[i].classList.add('d-none');
+          }
         }
       }
-    }
+      else if(elePanel.querySelector('ejs-chart') &&
+              elePanel.querySelector('ejs-chart').ej2_instances[0]
+              ){
+                const chartObj = elePanel.querySelector('ejs-chart').ej2_instances[0];
+                chartObj.height = '80%';
+                chartObj.width = '100%';
+                chartObj.chartResize();
+              }
+      else if(elePanel.querySelector('ejs-accumulationchart') &&
+          elePanel.querySelector('ejs-accumulationchart').ej2_instances[0]){
+            const chartObj = elePanel.querySelector('ejs-accumulationchart').ej2_instances[0];
+            chartObj.height = '80%';
+            chartObj.width = '100%';
+            chartObj.refreshChart();
+      }
+      else if(elePanel.querySelector('ejs-circulargauge') &&
+      elePanel.querySelector('ejs-circulargauge').ej2_instances[0]){
+            const chartObj = elePanel.querySelector('ejs-circulargauge').ej2_instances[0];
+            chartObj.height = '50%';
+            chartObj.width = '100%';
+            chartObj.refresh();
+      }
+      else if(elePanel.querySelector('ejs-treemap') &&
+      elePanel.querySelector('ejs-treemap').ej2_instances[0]){
+        const chartObj = elePanel.querySelector('ejs-treemap').ej2_instances[0];
+        chartObj.height = '60%';
+        chartObj.width = '80%';
+        (chartObj as TreeMapComponent);
+      }
+    },100)
+
   }
 
   private showHideButton(elePanel: any) {
@@ -827,27 +896,27 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       iterations: 1,
     };
 
-    elePanel?.getElementsByClassName('card-header')[0].classList.add('d-none');
+    elePanel?.getElementsByClassName('card-header')[0]?.classList.add('d-none');
     (elePanel as HTMLElement).onmouseover = (evt) => {
       //elePanel?.getElementsByClassName('card-header')[0].animate(newspaperSpinning, newspaperTiming);
       if (
         elePanel
           ?.getElementsByClassName('card-header')[0]
-          .classList.contains('d-none')
+          ?.classList.contains('d-none')
       ) {
         elePanel
           ?.getElementsByClassName('card-header')[0]
-          .classList.remove('d-none');
+          ?.classList.remove('d-none');
       }
     };
     (elePanel as HTMLElement).onmouseout = (evt) => {
       //elePanel?.getElementsByClassName('card-header')[0].animate(newspaperSpinning, newspaperTiming);
       !elePanel
         ?.getElementsByClassName('card-header')[0]
-        .classList.contains('d-none') &&
+        ?.classList.contains('d-none') &&
         elePanel
           ?.getElementsByClassName('card-header')[0]
-          .classList.add('d-none');
+          ?.classList.add('d-none');
     };
   }
 
@@ -984,7 +1053,9 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     let elePanel = document.getElementById(panelID);
     let component = elePanel?.getElementsByTagName('layout-panel')[0];
     if (component) {
-      let instance = window.ng.getComponent(component) as LayoutPanelComponent;
+      let instance = this.ngCmp.ng.getComponent(
+        component
+      ) as LayoutPanelComponent;
       instance.isChart = true;
     }
   }

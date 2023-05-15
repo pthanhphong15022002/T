@@ -14,18 +14,15 @@ import {
   AuthService,
   AuthStore,
   CodxFormComponent,
-  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
-  ImageViewerComponent,
   NotificationsService,
   RequestOption,
   UIComponent,
   Util,
 } from 'codx-core';
 import { CodxOmService } from '../../codx-om.service';
-import { Targets } from '../../model/okr.model';
 
 //import { CodxEpService } from '../../../codx-ep.service';
 
@@ -40,23 +37,10 @@ export class PopupAddOBComponent extends UIComponent {
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
   @Output() loadData = new EventEmitter();
-  @ViewChild('form') form :CodxFormComponent;
+  @ViewChild('form') form: CodxFormComponent;
 
   headerText = '';
-  subHeaderText = '';
-  month = 'Tháng';
-  quarter = 'Quý';
-
-  months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
-  quarters = ['1', '2', '3', '4'];
-  quartersMonth = ['1', '4', '7', '10'];
-  typePlan = '';
-  planMonth = [];
-  planQuarter = [];
-  allowCopyField=[];
-  listTarget = [];
-  
-  ops = ['m','q','y'];
+  allowCopyField = [];
   formModel: FormModel;
   dialogRef: DialogRef;
   isAfterRender: boolean;
@@ -65,39 +49,13 @@ export class PopupAddOBComponent extends UIComponent {
   dialogTargets: DialogRef;
   funcID: any;
   tempTarget: any;
-  funcType:any;
+  funcType: any;
   isSubKR: boolean;
-  ob:any;
-  oldOB:any;
+  ob: any;
+  oldOB: any;
   okrPlan: any;
-  listShares=[];
-  //Chờ c thương thiết lập vll
-  //Giả lập vll
-  //OM003
-  // vll={
-  //   datas : [
-  //     {
-  //       value: "9",
-  //       text: "Tất cả",
-  //       icon: "All.svg"
-  //     },
-  //     {
-  //       value: "4;P",
-  //       text: "Phòng & Quản lý của tôi",
-  //       icon: "MyDeptManagement.svg"
-  //     },
-  //     {
-  //       value: "4",
-  //       text: "Phòng của tôi",
-  //       icon: "MyDept.svg"
-  //     },
-  //     {
-  //       value: "P",
-  //       text: "Quản lý của tôi",
-  //       icon: "MyManagement.svg"
-  //     }
-  //   ]
-  // }
+  onSaving = false;
+  listShares = [];
   okrRecID: any;
   shareModel: any;
   curUser: any;
@@ -106,63 +64,71 @@ export class PopupAddOBComponent extends UIComponent {
     private injector: Injector,
     private authService: AuthService,
     private codxOmService: CodxOmService,
-    private notificationsService: NotificationsService,    
+    private notificationsService: NotificationsService,
     private authStore: AuthStore,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
-    super(injector);  
-    this.funcID= dialogData.data[0]
-    this.funcType = dialogData?.data[1];  
+    super(injector);
+    this.funcID = dialogData.data[0];
+    this.funcType = dialogData?.data[1];
     this.headerText = dialogData?.data[2];
     this.oldOB = dialogData.data[3];
     this.okrPlan = dialogData.data[4];
     this.groupModel = dialogData.data[5];
 
-    this.dialogRef= dialogRef;
-    this.formModel= dialogRef.formModel;
-    
+    this.dialogRef = dialogRef;
+    this.formModel = dialogRef.formModel;
+
     this.curUser = authStore.get();
   }
-
-  //-----------------------Base Func-------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
   ngAfterViewInit(): void {}
 
-  
-  onInit(): void {    
+  onInit(): void {
     this.getCurrentOB();
-    
   }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Cache Data--------------------------------//
+  //---------------------------------------------------------------------------------//
+  // getCacheData(){
+
+  // }
+
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Data Func---------------------------------//
+  //---------------------------------------------------------------------------------//
   getCurrentOB() {
-    if(this.funcType == OMCONST.MFUNCID.Add){
+    if (this.funcType == OMCONST.MFUNCID.Add) {
       this.afterOpenAddForm();
       this.isAfterRender = true;
-    }
-    else{
+    } else {
       this.codxOmService.getOKRByID(this.oldOB.recID).subscribe((obModel) => {
         if (obModel) {
           if (this.funcType == OMCONST.MFUNCID.Edit) {
             this.afterOpenEditForm(obModel);
           } else if (this.funcType == OMCONST.MFUNCID.Copy) {
             this.afterOpenCopyForm(obModel);
-          } 
-          this.isAfterRender=true;         
+          }
+          this.isAfterRender = true;
         }
       });
-    } 
+    }
   }
 
   afterOpenAddForm() {
-    this.ob = { ...this.groupModel?.obModel };   
-    this.ob.periodID= this.okrPlan.periodID;          
-    this.ob.year= this.okrPlan.year;
-    this.ob.interval= this.okrPlan.interval;
+    this.ob = { ...this.groupModel?.obModel };
+    this.ob.periodID = this.okrPlan.periodID;
+    this.ob.year = this.okrPlan.year;
+    this.ob.interval = this.okrPlan.interval;
     this.ob.transID = this.okrPlan.recID;
-    this.ob.parentID=this.okrPlan.recID; 
+    this.ob.parentID = this.okrPlan.recID;
   }
-  
+
   afterOpenEditForm(obModel: any) {
-    this.ob = obModel;    
+    this.ob = obModel;
   }
 
   afterOpenCopyForm(obModel: any) {
@@ -170,7 +136,7 @@ export class PopupAddOBComponent extends UIComponent {
     this.cache
       .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
       .subscribe((gv: any) => {
-        if (gv) {          
+        if (gv) {
           let gridView = Util.camelizekeyObj(gv);
           for (const key in gridView) {
             const element = gridView[key];
@@ -184,28 +150,26 @@ export class PopupAddOBComponent extends UIComponent {
         }
       });
   }
-  //-----------------------End-------------------------------//
-
-  //-----------------------Base Event------------------------//
-
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Event------------------------------------//
+  //---------------------------------------------------------------------------------//
   valueChange(evt: any) {
     if (evt && evt.field) {
-      this.ob[evt.field]=evt.data;      
+      this.ob[evt.field] = evt.data;
     }
     this.detectorRef.detectChanges();
   }
-  //-----------------------End-------------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Event----------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //-----------------------Get Data Func---------------------//
-  
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Validate Func---------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //-----------------------End-------------------------------//
-
-  //-----------------------Validate Func---------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Logic Func------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Logic Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
   beforeSave(option: RequestOption) {
     let itemData = this.fGroupAddOB.value;
     option.methodName = '';
@@ -214,20 +178,20 @@ export class PopupAddOBComponent extends UIComponent {
   }
 
   onSaveForm() {
+    this.onSaving = true;
     if (
       this.funcType == OMCONST.MFUNCID.Add ||
       this.funcType == OMCONST.MFUNCID.Copy
     ) {
-      this.ob.okrType = OMCONST.VLL.OKRType.Obj;        
-        this.OKRLevel();
+      this.ob.okrType = OMCONST.VLL.OKRType.Obj;
+      this.OKRLevel();
+    } else {
+      this.ob.edited = true;
     }
-    else{
-      this.ob.edited=true;
-    }
-    
+
     //---------------------------------------
-    this.fGroupAddOB=this.form?.formGroup;
-    this.ob.buid= this.ob.buid?? this.curUser?.buid;
+    this.fGroupAddOB = this.form?.formGroup;
+    this.ob.buid = this.ob.buid ?? this.curUser?.buid;
     this.fGroupAddOB.patchValue(this.ob);
     // if (this.fGroupAddOB.invalid == true) {
     //   this.codxOmService.notifyInvalid(
@@ -236,64 +200,72 @@ export class PopupAddOBComponent extends UIComponent {
     //   );
     //   return;
     // }
-    if (this.funcType == OMCONST.MFUNCID.Add || this.funcType == OMCONST.MFUNCID.Copy) {
-      this.methodAdd(this.ob,this.listShares);
-    } else if(this.funcType == OMCONST.MFUNCID.Edit) {
-      this.methodEdit(this.ob,this.listShares);
+    if (
+      this.funcType == OMCONST.MFUNCID.Add ||
+      this.funcType == OMCONST.MFUNCID.Copy
+    ) {
+      this.methodAdd(this.ob, this.listShares);
+    } else if (this.funcType == OMCONST.MFUNCID.Edit) {
+      this.methodEdit(this.ob, this.listShares);
     }
   }
-  methodAdd(ob:any,listShares:any) {
+  methodAdd(ob: any, listShares: any) {
     this.codxOmService.addOB(ob).subscribe((res: any) => {
       if (res) {
         res.write = true;
         res.delete = true;
         this.afterSave(res);
+      } else {
+        this.onSaving = false;
+        return;
       }
     });
   }
 
-  methodEdit(ob:any,listShares:any) {
+  methodEdit(ob: any, listShares: any) {
     this.codxOmService.editOB(ob).subscribe((res: any) => {
       if (res) {
         res.write = true;
         res.delete = true;
         this.afterSave(res);
+      } else {
+        this.onSaving = false;
+        return;
       }
     });
   }
-  afterSave(ob:any) {
-    if (this.funcType == OMCONST.MFUNCID.Add || this.funcType == OMCONST.MFUNCID.Copy) {
+  afterSave(ob: any) {
+    if (
+      this.funcType == OMCONST.MFUNCID.Add ||
+      this.funcType == OMCONST.MFUNCID.Copy
+    ) {
       this.notificationsService.notifyCode('SYS006');
     } else {
       this.notificationsService.notifyCode('SYS007');
     }
     this.dialogRef && this.dialogRef.close(ob);
   }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Func-----------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //-----------------------End-------------------------------//
-
-  //-----------------------Logic Event-----------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Custom Func-----------------------//
-  createShares(shareModel){
-    if(shareModel!=null){
-      let tmpShare = {...shareModel};
-      tmpShare.objectType='U';
-      tmpShare.permission='1'
-      tmpShare.read=1;
-      tmpShare.view=1;
-      tmpShare.write=1;
-      tmpShare.delete=1;
-      tmpShare.download=1;
-      tmpShare.upload=1;
-      tmpShare.share=1;
-      tmpShare.autoCreated=1;
-      tmpShare.objectID=this.authService.userValue.userID;
-      this.listShares.push(tmpShare);    
-      if(this.okrPlan?.owner !=this.authService.userValue.userID){
-        tmpShare.objectID=this.okrPlan?.owner;
+  createShares(shareModel) {
+    if (shareModel != null) {
+      let tmpShare = { ...shareModel };
+      tmpShare.objectType = 'U';
+      tmpShare.permission = '1';
+      tmpShare.read = 1;
+      tmpShare.view = 1;
+      tmpShare.write = 1;
+      tmpShare.delete = 1;
+      tmpShare.download = 1;
+      tmpShare.upload = 1;
+      tmpShare.share = 1;
+      tmpShare.autoCreated = 1;
+      tmpShare.objectID = this.authService.userValue.userID;
+      this.listShares.push(tmpShare);
+      if (this.okrPlan?.owner != this.authService.userValue.userID) {
+        tmpShare.objectID = this.okrPlan?.owner;
         this.listShares.push(tmpShare);
       }
     }
@@ -315,11 +287,8 @@ export class PopupAddOBComponent extends UIComponent {
         break;
     }
     this.detectorRef.detectChanges();
-  }    
-  //-----------------------End-------------------------------//
-
-  //-----------------------Popup-----------------------------//
-  
-
-  //-----------------------End-------------------------------//
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Popup-----------------------------------------//
+  //---------------------------------------------------------------------------------//
 }

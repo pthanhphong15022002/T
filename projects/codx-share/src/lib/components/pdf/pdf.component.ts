@@ -85,6 +85,7 @@ export class PdfComponent
   @Input() transRecID = null;
   @Input() oSignFile = {};
 
+  @Input() oApprovalTrans;
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
   @Input() approver: string = ''; // ký ngoài hệ thống
   @Output() confirmChange = new EventEmitter<boolean>();
@@ -139,7 +140,7 @@ export class PdfComponent
   pageMax;
   getSignAreas;
   pageStep;
-  curPage = 0;
+  curPage = 1;
 
   //zoom
   zoomValue: any = 100;
@@ -197,6 +198,7 @@ export class PdfComponent
   lstFiles: Array<Object> = [];
   fileInfo: any;
   file: Object = { text: 'fileName', value: 'fileID' };
+  fileIdx = 0;
   curFileID;
   curFileUrl;
   //font
@@ -252,6 +254,8 @@ export class PdfComponent
   oSignfile: any;
   onInit() {
     this.curSelectedHLA = null;
+    // console.log('approver', );
+
     this.cache.valueList('ES029').subscribe((res) => {
       if (res) {
         this.vllSupplier = res.datas;
@@ -301,6 +305,7 @@ export class PdfComponent
                 fileUrl: environment.urlUpload + '/' + res.urls[index],
                 signers: res?.approvers,
                 areas: file.areas,
+                fileIdx: index,
               });
             });
             this.lstSigners = res.approvers;
@@ -319,10 +324,14 @@ export class PdfComponent
               if (signer.stamp) {
                 signer.stamp = environment.urlUpload + '/' + signer.stamp;
               }
+              //approverType
+              // if (signer.authorID == this.curSignerType) {
+              //   signer.approverType = this.curSignerType;
+              // }
             });
             if (this.isApprover) {
               this.signerInfo = res?.approvers.find(
-                (approver) => approver.authorID == this.user.userID
+                (approver) => approver.authorID == this.oApprovalTrans.stepRecID
               );
 
               this.changeSignerInfo.emit(this.signerInfo);
@@ -496,7 +505,8 @@ export class PdfComponent
               this.recID,
               this.fileInfo.fileID,
               this.isApprover,
-              this.user.userID
+              this.user.userID,
+              this.stepNo
             )
             .subscribe((res) => {
               if (res) {
@@ -536,13 +546,18 @@ export class PdfComponent
   }
 
   goToPage(e) {
-    this.curPage = e.data;
-
-    if (this.curPage < 1) {
+    if (e.data == 0) {
       this.curPage = 1;
-    } else if (this.curPage > this.pageMax) {
-      this.curPage = this.pageMax;
+    } else if (e.data != this.curPage) {
+      this.curPage = e.data;
+
+      if (this.curPage > this.pageMax) {
+        this.curPage = this.pageMax;
+      }
+
+      this.detectorRef.detectChanges();
     }
+    console.log('this.curPage', this.curPage);
   }
 
   goToSelectedAnnotation(area: tmpSignArea) {
@@ -647,7 +662,10 @@ export class PdfComponent
   //get
   getAreaOwnerName(authorID) {
     return this.lstSigners.find((signer) => {
-      return signer.authorID == authorID;
+      return (
+        signer.authorID == authorID
+        // || signer?.roleType == this.curSignerType
+      );
     })?.fullName;
   }
 
@@ -701,7 +719,7 @@ export class PdfComponent
       new NgxExtendedPdfViewerService();
 
     if (this.isSignMode) {
-      if (this.curPage == 0) {
+      if (this.curPage == 1) {
         this.curPage = this.pageMax;
       }
     }
@@ -726,7 +744,8 @@ export class PdfComponent
               this.recID,
               this.fileInfo.fileID,
               this.isApprover,
-              this.user.userID
+              this.user.userID,
+              this.stepNo
             )
             .subscribe((res) => {
               if (res) {
@@ -809,7 +828,8 @@ export class PdfComponent
                 this.recID,
                 this.fileInfo.fileID,
                 this.isApprover,
-                this.user.userID
+                this.user.userID,
+                this.stepNo
               )
               .subscribe((res) => {
                 if (res) {
@@ -844,14 +864,18 @@ export class PdfComponent
         return ele.getAttribute('data-page-number') == e.pageNumber;
       }
     );
-    if (rendedPage?.firstChild) {
-      let warpper = rendedPage?.firstChild;
+    let warpper = rendedPage?.querySelector('.canvasWrapper');
+    if (warpper) {
       let virtual = document.createElement('div');
       let id = 'layer' + e.pageNumber.toString();
+      let addedLayer = document.getElementById(id);
+      if (addedLayer) {
+        addedLayer.remove();
+      }
       virtual.id = id;
       virtual.className = 'manualCanvasLayer';
       virtual.style.zIndex = this.isInteractPDF ? '-1' : '2';
-      virtual.style.border = '1px solid #eee';
+      virtual.style.border = '1px solid blue';
       virtual.style.position = 'absolute';
       virtual.style.top = '0';
 
@@ -890,7 +914,9 @@ export class PdfComponent
           if (
             (area.labelType != '8' && !this.isApprover && !area.isLock) ||
             (this.isApprover &&
+              // (
               area.signer == this.curSignerID &&
+              // ||                 area.signer == this.curSignerType)
               area.stepNo == this.stepNo)
           ) {
             isRender = true;
@@ -907,6 +933,7 @@ export class PdfComponent
           if (isRender) {
             let curSignerInfo = this.lstSigners.find(
               (signer) => signer.authorID == area.signer
+              // ||                this.curSignerType == area.signer
             );
             let url = '';
             let isChangeUrl = false;
@@ -948,7 +975,10 @@ export class PdfComponent
                 break;
               }
               case 'S3': {
-                let url = curSignerInfo?.stamp ?? area.labelValue;
+                url = curSignerInfo?.stamp ?? area.labelValue;
+                if (area.labelValue != url) {
+                  isChangeUrl = true;
+                }
                 let isUrl = this.checkIsUrl(url);
                 this.addArea(
                   url,
@@ -1289,12 +1319,12 @@ export class PdfComponent
     labelType,
     draggable: boolean,
     isSaveToDB: boolean,
-    authorID: string,
+    stepRecID: string,
     stepNo: number,
     area?: tmpSignArea
   ) {
     let tmpName: tmpAreaName = {
-      Signer: authorID,
+      Signer: stepRecID,
       Type: type,
       PageNumber: this.curPage - 1,
       StepNo: stepNo,
@@ -1424,8 +1454,16 @@ export class PdfComponent
 
   changeSignature_StampImg(area: tmpSignArea) {
     let setupShowForm = new SetupShowSignature();
+    let userID = this.oApprovalTrans.approver;
+    // if (userID == this.curSignerType) {
+    //   userID = this.lstSigners.find((x) => x.roleType == userID)?.authorID;
+    // }
+
+    if (userID == '') {
+      return;
+    }
     let model = {
-      userID: area.signer,
+      userID: userID,
       signatureType: area.signatureType,
     };
     let data = {
@@ -1459,6 +1497,9 @@ export class PdfComponent
       data
     );
     popupSignature.closed.subscribe((res) => {
+      if (res == null || res.event == null) {
+        return;
+      }
       if (res?.event[0]) {
         area.labelValue = environment.urlUpload + '/' + res.event[0].pathDisk;
         this.detectorRef.detectChanges();
@@ -1712,7 +1753,8 @@ export class PdfComponent
             this.recID,
             this.fileInfo.fileID,
             this.isApprover,
-            this.user.userID
+            this.user.userID,
+            this.stepNo
           )
           .subscribe((res) => {
             if (res) {
@@ -1965,21 +2007,24 @@ export class PdfComponent
     this.lstSigners = e.itemData.signers;
     this.fileInfo = e.itemData;
     this.curFileID = this.fileInfo.fileID;
-    this.curFileUrl = this.fileInfo.fileUrl;
     this.autoSignState = false;
+    this.curPage = 1;
+    this.lstAreas = [];
     this.getListCA();
     this.esService
       .getSignAreas(
         this.recID,
         this.fileInfo.fileID,
         this.isApprover,
-        this.user.userID
+        this.user.userID,
+        this.stepNo
       )
       .subscribe((res) => {
         if (res) {
           this.lstAreas = res;
-          this.detectorRef.detectChanges();
         }
+        this.curFileUrl = this.fileInfo.fileUrl;
+        this.detectorRef.detectChanges();
       });
     this.esService
       .changeSFCacheBytes(
@@ -1988,7 +2033,7 @@ export class PdfComponent
       .subscribe((res) => {
         console.log('change sf url', res);
       });
-    this.detectorRef.detectChanges();
+    // this.detectorRef.detectChanges();
   }
 
   changeZoom(type: string, e?: any) {
@@ -2209,7 +2254,8 @@ export class PdfComponent
                       this.recID,
                       this.fileInfo.fileID,
                       this.isApprover,
-                      this.user.userID
+                      this.user.userID,
+                      this.stepNo
                     )
                     .subscribe((res) => {
                       if (res) {
@@ -2297,7 +2343,8 @@ export class PdfComponent
                         this.recID,
                         this.fileInfo.fileID,
                         this.isApprover,
-                        this.user.userID
+                        this.user.userID,
+                        this.stepNo
                       )
                       .subscribe((res) => {
                         if (res) {
@@ -2437,6 +2484,7 @@ export class PdfComponent
         ngxService.currentlyRenderedPages()
       )
       .subscribe((lst: Map<string, Array<location>>) => {
+        if (lst == null) return;
         this.lstKey = [];
         this.lstHighlightTextArea = [];
         let lstTextLayer = document.getElementsByClassName('textLayer');
@@ -2520,7 +2568,7 @@ export class PdfComponent
     let isChange = false;
     let lstRemoveHLA = [];
     Array.from(lstDelHLA).forEach((hla: HTMLElement) => {
-      if (hla.getAttribute('aria-Checked').toLowerCase() == 'true') {
+      if (hla.querySelector('.e-check')) {
         let delKey = hla.parentElement.dataset.id;
         let delHLA = this.lstHighlightTextArea.find((hl) => {
           if (hl.isAdded) {

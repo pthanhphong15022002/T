@@ -32,7 +32,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   grvSetup: any;
   action = 'add';
   titleAction = 'Thêm';
-  disable = false;
+  enabled = false;
   //
   value: number = 5;
   min: number = 0;
@@ -52,7 +52,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   stepList = [];
   itemView = '';
   vllDynamic = 'DP0271';
-  fileNameArr =[];
+  fileNameArr = [];
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -64,18 +64,23 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.dialog = dialog;
     this.field = JSON.parse(JSON.stringify(dt?.data?.field));
     this.action = dt?.data?.action;
-    if (this.action=='add'|| this.action=='copy') this.field.recID = Util.uid();
-    
+    this.enabled = dt?.data?.enabled;
+    if (this.action == 'add' || this.action == 'copy')
+      this.field.recID = Util.uid();
+
     this.titleAction = dt?.data?.titleAction;
     this.stepList = dt?.data?.stepList;
-    this.grvSetup = dt.data?.grvSetup
-    if(this.stepList?.length > 0){
-      this.stepList.forEach(obj=>{
-        if(obj?.fields?.length>0){
-          let arrFn = obj?.fields.map(x=>x.fieldName)
-          this.fileNameArr =this.fileNameArr.concat(arrFn)
+    this.grvSetup = dt.data?.grvSetup;
+    if (this.stepList?.length > 0) {
+      this.stepList.forEach((obj) => {
+        if (obj?.fields?.length > 0) {
+          let arrFn = obj?.fields.map((x) => {
+            let obj = { fieldName: x.fieldName, recID: x.recID };
+            return obj;
+          });
+          this.fileNameArr = this.fileNameArr.concat(arrFn);
         }
-      })
+      });
     }
     //this.field.rank = 5;
     // this.cache
@@ -95,8 +100,13 @@ export class PopupAddCustomFieldComponent implements OnInit {
   valueChangeCbx(e) {}
 
   valueChange(e) {
+    if(e.field=='multiselect') {
+      this.field[e.field] = e.data;
+      return;
+    }
     if (e && e.data && e.field) this.field[e.field] = e.data;
-    if (e.field == 'title') this.removeAccents(e.data);
+    if (e.field == 'title' || e.field == 'fieldName')
+      this.removeAccents(e.data);
     this.changdef.detectChanges();
   }
 
@@ -104,7 +114,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.field.isRequired = e.data;
   }
   valueChangeIcon(e) {
-    if (e) this.field.rankIcon = e;
+    if (e && e?.data) this.field.rankIcon = e.data;
   }
 
   sliderChange(e) {
@@ -130,7 +140,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   saveData() {
-    
     if (
       (!this.field.title || this.field.title.trim() == '') &&
       this.grvSetup['Title']?.isRequire
@@ -153,14 +162,19 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
-    if(this.fileNameArr.length>0){
-     let check = this.fileNameArr.some(x=>x.toLowerCase() == this.field.fieldName.toLowerCase())
-     if(check){
-      this.notiService.notify(
-        "Field name không được trùng nhau ! - Thêm messCode Khanh !! ",'2'
+    if (this.fileNameArr.length > 0) {
+      let check = this.fileNameArr.some(
+        (x) =>
+          x.fieldName.toLowerCase() == this.field.fieldName.toLowerCase() &&
+          x.recID != this.field.recID
       );
-      return;
-     }
+      if (check) {
+        this.notiService.notifyCode(
+          'DP026',
+          0, '"' + this.grvSetup['FieldName']?.headerText + '"'
+        );
+        return;
+      }
     }
     if (!this.field.dataType && this.grvSetup['DataType']?.isRequire) {
       this.notiService.notifyCode(
@@ -194,9 +208,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
-    if (
-      (!this.field.rankIcon && this.field.dataType == 'R') 
-    ) {
+    if (!this.field.rankIcon && this.field.dataType == 'R') {
       this.notiService.notifyCode(
         'SYS009',
         0,

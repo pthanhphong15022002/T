@@ -37,6 +37,7 @@ export class VersionComponent implements OnInit {
   comment: string;
   path: any;
   historyID: string;
+  nameFile: string;
   fileEditing: FileUpload;
   fileUploadList: FileUpload[];
   interval: ItemInterval[];
@@ -70,7 +71,8 @@ export class VersionComponent implements OnInit {
     ) {
       this.dialog = dialog;
       this.formModel = data.data[0];
-      this.fileEditing = data.data[1]; 
+      this.fileEditing = data.data[1];
+      this.nameFile =  this.fileEditing?.fileName
       this.comment = '';
   }
 
@@ -432,7 +434,7 @@ export class VersionComponent implements OnInit {
   async serviceAddFile(fileItem: FileUpload): Promise<FileUpload> {
     try {
       fileItem.uploadId = '';      
-      var appName = environment.appName; // Tam thoi de hard
+      var appName = this.user.tenant; // Tam thoi de hard
       var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
       var uploadFile = fileItem.item.rawFile;
       var retUpload = await lvFileClientAPI.postAsync(
@@ -494,7 +496,7 @@ export class VersionComponent implements OnInit {
             that.displayThumbnail(res.data);
             this.dmSV.ChangeOneFolder.next(files[index]);
           }
-          var appName = environment.appName; // Tam thoi de hard
+          var appName = this.user.tenant; // Tam thoi de hard
           var uploadFile = fileItem.item.rawFile;
           var sizeInBytes = fileItem.fileSize; // uploadFile.size;
           var chunSizeInfBytes = this.dmSV.ChunkSizeInKB * 1024;

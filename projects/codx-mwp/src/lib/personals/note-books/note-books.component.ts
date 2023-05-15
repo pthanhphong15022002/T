@@ -33,9 +33,8 @@ import {
 } from '@angular/core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { AddUpdateNoteBookComponent } from './add-update-note-book/add-update-note-book.component';
-import { AddUpdateStorageComponent } from '../storage/add-update-storage/add-update-storage.component';
-import { A, I } from '@angular/cdk/keycodes';
-import { NoteBookServices } from '../../services/notebook.services';
+import { NoteBookServices } from '../../services/noteBook.services';
+
 
 @Component({
   selector: 'app-note-books',

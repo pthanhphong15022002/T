@@ -1,32 +1,39 @@
-<codx-views
-  #view
-  [funcID]="funcID"
-  [service]="'WP'"
-  [entityName]="functionList?.entityName"
-  [views]="views"
-  [toolbarDisplay]="false"
-  [autoLoad]="false"
->
+<codx-views #view [views]="views" [toolbarDisplay]="false" [autoLoad]="false">
 </codx-views>
 <ng-template #templateLeft>
-  <div class="bg-body p-5 rounded-3">
-    <div class="d-flex calendar">
+  <div class="bg-white rounded-3 p-3">
+    <div class="d-flex justify-content-center">
       <div class="w-250px me-5">
         <ejs-calendar
-          #calendar_mini
-          [firstDayOfWeek]="1"
-          locale="vi"
-          (change)="changeDayOfMonth($event)"
+          #ejCalendar
           cssClass="width-calendar"
           class="e-customStyle"
-          title="Lịch các nhân"
-          (navigated)="changeNewMonth($event)"
+          [firstDayOfWeek]="1"
           [value]="dateChange"
+          (change)="changeDayOfMonth($event)"
+          (navigated)="changeNewMonth($event)"
+          (renderDayCell)="onLoad($event)"
         >
         </ejs-calendar>
-        <ng-container #listParam>
-          
-        </ng-container>
+        <div class="my-2">
+          <ejs-dropdownlist
+            id="cbxChooseCalendar"
+            [dataSource]="calendarTypes"
+            [fields]="fields"
+            [allowFiltering]="true"
+            [itemTemplate]="itemTemplate"
+            [value]="defaultCalendar"
+            (filtering)="onFiltering($event)"
+            (change)="getCalendarData($event)"
+          >
+            <ng-template #itemTemplate="" let-data="">
+              <div class="d-flex align-items-center p-2">
+                <img [src]="data.smallIcon" class="svg-icon" />
+                <span class="ms-2">{{ data.customName }}</span>
+              </div>
+            </ng-template>
+          </ejs-dropdownlist>
+        </div>
         <ng-container #listParam>
           <div class="d-flex align-items-center mt-3 title-calendar">
             <div class="w-100">
@@ -230,7 +237,11 @@
         </ng-container>
       </div>
       <div class="w-100">
-        <ng-template #calendar_setting></ng-template>
+        <lib-calendar-center
+          #calendarCenter
+          [resources]="resources"
+          [resourceModel]="dataResourceModel"
+        ></lib-calendar-center>
       </div>
     </div>
   </div>

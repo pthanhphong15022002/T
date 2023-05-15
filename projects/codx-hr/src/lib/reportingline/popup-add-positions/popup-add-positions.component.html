@@ -1,178 +1,88 @@
-<codx-form #form 
-  [headerText]="title" 
-  subHeaderText="" 
-  [body]="body" 
-  [footer]="footer" 
+<!-- <codx-form
+  #form
+  [headerText]="title"
+  [body]="body"
+  [footer]="footer"
   [dialog]="dialogRef"
   [data]="data"
-  [formModel]="formModel">
-</codx-form>
+  [formModel]="formModel"
+  *ngIf="isAfterRender"
+>
+</codx-form> -->
 
-<ng-template #body>
-  <div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="PositionID" default="Mã chức danh"></codx-label>
-          <codx-input 
-            class="form-control" 
-            [formModel]="form.formModel" 
-            [Group]="form.formGroup"
-            [disabled]="blocked"
-            [ControlName]="'PositionID'">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col"></div>
+<codx-layout-add #form (setTitle)="setTile(form)" [tabInfo]="tabInfo" [formModel]="dialogRef.formModel"
+  [footer]="footer" [dialog]="dialogRef" [openMore]="true" [tabContent]="[positionInfo, description]" [data]="data"
+  *ngIf="isAfterRender">
+</codx-layout-add>
+
+<ng-template #positionInfo>
+    <div class="row form-group">
+        <codx-label [formModel]="formModel" fiedName="PositionID" default="Mã chức danh"></codx-label>
+        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="positionID"
+          [disabled]="blocked">
+        </codx-input>
+    </div>
+    <div class="row form-group">
+        <codx-label [formModel]="formModel" fiedName="PositionName" default="Tên chức danh công việc">
+        </codx-label>
+        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="positionName">
+        </codx-input>
+    </div>
+    <div class="row form-group">
+        <codx-label [formModel]="formModel" fiedName="PositionName2" default="Ngôn ngữ khác"></codx-label>
+        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="positionName2">
+        </codx-input>
+    </div>
+    <div class="row form-group">
+        <codx-label [formModel]="formModel" fiedName="JobID" default="Nhóm chức danh">
+        </codx-label>
+        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="jobID">
+        </codx-input>
+    </div>
+    <div class="row form-group">
+        <codx-label [formModel]="formModel" fiedName="JobLevel" default="Chức vụ">
+        </codx-label>
+        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="jobLevel">
+        </codx-input>
+    </div>
+    <div class="row form-group">
+        <codx-label [formModel]="formModel" fiedName="OrgUnitID" default="Nhóm/Team">
+        </codx-label>
+        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="orgUnitID">
+        </codx-input>
+    </div>
+    <div class="row form-group">
+        <codx-label [formModel]="formModel" fiedName="ReportTo"></codx-label>
+        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="reportTo">
+        </codx-input>
+    </div>
+    <div class="row form-group">
+        <codx-label fiedName="ReportTo2" [formModel]="formModel"></codx-label>
+        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="reportTo2">
+        </codx-input>
     </div>
     <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="PositionName" default="Tên chức danh công việc">
-          </codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'PositionName'">
-          </codx-input>
-        </div>
+      <div class="form-group">
+        <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="note">
+        </codx-input>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="PositionName2" default="Ngôn ngữ khác"></codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'PositionName2'">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="JobID" default="Nhóm chức danh">
-          </codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'JobID'">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="JobLevel" default="Chức vụ">
-          </codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'JobLevel'">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="OrgUnitID" default="Nhóm/Team">
-          </codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'OrgUnitID'">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <!-- <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="DepartmentID" default="Phòng/Ban"></codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'DepartmentID'">
-          </codx-input>
-        </div>
-      </div>
-    </div> -->
-    <!-- <div class="row" *ngIf="isCorporation">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="DivisionID" default="Khối">
-          </codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'DivisionID'">
-          </codx-input>
-        </div>
-      </div>
-    </div> -->
-    <!-- <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label fiedName="CompanyID" default="Công ty"> </codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'CompanyID'">
-          </codx-input>
-        </div>
-      </div>
-    </div> -->
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label fiedName="ReportTo" default="Báo cáo trực tiếp cho"></codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'reportTo'">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label fiedName="ReportTo2" default="Báo cáo gián tiếp cho"></codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'ReportTo2'">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label fiedName="Headcounts" default="Định biên"> </codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'Headcounts'">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group">
-          <codx-label fiedName="FilledCounts" default="Nhân viên"></codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'FilledCounts'" [disabled]="isAdd">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label fiedName="Onboard" default="Onboard"> </codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'Onboard'" [disabled]="isAdd">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group">
-          <codx-label fiedName="Offboard" default="Offboard"> </codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'Offboard'" [disabled]="isAdd">
-          </codx-input>
-        </div>
-      </div>
-    </div>
+</ng-template>
+<ng-template #description>
+  <div class="row form-group">    
+    <codx-label fiedName="JobDescription" [formModel]="formModel"></codx-label>
+    <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="jobDescription">
+    </codx-input>
   </div>
 </ng-template>
 
 <ng-template #footer>
+
+
   <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-primary" (click)="OnSaveForm()">
-      <codx-label [formModel]="dialogRef.formModel" [default]="'Lưu'"></codx-label>
+      <codx-label [formModel]="formModel" [default]="'Lưu'"></codx-label>
     </button>
   </div>
 </ng-template>

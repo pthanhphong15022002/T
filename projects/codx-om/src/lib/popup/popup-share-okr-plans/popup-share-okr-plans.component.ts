@@ -68,15 +68,22 @@ export class PopupShareOkrPlanComponent
   sharesData: any;
   planRecID: any;
   fgShares: any;
-  isAfterRender=false;
-  userData=[];
-  listShareTo=[];
-  listCCTo=[];
+  isAfterRender = false;
+  userData = [];
+  listShareTo = [];
+  listCCTo = [];
   shareObj: {
-    objectType: any; objectID: any; permission: string; //readonly
-    read: number; write: number; share: number; startedOn: any; expiredOn: any; note: any;
+    objectType: any;
+    objectID: any;
+    permission: string; //readonly
+    read: number;
+    write: number;
+    share: number;
+    startedOn: any;
+    expiredOn: any;
+    note: any;
   };
-  listUser=[];
+  listUser = [];
   okrsShares: any[];
   constructor(
     inject: Injector,
@@ -96,7 +103,6 @@ export class PopupShareOkrPlanComponent
     this.sharesData = dialogData?.data[4];
   }
 
-  
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
@@ -118,44 +124,46 @@ export class PopupShareOkrPlanComponent
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
-   getCacheData(){
+  getCacheData() {
     //this.fgShares=this.codxService.buildFormGroup(this.formModel?.formName,this.formModel?.gridViewName,this.formModel?.entityName,this.sharesData);
-    this.fgShares=this.codxOmService.getFormGroup(this.formModel?.formName,this.formModel?.gridViewName).then(res=>{
-      if(res){
-        this.fgShares=res;
-        this.fgShares.patchValue(this.sharesData);
-        this.isAfterRender=true;
-      }
-    })
+    this.fgShares = this.codxOmService
+      .getFormGroup(this.formModel?.formName, this.formModel?.gridViewName)
+      .then((res) => {
+        if (res) {
+          this.fgShares = res;
+          this.fgShares.patchValue(this.sharesData);
+          this.isAfterRender = true;
+        }
+      });
   }
 
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
-    getData(){
-      this.codxOmService.getOKRPlansByID(this.planRecID).subscribe(res=>{
-        if(res){
-          this.okrPlans=res;
-        }
-      })
-    }
+  getData() {
+    this.codxOmService.getOKRPlansByID(this.planRecID).subscribe((res) => {
+      if (res) {
+        this.okrPlans = res;
+      }
+    });
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Event------------------------------------//
   //---------------------------------------------------------------------------------//
   changeInput(value: any, type: any) {
     if (!value?.data) return;
-    if (type == 'from'){
+    if (type == 'from') {
       this.listShareTo.push(value?.data);
-      this.listShareTo=this.filterArray(this.listShareTo);
-    }else {
+      this.listShareTo = this.filterArray(this.listShareTo);
+    } else {
       this.listCCTo.push(value?.data);
-      this.listCCTo=this.filterArray(this.listCCTo);
-    } 
+      this.listCCTo = this.filterArray(this.listCCTo);
+    }
   }
 
   valueChange(evt: any) {
-    if (evt?.field && evt?.data!=null) {
-      this.sharesData[evt?.field]=evt?.data;
+    if (evt?.field && evt?.data != null) {
+      this.sharesData[evt?.field] = evt?.data;
       this.detectorRef.detectChanges();
     }
   }
@@ -168,7 +176,6 @@ export class PopupShareOkrPlanComponent
   //-----------------------------------Validate Func---------------------------------//
   //---------------------------------------------------------------------------------//
 
-  
   filterArray(arr) {
     return [...new Map(arr.map((item) => [item['id'], item])).values()];
   }
@@ -176,58 +183,52 @@ export class PopupShareOkrPlanComponent
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
 
-
   onSaveForm() {
-    if(this.sharesData?.expiredOn<this.sharesData?.startedOn){
-      this.notifySvr.notify('Ngày hiệu lực không được lớn hơn ngày hết hạn','2',null);
+    if (this.sharesData?.expiredOn < this.sharesData?.startedOn) {
+      this.notifySvr.notify(
+        'Ngày hiệu lực không được lớn hơn ngày hết hạn',
+        '2',
+        null
+      );
     }
     //if (this.checkRequied()) return;
-    this.listUser=[];
-    for(let obj of this.listShareTo){
+    this.listUser = [];
+    for (let obj of this.listShareTo) {
       this.listUser.push(obj[0]);
-    }    
-    if(this.listUser.length>0){
+    }
+    if (this.listUser.length > 0) {
       this.okrsShares = [];
       for (var item of this.listUser) {
-        let tmpShare = new Shares()
-        tmpShare.objectType = item[0]?.objectType,
-        tmpShare.objectID = item[0]?.id,
-        tmpShare.permission= "2", //readonly
-        tmpShare.read= 1,
-        tmpShare.write= this.sharesData.write ? 1 : 0,
-        tmpShare.share= this.sharesData.share ? 1 : 0,
-        tmpShare.startedOn= this.sharesData.startedOn,
-        tmpShare.expiredOn= this.sharesData.expiredOn,
-        tmpShare.note= this.sharesData.note
+        let tmpShare = new Shares();
+        (tmpShare.objectType = item[0]?.objectType),
+          (tmpShare.objectID = item[0]?.id),
+          (tmpShare.permission = '2'), //readonly
+          (tmpShare.read = 1),
+          (tmpShare.write = this.sharesData.write ? 1 : 0),
+          (tmpShare.share = this.sharesData.share ? 1 : 0),
+          (tmpShare.startedOn = this.sharesData.startedOn),
+          (tmpShare.expiredOn = this.sharesData.expiredOn),
+          (tmpShare.note = this.sharesData.note);
 
         this.okrsShares.push(tmpShare);
       }
       this.codxOmService
         .shareOKRPlans(this.okrPlans.recID, this.okrsShares)
         .subscribe((item) => {
-          if(item){
-            this.notifySvr.notifyCode('SYS034'); 
+          if (item) {
+            this.notifySvr.notifyCode('SYS034');
             this.dialogRef && this.dialogRef.close(true);
-          }
-          else return;
+          } else return;
         });
+    } else {
+      this.notifySvr.notify('Đối tượng chia sẻ không được bỏ trống', '2', null);
     }
-    else{
-      
-      this.notifySvr.notify('Đối tượng chia sẻ không được bỏ trống','2',null);
-    }
-    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
 
-
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
-  
-
-  
-  
 }

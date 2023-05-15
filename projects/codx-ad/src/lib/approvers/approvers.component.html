@@ -25,14 +25,15 @@
     resourceObjType="AD_Users"
     [formModel]="view.formModel"
     [typeMF]="'hover'"
+    [hideMF]="true"
     [dataItem]="data"
   ></codx-temp-full>
 </ng-template>
 
 <ng-template #titleTmp let-data>
-  <div class="d-flex">
+  <div class="d-flex align-items-center">
     <div
-      class="title"
+      class="title fs-6 fw-bold me-3"
       [innerHTML]="
         data.groupName | formatvalue : view.formModel : 'GroupName' | async
       "
@@ -42,7 +43,7 @@
       [showBgColor]="true"
       name="AD008"
       [value]="data?.groupType"
-      class="badge badge-danger"
+      class="badge badge-sm badge-danger"
     >
     </codx-vll>
   </div>
@@ -62,7 +63,7 @@
     <div class="d-flex flex-row align-items-top p-3 border-bottom">
       <div class="w-100 min-w-200px ps-3">
         <codx-temp-full
-          cardCss="card-template border-bottom px-2 pt-4 pb-2"
+          cardCss="card-template"
           (clickMF)="moreFunction($event, data)"
           [imageId]="data.recID"
           [imageObjType]="view.formModel?.entityName"
@@ -72,6 +73,7 @@
           resourceObjType="AD_Users"
           [formModel]="view.formModel"
           [typeMF]="'hover'"
+          [hideMF]="true"
           [dataItem]="data"
         ></codx-temp-full>
         <!-- <div class="text-dark fs-6 fw-bold">{{ data?.groupName }}</div>
@@ -87,15 +89,16 @@
         autoClose="outside"
         [openDelay]="500"
       >
-        <codx-imgs
-          *ngIf="data.members && data.members.length"
-          [isToolTip]="false"
-          [width]="30"
-          [objectId]="data.memberIDs"
-          [objectType]="data.memberType == 'U' ? 'AD_Users' : 'HR_Positions'"
-          [numberImages]="4"
-        >
-        </codx-imgs>
+        <ng-container *ngIf="data.members && data.members.length">
+          <codx-imgs
+            [isToolTip]="false"
+            [width]="30"
+            [objectId]="data.memberIDs"
+            [objectType]="data.memberType == 'U' ? 'AD_Users' : 'HR_Positions'"
+            [numberImages]="4"
+          >
+          </codx-imgs>
+        </ng-container>
       </div>
     </div>
     <div class="w-10px min-w-10px">

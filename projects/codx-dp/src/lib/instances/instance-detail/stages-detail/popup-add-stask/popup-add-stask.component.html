@@ -199,7 +199,6 @@
           [crrValue]="stepsTasks?.endDate"
           type="datetime"
           format="F"
-           [disabled]="isTaskDefault"
         >
         </codx-input>
       </div>
@@ -284,35 +283,21 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <div
-        class="d-flex justify-content-between align-item-center"
-        *ngIf="stepType === 'M'"
-      >
-        <div>
-          <codx-label
-            fiedName="roles"
-            [formModel]="dialog?.formModel"
-            default="Người tham gia"
-          ></codx-label>
-        </div>
-        <codx-input
-          type="Share"
-          [refValue]="vllShare"
-          field=""
-          [dataShared]="[]"
-          [multiple]="true"
-          [showInput]="false"
-          (valueChange)="applyOwner($event, listChair)"
-           [disabled]="isTaskDefault"
-        >
-        </codx-input>
-      </div>
-      <ng-container
-        *ngIf="listChair.length > 0"
-        [ngTemplateOutlet]="showUser"
-        [ngTemplateOutletContext]="{ users: listChair }"
-      ></ng-container>
+    <div class="form-group" *ngIf="stepType === 'M'">
+      <codx-user
+        [fiedName]="'roles'"
+        [formModel]="form?.formModel"
+        [default]=" 'Người tham gia'"
+        [dataSource]="participant"
+        [icon]="'icon-connection-point'"
+        [style]="{ 'justify-content': 'space-between' }"
+        (valueList)="changeRoler($event, participant, 'P')"
+        [vllShare]="'DP0331'"
+        [multiple]="true"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
+        [disabled]="isTaskDefault"
+      ></codx-user>
     </div>
 
     <div class="form-group">
@@ -359,13 +344,17 @@
   </div>
   
   <ng-container>
-    <div class="d-flex align-items-center justify-content-between mt-4"
-      *ngIf="showLabelAttachment"
-      style="float: left; clear: left">
+    <div
+      class="d-flex align-items-center nav-item w-100 mb-1"
+    >
       <div class="d-flex align-items-center mb-2">
+        <span class="icon-attach_file icon-18 me-2 text-primary"></span>
         <div class="fw-bold text-primary">
-          <codx-label fiedName="lblAttachments" [formModel]="dialog.formModel"
-            default="Tài liệu">
+          <codx-label
+            name="lblAttachments"
+            [formModel]="form.formModel"
+            default="Tài liệu đính kèm"
+          >
           </codx-label>
         </div>
       </div>
@@ -373,24 +362,22 @@
     <div>
       <codx-attachment
         #attachment
+        [objectType]="dialog.formModel.entityName"
         [objectId]="stepsTasks?.recID"
         hideFolder="1"
         hideImageUpload="0"
         hideImageThumb="0"
         hideUploadBtn="1"
+        [showMessage]="0"
         hideDes="1"
         type="inline"
         allowMultiFile="1"
-        [functionID]="funcIDparent"
+        referType="source"
+        [formModel]="dialog.formModel"
         (fileAdded)="fileAdded($event)"
         (fileCount)="getfileCount($event)"
-        (viewFile)="getfileDelete($event)"
         displayThumb="full"
-        showMessage="0"
-        [fdID]="folderID"
-        [fdName]="stepsTasks?.stepID"
-        [parentID]="folderID"
-        [dataSelected]="stepsTasks">
+      >
       </codx-attachment>
     </div>
   </ng-container>
@@ -403,6 +390,7 @@
     type="button"
     class="btn btn-light-primary me-3"
     (click)="addFile($event)"
+    [disabled]="isTaskDefault"
   >
     <i class="icon-cloud_upload fs-5"></i
     ><span>

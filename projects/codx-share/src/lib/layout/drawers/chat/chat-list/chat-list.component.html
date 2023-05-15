@@ -32,17 +32,18 @@
                 <span class="fw-bold">{{ item.groupType == '1' ? item.groupName2 : item.groupName}}</span>
                 <span *ngIf="item.messageMissed > 0" class="topbar-badge badge badge-sm rounded-pill bg-danger px-2 ">{{item.messageMissed}}</span>
             </div>
-            <div class="d-flex justify-content-between align-items-top w-100">
-                <span class="" [classList]="item.isRead ? 'text-gray-600 fs-7' : 'text-primary'">
-                        {{item.message}}
-                </span>
-                <ng-container *ngIf="item.messageSend">
-                    <div class="d-flex justify-content-end ms-3 fs-7 w-75px min-w-75px">
-                        <span class="text-gray-500">{{item.messageSend | timefrom}}</span>
-                    </div>
-                </ng-container>
-                
-            </div>
+            <ng-container *ngIf="item.message">
+                <div class="d-flex justify-content-between align-items-top w-100">
+                    <span class="message" [classList]="item.message.isRead ? 'text-gray-600 fs-7 line-clamp line-clamp-1' : 'text-primary'">
+                        {{item.message.message}}
+                    </span>
+                    <ng-container *ngIf="item.message.createdOn">
+                        <div class="d-flex justify-content-end ms-3 fs-7 w-75px min-w-75px">
+                            <span class="text-gray-500 text-nowrap">{{item.message.createdOn | timefrom}}</span>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
         </div>
     </div>
 </ng-template>

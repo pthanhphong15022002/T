@@ -19,6 +19,7 @@ export class PopupRolesDynamicComponent implements OnInit {
   process = new DP_Processes();
   lstPermissions: DP_Processes_Permission[] = [];
   type = '';
+  roleType = '';
   data: any;
   currentPemission = 0;
   //Role
@@ -51,8 +52,9 @@ export class PopupRolesDynamicComponent implements OnInit {
       this.groupBy(this.process.permissions, 'roleType')
     ).flat();
     this.process.permissions = this.lstPerm;
-    this.title = dt.data[1];
-    this.type = dt.data[2];
+    this.title = dt?.data[1];
+    this.type = dt?.data[2];
+    this.roleType = dt?.data[3];
     this.cache.valueList('DP010').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -61,8 +63,44 @@ export class PopupRolesDynamicComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.process.permissions != null && this.process.permissions.length > 0)
-      this.changePermission(0);
+    if (
+      this.process.permissions != null &&
+      this.process.permissions.length > 0
+    ) {
+      var index = -1;
+      switch (this.roleType) {
+        case 'O':
+          index = this.process.permissions.findIndex(
+            (x) => x.roleType == 'O'
+          );
+          if(index != -1){
+            this.currentPemission = index;
+            this.changePermission(index);
+          }
+          break;
+        case 'P':
+          index = this.process.permissions.findIndex(
+            (x) => x.roleType == 'P'
+          );
+          if(index != -1){
+            this.currentPemission = index;
+            this.changePermission(index);
+          }
+          break;
+        case 'F':
+          index = this.process.permissions.findIndex(
+            (x) => x.roleType == 'F'
+          );
+          if(index != -1){
+            this.currentPemission = index;
+            this.changePermission(index);
+          }
+          break;
+        case 'full':
+          this.changePermission(0);
+          break;
+      }
+    }
   }
 
   groupBy(arr, key) {
@@ -173,9 +211,7 @@ export class PopupRolesDynamicComponent implements OnInit {
   }
 
   checkAdminUpdate() {
-    if (
-      this.process.permissions[this.currentPemission].objectType == '1'
-    )
+    if (this.process.permissions[this.currentPemission].objectType == '1')
       return true;
     return false;
   }
@@ -199,7 +235,7 @@ export class PopupRolesDynamicComponent implements OnInit {
       this.dialog.close(this.process.permissions);
     } else {
       this.dpSv.updatePermissionProcess(this.process).subscribe((res) => {
-        if (res.permissions.length > 0) {
+        if (res) {
           // this.notifi.notifyCode('SYS034');
           this.noti.notifyCode('SYS034');
           this.dialog.close(res);

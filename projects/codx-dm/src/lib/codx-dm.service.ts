@@ -330,6 +330,40 @@ export class CodxDMService {
 
   ngOnInit(): void {}
 
+  loadValuelist(vll:any): Observable<any>
+  {
+    let paras = ["VLL",vll];
+    let keyRoot = "VLL" + vll;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+    
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.cache.valueList(vll)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
   //Load GridViewSetup
   loadGridView(formName:any, gridViewName:any): Observable<any>
   {
@@ -363,8 +397,13 @@ export class CodxDMService {
     return observable;
   }
 
-  getRight(folder: FolderInfo) {
-    debugger
+  getRight(folder: FolderInfo , funcID:any = "") {
+
+    if(funcID && funcID != 'DMT00' && funcID != 'DMT02' && funcID != 'DMT03') {
+      this.disableUpload.next(true);
+      this.disableInput.next(true);
+      return
+    }
     this.parentCreate = folder.create;
     this.parentRead = folder.read;
     this.parentUpdate = folder.write;
@@ -441,6 +480,7 @@ export class CodxDMService {
         return 'zip.svg';
       case '.jpg':
       case '.jpeg':
+      case '.jfif':
         return 'jpg.svg';
       case '.mp4':
         return 'mp4.svg';
@@ -530,6 +570,7 @@ export class CodxDMService {
       this.currentNode = '';
       this.folderId.next(data.recID);
       this.folderID = data.recID;
+      debugger
       //this.nodeSelect.next(data);
       this.changeClickData.next(data);
       this.disableInput.next(false);
@@ -670,12 +711,11 @@ export class CodxDMService {
             }
           } else {
             list[index] = res;
-            if (that.idMenuActive == 'DMT02' || that.idMenuActive == 'DMT02') {
-              that.nodeChange.next(list[index]);
-            }
+            that.nodeChange.next(list[index]);
           }
           // this.isBookmark = !this.isBookmark;
           this.listFolder = list;
+          
           //this.ChangeData.next(true);
           this.addFile.next(true);
           //that.changeDetectorRef.detectChanges();
@@ -723,9 +763,18 @@ export class CodxDMService {
           //list = "DMT0226;DMT0227;DMT0230;DMT0231";
           if (type == 'DM_FolderInfo') {
             if (this.folderService.options.favoriteID == '1') list = 'DMT0226;DMT0227';
+            else if (this.folderService.options.favoriteID == '3')  {
+              if(data?.approvalStatus == '8') list = 'DMT0226'
+              else list = 'DMT0233'
+            }
             else list = 'DMT0227';
           } else {
             if (this.fileService.options.favoriteID == '1') list = 'DMT0230;DMT0231';
+            else if (this.fileService.options.favoriteID == '3') 
+            {
+              if(data?.approvalStatus == '8') list = 'DMT0230'
+              else list = 'DMT0233'
+            }
             else list = 'DMT0231';
           }
           if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
@@ -940,16 +989,8 @@ export class CodxDMService {
     if (data?.folderName && !data?.extension)
       return '../../../assets/themes/dm/default/img/icon-folder.svg';
     else {
-      if (data?.viewThumb) return environment.urlUpload + '/' + data.thumbnail;
+      if (data?.viewThumb && this.checkView(data?.read) == true) return environment.urlUpload + '/' + data.thumbnail;
       return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
-      // if (data.hasThumbnail == null || data.hasThumbnail == false) {
-      //   return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
-      // } else if (data.thumbnail.indexOf('../../../') > -1)
-      //   return data.thumbnail;
-      // else {
-      //   return environment.urlUpload + "/" + data.thumbnail;
-      //   //return this.checkUrl(url, data);
-      // }
     }
   }
 
@@ -1079,12 +1120,8 @@ export class CodxDMService {
             if (index > -1) {
               this.deleteFileView.next(list[index].recID);
               list.splice(index, 1); //remove element from array
-              // this.dmSV.changeData(null, list, id);
-              //   this.listFiles.next(list);
               this.listFiles = list;
-              //this.changeDetectorRef.detectChanges();
               this.notificationsService.notify(res.message);
-              //this.ChangeData.next(true);
             }
           } else {
             // xet duyet huy
@@ -1097,10 +1134,7 @@ export class CodxDMService {
                 this.deleteFileView.next(list[index].recID);
                 list.splice(index, 1); //remove element from array
                 this.listFiles = list;
-                //   this.changeDetectorRef.detectChanges();
-                //this.changeDetectorRef.detectChanges();
                 this.notificationsService.notify(res.message);
-                //this.ChangeData.next(true);
               }
             } else {
               var files = this.listFiles;
@@ -1111,12 +1145,8 @@ export class CodxDMService {
                 files[index].fileName = res.data.fileName;
                 files[index] = res.data;
               }
-              //   this.dmSV.listFiles.next(files);
               this.listFiles = files;
-              // this.changeDetectorRef.detectChanges();
-              //this.changeDetectorRef.detectChanges();
               this.notificationsService.notify(res.message);
-              //this.ChangeData.next(true);
             }
           }
         });
@@ -1192,6 +1222,18 @@ export class CodxDMService {
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
     switch ($event.functionID) {
+      //Rút lại quyền sau khi đã duyệt
+      case 'DMT0233':
+        {
+          this.setRequest(
+            type,
+            data.recID,
+            data.id,
+            '-1',
+            true
+          );
+          break;
+        }
       case 'DMT0226': // xet duyet thu muc
       case 'DMT0230': // xet duyet file
         this.setRequest(
@@ -1241,33 +1283,6 @@ export class CodxDMService {
         });
         break;
       case 'DMT0211': // download
-        // const downloadFile = (url, filename = '') => {
-        //   if (filename.length === 0) filename = url.split('/').pop();
-        //   const req = new XMLHttpRequest();
-        //   req.open('GET', url, true);
-        //   req.responseType = 'blob';
-        //   req.onload = function () {
-        //     const blob = new Blob([req.response], {
-        //       type: 'application/pdf',
-        //     });
-
-        //     const isIE = false || !!window.document.documentElement.DOCUMENT_NODE;
-        //     if (isIE) {
-        //       window.navigator.msSaveBlob(blob, filename);
-        //     } else {
-        //       const windowUrl = window.URL || window.webkitURL;
-        //       const href = windowUrl.createObjectURL(blob);
-        //       const a = document.createElement('a');
-        //       a.setAttribute('download', filename);
-        //       a.setAttribute('href', href);
-        //       document.body.appendChild(a);
-        //       a.click();
-        //       document.body.removeChild(a);
-        //     }
-        //   };
-        //   req.send();
-        // };
-
         this.fileService.getFile(data.recID,false).subscribe(async (file) => {
           var id = file.recID;
           if (this.checkDownloadRight(file)) {
@@ -1319,7 +1334,8 @@ export class CodxDMService {
         break;
 
       case 'DMT0202': // chinh sua thu muc
-      case 'DMT0209': { // properties folder
+      case 'DMT0209': 
+      { // properties folder
         var breadcumb = [];
         var breadcumbLink = [];
         var treeView = view?.currentView?.currentComponent?.treeView;
@@ -1348,27 +1364,28 @@ export class CodxDMService {
       }
 
       case 'DMT0213': // chinh sua file
-      this.fileService.getFile(data.recID).subscribe((file) => {
-        if(file)
-        {
-          var option = new DialogModel();
-          option.FormModel = this.formModel;
-          var isCopyRight = false;
-          if(file.author) isCopyRight = true;
-          this.callfc.openForm(
-            EditFileComponent,
-            '',
-            800,
-            800,
-            '',
-            ['', file , isCopyRight],
-            '',
-            option
-          );
-       
-        }
-      });
-      break;
+        this.fileService.getFile(data.recID).subscribe((file) => {
+          if(file)
+          {
+            var option = new DialogModel();
+            option.FormModel = this.formModel;
+            var isCopyRight = false;
+            if(file.author) isCopyRight = true;
+            this.callfc.openForm(
+              EditFileComponent,
+              '',
+              800,
+              800,
+              '',
+              ['', file , isCopyRight,$event?.data?.customName],
+              '',
+              option
+            );
+        
+          }
+        });
+        break;
+      
       case 'DMT0207': // permission
       case 'DMT0220': {
         if (type == 'file' || this.type == 'DM_FileInfo') {
@@ -1389,7 +1406,7 @@ export class CodxDMService {
                   950,
                   650,
                   '',
-                  ['1', data.recID, view, type],
+                  ['1', data.recID, view, type ,null, $event?.data?.customName],
                   ''
                 )
                 .closed.subscribe();
@@ -1412,7 +1429,7 @@ export class CodxDMService {
                   950,
                   650,
                   '',
-                  ['1', data.recID, view, type],
+                  ['1', data.recID, view, type,null,$event?.data?.customName],
                   ''
                 )
                 .closed.subscribe((item) => {
@@ -1483,7 +1500,7 @@ export class CodxDMService {
         );
         break;
 
-      //request permisssion
+      //request permission
       case 'DMT0221':
       case 'DMT0208':
         //Là file

@@ -305,7 +305,7 @@
           </div>
           <div
             class="icon-MF d-flex justify-content-center"
-            (click)="clickMF('LTN03')"icon-image
+            (click)="clickMF('LTN03')"
           >
             <span
               class="icon-format_size icon-22 text-hover-primary"
@@ -402,14 +402,14 @@
       *ngIf="itemQuestion.answerType == 'C' && !itemQuestion?.showAnswer"
       class="icon-check_box_outline_blank pd-t-7"
     ></span>
-    <!-- <span *ngIf="itemQuestion.answerType == 'L' && itemAnswer" class="pd-t-7"
+    <span *ngIf="itemQuestion.answerType == 'L' && itemAnswer" class="pd-t-7"
       >{{ itemAnswer?.seqNo + 1 }}.</span
     >
     <span *ngIf="itemQuestion.answerType == 'L' && !itemAnswer" class="pd-t-7"
       >{{
         questions[seqNoSession].children[itemQuestion.seqNo].answers.length + 1
       }}.</span
-    > -->
+    >
     <span
       *ngIf="itemQuestion.answerType == 'D'"
       class="icon-calendar_today"
@@ -845,7 +845,7 @@
           ? 'position-relative w-100 d-flex justify-content-end'
           : 'position-relative w-100 d-flex px-5 mt-5'
       " -->
-          <div class="img-sv-bg-question w-100" [style.background-image]="'url(' + getSrcImage(item) + ')'"></div>
+          <img [src]="getSrcImage(item)" class="w-100" />
           <div class="d-flex align-items-center icon-MF-image-outside justify-content-center">
             <div ngbDropdown class="dropdown" container="body">
               <a
@@ -1638,7 +1638,7 @@
     <div class="form-group question w-100 position-relative">
       <div class="title-des d-flex inplaceeditor-bg-none inplaceeditor-sv-title">
         <ejs-inplaceeditor
-          [emptyText]="title"
+          [emptyText]="emptyText"
           #inplaceCommentEditor
           mode="Inline"
           submitOnEnter="false"

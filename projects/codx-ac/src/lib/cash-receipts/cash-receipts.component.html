@@ -1,7 +1,0 @@
-<codx-views #view idField="recID" [views]="views" [button]="button" entityName="AC_CashReceipts"
-  (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo">
-</codx-views>
-<ng-template #templateMore let-data>
-  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
-    type="view"></codx-mfunc>
-</ng-template>

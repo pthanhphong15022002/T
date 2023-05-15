@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  AuthStore,
   CacheService,
   CallFuncService,
   DialogData,
@@ -39,7 +40,6 @@ export class PopupAddStaskComponent implements OnInit {
   taskName = '';
   taskGroupName = '';
   linkQuesiton = 'http://';
-  listOwner: DP_Instances_Steps_Tasks_Roles[] = [];
   listChair = [];
   recIdEmail = '';
   isNewEmails = true;
@@ -69,14 +69,27 @@ export class PopupAddStaskComponent implements OnInit {
   isTaskDefault = false;
   startDateParent: Date;
   endDateParent: Date;
+  listCombobox = {
+    U: 'Share_Users_Sgl',
+    P: 'Share_Positions_Sgl',
+    R: 'Share_UserRoles_Sgl',
+    D: 'Share_Departments_Sgl',
+    O: 'Share_OrgUnits_Sgl',
+  };
+  participant: DP_Instances_Steps_Tasks_Roles[] = [];
+  owner: DP_Instances_Steps_Tasks_Roles[] = [];
+  roles: DP_Instances_Steps_Tasks_Roles[] = [];
+  user;
   
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.user = this.authStore.get();
     this.status = dt?.data?.status;
     this.title = dt?.data['taskType']['text'];
     this.stepType = dt?.data['taskType']['value'];
@@ -93,7 +106,6 @@ export class PopupAddStaskComponent implements OnInit {
       this.stepsTasks['refID'] = Util.uid();
       this.stepsTasks['isTaskDefault'] = false;
     } else {
-      this.showLabelAttachment = true;
       this.stepsTasks = dt?.data['stepTaskData'] || new DP_Instances_Steps_Tasks();
       this.stepType = this.stepsTasks.taskType;
     }
@@ -105,7 +117,7 @@ export class PopupAddStaskComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.listOwner = this.stepsTasks['roles'];
+    this.roles = this.stepsTasks['roles'] || [];
     this.startDateParent = new Date(this.step['startDate']);
     this.endDateParent = new Date(this.step['endDate']);
     console.log(this.startDateParent.getTime());
@@ -148,6 +160,24 @@ export class PopupAddStaskComponent implements OnInit {
         .map((y) => y.value)
         .join('; ');
     }
+    this.owner = this.roles?.filter((role) => role.roleType === 'O');
+    if(this.stepType == "M"){
+      this.participant = this.roles?.filter((role) => role.roleType === 'P');
+    }else{
+      let role = new DP_Instances_Steps_Tasks_Roles();
+      this.setRole(role);
+      this.participant = [role]
+    }
+  }
+
+  setRole<T>(role: T) {
+    role['recID'] = Util.uid();
+    role['objectName'] = this.user['userName'];
+    role['objectID'] = this.user['userID'];
+    role['createdOn'] = new Date();
+    role['createdBy'] = this.user['userID'];
+    role['roleType'] = 'P';
+    return role;
   }
 
   getFormModel() {
@@ -218,8 +248,6 @@ export class PopupAddStaskComponent implements OnInit {
     }else{
       this.isSaveTimeGroup = true;
     }
-    console.log(new Date(startDate.toLocaleString()).getTime());
-    console.log(new Date(this.startDateParent.toLocaleString()).getTime());
     
     if (new Date(startDate.toLocaleString()).getTime() < new Date(this.startDateParent.toLocaleString()).getTime()) {
       this.isSaveTimeGroup = false;
@@ -236,9 +264,15 @@ export class PopupAddStaskComponent implements OnInit {
       const startDate = new Date(this.stepsTasks['startDate']);
       if(endDate >= startDate){
         const duration = endDate.getTime() - startDate.getTime();
-        const time = Math.floor(duration / 60 / 1000/ 60);
-        const hours = time % 24;
-        const days = Math.floor(time / 24);
+        const time = Number((duration / 60 / 1000/ 60).toFixed(1));
+        let days = 0;
+        let hours = 0;
+        if(time < 1){
+           hours = time;
+        }else{
+          hours = Number((time % 24).toFixed(1));
+          days = Math.floor(time / 24);
+        }   
         this.stepsTasks['durationHour'] = hours;
         this.stepsTasks['durationDay'] = days;
       }
@@ -248,6 +282,23 @@ export class PopupAddStaskComponent implements OnInit {
     }
     this.isLoadDate = !this.isLoadDate;
   }
+
+  changeRoler(e, datas, type) {    
+    if (!e || e?.length == 0) return;
+    let listUser = e || [];
+    let listRole = [];
+    listUser.forEach((element) => {
+        listRole.push({
+          objectID: element.objectID,
+          objectName: element.objectName,
+          objectType: element.objectType,
+          roleType: type,
+          taskID: this.stepsTasks['recID'],
+        });
+    });
+    this.participant = listRole;
+  }
+
   applyOwner(e, datas) {
     if (!e || e?.data.length == 0) return;
     let listUser = e?.data;
@@ -269,7 +320,7 @@ export class PopupAddStaskComponent implements OnInit {
   }
 
   async saveData() {
-    this.stepsTasks['roles'] = this.listOwner;
+    this.stepsTasks['roles'] = [...this.participant,...this.owner];
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
 
     let message = [];
@@ -313,6 +364,8 @@ export class PopupAddStaskComponent implements OnInit {
     } else {
       if (this.status === 'copy') {
         this.stepsTasks['recID'] = Util.uid();
+        this.stepsTasks['refID'] = Util.uid();
+        this.stepsTasks['isTaskDefault'] = false;
       }
       this.dialog.close({ data: this.stepsTasks, status: this.status });
     }

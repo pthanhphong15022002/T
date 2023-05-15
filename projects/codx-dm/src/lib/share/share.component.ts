@@ -73,7 +73,7 @@ export class ShareComponent implements OnInit {
   isShare = true;
   requestTitle = '';
   ownerID :any;
-  toPermission: Permission[];
+  toPermission: Permission[] = [];
   byPermission: Permission[] = [];
   ccPermission: Permission[];
   bccPermission: Permission[];  
@@ -141,7 +141,7 @@ export class ShareComponent implements OnInit {
         o.id = f[0].objectID;
         this.ownerID = [o];
         o.objectID = f[0].objectID;
-        this.byPermission.push(o);
+        this.toPermission.push(o);
         
       }
     }
@@ -179,7 +179,7 @@ export class ShareComponent implements OnInit {
       for(var i=0; i<data.length; i++) {
         var item = data[i];
         var perm = new Permission;
-        if(type == "by" && data[i].objectType == "1")
+        if(type == "to" && data[i].objectType == "1")
         {
           var o = this.fileEditing.permissions.filter(x=>x.objectType == "1") // Lấy owner;
           perm.objectID = o[0].objectID;
@@ -263,16 +263,15 @@ export class ShareComponent implements OnInit {
     if (this.shareContent === '') {
       //$('#shareContent').addClass('form-control is-invalid');
       this.errorshow = true;
-      this.changeDetectorRef.detectChanges();
       return;
     }
 
     if (!this.isShare && this.requestTitle === '') {  
       this.errorshow = true;
-      this.changeDetectorRef.detectChanges();
       return;
     }
-    if(!this.isShare && !this.checkPermission(this.fileEditing.permissions , this.byPermission)) return this.notificationsService.notifyCode("DM066");
+    
+    if(!this.isShare && !this.checkPermission(this.fileEditing.permissions , this.toPermission)) return this.notificationsService.notifyCode("DM066");
     //  if (this.updateRequestShare())
     this.fileEditing.toPermission = this.toPermission;
     this.fileEditing.byPermission = this.byPermission;
@@ -284,22 +283,21 @@ export class ShareComponent implements OnInit {
       // this.fileEditing.toPermission[i].read = true;
       // this.fileEditing.toPermission[i].share = this.share;
       // this.fileEditing.toPermission[i].download = this.download;
-      debugger
-      this.fileEditing.toPermission[i].startDate = this.startDate ? new Date(this.startDate).toLocaleString() : "";
-      this.fileEditing.toPermission[i].endDate =   this.endDate ? new Date(this.endDate).toLocaleString() : "";
+      this.fileEditing.byPermission[i].startDate = this.startDate ? new Date(this.startDate).toLocaleString() : "";
+      this.fileEditing.byPermission[i].endDate =   this.endDate ? new Date(this.endDate).toLocaleString() : "";
       if (!this.isShare) {
         if (this.shareGroup.value.per == 'modified') {
-          this.fileEditing.toPermission[i].create = true;
-          this.fileEditing.toPermission[i].update = true;
-          this.fileEditing.toPermission[i].share = true;
-          this.fileEditing.toPermission[i].download = true;
-          this.fileEditing.toPermission[i].upload = true;
-          this.fileEditing.toPermission[i].read = true;
+          this.fileEditing.byPermission[i].create = true;
+          this.fileEditing.byPermission[i].update = true;
+          this.fileEditing.byPermission[i].share = true;
+          this.fileEditing.byPermission[i].download = true;
+          this.fileEditing.byPermission[i].upload = true;
+          this.fileEditing.byPermission[i].read = true;
         }
         else {
           //modified: xem, sua, xoa, download
           //readonly: xem
-          this.fileEditing.toPermission[i].read = true;
+          this.fileEditing.byPermission[i].read = true;
         }
       }
       else {

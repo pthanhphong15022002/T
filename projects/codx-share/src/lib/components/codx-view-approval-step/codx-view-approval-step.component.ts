@@ -37,7 +37,7 @@ export class CodxViewApprovalStepComponent
 {
   @Input() transID: string = '';
   @Input() approveStatus: string = '';
-
+  @Input() eSign = false;
   formModel: FormModel;
   fmApprovalTrans: FormModel;
   fmApprovalStep: FormModel;
@@ -45,7 +45,7 @@ export class CodxViewApprovalStepComponent
 
   positionDefault: string;
 
-  lstSttApproveStep = ['0', '1', '2', '4', '6'];
+  lstSttApproveStep = ['0', '1', '2', '6'];
   process: any = [];
   // lstStep: any = [];
   constructor(
@@ -83,7 +83,7 @@ export class CodxViewApprovalStepComponent
 
             if (gridModels.dataValue != null) {
               this.esService.getApprovalSteps(gridModels).subscribe((res) => {
-                if (res && res?.length >= 0) {
+                if (res && res?.length >= 0) {                  
                   this.process = res;
                   this.cr.detectChanges();
                 }
@@ -102,6 +102,7 @@ export class CodxViewApprovalStepComponent
           .subscribe((res) => {
             if (res) {
               this.process = res;
+              console.log(this.process)
               this.cr.detectChanges();
             }
           });

@@ -44,9 +44,12 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   funcID: string;
   actionType: string;
   employeeId: string;
+  idField = 'RecID';
   isAfterRender = false;
   lstSubContract: any;
   headerText: string;
+  openFrom: string;
+  genderGrvSetup: any
   employeeObj: any;
 
     //#region EBenefitInfo Declaration
@@ -109,6 +112,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
+    this.openFrom = data?.data?.openFrom;
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
     console.log('data truyen vao ben trong ', this.data);
@@ -129,6 +133,9 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   }
 
   onInit(): void {
+    this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
+      this.genderGrvSetup = res?.Gender;
+    });
     this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;
@@ -223,9 +230,13 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
 
   initForm() {
     if (this.actionType == 'add') {
-      this.hrSevice.getEContractDefault().subscribe((res) => {
+      // this.hrSevice.getEContractDefault().subscribe((res) => {
+        this.hrSevice.getDataDefault(this.formModel.funcID, this.formModel.entityName, this.idField).subscribe((res) => {
         if (res) {
-          this.data = res;
+          debugger
+          console.log('data default ne', res);
+          
+          this.data = res?.data;
           this.data.employeeID = this.employeeId;
           this.data.signedDate = null;
           this.data.effectedDate = null;
@@ -273,11 +284,10 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     if(this.data.payForm == null) this.data.payForm = '';
     if(this.data.benefits == null) this.data.benefits = '';
 
-    
-    // if (this.formGroup.invalid) {
-    //   this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
 
     if (this.data.effectedDate > this.data.expiredDate) {
       this.hrSevice.notifyInvalidFromTo(
@@ -360,7 +370,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         case 'contractTypeID': {
           this.data.limitMonths =
             event?.component?.itemsSelected[0]?.LimitMonths;
-          this.formGroup.patchValue({ limitMonths: this.data.limitMonths });
+          this.formGroup.patchValue({ limitMonths: this.data.limitMonths});
           this.setExpiredDate(this.data.limitMonths);
           break;
         }

@@ -25,13 +25,13 @@ import {
   DialogRef,
   FormModel,
   AuthStore,
-  CodxDetailTmpComponent
+  CodxDetailTmpComponent,
+  SidebarModel,
 } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -43,6 +43,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() dataService: CRUDService;
   @Output() progressEvent = new EventEmitter<object>();
   @Output() moreFunctionEvent = new EventEmitter<any>();
+  @Output() outStepInstance = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @Input() stepName: string;
   @Input() progress = '0';
@@ -51,16 +52,20 @@ export class InstanceDetailComponent implements OnInit {
   @Input() listCbxProccess: any;
   @Input() viewModelDetail = 'S';
   @ViewChild('viewDetailsItem') viewDetailsItem;
-  @Input() viewType = 'd';
+  // @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = []; //instanceStep
   @Input() tabInstances = [];
-  @ViewChild('viewDetail') viewDetail : CodxDetailTmpComponent ;
+  @ViewChild('viewDetail') viewDetail: CodxDetailTmpComponent;
   @Input() viewsCurrent = '';
   @Input() moreFunc: any;
-  @Input() reloadData = false;
+  // @Input() reloadData = false;
   @Input() stepStart: any;
   @Input() reasonStepsObject: any;
   @Output() clickStartInstances = new EventEmitter<any>();
+  @Output() saveDatasInstance = new EventEmitter<any>();
+  @Input() lstStepProcess = [];
+  @Input() colorFail: any;
+  @Input() colorSuccesss: any;
   id: any;
   totalInSteps: any;
   tmpTeps: DP_Instances_Steps;
@@ -77,26 +82,16 @@ export class InstanceDetailComponent implements OnInit {
   listStepInstance: any;
   instanceStatus: any;
   currentStep = 0;
-
+  isChangeData = false;
   listTypeTask = [];
-  //gantchat
-  ganttDs = [];
-  ganttDsClone = [];
-  dataColors = [];
-  taskFields = {
-    id: 'recID',
-    name: 'name',
-    startDate: 'startDate',
-    endDate: 'endDate',
-    type: 'type',
-    color: 'color',
-  };
+
   dialogPopupDetail: DialogRef;
   currentElmID: any;
   frmModelInstancesTask: FormModel;
   moreFuncCrr: any;
   listReasonSuccess: DP_Instances_Steps_Reasons[] = [];
   listReasonFail: DP_Instances_Steps_Reasons[] = [];
+  isOnlyView: boolean = true;
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
@@ -120,8 +115,144 @@ export class InstanceDetailComponent implements OnInit {
   isSaving = false;
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   isStart = false;
-  user:any;
-
+  user: any;
+  maxSize: number = 4;
+  ownerInstance: string[] = [];
+  HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`;
+  //gan chart
+   //gantchat
+   ganttDs = [];
+   ganttDsClone = [];
+   dataColors = [];
+   taskFields = {
+     id: 'recID',
+     name: 'name',
+     startDate: 'startDate',
+     endDate: 'endDate',
+     type: 'type',
+     color: 'color',
+   };
+  vllViewGannt = 'DP042';
+  crrViewGant = 'W';
+  columns=[
+    { field: 'name', headerText: 'Tên', width: '250' },
+    { field: 'startDate', headerText: 'Ngày bắt đầu' },
+    { field: 'endDate', headerText: 'Ngày kết thúc' }
+  ]
+  timelineSettings: any;
+  tags = '';
+  timelineSettingsHour: any = {
+    topTier: {
+      unit: 'Day',
+      formatter: (date: Date) => {
+        let day = date.getDay();
+        let text = '';
+        if (day == 0) {
+          text = 'Chủ nhật';
+        }
+        if (day == 1) {
+          text = 'Thứ Hai';
+        }
+        if (day == 2) {
+          text = 'Thứ Ba';
+        }
+        if (day == 3) {
+          text = 'Thứ Tư';
+        }
+        if (day == 4) {
+          text = 'Thứ Năm';
+        }
+        if (day == 5) {
+          text = 'Thứ Sáu';
+        }
+        if (day == 6) {
+          text = 'Thứ Bảy';
+        }
+        return `${text} ( ${date.toLocaleDateString()} )`; // format ngôn ngữ hỏi thương
+      },
+    },
+    bottomTier: {
+      unit: 'Hour',
+      //format: 'HH',
+      formatter: (h: Date) => {
+        return h.getHours();
+      },
+    },
+    timelineUnitSize: 25,
+  };
+  timelineSettingsDays = {
+    topTier: {
+      unit: 'Month',
+      formatter: (date: Date) => {
+        return 'Tháng ' + (date.getMonth() + 1) + '-' + date.getFullYear(); // format ngôn ngữ hỏi thương
+      },
+    },
+    bottomTier: {
+      unit: 'Day',
+      count: 1,
+      formatter: (date: Date) => {
+        let day = date.getDay();
+        let text = '';
+        if (day == 0) {
+          text = 'Chủ nhật';
+        }
+        if (day == 1) {
+          text = 'Thứ Hai';
+        }
+        if (day == 2) {
+          text = 'Thứ Ba';
+        }
+        if (day == 3) {
+          text = 'Thứ Tư';
+        }
+        if (day == 4) {
+          text = 'Thứ Năm';
+        }
+        if (day == 5) {
+          text = 'Thứ Sáu';
+        }
+        if (day == 6) {
+          text = 'Thứ Bảy';
+        }
+        return `${text} ( ${date.toLocaleDateString()} )`;
+      },
+    },
+    timelineUnitSize: 150,
+  };
+  timelineSettingsWeek = {
+    topTier: {
+      unit: 'Month',
+      formatter: (date: Date) => {
+        return 'Tháng ' + (date.getMonth() + 1) + '-' + date.getFullYear(); // format ngôn ngữ hỏi thương
+      },
+    },
+    bottomTier: {
+      unit: 'Week',
+      count: 1,
+      formatter: (date: Date) => {
+        return date.toLocaleDateString();
+      },
+    },
+    timelineUnitSize: 100,
+  };
+  timelineSettingsMonth = {
+    topTier: {
+      unit: 'Year',
+      formatter: (date: Date) => {
+        return date.getFullYear(); // format ngôn ngữ hỏi thương
+      },
+    },
+    bottomTier: {
+      unit: 'Month',
+      count: 1,
+      formatter: (date: Date) => {
+        return 'Tháng ' + (date.getMonth() + 1);
+      },
+    },
+    timelineUnitSize: 100,
+  };
+  //end gan
+  loaded: boolean;
   constructor(
     private callfc: CallFuncService,
     private dpSv: CodxDpService,
@@ -131,32 +262,41 @@ export class InstanceDetailComponent implements OnInit {
     private callFC: CallFuncService,
     private popupInstances: InstancesComponent,
     public sanitizer: DomSanitizer,
-    private authStore: AuthStore,
-
+    private authStore: AuthStore
   ) {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefault = fun.customName || fun.description;
     });
     this.user = this.authStore.get();
+    this.cache.functionList('DPT040102').subscribe((res) => {
+      if (res) {
+        let formModel = new FormModel();
+        formModel.formName = res?.formName;
+        formModel.gridViewName = res?.gridViewName;
+        formModel.entityName = res?.entityName;
+        formModel.funcID = 'DPT040102';
+        this.frmModelInstancesTask = formModel;
+      }
+    });
+    this.timelineSettings = this.timelineSettingsWeek;
   }
 
   async ngOnInit(): Promise<void> {
+    if (this.dataSelect?.permissions?.length > 0) {
+      this.ownerInstance =
+        this.dataSelect?.permissions
+          .filter((role) => role.roleType == 'O')
+          ?.map((item) => {
+            return item.objectID;
+          }) || [];
+    }
+    this.ownerInstance.push(this.dataSelect?.owner);
+
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;
       }
     });
-    this.frmModelInstancesTask = await this.getFormModel("DPT040102");
-  }
-
-  async getFormModel(functionID) {
-    let f = await firstValueFrom(this.cache.functionList(functionID));
-    let formModel = new FormModel;
-    formModel.formName = f?.formName;
-    formModel.gridViewName = f?.gridViewName;
-    formModel.entityName = f?.entityName;
-    formModel.funcID = functionID;
-    return formModel;
   }
 
   ngAfterViewInit(): void {
@@ -164,36 +304,38 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.loaded = false;
     if (changes['dataSelect']) {
       if (changes['dataSelect'].currentValue?.recID != null) {
         this.id = changes['dataSelect'].currentValue.recID;
-        this.dataSelect = changes['dataSelect'].currentValue;
-        this.instanceStatus = this.dataSelect.status;
-        this.GetStepsByInstanceIDAsync();
-        this.getDataGanttChart(
-          this.dataSelect.recID,
-          this.dataSelect.processID
-        );
-        this.listReasonBySteps(this.reasonStepsObject);
+        this.loadChangeData() ;
+        this.isChangeData = false;
+       // this.dataSelect = changes['dataSelect'].currentValue
       }
-    } else if (changes['reloadData'] && this.reloadData) {
-      this.instanceStatus = this.dataSelect.status;
-      //muon change ma ko chang dc
-      if(this.viewDetail && this.moreFuncCrr){
-        this.viewDetail.dataItem = this.dataSelect ;
-        this.viewDetail.changedataMFs(this.moreFuncCrr)
-      }
-      
-      this.getStageByStep(this.listSteps);
-      this.changeDetec.detectChanges();
+      this.loaded = true;
     }
   }
 
+  loadChangeData(){
+    this.instanceStatus = this.dataSelect.status;
+    this.GetStepsByInstanceIDAsync();
+    this.getDataGanttChart(
+      this.dataSelect.recID,
+      this.dataSelect.processID
+    );
+    this.listReasonBySteps(this.reasonStepsObject);
+    this.maxSize = 4;
+    this.isOnlyView = true;
+    this.changeDetec.detectChanges();
+  }
+
   GetStepsByInstanceIDAsync() {
+    this.tags = '';
     var data = [this.id, this.dataSelect.processID, this.instanceStatus];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
         this.loadTree(res);
+        this.tags = this.dataSelect?.tags;
         this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
         this.getStageByStep(this.listSteps);
@@ -205,6 +347,31 @@ export class InstanceDetailComponent implements OnInit {
       }
       //  this.getListStepsStatus();
     });
+  }
+  saveDataStep(e) {
+    let stepInsIdx = this.listSteps.findIndex((x) => {
+      x.recID == e.recID;
+    });
+    if (stepInsIdx != -1) {
+      this.listSteps[stepInsIdx] = e;
+    }
+    this.loadingDatas();
+  }
+  loadingDatas() {
+    let listField = [];
+    this.listSteps.forEach((st) => {
+      listField = listField.concat(st.fields);
+    });
+    let datas = '';
+    if (listField?.length > 0) {
+      listField.forEach((obj) => {
+        datas += '"' + obj.fieldName + '":"' + obj.dataValue + '",';
+      });
+    }
+    datas = datas.substring(0, datas.length - 1);
+    datas = '[{' + datas + '}]';
+    this.dataSelect.datas = datas;
+    this.saveDatasInstance.emit(datas);
   }
 
   getStageByStep(listSteps) {
@@ -220,6 +387,7 @@ export class InstanceDetailComponent implements OnInit {
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
         this.tmpTeps = data;
+        this.outStepInstance.emit({ data: this.tmpTeps });
         this.stepValue = {
           textColor: data.textColor,
           backgroundColor: data.backgroundColor,
@@ -296,22 +464,15 @@ export class InstanceDetailComponent implements OnInit {
       data: data,
       lstStepCbx: this.listStepInstance,
     });
-    // console.log(e);
-    // switch (e.functionID) {
-    //   case 'DP09':
-    //   // API của bảo nha
-    //  //   this.continues(data);
-    //     this.popupInstances.moveStage(e,data,this.listSteps);
-    //     break;
-    //   case 'DP02':
-    //     this
-    //     break;
-    // }
   }
+  // changeDataMFUpData(){
+  //   if(this.moreFuncCrr)
+  //   this.changeDataMF(this.moreFuncCrr,this.dataSelect)
+  // }
 
   changeDataMF(e, data) {
-    if (this.viewsCurrent == 'k-')
-      this.moreFuncCrr = JSON.parse(JSON.stringify(e));
+    //  if (this.viewsCurrent == 'k-')
+    //  this.moreFuncCrr = JSON.parse(JSON.stringify(e));
     this.changeMF.emit({
       e: e,
       data: data,
@@ -332,33 +493,19 @@ export class InstanceDetailComponent implements OnInit {
     //   });
     // }
   }
-
-  click(indexNo, data) {
-    if (
-      this.currentStep < indexNo &&
-      (this.instanceStatus === '1' || this.instanceStatus === '2')
-    )
-      return;
-    this.currentNameStep = indexNo;
-    var indx = this.listSteps.findIndex((x) => x.stepID == data);
-    this.tmpTeps = this.listSteps[indx];
-    this.lstInv = this.getInvolved(this.tmpTeps.roles);
-    this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
+  clickStage($event) {
+    if ($event) {
+      var indexNo = $event?.indexNo;
+      var stepId = $event?.id;
+      this.isOnlyView = $event?.isOnlyView;
+      this.currentNameStep = indexNo;
+      var indx = this.listSteps.findIndex((x) => x.stepID == stepId);
+      this.tmpTeps = this.listSteps[indx];
+      this.outStepInstance.emit({ data: this.tmpTeps });
+      this.lstInv = this.getInvolved(this.tmpTeps.roles);
+      this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
+    }
   }
-
-  // continues(data) {
-  //   if (this.currentStep + 1 == this.listSteps.length) return;
-  //   this.dpSv.GetStepsByInstanceIDAsync(data.recID).subscribe(res =>{
-  //     res.forEach((element) => {
-  //       if (element != null && element.recID == this.dataSelect.stepID) {
-  //         this.tmpTeps = element;
-  //       }
-  //     })
-  //   })
-  //   this.currentStep++;
-  //   this.currentNameStep = this.currentStep;
-  //   this.changeDetec.detectChanges();
-  // }
 
   setHTMLCssStages(oldStage, newStage) {}
 
@@ -389,6 +536,48 @@ export class InstanceDetailComponent implements OnInit {
   getColor(recID) {
     var idx = this.ganttDs.findIndex((x) => x.recID == recID);
     return this.ganttDs[idx]?.color;
+  }
+  clickDetailGanchart(recID) {
+    let data = this.ganttDsClone?.find((item) => item.recID === recID);
+    if (data) {
+      let frmModel: FormModel = {
+        entityName: 'DP_Instances_Steps_Tasks',
+        formName: 'DPInstancesStepsTasks',
+        gridViewName: 'grvDPInstancesStepsTasks',
+      };
+      let listData = {
+        value: data,
+        listValue: this.ganttDsClone,
+        // step: this.step,
+      };
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      let dialog = this.callfc.openSide(ViewJobComponent, listData, option);
+      // this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      //   value: data,
+      //   listValue: this.ganttDsClone,
+      // });
+    }
+  }
+  changeViewTimeGant(e) {
+    this.crrViewGant = e.data;
+    switch (this.crrViewGant) {
+      case 'D':
+        this.timelineSettings = this.timelineSettingsDays;
+        break;
+      case 'H':
+        this.timelineSettings = this.timelineSettingsHour;
+        break;
+      case 'W':
+        this.timelineSettings = this.timelineSettingsWeek;
+        break;
+      case 'M':
+        this.timelineSettings = this.timelineSettingsMonth;
+        break;
+    }
+    this.changeDetec.detectChanges();
   }
   //end ganttchar
 
@@ -425,20 +614,24 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   getReasonByStepId(status: string) {
-    if(status == '3' || status == '4') return this.listReasonSuccess;
-    if(status == '5' || status == '6') return this.listReasonFail;
+    if (status == '3' || status == '4') return this.listReasonSuccess;
+    if (status == '5' || status == '6') return this.listReasonFail;
     return null;
   }
-  listReasonBySteps(reasonStepsObject){
-    if(reasonStepsObject) {
-      this.listReasonSuccess = this.convertStepsReason(reasonStepsObject.stepReasonSuccess);
-      this.listReasonFail = this.convertStepsReason( reasonStepsObject.stepReasonFail);
+  listReasonBySteps(reasonStepsObject) {
+    if (reasonStepsObject) {
+      this.listReasonSuccess = this.convertStepsReason(
+        reasonStepsObject.stepReasonSuccess
+      );
+      this.listReasonFail = this.convertStepsReason(
+        reasonStepsObject.stepReasonFail
+      );
     }
   }
-  convertStepsReason(reasons:any){
-    var listReasonInstance =  [];
-    for(let item of reasons ) {
-      var  reasonInstance= new DP_Instances_Steps_Reasons();
+  convertStepsReason(reasons: any) {
+    var listReasonInstance = [];
+    for (let item of reasons) {
+      var reasonInstance = new DP_Instances_Steps_Reasons();
       reasonInstance.processID = this.dataSelect.processID;
       reasonInstance.stepID = item.stepID;
       reasonInstance.reasonName = item.reasonName;
@@ -450,7 +643,7 @@ export class InstanceDetailComponent implements OnInit {
   }
   getStepNameIsComlepte(data) {
     var idx = this.listSteps.findIndex(
-      (x) => x.stepStatus === '4' || x.stepStatus === '5'
+      (x) => x.stepStatus == '4' || x.stepStatus == '5'
     );
     if (idx > -1) {
       var reasonStep = this.listSteps[idx];
@@ -468,20 +661,12 @@ export class InstanceDetailComponent implements OnInit {
     return reasonStep?.stepName ?? '';
   }
 
-  clickDetailGanchart(recID) {
-    let data = this.ganttDsClone?.find((item) => item.recID === recID);
-    if (data) {
-      this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
-        value: data,
-        listValue: this.ganttDsClone,
-      });
-    }
-  }
-
   rollHeight() {
+    this.maxSize = 6;
+    this.isOnlyView = true;
     let classViewDetail: any;
     var heighOut = 25;
-    if (this.viewType == 'd') {
+    if (this.viewsCurrent == 'd-') {
       classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
     }
     if (!classViewDetail) return;
@@ -536,9 +721,28 @@ export class InstanceDetailComponent implements OnInit {
     this.viewModelDetail = e;
     this.isSaving = false;
     this.currentElmID = null;
+    if(this.viewModelDetail == 'G' && this.isChangeData){
+      this.getDataGanttChart(
+        this.dataSelect.recID,
+        this.dataSelect.processID
+      );
+    }
+  }
+  changeDataStep(e){
+    this.isChangeData = e;
   }
 
   startInstances() {
     this.clickStartInstances.emit(true);
+  }
+
+  checkOwnerRoleProcess(roles) {
+    if (roles != null && roles.length > 0) {
+      var checkOwner = roles.find((x) => x.roleType == 'S');
+
+      return checkOwner != null ? checkOwner.objectID : null;
+    } else {
+      return null;
+    }
   }
 }

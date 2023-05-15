@@ -28,6 +28,8 @@ import {
   DialogRef,
   CodxCardImgComponent,
   FormModel,
+  CRUDService,
+  DataService,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
@@ -42,6 +44,8 @@ import {
 import { CheckBoxComponent } from '@syncfusion/ej2-angular-buttons';
 import { closest } from '@syncfusion/ej2-base';
 import { firstValueFrom } from 'rxjs';
+import { LayoutComponent } from '../_layout/layout.component';
+import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -62,6 +66,8 @@ export class DynamicProcessComponent
   templateViewCard: TemplateRef<any>;
   @ViewChild('editNameProcess') editNameProcess: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
+  @ViewChild('footerButton') footerButton: TemplateRef<any>;
+
   @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   // Input
   @Input() dataObj?: any;
@@ -110,6 +116,7 @@ export class DynamicProcessComponent
   isCopy: boolean = false;
   dataCopy: any;
   oldIdProccess: any;
+  isButton = true;
   // Call API Dynamic Proccess
   readonly service = 'DP';
   readonly assemblyName = 'ERM.Business.DP';
@@ -121,10 +128,11 @@ export class DynamicProcessComponent
 
   // Get idField
   readonly idField = 'recID';
-
+  grvSetup: any;
   isChecked: boolean = false;
   totalInstance: number = 0;
   lstGroup: any = [];
+  isSaveName: boolean = true;
 
   constructor(
     private inject: Injector,
@@ -133,14 +141,19 @@ export class DynamicProcessComponent
     private codxDpService: CodxDpService,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
-    private callFunc: CallFuncService,
+    private layoutDP: LayoutComponent,
     private dpService: CodxDpService
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // this.genAutoNumber();
+    this.cache
+      .gridViewSetup('DPProcesses', 'grvDPProcesses')
+      .subscribe((grv) => {
+        this.grvSetup = grv;
+      });
+
     this.getListAppyFor();
     this.getValueFormCopy();
     this.getListProcessGroups();
@@ -164,6 +177,7 @@ export class DynamicProcessComponent
 
   //chang data
   viewChanged(e) {
+    this.layoutDP.hidenNameProcess();
     var funcIDClick = this.activedRouter.snapshot.params['funcID'];
     if (this.crrFunID != funcIDClick) {
       this.funcID = funcIDClick;
@@ -179,9 +193,12 @@ export class DynamicProcessComponent
     this.titleAction = evt.text;
     switch (evt.id) {
       case this.btnAdd:
-        this.add();
-        break;
+        if (this.isButton) {
+          this.add();
+          break;
+        }
     }
+    this.isButton = false;
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -189,6 +206,7 @@ export class DynamicProcessComponent
         type: ViewType.card,
         sameData: true,
         active: true,
+        toolbarTemplate: this.footerButton,
         model: {
           template: this.templateViewCard,
           headerTemplate: this.headerTemplate,
@@ -241,6 +259,7 @@ export class DynamicProcessComponent
               dialogModel
             );
             dialog.closed.subscribe((e) => {
+              this.isButton = true;
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
                 e.event.totalInstance = this.totalInstance;
@@ -296,6 +315,7 @@ export class DynamicProcessComponent
                 dialogModel
               );
               dialog.closed.subscribe((e) => {
+                this.isButton = true;
                 if (!e?.event) this.view.dataService.clear();
                 if (e && e.event != null) {
                   this.view.dataService.update(e.event).subscribe();
@@ -338,29 +358,38 @@ export class DynamicProcessComponent
               gridViewSetup: this.gridViewSetup,
               lstGroup: this.lstGroup,
             };
-            var dialog = this.callfc.openForm(
-              PopupAddDynamicProcessComponent,
-              '',
-              this.widthWin,
-              this.heightWin,
-              '',
-              obj,
-              '',
-              dialogModel
-            );
-            dialog.closed.subscribe((e) => {
-              if (!e?.event) this.view.dataService.clear();
-              if (e && e.event != null) {
-                debugger;
-                e.event.totalInstance = this.totalInstance;
-                this.view.dataService.add(e.event).subscribe();
-                this.changeDetectorRef.detectChanges();
-              }
+            let data = [
+              this.oldIdProccess,
+              this.view.dataService.dataSelected.recID,
+            ];
+            this.codxDpService.copyAvatarById(data).subscribe((res) => {
+              this.openFormCopyProccess(obj, dialogModel);
             });
           });
       });
     }
     return;
+  }
+
+  openFormCopyProccess(obj, dialogModel) {
+    var dialog = this.callfc.openForm(
+      PopupAddDynamicProcessComponent,
+      '',
+      this.widthWin,
+      this.heightWin,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+    dialog.closed.subscribe((e) => {
+      this.isButton = true;
+      if (!e?.event) this.view.dataService.clear();
+      if (e && e.event != null) {
+        e.event.totalInstance = this.totalInstance;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
   saveCopy() {
     this.isCopy = true;
@@ -375,28 +404,49 @@ export class DynamicProcessComponent
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,
       '',
-      500,
+      550,
       500
     );
   }
   checkValueCopy($event, data) {
-    if ($event && $event.currentTarget.checked) {
-      this.listClickedCoppy.push(data);
-      if (data.id === '3') {
-        this.listClickedCoppy = this.listClickedCoppy.concat(
-          this.listSelectStepCoppy
-        );
-      }
-    } else {
+    // if ($event && $event.currentTarget.checked) {
+    //   this.listClickedCoppy.push(data);
+    //   if (data.id === '3') {
+    //     this.listClickedCoppy = this.listClickedCoppy.concat(
+    //       this.listSelectStepCoppy
+    //     );
+    //   }
+    // } else {
+    //   if (data.id === '3') {
+    //     this.listClickedCoppy = this.listClickedCoppy.filter((item2) => {
+    //       return !this.listSelectStepCoppy.some(
+    //         (item1) => item1.id === item2.id
+    //       );
+    //     });
+    //   }
+    //   let idx = this.listClickedCoppy.findIndex((x) => x.id === data.id);
+    //   if (idx >= 0) this.listClickedCoppy.splice(idx, 1);
+    // }
+    const index = this.listClickedCoppy.indexOf(data);
+    if (index >= 0) {
       if (data.id === '3') {
         this.listClickedCoppy = this.listClickedCoppy.filter((item2) => {
           return !this.listSelectStepCoppy.some(
             (item1) => item1.id === item2.id
           );
         });
+
+        this.isChecked = false;
       }
-      let idx = this.listClickedCoppy.findIndex((x) => x.id === data.id);
-      if (idx >= 0) this.listClickedCoppy.splice(idx, 1);
+      this.listClickedCoppy.splice(index, 1);
+    } else {
+      if (data.id === '3') {
+        this.listClickedCoppy = this.listClickedCoppy.concat(
+          this.listSelectStepCoppy
+        );
+        this.isChecked = true;
+      }
+      this.listClickedCoppy.push(data);
     }
   }
   getValueFormCopy() {
@@ -466,17 +516,15 @@ export class DynamicProcessComponent
     this.itemSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
-
     switch (e.functionID) {
       case 'SYS01':
         this.add();
         break;
       case 'SYS03':
-        this.edit(data);
+        if (this.isButton) this.edit(data);
         break;
       case 'SYS04':
         this.OpenFormCopy(data);
-        //  this.copy(data);
         break;
       case 'SYS02':
         this.delete(data);
@@ -485,7 +533,7 @@ export class DynamicProcessComponent
       case 'DP02014':
       case 'DP02024':
       case 'DP02034':
-        this.roles(data);
+        if (this.isButton) this.roles(data);
         break;
       case 'DP01011':
       case 'DP02011':
@@ -498,7 +546,7 @@ export class DynamicProcessComponent
       case 'DP02033':
       case 'DP02023':
       case 'DP02013':
-        this.properties(data);
+        if (this.isButton) this.properties(data);
         break;
       case 'DP01012': // edit name
       case 'DP02012':
@@ -508,7 +556,11 @@ export class DynamicProcessComponent
       case 'DP042': // edit name
         this.restoreProcess(data);
         break;
+      case 'DP01015': // thiết lập quy trình duyệt
+        this.settingSubmit(data.processNo);
+        break;
     }
+    this.isButton = false;
   }
 
   changeDataMF(e, data) {
@@ -552,8 +604,11 @@ export class DynamicProcessComponent
           case 'DP02022':
           case 'DP02032':
           case 'SYS03':
-            let isEdit = data.write;
-            if (!isEdit || this.funcID == 'DP0203' || this.funcID === 'DP04') {
+            if (
+              !data.write ||
+              this.funcID == 'DP0203' ||
+              this.funcID === 'DP04'
+            ) {
               if (res.functionID == 'SYS03') res.disabled = true;
               else res.isblur = true;
             }
@@ -563,8 +618,7 @@ export class DynamicProcessComponent
           case 'DP02014':
           case 'DP02024':
           case 'DP02034':
-            let isAssign = data.assign;
-            if (!isAssign) res.isblur = true;
+            if (!data.assign) res.isblur = true;
             break;
           //Phát hành
           // case 'DP01015':
@@ -575,14 +629,20 @@ export class DynamicProcessComponent
 
           //   break;
           case 'SYS02': // xoa
-            let isDelete = data.delete;
             if (
-              !isDelete ||
+              !data.delete ||
               data.deleted ||
               this.funcID == 'DP0203' ||
               this.funcID === 'DP04'
             ) {
               res.disabled = true;
+            }
+            break;
+          case 'DP01015':
+            if (!data.write) {
+              res.disabled = true;
+            } else if (!data.approveRule) {
+              res.isblur = true;
             }
             break;
         }
@@ -606,11 +666,12 @@ export class DynamicProcessComponent
         950,
         650,
         '',
-        [e, this.titleAction, 'role'],
+        [e, this.titleAction, 'role', 'full'],
         '',
         dialogModel
       )
       .closed.subscribe((e) => {
+        this.isButton = true;
         if (e?.event && e?.event != null) {
           this.view.dataService.update(e?.event).subscribe();
           this.detectorRef.detectChanges();
@@ -625,6 +686,7 @@ export class DynamicProcessComponent
     option.Width = '550px';
     this.dialog = this.callfc.openSide(PopupPropertiesComponent, data, option);
     this.dialog.closed.subscribe((e) => {
+      this.isButton = true;
       if (!e.event) this.view.dataService.clear();
     });
   }
@@ -769,12 +831,26 @@ export class DynamicProcessComponent
   }
 
   changeValueInput(event) {
-    this.processName = event?.data;
+    let value = event?.data;
+    if (typeof event?.data === 'string') {
+      value = value.trim();
+    }
+    this.processName = value;
   }
 
   async editName() {
+    if (!this.isSaveName) return;
+    this.isSaveName = false;
+    setTimeout(() => {
+      this.isSaveName = true;
+    }, 3000);
+
     if (!this.processName?.trim()) {
-      this.notificationsService.notifyCode('SYS009', 0, 'Tên quy trình');
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['ProcessName']?.headerText + '"'
+      );
       return;
     }
     if (this.processName.trim() === this.processNameBefore.trim()) {
@@ -839,5 +915,71 @@ export class DynamicProcessComponent
         this.lstGroup = res;
       }
     });
+  }
+
+  valueChangeFilter(e) {
+    let predicates = '';
+    let predicate = e.field + '=@';
+    let dataValueFilter = e.data;
+    if (dataValueFilter?.length > 1) {
+      for (var i = 0; i < dataValueFilter.length - 1; i++) {
+        predicates += predicate + i + 'or ';
+      }
+      predicates += predicate + dataValueFilter.length;
+    } else if (dataValueFilter?.length == 1) {
+      predicates = predicate + '0';
+    }
+    if (predicates) predicates = '( ' + predicates + ' )';
+
+    (this.view.dataService as CRUDService)
+      .setPredicates([predicates], [dataValueFilter.join(';')])
+      .subscribe();
+  }
+  //setting trình kí
+  settingSubmit(categoryID) {
+    this.codxDpService
+      .getESCategoryByCategoryID(categoryID)
+      .subscribe((item: any) => {
+        if (item) {
+          this.cache.functionList('ESS22').subscribe((f) => {
+            if (f) {
+              if (!f || !f.gridViewName || !f.formName) return;
+              this.cache.gridView(f.gridViewName).subscribe((gridview) => {
+                this.cache
+                  .gridViewSetup(f.formName, f.gridViewName)
+                  .subscribe((grvSetup) => {
+                    let formES = new FormModel();
+                    formES.funcID = f?.functionID;
+                    formES.entityName = f?.entityName;
+                    formES.formName = f?.formName;
+                    formES.gridViewName = f?.gridViewName;
+                    formES.currentData = item;
+                    let option = new SidebarModel();
+                    option.Width = '550px';
+                    option.FormModel = formES;
+                    var dataService = new DataService(this.inject);
+                    dataService.dataSelected = item;
+                    let popupEditES = this.callfc.openSide(
+                      PopupAddCategoryComponent,
+                      {
+                        disableCategoryID: '1',
+                        data: item,
+                        isAdd: false,
+                        headerText: this.titleAction,
+                        dataType: 'auto',
+                      },
+                      option
+                    );
+
+                    popupEditES.closed.subscribe((res) => {
+                      if (!res?.event) {
+                      }
+                    });
+                  });
+              });
+            }
+          });
+        }
+      });
   }
 }

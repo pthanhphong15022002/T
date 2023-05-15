@@ -106,25 +106,14 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
   }
   // value change
   valueChange(value:any){
-    this.data.comments = value.data;
+    this.data.contents = value.data;
   }
   loading:boolean = false;
   // send comment
   sendComment(){
-    debugger
     if(!this.loading)
     {
-      this.data.refID = this.refID;
-      this.data.parentID = this.parent.recID;
-      if(!this.data.parentID){
-        this.notifySvr.notifyCode('SYS009',0,this.grvWP['ParentID']['headerText']);
-        return;
-      }
-      if(!this.data.refID){
-        this.notifySvr.notifyCode('SYS009',0,this.grvWP['RefID']['headerText']);
-        return;
-      }
-      if (!this.data.comments.trim() && !this.file) {
+      if (!this.data.contents.trim() && !this.file) {
         this.notifySvr.notifyCode('SYS009',0,this.grvWP['Comments']['headerText']);
         return;
       }
@@ -143,6 +132,18 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
   }
   // insert comments
   insertComment(data:any){
+    this.data.refID = this.refID;
+    this.data.parentID = this.parent.recID;
+    if(!this.data.parentID){
+      this.notifySvr.notifyCode('SYS009',0,this.grvWP['ParentID']['headerText']);
+      this.loading = false;
+      return;
+    }
+    if(!this.data.refID){
+      this.notifySvr.notifyCode('SYS009',0,this.grvWP['RefID']['headerText']);
+      this.loading = false;
+      return;
+    }
     //có đính kèm file
     if(this.file){
       let lstFile = [];
@@ -165,7 +166,7 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
             if(res)
             {
               this.data.recID = Util.uid();
-              this.data.comments = "";
+              this.data.contents = "";
               this.file = null;
               this.evtSendComment.emit(res);
               this.notifySvr.notifyCode("WP034");
@@ -195,7 +196,7 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
       .subscribe((res:any) => {
         if(res){
           this.data.recID = Util.uid();
-          this.data.comments = "";
+          this.data.contents = "";
           this.file = null;
           this.evtSendComment.emit(res);
           this.notifySvr.notifyCode("WP034");
@@ -209,7 +210,6 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
   }
   // update comments
   updateComment(data){
-    debugger
     //check deleted file
     if(this.fileDelete)
     {

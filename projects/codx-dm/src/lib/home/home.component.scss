@@ -93,7 +93,7 @@ codx-treeview .no-permission {
 {
   overflow-x:auto;
   max-width: 100%;
-  height: calc(100%);
+  height: 100%;
 }
 .tabel-div> table
 {
@@ -132,4 +132,16 @@ codx-treeview .no-permission {
   {
     color: white
   }
+}
+
+.div-dm-overflow
+{
+  width: 260px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.containerScroll
+{
+  //height: calc(100% - 88px);
 }

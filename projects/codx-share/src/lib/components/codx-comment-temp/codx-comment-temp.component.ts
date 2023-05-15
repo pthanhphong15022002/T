@@ -7,7 +7,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { ApiHttpService, CallFuncService, DialogModel } from 'codx-core';
+import { ApiHttpService, CallFuncService, DialogModel, FormModel } from 'codx-core';
+import { CodxTabsComponent } from '../codx-tabs/codx-tabs.component';
 
 @Component({
   selector: 'codx-comment-temp',
@@ -19,10 +20,12 @@ export class CodxCommentTempComponent implements OnInit {
   @Input() viewType = '0'; // Thảo customview
   @Input() zIndex: number = 0; // Thảo truyền z index
   @Input() openViewPopup = true ;// Thảo truyền ko cho click
+  @Input() isComment = true ;// thuận truyền vào để không cho bình luận chỉ xem.
+  @Input() formModel: FormModel = null;
   lstData: any[] = [];
   dVll: any = {};
 
-  countData: number = 0;
+  totalComment: number = 0;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   constructor(
     private api: ApiHttpService,
@@ -31,10 +34,10 @@ export class CodxCommentTempComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getDataAsync(this.objectID);
+    this.GetTotalComment(this.objectID);
   }
 
-  getDataAsync(pObjectID: string) {
+  GetTotalComment(pObjectID: string) {
     if (pObjectID) {
       this.api
         .execSv(
@@ -46,7 +49,7 @@ export class CodxCommentTempComponent implements OnInit {
         )
         .subscribe((res: number) => {
           if (res) {
-            this.countData = res;
+            this.totalComment = res;
           }
         });
     }
@@ -67,10 +70,22 @@ export class CodxCommentTempComponent implements OnInit {
         option
       );
       popup.closed.subscribe((res: any) => {
-        if (res) {
-          this.getDataAsync(this.objectID);
+        if (res){
+          this.totalComment = res.event;
+          let ele = document.getElementsByTagName("codx-tabs");
+          if(ele)
+          {
+            let codxTabs = window.ng.getComponent(ele[0]) as CodxTabsComponent;
+            if(codxTabs)
+            {
+              codxTabs.changeCountFooter(this.totalComment,"comment");
+            }
+          }
+          this.dt.detectChanges();
         }
       });
     }
   }
 }
+
+declare var window: any;

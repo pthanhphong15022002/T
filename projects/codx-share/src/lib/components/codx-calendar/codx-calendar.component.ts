@@ -1,24 +1,17 @@
-declare var window: any;
+import { addClass } from '@syncfusion/ej2-base';
 import {
-  ChangeDetectorRef,
+  AfterViewInit,
   Component,
+  ComponentRef,
   Injector,
-  OnInit,
-  Optional,
-  Output,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
 import {
-  CodxScheduleComponent,
-  CRUDService,
   DataRequest,
-  DialogData,
-  DialogRef,
   ResourceModel,
   UIComponent,
   Util,
@@ -26,10 +19,10 @@ import {
   ViewType,
 } from 'codx-core';
 import moment from 'moment';
-import { CalendarNotesComponent } from 'projects/codx-share/src/lib/components/calendar-notes/calendar-notes.component';
-import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CalendarCenterComponent } from './calendar-center/calendar-center.component';
+import { Query } from '@syncfusion/ej2-data';
+import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'app-codx-calendar',
@@ -37,116 +30,116 @@ import { CalendarCenterComponent } from './calendar-center/calendar-center.compo
   styleUrls: ['./codx-calendar.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CodxCalendarComponent extends UIComponent implements OnInit {
-  headerText: any;
-  dialog: DialogRef;
-  funcID: any;
-  fields = {
-    id: 'transID',
-    subject: { name: 'title' },
-    startTime: { name: 'startDate' },
-    endTime: { name: 'endDate' },
-    status: 'transType',
-  };
-  request?: ResourceModel;
-  tmpCalendarNote: any;
-  views: Array<ViewModel> = [];
-  functionList: any;
-
-  message: any;
-  listNote: any[] = [];
-  itemUpdate: any;
-  countNotePin = 0;
-  maxPinNotes: any;
-  checkUpdateNotePin = false;
-  TM_Tasks: any = [];
-  WP_Notes: any = [];
-  CO_Meetings: any = [];
-  EP_BookingRooms: any = [];
-  EP_BookingCars: any = [];
-  TM_TasksParam: any;
-  checkWeek = true;
-  WP_NotesParam: any;
-  CO_MeetingsParam: any;
-  EP_BookingRoomsParam: any;
-  EP_BookingCarsParam: any;
-  checkTM_TasksParam: any;
-  checkWP_NotesParam: any;
-  checkCO_MeetingsParam: any;
-  checkEP_BookingRoomsParam: any;
-  checkEP_BookingCarsParam: any;
-  daySelected: any;
-  typeList = 'notes-home';
-  dataValue = '';
-  predicate = '';
-  userID = '';
-  editMF: any;
-  deleteMF: any;
-  pinMF: any;
-  saveMF: any;
-  dateChange: any;
-  countEvent = 0;
-  countDataOfE = 0;
-  FDdate: any = new Date();
-  TDate: any;
-  WP_NotesTemp: any = [];
-  TM_TasksTemp: any = [];
-  CO_MeetingsTemp: any = [];
-  EP_BookingRoomsTemp: any = [];
-  EP_BookingCarsTemp: any = [];
-  dataListViewTemp: any;
-  dtService: CRUDService;
-  isCollapsed = false;
-
-  @ViewChild('calendar_mini') calendar_mini!: CalendarComponent;
+export class CodxCalendarComponent
+  extends UIComponent
+  implements AfterViewInit
+{
+  @ViewChild('ejCalendar') ejCalendar!: CalendarComponent;
   @ViewChild('calendar_setting', { read: ViewContainerRef })
   calendar_setting!: ViewContainerRef;
+  @ViewChild('calendar_setting')
+  calendar_center!: ComponentRef<CalendarCenterComponent>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
+  @ViewChild('calendarCenter') calendarCenter!: CalendarCenterComponent;
 
-  @Output() dataResourceModel: any[] = [];
-  @Output() settingValue: any;
+  dataResourceModel = [];
+  request?: ResourceModel;
+  views: Array<ViewModel> = [];
+  listNote = [];
+  countNotePin = 0;
+  checkUpdateNotePin = false;
+  TM_Tasks = [];
+  WP_Notes = [];
+  CO_Meetings = [];
+  EP_BookingRooms = [];
+  EP_BookingCars = [];
+  TM_TasksParam;
+  WP_NotesParam;
+  CO_MeetingsParam;
+  EP_BookingRoomsParam;
+  EP_BookingCarsParam;
+  checkTM_TasksParam;
+  checkWP_NotesParam;
+  checkCO_MeetingsParam;
+  checkEP_BookingRoomsParam;
+  checkEP_BookingCarsParam;
+  dateChange;
+  countEvent = 0;
+  countDataOfE = 0;
+  FDdate = new Date();
+  WP_NotesTemp = [];
+  TM_TasksTemp = [];
+  CO_MeetingsTemp = [];
+  EP_BookingRoomsTemp = [];
+  EP_BookingCarsTemp = [];
+  lstDOWeek = [];
+  typeNavigate = 'Month';
+  isCollapsed = false;
+  defaultCalendar;
 
-  constructor(
-    private injector: Injector,
-    private change: ChangeDetectorRef,
-    private route: ActivatedRoute,
-    private codxShareSV: CodxShareService,
-    @Optional() dialogRef: DialogRef,
-    @Optional() dt: DialogData
-  ) {
+  // maps the appropriate column to fields property
+  public fields: Object = { text: 'defaultName', value: 'functionID' };
+  //Bind the filter event
+  public onFiltering = (e: FilteringEventArgs) => {
+    let query = new Query();
+    //frame the query based on search string with filter type.
+    query =
+      e.text != ''
+        ? query.where('defaultName', 'startswith', e.text, true)
+        : query;
+    //pass the filter data source, filter query to updateData method.
+    e.updateData(this.calendarTypes, query);
+  };
+
+  calendarTypes = [];
+  calendarData: any;
+
+  //Để tạm
+  resources: any = [
+    {
+      color: '#E9F0FD',
+      borderColor: '#4E86EC',
+      text: 'TM_MyTasks',
+      status: 'TM_MyTasks',
+    },
+    {
+      color: '#FEF8E6',
+      borderColor: '#FFC107',
+      text: 'WP_Notes',
+      status: 'WP_Notes',
+    },
+    {
+      color: '#FFEEE9',
+      borderColor: '#E23900',
+      text: 'CO_Meetings',
+      status: 'CO_Meetings',
+    },
+    {
+      color: '#FFEEE9',
+      borderColor: '#E23900',
+      text: 'EP_BookingRooms',
+      status: 'EP_BookingRooms',
+    },
+    {
+      color: '#FAF1FF',
+      borderColor: '#4A0077',
+      text: 'EP_BookingCars',
+      status: 'EP_BookingCars',
+    },
+  ];
+
+  constructor(injector: Injector, private codxShareSV: CodxShareService) {
     super(injector);
-    this.dialog = dialogRef;
-    this.route.params.subscribe((params) => {
-      if (params) {
-        this.funcID = params['funcID'];
-        this.cache.functionList(this.funcID).subscribe((res) => {
-          if (res) this.functionList = res;
-        });
-      }
-    });
   }
 
   onInit(): void {
     let myInterVal = setInterval(() => {
-      if (this.calendar_mini) {
+      if (this.ejCalendar) {
         clearInterval(myInterVal);
         this.loadData();
         this.navigate();
       }
     }, 200);
-  }
-
-  ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.content,
-        active: true,
-        sameData: true,
-        model: {
-          panelLeftRef: this.templateLeft,
-        },
-      },
-    ];
     let myInterval_Calendar = setInterval(() => {
       if (
         this.TM_TasksParam &&
@@ -166,14 +159,67 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
         );
       }
     }, 200);
+
+    this.api
+      .exec('CO', 'CalendarsBusiness', 'GetListCalendarAsync')
+      .subscribe((res: any) => {
+        if (res) {
+          this.calendarTypes = res;
+          this.defaultCalendar = 'COT03';
+          this.api
+            .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
+              this.defaultCalendar,
+            ])
+            .subscribe();
+        }
+        this.detectorRef.detectChanges();
+      });
   }
 
-  fDayOfWeek: any;
-  lDayOfWeek: any;
+  ngAfterViewInit() {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: true,
+        model: {
+          panelLeftRef: this.templateLeft,
+        },
+      },
+    ];
+  }
+
+  onCreate() {
+    let footerElement: HTMLElement = document.getElementsByClassName(
+      'e-icon-container'
+    )[0] as HTMLElement;
+    let btn: HTMLElement = document.createElement('button');
+    let proxy = this;
+
+    //remove footer of ejs-calendar
+    document
+      .querySelector('ejs-calendar')
+      .removeChild(document.querySelector('.e-footer-container'));
+
+    //creates the custom element for setToday button
+    btn.className = 'e-btn e-today e-flat e-css';
+    btn.setAttribute('type', 'button');
+    btn.textContent = 'Today';
+    footerElement.appendChild(btn);
+    footerElement.insertBefore(btn, footerElement.children[1]);
+
+    // custom click handler to update the value property with null values.
+    document
+      .querySelector('.e-icon-container .e-today')
+      .addEventListener('click', function () {
+        proxy.ejCalendar.value = new Date();
+      });
+  }
+
   loadData() {
-    var tempCalendar = this.calendar_mini.element;
-    var htmlE = tempCalendar as HTMLElement;
-    var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+    let tempCalendar = this.ejCalendar.element;
+    let htmlE = tempCalendar as HTMLElement;
+    let eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
       ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
     let numbF = this.convertStrToDate(eleFromDate);
     const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
@@ -191,7 +237,6 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     this.getDayOfWeek(htmlE);
   }
 
-  lstDOWeek = [];
   getDayOfWeek(htmlE) {
     this.lstDOWeek = [];
     if (htmlE) {
@@ -204,19 +249,13 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
           DOMWeek = x.parentNode.parentNode;
       });
       if (DOMWeek) {
-        let index = DOMWeek.childNodes.length - 1;
         DOMWeek.childNodes.forEach((x) => {
           this.lstDOWeek.push(+x.childNodes[0].textContent);
         });
-        let eleFDOWeek = DOMWeek.childNodes[0].childNodes[0];
-        let eleLDOWeek = DOMWeek.childNodes[index].childNodes[0];
-        this.fDayOfWeek = +eleFDOWeek.textContent;
-        this.lDayOfWeek = +eleLDOWeek.textContent;
       }
     }
   }
 
-  typeNavigate = 'Month';
   navigate() {
     this.codxShareSV.dateChange.subscribe((res) => {
       if (res?.fromDate == 'Invalid Date' && res?.toDate == 'Invalid Date')
@@ -242,7 +281,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     });
   }
 
-  changeDayOfMonth(args: any) {
+  changeDayOfMonth(args) {
     args['date'] = args.value;
     let crrDate = moment(this.FDdate)
       .startOf('month')
@@ -264,45 +303,21 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
         }
       });
       if (this.typeNavigate == 'Week' || this.typeNavigate == 'WorkWeek') {
-        if (changeWeek && this.calendar_mini) {
-          let eleCalendar = this.calendar_mini.element as HTMLElement;
+        if (changeWeek && this.ejCalendar) {
+          let eleCalendar = this.ejCalendar.element as HTMLElement;
           this.getDayOfWeek(eleCalendar);
-          let ele = document.getElementsByTagName('codx-schedule')[0];
-          if (ele) {
-            let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-            cmp.selectedDate = new Date(args.value);
-            cmp.isNavigateInside = true;
-          }
-        }
-      }
-      if (this.typeNavigate == 'Day') {
-        let ele = document.getElementsByTagName('codx-schedule')[0];
-        if (ele) {
-          let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-          cmp.selectedDate = new Date(args.value);
-          cmp.isNavigateInside = true;
         }
       }
     }
   }
 
-  changeNewMonth(args: any) {
+  changeNewMonth(args) {
     this.FDdate = args.date;
-    let ele = document.getElementsByTagName('codx-schedule')[0];
-    if (ele) {
-      let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-      cmp.selectedDate = new Date(args.date);
-      cmp.isNavigateInside = true;
-      let myInterVal = setInterval(() => {
-        clearInterval(myInterVal);
-        this.loadData();
-      }, 100);
-    }
   }
 
   valueChangeSetting(e) {
     if (e) {
-      var field = e.field;
+      let field = e.field;
       this.updateSettingValue(field, e.data);
     }
   }
@@ -310,6 +325,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   updateSettingValue(transType, value) {
     if (value == false) value = '0';
     else value = '1';
+
     this.api
       .exec<any>(
         'ERM.Business.SYS',
@@ -320,29 +336,48 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           if (value == '0') {
-            if (transType == 'WP_Notes') this.WP_Notes = [];
-            else if (transType == 'TM_Tasks') this.TM_Tasks = [];
-            else if (transType == 'CO_Meetings') this.CO_Meetings = [];
-            else if (transType == 'EP_BookingRooms') this.EP_BookingRooms = [];
-            else if (transType == 'EP_BookingCars') this.EP_BookingCars = [];
+            if (transType == 'WP_Notes') {
+              this.WP_Notes = [];
+            }
+
+            if (transType == 'TM_Tasks') {
+              this.TM_Tasks = [];
+            }
+            if (transType == 'CO_Meetings') {
+              this.CO_Meetings = [];
+            }
+            if (transType == 'EP_BookingRooms') {
+              this.EP_BookingRooms = [];
+            }
+            if (transType == 'EP_BookingCars') {
+              this.EP_BookingCars = [];
+            }
+
+            this.dataResourceModel = this.dataResourceModel.filter((x) => {
+              if (transType == 'TM_Tasks') {
+                transType = 'TM_MyTasks';
+              }
+              return x.transType != transType;
+            });
           } else {
             if (this.checkWP_NotesParam)
-              if (transType == 'WP_Notes') this.WP_Notes = this.WP_NotesTemp;
-              else if (transType == 'TM_Tasks')
-                this.TM_Tasks = this.TM_TasksTemp;
-              else if (transType == 'CO_Meetings')
-                this.CO_Meetings = this.CO_MeetingsTemp;
-              else if (transType == 'EP_BookingRooms')
-                this.EP_BookingRooms = this.EP_BookingRoomsTemp;
-              else if (transType == 'EP_BookingCars')
-                this.EP_BookingCars = this.EP_BookingCarsTemp;
-          }
-          // this.componentRef.destroy();
-          if (value == '0') {
-            this.dataResourceModel = this.dataResourceModel.filter(
-              (x) => x.transType != transType
-            );
-          } else if (value == '1') {
+              if (transType == 'WP_Notes') {
+                this.WP_Notes = this.WP_NotesTemp;
+              }
+
+            if (transType == 'TM_Tasks') {
+              this.TM_Tasks = this.TM_TasksTemp;
+            }
+            if (transType == 'CO_Meetings') {
+              this.CO_Meetings = this.CO_MeetingsTemp;
+            }
+            if (transType == 'EP_BookingRooms') {
+              this.EP_BookingRooms = this.EP_BookingRoomsTemp;
+            }
+            if (transType == 'EP_BookingCars') {
+              this.EP_BookingCars = this.EP_BookingCarsTemp;
+            }
+
             if (
               this.checkWP_NotesParam == '0' ||
               this.checkTM_TasksParam == '0' ||
@@ -350,10 +385,10 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
               this.checkEP_BookingCarsParam == '0' ||
               this.checkEP_BookingRoomsParam == '0'
             ) {
-              if (this.calendar_mini) {
-                var tempCalendar = this.calendar_mini.element;
-                var htmlE = tempCalendar as HTMLElement;
-                var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]
+              if (this.ejCalendar) {
+                let tempCalendar = this.ejCalendar.element;
+                let htmlE = tempCalendar as HTMLElement;
+                let eleFromDate = htmlE?.childNodes[1]?.childNodes[0]
                   ?.childNodes[1]?.childNodes[0]?.childNodes[0]
                   ?.childNodes[0] as HTMLElement;
                 let numbF = this.convertStrToDate(eleFromDate);
@@ -379,31 +414,34 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
                   ...this.WP_NotesTemp,
                   ...this.dataResourceModel,
                 ];
-              else if (transType == 'TM_Tasks')
+
+              if (transType == 'TM_Tasks') {
                 this.dataResourceModel = [
                   ...this.dataResourceModel,
                   ...this.TM_TasksTemp,
                 ];
-              else if (transType == 'CO_Meetings')
+              }
+              if (transType == 'CO_Meetings')
                 this.dataResourceModel = [
                   ...this.dataResourceModel,
                   ...this.CO_MeetingsTemp,
                 ];
-              else if (transType == 'EP_BookingRooms')
+              if (transType == 'EP_BookingRooms')
                 this.dataResourceModel = [
                   ...this.dataResourceModel,
                   ...this.EP_BookingRoomsTemp,
                 ];
-              else if (transType == 'EP_BookingCars')
+              if (transType == 'EP_BookingCars')
                 this.dataResourceModel = [
                   ...this.dataResourceModel,
                   ...this.EP_BookingCarsTemp,
                 ];
             }
           }
-          if (this.calendar_mini) {
-            this.calendar_mini.refresh();
-            this.calendar_mini.value = this.FDdate;
+
+          if (this.ejCalendar) {
+            this.ejCalendar.refresh();
+            this.ejCalendar.value = this.FDdate;
           }
           this.codxShareSV.dataResourceModel.next(this.dataResourceModel);
         }
@@ -433,25 +471,20 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
-            let dt = res;
-            this.countEvent = dt[1];
+            const {
+              TM_Tasks,
+              WP_Notes,
+              CO_Meetings,
+              EP_BookingRooms,
+              EP_BookingCars,
+            } = res[0];
+            this.countEvent = res[1];
             const dataValue = fDayOfMonth + ';' + lDayOfMonth;
-            this.TM_TasksParam = dt[0]?.TM_Tasks[1]
-              ? JSON.parse(dt[0]?.TM_Tasks[1])
-              : null;
-            this.WP_NotesParam = dt[0]?.WP_Notes[1]
-              ? JSON.parse(dt[0]?.WP_Notes[1])
-              : null;
-            this.CO_MeetingsParam = dt[0]?.CO_Meetings[1]
-              ? JSON.parse(dt[0]?.CO_Meetings[1])
-              : null;
-            this.EP_BookingRoomsParam = dt[0]?.EP_BookingRooms[1]
-              ? JSON.parse(dt[0]?.EP_BookingRooms[1])
-              : null;
-            this.EP_BookingCarsParam = dt[0]?.EP_BookingCars[1]
-              ? JSON.parse(dt[0]?.EP_BookingCars[1])
-              : null;
-            this.settingValue = dt[0];
+            this.TM_TasksParam = JSON.parse(TM_Tasks[1]) ?? null;
+            this.WP_NotesParam = JSON.parse(WP_Notes[1]) ?? null;
+            this.CO_MeetingsParam = JSON.parse(CO_Meetings[1]) ?? null;
+            this.EP_BookingRoomsParam = JSON.parse(EP_BookingRooms[1]) ?? null;
+            this.EP_BookingCarsParam = JSON.parse(EP_BookingCars[1]) ?? null;
             if (updateCheck == true) {
               this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
               this.checkWP_NotesParam = this.WP_NotesParam?.ShowEvent;
@@ -466,31 +499,31 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
               .toISOString();
             const dataValueTM = fDayOfMonth + ';' + lDayTimeOfMonth;
             this.getRequestTM(
-              dt[0]?.TM_Tasks[0],
+              TM_Tasks[0],
               dataValueTM,
               this.TM_TasksParam,
               this.TM_TasksParam?.ShowEvent
             );
             this.getRequestWP(
-              dt[0]?.WP_Notes[0],
+              WP_Notes[0],
               dataValue,
               this.WP_NotesParam,
               this.WP_NotesParam?.ShowEvent
             );
             this.getRequestCO(
-              dt[0]?.CO_Meetings[0],
+              CO_Meetings[0],
               dataValue,
               this.CO_MeetingsParam,
               this.CO_MeetingsParam?.ShowEvent
             );
             this.getRequestEP_BookingRoom(
-              dt[0]?.EP_BookingRooms[0],
+              EP_BookingRooms[0],
               dataValue,
               this.EP_BookingRoomsParam,
               this.EP_BookingRoomsParam?.ShowEvent
             );
             this.getRequestEP_BookingCar(
-              dt[0]?.EP_BookingCars[0],
+              EP_BookingCars[0],
               dataValue,
               this.EP_BookingCarsParam,
               this.EP_BookingCarsParam?.ShowEvent
@@ -501,76 +534,100 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   }
 
   getRequestTM(predicate, dataValue, param, showEvent) {
-    if (showEvent == '0' || showEvent == 'false') return;
+    if (!showEvent || showEvent === 'false') {
+      return;
+    }
+
     this.TM_Tasks = [];
-    let requestDataTM: DataRequest = new DataRequest();
-    requestDataTM.predicate = predicate;
-    requestDataTM.dataValue = dataValue;
-    requestDataTM.funcID = 'TMT0201';
-    requestDataTM.formName = 'MyTasks';
-    requestDataTM.gridViewName = 'grvMyTasks';
-    requestDataTM.pageLoading = true;
-    requestDataTM.page = 1;
-    requestDataTM.pageSize = 1000;
-    requestDataTM.entityName = 'TM_Tasks';
-    requestDataTM.entityPermission = 'TM_MyTasks';
+
+    let requestDataTM: DataRequest = {
+      predicate: predicate,
+      dataValue: dataValue,
+      funcID: 'TMT0201',
+      formName: 'MyTasks',
+      gridViewName: 'grvMyTasks',
+      pageLoading: true,
+      page: 1,
+      pageSize: 1000,
+      entityName: 'TM_Tasks',
+      entityPermission: 'TM_MyTasks',
+    };
+
     this.codxShareSV.getDataTM_Tasks(requestDataTM).subscribe((res) => {
       this.getModelShare(res[0], param.Template, 'TM_Tasks');
     });
   }
 
   getRequestCO(predicate, dataValue, param, showEvent) {
-    if (showEvent == '0' || showEvent == 'false') return;
+    if (!showEvent || showEvent === 'false') {
+      return;
+    }
+
     this.CO_Meetings = [];
-    let requestDataCO: DataRequest = new DataRequest();
-    requestDataCO.predicates = predicate;
-    requestDataCO.dataValues = dataValue;
-    requestDataCO.funcID = 'TMT0501';
-    requestDataCO.formName = 'TMMeetings';
-    requestDataCO.gridViewName = 'grvTMMeetings';
-    requestDataCO.pageLoading = true;
-    requestDataCO.page = 1;
-    requestDataCO.pageSize = 1000;
-    requestDataCO.entityName = 'CO_Meetings';
-    requestDataCO.entityPermission = 'CO_TMMeetings';
+
+    let requestDataCO: DataRequest = {
+      predicates: predicate,
+      dataValues: dataValue,
+      funcID: 'TMT0501',
+      formName: 'TMMeetings',
+      gridViewName: 'grvTMMeetings',
+      pageLoading: true,
+      page: 1,
+      pageSize: 1000,
+      entityName: 'CO_Meetings',
+      entityPermission: 'CO_TMMeetings',
+    };
+
     this.codxShareSV.getDataCO_Meetings(requestDataCO).subscribe((res) => {
       this.getModelShare(res[0], param.Template, 'CO_Meetings');
     });
   }
 
   getRequestEP_BookingRoom(predicate, dataValue, param, showEvent) {
-    if (showEvent == '0' || showEvent == 'false') return;
+    if (!showEvent || showEvent === 'false') {
+      return;
+    }
+
     this.EP_BookingRooms = [];
-    let requestDataEP_Room: DataRequest = new DataRequest();
-    requestDataEP_Room.predicates = predicate;
-    requestDataEP_Room.dataValues = dataValue;
-    requestDataEP_Room.funcID = 'EP4T11';
-    requestDataEP_Room.formName = 'BookingRooms';
-    requestDataEP_Room.gridViewName = 'grvBookingRooms';
-    requestDataEP_Room.pageLoading = true;
-    requestDataEP_Room.page = 1;
-    requestDataEP_Room.pageSize = 1000;
-    requestDataEP_Room.entityName = 'EP_Bookings';
-    requestDataEP_Room.entityPermission = 'EP_BookingRooms';
+
+    let requestDataEP_Room: DataRequest = {
+      predicates: predicate,
+      dataValues: dataValue,
+      funcID: 'EP4T11',
+      formName: 'BookingRooms',
+      gridViewName: 'grvBookingRooms',
+      pageLoading: true,
+      page: 1,
+      pageSize: 1000,
+      entityName: 'EP_Bookings',
+      entityPermission: 'EP_BookingRooms',
+    };
+
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Room).subscribe((res) => {
       this.getModelShare(res[0], param.Template, 'EP_BookingRooms');
     });
   }
 
   getRequestEP_BookingCar(predicate, dataValue, param, showEvent) {
-    if (showEvent == '0' || showEvent == 'false') return;
+    if (!showEvent || showEvent === 'false') {
+      return;
+    }
+
     this.EP_BookingCars = [];
-    let requestDataEP_Car: DataRequest = new DataRequest();
-    requestDataEP_Car.predicates = predicate;
-    requestDataEP_Car.dataValues = dataValue;
-    requestDataEP_Car.funcID = 'EP7T11';
-    requestDataEP_Car.formName = 'BookingCars';
-    requestDataEP_Car.gridViewName = 'grvBookingCars';
-    requestDataEP_Car.pageLoading = true;
-    requestDataEP_Car.page = 1;
-    requestDataEP_Car.pageSize = 1000;
-    requestDataEP_Car.entityName = 'EP_Bookings';
-    requestDataEP_Car.entityPermission = 'EP_BookingCars';
+
+    let requestDataEP_Car: DataRequest = {
+      predicates: predicate,
+      dataValues: dataValue,
+      funcID: 'EP7T11',
+      formName: 'BookingCars',
+      gridViewName: 'grvBookingCars',
+      pageLoading: true,
+      page: 1,
+      pageSize: 1000,
+      entityName: 'EP_Bookings',
+      entityPermission: 'EP_BookingCars',
+    };
+
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Car).subscribe((res) => {
       this.getModelShare(res[0], param.Template, 'EP_BookingCars');
     });
@@ -580,26 +637,25 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     if (showEvent == '0' || showEvent == 'false') return;
     this.WP_Notes = [];
     this.codxShareSV.getDataWP_Notes(predicate, dataValue).subscribe((res) => {
-      this.countNotePin = 0;
       this.countNotePin = res[1];
       this.getModelShare(res[0], param.Template, 'WP_Notes');
     });
   }
 
   getModelShare(lstData, param, transType) {
-    this.onSwitchCountEven(transType);
+    this.onSwitchCountEvent(transType);
     if (lstData && lstData.length > 0) {
       lstData.forEach((item) => {
-        var paramValue = JSON.parse(JSON.stringify(Util.camelizekeyObj(param)));
+        let paramValue = JSON.parse(JSON.stringify(Util.camelizekeyObj(param)));
         paramValue['data'] = {};
-        let data: any = JSON.parse(JSON.stringify(item));
+        let data = JSON.parse(JSON.stringify(item));
         for (const key in data) {
           for (const keyValue of Object.keys(paramValue)) {
             if (
               paramValue[keyValue] &&
               typeof paramValue[keyValue] === 'string'
             ) {
-              var value = Util.camelize(paramValue[keyValue]);
+              let value = Util.camelize(paramValue[keyValue]);
               if (data[value] || typeof data[value] == 'boolean')
                 paramValue[keyValue] = data[value];
               if (paramValue[keyValue] == 'CheckList')
@@ -659,7 +715,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     }
   }
 
-  onSwitchCountEven(transType) {
+  onSwitchCountEvent(transType) {
     switch (transType) {
       case 'TM_Tasks':
         this.countDataOfE++;
@@ -684,8 +740,8 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
       {
         color: TM_.ShowBackground,
         borderColor: TM_.ShowColor,
-        text: 'TM_Tasks',
-        status: 'TM_Tasks',
+        text: 'TM_MyTasks',
+        status: 'TM_MyTasks',
       },
     ];
     let WP_Params = [
@@ -730,24 +786,53 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     let myInterval = setInterval(() => {
       if (this.dataResourceModel.length > 0) {
         clearInterval(myInterval);
-        this.getCalendarSetting(resources, this.dataResourceModel);
+        this.calendarCenter.resources = resources;
+        this.calendarCenter.resourceModel = this.dataResourceModel;
+        this.codxShareSV.dataResourceModel.subscribe((res) => {
+          if (res) {
+            this.calendarCenter && this.calendarCenter.updateData(res);
+          }
+        });
+
+        //this.getCalendarSetting(resources, this.dataResourceModel);
       }
     });
   }
 
-  getCalendarSetting(resource, dataResourceModel) {
-    let a = this.calendar_setting.createComponent(CalendarCenterComponent);
-    a.instance.resources = resource;
-    a.instance.resourceModel = dataResourceModel;
-    this.codxShareSV.dataResourceModel.subscribe((res) => {
-      if (res) {
-        let ele = document.getElementsByTagName('codx-schedule')[0];
-        if (ele) {
-          let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-          cmp.dataSource = res;
-          cmp.setEventSettings();
+  onLoad(args) {
+    let myInterval = setInterval(() => {
+      if (this.dataResourceModel.length > 0) {
+        clearInterval(myInterval);
+        if (this.dataResourceModel.length > 0) {
+          for (let i = 0; i < this.dataResourceModel.length; i++) {
+            let day = new Date(this.dataResourceModel[i].startDate);
+            if (
+              day &&
+              args.date.getFullYear() == day.getFullYear() &&
+              args.date.getMonth() == day.getMonth() &&
+              args.date.getDate() == day.getDate()
+            ) {
+              let span: HTMLElement;
+              span = document.createElement('span');
+              span.setAttribute('class', 'e-icons highlight');
+              addClass([args.element], ['special', 'e-day']);
+              args.element.appendChild(span);
+              return;
+            }
+          }
         }
       }
     });
+  }
+
+  getCalendarData(event): void {
+    let calendarType = event.value;
+    this.api
+      .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [calendarType])
+      .subscribe((res: any) => {
+        if (res) {
+          this.calendarData = res;
+        }
+      });
   }
 }

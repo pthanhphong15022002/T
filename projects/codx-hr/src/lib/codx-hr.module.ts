@@ -450,13 +450,35 @@ import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.compone
 import { ScrollSpyDirective } from './scroll-spy.directive';
 import { PopupEProcessContractComponent } from './employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { ViewContractDetailComponent } from './employee-contract/view-contracts-detail/view-contracts-detail.component';
-import { ApprovalHrComponent } from './approval-hr/approval-hr.component';
-import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
 import { EmployeeBasicSalaryComponent } from './employee-basic-salary/employee-basic-salary.component';
+import { EmployeeJobSalaryComponent } from './employee-job-salary/employee-job-salary.component';
+import { PopupEmployeeJobsalaryComponent } from './employee-job-salary/popup-employee-jobsalary/popup-employee-jobsalary.component';
+import { ViewBasicSalaryDetailComponent } from './employee-basic-salary/view-basic-salary-detail/view-basic-salary-detail.component';
+import { EmployeeBenefitComponent } from './employee-benefit/employee-benefit.component';
+import { PopupEmployeeBenefitComponent } from './employee-benefit/popup-employee-benefit/popup-employee-benefit.component';
+import { ViewDetailContractsComponent } from './employee-contract/popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
+import { ViewDetailEjobsalaryComponent } from './employee-job-salary/view-detail-ejobsalary/view-detail-ejobsalary.component';
+import { EmployeeAwardsComponent } from './employee-awards/employee-awards.component';
+import { EmployeeDisciplineComponent } from './employee-discipline/employee-discipline.component';
+import { ViewDetailEbenefitComponent } from './employee-benefit/view-detail-ebenefit/view-detail-ebenefit.component';
+import { ViewAwardDetailComponent } from './employee-awards/view-award-detail/view-award-detail.component';
+import { TestComponent } from './test/test.component';
+import { ApprovalHRContractComponent } from './approval-hr/approval-hrcontract/approval-hrcontract.component';
+import { ViewDetailDisciplinesComponent } from './employee-discipline/view-detail-disciplines/view-detail-disciplines.component';
+import { EmployeeBusinessTravelComponent } from './employee-business-travel/employee-business-travel.component';
+import { PopupEmployeeBusinessComponent } from './employee-business-travel/popup-employee-business/popup-employee-business.component';
+import { ViewDetailEmployeeBusinessComponent } from './employee-business-travel/view-detail-employee-business/view-detail-employee-business.component';
+import { EmployeeDayOffComponent } from './employee-day-off/employee-day-off.component';
+import { ViewDayOffDetailComponent } from './employee-day-off/view-day-off-detail/view-day-off-detail.component';
+import { EmployeeInfoDetailComponent } from './employee-list/employee-info-detail/employee-info-detail.component';
+import { PopupForeignWorkerComponent } from './employee-profile/popup-foreign-worker/popup-foreign-worker.component';
+import { PopupViewallBenefitComponent } from './employee-list/employee-info-detail/pop-up/popup-viewall-benefit/popup-viewall-benefit.component';
+import { PopupAddEmployeeComponent } from './employee-list/popup/popup-add-employee/popup-add-employee.component';
+import { PopupViewallSalaryComponent } from './employee-list/employee-info-detail/pop-up/popup-viewall-salary/popup-viewall-salary.component';
+import { PopupViewAllComponent } from './employee-list/employee-info-detail/pop-up/popup-view-all/popup-view-all.component';
+import { EmployeeAppointionsComponent } from './employee-appointions/employee-appointions.component';
+import { ViewDetailEappointionsComponent } from './employee-appointions/view-detail-eappointions/view-detail-eappointions.component';
 export const routes: Routes = [
-  {
-    path: '',
-    children: [
       {
         path: '',
         component: LayoutNoAsideComponent,
@@ -465,10 +487,6 @@ export const routes: Routes = [
             path: 'contactbook/:funcID',
             component: EmpContactsComponent,
           },
-          // {
-          //   path: 'employeelist/:funcID',
-          //   component: EmployeeListComponent,
-          // },
         ],
       },
       {
@@ -479,31 +497,9 @@ export const routes: Routes = [
             path: 'empinfosub/:funcID',
             component: EmployeeInfomationComponent,
           },
-        ],
-      },
-      
-      // {
-      //   path:'',
-      //   component: LayoutComponent,
-      //   children:[
-      //     {
-      //       path: 'approvals/:funcID',
-      //       loadChildren: () =>
-      //         import('projects/codx-hr/src/lib/codx-approvel.module').then(
-      //           (m) => m.CodxApprovelModule
-      //         ),
-      //       data: { noReuse: true },
-      //     },
-      //   ]
-      // },
-      {
-        path: '',
-        component: LayoutOnlyHeaderComponent,
-        children: [
           {
             path: 'employeedetail/:funcID',
-            //component: EmployeeProfileComponent,
-            component: EmployeeDetailComponent,
+            component: EmployeeInfoDetailComponent,
           },
         ],
       },
@@ -530,12 +526,6 @@ export const routes: Routes = [
             data: { noReuse: true },
             component: EmployeeListComponent,
           },
-
-          {
-            path: 'employeeleave/:funcID',
-            data: { noReuse: true },
-            component: EmployeesLeaveComponent,
-          },
           {
             path: 'reportingline/:funcID',
             data: { noReuse: true },
@@ -549,6 +539,34 @@ export const routes: Routes = [
             path: 'ebasicsalaries/:funcID',
             component: EmployeeBasicSalaryComponent,
           },
+          {
+            path: 'ejobsalaries/:funcID',
+            component: EmployeeJobSalaryComponent,
+          },
+          {
+            path: 'eawards/:funcID',
+            component: EmployeeAwardsComponent,
+          },
+          {
+            path: 'edisciplines/:funcID',
+            component: EmployeeDisciplineComponent,
+          },
+          {            
+            path: 'ebenefits/:funcID',
+            component: EmployeeBenefitComponent,
+          },
+          {            
+            path: 'ebusinesstravels/:funcID',
+            component: EmployeeBusinessTravelComponent,
+          },
+          {
+            path: 'edayoffs/:funcID',
+            component: EmployeeDayOffComponent
+          },
+          {
+            path: 'eappointions/:funcID',
+            component: EmployeeAppointionsComponent
+          },
           // {
           //   path: 'employeeinfomation/:funcID',
           //   component: EmployeeInfomationComponent,
@@ -559,13 +577,6 @@ export const routes: Routes = [
               import('projects/codx-hr/src/lib/codx-approvel.module').then(
                 (m) => m.CodxApprovelModule
               ),
-            // component: CodxApprovalComponent,
-            // children: [
-            //   {
-            //     path: 'econtracts/:FuncID/:id',
-            //     component: ApprovalHrComponent,
-            //   },
-            // ],
             data: { noReuse: true },
           },
 
@@ -621,13 +632,10 @@ export const routes: Routes = [
           },
         ],
       },
-    ],
-  },
 ];
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
-  ApprovalHrComponent,
   EmpContactsComponent,
   EmployeesComponent,
   PopupAddEmployeesComponent,
@@ -699,8 +707,35 @@ const T_Component: Type<any>[] = [
   EmployeeContractComponent,
   ScrollSpyDirective,
   PopupEProcessContractComponent,
+  PopupEmployeeJobsalaryComponent,
   ViewContractDetailComponent,
   EmployeeBasicSalaryComponent,
+  ViewBasicSalaryDetailComponent,
+  EmployeeJobSalaryComponent,
+  EmployeeBenefitComponent,
+  PopupEmployeeBenefitComponent,
+  ViewDetailContractsComponent,
+  ViewDetailEjobsalaryComponent,
+  EmployeeAwardsComponent,
+  EmployeeDisciplineComponent,
+  ViewDetailEbenefitComponent,
+  ViewAwardDetailComponent,
+  TestComponent,
+  ApprovalHRContractComponent,
+  ViewDetailDisciplinesComponent,
+  EmployeeBusinessTravelComponent,
+  EmployeeDayOffComponent,
+  ViewDayOffDetailComponent,
+  PopupEmployeeBusinessComponent,
+  ViewDetailEmployeeBusinessComponent,
+  EmployeeInfoDetailComponent,
+  PopupForeignWorkerComponent,
+  PopupViewallBenefitComponent,
+  PopupViewallSalaryComponent,
+  PopupViewAllComponent,
+  EmployeeAppointionsComponent,
+  PopupAddEmployeeComponent,
+  ViewDetailEappointionsComponent
 ];
 @NgModule({
   imports: [

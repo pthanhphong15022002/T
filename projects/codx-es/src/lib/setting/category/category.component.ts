@@ -271,7 +271,9 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       popupAdd.closed.subscribe((res) => {
         if (!res?.event) this.viewBase.dataService.clear();
         else {
-          this.viewBase.dataService.add(res.event).subscribe();
+          res.event.modifiedOn= new Date();
+          this.viewBase.dataService.update(res.event).subscribe();
+
         }
       });
     });
@@ -313,7 +315,6 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   edit(evt?) {
     if (evt?.data) {
       this.viewBase.dataService.dataSelected = evt?.data;
-
       this.viewBase.dataService
         .edit(this.viewBase.dataService.dataSelected)
         .subscribe((res) => {

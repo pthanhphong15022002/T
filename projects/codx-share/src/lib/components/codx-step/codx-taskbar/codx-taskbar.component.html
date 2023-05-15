@@ -1,0 +1,27 @@
+<div class="view-details-header bg-body scroll-y me-3 h-100" [ngClass]="class">
+   <div class="d-flex align-items-center justify-content-between">
+     <div class="d-flex tab-header">
+       <ng-container *ngFor="let item of listTaskConvert">
+          <a 
+            style="padding: 2px 2px 2px 0; margin: 0 10px 0 0;"
+            class="d-flex justify-content-center align-items-center tab-item" 
+            [ngClass]="'tab-item text-dark fw-bold' +' ' +(item.isActive ? 'tab-active' : '')"
+          >
+           <span
+               style="margin-right: 2px;"
+               class="me-1 text-gray-800"
+               [ngClass]="item.isActive ? item.icon + ' text-primary' + ' icon-' + sizeIcon : item.icon + ' icon-' + sizeIcon"
+           ></span>
+           <codx-label
+               [ngStyle]="{'font-size':sizeText}"
+               [name]="'lbl' + item.name"
+               [formName]="'SYS'"
+               [default]="item.textDefault"
+               (click)="clickMenu(item)"
+           >
+           </codx-label>
+         </a>
+       </ng-container>
+     </div>
+   </div>
+ </div>

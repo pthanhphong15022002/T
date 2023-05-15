@@ -21,7 +21,7 @@
               data-toggle="tooltip"
             >
               <i class="icon-add"></i>
-              <span class="fs-5">{{ titleAddFolder }}</span>
+              <codx-label [default]="titleAddFolder" [fiedName]="'lbltitleAddFolder'" [formName]="'fmLayOutDM'" class="fs-5-sm label-addnew"></codx-label>
             </button>
           </a>
         </div>
@@ -146,9 +146,8 @@
                         <div class="d-flex align-items-center">
                           <span>
                             <codx-label
-                              fiedName=""
-                              formName=""
-                              gridViewName=""
+                              fiedName="lblSharedDocuments"
+                              [formName]="'fmLayOutDM'"
                               default="Tài liệu được chia sẻ"
                             >
                             </codx-label>
@@ -170,9 +169,8 @@
                         <div class="d-flex align-items-center">
                           <span>
                             <codx-label
-                              fiedName=""
-                              formName=""
-                              gridViewName=""
+                              fiedName="lblSharedDocuments2"
+                              [formName]="'fmLayOutDM'"
                               default="Tài liệu chia sẻ"
                             >
                             </codx-label>
@@ -195,9 +193,8 @@
                         <div class="d-flex align-items-center">
                           <span>
                             <codx-label
-                              fiedName=""
-                              formName=""
-                              gridViewName=""
+                              fiedName="lblRequiredDocuments"
+                              [formName]="'fmLayOutDM'"
                               default="Tài liệu được yêu cầu"
                             >
                             </codx-label>
@@ -218,9 +215,8 @@
                         <div class="d-flex align-items-center">
                           <span>
                             <codx-label
-                              fiedName=""
-                              formName=""
-                              gridViewName=""
+                              fiedName="lblRequiredDocuments2"
+                              [formName]="'fmLayOutDM'"
                               default="Tài liệu yêu cầu"
                             >
                             </codx-label>
@@ -241,9 +237,8 @@
                         <div class="d-flex align-items-center">
                           <span>
                             <codx-label
-                              fiedName=""
-                              formName=""
-                              gridViewName=""
+                              fiedName="lblShareHistory"
+                              [formName]="'fmLayOutDM'"
                               default="Lịch sử chia sẻ"
                             >
                             </codx-label>
@@ -266,9 +261,8 @@
                         <div class="d-flex align-items-center">
                           <span>
                             <codx-label
-                              fiedName=""
-                              formName=""
-                              gridViewName=""
+                              fiedName="lblShareHistory2"
+                              [formName]="'fmLayOutDM'"
                               default="Tài liệu được yêu cầu"
                             >
                             </codx-label>
@@ -289,9 +283,8 @@
                         <div class="d-flex align-items-center">
                           <span>
                             <codx-label
-                              fiedName=""
-                              formName=""
-                              gridViewName=""
+                              fiedName="lblDocumentsPendingApproval"
+                              [formName]="'fmLayOutDM'"
                               default="Tài liệu chờ duyệt"
                             >
                             </codx-label>
@@ -312,9 +305,8 @@
                         <div class="d-flex align-items-center">
                           <span>
                             <codx-label
-                              fiedName=""
-                              formName=""
-                              gridViewName=""
+                              fiedName="lblReviewHistory"
+                              [formName]="'fmLayOutDM'"
                               default="Lịch sử xét duyệt"
                             >
                             </codx-label>
@@ -326,12 +318,22 @@
                     <some-element *ngSwitchDefault>
                       <a class="dropdown-item">
                         <div class="d-flex align-items-center">
-                          <span>Yêu cầu của tôi</span>
+                          <codx-label
+                          fiedName="lblMyRequest"
+                          [formName]="'fmLayOutDM'"
+                          default="Yêu cầu của tôi"
+                        >
+                        </codx-label>
                         </div>
                       </a>
                       <a class="dropdown-item">
                         <div class="d-flex align-items-center">
-                          <span>Yêu cầu chờ tôi cấp</span>
+                          <codx-label
+                          fiedName="lblRequestWaitForMeToGrant"
+                          [formName]="'fmLayOutDM'"
+                          default="Yêu cầu chờ tôi cấp"
+                        >
+                        </codx-label>
                         </div>
                       </a>
                     </some-element>
@@ -387,7 +389,7 @@
     <!-- CHAT -->
     <codx-chat></codx-chat>
     <!-- NOTES -->
-    <div class="d-flex align-items-center" (click)="openFormNoteDrawer()">
+    <div class="d-flex align-items-center ms-1 ms-lg-3" (click)="openFormNoteDrawer()">
       <!-- begin::Menu wrapper -->
       <div
         class="btn btn-icon btn-clean position-relative"

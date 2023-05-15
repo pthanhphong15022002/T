@@ -9,13 +9,9 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
 import { TenantsComponent } from '@modules/auth/tenants/tenants.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
+import { ReviewComponent } from 'projects/codx-sv/src/lib/add-survey/review/review.component';
 
-var childRoutes: Routes = [
-  {
-    path: 'auth',
-    loadChildren: () =>
-      import('./modules/auth/auth.module').then((m) => m.AuthModule),
-  },
+var childAuthRoutes: Routes = [
   {
     path: 'cm',
     canActivate: [AuthGuard],
@@ -81,27 +77,19 @@ var childRoutes: Routes = [
       ),
   },
   {
-    path: 'ep4',
+    path: 'ep',
     canActivate: [AuthGuard],
     loadChildren: () =>
-      import('projects/codx-ep/src/lib/room/codx-ep4.module').then(
-        (m) => m.CodxEp4Module
+      import('projects/codx-ep/src/lib/codx-ep.module').then(
+        (m) => m.CodxEPModule
       ),
   },
   {
-    path: 'ep7',
+    path: 'co',
     canActivate: [AuthGuard],
     loadChildren: () =>
-      import('projects/codx-ep/src/lib/car/codx-ep7.module').then(
-        (m) => m.CodxEp7Module
-      ),
-  },
-  {
-    path: 'ep8',
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('projects/codx-ep/src/lib/stationery/codx-ep8.module').then(
-        (m) => m.CodxEp8Module
+      import('projects/codx-co/src/lib/codx-co.module').then(
+        (m) => m.CodxCoModule
       ),
   },
   {
@@ -210,15 +198,6 @@ var childRoutes: Routes = [
     ],
   },
   {
-    path: 'error',
-    loadChildren: () =>
-      import('./pages/errors/errors.module').then((m) => m.ErrorsModule),
-  },
-  {
-    path: 'viewfile',
-    component: ViewFileDialogComponent,
-  },
-  {
     path: 'sos',
     component: SosComponent,
   },
@@ -229,6 +208,27 @@ var childRoutes: Routes = [
       import('projects/codx-tn/src/lib/codx-tn.module').then(
         (m) => m.CodxTnModule
       ),
+  },
+];
+
+var childPublicRoutes: Routes = [
+  {
+    path: 'auth',
+    loadChildren: () =>
+      import('./modules/auth/auth.module').then((m) => m.AuthModule),
+  },
+  {
+    path: 'viewfile',
+    component: ViewFileDialogComponent,
+  },
+  {
+    path: 'forms',
+    component: ReviewComponent,
+  },
+  {
+    path: 'error',
+    loadChildren: () =>
+      import('./pages/errors/errors.module').then((m) => m.ErrorsModule),
   },
   {
     path: '',
@@ -251,7 +251,7 @@ export const routes: Routes = [
   },
   {
     path: ':tenant',
-    children: childRoutes,
+    children: [...childAuthRoutes, ...childPublicRoutes],
   },
   {
     path: '',
@@ -263,7 +263,7 @@ export const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
     // RouterModule.forRoot(routes, {
     //   preloadingStrategy: HoverPreloadStrategy,
     // }),

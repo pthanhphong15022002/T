@@ -14,14 +14,16 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
   encapsulation: ViewEncapsulation.None
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  module = 'TM';
   dialog!: DialogRef;
 
   constructor(inject: Injector,
     private callfc: CallFuncService) {
     super(inject);
+    this.layoutModel.toolbarDisplay = false;
   }
-
+  funcID:any = '';
+  func:any={};
+  submenu:any;
   onInit(): void {
     // this.funcs$.subscribe(res => {
     //   console.log(res);
@@ -30,9 +32,8 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
 
   onAfterViewInit(): void {
-
   }
- override toolbar: boolean = false;
+
   openFormNoteDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';

@@ -95,7 +95,7 @@ export class UserComponent extends UIComponent {
     this.headerText = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        this.edit(data);
+        this.edit('edit', data);
         break;
       case 'SYS04':
         this.copy(data);
@@ -171,12 +171,17 @@ export class UserComponent extends UIComponent {
         if (x.event) {
           this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
             if (res) {
-              var dataMF: any = [];
-              if (x.event?.formType == 'edit') {
+              let dataMF: any = [];
+              if (x.event?.formType == 'invite') {
+                dataMF = res;
+                dataMF = dataMF.filter((y) => y.functionID == 'SYS01');
+                this.headerText = dataMF[0].customName;
+                this.edit(x.event?.formType, x.event?.data);
+              } else if (x.event?.formType == 'edit') {
                 dataMF = res;
                 dataMF = dataMF.filter((y) => y.functionID == 'SYS03');
                 this.headerText = dataMF[0].customName;
-                this.edit(x.event?.data);
+                this.edit(x.event?.formType, x.event?.data);
               } else {
                 dataMF = res;
                 dataMF = dataMF.filter((y) => y.functionID == 'SYS01');
@@ -201,8 +206,8 @@ export class UserComponent extends UIComponent {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
-      this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      this.dialog.closed.subscribe((e) => {
+      let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+      dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e?.event) {
           e.event.modifiedOn = new Date();
@@ -226,7 +231,7 @@ export class UserComponent extends UIComponent {
       });
   }
 
-  edit(data?) {
+  edit(formType: string, data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -234,19 +239,22 @@ export class UserComponent extends UIComponent {
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         var obj = {
-          formType: 'edit',
+          formType: formType,
           headerText: this.headerText,
         };
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = 'Auto';
-        this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-        this.dialog.closed.subscribe((x) => {
+        let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+        dialog.closed.subscribe((x) => {
           if (!x?.event) this.view.dataService.clear();
           if (x.event) {
             x.event.modifiedOn = new Date();
-            this.view.dataService.update(x.event).subscribe();
+            this.view.dataService.data
+            this.view.dataService.update(x.event).subscribe((res) => {
+              console.log('edit xong', res);
+            });
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -271,8 +279,8 @@ export class UserComponent extends UIComponent {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
-      this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      this.dialog.closed.subscribe((x) => {
+      let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+      dialog.closed.subscribe((x) => {
         if (x.event) {
           x.event.modifiedOn = new Date();
           this.view.dataService.update(x.event).subscribe();
@@ -287,9 +295,11 @@ export class UserComponent extends UIComponent {
     this.notifySvr.alertCode('AD009', config).subscribe((x) => {
       if (x.event.status == 'Y') {
         data.stop = true;
-        this.codxAdService.stopUser(data).subscribe((res) => {
+        data.status = '3';
+        this.codxAdService.stopUser(data.userID).subscribe((res) => {
           if (res) {
             // this.view.dataService.remove(res).subscribe();
+            this.view.dataService.update(data).subscribe();
             this.detectorRef.detectChanges();
           }
         });

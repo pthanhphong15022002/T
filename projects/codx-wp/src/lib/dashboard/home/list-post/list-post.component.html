@@ -24,11 +24,14 @@
   <div id="newfeed" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
     data-kt-scroll-dependencies="#postnew, .pw-profile, .pw-menu"
     data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #newfeed, .pw-content" data-kt-scroll-offset="0">
-    <codx-listview #listview [dataService]="dataService" [funcId]="'WP'" [service]="'WP'"
-      [assemblyName]="'ERM.Business.WP'" [className]="'CommentsBusiness'" [method]="'GetListPostAsync'"
-      entityName="WP_Comments" [itemTemplate]="itemTemplate" [emptyTemplate]="empty" [formModel]="formModel">
+    <codx-listview #listview 
+      [dataService]="dataService" 
+      [funcId]="'WP'" 
+      [formModel]="formModel"
+      entityName="WP_Comments" 
+      [itemTemplate]="itemTemplate" 
+      [emptyTemplate]="empty">
     </codx-listview>
-
   </div>
 </div>
 <ng-template #itemTemplate let-item>
@@ -59,7 +62,7 @@
               }}</span>
             <span class="rounded-1 py-1 px-2 bg-gray-200 d-flex algin-items-center">
               <codx-vll [name]="'WP001'" [value]="item.shareControl" [showText]="true" [showIcon]="true"
-                [className]="'text-gray-600'" [icoCss]="'w-13px h-13px'" [path]="'assets/themes/sys/default/img/'"
+                [className]="'text-gray-600 vll-post'" [icoCss]="'w-13px h-13px'" [path]="'assets/themes/sys/default/img/'"
                 [showBgColor]="true">
               </codx-vll>
             </span>
@@ -114,10 +117,10 @@
       </ng-template>
     </div>
     <!-- contents -->
-    <div class="wp-contents">
+    <div class="wp-contents mt-3">
       <div class="wp-contents-text">
-        <ng-container *ngIf="item.content">
-          <div [innerHTML]="item.isShowShortContent ? item.shortContent : item.content | safe: 'html'"></div>
+        <ng-container *ngIf="item.contents">
+          <div [innerHTML]="item.isShowShortContent ? item.shortContent : item.contents | safe: 'html'"></div>
           <ng-container *ngIf="item.isShowShortContent">
             <div>
               <a href="javascript:void(0)" (click)="viewMore(item)">
@@ -127,8 +130,8 @@
           </ng-container>
         </ng-container>
       </div>
-      <div class="wp-contents-files">
-        <ng-container *ngIf="item.attachments">
+      <ng-container *ngIf="item.attachments > 0">
+        <div class="wp-contents-files mt-3">
           <codx-view-files 
             [objectID]="item.recID" 
             [objectType]="'WP_Comments'" 
@@ -136,42 +139,13 @@
             [medias]="item.medias" 
             (selectFile)="clickViewDetail($event)">
           </codx-view-files>
-        </ng-container>
-      </div>
+        </div>
+      </ng-container>
     </div>
-    <!-- end contents -->
     <!-- template share -->
-    <ng-container *ngIf="item.category == CATEGORY.SHARE">
-      <div class="wp-contents-shares">
-        <ng-container [ngSwitch]="item.refType">
-          <!-- WP_Comments -->
-          <ng-container *ngSwitchCase="'WP_Comments'">
-            <ng-container *ngIf="item.shares;else postShareDeleted">
-              <ng-container *ngTemplateOutlet="templateSharePost; context: { $implicit: item.shares }">
-              </ng-container>
-            </ng-container>
-          </ng-container>
-          <!-- WP_News -->
-          <ng-container *ngSwitchCase="'WP_News'">
-            <ng-container *ngIf="item.news;else postShareDeleted">
-              <ng-container *ngTemplateOutlet="templateShareNews; context: { $implicit: item.news }">
-              </ng-container>
-            </ng-container>
-          </ng-container>
-        </ng-container>
-      </div>
+    <ng-container *ngIf="item.category == CATEGORY.SHARE || item.category == CATEGORY.FEEDBACK">
+      <wp-post-share [objectID]="item.refID" [refType]="item.refType" [formModel]="formModel"></wp-post-share>
     </ng-container>
-    <!-- end template share -->
-    <!-- template feedback -->
-    <ng-container *ngIf="item.isFeedBack">
-      <div class="wp-contents-shares">
-        <ng-container *ngIf="item.card && item.refType =='FD_Cards';else postShareDeleted">
-          <ng-container *ngTemplateOutlet="templateShareCard; context: { $implicit: item.card }">
-          </ng-container>
-        </ng-container>
-      </div>
-    </ng-container>
-    <!-- end template feedback -->
     <!-- commemt -->
     <treeview-comment 
       [funcID]="formModel.funcID" 
@@ -180,7 +154,7 @@
       [objectType]="'WP_Comments'"
       [objectID]="item.recID">
     </treeview-comment>
-    <!-- end comment -->
+
   </div>
 </ng-template>
 <!-- template empty data -->
@@ -202,13 +176,14 @@
               [formModel]="formModel" 
               [objectType]="'WP_Comments'"
               [medias]="share.medias"
-              [objectID]="share.recID">
+              [objectID]="share.recID"
+              (selectFile)="clickViewDetail($event)">
           </codx-view-files>
       </ng-container>
     </div>
     <div class="wp-share-contents">
-      <ng-container *ngIf="share.content">
-        <div [innerHTML]="share.content | safe: 'html'"></div>
+      <ng-container *ngIf="share.contents">
+        <div [innerHTML]="share.contents | safe: 'html'"></div>
       </ng-container>
     </div>
     <div class="d-flex border-top p-4">
@@ -233,7 +208,7 @@
           <div class="d-flex align-items-center justify-content-start ">
             <ng-container *ngIf="share.shareControl">
               <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
-                <codx-vll [name]="'WP001'" [value]="share.shareControl" [showText]="true" [className]="'text-gray-600'"
+                <codx-vll [name]="'WP001'" [value]="share.shareControl" [showText]="true" [className]="'text-gray-600 vll-post'"
                   [showIcon]="true" [path]="'assets/themes/sys/default/img/'" [icoCss]="'symbol-12px symbol-circle'"
                   [showBgColor]="true">
                 </codx-vll>
@@ -291,23 +266,7 @@
     <codx-view-card [card]="card"></codx-view-card>
   </div>
 </ng-template>
-<!-- template post deleted -->
-<ng-template #postShareDeleted>
-  <div class="card card-custom card-border border border-1 mt-3">
-    <div class="card-body p-5">
-      <div class="d-flex">
-        <div class="me-3">
-          <codx-img slot="start" objectId="" isDefaulImg="true" objectType="" [width]="30">
-          </codx-img>
-        </div>
-        <div class="d-flex flex-column flex-grow-1">
-          <codx-label [formModel]="formModel" name="lblPostDeleted" default="Bài viết không còn tồn tại">
-          </codx-label>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>
+
 <!-- template list permissions share -->
 <ng-template #templateShares let-data>
   <div ngbDropdown class="symbol-more" [container]="'body'">
@@ -316,7 +275,7 @@
     </div>
     <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
       <div class="py-2">
-        <codx-label [formModel]="" default="Danh sách người được chia sẻ" class="fw-bolder"></codx-label>
+        <codx-label [formModel]="formModel" name="lblShares" default="Danh sách người được chia sẻ" class="fw-bolder"></codx-label>
       </div>
       <div class="hr-list-employee">
         <ng-container *ngFor="let perrmisison of data.permissions">
@@ -324,8 +283,8 @@
             <div class="d-flex align-items-center mt-3">
               <codx-img 
                 [objectId]="perrmisison.objectID" 
-                [objectType]="'AD_Users'" 
                 [objectName]="perrmisison.objectName" 
+                [objectType]="'AD_Users'" 
                 [cssClass]="'me-3'"
                 [width]="30">
               </codx-img>
@@ -353,9 +312,9 @@
             <div class="d-flex align-items-center mt-3">
               <codx-img 
                 [objectId]="perrmisison.objectID" 
+                [objectName]="perrmisison.objectName" 
                 [objectType]="'AD_Users'" 
                 [cssClass]="'me-3'"
-                [objectName]="perrmisison.objectName" 
                 [width]="30">
               </codx-img>
               <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>

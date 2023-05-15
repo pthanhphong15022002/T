@@ -1,13 +1,21 @@
+declare global {
+  interface Window {
+    ng: any;
+  }
+}
 import {
   Component,
   ChangeDetectionStrategy,
   OnDestroy,
   OnInit,
   HostListener,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import {
+  AuthService,
+  AuthStore,
   LayoutService,
   NotificationsFCMService,
   NotificationsService,
@@ -16,40 +24,59 @@ import {
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 import { Title } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
+declare var window: any;
+
 @Component({
   selector: 'body[root]',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
   private angularFireMessaging: AngularFireMessaging;
 
   constructor(
     private router: Router,
     private tenant: TenantService,
-    // private angularFireMessaging: AngularFireMessaging,
-    private ns: NotificationsFCMService,
-    private notify: NotificationsService,
-    private route: ActivatedRoute,
     private layoutService: LayoutService,
-    private titleService: Title
+    private titleService: Title,
+    private authSV: AuthService
   ) {}
 
   ngOnInit() {
-    if (environment.layoutCZ == 'qtsc') {
-      this.titleService.setTitle('QTSC@oms');
-      document
-        .getElementById('appFavicon')
-        .setAttribute('href', './assets/cz/qtsc/bg/favicon.ico');
-    } else {
-      this.titleService.setTitle('CodxUI');
-      document
-        .getElementById('appFavicon')
-        .setAttribute('href', './assets/logos/favicon.ico');
+    if (environment.layout) {
+      if (environment.layout.title)
+        this.titleService.setTitle(environment.layout.title);
+      else this.titleService.setTitle('CodxUI');
+      if (environment.layout.icon)
+        document
+          .getElementById('appFavicon')
+          .setAttribute('href', environment.layout.icon);
+      else
+        document
+          .getElementById('appFavicon')
+          .setAttribute('href', './assets/logos/favicon.ico');
     }
+
+    // if (environment.layoutCZ == 'qtsc') {
+    //   this.titleService.setTitle('QTSC@oms');
+    //   document
+    //     .getElementById('appFavicon')
+    //     .setAttribute('href', './assets/cz/qtsc/bg/favicon.ico');
+    // } else if (environment.layoutCZ == 'lacviet') {
+    //   this.titleService.setTitle('QTSC@oms');
+    //   document
+    //     .getElementById('appFavicon')
+    //     .setAttribute('href', './assets/cz/lacviet/bg/favicon.ico');
+    // } else {
+    //   this.titleService.setTitle('CodxUI');
+    //   document
+    //     .getElementById('appFavicon')
+    //     .setAttribute('href', './assets/logos/favicon.ico');
+    // }
     this.unsubscribe.push(this.tenant.init(this.router));
+
     // this.angularFireMessaging.requestToken.subscribe(
     //   (token) => {
     //     environment.FCMToken = token;
@@ -71,6 +98,7 @@ export class AppComponent implements OnInit, OnDestroy {
     //   });
   }
 
+  ngAfterViewInit() {}
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }
@@ -90,7 +118,7 @@ export class AppComponent implements OnInit, OnDestroy {
   //           e.classList.remove("active");
   //         }
   //       });
-        
+
   //     }
   // }
 

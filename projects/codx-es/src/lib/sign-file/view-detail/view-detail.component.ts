@@ -28,7 +28,6 @@ import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/mode
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign-file.component';
 
-
 @Component({
   selector: 'lib-view-detail',
   templateUrl: './view-detail.component.html',
@@ -50,6 +49,7 @@ export class ViewDetailComponent implements OnInit {
     this.user = this.authStore.get();
   }
 
+  @Input() data: any = { category: 'Trình ký' };
   @Input() showApproveStatus: boolean = true;
   @Input() itemDetail: any;
   @Input() funcID;
@@ -117,12 +117,18 @@ export class ViewDetailComponent implements OnInit {
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      // { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
       { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
     ];
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes?.data &&
+      changes.data?.previousValue?.recID != changes.data?.currentValue?.recID
+    ) {
+      this.data = changes.data?.currentValue;
+    }
     if (this.formModel) {
       this.initForm();
     } else {
@@ -192,6 +198,7 @@ export class ViewDetailComponent implements OnInit {
         .getDetailSignFile(this.itemDetail?.recID)
         .subscribe((res) => {
           if (res) {
+            let x= res;
             if (res.refType != null) {
               this.esService
                 .getEntity(this.itemDetail?.refType)
@@ -201,12 +208,8 @@ export class ViewDetailComponent implements OnInit {
                       .getod(this.itemDetail?.recID)
                       .subscribe((res) => {
                         res.refType = this.itemDetail?.refType;
-                        let item = this.dataReferences.filter((p) => {
-                          p.recID == res.recID;
-                        });
-                        if (item?.length == 0) {
-                          this.dataReferences.push(res);
-                        }
+                        let index = this.dataReferences.findIndex(x=>x.recID == res.recID);
+                        if (index < 0) this.dataReferences.push(res);
                         this.df.detectChanges();
                       });
                   }
@@ -480,33 +483,34 @@ export class ViewDetailComponent implements OnInit {
   }
 
   beforeCancel(datas: any) {
-    let mssgCode = 'ES015';
-    this.notify.alertCode(mssgCode).subscribe((x) => {
-      if (x.event?.status == 'Y') {
-        if (datas.approveStatus == '1') {
-          this.cancel(datas);
-        } else {
-          this.esService
-            .getApprovalTransActive(datas.recID)
-            .subscribe((lstTrans) => {
-              if (lstTrans && lstTrans?.length > 0) {
-                this.cancelControl = lstTrans[0]?.cancelControl;
-                if (this.cancelControl == '0') {
-                } else if (this.cancelControl == '1') {
-                  this.cancel(datas);
-                } else if (
-                  this.cancelControl == '2' ||
-                  this.cancelControl == '3'
-                ) {
-                  this.oCancelSF = datas;
-                  this.callfunc.openForm(this.addCancelComment, '', 650, 380);
-                }
-                return;
-              }
-            });
-        }
-      }
-    });
+    // let mssgCode = 'ES015';
+    // this.notify.alertCode(mssgCode).subscribe((x) => {
+    //   if (x.event?.status == 'Y') {
+        
+    //   }
+    // });
+    if (datas.approveStatus == '1') {
+      this.cancel(datas);
+    } else {
+      this.esService
+        .getApprovalTransActive(datas.recID)
+        .subscribe((lstTrans) => {
+          if (lstTrans && lstTrans?.length > 0) {
+            this.cancelControl = lstTrans[0]?.cancelControl;
+            if (this.cancelControl == '0') {
+            } else if (this.cancelControl == '1') {
+              this.cancel(datas);
+            } else if (
+              this.cancelControl == '2' ||
+              this.cancelControl == '3'
+            ) {
+              this.oCancelSF = datas;
+              this.callfunc.openForm(this.addCancelComment, '', 650, 380);
+            }
+            return;
+          }
+        });
+    }
   }
 
   cancel(datas: any) {
@@ -574,6 +578,9 @@ export class ViewDetailComponent implements OnInit {
         '',
         dialogModel
       );
+      dialogAdd.closed.subscribe((res) => {
+        window['PDFViewerApplication']?.unbindWindowEvents();
+      });
     });
   }
 
@@ -692,6 +699,7 @@ export class ViewDetailComponent implements OnInit {
     if (event?.field && event?.component) {
       if (event?.field == 'comment') {
         this.comment = event?.data;
+        this.df.detectChanges();
       }
     }
   }
@@ -708,7 +716,7 @@ export class ViewDetailComponent implements OnInit {
     } else if (this.cancelControl == '3') {
       //comment bat buoc
       if (this.comment == '') {
-        this.notify.notifyCode('ES012');
+        this.notify.notifyCode('ES031');
         return;
       }
       this.cancel(this.oCancelSF);

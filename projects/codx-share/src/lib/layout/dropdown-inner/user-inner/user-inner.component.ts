@@ -21,12 +21,13 @@ import {
   AuthStore,
   CallFuncService,
   AlertConfirmInputConfig,
+  FilesService,
 } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 import { CodxShareService } from '../../../codx-share.service';
 import { environment } from 'src/environments/environment';
 import { CodxClearCacheComponent } from '../../../components/codx-clear-cache/codx-clear-cache.component';
-import { T } from '@angular/cdk/keycodes';
+import { SignalRService } from '../../drawers/chat/services/signalr.service';
 
 @Component({
   selector: 'codx-user-inner',
@@ -52,7 +53,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   private unsubscribe: Subscription[] = [];
   functionList: any;
   formModel: any;
-
+  modifiedOn = new Date();
   constructor(
     public codxService: CodxService,
     private auth: AuthService,
@@ -64,7 +65,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private codxShareSV: CodxShareService,
     private change: ChangeDetectorRef,
     private element: ElementRef,
-    private callSV: CallFuncService
+    private signalRSV: SignalRService,
+    private callSV: CallFuncService,
+    private fileSv: FilesService
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
       if (res) {
@@ -96,26 +99,21 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     // if (this.functionList) {
 
     // }
-    this.refreshAvatar();
   }
 
   ngAfterViewInit() {
     MenuComponent.reinitialization();
-  }
-
-  refreshAvatar() {
-    //Nguyên thêm để refresh avatar khi change
-    this.codxShareSV.dataRefreshImage.subscribe((res) => {
-      if (res) {
-        this.user['modifiedOn'] = res?.modifiedOn;
-        this.change.detectChanges();
-      }
-    });
+    MenuComponent.createInstances('[data-kt-menu="true"]');
   }
 
   logout() {
-    this.auth.logout();
-    document.location.reload();
+    let ele = document.getElementsByTagName('codx-chat-container');
+    if(ele.length > 0){
+      ele[0].remove();
+    }
+    this.signalRSV.sendData('LogOutAsync', this.user.tenant, this.user.userID);
+    this.auth.logout('');
+    // document.location.reload();
   }
 
   updateSettting(lang: string, theme: string, themeMode: string) {
@@ -218,9 +216,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   avatarChanged(data: any) {
     this.onAvatarChanged.emit(data);
-    let modifiedOn = new Date();
-    var obj = { modifiedOn: modifiedOn };
-    this.codxShareSV.dataRefreshImage.next(obj);
+    this.modifiedOn = new Date();
+    this.fileSv.dataRefreshImage.next(this.user);
   }
 
   clearCache() {
@@ -254,6 +251,41 @@ export class UserInnerComponent implements OnInit, OnDestroy {
               console.log(res);
             });
         }
+      });
+  }
+
+  clearTenant() {
+    // var config = new AlertConfirmInputConfig();
+    // config.type = 'text';
+    // config.label = 'predicate';
+    // this.notifyService
+    //   .alert(
+    //     'Cánh báo',
+    //     '<span style="color: red">CHỨC NĂNG NÀY SẼ XÓA CÁC TENANT HIỆN TẠI THEO ĐIỀU KIỆN!!!! VUI LÒNG BACKUP DATA TRƯỚC KHI THỰC HIỆN!!! XIN CẢM ƠN!!!</span><div><a href="tel:+84363966390">Gọi hỗ trợ</a></div><div><a href="mailto:Quangvovan22@gmail.com">Gửi mail hỗ trợ</a></div>',
+    //     config
+    //   )
+    //   .closed.subscribe((x) => {
+    //     debugger;
+    //     if (x.event && x.event.status == 'Y' && x.event.data) {
+    //       this.api
+    //         .execSv('Tenant', 'Tenant', 'TenantsBusiness', 'DropTenantAsync', [
+    //           x.event.data,
+    //         ])
+    //         .subscribe((res) => {
+    //           if (res) console.log(res);
+    //         });
+    //     }
+    //   });
+  }
+
+  testFormatString() {
+    this.api
+      .callSv('SYS', 'ERM.Business.Core', 'CMBusiness', 'ReplaceStringAsync', [
+        '',
+        null,
+      ])
+      .subscribe((res) => {
+        console.log(res);
       });
   }
 

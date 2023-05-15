@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
 import { environment } from 'src/environments/environment';
+import { CodxShareService } from '../../codx-share.service';
 
 @Component({
   selector: 'codx-view-card',
@@ -9,24 +10,28 @@ import { environment } from 'src/environments/environment';
 })
 export class CodxViewCardComponent implements OnInit {
 
-  @Input() card:any = null
+  @Input() card:any = null;
+  @Input() objectID:string = "";
   file:any = null;
   constructor(
     private api:ApiHttpService,
+    private codxShareSV:CodxShareService,
     private dt:ChangeDetectorRef
-  ) { }
+  ) 
+  {
 
-  ngOnInit(): void {
-    if(this.card)
-    {
-      this.getFilepattern(this.card.patternID);
-    }
+  }
+
+  ngOnInit(): void {   
+    debugger
+    this.getFilepattern(this.card.patternID);
   }
 
 
-  // Get card
+  // Get pattern
   getFilepattern(patternID:string){
     if(patternID){
+      debugger
       this.api
       .execSv(
         'DM',
@@ -34,10 +39,15 @@ export class CodxViewCardComponent implements OnInit {
         'FileBussiness',
         'GetFilesByIbjectIDAsync',
         [patternID])
-        .subscribe((res:any) => {
-          if (res) 
-          {
-            this.file = res;
+        .subscribe((res:any[]) => {
+          if(res){
+            res.forEach(x => {
+              if(x.referType === 'image')
+              {
+                x["source"] = this.codxShareSV.getThumbByUrl(x.url,900);
+              }
+            })
+            this.file = res[0];
             this.dt.detectChanges();
           }
       })

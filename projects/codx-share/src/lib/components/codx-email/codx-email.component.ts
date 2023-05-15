@@ -10,7 +10,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { NodeSelection } from '@syncfusion/ej2-angular-richtexteditor';
+import {
+  NodeSelection,
+  RichTextEditorComponent,
+} from '@syncfusion/ej2-angular-richtexteditor';
 import { DataManager, Query } from '@syncfusion/ej2-data';
 import {
   ApiHttpService,
@@ -18,10 +21,12 @@ import {
   CacheService,
   CallFuncService,
   CodxInputComponent,
+  CodxService,
   DataRequest,
   DialogData,
   DialogRef,
   FormModel,
+  Util,
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { EmailSendTo } from 'projects/codx-es/src/lib/codx-es.model';
@@ -38,8 +43,9 @@ export class CodxEmailComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('dataView', { static: false }) dataView: ElementRef;
   @ViewChild('textarea', { static: false }) textarea: ElementRef;
-  @ViewChild('richtexteditor', { static: false })
-  richtexteditor: CodxInputComponent;
+  @ViewChild('richtexteditor') richtexteditor: CodxInputComponent;
+  @ViewChild('defaultRTE')
+  public defaultRTE: RichTextEditorComponent;
 
   @ViewChild('listviewInstance', { static: false })
   public listviewInstance: any;
@@ -90,7 +96,7 @@ export class CodxEmailComponent implements OnInit {
   public cssClass: string = 'e-list-template';
 
   //(1)(2)(3)(4) => ưu tiên get danh sách
-  cubeID: string; //Truyền vào (1) hoặc AD_EmailTemplates.CubeID (2) => get danh sách field để chọn (từ gridViewSetup)
+  //cubeID: string; //Truyền vào (1) hoặc AD_EmailTemplates.CubeID (2) => get danh sách field để chọn (từ gridViewSetup)
   functionID: string; //truyền vào (3) hoặc lấy funtion nghiệp vụ (4) => get danh sách field để chọn (từ gridViewSetup)
 
   constructor(
@@ -102,6 +108,7 @@ export class CodxEmailComponent implements OnInit {
     private callFunc: CallFuncService,
     private auth: AuthStore,
     private dmSV: CodxDMService,
+    private mainService: CodxService,
     private cr: ChangeDetectorRef,
     private renderer: Renderer2,
     @Optional() dialog: DialogRef,
@@ -110,7 +117,7 @@ export class CodxEmailComponent implements OnInit {
     this.dialog = dialog;
     this.templateID = data?.data?.templateID;
 
-    this.cubeID = data?.data?.cubeID;
+    //this.cubeID = data?.data?.cubeID;
     this.functionID = data?.data?.functionID;
 
     if (!this.functionID) {
@@ -162,119 +169,47 @@ export class CodxEmailComponent implements OnInit {
     this.formModel.funcID = '';
 
     this.cache.gridView(this.formModel.gridViewName).subscribe((gridView) => {
-      this.cache.setGridView(this.formModel.gridViewName, gridView);
+      // this.cache.setGridView(this.formModel.gridViewName, gridView);
       this.cache
         .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
         .subscribe((gridViewSetup) => {
-          this.cache.setGridViewSetup(
+          // this.cache.setGridViewSetup(
+          //   this.formModel.formName,
+          //   this.formModel.gridViewName,
+          //   gridViewSetup
+          // );
+          this.dialogETemplate = this.mainService.buildFormGroup(
             this.formModel.formName,
-            this.formModel.gridViewName,
-            gridViewSetup
+            this.formModel.gridViewName
           );
-
-          this.codxService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-            .then((res) => {
-              if (res) {
-                this.dialogETemplate = res;
-
-                if (this.cubeID) {
-                  //truyền cubeID
-                  this.loadListFieldByCubeID(this.cubeID);
-                  return;
-                } else {
-                  //get cubeIB by EmailTemplate
-                  if (this.templateID) {
-                    this.codxService
-                      .getEmailTemplate(this.templateID)
-                      .subscribe((res1) => {
-                        if (res1 != null) {
-                          console.log('getEmailTemplate', res1);
-
-                          this.data = res1[0];
-                          this.dialogETemplate.patchValue(this.data);
-                          if (this.data?.cubeID) {
-                            //Load field theo cubeID của EmailTemplate
-                            this.loadListFieldByCubeID(this.data.cubeIB);
-                          } else {
-                            this.loadListFieldByFuntion();
-                          }
-                          this.setViewBody();
-                          this.dialogETemplate.addControl(
-                            'recID',
-                            new FormControl(res1[0].recID)
-                          );
-
-                          // if (res[0].isTemplate) {
-                          //   this.methodEdit = true;
-                          // }
-
-                          let lstUser = res1[1];
-                          if (lstUser && lstUser.length > 0) {
-                            console.log(lstUser);
-
-                            lstUser.forEach((element) => {
-                              switch (element.sendType) {
-                                case '1':
-                                  this.lstFrom.push(element);
-                                  break;
-                                case '2':
-                                  this.lstTo.push(element);
-                                  break;
-                                case '3':
-                                  this.lstCc.push(element);
-                                  break;
-                                case '4':
-                                  this.lstBcc.push(element);
-                                  break;
-                              }
-                            });
-                          }
-                          this.formModel.currentData = this.data;
-                          this.isAfterRender = true;
-                        }
-                        this.cr.detectChanges();
-                      });
-                  } else {
-                    this.loadListFieldByFuntion();
-                  }
-                }
-              }
-            });
-        });
-    });
-  }
-
-  initForm() {
-    this.codxService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        if (res) {
-          this.dialogETemplate = res;
-
           if (this.templateID) {
             this.codxService
               .getEmailTemplate(this.templateID)
               .subscribe((res1) => {
                 if (res1 != null) {
                   console.log('getEmailTemplate', res1);
-
                   this.data = res1[0];
                   this.dialogETemplate.patchValue(this.data);
-                  this.setViewBody();
+                  if (this.data?.gridviewName) {
+                    //Load field theo cubeID của EmailTemplate
+                    this.loadListFieldByGridViewName(
+                      this.data?.gridviewName,
+                      this.data?.formName
+                    );
+                  } else {
+                    this.loadListFieldByFuntion();
+                  }
+                  // this.setViewBody();
                   this.dialogETemplate.addControl(
                     'recID',
                     new FormControl(res1[0].recID)
                   );
-
                   // if (res[0].isTemplate) {
                   //   this.methodEdit = true;
                   // }
-
                   let lstUser = res1[1];
                   if (lstUser && lstUser.length > 0) {
                     console.log(lstUser);
-
                     lstUser.forEach((element) => {
                       switch (element.sendType) {
                         case '1':
@@ -295,54 +230,133 @@ export class CodxEmailComponent implements OnInit {
                   this.formModel.currentData = this.data;
                   this.isAfterRender = true;
                 }
-                this.cr.detectChanges();
+                //this.cr.detectChanges();
               });
           } else {
-            this.codxService.getDataDefault().subscribe((res) => {
-              if (res) {
-                this.setViewBody();
+            this.codxService
+              .getDataDefault(this.functionID)
+              .subscribe((res) => {
+                if (res) {
+                  //this.setViewBody();
 
-                this.data = res;
-                this.dialogETemplate.patchValue(this.data);
-                this.dialogETemplate.addControl(
-                  'recID',
-                  new FormControl(this.data.recID)
-                );
-                this.formModel.currentData = this.data;
-                this.isAfterRender = true;
-                this.cr.detectChanges();
-              }
-            });
+                  this.data = res;
+                  this.dialogETemplate.patchValue(this.data);
+                  this.dialogETemplate.addControl(
+                    'recID',
+                    new FormControl(this.data.recID)
+                  );
+                  this.loadListFieldByFuntion();
+                  this.formModel.currentData = this.data;
+                  this.isAfterRender = true;
+                  //this.cr.detectChanges();
+                }
+              });
+            //this.loadListFieldByFuntion();
           }
-        }
-      });
+          // this.codxService
+          //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          //   .then((res) => {
+          //     if (res) {
+          //       this.dialogETemplate = res;
 
-    this.cr.detectChanges();
+          //     }
+          //   });
+        });
+    });
   }
 
-  loadListFieldByCubeID(cubeID: string) {
-    if (!cubeID) return;
-    var request = new DataRequest();
-    request.entityName = 'BI_Cubes';
-    request.predicates = 'CubeID=@0';
-    request.dataValues = cubeID;
-    request.pageLoading = false;
-    request.page = 1;
-    this.codxService.loadData('BI', request).subscribe((res) => {
-      if (res && res[1] > 0) {
+  // initForm() {
+  //   this.dialogETemplate = this.mainService.buildFormGroup(
+  //     this.formModel.formName,
+  //     this.formModel.gridViewName
+  //   );
+  //   if (this.templateID) {
+  //     this.codxService.getEmailTemplate(this.templateID).subscribe((res1) => {
+  //       if (res1 != null) {
+  //         console.log('getEmailTemplate', res1);
+  //         this.data = res1[0];
+  //         this.dialogETemplate.patchValue(this.data);
+  //         this.setViewBody();
+  //         this.dialogETemplate.addControl(
+  //           'recID',
+  //           new FormControl(res1[0].recID)
+  //         );
+  //         // if (res[0].isTemplate) {
+  //         //   this.methodEdit = true;
+  //         // }
+  //         let lstUser = res1[1];
+  //         if (lstUser && lstUser.length > 0) {
+  //           console.log(lstUser);
+  //           lstUser.forEach((element) => {
+  //             switch (element.sendType) {
+  //               case '1':
+  //                 this.lstFrom.push(element);
+  //                 break;
+  //               case '2':
+  //                 this.lstTo.push(element);
+  //                 break;
+  //               case '3':
+  //                 this.lstCc.push(element);
+  //                 break;
+  //               case '4':
+  //                 this.lstBcc.push(element);
+  //                 break;
+  //             }
+  //           });
+  //         }
+  //         this.formModel.currentData = this.data;
+  //         this.isAfterRender = true;
+  //       }
+  //       this.cr.detectChanges();
+  //     });
+  //   } else {
+  //     this.codxService.getDataDefault().subscribe((res) => {
+  //       if (res) {
+  //         this.setViewBody();
+
+  //         this.data = res;
+  //         this.dialogETemplate.patchValue(this.data);
+  //         this.dialogETemplate.addControl(
+  //           'recID',
+  //           new FormControl(this.data.recID)
+  //         );
+  //         this.formModel.currentData = this.data;
+  //         this.isAfterRender = true;
+  //         this.cr.detectChanges();
+  //       }
+  //     });
+  //   }
+  //   // this.codxService
+  //   //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+  //   //   .then((res) => {
+  //   //     if (res) {
+  //   //       this.dialogETemplate = res;
+
+  //   //     }
+  //   //   });
+
+  //   this.cr.detectChanges();
+  // }
+
+  loadListFieldByGridViewName(gridViewName, formName) {
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((grvSetup) => {
+      if (grvSetup) {
+        var arrgv = Object.values(grvSetup) as any[];
         var result = [];
-        var lstRes = res[0];
-        lstRes.forEach((element) => {
-          var obj = {
-            fieldName: element['FieldName'],
-            headerText: element['HeaderText'],
-            data: element,
-          };
-          result.push(obj);
+        console.log(grvSetup);
+        arrgv.forEach((element) => {
+          if (element.isTemplate == '1') {
+            var obj = {
+              fieldName: element?.fieldName,
+              headerText: element?.headerText,
+              data: element,
+            };
+            result.push(obj);
+          }
         });
         this.dataSource = result;
-        this.initForm();
-        this.setViewBody();
+        //this.setViewBody();
+        // this.initForm();
       }
     });
   }
@@ -350,47 +364,48 @@ export class CodxEmailComponent implements OnInit {
   loadListFieldByFuntion() {
     this.cache.functionList(this.functionID).subscribe((res) => {
       if (res) {
-        this.cache
-          .gridViewSetup(res.formName, res.gridViewName)
-          .subscribe((grvSetup) => {
-            if (grvSetup) {
-              var arrgv = Object.values(grvSetup) as any[];
-              var result = [];
-              console.log(grvSetup);
-              arrgv.forEach((element) => {
-                var obj = {
-                  fieldName: element?.fieldName,
-                  headerText: element?.headerText,
-                  data: element,
-                };
-                result.push(obj);
-              });
-              this.dataSource = result;
-              this.setViewBody();
-              this.initForm();
-            }
-          });
+        this.loadListFieldByGridViewName(res.formName, res.gridViewName);
+        // this.cache
+        //   .gridViewSetup()
+        //   .subscribe((grvSetup) => {
+        //     if (grvSetup) {
+        //       var arrgv = Object.values(grvSetup) as any[];
+        //       var result = [];
+        //       console.log(grvSetup);
+        //       arrgv.forEach((element) => {
+        //         var obj = {
+        //           fieldName: element?.fieldName,
+        //           headerText: element?.headerText,
+        //           data: element,
+        //         };
+        //         result.push(obj);
+        //       });
+        //       this.dataSource = result;
+        //       this.setViewBody();
+        //       this.initForm();
+        //     }
+        //   });
       }
     });
   }
 
-  setViewBody() {
-    return;
-    // if (this.dataSource && this.dialogETemplate) {
-    //   if (!this.data.message && this.data.message == null) {
-    //     this.data.message = '';
-    //     this.dialogETemplate?.patchValue({ message: this.data.message });
-    //   }
-    //   this.dataSource?.forEach((element) => {
-    //     this.data.message = this.data.message.replace(
-    //       '[' + element.fieldName + ']',
-    //       '[' + element.headerText + ']'
-    //     );
-    //   });
-    //   this.dialogETemplate?.patchValue({ message: this.data.message });
-    //   this.cr.detectChanges();
-    // }
-  }
+  // setViewBody() {
+  //   return;
+  //   // if (this.dataSource && this.dialogETemplate) {
+  //   //   if (!this.data.message && this.data.message == null) {
+  //   //     this.data.message = '';
+  //   //     this.dialogETemplate?.patchValue({ message: this.data.message });
+  //   //   }
+  //   //   this.dataSource?.forEach((element) => {
+  //   //     this.data.message = this.data.message.replace(
+  //   //       '[' + element.fieldName + ']',
+  //   //       '[' + element.headerText + ']'
+  //   //     );
+  //   //   });
+  //   //   this.dialogETemplate?.patchValue({ message: this.data.message });
+  //   //   this.cr.detectChanges();
+  //   // }
+  // }
 
   setMessage(message: any) {
     return;
@@ -421,11 +436,11 @@ export class CodxEmailComponent implements OnInit {
       ...this.lstCc,
       ...this.lstBcc,
     ];
-    this.codxService.sendEmail(this.data, lstSento).subscribe(res =>{
-      if(res){
+    this.codxService.sendEmail(this.data, lstSento).subscribe((res) => {
+      if (res) {
         this.dialog && this.dialog.close();
       }
-    })
+    });
   }
 
   onSaveForm(dialog1: DialogRef) {
@@ -504,7 +519,7 @@ export class CodxEmailComponent implements OnInit {
       if (this.data && this.data.recID) {
         delete this.data.recID;
       }
-      
+
       if (lstSento && lstSento?.length > 0) {
         lstSento.forEach((element) => {
           delete element.recID;
@@ -579,48 +594,96 @@ export class CodxEmailComponent implements OnInit {
         }
         case 'template': {
           if (event?.data != '') {
-            this.codxService.getEmailTemplate(event?.data).subscribe((res1) => {
-              if (res1 != null) {
-                res1[0].recID = this.data?.recID;
-                res1[0].id = this.data?.id;
-                this.data = res1[0];
-                this.setViewBody();
-                this.dialogETemplate.patchValue(this.data);
-                this.setViewBody();
+            this.templateID = event?.data;
+            this.codxService
+              .getEmailTemplate(this.templateID)
+              .subscribe((res1) => {
+                if (res1 != null) {
+                  console.log('getEmailTemplate', res1);
+                  this.data = res1[0];
+                  this.dialogETemplate.patchValue(this.data);
+                  if (this.data?.gridviewName) {
+                    //Load field theo cubeID của EmailTemplate
+                    this.loadListFieldByGridViewName(
+                      this.data?.gridviewName,
+                      this.data?.formName
+                    );
+                  } else {
+                    this.loadListFieldByFuntion();
+                  }
+                  this.dialogETemplate.addControl(
+                    'recID',
+                    new FormControl(res1[0].recID)
+                  );
 
-                this.richtexteditor.control.angularValue = this.data?.message;
-
-                let lstUser = res1[1];
-                this.lstFrom = [];
-                this.lstTo = [];
-                this.lstCc = [];
-                this.lstBcc = [];
-                if (lstUser && lstUser.length > 0) {
-                  console.log(lstUser);
-
-                  lstUser.forEach((element) => {
-                    delete element.id;
-                    delete element.recID;
-                    element.transID = this.dialogETemplate.value.recID;
-                    switch (element.sendType) {
-                      case '1':
-                        this.lstFrom.push(element);
-                        break;
-                      case '2':
-                        this.lstTo.push(element);
-                        break;
-                      case '3':
-                        this.lstCc.push(element);
-                        break;
-                      case '4':
-                        this.lstBcc.push(element);
-                        break;
-                    }
-                  });
+                  let lstUser = res1[1];
+                  if (lstUser && lstUser.length > 0) {
+                    console.log(lstUser);
+                    lstUser.forEach((element) => {
+                      switch (element.sendType) {
+                        case '1':
+                          this.lstFrom.push(element);
+                          break;
+                        case '2':
+                          this.lstTo.push(element);
+                          break;
+                        case '3':
+                          this.lstCc.push(element);
+                          break;
+                        case '4':
+                          this.lstBcc.push(element);
+                          break;
+                      }
+                    });
+                  }
+                  this.formModel.currentData = this.data;
+                  this.isAfterRender = true;
                 }
-              }
-              this.cr.detectChanges();
-            });
+                //this.cr.detectChanges();
+              });
+            // this.codxService.getEmailTemplate(event?.data).subscribe((res1) => {
+            //   if (res1 != null) {
+            //     res1[0].recID = this.data?.recID;
+            //     res1[0].id = this.data?.id;
+            //     this.data = res1[0];
+            //     //this.setViewBody();
+            //     this.dialogETemplate.patchValue(this.data);
+            //     //this.setViewBody();
+
+            //     this.richtexteditor.control.angularValue = this.data?.message;
+
+            //     let lstUser = res1[1];
+            //     this.lstFrom = [];
+            //     this.lstTo = [];
+            //     this.lstCc = [];
+            //     this.lstBcc = [];
+            //     if (lstUser && lstUser.length > 0) {
+            //       console.log(lstUser);
+
+            //       lstUser.forEach((element) => {
+            //         delete element.id;
+            //         delete element.recID;
+            //         element.transID = this.dialogETemplate.value.recID;
+            //         switch (element.sendType) {
+            //           case '1':
+            //             this.lstFrom.push(element);
+            //             break;
+            //           case '2':
+            //             this.lstTo.push(element);
+            //             break;
+            //           case '3':
+            //             this.lstCc.push(element);
+            //             break;
+            //           case '4':
+            //             this.lstBcc.push(element);
+            //             break;
+            //         }
+            //       });
+            //     }
+
+            //   }
+            //   this.cr.detectChanges();
+            // });
           }
           break;
         }
@@ -832,53 +895,45 @@ export class CodxEmailComponent implements OnInit {
   getfileCount(e: any) {}
 
   public selection: NodeSelection = new NodeSelection();
-  public range: Range;
-  public saveSelection: NodeSelection;
+  //public range: Range;
+  //public saveSelection: NodeSelection;
 
   getPosition() {
-    this.range = this.selection.getRange(document);
+    //this.range = this.selection.getRange(document);
   }
 
   insert(data: any) {
+    const tempElem: HTMLElement = this.richtexteditor.control.createElement(
+      this.richtexteditor.control.enterKey
+    );
+    debugger;
     console.log('message', this.data.message);
     console.log(
       'before angularvalue',
       this.richtexteditor.control.angularValue
     );
     if (data && data != null) {
-      this.saveSelection = this.selection.save(this.range, document);
-      this.saveSelection.restore();
-      console.log(this.saveSelection);
+      // this.saveSelection = this.selection.save(this.range, document);
+      // this.saveSelection.restore();
+      //console.log(this.saveSelection);
       let html =
-        '<span data="' +
-        data?.fieldName +
-        '">[' +
-        data?.headerText +
-        ']</span>';
+        '<span contenteditable="false" class="e-mention-chip" ><span class="e-success" codx-data="{0}">#{1}</span></span>';
       if (data.data.referedType == '2') {
-        html =
-          '<span data="' +
-          data?.fieldName +
-          '|vll:' +
-          data?.data?.referedValue +
-          '">[' +
-          data?.headerText +
-          ']</span>';
+        var key = data?.fieldName + '|vll:' + data?.data?.referedValue;
+        var value = data?.headerText;
+        html = Util.stringFormat(html, key, value);
       } else if (data.data.referedType == '3') {
-        html =
-          '<span data="' +
-          data?.fieldName +
-          '|cbx:' +
-          data?.data?.referedValue +
-          '">[' +
-          data?.headerText +
-          ']</span>';
+        var key = data?.fieldName + '|cbx:' + data?.data?.referedValue;
+        var value = data?.headerText;
+        html = Util.stringFormat(html, key, value);
+      } else {
+        var key = data?.fieldName + '';
+        var value = data?.headerText;
+        html = Util.stringFormat(html, key, value);
       }
 
-      this.richtexteditor.control.executeCommand('insertHTML', '&nbsp;');
       this.richtexteditor.control.executeCommand('insertHTML', html);
-      this.richtexteditor.control.executeCommand('insertHTML', '&nbsp;');
-
+      //const range: Range = this.richtexteditor.control.getRange();
       // this.richtexteditor.control.executeCommand('fontColor', 'gray');
       // this.richtexteditor.control.executeCommand(
       //   'insertText',
@@ -886,17 +941,17 @@ export class CodxEmailComponent implements OnInit {
       // );
       // this.richtexteditor.control.executeCommand('fontColor', 'black');
 
-      this.range = this.selection.getRange(document);
+      //this.range = this.selection.getRange(document);
 
-      this.data.message = this.richtexteditor.control.angularValue;
-
-      console.log('control', this.richtexteditor);
-      console.log('angularvalue', this.richtexteditor.control.angularValue);
-
+      // console.log('control', this.richtexteditor);
+      // console.log('angularvalue', this.richtexteditor.control.angularValue);
+      this.data.message =
+        this.richtexteditor?.control?.contentModule?.editableElement?.innerHTML;
       this.dialogETemplate.patchValue({ message: this.data.message });
 
       this.cr.detectChanges();
     }
+    // this.saveSelection.Clear(document);
   }
 
   isInside: boolean = false;
@@ -922,7 +977,6 @@ export class CodxEmailComponent implements OnInit {
 
   clickItem(item) {
     console.log('clickItem', item);
-
     if (item) {
       this.insert(item);
     }
@@ -946,7 +1000,7 @@ export class CodxEmailComponent implements OnInit {
   keyUp(event) {
     console.log(this.richtexteditor.control.angularValue);
 
-    this.range = this.selection.getRange(document);
+    //this.range = this.selection.getRange(document);
   }
 
   onActionComplete(args: any): void {}

@@ -25,7 +25,6 @@ import {
   NotificationsService,
   AuthService,
 } from 'codx-core';
-import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
 import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
 
 import { MWPPopupAddBookingRoomComponent } from './popup-add-booking-room/mwp-popup-add-booking-room.component';
@@ -41,7 +40,6 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('report') report: TemplateRef<any>;
-  @ViewChild('reportObj') reportObj: CodxReportViewerComponent;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
@@ -80,14 +78,14 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
   optionalData;
   formModel: FormModel;
   popupClosed = true;
-  listRoom=[];  
-  listReason=[];  
-  listAttendees=[];  
+  listRoom=[];
+  listReason=[];
+  listAttendees=[];
   listItem=[];
   tempReasonName='';
-  tempRoomName='';  
+  tempRoomName='';
   tempAttendees='';
-  selectBookingItems=[];  
+  selectBookingItems=[];
   selectBookingAttendees='';
   constructor(
     private injector: Injector,
@@ -155,19 +153,19 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
       if(res){
         this.listRoom=[];
         this.listRoom=res;
-      }        
+      }
     });
     this.codxEpService.getListReason('EP_BookingRooms').subscribe((res:any)=>{
       if(res){
         this.listReason=[];
         this.listReason=res;
-      }        
-    });    
+      }
+    });
   }
 
   ngAfterViewInit(): void {
-    
-    
+
+
 
 
     this.view.dataService.methodDelete = 'DeleteBookingAsync';
@@ -219,7 +217,7 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
     this.listRoom.forEach(r=>{
       if(r.resourceID==resourceID){
         this.tempRoomName= r.resourceName;
-      }      
+      }
     });
     return this.tempRoomName;
   }
@@ -228,18 +226,18 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
     this.listReason.forEach(r=>{
       if(r.reasonID==reasonID){
         this.tempReasonName= r.description;
-      }      
+      }
     });
     return this.tempReasonName;
   }
-  getMoreInfo(recID:any){  
-    this.selectBookingItems=[];  
+  getMoreInfo(recID:any){
+    this.selectBookingItems=[];
     this.selectBookingAttendees='';
 
     this.codxEpService.getListItems(recID).subscribe((item:any)=>{
       if(item){
         this.selectBookingItems = item;
-      }        
+      }
     });
     this.codxEpService.getListAttendees(recID).subscribe((attendees:any)=>{
       if(attendees){
@@ -248,7 +246,7 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
           this.selectBookingAttendees=this.selectBookingAttendees +element.userID+';';
         });
         this.selectBookingAttendees;
-      }        
+      }
     });
   }
   changeItemDetail(event) {
@@ -320,7 +318,7 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
           }
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
-            func.functionID == 'SYS03' /*MF xóa*/ 
+            func.functionID == 'SYS03' /*MF xóa*/
           ) {
             func.disabled = true;
           }
@@ -379,7 +377,7 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
   //     [data,this.formModel,title]
   //   );
   //   dialogInvite.closed.subscribe((x) => {
-      
+
   //     if (!x.event) this.view.dataService.clear();
   //     if (x.event == null && this.view.dataService.hasSaved)
   //       this.view.dataService
@@ -389,7 +387,7 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
   //         });
   //     else if (x.event) {
   //       x.event.modifiedOn = new Date();
-        
+
   //       this.view.dataService.update(x.event).subscribe();
   //     }
   //   });
@@ -454,7 +452,7 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
             );
             dialog.closed.subscribe((returnData) => {
               this.popupClosed = true;
-              if (!returnData.event) 
+              if (!returnData.event)
               {
                 this.view.dataService.clear();
               }
@@ -463,7 +461,7 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
       }
     }
   }
-  
+
   copy(evt?) {
     if (evt) {
       if (this.popupClosed) {
@@ -511,7 +509,7 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
         return;
       }
     }
-    this.view.dataService.delete([deleteItem]).subscribe((res) => {      
+    this.view.dataService.delete([deleteItem]).subscribe((res) => {
     });
   }
 

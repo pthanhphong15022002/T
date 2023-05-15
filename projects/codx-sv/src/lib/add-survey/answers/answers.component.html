@@ -46,6 +46,12 @@
                             <span class="ms-7 mt-4">{{an.answer}}</span>
                           </div>
                         </ng-container>
+                        <ng-container *ngSwitchCase="'L'">
+                          <div class="d-flex align-items-center">
+                            <codx-input [type]="'radio'" [disabled]="true" [checked]="true"></codx-input>
+                            <span class="ms-7 mt-4">{{an.answer}}</span>
+                          </div>
+                        </ng-container>
                       </ng-container>
                     </ng-container>
                   </ng-container>
@@ -110,7 +116,7 @@
                   <div ngbDropdownMenu>
                     <ng-container *ngIf="respondents && respondents.responds.length > 0">
                       <button class="btn-dpd-1" ngbDropdownItem *ngFor="let item of respondents.responds ; let i = index" (click)="selectedDropDown(i,item.question)">
-                        <span>{{extractContent(item.question)}}</span>
+                        <span class="span-overflow">{{extractContent(item.question)}}</span>
                       </button>
                     </ng-container>
                   </div>
@@ -146,6 +152,17 @@
                         ></codx-input>
                         <span>{{item.answer}}</span>
                       </ng-container>
+                      <ng-container *ngSwitchCase="'C'">
+                        <codx-input
+                          *ngIf="!item.other"
+                          type="checkbox"
+                          [disabled]="true"
+                          class="test-check"
+                          field="O"
+                          ngClass="ip-ans me-7"
+                        ></codx-input>
+                        <span>{{item.answer}}</span>
+                      </ng-container>
                     </ng-container>
                    
                   </div>
@@ -169,7 +186,31 @@
                         ></codx-input>
                         <span>{{item.answer}}</span>
                       </ng-container>
+                      <ng-container *ngSwitchCase="'L'">
+                        <codx-input
+                          *ngIf="!item.other"
+                          type="radio"
+                          [disabled]="true"
+                          class="test-check"
+                          field="O"
+                          ngClass="ip-ans me-7"
+                          [checked]="true"
+                        ></codx-input>
+                        <span>{{item.answer}}</span>
+                      </ng-container>
                       <ng-container *ngSwitchCase="'T'">
+                        {{item.answer}}
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'C'">
+                        <codx-input
+                        *ngIf="!item.other"
+                        type="checkbox"
+                        [disabled]="true"
+                        class="test-check"
+                        field="O"
+                        ngClass="ip-ans me-7"
+                        [checked]="true"
+                      ></codx-input>
                         {{item.answer}}
                       </ng-container>
                     </ng-container> 

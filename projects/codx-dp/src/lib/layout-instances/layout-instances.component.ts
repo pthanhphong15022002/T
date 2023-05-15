@@ -1,4 +1,12 @@
-import { Component, OnInit, Injector, ChangeDetectorRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Injector,
+  ChangeDetectorRef,
+  ViewChild,
+} from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+
 import {
   CallFuncService,
   DialogModel,
@@ -18,18 +26,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class LayoutInstancesComponent extends LayoutBaseComponent {
   @ViewChild('popupGuide') popupGuide;
   vllApplyFor = 'DP002';
-  module = '';
-  override aside = false;
-  override toolbarFixed = false;
-  
-  //override asideFixed = true;
-  // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  //override toolbar = false;
-  //dataProcess = new BehaviorSubject<any>(null);
   processView: any;
-  stepNames = [];
+  stepViews = [];
   dialogGuide: DialogRef;
-  
+
   constructor(
     inject: Injector,
     private changDef: ChangeDetectorRef,
@@ -37,6 +37,9 @@ export class LayoutInstancesComponent extends LayoutBaseComponent {
     private callfc: CallFuncService
   ) {
     super(inject);
+    this.module = '';
+    this.layoutModel.asideDisplay=false;
+    this.layoutModel.toolbarFixed=false;
   }
 
   onInit(): void {
@@ -54,8 +57,17 @@ export class LayoutInstancesComponent extends LayoutBaseComponent {
   }
   viewNameProcess(ps) {
     this.processView = ps;
+    this.stepViews=[] ;
     if (this.processView?.steps?.length > 0)
-      this.stepNames = this.processView.steps.map((x) => x.stepName);
+      this.processView.steps.forEach((x) => {
+        if (!x.isFailStep && !x.isSuccessStep) {
+          let obj = {
+            stepName: x.stepName,
+            memo: x.memo
+          };
+          this.stepViews.push(obj);
+        }
+      });
     this.changDef.detectChanges();
   }
 
@@ -64,11 +76,11 @@ export class LayoutInstancesComponent extends LayoutBaseComponent {
     let option = new DialogModel();
     option.zIndex = 1001;
 
-   this.dialogGuide = this.callfc.openForm(
+    this.dialogGuide = this.callfc.openForm(
       this.popupGuide,
       '',
-      500,
-      300,
+      600,
+      470,
       '',
       null,
       '',

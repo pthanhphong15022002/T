@@ -1,0 +1,486 @@
+<codx-form #form [subHeader]="subHeader" [body]="body" [footer]="footer" [formModel]="dialog.formModel"
+  [dialog]="dialog" [data]="inventoryJournal" [customToolbar]="subToolbar" [openMore]="false">
+</codx-form>
+
+<!-- Start: Sub header -->
+<ng-template #subHeader>
+  <ng-container *ngIf="form?.formGroup"> </ng-container>
+</ng-template>
+<!-- End: Sub header -->
+
+<!-- Start: Body -->
+<ng-template #body>
+  <div class="card-add mt-3" #cardbodyRef>
+    <ejs-tab #inventoryRef>
+      <e-tabitems>
+        <!-- Tab thông tin chứng từ -->
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2">
+              <i class="icon-info icon-20 me-2"></i>
+              <span [innerHTML]="'0' | vll : 'AC071' : 'text' | async" class="fw-bold fs-5-sm text-uppercase">
+              </span>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+    <ejs-tab>
+      <e-tabitems #tabObj>
+        <!-- Tab chi tiết -->
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2">
+              <i class="icon-format_list_numbered icon-20 me-2"></i>
+              <span [innerHTML]="'1' | vll : 'AC070' : 'text' | async" class="fw-bold fs-5-sm text-uppercase">
+              </span>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="tabLine"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+  </div>
+</ng-template>
+<!-- End: Body -->
+
+<!-- Start: Tab Basic -->
+<ng-template #tabBasic>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="row mt-5">
+      <div class="col-7 ac-left">
+        <div class="mw-750px">
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <!-- Mã Kho -->
+                <div class="form-group">
+                  <codx-label fiedName="WarehouseID" [formModel]="form.formModel">
+                  </codx-label>
+                  <codx-input [Group]="form.formGroup" field="warehouseID" [formModel]="form.formModel"
+                    (valueChange)="valueChange($event)">
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="form-group">
+                <!-- Tên Kho -->
+                <div class="form-group">
+                  <codx-label field="WarehouseName" default="Tên kho" [formModel]="form.formModel">
+                  </codx-label>
+                  <codx-input type="text" field="warehouseName" [disabled]="true" [crrValue]="inventoryJournal.warehouseName"></codx-input>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <!-- Lý do -->
+                <div class="form-group">
+                  <codx-label fiedName="ReasonID" [formModel]="form.formModel">
+                  </codx-label>
+                  <codx-input [Group]="form.formGroup" field="reasonID" [formModel]="form.formModel"
+                    (valueChange)="valueChange($event)">
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="form-group">
+                <!-- Đối tượng -->
+                <div class="form-group">
+                  <codx-label fiedName="ObjectID" [formModel]="form.formModel">
+                  </codx-label>
+                  <codx-input [Group]="form.formGroup" field="objectID" [formModel]="form.formModel"
+                    (valueChange)="valueChange($event)">
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div #noteRef class="form-group">
+              <codx-label fiedName="Memo" [formModel]="form.formModel">
+              </codx-label>
+              <codx-input [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
+                (valueChange)="valueChange($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-2 ac-bettween"></div>
+      <div class="col-3 ac-right d-flex justify-content-end">
+        <div class="d-flex flex-column mw-300px">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="voucherDate"
+                  (valueChange)="valueChange($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)" [disabled]="journal?.voucherNoRule != '0'">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<!-- End: Tab Basic -->
+
+<!-- Start:CashPaymentLine -->
+<ng-template #tabLine>
+  <ng-container>
+    <div *ngIf="modeGrid == 1" class="h-100 w-100 border">
+      <codx-gridview-v2 #gridInventoryJournalLine class="tabLine" [formName]="fmInventoryJournalLines.formName"
+        [gridViewName]="fmInventoryJournalLines.gridViewName" [entityName]="fmInventoryJournalLines.entityName"
+        [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
+        [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="inventoryJournalLines" service="IV"
+        [height]="gridHeight"  [autoLoad]="false" rowHeight="30" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"
+        (created)="gridCreated($event, gridInventoryJournalLine)"></codx-gridview-v2>
+    </div>
+    <ng-container *ngIf="form?.formGroup && modeGrid == 2 && gridViewSetupLine">
+      <div class="table-responsive mt-3">
+        <table style="table-layout: fixed;" class="table table-hover table-row-bordered mb-2">
+          <thead>
+            <tr>
+              <th class="w-50px text-center">
+                <codx-label class="fw-bold" fiedName="RowNo" [formModel]="fmInventoryJournalLines">
+                </codx-label>
+              </th>
+              <th style="width: 40%;">
+                <div class="d-flex">
+                  <i class="icon-i-box icon-16 me-2 icon-add text-gray-700"></i>
+                  <codx-label class="fw-bold" fiedName="ItemID" [formModel]="fmInventoryJournalLines">
+                  </codx-label>
+                </div>
+              </th>
+              <th>
+                <div class="d-flex">
+                  <i class="icon-list-check icon-16 me-2"></i>
+                  <span class="fw-bold">Thông tin mua hàng</span>
+                </div>
+              </th>
+              <th>
+                <div class="d-flex">
+                  <i class="icon-i-graph-up icon-16 me-2"></i>
+                  <span class="fw-bold">Thông tin phân tích</span>
+                </div>
+              </th>
+              <th style="width: 10px;">
+              </th>
+            </tr>
+          </thead>
+          <tbody class="border-bottom" *ngFor="
+              let item of inventoryJournalLines
+                | slice : (page - 1) * pageSize : page * pageSize
+            ">
+            <tr>
+              <td class="text-center fw-bold">
+                {{ item.rowNo }}
+              </td>
+              <td>
+                <div class="d-flex flex-wrap">
+                  <div class="d-flex align-items-center me-5 mb-1">
+                    <span [ngbTooltip]="item.itemName" class="fw-bold line-clamp line-clamp-2">{{ item.itemName }}</span>
+                  </div>
+                </div>
+                <div style="white-space: nowrap" class="d-flex flex-wrap">
+                  <ng-container *ngIf="item.idiM0 != null && item.idiM0 != ''">
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM0" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">&nbsp;{{item.idiM0}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                  </ng-container>
+  
+                  <ng-container *ngIf="item.idiM1 != null && item.idiM1 != ''">
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM1" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">&nbsp;{{item.idiM1}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                  </ng-container>
+  
+                  <ng-container *ngIf="item.idiM2 != null && item.idiM2 != ''">
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM2" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">&nbsp;{{item.idiM2}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                  </ng-container>
+  
+                  <ng-container *ngIf="item.idiM3 != null && item.idiM3 != ''">
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM3" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">&nbsp;{{item.idiM3}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                  </ng-container>
+  
+                  <ng-container *ngIf="item.idiM4 != null && item.idiM4 != ''">
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM4" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    &nbsp;
+                    <span #idiM4 class="fs-6 fw-bold" [innerHTML]="
+                        item.idiM4
+                          | formatvalue
+                            : fmInventoryJournalLines
+                            : 'idiM4'
+                            : idiM4
+                          | async
+                      "></span>
+                  </ng-container>
+                </div>
+                <div style="white-space: nowrap" class="d-flex flex-wrap">
+                  <ng-container *ngIf="item.idiM5 != null && item.idiM5 != ''">
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM5" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">&nbsp;{{item.idiM5}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                  </ng-container>
+  
+                  <ng-container *ngIf="item.idiM6 != null && item.idiM6 != ''">
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM6" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">&nbsp;{{item.idiM6}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                  </ng-container>
+  
+                  <ng-container *ngIf="item.idiM7 != null && item.idiM7 != ''">
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM7" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">&nbsp;{{item.idiM7}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                  </ng-container>
+  
+                  <ng-container *ngIf="item.idiM8 != null && item.idiM8 != ''">
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM8" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">&nbsp;{{item.idiM8}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                  </ng-container>
+  
+                  <ng-container *ngIf="item.idiM9 != null && item.idiM9 != ''">
+                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM9" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span class="fs-6 fw-bold">&nbsp;{{item.idiM9}}</span>
+                  </ng-container>
+                </div>
+              </td>
+              <td>
+                <div *ngIf="item.costAmt != null && item.costAmt != ''" style="white-space: nowrap"
+                  class="d-flex align-items-center justify-content-start mt-1">
+                  <span class="text-gray-700 fs-6">Tiền hàng:</span>
+                  <span [ngbTooltip]="popContent" class="fs-6 fw-bold line-clamp line-clamp-1">&nbsp;{{ item.quantity }}{{ item.umid }} x
+                    {{ item.costPrice.toLocaleString("it-IT") }} =
+                    {{ item.costAmt.toLocaleString("it-IT") }}</span>
+                    <ng-template #popContent >
+                      <span #popContent [ngbTooltip]="popContent" class="fs-6 fw-bold">&nbsp;{{ item.quantity }}{{ item.umid }} x
+                        {{ item.costPrice.toLocaleString("it-IT") }} =
+                        {{ item.costAmt.toLocaleString("it-IT") }}</span>
+                    </ng-template>
+                </div>
+              </td>
+              <td>
+                <div class="d-flex flex-wrap">
+                  <ng-container *ngIf="item.diM2 != null && item.diM2 != ''">
+                    <div class="d-flex align-items-top">
+                    <codx-label class="text-gray-700 label-colon" fiedName="DIM2" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span #diM2 class="fs-6 fw-bold" [innerHTML]="
+                        item.diM2
+                          | formatvalue
+                            : fmInventoryJournalLines
+                            : 'diM2'
+                            : diM2
+                          | async
+                      "></span>
+                    </div>
+                    
+                  </ng-container>
+                  <ng-container *ngIf="item.diM3 != null && item.diM3 != ''">
+                    <div class="text-gray-400 mx-1">|</div>
+                    <div class="d-flex align-items-top">
+                      <codx-label class="text-gray-700 label-colon" fiedName="DIM3" [formModel]="fmInventoryJournalLines">
+                      </codx-label>
+                      <span #diM3 class="fs-6 fw-bold" [innerHTML]="
+                          item.diM3
+                            | formatvalue
+                              : fmInventoryJournalLines
+                              : 'diM3'
+                              : diM3
+                            | async
+                        "></span>
+                      </div>
+                  </ng-container>
+                </div>
+                <div class="d-flex flex-wrap mt-1">
+                  <ng-container *ngIf="item.diM1 != null && item.diM1 != ''">
+                    <div class="d-flex align-items-top">
+                    <codx-label class="text-gray-700 label-colon" fiedName="DIM1" [formModel]="fmInventoryJournalLines">
+                    </codx-label>
+                    <span #diM1 class="fs-6 fw-bold" [innerHTML]="
+                        item.diM1
+                          | formatvalue
+                            : fmInventoryJournalLines
+                            : 'diM1'
+                            : diM1
+                          | async
+                      "></span>
+                    </div>
+                    
+                  </ng-container>
+                  <ng-container *ngIf="item.projectID != null && item.projectID != ''">
+                    <div class="text-gray-400 mx-1">|</div>
+                    <div class="d-flex align-items-top">
+                      <codx-label class="text-gray-700 label-colon" fiedName="ProjectID"
+                        [formModel]="fmInventoryJournalLines">
+                      </codx-label>
+                      <span #projectID class="fs-6 fw-bold" [innerHTML]="
+                          item.projectID
+                            | formatvalue
+                              : fmInventoryJournalLines
+                              : 'projectID'
+                              : projectID
+                            | async
+                        "></span>
+                    </div>
+                  </ng-container>
+                </div>
+              </td>
+              <td>
+                <div class="has-action-menu">
+                  <codx-mfunc [dataItem]="item" [formModel]="form.formModel" (clickMF)="clickMF($event, item)"
+                    isBookMark="false" type="hover"></codx-mfunc>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>  
+    </ng-container>
+    <div class="d-flex flex-wrap mt-6">
+      <div class="d-flex align-items-center mb-1 bg-light me-5">
+        <span class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 me-2 bg-primary"></span>
+        <span class="text-dark fw-bold py-1 px-2">Tổng cộng: {{ total + ' ' + inventoryJournal.currencyID }}</span>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div *ngIf="inventoryJournalLines.length > 0 && modeGrid == 2" class="d-flex justify-content-end">
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize"
+          [collectionSize]="inventoryJournalLines.length"></ngb-pagination>
+      </div>
+    </div>
+    <div  class="container w-90 h-90">
+      <div style="background: none" class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center mt-2">
+          <div [ngbTooltip]="popContent" placement="bottom" style="width: 40px !important;height: 40px !important;"
+            class="btn btn-icon btn-bg btn-light-primary btn-circle me-4" (click)="addRow()">
+            <i class="icon-i-file-earmark-plus icon-18"></i>
+          </div>
+          <ng-template #popContent>
+            <span #popContent [ngbTooltip]="popContent" class="fs-6 fw-bold">Thêm dòng</span>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<!-- End: CashPaymentLine -->
+
+<!-- Start: More function -->
+<ng-template #morefunction let-data>
+  <span *ngIf="modeGrid == '2'" ngbTooltip="Sửa" placement="top" type="button" class="btn btn-icon btn-light-primary ms-1" (click)="editRow(data)">
+    <i class="icon-edit icon-16"></i>
+  </span>
+  <span ngbTooltip="Xóa" placement="bottom" type="button" class="btn btn-icon btn-light-danger ms-1"
+    (click)="deleteRow(data)">
+    <i class="icon-delete icon-16"></i>
+  </span>
+</ng-template>
+<!-- End: More function -->
+
+<!-- Start: Footer -->
+<ng-template #footer>
+  <div class="codx-detail-footer dialog-footer" *ngIf="inventoryJournal">
+    <div class="btn btn-white btn-icon tab-action">
+      <span class="icon-unfold_more icon-20"></span>
+    </div>
+    <ng-container *ngTemplateOutlet="tabRef"></ng-container>
+  </div>
+</ng-template>
+<!-- End: Footer -->
+
+<!-- Start: Tab Referen -->
+<ng-template #tabRef>
+  <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="inventoryJournal.recID"
+    [funcID]="form.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+</ng-template>
+<!-- End: Tab Referen -->
+
+<!-- Start: Sub toolbar -->
+<ng-template #subToolbar>
+  <div class="w-100">
+    <div class="d-flex align-items-center justify-content-between pt-3">
+      <div class="d-flex justify-content-start align-items-center me-2">
+        <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
+          <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
+          <i *ngIf="formType == 'copy'" class="icon-content_copy icon-16"></i>
+          <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
+        </div>
+        <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
+          {{ headerText }}
+        </div>
+        <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
+          <codx-input class="badge badge-danger" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
+          </codx-input>
+        </div>
+      </div>
+      <div class="d-flex align-items-center me-3">
+        <div *ngIf="formType != 'edit'" class="ms-2">
+          <button type="button" class="btn btn-md btn-light-primary" (click)="onSaveAdd()" >
+            <codx-label class="fw-normal" fiedName="lblSave" default="Lưu & thêm"></codx-label>
+          </button>
+        </div>
+        <div class="ms-2 me-2">
+          <button type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
+            <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+          </button>
+        </div>
+        <div class="ms-2">
+          <div class="btn btn-icon btn-light-danger btn-circle bg" (click)="close()">
+            <i class="icon-close icon-18"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- End: Sub toolbar -->

@@ -1,0 +1,119 @@
+<div>
+  <div class="custom-toolbar d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2">
+    <div>
+      <button
+        type="button"
+        class="btn btn-clean btn-sm btn-icon btn-icon-md"
+        (click)="add()"
+      >
+        <i class="icon-add_box icon-18 text-primary"></i>
+      </button>
+    </div>
+  </div>
+  <!-- <div
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-height="auto"
+    data-kt-scroll-dependencies=".custom-toolbar"
+    data-kt-scroll-wrappers=".tab-pane"
+    [attr.data-kt-scroll-offset]="'0px'"
+  > -->
+    <ng-container
+      *ngIf="listQuotations?.length > 0"
+      [ngTemplateOutlet]="itemViewList"
+    ></ng-container>
+  <!-- </div> -->
+</div>
+
+<ng-template #itemViewList>
+  <ng-container *ngFor="let data of listQuotations; let i = index">
+    <div class="has-action-menu my-5 py-3">
+      <div class="row">
+        <div class="col-1 d-flex justify-content-center align-items-center">
+          <span>{{ i + 1 }}</span>
+          <!-- <span
+            #rowNo
+            [innerHTML]="
+              data?.rowNo
+                | formatvalue
+                  : formModel
+                  : 'rowNo'
+                  : rowNo
+                  : 'CMQuotations'
+                  : 'grvCMQuotations'
+                | async
+            "
+          ></span> -->
+        </div>
+        <div class="col-3 d-flex flex-column justify-content-center">
+          <span
+            class="fs-6 fw-bold"
+            #quotationName
+            [innerHTML]="
+              data.quotationName
+                | formatvalue
+                  : formModel
+                  : 'quotationName'
+                  : quotationName
+                  : 'CMQuotations'
+                  : 'grvCMQuotations'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="col-2 d-flex justify-content-end align-items-center">
+          <span
+            class="fs-6"
+            #totalAmt
+            [innerHTML]="
+              data.quotationName
+                | formatvalue
+                  : formModel
+                  : 'totalAmt'
+                  : totalAmt
+                  : 'CMQuotations'
+                  : 'grvCMQuotations'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="col-2 d-flex justify-content-end align-items-center">
+          <span
+            class="fs-6"
+            #createdOn
+            [innerHTML]="
+              data.createdOn
+                | formatvalue
+                  : formModel
+                  : 'createdOn'
+                  : createdOn
+                  : 'CMQuotations'
+                  : 'grvCMQuotations'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="col-2 d-flex justify-content-end align-items-center">
+          <codx-vll
+            [name]="vllStatus"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-md fs-7"
+          >
+          </codx-vll>
+        </div>
+      </div>
+      <codx-mfunc
+        [formModel]="formModel"
+        (clickMF)="clickMF($event, data)"
+        (changeDataMF)="changeDataMF($event, data)"
+        [isBookMark]="true"
+        [dataItem]="data"
+        type="hover"
+      >
+      </codx-mfunc>
+    </div>
+  </ng-container>
+</ng-template>

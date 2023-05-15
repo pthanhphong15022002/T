@@ -12,8 +12,15 @@
             type="button"
             [style.background]="item?.color"
             class="btn btn-sm text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
-            [disabled]="!canOpenSubPopup || !isConfirm || ((item.functionID != 'SYS206') && isInteractPDF) || ((item.functionID != 'SYS206') && (item.functionID != 'SYS208') && isEdited)"
-            (click)="clickOpenPopupADR(item)"
+            [disabled]="
+              !canOpenSubPopup ||
+              !isConfirm ||
+              (item.functionID != 'SYS206' && isInteractPDF) ||
+              (item.functionID != 'SYS206' &&
+                item.functionID != 'SYS208' &&
+                isEdited)
+            "
+            (click)="beforeOpenPopupADR(item)"
           >
             {{ item?.text }}
           </button>
@@ -70,6 +77,8 @@
         </div>
       </div>
     </div>
+    <!-- [curSignerType]="oApprovalTrans?.approverType" -->
+
     <div class="stepper-body no-header pt-2 w-100">
       <lib-pdf
         #pdfView
@@ -77,6 +86,7 @@
         [isApprover]="isApprover"
         [isConfirm]="oApprovalTrans.confirmControl == '1' ? true : false"
         [transRecID]="transRecID"
+        [oApprovalTrans]="oApprovalTrans"
         [recID]="sfRecID"
         [stepNo]="stepNo"
         [isEditable]="canOpenSubPopup"

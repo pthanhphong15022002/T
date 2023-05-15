@@ -16,6 +16,7 @@ import {
   ApiHttpService,
   CallFuncService,
   NotificationsService,
+  AuthStore,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
@@ -67,6 +68,8 @@ export class PopupJobComponent implements OnInit {
   view = [];
   step: DP_Steps;
   listFileTask: string[] = [];
+  user: any;
+  functionID = 'DP01';
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -79,7 +82,7 @@ export class PopupJobComponent implements OnInit {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
-    private api: ApiHttpService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -108,6 +111,7 @@ export class PopupJobComponent implements OnInit {
     this.taskList = dt?.data[5];
     this.taskGroupID = dt?.data[6];
     this.listFileTask = dt?.data[7];
+    this.user = this.authStore.get();
   }
   async ngOnInit() {
     this.getTypeTask();
@@ -115,6 +119,7 @@ export class PopupJobComponent implements OnInit {
     this.roles = this.stepsTasks['roles'];
     this.owner = this.roles?.filter((role) => role.roleType === 'O');
     this.participant = this.roles?.filter((role) => role.roleType === 'P');
+
     this.litsParentID = this.stepsTasks['parentID']
       ? this.stepsTasks['parentID']?.split(';')
       : [];
@@ -189,7 +194,7 @@ export class PopupJobComponent implements OnInit {
     this.owner = owner;
   }
 
-  changeRoler(e, datas, type) {    
+  changeRoler(e) {    
     if (!e || e?.length == 0) return;
     let listUser = e || [];
     let listRole = [];
@@ -198,16 +203,15 @@ export class PopupJobComponent implements OnInit {
           objectID: element.objectID,
           objectName: element.objectName,
           objectType: element.objectType,
-          roleType: type,
+          roleType: this.taskType == "M" ? "P" : "O",
           taskID: this.stepsTasks['recID'],
         });
     });
-    this.participant = listRole;
-  }
-
-  onDeleteOwner(objectID, data) {
-    let index = data.findIndex((item) => item.objectID == objectID);
-    if (index != -1) data.splice(index, 1);
+    if(this.taskType == "M"){
+      this.participant = listRole;
+    }else{
+      this.owner = listRole;
+    }
   }
 
   async changeCombobox(value, key) {
@@ -307,23 +311,29 @@ export class PopupJobComponent implements OnInit {
   changeQuestion(e) {
     if (e?.data) {
       this.stepsTasks['reference'] = e?.data;
-      let url = window.location.href;
-      let index = url.indexOf('/bp/');
-      if (index != -1)
-        this.linkQuesiton =
-          url.substring(0, index) +
-          Util.stringFormat(
-            '/sv/add-survey?funcID={0}&title={1}&recID={2}',
-            'SVT01',
-            '',
-            e?.data
-          );
-      this.changeDef.detectChanges();
     }
   }
 
   viewDetailSurveys() {
-    if (this.linkQuesiton) window.open(this.linkQuesiton);
+    if (this.linkQuesiton){
+      this.setLink();
+      window.open(this.linkQuesiton);
+    } 
+  }
+
+  setLink(){
+    let url = window.location.href;
+    let index = url.indexOf('/dp/');
+    if (index != -1){
+      this.linkQuesiton =
+        url.substring(0, index) +
+        Util.stringFormat(
+          '/sv/add-survey?funcID={0}&title={1}&recID={2}',
+          'SVT01',
+          '',
+          this.stepsTasks['reference']
+        );
+    }
   }
   // file
   addFile(evt: any) {
@@ -387,6 +397,7 @@ export class PopupJobComponent implements OnInit {
         //No parentID
         this.checkSave(groupTask);
       } else {
+        // tính thời gian lớn nhất của group
         let timeMax = this.getTimeMaxGroupTask(groupTask['task'], this.stepsTasks);
         this.checkSave(groupTask, timeMax);
       }
@@ -396,8 +407,8 @@ export class PopupJobComponent implements OnInit {
         if (this.getHour(this.stepsTasks) > this.getHour(this.step)) {
           this.notiService.alertCode('DP010').subscribe((x) => {
             if (x.event && x.event.status == 'Y') {
-              this.step['durationDay'] = this.stepsTasks['durationDay'];
-              this.step['durationHour'] = this.stepsTasks['durationHour'];
+              this.step['durationDay'] = this.stepsTasks['durationDay'] || 0;
+              this.step['durationHour'] = this.stepsTasks['durationHour'] || 0;
               this.dialog.close({ data: this.stepsTasks, status: this.status });
             } 
           });
@@ -409,15 +420,15 @@ export class PopupJobComponent implements OnInit {
         let listIdTask = this.stepsTasks['parentID'].split(';');
         let maxtime = 0;
         listIdTask?.forEach((id) => {
-          let time = this.getSumTimeTask(this.taskList,id);
+          let time = this.getSumTimeTask(this.taskList,id, false);
           maxtime = Math.max(time, maxtime);
         });
         maxtime += this.getHour(this.stepsTasks);
         if (maxtime > this.getHour(this.step)) {
           this.notiService.alertCode('DP010').subscribe((x) => {
             if (x.event && x.event.status == 'Y') {
-              this.step['durationDay'] = Math.floor(maxtime / 24);
-              this.step['durationHour'] = maxtime % 24;
+              this.step['durationDay'] = Math.floor(maxtime / 24 || 0);
+              this.step['durationHour'] = maxtime % 24 || 0;
               this.dialog.close({ data: this.stepsTasks, status: this.status });
             }
           });
@@ -468,7 +479,7 @@ export class PopupJobComponent implements OnInit {
     if (this.taskGroupList?.length > 0) {
       if (index >= 0) {
         for (let group of this.taskGroupList) {
-          if (Number(group['indexNo']) <= index) {
+          if (Number(group['indexNo']) < index) {
             sum += this.getHour(group);
           }
         }
@@ -502,16 +513,25 @@ export class PopupJobComponent implements OnInit {
     return maxTime;
   }
 
-  getSumTimeTask(taskList: any[], taskId: string) {
+
+  getSumTimeTask(taskList: any[], taskId: string, isGroup = true) {
     let task = taskList?.find((t) => t['recID'] === taskId);
     if (!task) return 0;
     if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
-      return this.getHour(task);
+      let maxTime = this.getHour(task);
+      if(task.taskGroupID && !isGroup){
+        let groupFind = this.taskGroupList?.find(group => group['recID'] == task.taskGroupID);
+        if(groupFind){
+          let time = this.sumHourGroupTask(groupFind?.indexNo) || 0
+          maxTime += time;
+        }
+      }     
+      return maxTime;
     } else {
       const parentIds = task?.parentID.split(';');
       let maxTime = 0;
       parentIds?.forEach((parentId) => {
-        const parentTime = this.getSumTimeTask(taskList, parentId);
+        const parentTime = this.getSumTimeTask(taskList, parentId, isGroup);
         maxTime = Math.max(maxTime, parentTime);
       });
       const completionTime = this.getHour(task) + maxTime;

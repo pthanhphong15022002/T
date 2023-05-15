@@ -448,22 +448,23 @@
     <div class="modal-header">
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex justify-content-between align-items-center">
-          <h2 id="modal-basic-title">
+          <div class="fs-4 fw-bold mb-1" id="modal-basic-title">
             <codx-label name="lblEquipment" default="Cài đặt thiết bị"></codx-label>
-          </h2>
-          <button type="button" class="btn btn-xs btn-icon btn-light-primary" aria-label="Close"
+          </div>
+          <div class="text-gray-500">
+            <codx-label name="lblChooseRoomEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong phòng">
+            </codx-label>
+          </div>
+          
+        </div>
+        <button type="button" class="btn btn-xs btn-icon btn-light-primary" aria-label="Close"
             (click)="dialog.close()">
             <span class="icon-close icon-20 text-dark text-hover-primary"></span>
           </button>
-        </div>
-        <div class="text-dark-50">
-          <codx-label name="lblChooseRoomEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong phòng">
-          </codx-label>
-        </div>
       </div>
     </div>
-    <div class="modal-body" *ngIf="tmplstDevice != null">
-      <div class="py-2" *ngFor="let item of tmplstDevice">
+    <div class="modal-body p-5 pt-0" *ngIf="tmplstDevice != null">
+      <div class="py-3" *ngFor="let item of tmplstDevice">
         <div class="d-flex flex-stack">
           <div class="d-flex">
             <span class="me-1 ps-2" [className]="item.icon"
@@ -474,7 +475,7 @@
                 }}</span>
             </div>
           </div>
-          <div class="d-flex justify-content-end">
+          <div class="d-flex justify-content-end align-items-center">
             <div class="form-check form-check-solid form-switch">
               <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
                 [checked]="item?.isSelected" (valueChange)="checkedChange($event, item)"></codx-input>
@@ -487,9 +488,9 @@
   </ng-template>
 
   <ng-template #addLink let-dialog>
-    <lib-meeting #suremeet [dialog]="dialog" [meetingTitle]="data.title" [meetingDescription]="data.memo"
+    <!-- <lib-meeting #suremeet [dialog]="dialog" [meetingTitle]="data.title" [meetingDescription]="data.memo"
       [meetingStartDate]="data.startDate" [meetingStartTime]="startTime" [meetingDuration]="60" [meetingPassword]="null"
-      [meetingUrl]="data.onlineUrl" [userName]="'ABC'" [mail]="'abc@gmail.com'" [isManager]="true"></lib-meeting>
+      [meetingUrl]="data.onlineUrl" [userName]="'ABC'" [mail]="'abc@gmail.com'" [isManager]="true"></lib-meeting> -->
   </ng-template>
 </codx-layout-add>
 

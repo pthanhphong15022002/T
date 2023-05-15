@@ -1,14 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
   ApiHttpService,
+  CRUDService,
   CacheService,
   DataRequest,
   FormModel,
   NotificationsService,
 } from 'codx-core';
 import { map, Observable, tap } from 'rxjs';
-import { Transactiontext } from './models/transactiontext.model';
+import { Reason } from './models/Reason.model';
 
 @Injectable({
   providedIn: 'root',
@@ -68,7 +69,7 @@ export class CodxAcService {
     return newMemo;
   }
 
-  setMemo(master: any, transactiontext: Array<Transactiontext>) {
+  setMemo(master: any, transactiontext: Array<Reason>) {
     let newMemo = '';
     let sortTrans = transactiontext.sort((a, b) => a.index - b.index);
     for (let i = 0; i < sortTrans.length; i++) {
@@ -78,10 +79,11 @@ export class CodxAcService {
     return newMemo;
   }
 
+  /** @param irregularGvsPropNames Use irregularGvsPropNames in case unable to transform some data prop names to gvs prop names respectively. */
   validateFormData(
     formGroup: FormGroup,
     gridViewSetup: any,
-    irregularFields: string[] = [],
+    irregularGvsPropNames: string[] = [],
     ignoredFields: string[] = []
   ): boolean {
     console.log(formGroup);
@@ -97,8 +99,10 @@ export class CodxAcService {
       }
 
       if (controls[propName].invalid) {
+        console.log('invalid', { propName });
+
         const gvsPropName =
-          irregularFields.find(
+          irregularGvsPropNames.find(
             (i) => i.toLowerCase() === propName.toLowerCase()
           ) ?? this.toPascalCase(propName);
 
@@ -115,10 +119,53 @@ export class CodxAcService {
     return isValid;
   }
 
+  /** @param irregularDataPropNames Use irregularDataPropNames in case unable to transform some gvs prop names to data prop names respectively. */
+  validateFormDataUsingGvs(
+    gridViewSetup: any,
+    data: any,
+    irregularDataPropNames: string[] = [],
+    ignoredFields: string[] = []
+  ): boolean {
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+
+    let isValid = true;
+    for (const propName in gridViewSetup) {
+      if (gridViewSetup[propName].isRequire) {
+        if (ignoredFields.includes(propName.toLowerCase())) {
+          continue;
+        }
+
+        const dataPropName =
+          irregularDataPropNames.find(
+            (i) => i.toLowerCase() === propName.toLowerCase()
+          ) ?? this.toCamelCase(propName);
+
+        if (
+          gridViewSetup[propName].dataType === 'String' &&
+          !data[dataPropName]?.trim()
+        ) {
+          console.log('invalid', { propName });
+
+          this.notiService.notifyCode(
+            'SYS009',
+            0,
+            `"${gridViewSetup[propName]?.headerText}"`
+          );
+
+          isValid = false;
+        }
+      }
+    }
+
+    return isValid;
+  }
+
+  /** @example StudentId => studentId */
   toCamelCase(pascalCase: string): string {
     return pascalCase.charAt(0).toLowerCase() + pascalCase.slice(1);
   }
 
+  /** @example studentId => StudentId */
   toPascalCase(camelCase: string): string {
     return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
   }
@@ -150,5 +197,49 @@ export class CodxAcService {
         map((r) => r[0]),
         tap((r) => console.log(r))
       );
+  }
+
+  createCrudService(injector: Injector, formModel: FormModel, service: string): CRUDService {
+    const requestData = new DataRequest();
+    requestData.entityName = formModel.entityName;
+    requestData.entityPermission = formModel.entityPer;
+    requestData.formName = formModel.formName;
+    requestData.gridViewName = formModel.gridViewName;
+    requestData.pageLoading = false;
+
+    const crudService = new CRUDService(injector);
+    crudService.service = service;
+    crudService.request = requestData;
+
+    return crudService;
+  }
+
+  getCategoryByEntityName(entityName: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'CategoriesBusiness',
+      'GetCategoryByEntityNameAsync',
+      [entityName]
+    );
+  }
+  release(
+    recID: string,
+    processID: string,
+    entityName: string,
+    funcID: string,
+    title: string
+  ) {
+    return this.api.execSv<any>(
+      'AC',
+      'ERM.Business.Core',
+      'DataBusiness',
+      'ReleaseAsync',
+      [recID, processID, entityName, funcID, title]
+    );
+  }
+  setPopupSize(dialog:any,width:any,height:any){
+    dialog.dialog.properties.height = width;
+    dialog.dialog.properties.width = height;
   }
 }

@@ -1,96 +1,89 @@
 :host {
-    background-color: yellowgreen !important;
+  background-color: yellowgreen !important;
 }
 
 :host ::ng-deep {
-    background-color: violet !important;
+  background-color: violet !important;
 }
 
 :host-context {
-    background-color: blue !important;
+  background-color: blue !important;
 }
 
 :host-context .cotrol-vll {
-    border: 0 !important;
+  border: 0 !important;
 }
 
 .modal .k-editor {
-    border: none !important;
+  border: none !important;
 }
 
 .close-circle {
-    width: 32px;
-    height: 32px;
-    background-color: #eff2f5;
-    border-radius: 50%;
-    text-shadow: none;
-    outline: none !important;
-    color: #b5b5c3;
-    padding: 0;
-    margin: 0;
-    line-height: 0;
-    border: none;
+  width: 32px;
+  height: 32px;
+  background-color: #eff2f5;
+  border-radius: 50%;
+  text-shadow: none;
+  outline: none !important;
+  color: #b5b5c3;
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+  border: none;
 }
 
 .icon-30 {
-    font-size: 28px;
+  font-size: 28px;
 }
 
 .user-name {
-    margin: 0px;
-    padding: 0px;
+  margin: 0px;
+  padding: 0px;
 }
 
 .body-function {
-    padding: 3px 10px;
-    border: 1px solid #cfd0d3;
-    border-radius: 3px !important;
+  padding: 3px 10px;
+  border: 1px solid #cfd0d3;
+  border-radius: 3px !important;
 }
 
 .btn-post {
-    width: 100%;
+  width: 100%;
 }
 
 .btn-emoji {
-    position: relative;
+  position: relative;
 }
 
 .emoji {
-    position: absolute;
-    z-index: 99;
-    bottom: 28px;
+  position: absolute;
+  z-index: 99;
+  bottom: 28px;
 
-    right: -64px;
+  right: -64px;
 }
 
 codx-vll > .symbol.symbol-12px > img {
-    width: 12px;
-    height: 12px;
-}
-
-.body-addpost {
-    height: 100%;
-    position: relative;
-    min-height: 436px;
+  width: 12px;
+  height: 12px;
 }
 
 .addpost-scroll {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 56px;
-    bottom: 50px;
-    overflow: hidden;
-    overflow-y: auto;
+  // position: absolute;
+  // left: 0;
+  // right: 0;
+  // top: 56px;
+  // bottom: 50px;
+  // overflow: hidden;
+  // overflow-y: auto;
+  border: 1px var(--gray-150) solid;
+  .wp-contents {
+    margin: 0;
+  }
 }
+.border-toolbar .e-rte-content {
+  border-bottom: 1px var(--gray-150) solid !important;
+} // chỗ này sao gắn cái toolbar mà nó k ra cái boder.
 
-.body.body-addpost .body-function {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-.wp-template-share{
-    border: 1px solid #bfb5b5;
-    border-radius: 4px;
-}
+
+ 

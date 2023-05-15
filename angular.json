@@ -34,53 +34,13 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              "src/favicon.ico",
+              "src/assets",
               {
                 "glob": "**/*",
                 "input": "node_modules/ngx-extended-pdf-viewer/assets/",
                 "output": "/assets/"
               },
-              {
-                "glob": "**/*",
-                "input": "node_modules/ngx-extended-pdf-viewer/assets/additional-locale",
-                "output": "/assets/additional-locale"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/ngx-extended-pdf-viewer/assets/cmaps",
-                "output": "/assets/cmaps"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/ngx-extended-pdf-viewer/assets/images",
-                "output": "/assets/images"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/ngx-extended-pdf-viewer/assets/inline-locale-files",
-                "output": "/assets/inline-locale-files"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/ngx-extended-pdf-viewer/assets/locale",
-                "output": "/assets/locale"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/ngx-extended-pdf-viewer/assets/locale/vi",
-                "output": "/assets/locale/vi"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/ngx-extended-pdf-viewer/assets/locale/en-US",
-                "output": "/assets/locale/en-US"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/ngx-extended-pdf-viewer/assets/standard_fonts",
-                "output": "/assets/standard_fonts"
-              },
-              "src/favicon.ico",
-              "src/assets",
               {
                 "glob": "**/*",
                 "input": "node_modules/codx-core/assets/media",
@@ -811,6 +771,39 @@
             "main": "projects/codx-cm/src/test.ts",
             "tsConfig": "projects/codx-cm/tsconfig.spec.json",
             "karmaConfig": "projects/codx-cm/karma.conf.js"
+          }
+        }
+      }
+    },
+    "codx-co": {
+      "projectType": "library",
+      "root": "projects/codx-co",
+      "sourceRoot": "projects/codx-co/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-co/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-co/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-co/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/codx-co/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
           }
         }
       }

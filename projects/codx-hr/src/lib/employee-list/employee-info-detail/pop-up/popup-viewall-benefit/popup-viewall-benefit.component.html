@@ -1,0 +1,128 @@
+<codx-form
+  #form
+  [headerText]="headerTextNew"
+  [body]="body"
+  [formModel]="formModel"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div class="d-flex align-items-center">
+      <span class="ms-2">
+        <codx-dropdown-select
+          *ngIf="eBenefitGrvSetup"
+          [cssClass]="'rounded-pill border-1'"
+          cssPopup="h-350px w-300px"
+          [emptyText]="benefitHeaderTexts['BenefitID']"
+          [isMulti]="true"
+          type="combobox"
+          field="BenefitID"
+          [refValue]="eBenefitGrvSetup?.BenefitID?.referedValue"
+          (valueChange)="valueChangeFilterBenefit($event)"
+        ></codx-dropdown-select>
+      </span>
+      <span class="ms-2">
+        <codx-dropdown-calendar
+          [cssPopup]="'w-600px h-400px'"
+          emptyText="Chọn năm"
+          [firstChange]="false"
+          [displayOption]="ops"
+          [selectedType]="'y'"
+          [cssClass]="'rounded-pill'"
+          (change)="valueChangeYearFilterBenefit($event)"
+        ></codx-dropdown-calendar>
+      </span>
+    </div>
+    <div class="card-body">
+      <codx-gridview
+        *ngIf="benefitColumnGrid"
+        #gridView
+        [sort]="[benefitSortModel]"
+        [formModel]="benefitFormodel"
+        [columnsGrid]="benefitColumnGrid"
+        [service]="'HR'"
+        [assemblyName]="'Core'"
+        [className]="'DataBusiness'"
+        [method]="'LoadDataAsync'"
+        [predicates]="'EmployeeID=@0'"
+        [dataValues]="employeeId"
+        [pageSize]="numPageSizeGridView"
+        [entityName]="'HR_EBenefits'"
+        height="auto"
+      ></codx-gridview>
+    </div>
+  </ng-template>
+
+  <ng-template #templateBenefitID let-data>
+    <div
+      [class]="data.isCurrent ? 'text-primary' : ''"
+      [innerHTML]="
+        data?.benefitID | formatvalue : benefitFormodel : 'benefitID' | async
+      "
+    >
+      <span
+        *ngIf="data.isCurrent == true"
+        class="bullet bullet-vertical d-flex align-items-center min-h-30px mh-100 me-3 bg-primary"
+      >
+      </span>
+
+      <span class="icon-i-plus-circle icon-12 pe-2"></span>
+    </div>
+  </ng-template>
+
+  <ng-template #templateBenefitAmt let-data>
+    <div #benefitNorm [class]="data.isCurrent ? 'text-primary' : ''">
+      <span
+        [innerHTML]="
+          data?.benefitAmt
+            | formatvalue : benefitFormodel : 'benefitAmt'
+            | async
+        "
+      >
+      </span>
+      <span class="mx-2"> / </span>
+      <span
+        [innerHTML]="
+          data?.benefitNorm
+            | formatvalue : benefitFormodel : 'benefitNorm'
+            | async
+        "
+      ></span>
+    </div>
+  </ng-template>
+
+  <ng-template #templateBenefitEffected let-data>
+    <div class="has-action-menu">
+      <div class="d-flex flex-column">
+        <div
+          class="d-flex align-items-center"
+          [ngClass]="data.isCurrent ? 'text-primary' : ''"
+        >
+          <span
+            [innerHTML]="
+              data?.effectedDate
+                | formatvalue : benefitFormodel : 'effectedDate'
+                | async
+            "
+          ></span>
+          <span class="mx-2"> - </span>
+          <span
+            [innerHTML]="
+              data?.expiredDate
+                | formatvalue : benefitFormodel : 'expiredDate'
+                | async
+            "
+          ></span>
+          <!-- <codx-mfunc [formModel]="benefitFormodel" [dataItem]="data" type="hover">
+                    </codx-mfunc> -->
+        </div>
+      </div>
+      <codx-mfunc
+        [formModel]="benefitFormodel"
+        (clickMF)="clickMF($event, data, 'eBenefit')"
+        [dataItem]="data"
+        type="hover"
+      >
+      </codx-mfunc>
+    </div>
+  </ng-template>
+</codx-form>

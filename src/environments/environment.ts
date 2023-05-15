@@ -13,8 +13,15 @@ export const environment = {
   office365: '',
   appName: '',
   saas: 1,
-  layoutCZ: 'qtsc',
+  layoutCZ: 'lacviet',
   themeMode: 'body', //layout,
+  hideFavCount: false,
+  singleExec: false,
+  asideMinimize: 'icon-title',
+  layout: {
+    title: '',
+    icon: '',
+  },
   externalLogin: {
     amazonId: '',
     facebookId: '',

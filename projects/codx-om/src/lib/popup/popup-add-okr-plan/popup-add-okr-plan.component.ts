@@ -1,6 +1,4 @@
-declare var window: any;
 import { CodxOmService } from 'projects/codx-om/src/public-api';
-import { Util } from 'codx-core';
 import { OMCONST } from './../../codx-om.constant';
 import {
   AfterViewInit,
@@ -20,8 +18,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-
-//import { CodxEpService } from '../../../codx-ep.service';
+import { ɵglobal as global } from '@angular/core';
 
 @Component({
   selector: 'popup-add-okr-plan',
@@ -33,7 +30,7 @@ export class PopupAddOKRPlanComponent
   implements AfterViewInit
 {
   @ViewChild('form') form: CodxFormComponent;
-
+  ngCmp: any = global;
   obType = OMCONST.VLL.OKRType.Obj;
   krType = OMCONST.VLL.OKRType.KResult;
   skrType = OMCONST.VLL.OKRType.SKResult;
@@ -57,6 +54,7 @@ export class PopupAddOKRPlanComponent
   groupModel: any;
   okrGrv: any;
   mssgCode: any;
+  onSaving=false;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -104,11 +102,11 @@ export class PopupAddOKRPlanComponent
         let x = skrGrd;
       }
     });
-    this.cache.message("OM002").subscribe(mess=>{
-      if(mess){
-        this.mssgCode= mess?.customName;
+    this.cache.message('OM002').subscribe((mess) => {
+      if (mess) {
+        this.mssgCode = mess?.customName;
       }
-    })
+    });
   }
 
   //---------------------------------------------------------------------------------//
@@ -129,7 +127,6 @@ export class PopupAddOKRPlanComponent
         if (item) {
           this.dataOKR = item;
         }
-
         this.isAfterRender = true;
       });
   }
@@ -170,8 +167,11 @@ export class PopupAddOKRPlanComponent
 
         case this.krType:
           if (this.dataOKR[obIndex]?.okrName == null) {
-            
-        this.notificationsService.notifyCode('OM002', 0, '"' + this.okrGrv.obGrv['okrName'].headerText + '"' );
+            this.notificationsService.notifyCode(
+              'OM002',
+              0,
+              '"' + this.okrGrv.obGrv['okrName'].headerText + '"'
+            );
             return;
           }
           if (!this.dataOKR[obIndex]?.items) {
@@ -182,8 +182,11 @@ export class PopupAddOKRPlanComponent
 
         case this.skrType:
           if (this.dataOKR[obIndex]?.items[krIndex]?.okrName == null) {
-            
-        this.notificationsService.notifyCode('OM002', 0, '"' + this.okrGrv.krGrv['okrName'].headerText + '"' );
+            this.notificationsService.notifyCode(
+              'OM002',
+              0,
+              '"' + this.okrGrv.krGrv['okrName'].headerText + '"'
+            );
             return;
           }
           if (!this.dataOKR[obIndex]?.items[krIndex]?.items) {
@@ -215,7 +218,7 @@ export class PopupAddOKRPlanComponent
           break;
       }
       let dom = document.getElementById(id);
-      let curInput = window.ng.getComponent(dom);
+      let curInput = this.ngCmp.ng.getComponent(dom);
       if (curInput) {
         curInput.multiSelectObj.enableEditMode = true;
       }
@@ -236,12 +239,64 @@ export class PopupAddOKRPlanComponent
     }
     tmpOKR.items = [];
     tmpOKR.isAdd = true;
+    tmpOKR.isDeleted = false;
     tmpOKR.okrLevel = this.okrPlan.okrLevel;
     tmpOKR.periodID = this.okrPlan.periodID;
     tmpOKR.year = this.okrPlan.year;
     tmpOKR.interval = this.okrPlan.interval;
     return tmpOKR;
   }
+
+  deleteOKR(type: any, obIndex: number, krIndex: number, skrIndex: number) {
+    if (type) {
+      switch (type) {
+        case this.obType:
+
+          if(this.dataOKR[obIndex].autoCreated==true){
+            this.notificationsService.notify('Không thể xóa mục tiêu tự động tạo');
+            return;
+          }
+          if(this.dataOKR[obIndex].isAdd==true){
+            this.dataOKR.splice(obIndex,1);
+          }
+          else{
+            this.dataOKR[obIndex].isDeleted = true;
+          }         
+          break;
+
+        case this.krType:
+          
+          if(this.dataOKR[obIndex].items[krIndex].autoCreated==true){
+            this.notificationsService.notify('Không thể xóa kết quả chính tự động tạo');
+            return;
+          }
+          if(this.dataOKR[obIndex].items[krIndex].isAdd==true){
+            this.dataOKR[obIndex].items.splice(krIndex,1);
+          }
+          else{
+            this.dataOKR[obIndex].items[krIndex].isDeleted = true;
+          }
+          
+          break;
+
+        case this.skrType:
+          if(this.dataOKR[obIndex].items[krIndex].items[skrIndex].autoCreated==true){
+            this.notificationsService.notify('Không thể xóa kết quả phụ tự động tạo');
+            return;
+          }
+          if(this.dataOKR[obIndex].items[krIndex].items[skrIndex].isAdd==true){
+            this.dataOKR[obIndex].items[krIndex].items.splice(skrIndex,1);
+          }
+          else{
+            this.dataOKR[obIndex].items[krIndex].items[skrIndex].isDeleted = true;
+          }
+           
+          break;
+      }
+      this.detectorRef.detectChanges();
+    }
+  }
+
   obChange(evt: any, obIndex: number) {
     if (evt && evt?.field && evt?.data != null && obIndex != null) {
       this.dataOKR[obIndex][evt?.field] = evt?.data;
@@ -306,16 +361,31 @@ export class PopupAddOKRPlanComponent
   //-----------------------------------Logic Func------------------------------------//
   //---------------------------------------------------------------------------------//
   onSaveForm() {
-    
+    this.onSaving=true;
     switch (this.inputValidate()) {
       case this.obType:
-        this.notificationsService.notifyCode('OM002', 0, '"' + this.okrGrv.obGrv['okrName'].headerText + '"' );
+        this.notificationsService.notifyCode(
+          'OM002',
+          0,
+          '"' + this.okrGrv.obGrv['okrName'].headerText + '"'
+        );
+        this.onSaving=false;
         return;
       case this.krType:
-        this.notificationsService.notifyCode('OM002', 0, '"' + this.okrGrv.krGrv['okrName'].headerText + '"' );
+        this.notificationsService.notifyCode(
+          'OM002',
+          0,
+          '"' + this.okrGrv.krGrv['okrName'].headerText + '"'
+        );
+        this.onSaving=false;
         return;
       case this.skrType:
-        this.notificationsService.notifyCode('OM002', 0, '"' + this.okrGrv.skrGrv['okrName'].headerText + '"' );
+        this.notificationsService.notifyCode(
+          'OM002',
+          0,
+          '"' + this.okrGrv.skrGrv['okrName'].headerText + '"'
+        );
+        this.onSaving=false;
         return;
     }
     this.codxOmService
@@ -328,6 +398,10 @@ export class PopupAddOKRPlanComponent
             this.notificationsService.notifyCode('SYS007');
           }
           this.dialogRef && this.dialogRef.close(true);
+        }        
+        else{
+          this.onSaving=false;
+          return ;
         }
       });
   }

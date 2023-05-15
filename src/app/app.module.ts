@@ -26,9 +26,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
 import { TMModule } from 'projects/codx-tm/src/public-api';
-import { CodxEp4Module } from 'projects/codx-ep/src/lib/room/codx-ep4.module';
-import { CodxEp7Module } from 'projects/codx-ep/src/lib/car/codx-ep7.module';
-import { CodxEp8Module } from 'projects/codx-ep/src/lib/stationery/codx-ep8.module';
 import { CodxEsModule } from 'projects/codx-es/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
@@ -111,9 +108,9 @@ function appInitializer(authService: AuthService, appConfig: AppConfigService) {
   return () => {
     return new Promise((resolve) => {
       appConfig.load().subscribe((res) => {
-        authService.getUserByToken().subscribe((v) => {
-          resolve(v);
-        });
+        // authService.getUserByToken().subscribe((v) => {
+           resolve(true);
+        // });
       });
     });
   };
@@ -171,12 +168,11 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     ERMModule,
     CodxCoreModule.forRoot({ environment }),
     TMModule.forRoot({ environment }),
-    CodxEp4Module.forRoot({ environment }),
-    CodxEp7Module.forRoot({ environment }),
-    CodxEp8Module.forRoot({ environment }),
+    // CodxEp4Module.forRoot({ environment }),
+    // CodxEp7Module.forRoot({ environment }),
+    // CodxEp8Module.forRoot({ environment }),
     CodxEiModule.forRoot({ environment }),
     CodxEsModule.forRoot({ environment }),
-    CodxReportModule.forRoot({ environment }),
     CodxShareModule,
     AppRoutingModule,
     NgxSkeletonLoaderModule.forRoot({

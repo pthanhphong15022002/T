@@ -14,7 +14,7 @@ export class AppConfigService extends AppConfig {
   }
 
   load() {
-    return this.http.get<AppConfig>('assets/config/appconfig.json').pipe(
+    return this.http.get<AppConfig>('assets/cfg/_.cf').pipe(
       map((res) => {
         environment.apiUrl = res.apiUrl;
         environment.shopping = res.shopping;
@@ -24,7 +24,11 @@ export class AppConfigService extends AppConfig {
         environment.office365 = res.office365;
         environment.saas = res.saas;
         environment.layoutCZ = res.layoutCZ;
+        environment.layout = res.layout;
         environment.themeMode = res.themeMode;
+        environment.hideFavCount = res.hideFavCount;
+        environment.singleExec = res.singleExec;
+        environment.asideMinimize = res.asideMinimize;
         environment.SureMeet = res.sureMeet;
         environment.firebase = res.firebase;
         environment.externalLogin = res.externalLogin;

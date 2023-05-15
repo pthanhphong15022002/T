@@ -1,0 +1,7 @@
+.action-menu-od {
+  opacity: 0;
+}
+
+.has-action-menu-od:hover .action-menu-od {
+  opacity: 1;
+}

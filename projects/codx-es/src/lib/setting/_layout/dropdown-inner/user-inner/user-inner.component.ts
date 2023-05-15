@@ -17,7 +17,7 @@ import {
 import { Observable, of, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'codx-user-inner',
+  selector: 'codx-user-inner5',
   templateUrl: './user-inner.component.html',
   styleUrls: ['./user-inner.component.scss'],
 })
@@ -57,8 +57,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.auth.logout();
-    document.location.reload();
+    this.auth.logout('');
+    // document.location.reload();
   }
 
   selectLanguage(lang: string) {

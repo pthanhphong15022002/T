@@ -1,0 +1,36 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  (viewChanged)="viewChanged($event)"
+  [toolbarDisplay]="true"
+  [views]="views"
+  (buttonClick)="click($event)"
+  [moreFuncs]="moreFc"
+  (filterReportChange)="filterReportChange($event)"
+  (buttonClick)="onActions($event)"
+  >
+</codx-views>
+<ng-template #report>
+  <!-- <report-viewer [reportUUID]="reportUUID"[parameters]="param" [print]="print"></report-viewer> -->
+  <!-- <iframe style="height: 100%; width: 100%;" #iframe [src]="urlSafe">
+
+  </iframe> -->
+  <!-- <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [parameters]="param" [print]="print"></codx-report> -->
+  <codx-report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString"></codx-report-iframe>
+  </ng-template>
+
+<!-- <ng-template #breadCrumb>
+
+</ng-template> -->
+<div class="w-100 h-100 pt-5" id="breadCrumb" #breadCrumb>
+  <div ngbDropdown class="d-inline-block flex-column" *ngIf="this.funcItem" >
+    <span class="me-3 fw-bolder fs-3 text-dark" *ngIf="rootFunction" (click)="homeClick()">{{rootFunction.customName}}</span>
+    <a type="button"  id="dropdownReport" style="font-size: 1rem !important" ngbDropdownToggle>
+      <span class="text-muted text-hover-primary pt-1"> > {{this.funcItem.customName}}</span>
+    </a>
+    <div ngbDropdownMenu aria-labelledby="dropdownReport">
+      <a ngbDropdownItem *ngFor="let item of reportList" (click)="itemSelect(item)">{{item.customName}}</a>
+
+    </div>
+  </div>
+</div>

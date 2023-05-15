@@ -44,11 +44,17 @@ export class NewsDetailComponent extends UIComponent {
       this.recID = param["recID"];
       this.category = param["category"];
       this.funcID = param["funcID"];
-      this.loadData(this.recID);
+      this.loadData(this.recID,this.category);
       this.getUserPermission(this.funcID);
       this.getDataTagAsync("WP_News");
     });
-    
+    this.cache.moreFunction("CoDXSystem","")
+    .subscribe((mFuc:any) => {
+      if(mFuc)
+      {
+        this.moreFunction = mFuc;
+      }
+    });
     
   }
   ngAfterViewInit(): void {
@@ -64,19 +70,42 @@ export class NewsDetailComponent extends UIComponent {
     ];
     this.detectorRef.detectChanges();
   }
-  loadData(recID: string) {
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetNewsInforAsync", recID)
-    .subscribe(
-      (res) => {
-        if (res) {
-          this.data = res[0];
-          this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
-          this.listViews = res[1];
-          this.listNews = res[2];
-        }
-      }
-    );
+  //load data 
+  loadData(recID: string, category: string) {
+    this.getData(recID);
+    this.getSubData(category);
   }
+  getData(recID:string){
+    this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "NewsBusiness",
+      "GetPostByIDAsync",
+      [recID])
+      .subscribe((res) => {
+        if(res) {
+          this.data = res;
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  //get data order view + created
+  getSubData(category:string){
+    this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "NewsBusiness",
+      "GetSubDataAsync",
+      [category])
+      .subscribe((res:any) => {
+        if(res){
+          this.listViews = res[0];
+          this.listNews = res[1];
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  // get permisison 
   getUserPermission(funcID:string){
     if(funcID){
       let funcIDPermission  = funcID + "P";
@@ -89,6 +118,7 @@ export class NewsDetailComponent extends UIComponent {
       });
     }
   }
+  // get data tags
   getDataTagAsync(entityName:string){
     if(entityName){
       this.api
@@ -108,7 +138,7 @@ export class NewsDetailComponent extends UIComponent {
       (res) => {
         if (res) {
           this.codxService.navigate('', `wp2/news/${this.funcID}/${data.category}/${data.recID}`);
-          this.loadData(data.recID);
+          this.loadData(data.recID,this.category);
         }
       });
   }
@@ -117,13 +147,19 @@ export class NewsDetailComponent extends UIComponent {
     this.codxService.navigate('', `wp2/news/${this.funcID}/tag/${tag.value}`);
   }
   // add
-  openPopupAdd(newsType: string) {
+  moreFunction:any = null;
+  openPopupAdd(type: string) {
     if(this.view){
       let option = new DialogModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.IsFull = true;
-      this.callfc.openForm(PopupAddComponent, '', 0, 0, '', newsType , '', option);
+      let mfc = Array.from<any>(this.moreFunction).find((x:any) => x.functionID === "SYS01");
+      let data = {
+        action: mfc.defaultName,
+        type:type
+      }
+      this.callfc.openForm(PopupAddComponent, '', 0, 0, '', data , '', option);
     }
   }
   clickShowPopupSearch() {
@@ -136,14 +172,13 @@ export class NewsDetailComponent extends UIComponent {
     } 
   }
   // open popup share
-  openPopupShare(post: any) {
-    if (post)
-    {
-      let _data = new WP_Comments();
-      _data.news = JSON.parse(JSON.stringify(post));
-      _data.refID = post.recID;
+  openPopupShare(data: any) {
+    if (data){
+      let post = new WP_Comments();
+      post.news = JSON.parse(JSON.stringify(data));
+      post.refID = data.recID;
       let _obj = {
-        data: _data,
+        data: post,
         refType: "WP_News",
         status: 'share',
         headerText: 'Chia sẻ bài viết',

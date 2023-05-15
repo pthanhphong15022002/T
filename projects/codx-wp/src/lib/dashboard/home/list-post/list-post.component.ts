@@ -44,6 +44,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   @Input() funcID: string = '';
   @Input() objectID: string = '';
+  @Input() method: string = '';
   @Input() predicate: any;
   @Input() dataValue: any;
   @Input() predicates: any;
@@ -93,25 +94,47 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         this.dataService.dataValues = res.params.dataValue;
       }
     });
-    // set predicate - sort
+    // set dataService
+    this.dataService.service = "WP";
+    this.dataService.assemblyName = "ERM.Business.WP";
+    this.dataService.className = "CommentsBusiness";
+    this.dataService.method = this.method || "GetListPostAsync";
     this.dataService.predicate = this.predicate;
     this.dataService.dataValue = this.dataValue;
     let arrSort:SortModel[] = [{ field : "CreatedOn",dir:"desc"}];
     this.dataService.setSort(arrSort);
     this.dataService.pageSize = 20;
     this.getSetting();
-    this.refreshAvatar();
   }
 
-  refreshAvatar() {
-    //Nguyên thêm để refresh avatar khi change
-    this.codxShareSV.dataRefreshImage.subscribe((res) => {
-      if (res) {
-        this.user['modifiedOn'] = res?.modifiedOn;
-        this.dt.detectChanges();
-      }
-    });
+
+  /// test report
+  testApiReport(){
+    let jsParams = {
+      fromDate :null,
+      toDate : null,
+      owner :"",
+      taskGroupID :"",
+      projectID :"",
+      orgUnitID :"",
+      departmentID :"",
+      group1 : false,
+      groupType1 :"",
+      group2 : false,
+      groupType2 :"",
+      group3 : false,
+      groupType3 :"",
+
+    }
+    this.api.execSv(
+      "EP",
+      "ERM.Business.EP",
+      "BookingItemsBusiness",
+      "StationaryReportAsync",
+      [JSON.stringify(jsParams)])
+      .subscribe((res:any) => console.log("testApiReport: ", JSON.parse(res)));
   }
+ 
 
   //get thiết lập
   getSetting() {
@@ -167,8 +190,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     }
   }
 
-  beforDelete(option: RequestOption, data: any) {
-    if (!option || !data) return false;
+  beforDelete(option: RequestOption, data: string) {
     option.service = 'WP';
     option.assemblyName = 'ERM.Business.WP';
     option.className = 'CommentsBusiness';
@@ -178,9 +200,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   // xóa bài viết
   deletePost(data: any) {
-    if (data) {
+    if (data?.recID) {
       (this.listview.dataService as CRUDService)
-        .delete([data],true,(op: any) => this.beforDelete(op, data),'','WP022','','WP023')
+        .delete([data],true,(op: any) => this.beforDelete(op, data.recID),'','WP022','','WP023')
         .subscribe();
     }
   }
@@ -201,7 +223,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       PopupAddPostComponent,
       '',
       700,
-      550,
+      650,
       '',
       obj,
       '',
@@ -230,7 +252,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       PopupAddPostComponent,
       '',
       700,
-      550,
+      650,
       '',
       obj,
       '',
@@ -264,7 +286,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         PopupAddPostComponent,
         '',
         700,
-        550,
+        650,
         '',
         obj,
         '',
@@ -336,4 +358,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     item.isShowShortContent = !item.isShowShortContent; 
   }
   
+
+  // xóa bài viết trên client
+  removePost(data:any){
+    (this.listview.dataService as CRUDService).remove(data).subscribe();
+  }
 }

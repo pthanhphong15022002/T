@@ -128,7 +128,7 @@ export class ReportinglineComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = '550px';
+      option.Width = '800px';
       if (this.views[1].active) {
         // modeView tree-orgchart
         let currentView: any = this.view.currentView;
@@ -136,23 +136,21 @@ export class ReportinglineComponent extends UIComponent {
           this.codxTreeView = currentView.currentComponent?.treeView;
         }
       }
-      this.view.dataService.addNew()
-      .subscribe((result: any) => {
+      this.view.dataService.addNew().subscribe((result: any) => {
         if (result) {
           let object = {
-            dataService: this.view.dataService,
+            //dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: result,
-            function: this.funcID,
-            isAddMode: true,
-            titleMore: event.text,
+            funcID: this.funcID,
+            isAdd: true,
+            title: event.text,
             isCorporation: this.isCorporation, 
           };
           let form = this.callfc.openSide(
             PopupAddPositionsComponent,
             object,
             option,
-            this.funcID
           );
           form.closed.subscribe((res: any) => {
             if (res?.event?.save) {
@@ -187,17 +185,17 @@ export class ReportinglineComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = '550px';
+      option.Width = '800px';
       this.view.dataService
         .edit(this.view.dataService.dataSelected)
         .subscribe((result) => {
           let object = {
-            dataService: this.view.dataService,
+            //dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: result,
-            function: this.view.formModel.funcID,
-            isAddMode: false,
-            titleMore: event.text,
+            funcID: this.view.formModel.funcID,
+            isAdd: false,
+            title: event.text,
             isCorporation: this.isCorporation, 
           };
           this.callfc.openSide(
@@ -215,19 +213,19 @@ export class ReportinglineComponent extends UIComponent {
   copy(event: any, data: any) {
     if (event && data) {
       this.view.dataService.dataSelected = data;
-      this.view.dataService.copy(data).subscribe((res) => {
+      this.view.dataService.copy().subscribe((res) => {
         if (res) {
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
           option.FormModel = this.view.formModel;
-          option.Width = '550px';
+          option.Width = '800px';
           let object = {
-            dataService: this.view.dataService,
+            //dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: res,
-            function: this.view.formModel.funcID,
-            isAddMode: true,
-            titleMore: event.text,
+            funcID: this.view.formModel.funcID,
+            isAdd: true,
+            title: event.text,
           };
           this.callfc.openSide(PopupAddPositionsComponent,object,option,this.view.formModel.funcID)
           .closed.subscribe((res)=>{
@@ -239,6 +237,7 @@ export class ReportinglineComponent extends UIComponent {
         }
       });
     }
+    
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
