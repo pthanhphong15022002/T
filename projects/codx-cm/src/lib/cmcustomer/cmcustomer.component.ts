@@ -125,6 +125,7 @@ export class CmCustomerComponent
       if (param.funcID) {
         // this.view.dataService = JSON.parse(JSON.stringify(this.view.dataService));
         this.funcID = param.funcID;
+        this.isButton = true;
         this.afterLoad();
       }
     });
