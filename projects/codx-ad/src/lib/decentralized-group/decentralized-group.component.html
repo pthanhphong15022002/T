@@ -38,7 +38,7 @@
       <div class="w-100 min-w-200px ps-3">
         <codx-temp-full
           cardCss="card-template border-bottom px-2 pt-4 pb-2"
-          [imageId]="data.recID"
+          [imageId]="data.groupName"
           [imageObjType]="view.formModel?.entityName"
           [titleTmp]="titleTmp"
           [subTitleTmp]="subTitleTmp"
@@ -208,7 +208,7 @@
         [width]="30"
         [objectId]="data.memberIDs"
         [objectType]="data.memberType == 'U' ? 'AD_Users' : 'HR_Positions'"
-        [numberImages]="4"
+        [numberImages]="10"
       >
       </codx-imgs>
     </ng-container>

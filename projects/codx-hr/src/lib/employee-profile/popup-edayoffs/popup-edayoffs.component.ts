@@ -14,7 +14,6 @@ import {
   UIComponent,
 } from 'codx-core';
 import { CalendarView } from '@syncfusion/ej2-angular-calendars';
-import { compareDate } from 'projects/codx-od/src/lib/function/default.function';
 
 @Component({
   selector: 'lib-popup-edayoffs',
@@ -44,7 +43,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   pregnancyFromVal;
   @ViewChild('form') form: CodxFormComponent;
   empObj: any;
-  genderGrvSetup: any;
+  // genderGrvSetup: any;
   allowToViewEmSelector: boolean = false;
   //@ViewChild('listView') listView: CodxListviewComponent;
 
@@ -106,11 +105,11 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         }
       });
 
-    this.cache
-      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-      .subscribe((res) => {
-        this.genderGrvSetup = res?.Gender;
-      });
+    // this.cache
+    //   .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+    //   .subscribe((res) => {
+    //     this.genderGrvSetup = res?.Gender;
+    //   });
 
     if (this.employId) this.getEmployeeInfoById(this.employId, 'employeeID');
   }
