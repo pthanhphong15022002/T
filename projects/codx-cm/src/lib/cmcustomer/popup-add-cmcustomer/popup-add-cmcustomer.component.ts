@@ -496,7 +496,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           var dialog = this.callFc.openForm(
             PopupAddressComponent,
             '',
-            500,
+            650,
             550,
             '',
             obj,
@@ -576,7 +576,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         var dialog = this.callFc.openForm(
           PopupListContactsComponent,
           '',
-          500,
+          650,
           550,
           '',
           obj,

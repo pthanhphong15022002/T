@@ -182,7 +182,7 @@ export class PopupListContactsComponent implements OnInit {
         var dialog = this.callFc.openForm(
           PopupQuickaddContactComponent,
           '',
-          500,
+          600,
           500,
           '',
           obj,

@@ -4,8 +4,8 @@
   flex-direction: column;
 }
 
-.scroll{
-  height: 300px;
+.list-contacts{
+  height: calc(100% - 46px);
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -34,7 +34,3 @@
   opacity: 1;
 }
 
-codx-input{
-  width: 80%;
-  margin-left: 10px;
-}
