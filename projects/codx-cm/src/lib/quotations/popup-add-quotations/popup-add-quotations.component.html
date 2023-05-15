@@ -1,15 +1,14 @@
 <codx-form
   #form
-  [body]="body"
-  [formModel]="dialog?.formModel"
   [dialog]="dialog"
+  [formModel]="dialog?.formModel"
   [data]="quotations"
-  subToolbarCss="text-end"
-  [subToolbar]="subToolbar"
+  [body]="body"
+  subToolbarCss="text-end" 
+  [footer]="footer"
+  [subToolbar]="subToolbar" 
 >
-</codx-form>
-
-<!-- Start: Sub toolbar -->
+<ng-template #footer></ng-template>
 <ng-template #subToolbar>
   <div class="d-flex align-items-center justify-content-between pt-2">
     <div class="d-flex justify-content-start me-2">
@@ -401,3 +400,4 @@
   </div>
 </ng-template>
 <!-- End: More function -->
+</codx-form>

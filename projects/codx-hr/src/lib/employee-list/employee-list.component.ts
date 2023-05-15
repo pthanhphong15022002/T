@@ -324,13 +324,15 @@ export class EmployeeListComponent extends UIComponent {
   
   //selected Change
   selectedChange(val: any) {
+    debugger
     this.itemSelected = val.data;
     this.detectorRef.detectChanges();
   }
+  funIDEmpInfor:string = "HRT03b";
   // view imployee infor
-  doubleClick(data:any){
+  clickViewEmpInfo(data:any){
     debugger
-    this.cache.functionList("HRT03b")
+    this.cache.functionList(this.funIDEmpInfor)
     .subscribe(func => {
       let queryParams =  {
         employeeID: data.employeeID,
