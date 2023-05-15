@@ -458,9 +458,12 @@
         <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
           {{ headerText }}
         </div>
-        <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
-          <codx-input class="badge badge-danger" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
-          </codx-input>
+        <div class="input-circle input-sm" *ngIf="form?.formGroup">
+          <span class="me-2">
+            <codx-vll [name]="'AC040'" [formModel]="form.formModel" [field]="'Status'" [value]="inventoryJournal?.status"
+              [showText]="true" [showBgColor]="true" class="badge badge-light badge-lg lg">
+            </codx-vll>
+          </span>
         </div>
       </div>
       <div class="d-flex align-items-center me-3">
