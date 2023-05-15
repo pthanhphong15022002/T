@@ -49,6 +49,7 @@ import { LayoutInstancesComponent } from '../layout-instances/layout-instances.c
 import { LayoutComponent } from '../_layout/layout.component';
 import { Observable, finalize, map, filter, firstValueFrom } from 'rxjs';
 import { PopupEditOwnerstepComponent } from './popup-edit-ownerstep/popup-edit-ownerstep.component';
+import { PopupSelectTempletComponent } from './popup-select-templet/popup-select-templet.component';
 
 @Component({
   selector: 'codx-instances',
@@ -1812,13 +1813,37 @@ export class InstancesComponent
     this.isLockButton = true;
     let option = new DialogModel();
     option.zIndex = 1001;
+
+    // this.dialogTemplate = this.callfc.openForm(
+    //   this.popupTemplate,
+    //   '',
+    //   600,
+    //   500,
+    //   '',
+    //   null,
+    //   '',
+    //   option
+    // );
+
+    let obj = {
+      data: this.dataSelected,
+      formModel: this.view.formModel,
+      isFormExport : true,
+      refID: this.process.recID,
+      refType: 'DP_Processes',
+      esCategory: this.esCategory,
+      titleAction: this.titleAction,
+      loaded: true,
+      dataEx: this.dataEx,
+      dataWord: this.dataWord
+    };
     this.dialogTemplate = this.callfc.openForm(
-      this.popupTemplate,
+      PopupSelectTempletComponent,
       '',
       600,
       500,
       '',
-      null,
+      obj,
       '',
       option
     );
@@ -1972,13 +1997,36 @@ export class InstancesComponent
                 this.isLockButton = true;
                 let option = new DialogModel();
                 option.zIndex = 1001;
+                // this.dialogTemplate = this.callfc.openForm(
+                //   this.popupTemplate,
+                //   '',
+                //   600,
+                //   500,
+                //   '',
+                //   null,
+                //   '',
+                //   option
+                // );
+
+                let obj = {
+                  data: this.dataSelected,
+                  formModel: this.view.formModel,
+                  isFormExport : false,
+                  refID: this.process.recID,
+                  refType: 'DP_Processes',
+                  esCategory: this.esCategory,
+                  titleAction: this.titleAction,
+                  loaded: true,
+                  dataEx: this.dataEx,
+                  dataWord: this.dataWord
+                };
                 this.dialogTemplate = this.callfc.openForm(
-                  this.popupTemplate,
+                  PopupSelectTempletComponent,
                   '',
                   600,
                   500,
                   '',
-                  null,
+                  obj,
                   '',
                   option
                 );

@@ -132,6 +132,15 @@ export class CodxCmService {
     );
   }
 
+  checkCustomerIDByDealsAsync(customerID) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'CheckCustomerIDByDealsAsync',
+      [customerID]
+    );
+  }
+
   addDealCompetitor(dealCompetitor) {
     return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealCompetitorAsync', [
       dealCompetitor,
@@ -477,6 +486,15 @@ export class CodxCmService {
       'ContractsBusiness',
       'UpdateContractAsync',
       data
+    );
+  }
+ //quotation lines test
+  getQuotationsLinesByTransID(transID){
+    return this.api.exec<any>(
+      'CM',
+      'QuotationsLinesBusiness',
+      'GetQuotationsLinesByTransIDAsync',
+      transID
     );
   }
 }

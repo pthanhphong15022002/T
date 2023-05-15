@@ -61,6 +61,7 @@ export class CashPaymentsComponent extends UIComponent {
   cashpaymentline: any;
   settledInvoices: any;
   acctTrans: any;
+  baseCurr: any;
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
@@ -102,6 +103,9 @@ export class CashPaymentsComponent extends UIComponent {
     this.routerActive.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
     });
+    this.cache.companySetting().subscribe((res) => {
+      this.baseCurr = res.filter(x => x.baseCurr != null)[0].baseCurr;
+    })
   }
   //#endregion
 

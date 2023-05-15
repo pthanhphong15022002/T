@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
-import { FormModel } from 'codx-core';
+import { ApiHttpService, FormModel } from 'codx-core';
+import { CodxCmService } from '../../codx-cm.service';
 
 @Component({
   selector: 'lib-quotations-view-detail',
@@ -21,6 +22,7 @@ export class QuotationsViewDetailComponent implements OnChanges {
   @Input() vllStatus = 'CRM012';
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() eventChangeMF = new EventEmitter<any>();
+  contact: any;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -66,17 +68,41 @@ export class QuotationsViewDetailComponent implements OnChanges {
   };
   gridHeight: number = 250;
   editSettings: EditSettingsModel = {
-    allowEditing: true,
-    allowAdding: true,
-    allowDeleting: true,
+    allowEditing: false,
+    allowAdding: false,
+    allowDeleting: false,
     mode: 'Normal',
   };
   dataSource = [];
+  crrContactID: any;
 
-  constructor(protected sanitizer: DomSanitizer) {}
+  constructor(
+    private api: ApiHttpService,
+    private codxCM: CodxCmService,
+    protected sanitizer: DomSanitizer
+  ) {}
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['itemSelected']) {
     }
+    if (this.itemSelected.contactID != this.crrContactID) {
+      this.crrContactID = this.itemSelected.contactID;
+      this.loadDetailContactByID(this.crrContactID);
+    }
+    this.codxCM
+      .getQuotationsLinesByTransID(this.itemSelected.recID)
+      .subscribe((res) => {
+        if (res) {
+          this.dataSource = res;
+        }
+      });
+  }
+
+  loadDetailContactByID(contactID) {
+    this.api
+      .exec<any>('CM', 'ContactsBusiness', 'GetContactByRecIDAsync', contactID)
+      .subscribe((res) => {
+        this.contact = res;
+      });
   }
 
   changeDataMF(e, data) {

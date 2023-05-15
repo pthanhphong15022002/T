@@ -114,7 +114,6 @@ export class EPApprovalComponent extends UIComponent {
   onInit(): void {
     this.getBaseVariable();
     this.getCacheData();
-    
   }
   ngAfterViewInit(): void {
     this.getView();
@@ -159,12 +158,11 @@ export class EPApprovalComponent extends UIComponent {
         }
       });
   }
-  getView(){
+  getView() {
     if (
       this.funcID == EPCONST.FUNCID.R_Approval ||
       this.funcID == EPCONST.FUNCID.C_Approval
     ) {
-      
       this.getSchedule();
       this.views = [
         {
@@ -262,7 +260,6 @@ export class EPApprovalComponent extends UIComponent {
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
     this.getBaseVariable();
     this.getView();
-
   }
   changeItemDetail(event) {
     let recID = '';
@@ -277,8 +274,11 @@ export class EPApprovalComponent extends UIComponent {
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
       event.forEach((func) => {
-        if (func.functionID == EPCONST.MFUNCID.Copy||
-          func.functionID == EPCONST.MFUNCID.C_CardTrans) {
+        if (
+          func.functionID == EPCONST.MFUNCID.Copy ||
+          func.functionID == EPCONST.MFUNCID.C_CardTrans ||
+          func.functionID == EPCONST.MFUNCID.C_DriverAssign
+        ) {
           func.disabled = true;
         }
       });
@@ -298,7 +298,7 @@ export class EPApprovalComponent extends UIComponent {
             func.functionID == EPCONST.MFUNCID.R_Undo ||
             func.functionID == EPCONST.MFUNCID.C_Undo ||
             func.functionID == EPCONST.MFUNCID.S_Undo ||
-            func.functionID == EPCONST.MFUNCID.C_DriverAssign 
+            func.functionID == EPCONST.MFUNCID.C_DriverAssign
           ) {
             func.disabled = true;
           }
@@ -306,10 +306,9 @@ export class EPApprovalComponent extends UIComponent {
       } else if (data.approveStatus == '4') {
         event.forEach((func) => {
           if (
-            
             func.functionID == EPCONST.MFUNCID.R_Undo ||
             func.functionID == EPCONST.MFUNCID.C_Undo ||
-            func.functionID == EPCONST.MFUNCID.S_Undo 
+            func.functionID == EPCONST.MFUNCID.S_Undo
           ) {
             func.disabled = false;
           }
@@ -320,13 +319,12 @@ export class EPApprovalComponent extends UIComponent {
             func.functionID == EPCONST.MFUNCID.R_Reject ||
             func.functionID == EPCONST.MFUNCID.C_Reject ||
             func.functionID == EPCONST.MFUNCID.S_Reject ||
-            func.functionID == EPCONST.MFUNCID.C_DriverAssign 
+            func.functionID == EPCONST.MFUNCID.C_DriverAssign
           ) {
             func.disabled = true;
           }
         });
-      }      
-      else if (data.approveStatus == '5') {
+      } else if (data?.approveStatus == '5' && data?.stepType != 'I') {
         event.forEach((func) => {
           if (
             func.functionID == EPCONST.MFUNCID.R_Approval ||
@@ -350,8 +348,11 @@ export class EPApprovalComponent extends UIComponent {
               let driver = Array.from(data?.resources).filter((item: any) => {
                 return item.roleType == '2';
               });
-              if ((driver != null && driver.length > 0) || data?.driverName!=null) {
-                func.disabled = false;//true
+              if (
+                (driver != null && driver.length > 0) ||
+                data?.driverName != null
+              ) {
+                func.disabled = false; //true
               } else {
                 func.disabled = false;
               }
@@ -359,9 +360,58 @@ export class EPApprovalComponent extends UIComponent {
           }
         });
       }
+      // Xử lí cấp phát VPP là bước duyệt cuối (stepType=='I')
+      else if (
+        data?.approveStatus == '5' &&
+        data?.stepType == 'I' &&
+        data?.issueStatus == '1'
+      ) {
+        //Chưa cấp phát
+        event.forEach((func) => {
+          if (
+            func.functionID == EPCONST.MFUNCID.R_Approval ||
+            func.functionID == EPCONST.MFUNCID.C_Approval ||
+            func.functionID == EPCONST.MFUNCID.S_Approval ||
+            func.functionID == EPCONST.MFUNCID.R_Reject ||
+            func.functionID == EPCONST.MFUNCID.C_Reject ||
+            func.functionID == EPCONST.MFUNCID.S_Reject
+          ) {
+            func.disabled = false;
+          }
+          if (
+            func.functionID == EPCONST.MFUNCID.R_Undo ||
+            func.functionID == EPCONST.MFUNCID.C_Undo ||
+            func.functionID == EPCONST.MFUNCID.S_Undo
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else if (
+        (data?.approveStatus == '5' &&
+          data?.stepType == 'I' &&
+          data?.issueStatus == '3') ||
+        (data?.approveStatus == '4' && data?.stepType == 'I')
+      ) {
+        //Đã cấp phát
+        event.forEach((func) => {
+          if (
+            func.functionID == EPCONST.MFUNCID.R_Approval ||
+            func.functionID == EPCONST.MFUNCID.C_Approval ||
+            func.functionID == EPCONST.MFUNCID.S_Approval ||
+            func.functionID == EPCONST.MFUNCID.R_Reject ||
+            func.functionID == EPCONST.MFUNCID.C_Reject ||
+            func.functionID == EPCONST.MFUNCID.S_Reject ||
+            func.functionID == EPCONST.MFUNCID.R_Undo ||
+            func.functionID == EPCONST.MFUNCID.C_Undo ||
+            func.functionID == EPCONST.MFUNCID.S_Undo
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
     }
   }
-  clickMF(evt :any, data: any ) {
+  clickMF(evt: any, data: any) {
     let funcID = evt?.functionID;
     switch (funcID) {
       case EPCONST.MFUNCID.R_Approval:
@@ -387,13 +437,13 @@ export class EPApprovalComponent extends UIComponent {
         break;
       case EPCONST.MFUNCID.C_CardTrans:
         {
-          this.popupTitle=evt?.text;
+          this.popupTitle = evt?.text;
           this.cardTrans(data);
         }
         break;
       case EPCONST.MFUNCID.C_DriverAssign:
         {
-          this.popupTitle=evt?.text;
+          this.popupTitle = evt?.text;
           this.assignDriver(data);
         }
         break;
@@ -427,6 +477,10 @@ export class EPApprovalComponent extends UIComponent {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
           this.notificationsService.notifyCode('SYS034'); //đã duyệt
           data.approveStatus = '5';
+          //nếu bước duyệt VPP hiện tại là Cấp phát thì đổi cả IssueStatus
+          if (data?.stepType == 'I') {
+            data.issueStatus = '3';
+          }
           this.view.dataService.update(data).subscribe();
         } else {
           this.notificationsService.notifyCode(res?.msgCodeError);
@@ -464,7 +518,9 @@ export class EPApprovalComponent extends UIComponent {
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
-
+  setPopupTitleOption(mfunc) {
+    this.popupTitle = mfunc;
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
@@ -490,11 +546,7 @@ export class EPApprovalComponent extends UIComponent {
             550,
             250,
             this.funcID,
-            [
-              data,
-              this.popupTitle,
-              this.cbbDriver,
-            ]
+            [data, this.popupTitle, this.cbbDriver]
           );
           popupDialog.closed.subscribe((x) => {
             if (!x?.event) this.view.dataService.clear();
@@ -506,7 +558,7 @@ export class EPApprovalComponent extends UIComponent {
       });
   }
 
-  cardTrans( data: any) {
+  cardTrans(data: any) {
     let curTran = new ResourceTrans();
     let dialog = this.callfc.openForm(
       PopupAddCardTransComponent,

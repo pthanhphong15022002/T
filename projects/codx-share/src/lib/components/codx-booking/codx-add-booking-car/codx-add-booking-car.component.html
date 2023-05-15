@@ -167,6 +167,18 @@
 </ng-template>
 
 <ng-template #tabPeopleInfo>
+  <div class="d-flex justify-content-start align-items-center">
+    <div class="">
+      <codx-label name="lblAttendees" default="Số người đi xe" [formModel]="form.formModel">
+      </codx-label>
+    </div>
+    <div class="">
+      <span class="me-2">:</span>
+      <span class="fw-bold">{{ data?.attendees }}</span>
+    </div>
+  </div>
+  
+  <div class="separator my-5"></div>
   <div class="d-flex flex-row justify-content-between">
     <div class="d-flex flex-row justify-content-start">
       <ng-container *ngFor="let item of listRoles">

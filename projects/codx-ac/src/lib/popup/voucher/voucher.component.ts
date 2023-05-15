@@ -107,6 +107,10 @@ export class VoucherComponent implements OnInit {
     // this.payAmt = e.value;
   }
 
+  onSelected(e) {
+    console.log(e);
+  }
+
   valueChange(e: any) {
     let field = e.field;
     if (!e.data || typeof e.data === 'undefined') {
@@ -144,7 +148,7 @@ export class VoucherComponent implements OnInit {
       this.mapDataValues.set('accountID', e.data);
     }
 
-    if (field === 'invoiceDueDate' && typeof e.data !== 'undefined') {
+    if (field === 'invoiceDueDate' && typeof e.data !== 'undefined' && e.data) {
       this.mapPredicates.set('invoiceDueDate', 'InvoiceDueDate = @0');
       this.mapDataValues.set(
         'invoiceDueDate',
@@ -200,15 +204,9 @@ export class VoucherComponent implements OnInit {
 
   apply() {
     let data = this.grid.arrSelectedRows;
-    this.api
-      .exec<any>('AC', 'SettledInvoicesBusiness', 'ConvertSubLedgenToSettled', [
-        data,
-        this.cashpayment,
-        this.payAmt,
-      ])
-      .subscribe((res) => {
-        if (res && res.length) this.dialog.close(res);
-      });
+    if (this.type == 0) {
+      this.api.exec('AC', 'AC', 'SettledInvoicesBusiness');
+    } else this.dialog.close(data);
   }
 
   paymentAmt(data) {
@@ -291,42 +289,49 @@ export class VoucherComponent implements OnInit {
   }
 
   loadData() {
-    this.gridModel.predicate = this.morefunction.predicate;
-    this.gridModel.dataValue = this.morefunction.dataValue;
+    // this.gridModel.predicate = this.morefunction.predicate;
+    // this.gridModel.dataValue = this.morefunction.dataValue;
     this.gridModel.entityName = 'AC_SubInvoices';
+    let accID = this.form.formGroup.controls.accountID.value;
+
     this.api
-      .execSv<any>(
-        'AC',
-        'Core',
-        'DataBusiness',
-        'LoadDataAsync',
-        this.gridModel
-      )
+      .exec<any>('AC', 'SettledInvoicesBusiness', 'LoadSettledAsync', [
+        this.gridModel,
+        accID,
+        this.cashpayment.objectID,
+        this.cashpayment.journalType,
+        this.cashpayment.voucherDate,
+        this.cashpayment.currencyID,
+        this.cashpayment.exchangeRate,
+        this.payAmt,
+      ])
       .subscribe((res) => {
         if (res && res.length) {
-          this.autoPay(res[0]);
-          //if (this.payAmt && this.payAmt > 0) this.paymentAmt(res[0]);
-          //this.sublegendOpen = res[0];
+          this.subInvoices = res[0];
+          if (this.type == 1) {
+            setTimeout(() => {
+              this.grid.gridRef?.selectRows(res[2]);
+            }, 100);
+          }
         }
       });
   }
 
   autoPay(data: []) {
     let accID = this.form.formGroup.controls.accountID.value;
-    this.api.exec<any>('AC', 'SettledInvoicesBusiness', 'SettlementAsync', [
-      data,
-      this.cashpayment,
-      accID,
-      this.payAmt,
-    ]).subscribe(res=>{
-      this.subInvoices = res.subInvoices;
-      setTimeout(() => {
-        this.grid.gridRef?.selectRows(res.listCheck);
-      }, 100);
-    });
+    this.api
+      .exec<any>('AC', 'SettledInvoicesBusiness', 'SettlementAsync', [
+        data,
+        this.cashpayment,
+        accID,
+        this.payAmt,
+      ])
+      .subscribe((res) => {
+        this.subInvoices = res[0];
+        setTimeout(() => {
+          this.grid.gridRef?.selectRows(res[1]);
+        }, 100);
+      });
   }
   //#endregion
 }
-
-
-

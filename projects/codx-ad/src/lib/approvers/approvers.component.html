@@ -17,7 +17,7 @@
   <codx-temp-full
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="moreFunction($event, data)"
-    [imageId]="data.recID"
+    [imageId]="data.groupName"
     [imageObjType]="view.formModel?.entityName"
     [titleTmp]="titleTmp"
     [subTitleTmp]="subTitleTmp"
@@ -65,7 +65,7 @@
         <codx-temp-full
           cardCss="card-template"
           (clickMF)="moreFunction($event, data)"
-          [imageId]="data.recID"
+          [imageId]="data.groupName"
           [imageObjType]="view.formModel?.entityName"
           [titleTmp]="titleTmp"
           [subTitleTmp]="subTitleTmp"

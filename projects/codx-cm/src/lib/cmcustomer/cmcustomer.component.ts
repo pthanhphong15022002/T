@@ -79,6 +79,8 @@ export class CmCustomerComponent
   vllPriority = 'TM005';
   crrFuncID = '';
   viewMode = 2;
+  isButton = true;
+
   // const set value
   readonly btnAdd: string = 'btnAdd';
   constructor(
@@ -121,7 +123,9 @@ export class CmCustomerComponent
 
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
+        // this.view.dataService = JSON.parse(JSON.stringify(this.view.dataService));
         this.funcID = param.funcID;
+        this.isButton = true;
         this.afterLoad();
       }
     });
@@ -388,9 +392,10 @@ export class CmCustomerComponent
     this.titleAction = evt.text;
     switch (evt.id) {
       case 'btnAdd':
-        this.add();
+        if (this.isButton) this.add();
         break;
     }
+    this.isButton = false;
   }
 
   clickMF(e, data) {
@@ -398,13 +403,13 @@ export class CmCustomerComponent
     this.titleAction = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        this.edit(data);
+        if (this.isButton) this.edit(data);
         break;
       case 'SYS02':
         this.delete(data);
         break;
       case 'SYS04':
-        this.copy(data);
+        if (this.isButton) this.copy(data);
         break;
       case 'CM0101_1':
         this.setIsBlackList(data, true);
@@ -417,6 +422,7 @@ export class CmCustomerComponent
         this.deleteContactToCM(data);
         break;
     }
+    this.isButton = false;
   }
 
   clickMoreFunc(e) {
@@ -513,6 +519,7 @@ export class CmCustomerComponent
               option
             );
             dialog.closed.subscribe((e) => {
+              this.isButton = true;
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
                 e.event.modifiedOn = new Date();
@@ -555,8 +562,10 @@ export class CmCustomerComponent
             option
           );
           dialog.closed.subscribe((e) => {
+            this.isButton = true;
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event != null) {
+              e.event.modifiedOn = new Date();
               this.view.dataService.update(e.event).subscribe();
               this.dataSelected = JSON.parse(JSON.stringify(e?.event));
               this.customerDetail.getOneCustomerDetail();
@@ -609,8 +618,10 @@ export class CmCustomerComponent
               option
             );
             dialog.closed.subscribe((e) => {
+              this.isButton = true;
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
+                e.event.modifiedOn = new Date();
                 this.view.dataService.update(e.event).subscribe();
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.view.dataService.data[0])
@@ -633,27 +644,53 @@ export class CmCustomerComponent
   delete(data: any) {
     this.view.dataService.dataSelected = data;
     var checkContact = false;
-    if (this.funcID == 'CM0102') {
-      checkContact =
-        data?.contactType?.split(';').some((x) => x == '1') &&
-        data.objectID != null &&
-        data.objectID.trim() != ''
-          ? true
-          : false;
-    }
-    if (!checkContact) {
-      this.view.dataService
-        .delete([this.view.dataService.dataSelected], true, (opt) =>
-          this.beforeDel(opt)
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.view.dataService.onAction.next({ type: 'delete', data: data });
-          }
-        });
+    if (this.funcID == 'CM0101') {
+      this.cmSv.checkCustomerIDByDealsAsync(data?.recID).subscribe(res =>{
+        if(res){
+          this.notiService.notifyCode('Đang tồn tại trong cơ hội, không được xóa');
+          return;
+        }else{
+          this.view.dataService
+          .delete([this.view.dataService.dataSelected], true, (opt) =>
+            this.beforeDel(opt)
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.view.dataService.onAction.next({
+                type: 'delete',
+                data: data,
+              });
+            }
+          });
+        }
+      })
     } else {
-      this.notiService.notifyCode('CM004');
-      return;
+      if (this.funcID == 'CM0102') {
+        checkContact =
+          data?.contactType?.split(';').some((x) => x == '1') &&
+          data.objectID != null &&
+          data.objectID.trim() != ''
+            ? true
+            : false;
+      }
+
+      if (!checkContact) {
+        this.view.dataService
+          .delete([this.view.dataService.dataSelected], true, (opt) =>
+            this.beforeDel(opt)
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.view.dataService.onAction.next({
+                type: 'delete',
+                data: data,
+              });
+            }
+          });
+      } else {
+        this.notiService.notifyCode('CM004');
+        return;
+      }
     }
 
     this.detectorRef.detectChanges();

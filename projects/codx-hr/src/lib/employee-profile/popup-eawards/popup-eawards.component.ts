@@ -38,10 +38,10 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   defaultAwardDate: string = '0001-01-01T00:00:00';
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
+  // @ViewChild('listView') listView: CodxListviewComponent;
 
   fromListView: boolean = false; //check where to open the form
-  genderGrvSetup: any;
+  // genderGrvSetup: any;
   constructor(
     private injector: Injector,
     private notify: NotificationsService,
@@ -196,11 +196,11 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         }
       }); 
 
-    this.cache
-      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-      .subscribe((res) => {
-        this.genderGrvSetup = res?.Gender;
-      });
+    // this.cache
+    //   .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+    //   .subscribe((res) => {
+    //     this.genderGrvSetup = res?.Gender;
+    //   });
 
     if (this.employId != null)
       this.getEmployeeInfoById(this.employId, 'employeeID');

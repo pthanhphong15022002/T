@@ -139,7 +139,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     let oldSessionID = this.task.sessionID !=null ? this.task.sessionID :null ;
     
     this.api
-      .execSv<number>('TM', 'Core', 'DataBusiness', 'GetDefaultAsync', [
+      .execSv<any>('TM', 'Core', 'DataBusiness', 'GetDefaultAsync', [
         this.functionID,
         'TM_Tasks',
         'taskID',
