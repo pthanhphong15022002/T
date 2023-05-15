@@ -1,25 +1,34 @@
-<div
-  class="d-flex justify-content-end mb-4 mt-n2"
-  *ngIf="!hidenMF"
->
-  <button
-  type="button"
-  class="btn btn-sm btn-icon btn-light-primary me-2"
-  (click)="isButton ? clickPopupContacts() : null"
-  >
-  <i class="icon-check-correct icon-16"></i>
-  </button>
-  <button
-  type="button"
-  class="btn btn-sm btn-icon btn-primary"
-  (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
-  >
-  <i class="icon-person_add_alt_1 icon-16"></i>
-  </button>
+<div [class]="'detail-form'">
+  <div class="d-flex " *ngIf="!hidenMF">
+    <button
+      type="button"
+      class="btn btn-sm btn-icon btn-primary me-2 d-flex" style="min-width: 180px;"
+      (click)="isButton ? clickPopupContacts() : null"
+    >
+      <i class="icon-check-correct icon-16 me-1"></i>
+      <codx-label
+        name="lblSelectContacts"
+        [formModel]="formModel"
+        default="Chọn liên hệ từ hệ thống"
+      ></codx-label>
+    </button>
+    <button
+      type="button"
+      class="btn btn-sm btn-icon btn-primary d-flex" style="min-width: 180px;"
+      (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
+    >
+      <i class="icon-person_add_alt_1 icon-16 me-1"></i>
+      <codx-label
+        name="lblQuickAdd"
+        [formModel]="formModel"
+        default="Thêm nhanh liên hệ"
+      ></codx-label>
+    </button>
+  </div>
 </div>
 
 <ng-container *ngIf="loaded">
-  <div *ngIf="listContacts != null && listContacts.length > 0; else noData">
+  <div class="mt-2" *ngIf="listContacts != null && listContacts.length > 0; else noData">
     <div *ngFor="let item of listContacts">
       <ng-container
         [ngTemplateOutlet]="contacts"
@@ -122,19 +131,17 @@
         </ng-container>
       </div>
     </div>
-    <div
-        class="action-menu-od w-50px"
+    <div class="action-menu-od w-50px">
+      <codx-mfunc
+        [hidden]="hidenMF"
+        [formModel]="formModelContact"
+        [isBookMark]="true"
+        [dataItem]="data"
+        [type]="'hover'"
+        (clickMF)="clickMFContact($event, data)"
+        (changeDataMF)="changeDataMFContact($event, data)"
       >
-        <codx-mfunc
-          [hidden]="hidenMF"
-          [formModel]="formModelContact"
-          [isBookMark]="true"
-          [dataItem]="data"
-          [type]="'hover'"
-          (clickMF)="clickMFContact($event, data)"
-          (changeDataMF)="changeDataMFContact($event, data)"
-        >
-        </codx-mfunc>
-      </div>
+      </codx-mfunc>
+    </div>
   </div>
 </ng-template>
