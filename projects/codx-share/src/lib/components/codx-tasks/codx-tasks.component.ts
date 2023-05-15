@@ -157,7 +157,6 @@ export class CodxTasksComponent
   crrFuncID = '';
   isHoverPop = false;
   timeoutId: any;
-  crrViews = 2;
 
   constructor(
     inject: Injector,
@@ -1013,7 +1012,7 @@ export class CodxTasksComponent
   //#endregion
   //#region Event đã có dùng clickChildrenMenu truyền về
   changeView(evt: any) {
-    this.crrViews = evt.type;
+
     if (this.crrFuncID != this.funcID) {
       this.cache.viewSettings(this.funcID).subscribe((views) => {
         if (views) {
