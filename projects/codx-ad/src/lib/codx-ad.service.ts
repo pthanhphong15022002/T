@@ -231,6 +231,16 @@ export class CodxAdService {
     );
   }
 
+  getOrderDetail(orderRecID) {
+    return this.api.execSv(
+      'Tenant',
+      'ERM.Business.Tenant',
+      'OrdersBusiness',
+      'GetObjectAsync',
+      [orderRecID]
+    );
+  }
+
   checkExistedUserRoles(lstMemberID) {
     return this.api.execSv(
       'SYS',
