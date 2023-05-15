@@ -43,7 +43,7 @@ export class JournalService {
     entityName: string,
     form: CodxFormComponent,
     isEdit: boolean,
-    saveFunction
+    saveFunction: () => void
   ): void {
     if (
       journal.voucherNoRule !== '0' &&

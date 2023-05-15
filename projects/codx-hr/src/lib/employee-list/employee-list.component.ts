@@ -226,8 +226,9 @@ export class EmployeeListComponent extends UIComponent {
     if(data)
     {
       if(!moreFunc) moreFunc = this.sysMoreFunc.find(x => x.functionID == "SYS04");
+      this.view.dataService.dataSelected = data;
       this.view.dataService
-        .copy(data)
+        .copy()
         .subscribe((res: any) => {
           debugger
           let option = new SidebarModel();
@@ -324,19 +325,22 @@ export class EmployeeListComponent extends UIComponent {
   
   //selected Change
   selectedChange(val: any) {
+    debugger
     this.itemSelected = val.data;
     this.detectorRef.detectChanges();
   }
+  funIDEmpInfor:string = "HRT03b";
   // view imployee infor
-  doubleClick(data:any){
+  clickViewEmpInfo(data:any){
     debugger
-    this.cache.functionList("HRT0301")
+    this.cache.functionList(this.funIDEmpInfor)
     .subscribe(func => {
       let queryParams =  {
         employeeID: data.employeeID,
-        page: this.view.dataService.page
+        page: this.view.dataService.page,
+        filter: JSON.stringify(this.view.dataService?.filter),
       };
-      this.codxService.navigate(func.funcID,func.url,queryParams);
+      this.codxService.navigate("",func.url,queryParams);
     });
   }
 }
