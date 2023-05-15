@@ -1,6 +1,6 @@
-import { Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { CM_Contacts, CM_Contracts } from '../../models/cm_model';
-import { AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
+import { AuthStore, CRUDService, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, RequestOption, Util } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
@@ -20,12 +20,14 @@ export class AddContractsComponent implements OnInit{
   tabClicked  = '';
   listClicked = [];
   account: any;
+  type: 'view' | 'list';
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private authStore: AuthStore,
     private cmService: CodxCmService,
+    private changeDetector: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -34,6 +36,7 @@ export class AddContractsComponent implements OnInit{
     this.action = dt?.data?.action;
     this.contractsInput = dt?.data?.contract;
     this.account = dt?.data?.account;
+    this.type = dt?.data?.type;
   }
   ngOnInit() {
     this.setData(this.contractsInput);
@@ -110,22 +113,57 @@ export class AddContractsComponent implements OnInit{
     }
   }
 
+  beforeSave(op: RequestOption) {
+    let data = [];
+    if (this.action == 'add' || this.action == 'copy') {
+      op.methodName = 'AddContractsAsync';
+      data = [this.contracts];
+    }
+    if (this.action == 'edit') {
+      op.methodName = 'UpdateContractAsync';
+      data = [this.contracts];
+    }
+    op.data = data;
+    return true;
+  }
+
   addContracts(){
-    console.log(this.contracts);
-    
-    this.cmService.addContracts(this.contracts).subscribe( res => {
+    if(this.type == 'view'){
+      this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt), 0)
+      .subscribe((res) => {
+        if (res.save) {
+          (this.dialog.dataService as CRUDService).update(res.save).subscribe();
+          this.dialog.close(res.save);
+        } else {
+          this.dialog.close();
+        }
+        // this.changeDetector.detectChanges();
+      });
+    }else{
+       this.cmService.addContracts(this.contracts).subscribe( res => {
       if(res){
-        this.dialog.close({ contract: res, action: this.action });
-      }
-    })
+          this.dialog.close({ contract: res, action: this.action });
+        }
+      })
+    }
+    // console.log(this.contracts);
   }
 
   editContract(){
-    this.cmService.editContracts(this.contracts).subscribe( res => {
+    if(this.type == 'view'){
+      this.dialog.dataService
+    .save((opt: any) => this.beforeSave(opt))
+    .subscribe((res) => {
+      this.dialog.close({ contract: res, action: this.action }); 
+    })
+    }else{
+      this.cmService.editContracts(this.contracts).subscribe( res => {
       if(res){
         this.dialog.close({ contract: res, action: this.action });
       }
     })
+    }
   }
   changeTab(e){
     this.tabClicked = e;

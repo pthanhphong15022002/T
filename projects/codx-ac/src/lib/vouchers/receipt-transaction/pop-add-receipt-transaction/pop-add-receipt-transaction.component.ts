@@ -145,7 +145,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         this.editRow(data);
         break;
       case 'SYS04':
-        //this.copyRow(data);
+        this.copyRow(data);
         break;
     }
   }
@@ -305,7 +305,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             this.inventoryJournal
           );
           this.dialog.dataService
-            .save(null, 0, '', '', true)
+            .save(null, 0, '', '', false)
             .subscribe((res) => {
               if (res && res.update.data != false) {
                 this.loadModegrid();
@@ -366,6 +366,35 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         break;
     }
   }
+
+  copyRow(data) {
+    let idx;
+    this.api
+      .exec<any>('IV', 'InventoryJournalLinesBusiness', 'SetDefaultAsync', [
+        this.inventoryJournal,
+        data,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          switch (this.modeGrid) {
+            case '1':
+              idx = this.gridInventoryJournalLine.dataSource.length;
+              res.rowNo = idx + 1;
+              res.recID = Util.uid();
+              this.gridInventoryJournalLine.addRow(res, idx);
+      
+              break;
+            case '2':
+              idx = this.inventoryJournalLines.length;
+              res.rowNo = idx + 1;
+              res.recID = Util.uid();
+              this.openPopupLine(res, 'copy');
+              break;
+          }
+        }
+      });
+  }
+  
   deleteRow(data) {
     this.notification.alertCode('SYS030', null).subscribe((res) => {
       if (res.event.status === 'Y') {
@@ -382,7 +411,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               }
             }
             this.inventoryJournalLines = this.gridInventoryJournalLine.dataSource;
-            this.loadTotal();
             break;
           case '2':
             let index = this.inventoryJournalLines.findIndex(
@@ -408,6 +436,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   [this.inventoryJournalLines]
                 )
                 .subscribe((res) => {
+                  this.notification.notifyCode('SYS008', 0, '');
+                  this.hasSaved = true;
                   this.loadTotal();
                 });
             }
@@ -416,14 +446,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     });
   }
 
-  openPopupLine(data) {
+  openPopupLine(data, type: string) {
     var obj = {
       headerText: this.headerText,
       data: { ...data },
       dataline: this.inventoryJournalLines,
       dataInventoryJournal: this.inventoryJournal,
       lockFields: this.lockFields,
-      type: 'add',
+      type: type,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -448,8 +478,12 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           dialogs.closed.subscribe((res) => {
             if (res.event != null) {
               var dataline = res.event['data'];
-              this.inventoryJournalLines.push(dataline);
+              if(dataline)
+              {
+                this.inventoryJournalLines.push(dataline);
+              }
               this.loadPageCount();
+              this.hasSaved = true;
               this.loadTotal();
             }
           });
@@ -464,7 +498,21 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   close() {
-    this.dialog.close();
+    if (this.hasSaved) {
+      this.onEditInventory(false);
+    } else {
+      this.dialog.close();
+    }
+  }
+  onDiscard(){
+    this.dialog.dataService
+      .delete([this.inventoryJournal], true, null, '', 'AC0010', null, null, false)
+      .subscribe((res) => {
+        if (res.data != null) {
+          this.dialog.close();
+          this.dt.detectChanges();
+        }
+      });
   }
 
   onEdit(e: any) {
@@ -479,6 +527,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         .subscribe((save) => {
           if (save) {
             this.notification.notifyCode('SYS007', 0, '');
+            this.hasSaved = true;
             this.loadTotal();
           }
         });
@@ -497,6 +546,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         .subscribe((save) => {
           if (save) {
             this.notification.notifyCode('SYS006', 0, '');
+            this.hasSaved = true;
             this.loadTotal();
           }
         });
@@ -609,32 +659,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           }
           break;
         case 'edit':
-          this.journalService.handleVoucherNoAndSave(
-            this.journal,
-            this.inventoryJournal,
-            'IV',
-            'IV_InventoryJournals',
-            this.form,
-            this.formType === 'edit',
-            () => {
-              if (this.inventoryJournal.status == '0') {
-                this.inventoryJournal.status = '1';
-              }
-              this.dialog.dataService.updateDatas.set(
-                this.inventoryJournal['_uuid'],
-                this.inventoryJournal
-              );
-              this.dialog.dataService.save().subscribe((res) => {
-                if (res && res.update.data != null) {
-                  this.dialog.close({
-                    update: true,
-                    data: res.update,
-                  });
-                  this.dt.detectChanges();
-                }
-              });
-            }
-          );
+          this.onEditInventory(true);
           break;
       }
     }
@@ -650,10 +675,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       totals = totals + element.costAmt;
     });
     this.inventoryJournal.totalAmt = totals;
-    this.total = totals.toLocaleString('it-IT', {
-      style: 'currency',
-      currency: 'VND',
-    });
+    this.total = totals.toLocaleString('it-IT')
   }
 
   clearInventoryJournal() {
@@ -739,7 +761,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             case '2':
               idx = this.inventoryJournalLines.length;
               res.rowNo = idx + 1;
-              this.openPopupLine(res);
+              this.openPopupLine(res, 'add');
               break;
           }
         }
@@ -864,6 +886,35 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   loadPageCount() {
     this.pageCount = '(' + this.inventoryJournalLines.length + ')';
+  }
+
+  onEditInventory(notification: boolean){
+    this.journalService.handleVoucherNoAndSave(
+      this.journal,
+      this.inventoryJournal,
+      'IV',
+      'IV_InventoryJournals',
+      this.form,
+      this.formType === 'edit',
+      () => {
+        if (this.inventoryJournal.status == '0') {
+          this.inventoryJournal.status = '1';
+        }
+        this.dialog.dataService.updateDatas.set(
+          this.inventoryJournal['_uuid'],
+          this.inventoryJournal
+        );
+        this.dialog.dataService.save(null, 0, '', '', notification).subscribe((res) => {
+          if (res && res.update.data != null) {
+            this.dialog.close({
+              update: true,
+              data: res.update,
+            });
+            this.dt.detectChanges();
+          }
+        });
+      }
+    );
   }
 
   //#endregion

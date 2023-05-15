@@ -258,7 +258,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   reRenderGrid = true;
 
   //#region ColumnsGrid
-  visaColumnGrid;
   workPermitColumnGrid;
   healthColumnsGrid;
   vaccineColumnsGrid;
@@ -363,16 +362,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   EExperienceTmp: TemplateRef<any>;
   @ViewChild('tempFromDate', { static: true }) tempFromDate;
   @ViewChild('tempToDate', { static: true }) tempToDate: TemplateRef<any>;
-
-  // ePassVisa
-  @ViewChild('visaCol1', { static: true }) visaCol1: TemplateRef<any>;
-  @ViewChild('visaCol2', { static: true }) visaCol2: TemplateRef<any>;
-
-  // eWorkPermit
-  @ViewChild('workPermitCol1', { static: true })
-  workPermitCol1: TemplateRef<any>;
-  @ViewChild('workPermitCol2', { static: true })
-  workPermitCol2: TemplateRef<any>;
 
   // eBasicSalary
   @ViewChild('basicSalaryCol1', { static: true })
@@ -717,13 +706,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         });
 
       // Asset
-      if (!this.lstAsset)
-        this.hrService.LoadListEAsset(this.employeeID).subscribe((res) => {
-          if (res) {
-            this.lstAsset = res;
-            this.df.detectChanges();
-          }
-        });
+      // if (!this.lstAsset)
+      //   this.hrService.LoadListEAsset(this.employeeID).subscribe((res) => {
+      //     if (res) {
+      //       this.lstAsset = res;
+      //       this.df.detectChanges();
+      //     }
+      //   });
     }
     if (!this.jobSalaryColumnGrid) {
       //#region get columnGrid EJobSalary - Lương chức danh
@@ -1183,89 +1172,89 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   initLegalInfo() {
     //#region get columnGrid EVisa - Thị thực
-    if (!this.visaColumnGrid) {
-      this.hrService.getHeaderText(this.eVisaFuncID).then((res) => {
-        let visaHeaderText = res;
-        this.visaColumnGrid = [
-          {
-            headerText:
-              visaHeaderText['VisaNo'] + ' | ' + visaHeaderText['IssuedPlace'],
-            template: this.visaCol1,
-            width: '150',
-          },
-          {
-            headerText:
-              visaHeaderText['IssuedDate'] +
-              ' | ' +
-              visaHeaderText['ExpiredDate'],
-            template: this.visaCol2,
-            width: '150',
-          },
-        ];
-      });
+    // if (!this.visaColumnGrid) {
+    //   this.hrService.getHeaderText(this.eVisaFuncID).then((res) => {
+    //     let visaHeaderText = res;
+    //     this.visaColumnGrid = [
+    //       {
+    //         headerText:
+    //           visaHeaderText['VisaNo'] + ' | ' + visaHeaderText['IssuedPlace'],
+    //         template: this.visaCol1,
+    //         width: '150',
+    //       },
+    //       {
+    //         headerText:
+    //           visaHeaderText['IssuedDate'] +
+    //           ' | ' +
+    //           visaHeaderText['ExpiredDate'],
+    //         template: this.visaCol2,
+    //         width: '150',
+    //       },
+    //     ];
+    //   });
 
-      let insVisa = setInterval(() => {
-        if (this.visaGridview) {
-          clearInterval(insVisa);
-          let t = this;
-          this.visaGridview.dataService.onAction.subscribe((res) => {
-            if (res) {
-              if (res.type == 'loaded') {
-                t.visaRowCount = res['data'].length;
-                if (res['data'].length > 0) {
-                  this.crrVisa = res.data[0];
-                }
-              }
-            }
-          });
-          this.visaRowCount = this.visaGridview.dataService.rowCount;
-        }
-      }, 100);
-    }
+    //   let insVisa = setInterval(() => {
+    //     if (this.visaGridview) {
+    //       clearInterval(insVisa);
+    //       let t = this;
+    //       this.visaGridview.dataService.onAction.subscribe((res) => {
+    //         if (res) {
+    //           if (res.type == 'loaded') {
+    //             t.visaRowCount = res['data'].length;
+    //             if (res['data'].length > 0) {
+    //               this.crrVisa = res.data[0];
+    //             }
+    //           }
+    //         }
+    //       });
+    //       this.visaRowCount = this.visaGridview.dataService.rowCount;
+    //     }
+    //   }, 100);
+    // }
     //#endregion
 
 
     //#region get columnGrid EWorkPermit - Giấy phép lao động
-    if (!this.workPermitColumnGrid) {
-      this.hrService.getHeaderText(this.eWorkPermitFuncID).then((res) => {
-        let workHeaderText = res;
-        this.workPermitColumnGrid = [
-          {
-            headerText:
-              workHeaderText['WorkPermitNo'] +
-              ' | ' +
-              workHeaderText['IssuedPlace'],
-            template: this.workPermitCol1,
-            width: '150',
-          },
-          {
-            headerText:
-              workHeaderText['IssuedDate'] + ' | ' + workHeaderText['ToDate'],
-            template: this.workPermitCol2,
-            width: '150',
-          },
-        ];
-      });
+    // if (!this.workPermitColumnGrid) {
+    //   this.hrService.getHeaderText(this.eWorkPermitFuncID).then((res) => {
+    //     let workHeaderText = res;
+    //     this.workPermitColumnGrid = [
+    //       {
+    //         headerText:
+    //           workHeaderText['WorkPermitNo'] +
+    //           ' | ' +
+    //           workHeaderText['IssuedPlace'],
+    //         template: this.workPermitCol1,
+    //         width: '150',
+    //       },
+    //       {
+    //         headerText:
+    //           workHeaderText['IssuedDate'] + ' | ' + workHeaderText['ToDate'],
+    //         template: this.workPermitCol2,
+    //         width: '150',
+    //       },
+    //     ];
+    //   });
 
-      let insWorkPermit = setInterval(() => {
-        if (this.workPermitGridview) {
-          clearInterval(insWorkPermit);
-          let t = this;
-          this.workPermitGridview?.dataService.onAction.subscribe((res) => {
-            if (res) {
-              if (res.type == 'loaded') {
-                t.workPermitRowCount = res['data'].length;
-                if (res['data'].length > 0) {
-                  this.crrWorkpermit = res.data[0];
-                }
-              }
-            }
-          });
-          this.workPermitRowCount =
-            this.workPermitGridview.dataService.rowCount;
-        }
-      }, 100);
-    }
+    //   let insWorkPermit = setInterval(() => {
+    //     if (this.workPermitGridview) {
+    //       clearInterval(insWorkPermit);
+    //       let t = this;
+    //       this.workPermitGridview?.dataService.onAction.subscribe((res) => {
+    //         if (res) {
+    //           if (res.type == 'loaded') {
+    //             t.workPermitRowCount = res['data'].length;
+    //             if (res['data'].length > 0) {
+    //               this.crrWorkpermit = res.data[0];
+    //             }
+    //           }
+    //         }
+    //       });
+    //       this.workPermitRowCount =
+    //         this.workPermitGridview.dataService.rowCount;
+    //     }
+    //   }, 100);
+    // }
     //#endregion
   }
 
@@ -2375,14 +2364,16 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         break;
 
       case this.ePassportFuncID + 'ViewAll':        
-        // this.popupViewAll(this.ePassportFuncID)
         this.popupViewAllPassport();
         break;
       case this.eVisaFuncID + 'ViewAll':
-        this.popupViewAll(this.eVisaFuncID);
+        this.popupViewAllVisa();
+        // this.popupViewAll(this.eVisaFuncID);
         break;
       case this.eWorkPermitFuncID + 'ViewAll':
-        this.popupViewAll(this.eWorkPermitFuncID);
+        this.popupViewAllWorkPermit();
+
+        // this.popupViewAll(this.eWorkPermitFuncID);
         break;
 
       case 'SYS02': //delete
@@ -2407,6 +2398,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                     this.notify.notifyCode('SYS008');
                       this.hrService.GetEmpCurrentPassport(this.employeeID).subscribe((res) => {
                         this.crrPassport = res;
+                    this.df.detectChanges();
                       })
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2420,13 +2412,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.workPermitRowCount = this.updateGridView(
-                      this.workPermitGridview,
-                      'delete',
-                      data
-                    );
-                    this.df.detectChanges();
-                  } else {
+                    this.hrService.GetEmpCurrentWorkpermit(this.employeeID).subscribe((res) => {
+                      this.crrWorkpermit = res;
+                  this.df.detectChanges();
+                    })
+                } else {
                     this.notify.notifyCode('SYS022');
                   }
                 });
@@ -2436,18 +2426,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    // let i = this.lstVisa.indexOf(data);
-                    // if (i != -1) {
-                    //   this.lstVisa.splice(i, 1);
-                    //   console.log('delete visa', this.lstVisa);
-                    // }
-
-                    this.visaRowCount += this.updateGridView(
-                      this.visaGridview,
-                      'delete',
-                      data
-                    );
-                    this.df.detectChanges();
+                    this.hrService.GetEmpCurrentVisa(this.employeeID).subscribe((res) => {
+                      this.crrVisa = res;
+                      this.df.detectChanges();
+                    })
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -2967,6 +2949,76 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   }
 
+  popupViewAllWorkPermit(){
+    let opt = new DialogModel();
+    opt.zIndex = 999;
+    let popup = this.callfunc.openForm(
+      PopupViewAllComponent,
+      null,
+      850,
+      550,
+      this.eWorkPermitFuncID,
+      {
+        funcID: this.eWorkPermitFuncID,
+        employeeId: this.employeeID,
+        headerText: this.getFormHeader(this.eWorkPermitFuncID),
+        sortModel: this.workPermitSortModel,
+        //columnGrid: this.passportColumnGrid,
+        formModel: this.eWorkPermitFormModel,
+        hasFilter: false,
+      }
+      ,
+      null,
+      opt
+    )
+    popup.closed.subscribe((res) => {
+      if(res?.event){
+        if(res?.event == 'none'){
+          this.crrWorkpermit = null;
+        }
+        else{
+          this.crrWorkpermit = res.event
+          this.df.detectChanges();
+        }
+      }
+    })
+  }
+
+  popupViewAllVisa(){
+    let opt = new DialogModel();
+    opt.zIndex = 999;
+    let popup = this.callfunc.openForm(
+      PopupViewAllComponent,
+      null,
+      850,
+      550,
+      this.eVisaFuncID,
+      {
+        funcID: this.eVisaFuncID,
+        employeeId: this.employeeID,
+        headerText: this.getFormHeader(this.eVisaFuncID),
+        sortModel: this.visaSortModel,
+        //columnGrid: this.passportColumnGrid,
+        formModel: this.eVisaFormModel,
+        hasFilter: false,
+      }
+      ,
+      null,
+      opt
+    )
+    popup.closed.subscribe((res) => {
+      if(res?.event){
+        if(res?.event == 'none'){
+          this.crrVisa = null;
+        }
+        else{
+          this.crrVisa = res.event
+          this.df.detectChanges();
+        }
+      }
+    })
+  }
+
   popupViewAllPassport(){
     let opt = new DialogModel();
     opt.zIndex = 999;
@@ -2990,13 +3042,16 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       opt
     )
     popup.closed.subscribe((res) => {
-      debugger
       if(res?.event){
-        this.crrPassport = res.event
-        this.df.detectChanges();
+        if(res?.event == 'none'){
+          this.crrPassport = null;
+        }
+        else{
+          this.crrPassport = res.event
+          this.df.detectChanges();
+        }
       }
     })
-    
   }
   // getDataAsync(funcID: string) {
   //   this.getDataFromFunction(funcID);
@@ -3656,7 +3711,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
       else {
         if(actionType == 'add' || actionType == 'copy'){
-        if(res?.event.issuedDate > this.crrPassport.issuedDate){
+        if(!this.crrPassport || (res?.event.issuedDate > this.crrPassport.issuedDate)){
           this.crrPassport = res?.event;
           this.df.detectChanges()
         }
@@ -3758,10 +3813,34 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      // if (!res?.event)
-      //   (this.workPermitGridview.dataService as CRUDService).clear();
-      // else this.updateGridView(this.workPermitGridview, actionType, res.event);
-      // this.df.detectChanges();
+      if (!res?.event){
+        // (this.passportGridview.dataService as CRUDService).clear();
+      }
+      else {
+        if(actionType == 'add' || actionType == 'copy'){
+        if(!this.crrWorkpermit || (res?.event.issuedDate > this.crrWorkpermit.issuedDate)){
+          this.crrWorkpermit = res?.event;
+          this.df.detectChanges()
+        }
+      }
+        else if(actionType == 'edit'){
+        if(res?.event.issuedDate > this.crrWorkpermit.issuedDate || res?.event.issuedDate > this.crrWorkpermit.issuedDate){
+          //do nothing, old is current value is still is current
+        }
+        else{
+          this.hrService.GetEmpCurrentWorkpermit(this.employeeID).subscribe((res) => {
+            this.crrWorkpermit = res;
+            this.df.detectChanges()
+          })
+        }
+      }
+        // this.passportRowCount += this.updateGridView(
+        //   this.passportGridview,
+        //   actionType,
+        //   res?.event
+        // );
+      }
+      this.df.detectChanges();
     });
   }
 
@@ -3783,8 +3862,28 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) (this.visaGridview.dataService as CRUDService).clear();
-      else this.updateGridView(this.visaGridview, actionType, res.event);
+      if (!res?.event){
+        // (this.passportGridview.dataService as CRUDService).clear();
+      }
+      else {
+        if(actionType == 'add' || actionType == 'copy'){
+        if(!this.crrVisa || (res?.event.issuedDate > this.crrVisa.issuedDate)){
+          this.crrVisa = res?.event;
+          this.df.detectChanges()
+        }
+      }
+        else if(actionType == 'edit'){
+        if(res?.event.issuedDate > this.crrVisa.issuedDate || res?.event.issuedDate > this.crrVisa.issuedDate){
+          //do nothing, old is current value is still is current
+        }
+        else{
+          this.hrService.GetEmpCurrentPassport(this.employeeID).subscribe((res) => {
+            this.crrVisa = res;
+            this.df.detectChanges()
+          })
+        }
+      }
+      }
       this.df.detectChanges();
     });
   }

@@ -12,9 +12,9 @@
           <codx-img [width]="35" class="me-3" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
             [objectName]="data?.emp?.employeeName" [objectType]="'HR_Employees'">
           </codx-img>
-          <codx-vll class="badge badge-sm" [name]="genderGrvSetup?.referedValue" [value]="data?.emp?.gender"
+          <!-- <codx-vll class="badge badge-sm" [name]="genderGrvSetup?.referedValue" [value]="data?.emp?.gender"
             [showText]="true" [showIcon]="false" [showBgColor]="false">
-          </codx-vll>
+          </codx-vll> -->
         </div>
         <div class="d-flex flex-column">
           <div>
@@ -45,7 +45,7 @@
     <div class="w-25 p-3">
       <div class="d-flex flex-column">
         <div class="d-flex flex-row">
-          <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.appoint?.headerText">
+          <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.Appoint?.headerText">
             <span class="align-self-center fw-bold" [innerHTML]="
                 data?.appoint | formatvalue : view.formModel : 'appoint' | async
               ">
@@ -157,10 +157,10 @@
     </div>
   </div>
   <!-- <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label
+    <codx-labelK)
       name="lblApproveStatus"
       [default]="'Tình trạng duyệt'"
-    ></codx-label>
+    ></codx-labelK>
   </div> -->
 </ng-template>
 
@@ -191,11 +191,10 @@
           <div class="p-disabled">
             <codx-input field="status" [formModel]="view.formModel" [Group]="formGroup"></codx-input>
           </div>
-          <!-- <codx-input [disabled]="true" field="status" [formModel]="view.formModel" [Group]="formGroup"></codx-input> -->
         </div>
         <div class="form-group">
           <label>
-            <codx-label [default]="'Bình luận'" [name]="'lblComment'"></codx-label>
+            <codx-label fiedName="comments" [formModel]="view.formModel" [default]="grvSetup?.Comments?.description"></codx-label>
           </label>
           <codx-input type="text" [formModel]="view.formModel" (valueChange)="ValueChangeComment($event)">
           </codx-input>
@@ -220,11 +219,11 @@
       [imageObjType]="'HR_Employees'" [imageWidth]="40" [formModel]="view.formModel" [titleTmp]="titleTmp"
       [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'" (changeDataMF)="changeDataMF($event, data)">
     </codx-temp-full>
-    <div class="d-flex flex-center vll-badge">
+    <!-- <div class="d-flex flex-center vll-badge">
       <codx-vll class="badge badge-sm me-0 badge-light" [name]="genderGrvSetup?.referedValue"
         [value]="data?.emp?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
       </codx-vll>
-    </div>
+    </div> -->
   </div>
 
   <ng-template #titleTmp let-data>
@@ -242,7 +241,7 @@
         </span>
       </div>
 
-      <div class="justify-content-between">
+      <div class="justify-content-between text-secondary">
         <span [innerHTML]="
             data.emp.positionID
               | formatvalue : view.formModel : 'PositionID'
@@ -250,61 +249,47 @@
           "></span>
       </div>
 
-      <div class="d-flex flex-column" [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'">
-        <div class="d-flex flex-row">
-          <div class="d-flex flex-row">
-            <span class="icon-attach_money icon-15 me-1"></span>
-            <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.jSalary?.headerText">
-              <span class="align-self-center fw-bold" [innerHTML]="
-                  data?.jSalary
-                    | formatvalue : view.formModel : 'jSalary'
-                    | async
-                ">
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div class="d-flex flex-column">
-          <div class="d-flex flex-row">
-            <span class="icon-calendar_today icon-15 me-1"></span>
-            <div class="align-self-center fw-bold">
-              <span [title]="
-                  eJobSalaryHeader ? eJobSalaryHeader['EffectedDate'] : ''
-                " [ngbTooltip]="grvSetup?.effectedDate?.headerText">
-                {{ data?.effectedDate | fmDT }}
-              </span>
-            </div>
-          </div>
-        </div>
+      <div class="justify-content-between">
+        <span [innerHTML]="
+            data.appoint
+              | formatvalue : view.formModel : 'appoint'
+              | async
+          "></span>
       </div>
 
+      <div class="justify-content-between text-primary">
+        <span [innerHTML]="
+            data.orgUnitID
+              | formatvalue : view.formModel : 'orgUnitID'
+              | async
+          "></span>
+      </div>
+
+      <div class="d-flex flex-row">
+        <span class="icon-calendar_today icon-15 me-1"></span>
+        <div class="align-self-center fw-bold">
+          <span [title]="
+              eJobSalaryHeader ? eJobSalaryHeader['EffectedDate'] : ''
+            " [ngbTooltip]="grvSetup?.effectedDate?.headerText">
+            {{ data?.effectedDate | fmDT }}
+          </span>
+        </div>
+      </div> 
       <div class="d-flex justify-content-between text-dark">
         <span class="mt-2">
           <codx-vll class="badge fw-bold" [name]="'HRS102'" [value]="data?.status" [showText]="true"
             [showBgColor]="true">
           </codx-vll>
         </span>
-
-        <!-- <span class="d-flex flex-row justify-content-end">
-          <codx-imgs
-            [objectId]="getIdUser(data.createdBy, data.owner)"
-            [objectType]="'AD_Users'"
-            [width]="30"
-            [numberImages]="3"
-            [mode]="false"
-          >
-          </codx-imgs>
-        </span> -->
       </div>
     </div>
   </ng-template>
 </ng-template>
 
 <ng-template #panelRightListDetail let-data>
-  <lib-view-detail-ejobsalary [itemDetail]="itemDetail" [funcID]="funcID" [view]="view" [formModel]="view.formModel"
-    (uploaded)="getDetailESalary($event, data)" (clickMFunction)="clickEvent($event, data)">
-  </lib-view-detail-ejobsalary>
+  <lib-view-detail-eappointions [itemDetail]="itemDetail" [funcID]="funcID" [view]="view" [formModel]="view.formModel"
+     (clickMFunction)="clickEvent($event, data)">
+  </lib-view-detail-eappointions>
   <ng-template #itemRightDetail> </ng-template>
 </ng-template>
 

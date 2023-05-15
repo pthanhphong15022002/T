@@ -78,6 +78,7 @@ export class StagesDetailComponent implements OnInit {
   @Output() saveAssign = new EventEmitter<any>();
   @Output() outDataStep = new EventEmitter<any>();
   @Output() isChangeData = new EventEmitter<any>();
+  @Output() progressEmit = new EventEmitter<any>();
 
   stepID: any;
   isDelete: boolean = false;

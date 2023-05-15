@@ -1,8 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, DialogData, DialogRef, FormModel, ImageViewerComponent, LayoutAddComponent, NotificationsService, Util } from 'codx-core';
-import { CodxHrService } from '../../../codx-hr.service';
-import moment from 'moment';
-import { map } from 'rxjs';
+import { ApiHttpService, CacheService, DialogData, DialogRef, FilesService, FormModel, ImageViewerComponent, LayoutAddComponent, NotificationsService, Util } from 'codx-core';
 
 @Component({
   selector: 'hr-popup-add-employee',
@@ -17,6 +14,8 @@ export class PopupAddEmployeeComponent implements OnInit{
   formModel:FormModel = null;
   dialogRef:DialogRef = null;
   dialogData:any = null;
+  grvSetUp:any[] = [];
+  codxModifiedOn = new Date();
 
   tabInfo: any[] = [
     {
@@ -43,24 +42,23 @@ export class PopupAddEmployeeComponent implements OnInit{
     private api:ApiHttpService,
     private notifySV:NotificationsService,
     private cache:CacheService,
+    private fileSV:FilesService,
     private dt: ChangeDetectorRef,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   )
   {
-    debugger
     this.dialogRef = dialogRef;
     this.formModel = dialogRef?.formModel;
     this.action = dialogData?.data?.action;
     this.headerText = dialogData?.data?.text;
-    this.data = dialogData?.data?.data;
+    this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName,this.formModel.gridViewName);
   }
 
 
-  grvSetUp:any[] = [];
   //get grvSetup
   getGrvSetup(fromName:string , grdViewName:string){
     this.cache.gridViewSetup(fromName,grdViewName).subscribe((grv:any) => {
@@ -78,12 +76,10 @@ export class PopupAddEmployeeComponent implements OnInit{
 
   //value change
   valueChange(event: any) {
-    debugger
-    if (event?.data) {
+    if (event) {
       let field = Util.camelize(event.field);
       this.data[field] = event.data;
       if(field === 'birthday'){
-        debugger
         if(!this.validateBirthday(event.data)){
           this.notifySV.notifyCode("HR001");
           this.data[field] = null;
@@ -138,7 +134,8 @@ export class PopupAddEmployeeComponent implements OnInit{
   //click Button Save
   clickBtnSave(){
     debugger
-    if(this.checkValidate()){
+    if(this.checkValidate())
+    {
       this.action != "edit" ? this.save(this.data,this.formModel.funcID) : this.update(this.data); 
       this.dt.detectChanges();
     }
@@ -147,14 +144,13 @@ export class PopupAddEmployeeComponent implements OnInit{
   //check validate
   checkValidate(){
     debugger
-    let arrField =  Object.values(this.grvSetUp).filter((x:any) => x.isRequire);
-    let fieldRequired = arrField.map((x:any) => x.fieldName);
-    if(fieldRequired.length > 0)
+    let arrFieldRequire =  Object.values(this.grvSetUp).filter((x:any) => x.isRequire);
+    let arrFieldName = arrFieldRequire.map((x:any) => x.fieldName);
+    if(arrFieldName.length > 0)
     {
       let strFieldUnValid:string = "";
-      fieldRequired.forEach((key) => {
-        let field = Util.camelize(key);
-        if (!this.data[field])
+      arrFieldName.forEach((key) => {
+        if (!this.data[Util.camelize(key)])
           strFieldUnValid += this.grvSetUp[key]['headerText'] + ";";
       });
       if(strFieldUnValid)
@@ -166,6 +162,7 @@ export class PopupAddEmployeeComponent implements OnInit{
     return true;
   }
 
+  //save data
   save(data:any,funcID:string)
   {
     debugger
@@ -173,13 +170,18 @@ export class PopupAddEmployeeComponent implements OnInit{
       this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","SaveAsync",[data,funcID])
       .subscribe((res:any) => {
         debugger
-        if(res)
-        {
-          this.codxImg.updateFileDirectReload(data.employeeID).subscribe();
+        if(res){
+          this.codxImg.updateFileDirectReload(res.employeeID).subscribe((res2:any) => {
+            debugger
+            this.notifySV.notifyCode("SYS006")
+            this.dialogRef.close(res);
+          });
         }
-        let mssg = res ? "SYS006" : "SYS023";
-        this.notifySV.notifyCode(mssg)
-        this.dialogRef.close(res);
+        else
+        {
+          this.notifySV.notifyCode("SYS023");
+          this.dialogRef.close(null);
+        }
       });
     }
   }
@@ -187,12 +189,18 @@ export class PopupAddEmployeeComponent implements OnInit{
   update(data:any){
     debugger
     if(data){
-      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","SaveAsync",[data])
+      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","UpdateAsync",[data])
       .subscribe((res:any) => {
-        let mssg = res ? "SYS006" : "SYS023";
-        this.notifySV.notifyCode(mssg);
-        this.dialogRef.close(res);
+        debugger
+        this.notifySV.notifyCode(res ? "SYS007" : "SYS021");
+        this.dialogRef.close(res ? data : null );
       });
     }
+  }
+
+  //
+  changeAvatar(event:any){
+    this.codxModifiedOn = new Date();
+    this.fileSV.dataRefreshImage.next({userID: this.data.employeeID});
   }
 }

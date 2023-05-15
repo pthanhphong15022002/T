@@ -6,6 +6,7 @@ import {
   OnInit,
   Optional,
   SimpleChanges,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -63,6 +64,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
   @ViewChild('cashBook') cashBook: CodxInputComponent;
+  @ViewChild('rowNo', {static: true}) rowNo: TemplateRef<any>;
+  @ViewChild('account', {static: true}) account: TemplateRef<any>;
+  @ViewChild('dr', {static: true}) dr: TemplateRef<any>;
   headerText: string;
   dialog!: DialogRef;
   cashpayment: any;
@@ -110,6 +114,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   classNameLine:any;
   className:any;
   dataLine:any;
+  columnsGrid:any;
   authStore: AuthStore;
   constructor(
     inject: Injector,
@@ -180,6 +185,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#region Init
   onInit(): void {
     this.loadInit();
+    this.loadcolumnsGrid();
     this.loadTotal();
     this.loadFuncid();
     this.loadReason();
@@ -483,6 +489,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   addRow() {
+    //this.loadModegrid();
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
@@ -691,6 +698,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             var dataline = res.event['data'];
             this.cashpaymentline.push(dataline);
             this.loadTotal();
+            this.hasSaved = true;
             if (
               parseInt(this.total.replace(/\D/g, '')) >
               this.cashpayment.paymentAmt
@@ -824,10 +832,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   onSaveAdd() {
-    if (this.cashpaymentline.length == 0) {
-      this.notification.notifyCode('AC0013', 0, '');
-      return;
-    }
+    // if (this.cashpaymentline.length == 0) {
+    //   this.notification.notifyCode('AC0013', 0, '');
+    //   return;
+    // }
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
@@ -1207,6 +1215,26 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         this.baseCurr = res.baseCurr;
       });
+  }
+
+  loadcolumnsGrid(){
+    this.columnsGrid = [
+      {
+        headerText: 'STT',
+        template: this.rowNo,
+        width: '30',
+      },
+      {
+        headerText: 'Tài khoản',
+        template: this.account,
+        width: '100',
+      },
+      {
+        headerText: 'Nợ',
+        template: this.dr,
+        width: '100',
+      },
+    ]
   }
 
   onDrop(event: CdkDragDrop<string[]>) {
