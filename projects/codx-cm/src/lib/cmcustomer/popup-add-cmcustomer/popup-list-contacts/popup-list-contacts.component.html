@@ -57,7 +57,7 @@
       </button>
     </div>
   </div>
-  
+
   <ng-container *ngIf="loaded">
     <div
       class="scroll"
@@ -136,8 +136,8 @@
             <div
               class="text-gray-500 fs-7"
               [innerHTML]="
-                item?.department
-                  | formatvalue : dialog.formModel : 'Department'
+                item?.jobTitle
+                  | formatvalue : dialog.formModel : 'JobTitle'
                   | async
               "
             ></div>
