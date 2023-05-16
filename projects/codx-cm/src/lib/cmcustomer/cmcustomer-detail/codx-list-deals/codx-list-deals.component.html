@@ -94,10 +94,10 @@
             [innerHTML]="getStep(data?.stepID)?.stepName"
           ></span>
         </div>
-        <div class="ms-5">
-          <span class="icon-money icon-16 me-1"></span>
+        <div class="ms-1 d-flex align-items-center mt-1">
+          <span class="icon-money icon-16 text-gray-800 me-1"></span>
           <span
-            class="text-gray-500 my-2"
+            class="text-gray-700"
             [innerHTML]="
               data.endDate | formatvalue : formModel : 'EndDate' | async
             "
