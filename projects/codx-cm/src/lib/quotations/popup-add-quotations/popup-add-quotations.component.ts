@@ -495,7 +495,7 @@ export class PopupAddQuotationsComponent implements OnInit {
       });
     }
     this.quotations['totalAmt'] = totals;
-    this.quotations['DiscAmt'] = totalVAT;
+    // this.quotations['DiscAmt'] = totalVAT;
     this.quotations['DiscAmt'] = totalDis;
   }
 
