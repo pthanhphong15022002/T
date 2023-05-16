@@ -76,6 +76,9 @@ import { PopupViewAllComponent } from './pop-up/popup-view-all/popup-view-all.co
   styleUrls: ['./employee-info-detail.component.scss'],
 })
 export class EmployeeInfoDetailComponent extends UIComponent {
+valueChangeViewAllEContract() {
+throw new Error('Method not implemented.');
+}
   console = console;
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('button') button: TemplateRef<any>;
@@ -439,7 +442,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   eBenefitRowCount: number = 0;
   eBusinessTravelRowCount = 0;
   eSkillRowCount = 0;
-  dayoffRowCount: number = 0;
+  // dayoffRowCount: number = 0;
   eAssetRowCount = 0;
   eBasicSalaryRowCount = 0;
   eTrainCourseRowCount = 0;
@@ -452,6 +455,14 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //eDisciplineRowCount = 0;
   eDiseasesRowCount = 0;
   eAccidentsRowCount = 0;
+  // eHealthRowCount = 0;
+  // eVaccineRowCount = 0;
+  appointionRowCount = 0;
+  awardRowCount = 0;
+  eContractRowCount = 0;
+  eDisciplineRowCount = 0;
+  // eDiseasesRowCount = 0;
+  // eAccidentsRowCount = 0;
   //#endregion
 
   //#region var functionID
@@ -521,7 +532,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   eHealthFormModel: FormModel; //Khám sức khỏe
   eVaccineFormModel: FormModel; //Tiêm vắc xin
   appointionFormModel: FormModel;
-  dayofFormModel: FormModel;
+  dayoffFormModel: FormModel;
   eJobSalaryFormModel: FormModel; // Lương chức danh
   awardFormModel: FormModel; // Khen thưởng
   eContractFormModel: FormModel; // Hợp đồng lao động
@@ -972,11 +983,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
 
     this.hrService.getFormModel(this.dayoffFuncID).then((res) => {
-      this.dayofFormModel = res;
+      this.dayoffFormModel = res;
       this.cache
         .gridViewSetup(
-          this.dayofFormModel.formName,
-          this.dayofFormModel.gridViewName
+          this.dayoffFormModel.formName,
+          this.dayoffFormModel.gridViewName
         )
         .subscribe((res) => {
           this.eDayOffGrvSetup = res;
@@ -1096,13 +1107,15 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         {
           headerText:
             this.dayoffHeaderTexts['KowID'] +
-            '|' +
+            ' | ' +
             this.dayoffHeaderTexts['RegisteredDate'],
           template: this.templateDayOffGridCol1,
           width: '150',
         },
         {
-          headerText: 'Thời gian nghỉ ' + '|' + 'Số ngày',
+          headerText: this.dayoffHeaderTexts['BeginDate']
+            + ' - ' + this.dayoffHeaderTexts['EndDate']
+            + ' | ' + this.dayoffHeaderTexts['TotalDaysOff'],
           template: this.templateDayOffGridCol2,
           width: '150',
         },
@@ -1114,20 +1127,20 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       ];
     });
 
-    let insDayOff = setInterval(() => {
-      if (this.dayoffGrid) {
-        clearInterval(insDayOff);
-        let t = this;
-        this.dayoffGrid.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type != null && res.type == 'loaded') {
-              t.dayoffRowCount = res['data'].length;
-            }
-          }
-        });
-        this.dayoffRowCount = this.dayoffGrid.dataService.rowCount;
-      }
-    }, 100);
+    // let insDayOff = setInterval(() => {
+    //   if (this.dayoffGrid) {
+    //     clearInterval(insDayOff);
+    //     let t = this;
+    //     this.dayoffGrid.dataService.onAction.subscribe((res) => {
+    //       if (res) {
+    //         if (res.type != null && res.type == 'loaded') {
+    //           t.dayoffRowCount = res['data'].length;
+    //         }
+    //       }
+    //     });
+    //     this.dayoffRowCount = this.dayoffGrid.dataService.rowCount;
+    //   }
+    // }, 100);
     //#endregion
 
     //#region eAsset - Tai san cap phat
@@ -1206,20 +1219,20 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       ];
     });
 
-    let insEHealth = setInterval(() => {
-      if (this.eHealthsGrid) {
-        clearInterval(insEHealth);
-        let t = this;
-        this.eHealthsGrid.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type == 'loaded') {
-              t.eHealthRowCount = res['data'].length;
-            }
-          }
-        });
-        this.eHealthRowCount = this.eHealthsGrid.dataService.rowCount;
-      }
-    }, 100);
+    // let insEHealth = setInterval(() => {
+    //   if (this.eHealthsGrid) {
+    //     clearInterval(insEHealth);
+    //     let t = this;
+    //     this.eHealthsGrid.dataService.onAction.subscribe((res) => {
+    //       if (res) {
+    //         if (res.type == 'loaded') {
+    //           t.eHealthRowCount = res['data'].length;
+    //         }
+    //       }
+    //     });
+    //     this.eHealthRowCount = this.eHealthsGrid.dataService.rowCount;
+    //   }
+    // }, 100);
     //#endregion
 
     //#region Tiem vaccine
@@ -1252,20 +1265,20 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       ];
     });
 
-    let insEVaccines = setInterval(() => {
-      if (this.eVaccinesGrid) {
-        clearInterval(insEVaccines);
-        let t = this;
-        this.eVaccinesGrid.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type == 'loaded') {
-              t.eVaccineRowCount = res['data'].length;
-            }
-          }
-        });
-        this.eVaccineRowCount = this.eVaccinesGrid.dataService.rowCount;
-      }
-    }, 100);
+    // let insEVaccines = setInterval(() => {
+    //   if (this.eVaccinesGrid) {
+    //     clearInterval(insEVaccines);
+    //     let t = this;
+    //     this.eVaccinesGrid.dataService.onAction.subscribe((res) => {
+    //       if (res) {
+    //         if (res.type == 'loaded') {
+    //           t.eVaccineRowCount = res['data'].length;
+    //         }
+    //       }
+    //     });
+    //     this.eVaccineRowCount = this.eVaccinesGrid.dataService.rowCount;
+    //   }
+    // }, 100);
     //#endregion
 
     //#region eExperience - Kinh nghiem truoc day
@@ -1473,21 +1486,21 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       ];
     });
 
-    let insDiseases = setInterval(() => {
-      if (this.eDiseasesGrid) {
-        clearInterval(insDiseases);
-        let t = this;
-        this.eDiseasesGrid.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type != null && res.type == 'loaded') {
-              t.eDiseasesRowCount = 0;
-              t.eDiseasesRowCount = res['data'].length;
-            }
-          }
-        });
-        this.eDiseasesRowCount = this.eDiseasesGrid.dataService.rowCount;
-      }
-    }, 100);
+    // let insDiseases = setInterval(() => {
+    //   if (this.eDiseasesGrid) {
+    //     clearInterval(insDiseases);
+    //     let t = this;
+    //     this.eDiseasesGrid.dataService.onAction.subscribe((res) => {
+    //       if (res) {
+    //         if (res.type != null && res.type == 'loaded') {
+    //           t.eDiseasesRowCount = 0;
+    //           t.eDiseasesRowCount = res['data'].length;
+    //         }
+    //       }
+    //     });
+    //     this.eDiseasesRowCount = this.eDiseasesGrid.dataService.rowCount;
+    //   }
+    // }, 100);
 
     //#endregion
 
@@ -1520,21 +1533,21 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       ];
     });
 
-    let insEAccident = setInterval(() => {
-      if (this.eAccidentGridView) {
-        clearInterval(insEAccident);
-        let t = this;
-        this.eAccidentGridView.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type == 'loaded') {
-              t.eAccidentsRowCount = 0;
-              t.eAccidentsRowCount = res['data'].length;
-            }
-          }
-        });
-        this.eAccidentsRowCount = this.eAccidentGridView.dataService.rowCount;
-      }
-    }, 100);
+    // let insEAccident = setInterval(() => {
+    //   if (this.eAccidentGridView) {
+    //     clearInterval(insEAccident);
+    //     let t = this;
+    //     this.eAccidentGridView.dataService.onAction.subscribe((res) => {
+    //       if (res) {
+    //         if (res.type == 'loaded') {
+    //           t.eAccidentsRowCount = 0;
+    //           t.eAccidentsRowCount = res['data'].length;
+    //         }
+    //       }
+    //     });
+    //     this.eAccidentsRowCount = this.eAccidentGridView.dataService.rowCount;
+    //   }
+    // }, 100);
 
     //#endregion
   }
@@ -2640,13 +2653,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                   }
                 });
             } else if (funcID == 'eDayoff') {
-              this.hrService.DeleteEmployeeDayOffInfo(data).subscribe((p) => {
+              this.hrService.DeleteEmployeeDayOffInfo(data.recID).subscribe((p) => {
                 if (p != null) {
                   this.notify.notifyCode('SYS008');
                   (this.dayoffGrid.dataService as CRUDService)
                     .remove(data)
                     .subscribe();
-                  this.dayoffRowCount = this.dayoffRowCount - 1;
+                  // this.dayoffRowCount = this.dayoffRowCount - 1;
                   this.df.detectChanges();
                 } else {
                   this.notify.notifyCode('SYS022');
@@ -2711,7 +2724,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                   (this.eHealthsGrid.dataService as CRUDService)
                     .remove(data)
                     .subscribe();
-                  this.eHealthRowCount = this.eHealthRowCount - 1;
+                  // this.eHealthRowCount = this.eHealthRowCount - 1;
                   this.df.detectChanges();
                 } else {
                   this.notify.notifyCode('SYS022');
@@ -2763,7 +2776,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                   (this.eVaccinesGrid.dataService as CRUDService)
                     .remove(data)
                     .subscribe();
-                  this.eVaccineRowCount = this.eVaccineRowCount - 1;
+                  // this.eVaccineRowCount = this.eVaccineRowCount - 1;
                   this.df.detectChanges();
                 } else {
                   this.notify.notifyCode('SYS022');
@@ -2901,7 +2914,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                     (this.eDiseasesGrid.dataService as CRUDService)
                       .remove(data)
                       .subscribe();
-                    this.eDiseasesRowCount--;
+                    // this.eDiseasesRowCount--;
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -2988,7 +3001,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                   (this.eAccidentGridView.dataService as CRUDService)
                     ?.remove(data)
                     .subscribe();
-                  this.eAccidentsRowCount--;
+                  // this.eAccidentsRowCount--;
                   this.df.detectChanges();
                 } else this.notify.notifyCode('SYS022');
               });
@@ -3759,7 +3772,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 );
               }
             });
-          this.dayoffRowCount += 1;
+          // this.dayoffRowCount += 1;
         } else if (actionType == 'edit') {
           (this.dayoffGrid.dataService as CRUDService)
             .update(res.event)
@@ -3933,13 +3946,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.eAccidentGridView?.dataService as CRUDService)?.clear();
-      else {
-        this.eAccidentsRowCount += this.updateGridView(
-          this.eAccidentGridView,
-          actionType,
-          res.event
-        );
-      }
+      // else {
+      //   this.eAccidentsRowCount += this.updateGridView(
+      //     this.eAccidentGridView,
+      //     actionType,
+      //     res.event
+      //   );
+      // }
       this.df.detectChanges();
     });
   }
@@ -4280,7 +4293,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
-          this.eHealthRowCount += 1;
+          // this.eHealthRowCount += 1;
           (this.eHealthsGrid.dataService as CRUDService)
             .add(res.event)
             .subscribe();
@@ -4342,12 +4355,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         actionHeaderText + ' ' + this.getFormHeader(this.eDiseasesFuncID),
     });
     dialogAdd.closed.subscribe((res) => {
-      if (res)
-        this.eDiseasesRowCount += this.updateGridView(
-          this.eDiseasesGrid,
-          actionType,
-          res.event
-        );
+      // if (res)
+      //   this.eDiseasesRowCount += this.updateGridView(
+      //     this.eDiseasesGrid,
+      //     actionType,
+      //     res.event
+      //   );
       this.df.detectChanges();
     });
 
@@ -4473,7 +4486,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
-          this.eVaccineRowCount += 1;
+          // this.eVaccineRowCount += 1;
           (this.eVaccinesGrid.dataService as CRUDService)
             .add(res.event)
             .subscribe();

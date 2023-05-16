@@ -31,17 +31,18 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
+    this.cacheSv.functionList(this.funcID).subscribe((res:any)=>{
+      if(res){
+        this.module = res.module ? res.module.toLowerCase() : '';
+      }
+    })
   }
   ngOnChanges(changes: SimpleChanges): void {
 
   }
 
   ngAfterViewInit(): void {
-    this.cacheSv.functionList(this.funcID).subscribe((res:any)=>{
-      if(res){
-        this.module = res.module ? res.module.toLowerCase() : '';
-      }
-    })
+
     this.views = [
       {
         type: ViewType.report,
@@ -55,7 +56,9 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
       },
       // {
       //   type: ViewType.list,
-      //   sameData: true,
+      //   sameData: false,
+      //   reportView: true,
+      //   reportType:'R',
       //   active: false,
 
       //   // model: {

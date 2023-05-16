@@ -17,7 +17,8 @@ import { TN_OrderModule } from '../../models/tmpModule.model';
 export class PopupExtendModuleComponent extends UIComponent {
   dialog;
   module;
-
+  childModule;
+  grvTNOrders;
   constructor(
     private inject: Injector,
     private adService: CodxAdService,
@@ -29,8 +30,16 @@ export class PopupExtendModuleComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.module = dt.data.module as TN_OrderModule;
+    this.module = dt.data.module;
+    this.childModule = dt.data.childModule;
+    this.grvTNOrders = dt?.data?.grvView;
+
+    console.log('module', this.module);
+    console.log('childModule', this.childModule);
   }
 
   onInit() {}
+  closePopup() {
+    this.dialog.close();
+  }
 }
