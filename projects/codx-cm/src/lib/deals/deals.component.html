@@ -34,7 +34,6 @@
     [footer]="footerKanban"
     [dataItem]="data"
     [rootData]="data"
-    (dblclick)="dblClick($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
   >
   </codx-card-img>
@@ -145,7 +144,22 @@
   <div class="d-flex flex-column py-2">
     <div class="d-flex justify-content-start py-1">
       <i class="icon-business pe-1"></i>
-      <div> {{data?.customerName}} </div>
+      <div>
+        <span
+        class="fs-7"
+        #customerID
+        [innerHTML]="
+        data?.customerID
+            | formatvalue
+              : formModel
+              : 'customerID'
+              : customerID
+              : 'CMDeals'
+              : 'grvCMDeals'
+            | async
+        "
+      ></span>
+      </div>
     </div>
     <div class="d-flex justify-content-star py-1">
       <div class="d-flex align-items-start pe-4">
@@ -219,6 +233,7 @@
     [formModel]="view.formModel"
     [dataSelected]="dataSelected"
     [funcID]="funcID"
+    (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
   >
   </codx-deal-detail>
