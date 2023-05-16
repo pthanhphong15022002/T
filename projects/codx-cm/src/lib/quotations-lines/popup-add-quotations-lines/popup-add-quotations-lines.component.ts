@@ -1,5 +1,5 @@
-import { Component, OnInit, Optional } from '@angular/core';
-import { DialogData, DialogRef } from 'codx-core';
+import { Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { CodxFormComponent, DialogData, DialogRef } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 
 @Component({
@@ -8,6 +8,7 @@ import { CodxCmService } from '../../codx-cm.service';
   styleUrls: ['./popup-add-quotations-lines.component.css'],
 })
 export class PopupAddQuotationsLinesComponent implements OnInit {
+  @ViewChild('form') form: CodxFormComponent;
   dialog: DialogRef;
   headerText: any;
   quotationsLine: any;
@@ -25,22 +26,33 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
 
   ngOnInit(): void {}
   onSave() {
+    this.quotationsLine['netAmt'] = this.quotationsLine['costAmt'] = this.quotationsLine['salesAmt'] +  this.quotationsLine['discAmt'] +  this.quotationsLine['VATAmt'] 
     this.dialog.close(this.quotationsLine);
   }
 
   valueChange(e) {
     if (!e.field || !e.data) return;
-    if (typeof this.quotationsLine[e.field] == 'number') {
-      this.quotationsLine[e.field] = Number.parseInt(e.data);
-    } else this.quotationsLine[e.field] = e.data;
+    this.quotationsLine[e.field] = e.data;
     switch (e.field) {
       case 'itemID':
         this.loadItem(e.data);
         break;
+    
       case 'quantity':
       case 'salesPrice':
-        this.quotationsLine.costAmt =
-          this.quotationsLine.quantity * this.quotationsLine.salesPrice;
+        this.quotationsLine['salesAmt'] =
+          this.quotationsLine['quantity'] * this.quotationsLine['salesPrice'];
+        break;
+      case 'discPct':
+          this.quotationsLine['discAmt'] =
+          this.quotationsLine['discPct'] * this.quotationsLine['salesAmt'];
+          this.quotationsLine['VATBase'] = this.quotationsLine['salesAmt'] + this.quotationsLine['discAmt']
+          break;
+      case 'VATID':
+        let taxrate = e?.component?.itemsSelected[0]?.TaxRate;
+        if(taxrate){
+          this.quotationsLine['VATAmt'] = taxrate * this.quotationsLine['VATBase']
+        }
         break;
     }
   }
@@ -48,11 +60,11 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
   loadItem(itemID) {
     this.codxCM.getItem(itemID).subscribe((items) => {
       if (items) {
-        this.quotationsLine.onhand = items.quantity;
-        this.quotationsLine.iDIM4 = items.warehouseID; // kho
-        this.quotationsLine.costPrice = items.costPrice; // gia von
-        this.quotationsLine.uMID = items.umid; // don vi tinh
-        this.quotationsLine.quantity = items.minSettledQty; //so luong mua nhieu nhat
+        this.quotationsLine['onhand'] = items.quantity;
+        this.quotationsLine['iDIM4'] = items.warehouseID; // kho
+        this.quotationsLine['costPrice'] = items.costPrice; // gia von
+        this.quotationsLine['uMID'] = items.umid; // don vi tinh
+        this.quotationsLine['quantity'] = items.minSettledQty; //so luong mua nhieu nhat
       }
       // (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
       // (this.idiM1.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
@@ -72,7 +84,7 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
       // this.inventoryJournalLine.idiM3 = null;
       // this.inventoryJournalLine.idiM6 = null;
       // this.inventoryJournalLine.idiM7 = null;
-      // this.form.formGroup.patchValue(this.inventoryJournalLine);
+      this.form.formGroup.patchValue(this.quotationsLine);
     });
   }
 }
