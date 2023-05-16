@@ -448,7 +448,7 @@ export class CodxCalendarComponent
             this.ejCalendar.value = this.FDdate;
           }
 
-          this.codxShareSV.dataResourceModel.next(this.calendarData[0]);
+          this.codxShareSV.dataResourceModel.next(this.calendarData);
         }
       });
   }
@@ -716,7 +716,7 @@ export class CodxCalendarComponent
           JSON.stringify(this.EP_BookingCars)
         );
 
-        this.codxShareSV.dataResourceModel.next(this.calendarData[0]);
+        this.codxShareSV.dataResourceModel.next(this.calendarData);
       }
     }
   }
@@ -809,22 +809,20 @@ export class CodxCalendarComponent
     let myInterval = setInterval(() => {
       if (this.calendarData) {
         clearInterval(myInterval);
-        if (this.calendarData[1] > 0) {
-          for (let i = 0; i < this.calendarData[1]; i++) {
-            let day = new Date(this.calendarData[0][i].startDate);
-            if (
-              day &&
-              args.date.getFullYear() == day.getFullYear() &&
-              args.date.getMonth() == day.getMonth() &&
-              args.date.getDate() == day.getDate()
-            ) {
-              let span: HTMLElement;
-              span = document.createElement('span');
-              span.setAttribute('class', 'e-icons highlight');
-              addClass([args.element], ['special', 'e-day']);
-              args.element.appendChild(span);
-              return;
-            }
+        for (let i = 0; i < this.calendarData.length; i++) {
+          let day = new Date(this.calendarData[i].startDate);
+          if (
+            day &&
+            args.date.getFullYear() == day.getFullYear() &&
+            args.date.getMonth() == day.getMonth() &&
+            args.date.getDate() == day.getDate()
+          ) {
+            let span: HTMLElement;
+            span = document.createElement('span');
+            span.setAttribute('class', 'e-icons highlight');
+            addClass([args.element], ['special', 'e-day']);
+            args.element.appendChild(span);
+            return;
           }
         }
       }

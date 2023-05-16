@@ -34,6 +34,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { TN_OrderModule } from '../models/tmpModule.model';
 import { PopupModuleDetailComponent } from './popup-module-detail/popup-module-detail.component';
 import { PopupOrderDetailComponent } from './popup-order-detail/popup-order-detail.component';
+import { PopupExtendModuleComponent } from './popup-extend-module/popup-extend-module.component';
 
 @Component({
   selector: 'lib-company-setting',
@@ -459,6 +460,26 @@ export class CompanySettingComponent
       PopupOrderDetailComponent,
       '',
       650,
+      900,
+      '',
+      data
+    );
+  }
+
+  extendModule(module) {
+    let childModule = this.lstModule.find(
+      (md: TN_OrderModule) =>
+        md.boughtModule?.refID == module?.boughtModule?.moduleID
+    );
+    let data = {
+      grvView: this.grvTNOrders,
+      module: module,
+      childModule: childModule,
+    };
+    let orderDialog = this.callfc.openForm(
+      PopupExtendModuleComponent,
+      '',
+      900,
       900,
       '',
       data
