@@ -42,7 +42,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   formType: any;
   gridViewSetup: any;
   gridViewSetupLine: any;
-  validate: any;
+  validate: any = 0;
   journalNo: any;
   modeGrid: any;
   inventoryJournalLines: Array<InventoryJournalLines> = [];
