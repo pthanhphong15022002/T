@@ -67,7 +67,7 @@ import { Sort } from '@syncfusion/ej2-angular-grids';
 import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 import { PopupEProcessContractComponent } from '../../employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { PopupForeignWorkerComponent } from '../../employee-profile/popup-foreign-worker/popup-foreign-worker.component';
-import { PopupViewallBenefitComponent } from './pop-up/popup-viewall-benefit/popup-viewall-benefit.component';
+// import { PopupViewallBenefitComponent } from './pop-up/popup-viewall-benefit/popup-viewall-benefit.component';
 import { PopupViewAllComponent } from './pop-up/popup-view-all/popup-view-all.component';
 
 @Component({
@@ -214,6 +214,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //EAppointion
   lstAppointions: any = [];
   //Basic salary
+  employeeGrossSalary;
   crrEBSalary: any;
 
   listCrrBenefit: any;
@@ -477,19 +478,19 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //#endregion
 
   //#region RowCount
-  eDegreeRowCount: number = 0;
+  // eDegreeRowCount: number = 0;
   passportRowCount: number = 0;
   visaRowCount: number = 0;
   workPermitRowCount: number = 0;
   eExperienceRowCount = 0;
-  eCertificateRowCount = 0;
+  // eCertificateRowCount = 0;
   eBenefitRowCount: number = 0;
   eBusinessTravelRowCount = 0;
-  eSkillRowCount = 0;
+  // eSkillRowCount = 0;
   dayoffRowCount: number = 0;
   eAssetRowCount = 0;
   eBasicSalaryRowCount = 0;
-  eTrainCourseRowCount = 0;
+  // eTrainCourseRowCount = 0;
   eHealthRowCount = 0;
   eVaccineRowCount = 0;
   appointionRowCount = 0;
@@ -860,21 +861,21 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         ];
       });
 
-      let insDegree = setInterval(() => {
-        if (this.eDegreeGrid) {
-          clearInterval(insDegree);
-          let t = this;
-          this.eDegreeGrid.dataService.onAction.subscribe((res) => {
-            if (res) {
-              if (res.type == 'loaded') {
-                t.eDegreeRowCount = 0;
-                t.eDegreeRowCount = res['data'].length;
-              }
-            }
-          });
-          this.eDegreeRowCount = this.eDegreeGrid.dataService.rowCount;
-        }
-      }, 100);
+      // let insDegree = setInterval(() => {
+      //   if (this.eDegreeGrid) {
+      //     clearInterval(insDegree);
+      //     let t = this;
+      //     this.eDegreeGrid.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.eDegreeRowCount = 0;
+      //           t.eDegreeRowCount = res['data'].length;
+      //         }
+      //       }
+      //     });
+      //     this.eDegreeRowCount = this.eDegreeGrid.dataService.rowCount;
+      //   }
+      // }, 100);
 
       this.df.detectChanges();
       //#endregio
@@ -909,22 +910,22 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         ];
       });
 
-      let insCerti = setInterval(() => {
-        if (this.eCertificateGrid) {
-          clearInterval(insCerti);
-          let t = this;
-          this.eCertificateGrid.dataService.onAction.subscribe((res) => {
-            if (res) {
-              if (res.type == 'loaded') {
-                t.eCertificateRowCount = 0;
-                t.eCertificateRowCount = res['data'].length;
-              }
-            }
-          });
-          this.eCertificateRowCount =
-            this.eCertificateGrid.dataService.rowCount;
-        }
-      }, 100);
+      // let insCerti = setInterval(() => {
+      //   if (this.eCertificateGrid) {
+      //     clearInterval(insCerti);
+      //     let t = this;
+      //     this.eCertificateGrid.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.eCertificateRowCount = 0;
+      //           t.eCertificateRowCount = res['data'].length;
+      //         }
+      //       }
+      //     });
+      //     this.eCertificateRowCount =
+      //       this.eCertificateGrid.dataService.rowCount;
+      //   }
+      // }, 100);
 
       //#endregion
     }
@@ -964,20 +965,20 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         ];
       });
 
-      let insSkill = setInterval(() => {
-        if (this.skillGrid) {
-          clearInterval(insSkill);
-          let t = this;
-          this.skillGrid.dataService.onAction.subscribe((res) => {
-            if (res) {
-              if (res.type == 'loaded') {
-                t.eSkillRowCount = res['data'].length;
-              }
-            }
-          });
-          this.eSkillRowCount = this.skillGrid.dataService.rowCount;
-        }
-      }, 100);
+      // let insSkill = setInterval(() => {
+      //   if (this.skillGrid) {
+      //     clearInterval(insSkill);
+      //     let t = this;
+      //     this.skillGrid.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.eSkillRowCount = res['data'].length;
+      //         }
+      //       }
+      //     });
+      //     this.eSkillRowCount = this.skillGrid.dataService.rowCount;
+      //   }
+      // }, 100);
       //#endregion
       this.df.detectChanges();
     }
@@ -1015,22 +1016,22 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         ];
       });
 
-      let insTrain = setInterval(() => {
-        if (this.eTrainCourseGrid) {
-          clearInterval(insTrain);
-          let t = this;
-          this.eTrainCourseGrid.dataService.onAction.subscribe((res) => {
-            if (res) {
-              if (res.type == 'loaded') {
-                t.eTrainCourseRowCount = 0;
-                t.eTrainCourseRowCount = res['data'].length;
-              }
-            }
-          });
-          this.eTrainCourseRowCount =
-            this.eTrainCourseGrid.dataService.rowCount;
-        }
-      }, 100);
+      // let insTrain = setInterval(() => {
+      //   if (this.eTrainCourseGrid) {
+      //     clearInterval(insTrain);
+      //     let t = this;
+      //     this.eTrainCourseGrid.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.eTrainCourseRowCount = 0;
+      //           t.eTrainCourseRowCount = res['data'].length;
+      //         }
+      //       }
+      //     });
+      //     this.eTrainCourseRowCount =
+      //       this.eTrainCourseGrid.dataService.rowCount;
+      //   }
+      // }, 100);
 
       //#endregion
     }
@@ -1392,6 +1393,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           this.hrService.loadData('HR', empRequest).subscribe((emp) => {
             if (emp[1] > 0) {
               this.infoPersonal = emp[0][0];
+              console.log(this.infoPersonal);
               this.initForm();
             }
           });
@@ -2186,6 +2188,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }, 100);
 
     //#endregion
+    
+    this.hrService.getGrossSalary(this.employeeID).subscribe((res) => {
+      this.employeeGrossSalary = res;
+    });
   }
 
   initForm() {
@@ -2607,7 +2613,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                     (this.eDegreeGrid?.dataService as CRUDService)
                       ?.remove(data)
                       .subscribe();
-                    this.eDegreeRowCount--;
+                    // this.eDegreeRowCount--;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2618,11 +2624,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 if (res) {
                   if (!this.skillGrid && res[0] == true) {
                     this.lstESkill = res[1];
-                    this.eSkillRowCount--;
+                    // this.eSkillRowCount--;
                   } else if (this.lstESkill && res[0] == true) {
                     this.notify.notifyCode('SYS008');
                     this.lstESkill = res[1];
-                    this.eSkillRowCount += this.updateGridView(
+                    this.updateGridView(
                       this.skillGrid,
                       'delete',
                       data
@@ -2643,7 +2649,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                     // if (i != -1) {
                     //   this.lstCertificates.splice(i, 1);
                     // }
-                    this.eCertificateRowCount--;
+                    // this.eCertificateRowCount--;
                     (this.eCertificateGrid.dataService as CRUDService)
                       .remove(data)
                       .subscribe();
@@ -2715,7 +2721,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                     (this.eTrainCourseGrid.dataService as CRUDService)
                       .remove(data)
                       .subscribe();
-                    this.eTrainCourseRowCount--;
+                    // this.eTrainCourseRowCount--;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -4083,11 +4089,16 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
       else if (res.event)
-        this.eCertificateRowCount += this.updateGridView(
+        this.updateGridView(
           this.eCertificateGrid,
           actionType,
           res.event
         );
+        // this.eCertificateRowCount += this.updateGridView(
+        //   this.eCertificateGrid,
+        //   actionType,
+        //   res.event
+        // );
       this.df.detectChanges();
     });
   }
@@ -4114,7 +4125,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
     dialogAdd.closed.subscribe((res) => {
       if (res)
-        this.eDegreeRowCount += this.updateGridView(
+         this.updateGridView(
           this.eDegreeGrid,
           actionType,
           res.event
@@ -4148,14 +4159,14 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       else if (res.event != null) {
         this.lstESkill = res?.event[1];
         if (this.skillGrid) {
-          this.eSkillRowCount += this.updateGridView(
+          this.updateGridView(
             this.skillGrid,
             actionType,
             res.event[0]
           );
         } else {
           if (actionType == 'add' || actionType == 'copy') {
-            this.eSkillRowCount++;
+            // this.eSkillRowCount++;
           }
         }
       }
@@ -4190,7 +4201,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (!res?.event)
         (this.eTrainCourseGrid?.dataService as CRUDService).clear();
       else if (res.event)
-        this.eTrainCourseRowCount += this.updateGridView(
+        this.updateGridView(
           this.eTrainCourseGrid,
           actionType,
           res.event
@@ -4791,30 +4802,60 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialog.close();
   }
 
-  headerTextBenefit;
+  // headerTextBenefit;
   popupViewBenefit() {
-    this.headerTextBenefit =
-      this.getFormHeader(this.benefitFuncID) + ' | ' + 'Tất cả';
-    let option = new DialogModel();
-    option.zIndex = 999;
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    this.dialogViewBenefit = this.callfc.openForm(
-      this.templateViewBenefit,
-      '',
+    let opt = new DialogModel();
+    opt.zIndex = 999;
+    let popup = this.callfunc.openForm(
+      PopupViewAllComponent,
+      null,
       850,
       550,
-      '',
+      this.benefitFuncID,
+      {
+        funcID: this.benefitFuncID,
+        employeeId: this.employeeID,
+        headerText: this.getFormHeader(this.benefitFuncID),
+        sortModel: this.benefitSortModel,
+        formModel: this.benefitFormodel,
+        hasFilter: false,
+      }
+      ,
       null,
-      '',
-      option
-    );
-    this.dialogViewBenefit.closed.subscribe((res) => {
-      // if (res?.event) {
-      //   this.view.dataService.update(res.event[0]).subscribe((res) => {});
-      // }
-      this.df.detectChanges();
-    });
+      opt
+    )
+    popup.closed.subscribe((res) => {
+      if(res?.event){
+        this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
+          if (res) {
+            this.listCrrBenefit = res;
+            this.df.detectChanges();
+          }
+        }); 
+      }
+    }) 
+    // this.headerTextBenefit =
+    //   this.getFormHeader(this.benefitFuncID) + ' | ' + 'Tất cả';
+    // let option = new DialogModel();
+    // option.zIndex = 999;
+    // option.DataService = this.view.dataService;
+    // option.FormModel = this.view.formModel;
+    // this.dialogViewBenefit = this.callfc.openForm(
+    //   this.templateViewBenefit,
+    //   '',
+    //   850,
+    //   550,
+    //   '',
+    //   null,
+    //   '',
+    //   option
+    // );
+    // this.dialogViewBenefit.closed.subscribe((res) => {
+    //   if (res?.event) {
+    //     this.view.dataService.update(res.event[0]).subscribe((res) => {});
+    //   }
+    //   this.df.detectChanges();
+    // });
   }
 
   RenderDataFromPopup(event) {
@@ -4853,18 +4894,18 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   valueChangeViewAllESkill(evt) {
     this.ViewAllEskillFlag = evt.data;
-    let ins = setInterval(() => {
-      if (this.skillGrid) {
-        clearInterval(ins);
-        let t = this;
-        this.skillGrid.dataService.onAction.subscribe((res) => {
-          if (res.type == 'loaded') {
-            t.eSkillRowCount = res['data'].length;
-          }
-        });
-        this.eSkillRowCount = this.skillGrid.dataService.rowCount;
-      }
-    }, 100);
+    // let ins = setInterval(() => {
+    //   if (this.skillGrid) {
+    //     clearInterval(ins);
+    //     let t = this;
+    //     this.skillGrid.dataService.onAction.subscribe((res) => {
+    //       if (res.type == 'loaded') {
+    //         t.eSkillRowCount = res['data'].length;
+    //       }
+    //     });
+    //     this.eSkillRowCount = this.skillGrid.dataService.rowCount;
+    //   }
+    // }, 100);
   }
 
 
@@ -4873,30 +4914,40 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   headerTextSalary;
-  popupUpdateEJobSalaryStatus() {
-    this.headerTextSalary =
-      this.getFormHeader(this.eBasicSalaryFuncID) + ' | ' + 'Tất cả';
-    let option = new DialogModel();
-    option.zIndex = 999;
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    this.dialogViewSalary = this.callfc.openForm(
-      this.templateViewSalary,
-      '',
+  popupUpdateEBasicSalaryStatus() {
+       let opt = new DialogModel();
+    opt.zIndex = 999;
+    let popup = this.callfunc.openForm(
+      PopupViewAllComponent,
+      null,
       850,
       550,
-      '',
+      this.eBasicSalaryFuncID,
+      {
+        funcID: this.eBasicSalaryFuncID,
+        employeeId: this.employeeID,
+        headerText: this.getFormHeader(this.eBasicSalaryFuncID),
+        sortModel: this.bSalarySortModel,
+        formModel: this.eBasicSalaryFormmodel,
+        hasFilter: false,
+      }
+      ,
       null,
-      '',
-      option
-    );
-    this.dialogViewSalary.closed.subscribe((res) => {
-      this.df.detectChanges();
-    });
+      opt
+    )
+    popup.closed.subscribe((res) => {
+      if(res?.event){
+        this.hrService
+        .GetCurrentEBasicSalariesByEmployeeID(this.employeeID)
+        .subscribe((dataEBaSlary) => {
+          this.crrEBSalary = dataEBaSlary;
+        }); 
+      }
+    }) 
   }
 
   valueChangeViewAllEBasicSalary() {
-    this.popupUpdateEJobSalaryStatus();
+    this.popupUpdateEBasicSalaryStatus(); 
   }
   valueChangeViewAllEJobSalary(evt) {
     this.ViewAllEJobSalaryFlag = evt.data;
@@ -4912,18 +4963,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.eJobSalaryRowCount = this.jobSalaryGridview.dataService.rowCount;
       }
     }, 100);
-  }
-
-  //Update data table follow pop up
-  UpdateDataFromPopup(event) {
-    if (event.isRenderDelete === true) {
-      this.hrService
-        .GetCurrentEBasicSalariesByEmployeeID(this.employeeID)
-        .subscribe((dataEBaSlary) => {
-          this.crrEBSalary = dataEBaSlary;
-        });
-    }
-  }
+  } 
 
   valueChangeViewAllEContract() {
     this.popupViewAll(this.eContractFuncID);

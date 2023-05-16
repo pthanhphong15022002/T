@@ -3219,6 +3219,32 @@
       (sectionChange)="onSectionChange($event)"
     > -->
     
+      <div class="user-profile overview d-block">
+        <div class="rounded-2 p-5 bg-white mb-4">
+          <div
+            class="d-flex align-items-center justify-content-between"
+            *ngIf="employeeGrossSalary"
+          >
+            <div class="d-flex align-items-center text-primary">
+              <div class="user-status d-flex align-items-center">
+                <span class="icon-attach_money icon-20 me-2"></span>
+              </div>
+              <div class="fs-5 fw-bold text-primary text-uppercase"> 
+                Tổng lương (Gross)
+              </div>
+              <span class="ms-20"  
+              [innerHTML]="
+              infoPersonal?.totalGrossSalary
+                  | formatvalue : eInfoFormModel : 'totalGrossSalary'
+                  | async
+              "
+               >
+              </span>
+            </div> 
+          </div> 
+
+        </div>
+      </div>
       <!-- Lương -->
       <div class="user-profile overview d-block" [id]="eBasicSalaryFuncID">
         <div class="rounded-2 p-5 bg-white mb-4">
@@ -4447,8 +4473,8 @@
               <div class="fs-5 fw-bold text-uppercase text-primary">
                 {{ getFormHeader(eDegreeFuncID) }}
               </div>
-              <span class="text-gray-500 mx-2">|</span>
-              <span class="text-dark">({{ eDegreeRowCount }})</span>
+              <!-- <span class="text-gray-500 mx-2">|</span>
+              <span class="text-dark">({{ eDegreeRowCount }})</span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <button
@@ -4560,8 +4586,8 @@
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                 {{ getFormHeader("HRTEM0602") }}
               </div>
-              <span class="text-gray-500 mx-2">|</span>
-              <span class="text-dark">({{ eCertificateRowCount }})</span>
+              <!-- <span class="text-gray-500 mx-2">|</span>
+              <span class="text-dark">({{ eCertificateRowCount }})</span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <button
@@ -4674,8 +4700,8 @@
               <div class="fs-5 fw-bold text-uppercase mt-1">
                 {{ getFormHeader("HRTEM0603") }}
               </div>
-              <span class="text-gray-500 mx-2">|</span>
-              <span class="text-dark">({{ eSkillRowCount }})</span>
+              <!-- <span class="text-gray-500 mx-2">|</span>
+              <span class="text-dark">({{ eSkillRowCount }})</span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <button
@@ -4856,10 +4882,10 @@
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                 {{ getFormHeader("HRTEM0604") }}
               </div>
-              <span class="text-gray-500 mx-2">|</span>
+              <!-- <span class="text-gray-500 mx-2">|</span>
               <span class="text-dark">
                 <span>({{ eTrainCourseRowCount }})</span>
-              </span>
+              </span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <codx-dropdown-select
@@ -7133,19 +7159,6 @@
 <ng-template #tmpViewAllPassport let-dialog1>
 </ng-template> -->
 
-<!-- Salary modal view All -->
-<ng-template #templateViewSalary let-dialogViewSalary>
-  <lib-popup-viewall-salary
-    [funcID]="view.funcID"
-    [employeeId]="employeeID"
-    [dialog]="dialogViewSalary"
-    [formModel]="view.formModel"
-    [headerText]="headerTextSalary"
-    (RenderUpdateData)="UpdateDataFromPopup($event)"
-  >
-  </lib-popup-viewall-salary>
-</ng-template>
-
 <ng-template #emptyDataTemplate>
   <div class="d-flex ms-1">
     <span class="text-gray-500 fw-bold">
@@ -7326,7 +7339,7 @@
   </div>
 </ng-template>
 
-<ng-template #templateViewBenefit let-dialogViewBenefit>
+<!-- <ng-template #templateViewBenefit let-dialogViewBenefit>
   <lib-popup-viewall-benefit
     [funcID]="view.funcID"
     [employeeId]="employeeID"
@@ -7336,4 +7349,4 @@
     (RenderUpdateData)="RenderDataFromPopup($event)"
   >
   </lib-popup-viewall-benefit>
-</ng-template>
+</ng-template> -->
