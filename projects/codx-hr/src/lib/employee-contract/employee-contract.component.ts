@@ -42,7 +42,7 @@ export class EmployeeContractComponent extends UIComponent {
   dialogEditStatus: any;
   statusCbx = true;
   
-  genderGrvSetup: any
+  //genderGrvSetup: any
 
   //#region eContractFuncID
   actionAddNew = 'HRTPro01A01'
@@ -83,9 +83,9 @@ export class EmployeeContractComponent extends UIComponent {
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
-    this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
-      this.genderGrvSetup = res?.Gender;
-    });
+    // this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
+    //   this.genderGrvSetup = res?.Gender;
+    // });
   } 
 
 
@@ -295,19 +295,20 @@ export class EmployeeContractComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
+        debugger
         if(actionType == 'add'){
           // console.log('moi add hop dong xong', res.event[0]);
-          this.view.dataService.add(res.event[0],0).subscribe((res) => {
+          this.view.dataService.add(res.event,0).subscribe((res) => {
           });
           this.df.detectChanges();
         }
         else if(actionType == 'copy'){
-          this.view.dataService.add(res.event[0],0).subscribe((res) => {
+          this.view.dataService.add(res.event,0).subscribe((res) => {
           });
           this.df.detectChanges();
         }
         else if(actionType == 'edit'){
-          this.view.dataService.update(res.event[0]).subscribe((res) => {
+          this.view.dataService.update(res.event).subscribe((res) => {
           })
           this.df.detectChanges();
         }

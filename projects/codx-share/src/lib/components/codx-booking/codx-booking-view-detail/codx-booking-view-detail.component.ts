@@ -65,6 +65,7 @@ export class CodxBookingViewDetailComponent
   @Output('invite') invite: EventEmitter<any> = new EventEmitter();
   @Output('cancel') cancel: EventEmitter<any> = new EventEmitter();
   @Output('allocate') allocate: EventEmitter<any> = new EventEmitter();
+  @Output('setAllocateStatus') setAllocateStatus: EventEmitter<any> = new EventEmitter();
   @Output('reschedule') reschedule: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
     new EventEmitter();
@@ -217,6 +218,11 @@ export class CodxBookingViewDetailComponent
        
         //Stationery
         case EPCONST.MFUNCID.S_Allocate:
+          this.setAllocateStatus.emit(EPCONST.A_STATUS.Approved);
+          this.allocate.emit(data);
+          break;
+        case EPCONST.MFUNCID.S_Allocate:
+          this.setAllocateStatus.emit(EPCONST.A_STATUS.Rejected);
           this.allocate.emit(data);
           break;
       }

@@ -6,7 +6,7 @@
     <div class="d-flex mb-2">
       <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" cardCss=" p-3"
         [imageId]="itemDetail?.emp?.employeeID" [imageObjType]="'HR_Employees'" [imageWidth]="70"
-        [formModel]="view.formModel" [titleTmp]="title" [typeMF]="'hover'">
+        [formModel]="view.formModel" [titleTmp]="title" [hideMF]="true">
         <!-- info view -->
         <ng-template #title>
           <div class="w-100 d-flex flex-column">
@@ -26,9 +26,8 @@
                 {{ itemDetail?.emp?.mobile }}
               </div>
             </div>
-            <div class="text-gray-700">
-              <span
-                [innerHTML]="itemDetail?.emp?.orgUnitID  | formatvalue : view.formModel : 'orgUnitID'| async"></span>
+            <div class="text-gray-500">
+              <span [innerHTML]="itemDetail?.emp?.orgUnitID | formatvalue : view.formModel : 'orgUnitID'| async"></span>
             </div>
           </div>
         </ng-template>
@@ -36,89 +35,88 @@
       </codx-temp-full>
     </div>
     <div class="d-flex flex-wrap">
-      <div class="d-flex align-items-center  mb-2 col-6">
-        <codx-label fiedName="decisionNo" [formModel]="formModel" class="text-gray-700 label-colon col-4">
+      <div class="d-flex align-items-center mb-2 px-4">
+        <codx-label fiedName="decisionNo" [formModel]="formModel" class="text-gray-500 label-colon">
         </codx-label>
         <span class="fw-bold">
           {{ itemDetail?.decisionNo }}
         </span>
       </div>
 
-      <div class="d-flex align-items-center  mb-2 col-6">
-        <codx-label fiedName="signedDate" [formModel]="formModel" class="text-gray-700 label-colon col-4">
+      <div class="d-flex align-items-center mb-2 px-4">
+        <codx-label fiedName="signedDate" [formModel]="formModel" class="text-gray-500 label-colon">
         </codx-label>
         <span class="fw-bold" [innerHTML]="itemDetail?.signedDate | formatvalue : formModel : 'signedDate'| async">
         </span>
       </div>
 
 
-      <div class="d-flex align-items-center  mb-2 col-6">
-        <codx-label fiedName="awardID" [formModel]="formModel" class="text-gray-700 label-colon col-4">
+      <div class="d-flex align-items-center mb-2 px-4">
+        <codx-label fiedName="awardID" [formModel]="formModel" class="text-gray-500 label-colon">
         </codx-label>
         <span class="fw-bold" [innerHTML]="itemDetail?.awardID| formatvalue : formModel : 'awardID' | async">
         </span>
       </div>
 
-      <div class="d-flex align-items-center  mb-2 col-6">
-        <codx-label fiedName="awardFormCategory" [formModel]="formModel" class="text-gray-700 label-colon col-4">
+      <div class="d-flex align-items-center mb-2 px-4">
+        <codx-label fiedName="awardFormCategory" [formModel]="formModel" class="text-gray-500 label-colon">
         </codx-label>
         <span class="fw-bold"
           [innerHTML]="itemDetail?.awardFormCategory| formatvalue : formModel : 'awardFormCategory' | async">
         </span>
       </div>
 
-      <div class="d-flex align-items-center  mb-2 col-6">
-        <codx-label fiedName="awardDate" [formModel]="formModel" class="text-gray-700 label-colon col-4">
+      <div class="d-flex align-items-center mb-2 px-4">
+        <codx-label fiedName="awardDate" [formModel]="formModel" class="text-gray-500 label-colon">
         </codx-label>
         <span class="fw-bold" [innerHTML]="itemDetail?.awardDate | formatvalue : formModel : 'awardDate'| async">
         </span>
       </div>
 
-      <div class="d-flex align-items-center  mb-2 col-6">
-        <codx-label fiedName="inYear" [formModel]="formModel" class="text-gray-700 label-colon col-4">
+      <div class="d-flex align-items-center mb-2 px-4">
+        <codx-label fiedName="inYear" [formModel]="formModel" class="text-gray-500 label-colon">
         </codx-label>
-        <!-- <span class="fw-bold" [innerHTML]="itemDetail?.inYear | formatvalue : formModel : 'inYear'| async"> -->
         <span class="fw-bold">
           {{ itemDetail?.inYear}}
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2 col-12">
-        <codx-label fiedName="awardLevelCategory" [formModel]="formModel" class="text-gray-700 label-colon col-2">
+      <div class="d-flex align-items-center mb-2 px-4">
+        <codx-label fiedName="awardLevelCategory" [formModel]="formModel" class="text-gray-500 label-colon">
         </codx-label>
         <span class="fw-bold"
           [innerHTML]="itemDetail?.awardLevelCategory | formatvalue : formModel : 'awardLevelCategory'| async">
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2 col-12">
-        <codx-label fiedName="awardPlace" [formModel]="formModel" class="text-gray-700 label-colon col-2">
+      <div class="d-flex align-items-center mb-2 px-4">
+        <codx-label fiedName="awardPlace" [formModel]="formModel" class="text-gray-500 label-colon">
         </codx-label>
         <span class="fw-bold" [innerHTML]="itemDetail?.awardPlace | formatvalue : formModel : 'awardPlace'| async">
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2 col-12">
-        <codx-label fiedName="reason" [formModel]="formModel" class="text-gray-700 label-colon col-2">
+      <div class="d-flex align-items-center mb-2 px-4">
+        <codx-label fiedName="reason" [formModel]="formModel" class="text-gray-500 label-colon">
         </codx-label>
         <span class="fw-bold" [innerHTML]="itemDetail?.reason | formatvalue : formModel : 'reason'| async">
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2 col-12">
-        <codx-label fiedName="note" [formModel]="formModel" class="text-gray-700 label-colon col-2">
+      <div class="d-flex align-items-top mb-2 col-12 px-4">
+        <codx-label fiedName="note" [formModel]="formModel" class="text-gray-500 label-colon min-w-60px">
         </codx-label>
         <span class="fw-bold" [innerHTML]="itemDetail?.note | formatvalue : formModel : 'note'| async">
         </span>
       </div>
 
     </div>
-    <!-- <div class="mt-2">
-      <ng-container *ngIf="files.length > 0">
-        <codx-thumbnail [files]="files" displayThumb="simple" [hideHover]="'0'">
+    <div class="mt-2 px-4">
+      <ng-container *ngIf="lstFile.length > 0">
+        <codx-thumbnail [files]="lstFile" displayThumb="simple">
         </codx-thumbnail>
       </ng-container>
-    </div> -->
+    </div>
   </ng-template>
 
   <ng-template #body>

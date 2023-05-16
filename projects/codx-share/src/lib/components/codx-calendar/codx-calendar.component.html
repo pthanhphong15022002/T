@@ -80,9 +80,7 @@
                 <codx-input
                   type="checkbox"
                   field="WP_Notes"
-                  [checked]="
-                    checkWP_NotesParam == 'true' || checkWP_NotesParam == '1'
-                  "
+                  [checked]="WP_NotesParam.ShowEvent == '1'"
                   labelPosition="Before"
                   [disabled]="false"
                   class="test-check"
@@ -114,9 +112,7 @@
                 <codx-input
                   type="checkbox"
                   field="TM_Tasks"
-                  [checked]="
-                    checkTM_TasksParam == 'true' || checkTM_TasksParam == '1'
-                  "
+                  [checked]="TM_TasksParam.ShowEvent == '1'"
                   labelPosition="Before"
                   [disabled]="false"
                   class="test-check"
@@ -149,10 +145,7 @@
                 <codx-input
                   type="checkbox"
                   field="CO_Meetings"
-                  [checked]="
-                    checkCO_MeetingsParam == 'true' ||
-                    checkCO_MeetingsParam == '1'
-                  "
+                  [checked]="CO_MeetingsParam.ShowEvent == '1'"
                   labelPosition="Before"
                   [disabled]="false"
                   class="test-check"
@@ -185,10 +178,7 @@
                 <codx-input
                   type="checkbox"
                   field="EP_BookingRooms"
-                  [checked]="
-                    checkEP_BookingRoomsParam == 'true' ||
-                    checkEP_BookingRoomsParam == '1'
-                  "
+                  [checked]="EP_BookingRoomsParam.ShowEvent == '1'"
                   labelPosition="Before"
                   [disabled]="false"
                   class="test-check"
@@ -221,10 +211,7 @@
                 <codx-input
                   type="checkbox"
                   field="EP_BookingCars"
-                  [checked]="
-                    checkEP_BookingCarsParam == 'true' ||
-                    checkEP_BookingCarsParam == '1'
-                  "
+                  [checked]="EP_BookingCarsParam.ShowEvent == '1'"
                   labelPosition="Before"
                   [disabled]="false"
                   class="test-check"
