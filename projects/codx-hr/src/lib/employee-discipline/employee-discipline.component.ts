@@ -33,7 +33,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
   cmtStatus: string = '';
   currentEmpObj: any = null;
   dialogEditStatus: any;
-  genderGrvSetup: any
+  //genderGrvSetup: any
   econtractGrvSetup: any;
 
     //#region eDisciplineFuncID
@@ -62,9 +62,9 @@ export class EmployeeDisciplineComponent extends UIComponent {
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
-    this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
-      this.genderGrvSetup = res?.Gender;
-    });
+    // this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
+    //   this.genderGrvSetup = res?.Gender;
+    // });
   }
 
   clickEvent(event, data){

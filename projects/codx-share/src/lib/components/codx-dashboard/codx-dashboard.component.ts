@@ -604,8 +604,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (args.element.querySelector('ejs-accumulationchart')) {
         const chartObj = args.element.querySelector('ejs-accumulationchart')
           .ej2_instances[0];
-        chartObj.height = '50%';
-        chartObj.width = '50%';
+        chartObj.height = '80%';
+        chartObj.width = '100%';
         // if (args.element.offsetHeight < chartObj.element.offsetHeight) {
         //   chartObj.height = '80%';
         //   chartObj.width = '80%';
@@ -626,7 +626,6 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (args.element.querySelector('ejs-treemap')) {
         let component = args.element.getElementsByTagName('ejs-treemap')[0];
         if (component) {
-          debugger
           let instance =component.ej2_instances[0] as TreeMapComponent;
           instance.width = args.element.offsetWidth -50 +'px';
           instance.height = args.element.offsetHeight -50 +'px';

@@ -30,11 +30,14 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
 
   valueChange(e) {
     if (!e.field || !e.data) return;
-    this.quotationsLine[e.field] = e.data;
+    if (typeof this.quotationsLine[e.field] == 'number') {
+      this.quotationsLine[e.field] = Number.parseInt(e.data);
+    } else this.quotationsLine[e.field] = e.data;
     switch (e.field) {
       case 'itemID':
         this.loadItem(e.data);
         break;
+      case 'quantity':
       case 'salesPrice':
         this.quotationsLine.costAmt =
           this.quotationsLine.quantity * this.quotationsLine.salesPrice;
