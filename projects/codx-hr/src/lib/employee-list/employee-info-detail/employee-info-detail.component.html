@@ -4252,9 +4252,9 @@
                 <span class="text-uppercase">
                   {{ getFormHeader("HRTEM0504") }}
                 </span>
-                <span class="text-gray-500 mx-2"> | </span>
               </div>
-              <span class="text-gray-800">({{ eBusinessTravelRowCount }})</span>
+              <!-- <span class="text-gray-500 mx-2"> | </span>
+              <span class="text-gray-800">({{ eBusinessTravelRowCount }})</span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <codx-dropdown-calendar
@@ -4292,7 +4292,6 @@
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_EBusinessTravels'"
-                [rowHeight]="30"
                 height="auto"
                 [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
@@ -6472,15 +6471,16 @@
 </ng-template>
 <!-- #endregion Nghỉ phép -->
 
+<!-- #region Nhật ký công tác -->
 <ng-template #templateBusinessTravelGridCol1 let-data>
-  <div class="d-flex flex-wrap mb-5px">
-    <i class="icon-home_work icon-16 me-2"></i>
-    <span class="text-dark">{{ data?.businessPlace }}</span>
+  <div class="d-flex align-items-center mb-1">
+    <i class="icon-home_work fw-bold icon-16 me-2"></i>
+    <span class="text-dark fw-bold">{{ data?.businessPlace }}</span>
   </div>
-  <div class="d-flex flex-wrap">
+  <div class="d-flex align-items-center">
     <i class="icon-connection-point icon-16 me-2 text-primary"></i>
     <span
-      class="text-dark"
+      class="text-primary fw-bold"
       [innerHTML]="
         data?.kowID | formatvalue : EBusinessTravelFormodel : 'kowID' | async
       "
@@ -6490,33 +6490,51 @@
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol2 let-data>
-  <div class="d-flex flex-wrap mb-5px">
-    <i class="icon-calendar_today icon-16 me-2"></i>
-    <span class="text-dark"
-      >{{ data?.beginDate | fmDT }} - {{ data?.endDate | fmDT }}</span
-    >
+  <div class="d-flex align-items-center mb-1">
+    <i class="icon-calendar_today text-dark icon-16 me-1"></i>
+    <span
+      class="text-dark fw-bold"
+      [innerHTML]="
+        data?.beginDate
+          | formatvalue : EBusinessTravelFormodel : 'beginDate'
+          | async
+      "
+    ></span>
+    <span class="px-1"> - </span>
+    <span
+      class="text-dark fw-bold"
+      [innerHTML]="
+        data?.endDate
+          | formatvalue : EBusinessTravelFormodel : 'endDate'
+          | async
+      "
+    ></span>
   </div>
   <div class="d-flex align-items-center">
     <i
-      class="icon-i-circle-fill icon-circle-group icon-12 text-gray-400 me-2"
+      class="icon-i-circle-fill icon-circle-group icon-12 text-gray-400 px-2"
     ></i>
-    <span>{{ data?.days }}</span>
+    <span class="text-primary fw-bold">
+      {{ data?.days }}
+    </span>
   </div>
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol3 let-data>
-  <div class="has-action-menu min-h-40px">
-    {{ data?.businessPurpose }}
+  <div class="d-flex align-items-center has-action-menu min-h-40px">
+    <span class="fw-bold">
+      {{ data?.businessPurpose }}
+    </span>
     <codx-mfunc
       [formModel]="EBusinessTravelFormodel"
       (clickMF)="clickMF($event, data, 'eBusinessTravels')"
-      type="hover"
       [dataItem]="data"
+      type="hover"
     >
     </codx-mfunc>
   </div>
 </ng-template>
-<!-- #endregion -->
+<!-- #endregion Nhật ký công tác -->
 
 <!--region Award - Khen thưởng-->
 <ng-template #templateAwardGridCol1 let-data>
