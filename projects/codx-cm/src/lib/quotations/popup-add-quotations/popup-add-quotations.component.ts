@@ -98,6 +98,15 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.action = dt?.data?.action;
     this.disableRefID = dt?.data?.disableRefID;
     this.listQuotationLines = [];
+    if(this.action=='edit'){
+      this.codxCM
+      .getQuotationsLinesByTransID(this.quotations.recID)
+      .subscribe((res) => {
+        if (res) {
+          this.listQuotationLines = res;
+        }
+      });
+    }
     this.cache
       .gridViewSetup(
         this.fmQuotationLines.formName,
@@ -294,10 +303,9 @@ export class PopupAddQuotationsComponent implements OnInit {
           dialogQuotations.closed.subscribe((res) => {
             if (res?.event) {
               data = res?.event;
-              // this.gridQuationsLines.addRow(data, idx);
               this.quotationLinesAddNew.push(data);
               this.listQuotationLines.push(data);
-              // this.gridQuationsLines.dataSource = this.quotationLines
+              this.gridQuationsLines.refresh();
               this.loadTotal();
               this.changeDetector.detectChanges();
             }
@@ -322,7 +330,31 @@ export class PopupAddQuotationsComponent implements OnInit {
     data.transID = this.quotations?.recID;
     return data;
   }
-  deleteLine(dt) {}
+
+  deleteLine(data) {
+    this.notiService.alertCode('SYS030').subscribe((res) => {
+      if (res.event.status === 'Y') {
+        //=> delete fe
+        this.quotationLinesDeleted.push(data);
+        this.gridQuationsLines.deleteRow(data);
+        if (this.gridQuationsLines.dataSource.length > 0) {
+          for (let i = 0; i < this.gridQuationsLines.dataSource.length; i++) {
+            if (
+              this.gridQuationsLines.dataSource[i].rowNo != i + 1 &&
+              this.action == 'edit'
+            ) {
+              if (!this.quotationLinesEdit.some((x) => x.recID == data.recID))
+                this.quotationLinesEdit.push(data);
+            }
+            this.gridQuationsLines.dataSource[i].rowNo = i + 1;
+          }
+        }
+        this.listQuotationLines = this.gridQuationsLines.dataSource;
+        this.loadTotal();
+        this.changeDetector.detectChanges();
+      }
+    });
+  }
 
   editLine(dt) {
     this.cache.functionList(this.fmQuotationLines.funcID).subscribe((f) => {
@@ -333,7 +365,7 @@ export class PopupAddQuotationsComponent implements OnInit {
         )
         .subscribe((res) => {
           var obj = {
-            headerText: this.titleActionLine,
+            headerText: this.titleActionLine + f?.customName || f?.description,
             quotationsLine: dt,
             listQuotationLines: this.listQuotationLines,
           };
@@ -354,10 +386,15 @@ export class PopupAddQuotationsComponent implements OnInit {
           dialogQuotations.closed.subscribe((res) => {
             if (res?.event) {
               let data = res?.event;
-              let check = this.quotationLinesEdit.some(x=>x.recID==data.recID)
-              if(!check)this.quotationLinesEdit.push(data)
-              // this.quotationLines.push(data);
-              // // this.gridQuationsLines.dataSource = this.quotationLines
+              let check = this.quotationLinesEdit.some(
+                (x) => x.recID == data.recID
+              );
+              if (!check) this.quotationLinesEdit.push(data);
+              this.gridQuationsLines.refresh();
+              // this.dialog.dataService.updateDatas.set(
+              //   this.quotations['_uuid'],
+              //   this.quotations
+              // );
               this.loadTotal();
               this.changeDetector.detectChanges();
             }
@@ -369,7 +406,6 @@ export class PopupAddQuotationsComponent implements OnInit {
   copyLine(dt) {}
 
   // endregion QuotationLines
-
 
   loadModegrid() {}
 

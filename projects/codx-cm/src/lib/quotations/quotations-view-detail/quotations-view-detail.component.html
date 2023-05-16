@@ -295,7 +295,6 @@
         [formName]="fmQuotationLines.formName"
         [gridViewName]="fmQuotationLines.gridViewName"
         [entityName]="fmQuotationLines.entityName"
-       
         [contentEditable]="false"
         [allowFiltering]="true"
         [allowSorting]="true"
@@ -306,24 +305,6 @@
         predicates="TransID=@0"
         [dataValues]="itemSelected.recID"
       ></codx-gridview-v2>
-       <!-- [editSettings]="editSettings" -->
-      <!-- <codx-gridview-v2
-        idField="recID"
-        [service]="'CM'"
-        [gridViewName]="fmQuotationLines.gridViewName"
-        [formName]="fmQuotationLines.formName"
-        [entityName]="fmQuotationLines.entityName"
-        [assemblyName]="'Core'"
-        [className]="'DataBusiness'"
-        [method]="'LoadDataAsync'"
-        predicates="TransID=@0"
-        [autoLoad]="true"
-        [height]="gridHeight"
-        [dataValues]="itemSelected.recID"
-        [contentEditable]="false"
-        [allowResizing]="true"
-      ></codx-gridview-v2> -->
-
       <div #tabsNote class="row mt-5">
         <div class="form-group col-7">
           <codx-label fiedName="Memo" [formModel]="formModel"></codx-label>

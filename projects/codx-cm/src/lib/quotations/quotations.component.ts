@@ -24,6 +24,7 @@ import {
 } from 'codx-core';
 import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-quotations.component';
 import { Observable, finalize, map } from 'rxjs';
+import { CodxCmService } from '../codx-cm.service';
 
 @Component({
   selector: 'lib-quotations',
@@ -73,10 +74,12 @@ export class QuotationsComponent extends UIComponent {
   arrFieldIsVisible = [];
   itemSelected: any;
   button?: ButtonModel;
-  titleAction= ''
+  titleAction= '' ;
+  dataSource =[]
 
   constructor(
     private inject: Injector,
+    private codxCM :CodxCmService,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
     @Optional() dialog?: DialogRef
@@ -184,7 +187,7 @@ export class QuotationsComponent extends UIComponent {
         model: {
           resources: this.columnGrids,
           template2: this.templateMore,
-          // frozenColumns: 1,
+           frozenColumns: 1,
         },
       },
     ];
@@ -222,10 +225,10 @@ export class QuotationsComponent extends UIComponent {
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(e, data);
+        this.edit(data);
         break;
       case 'SYS04':
-        this.copy(e, data);
+        this.copy(data);
         break;
     }
   }
@@ -277,7 +280,7 @@ export class QuotationsComponent extends UIComponent {
     );
   }
 
-  edit(e, data) {
+  edit(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -285,7 +288,7 @@ export class QuotationsComponent extends UIComponent {
       var obj = {
         data: this.view.dataService.dataSelected,
         action: 'edit',
-        headerText: e.text,
+        headerText: this.titleAction,
       };
       let option = new DialogModel();
       option.IsFull = true;
@@ -304,7 +307,14 @@ export class QuotationsComponent extends UIComponent {
     });
   }
 
-  copy(e, data) {
+  copy(data) {
+    this.codxCM
+    .getQuotationsLinesByTransID(this.itemSelected.recID)
+    .subscribe((res) => {
+      if (res) {
+        this.dataSource = res;
+      }
+    });
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -312,7 +322,7 @@ export class QuotationsComponent extends UIComponent {
       var obj = {
         data: res,
         action: 'copy',
-        headerText: e.text,
+        headerText: this.titleAction,
       };
       let option = new DialogModel();
       option.IsFull = true;
@@ -352,6 +362,8 @@ export class QuotationsComponent extends UIComponent {
     opt.data = data;
     return true;
   }
+
+  
 
   getIndex(recID) {
     return (
