@@ -306,7 +306,7 @@ export class CodxCmService {
       data
     );
   }
-  editInstance(data:any){
+  editInstance(data: any) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
@@ -488,8 +488,8 @@ export class CodxCmService {
       data
     );
   }
- //quotation lines test
-  getQuotationsLinesByTransID(transID){
+  //quotation lines test
+  getQuotationsLinesByTransID(transID) {
     return this.api.exec<any>(
       'CM',
       'QuotationsLinesBusiness',
@@ -497,7 +497,7 @@ export class CodxCmService {
       transID
     );
   }
-  getPaymentsByContract(contractID){
+  getPaymentsByContract(contractID) {
     return this.api.exec<any>(
       'CM',
       'ContractsPaymentsBusiness',
@@ -505,7 +505,7 @@ export class CodxCmService {
       contractID
     );
   }
-  addPayments(contracts){
+  addPayments(contracts) {
     return this.api.exec<any>(
       'CM',
       'ContractsPaymentsBusiness',
@@ -513,7 +513,7 @@ export class CodxCmService {
       contracts
     );
   }
-  editPayments(contracts){
+  editPayments(contracts) {
     return this.api.exec<any>(
       'CM',
       'ContractsPaymentsBusiness',
@@ -521,7 +521,7 @@ export class CodxCmService {
       contracts
     );
   }
-  deletePayments(contractsID){
+  deletePayments(contractsID) {
     return this.api.exec<any>(
       'CM',
       'ContractsPaymentsBusiness',
@@ -529,4 +529,11 @@ export class CodxCmService {
       contractsID
     );
   }
+
+  // QuotationLine
+  // loadItem
+  getItem(itemID) {
+    return this.api.exec<any>('IV', 'ItemsBusiness', 'LoadDataAsync', itemID);
+  }
+  
 }

@@ -23,7 +23,7 @@
           ></codx-input>
         </div>
       </div>
-      <div class="col-10">
+      <div class="col-6">
         <div class="form-group">
           <codx-label
             fiedName="ItemID"
@@ -34,6 +34,20 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label
+            fiedName="CostPrice"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            field="costPrice"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [disabled]="true"
           ></codx-input>
         </div>
       </div>

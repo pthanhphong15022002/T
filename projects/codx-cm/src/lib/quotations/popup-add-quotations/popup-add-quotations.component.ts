@@ -385,5 +385,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     let idx = this.quotationLines.length;
     let data = new CM_QuotationsLines();
   }
+
+  
   //#endregion
 }
