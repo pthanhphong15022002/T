@@ -97,7 +97,7 @@ codx-view-list-detail {
 }
 .fs-6 {
   //font-size: var(--fs-6) !important;
-  font-size: 1.035rem !important;
+  font-size: 13.5px!important;
 }
 /** custom bootstrap  **/
 .rounded-4 {
@@ -2801,6 +2801,20 @@ codx-vll.vll-post{
   opacity: 1;
 }
 
+
+.card-report {
+  .codx-image {
+    display: unset !important;
+    height: 150px !important;
+    min-height: 150px!important;
+    border-radius: 4px 4px 0 0;
+  }
+  .card-body{
+    min-height: 50px;
+    font-weight: 500;
+    padding-top: 10px!important;
+  }
+}
 
 // boostraps\
 .e-multi-select-wrapper .e-delim-values{

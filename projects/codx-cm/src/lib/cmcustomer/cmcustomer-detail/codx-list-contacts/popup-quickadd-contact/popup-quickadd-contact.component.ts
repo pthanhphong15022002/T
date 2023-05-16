@@ -1,4 +1,4 @@
-import { CodxCmService } from './../../../codx-cm.service';
+import { CodxCmService } from '../../../../codx-cm.service';
 import { Component, OnInit, Optional } from '@angular/core';
 import {
   DialogData,
@@ -7,8 +7,8 @@ import {
   CacheService,
   AlertConfirmInputConfig,
 } from 'codx-core';
-import { CM_Contacts } from '../../../models/cm_model';
-import { tmpCrm } from '../../../models/tmpCrm.model';
+import { CM_Contacts } from '../../../../models/cm_model';
+import { tmpCrm } from '../../../../models/tmpCrm.model';
 
 @Component({
   selector: 'lib-popup-quickadd-contact',
