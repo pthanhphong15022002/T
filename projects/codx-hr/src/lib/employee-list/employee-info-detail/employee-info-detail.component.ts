@@ -67,7 +67,7 @@ import { Sort } from '@syncfusion/ej2-angular-grids';
 import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 import { PopupEProcessContractComponent } from '../../employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { PopupForeignWorkerComponent } from '../../employee-profile/popup-foreign-worker/popup-foreign-worker.component';
-import { PopupViewallBenefitComponent } from './pop-up/popup-viewall-benefit/popup-viewall-benefit.component';
+// import { PopupViewallBenefitComponent } from './pop-up/popup-viewall-benefit/popup-viewall-benefit.component';
 import { PopupViewAllComponent } from './pop-up/popup-view-all/popup-view-all.component';
 
 @Component({
@@ -166,6 +166,7 @@ throw new Error('Method not implemented.');
   //EAppointion
   lstAppointions: any = [];
   //Basic salary
+  employeeGrossSalary;
   crrEBSalary: any;
 
   listCrrBenefit: any;
@@ -433,23 +434,31 @@ throw new Error('Method not implemented.');
   //#endregion
 
   //#region RowCount
-  eDegreeRowCount: number = 0;
+  // eDegreeRowCount: number = 0;
   passportRowCount: number = 0;
   visaRowCount: number = 0;
   workPermitRowCount: number = 0;
-  eExperienceRowCount = 0;
-  eCertificateRowCount = 0;
+  //eExperienceRowCount = 0;
+  // eCertificateRowCount = 0;
   eBenefitRowCount: number = 0;
-  eBusinessTravelRowCount = 0;
+  // eBusinessTravelRowCount = 0;
   eSkillRowCount = 0;
   // dayoffRowCount: number = 0;
   eAssetRowCount = 0;
   eBasicSalaryRowCount = 0;
-  eTrainCourseRowCount = 0;
+  // eTrainCourseRowCount = 0;
+  eHealthRowCount = 0;
+  eVaccineRowCount = 0;
+  //appointionRowCount = 0;
+  eJobSalaryRowCount = 0;
+  //awardRowCount = 0;
+  //eContractRowCount = 0;
+  //eDisciplineRowCount = 0;
+  eDiseasesRowCount = 0;
+  eAccidentsRowCount = 0;
   // eHealthRowCount = 0;
   // eVaccineRowCount = 0;
   appointionRowCount = 0;
-  eJobSalaryRowCount = 0;
   awardRowCount = 0;
   eContractRowCount = 0;
   eDisciplineRowCount = 0;
@@ -596,6 +605,508 @@ throw new Error('Method not implemented.');
     this.funcID = this.routeActive.snapshot.params['funcID'];
   }
 
+      //#endregion
+    }
+    if (!this.basicSalaryColumnGrid) {
+      //#region get columnGrid EBasicSalary - Lương cơ bản
+      this.hrService.getHeaderText(this.eBasicSalaryFuncID).then((res) => {
+        let basicSalaryHeaderText = res;
+        this.basicSalaryColumnGrid = [
+          {
+            headerText: basicSalaryHeaderText['BSalary'],
+            template: this.basicSalaryCol1,
+            width: '100',
+          },
+          {
+            headerText: basicSalaryHeaderText['SISalary'],
+            template: this.basicSalaryCol2,
+            width: '100',
+          },
+          {
+            headerText: basicSalaryHeaderText['JSalary'],
+            template: this.basicSalaryCol3,
+            width: '150',
+          },
+          {
+            headerText: basicSalaryHeaderText['EffectedDate'],
+            template: this.basicSalaryCol4,
+            width: '150',
+          },
+        ];
+      });
+      let insBSalary = setInterval(() => {
+        if (this.basicSalaryGridview) {
+          clearInterval(insBSalary);
+          let t = this;
+          this.basicSalaryGridview.dataService.onAction.subscribe((res) => {
+            if (res) {
+              if (res.type == 'loaded') {
+                t.eBasicSalaryRowCount = 0;
+                t.eBasicSalaryRowCount = res['data'].length;
+              }
+            }
+          });
+          this.eBasicSalaryRowCount =
+            this.basicSalaryGridview.dataService.rowCount;
+        }
+      }, 100);
+
+      //#endregion
+
+      this.df.detectChanges();
+    }
+  }
+
+  initKnowledgeInfo() {
+    if (this.employeeID) {
+      //HR_ESkills
+      if (!this.lstESkill) {
+        let rqESkill = new DataRequest();
+        rqESkill.entityName = 'HR_ESkills';
+        rqESkill.dataValues = this.employeeID;
+        rqESkill.predicates = 'EmployeeID=@0';
+        rqESkill.page = 1;
+        rqESkill.pageSize = 20;
+        this.hrService.getViewSkillAsync(rqESkill).subscribe((res) => {
+          if (res) {
+            this.lstESkill = res;
+          }
+        });
+      }
+      this.df.detectChanges();
+    }
+
+    if (!this.eDegreeColumnsGrid) {
+      //#region EDegrees - Bằng cấp
+
+      this.hrService.getHeaderText(this.eDegreeFuncID).then((res) => {
+        this.eDegreeHeaderText = res;
+        this.eDegreeColumnsGrid = [
+          {
+            headerText:
+              this.eDegreeHeaderText['DegreeName'] +
+              '|' +
+              this.eDegreeHeaderText['TrainFieldID'],
+            template: this.templateEDegreeGridCol1,
+            width: '150',
+          },
+          {
+            headerText:
+              this.eDegreeHeaderText['TrainSupplierID'] +
+              '|' +
+              this.eDegreeHeaderText['Ranking'],
+            template: this.templateEDegreeGridCol2,
+            width: '150',
+          },
+          {
+            headerText:
+              this.eDegreeHeaderText['YearGraduated'] +
+              '|' +
+              this.eDegreeHeaderText['IssuedDate'],
+            template: this.templateEDegreeGridCol3,
+            width: '150',
+          },
+        ];
+      });
+
+      // let insDegree = setInterval(() => {
+      //   if (this.eDegreeGrid) {
+      //     clearInterval(insDegree);
+      //     let t = this;
+      //     this.eDegreeGrid.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.eDegreeRowCount = 0;
+      //           t.eDegreeRowCount = res['data'].length;
+      //         }
+      //       }
+      //     });
+      //     this.eDegreeRowCount = this.eDegreeGrid.dataService.rowCount;
+      //   }
+      // }, 100);
+
+      this.df.detectChanges();
+      //#endregio
+    }
+
+    if (!this.eCertificateColumnGrid) {
+      //#region - Chứng chỉ
+      this.hrService.getHeaderText(this.eCertificateFuncID).then((res) => {
+        this.eCertificateHeaderText = res;
+        this.eCertificateColumnGrid = [
+          {
+            headerText: this.eCertificateHeaderText['CertificateID'],
+            template: this.templateECertificateGridCol1,
+            width: '150',
+          },
+          {
+            headerText:
+              this.eCertificateHeaderText['TrainSupplierID'] +
+              '|' +
+              this.eCertificateHeaderText['Ranking'],
+            template: this.templateECertificateGridCol2,
+            width: '150',
+          },
+          {
+            headerText:
+              this.eCertificateHeaderText['IssuedDate'] +
+              '|' +
+              this.eCertificateHeaderText['EffectedDate'],
+            template: this.templateECertificateGridCol3,
+            width: '150',
+          },
+        ];
+      });
+
+      // let insCerti = setInterval(() => {
+      //   if (this.eCertificateGrid) {
+      //     clearInterval(insCerti);
+      //     let t = this;
+      //     this.eCertificateGrid.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.eCertificateRowCount = 0;
+      //           t.eCertificateRowCount = res['data'].length;
+      //         }
+      //       }
+      //     });
+      //     this.eCertificateRowCount =
+      //       this.eCertificateGrid.dataService.rowCount;
+      //   }
+      // }, 100);
+
+      //#endregion
+    }
+
+    if (!this.eSkillColumnGrid) {
+      //#region ESKills - Kỹ năng
+
+      this.hrService.getHeaderText(this.eSkillFuncID).then((res) => {
+        this.eSkillHeaderText = res;
+        this.eSkillColumnGrid = [
+          {
+            headerText:
+              this.eSkillHeaderText['SkillID'] +
+              '|' +
+              this.eSkillHeaderText['SkillGradeID'],
+            template: this.templateESkillGridCol1,
+            width: '150',
+          },
+          {
+            headerText:
+              this.eSkillHeaderText['TrainSupplierID'] +
+              '|' +
+              this.eSkillHeaderText['Ranking'] +
+              ' - ' +
+              this.eSkillHeaderText['TotalScore'],
+            template: this.templateESkillGridCol2,
+            width: '150',
+          },
+          {
+            headerText:
+              this.eSkillHeaderText['TrainFrom'] +
+              '|' +
+              this.eSkillHeaderText['TrainForm'],
+            template: this.templateESkillGridCol3,
+            width: '150',
+          },
+        ];
+      });
+
+      // let insSkill = setInterval(() => {
+      //   if (this.skillGrid) {
+      //     clearInterval(insSkill);
+      //     let t = this;
+      //     this.skillGrid.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.eSkillRowCount = res['data'].length;
+      //         }
+      //       }
+      //     });
+      //     this.eSkillRowCount = this.skillGrid.dataService.rowCount;
+      //   }
+      // }, 100);
+      //#endregion
+      this.df.detectChanges();
+    }
+
+    if (!this.eTrainCourseColumnGrid) {
+      //#region get columnGrid ETrainCourse - Đào Tạo
+
+      this.hrService.getHeaderText(this.eTrainCourseFuncID).then((res) => {
+        this.eTrainCourseHeaderText = res;
+        this.eTrainCourseColumnGrid = [
+          {
+            headerText:
+              this.eTrainCourseHeaderText['TrainCourseID'] +
+              '|' +
+              this.eTrainCourseHeaderText['TrainForm'],
+            template: this.templateTrainCourseGridCol1,
+            width: '150',
+          },
+          {
+            headerText:
+              this.eTrainCourseHeaderText['TrainFrom'] +
+              '|' +
+              this.eTrainCourseHeaderText['InYear'],
+            template: this.templateTrainCourseGridCol2,
+            width: '150',
+          },
+          {
+            headerText:
+              this.eTrainCourseHeaderText['TrainSupplierID'] +
+              '|' +
+              this.eTrainCourseHeaderText['Result'],
+            template: this.templateTrainCourseGridCol3,
+            width: '150',
+          },
+        ];
+      });
+
+      // let insTrain = setInterval(() => {
+      //   if (this.eTrainCourseGrid) {
+      //     clearInterval(insTrain);
+      //     let t = this;
+      //     this.eTrainCourseGrid.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.eTrainCourseRowCount = 0;
+      //           t.eTrainCourseRowCount = res['data'].length;
+      //         }
+      //       }
+      //     });
+      //     this.eTrainCourseRowCount =
+      //       this.eTrainCourseGrid.dataService.rowCount;
+      //   }
+      // }, 100);
+
+      //#endregion
+    }
+  }
+
+  initHRProcess() {
+    if (!this.eContractFormModel) {
+      this.hrService.getFormModel(this.eContractFuncID).then((res) => {
+        this.eContractFormModel = res;
+      });
+    }
+    if (this.employeeID) {
+      if (!this.crrEContract) {
+        //HR_EContracts
+        let rqContract = new DataRequest();
+        rqContract.entityName = 'HR_EContracts';
+        rqContract.dataValues = this.employeeID + ';false;true';
+        rqContract.predicates =
+          'EmployeeID=@0 and IsAppendix=@1 and IsCurrent=@2';
+        rqContract.page = 1;
+        rqContract.pageSize = 1;
+
+        this.hrService.getCrrEContract(rqContract).subscribe((res) => {
+          if (res && res[0]) {
+            this.crrEContract = res[0][0];
+            this.df.detectChanges();
+          }
+        });
+      }
+
+      if (!this.lstContractType) {
+        let rqContractType = new DataRequest();
+        rqContractType.entityName = 'HR_ContractTypes';
+        rqContractType.dataValues = '1';
+        rqContractType.predicates = 'ContractGroup =@0';
+        rqContractType.pageLoading = false;
+
+        this.hrService.getCrrEContract(rqContractType).subscribe((res) => {
+          if (res && res[0]) {
+            this.lstContractType = res[0];
+            console.log('aaaaaaaaaaaa', this.lstContractType);
+
+            this.df.detectChanges();
+          }
+        });
+      }
+    }
+
+    //#region EContract - Hợp đồng lao động
+    if (!this.eContractColumnGrid) {
+      this.hrService.getHeaderText(this.eContractFuncID).then((res) => {
+        this.eContractHeaderText = res;
+        this.eContractColumnGrid = [
+          {
+            headerText:
+              this.eContractHeaderText['ContractTypeID'] +
+              ' | ' +
+              this.eContractHeaderText['EffectedDate'],
+
+            template: this.eContractCol1,
+            width: '250',
+          },
+          {
+            // headerText: this.eContractHeaderText['ContractNo'] +
+            // ' - ' +
+            // this.eContractHeaderText['SignedDate'],
+            headerText: 'Hợp đồng',
+            template: this.eContractCol2,
+            width: '150',
+          },
+          {
+            headerText: this.eContractHeaderText['Note'],
+            template: this.eContractCol3,
+            width: '150',
+          },
+        ];
+      });
+
+      // let insEContract = setInterval(() => {
+      //   if (this.eContractGridview) {
+      //     clearInterval(insEContract);
+      //     let t = this;
+      //     this.eContractGridview.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.eContractRowCount = 0;
+      //           t.eContractRowCount = res['data'].length;
+      //         }
+      //       }
+      //     });
+      //     this.eContractRowCount = this.eContractGridview.dataService.rowCount;
+      //   }
+      // }, 100);
+    }
+    //#endregion
+
+    if (!this.appointionColumnGrid) {
+      //#region get columnGrid EAppointion - Bổ nhiệm điều chuyển
+      this.hrService.getHeaderText(this.appointionFuncID).then((res) => {
+        this.appointionHeaderTexts = res;
+        this.appointionColumnGrid = [
+          {
+            headerText:
+              this.appointionHeaderTexts['Appoint'] ?? '' + '| Hiệu lực',
+            template: this.templateAppointionGridCol1,
+            width: '150',
+          },
+          {
+            headerText: this.appointionHeaderTexts['PositionID'],
+            template: this.templateAppointionGridCol2,
+            width: '150',
+          },
+          {
+            headerText: this.appointionHeaderTexts['OrgUnitID'] + '/ Phòng ban',
+            template: this.templateAppointionGridCol3,
+            width: '150',
+          },
+        ];
+      });
+
+      let ins = setInterval(() => {
+        if (this.appointionGridView) {
+          clearInterval(ins);
+          let t = this;
+          this.appointionGridView.dataService.onAction.subscribe((res) => {
+            if (res) {
+              if (res.type != null && res.type == 'loaded') {
+                t.appointionRowCount = res['data'].length;
+              }
+            }
+          });
+          this.appointionRowCount =
+            this.appointionGridView.dataService.rowCount;
+        }
+      }, 100);
+      //#endregion
+    }
+  }
+
+  initLegalInfo() {
+    //#region get columnGrid EVisa - Thị thực
+    // if (!this.visaColumnGrid) {
+    //   this.hrService.getHeaderText(this.eVisaFuncID).then((res) => {
+    //     let visaHeaderText = res;
+    //     this.visaColumnGrid = [
+    //       {
+    //         headerText:
+    //           visaHeaderText['VisaNo'] + ' | ' + visaHeaderText['IssuedPlace'],
+    //         template: this.visaCol1,
+    //         width: '150',
+    //       },
+    //       {
+    //         headerText:
+    //           visaHeaderText['IssuedDate'] +
+    //           ' | ' +
+    //           visaHeaderText['ExpiredDate'],
+    //         template: this.visaCol2,
+    //         width: '150',
+    //       },
+    //     ];
+    //   });
+
+    //   let insVisa = setInterval(() => {
+    //     if (this.visaGridview) {
+    //       clearInterval(insVisa);
+    //       let t = this;
+    //       this.visaGridview.dataService.onAction.subscribe((res) => {
+    //         if (res) {
+    //           if (res.type == 'loaded') {
+    //             t.visaRowCount = res['data'].length;
+    //             if (res['data'].length > 0) {
+    //               this.crrVisa = res.data[0];
+    //             }
+    //           }
+    //         }
+    //       });
+    //       this.visaRowCount = this.visaGridview.dataService.rowCount;
+    //     }
+    //   }, 100);
+    // }
+    //#endregion
+
+
+    //#region get columnGrid EWorkPermit - Giấy phép lao động
+    // if (!this.workPermitColumnGrid) {
+    //   this.hrService.getHeaderText(this.eWorkPermitFuncID).then((res) => {
+    //     let workHeaderText = res;
+    //     this.workPermitColumnGrid = [
+    //       {
+    //         headerText:
+    //           workHeaderText['WorkPermitNo'] +
+    //           ' | ' +
+    //           workHeaderText['IssuedPlace'],
+    //         template: this.workPermitCol1,
+    //         width: '150',
+    //       },
+    //       {
+    //         headerText:
+    //           workHeaderText['IssuedDate'] + ' | ' + workHeaderText['ToDate'],
+    //         template: this.workPermitCol2,
+    //         width: '150',
+    //       },
+    //     ];
+    //   });
+
+    //   let insWorkPermit = setInterval(() => {
+    //     if (this.workPermitGridview) {
+    //       clearInterval(insWorkPermit);
+    //       let t = this;
+    //       this.workPermitGridview?.dataService.onAction.subscribe((res) => {
+    //         if (res) {
+    //           if (res.type == 'loaded') {
+    //             t.workPermitRowCount = res['data'].length;
+    //             if (res['data'].length > 0) {
+    //               this.crrWorkpermit = res.data[0];
+    //             }
+    //           }
+    //         }
+    //       });
+    //       this.workPermitRowCount =
+    //         this.workPermitGridview.dataService.rowCount;
+    //     }
+    //   }, 100);
+    // }
+    //#endregion
+  }
+
   onInit(): void {
     
     this.hrService.getFunctionList(this.funcID)
@@ -731,6 +1242,7 @@ throw new Error('Method not implemented.');
           this.hrService.loadData('HR', empRequest).subscribe((emp) => {
             if (emp[1] > 0) {
               this.infoPersonal = emp[0][0];
+              console.log(this.infoPersonal);
               this.getManagerEmployeeInfoById();
               this.initForm();
             }
@@ -1053,7 +1565,7 @@ throw new Error('Method not implemented.');
         {
           headerText:
             this.eBusinessTravelHeaderTexts['BusinessPlace'] +
-            '|' +
+            ' | ' +
             this.eBusinessTravelHeaderTexts['KowID'],
           template: this.templateBusinessTravelGridCol1,
           width: '150',
@@ -1061,7 +1573,7 @@ throw new Error('Method not implemented.');
         {
           headerText:
             this.eBusinessTravelHeaderTexts['PeriodType'] +
-            '|' +
+            ' | ' +
             this.eBusinessTravelHeaderTexts['Days'],
           template: this.templateBusinessTravelGridCol2,
           width: '150',
@@ -1074,21 +1586,21 @@ throw new Error('Method not implemented.');
       ];
     });
 
-    let insBusinessTravel = setInterval(() => {
-      if (this.businessTravelGrid) {
-        clearInterval(insBusinessTravel);
-        let t = this;
-        this.businessTravelGrid.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type != null && res.type == 'loaded') {
-              t.eBusinessTravelRowCount = res['data'].length;
-            }
-          }
-        });
-        this.eBusinessTravelRowCount =
-          this.businessTravelGrid.dataService.rowCount;
-      }
-    }, 100);
+    // let insBusinessTravel = setInterval(() => {
+    //   if (this.businessTravelGrid) {
+    //     clearInterval(insBusinessTravel);
+    //     let t = this;
+    //     this.businessTravelGrid.dataService.onAction.subscribe((res) => {
+    //       if (res) {
+    //         if (res.type != null && res.type == 'loaded') {
+    //           t.eBusinessTravelRowCount = res['data'].length;
+    //         }
+    //       }
+    //     });
+    //     this.eBusinessTravelRowCount =
+    //       this.businessTravelGrid.dataService.rowCount;
+    //   }
+    // }, 100);
 
     //#endregion
 
@@ -1311,20 +1823,20 @@ throw new Error('Method not implemented.');
       ];
     });
 
-    let insExperience = setInterval(() => {
-      if (this.eExperienceGrid) {
-        clearInterval(insExperience);
-        let t = this;
-        this.eExperienceGrid.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type == 'loaded') {
-              t.eExperienceRowCount = res['data'].length;
-            }
-          }
-        });
-        this.eExperienceRowCount = this.eExperienceGrid.dataService.rowCount;
-      }
-    }, 100);
+    // let insExperience = setInterval(() => {
+    //   if (this.eExperienceGrid) {
+    //     clearInterval(insExperience);
+    //     let t = this;
+    //     this.eExperienceGrid.dataService.onAction.subscribe((res) => {
+    //       if (res) {
+    //         if (res.type == 'loaded') {
+    //           t.eExperienceRowCount = res['data'].length;
+    //         }
+    //       }
+    //     });
+    //     this.eExperienceRowCount = this.eExperienceGrid.dataService.rowCount;
+    //   }
+    // }, 100);
     //#endregion
     ////////////////////
 
@@ -1385,21 +1897,21 @@ throw new Error('Method not implemented.');
       ];
     });
 
-    let insAward = setInterval(() => {
-      if (this.AwardGrid) {
-        clearInterval(insAward);
-        let t = this;
-        this.AwardGrid.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type == 'loaded') {
-              t.awardRowCount = 0;
-              t.awardRowCount = res['data'].length;
-            }
-          }
-        });
-        this.awardRowCount = this.AwardGrid.dataService.rowCount;
-      }
-    }, 100);
+    // let insAward = setInterval(() => {
+    //   if (this.AwardGrid) {
+    //     clearInterval(insAward);
+    //     let t = this;
+    //     this.AwardGrid.dataService.onAction.subscribe((res) => {
+    //       if (res) {
+    //         if (res.type == 'loaded') {
+    //           t.awardRowCount = 0;
+    //           t.awardRowCount = res['data'].length;
+    //         }
+    //       }
+    //     });
+    //     this.awardRowCount = this.AwardGrid.dataService.rowCount;
+    //   }
+    // }, 100);
     //#endregion
 
     //#region EDiscipline - Kỷ luật
@@ -1434,21 +1946,21 @@ throw new Error('Method not implemented.');
       ];
     });
 
-    let insEDiscipline = setInterval(() => {
-      if (this.eDisciplineGrid) {
-        clearInterval(insEDiscipline);
-        let t = this;
-        this.eDisciplineGrid.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type == 'loaded') {
-              t.eDisciplineRowCount = 0;
-              t.eDisciplineRowCount = res['data'].length;
-            }
-          }
-        });
-        this.eDisciplineRowCount = this.eDisciplineGrid.dataService.rowCount;
-      }
-    }, 100);
+    // let insEDiscipline = setInterval(() => {
+    //   if (this.eDisciplineGrid) {
+    //     clearInterval(insEDiscipline);
+    //     let t = this;
+    //     this.eDisciplineGrid.dataService.onAction.subscribe((res) => {
+    //       if (res) {
+    //         if (res.type == 'loaded') {
+    //           t.eDisciplineRowCount = 0;
+    //           t.eDisciplineRowCount = res['data'].length;
+    //         }
+    //       }
+    //     });
+    //     this.eDisciplineRowCount = this.eDisciplineGrid.dataService.rowCount;
+    //   }
+    // }, 100);
 
     //#endregion
 
@@ -1933,10 +2445,11 @@ throw new Error('Method not implemented.');
         }
       }, 100);
 
-      //#endregion
-
-      this.df.detectChanges();
-    }
+    //#endregion
+    
+    this.hrService.getGrossSalary(this.employeeID).subscribe((res) => {
+      this.employeeGrossSalary = res;
+    });
   }
 
   initKnowledgeInfo() {
@@ -2167,6 +2680,30 @@ throw new Error('Method not implemented.');
     }
   }
 
+  getECurrentContract(){
+    if (!this.crrEContract) {
+      //HR_EContracts
+      let rqContract = new DataRequest();
+      rqContract.entityName = 'HR_EContracts';
+      rqContract.dataValues = this.employeeID + ';false;true';
+      rqContract.predicates =
+        'EmployeeID=@0 and IsAppendix=@1 and IsCurrent=@2';
+      rqContract.page = 1;
+      rqContract.pageSize = 1;
+
+      this.hrService.getCrrEContract(rqContract).subscribe((res) => {
+        debugger
+        if (res && res[0]) {
+          this.crrEContract = res[0][0];
+        }
+        else{
+          this.crrEContract = null;
+        }
+        this.df.detectChanges();
+      });
+    }
+  }
+
   initHRProcess() {
     if (!this.eContractFormModel) {
       this.hrService.getFormModel(this.eContractFuncID).then((res) => {
@@ -2174,23 +2711,7 @@ throw new Error('Method not implemented.');
       });
     }
     if (this.employeeID) {
-      if (!this.crrEContract) {
-        //HR_EContracts
-        let rqContract = new DataRequest();
-        rqContract.entityName = 'HR_EContracts';
-        rqContract.dataValues = this.employeeID + ';false;true';
-        rqContract.predicates =
-          'EmployeeID=@0 and IsAppendix=@1 and IsCurrent=@2';
-        rqContract.page = 1;
-        rqContract.pageSize = 1;
-
-        this.hrService.getCrrEContract(rqContract).subscribe((res) => {
-          if (res && res[0]) {
-            this.crrEContract = res[0][0];
-            this.df.detectChanges();
-          }
-        });
-      }
+      this.getECurrentContract();
 
       if (!this.lstContractType) {
         let rqContractType = new DataRequest();
@@ -2282,21 +2803,21 @@ throw new Error('Method not implemented.');
         ];
       });
 
-      let ins = setInterval(() => {
-        if (this.appointionGridView) {
-          clearInterval(ins);
-          let t = this;
-          this.appointionGridView.dataService.onAction.subscribe((res) => {
-            if (res) {
-              if (res.type != null && res.type == 'loaded') {
-                t.appointionRowCount = res['data'].length;
-              }
-            }
-          });
-          this.appointionRowCount =
-            this.appointionGridView.dataService.rowCount;
-        }
-      }, 100);
+      // let ins = setInterval(() => {
+      //   if (this.appointionGridView) {
+      //     clearInterval(ins);
+      //     let t = this;
+      //     this.appointionGridView.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type != null && res.type == 'loaded') {
+      //           t.appointionRowCount = res['data'].length;
+      //         }
+      //       }
+      //     });
+      //     this.appointionRowCount =
+      //       this.appointionGridView.dataService.rowCount;
+      //   }
+      // }, 100);
       //#endregion
     }
   }
@@ -2570,11 +3091,9 @@ throw new Error('Method not implemented.');
         break;
       case this.eVisaFuncID + 'ViewAll':
         this.popupViewAllVisa();
-        // this.popupViewAll(this.eVisaFuncID);
         break;
       case this.eWorkPermitFuncID + 'ViewAll':
         this.popupViewAllWorkPermit();
-        // this.popupViewAll(this.eWorkPermitFuncID);
         break;
       case this.eContractFuncID + 'ViewAll':
         this.popupViewAllContract();
@@ -2811,7 +3330,7 @@ throw new Error('Method not implemented.');
                     (this.eDegreeGrid?.dataService as CRUDService)
                       ?.remove(data)
                       .subscribe();
-                    this.eDegreeRowCount--;
+                    // this.eDegreeRowCount--;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2822,11 +3341,11 @@ throw new Error('Method not implemented.');
                 if (res) {
                   if (!this.skillGrid && res[0] == true) {
                     this.lstESkill = res[1];
-                    this.eSkillRowCount--;
+                    // this.eSkillRowCount--;
                   } else if (this.lstESkill && res[0] == true) {
                     this.notify.notifyCode('SYS008');
                     this.lstESkill = res[1];
-                    this.eSkillRowCount += this.updateGridView(
+                    this.updateGridView(
                       this.skillGrid,
                       'delete',
                       data
@@ -2847,7 +3366,7 @@ throw new Error('Method not implemented.');
                     // if (i != -1) {
                     //   this.lstCertificates.splice(i, 1);
                     // }
-                    this.eCertificateRowCount--;
+                    // this.eCertificateRowCount--;
                     (this.eCertificateGrid.dataService as CRUDService)
                       .remove(data)
                       .subscribe();
@@ -2867,7 +3386,7 @@ throw new Error('Method not implemented.');
                     // if (i != -1) {
                     //   this.lstAppointions.splice(i, 1);
                     // }
-                    this.appointionRowCount--;
+                    //this.appointionRowCount--;
                     (this.appointionGridView.dataService as CRUDService)
                       .remove(data)
                       .subscribe();
@@ -2886,7 +3405,7 @@ throw new Error('Method not implemented.');
                     (this.eExperienceGrid.dataService as CRUDService)
                       .remove(data)
                       .subscribe();
-                    this.eExperienceRowCount = this.eExperienceRowCount - 1;
+                    //this.eExperienceRowCount = this.eExperienceRowCount - 1;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2919,7 +3438,7 @@ throw new Error('Method not implemented.');
                     (this.eTrainCourseGrid.dataService as CRUDService)
                       .remove(data)
                       .subscribe();
-                    this.eTrainCourseRowCount--;
+                    // this.eTrainCourseRowCount--;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2932,8 +3451,8 @@ throw new Error('Method not implemented.');
                   (this.businessTravelGrid.dataService as CRUDService)
                     .remove(data)
                     .subscribe();
-                  this.eBusinessTravelRowCount =
-                    this.eBusinessTravelRowCount - 1;
+                  // this.eBusinessTravelRowCount =
+                  //   this.eBusinessTravelRowCount - 1;
                 }
               });
             } else if (funcID == 'eAwards') {
@@ -2949,7 +3468,7 @@ throw new Error('Method not implemented.');
                     (this.AwardGrid.dataService as CRUDService)
                       .remove(data)
                       .subscribe();
-                    this.awardRowCount--;
+                    //this.awardRowCount--;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2964,7 +3483,7 @@ throw new Error('Method not implemented.');
                     (this.eDisciplineGrid.dataService as CRUDService)
                       .remove(data)
                       .subscribe();
-                    this.eDisciplineRowCount--;
+                    //this.eDisciplineRowCount--;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2974,16 +3493,7 @@ throw new Error('Method not implemented.');
               this.hrService.deleteEContract(data).subscribe((res) => {
                 if (res && res[0]) {
                   this.notify.notifyCode('SYS008');
-                  (this.eContractGridview?.dataService as CRUDService)
-                    ?.remove(data)
-                    .subscribe();
-                  this.eContractRowCount--;
-                  if (data.isCurrent && res[1]) {
-                    (this.eContractGridview?.dataService as CRUDService)
-                      ?.update(res[1])
-                      .subscribe();
-                    this.crrEContract = res[1];
-                  }
+                  this.crrEContract = res[1];
                   this.df.detectChanges();
                 } else {
                   this.notify.notifyCode('SYS022');
@@ -3082,76 +3592,6 @@ throw new Error('Method not implemented.');
         }
         break;
     }
-  }
-
-  popupViewAll(funcID) {
-    let ref: TemplateRef<any>;
-    // let ins = setInterval(() => {
-    //   if (this.passportGridview) {
-    //     clearInterval(ins);
-    //     let t = this;
-    //     this.passportGridview?.dataService.onAction.subscribe((res) => {
-    //       if (res?.type == 'loaded') {
-    //         t.passportRowCount = res['data'].length;
-    //       }
-    //     });
-    //     debugger
-    //     this.passportRowCount = this.passportGridview.dataService.rowCount;
-    //   }
-    // }, 100);
-
-    switch (funcID) {
-      case this.ePassportFuncID:
-        ref = this.tmpViewAllPassport;
-        this.hrService
-          .countEmpTotalRecord(this.employeeID, 'EPassportsBusiness')
-          .subscribe((res) => {
-            this.passportRowCount = res;
-          });
-        break;
-
-      case this.eVisaFuncID:
-        ref = this.tmpViewAllVisa;
-        this.hrService
-          .countEmpTotalRecord(this.employeeID, 'EmpVisasBusiness')
-          .subscribe((res) => {
-            this.visaRowCount = res;
-          });
-        break;
-
-      case this.eWorkPermitFuncID:
-        ref = this.tmpViewAllWorkpermit;
-        this.hrService
-          .countEmpTotalRecord(this.employeeID, 'EWorkPermitsBusiness')
-          .subscribe((res) => {
-            this.workPermitRowCount = res;
-          });
-        break;
-
-      case this.eContractFuncID:
-        ref = this.tmpViewAllContract;
-        this.hrService
-          .countEmpTotalRecord(this.employeeID, 'EContractsBusiness')
-          .subscribe((res) => {
-            this.eContractRowCount = res;
-          });
-        break;
-    }
-
-    let option = new DialogModel();
-    option.zIndex = 999;
-    let dialog = this.callfunc.openForm(
-      ref,
-      '',
-      850,
-      550,
-      '',
-      null,
-      '',
-      option
-    );
-    this.df.detectChanges();
-
   }
 
   popupViewAllContract(){
@@ -3616,7 +4056,7 @@ throw new Error('Method not implemented.');
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
-          this.eExperienceRowCount += 1;
+          //this.eExperienceRowCount += 1;
           (this.eExperienceGrid.dataService as CRUDService)
             .add(res.event)
             .subscribe();
@@ -3982,7 +4422,7 @@ throw new Error('Method not implemented.');
       if (!res?.event)
         (this.eDisciplineGrid?.dataService as CRUDService).clear();
       if (res.event)
-        this.eDisciplineRowCount += this.updateGridView(
+        this.updateGridView(
           this.eDisciplineGrid,
           actionType,
           res.event
@@ -4088,7 +4528,7 @@ throw new Error('Method not implemented.');
         this.reRenderGrid = true;
         this.df.detectChanges();
         if (actionType == 'add') {
-          this.appointionRowCount += 1;
+          //this.appointionRowCount += 1;
 
           // this.appointionRowCount+=1
           // this.appointionGridView.dataSource = [];
@@ -4108,7 +4548,7 @@ throw new Error('Method not implemented.');
           //   this.appointionRowCount =this.appointionGridView.dataSource.length ;
           // })
         } else if (actionType == 'copy') {
-          this.appointionRowCount += 1;
+          //this.appointionRowCount += 1;
           (this.appointionGridView?.dataService as CRUDService)
             .add(res.event)
             .subscribe();
@@ -4149,11 +4589,16 @@ throw new Error('Method not implemented.');
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
       else if (res.event)
-        this.eCertificateRowCount += this.updateGridView(
+        this.updateGridView(
           this.eCertificateGrid,
           actionType,
           res.event
         );
+        // this.eCertificateRowCount += this.updateGridView(
+        //   this.eCertificateGrid,
+        //   actionType,
+        //   res.event
+        // );
       this.df.detectChanges();
     });
   }
@@ -4180,7 +4625,7 @@ throw new Error('Method not implemented.');
 
     dialogAdd.closed.subscribe((res) => {
       if (res)
-        this.eDegreeRowCount += this.updateGridView(
+         this.updateGridView(
           this.eDegreeGrid,
           actionType,
           res.event
@@ -4214,14 +4659,14 @@ throw new Error('Method not implemented.');
       else if (res.event != null) {
         this.lstESkill = res?.event[1];
         if (this.skillGrid) {
-          this.eSkillRowCount += this.updateGridView(
+          this.updateGridView(
             this.skillGrid,
             actionType,
             res.event[0]
           );
         } else {
           if (actionType == 'add' || actionType == 'copy') {
-            this.eSkillRowCount++;
+            // this.eSkillRowCount++;
           }
         }
       }
@@ -4256,7 +4701,7 @@ throw new Error('Method not implemented.');
       if (!res?.event)
         (this.eTrainCourseGrid?.dataService as CRUDService).clear();
       else if (res.event)
-        this.eTrainCourseRowCount += this.updateGridView(
+        this.updateGridView(
           this.eTrainCourseGrid,
           actionType,
           res.event
@@ -4319,27 +4764,15 @@ throw new Error('Method not implemented.');
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      debugger
       if (!res?.event) this.view.dataService.clear();
-      else if (res?.event[0]) {
-        if (this.eContractGridview)
-          this.eContractRowCount += this.updateGridView(
-            this.eContractGridview,
-            actionType,
-            res?.event[0]
-          );
-        if (res?.event[1]) {
-          (this.eContractGridview.dataService as CRUDService)
-            .update(res.event[1])
-            .subscribe();
-        } else if (actionType == 'copy' || actionType == 'add') {
-          this.eContractRowCount++;
+      else if(res.event){
+        if(res.event.isCurrent == true){
+          this.crrEContract = res.event;
         }
-
-        res.event.forEach((element) => {
-          if (element.isCurrent) {
-            this.crrEContract = element;
-          }
-        });
+        else{
+          this.getECurrentContract();
+        }
       }
       this.df.detectChanges();
     });
@@ -4407,7 +4840,7 @@ throw new Error('Method not implemented.');
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) (this.AwardGrid?.dataService as CRUDService).clear();
       if (res.event)
-        this.awardRowCount += this.updateGridView(
+        this.updateGridView(
           this.AwardGrid,
           actionType,
           res.event
@@ -4527,7 +4960,7 @@ throw new Error('Method not implemented.');
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
-          this.eBusinessTravelRowCount += 1;
+          // this.eBusinessTravelRowCount += 1;
           (this.businessTravelGrid?.dataService as CRUDService)
             ?.add(res.event)
             .subscribe();
@@ -4857,30 +5290,60 @@ throw new Error('Method not implemented.');
     dialog.close();
   }
 
-  headerTextBenefit;
+  // headerTextBenefit;
   popupViewBenefit() {
-    this.headerTextBenefit =
-      this.getFormHeader(this.benefitFuncID) + ' | ' + 'Tất cả';
-    let option = new DialogModel();
-    option.zIndex = 999;
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    this.dialogViewBenefit = this.callfc.openForm(
-      this.templateViewBenefit,
-      '',
+    let opt = new DialogModel();
+    opt.zIndex = 999;
+    let popup = this.callfunc.openForm(
+      PopupViewAllComponent,
+      null,
       850,
       550,
-      '',
+      this.benefitFuncID,
+      {
+        funcID: this.benefitFuncID,
+        employeeId: this.employeeID,
+        headerText: this.getFormHeader(this.benefitFuncID),
+        sortModel: this.benefitSortModel,
+        formModel: this.benefitFormodel,
+        hasFilter: false,
+      }
+      ,
       null,
-      '',
-      option
-    );
-    this.dialogViewBenefit.closed.subscribe((res) => {
-      // if (res?.event) {
-      //   this.view.dataService.update(res.event[0]).subscribe((res) => {});
-      // }
-      this.df.detectChanges();
-    });
+      opt
+    )
+    popup.closed.subscribe((res) => {
+      if(res?.event){
+        this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
+          if (res) {
+            this.listCrrBenefit = res;
+            this.df.detectChanges();
+          }
+        }); 
+      }
+    }) 
+    // this.headerTextBenefit =
+    //   this.getFormHeader(this.benefitFuncID) + ' | ' + 'Tất cả';
+    // let option = new DialogModel();
+    // option.zIndex = 999;
+    // option.DataService = this.view.dataService;
+    // option.FormModel = this.view.formModel;
+    // this.dialogViewBenefit = this.callfc.openForm(
+    //   this.templateViewBenefit,
+    //   '',
+    //   850,
+    //   550,
+    //   '',
+    //   null,
+    //   '',
+    //   option
+    // );
+    // this.dialogViewBenefit.closed.subscribe((res) => {
+    //   if (res?.event) {
+    //     this.view.dataService.update(res.event[0]).subscribe((res) => {});
+    //   }
+    //   this.df.detectChanges();
+    // });
   }
 
   RenderDataFromPopup(event) {
@@ -4919,18 +5382,18 @@ throw new Error('Method not implemented.');
 
   valueChangeViewAllESkill(evt) {
     this.ViewAllEskillFlag = evt.data;
-    let ins = setInterval(() => {
-      if (this.skillGrid) {
-        clearInterval(ins);
-        let t = this;
-        this.skillGrid.dataService.onAction.subscribe((res) => {
-          if (res.type == 'loaded') {
-            t.eSkillRowCount = res['data'].length;
-          }
-        });
-        this.eSkillRowCount = this.skillGrid.dataService.rowCount;
-      }
-    }, 100);
+    // let ins = setInterval(() => {
+    //   if (this.skillGrid) {
+    //     clearInterval(ins);
+    //     let t = this;
+    //     this.skillGrid.dataService.onAction.subscribe((res) => {
+    //       if (res.type == 'loaded') {
+    //         t.eSkillRowCount = res['data'].length;
+    //       }
+    //     });
+    //     this.eSkillRowCount = this.skillGrid.dataService.rowCount;
+    //   }
+    // }, 100);
   }
 
 
@@ -4939,30 +5402,40 @@ throw new Error('Method not implemented.');
   }
 
   headerTextSalary;
-  popupUpdateEJobSalaryStatus() {
-    this.headerTextSalary =
-      this.getFormHeader(this.eBasicSalaryFuncID) + ' | ' + 'Tất cả';
-    let option = new DialogModel();
-    option.zIndex = 999;
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    this.dialogViewSalary = this.callfc.openForm(
-      this.templateViewSalary,
-      '',
+  popupUpdateEBasicSalaryStatus() {
+       let opt = new DialogModel();
+    opt.zIndex = 999;
+    let popup = this.callfunc.openForm(
+      PopupViewAllComponent,
+      null,
       850,
       550,
-      '',
+      this.eBasicSalaryFuncID,
+      {
+        funcID: this.eBasicSalaryFuncID,
+        employeeId: this.employeeID,
+        headerText: this.getFormHeader(this.eBasicSalaryFuncID),
+        sortModel: this.bSalarySortModel,
+        formModel: this.eBasicSalaryFormmodel,
+        hasFilter: false,
+      }
+      ,
       null,
-      '',
-      option
-    );
-    this.dialogViewSalary.closed.subscribe((res) => {
-      this.df.detectChanges();
-    });
+      opt
+    )
+    popup.closed.subscribe((res) => {
+      if(res?.event){
+        this.hrService
+        .GetCurrentEBasicSalariesByEmployeeID(this.employeeID)
+        .subscribe((dataEBaSlary) => {
+          this.crrEBSalary = dataEBaSlary;
+        }); 
+      }
+    }) 
   }
 
   valueChangeViewAllEBasicSalary() {
-    this.popupUpdateEJobSalaryStatus();
+    this.popupUpdateEBasicSalaryStatus(); 
   }
   valueChangeViewAllEJobSalary(evt) {
     this.ViewAllEJobSalaryFlag = evt.data;
@@ -4978,17 +5451,10 @@ throw new Error('Method not implemented.');
         this.eJobSalaryRowCount = this.jobSalaryGridview.dataService.rowCount;
       }
     }, 100);
-  }
+  } 
 
-  //Update data table follow pop up
-  UpdateDataFromPopup(event) {
-    if (event.isRenderDelete === true) {
-      this.hrService
-        .GetCurrentEBasicSalariesByEmployeeID(this.employeeID)
-        .subscribe((dataEBaSlary) => {
-          this.crrEBSalary = dataEBaSlary;
-        });
-    }
+  valueChangeViewAllEContract() {
+    this.popupViewAll(this.eContractFuncID);
   }
 
   copyValue(actionHeaderText, data, flag) {

@@ -23,6 +23,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CalendarCenterComponent } from './calendar-center/calendar-center.component';
 import { Query } from '@syncfusion/ej2-data';
 import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
+import { CodxCalendarService } from './codx-calendar.service';
 
 @Component({
   selector: 'app-codx-calendar',
@@ -85,7 +86,11 @@ export class CodxCalendarComponent
   //Để tạm
   resources = [];
 
-  constructor(injector: Injector, private codxShareSV: CodxShareService) {
+  constructor(
+    injector: Injector,
+    private calendarService: CodxCalendarService,
+    private codxShareSV: CodxShareService
+  ) {
     super(injector);
   }
 
@@ -136,6 +141,12 @@ export class CodxCalendarComponent
               status: param.Template.TransType,
             });
           }
+
+          this.TM_TasksParam = JSON.parse(res['TM_Tasks']);
+          this.WP_NotesParam = JSON.parse(res['WP_Notes']);
+          this.CO_MeetingsParam = JSON.parse(res['CO_Meetings']);
+          this.EP_BookingRoomsParam = JSON.parse(res['EP_BookingRooms']);
+          this.EP_BookingCarsParam = JSON.parse(res['EP_BookingCars']);
         }
       });
 
@@ -240,7 +251,7 @@ export class CodxCalendarComponent
   }
 
   navigate() {
-    this.codxShareSV.dateChange.subscribe((res) => {
+    this.calendarService.dateChange.subscribe((res) => {
       if (res?.fromDate == 'Invalid Date' && res?.toDate == 'Invalid Date')
         return;
       if (res?.fromDate && res?.toDate) {
@@ -427,7 +438,7 @@ export class CodxCalendarComponent
             this.ejCalendar.value = this.FDdate;
           }
 
-          this.codxShareSV.dataResourceModel.next(this.calendarData);
+          this.calendarService.dataResourceModel.next(this.calendarData);
         }
       });
   }
@@ -695,7 +706,7 @@ export class CodxCalendarComponent
           JSON.stringify(this.EP_BookingCars)
         );
 
-        this.codxShareSV.dataResourceModel.next(this.calendarData);
+        this.calendarService.dataResourceModel.next(this.calendarData);
       }
     }
   }
@@ -721,59 +732,12 @@ export class CodxCalendarComponent
   }
 
   getCalendarNotes(TM_, WP_, CO_, EP_Room_, EP_Ca_) {
-    let TM_Params = [
-      {
-        color: TM_.ShowBackground,
-        borderColor: TM_.ShowColor,
-        text: 'TM_MyTasks',
-        status: 'TM_MyTasks',
-      },
-    ];
-    let WP_Params = [
-      {
-        color: WP_.ShowBackground,
-        borderColor: WP_.ShowColor,
-        text: 'WP_Notes',
-        status: 'WP_Notes',
-      },
-    ];
-    let CO_Params = [
-      {
-        color: CO_.ShowBackground,
-        borderColor: CO_.ShowColor,
-        text: 'CO_Meetings',
-        status: 'CO_Meetings',
-      },
-    ];
-    let EP_BookingRoomParams = [
-      {
-        color: EP_Room_.ShowBackground,
-        borderColor: EP_Room_.ShowColor,
-        text: 'EP_BookingRooms',
-        status: 'EP_BookingRooms',
-      },
-    ];
-    let EP_BookingCarParams = [
-      {
-        color: EP_Ca_.ShowBackground,
-        borderColor: EP_Ca_.ShowColor,
-        text: 'EP_BookingCars',
-        status: 'EP_BookingCars',
-      },
-    ];
-    let resources = [
-      ...TM_Params,
-      ...WP_Params,
-      ...CO_Params,
-      ...EP_BookingRoomParams,
-      ...EP_BookingCarParams,
-    ];
     let myInterval = setInterval(() => {
       if (this.dataResourceModel.length > 0) {
         clearInterval(myInterval);
-        this.calendarCenter.resources = resources;
+        this.calendarCenter.resources = this.resources;
         this.calendarCenter.resourceModel = this.dataResourceModel;
-        this.codxShareSV.dataResourceModel.subscribe((res) => {
+        this.calendarService.dataResourceModel.subscribe((res) => {
           if (res) {
             this.calendarCenter && this.calendarCenter.updateData(res);
           }

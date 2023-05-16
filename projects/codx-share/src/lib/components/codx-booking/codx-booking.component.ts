@@ -100,7 +100,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   crrViewMode: any;
   allocateFuncID = EPCONST.FUNCID.S_Allocate;
   categoryIDProcess = '';
-  categoryID='';
+  categoryID = '';
+  allocateStatus: string;
   constructor(
     injector: Injector,
     private codxBookingService: CodxBookingService,
@@ -169,7 +170,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     headerText: this.grView?.title?.headerText,
                   },
                   {
-                    field: 'title',
+                    field: 'owner',
                     template: this.gridHost,
                     headerText: 'Người chủ trì',
                   },
@@ -271,7 +272,6 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       }
     });
     switch (this.funcID) {
-
       case EPCONST.FUNCID.R_Bookings:
         this.resourceType = '1';
         this.categoryIDProcess = 'ES_EP001';
@@ -436,7 +436,13 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
       //Stationery
       case EPCONST.MFUNCID.S_Allocate:
+        this.allocateStatus='5';
         this.allocate(data);
+        break;
+      case EPCONST.MFUNCID.S_UnAllocate:
+        this.allocateStatus='4';
+        this.allocate(data);
+        break;
     }
   }
 
@@ -660,11 +666,19 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
   setPopupTitle(mfunc) {
     this.popupTitle = mfunc + ' ' + this.funcIDName;
+    this.detectorRef.detectChanges();
   }
 
   setPopupTitleOption(mfunc) {
     this.popupTitle = mfunc;
+    this.detectorRef.detectChanges();
   }
+
+  setAllocateStatus(status:string) {
+    this.allocateStatus = status;
+    this.detectorRef.detectChanges();
+  }
+
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
@@ -1018,8 +1032,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               //???????
               this.codxBookingService
                 .approve(
-                  item.recID, //ApprovelTrans.RecID
-                  '5',
+                  item?.recID, //ApprovelTrans.RecID
+                  status,
                   '',
                   ''
                 )
@@ -1041,7 +1055,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         .subscribe((dataItem: any) => {
           if (dataItem) {
             this.codxBookingService
-              .getBookingByRecID(dataItem.recID)
+              .getBookingByRecID(dataItem?.recID)
               .subscribe((booking) => {
                 this.view.dataService.update(booking).subscribe((res) => {
                   if (res) {
