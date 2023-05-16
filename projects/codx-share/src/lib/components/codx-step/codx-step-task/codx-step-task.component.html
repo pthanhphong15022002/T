@@ -71,12 +71,6 @@
                             value: { task: task, group: groupTask }
                           }"
                         ></ng-container>
-                        <div class="ms-5">
-                          <ng-container
-                            [ngTemplateOutlet]="fileTemplate"
-                            [ngTemplateOutletContext]="{ value: task }"
-                          ></ng-container>
-                        </div>
                       </div>
                       <div>
                         <ng-container
@@ -86,6 +80,13 @@
                           }"
                         ></ng-container>
                       </div>
+                    </div>
+
+                    <div class="ms-5">
+                      <ng-container
+                        [ngTemplateOutlet]="fileTemplate"
+                        [ngTemplateOutletContext]="{value: task}"
+                      ></ng-container>
                     </div>
                   </div>
                 </ng-container>
@@ -206,18 +207,18 @@
 <ng-template #fileTemplate let-data="value">
   <codx-attachment
     #attachment
+    [objectType]="'DP_Instances_Steps_Tasks'"
     [objectId]="data?.recID"
     hideFolder="1"
     hideImageUpload="0"
     hideImageThumb="0"
     hideUploadBtn="1"
+    [showMessage]="0"
     hideDes="1"
     type="inline"
     allowMultiFile="1"
+    referType="source"
     displayThumb="full"
-    showMessage="0"
-    [fdName]="data?.stepID"
-    [dataSelected]="data"
   >
   </codx-attachment>
 </ng-template>

@@ -1,9 +1,8 @@
-<div>
-  <div class="d-flex justify-content-end" style="background-color: #f5f8fa">
-    <button type="button" class="btn btn-primary me-5 btn-sm d-flex align-items-center my-3" (click)="addContract()">
-      <span class="icon-add"></span>
+<div class="list-contracts">
+  <div class="d-flex justify-content-end p-2 bg-gray-100 mb-3">
+    <button type="button" class="btn btn-sm btn-primary" (click)="addContract()">
+      <i class="icon-add icon-16 ms-n1"></i>
       <codx-label
-        class="fs-5 font-weight-bold"
         [default]="'Thêm'"
       ></codx-label>
     </button>
@@ -14,7 +13,6 @@
       [ngTemplateOutletContext]="{}"
     ></ng-container>
   </div>
-  <div></div>
 </div>
 
 <ng-template #contractsTemplate let-data="value">
@@ -25,7 +23,7 @@
       </div>
       <div class="col-5 d-flex flex-column justify-content-center">
         <span class="fs-6 fw-bold">{{ contract?.contractName }}</span>
-        <span class="fs-6"
+        <span class="text-gray-600"
           >Ngày hiệu lực: {{ contract?.effectiveFrom | date : dateFomat }}</span
         >
       </div>
@@ -38,10 +36,9 @@
       <div class="col-2 d-flex justify-content-end align-items-center">
         <button
           type="button"
-          class="btn btn-outline-primary"
-          style="border-radius: 50px; padding: 0 10px !important"
+          class="btn btn-sm rounded-pill btn-outline-primary"
         >
-          <span class="fs-6">Chờ duyệt</span>
+          <span>Chờ duyệt</span>
         </button>
       </div>
     </div>

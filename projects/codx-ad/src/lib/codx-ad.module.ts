@@ -49,6 +49,8 @@ import { PopupInfoComponent } from './company-setting/popup-info/popup-info.comp
 import { PopActiveAccountComponent } from './users/pop-active-account/pop-active-account.component';
 import { DecentralizedGroupComponent } from './decentralized-group/decentralized-group.component';
 import { AddDecentralGroupMemComponent } from './decentralized-group/add-decentral-group-mem/add-decentral-group-mem.component';
+import { PopupOrderDetailComponent } from './company-setting/popup-order-detail/popup-order-detail.component';
+import { PopupExtendModuleComponent } from './company-setting/popup-extend-module/popup-extend-module.component';
 
 export const routes: Routes = [
   {
@@ -126,6 +128,8 @@ const T_Component: Type<any>[] = [
   PopActiveAccountComponent,
   DecentralizedGroupComponent,
   AddDecentralGroupMemComponent,
+  PopupOrderDetailComponent,
+  PopupExtendModuleComponent,
 ];
 @NgModule({
   imports: [

@@ -6,6 +6,7 @@ import {
   CacheService,
   FormModel,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { lstat } from 'fs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -130,13 +131,15 @@ export class CodxAdService {
         break;
       }
     }
-    let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+    if (invalid.length == 0) return;
+    let fieldName = Util.camelize(invalid[0]); //invalid[0]?.charAt(0)?.toUpperCase() + invalid[0]?.slice(1);
     if (gridViewSetup == null) {
       this.cache
         .gridViewSetup(formModel.formName, formModel.gridViewName)
-        .subscribe((res) => {
-          if (res) {
-            if (fieldName == 'Buid') fieldName = 'BUID';
+        .subscribe((grvSetup) => {
+          if (grvSetup) {
+            let res = Util.camelizekeyObj(grvSetup);
+            //if (fieldName == 'Buid') fieldName = 'BUID';
             gridViewSetup = res;
             this.notificationsService.notifyCode(
               'SYS009',
@@ -228,6 +231,16 @@ export class CodxAdService {
       'TenantModulesBusiness',
       'GetListValidRecIDAsync',
       [lstAD_UserRoles, userID]
+    );
+  }
+
+  getOrderDetail(orderRecID) {
+    return this.api.execSv(
+      'Tenant',
+      'ERM.Business.Tenant',
+      'OrdersBusiness',
+      'GetObjectAsync',
+      [orderRecID]
     );
   }
 

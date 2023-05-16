@@ -1,26 +1,17 @@
-<codx-detail-tmp
-  #itemDetailTemplate
-  [header]="header"
-  [dataItem]="itemDetail"
-  [footer]="!hideFooter ? footer : null"
-  [formModel]="view.formModel"
-  (clickMF)="clickMF($event, itemDetail)"
-  (changeDataMF)="changeDataMF($event, itemDetail)"
-  class="h-100 dt-es-view"
->
+<codx-detail-tmp #itemDetailTemplate [header]="header" [dataItem]="itemDetail" [footer]="!hideFooter ? footer : null"
+  [formModel]="view.formModel" (clickMF)="clickMF($event, itemDetail)" (changeDataMF)="changeDataMF($event, itemDetail)"
+  class="h-100 dt-es-view">
   <ng-template #titleTmp>
     <div class="w-100">
       <h3>
         {{ itemDetail?.emp?.employeeName }}
       </h3>
       <div class="d-flex gap-10 align-items-center">
-        <div
-          [innerHTML]="
+        <div [innerHTML]="
             itemDetail?.emp?.positionID
               | formatvalue : view.formModel : 'positionID'
               | async
-          "
-        ></div>
+          "></div>
         <div class="d-flex">
           <i class="icon-email me-2"></i>
           {{ itemDetail?.emp?.email }}
@@ -30,240 +21,155 @@
           {{ itemDetail?.emp?.mobile }}
         </div>
       </div>
-      <span
-        [innerHTML]="
+      <span [innerHTML]="
           itemDetail.orgUnitID
             | formatvalue : view.formModel : 'orgUnitID'
             | async
-        "
-      ></span>
+        "></span>
     </div>
   </ng-template>
 
   <!-- Header detail -->
   <ng-template #header>
     <div class="d-flex mb-2">
-      <codx-temp-full
-        class="user-center"
-        [title]="itemDetail?.ownerName"
-        [imageId]="itemDetail?.emp?.employeeID"
-        imageObjType="'HR_Employees'"
-        [referType]="'avt'"
-        [imageWidth]="80"
-        [titleTmp]="titleTmp"
-      >
+      <codx-temp-full class="user-center" [title]="itemDetail?.ownerName" [imageId]="itemDetail?.emp?.employeeID"
+        imageObjType="'HR_Employees'" [referType]="'avt'" [imageWidth]="80" [titleTmp]="titleTmp">
       </codx-temp-full>
     </div>
     <div class="d-flex flex-wrap">
-        <div class="d-flex align-items-center me-5 mb-5 col-12">
-            <codx-label
-              fiedName="Appoint"
-              [formModel]="formModel"
-              class="text-gray-700 label-colon"
-            >
-            </codx-label>
-            <span
-              class="fw-bold"
-              [innerHTML]="
+      <div class="d-flex align-items-center me-5 mb-5">
+        <codx-label fiedName="Appoint" [formModel]="formModel" class="text-gray-700 label-colon">
+        </codx-label>
+        <span class="fw-bold" [innerHTML]="
                 itemDetail?.appoint
                   | formatvalue : formModel : 'appoint'
                   | async
-              "
-            >
-            </span>
-          </div>
-
-      <div class="d-flex align-items-center me-5 mb-5 col-5">
-        <codx-label
-          fiedName="decisionNo"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-        >
-        </codx-label>
-        <span
-          class="fw-bold"
-          [innerHTML]="
-            itemDetail?.decisionNo
-              | formatvalue : formModel : 'decisionNo'
-              | async
-          "
-        >
+              ">
         </span>
       </div>
 
-      <div class="d-flex align-items-center me-5 mb-5 col-5">
-        <codx-label
-          fiedName="signedDate"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-        >
-        </codx-label>
-        <span
-          class="fw-bold"
-          [innerHTML]="
-            itemDetail?.signedDate
-              | formatvalue : formModel : 'signedDate'
-              | async
-          "
-        >
-        </span>
-      </div>
-      <div class="d-flex align-items-center me-5 mb-5 col-5">
-        <codx-label
-          fiedName="EffectedDate"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-        >
-        </codx-label>
-        <span
-          class="fw-bold"
-          [innerHTML]="
-            itemDetail?.effectedDate
-              | formatvalue : formModel : 'effectedDate'
-              | async
-          "
-        >
-        </span>
+      <div class="d-flex w-100">
+        <div class="d-flex align-items-center me-5 mb-5">
+          <codx-label fiedName="decisionNo" [formModel]="formModel" class="text-gray-700 label-colon">
+          </codx-label>
+          <span class="fw-bold" [innerHTML]="
+                itemDetail?.decisionNo
+                  | formatvalue : formModel : 'decisionNo'
+                  | async
+              ">
+          </span>
+        </div>
+
+        <div class="d-flex align-items-center me-5 mb-5">
+          <codx-label fiedName="signedDate" [formModel]="formModel" class="text-gray-700 label-colon">
+          </codx-label>
+          <span class="fw-bold" [innerHTML]="
+                itemDetail?.signedDate
+                  | formatvalue : formModel : 'signedDate'
+                  | async
+              ">
+          </span>
+        </div>
       </div>
 
-      <div class="d-flex align-items-center me-5 mb-5 col-5">
-        <codx-label
-          fiedName="expiredDate"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-        >
-        </codx-label>
-        <span
-          class="fw-bold"
-          [innerHTML]="
-            itemDetail?.expiredDate
-              | formatvalue : formModel : 'expiredDate'
-              | async
-          "
-        >
-        </span>
+      <div class="d-flex w-100">
+        <div class="d-flex align-items-center me-5 mb-5">
+          <codx-label fiedName="EffectedDate" [formModel]="formModel" class="text-gray-700 label-colon">
+          </codx-label>
+          <span class="fw-bold" [innerHTML]="
+                itemDetail?.effectedDate
+                  | formatvalue : formModel : 'effectedDate'
+                  | async
+              ">
+          </span>
+        </div>
+
+        <div class="d-flex align-items-center me-5 mb-5">
+          <codx-label fiedName="expiredDate" [formModel]="formModel" class="text-gray-700 label-colon">
+          </codx-label>
+          <span class="fw-bold" [innerHTML]="
+                itemDetail?.expiredDate
+                  | formatvalue : formModel : 'expiredDate'
+                  | async
+              ">
+          </span>
+        </div>
       </div>
 
-      <div class="d-flex align-items-center me-5 mb-5 col-5">
-        <codx-label
-          fiedName="OrgUnitID"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-        >
-        </codx-label>
-        <span
-          class="fw-bold"
-          [innerHTML]="
-            itemDetail?.orgUnitID | formatvalue : formModel : 'orgUnitID' | async
-          "
-        >
-        </span>
+      <div class="d-flex w-100">
+        <div class="d-flex align-items-center me-5 mb-5">
+          <codx-label fiedName="OrgUnitID" [formModel]="formModel" class="text-gray-700 label-colon">
+          </codx-label>
+          <span class="fw-bold" [innerHTML]="
+                itemDetail?.orgUnitID | formatvalue : formModel : 'orgUnitID' | async
+              ">
+          </span>
+        </div>
+
+        <div class="d-flex align-items-center me-5 mb-5">
+          <codx-label fiedName="OldOrgUnitID" [formModel]="formModel" class="text-gray-700 label-colon">
+          </codx-label>
+          <span class="fw-bold" [innerHTML]="
+                itemDetail?.oldOrgUnitID | formatvalue : formModel : 'oldOrgUnitID' | async
+              ">
+          </span>
+        </div>
       </div>
 
-      <div class="d-flex align-items-center me-5 mb-5 col-5">
-        <codx-label
-          fiedName="OldOrgUnitID"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-        >
-        </codx-label>
-        <span
-          class="fw-bold"
-          [innerHTML]="
-            itemDetail?.oldOrgUnitID | formatvalue : formModel : 'oldOrgUnitID' | async
-          "
-        >
-        </span>
-      </div>
-      <div class="d-flex align-items-center me-5 mb-5 col-5">
-        <codx-label
-          fiedName="JobLevel"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-        >
-        </codx-label>
-        <span
-          class="fw-bold"
-          [innerHTML]="
-            itemDetail?.jobLevel | formatvalue : formModel : 'jobLevel' | async
-          "
-        >
-        </span>
+      <div class="d-flex w-100">
+        <div class="d-flex align-items-center me-5 mb-5">
+          <codx-label fiedName="JobLevel" [formModel]="formModel" class="text-gray-700 label-colon">
+          </codx-label>
+          <span class="fw-bold" [innerHTML]="
+                itemDetail?.jobLevel | formatvalue : formModel : 'jobLevel' | async
+              ">
+          </span>
+        </div>
+
+        <div class="d-flex align-items-center me-5 mb-5">
+          <codx-label fiedName="OldJobLevel" [formModel]="formModel" class="text-gray-700 label-colon">
+          </codx-label>
+          <span class="fw-bold" [innerHTML]="
+                itemDetail?.oldJobLevel | formatvalue : formModel : 'oldJobLevel' | async
+              ">
+          </span>
+        </div>
       </div>
 
-      <div class="d-flex align-items-center me-5 mb-5 col-5">
-        <codx-label
-          fiedName="OldJobLevel"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-        >
-        </codx-label>
-        <span
-          class="fw-bold"
-          [innerHTML]="
-            itemDetail?.oldJobLevel | formatvalue : formModel : 'oldJobLevel' | async
-          "
-        >
-        </span>
-      </div>
-      <div class="d-flex align-items-center me-5 mb-5 col-5">
-        <codx-label
-          fiedName="PositionID"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-        >
-        </codx-label>
-        <span
-          class="fw-bold"
-          [innerHTML]="
-            itemDetail?.positionID | formatvalue : formModel : 'positionID' | async
-          "
-        >
-        </span>
+      <div class="d-flex w-100">
+        <div class="d-flex align-items-center me-5 mb-5">
+          <codx-label fiedName="PositionID" [formModel]="formModel" class="text-gray-700 label-colon">
+          </codx-label>
+          <span class="fw-bold" [innerHTML]="
+                itemDetail?.positionID | formatvalue : formModel : 'positionID' | async
+              ">
+          </span>
+        </div>
+
+        <div class="d-flex align-items-center me-5 mb-5">
+          <codx-label fiedName="OldPositionID" [formModel]="formModel" class="text-gray-700 label-colon">
+          </codx-label>
+          <span class="fw-bold" [innerHTML]="
+                itemDetail?.oldPositionID | formatvalue : formModel : 'oldPositionID' | async
+              ">
+          </span>
+        </div>
       </div>
 
-      <div class="d-flex align-items-center me-5 mb-5 col-5">
-        <codx-label
-          fiedName="OldPositionID"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-        >
+      <div class="d-flex align-items-center me-5 mb-5 ">
+        <codx-label fiedName="Note" [formModel]="formModel" class="text-gray-700 label-colon">
         </codx-label>
-        <span
-          class="fw-bold"
-          [innerHTML]="
-            itemDetail?.oldPositionID | formatvalue : formModel : 'oldPositionID' | async
-          "
-        >
-        </span>
-      </div>
-      <div class="d-flex align-items-center me-5 mb-5 col-12">
-        <codx-label
-          fiedName="Note"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-        >
-        </codx-label>
-        <span
-          class="fw-bold"
-          [innerHTML]="
+        <span class="fw-bold" [innerHTML]="
             itemDetail?.note | formatvalue : formModel : 'note' | async
-          "
-        >
+          ">
         </span>
       </div>
     </div>
   </ng-template>
 
   <ng-template #footer>
-    <codx-tabs
-      [TabControl]="tabControl"
-      [entityName]="formModel.entityName"
-      [objectID]="itemDetail?.recID"
-      [funcID]="formModel.funcID"
-      [transID]="itemDetail?.recID"
-      [approveStatus]="itemDetail?.approveStatus"
-    >
+    <codx-tabs [TabControl]="tabControl" [entityName]="formModel.entityName" [objectID]="itemDetail?.recID"
+      [funcID]="formModel.funcID" [transID]="itemDetail?.recID" [approveStatus]="itemDetail?.approveStatus">
     </codx-tabs>
   </ng-template>
 </codx-detail-tmp>

@@ -55,6 +55,7 @@ import { InputNumberDurationComponent } from './dynamic-process/popup-add-dynami
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
 import { PopupEditOwnerstepComponent } from './instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
+import { PopupSelectTempletComponent } from './instances/popup-select-templet/popup-select-templet.component';
 
 
 const routes: Routes = [
@@ -150,7 +151,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     TestComponent,
     InputNumberDurationComponent,
     ApprovalsComponent,
-    PopupEditOwnerstepComponent
+    PopupEditOwnerstepComponent,
+    PopupSelectTempletComponent
   ],
   imports: [
     RouterModule.forChild(routes),
