@@ -141,6 +141,12 @@ export class CodxCalendarComponent
               status: param.Template.TransType,
             });
           }
+
+          this.TM_TasksParam = JSON.parse(res['TM_Tasks']);
+          this.WP_NotesParam = JSON.parse(res['WP_Notes']);
+          this.CO_MeetingsParam = JSON.parse(res['CO_Meetings']);
+          this.EP_BookingRoomsParam = JSON.parse(res['EP_BookingRooms']);
+          this.EP_BookingCarsParam = JSON.parse(res['EP_BookingCars']);
         }
       });
 
