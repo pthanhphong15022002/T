@@ -93,6 +93,19 @@
     >
     </codx-input>
   </div>
+  <div class="d-flex justify-content-between">
+    <div>
+      <codx-input
+        [field]="'isDefault'"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="w-100 ms-1">
+      <codx-label [formModel]="form.formModel" fiedName="IsDefault">
+      </codx-label>
+    </div>
+  </div>
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
