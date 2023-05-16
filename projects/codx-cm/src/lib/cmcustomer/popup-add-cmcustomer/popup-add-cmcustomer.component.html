@@ -431,81 +431,23 @@
 </ng-template>
 <ng-template #tabAddress>
   <ng-container *ngIf="form?.formGroup">
-    <div class="d-flex justify-content-between">
-      <div class="mb-2">
+    <div class="d-flex align-items-center mt-2 mb-4">
+      <div class="fw-bold fs-6 text-primary">
         <codx-label
           fiedName="Address"
-          class="h4 text-dark text-primary fw-bold"
           [formModel]="form.formModel"
           default="Địa chỉ"
         >
         </codx-label>
       </div>
-      <div class="mb-2">
-        <button
-          type="button"
-          (click)="openPopupAddress()"
-          class="btn btn-outline-primary"
-        >
-          <i class="icon-add_location_alt icon-16 text-primary"></i>
-
-          <codx-label
-            name="lblAddAddress"
-            [formModel]="dialog.formModel"
-            default="Thêm"
-          ></codx-label>
-        </button>
-        <!-- <button
-          type="button"
-          class="btn btn-clean btn-sm btn-icon btn-icon-md"
-          (click)="openPopupAddress()"
-        ></button> -->
-      </div>
     </div>
-    <div
-      class="d-flex flex-column mt-2"
-      *ngIf="listAddress != null && listAddress.length > 0"
-    >
-      <ng-container *ngFor="let item of listAddress; index as i">
-        <div class="row mb-1">
-          <div class="col-3">
-            <span
-              class="label-colon text-gray-600"
-              [innerHTML]="
-                item?.adressType
-                  | formatvalue : formModelAddress : 'AdressType'
-                  | async
-              "
-            ></span>
-          </div>
-          <div class="col-7">
-            <span
-              *ngIf="item?.adressName"
-              [innerHTML]="
-                item?.adressName
-                  | formatvalue : formModelAddress : 'AdressName'
-                  | async
-              "
-            ></span>
-          </div>
-          <div class="col-2">
-            <div class="d-flex justify-content-end align-items-center">
-              <button
-                class="btn btn-sm btn-icon btn-light-warning"
-                (click)="openPopupAddress(item, 'edit')"
-              >
-                <i class="icon icon-14 icon-edit"></i>
-              </button>
-              <button
-                class="btn btn-sm btn-icon btn-light-danger ms-2"
-                (click)="removeAddress(item, i)"
-              >
-                <i class="icon icon-14 icon-close"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </ng-container>
+    <div>
+      <codx-address-cm
+        [type]="'formAdd'"
+        [funcID]="funcID"
+        [entityName]="dialog.formModel.entityName"
+        [id]="data.recID"
+      ></codx-address-cm>
     </div>
   </ng-container>
 </ng-template>
@@ -548,7 +490,6 @@
       </div>
       <div class="row">
         <div class="col-6">
-
           <div
             class="form-group"
             *ngIf="funcID == 'CM0104' || funcID == 'CM0103'"
@@ -777,7 +718,10 @@
                 </codx-input>
               </div>
               <div class="w-100 ms-1">
-                <codx-label [formModel]="form.formModel" fiedName="OfficialHour">
+                <codx-label
+                  [formModel]="form.formModel"
+                  fiedName="OfficialHour"
+                >
                 </codx-label>
               </div>
             </div>
@@ -798,7 +742,10 @@
       <div class="row">
         <div class="col-6">
           <div class="form-group" *ngIf="funcID == 'CM0101'">
-            <codx-label [formModel]="form.formModel" fiedName="CustomerResource">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="CustomerResource"
+            >
             </codx-label>
             <codx-input
               [formModel]="form.formModel"

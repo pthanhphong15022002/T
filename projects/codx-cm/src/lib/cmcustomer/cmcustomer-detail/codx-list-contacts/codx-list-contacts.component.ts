@@ -78,7 +78,7 @@ export class CodxListContactsComponent implements OnInit {
     this.request.funcID = 'CM0102';
     this.className = 'ContactsBusiness';
     this.fetch().subscribe((item) => {
-      this.listContacts = this.bringDefaultContactToFront(item);
+      this.listContacts = this.cmSv.bringDefaultContactToFront(item);
       this.loaded = true;
     });
   }
@@ -191,16 +191,16 @@ export class CodxListContactsComponent implements OnInit {
                 if (e?.event?.isDefault) {
                   this.listContacts[index].isDefault = false;
 
-                  this.listContacts = this.bringDefaultContactToFront(
+                  this.listContacts = this.cmSv.bringDefaultContactToFront(
                     this.cmSv.loadList(e.event, this.listContacts, 'update')
                   );
                 } else {
-                  this.listContacts = this.bringDefaultContactToFront(
+                  this.listContacts = this.cmSv.bringDefaultContactToFront(
                     this.cmSv.loadList(e.event, this.listContacts, 'update')
                   );
                 }
               } else {
-                this.listContacts = this.bringDefaultContactToFront(
+                this.listContacts = this.cmSv.bringDefaultContactToFront(
                   this.cmSv.loadList(e.event, this.listContacts, 'update')
                 );
               }
@@ -247,7 +247,7 @@ export class CodxListContactsComponent implements OnInit {
           this.isButton = true;
           if (e && e.event != null) {
             if (e.event?.recID) {
-              this.listContacts = this.bringDefaultContactToFront(
+              this.listContacts = this.cmSv.bringDefaultContactToFront(
                 this.cmSv.loadList(e.event, this.listContacts, 'update')
               );
               this.lstContactEmit.emit(this.listContacts);
@@ -268,7 +268,7 @@ export class CodxListContactsComponent implements OnInit {
           this.cmSv.updateContactCrm(data.recID).subscribe((res) => {
             if (res) {
               // this.getListContactByObjectID(this.objectID);
-              this.listContacts = this.bringDefaultContactToFront(
+              this.listContacts = this.cmSv.bringDefaultContactToFront(
                 this.cmSv.loadList(data, this.listContacts, 'delete')
               );
               this.notiService.notifyCode('SYS008');
@@ -288,18 +288,6 @@ export class CodxListContactsComponent implements OnInit {
     });
   }
 
-  bringDefaultContactToFront(contacts) {
-    const defaultContactIndex = contacts.findIndex(
-      (contact) => contact.isDefault
-    );
 
-    if (defaultContactIndex !== -1) {
-      const defaultContact = contacts[defaultContactIndex];
-      contacts.splice(defaultContactIndex, 1);
-      contacts.unshift(defaultContact);
-    }
-
-    return contacts;
-  }
   //#endregion
 }
