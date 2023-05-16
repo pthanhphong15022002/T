@@ -451,6 +451,14 @@ export class CodxCmService {
       [id]
     );
   }
+  getListContactByCustomerID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContactsBusiness',
+      'GetListContactByCusomerIDAsync',
+      data
+    );
+  }
 
   genAutoNumber(funcID: any, entityName: string, key: any) {
     return this.api.execSv<any>(
@@ -487,6 +495,38 @@ export class CodxCmService {
       'QuotationsLinesBusiness',
       'GetQuotationsLinesByTransIDAsync',
       transID
+    );
+  }
+  getPaymentsByContract(contractID){
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'GetPaymentsAsync',
+      contractID
+    );
+  }
+  addPayments(contracts){
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'AddPaymentsAsync',
+      contracts
+    );
+  }
+  editPayments(contracts){
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'UpdatePaymentsAsync',
+      contracts
+    );
+  }
+  deletePayments(contractsID){
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'DeletePaymentsAsync',
+      contractsID
     );
   }
 }

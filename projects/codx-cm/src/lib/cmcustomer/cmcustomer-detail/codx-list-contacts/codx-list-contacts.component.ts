@@ -31,6 +31,8 @@ export class CodxListContactsComponent implements OnInit {
   @Input() funcID: any;
   @Input() objectName: any;
   @Input() hidenMF = true;
+  @Input() type = '';
+  @Input() formModel: FormModel;
   @Output() contactPerson = new EventEmitter<any>();
   listContacts = [];
   formModelContact: FormModel;
@@ -159,7 +161,7 @@ export class CodxListContactsComponent implements OnInit {
           moreFuncName: title,
           action: action,
           dataContact: data,
-          type: 'formDetail',
+          type: this.type,
           recIDCm: this.objectID,
           objectType: this.funcID == 'CM0101' ? '1' : '3',
           objectName: this.objectName,
@@ -246,7 +248,7 @@ export class CodxListContactsComponent implements OnInit {
       .gridViewSetup(dataModel.formName, dataModel.gridViewName)
       .subscribe((res) => {
         var obj = {
-          type: 'formDetail',
+          type: this.type,
           recIDCm: this.objectID,
           objectName: this.objectName,
           objectType: this.funcID == 'CM0101' ? '1' : '3',

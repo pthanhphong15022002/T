@@ -26,6 +26,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isShowButton = true;
   @Input() isShowFile = true;
   @Input() isShowComment = true;
+  @Input() isDeepCopy = true;
   @Input() typeProgress = 1;
 
   @Input() isOnlyView = true;
@@ -133,7 +134,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (this.stepId) {
       this.currentStep = await firstValueFrom(this.api.exec<any>('DP', 'InstanceStepsBusiness', 'GetStepByIdAsync', stepId));
     } else {
-      this.currentStep = JSON.parse(JSON.stringify(this.dataSources));
+      this.currentStep = this.isDeepCopy ? JSON.parse(JSON.stringify(this.dataSources)) : this.dataSources;
     }
     const taskGroupList = this.currentStep?.tasks.reduce((group, product) => {
       const { taskGroupID } = product;
