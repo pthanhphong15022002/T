@@ -16,7 +16,6 @@ import {
   CodxFormComponent,
   CodxGridviewComponent,
   DataRequest,
-  DataRequest,
   DataService,
   DialogData,
   DialogRef,
