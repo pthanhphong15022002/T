@@ -45,9 +45,7 @@ export class PopupListContactsComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.type = dt?.data?.type;
-    if (this.type == 'formAdd') {
-      this.contactType = '1';
-    }
+
     this.recIDCm = dt?.data?.recIDCm;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.objectType = dt?.data?.objectType;
@@ -64,7 +62,6 @@ export class PopupListContactsComponent implements OnInit {
         this.changeContacts(0, this.lstSearch[0]);
       }
       this.loaded = true;
-
     });
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -75,76 +72,35 @@ export class PopupListContactsComponent implements OnInit {
   }
 
   onSave() {
+    this.contact.isDefault = false;
+    if (
+      this.contactType == null ||
+      this.contactType.trim() == ''
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ContactType'].headerText + '"'
+      );
+      return;
+    }
     if (this.type == 'formDetail') {
       this.contact.contactType = this.contactType;
       this.contact.objectID = this.recIDCm;
       this.contact.objectType = this.objectType;
       this.contact.objectName = this.objectName;
 
-      if (
-        this.contact.contactType == null ||
-        this.contact.contactType.trim() == ''
-      ) {
-        this.notiService.notifyCode(
-          'SYS009',
-          0,
-          '"' + this.gridViewSetup['ContactType'].headerText + '"'
-        );
-        return;
-      }
-      if (this.lstContactCm != null) {
-        if (
-          this.lstContactCm.some(
-            (x) =>
-              x.contactType.split(';').some((x) => x == '1') &&
-              x.recID != this.contact.recID
-          )
-        ) {
-          if (this.contactType.split(';').some((x) => x == '1')) {
-            var config = new AlertConfirmInputConfig();
-            config.type = 'YesNo';
-            this.notiService.alertCode('CM001').subscribe((x) => {
-              if (x.event.status == 'Y') {
-                this.cmSv
-                  .updateContactByPopupListCt(this.contact)
-                  .subscribe((res) => {
-                    if (res) {
-                      this.dialog.close(res);
-                    }
-                  });
-              }
-            });
-          } else {
-            this.cmSv
-              .updateContactByPopupListCt(this.contact)
-              .subscribe((res) => {
-                if (res) {
-                  this.dialog.close(res);
-                }
-              });
-          }
-        } else {
-          if (!this.contactType.split(';').some((x) => x == '1')) {
-            this.notiService.notifyCode('CM002');
-          } else {
-            this.cmSv
-              .updateContactByPopupListCt(this.contact)
-              .subscribe((res) => {
-                if (res) {
-                  this.dialog.close(res);
-                }
-              });
-          }
+
+      this.cmSv.updateContactByPopupListCt(this.contact).subscribe((res) => {
+        if (res) {
+          this.dialog.close(res);
         }
-      } else {
-        this.cmSv.updateContactByPopupListCt(this.contact).subscribe((res) => {
-          if (res) {
-            this.dialog.close(res);
-          }
-        });
-      }
+      });
     } else {
-      if (this.contact != null) this.dialog.close(this.contact);
+      if (this.contact != null){
+        this.contact.contactType = this.contactType;
+        this.dialog.close(this.contact);
+      }
       else return;
     }
   }
@@ -182,8 +138,8 @@ export class PopupListContactsComponent implements OnInit {
         var dialog = this.callFc.openForm(
           PopupQuickaddContactComponent,
           '',
-          600,
           500,
+          600,
           '',
           obj,
           '',

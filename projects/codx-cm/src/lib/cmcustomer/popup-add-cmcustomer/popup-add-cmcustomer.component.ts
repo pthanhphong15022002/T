@@ -26,7 +26,13 @@ import { PopupAddressComponent } from '../popup-address/popup-address.component'
 import { PopupListContactsComponent } from './popup-list-contacts/popup-list-contacts.component';
 import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxCmService } from '../../codx-cm.service';
-import { BS_AddressBook } from '../../models/cm_model';
+import {
+  BS_AddressBook,
+  CM_Competitors,
+  CM_Contacts,
+  CM_Customers,
+  CM_Partners,
+} from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -61,6 +67,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
   listAddressDelete: BS_AddressBook[] = [];
   disableObjectID = true;
   lstContact = [];
+  lstContactDeletes = [];
+
   contactType: any;
   count = 0;
   avatarChange = false;
@@ -95,9 +103,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
+    this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.action = dt?.data?.action;
     this.title = dt?.data?.title;
     this.autoNumber = dt?.data?.autoNumber;
@@ -164,7 +172,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           name: 'InformationDefault',
         },
       ];
-    }else{
+    } else {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
@@ -271,6 +279,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.contactType = null;
       this.data.objectID = null;
       this.data.objectName = null;
+      this.data.isDefault = false;
     }
     if (this.action === 'add' || this.action == 'copy') {
       op.method = 'AddCrmAsync';
@@ -286,8 +295,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.funcID == 'CM0104' ? this.data : null,
       this.funcID,
       this.dialog.formModel.entityName,
-      this.contactsPerson?.recID,
-      this.funcID == 'CM0101' ? '1' : this.funcID == 'CM0103' ? '3' : null,
+      this.lstContact,
+      this.action == 'edit' ? this.lstContactDeletes : [],
       this.listAddress,
       this.listAddressDelete,
     ];
@@ -475,6 +484,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
         this.lstContact = res;
       }
     });
+  }
+
+  lstContactEmit(e) {
+    if (e != null && e.length > 0) {
+      this.lstContact = e;
+    }
+  }
+
+  lstContactDeleteEmit(e){
+    if(e != null && e.length > 0){
+      this.lstContactDeletes = e;
+    }
   }
 
   fileImgAdded(e) {
