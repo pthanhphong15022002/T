@@ -63,7 +63,6 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     //#endregion
 
   fmSubContract: FormModel;
-  title = 'Hợp đồng lao động';
   tabInfo: any[] = [
     {
       icon: 'icon-info',
@@ -110,6 +109,8 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
+    console.log('headertext nhan vao', this.headerText);
+    
     this.employeeId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
     this.openFrom = data?.data?.openFrom;
@@ -280,6 +281,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   }
 
   onSaveForm() {
+    debugger
     console.log('data chuan bi luu', this.data);
     if(this.data.payForm == null) this.data.payForm = '';
     if(this.data.benefits == null) this.data.benefits = '';
@@ -306,7 +308,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
             //code test
             this.notify.notifyCode('SYS006');
             res[0].emp = this.employeeObj;
-            this.dialog && this.dialog.close(res);
+            this.dialog && this.dialog.close(res[0]);
             this.data = res;
           } else if (res[1]) {
             this.notify.alertCode(res[1]).subscribe((stt) => {
@@ -319,7 +321,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
                       if (result && result[0]) {
                         this.notify.notifyCode('SYS006');
                         result[0].emp = this.employeeObj;
-                        this.dialog && this.dialog.close(result);
+                        this.dialog && this.dialog.close(result[0]);
                       }
                     });
                 } else if (res[1] == 'HR009') {
@@ -332,7 +334,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
                       if (result && result[0]) {
                         this.notify.notifyCode('SYS006');
                         result[0].emp = this.employeeObj;
-                        this.dialog && this.dialog.close(result);
+                        this.dialog && this.dialog.close(result[0]);
                       }
                     });
                 }
@@ -346,7 +348,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         if (res && res[0]) {
           this.notify.notifyCode('SYS007');
           res[0].emp = this.employeeObj;
-          this.dialog && this.dialog.close(res);
+          this.dialog && this.dialog.close(res[0]);
         }
       });
     }

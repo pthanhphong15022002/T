@@ -338,12 +338,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
       }
     }
 
-    if (this.funcID != 'CM0102' && this.funcID != 'CM0104') {
-      if (this.contactsPerson == null) {
-        this.notiService.notifyCode('CM002'); //Chưa có msssg
-        return;
-      }
-    }
+    // if (this.funcID != 'CM0102' && this.funcID != 'CM0104') {
+    //   if (this.contactsPerson == null) {
+    //     this.notiService.notifyCode('CM002'); //Chưa có msssg
+    //     return;
+    //   }
+    // }
     if (this.data.phone != null && this.data.phone.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.phone, 'P')) return;
     }
@@ -519,7 +519,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           var dialog = this.callFc.openForm(
             PopupAddressComponent,
             '',
-            500,
+            650,
             550,
             '',
             obj,
@@ -599,7 +599,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         var dialog = this.callFc.openForm(
           PopupListContactsComponent,
           '',
-          500,
+          650,
           550,
           '',
           obj,
