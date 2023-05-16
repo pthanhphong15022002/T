@@ -2805,17 +2805,43 @@ codx-vll.vll-post{
 .card-report {
   .codx-image {
     display: unset !important;
-    height: 150px !important;
-    min-height: 150px!important;
+    height: 140px !important;
+    min-height: 140px!important;
     border-radius: 4px 4px 0 0;
   }
   .card-body{
-    min-height: 50px;
+    min-height: 50px!important;
     font-weight: 500;
     padding-top: 10px!important;
   }
 }
 
+codx-toolbar-report{
+  .btn-sm.h-25px{
+    height: 28px!important;
+  }
+  .e-control.e-datepicker.e-lib{
+    .e-input-group.e-control-wrapper.e-date-wrapper{
+      height: 28px!important;
+      border-radius: 20px!important;
+      padding-left: 5px!important;
+      padding-right: 5px!important;
+    }
+  }
+  .e-input-group-icon {
+    min-height: 26px!important;
+  }
+  .e-input-group.e-control-wrapper .e-input-group-icon {
+    font-size: 15px!important;
+  }
+  .container-fluid.w-100>.row>.col-2{
+    align-items: center;
+    display: flex;
+    justify-content: end;
+  }
+
+  
+}
 // boostraps\
 .e-multi-select-wrapper .e-delim-values{
   font-size: 13px!important;
