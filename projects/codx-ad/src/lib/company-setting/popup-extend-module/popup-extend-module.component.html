@@ -44,12 +44,13 @@
       [name]="grvTNOrders['Interval']?.referedValue"
       [value]="module?.interval"
       [showText]="true"
-      [showBgColor]="true"
+      [showBgColor]="false"
       class="badge badge-light badge-square badge-md fs-7 p-2"
     >
     </codx-vll>
   </div>
 </ng-template>
+
 <ng-template #moduleEmplDescTmp let-module>
   <div class="d-flex" *ngIf="childModule?.price">
     <codx-label name="lblPriceForEmpl" default="Nhân viên thường: ">
@@ -67,7 +68,7 @@
     <codx-vll
       [name]="grvTNOrders['Interval']?.referedValue"
       [value]="childModule?.interval"
-      [showText]="false"
+      [showText]="true"
       [showBgColor]="false"
       class="badge badge-light badge-square badge-md fs-7 p-2"
     >
