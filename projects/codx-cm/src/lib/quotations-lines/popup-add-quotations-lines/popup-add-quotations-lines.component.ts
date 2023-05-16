@@ -11,11 +11,15 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
   dialog: DialogRef;
   headerText: any;
   quotationsLine: any;
-  quotationsLines =[]
-  constructor(private codxCM: CodxCmService,@Optional() dt?: DialogData, @Optional() dialog?: DialogRef) {
+  listQuotationLines = [];
+  constructor(
+    private codxCM: CodxCmService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
     this.dialog = dialog;
     this.quotationsLine = JSON.parse(JSON.stringify(dt?.data?.quotationsLine));
-    this.quotationsLines = dt?.data?.quotationsLines??[]
+    this.listQuotationLines = dt?.data?.listQuotationLines ?? [];
     this.headerText = dt?.data?.headerText;
   }
 
@@ -24,26 +28,28 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
     this.dialog.close(this.quotationsLine);
   }
 
-  valueChange(e){
-    this.quotationsLine[e.field] = e.data
-    switch (e.field){
+  valueChange(e) {
+    if (!e.field || !e.data) return;
+    this.quotationsLine[e.field] = e.data;
+    switch (e.field) {
       case 'itemID':
-         this.loadItem(e.data) ;
+        this.loadItem(e.data);
         break;
       case 'salesPrice':
-         this.quotationsLine.costAmt = this.quotationsLine.quantity*this.quotationsLine.salesPrice
+        this.quotationsLine.costAmt =
+          this.quotationsLine.quantity * this.quotationsLine.salesPrice;
         break;
     }
   }
 
   loadItem(itemID) {
     this.codxCM.getItem(itemID).subscribe((items) => {
-      if(items){
-        this.quotationsLine.onhand= items.quantity 
-        this.quotationsLine.iDIM4 = items.warehouseID  // kho
-        this.quotationsLine.costPrice= items.costPrice // gia von
-        this.quotationsLine.uMID= items.uMID  // don vi tinh
-        this.quotationsLine.quantity= items.minSettledQty //so luong mua nhieu nhat
+      if (items) {
+        this.quotationsLine.onhand = items.quantity;
+        this.quotationsLine.iDIM4 = items.warehouseID; // kho
+        this.quotationsLine.costPrice = items.costPrice; // gia von
+        this.quotationsLine.uMID = items.umid; // don vi tinh
+        this.quotationsLine.quantity = items.minSettledQty; //so luong mua nhieu nhat
       }
       // (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
       // (this.idiM1.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
