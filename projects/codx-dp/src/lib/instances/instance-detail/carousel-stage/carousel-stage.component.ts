@@ -104,10 +104,10 @@ implements OnInit, AfterViewInit {
     return 'step';
   }
   getbackgroundColor(item) {
-    if(item.isSuccessStep) {
+    if(item?.isSuccessStep) {
       return '--primary-color:' + this.colorReasonSuccess?.color;
     }
-    else if(item.isFailStep) {
+    else if(item?.isFailStep) {
       return '--primary-color:' + this.colorReasonFail?.color;
     }
     return item?.backgroundColor
@@ -151,7 +151,7 @@ implements OnInit, AfterViewInit {
     let stepCrr = listStep?.filter(x=>x.stepStatus == '1' || x.isSuccessStep || x.isFailStep)[0];
     var stepId = '';
     if(stepCrr) {
-      stepId = stepCrr.stepID;
+      stepId = stepCrr?.stepID;
     }
     else {
       stepId = listStep[0]?.stepID;

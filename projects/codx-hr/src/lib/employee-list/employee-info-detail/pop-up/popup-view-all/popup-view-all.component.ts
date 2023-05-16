@@ -16,6 +16,7 @@ import {
   CodxFormComponent,
   CodxGridviewComponent,
   DataRequest,
+  DataRequest,
   DataService,
   DialogData,
   DialogRef,
@@ -31,6 +32,8 @@ import { PopupEVisasComponent } from 'projects/codx-hr/src/lib/employee-profile/
 import { PopupEWorkPermitsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ework-permits/popup-ework-permits.component';
 import { PopupEBasicSalariesComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { PopupEbenefitComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ebenefit/popup-ebenefit.component';
+import { PopupSubEContractComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-sub-econtract/popup-sub-econtract.component';
+import { PopupEProcessContractComponent } from 'projects/codx-hr/src/lib/employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 
 @Component({
   selector: 'lib-popup-view-all',
@@ -49,12 +52,17 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   formModel: any;
   formGroup: any;
 
+  //#region declare empInfo
+  infoPersonal: any;
+  //#endregion
+
   //#region funcID
   ePassportFuncID = 'HRTEM0202';
   eVisaFuncID = 'HRTEM0203';
   eWorkPermitFuncID = 'HRTEM0204';
   eBasicSalaryFuncID = 'HRTEM0401';
   ebenefitFuncID = 'HRTEM0403';
+  eContractFuncID = 'HRTEM0501';
   //#endregion
 
   //#region columnGrid
@@ -63,6 +71,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   workPermitColumnGrid: any;
   basicSalaryColumnGrid: any;
   benefitColumnGrid: any;
+  eContractColumnGrid;
   //#endregion
 
   //#region headerText
@@ -78,6 +87,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   filterEBenefitPredicates: string;
   startDateEBenefitFilterValue;
   endDateEBenefitFilterValue;
+  eContractHeaderText: any;
   //#endregion
 
   ops = ['y'];
@@ -126,6 +136,11 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   filterBenefit: TemplateRef<any>;
 
   dialogRef: any;
+
+  // EContract grid 
+  @ViewChild('eContractCol1', { static: true }) eContractCol1: TemplateRef<any>;
+  @ViewChild('eContractCol2', { static: true }) eContractCol2: TemplateRef<any>;
+  @ViewChild('eContractCol3', { static: true }) eContractCol3: TemplateRef<any>;
 
   constructor(
     private injector: Injector,
@@ -292,6 +307,116 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         }
       });
     }
+
+    if (!this.eContractColumnGrid) {
+      this.hrService.getHeaderText(this.eContractFuncID).then((res) => {
+        this.eContractHeaderText = res;
+        this.eContractColumnGrid = [
+          {
+            headerText:
+              this.eContractHeaderText['ContractTypeID'] +
+              ' | ' +
+              this.eContractHeaderText['EffectedDate'],
+
+            template: this.eContractCol1,
+            width: '250',
+          },
+          {
+            // headerText: this.eContractHeaderText['ContractNo'] +
+            // ' - ' +
+            // this.eContractHeaderText['SignedDate'],
+            headerText: 'Hợp đồng',
+            template: this.eContractCol2,
+            width: '150',
+          },
+          {
+            headerText: this.eContractHeaderText['Note'],
+            template: this.eContractCol3,
+            width: '150',
+          },
+        ];
+        if (this.funcID == this.eContractFuncID) {
+          this.columnGrid = this.eContractColumnGrid;
+          this.filter = null;
+          this.getEmpInfo();
+          //Get row count
+          this.getRowCount();
+        }
+      });
+    }
+    //#endregion
+
+    //#region get columnGrid EBasicSalary - Lương cơ bản
+    if (!this.basicSalaryColumnGrid) {
+      this.hrService.getHeaderText(this.funcID).then((res) => {
+        let basicSalaryHeaderText = res;
+        this.basicSalaryColumnGrid = [
+          {
+            headerText: basicSalaryHeaderText['BSalary'],
+            template: this.basicSalaryCol1,
+            width: '100',
+          },
+          {
+            headerText: basicSalaryHeaderText['SISalary'],
+            template: this.basicSalaryCol2,
+            width: '100',
+          },
+          {
+            headerText: basicSalaryHeaderText['JSalary'],
+            template: this.basicSalaryCol3,
+            width: '150',
+          },
+          {
+            headerText: basicSalaryHeaderText['EffectedDate'],
+            template: this.basicSalaryCol4,
+            width: '150',
+          },
+        ];
+        if (this.funcID == this.eBasicSalaryFuncID) {
+          this.columnGrid = this.basicSalaryColumnGrid;
+          this.filter = null;
+          //Get row count
+          this.getRowCount();
+        }
+      });
+    }
+
+    if (!this.eContractColumnGrid) {
+      this.hrService.getHeaderText(this.eContractFuncID).then((res) => {
+        this.eContractHeaderText = res;
+        this.eContractColumnGrid = [
+          {
+            headerText:
+              this.eContractHeaderText['ContractTypeID'] +
+              ' | ' +
+              this.eContractHeaderText['EffectedDate'],
+
+            template: this.eContractCol1,
+            width: '250',
+          },
+          {
+            // headerText: this.eContractHeaderText['ContractNo'] +
+            // ' - ' +
+            // this.eContractHeaderText['SignedDate'],
+            headerText: 'Hợp đồng',
+            template: this.eContractCol2,
+            width: '150',
+          },
+          {
+            headerText: this.eContractHeaderText['Note'],
+            template: this.eContractCol3,
+            width: '150',
+          },
+        ];
+        if (this.funcID == this.eContractFuncID) {
+          this.columnGrid = this.eContractColumnGrid;
+          this.filter = null;
+          this.getEmpInfo();
+          //Get row count
+          this.getRowCount()
+        }
+      });
+    }
     //#endregion
 
     //#region get columnGrid EBenefit - Phụ cấp
@@ -369,7 +494,22 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       } else {
         this.dialogRef.close('none');
       }
-    } else {
+    }
+    if(this.funcID == this.eContractFuncID){
+      debugger
+      let lstData = this.gridView.dataService.data;
+      let found = lstData.find(
+        (val) => val.isCurrent == true
+      )
+        if(found){
+          debugger
+          this.dialogRef.close(found)
+        }
+        else{
+          this.dialogRef.close('none');
+        }
+    } 
+    else {
       this.dialogRef.close();
     }
   }
@@ -382,6 +522,9 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         event[i].disabled = true;
         break;
       }
+    }
+    if(this.funcID == this.eContractFuncID){
+      this.hrService.handleShowHideMF(event, data, this.formModel);
     }
   }
 
@@ -398,6 +541,8 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
           this.HandleEmployeeBasicSalariesInfo(event.text, 'edit', data);
         } else if (funcID == this.ebenefitFuncID) {
           this.HandleEmployeeBenefit(event.text, 'edit', data);
+        } else if(funcID == this.eContractFuncID){
+          this.handleEContractInfo(event.text, 'edit', data);
         }
         break;
       case 'SYS04': //copy
@@ -461,7 +606,18 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            }
+            } else if (funcID == this.eContractFuncID) {
+              this.hrService
+                .deleteEContract(data)
+                .subscribe((p) => {
+                  if (p[0] != null) {
+                    this.notify.notifyCode('SYS008');
+                    this.updateGridView(this.gridView, 'delete', data);
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            } 
           }
         });
     }
@@ -489,6 +645,10 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       (this.gridView.dataService as CRUDService).copy().subscribe((res) => {
         this.HandleEmployeeBenefit(actionHeaderText, 'copy', res);
       });
+    } else if (this.funcID == this.eContractFuncID) {
+      (this.gridView.dataService as CRUDService).copy().subscribe((res) => {
+        this.handleEContractInfo(actionHeaderText, 'copy', res);
+      });
     }
   }
 
@@ -499,19 +659,23 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   ) {
     if (!dataItem) (gridView?.dataService as CRUDService)?.clear();
     else {
+      debugger
       let returnVal = 0;
       if (actionType == 'add' || actionType == 'copy') {
-        (gridView?.dataService as CRUDService)?.add(dataItem, 0).subscribe();
+        (gridView?.dataService as CRUDService)?.add(dataItem).subscribe();
+      this.df.detectChanges();
+      debugger
         returnVal = 1;
       } else if (actionType == 'edit') {
         (gridView?.dataService as CRUDService)?.update(dataItem).subscribe();
-      } else if ((actionType = 'delete')) {
+        this.df.detectChanges();
+      } else if ((actionType == 'delete')) {
         (gridView?.dataService as CRUDService)?.remove(dataItem).subscribe();
+        this.df.detectChanges();
         returnVal = -1;
       }
       // return returnVal;
       this.rowCount += returnVal;
-      this.df.detectChanges();
     }
   }
 
@@ -728,4 +892,53 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     this.UpdateEBenefitPredicate();
   }
   //#endregion
+
+  getEmpInfo(){
+    if (!this.infoPersonal) {
+      let empRequest = new DataRequest();
+      empRequest.entityName = 'HR_Employees';
+      empRequest.dataValues = this.employeeId;
+      empRequest.predicates = 'EmployeeID=@0';
+      empRequest.pageLoading = false;
+      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+        if (emp[1] > 0) {
+          this.infoPersonal = emp[0][0];
+        }
+      });
+    }
+  }
+
+  handleEContractInfo(actionHeaderText, actionType: string, data: any) {
+    debugger
+    let option = new SidebarModel();
+    option.Width = '850px';
+    option.FormModel = this.formModel;
+    let isAppendix = false;
+    debugger
+    if (
+      (actionType == 'edit' || actionType == 'copy') &&
+      data.isAppendix == true
+    ) {
+      isAppendix = true;
+    }
+    let dialogAdd = this.callfunc.openSide(
+      isAppendix ? PopupSubEContractComponent : PopupEProcessContractComponent,
+      {
+        actionType: actionType,
+        dataObj: data,
+        empObj: this.infoPersonal,
+        headerText:
+          actionHeaderText + ' ' + this.headerText,
+        employeeId: this.employeeId,
+        funcID: this.eContractFuncID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res.event) {
+        this.updateGridView(this.gridView, actionType, res.event);
+      }
+      this.df.detectChanges();
+    });
+  }
 }

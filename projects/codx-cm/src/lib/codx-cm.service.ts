@@ -132,6 +132,15 @@ export class CodxCmService {
     );
   }
 
+  checkCustomerIDByDealsAsync(customerID) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'CheckCustomerIDByDealsAsync',
+      [customerID]
+    );
+  }
+
   addDealCompetitor(dealCompetitor) {
     return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealCompetitorAsync', [
       dealCompetitor,
@@ -297,7 +306,7 @@ export class CodxCmService {
       data
     );
   }
-  editInstance(data:any){
+  editInstance(data: any) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
@@ -442,6 +451,14 @@ export class CodxCmService {
       [id]
     );
   }
+  getListContactByCustomerID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContactsBusiness',
+      'GetListContactByCusomerIDAsync',
+      data
+    );
+  }
 
   genAutoNumber(funcID: any, entityName: string, key: any) {
     return this.api.execSv<any>(
@@ -471,8 +488,8 @@ export class CodxCmService {
       data
     );
   }
- //quotation lines test
-  getQuotationsLinesByTransID(transID){
+  //quotation lines test
+  getQuotationsLinesByTransID(transID) {
     return this.api.exec<any>(
       'CM',
       'QuotationsLinesBusiness',
@@ -480,4 +497,43 @@ export class CodxCmService {
       transID
     );
   }
+  getPaymentsByContract(contractID) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'GetPaymentsAsync',
+      contractID
+    );
+  }
+  addPayments(contracts) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'AddPaymentsAsync',
+      contracts
+    );
+  }
+  editPayments(contracts) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'UpdatePaymentsAsync',
+      contracts
+    );
+  }
+  deletePayments(contractsID) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'DeletePaymentsAsync',
+      contractsID
+    );
+  }
+
+  // QuotationLine
+  // loadItem
+  getItem(itemID) {
+    return this.api.exec<any>('IV', 'ItemsBusiness', 'LoadDataAsync', itemID);
+  }
+  
 }

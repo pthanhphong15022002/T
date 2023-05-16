@@ -74,7 +74,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   funcType: any;
   onSaving = false;
   categoryID: any;
-
+  subFuncID = EPCONST.FUNCID.S_Category;
   constructor(
     private injector: Injector,
     private auth: AuthStore,
@@ -94,6 +94,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
       this.isAddNew = false;
     }
     this.formModel = dialogRef?.formModel;
+    this.funcID = this.formModel.funcID;
     if (!this.isAddNew) {
       if (this.data?.category == '1') {
         this.radioPersonalCheck = true;
@@ -121,27 +122,34 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
           this.nagetivePhysical = StationerySetting_1.NagetivePhysical;
           this.isPriceVisible = StationerySetting_1.ShowUnitPrice ?? false;
         }
-      });    
-      this.codxBookingService
+      });
+    this.codxBookingService
       .getDataValueOfSettingAsync(_EPParameters, null, '4')
       .subscribe((res: string) => {
         if (res) {
           let stationerySetting_4 = JSON.parse(res);
           if (stationerySetting_4 != null && stationerySetting_4.length > 0) {
-            let setting= stationerySetting_4.filter((x:any) => x.Category == EPCONST.ENTITY.S_Bookings);
-            if(setting!=null){
-              this.approvalRule = setting[0]?.ApprovalRule;
-              this.categoryID=setting[0]?.CategoryID;
-            }
-            else{
-              this.approvalRule='1';//Đề phòng trường hợp setting lỗi/ thì lấy duyệt theo quy trình
-              this.categoryID='ES_EP003';
+            let setting = stationerySetting_4.filter(
+              (x: any) => x.Category == EPCONST.ENTITY.S_Bookings
+            );
+            if (setting != null) {
+              this.approvalRule =
+                setting[0]?.ApprovalRule != null
+                  ? setting[0]?.ApprovalRule
+                  : '1';
+              this.categoryID =
+                setting[0]?.CategoryID != null
+                  ? setting[0]?.CategoryID
+                  : EPCONST.ES_CategoryID.Stationery;
+            } else {
+              this.approvalRule = '1'; //Đề phòng trường hợp setting lỗi/ thì lấy duyệt theo quy trình
+              this.categoryID = EPCONST.ES_CategoryID.Stationery;
             }
           }
         }
       });
     this.cache
-      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+      .gridViewSetup("Stationery", "grvStationery")
       .subscribe((gv) => {
         this.grvStationery = gv;
       });
@@ -508,7 +516,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
 
   filterStationery(groupID: string = null) {
     let resourceModel = new GridModels();
-    (resourceModel.funcID = 'EP8S21'),
+    (resourceModel.funcID = EPCONST.FUNCID.S_Category),
       (resourceModel.entityName = 'EP_Resources');
     resourceModel.pageSize = 20;
     this.groupID = groupID;

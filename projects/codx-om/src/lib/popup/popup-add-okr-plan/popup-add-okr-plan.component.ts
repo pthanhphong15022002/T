@@ -55,6 +55,7 @@ export class PopupAddOKRPlanComponent
   okrGrv: any;
   mssgCode: any;
   onSaving=false;
+  useSKR=false;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -74,6 +75,7 @@ export class PopupAddOKRPlanComponent
     this.okrVll = dialogData.data[7];
     this.funcType = dialogData.data[8];
     this.okrGrv = dialogData.data[9];
+    this.useSKR = dialogData.data[10];
 
     this.dialogRef = dialogRef;
     this.formModel = dialogRef.formModel;

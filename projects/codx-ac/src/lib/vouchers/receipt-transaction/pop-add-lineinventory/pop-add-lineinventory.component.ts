@@ -80,6 +80,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
       return;
     } else {
       switch (this.type) {
+        case 'copy':
         case 'add':
           this.api
             .execAction<any>(

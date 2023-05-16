@@ -97,7 +97,7 @@ codx-view-list-detail {
 }
 .fs-6 {
   //font-size: var(--fs-6) !important;
-  font-size: 1.035rem !important;
+  font-size: 13.5px!important;
 }
 /** custom bootstrap  **/
 .rounded-4 {
@@ -1466,7 +1466,7 @@ a {
 
 .label-colon span{
   //position: relative;
-  //padding-right: 10px;
+  padding-right: 7px;
   min-height: 18px;
  // display: block;
   line-height: 18px;
@@ -1803,9 +1803,13 @@ codx-dropdown-calendar {
 // }
 
 /*** codx-tabs ***/
+codx-view-list-detail .nav-link {
+  padding: 6px 0px;
+  margin: 0 7px;
+}
 codx-tabs {
   .nav-link {
-    padding: 6px 10px;
+    padding: 6px 8px;
     color: #323232;
   }
 
@@ -2790,10 +2794,71 @@ codx-vll.vll-post{
 .text-highlight >em
 {
   color: #1A73EC;
+  color: var(--primary);
 }
 /*TBChung thêm á đừng xóa tội em*/
-.e-checkbox-wrapper .e-checkbox {
+.card-survey .e-checkbox-wrapper .e-checkbox{
   opacity: 1;
+}
+
+
+.card-report {
+  .codx-image {
+    display: unset !important;
+    height: 140px !important;
+    min-height: 140px!important;
+    border-radius: 4px 4px 0 0;
+  }
+  .card-body{
+    min-height: 50px!important;
+    font-weight: 500;
+    padding-top: 10px!important;
+  }
+}
+
+codx-toolbar-report{
+  .btn-sm.h-25px{
+    height: 28px!important;
+  }
+  .e-control.e-datepicker.e-lib{
+    .e-input-group.e-control-wrapper.e-date-wrapper{
+      height: 28px!important;
+      border-radius: 20px!important;
+      padding-left: 5px!important;
+      padding-right: 5px!important;
+    }
+  }
+  .e-input-group-icon {
+    min-height: 26px!important;
+  }
+  .e-input-group.e-control-wrapper .e-input-group-icon {
+    font-size: 15px!important;
+  }
+  .container-fluid.w-100>.row>.col-2{
+    align-items: center;
+    display: flex;
+    justify-content: end;
+  }
+
+  
+}
+// boostraps\
+.e-multi-select-wrapper .e-delim-values{
+  font-size: 13px!important;
+}
+.e-multi-select-wrapper .e-chips {
+  
+  .e-delim-values{
+    font-size: 13px!important;
+    font-weight: normal!important;
+
+  }
+  background-color: var(--primary);
+  border-radius: 2px;
+  span{
+    font-size: 13px!important;
+    font-weight: normal!important;
+  }
 }
 
 //calendar
@@ -2806,4 +2871,9 @@ codx-vll.vll-post{
 }
 .text-primary-dark{
   color: var(--primary-dark);
+}
+
+
+.cal-notes .checkbox-list {
+  padding: 7px 16px;
 }

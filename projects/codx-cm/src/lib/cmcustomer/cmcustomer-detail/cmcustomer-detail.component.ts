@@ -19,9 +19,9 @@ import {
   AlertConfirmInputConfig,
   NotificationsService,
 } from 'codx-core';
-import { PopupQuickaddContactComponent } from '../popup-add-cmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
+import { PopupQuickaddContactComponent } from './codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CM_Contacts } from '../../models/cm_model';
-import { PopupListContactsComponent } from '../popup-add-cmcustomer/popup-list-contacts/popup-list-contacts.component';
+import { PopupListContactsComponent } from './codx-list-contacts/popup-list-contacts/popup-list-contacts.component';
 
 @Component({
   selector: 'codx-cmcustomer-detail',
@@ -72,8 +72,8 @@ export class CmcustomerDetailComponent implements OnInit {
     {
       name: 'Quotations',
       textDefault: 'Báo giá',
+      icon: 'icon-monetization_on',
       isActive: false,
-      template: null,
     },
     { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
   ];
@@ -83,6 +83,7 @@ export class CmcustomerDetailComponent implements OnInit {
   id = '';
   tabDetail = [];
   formModelContact: FormModel;
+  formModelAddress: FormModel;
   gridViewSetup: any;
   listAddress = [];
   contactPerson = new CM_Contacts();
@@ -100,11 +101,15 @@ export class CmcustomerDetailComponent implements OnInit {
   async ngOnInit() {
     // this.getGridviewSetup();
     // this.getVllByGridViewSetupContact();
+    this.getFormModelAddress();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
-      if (changes['dataSelected'].currentValue != null && changes['dataSelected'].currentValue?.recID) {
+      if (
+        changes['dataSelected'].currentValue != null &&
+        changes['dataSelected'].currentValue?.recID
+      ) {
         if (changes['dataSelected'].currentValue?.recID == this.id) return;
         this.id = changes['dataSelected'].currentValue?.recID;
         this.getOneCustomerDetail();
@@ -112,14 +117,7 @@ export class CmcustomerDetailComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    this.tabControl.push({
-      name: 'Contract',
-      textDefault: 'Hợp đồng',
-      isActive: false,
-      template: this.contract,
-    });
-  }
+  ngAfterViewInit(): void {}
 
   getOneCustomerDetail() {
     this.viewTag = '';
@@ -136,7 +134,6 @@ export class CmcustomerDetailComponent implements OnInit {
     this.cmSv.getContactByObjectID(objectID).subscribe((res) => {
       if (res) this.contactPerson = res;
       this.viewTag = this.dataSelected?.tags;
-
     });
   }
 
@@ -190,14 +187,26 @@ export class CmcustomerDetailComponent implements OnInit {
           isActive: false,
         },
         {
+          name: 'Address',
+          textDefault: 'Địa chỉ',
+          icon: 'icon-location_on',
+          isActive: false,
+        },
+        {
           name: 'Deal',
           textDefault: 'Cơ hội',
           icon: 'icon-add_shopping_cart',
           isActive: false,
         },
         {
-          name: 'Product',
-          textDefault: 'Sản phẩm đã mua',
+          name: 'Quotations',
+          textDefault: 'Báo giá',
+          icon: 'icon-monetization_on',
+          isActive: false,
+        },
+        {
+          name: 'Contract',
+          textDefault: 'Hợp đồng',
           icon: 'icon-shopping_bag',
           isActive: false,
         },
@@ -209,6 +218,12 @@ export class CmcustomerDetailComponent implements OnInit {
           textDefault: 'Thông tin chung',
           icon: 'icon-info',
           isActive: true,
+        },
+        {
+          name: 'Address',
+          textDefault: 'Địa chỉ',
+          icon: 'icon-location_on',
+          isActive: false,
         },
       ];
     } else if (funcID == 'CM0103') {
@@ -225,6 +240,12 @@ export class CmcustomerDetailComponent implements OnInit {
           icon: 'icon-contact_phone',
           isActive: false,
         },
+        {
+          name: 'Address',
+          textDefault: 'Địa chỉ',
+          icon: 'icon-location_on',
+          isActive: false,
+        },
       ];
     } else {
       this.tabDetail = [
@@ -235,6 +256,12 @@ export class CmcustomerDetailComponent implements OnInit {
           isActive: true,
         },
         {
+          name: 'Address',
+          textDefault: 'Địa chỉ',
+          icon: 'icon-location_on',
+          isActive: false,
+        },
+        {
           name: 'DealCompetitors',
           textDefault: 'Cơ hội liên quan',
           icon: 'icon-shopping_cart',
@@ -243,7 +270,14 @@ export class CmcustomerDetailComponent implements OnInit {
       ];
     }
   }
-
+  getFormModelAddress() {
+    let dataModel = new FormModel();
+    dataModel.formName = 'CMAddressBook';
+    dataModel.gridViewName = 'grvCMAddressBook';
+    dataModel.entityName = 'BS_AddressBook';
+    dataModel.funcID = this.funcID;
+    this.formModelAddress = dataModel;
+  }
   getFunctionlist(funcID) {
     this.cache.functionList(funcID).subscribe((fun) => {
       var formMD = new FormModel();

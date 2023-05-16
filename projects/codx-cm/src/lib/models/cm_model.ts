@@ -1,3 +1,5 @@
+import { Util } from 'codx-core';
+
 export class CM_Products {
   recID: string;
   productID: string;
@@ -52,7 +54,7 @@ export class CM_Quotations {
   orderPoolID: string;
   customerID: string;
   salespersonID: string;
-  contactID : string;
+  contactID: string;
   consultantID: string;
   delTermID: string;
   delModeID: string;
@@ -60,7 +62,7 @@ export class CM_Quotations {
   pmtMethodID: string;
   currencyID: string;
   status: string = '1';
-  exchangeRate:number ;
+  exchangeRate: number;
   deadline: Date;
   memo: string;
   totalAmt: number;
@@ -98,7 +100,7 @@ export class CM_QuotationsLines {
   iDIM3: string;
   IDIM4: string;
   quantity: number;
-  uMID: string;
+  umid: string;
   conversion: number;
   cWUM: string;
   cWConversion: number;
@@ -230,17 +232,20 @@ export class CM_Customers {
   email: string;
   webPage: string;
   establishDate: Date;
-  headcounts: string;
+  headcounts: number;
   annualRevenue: number;
   workingDays: string;
   officialHour: boolean;
   countryID: string;
   provinceID: string;
   districtID: string;
+  wardID: string;
   regionID: string;
   consultantID: string;
   invoiceAccount: string;
   isBlackList: boolean;
+  isNew: boolean;
+  isSale: boolean;
   stop: boolean;
   stopReason: string;
   customerFrom: Date;
@@ -289,6 +294,7 @@ export class CM_Contacts {
   provinceID: string;
   districtID: string;
   wardID: string;
+  regionID: string;
   postalCode: string;
   mobile: string;
   phone: string;
@@ -299,7 +305,7 @@ export class CM_Contacts {
   objectType: string;
   objectID: string;
   objectName: string;
-  cumulatedPonumbers: number;
+  cumulatedPoints: number;
   loyaltyGroupID: string;
   vIP: boolean;
   isDefault: boolean;
@@ -362,81 +368,115 @@ export class BS_AddressBook {
   divisionID: string;
   wardID: string;
 }
+export class CM_ContractsPayments {
+  recID: string = Util.uid(); //Mã thanh toán
+  transID: string; //Mã giao dịch
+  lineType: string; //Loại: Lịch thanh toán, Lịch sử thanh toán
+  rowNo: number; //Số thứ tự hàng
+  scheduleDate: Date; //Ngày hẹn thanh toán
+  schedulePct: number; //
+  scheduleBaseOn: string; //
+  scheduleAmt: number; //Số tiền hẹn thanh toán
+  interestAmt: number; //Số tiền lãi
+  adjustedAmt: number; //Số tiền được điều chỉnh
+  vATAmt: number; //Số tiền thuế VAT
+  totalAmt: number; //Tổng tiền
+  remainAmt: number; //Dư nợ còn lại
+  memo: string; //Ghi chú
+  status: string; //Trạng thái
+  paidDate: Date; //Ngày đã thanh toán
+  paidAmt: number; //Số tiền đã thanh toán
+  paidnumbererest: number; //Số tiền lãi đã thanh toán
+  paidVAT: number; //Số tiền thuế VAT đã thanh toán
+  paidNote: string; //Ghi chú thanh toán
+  refNo: string; //Số tham chiếu
+  refDate: Date; //Ngày tham chiếu
+  refLineID: string; //Mã dòng tham chiếu
+  extendOn: Date; //Ngày gia hạn
+  invoiced: string; //Đã xuất hóa đơn
+  posted: string; //
+  note: string; //Ghi chú lịch thanh toán
+  autoCreated: boolean; //Tạo tự động
+  createdOn: Date; //Ngày tạo
+  createdBy: string; //Người tạo
+  modifiedOn: Date; //Ngày chỉnh sửa
+  modifiedBy: string; //Người chỉnh sửa
+}
 export class CM_Contracts {
-  recID: string;//Mã hợp đồng
-  contractID: string;//Mã hợp đồng
-  contractDate: Date;//Ngày lập hợp đồng
-  contractName: string;//Tên hợp đồng
-  contractType: string;//Loại hợp đồng
-  useType: string;//Loại hợp đồng sử dụng: Một lần, nhiều lần
-  category: string;//Phân loại
-  assetID: string;//Mã tài sản
-  projectID: string;//Mã dự án
-  quotationID: string;//Báo giá
-  orderID: string;//Đơn hàng
-  dealID: string;//Cơ hội
-  objectType: string;//Loại đối tượng
-  objectID: string;//Mã đối tượng
-  objectName: string;//Tên đối tượng
-  contactID: string;//Liên hệ
-  customerID: string;//Khách hàng
-  currencyID: string;//Tiền tệ
-  exchangeRate: number;//Tỷ giá hối đoái
-  contractAmt: number;//Giá trị hợp đồng
-  VATID: string;//VAT
-  paymentStatus: string;//Trạng thái thanh toán
-  paidAmt: number;//Số tiền đã thanh toán
-  remainAmt: number;//Số tiền còn lại
-  terms: string;//Điều khoản hợp đồng -- thiếu vll
-  status: string;//Trạng thái
-  periods: number;//Giai đoạn
-  numbererval: string;//Khoảng thời gian
-  effectiveFrom: Date;//Hiệu lực từ
-  effectiveTo: Date;//Hiệu lực đến
-  extendOn: Date;//Ngày gia hạn
-  disposalOn: Date;//Ngày thanh lý
-  warantyMonths: number;//Số tháng bảo hành
-  warantyExpired: Date;//Ngày hết hạn bảo hành
-  salespersonID: string;//Mã nhân viên kinh doanh
-  consultantID: string;//Mã nhân viên tư vấn
-  pmtMethodID: string;//Phương thức thanh toán
-  pmtTermID: string;//Điều khoản thanh toán
-  pmtStatus: string;//Tình trạng thanh toán
-  delModeID: string;//Hình thức giao hàng
-  delTermID: string;//Điều khoản giao hàng
-  delPrice: number;//Phí vận chuyển
-  delStatus: string;//Tình trạng giao hàng
-  parentID: string;//Tham chiếu cha
-  refType: string;//Loại tham chiếu
-  refID: string;//Mã tham chiếu
-  refNo: string;//Số tham chiếu
-  attachments: number;//Số lượng file đính kèm
-  note: string;//Diễn giải
-  stop: boolean;//Tạm ngừng
-  companyID: string;//Bên A
-  companyName: string;//Tên công ty
-  taxCode: string;//Mã số thuế
-  address: string;//Địa chỉ
-  phone: string;//Số điện thoại
-  faxNo: string;//Số Fax
-  representative: string;//Người đại diện
-  jobTitle: string;//Chức vụ
-  bankAccount: string;//Tài khoản ngân hàng
-  bankID: string;//Mở tại ngân hàng
-  owner: string;//Người sở hữu
-  bUID: string;//Đơn vị
-  createdOn: Date;//Ngày tạo
-  createdBy: string;//Người tạo
-  modifiedOn: Date;//Ngày chỉnh sửa
-  modifiedBy: string;//Người chỉnh sửa
+  recID: string = Util.uid(); //Mã hợp đồng
+  contractID: string; //Mã hợp đồng
+  contractDate: Date; //Ngày lập hợp đồng
+  contractName: string; //Tên hợp đồng
+  contractType: string; //Loại hợp đồng
+  useType: string; //Loại hợp đồng sử dụng: Một lần, nhiều lần
+  category: string; //Phân loại
+  assetID: string; //Mã tài sản
+  projectID: string; //Mã dự án
+  quotationID: string; //Báo giá
+  orderID: string; //Đơn hàng
+  dealID: string; //Cơ hội
+  objectType: string; //Loại đối tượng
+  objectID: string; //Mã đối tượng
+  objectName: string; //Tên đối tượng
+  contactID: string; //Liên hệ
+  customerID: string; //Khách hàng
+  currencyID: string; //Tiền tệ
+  exchangeRate: number; //Tỷ giá hối đoái
+  contractAmt: number; //Giá trị hợp đồng
+  VATID: string; //VAT
+  paymentStatus: string; //Trạng thái thanh toán
+  paidAmt: number; //Số tiền đã thanh toán
+  remainAmt: number; //Số tiền còn lại
+  terms: string; //Điều khoản hợp đồng -- thiếu vll
+  status: string; //Trạng thái
+  periods: number; //Giai đoạn
+  numbererval: string; //Khoảng thời gian
+  effectiveFrom: Date; //Hiệu lực từ
+  effectiveTo: Date; //Hiệu lực đến
+  extendOn: Date; //Ngày gia hạn
+  disposalOn: Date; //Ngày thanh lý
+  warantyMonths: number; //Số tháng bảo hành
+  warantyExpired: Date; //Ngày hết hạn bảo hành
+  salespersonID: string; //Mã nhân viên kinh doanh
+  consultantID: string; //Mã nhân viên tư vấn
+  pmtMethodID: string; //Phương thức thanh toán
+  pmtTermID: string; //Điều khoản thanh toán
+  pmtStatus: string; //Tình trạng thanh toán
+  delModeID: string; //Hình thức giao hàng
+  delTermID: string; //Điều khoản giao hàng
+  delPrice: number; //Phí vận chuyển
+  delStatus: string; //Tình trạng giao hàng
+  parentID: string; //Tham chiếu cha
+  refType: string; //Loại tham chiếu
+  refID: string; //Mã tham chiếu
+  refNo: string; //Số tham chiếu
+  attachments: number; //Số lượng file đính kèm
+  note: string; //Diễn giải
+  stop: boolean; //Tạm ngừng
+  companyID: string; //Bên A
+  companyName: string; //Tên công ty
+  taxCode: string; //Mã số thuế
+  address: string; //Địa chỉ
+  phone: string; //Số điện thoại
+  faxNo: string; //Số Fax
+  representative: string; //Người đại diện
+  jobTitle: string; //Chức vụ
+  bankAccount: string; //Tài khoản ngân hàng
+  bankID: string; //Mở tại ngân hàng
+  owner: string; //Người sở hữu
+  bUID: string; //Đơn vị
+  createdOn: Date; //Ngày tạo
+  createdBy: string; //Người tạo
+  modifiedOn: Date; //Ngày chỉnh sửa
+  modifiedBy: string; //Người chỉnh sửa
 
-  contactName: string;//Người đại diện -- thiếu
+  contactName: string; //Người đại diện -- thiếu
   // Hạn thanh toán
   // Hạn giao hàng
   // Điều khoản hồ sơ liên quan -- memo
 }
 
-export class CM_DealsCompetitors{
+export class CM_DealsCompetitors {
   recID: string;
   dealID: string;
   competitorID: string;
@@ -452,67 +492,141 @@ export class CM_DealsCompetitors{
 }
 
 export class CM_Cases {
-recID: string;
-caseNo: string;
-caseName: string;
-caseType: string;
-category: string;
-channelID: string;
-objectType: string;
-objectID: string;
-objectName: string;
-contactID: string;
-contactName: string;
-mobile: string;
-email: string;
-address: string;
-businessLineID: string;
-tags: string;
-productSeri: string;
-productID: string;
-productBrand: string;
-severity: string;
-priority: string;
-occuredOn: Date;
-occuredPlace: string;
-reality: string;
-memo: string;
-state: string;
-reason: string;
-status: string;
-statusID: string;
-stepID: string;
-nextStep: string;
-lastUpdated: Date;
-refType: string;
-refID: string;
-refNo: string;
-leadtime: Number;
-deadline: Date;
-processStatus: string;
-processHours: Number;
-approvalStatus: string;
-consulted: boolean;
-solution: string;
-closed: boolean;
-closedOn: Date;
-closedBy: string;
-closeComment: string;
-rating: string;
-reOpens: Number;
-called: string;
-sendMail: string;
-sendSMS: string;
-attachments: string;
-processID: string;
-startDate: Date;
-endDate: Date;
-// datas: Json;
-bUID: string;
-owner: string;
-createdOn: Date;
-createdBy: string;
-modifiedOn: Date;
-modifiedBy: string;
+  recID: string;
+  caseNo: string;
+  caseName: string;
+  caseType: string = '2';
+  category: string;
+  channelID: string;
+  objectType: string;
+  objectID: string;
+  objectName: string;
+  contactID: string;
+  customerID: string;
+  contactName: string;
+  mobile: string;
+  email: string;
+  address: string;
+  businessLineID: string;
+  tags: string;
+  productSeri: string;
+  productID: string;
+  productBrand: string;
+  severity: string;
+  priority: string;
+  occuredOn: Date;
+  occuredPlace: string;
+  reality: string;
+  memo: string;
+  state: string;
+  reason: string;
+  status: string;
+  statusID: string;
+  stepID: string;
+  nextStep: string;
+  lastUpdated: Date;
+  refType: string;
+  refID: string;
+  refNo: string;
+  leadtime: Number;
+  deadline: Date;
+  processStatus: string;
+  processHours: Number;
+  approvalStatus: string;
+  consulted: boolean;
+  solution: string;
+  closed: boolean;
+  closedOn: Date;
+  closedBy: string;
+  closeComment: string;
+  rating: string;
+  reOpens: Number;
+  called: string;
+  sendMail: string;
+  sendSMS: string;
+  attachments: Number = 0;
+  processID: string;
+  startDate: Date;
+  endDate: Date;
+  // datas: Json;
+  bUID: string;
+  owner: string;
+  createdOn: Date = new Date();
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+}
 
+export class CM_Partners {
+  recID: string;
+  partnerID: string;
+  partnerName: string;
+  partnerName2: string;
+  shortName: string;
+  website: string;
+  partnerFrom: Date;
+  taxCode: string;
+  establishDate: Date;
+  memo: string;
+  address: string;
+  countryID: string;
+  provinceID: string;
+  districtID: string;
+  wardID: string;
+  regionID: string;
+  industries: string;
+  phone: string;
+  faxNo: string;
+  email: string;
+  channelID: string;
+  segmentID: string;
+  capital: number;
+  annualRevenue: number;
+  headcounts: number;
+  cEO: string;
+  owner: string;
+  bUID: string;
+  tags: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+}
+
+export class CM_Competitors {
+  recID: string;
+  competitorID: string;
+  competitorName: string;
+  competitorName2: string;
+  shortName: string;
+  category: string;
+  channelID: string;
+  segmentID: string;
+  capital: number;
+  annualRevenue: number;
+  headcounts: number;
+  establishDate: number;
+  rating: string;
+  cEO: string;
+  status: string;
+  address: string;
+  countryID: string;
+  provinceID: string;
+  districtID: string;
+  wardID: string;
+  regionID: string;
+  phone: string;
+  faxNo: string;
+  email: string;
+  webPage: string;
+  memo: string;
+  taxCode: string;
+  industries: string;
+  tags: string;
+  owner: string;
+  bUID: string;
+  createdOn: number;
+  createdBy: string;
+  modifiedOn: number;
+  modifiedBy: string;
 }
