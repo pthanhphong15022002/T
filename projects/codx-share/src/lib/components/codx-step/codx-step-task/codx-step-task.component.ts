@@ -149,9 +149,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         task: task.sort((a, b) => a['indexNo'] - b['indexNo']),
       };
     });
-    this.currentStep['taskGroups'] = taskGroupConvert;
-    this.listGroupTask = this.currentStep['taskGroups'];
-    if (this.currentStep['taskGroups']?.length > 0 || this.currentStep['tasks']?.length > 0) {
+    // this.currentStep['taskGroups'] = taskGroupConvert;
+    this.listGroupTask = taskGroupConvert;
+    if (taskGroupList['null']) {
       let taskGroup = {};
       taskGroup['task'] =
         taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) ||
@@ -160,6 +160,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.listGroupTask.push(taskGroup);
     }
     this.listTask = this.currentStep['tasks'];
+    console.log(this.listGroupTask);
+    
   }
 
   toggleTask(e, idGroup) {
@@ -439,8 +441,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   async addTask(groupID){
     this.taskType = await this.chooseTypeTask();
+    if(!this.taskType) return;
     let task = new DP_Instances_Steps_Tasks();
-    task['taskType'] = this.taskType;
+    task['taskType'] = this.taskType?.value;
     task['stepID'] = this.currentStep?.recID;
     task['progress'] = 0;
     task['taskGroupID'] = groupID || null;
@@ -453,9 +456,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.currentStep?.tasks?.push(data.task);
       this.currentStep['progress'] = data.progressStep;
       let group = this.listGroupTask.find(group => group.refID == data.task.taskGroupID);
-      if(group){
+      let groupStep = this.currentStep?.taskGroups.find(group => group.refID == data.task.taskGroupID);
+      if(group && groupStep){
         group?.task.push(data.task);
         group['progress'] = data.progressGroup;
+        groupStep?.task.push(data.task);
+        groupStep['progress'] = data.progressGroup;
       }
     }
     

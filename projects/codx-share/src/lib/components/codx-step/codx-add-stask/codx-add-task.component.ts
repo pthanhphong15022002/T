@@ -114,33 +114,6 @@ export class CodxAddTaskComponent implements OnInit {
     if (this.stepsTasks['parentID']) {
       this.litsParentID = this.stepsTasks['parentID'].split(';');
     }
-    // if (this.listTask.length > 0) {
-    //   this.dataCombobox = this.listTask.map((data) => {
-    //     if (this.litsParentID.some((x) => x == data.refID)) {
-    //       return {
-    //         key: data.refID,
-    //         value: data.taskName,
-    //         checked: true,
-    //       };
-    //     } else {
-    //       return {
-    //         key: data.refID,
-    //         value: data.taskName,
-    //         checked: false,
-    //       };
-    //     }
-    //   });
-    //   if (this.action == 'edit') {
-    //     let index = this.dataCombobox?.findIndex(
-    //       (x) => x.key === this.stepsTasks.refID
-    //     );
-    //     this.dataCombobox.splice(index, 1);
-    //   }
-    //   this.valueInput = this.dataCombobox
-    //     .filter((x) => x.checked)
-    //     .map((y) => y.value)
-    //     .join('; ');
-    // }
     this.owner = this.roles?.filter((role) => role.roleType === 'O');
     if(this.taskType == "M"){
       this.participant = this.roles?.filter((role) => role.roleType === 'P');
@@ -181,13 +154,14 @@ export class CodxAddTaskComponent implements OnInit {
     this.stepsTasks[event?.field] = event?.data;
   }
 
-  filterText(value, key) {
-    this.stepsTasks[key] = value;
-    if(value){
-      this.groupTask = this.listGroup.find((x) => x.refID === value);
+  filterText(event, key) {
+    this.stepsTasks[key] = event;
+    if(event){
+      this.groupTask = this.listGroup.find((x) => x.refID === event);
       this.startDateParent = new Date(this.groupTask['startDate']);
       this.endDateParent = new Date(this.groupTask['endDate']);
       this.stepsTasks['startDate'] = this.startDateParent || new Date();
+      this.stepsTasks['indexNo'] = this.groupTask?.task?.length + 1 || 1;
     }else{
       this.startDateParent = new Date(this.step['startDate']);
       this.endDateParent = new Date(this.step['endDate']);
