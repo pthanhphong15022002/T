@@ -654,11 +654,12 @@
                   <codx-label
                     fiedName="EmployeeName"
                     [formModel]="eInfoFormModel"
+                    [setRequire]="false"
                   >
                   </codx-label>
                 </div>
                 <div class="fw-bold text-dark fs-6">
-                  {{ infoPersonal?.employeeName }}
+                  {{infoPersonal?.employeeName }}
                 </div>
               </div>
               <!-- Bí danh -->
@@ -737,7 +738,7 @@
               <!-- Giới tính -->
               <div class="col">
                 <div class="text-gray-600 me-2 pb-1">
-                  <codx-label fiedName="Gender" [formModel]="eInfoFormModel">
+                    <codx-label fiedName="Gender" [formModel]="eInfoFormModel"  [setRequire]="false"> 
                   </codx-label>
                 </div>
                 <div>
@@ -1540,6 +1541,7 @@
                           class="icon-wysiwyg icon-16 text-gray-600 me-2"
                         ></span>
                         <codx-label
+                        [setRequire]="false"
                           fiedName="PassportNo"
                           [formModel]="ePassportFormModel"
                         >
@@ -1556,6 +1558,8 @@
                         <codx-label
                           fiedName="IssuedDate"
                           [formModel]="ePassportFormModel"
+                          [setRequire]="false"
+
                         >
                         </codx-label>
                       </div>
@@ -1570,6 +1574,8 @@
                         <codx-label
                           fiedName="ExpiredDate"
                           [formModel]="ePassportFormModel"
+                          [setRequire]="false"
+
                         >
                         </codx-label>
                       </div>
@@ -1630,6 +1636,8 @@
                           ></span>
                           <codx-label
                             fiedName="VisaNo"
+                            [setRequire]="false"
+
                             [formModel]="eVisaFormModel"
                           >
                           </codx-label>
@@ -1869,6 +1877,7 @@
                           class="icon-wysiwyg icon-16 text-gray-600 me-2"
                         ></span>
                         <codx-label
+                    [setRequire]="false"
                           fiedName="workPermitNo"
                           [formModel]="eWorkPermitFormModel"
                         >
@@ -2099,10 +2108,10 @@
                   </codx-label> -->
                       {{ getFormHeader(eFamiliesFuncID) }}
                     </div>
-                    <span class="text-gray-500 mx-2">|</span>
+                    <!-- <span class="text-gray-500 mx-2">|</span>
                     <span class="text-dark">
                       <span>({{ lstFamily.length }})</span>
-                    </span>
+                    </span> -->
                   </div>
                   <div class="d-flex align-items-center ms-5">
                     <button type="button" class="btn btn-icon btn-white">
@@ -2248,10 +2257,10 @@
                     </codx-label> -->
                       {{ getFormHeader(eExperienceFuncID) }}
                     </div>
-                    <span class="text-gray-500 mx-2">|</span>
+                    <!-- <span class="text-gray-500 mx-2">|</span>
                     <span class="text-dark">
                       <span>({{ eExperienceRowCount }})</span>
-                    </span>
+                    </span> -->
                   </div>
                   <div class="d-flex align-items-center ms-5">
                     <button
@@ -3966,6 +3975,7 @@
                       class="icon-wysiwyg icon-16 text-gray-600 me-2"
                     ></span>
                     <codx-label
+                    [setRequire]="false"
                       fiedName="ContractTypeID"
                       [formModel]="eContractFormModel"
                     >
@@ -4034,6 +4044,7 @@
                     <codx-label
                       class="text-gray-600"
                       fiedName="ContractNo"
+                      [setRequire]="false"
                       [formModel]="eContractFormModel"
                     >
                     </codx-label>
@@ -4041,6 +4052,7 @@
                     <codx-label
                       class="text-gray-600"
                       fiedName="SignedDate"
+                      [setRequire]="false"
                       [formModel]="eContractFormModel"
                     >
                     </codx-label>
@@ -5369,7 +5381,7 @@
                 <span class="icon-sick icon-20 me-2"></span>
               </div>
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
-                {{ getFormHeader("HRTEM0803") }}
+                {{ getFormHeader(quitJobInfoFuncID) }}
               </div>
               <!-- <span class="text-gray-500 mx-2"> | </span>
               <span class="text-dark">
@@ -5425,7 +5437,6 @@
               [dataValues]="employeeID"
               [pageSize]="numPageSizeGridView"
               [entityName]="'HR_EDiseases'"
-              [rowHeight]="40"
               height="auto"
             >
             </codx-gridview>
@@ -7331,9 +7342,9 @@
                     class="fw-bold text-uppercase fs-5 text-gray-600"
                   >
                   </codx-label>
-                  <span class="text-gray-500 mx-2"> | </span>
+                  <!-- <span class="text-gray-500 mx-2"> | </span>
                   <span class="text-gray-500"
-                    >Tất cả ({{ eContractRowCount }})</span
+                    >Tất cả ({{ eContractRowCount }})</span -->
                   >
                 </div>
               </div>
