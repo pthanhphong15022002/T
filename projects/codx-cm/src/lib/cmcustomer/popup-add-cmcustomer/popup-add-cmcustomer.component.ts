@@ -22,9 +22,9 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
-import { PopupAddressComponent } from '../popup-address/popup-address.component';
-import { PopupListContactsComponent } from './popup-list-contacts/popup-list-contacts.component';
-import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
+import { PopupAddressComponent } from '../cmcustomer-detail/codx-address-cm/popup-address/popup-address.component';
+import { PopupListContactsComponent } from '../cmcustomer-detail/codx-list-contacts/popup-list-contacts/popup-list-contacts.component';
+import { PopupQuickaddContactComponent } from '../cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxCmService } from '../../codx-cm.service';
 import {
   BS_AddressBook,
@@ -61,7 +61,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   recID: any;
   refValueCbx = '';
   refContactType = '';
-
+  titleAction = '';
   listAddress: BS_AddressBook[] = [];
   formModelAddress: FormModel;
   listAddressDelete: BS_AddressBook[] = [];
@@ -107,7 +107,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.funcID = this.dialog.formModel.funcID;
     this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.action = dt?.data?.action;
-    this.title = dt?.data?.title;
+    this.titleAction = dt?.data?.title;
     this.autoNumber = dt?.data?.autoNumber;
     if (this.action == 'copy') {
       this.recID = dt?.data[2];
@@ -152,10 +152,21 @@ export class PopupAddCmCustomerComponent implements OnInit {
     });
   }
 
+  setTitle(e: any) {
+    this.title =
+      this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
+    //this.changDetec.detectChanges();
+  }
+
   getTab() {
     if (this.funcID == 'CM0101' || this.funcID == 'CM0103') {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
+        {
+          icon: 'icon-info',
+          text: 'Thông tin khác',
+          name: 'InformationDefault',
+        },
         {
           icon: 'icon-location_on',
           text: 'Danh sách địa chỉ',
@@ -165,26 +176,23 @@ export class PopupAddCmCustomerComponent implements OnInit {
           icon: 'icon-contact_phone',
           text: 'Người liên hệ',
           name: 'Contacts',
-        },
-        {
-          icon: 'icon-info',
-          text: 'Thông tin khác',
-          name: 'InformationDefault',
-        },
+        }
+
       ];
     } else {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
-          icon: 'icon-location_on',
-          text: 'Danh sách địa chỉ',
-          name: 'Address',
-        },
-        {
           icon: 'icon-info',
           text: 'Thông tin khác',
           name: 'InformationDefault',
         },
+        {
+          icon: 'icon-location_on',
+          text: 'Danh sách địa chỉ',
+          name: 'Address',
+        },
+
       ];
     }
   }
@@ -403,12 +411,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (this.funcID == 'CM0102') {
       if (this.lstContact != null && this.lstContact.length > 0) {
         var checkMainLst = this.lstContact.some(
-          (x) =>
-            x.contactType.split(';').some((x) => x == '1') &&
-            x.recID != this.data.recID
+          (x) => x.isDefault && x.recID != this.data.recID
         );
         if (checkMainLst) {
-          if (this.data?.contactType?.split(';').some((x) => x == '1')) {
+          if (this.data?.isDefault) {
             var config = new AlertConfirmInputConfig();
             config.type = 'YesNo';
             this.notiService.alertCode('CM001').subscribe((x) => {
@@ -420,11 +426,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
             this.hanleSave();
           }
         } else {
-          if (!this.data.contactType.split(';').some((x) => x == '1')) {
-            this.notiService.notifyCode('CM002');
-          } else {
-            this.hanleSave();
-          }
+          this.hanleSave();
         }
       } else {
         this.hanleSave();
@@ -492,8 +494,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
-  lstContactDeleteEmit(e){
-    if(e != null && e.length > 0){
+  lstContactDeleteEmit(e) {
+    if (e != null && e.length > 0) {
       this.lstContactDeletes = e;
     }
   }
@@ -577,8 +579,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
           var dialog = this.callFc.openForm(
             PopupAddressComponent,
             '',
-            650,
-            550,
+            500,
+            700,
             '',
             obj,
             '',

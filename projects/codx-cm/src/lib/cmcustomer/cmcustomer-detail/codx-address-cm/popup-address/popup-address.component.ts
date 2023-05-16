@@ -7,7 +7,8 @@ import {
   DataRequest,
   ApiHttpService,
 } from 'codx-core';
-import { BS_AddressBook } from '../../models/cm_model';
+import { BS_AddressBook } from '../../../../models/cm_model';
+import { CodxCmService } from '../../../../codx-cm.service';
 
 @Component({
   selector: 'lib-popup-address',
@@ -28,10 +29,12 @@ export class PopupAddressComponent implements OnInit {
   modelDistrictID: any;
   modelWardID: any;
   isDisable = false;
+  count = 0;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
+    private cmSv: CodxCmService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -84,23 +87,10 @@ export class PopupAddressComponent implements OnInit {
   }
 
   onSave() {
-    if (this.data.adressType == null || this.data.adressType.trim() == '') {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['AdressType'].headerText + '"'
-      );
-      return;
-    }
-    if (this.data.countryID == null || this.data.countryID.trim() == '') {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['CountryID'].headerText + '"'
-      );
-      return;
-    }
     this.onAdd();
+    this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
+    if(this.count > 0)
+      return;
     this.dialog.close(this.data);
   }
 

@@ -17,8 +17,8 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
-import { PopupQuickaddContactComponent } from '../../popup-add-cmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
-import { PopupListContactsComponent } from '../../popup-add-cmcustomer/popup-list-contacts/popup-list-contacts.component';
+import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
+import { PopupListContactsComponent } from './popup-list-contacts/popup-list-contacts.component';
 import { Observable, finalize, map } from 'rxjs';
 
 @Component({

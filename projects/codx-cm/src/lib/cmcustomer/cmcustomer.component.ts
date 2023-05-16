@@ -493,8 +493,7 @@ export class CmCustomerComponent
         formMD.funcID = this.funcID;
         option.FormModel = JSON.parse(JSON.stringify(formMD));
         option.Width = '800px';
-        this.titleAction =
-          this.titleAction + ' ' + this.view?.function.customName;
+
         this.cmSv
           .getAutonumber(
             this.funcID,
@@ -552,8 +551,7 @@ export class CmCustomerComponent
           formMD.funcID = this.funcID;
           option.FormModel = JSON.parse(JSON.stringify(formMD));
           option.Width = '800px';
-          this.titleAction =
-            this.titleAction + ' ' + this.view?.function.customName;
+
           var obj = {
             action: 'edit',
             title: this.titleAction,
@@ -593,8 +591,7 @@ export class CmCustomerComponent
         formMD.funcID = this.funcID;
         option.FormModel = JSON.parse(JSON.stringify(formMD));
         option.Width = '800px';
-        this.titleAction =
-          this.titleAction + ' ' + this.view?.function.customName;
+
         this.cmSv
           .getAutonumber(
             this.funcID,

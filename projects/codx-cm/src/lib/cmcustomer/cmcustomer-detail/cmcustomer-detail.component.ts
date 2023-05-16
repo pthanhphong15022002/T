@@ -19,9 +19,9 @@ import {
   AlertConfirmInputConfig,
   NotificationsService,
 } from 'codx-core';
-import { PopupQuickaddContactComponent } from '../popup-add-cmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
+import { PopupQuickaddContactComponent } from './codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CM_Contacts } from '../../models/cm_model';
-import { PopupListContactsComponent } from '../popup-add-cmcustomer/popup-list-contacts/popup-list-contacts.component';
+import { PopupListContactsComponent } from './codx-list-contacts/popup-list-contacts/popup-list-contacts.component';
 
 @Component({
   selector: 'codx-cmcustomer-detail',
