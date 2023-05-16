@@ -10,18 +10,17 @@
   >
     <ng-template #header let-data>
       <div class="container_detail mt-3">
-        <div class="d-flex justify-content-start pb-3">
+        <div class="d-flex justify-content-between mb-3">
           <div class="fs-2">{{ dataSelected?.dealName }}</div>
-          <div></div>
-          <div class="fs-2 ms-auto">
-            <span class="icon-monetization_on pe-1" style="color: gold"></span>
-            {{dataSelected?.dealValue}}
+          <div class="d-flex align-items-center">
+            <span class="icon-monetization_on pe-1 text-wraning"></span>
+            <span class="fs-2 fw-bold">{{dataSelected?.dealValue}}</span>
           </div>
         </div>
-        <div class="d-flex justify-content-between pb-3">
+        <div class="d-flex flex-wrap align-items-center pb-3">
           <div class="d-flex flex-row">
             <div class="d-flex align-items-stretch">
-              <div class="pe-2">
+              <div class="me-3">
                 <codx-imgs
                   [isToolTip]="true"
                   [width]="25"
@@ -31,13 +30,11 @@
                 >
                 </codx-imgs>
               </div>
-              <div>
-                <div
-                  class="fw-bold fs-6 text-dark codx-text-overflow-1line pb-2"
+              <div
+                  class="fw-bold fs-6 text-dark line-clamp line-clamp-1"
                 >
                 {{dataSelected?.createdBy}}
                 </div>
-              </div>
             </div>
           </div>
           <div>
@@ -107,16 +104,14 @@
             % <span class="pe-2">{{dataSelected?.probability}}</span>
           </div>
         </div>
-        <div class="d-flex justify-content-start pb-3" >
+        <div class="d-flex flex-wrap justify-content-between pb-3" >
           <div class=" d-flex justify-content-start">
             <codx-label default="Khách hàng:" class="fs-6 me-1"></codx-label>
             <i class="icon-business pe-1"></i>
             <div class="fs-6">{{dataSelected?.customerName}}</div>
           </div>
-          <div>
 
-          </div>
-          <div class="fs-6 ms-auto">
+          <div class="ms-5">
             <div class="badge badge-primary">
               <span>
               {{dataSelected?.currentStepName}}
