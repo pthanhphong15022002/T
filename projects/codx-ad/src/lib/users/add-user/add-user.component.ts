@@ -340,10 +340,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
     let formGroup = this.form.formGroup.controls;
     if (!this.adUser.buid) formGroup.buid.setValue(null);
     if (
-      formGroup.userID.status == 'VALID' &&
-      formGroup.userName.status == 'VALID' &&
-      formGroup.buid.status == 'VALID' &&
-      formGroup.email.status == 'VALID'
+      formGroup.userID.value &&
+      formGroup.userName.value &&
+      formGroup.buid.value &&
+      formGroup.email.value
     ) {
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt), 0, '', '', false)
