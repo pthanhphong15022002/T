@@ -612,21 +612,26 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     taskGroup['isTaskDefault'] = false;
     taskGroup['progress'] = 0;
     taskGroup['stepID'] = this.currentStep['recID'];
-    taskGroup['task'] = [];
 
-    let taskBefore = this.listGroupTask?.reverse()?.find(group => group.recID);
-    taskGroup['startDate'] = taskBefore?.endDate || this.currentStep?.startDate;
-    let taskOutput = await this.openPopupGroup('add',taskGroup);
-
-    if(taskOutput?.event.task){
-      let data = taskOutput?.event;
-      this.currentStep?.tasks?.push(data.task);
-      this.currentStep['progress'] = data.progressStep;
-      let group = this.listGroupTask.find(group => group.refID == data.task.taskGroupID);
-      if(group){
-        group?.task.push(data.task);
-        group['progress'] = data.progressGroup;
+    let taskBeforeIndex = -1;
+    for(let i = this.listGroupTask?.length -1; i >= 0 ; i--){
+      if(this.listGroupTask[i]?.recID){
+        taskBeforeIndex = i;
+        break;
       }
+    }
+
+    if(taskBeforeIndex >=0 ){
+      taskGroup['startDate'] = this.listGroupTask[taskBeforeIndex]?.endDate || this.currentStep?.startDate;
+      taskGroup['indexNo'] = taskBeforeIndex + 1;
+    }
+
+    let taskOutput = await this.openPopupGroup('add',taskGroup);
+    if(taskOutput?.event.groupTask){
+      let data = taskOutput?.event;
+      this.currentStep?.taskGroups?.push(data.groupTask);
+      this.listGroupTask.splice(taskBeforeIndex,0,data.groupTask)
+      this.currentStep['progress'] = data.progressStep;
     }
   }
 
