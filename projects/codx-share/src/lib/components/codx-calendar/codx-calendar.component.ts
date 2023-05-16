@@ -77,56 +77,13 @@ export class CodxCalendarComponent
   isCollapsed = false;
   defaultCalendar;
 
-  // maps the appropriate column to fields property
-  public fields: Object = { text: 'defaultName', value: 'functionID' };
-  //Bind the filter event
-  public onFiltering = (e: FilteringEventArgs) => {
-    let query = new Query();
-    //frame the query based on search string with filter type.
-    query =
-      e.text != ''
-        ? query.where('defaultName', 'startswith', e.text, true)
-        : query;
-    //pass the filter data source, filter query to updateData method.
-    e.updateData(this.calendarTypes, query);
-  };
+  fields: Object = { text: 'defaultName', value: 'functionID' };
 
   calendarTypes = [];
   calendarData: any;
 
   //Để tạm
-  resources: any = [
-    {
-      color: '#E9F0FD',
-      borderColor: '#4E86EC',
-      text: 'TM_MyTasks',
-      status: 'TM_MyTasks',
-    },
-    {
-      color: '#FEF8E6',
-      borderColor: '#FFC107',
-      text: 'WP_Notes',
-      status: 'WP_Notes',
-    },
-    {
-      color: '#FFEEE9',
-      borderColor: '#E23900',
-      text: 'CO_Meetings',
-      status: 'CO_Meetings',
-    },
-    {
-      color: '#FFEEE9',
-      borderColor: '#E23900',
-      text: 'EP_BookingRooms',
-      status: 'EP_BookingRooms',
-    },
-    {
-      color: '#FAF1FF',
-      borderColor: '#4A0077',
-      text: 'EP_BookingCars',
-      status: 'EP_BookingCars',
-    },
-  ];
+  resources = [];
 
   constructor(injector: Injector, private codxShareSV: CodxShareService) {
     super(injector);
@@ -159,6 +116,28 @@ export class CodxCalendarComponent
         );
       }
     }, 200);
+
+    this.api
+      .execSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetParamMyCalendarAsync',
+        'WPCalendars'
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          for (const prop in res) {
+            let param = JSON.parse(res[prop]);
+            this.resources.push({
+              color: param.ShowBackground,
+              borderColor: param.ShowColor,
+              text: param.Template.TransType,
+              status: param.Template.TransType,
+            });
+          }
+        }
+      });
 
     this.api
       .exec('CO', 'CalendarsBusiness', 'GetListCalendarAsync')
@@ -838,5 +817,16 @@ export class CodxCalendarComponent
           this.calendarData = res;
         }
       });
+  }
+
+  onFiltering(e: FilteringEventArgs) {
+    let query = new Query();
+    //frame the query based on search string with filter type.
+    query =
+      e.text != ''
+        ? query.where('defaultName', 'startswith', e.text, true)
+        : query;
+    //pass the filter data source, filter query to updateData method.
+    e.updateData(this.calendarTypes, query);
   }
 }
