@@ -76,9 +76,11 @@
         <div class="fw-bold text-dark line-clamp line-clamp-1 mb-1">
           {{ data?.contactName }}
         </div>
-        <div class="me-4" *ngIf="data.jobTitle">
-          <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
+        <div class="" *ngIf="data.jobTitle">
           <span class="text-gray-900">{{ data.jobTitle }}</span>
+        </div>
+        <div class="" *ngIf="data.isDefault">
+          <codx-label class="text-gray-900 text-primary" fiedName="IsDefault" [formModel]="formModelContact"></codx-label>
         </div>
       </div>
     </div>
