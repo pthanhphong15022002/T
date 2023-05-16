@@ -5,3 +5,9 @@
 .has-action-menu-od:hover .action-menu-od {
   opacity: 1;
 }
+
+.detail-form {
+  position: fixed;
+  bottom: 50px;
+  z-index: 10;
+}

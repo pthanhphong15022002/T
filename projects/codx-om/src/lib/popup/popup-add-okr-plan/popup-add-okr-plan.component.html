@@ -123,7 +123,7 @@
                                                     (click)="deleteOKR(krType,i,ii,0)">
                                                 <i class="icon-close"></i>    
                                             </button>
-                                            <button type="button" class="btn btn-icon btn-light-primary om-hover-mf" ngbTooltip="Thêm kết quả phụ"
+                                            <button *ngIf="useSKR" type="button" class="btn btn-icon btn-light-primary om-hover-mf" ngbTooltip="Thêm kết quả phụ"
                                                 (click)="addOKR(skrType,i,ii)">
                                                 <i class="icon-post_add"></i>
                                             </button>

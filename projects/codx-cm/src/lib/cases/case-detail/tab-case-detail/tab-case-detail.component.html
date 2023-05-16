@@ -47,26 +47,101 @@
     </div>
     <div class="mb-3">
       <div class="row py-2">
-        <div class="col-2"><codx-label default="Kênh tiếp nhận:"></codx-label></div>
-        <div class="col-4"> Trực tiếp</div>
-
-        <div class="col-2"><codx-label default="Tính chất sự cố:"></codx-label></div>
+        <div class="col-2"><codx-label default="Kênh tiếp nhận:" fieldName="ChannelID"></codx-label></div>
         <div class="col-4">
+          <span
+          class="fs-7"
+          #channelID
+          [innerHTML]="
+            dataSelected?.channelID
+              | formatvalue
+                : formModel
+                : 'channelID'
+                : channelID
+                : 'CMCases'
+                : 'grvCMCases'
+              | async
+          "
+        ></span>
+        </div>
+
+        <div class="col-2"><codx-label default="Tính chất sự cố:" fieldName="State"></codx-label></div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #state
+          [innerHTML]="
+            dataSelected?.state
+              | formatvalue
+                : formModel
+                : 'state'
+                : state
+                : 'CMCases'
+                : 'grvCMCases'
+              | async
+          "
+        ></span>
+
         </div>
       </div>
 
       <div class="row py-2">
-        <div class="col-2"><codx-label default="Thời gian xảy ra thực tế"></codx-label>:</div>
-        <div class="col-4"> 15/03/2022 13:12:23</div>
-
-        <div class="col-2"><codx-label default="Ví trí cụ thể"></codx-label>:</div>
+        <div class="col-2"><codx-label default="Thời gian xảy ra thực tế" fieldName="OccuredOn"></codx-label>:</div>
         <div class="col-4">
+          <span
+          class="fs-7"
+          #occuredOn
+          [innerHTML]="
+            dataSelected?.occuredOn
+              | formatvalue
+                : formModel
+                : 'occuredOn'
+                : occuredOn
+                : 'CMCases'
+                : 'grvCMCases'
+              | async
+          "
+        ></span>
+        </div>
+
+        <div class="col-2"><codx-label default="Ví trí cụ thể" fieldName="OccuredPlace"></codx-label>:</div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #occuredPlace
+          [innerHTML]="
+            dataSelected?.occuredPlace
+              | formatvalue
+                : formModel
+                : 'occuredPlace'
+                : occuredPlace
+                : 'CMCases'
+                : 'grvCMCases'
+              | async
+          "
+        ></span>
         </div>
       </div>
 
       <div class="row py-2">
-        <div class="col-2"><codx-label default="Thời gian phát hiện"></codx-label>:</div>
-        <div class="col-4"> 15/03/2022 13:12:23</div>
+        <div class="col-2"><codx-label default="Thời gian phát hiện" fieldName="OccuredOn"></codx-label>:</div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #occuredOn
+          [innerHTML]="
+            dataSelected?.occuredOn
+              | formatvalue
+                : formModel
+                : 'occuredOn'
+                : occuredOn
+                : 'CMCases'
+                : 'grvCMCases'
+              | async
+          "
+        ></span>
+
+        </div>
       </div>
     </div>
     <div class="mt-5">
@@ -75,17 +150,44 @@
       </div>
       <div class="d-flex flex-column-reverse">
         <div class="d-flex justify-content-start">
-           <div class="col-2"><codx-label default="Hiện trạng"></codx-label>:</div>
+           <div class="col-2"><codx-label default="Hiện trạng" fieldName="Reality"></codx-label>:</div>
           <div class="col-10">
-            Máy không hoạt động, đã thử cắm điện, bật nút nguồn nhưng máy vẫn không khởi động
+            <span
+            class="fs-7"
+            #reality
+            [innerHTML]="
+              dataSelected?.reality
+                | formatvalue
+                  : formModel
+                  : 'reality'
+                  : reality
+                  : 'CMCases'
+                  : 'grvCMCases'
+                | async
+            "
+          ></span>
+
           </div>
         </div>
       </div>
       <div class="d-flex flex-column-reverse">
         <div class="d-flex justify-content-start">
-           <div class="col-2"><codx-label default="Mô tả chi tiết"></codx-label>:</div>
+           <div class="col-2"><codx-label default="Mô tả chi tiết" fieldName="Memo"></codx-label>:</div>
           <div class="col-10">
-            Máy không hoạt động, đã thử cắm điện, bật nút nguồn nhưng máy vẫn không khởi động
+            <span
+            class="fs-7"
+            #memo
+            [innerHTML]="
+              dataSelected?.memo
+                | formatvalue
+                  : formModel
+                  : 'memo'
+                  : memo
+                  : 'CMCases'
+                  : 'grvCMCases'
+                | async
+            "
+          ></span>
           </div>
         </div>
       </div>
@@ -93,11 +195,24 @@
     </div>
     <div class="mt-5">
       <div class="mb-3">
-        <h2><codx-label default="Gợi ý biện pháp xử lý"></codx-label></h2>
+        <h2><codx-label default="Gợi ý biện pháp xử lý" fiedName="Solution"></codx-label></h2>
       </div>
       <span class="py-2"
         >
-        {{dataSelected.memo}}
+        <span
+        class="fs-7"
+        #solution
+        [innerHTML]="
+          dataSelected?.solution
+            | formatvalue
+              : formModel
+              : 'solution'
+              : solution
+              : 'CMCases'
+              : 'grvCMCases'
+            | async
+        "
+      ></span>
         </span
       >
     </div>

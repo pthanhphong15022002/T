@@ -4,6 +4,7 @@ import { UIComponent, ViewModel, ButtonModel, FormModel, ResourceModel, CacheSer
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
 import { CM_Customers } from '../models/cm_model';
+import { PopupAddCaseComponent } from './popup-add-case/popup-add-case.component';
 
 @Component({
   selector: 'lib-cases',
@@ -41,9 +42,9 @@ kanban: any;
 // config api get data
 service = 'CM';
 assemblyName = 'ERM.Business.CM';
-entityName = 'CM_Deals';
-className = 'DealsBusiness';
-method = 'GetListDealsAsync';
+entityName = 'CM_Cases';
+className = 'CasesBusiness';
+method = 'GetListCasesAsync';
 idField = 'recID';
 
 // data structure
@@ -100,8 +101,8 @@ onInit(): void {
   this.request = new ResourceModel();
   this.request.service = 'CM';
   this.request.assemblyName = 'CM';
-  this.request.className = 'DealsBusiness';
-  this.request.method = 'GetListDealsAsync';
+  this.request.className = 'CasesBusiness';
+  this.request.method = 'GetListCasesAsync';
   this.request.idField = 'recID';
   this.request.dataObj = this.dataObj;
 
@@ -236,9 +237,9 @@ searchChanged(e) {}
 //#region CRUD
 add() {
   switch (this.funcID) {
-    case 'CM0201': {
+    case 'CM0401': {
       //statements;
-      this.addDeal();
+      this.addCases();
       break;
     }
     default: {
@@ -248,7 +249,7 @@ add() {
   }
 }
 
-addDeal() {
+addCases() {
   this.view.dataService.addNew().subscribe((res) => {
 
     let option = new SidebarModel();
@@ -262,18 +263,18 @@ addDeal() {
     // formMD.gridViewName = fun.gridViewName;
     option.Width = '800px';
     option.zIndex = 1001;
-    this.openFormDeal(formMD, option, 'add');
+    this.openFormCases(formMD, option, 'add');
   });
 }
 
-openFormDeal(formMD, option, action) {
+openFormCases(formMD, option, action) {
   var obj = {
     action: action === 'add' ? 'add' : 'copy',
     formMD: formMD,
-    titleAction: action === 'add' ? 'Thêm cơ hội' : 'Copy cơ hội',
+    titleAction: 'Phiếu ghi nhận thông tin',
   };
   let dialogCustomDeal = this.callfc.openSide(
-    PopupAddDealComponent,
+    PopupAddCaseComponent,
     obj,
     option
   );
@@ -305,10 +306,10 @@ edit(data) {
     var obj = {
       action: 'edit',
       formMD: formMD,
-      titleAction: 'Chỉnh sửa cơ hội',
+      titleAction: 'Chỉnh sửa Phiếu ghi nhận sự cố',
     };
     let dialogCustomDeal = this.callfc.openSide(
-      PopupAddDealComponent,
+      PopupAddCaseComponent,
       obj,
       option
     );
@@ -339,7 +340,7 @@ copy(data) {
     // formMD.gridViewName = fun.gridViewName;
     option.Width = '800px';
     option.zIndex = 1001;
-    this.openFormDeal(formMD, option, 'copy');
+    this.openFormCases(formMD, option, 'copy');
   });
 
 
@@ -360,7 +361,7 @@ delete(data: any) {
 }
 beforeDel(opt: RequestOption) {
   var itemSelected = opt.data[0];
-  opt.methodName = 'DeletedDealAsync';
+  opt.methodName = 'DeletedCasesAsync';
   opt.data = [itemSelected.recID];
   return true;
 }

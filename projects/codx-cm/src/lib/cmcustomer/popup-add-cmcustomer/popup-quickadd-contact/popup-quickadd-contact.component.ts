@@ -23,6 +23,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   action = '';
   type: any;
   contactType = '';
+  isDefault = false;
   isCheckContactType = false;
   recIDCm: any;
   objectType: any;
@@ -44,17 +45,26 @@ export class PopupQuickaddContactComponent implements OnInit {
     this.objectName = dt?.data?.objectName;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.listContacts = dt?.data?.listContacts;
-    if (this.type == 'formAdd') {
-      this.contactType = '1';
-    } else if(this.type == 'formList'){
-      this.contactType = dt?.data?.contactType;
-    }
+    this.contactType = dt?.data?.contactType;
     if (this.action == 'edit' || this.action == 'editType') {
       this.data = JSON.parse(JSON.stringify(dt?.data?.dataContact));
+      this.isDefault = this.data.isDefault;
       this.contactType = this.data?.contactType;
     }
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.action == 'add') {
+      if (this.listContacts != null && this.listContacts.length > 0) {
+        if (this.listContacts.some((x) => x.isDefault == true)) {
+          this.isDefault = false;
+        } else {
+          this.isDefault = true;
+        }
+      } else {
+        this.isDefault = true;
+      }
+    }
+  }
 
   // getLastAndFirstName(contactName) {
   //   if (contactName != null) {
@@ -91,6 +101,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     }
     if (this.type == 'formDetail') {
       this.data.contactType = this.contactType;
+      this.data.isDefault = this.isDefault;
     }
     if (this.action == 'add') {
       data = [
@@ -106,6 +117,7 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.cmSv.quickAddContacts(data).subscribe((res) => {
         if (res) {
           this.data = res;
+          this.data.isDefault = this.isDefault;
           this.data.contactType = this.contactType;
           this.dialog.close(this.data);
           this.notiService.notifyCode('SYS007');
@@ -116,6 +128,8 @@ export class PopupQuickaddContactComponent implements OnInit {
     } else {
       this.cmSv.updateContactByPopupListCt(this.data).subscribe((res) => {
         if (res) {
+          res.isDefault = this.isDefault;
+          this.data.contactType = this.contactType;
           this.dialog.close(res);
           this.notiService.notifyCode('SYS007');
         }
@@ -124,20 +138,19 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
 
   onSave() {
-    if (this.data.firstName == null || this.data.firstName.trim() == '') {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['FirstName'].headerText + '"'
-      );
-      return;
-    }
-
     if (this.contactType == null || this.contactType.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
         0,
         '"' + this.gridViewSetup['ContactType'].headerText + '"'
+      );
+      return;
+    }
+    if (this.data.firstName == null || this.data.firstName.trim() == '') {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['FirstName'].headerText + '"'
       );
       return;
     }
@@ -153,15 +166,13 @@ export class PopupQuickaddContactComponent implements OnInit {
     }
 
     if (this.type == 'formDetail') {
-      if(this.listContacts != null){
+      if (this.listContacts != null) {
         if (
           this.listContacts.some(
-            (x) =>
-              x.contactType.split(';').some((x) => x == '1') &&
-              x.recID != this.data.recID
+            (x) => x.isDefault && x.recID != this.data.recID
           )
         ) {
-          if (this.contactType.split(';').some((x) => x == '1')) {
+          if (this.isDefault) {
             var config = new AlertConfirmInputConfig();
             config.type = 'YesNo';
             this.notiService.alertCode('CM001').subscribe((x) => {
@@ -169,27 +180,26 @@ export class PopupQuickaddContactComponent implements OnInit {
                 this.onAdd();
               }
             });
-          }else{
-            this.onAdd();
-          }
-        } else {
-          if (!this.contactType.split(';').some((x) => x == '1')) {
-            this.notiService.notifyCode('CM002');
           } else {
             this.onAdd();
           }
+        } else {
+          this.onAdd();
         }
-      }else{
+      } else {
         this.onAdd();
       }
-
     } else {
       this.onAdd();
     }
   }
 
   valueChange(e) {
-    this.contactType = e.data;
+    if (e.field == 'isDefault') {
+      this.isDefault = e.data;
+    } else {
+      this.contactType = e.data;
+    }
   }
 
   checkEmailOrPhone(field, type) {

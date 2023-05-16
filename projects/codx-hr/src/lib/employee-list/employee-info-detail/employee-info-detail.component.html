@@ -4087,8 +4087,8 @@
                     </codx-label> -->
                 {{ getFormHeader(appointionFuncID) }}
               </div>
-              <span class="text-gray-500 mx-2">|</span>
-              <span class="text-gray-800">({{ appointionRowCount }})</span>
+              <!-- <span class="text-gray-500 mx-2">|</span>
+              <span class="text-gray-800">({{ appointionRowCount }})</span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <button
@@ -4127,7 +4127,7 @@
       </div>
       <!-- Nghỉ phép -->
       <div class="user-profile overview d-block" [id]="dayoffFuncID">
-        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="dayofFormModel">
+        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="dayoffFormModel">
           <div class="d-flex align-items-center justify-content-between mb-3">
             <div class="d-flex align-items-center">
               <span class="icon-deck icon-20 me-2 text-primary"></span>
@@ -4140,8 +4140,8 @@
                   </codx-label> -->
                 {{ getFormHeader("HRTEM0503") }}
               </div>
-              <span class="text-gray-500 mx-2">|</span>
-              <span class="text-gray-800">({{ dayoffRowCount }})</span>
+              <!-- <span class="text-gray-500 mx-2">|</span>
+              <span class="text-gray-800">({{ dayoffRowCount }})</span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <codx-dropdown-select
@@ -4177,25 +4177,22 @@
           </div>
 
           <div class="mt-1">
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
               <div class="d-flex flex-wrap">
-                <span class="icon-date_range icon-16 me-2"></span>
-                <span class="text-gray-600 text-italic me-1"
-                  >Tiêu chuẩn phép năm:</span
-                >
-                <span class="text-primary fs-5 fw-bold me-1">14</span>
-                <span>ngày/năm</span>
+                <span class="icon-date_range icon-17 me-1"></span>
+                <span class="text-gray-600 me-1">Tiêu chuẩn phép năm: </span>
+                <span class="text-primary fw-bold me-1">14</span>
+                <span class="fw-bold">ngày/năm</span>
               </div>
+              <span class="px-1"> | </span>
               <div class="d-flex flex-wrap">
-                <span class="text-gray-600 text-italic me-1"
-                  >Còn lại năm trước:</span
-                >
-                <span class="text-primary fs-5 fw-bold me-1">1</span>
-                <span>ngày</span>
-                <span class="icon-i-dot text-gray-400"></span>
-                <span class="text-gray-600 text-italic me-1">Còn năm nay:</span>
-                <span class="text-primary fs-5 fw-bold me-1">14</span>
-                <span>ngày</span>
+                <span class="text-gray-600 me-1">Còn lại năm trước:</span>
+                <span class="text-primary fw-bold me-1">1</span>
+                <span class="fw-bold">ngày</span>
+                <span class="icon-i-dot text-gray-600 px-2"></span>
+                <span class="text-gray-600 me-1">Còn năm nay:</span>
+                <span class="text-primary fw-bold me-1">14</span>
+                <span class="fw-bold">ngày</span>
               </div>
             </div>
             <!-- String này đang gán cứng chờ module phát triển -->
@@ -4206,7 +4203,7 @@
               *ngIf="dayoffColumnGrid"
               [sort]="[dayOffSortModel]"
               #dayoffGridView
-              [formModel]="dayofFormModel"
+              [formModel]="dayoffFormModel"
               [columnsGrid]="dayoffColumnGrid"
               [service]="'HR'"
               [assemblyName]="'Core'"
@@ -4216,7 +4213,6 @@
               [dataValues]="employeeID"
               [pageSize]="numPageSizeGridView"
               [entityName]="'HR_EDayOffs'"
-              [rowHeight]="30"
               height="auto"
               [emptyTemplate]="emptyDataTemplate"
             ></codx-gridview>
@@ -4308,10 +4304,10 @@
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                 {{ getFormHeader(awardFuncID) }}
               </div>
-              <span class="text-gray-500 mx-2"> | </span>
+              <!-- <span class="text-gray-500 mx-2"> | </span>
               <span class="text-dark">
                 <span>({{ awardRowCount }})</span>
-              </span>
+              </span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <codx-dropdown-calendar
@@ -4395,10 +4391,10 @@
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                 {{ getFormHeader("HRTEM0702") }}
               </div>
-              <span class="text-gray-500 mx-2">|</span>
+              <!-- <span class="text-gray-500 mx-2">|</span>
               <span class="text-dark">
                 <span>({{ eDisciplineRowCount }})</span>
-              </span>
+              </span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <button
@@ -5039,10 +5035,10 @@
                             </codx-label> -->
                 {{ getFormHeader(eAccidentsFuncID) }}
               </div>
-              <span class="text-gray-500 mx-2"> | </span>
+              <!-- <span class="text-gray-500 mx-2"> | </span>
               <span class="text-dark">
                 <span>({{ eAccidentsRowCount }})</span>
-              </span>
+              </span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <codx-dropdown-select
@@ -5102,10 +5098,10 @@
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                 {{ getFormHeader("HRTEM0803") }}
               </div>
-              <span class="text-gray-500 mx-2"> | </span>
+              <!-- <span class="text-gray-500 mx-2"> | </span>
               <span class="text-dark">
                 <span>({{ eDiseasesRowCount }})</span>
-              </span>
+              </span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <span>
@@ -5206,10 +5202,10 @@
                   </codx-label> -->
                 {{ getFormHeader(eHealthFuncID) }}
               </div>
-              <span class="text-gray-400 mx-2">|</span>
+              <!-- <span class="text-gray-400 mx-2">|</span>
               <span class="text-dark">
                 <span>({{ eHealthRowCount }})</span>
-              </span>
+              </span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <button
@@ -5261,10 +5257,10 @@
                   </codx-label> -->
                 {{ getFormHeader("HRTEM0802") }}
               </div>
-              <span class="text-gray-500 mx-2"> | </span>
+              <!-- <span class="text-gray-500 mx-2"> | </span>
               <span class="text-dark">
                 <span>({{ eVaccineRowCount }})</span>
-              </span>
+              </span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <codx-dropdown-select
@@ -5375,10 +5371,10 @@
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                 {{ getFormHeader("HRTEM0803") }}
               </div>
-              <span class="text-gray-500 mx-2"> | </span>
+              <!-- <span class="text-gray-500 mx-2"> | </span>
               <span class="text-dark">
                 <span>({{ eDiseasesRowCount }})</span>
-              </span>
+              </span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <span>
@@ -6399,43 +6395,63 @@
   </div>
 </ng-template>
 
+<!-- #region Nghỉ phép -->
 <ng-template #templateDayOffGridCol1 let-data>
-  <div class="d-flex align-items-center mb-5px">
-    <i class="icon-calendar_today icon-16 me-2"></i>
-    <span
-      class="text-dark"
-      [innerHTML]="data?.kowID | formatvalue : dayofFormModel : 'kowID' | async"
-    ></span>
-  </div>
-  <div class="text-dark fs-6">
-    {{ data?.registeredDate | fmDT }}
+  <div class="d-flex align-items-top mb-1">
+    <i class="icon-deck text-primary me-2"></i>
+    <div class="d-flex flex-column">
+      <span
+        class="text-dark fw-bold"
+        [innerHTML]="
+          data?.kowID | formatvalue : dayoffFormModel : 'kowID' | async
+        "
+      ></span>
+      <span
+        class="text-dark"
+        [innerHTML]="
+          data?.registeredDate
+            | formatvalue : dayoffFormModel : 'registeredDate'
+            | async
+        "
+      ></span>
+    </div>
   </div>
 </ng-template>
 
 <ng-template #templateDayOffGridCol2 let-data>
-  <div class="d-flex align-items-center mb-5px">
-    <i class="icon-calendar_today icon-16 me-2"></i>
-    <span class="text-dark">
-      {{ data?.beginDate | fmDT }} - {{ data?.endDate | fmDT }}</span
-    >
+  <div class="d-flex align-items-center">
+    <i class="icon-event text-dark icon-16 me-1"></i>
+    <span
+      class="text-dark fw-bold"
+      [innerHTML]="
+        data?.beginDate | formatvalue : dayoffFormModel : 'beginDate' | async
+      "
+    ></span>
+    <span class="px-1"> - </span>
+    <span
+      class="text-dark fw-bold"
+      [innerHTML]="
+        data?.endDate | formatvalue : dayoffFormModel : 'endDate' | async
+      "
+    ></span>
   </div>
   <div class="d-flex align-items-center">
     <i
-      class="icon-i-circle-fill icon-circle-group icon-12 text-gray-400 me-2"
+      class="icon-i-circle-fill icon-circle-group icon-12 text-gray-400 px-2"
     ></i>
-    <span>
+    <span class="text-primary fw-bold me-1">
       {{ data?.totalDaysOff }}
     </span>
   </div>
 </ng-template>
 
 <ng-template #templateDayOffGridCol3 let-data>
-  <div class="has-action-menu">
-    <div class="min-h-40px">
+  <div class="d-flex align-items-center has-action-menu min-h-40px">
+    <span class="fw-bold">
       {{ data?.reason }}
-    </div>
+    </span>
     <codx-mfunc
-      [formModel]="dayofFormModel"
+      [formModel]="dayoffFormModel"
       (clickMF)="clickMF($event, data, 'eDayoff')"
       [dataItem]="data"
       type="hover"
@@ -6443,6 +6459,7 @@
     </codx-mfunc>
   </div>
 </ng-template>
+<!-- #endregion Nghỉ phép -->
 
 <ng-template #templateBusinessTravelGridCol1 let-data>
   <div class="d-flex flex-wrap mb-5px">
