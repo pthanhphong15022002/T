@@ -193,6 +193,20 @@ export class CodxCmService {
     return formModel;
   }
 
+  bringDefaultContactToFront(data) {
+    const defaultContactIndex = data.findIndex(
+      (data) => data.isDefault
+    );
+
+    if (defaultContactIndex !== -1) {
+      const defaultContact = data[defaultContactIndex];
+      data.splice(defaultContactIndex, 1);
+      data.unshift(defaultContact);
+    }
+
+    return data;
+  }
+
   loadList(data, list = [], action) {
     var listTmp = [];
     if (list != null && list.length > 0) {
@@ -469,7 +483,20 @@ export class CodxCmService {
       [funcID, entityName, key]
     );
   }
-  //#endregion
+  // API for More in deal
+
+  startDeal(data){
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'StartDealAsync',
+      data
+    );
+  }
+
+
+  //#endregion -- Bao
 
   //contracts -- nvthuan
   addContracts(data) {
@@ -535,5 +562,5 @@ export class CodxCmService {
   getItem(itemID) {
     return this.api.exec<any>('IV', 'ItemsBusiness', 'LoadDataAsync', itemID);
   }
-  
+
 }

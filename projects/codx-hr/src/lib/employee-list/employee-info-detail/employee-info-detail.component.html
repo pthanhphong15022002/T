@@ -654,11 +654,12 @@
                   <codx-label
                     fiedName="EmployeeName"
                     [formModel]="eInfoFormModel"
+                    [setRequire]="false"
                   >
                   </codx-label>
                 </div>
                 <div class="fw-bold text-dark fs-6">
-                  {{ infoPersonal?.employeeName }}
+                  {{infoPersonal?.employeeName }}
                 </div>
               </div>
               <!-- Bí danh -->
@@ -737,7 +738,7 @@
               <!-- Giới tính -->
               <div class="col">
                 <div class="text-gray-600 me-2 pb-1">
-                  <codx-label fiedName="Gender" [formModel]="eInfoFormModel">
+                    <codx-label fiedName="Gender" [formModel]="eInfoFormModel"  [setRequire]="false"> 
                   </codx-label>
                 </div>
                 <div>
@@ -1540,6 +1541,7 @@
                           class="icon-wysiwyg icon-16 text-gray-600 me-2"
                         ></span>
                         <codx-label
+                        [setRequire]="false"
                           fiedName="PassportNo"
                           [formModel]="ePassportFormModel"
                         >
@@ -1556,6 +1558,8 @@
                         <codx-label
                           fiedName="IssuedDate"
                           [formModel]="ePassportFormModel"
+                          [setRequire]="false"
+
                         >
                         </codx-label>
                       </div>
@@ -1570,6 +1574,8 @@
                         <codx-label
                           fiedName="ExpiredDate"
                           [formModel]="ePassportFormModel"
+                          [setRequire]="false"
+
                         >
                         </codx-label>
                       </div>
@@ -1630,6 +1636,8 @@
                           ></span>
                           <codx-label
                             fiedName="VisaNo"
+                            [setRequire]="false"
+
                             [formModel]="eVisaFormModel"
                           >
                           </codx-label>
@@ -1869,6 +1877,7 @@
                           class="icon-wysiwyg icon-16 text-gray-600 me-2"
                         ></span>
                         <codx-label
+                    [setRequire]="false"
                           fiedName="workPermitNo"
                           [formModel]="eWorkPermitFormModel"
                         >
@@ -2099,10 +2108,10 @@
                   </codx-label> -->
                       {{ getFormHeader(eFamiliesFuncID) }}
                     </div>
-                    <span class="text-gray-500 mx-2">|</span>
+                    <!-- <span class="text-gray-500 mx-2">|</span>
                     <span class="text-dark">
                       <span>({{ lstFamily.length }})</span>
-                    </span>
+                    </span> -->
                   </div>
                   <div class="d-flex align-items-center ms-5">
                     <button type="button" class="btn btn-icon btn-white">
@@ -2248,10 +2257,10 @@
                     </codx-label> -->
                       {{ getFormHeader(eExperienceFuncID) }}
                     </div>
-                    <span class="text-gray-500 mx-2">|</span>
+                    <!-- <span class="text-gray-500 mx-2">|</span>
                     <span class="text-dark">
                       <span>({{ eExperienceRowCount }})</span>
-                    </span>
+                    </span> -->
                   </div>
                   <div class="d-flex align-items-center ms-5">
                     <button
@@ -3269,6 +3278,31 @@
       (sectionChange)="onSectionChange($event)"
     > -->
 
+      <div class="user-profile overview d-block">
+        <div class="rounded-2 p-5 bg-white mb-4">
+          <div
+            class="d-flex align-items-center justify-content-between"
+          >
+            <div class="d-flex align-items-center text-primary">
+              <div class="user-status d-flex align-items-center">
+                <span class="icon-attach_money icon-20 me-2"></span>
+              </div>
+              <div class="fs-5 fw-bold text-primary text-uppercase"> 
+                Tổng lương (Gross)
+              </div>
+              <span class="ms-20"  
+              [innerHTML]="
+              infoPersonal?.totalGrossSalary
+                  | formatvalue : eInfoFormModel : 'totalGrossSalary'
+                  | async
+              "
+               >
+              </span>
+            </div> 
+          </div> 
+
+        </div>
+      </div>
     <!-- Lương -->
     <div class="user-profile overview d-block" [id]="eBasicSalaryFuncID">
       <div class="rounded-2 p-5 bg-white mb-4">
@@ -3966,6 +4000,7 @@
                       class="icon-wysiwyg icon-16 text-gray-600 me-2"
                     ></span>
                     <codx-label
+                    [setRequire]="false"
                       fiedName="ContractTypeID"
                       [formModel]="eContractFormModel"
                     >
@@ -4034,6 +4069,7 @@
                     <codx-label
                       class="text-gray-600"
                       fiedName="ContractNo"
+                      [setRequire]="false"
                       [formModel]="eContractFormModel"
                     >
                     </codx-label>
@@ -4041,6 +4077,7 @@
                     <codx-label
                       class="text-gray-600"
                       fiedName="SignedDate"
+                      [setRequire]="false"
                       [formModel]="eContractFormModel"
                     >
                     </codx-label>
@@ -4240,9 +4277,9 @@
                 <span class="text-uppercase">
                   {{ getFormHeader("HRTEM0504") }}
                 </span>
-                <span class="text-gray-500 mx-2"> | </span>
               </div>
-              <span class="text-gray-800">({{ eBusinessTravelRowCount }})</span>
+              <!-- <span class="text-gray-500 mx-2"> | </span>
+              <span class="text-gray-800">({{ eBusinessTravelRowCount }})</span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <codx-dropdown-calendar
@@ -4280,7 +4317,6 @@
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_EBusinessTravels'"
-                [rowHeight]="30"
                 height="auto"
                 [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
@@ -4481,8 +4517,8 @@
               <div class="fs-5 fw-bold text-uppercase text-primary">
                 {{ getFormHeader(eDegreeFuncID) }}
               </div>
-              <span class="text-gray-500 mx-2">|</span>
-              <span class="text-dark">({{ eDegreeRowCount }})</span>
+              <!-- <span class="text-gray-500 mx-2">|</span>
+              <span class="text-dark">({{ eDegreeRowCount }})</span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <button
@@ -4594,8 +4630,8 @@
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                 {{ getFormHeader("HRTEM0602") }}
               </div>
-              <span class="text-gray-500 mx-2">|</span>
-              <span class="text-dark">({{ eCertificateRowCount }})</span>
+              <!-- <span class="text-gray-500 mx-2">|</span>
+              <span class="text-dark">({{ eCertificateRowCount }})</span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <button
@@ -4708,8 +4744,8 @@
               <div class="fs-5 fw-bold text-uppercase mt-1">
                 {{ getFormHeader("HRTEM0603") }}
               </div>
-              <span class="text-gray-500 mx-2">|</span>
-              <span class="text-dark">({{ eSkillRowCount }})</span>
+              <!-- <span class="text-gray-500 mx-2">|</span>
+              <span class="text-dark">({{ eSkillRowCount }})</span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <button
@@ -4890,10 +4926,10 @@
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                 {{ getFormHeader("HRTEM0604") }}
               </div>
-              <span class="text-gray-500 mx-2">|</span>
+              <!-- <span class="text-gray-500 mx-2">|</span>
               <span class="text-dark">
                 <span>({{ eTrainCourseRowCount }})</span>
-              </span>
+              </span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
               <codx-dropdown-select
@@ -5369,7 +5405,7 @@
                 <span class="icon-sick icon-20 me-2"></span>
               </div>
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
-                {{ getFormHeader("HRTEM0803") }}
+                {{ getFormHeader(quitJobInfoFuncID) }}
               </div>
               <!-- <span class="text-gray-500 mx-2"> | </span>
               <span class="text-dark">
@@ -5425,7 +5461,6 @@
               [dataValues]="employeeID"
               [pageSize]="numPageSizeGridView"
               [entityName]="'HR_EDiseases'"
-              [rowHeight]="40"
               height="auto"
             >
             </codx-gridview>
@@ -6461,15 +6496,16 @@
 </ng-template>
 <!-- #endregion Nghỉ phép -->
 
+<!-- #region Nhật ký công tác -->
 <ng-template #templateBusinessTravelGridCol1 let-data>
-  <div class="d-flex flex-wrap mb-5px">
-    <i class="icon-home_work icon-16 me-2"></i>
-    <span class="text-dark">{{ data?.businessPlace }}</span>
+  <div class="d-flex align-items-center mb-1">
+    <i class="icon-home_work fw-bold icon-16 me-2"></i>
+    <span class="text-dark fw-bold">{{ data?.businessPlace }}</span>
   </div>
-  <div class="d-flex flex-wrap">
+  <div class="d-flex align-items-center">
     <i class="icon-connection-point icon-16 me-2 text-primary"></i>
     <span
-      class="text-dark"
+      class="text-primary fw-bold"
       [innerHTML]="
         data?.kowID | formatvalue : EBusinessTravelFormodel : 'kowID' | async
       "
@@ -6479,33 +6515,51 @@
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol2 let-data>
-  <div class="d-flex flex-wrap mb-5px">
-    <i class="icon-calendar_today icon-16 me-2"></i>
-    <span class="text-dark"
-      >{{ data?.beginDate | fmDT }} - {{ data?.endDate | fmDT }}</span
-    >
+  <div class="d-flex align-items-center mb-1">
+    <i class="icon-calendar_today text-dark icon-16 me-1"></i>
+    <span
+      class="text-dark fw-bold"
+      [innerHTML]="
+        data?.beginDate
+          | formatvalue : EBusinessTravelFormodel : 'beginDate'
+          | async
+      "
+    ></span>
+    <span class="px-1"> - </span>
+    <span
+      class="text-dark fw-bold"
+      [innerHTML]="
+        data?.endDate
+          | formatvalue : EBusinessTravelFormodel : 'endDate'
+          | async
+      "
+    ></span>
   </div>
   <div class="d-flex align-items-center">
     <i
-      class="icon-i-circle-fill icon-circle-group icon-12 text-gray-400 me-2"
+      class="icon-i-circle-fill icon-circle-group icon-12 text-gray-400 px-2"
     ></i>
-    <span>{{ data?.days }}</span>
+    <span class="text-primary fw-bold">
+      {{ data?.days }}
+    </span>
   </div>
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol3 let-data>
-  <div class="has-action-menu min-h-40px">
-    {{ data?.businessPurpose }}
+  <div class="d-flex align-items-center has-action-menu min-h-40px">
+    <span class="fw-bold">
+      {{ data?.businessPurpose }}
+    </span>
     <codx-mfunc
       [formModel]="EBusinessTravelFormodel"
       (clickMF)="clickMF($event, data, 'eBusinessTravels')"
-      type="hover"
       [dataItem]="data"
+      type="hover"
     >
     </codx-mfunc>
   </div>
 </ng-template>
-<!-- #endregion -->
+<!-- #endregion Nhật ký công tác -->
 
 <!--region Award - Khen thưởng-->
 <ng-template #templateAwardGridCol1 let-data>
@@ -7185,19 +7239,6 @@
 <ng-template #tmpViewAllPassport let-dialog1>
 </ng-template> -->
 
-<!-- Salary modal view All -->
-<ng-template #templateViewSalary let-dialogViewSalary>
-  <lib-popup-viewall-salary
-    [funcID]="view.funcID"
-    [employeeId]="employeeID"
-    [dialog]="dialogViewSalary"
-    [formModel]="view.formModel"
-    [headerText]="headerTextSalary"
-    (RenderUpdateData)="UpdateDataFromPopup($event)"
-  >
-  </lib-popup-viewall-salary>
-</ng-template>
-
 <ng-template #emptyDataTemplate>
   <div class="d-flex ms-1">
     <span class="text-gray-500 fw-bold">
@@ -7331,9 +7372,9 @@
                     class="fw-bold text-uppercase fs-5 text-gray-600"
                   >
                   </codx-label>
-                  <span class="text-gray-500 mx-2"> | </span>
+                  <!-- <span class="text-gray-500 mx-2"> | </span>
                   <span class="text-gray-500"
-                    >Tất cả ({{ eContractRowCount }})</span
+                    >Tất cả ({{ eContractRowCount }})</span -->
                   >
                 </div>
               </div>
@@ -7379,7 +7420,7 @@
   </div>
 </ng-template>
 
-<ng-template #templateViewBenefit let-dialogViewBenefit>
+<!-- <ng-template #templateViewBenefit let-dialogViewBenefit>
   <lib-popup-viewall-benefit
     [funcID]="view.funcID"
     [employeeId]="employeeID"
@@ -7390,3 +7431,4 @@
   >
   </lib-popup-viewall-benefit>
 </ng-template>
+ -->

@@ -140,7 +140,7 @@ export class CM_Deals {
   dealID: string;
   dealName: string;
   dealName2: string;
-  category: string;
+  category: string = "1";
   customerID: string;
   channelID: string;
   campaignID: string;
@@ -149,8 +149,8 @@ export class CM_Deals {
   tags: string;
   dealValue: number;
   probability: number;
-  expectedClosed: number;
-  status: string;
+  expectedClosed: Date;
+  status: string = "1";
   statusCodeID: string;
   stepID: string;
   nextStep: string;
