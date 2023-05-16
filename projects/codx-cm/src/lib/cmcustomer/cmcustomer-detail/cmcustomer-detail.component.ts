@@ -125,7 +125,6 @@ export class CmcustomerDetailComponent implements OnInit {
     this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
     // this.getListContactByObjectID(this.dataSelected?.recID);
     this.getContactByObjectID(this.dataSelected?.recID);
-    this.getListAddress(this.entityName, this.dataSelected?.recID);
     this.listTab(this.funcID);
     this.loaded = true;
   }

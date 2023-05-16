@@ -67,7 +67,6 @@ import { Sort } from '@syncfusion/ej2-angular-grids';
 import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 import { PopupEProcessContractComponent } from '../../employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { PopupForeignWorkerComponent } from '../../employee-profile/popup-foreign-worker/popup-foreign-worker.component';
-import { PopupViewallBenefitComponent } from './pop-up/popup-viewall-benefit/popup-viewall-benefit.component';
 import { PopupViewAllComponent } from './pop-up/popup-view-all/popup-view-all.component';
 
 @Component({
@@ -440,7 +439,7 @@ throw new Error('Method not implemented.');
   //eExperienceRowCount = 0;
   eCertificateRowCount = 0;
   eBenefitRowCount: number = 0;
-  eBusinessTravelRowCount = 0;
+  // eBusinessTravelRowCount = 0;
   eSkillRowCount = 0;
   // dayoffRowCount: number = 0;
   eAssetRowCount = 0;
@@ -1061,7 +1060,7 @@ throw new Error('Method not implemented.');
         {
           headerText:
             this.eBusinessTravelHeaderTexts['BusinessPlace'] +
-            '|' +
+            ' | ' +
             this.eBusinessTravelHeaderTexts['KowID'],
           template: this.templateBusinessTravelGridCol1,
           width: '150',
@@ -1069,7 +1068,7 @@ throw new Error('Method not implemented.');
         {
           headerText:
             this.eBusinessTravelHeaderTexts['PeriodType'] +
-            '|' +
+            ' | ' +
             this.eBusinessTravelHeaderTexts['Days'],
           template: this.templateBusinessTravelGridCol2,
           width: '150',
@@ -1082,21 +1081,21 @@ throw new Error('Method not implemented.');
       ];
     });
 
-    let insBusinessTravel = setInterval(() => {
-      if (this.businessTravelGrid) {
-        clearInterval(insBusinessTravel);
-        let t = this;
-        this.businessTravelGrid.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type != null && res.type == 'loaded') {
-              t.eBusinessTravelRowCount = res['data'].length;
-            }
-          }
-        });
-        this.eBusinessTravelRowCount =
-          this.businessTravelGrid.dataService.rowCount;
-      }
-    }, 100);
+    // let insBusinessTravel = setInterval(() => {
+    //   if (this.businessTravelGrid) {
+    //     clearInterval(insBusinessTravel);
+    //     let t = this;
+    //     this.businessTravelGrid.dataService.onAction.subscribe((res) => {
+    //       if (res) {
+    //         if (res.type != null && res.type == 'loaded') {
+    //           t.eBusinessTravelRowCount = res['data'].length;
+    //         }
+    //       }
+    //     });
+    //     this.eBusinessTravelRowCount =
+    //       this.businessTravelGrid.dataService.rowCount;
+    //   }
+    // }, 100);
 
     //#endregion
 
@@ -2946,8 +2945,8 @@ throw new Error('Method not implemented.');
                   (this.businessTravelGrid.dataService as CRUDService)
                     .remove(data)
                     .subscribe();
-                  this.eBusinessTravelRowCount =
-                    this.eBusinessTravelRowCount - 1;
+                  // this.eBusinessTravelRowCount =
+                  //   this.eBusinessTravelRowCount - 1;
                 }
               });
             } else if (funcID == 'eAwards') {
@@ -4450,7 +4449,7 @@ throw new Error('Method not implemented.');
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
-          this.eBusinessTravelRowCount += 1;
+          // this.eBusinessTravelRowCount += 1;
           (this.businessTravelGrid?.dataService as CRUDService)
             ?.add(res.event)
             .subscribe();
