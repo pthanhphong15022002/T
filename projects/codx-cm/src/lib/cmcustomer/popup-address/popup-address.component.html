@@ -10,7 +10,7 @@
 </codx-form>
 
 <ng-template #body>
-  <div class="form-group">
+  <div class="form-group mt-4">
     <codx-label fiedName="AdressType" [formModel]="form.formModel"></codx-label>
     <codx-input
       [disabled]="isDisable"
@@ -30,50 +30,62 @@
     >
     </codx-input>
   </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label fiedName="CountryID" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+          [crrValue]="data?.countryID"
+          field="countryID"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label fiedName="ProvinceID" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+          [crrValue]="data?.provinceID"
+          [model]="model"
+          field="provinceID"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label fiedName="DistrictID" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+          [crrValue]="data?.districtID"
+          [model]="modelDistrictID"
+          field="districtID"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label fiedName="WardID" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+          [crrValue]="data?.wardID"
+          [model]="modelWardID"
+          field="wardID"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
 
-  <div class="form-group">
-    <codx-label fiedName="CountryID" [formModel]="form.formModel"></codx-label>
-    <codx-input
-      [formModel]="form.formModel"
-      (valueChange)="valueChange($event)"
-      [crrValue]="data?.countryID"
-      field="countryID"
-    >
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label fiedName="ProvinceID" [formModel]="form.formModel"></codx-label>
-    <codx-input
-      [formModel]="form.formModel"
-      (valueChange)="valueChange($event)"
-      [crrValue]="data?.provinceID"
-      [model]="model"
-      field="provinceID"
-    >
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label fiedName="DistrictID" [formModel]="form.formModel"></codx-label>
-    <codx-input
-      [formModel]="form.formModel"
-      (valueChange)="valueChange($event)"
-      [crrValue]="data?.districtID"
-      [model]="modelDistrictID"
-      field="districtID"
-    >
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label fiedName="WardID" [formModel]="form.formModel"></codx-label>
-    <codx-input
-      [formModel]="form.formModel"
-      (valueChange)="valueChange($event)"
-      [crrValue]="data?.wardID"
-      [model]="modelWardID"
-      field="wardID"
-    >
-    </codx-input>
-  </div>
   <div class="form-group">
     <codx-label fiedName="PostalCode" [formModel]="form.formModel"></codx-label>
     <codx-input

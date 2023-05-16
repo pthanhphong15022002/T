@@ -308,7 +308,7 @@
           </codx-img>
         </div>
       </div>
-      <div class="form-group" *ngIf="funcID != 'CM0102'">
+      <div class="form-group mt-8" *ngIf="funcID != 'CM0102'">
         <codx-label [formModel]="form.formModel" fiedName="ShortName">
         </codx-label>
         <codx-input
@@ -770,7 +770,7 @@
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101'">
         <div class="d-flex justify-content-between">
-          <div>
+          <div class="me-2">
             <codx-input
               [formModel]="form.formModel"
               [Group]="form.formGroup"
@@ -778,7 +778,7 @@
             >
             </codx-input>
           </div>
-          <div class="w-100 ms-1">
+          <div class="w-100">
             <codx-label [formModel]="form.formModel" fiedName="OfficialHour">
             </codx-label>
           </div>
