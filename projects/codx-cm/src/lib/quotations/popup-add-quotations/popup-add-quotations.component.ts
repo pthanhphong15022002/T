@@ -386,17 +386,23 @@ export class PopupAddQuotationsComponent implements OnInit {
           dialogQuotations.closed.subscribe((res) => {
             if (res?.event) {
               let data = res?.event;
-              let check = this.quotationLinesEdit.some(
-                (x) => x.recID == data.recID
-              );
-              if (!check) this.quotationLinesEdit.push(data);
-              this.gridQuationsLines.refresh();
-              // this.dialog.dataService.updateDatas.set(
-              //   this.quotations['_uuid'],
-              //   this.quotations
-              // );
-              this.loadTotal();
-              this.changeDetector.detectChanges();
+              let idxUp =this.listQuotationLines.findIndex(x=>x.recID==data.recID)
+              if(idxUp!=-1){
+                this.listQuotationLines[idxUp] = data;
+                let check = this.quotationLinesEdit.some(
+                  (x) => x.recID == data.recID
+                );
+                if (!check) this.quotationLinesEdit.push(data);
+               
+                this.gridQuationsLines.refresh();
+                // this.dialog.dataService.updateDatas.set(
+                //   this.quotations['_uuid'],
+                //   this.quotations
+                // );
+                this.loadTotal();
+                this.changeDetector.detectChanges();
+              }
+             
             }
           });
         });

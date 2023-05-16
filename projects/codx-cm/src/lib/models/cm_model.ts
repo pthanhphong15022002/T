@@ -100,7 +100,7 @@ export class CM_QuotationsLines {
   iDIM3: string;
   IDIM4: string;
   quantity: number;
-  uMID: string;
+  umid: string;
   conversion: number;
   cWUM: string;
   cWConversion: number;
