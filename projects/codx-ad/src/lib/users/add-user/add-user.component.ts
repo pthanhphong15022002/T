@@ -200,10 +200,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
   openPopup(item: any) {
     let formGroup = this.form.formGroup.controls;
     if (
-      formGroup.userID.status == 'VALID' &&
-      formGroup.userName.status == 'VALID' &&
-      formGroup.buid.status == 'VALID' &&
-      formGroup.email.status == 'VALID'
+      formGroup.userID.value &&
+      formGroup.userName.value &&
+      formGroup.buid.value &&
+      formGroup.email.value
     ) {
       if (
         this.checkValueChangeUG == true ||

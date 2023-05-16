@@ -529,7 +529,11 @@
                           >
                           </codx-label>
                         </button>
-                        <button type="button" class="btn btn-primary ms-2">
+                        <button
+                          type="button"
+                          class="btn btn-primary ms-2"
+                          (click)="extendModule(module)"
+                        >
                           <codx-label
                             name="lblExtend"
                             [formModel]="view.formModel"
