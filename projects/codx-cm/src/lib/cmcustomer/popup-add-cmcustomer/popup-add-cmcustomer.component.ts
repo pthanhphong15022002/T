@@ -116,6 +116,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getTab();
     if (this.action == 'add' || this.action == 'copy')
       this.getAutoNumber(this.autoNumber);
     if (this.data?.objectID) {
@@ -141,6 +142,43 @@ export class PopupAddCmCustomerComponent implements OnInit {
         if (edit) this.moreFuncEdit = edit.customName;
       }
     });
+  }
+
+  getTab() {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0103') {
+      this.tabInfo = [
+        { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
+        {
+          icon: 'icon-location_on',
+          text: 'Danh sách địa chỉ',
+          name: 'Address',
+        },
+        {
+          icon: 'icon-contact_phone',
+          text: 'Người liên hệ',
+          name: 'Contacts',
+        },
+        {
+          icon: 'icon-info',
+          text: 'Thông tin khác',
+          name: 'InformationDefault',
+        },
+      ];
+    }else{
+      this.tabInfo = [
+        { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
+        {
+          icon: 'icon-location_on',
+          text: 'Danh sách địa chỉ',
+          name: 'Address',
+        },
+        {
+          icon: 'icon-info',
+          text: 'Thông tin khác',
+          name: 'InformationDefault',
+        },
+      ];
+    }
   }
 
   getAutoNumber(autoNumber) {
@@ -269,12 +307,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
               .subscribe((result) => {
                 if (result) {
                   this.dialog.close([res.save]);
-                }else{
+                } else {
                   this.dialog.close([res.save]);
-
                 }
               });
-          }else{
+          } else {
             this.dialog.close([res.save]);
           }
         }
@@ -294,17 +331,17 @@ export class PopupAddCmCustomerComponent implements OnInit {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
-            if (this.avatarChange) {
-              this.imageUpload
-                .updateFileDirectReload(recID)
-                .subscribe((result) => {
-                  if (result) {
-                    this.dialog.close(res.update);
-                  }
-                });
-            }else{
-              this.dialog.close(res.update);
-            }
+          if (this.avatarChange) {
+            this.imageUpload
+              .updateFileDirectReload(recID)
+              .subscribe((result) => {
+                if (result) {
+                  this.dialog.close(res.update);
+                }
+              });
+          } else {
+            this.dialog.close(res.update);
+          }
         }
       });
   }
