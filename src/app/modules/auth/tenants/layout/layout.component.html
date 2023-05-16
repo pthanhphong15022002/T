@@ -39,6 +39,7 @@
     <!-- begin::User -->
     <codx-user-inner
       [user]="user"
+      [hasMenu]="false"
       (onAvatarChanged)="this.reloadAvatar($event)"
       [buttonMarginClass]="codxService.toolbarButtonMarginClass"
     ></codx-user-inner>

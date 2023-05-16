@@ -97,7 +97,7 @@
   <codx-booking-view-detail #viewdetail [viewMode]="'1'" [itemDetail]="itemDetail" [funcID]="funcID"
     [formModel]="formModel" [resourceType]="resourceType" (reschedule)="reschedule($event)" (cancel)="cancel($event)"
     (invite)="invite($event)" (edit)="edit($event)" (copy)="copy($event)" (release)="release($event)"
-    (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"  (allocate)="allocate($event)"
+    (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"  (allocate)="allocate($event)" (setAllocateStatus)="setAllocateStatus($event)"
     (setPopupTitleOption)="setPopupTitleOption($event)"></codx-booking-view-detail>
 </ng-template>
 
@@ -109,11 +109,11 @@
 </ng-template>
 <ng-template #gridResourceName let-data>
   <div>
-    <span [innerHTML]="data?.resourceName  | formatvalue : formModel : 'ResourceID' | async"></span>
+    <span [innerHTML]="data?.resourceName "></span>
   </div>
 </ng-template>
 <ng-template #gridHost let-data>
-  <div>{{data?.host}}</div>
+  <span [innerHTML]="data?.owner | formatvalue : formModel : 'Owner' | async"></span>
 </ng-template>
 <ng-template #gridBookingOn let-data>
   <div>

@@ -273,14 +273,14 @@
       </thead>
       <tbody>
         <tr *ngFor="let paymemnt of  listPayment">
-          <td>{{paymemnt}}</td>
-          <td>{{paymemnt}}</td>
-          <td>{{paymemnt}}</td>
-          <td>{{paymemnt}}</td>
-          <td>{{paymemnt}}</td>
-          <td>{{paymemnt}}</td>
-          <td>{{paymemnt}}</td>
-        </tr>>
+          <td>{{paymemnt?.rowNo}}</td>
+          <td>{{paymemnt?.scheduleDate | date:'dd/MM/yyyy'}}</td>
+          <td>{{paymemnt?.scheduleAmt}}</td>
+          <td>{{paymemnt?.status}}</td>
+          <td>{{paymemnt?.remainAmt}}</td>
+          <td>{{paymemnt?.remainAmt}}</td>
+          <td>{{paymemnt?.memo}}</td>
+        </tr>
       </tbody>
     </table>
     <div class="d-flex align-items-center">

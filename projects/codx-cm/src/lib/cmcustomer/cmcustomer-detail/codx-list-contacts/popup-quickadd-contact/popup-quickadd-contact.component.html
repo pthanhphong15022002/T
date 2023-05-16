@@ -36,7 +36,6 @@
     <codx-label [formModel]="form.formModel" fiedName="ContactType">
     </codx-label>
     <codx-input
-      [disabled]="type == 'formAdd' ? true : false"
       [crrValue]="contactType"
       [formModel]="form.formModel"
       (valueChange)="valueChange($event)"
@@ -60,6 +59,15 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="firstName"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="JobTitle"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="jobTitle"
     >
     </codx-input>
   </div>
@@ -118,6 +126,20 @@
       [field]="'personalEmail'"
     >
     </codx-input>
+  </div>
+  <div class="d-flex justify-content-between">
+    <div>
+      <codx-input
+        [field]="'isDefault'"
+        [crrValue]="isDefault"
+        type="switch"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div class="w-100 ms-1">
+      <codx-label [formModel]="form.formModel" fiedName="IsDefault">
+      </codx-label>
+    </div>
   </div>
 </ng-template>
 <ng-template #footer>

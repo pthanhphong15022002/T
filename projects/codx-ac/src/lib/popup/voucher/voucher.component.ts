@@ -80,6 +80,7 @@ export class VoucherComponent implements OnInit {
     this.mapPredicates.set('currencyID', 'CurrencyID = @0');
     this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
   }
+
   ngAfterViewInit() {
     let hBody, hTab;
     if (this.cardbodyRef)
@@ -102,13 +103,30 @@ export class VoucherComponent implements OnInit {
     this.payAmt = e.data;
   }
 
-  payAmtBlur(e: any) {
-    // if (this.payAmt == e.value) return;
-    // this.payAmt = e.value;
-  }
-
   onSelected(e) {
-    console.log(e);
+    let data = e.data;
+    if(data.settledAmt != 0) return;
+    let cashDiscDate;
+    let accID = this.form.formGroup.controls.accountID.value;
+    if (data.unbounds) cashDiscDate = data.unbounds.cashDiscDate;
+    this.api
+      .exec('AC', 'SettledInvoicesBusiness', 'SettlementOneLineAsync', [
+        data,
+        accID,this.cashpayment.objectID,
+        this.cashpayment.journalType,
+        this.cashpayment.voucherDate,
+        cashDiscDate,
+        this.cashpayment.currencyID,
+        this.cashpayment.exchangeRate,
+        this.payAmt])
+      .subscribe((res) => {
+        if (res) {
+          this.grid.updateRow(e.rowIndex,res);
+          setTimeout(() => {
+            this.grid.gridRef?.selectRows(e.rowIndexes);
+          }, 100);
+        }
+      });
   }
 
   valueChange(e: any) {

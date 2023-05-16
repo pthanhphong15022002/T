@@ -41,7 +41,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   @Output() onAvatarChanged = new EventEmitter<any>();
   @Input() user: any;
   @Input() buttonMarginClass: any;
-
+  @Input() hasMenu: boolean = true;
   tenant?: string;
   themeMode: ThemeMode = themeModeDefault;
   language: LanguageFlag = langDefault;
@@ -108,7 +108,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   logout() {
     let ele = document.getElementsByTagName('codx-chat-container');
-    if(ele.length > 0){
+    if (ele.length > 0) {
       ele[0].remove();
     }
     this.signalRSV.sendData('LogOutAsync', this.user.tenant, this.user.userID);
