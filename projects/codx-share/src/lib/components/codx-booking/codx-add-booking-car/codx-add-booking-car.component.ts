@@ -45,7 +45,6 @@ export class CodxAddBookingCarComponent
 {
   tmpTitle = '';
   optionalData: any;
-  isCopy: boolean;
   user: any;
   dialogRef: DialogRef;
   formModel: FormModel;
@@ -106,7 +105,7 @@ export class CodxAddBookingCarComponent
     },
     {
       icon: 'icon-person_outline',
-      text: 'Người tham dự',
+      text: 'Người đi cùng',
       name: 'tabPeopleInfo',
     },
     {
@@ -216,7 +215,7 @@ export class CodxAddBookingCarComponent
             }
           });
 
-        if (this.isCopy) {
+        if (this.funcType == _copyMF) {
           if (this.data.equipments) {
             this.data.equipments.forEach((equip) => {
               let tmpDevice = new Device();
