@@ -276,7 +276,9 @@ export class CatagoryComponent implements OnInit {
           );
           break;
         case 'cpnapprovals':
-          let dtvalue = this.dataValue.find((x) => x.FieldName == value);
+          let dtvalue = this.dataValue[item.transType].find(
+            (x) => x.FieldName == value
+          );
           if (dtvalue.ApprovalRule == '0') return;
           dialogModel.IsFull = true;
           var category = this.categories[value];
@@ -427,9 +429,13 @@ export class CatagoryComponent implements OnInit {
     this.changeDetectorRef.detectChanges;
   }
 
-  collapseItem(evt: any, recID: string, fieldName: string) {
+  collapseItem(evt: any, setting: any) {
+    let recID = setting.recID;
+    let fName = setting.fieldName;
+    let transType = setting.transType;
     if (
-      (this.dataValue[fieldName] != '1' || !this.dataValue[fieldName]) &&
+      (this.dataValue[transType][fName] != '1' ||
+        !this.dataValue[transType][fName]) &&
       evt != null
     )
       return;
@@ -444,7 +450,7 @@ export class CatagoryComponent implements OnInit {
           if (classlist.contains('d-none')) classlist.remove('d-none');
           else classlist.add('d-none');
         } else {
-          if (this.dataValue[fieldName] != '1' || !this.dataValue[fieldName]) {
+          if (this.dataValue[fName] != '1' || !this.dataValue[fName]) {
             classlist.add('d-none');
           } else {
             classlist.remove('d-none');
@@ -495,10 +501,16 @@ export class CatagoryComponent implements OnInit {
       case '1':
       case '4':
         if (this.settingValue.length > 0) {
-          var value = this.settingValue[0].dataValue;
-          if (value) {
-            this.dataValue = JSON.parse(value);
-          }
+          this.settingValue.forEach((element) => {
+            var value = element.dataValue;
+            if (value) {
+              this.dataValue[element.transType] = JSON.parse(value);
+            }
+          });
+          // var value = this.settingValue[0].dataValue;
+          // if (value) {
+          //   this.dataValue = JSON.parse(value);
+          // }
           if (this.category == '4') {
             this.getCategories();
           }
@@ -571,11 +583,18 @@ export class CatagoryComponent implements OnInit {
     //     if (element.fieldName) lstCategoryID.push(element.fieldName);
     //   });
     // }
-    if (this.dataValue && Array.isArray(this.dataValue)) {
-      this.dataValue.forEach((element) => {
-        if (element.CategoryID) lstCategoryID.push(element.CategoryID);
-      });
+    for (const property in this.dataValue) {
+      if (this.dataValue[property] && Array.isArray(this.dataValue[property])) {
+        this.dataValue[property].forEach((element) => {
+          if (element.CategoryID) lstCategoryID.push(element.CategoryID);
+        });
+      }
     }
+    // if (this.dataValue && Array.isArray(this.dataValue)) {
+    //   this.dataValue.forEach((element) => {
+    //     if (element.CategoryID) lstCategoryID.push(element.CategoryID);
+    //   });
+    // }
     if (lstCategoryID.length > 0) {
       this.api
         .execSv<any>('ES', 'ES', 'CategoriesBusiness', 'GetDicByIDAsync', [
@@ -697,8 +716,8 @@ export class CatagoryComponent implements OnInit {
         }
       } else {
         if (this.category != '4') {
-          if (this.dataValue[field] == value) {
-            this.collapseItem(null, data.recID, data.fieldName);
+          if (this.dataValue[transType][field] == value) {
+            this.collapseItem(null, data);
             return;
           }
         }
@@ -706,22 +725,26 @@ export class CatagoryComponent implements OnInit {
           (x) => x.category == this.category && x.transType == transType
         );
         if (this.category == '1' || this.category == '4') {
-          if (this.category == '4' && Array.isArray(this.dataValue)) {
-            let dtvalue = this.dataValue.find(
+          if (
+            this.category == '4' &&
+            Array.isArray(this.dataValue[transType])
+          ) {
+            let dtvalue = this.dataValue[transType].find(
               (x) => x.FieldName == data.fieldName
             );
             if (dtvalue.ApprovalRule == value) return;
             dtvalue.ApprovalRule = value;
           } else {
             if (data.displayMode !== '4' && data.displayMode !== '5') {
-              this.dataValue[field] = value;
+              this.dataValue[transType][field] = value;
             } else {
               if (
                 evt.component?.ComponentCurrent?.typecheck == 'share' &&
                 !value
               )
                 return;
-              if (!Array.isArray(value)) this.dataValue[field] = value;
+              if (!Array.isArray(value))
+                this.dataValue[transType][field] = value;
               let fID = '',
                 id = '',
                 fName = '',
@@ -745,22 +768,22 @@ export class CatagoryComponent implements OnInit {
                   type += space + (element.objectType || '');
                 });
               }
-              if (fID) this.dataValue[fID] = id;
-              if (fName) this.dataValue[fName] = name;
-              if (fType) this.dataValue[fType] = type;
+              if (fID) this.dataValue[transType][fID] = id;
+              if (fName) this.dataValue[transType][fName] = name;
+              if (fType) this.dataValue[transType][fType] = type;
               var ele = document.querySelector(
                 '.share-object-name[data-recid="' + data.recID + '"]'
               );
               if (ele) ele.innerHTML = name;
             }
             if (data.displayMode == '3') {
-              this.collapseItem(null, data.recID, data.fieldName);
+              this.collapseItem(null, data);
             }
           }
 
           if (!this.dialog) {
             if (dt) {
-              dt.dataValue = JSON.stringify(this.dataValue);
+              dt.dataValue = JSON.stringify(this.dataValue[transType]);
               this.api
                 .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
                 .subscribe((res) => {
@@ -829,7 +852,7 @@ export class CatagoryComponent implements OnInit {
                   .subscribe((res) => {
                     if (res) {
                       dt = res;
-                      dt.dataValue = JSON.stringify(this.dataValue);
+                      dt.dataValue = JSON.stringify(this.dataValue[transType]);
                       var setting = this.setting[0];
                       dt.formName = data.formName;
                       dt.category = data.category;
@@ -886,11 +909,19 @@ export class CatagoryComponent implements OnInit {
   }
 
   click($event: any) {
-    var dt = this.settingValue.find((x) => x.category == this.category);
-    if (dt) {
-      dt.dataValue = JSON.stringify(this.dataValue);
+    var lstData: any[] = [];
+    for (const property in this.dataValue) {
+      var dt = this.settingValue.find(
+        (x) => x.category == this.category && x.transType == property
+      );
+      dt.dataValue = JSON.stringify(this.dataValue[property]);
+      lstData.push(dt);
+    }
+
+    if (lstData.length > 0) {
+      //dt.dataValue = JSON.stringify(this.dataValue);
       this.api
-        .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
+        .execAction('SYS_SettingValues', [lstData], 'UpdateAsync')
         .subscribe((res) => {
           if (res) {
             this.dialog.close();
@@ -911,14 +942,25 @@ export class CatagoryComponent implements OnInit {
           .subscribe((res) => {
             if (res) {
               dt = res;
-              dt.dataValue = JSON.stringify(this.dataValue);
-              var setting = this.setting[0];
-              dt.formName = setting.formName;
-              dt.category = setting.category;
-              dt.refModule = setting.moduleSales;
-              this.settingValue.push(dt);
+              var lstData: any[] = [];
+              for (const property in this.dataValue) {
+                var setting = this.setting.find(
+                  (x) => x.transType == property && x.category == this.category
+                );
+                dt.recID = Util.uid();
+                dt.formName = setting?.formName;
+                dt.category = setting?.category;
+                dt.refModule = setting?.moduleSales;
+                dt.transType = setting?.transType || property;
+                var dt = this.settingValue.find(
+                  (x) => x.category == this.category && x.transType == property
+                );
+                dt.dataValue = JSON.stringify(this.dataValue[property]);
+                lstData.push(dt);
+                this.settingValue.push(dt);
+              }
               this.api
-                .execAction('SYS_SettingValues', [dt], 'SaveAsync')
+                .execAction('SYS_SettingValues', [lstData], 'SaveAsync')
                 .subscribe((res) => {
                   if (res) {
                   }

@@ -126,7 +126,9 @@
                   [checked]="
                     autoDefault && autoDefault[data.fieldName]
                       ? !autoDefault[data.fieldName].stop
-                      : dataValue[data.fieldName] == '1'
+                      : dataValue[data.transType]
+                      ? dataValue[data.transType][data.fieldName] == '1'
+                      : false
                   "
                   [crrValue]="
                     data.controlType == 'Switch' ||
@@ -134,7 +136,9 @@
                       ? ''
                       : autoDefault && autoDefault[data.fieldName]
                       ? !autoDefault[data.fieldName].stop
-                      : dataValue[data.fieldName] || ''
+                      : dataValue[data.transType]
+                      ? dataValue[data.transType][data.fieldName] || ''
+                      : ''
                   "
                   (valueChange)="valueChange($event, data, autoDefault)"
                 >
@@ -173,7 +177,7 @@
                 <codx-input
                   *ngIf="
                     data.isCustomize == '0' &&
-                    (dataValue
+                    (dataValue[data.transType]
                       | value : 'FieldName' : data.fieldName : 'ApprovalRule')
                   "
                   [type]="data | type"
@@ -185,7 +189,7 @@
                   [loadFull]="true"
                   [field]="data.fieldName"
                   [checked]="
-                    (dataValue
+                    (dataValue[data.transType]
                       | value
                         : 'FieldName'
                         : data.fieldName
@@ -199,7 +203,7 @@
                 <codx-input
                   *ngIf="
                     data.isCustomize == '0' &&
-                    (dataValue
+                    (dataValue[data.transType]
                       | value : 'FieldName' : data.fieldName : 'ApprovalRule')
                   "
                   [style]="
@@ -218,7 +222,7 @@
                   [loadFull]="true"
                   [field]="data.fieldName"
                   [crrValue]="
-                    dataValue
+                    dataValue[data.transType]
                       | value : 'FieldName' : data.fieldName : 'ApprovalRule'
                   "
                   (valueChange)="valueChange($event, data, autoDefault)"
@@ -317,7 +321,8 @@
                 data.reference ? '../../../' + data.reference : null
               "
               (click)="
-                !data.reference && openSub($event, data.recID, dataValue)
+                !data.reference &&
+                  openSub($event, data.recID, dataValue[data.transType])
               "
             >
               <span class="w-30px d-flex justify-content-center"
@@ -338,7 +343,7 @@
             <a
               href="javascript:void(0)"
               *ngIf="data.displayMode === '3'"
-              (click)="collapseItem($event, data.recID, data.fieldName)"
+              (click)="collapseItem($event, data)"
               ><span class="w-30px d-flex justify-content-center"
                 ><span
                   class="button-collapse icon-keyboard_arrow_right icon-22"
@@ -387,13 +392,23 @@
           [attr.data-recid]="data.recID"
         >
           {{
-            (data.recID | shareSetting : settingFull : dataValue)?.objectName ==
-              "null" ||
-            !(data.recID | shareSetting : settingFull : dataValue)?.objectName
+            (
+              data.recID
+              | shareSetting : settingFull : dataValue[data.transType]
+            )?.objectName == "null" ||
+            !(
+              data.recID
+              | shareSetting : settingFull : dataValue[data.transType]
+            )?.objectName
               ? ""
-              : (data.recID | shareSetting : settingFull : dataValue)
-                  ?.objectName ||
-                (data.recID | shareSetting : settingFull : dataValue)?.objectID
+              : (
+                  data.recID
+                  | shareSetting : settingFull : dataValue[data.transType]
+                )?.objectName ||
+                (
+                  data.recID
+                  | shareSetting : settingFull : dataValue[data.transType]
+                )?.objectID
           }}
         </span>
       </div>
