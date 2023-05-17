@@ -227,6 +227,7 @@ export class PopupAddQuotationsComponent implements OnInit {
         this.modelObjectIDContacs = { objectID: this.quotations.customerID };
         break;
     }
+    this.form.formGroup.patchValue(this.quotations);
   }
 
   valueChange(e) {
@@ -490,13 +491,13 @@ export class PopupAddQuotationsComponent implements OnInit {
       this.listQuotationLines.forEach((element) => {
         //tisnh tong tien
         totals += element['netAmt'] ?? 0;
-        totalVAT += element['VATAmt'] ?? 0;
+        totalVAT += element['vatAmt'] ?? 0;
         totalDis += element['discAmt'] ?? 0;
       });
     }
     this.quotations['totalAmt'] = totals;
     // this.quotations['DiscAmt'] = totalVAT;
-    this.quotations['DiscAmt'] = totalDis;
+    this.quotations['discAmt'] = totalDis;
   }
 
   clearQuotationsLines() {

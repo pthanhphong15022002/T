@@ -4,7 +4,7 @@
       type="button"
       class="btn btn-sm btn-icon btn-primary me-2 d-flex"
       style="min-width: 100px"
-      (click)="openPopupAddress()"
+      (click)="openPopupAddress(null, 'add')"
     >
       <i class="icon-add_location_alt icon-16 me-1"></i>
       <codx-label
@@ -49,7 +49,11 @@
 </ng-template>
 
 <ng-template #address let-data>
-  <div class="d-flex flex-column mb-2 has-action-menu-od">
+  <div
+    (click)="changeAddress(data)"
+    [ngClass]="data.recID == this.currentRecID ? 'user-nav-active' : null"
+    class="d-flex p-2 border-bottom border-gray-150 flex-column has-action-menu-od user-nav-item"
+  >
     <div class="row">
       <div class="col-10">
         <div class="d-flex">

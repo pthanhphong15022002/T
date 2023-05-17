@@ -7,6 +7,7 @@
         </h2>
       </div>
       <div class="d-flex justify-content-end">
+        <ng-container [ngTemplateOutlet]="confirmCheckbox"> </ng-container>
         <ng-container *ngFor="let item of lstMF">
           <button
             type="button"
@@ -152,5 +153,25 @@
         </button>
       </div>
     </div>
+  </div>
+</ng-template>
+<ng-template #confirmCheckbox>
+  <div
+    class="pdf-check-add align-self-center me-3 btn-flex flex-center btn-white"
+  >
+    <codx-input
+      type="checkbox"
+      class="check-add me-2"
+      name="select"
+      (valueChange)="changeConfirmState($event)"
+    >
+    </codx-input>
+    {{ "ES011" | mssg | async }}
+    <!-- <codx-label
+      name="lblConfirmSeen"
+      [formModel]=""
+      [default]="'Xác nhận đã xem văn bản'"
+      class="text-header"
+    ></codx-label> -->
   </div>
 </ng-template>

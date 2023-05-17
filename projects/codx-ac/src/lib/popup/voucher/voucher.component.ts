@@ -33,7 +33,7 @@ export class VoucherComponent implements OnInit {
   vouchers: Array<any> = [];
   gridModel: DataRequest = new DataRequest();
   invoiceDueDate: any;
-  gridHeight: number = 0;
+  gridHeight: any='100%';
   formModel: FormModel = {
     gridViewName: 'grvSettledInvoices',
     formName: 'SettledInvoices',
@@ -50,6 +50,12 @@ export class VoucherComponent implements OnInit {
   @ViewChild('cashRef') cashRef: ElementRef;
   morefunction: any;
   payAmt: number = 0;
+  editSettings: any = {
+    allowAdding: true,
+    allowDeleting: true,
+    allowEditing: true,
+    mode: 'Normal',
+  };
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -105,6 +111,7 @@ export class VoucherComponent implements OnInit {
     this.payAmt = e.data;
   }
 
+  oldSelected:any=[]
   onSelected(e) {
     let data = e.data;
     if(data.settledAmt != 0) return;
@@ -123,10 +130,22 @@ export class VoucherComponent implements OnInit {
         this.payAmt])
       .subscribe((res) => {
         if (res) {
-          this.grid.updateRow(e.rowIndex,res);
+          this.grid.dataSource[e.rowIndex] =res;
+          this.grid.gridRef.dataSource = [...this.grid.dataSource];
+          if(e.rowIndexes && Array.isArray(e.rowIndexes)){
+            this.oldSelected = e.rowIndexes
+          }
+
           setTimeout(() => {
-            this.grid.gridRef?.selectRows(e.rowIndexes);
-          }, 100);
+            if(this.isDblCLick){
+              this.isDblCLick = false;
+              this.grid.gridRef.startEdit();
+            }
+            else{
+              this.grid.gridRef?.selectRows(this.oldSelected);
+            }
+
+          }, 200);
         }
       });
   }
@@ -352,4 +371,21 @@ export class VoucherComponent implements OnInit {
       });
   }
   //#endregion
+
+  isDblCLick:boolean=false;
+  onDoubleClick(e:any){
+    if(e.rowIndex){
+      this.isDblCLick = true;
+      this.grid.gridRef.selectRow(e.rowIndex);
+    }
+  }
+  actions(e:any){
+    if(e.type=='endEdit'){
+      if(this.oldSelected && this.oldSelected.length && this.grid.gridRef){
+        setTimeout(()=>{
+          this.grid.gridRef.selectRows(this.oldSelected);
+        },500)
+      }
+    }
+  }
 }

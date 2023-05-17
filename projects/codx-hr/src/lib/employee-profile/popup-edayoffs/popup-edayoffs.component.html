@@ -479,35 +479,35 @@
     <ng-template #body>
         <div class="form-group row d-flex flex-row" *ngIf="fromListView">
             <div class="col-6">
-              <div class="d-flex align-items-start">
-                <div class="d-flex flex-column me-2">
-                  <codx-img [width]="35" [objectId]="empObj?.employeeID" [referType]="'avt'"
-                    [objectName]="empObj?.employeeName" [objectType]="'HR_Employees'">
-                  </codx-img>
-                  <!-- <codx-vll class="badge badge-sm badge-light me-0" [name]="genderGrvSetup?.referedValue"
+                <div class="d-flex align-items-start">
+                    <div class="d-flex flex-column me-2">
+                        <codx-img [width]="35" [objectId]="empObj?.employeeID" [referType]="'avt'"
+                            [objectName]="empObj?.employeeName" [objectType]="'HR_Employees'">
+                        </codx-img>
+                        <!-- <codx-vll class="badge badge-sm badge-light me-0" [name]="genderGrvSetup?.referedValue"
                     [value]="empObj?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
                   </codx-vll> -->
+                    </div>
+                    <div class="d-flex flex-column">
+                        <div class="me-2 text-dark fw-bold text-nowrap">
+                            <span>{{ empObj?.employeeName }}</span>
+                        </div>
+                        <div class="text-gray-500 fs-7">
+                            <span [innerHTML]="empObj?.positionID"></span>
+                        </div>
+                        <div class="text-gray-700">
+                            <span [innerHTML]="empObj?.orgUnitID"></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="d-flex flex-column">
-                  <div class="me-2 text-dark fw-bold text-nowrap">
-                    <span>{{ empObj?.employeeName }}</span>
-                  </div>
-                  <div class="text-gray-500 fs-7">
-                    <span [innerHTML]="empObj?.positionID"></span>
-                  </div>
-                  <div class="text-gray-700">
-                    <span [innerHTML]="empObj?.orgUnitID"></span>
-                  </div>
-                </div>
-              </div>
             </div>
             <div class="col-6" *ngIf="actionType != 'edit'">
-              <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
-              <codx-input field="employeeID" [formModel]="formModel" [Group]="formGroup"
-                (valueChange)="handleSelectEmp($event)">
-              </codx-input>
+                <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
+                <codx-input field="employeeID" [formModel]="formModel" [Group]="formGroup"
+                    (valueChange)="handleSelectEmp($event)">
+                </codx-input>
             </div>
-          </div>
+        </div>
         <div class="form-group row mt-5">
             <div class="col-6">
                 <codx-label fiedName="RegisteredDate" [formModel]="formModel"></codx-label>
@@ -523,7 +523,8 @@
 
         <div class="form-group row">
             <codx-label fiedName="KowID" [formModel]="formModel"></codx-label>
-            <codx-input field="kowID" [formModel]="formModel" [Group]="formGroup"></codx-input>
+            <codx-input field="kowID" [formModel]="formModel" [Group]="formGroup" 
+                (valueChange)="kowIDValuechange()"></codx-input>
         </div>
 
         <div class="form-group row">
@@ -601,11 +602,12 @@
             <codx-input field="note" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
 
-        <div class="row text-primary">
-            <codx-label default="THÔNG TIN LOẠI NGHỈ CHẾ ĐỘ" [formModel]="formModel"></codx-label>
+        <div class="row mt-5 mb-1">
+            <codx-label class="fw-bold text-primary fs-5" default="THÔNG TIN LOẠI NGHỈ CHẾ ĐỘ"
+                [formModel]="formModel"></codx-label>
         </div>
 
-        <div class="form-group row">
+        <div id="groupA" *ngIf="groupKowTypeView['groupA'].isShow" class="form-group row">
             <div class="col-6">
                 <codx-label fiedName="SILeaveNo" [formModel]="formModel"></codx-label>
                 <codx-input field="SILeaveNo" [formModel]="formModel" [Group]="formGroup"></codx-input>
@@ -616,7 +618,7 @@
             </div>
         </div>
 
-        <div class="form-group row">
+        <div id="groupB" *ngIf="groupKowTypeView['groupB'].isShow" class="form-group row">
             <div class="col-6">
                 <codx-label fiedName="ChildID" [formModel]="formModel"></codx-label>
                 <codx-input field="childID" [formModel]="formModel" [Group]="formGroup"></codx-input>
@@ -627,7 +629,7 @@
             </div>
         </div>
 
-        <div class="form-group row">
+        <div id="groupC" *ngIf="groupKowTypeView['groupC'].isShow" class="form-group row">
             <div class="col-6">
                 <codx-label fiedName="PregnancyFrom" [formModel]="formModel"></codx-label>
                 <!-- <codx-input
@@ -645,58 +647,60 @@
             </div>
         </div>
 
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label fiedName="NewChildBirthDate" [formModel]="formModel"></codx-label>
-                <codx-input field="newChildBirthDate" [formModel]="formModel" [Group]="formGroup"></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label fiedName="NewChildNum" [formModel]="formModel"></codx-label>
-                <codx-input field="newChildNum" [showSpinButton]="false" [formModel]="formModel"
-                    [Group]="formGroup"></codx-input>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6">
-                <!-- <codx-label
-                    fiedName="NewChildBirthType"
-                    [formModel]="formModel"
-                ></codx-label> -->
-                <div *ngIf="lstPregnantType">
-                    <codx-input type="checkbox" [label]="lstPregnantType[0].text" [checked]="isnormalPregnant"
-                        (valueChange)="HandlePregnantTypeChange($event, lstPregnantType[0])"></codx-input>
+        <div id="groupD" *ngIf="groupKowTypeView['groupD'].isShow">
+            <div class="form-group row">
+                <div class="col-6">
+                    <codx-label fiedName="NewChildBirthDate" [formModel]="formModel"></codx-label>
+                    <codx-input field="newChildBirthDate" [formModel]="formModel" [Group]="formGroup"></codx-input>
                 </div>
-
-                <div *ngIf="lstPregnantType">
-                    <codx-input type="checkbox" [checked]="isNotNormalPregnant" [label]="lstPregnantType[1].text"
-                        (valueChange)="HandlePregnantTypeChange($event, lstPregnantType[1])"></codx-input>
+                <div class="col-6">
+                    <codx-label fiedName="NewChildNum" [formModel]="formModel"></codx-label>
+                    <codx-input field="newChildNum" [showSpinButton]="false" [formModel]="formModel"
+                        [Group]="formGroup"></codx-input>
                 </div>
             </div>
-            <div class="col-6">
-                <div>
-                    <codx-label fiedName="IsNewChildUnder32W" [formModel]="formModel"></codx-label>
+
+            <div class="form-group row">
+                <div class="col-6">
+                    <!-- <codx-label
+                        fiedName="NewChildBirthType"
+                        [formModel]="formModel"
+                        ></codx-label> -->
+                    <div *ngIf="lstPregnantType">
+                        <codx-input type="checkbox" [label]="lstPregnantType[0].text" [checked]="isnormalPregnant"
+                            (valueChange)="HandlePregnantTypeChange($event, lstPregnantType[0])"></codx-input>
+                    </div>
+
+                    <div *ngIf="lstPregnantType">
+                        <codx-input type="checkbox" [checked]="isNotNormalPregnant" [label]="lstPregnantType[1].text"
+                            (valueChange)="HandlePregnantTypeChange($event, lstPregnantType[1])"></codx-input>
+                    </div>
                 </div>
-                <div>
-                    <codx-input field="isNewChildUnder32W" [formModel]="formModel" [Group]="formGroup"></codx-input>
+                <div class="col-6">
+                    <div>
+                        <codx-label fiedName="IsNewChildUnder32W" [formModel]="formModel"></codx-label>
+                    </div>
+                    <div>
+                        <codx-input field="isNewChildUnder32W" [formModel]="formModel" [Group]="formGroup"></codx-input>
+                    </div>
+
                 </div>
-
             </div>
-        </div>
 
-        <div class="form-group row">
-            <codx-label fiedName="WifeID" [formModel]="formModel"></codx-label>
-            <codx-input field="wifeID" [formModel]="formModel" [Group]="formGroup"></codx-input>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label fiedName="WifeIDCardNo" [formModel]="formModel"></codx-label>
-                <codx-input field="wifeIDCardNo" [formModel]="formModel" [Group]="formGroup"></codx-input>
+            <div class="form-group row">
+                <codx-label fiedName="WifeID" [formModel]="formModel"></codx-label>
+                <codx-input field="wifeID" [formModel]="formModel" [Group]="formGroup"></codx-input>
             </div>
-            <div class="col-6">
-                <codx-label fiedName="WifeSINo" [formModel]="formModel"></codx-label>
-                <codx-input field="wifeSINo" [formModel]="formModel" [Group]="formGroup"></codx-input>
+
+            <div class="form-group row">
+                <div class="col-6">
+                    <codx-label fiedName="WifeIDCardNo" [formModel]="formModel"></codx-label>
+                    <codx-input field="wifeIDCardNo" [formModel]="formModel" [Group]="formGroup"></codx-input>
+                </div>
+                <div class="col-6">
+                    <codx-label fiedName="WifeSINo" [formModel]="formModel"></codx-label>
+                    <codx-input field="wifeSINo" [formModel]="formModel" [Group]="formGroup"></codx-input>
+                </div>
             </div>
         </div>
 

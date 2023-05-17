@@ -200,7 +200,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   openPopup(item: any) {
     let formGroup = this.form.formGroup.controls;
     if (
-      formGroup.userID.value &&
+      formGroup.userID.valid &&
       formGroup.userName.value &&
       formGroup.buid.value &&
       formGroup.email.value
@@ -340,7 +340,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     let formGroup = this.form.formGroup.controls;
     if (!this.adUser.buid) formGroup.buid.setValue(null);
     if (
-      formGroup.userID.value &&
+      formGroup.userID.valid &&
       formGroup.userName.value &&
       formGroup.buid.value &&
       formGroup.email.value

@@ -68,6 +68,7 @@ import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-eco
 import { PopupEProcessContractComponent } from '../../employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { PopupForeignWorkerComponent } from '../../employee-profile/popup-foreign-worker/popup-foreign-worker.component';
 import { PopupViewAllComponent } from './pop-up/popup-view-all/popup-view-all.component';
+import { PopupEquitjobComponent } from '../../employee-profile/popup-equitjob/popup-equitjob.component';
 
 @Component({
   selector: 'lib-employee-info-detail',
@@ -75,16 +76,15 @@ import { PopupViewAllComponent } from './pop-up/popup-view-all/popup-view-all.co
   styleUrls: ['./employee-info-detail.component.scss'],
 })
 export class EmployeeInfoDetailComponent extends UIComponent {
-valueChangeViewAllEContract() {
-throw new Error('Method not implemented.');
-}
+  valueChangeViewAllEContract() {
+    throw new Error('Method not implemented.');
+  }
   console = console;
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('button') button: TemplateRef<any>;
   @ViewChild('itemTemplate') template: TemplateRef<any>;
   @ViewChild('paneRight') panelRight: TemplateRef<any>;
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
-
 
   views: Array<ViewModel> | any = [];
   minType = 'MinRange';
@@ -101,7 +101,7 @@ throw new Error('Method not implemented.');
     'HRTEM0804',
     'HRTEM0801',
   ];
-  dialogViewAll : any;
+  dialogViewAll: any;
 
   infoPersonal: any;
   infoPersonalContract: any;
@@ -165,6 +165,7 @@ throw new Error('Method not implemented.');
   //EAppointion
   lstAppointions: any = [];
   //Basic salary
+  employeeGrossSalary;
   crrEBSalary: any;
 
   listCrrBenefit: any;
@@ -376,7 +377,8 @@ throw new Error('Method not implemented.');
   //#endregion
 
   //#region gridView viewChild
-  @ViewChild('passportGridview',{ static: true }) passportGridview: CodxGridviewComponent;
+  @ViewChild('passportGridview', { static: true })
+  passportGridview: CodxGridviewComponent;
   @ViewChild('visaGridview') visaGridview: CodxGridviewComponent;
   @ViewChild('workPermitGridview') workPermitGridview: CodxGridviewComponent;
   @ViewChild('basicSalaryGridview') basicSalaryGridview: CodxGridviewComponent;
@@ -503,6 +505,7 @@ throw new Error('Method not implemented.');
   eContractFuncID = 'HRTEM0501';
   eDisciplineFuncID = 'HRTEM0702';
   eDiseasesFuncID = 'HRTEM0803';
+  eQuitJobFuncID = 'HRTEM0901'
   eAccidentsFuncID = 'HRTEM0804';
   eNeedToSubmitProfileFuncID = 'HRTEM0304';
   //#endregion
@@ -519,6 +522,7 @@ throw new Error('Method not implemented.');
   eInfoFormModel: FormModel; // Thông tin bản thân/ Bảo hiểm
   eFamilyFormModel: FormModel; //Quan hệ gia đình
   ePassportFormModel: FormModel; //Hộ chiếu
+  eQuitJobFormModel: FormModel; //Hộ chiếu
   eVisaFormModel: FormModel;
   eWorkPermitFormModel: FormModel; //Giay phep lao dong
   eCertificateFormModel: FormModel; // Chứng chỉ
@@ -596,17 +600,14 @@ throw new Error('Method not implemented.');
 
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) 
-  {
+  ) {
     super(inject);
     this.user = this.auth.get();
     this.funcID = this.routeActive.snapshot.params['funcID'];
   }
 
   onInit(): void {
-    
-    this.hrService.getFunctionList(this.funcID)
-    .subscribe((res) => {
+    this.hrService.getFunctionList(this.funcID).subscribe((res) => {
       console.log('functionList', res);
       if (res && res[1] > 0) {
         this.lstTab = res[0].filter((p) => p.parentID == this.funcID);
@@ -754,7 +755,6 @@ throw new Error('Method not implemented.');
       }
     });
 
-
     //#region filter
     this.dayOffSortModel = new SortModel();
     this.dayOffSortModel.field = 'BeginDate';
@@ -816,9 +816,9 @@ throw new Error('Method not implemented.');
     this.eContractSortModel.field = 'EffectedDate';
     this.eContractSortModel.dir = 'desc';
 
-    this.disciplinesSortModel = new SortModel()
+    this.disciplinesSortModel = new SortModel();
     this.disciplinesSortModel.field = 'DisciplineDate';
-    this.disciplinesSortModel.dir = 'desc'
+    this.disciplinesSortModel.dir = 'desc';
 
     // #region Sức khỏe sort model
 
@@ -877,6 +877,11 @@ throw new Error('Method not implemented.');
     this.hrService.getFormModel(this.eWorkPermitFuncID).then((res) => {
       this.eWorkPermitFormModel = res;
     });
+
+    this.hrService.getFormModel(this.quitJobInfoFuncID).then((res) => {
+      console.log('formModel thoi viec', res);
+      this.eQuitJobFormModel = res;
+    })
 
     this.hrService.getFormModel(this.eExperienceFuncID).then((res) => {
       this.eExperienceFormModel = res;
@@ -1112,9 +1117,12 @@ throw new Error('Method not implemented.');
           width: '150',
         },
         {
-          headerText: this.dayoffHeaderTexts['BeginDate']
-            + ' - ' + this.dayoffHeaderTexts['EndDate']
-            + ' | ' + this.dayoffHeaderTexts['TotalDaysOff'],
+          headerText:
+            this.dayoffHeaderTexts['BeginDate'] +
+            ' - ' +
+            this.dayoffHeaderTexts['EndDate'] +
+            ' | ' +
+            this.dayoffHeaderTexts['TotalDaysOff'],
           template: this.templateDayOffGridCol2,
           width: '150',
         },
@@ -1549,8 +1557,11 @@ throw new Error('Method not implemented.');
     // }, 100);
 
     //#endregion
-  }
 
+    this.hrService.getGrossSalary(this.employeeID).subscribe((res) => {
+      this.employeeGrossSalary = res;
+    });
+  }
 
   ngAfterViewInit(): void {
     // this.view.dataService.methodDelete = 'DeleteSignFileAsync';
@@ -1833,15 +1844,14 @@ throw new Error('Method not implemented.');
       }
 
       // Benefit
-      if (!this.listCrrBenefit)
-      this.loadEBenefit = false;
-        this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
-          this.loadEBenefit = true;
-          if (res?.length) {
-            this.listCrrBenefit = res;
-            this.df.detectChanges();
-          } 
-        });
+      if (!this.listCrrBenefit) this.loadEBenefit = false;
+      this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
+        this.loadEBenefit = true;
+        if (res?.length) {
+          this.listCrrBenefit = res;
+          this.df.detectChanges();
+        }
+      });
 
       // Asset
       if (!this.lstAsset)
@@ -2174,7 +2184,7 @@ throw new Error('Method not implemented.');
     }
   }
 
-  getECurrentContract(){
+  getECurrentContract() {
     if (!this.crrEContract) {
       //HR_EContracts
       let rqContract = new DataRequest();
@@ -2186,11 +2196,9 @@ throw new Error('Method not implemented.');
       rqContract.pageSize = 1;
 
       this.hrService.getCrrEContract(rqContract).subscribe((res) => {
-        debugger
         if (res && res[0]) {
           this.crrEContract = res[0][0];
-        }
-        else{
+        } else {
           this.crrEContract = null;
         }
         this.df.detectChanges();
@@ -2338,7 +2346,6 @@ throw new Error('Method not implemented.');
     //       },
     //     ];
     //   });
-
     //   let insVisa = setInterval(() => {
     //     if (this.visaGridview) {
     //       clearInterval(insVisa);
@@ -2358,8 +2365,6 @@ throw new Error('Method not implemented.');
     //   }, 100);
     // }
     //#endregion
-
-
     //#region get columnGrid EWorkPermit - Giấy phép lao động
     // if (!this.workPermitColumnGrid) {
     //   this.hrService.getHeaderText(this.eWorkPermitFuncID).then((res) => {
@@ -2381,7 +2386,6 @@ throw new Error('Method not implemented.');
     //       },
     //     ];
     //   });
-
     //   let insWorkPermit = setInterval(() => {
     //     if (this.workPermitGridview) {
     //       clearInterval(insWorkPermit);
@@ -2403,8 +2407,6 @@ throw new Error('Method not implemented.');
     // }
     //#endregion
   }
-
-  
 
   initForm() {
     this.initPersonalInfo();
@@ -2494,6 +2496,9 @@ throw new Error('Method not implemented.');
       case this.eAccidentsFuncID:
         this.HandleEmployeeAccidentInfo(this.addHeaderText, 'add', null);
         break;
+      case this.eQuitJobFuncID:
+        this.HandleEmployeeQuitJobInfo(this.addHeaderText, 'add', null);
+        break;
     }
   }
 
@@ -2580,7 +2585,7 @@ throw new Error('Method not implemented.');
         }
         break;
 
-      case this.ePassportFuncID + 'ViewAll':        
+      case this.ePassportFuncID + 'ViewAll':
         this.popupViewAllPassport();
         break;
       case this.eVisaFuncID + 'ViewAll':
@@ -2613,27 +2618,29 @@ throw new Error('Method not implemented.');
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                      this.hrService.GetEmpCurrentPassport(this.employeeID).subscribe((res) => {
+                    this.hrService
+                      .GetEmpCurrentPassport(this.employeeID)
+                      .subscribe((res) => {
                         this.crrPassport = res;
-                    this.df.detectChanges();
-                      })
+                        this.df.detectChanges();
+                      });
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            }
-
-            else if (funcID == 'workpermit') {
+            } else if (funcID == 'workpermit') {
               this.hrService
                 .DeleteEmployeeWorkPermitInfo(data.recID)
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.hrService.GetEmpCurrentWorkpermit(this.employeeID).subscribe((res) => {
-                      this.crrWorkpermit = res;
-                  this.df.detectChanges();
-                    })
-                } else {
+                    this.hrService
+                      .GetEmpCurrentWorkpermit(this.employeeID)
+                      .subscribe((res) => {
+                        this.crrWorkpermit = res;
+                        this.df.detectChanges();
+                      });
+                  } else {
                     this.notify.notifyCode('SYS022');
                   }
                 });
@@ -2643,27 +2650,31 @@ throw new Error('Method not implemented.');
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.hrService.GetEmpCurrentVisa(this.employeeID).subscribe((res) => {
-                      this.crrVisa = res;
-                      this.df.detectChanges();
-                    })
+                    this.hrService
+                      .GetEmpCurrentVisa(this.employeeID)
+                      .subscribe((res) => {
+                        this.crrVisa = res;
+                        this.df.detectChanges();
+                      });
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
                 });
             } else if (funcID == 'eDayoff') {
-              this.hrService.DeleteEmployeeDayOffInfo(data.recID).subscribe((p) => {
-                if (p != null) {
-                  this.notify.notifyCode('SYS008');
-                  (this.dayoffGrid.dataService as CRUDService)
-                    .remove(data)
-                    .subscribe();
-                  // this.dayoffRowCount = this.dayoffRowCount - 1;
-                  this.df.detectChanges();
-                } else {
-                  this.notify.notifyCode('SYS022');
-                }
-              });
+              this.hrService
+                .DeleteEmployeeDayOffInfo(data.recID)
+                .subscribe((p) => {
+                  if (p != null) {
+                    this.notify.notifyCode('SYS008');
+                    (this.dayoffGrid.dataService as CRUDService)
+                      .remove(data)
+                      .subscribe();
+                    // this.dayoffRowCount = this.dayoffRowCount - 1;
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
             } else if (funcID == 'family') {
               this.hrService
                 .DeleteEmployeeFamilyInfo(data.recID)
@@ -3011,7 +3022,7 @@ throw new Error('Method not implemented.');
 
       case 'SYS04': //copy
         if (funcID == 'passport') {
-          this.copyValue(event.text, data, 'ePassport')
+          this.copyValue(event.text, data, 'ePassport');
           this.df.detectChanges();
         } else if (funcID == 'eDayoff') {
           this.copyValue(event.text, data, 'eDayoff');
@@ -3071,7 +3082,7 @@ throw new Error('Method not implemented.');
           this.HandleEmployeeEAwardsInfo(event.text, 'copy', data);
           this.df.detectChanges();
         } else if (funcID == 'eDisciplines') {
-          this.copyValue(event.text, data, 'eDisciplines')
+          this.copyValue(event.text, data, 'eDisciplines');
           // this.HandleEmployeeEDisciplinesInfo(event.text, 'copy', data);
           this.df.detectChanges();
         } else if (funcID == 'eDiseases') {
@@ -3088,7 +3099,7 @@ throw new Error('Method not implemented.');
     }
   }
 
-  popupViewAllContract(){
+  popupViewAllContract() {
     let opt = new DialogModel();
     opt.zIndex = 999;
     let popup = this.callfunc.openForm(
@@ -3105,25 +3116,23 @@ throw new Error('Method not implemented.');
         //columnGrid: this.passportColumnGrid,
         formModel: this.eContractFormModel,
         hasFilter: false,
-      }
-      ,
+      },
       null,
       opt
-    )
+    );
     popup.closed.subscribe((res) => {
-      if(res?.event){
-        if(res?.event == 'none'){
+      if (res?.event) {
+        if (res?.event == 'none') {
           this.crrEContract = null;
-        }
-        else{
-          this.crrEContract = res.event
+        } else {
+          this.crrEContract = res.event;
         }
         this.df.detectChanges();
       }
-    })
+    });
   }
 
-  popupViewAllWorkPermit(){
+  popupViewAllWorkPermit() {
     let opt = new DialogModel();
     opt.zIndex = 999;
     let popup = this.callfunc.openForm(
@@ -3140,25 +3149,23 @@ throw new Error('Method not implemented.');
         //columnGrid: this.passportColumnGrid,
         formModel: this.eWorkPermitFormModel,
         hasFilter: false,
-      }
-      ,
+      },
       null,
       opt
-    )
+    );
     popup.closed.subscribe((res) => {
-      if(res?.event){
-        if(res?.event == 'none'){
+      if (res?.event) {
+        if (res?.event == 'none') {
           this.crrWorkpermit = null;
-        }
-        else{
-          this.crrWorkpermit = res.event
+        } else {
+          this.crrWorkpermit = res.event;
         }
         this.df.detectChanges();
       }
-    })
+    });
   }
 
-  popupViewAllVisa(){
+  popupViewAllVisa() {
     let opt = new DialogModel();
     opt.zIndex = 999;
     let popup = this.callfunc.openForm(
@@ -3175,25 +3182,23 @@ throw new Error('Method not implemented.');
         //columnGrid: this.passportColumnGrid,
         formModel: this.eVisaFormModel,
         hasFilter: false,
-      }
-      ,
+      },
       null,
       opt
-    )
+    );
     popup.closed.subscribe((res) => {
-      if(res?.event){
-        if(res?.event == 'none'){
+      if (res?.event) {
+        if (res?.event == 'none') {
           this.crrVisa = null;
-        }
-        else{
-          this.crrVisa = res.event
+        } else {
+          this.crrVisa = res.event;
         }
         this.df.detectChanges();
       }
-    })
+    });
   }
 
-  popupViewAllPassport(){
+  popupViewAllPassport() {
     let opt = new DialogModel();
     opt.zIndex = 999;
     let popup = this.callfunc.openForm(
@@ -3210,22 +3215,20 @@ throw new Error('Method not implemented.');
         //columnGrid: this.passportColumnGrid,
         formModel: this.ePassportFormModel,
         hasFilter: false,
-      }
-      ,
+      },
       null,
       opt
-    )
+    );
     popup.closed.subscribe((res) => {
-      if(res?.event){
-        if(res?.event == 'none'){
+      if (res?.event) {
+        if (res?.event == 'none') {
           this.crrPassport = null;
-        }
-        else{
-          this.crrPassport = res.event
+        } else {
+          this.crrPassport = res.event;
         }
         this.df.detectChanges();
       }
-    })
+    });
   }
   // getDataAsync(funcID: string) {
   //   this.getDataFromFunction(funcID);
@@ -3249,8 +3252,6 @@ throw new Error('Method not implemented.');
   //       });
   //   }
   // }
-
-  
 
   changeItemDetail(item) {}
 
@@ -3297,6 +3298,9 @@ throw new Error('Method not implemented.');
         break;
       case this.healthInfoFuncID:
         this.lstBtnAdd = this.lstFuncHealth;
+        break;
+      case this.quitJobInfoFuncID:
+        this.lstBtnAdd = this.lstFuncQuitJob;
         break;
     }
   }
@@ -3706,27 +3710,32 @@ throw new Error('Method not implemented.');
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event){
+      if (!res?.event) {
         // (this.passportGridview.dataService as CRUDService).clear();
-      }
-      else {
-        if(actionType == 'add' || actionType == 'copy'){
-        if(!this.crrPassport || (res?.event.issuedDate > this.crrPassport.issuedDate)){
-          this.crrPassport = res?.event;
-          this.df.detectChanges()
+      } else {
+        if (actionType == 'add' || actionType == 'copy') {
+          if (
+            !this.crrPassport ||
+            res?.event.issuedDate > this.crrPassport.issuedDate
+          ) {
+            this.crrPassport = res?.event;
+            this.df.detectChanges();
+          }
+        } else if (actionType == 'edit') {
+          if (
+            res?.event.issuedDate > this.crrPassport.issuedDate ||
+            res?.event.issuedDate > this.crrPassport.issuedDate
+          ) {
+            //do nothing, old is current value is still is current
+          } else {
+            this.hrService
+              .GetEmpCurrentPassport(this.employeeID)
+              .subscribe((res) => {
+                this.crrPassport = res;
+                this.df.detectChanges();
+              });
+          }
         }
-      }
-        else if(actionType == 'edit'){
-        if(res?.event.issuedDate > this.crrPassport.issuedDate || res?.event.issuedDate > this.crrPassport.issuedDate){
-          //do nothing, old is current value is still is current
-        }
-        else{
-          this.hrService.GetEmpCurrentPassport(this.employeeID).subscribe((res) => {
-            this.crrPassport = res;
-            this.df.detectChanges()
-          })
-        }
-      }
         // this.passportRowCount += this.updateGridView(
         //   this.passportGridview,
         //   actionType,
@@ -3734,6 +3743,33 @@ throw new Error('Method not implemented.');
         // );
       }
       this.df.detectChanges();
+    });
+  }
+
+  HandleEmployeeQuitJobInfo(actionHeaderText, actionType: string, data: any) {
+    let option = new SidebarModel();
+    //option.DataService = this.passportGridview?.dataService;
+    option.FormModel = this.eInfoFormModel;
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEquitjobComponent,
+      {
+        actionType: actionType,
+        funcID: this.quitJobInfoFuncID,
+        headerText:
+          actionHeaderText + ' ' + this.getFormHeader(this.quitJobInfoFuncID),
+        employeeId: this.employeeID,
+        dataObj: data,
+      },
+      option
+    );
+
+    dialogAdd.closed.subscribe((res) => {
+      if (res?.event) {
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
     });
   }
 
@@ -3813,27 +3849,32 @@ throw new Error('Method not implemented.');
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event){
+      if (!res?.event) {
         // (this.passportGridview.dataService as CRUDService).clear();
-      }
-      else {
-        if(actionType == 'add' || actionType == 'copy'){
-        if(!this.crrWorkpermit || (res?.event.issuedDate > this.crrWorkpermit.issuedDate)){
-          this.crrWorkpermit = res?.event;
-          this.df.detectChanges()
+      } else {
+        if (actionType == 'add' || actionType == 'copy') {
+          if (
+            !this.crrWorkpermit ||
+            res?.event.issuedDate > this.crrWorkpermit.issuedDate
+          ) {
+            this.crrWorkpermit = res?.event;
+            this.df.detectChanges();
+          }
+        } else if (actionType == 'edit') {
+          if (
+            res?.event.issuedDate > this.crrWorkpermit.issuedDate ||
+            res?.event.issuedDate > this.crrWorkpermit.issuedDate
+          ) {
+            //do nothing, old is current value is still is current
+          } else {
+            this.hrService
+              .GetEmpCurrentWorkpermit(this.employeeID)
+              .subscribe((res) => {
+                this.crrWorkpermit = res;
+                this.df.detectChanges();
+              });
+          }
         }
-      }
-        else if(actionType == 'edit'){
-        if(res?.event.issuedDate > this.crrWorkpermit.issuedDate || res?.event.issuedDate > this.crrWorkpermit.issuedDate){
-          //do nothing, old is current value is still is current
-        }
-        else{
-          this.hrService.GetEmpCurrentWorkpermit(this.employeeID).subscribe((res) => {
-            this.crrWorkpermit = res;
-            this.df.detectChanges()
-          })
-        }
-      }
         // this.passportRowCount += this.updateGridView(
         //   this.passportGridview,
         //   actionType,
@@ -3862,27 +3903,32 @@ throw new Error('Method not implemented.');
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event){
+      if (!res?.event) {
         // (this.passportGridview.dataService as CRUDService).clear();
-      }
-      else {
-        if(actionType == 'add' || actionType == 'copy'){
-        if(!this.crrVisa || (res?.event.issuedDate > this.crrVisa.issuedDate)){
-          this.crrVisa = res?.event;
-          this.df.detectChanges()
+      } else {
+        if (actionType == 'add' || actionType == 'copy') {
+          if (
+            !this.crrVisa ||
+            res?.event.issuedDate > this.crrVisa.issuedDate
+          ) {
+            this.crrVisa = res?.event;
+            this.df.detectChanges();
+          }
+        } else if (actionType == 'edit') {
+          if (
+            res?.event.issuedDate > this.crrVisa.issuedDate ||
+            res?.event.issuedDate > this.crrVisa.issuedDate
+          ) {
+            //do nothing, old is current value is still is current
+          } else {
+            this.hrService
+              .GetEmpCurrentPassport(this.employeeID)
+              .subscribe((res) => {
+                this.crrVisa = res;
+                this.df.detectChanges();
+              });
+          }
         }
-      }
-        else if(actionType == 'edit'){
-        if(res?.event.issuedDate > this.crrVisa.issuedDate || res?.event.issuedDate > this.crrVisa.issuedDate){
-          //do nothing, old is current value is still is current
-        }
-        else{
-          this.hrService.GetEmpCurrentPassport(this.employeeID).subscribe((res) => {
-            this.crrVisa = res;
-            this.df.detectChanges()
-          })
-        }
-      }
       }
       this.df.detectChanges();
     });
@@ -3916,11 +3962,7 @@ throw new Error('Method not implemented.');
       if (!res?.event)
         (this.eDisciplineGrid?.dataService as CRUDService).clear();
       if (res.event)
-        this.updateGridView(
-          this.eDisciplineGrid,
-          actionType,
-          res.event
-        );
+        this.updateGridView(this.eDisciplineGrid, actionType, res.event);
       this.df.detectChanges();
     });
   }
@@ -4023,14 +4065,12 @@ throw new Error('Method not implemented.');
         this.df.detectChanges();
         if (actionType == 'add') {
           //this.appointionRowCount += 1;
-
           // this.appointionRowCount+=1
           // this.appointionGridView.dataSource = [];
           // this.appointionGridView.gridRef!.dataSource = [];
           // this.appointionGridView.dataService.loading = false;
           // this.appointionGridView.dataService.loaded = false;
           // this.appointionGridView.loadData();
-
           //Khong duoc xoa comment nay
           // this.appointionGridView.dataService.load().subscribe(res=>{
           //     this.appointionGridView.dataSource = [];
@@ -4253,13 +4293,11 @@ throw new Error('Method not implemented.');
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      debugger
       if (!res?.event) this.view.dataService.clear();
-      else if(res.event){
-        if(res.event.isCurrent == true){
+      else if (res.event) {
+        if (res.event.isCurrent == true) {
           this.crrEContract = res.event;
-        }
-        else{
+        } else {
           this.getECurrentContract();
         }
       }
@@ -4328,12 +4366,7 @@ throw new Error('Method not implemented.');
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) (this.AwardGrid?.dataService as CRUDService).clear();
-      if (res.event)
-        this.updateGridView(
-          this.AwardGrid,
-          actionType,
-          res.event
-        );
+      if (res.event) this.updateGridView(this.AwardGrid, actionType, res.event);
       this.df.detectChanges();
     });
   }
@@ -4779,30 +4812,60 @@ throw new Error('Method not implemented.');
     dialog.close();
   }
 
-  headerTextBenefit;
+  // headerTextBenefit;
   popupViewBenefit() {
-    this.headerTextBenefit =
-      this.getFormHeader(this.benefitFuncID) + ' | ' + 'Tất cả';
-    let option = new DialogModel();
-    option.zIndex = 999;
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    this.dialogViewBenefit = this.callfc.openForm(
-      this.templateViewBenefit,
-      '',
+    let opt = new DialogModel();
+    opt.zIndex = 999;
+    let popup = this.callfunc.openForm(
+      PopupViewAllComponent,
+      null,
       850,
       550,
-      '',
+      this.benefitFuncID,
+      {
+        funcID: this.benefitFuncID,
+        employeeId: this.employeeID,
+        headerText: this.getFormHeader(this.benefitFuncID),
+        sortModel: this.benefitSortModel,
+        formModel: this.benefitFormodel,
+        hasFilter: false,
+      }
+      ,
       null,
-      '',
-      option
-    );
-    this.dialogViewBenefit.closed.subscribe((res) => {
-      // if (res?.event) {
-      //   this.view.dataService.update(res.event[0]).subscribe((res) => {});
-      // }
-      this.df.detectChanges();
-    });
+      opt
+    )
+    popup.closed.subscribe((res) => {
+      if(res?.event){
+        this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
+          if (res) {
+            this.listCrrBenefit = res;
+            this.df.detectChanges();
+          }
+        }); 
+      }
+    }) 
+    // this.headerTextBenefit =
+    //   this.getFormHeader(this.benefitFuncID) + ' | ' + 'Tất cả';
+    // let option = new DialogModel();
+    // option.zIndex = 999;
+    // option.DataService = this.view.dataService;
+    // option.FormModel = this.view.formModel;
+    // this.dialogViewBenefit = this.callfc.openForm(
+    //   this.templateViewBenefit,
+    //   '',
+    //   850,
+    //   550,
+    //   '',
+    //   null,
+    //   '',
+    //   option
+    // );
+    // this.dialogViewBenefit.closed.subscribe((res) => {
+    //   if (res?.event) {
+    //     this.view.dataService.update(res.event[0]).subscribe((res) => {});
+    //   }
+    //   this.df.detectChanges();
+    // });
   }
 
   RenderDataFromPopup(event) {
@@ -4855,36 +4918,64 @@ throw new Error('Method not implemented.');
     }, 100);
   }
 
-
   closeModelSalary(dialog: DialogRef) {
     dialog.close();
   }
 
-  headerTextSalary;
-  popupUpdateEJobSalaryStatus() {
-    this.headerTextSalary =
-      this.getFormHeader(this.eBasicSalaryFuncID) + ' | ' + 'Tất cả';
-    let option = new DialogModel();
-    option.zIndex = 999;
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    this.dialogViewSalary = this.callfc.openForm(
-      this.templateViewSalary,
-      '',
+  // headerTextSalary;
+  popupUpdateEBasicSalaryStatus() {
+    let opt = new DialogModel();
+    opt.zIndex = 999;
+    let popup = this.callfunc.openForm(
+      PopupViewAllComponent,
+      null,
       850,
       550,
-      '',
+      this.eBasicSalaryFuncID,
+      {
+        funcID: this.eBasicSalaryFuncID,
+        employeeId: this.employeeID,
+        headerText: this.getFormHeader(this.eBasicSalaryFuncID),
+        sortModel: this.bSalarySortModel,
+        formModel: this.eBasicSalaryFormmodel,
+        hasFilter: false,
+      }
+      ,
       null,
-      '',
-      option
-    );
-    this.dialogViewSalary.closed.subscribe((res) => {
-      this.df.detectChanges();
-    });
+      opt
+    )
+    popup.closed.subscribe((res) => {
+      if(res?.event){
+        this.hrService
+        .GetCurrentEBasicSalariesByEmployeeID(this.employeeID)
+        .subscribe((dataEBaSlary) => {
+          this.crrEBSalary = dataEBaSlary;
+        }); 
+      }
+    }) 
+    // this.headerTextSalary =
+    //   this.getFormHeader(this.eBasicSalaryFuncID) + ' | ' + 'Tất cả';
+    // let option = new DialogModel();
+    // option.zIndex = 999;
+    // option.DataService = this.view.dataService;
+    // option.FormModel = this.view.formModel;
+    // this.dialogViewSalary = this.callfc.openForm(
+    //   this.templateViewSalary,
+    //   '',
+    //   850,
+    //   550,
+    //   '',
+    //   null,
+    //   '',
+    //   option
+    // );
+    // this.dialogViewSalary.closed.subscribe((res) => {
+    //   this.df.detectChanges();
+    // });
   }
 
   valueChangeViewAllEBasicSalary() {
-    this.popupUpdateEJobSalaryStatus();
+    this.popupUpdateEBasicSalaryStatus();
   }
   valueChangeViewAllEJobSalary(evt) {
     this.ViewAllEJobSalaryFlag = evt.data;
@@ -4903,15 +4994,15 @@ throw new Error('Method not implemented.');
   }
 
   //Update data table follow pop up
-  UpdateDataFromPopup(event) {
-    if (event.isRenderDelete === true) {
-      this.hrService
-        .GetCurrentEBasicSalariesByEmployeeID(this.employeeID)
-        .subscribe((dataEBaSlary) => {
-          this.crrEBSalary = dataEBaSlary;
-        });
-    }
-  }
+  // UpdateDataFromPopup(event) {
+  //   if (event.isRenderDelete === true) {
+  //     this.hrService
+  //       .GetCurrentEBasicSalariesByEmployeeID(this.employeeID)
+  //       .subscribe((dataEBaSlary) => {
+  //         this.crrEBSalary = dataEBaSlary;
+  //       });
+  //   }
+  // }
 
   copyValue(actionHeaderText, data, flag) {
     if (flag == 'benefit') {
@@ -4929,8 +5020,7 @@ throw new Error('Method not implemented.');
             this.handlEmployeeBenefit(actionHeaderText, 'copy', res);
           });
       }
-    }
-     else if (flag == 'eDisciplines') {
+    } else if (flag == 'eDisciplines') {
       if (this.eDisciplineGrid) {
         this.eDisciplineGrid.dataService.dataSelected = data;
         (this.eDisciplineGrid.dataService as CRUDService)
@@ -4944,36 +5034,39 @@ throw new Error('Method not implemented.');
           .subscribe((res) => {
             this.HandleEmployeeEDisciplinesInfo(actionHeaderText, 'copy', res);
           });
-      }} 
-    else if (flag == 'eAppointions') {
+      }
+    } else if (flag == 'eAppointions') {
       this.appointionGridView.dataService.dataSelected = data;
       (this.appointionGridView.dataService as CRUDService)
         .copy()
         .subscribe((res: any) => {
           this.HandleEmployeeAppointionInfo(actionHeaderText, 'copy', res);
         });
-    }
-    else if (flag == 'ePassport') {
-      this.hrService.copy(data, this.ePassportFormModel, 'RecID').subscribe((res) => {
-        this.handleEmployeePassportInfo(actionHeaderText, 'copy', res);
-      })
-    } 
-    else if (flag == 'eWorkPermit') {
-      this.hrService.copy(data, this.eWorkPermitFormModel, 'RecID').subscribe((res) => {
-        this.handleEmployeeWorkingPermitInfo(actionHeaderText, 'copy', res);
-      })
-    }
-    else if (flag == 'eFamilies') {
-      this.hrService.copy(data, this.eFamilyFormModel, 'RecID').subscribe((res) => {
-        this.handleEFamilyInfo(actionHeaderText, 'copy', res);
-      })
-    }
-    else if (flag == 'eVisa') {
-      this.hrService.copy(data, this.eVisaFormModel, 'RecID').subscribe((res) => {
-        this.handleEmployeeVisaInfo(actionHeaderText, 'copy', res);
-      })
-    }
-    else if (flag == 'eExperiences') {
+    } else if (flag == 'ePassport') {
+      this.hrService
+        .copy(data, this.ePassportFormModel, 'RecID')
+        .subscribe((res) => {
+          this.handleEmployeePassportInfo(actionHeaderText, 'copy', res);
+        });
+    } else if (flag == 'eWorkPermit') {
+      this.hrService
+        .copy(data, this.eWorkPermitFormModel, 'RecID')
+        .subscribe((res) => {
+          this.handleEmployeeWorkingPermitInfo(actionHeaderText, 'copy', res);
+        });
+    } else if (flag == 'eFamilies') {
+      this.hrService
+        .copy(data, this.eFamilyFormModel, 'RecID')
+        .subscribe((res) => {
+          this.handleEFamilyInfo(actionHeaderText, 'copy', res);
+        });
+    } else if (flag == 'eVisa') {
+      this.hrService
+        .copy(data, this.eVisaFormModel, 'RecID')
+        .subscribe((res) => {
+          this.handleEmployeeVisaInfo(actionHeaderText, 'copy', res);
+        });
+    } else if (flag == 'eExperiences') {
       this.eExperienceGrid.dataService.dataSelected = data;
       (this.eExperienceGrid.dataService as CRUDService)
         .copy()
@@ -5678,7 +5771,7 @@ throw new Error('Method not implemented.');
   }
 
   getManagerEmployeeInfoById() {
-    if(this.infoPersonal?.lineManager){
+    if (this.infoPersonal?.lineManager) {
       let empRequest = new DataRequest();
       empRequest.entityName = 'HR_Employees';
       empRequest.dataValues = this.infoPersonal.lineManager;
@@ -5687,15 +5780,15 @@ throw new Error('Method not implemented.');
       this.hrService.loadData('HR', empRequest).subscribe((emp) => {
         if (emp[1] > 0) {
           this.lineManager = emp[0][0];
-        } 
+        }
       });
       this.hrService.loadData('HR', empRequest).subscribe((emp) => {
         if (emp[1] > 0) {
           this.lineManager = emp[0][0];
-        } 
+        }
       });
     }
-    if(this.infoPersonal?.indirectManager){
+    if (this.infoPersonal?.indirectManager) {
       let empRequest = new DataRequest();
       empRequest.entityName = 'HR_Employees';
       empRequest.dataValues = this.infoPersonal.indirectManager;
@@ -5704,12 +5797,12 @@ throw new Error('Method not implemented.');
       this.hrService.loadData('HR', empRequest).subscribe((emp) => {
         if (emp[1] > 0) {
           this.indirectManager = emp[0][0];
-        } 
+        }
       });
       this.hrService.loadData('HR', empRequest).subscribe((emp) => {
         if (emp[1] > 0) {
           this.indirectManager = emp[0][0];
-        } 
+        }
       });
     }
   }

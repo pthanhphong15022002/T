@@ -13,6 +13,7 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
   headerText: any;
   quotationsLine: any;
   listQuotationLines = [];
+  taxrate = 0;
   constructor(
     private codxCM: CodxCmService,
     @Optional() dt?: DialogData,
@@ -27,7 +28,10 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
   ngOnInit(): void {}
   onSave() {
     // this.quotationsLine['costAmt'] = ???
-    this.quotationsLine['netAmt'] =  this.quotationsLine['salesAmt'] +  this.quotationsLine['discAmt'] +  this.quotationsLine['VATAmt'] 
+    this.quotationsLine['netAmt'] =
+      (this.quotationsLine['salesAmt'] ?? 0) +
+      (this.quotationsLine['discAmt'] ?? 0) +
+      (this.quotationsLine['vatAmt'] ?? 0);
     this.dialog.close(this.quotationsLine);
   }
 
@@ -38,24 +42,39 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
       case 'itemID':
         this.loadItem(e.data);
         break;
-    
-      case 'quantity':
-      case 'salesPrice':
-        this.quotationsLine['salesAmt'] =
-          this.quotationsLine['quantity'] * this.quotationsLine['salesPrice'];
+      case 'VATID':
+        let crrtaxrate = e?.component?.itemsSelected[0]?.TaxRate;
+        if (crrtaxrate) {
+          this.taxrate = crrtaxrate;
+        }
+        this.loadChange();
         break;
       case 'discPct':
-          this.quotationsLine['discAmt'] =
-          this.quotationsLine['discPct'] * this.quotationsLine['salesAmt'];
-          this.quotationsLine['VATBase'] = this.quotationsLine['salesAmt'] + this.quotationsLine['discAmt']
-          break;
-      case 'VATID':
-        let taxrate = e?.component?.itemsSelected[0]?.TaxRate;
-        if(taxrate){
-          this.quotationsLine['VATAmt'] = taxrate * this.quotationsLine['VATBase']
-        }
+      case 'quantity':
+      case 'salesPrice':
+        this.loadChange();
         break;
     }
+
+    this.form.formGroup.patchValue(this.quotationsLine);
+  }
+
+  loadChange() {
+    this.quotationsLine['salesAmt'] =
+      (this.quotationsLine['quantity'] ?? 0) *
+      (this.quotationsLine['salesPrice'] ?? 0);
+
+    this.quotationsLine['discAmt'] =
+      ((this.quotationsLine['discPct'] ?? 0) *
+        (this.quotationsLine['salesAmt'] ?? 0)) /
+      100;
+
+    this.quotationsLine['vatBase'] =
+      (this.quotationsLine['salesAmt'] ?? 0) +
+      (this.quotationsLine['discAmt'] ?? 0);
+
+    this.quotationsLine['vatAmt'] =
+      this.taxrate * (this.quotationsLine['vatBase'] ?? 0);
   }
 
   loadItem(itemID) {

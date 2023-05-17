@@ -402,15 +402,14 @@ export class CodxBookingViewDetailComponent
           ) {
             func.disabled = true;
           }
-        });
-      
-      if (data?.issueStatus =='3') {
-        event.forEach((func) => {
-          if (func.functionID == EPCONST.MFUNCID.S_Allocate /*MF cấp phát*/) {
+          if(data?.issueStatus=='1' && data?.approveStatus =='5' && (func.functionID == EPCONST.MFUNCID.S_Allocate || func.functionID == EPCONST.MFUNCID.S_UnAllocate)){
+            func.disabled = false;
+          }
+          else if((data?.issueStatus!='1' || data?.approveStatus !='5') && (func.functionID == EPCONST.MFUNCID.S_Allocate || func.functionID == EPCONST.MFUNCID.S_UnAllocate)){
             func.disabled = true;
           }
-        });
-      }
+        });      
+      
     }
     } else if (this.viewMode == '2') {
       event.forEach((func) => {
@@ -526,11 +525,7 @@ export class CodxBookingViewDetailComponent
             func.disabled = true;
           }
         });
-      } else if (
-        (data?.approveStatus == '5' &&
-          data?.stepType == 'I' &&
-          data?.issueStatus == '3') ||
-        (data?.approveStatus == '4' && data?.stepType == 'I')
+      } else if (data?.stepType == 'I' && (data?.approveStatus == '5' &&  data?.issueStatus != '1') || (data?.approveStatus == '4') 
       ) {
         //Đã cấp phát
         event.forEach((func) => {

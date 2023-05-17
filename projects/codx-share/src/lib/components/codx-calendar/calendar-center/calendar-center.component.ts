@@ -92,7 +92,7 @@ export class CalendarCenterComponent
         toDate: event.data.toDate,
         type: event?.data.type,
       };
-      this.calendarService.dateChange.next(obj);
+      this.calendarService.dateChange$.next(obj);
     }
   }
 

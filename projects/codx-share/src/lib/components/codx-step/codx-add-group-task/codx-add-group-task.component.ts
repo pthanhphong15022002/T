@@ -51,7 +51,9 @@ export class CodxAddGroupTaskComponent implements OnInit {
     this.getFormModel();
     let role = new DP_Instances_Steps_TaskGroups_Roles();
     this.setRole(role);
-    this.taskGroup['roles'] = [role];
+    if(this.action == 'add' || this.action == 'copy'){
+      this.taskGroup['roles'] = [role];
+    }
   }
 
   setRole<T>(role: T) {
@@ -92,6 +94,7 @@ export class CodxAddGroupTaskComponent implements OnInit {
     }
     data[event?.field] = event?.data;
   }
+
   changeValueDate(event, data) {
     if(this.checkShow){
       this.checkShow = !this.checkShow;
@@ -130,6 +133,7 @@ export class CodxAddGroupTaskComponent implements OnInit {
       }
     }
   }
+
   handleSave() {
     let message = [];
     for (let key of this.REQUIRE) {
@@ -168,11 +172,11 @@ export class CodxAddGroupTaskComponent implements OnInit {
     this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
-      'UpdateTaskStepAsync',
+      'UpdateGroupTaskStepAsync',
       this.taskGroup
     ).subscribe(res => {
       if(res){        
-        this.dialog.close({ task:res, progressGroup: null, progressStep: null });
+        this.dialog.close({ groupTask:res,progressStep: null});
       }
     });
   }

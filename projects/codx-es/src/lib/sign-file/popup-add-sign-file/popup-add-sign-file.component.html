@@ -280,8 +280,8 @@
             </div>
             <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab == 2 ? 'active show' : ''">
               <codx-approval-steps #viewApprovalStep *ngIf="currentTab == 2" [transId]="
-                  data.approveControl == '1' ? data.recID : data.processID
-                " [recID]="data.recID" [type]="'1'" [eSign]="eSign" [signatureType]="signatureType"
+                  data?.approveControl == '1' ? data.recID : data.processID" [approveControl]="data?.approveControl"
+                 [recID]="data.recID" [type]="'1'" [eSign]="eSign" [signatureType]="signatureType"
                 [mssgDelete]="mssgDelete" (addEditItem)="dataStepChange($event)">
               </codx-approval-steps>
             </div>
