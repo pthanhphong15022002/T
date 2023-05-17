@@ -2379,7 +2379,6 @@ codx-calendar {
   }
 }
 
-//
 
  .btn:not(.btn-outline-default):focus {
    border-color: transparent !important;
@@ -2666,10 +2665,14 @@ codx-input .e-icons.e-check:before {
     left: 0;
   }
 }
-.e-grid .e-table {
-  table-layout: auto;
+// .e-grid .e-table {
+//   table-layout: auto; /**vannguvaichuong**/
+// }
+doc-category{
+  .e-grid .e-table {
+    table-layout: auto!important;
+  }
 }
-
 .e-richtexteditor .e-toolbar-wrapper {
   position: relative;
 }

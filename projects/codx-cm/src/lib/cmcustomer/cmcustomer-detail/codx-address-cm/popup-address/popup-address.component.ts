@@ -203,7 +203,7 @@ export class PopupAddressComponent implements OnInit {
       this.data[e.field] = e?.data;
       switch (e.field) {
         case 'countryID':
-          this.model = { CountryID: this.data?.countryID };
+          this.model = { CountryID: JSON.parse(JSON.stringify(e?.data)) };
           this.nameCountry =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
@@ -211,7 +211,7 @@ export class PopupAddressComponent implements OnInit {
               : null;
           break;
         case 'provinceID':
-          this.modelDistrictID = { ProvinceID: this.data?.provinceID };
+          this.modelDistrictID = { ProvinceID: JSON.parse(JSON.stringify(e?.data)) };
           this.nameProvince =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
@@ -219,7 +219,7 @@ export class PopupAddressComponent implements OnInit {
               : null;
           break;
         case 'districtID':
-          this.modelWardID = { DistrictID: this.data?.districtID };
+          this.modelWardID = { DistrictID: JSON.parse(JSON.stringify(e?.data)) };
           this.nameDistrict =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0

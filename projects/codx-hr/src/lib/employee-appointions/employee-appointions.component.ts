@@ -328,7 +328,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .EditEmployeeJobSalariesMoreFunc(this.itemDetail)
+                  .EditEmployeeAppointionsMoreFunc(this.itemDetail)
                   .subscribe((res) => {
                     console.log('Result after send edit' + res);
                     if (res) {
