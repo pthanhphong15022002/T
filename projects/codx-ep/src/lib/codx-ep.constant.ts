@@ -82,7 +82,7 @@ export const EPCONST = {
     S_Approval:'EPT40301',
     S_Reject:'EPT40302',
     S_Allocate:'EPT40303',
-    S_UnAllocate:'',
+    S_UnAllocate:'EPT40304',
     S_Undo:'EPT40306',
     S_Release:'EP8T1101',
     S_Cancel:'EP8T1102',

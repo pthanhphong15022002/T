@@ -1,8 +1,25 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AlertConfirmInputConfig, CacheService, CallFuncService, DialogModel, FormModel, NotificationsService } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  AlertConfirmInputConfig,
+  ApiHttpService,
+  CacheService,
+  CallFuncService,
+  DataRequest,
+  DialogModel,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
 import { BS_AddressBook } from '../../../models/cm_model';
 import { PopupAddressComponent } from './popup-address/popup-address.component';
+import { Observable, finalize, map } from 'rxjs';
 
 @Component({
   selector: 'codx-address-cm',
@@ -14,44 +31,89 @@ export class CodxAddressCmComponent implements OnInit {
   @Input() entityName: any;
   @Input() id: any;
   @Input() type: any;
+  @Output() lstAddressEmit = new EventEmitter<any>();
+  @Output() lstAddressDeleteEmit = new EventEmitter<any>();
+  @Output() addressName = new EventEmitter<any>();
+
   listAddress = [];
   listAddressDelete = [];
   formModelAddress: FormModel;
   moreFuncAdd = '';
   moreFuncEdit = '';
   loaded: boolean;
-
-  constructor(private cmSv: CodxCmService, private cache: CacheService, private notiService: NotificationsService, private callFc: CallFuncService,) {}
+  request = new DataRequest();
+  predicates = 'ObjectID=@0 && ObjectType=@1';
+  dataValues = '';
+  service = 'BS';
+  assemblyName = 'ERM.Business.BS';
+  className = 'AddressBookBusiness';
+  method = 'GetListAddressAsync';
+  constructor(
+    private cmSv: CodxCmService,
+    private cache: CacheService,
+    private notiService: NotificationsService,
+    private callFc: CallFuncService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private api: ApiHttpService
+  ) {}
 
   ngOnInit(): void {
-    this.getListAddress(this.entityName, this.id);
+    this.getListAddress();
     this.getFormModelAddress();
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');
-        let edit = res.find((x) => x.functionID == 'SYS03');
         if (m) this.moreFuncAdd = m.customName;
-        if (edit) this.moreFuncEdit = edit.customName;
       }
     });
   }
 
-  getListAddress(entityName, recID) {
+  getListAddress() {
     this.loaded = false;
-    this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
-      if (res && res.length > 0) {
-        this.listAddress = this.cmSv.bringDefaultContactToFront(res);
-      }
+    this.request.predicates = 'ObjectID=@0 && ObjectType=@1';
+    this.request.dataValues = this.id + ';' + this.entityName;
+    this.request.entityName = 'BS_AddressBook';
+    this.request.funcID = this.funcID;
+    this.className = 'AddressBookBusiness';
+    this.fetch().subscribe((item) => {
+      this.listAddress = this.cmSv.bringDefaultContactToFront(item);
       this.loaded = true;
-
     });
   }
 
-  clickMFAddress(e, data){
-
+  private fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.service,
+        this.assemblyName,
+        this.className,
+        this.method,
+        this.request
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response ? response[0] : [];
+        })
+      );
   }
 
-  changeDataMFAddress(e, data){
+  clickMFAddress(e, data) {
+    this.moreFuncEdit = e.text;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.openPopupAddress(data, 'edit');
+        break;
+      case 'SYS02':
+        this.removeAddress(data);
+        break;
+    }
+  }
+
+  changeDataMFAddress(e, data) {
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
@@ -74,11 +136,10 @@ export class CodxAddressCmComponent implements OnInit {
     this.formModelAddress = dataModel;
   }
 
-  openPopupAddress(data = new BS_AddressBook(), action = 'add') {
+  openPopupAddress(data, action) {
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    var title =
-      (action == 'add' ? this.moreFuncAdd : this.moreFuncEdit)
+    var title = action == 'add' ? this.moreFuncAdd : this.moreFuncEdit;
     dataModel.formName = 'CMAddressBook';
     dataModel.gridViewName = 'grvCMAddressBook';
     dataModel.entityName = 'BS_AddressBook';
@@ -94,6 +155,9 @@ export class CodxAddressCmComponent implements OnInit {
             action: action,
             data: data,
             listAddress: this.listAddress,
+            type: this.type,
+            objectID: this.id,
+            objectType: this.entityName,
           };
           var dialog = this.callFc.openForm(
             PopupAddressComponent,
@@ -108,40 +172,37 @@ export class CodxAddressCmComponent implements OnInit {
           dialog.closed.subscribe((e) => {
             if (e && e.event != null) {
               if (e?.event?.adressType) {
-                var address = new BS_AddressBook();
-                address = e.event;
                 var index = this.listAddress.findIndex(
-                  (x) => x.recID != null && x.recID == address.recID
+                  (x) => x.recID != e.event?.recID && x.isDefault
                 );
-                var checkCoincide = this.listAddress.some(
-                  (x) =>
-                    x.recID != address.recID &&
-                    x.adressType == address.adressType &&
-                    x.street == address.street &&
-                    x.countryID == address.countryID &&
-                    x.provinceID == address.provinceID &&
-                    x.districtID == address.districtID &&
-                    x.regionID == x.regionID
-                );
-                var check = this.listAddress.some(
-                  (x) =>
-                    x.recID != address.recID &&
-                    x.adressType == '1' &&
-                    address.adressType == '1'
-                );
-                if (!checkCoincide && !check) {
-                  if (index != -1) {
-                    this.listAddress.splice(index, 1);
+                if (index != -1) {
+                  if (e?.event?.isDefault) {
+                    this.listAddress[index].isDefault = false;
+
+                    this.listAddress = this.cmSv.bringDefaultContactToFront(
+                      this.cmSv.loadList(e.event, this.listAddress, 'update')
+                    );
+
+                  } else {
+                    this.listAddress = this.cmSv.bringDefaultContactToFront(
+                      this.cmSv.loadList(e.event, this.listAddress, 'update')
+                    );
                   }
-                  this.listAddress.push(address);
                 } else {
-                  // this.notiService.notifyCode(
-                  //   'CM003',
-                  //   0,
-                  //   '"' + this.gridViewSetup['Address'].headerText + '"'
-                  // );
+                  this.listAddress = this.cmSv.bringDefaultContactToFront(
+                    this.cmSv.loadList(e.event, this.listAddress, 'update')
+                  );
                 }
-                this.listAddress = this.cmSv.bringDefaultContactToFront(this.listAddress);
+                var checkIsDefault = this.listAddress.some((x) => x.isDefault);
+                if (!checkIsDefault) {
+                  this.addressName.emit(null);
+                }else{
+                  if (this.type == 'formDetail' && e?.event?.isDefault) {
+                    this.addressName.emit(e?.event?.adressName);
+                  }
+                }
+                this.lstAddressEmit.emit(this.listAddress);
+                this.changeDetectorRef.detectChanges();
               }
             }
           });
@@ -154,9 +215,28 @@ export class CodxAddressCmComponent implements OnInit {
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
-        var index = -1;
-        this.listAddress =  this.cmSv.bringDefaultContactToFront(this.listAddress.splice(index, 1));
-        this.listAddressDelete.push(data);
+        var index = this.listAddress.findIndex((x) => x.recID == data.recID);
+        if (this.type == 'formAdd') {
+          if (index != -1) {
+            this.listAddress.splice(index, 1);
+            this.listAddressDelete.push(data);
+            this.lstAddressDeleteEmit.emit(this.listAddressDelete);
+            this.lstAddressEmit.emit(this.listAddress);
+          }
+        }else{
+          this.cmSv.deleteOneAddress(data.recID).subscribe(res => {
+            if(res){
+              this.listAddress = this.cmSv.bringDefaultContactToFront(
+                this.cmSv.loadList(data, this.listAddress, 'delete')
+              );
+              if(data.isDefault){
+                this.addressName.emit(null);
+              }
+              this.notiService.notifyCode('SYS008');
+              this.changeDetectorRef.detectChanges();
+            }
+          })
+        }
       }
     });
   }

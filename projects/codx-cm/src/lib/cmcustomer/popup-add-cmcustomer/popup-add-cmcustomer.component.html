@@ -294,27 +294,29 @@
       </div>
       <div class="col-6">
         <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            name="lblAvatar"
-            default="Ảnh đại diện"
-          ></codx-label>
-          <div>
-            <codx-img
-              #imageUpload
-              class="image-inpt-wrapper fullImage"
-              [referType]="'avt'"
-              [width]="90"
-              [funcId]="funcID"
-              [objectId]="data?.recID"
-              [objectType]="form.formModel.entityName"
-              [objectName]="getNameCrm(data)"
-              [isAllowEdit]="true"
-              [isDefaulImg]="true"
-              [imgOn]="data?.modifiedOn"
-              (handleInput)="changeAvatar()"
-            >
-            </codx-img>
+          <div style="height: 122px;">
+            <codx-label
+              [formModel]="form.formModel"
+              name="lblAvatar"
+              default="Ảnh đại diện"
+            ></codx-label>
+            <div>
+              <codx-img
+                #imageUpload
+                class="image-inpt-wrapper fullImage"
+                [referType]="'avt'"
+                [width]="90"
+                [funcId]="funcID"
+                [objectId]="data?.recID"
+                [objectType]="form.formModel.entityName"
+                [objectName]="getNameCrm(data)"
+                [isAllowEdit]="true"
+                [isDefaulImg]="true"
+                [imgOn]="data?.modifiedOn"
+                (handleInput)="changeAvatar()"
+              >
+              </codx-img>
+            </div>
           </div>
         </div>
         <div class="form-group" *ngIf="funcID != 'CM0102'">
@@ -443,6 +445,8 @@
     </div>
     <div>
       <codx-address-cm
+        (lstAddressEmit)="lstAddressEmit($event)"
+        (lstAddressDeleteEmit)="lstAddressDeleteEmit($event)"
         [type]="'formAdd'"
         [funcID]="funcID"
         [entityName]="dialog.formModel.entityName"
@@ -779,16 +783,6 @@
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               [field]="funcID == 'CM0101' ? 'customerFrom' : 'partnerFrom'"
-            >
-            </codx-input>
-          </div>
-          <div class="form-group" *ngIf="funcID == 'CM0101'">
-            <codx-label [formModel]="form.formModel" fiedName="ConsultantID">
-            </codx-label>
-            <codx-input
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              field="consultantID"
             >
             </codx-input>
           </div>

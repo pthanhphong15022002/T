@@ -956,7 +956,6 @@
     class="mb-3"
     *ngIf="
       dataSelected?.customerResource ||
-      dataSelected?.consultantID ||
       dataSelected?.customerFrom ||
       dataSelected?.partnerFrom ||
       dataSelected?.segmentID
@@ -995,29 +994,6 @@
               "
             >
               <!-- {{ dataSelected?.source }} -->
-            </div>
-          </div>
-
-          <div
-            class="mb-2 d-flex flex-wrap align-items-top"
-            *ngIf="funcID == 'CM0101' && dataSelected?.consultantID"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="ConsultantID"
-                [formModel]="formModel"
-              ></codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.consultantID
-                  | formatvalue : formModel : 'ConsultantID'
-                  | async
-              "
-            >
-              <!-- {{ dataSelected?.consultantID }} -->
             </div>
           </div>
         </div>
