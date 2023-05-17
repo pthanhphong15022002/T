@@ -9,19 +9,19 @@
     <div class="d-flex w-100 ps-2 pe-4">
         <div class="w-30 text-primary fw-bold p-3">
             <codx-label fiedName="lblEmployeeID" [formModel]="view.formModel"
-                [default]="grvSetup?.EmployeeID?.description"></codx-label>
+                [default]="grvSetup?.EmployeeID?.headerText"></codx-label>
         </div>
         <div class="w-30 text-primary fw-bold p-3">
             <codx-label fiedName="lblAwardID" [formModel]="view.formModel"
-                [default]="grvSetup?.AwardID?.description"></codx-label>
+                [default]="grvSetup?.AwardID?.headerText"></codx-label>
             <span> | </span>
             <codx-label fiedName="lblAwardFormCategory" [formModel]="view.formModel"
-                [default]="grvSetup?.AwardFormCategory?.description"></codx-label>
+                [default]="grvSetup?.AwardFormCategory?.headerText"></codx-label>
         </div>
-        <!-- <div class="w-20 text-primary fw-bold p-3">
-            <codx-label name="lblAwardDate" [formModel]="view.formModel"
-                [default]="grvSetup?.AwardDate?.description"></codx-label>
-        </div> -->
+        <div class="w-40 text-primary fw-bold p-3">
+            <codx-label name="lblStatus" [formModel]="view.formModel"
+                [default]="grvSetup?.Status?.headerText"></codx-label>
+        </div>
     </div>
 </ng-template>
 <!-- end header -->

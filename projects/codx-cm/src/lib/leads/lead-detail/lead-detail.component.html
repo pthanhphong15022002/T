@@ -1,1 +1,168 @@
-<p>lead-detail works!</p>
+<ng-container *ngIf="dataSelected?.recID">
+  <codx-detail-tmp
+    [header]="header"
+    [formModel]="formModel"
+    [body]="body"
+    [dataItem]="dataSelected"
+    [hideMF]="false"
+    [footer]="tabs"
+    (changeDataMF)="changeDataMF($event, dataSelected)"
+    (clickMF)="clickMF($event, dataSelected)"
+  >
+    <ng-template #header let-data>
+      <div class="container_detail mt-3">
+        <div class="d-flex justify-content-between pb-3">
+          <div>
+            <div class="d-flex align-items-stretch">
+              <div class="pe-2 avatar-center">
+                <codx-imgs
+                  [isToolTip]="true"
+                  [width]="25"
+                  [objectId]="dataSelected.owner"
+                  ojectType="AD_Users"
+                  [numberImages]="1"
+                >
+                </codx-imgs>
+              </div>
+              <div>
+                <div
+                  class="fw-bold fs-6 text-dark codx-text-overflow-1line pb-2"
+                >
+                  Công ty CPTH Lạc Việt
+                </div>
+                <div class="d-flex align-items-start me-4 mb-1">
+                  <div class="me-3 pe-5">
+                    <span
+                      class="icon-location_on text-primary icon-16 me-1"
+                    ></span>
+                    <span class="text-gray-900"> 23 Nguyễn Thị Huỳnh, Phường 8, Quận Phú Nhuận, Tp HCM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div></div>
+          <div>
+            <div class="me-2 badge badge-light-primary">
+              <span> Mới </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between pb-3">
+          <div class="d-flex flex-row">
+            <div class="d-flex justify-content-start">
+              <codx-label default="Lĩnh vực hoạt động:" class="fs-6 me-1"></codx-label>
+              <i class="icon-business pe-1"></i>
+              <div class="fs-6">
+                <!-- <span
+                  class="fs-7"
+                  #customerID
+                  [innerHTML]="
+                    dataSelected?.customerID
+                      | formatvalue
+                        : formModel
+                        : 'customerID'
+                        : customerID
+                        : 'CMDeals'
+                        : 'grvCMDeals'
+                      | async
+                  "
+                ></span> -->
+                Sản xuất
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-start">
+              <codx-label
+                default="Dòng sản phẩm:"
+                class="fs-6 me-1"
+              ></codx-label>
+              <div class="fs-6">
+                <span
+                  class="fs-7"
+                  #businessLineID
+                  [innerHTML]="
+                    data?.businessLineID
+                      | formatvalue
+                        : formModel
+                        : 'businessLineID'
+                        : businessLineID
+                        : 'CMDeals'
+                        : 'grvCMDeals'
+                      | async
+                  "
+                ></span>
+              </div>
+          </div>
+          <div class="d-flex align-items-stretch">
+              <codx-label
+                default="Nhân viên bán hàng:"
+                class="fs-6 me-2"
+              ></codx-label>
+                <codx-imgs
+                [isToolTip]="true"
+                [width]="25"
+                [objectId]="dataSelected.owner"
+                ojectType="AD_Users"
+                [numberImages]="1"
+              >
+              </codx-imgs>
+          </div>
+        </div>
+        <div class="d-flex justify-content-start">
+          <codx-tag
+            [entityName]="formModel.entityName"
+            [disabled]="true"
+            [isEdit]="false"
+            [value]="dataSelected?.tags"
+          >
+          </codx-tag>
+        </div>
+
+        <div class="view-details-header bg-body scroll-y me-3 h-100">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex tab-header">
+              <codx-taskbar
+                [listTab]="tabDetail"
+                (tab)="changeTab($event)"
+                size="22"
+                class="mb-3"
+              ></codx-taskbar>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </codx-detail-tmp>
+</ng-container>
+<ng-template #body let-data>
+  <codx-tab-lead-detail
+    [tabClicked]="tabClicked"
+    [dataSelected]="dataSelected"
+  ></codx-tab-lead-detail>
+</ng-template>
+<ng-template #tabs let-data>
+  <codx-tabs
+    [entityName]="formModel.entityName"
+    [formModel]="formModel"
+    [TabControl]="tabControl"
+    [objectID]="dataSelected.recID"
+    [funcID]="formModel.funcID"
+    [dataTree]="treeTask"
+    [funcIDQuotations]="'CM0202'"
+    [refType]="formModel.entityName"
+    [refID]="dataSelected.recID"
+    [customerID]="dataSelected.customerID"
+    [salespersonID]="dataSelected.salespersonID"
+    [consultantID]="dataSelected.consultantID"
+    (tabChange)="changeFooter($event)"
+  ></codx-tabs>
+</ng-template>
+
+<ng-template #contract let-data>
+  <!-- <list-contracts [projectID]="dataSelected?.recID" [customers]=""></list-contracts> -->
+</ng-template>
+<!-- <ng-template #quotations let-data>
+ <lib-quotations [funcID]="'CM0202'" [customerID]="dataSelected.customerID" ></lib-quotations>
+</ng-template> -->
