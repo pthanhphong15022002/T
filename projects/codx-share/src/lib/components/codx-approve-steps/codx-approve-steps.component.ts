@@ -46,7 +46,7 @@ export class CodxApproveStepsComponent
   @Input() mssgDelete = '';
   @Input() eSign: boolean = false; //Quy trình ký số
   @Input() signatureType; //Quy trình ký số
-  @Input() approveControl ='3';
+  @Input() approveControl = '3';
   @Output() addEditItem = new EventEmitter();
 
   headerText = '';
@@ -70,7 +70,7 @@ export class CodxApproveStepsComponent
   @Input() data: any = {}; // object category
 
   model: any;
-  isRequestListStep = false ; //Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
+  isRequestListStep = false; //Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
   constructor(
     private cfService: CallFuncService,
     private cr: ChangeDetectorRef,
@@ -88,8 +88,8 @@ export class CodxApproveStepsComponent
       console.log(this.data);
 
       this.dialogApproval = dialog;
-      this.isRequestListStep = dialogData?.data?.isRequestListStep??false ; // Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
-      this.lstStep = dialogData?.data?.lstStep // Thảo thêm ngày 20/04/2023 để gui danh sach step qua ve
+      this.isRequestListStep = dialogData?.data?.isRequestListStep ?? false; // Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
+      this.lstStep = dialogData?.data?.lstStep; // Thảo thêm ngày 20/04/2023 để gui danh sach step qua ve
       this.justView = dialogData?.data.justView ?? false;
       this.isAddNew = dialogData?.data?.isAddNew ?? true;
     } else {
@@ -132,9 +132,9 @@ export class CodxApproveStepsComponent
 
   initForm() {
     // Thao lam de gui danh sach step qua ve  -20/04/2023
-    if(this.isRequestListStep && this.lstStep?.length >0){
+    if (this.isRequestListStep && this.lstStep?.length > 0) {
       this.currentStepNo = this.lstStep.length + 1;
-    }else{
+    } else {
       if (this.transId != '') {
         let gridModels = new DataRequest();
         gridModels.dataValue = this.transId;
@@ -143,9 +143,9 @@ export class CodxApproveStepsComponent
         gridModels.entityName = this.formModel.entityName;
         gridModels.gridViewName = this.formModel.gridViewName;
         gridModels.pageLoading = false;
-        gridModels.srtColumns = "StepNo";
+        gridModels.srtColumns = 'StepNo';
         gridModels.srtDirections = 'asc';
-  
+
         this.esService.getApprovalSteps(gridModels).subscribe((res) => {
           if (res && res?.length >= 0) {
             this.lstStep = res;
@@ -158,7 +158,7 @@ export class CodxApproveStepsComponent
         this.lstStep = [];
         this.currentStepNo = this.lstStep.length + 1;
       }
-    }  
+    }
   }
 
   setTransID(transID) {
@@ -189,7 +189,6 @@ export class CodxApproveStepsComponent
         this.updateApprovalStep();
         this.dialogApproval && this.dialogApproval.close(true);
       }
-      
     }
   }
 
@@ -292,7 +291,6 @@ export class CodxApproveStepsComponent
   }
 
   openPopupAddAppStep(data) {
-    this.approveControl='1';
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         var model = new DialogModel();
@@ -310,26 +308,22 @@ export class CodxApproveStepsComponent
         );
 
         dialog.closed.subscribe((res) => {
-          debugger
           if (res?.event) {
+            this.approveControl = '1';
             if (this.type == '1') {
               if (this.lstStep?.length > 0) {
                 for (let i = 0; i < this.lstStep.length; i++) {
-                  if(this.approveControl=='1'){
-                    if (this.lstStep[i].transID != this.recID) {
-                      delete this.lstStep[i].recID;
-                      delete this.lstStep[i].id;
-                      this.lstStep[i].transID = this.recID;
-                    }
+                  if (this.lstStep[i].transID != this.recID) {
+                    delete this.lstStep[i].recID;
+                    delete this.lstStep[i].id;
+                    this.lstStep[i].transID = this.recID;
                   }
-                  else{
-                    if (this.lstStep[i].transID != this.transId) {
-                      delete this.lstStep[i].recID;
-                      delete this.lstStep[i].id;
-                      this.lstStep[i].transID = this.transId;
-                    }
-                  }
-                  
+
+                  // if (this.lstStep[i].transID != this.transId) {
+                  //   delete this.lstStep[i].recID;
+                  //   delete this.lstStep[i].id;
+                  //   this.lstStep[i].transID = this.transId;
+                  // }
                 }
               }
               this.updateApprovalStep();
@@ -360,7 +354,7 @@ export class CodxApproveStepsComponent
         this.addEditItem.emit(true);
       }
     });
-    if (this.lstDeleteStep?.length > 0){
+    if (this.lstDeleteStep?.length > 0) {
       this.esService.deleteApprovalStep(this.lstDeleteStep).subscribe((res) => {
         console.log('result delete aaappppp', res);
         if (res == true) {
