@@ -440,68 +440,34 @@
     >
     </codx-input>
   </div>
-  <div *ngIf="itemQuestion.answerType == 'R'">
-    <table>
+  <div class="w-100 d-flex align-items-center" *ngIf="itemQuestion.answerType == 'R'">
+    <span>
+      {{convertAnswer(itemQuestion.answers[0].answer,"l")}}
+    </span>
+    <table class="tb-100">
       <tr>
-        <th scope="col">
-          <span>{{ "1" }}</span>
-        </th>
-        <th scope="col">
-          <span>{{ "2" }}</span>
-        </th>
-        <th scope="col">
-          <span>{{ "3" }}</span>
-        </th>
-        <th scope="col">
-          <span>{{ "4" }}</span>
-        </th>
-        <th scope="col">
-          <span>{{ "5" }}</span>
+        <th scope="col" *ngFor="let i of convertAnswer(itemQuestion.answers[0].answer)">
+          <span>{{ i }}</span>
         </th>
       </tr>
       <tr>
-        <th scope="col">
+        <th scope="col" *ngFor="let i of convertAnswer(itemQuestion.answers[0].answer)">
           <codx-input
             type="radio"
             [disabled]="false"
             class="test-check"
-            name="group"
-          ></codx-input>
-        </th>
-        <th scope="col">
-          <codx-input
-            type="radio"
-            [disabled]="false"
-            class="test-check"
-            name="group"
-          ></codx-input>
-        </th>
-        <th scope="col">
-          <codx-input
-            type="radio"
-            [disabled]="false"
-            class="test-check"
-            name="group"
-          ></codx-input>
-        </th>
-        <th scope="col">
-          <codx-input
-            type="radio"
-            [disabled]="false"
-            class="test-check"
-            name="group"
-          ></codx-input>
-        </th>
-        <th scope="col">
-          <codx-input
-            type="radio"
-            [disabled]="false"
-            class="test-check"
-            name="group"
+            [name]="itemQuestion.recID"
+            [crrValue]="i"
+            class="ip-r-radio"
+            field="R"
+            (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
           ></codx-input>
         </th>
       </tr>
     </table>
+    <span>
+      {{convertAnswer(itemQuestion.answers[0].answer,"r")}}
+    </span>
   </div>
   <div class="ms-6" *ngIf="itemQuestion.answerType == 'D'">
     <codx-input
@@ -697,14 +663,14 @@
   <ng-template #tmpL>
     <ng-container *ngIf="itemQuestion.answerType == 'L' ; else tmpO">
       <!-- //(change)="valueChange($event.target.value, itemSession, itemQuestion, item)" -->
-      <select class="form-select w-200px ms-6 rounded" aria-label="Default select example" (change)="valueChange( $event, itemSession, itemQuestion, $event.target.value)"> 
+      <select class="form-select w-200px ms-6 mb-5 rounded" aria-label="Default select example" (change)="valueChange( $event, itemSession, itemQuestion, $event.target.value)"> 
         <option selected >Chọn</option>
         <option *ngFor="let item of itemQuestion.answers" [value]="item.answer">{{item.answer}}</option>
       </select>
     </ng-container>
   </ng-template>
   <ng-template #tmpO>
-    <div class="list answer ms-6">
+    <div class="list answer mx-6">
       <div class="box" *ngFor="let itemAnswer of itemQuestion.answers">
         <div class="has-action-menu">
           <div class="d-flex">
