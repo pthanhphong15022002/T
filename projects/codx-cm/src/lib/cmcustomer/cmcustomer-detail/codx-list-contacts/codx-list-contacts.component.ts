@@ -49,7 +49,7 @@ export class CodxListContactsComponent implements OnInit {
   className = 'ContactsBusiness';
   method = 'GetListContactAsync';
   isButton = true;
-
+  currentRecID = '';
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -79,6 +79,9 @@ export class CodxListContactsComponent implements OnInit {
     this.className = 'ContactsBusiness';
     this.fetch().subscribe((item) => {
       this.listContacts = this.cmSv.bringDefaultContactToFront(item);
+      if(this.listContacts != null && this.listContacts.length > 0){
+        this.changeContacts(this.listContacts[0]);
+      }
       this.loaded = true;
     });
   }
@@ -100,6 +103,11 @@ export class CodxListContactsComponent implements OnInit {
           return response ? response[0] : [];
         })
       );
+  }
+
+  changeContacts(item) {
+    this.currentRecID = item.recID;
+    this.changeDetectorRef.detectChanges();
   }
 
   clickMFContact(e, data) {

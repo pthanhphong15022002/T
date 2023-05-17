@@ -11,3 +11,11 @@
   bottom: 50px;
   z-index: 10;
 }
+
+.user-nav-item.user-nav-active {
+  background-color: #b8c5cd;
+  border-left-color: #3699ff;
+}
+.user-nav-item:hover{
+  background-color: #bbf2fa;
+}
