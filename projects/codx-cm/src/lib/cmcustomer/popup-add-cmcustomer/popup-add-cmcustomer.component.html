@@ -9,7 +9,7 @@
       ? [tabGeneralInfo, tabDefault, tabAddress, tabContacts]
       : [tabGeneralInfo, tabDefault, tabAddress]
   "
-  [openMore]="true"
+  [openMore]="false"
   [dialog]="dialog"
   [formModel]="dialog.formModel"
   [footer]="footer"
@@ -99,7 +99,15 @@
         </div>
       </div>
     </div>
-
+    <div class="mb-4" *ngIf="funcID == 'CM0102'">
+      <codx-label
+        name="lblInformation"
+        class="h4 text-dark text-primary fw-bold"
+        [formModel]="dialog.formModel"
+        default="Thông tin chung"
+      >
+      </codx-label>
+    </div>
     <div class="row">
       <div class="col-6">
         <div class="form-group" *ngIf="funcID == 'CM0101'">
