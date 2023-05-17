@@ -137,6 +137,8 @@ export class CmcustomerDetailComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.addressNameCM = res?.adressName;
+        }else{
+          this.addressNameCM = null;
         }
         this.viewTag = this.dataSelected?.tags;
       });
