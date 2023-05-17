@@ -61,7 +61,7 @@ export class ViewListCmComponent implements OnInit {
       if (res && res.length > 0) {
         this.listContacts = res;
         this.contactPerson = this.listContacts.find((x) =>
-          x.contactType.split(';').some((x) => x == '1')
+          x.isDefault
         );
       }
     });

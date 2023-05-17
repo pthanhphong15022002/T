@@ -80,6 +80,7 @@ export class VoucherComponent implements OnInit {
     this.mapPredicates.set('currencyID', 'CurrencyID = @0');
     this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
   }
+
   ngAfterViewInit() {
     let hBody, hTab;
     if (this.cardbodyRef)
@@ -102,9 +103,30 @@ export class VoucherComponent implements OnInit {
     this.payAmt = e.data;
   }
 
-  payAmtBlur(e: any) {
-    // if (this.payAmt == e.value) return;
-    // this.payAmt = e.value;
+  onSelected(e) {
+    let data = e.data;
+    if(data.settledAmt != 0) return;
+    let cashDiscDate;
+    let accID = this.form.formGroup.controls.accountID.value;
+    if (data.unbounds) cashDiscDate = data.unbounds.cashDiscDate;
+    this.api
+      .exec('AC', 'SettledInvoicesBusiness', 'SettlementOneLineAsync', [
+        data,
+        accID,this.cashpayment.objectID,
+        this.cashpayment.journalType,
+        this.cashpayment.voucherDate,
+        cashDiscDate,
+        this.cashpayment.currencyID,
+        this.cashpayment.exchangeRate,
+        this.payAmt])
+      .subscribe((res) => {
+        if (res) {
+          this.grid.updateRow(e.rowIndex,res);
+          setTimeout(() => {
+            this.grid.gridRef?.selectRows(e.rowIndexes);
+          }, 100);
+        }
+      });
   }
 
   valueChange(e: any) {
@@ -144,7 +166,7 @@ export class VoucherComponent implements OnInit {
       this.mapDataValues.set('accountID', e.data);
     }
 
-    if (field === 'invoiceDueDate' && typeof e.data !== 'undefined') {
+    if (field === 'invoiceDueDate' && typeof e.data !== 'undefined' && e.data) {
       this.mapPredicates.set('invoiceDueDate', 'InvoiceDueDate = @0');
       this.mapDataValues.set(
         'invoiceDueDate',
@@ -200,15 +222,9 @@ export class VoucherComponent implements OnInit {
 
   apply() {
     let data = this.grid.arrSelectedRows;
-    this.api
-      .exec<any>('AC', 'SettledInvoicesBusiness', 'ConvertSubLedgenToSettled', [
-        data,
-        this.cashpayment,
-        this.payAmt,
-      ])
-      .subscribe((res) => {
-        if (res && res.length) this.dialog.close(res);
-      });
+    if (this.type == 0) {
+      this.api.exec('AC', 'AC', 'SettledInvoicesBusiness');
+    } else this.dialog.close(data);
   }
 
   paymentAmt(data) {
@@ -295,19 +311,26 @@ export class VoucherComponent implements OnInit {
     // this.gridModel.dataValue = this.morefunction.dataValue;
     this.gridModel.entityName = 'AC_SubInvoices';
     let accID = this.form.formGroup.controls.accountID.value;
+
     this.api
       .exec<any>('AC', 'SettledInvoicesBusiness', 'LoadSettledAsync', [
         this.gridModel,
-        this.cashpayment,
         accID,
+        this.cashpayment.objectID,
+        this.cashpayment.journalType,
+        this.cashpayment.voucherDate,
+        this.cashpayment.currencyID,
+        this.cashpayment.exchangeRate,
         this.payAmt,
       ])
       .subscribe((res) => {
         if (res && res.length) {
           this.subInvoices = res[0];
-          setTimeout(() => {
-            this.grid.gridRef?.selectRows(res[2]);
-          }, 100);
+          if (this.type == 1) {
+            setTimeout(() => {
+              this.grid.gridRef?.selectRows(res[2]);
+            }, 100);
+          }
         }
       });
   }

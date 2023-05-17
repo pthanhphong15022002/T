@@ -63,8 +63,7 @@ export class PopupEmpBusinessTravelsComponent
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType;
     this.funcID = data?.data?.funcID;
-    this.data = data?.data?.businessTravelObj;
-    console.log('data khi copy truyen vao', this.data);
+    this.data = JSON.parse(JSON.stringify(data?.data?.businessTravelObj));
 
     if (this.data) {
       if (this.data.beginDate == '0001-01-01T00:00:00') {
@@ -91,9 +90,7 @@ export class PopupEmpBusinessTravelsComponent
   }
 
   changOverSeaFlag(event) {
-    console.log('di cong tac nc ngoai', event.checked);
     this.isNotOverseaFlag = !event.checked;
-    console.log('co hieu ', this.isNotOverseaFlag);
     if (this.isNotOverseaFlag == true) {
       this.data.country = null;
       this.formGroup.patchValue(this.data.country);

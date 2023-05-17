@@ -23,6 +23,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CalendarCenterComponent } from './calendar-center/calendar-center.component';
 import { Query } from '@syncfusion/ej2-data';
 import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
+import { CodxCalendarService } from './codx-calendar.service';
 
 @Component({
   selector: 'app-codx-calendar',
@@ -77,58 +78,22 @@ export class CodxCalendarComponent
   isCollapsed = false;
   defaultCalendar;
 
-  // maps the appropriate column to fields property
-  public fields: Object = { text: 'defaultName', value: 'functionID' };
-  //Bind the filter event
-  public onFiltering = (e: FilteringEventArgs) => {
-    let query = new Query();
-    //frame the query based on search string with filter type.
-    query =
-      e.text != ''
-        ? query.where('defaultName', 'startswith', e.text, true)
-        : query;
-    //pass the filter data source, filter query to updateData method.
-    e.updateData(this.calendarTypes, query);
-  };
+  fields: Object = { text: 'defaultName', value: 'functionID' };
 
   calendarTypes = [];
-  calendarData: any;
+  calendarData = [];
+  calendarFilterData = [];
 
   //Để tạm
-  resources: any = [
-    {
-      color: '#E9F0FD',
-      borderColor: '#4E86EC',
-      text: 'TM_MyTasks',
-      status: 'TM_MyTasks',
-    },
-    {
-      color: '#FEF8E6',
-      borderColor: '#FFC107',
-      text: 'WP_Notes',
-      status: 'WP_Notes',
-    },
-    {
-      color: '#FFEEE9',
-      borderColor: '#E23900',
-      text: 'CO_Meetings',
-      status: 'CO_Meetings',
-    },
-    {
-      color: '#FFEEE9',
-      borderColor: '#E23900',
-      text: 'EP_BookingRooms',
-      status: 'EP_BookingRooms',
-    },
-    {
-      color: '#FAF1FF',
-      borderColor: '#4A0077',
-      text: 'EP_BookingCars',
-      status: 'EP_BookingCars',
-    },
-  ];
+  resources = [];
 
-  constructor(injector: Injector, private codxShareSV: CodxShareService) {
+  locale = 'vi';
+
+  constructor(
+    injector: Injector,
+    private calendarService: CodxCalendarService,
+    private codxShareSV: CodxShareService
+  ) {
     super(injector);
   }
 
@@ -159,6 +124,35 @@ export class CodxCalendarComponent
         );
       }
     }, 200);
+
+    this.api
+      .execSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetParamMyCalendarAsync',
+        'WPCalendars'
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          debugger;
+          for (const prop in res) {
+            let param = JSON.parse(res[prop]);
+            this.resources.push({
+              color: param.ShowBackground,
+              borderColor: param.ShowColor,
+              text: param.Template.TransType,
+              status: param.Template.TransType,
+            });
+          }
+
+          this.TM_TasksParam = JSON.parse(res['TM_Tasks']);
+          this.WP_NotesParam = JSON.parse(res['WP_Notes']);
+          this.CO_MeetingsParam = JSON.parse(res['CO_Meetings']);
+          this.EP_BookingRoomsParam = JSON.parse(res['EP_BookingRooms']);
+          this.EP_BookingCarsParam = JSON.parse(res['EP_BookingCars']);
+        }
+      });
 
     this.api
       .exec('CO', 'CalendarsBusiness', 'GetListCalendarAsync')
@@ -261,7 +255,7 @@ export class CodxCalendarComponent
   }
 
   navigate() {
-    this.codxShareSV.dateChange.subscribe((res) => {
+    this.calendarService.dateChange$.subscribe((res) => {
       if (res?.fromDate == 'Invalid Date' && res?.toDate == 'Invalid Date')
         return;
       if (res?.fromDate && res?.toDate) {
@@ -363,7 +357,8 @@ export class CodxCalendarComponent
               }
               return x.transType != transType;
             });
-          } else {
+          }
+          if (value == '1') {
             if (this.checkWP_NotesParam)
               if (transType == 'WP_Notes') {
                 this.WP_Notes = this.WP_NotesTemp;
@@ -448,7 +443,7 @@ export class CodxCalendarComponent
             this.ejCalendar.value = this.FDdate;
           }
 
-          this.codxShareSV.dataResourceModel.next(this.calendarData[0]);
+          this.calendarService.calendarData$.next(this.calendarData);
         }
       });
   }
@@ -716,7 +711,7 @@ export class CodxCalendarComponent
           JSON.stringify(this.EP_BookingCars)
         );
 
-        this.codxShareSV.dataResourceModel.next(this.calendarData[0]);
+        this.calendarService.calendarData$.next(this.calendarData);
       }
     }
   }
@@ -742,59 +737,12 @@ export class CodxCalendarComponent
   }
 
   getCalendarNotes(TM_, WP_, CO_, EP_Room_, EP_Ca_) {
-    let TM_Params = [
-      {
-        color: TM_.ShowBackground,
-        borderColor: TM_.ShowColor,
-        text: 'TM_MyTasks',
-        status: 'TM_MyTasks',
-      },
-    ];
-    let WP_Params = [
-      {
-        color: WP_.ShowBackground,
-        borderColor: WP_.ShowColor,
-        text: 'WP_Notes',
-        status: 'WP_Notes',
-      },
-    ];
-    let CO_Params = [
-      {
-        color: CO_.ShowBackground,
-        borderColor: CO_.ShowColor,
-        text: 'CO_Meetings',
-        status: 'CO_Meetings',
-      },
-    ];
-    let EP_BookingRoomParams = [
-      {
-        color: EP_Room_.ShowBackground,
-        borderColor: EP_Room_.ShowColor,
-        text: 'EP_BookingRooms',
-        status: 'EP_BookingRooms',
-      },
-    ];
-    let EP_BookingCarParams = [
-      {
-        color: EP_Ca_.ShowBackground,
-        borderColor: EP_Ca_.ShowColor,
-        text: 'EP_BookingCars',
-        status: 'EP_BookingCars',
-      },
-    ];
-    let resources = [
-      ...TM_Params,
-      ...WP_Params,
-      ...CO_Params,
-      ...EP_BookingRoomParams,
-      ...EP_BookingCarParams,
-    ];
     let myInterval = setInterval(() => {
       if (this.dataResourceModel.length > 0) {
         clearInterval(myInterval);
-        this.calendarCenter.resources = resources;
+        this.calendarCenter.resources = this.resources;
         this.calendarCenter.resourceModel = this.dataResourceModel;
-        this.codxShareSV.dataResourceModel.subscribe((res) => {
+        this.calendarService.calendarData$.subscribe((res) => {
           if (res) {
             this.calendarCenter && this.calendarCenter.updateData(res);
           }
@@ -809,22 +757,20 @@ export class CodxCalendarComponent
     let myInterval = setInterval(() => {
       if (this.calendarData) {
         clearInterval(myInterval);
-        if (this.calendarData[1] > 0) {
-          for (let i = 0; i < this.calendarData[1]; i++) {
-            let day = new Date(this.calendarData[0][i].startDate);
-            if (
-              day &&
-              args.date.getFullYear() == day.getFullYear() &&
-              args.date.getMonth() == day.getMonth() &&
-              args.date.getDate() == day.getDate()
-            ) {
-              let span: HTMLElement;
-              span = document.createElement('span');
-              span.setAttribute('class', 'e-icons highlight');
-              addClass([args.element], ['special', 'e-day']);
-              args.element.appendChild(span);
-              return;
-            }
+        for (let i = 0; i < this.calendarData.length; i++) {
+          let day = new Date(this.calendarData[i].startDate);
+          if (
+            day &&
+            args.date.getFullYear() == day.getFullYear() &&
+            args.date.getMonth() == day.getMonth() &&
+            args.date.getDate() == day.getDate()
+          ) {
+            let span: HTMLElement;
+            span = document.createElement('span');
+            span.setAttribute('class', 'e-icons highlight');
+            addClass([args.element], ['special', 'e-day']);
+            args.element.appendChild(span);
+            return;
           }
         }
       }
@@ -840,5 +786,33 @@ export class CodxCalendarComponent
           this.calendarData = res;
         }
       });
+  }
+
+  onFiltering(e: FilteringEventArgs) {
+    let query = new Query();
+    //frame the query based on search string with filter type.
+    query =
+      e.text != ''
+        ? query.where('defaultName', 'startswith', e.text, true)
+        : query;
+    //pass the filter data source, filter query to updateData method.
+    e.updateData(this.calendarTypes, query);
+  }
+
+  updateSettingValue2() {
+    // this.api
+    //   .exec<any>(
+    //     'ERM.Business.SYS',
+    //     'SettingValuesBusiness',
+    //     'AddUpdateByUserIDVer2Async',
+    //     ['WPCalendars', this.lstTransType]
+    //   )
+    //   .subscribe((res) => {
+    //     this.getParamCalendar(
+    //       this.curStartDateOfWeek,
+    //       this.curEndDateOfWeek,
+    //       false
+    //     );
+    //   });
   }
 }

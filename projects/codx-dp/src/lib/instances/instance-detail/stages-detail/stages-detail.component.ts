@@ -910,6 +910,22 @@ export class StagesDetailComponent implements OnInit {
     }
   }
 
+  changeProgress1(event) {
+    if (event) {  
+      this.updateProgress1(event)
+    }
+  }
+
+  updateProgress1(event){
+    if (event.type == 'P') {//step
+      this.step.progress = Number( event?.progressStep || 0);
+    } else if (event.type == 'G') { // group
+     
+    } else {//task
+      
+    }
+  }  
+
   async handelProgress() {
     if (this.dataProgress?.progress == 100 && !this.dataProgress?.actualEnd) {
       this.notiService.notifyCode(
@@ -968,7 +984,9 @@ export class StagesDetailComponent implements OnInit {
           this.progress = progress;
           this.notiService.notifyCode('SYS006');
           this.popupUpdateProgress.close();
-          this.saveAssign.emit(true);
+          this.progressEmit.emit({
+            stepID: this.step.recID, progress: progress
+          });
         }
       });
   }
@@ -982,12 +1000,14 @@ export class StagesDetailComponent implements OnInit {
           if (res) {
             this.dataProgressClone['progress'] = this.dataProgress['progress'];
             this.dataProgressClone['actualEnd'] =
-              this.dataProgress['actualEnd'];
+            this.dataProgress['actualEnd'];
             this.dataProgressClone['note'] = this.dataProgress['note'];
             this.notiService.notifyCode('SYS006');
             this.popupUpdateProgress.close();
             this.calculateProgressStep();
-            this.saveAssign.emit(true);
+            this.progressEmit.emit({
+             
+            });
           }
         });
       }
@@ -1002,7 +1022,7 @@ export class StagesDetailComponent implements OnInit {
             this.dataProgressClone['note'] = this.dataProgress['note'];
             this.notiService.notifyCode('SYS006');
             this.popupUpdateProgress.close();
-            this.saveAssign.emit(true);
+            this.progressEmit.emit(true);
           }
         });
       }
@@ -1026,7 +1046,7 @@ export class StagesDetailComponent implements OnInit {
             this.notiService.notifyCode('SYS007');
             this.popupUpdateProgress.close();
             this.calculateProgressStep();
-            this.saveAssign.emit(true);
+            this.progressEmit.emit(true);
             this.checkContinueStep();
           } else {
             this.popupUpdateProgress.close();
@@ -1043,7 +1063,7 @@ export class StagesDetailComponent implements OnInit {
             this.dataProgressClone['note'] = this.dataProgress['note'];
             this.notiService.notifyCode('SYS007');
             this.popupUpdateProgress.close();
-            this.saveAssign.emit(true);
+            this.progressEmit.emit(true);
             this.checkContinueStep();
           } else {
             this.popupUpdateProgress.close();

@@ -276,7 +276,8 @@ export class EPApprovalComponent extends UIComponent {
       event.forEach((func) => {
         if (
           func.functionID == EPCONST.MFUNCID.Copy ||
-          func.functionID == EPCONST.MFUNCID.C_CardTrans
+          func.functionID == EPCONST.MFUNCID.C_CardTrans ||
+          func.functionID == EPCONST.MFUNCID.C_DriverAssign
         ) {
           func.disabled = true;
         }
@@ -385,12 +386,7 @@ export class EPApprovalComponent extends UIComponent {
             func.disabled = true;
           }
         });
-      } else if (
-        (data?.approveStatus == '5' &&
-          data?.stepType == 'I' &&
-          data?.issueStatus == '3') ||
-        (data?.approveStatus == '4' && data?.stepType == 'I')
-      ) {
+      } else if (data?.stepType == 'I' && (data?.approveStatus == '5' &&  data?.issueStatus != '1') || (data?.approveStatus == '4') ) {
         //Đã cấp phát
         event.forEach((func) => {
           if (
@@ -474,11 +470,13 @@ export class EPApprovalComponent extends UIComponent {
       )
       .subscribe((res: any) => {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
-          this.notificationsService.notifyCode('SYS034'); //đã duyệt
-          data.approveStatus = '5';
-          //nếu bước duyệt VPP hiện tại là Cấp phát thì đổi cả IssueStatus
-          if (data?.stepType == 'I') {
-            data.issueStatus = '3';
+          this.notificationsService.notifyCode('SYS034'); //đã duyệt          
+          //nếu bước duyệt VPP hiện tại là Cấp phát thì đổi IssueStatus
+          if (data?.stepType != 'I') {
+            data.approveStatus = '5';
+          }
+          else{
+            data.issueStatus = '3';            
           }
           this.view.dataService.update(data).subscribe();
         } else {
@@ -498,7 +496,13 @@ export class EPApprovalComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
           this.notificationsService.notifyCode('SYS034'); //đã duyệt
-          data.approveStatus = '4';
+          //nếu bước duyệt VPP hiện tại là Cấp phát thì đổi IssueStatus
+          if (data?.stepType != 'I') {
+            data.approveStatus = '4';
+          }
+          else{
+            data.issueStatus = '4';            
+          }
           this.view.dataService.update(data).subscribe();
         } else {
           this.notificationsService.notifyCode(res?.msgCodeError);
@@ -517,7 +521,9 @@ export class EPApprovalComponent extends UIComponent {
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
-
+  setPopupTitleOption(mfunc) {
+    this.popupTitle = mfunc;
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//

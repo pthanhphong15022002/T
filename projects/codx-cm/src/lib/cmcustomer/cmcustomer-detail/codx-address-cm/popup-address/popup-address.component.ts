@@ -6,8 +6,10 @@ import {
   NotificationsService,
   DataRequest,
   ApiHttpService,
+  AlertConfirmInputConfig,
 } from 'codx-core';
-import { BS_AddressBook } from '../../models/cm_model';
+import { BS_AddressBook } from '../../../../models/cm_model';
+import { CodxCmService } from '../../../../codx-cm.service';
 
 @Component({
   selector: 'lib-popup-address',
@@ -28,25 +30,45 @@ export class PopupAddressComponent implements OnInit {
   modelDistrictID: any;
   modelWardID: any;
   isDisable = false;
+  isDefault = false;
+  count = 0;
+  type = '';
+  objectID = '';
+  objectType = '';
+  lstAddress = [];
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
+    private cmSv: CodxCmService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = dt?.data?.data;
-
     this.action = dt?.data?.action;
-
-    this.isDisable = this.action == 'edit' && this.data?.adressType == '1';
     this.dialog = dialog;
     this.title = dt?.data?.title;
     this.gridViewSetup = dt?.data?.gridViewSetup;
+    if(this.action == 'edit'){
+      this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+    }
+    this.type = dt?.data?.type;
+    this.objectID = dt?.data?.objectID;
+    this.objectType = dt?.data?.objectType;
+    this.lstAddress = dt?.data?.listAddress;
+
   }
 
   ngOnInit(): void {
-    if(this.action == 'add'){
+    if (this.action == 'add') {
+      if (this.lstAddress != null && this.lstAddress.length > 0) {
+        if (this.lstAddress.some((x) => x.isDefault == true)) {
+          this.isDefault = false;
+        } else {
+          this.isDefault = true;
+        }
+      } else {
+        this.isDefault = true;
+      }
       this.data.recID = Guid.newGuid();
     }
     if (this.action == 'edit') this.setNameAdress();
@@ -84,27 +106,65 @@ export class PopupAddressComponent implements OnInit {
   }
 
   onSave() {
-    if (this.data.adressType == null || this.data.adressType.trim() == '') {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['AdressType'].headerText + '"'
+    this.setAdressName();
+    this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
+    if (this.count > 0) return;
+
+    if (this.lstAddress != null && this.lstAddress.length > 0) {
+      var checkCoincide = this.lstAddress.some(
+        (x) =>
+          x.recID != this.data.recID &&
+          x.adressType == this.data.adressType &&
+          x.street == this.data.street &&
+          x.countryID == this.data.countryID &&
+          x.provinceID == this.data.provinceID &&
+          x.districtID == this.data.districtID &&
+          x.regionID == x.regionID
       );
-      return;
+      if (!checkCoincide) {
+        if (
+          this.lstAddress.some((x) => x.isDefault && x.recID != this.data.recID)
+        ) {
+          if (this.isDefault) {
+            var config = new AlertConfirmInputConfig();
+            config.type = 'YesNo';
+            this.notiService.alertCode('CM001').subscribe((x) => {
+              if (x.event.status == 'Y') {
+                this.onSaveHanle();
+              }
+            });
+          } else {
+            this.onSaveHanle();
+          }
+        } else {
+          this.onSaveHanle();
+        }
+      } else {
+        this.dialog.close();
+      }
+    } else {
+      this.onSaveHanle();
     }
-    if (this.data.countryID == null || this.data.countryID.trim() == '') {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['CountryID'].headerText + '"'
-      );
-      return;
-    }
-    this.onAdd();
-    this.dialog.close(this.data);
   }
 
-  onAdd() {
+  onSaveHanle() {
+    this.data.isDefault = this.isDefault;
+    if (this.type == 'formAdd') {
+      this.dialog.close(this.data);
+    } else {
+      this.data.objectID = this.objectID;
+      this.data.objectType = this.objectType;
+      if(this.action == 'add'){
+        this.cmSv.addOneAddress(this.data).subscribe(res => {
+          if(res){
+            this.dialog.close(res);
+          }
+        })
+      }
+    }
+  }
+
+  setAdressName() {
     this.data.adressName =
       this.data?.street != null && this.data?.street?.trim() != ''
         ? this.data.street +
@@ -119,12 +179,15 @@ export class PopupAddressComponent implements OnInit {
           this.nameCountry;
   }
 
+  valueIsDefault(e) {
+    this.isDefault = e.data;
+  }
   valueChange(e) {
     if (e.data) {
       this.data[e.field] = e?.data;
       switch (e.field) {
         case 'countryID':
-          this.model = {CountryID: this.data?.countryID}
+          this.model = { CountryID: this.data?.countryID };
           this.nameCountry =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
@@ -132,7 +195,7 @@ export class PopupAddressComponent implements OnInit {
               : null;
           break;
         case 'provinceID':
-          this.modelDistrictID = {ProvinceID: this.data?.provinceID};
+          this.modelDistrictID = { ProvinceID: this.data?.provinceID };
           this.nameProvince =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
@@ -140,7 +203,7 @@ export class PopupAddressComponent implements OnInit {
               : null;
           break;
         case 'districtID':
-          this.modelWardID = {DistrictID: this.data?.districtID};
+          this.modelWardID = { DistrictID: this.data?.districtID };
           this.nameDistrict =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0

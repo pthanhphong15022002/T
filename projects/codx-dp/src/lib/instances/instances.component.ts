@@ -49,6 +49,7 @@ import { LayoutInstancesComponent } from '../layout-instances/layout-instances.c
 import { LayoutComponent } from '../_layout/layout.component';
 import { Observable, finalize, map, filter, firstValueFrom } from 'rxjs';
 import { PopupEditOwnerstepComponent } from './popup-edit-ownerstep/popup-edit-ownerstep.component';
+import { PopupSelectTempletComponent } from './popup-select-templet/popup-select-templet.component';
 
 @Component({
   selector: 'codx-instances',
@@ -228,6 +229,8 @@ export class InstancesComponent
   idTemp = '';
   nameTemp = '';
   ownerRoles = '';
+  dataVll :any;
+
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -266,6 +269,11 @@ export class InstancesComponent
         if (grv) {
           this.grvSetup = grv;
           this.vllStatus = grv['Status'].referedValue ?? this.vllStatus;
+          this.cache.valueList(this.vllStatus).subscribe(res=>{
+            if (res && res.datas) {
+               this.dataVll = res.datas
+            }
+          })
         }
       });
     this.cache.valueList('DP034').subscribe((res) => {
@@ -281,6 +289,7 @@ export class InstancesComponent
         this.tabInstances = tabIns;
       }
     });
+  
 
     this.cache.functionList(this.funcID).subscribe((f) => {
       // if (f) this.pageTitle.setSubTitle(f?.customName);
@@ -1375,6 +1384,7 @@ export class InstancesComponent
               item.actualStart = new Date();
             } else if (item.stepStatus == '1') {
               item.stepStatus = '3';
+              item.actualEnd = new Date();
             }
           }
           dataInstance.instance.stepID = instanceStepId.find(
@@ -1385,13 +1395,14 @@ export class InstancesComponent
           this.codxDpService.autoMoveStage(data).subscribe((res) => {
             if (res) {
               var stepsUpdate = dataInstance.listStep.map((item1) => {
-                var item2 = instanceStepId.find(
-                  (item2) => item1.stepID === item2.stepID
-                );
+                var item2 = instanceStepId.find((item2) => item1.stepID === item2.stepID);
                 if (item2) {
-                  return { ...item1, status: item2.status };
+                  return { ...item2 };
+                } else {
+                  return item1;
                 }
               });
+
               this.listStepInstances = stepsUpdate;
               this.dataSelected = dataInstance.instance;
               this.view.dataService.update(this.dataSelected).subscribe();
@@ -1810,13 +1821,37 @@ export class InstancesComponent
     this.isLockButton = true;
     let option = new DialogModel();
     option.zIndex = 1001;
+
+    // this.dialogTemplate = this.callfc.openForm(
+    //   this.popupTemplate,
+    //   '',
+    //   600,
+    //   500,
+    //   '',
+    //   null,
+    //   '',
+    //   option
+    // );
+
+    let obj = {
+      data: this.dataSelected,
+      formModel: this.view.formModel,
+      isFormExport : true,
+      refID: this.process.recID,
+      refType: 'DP_Processes',
+      esCategory: this.esCategory,
+      titleAction: this.titleAction,
+      loaded: true,
+      dataEx: this.dataEx,
+      dataWord: this.dataWord
+    };
     this.dialogTemplate = this.callfc.openForm(
-      this.popupTemplate,
+      PopupSelectTempletComponent,
       '',
       600,
       500,
       '',
-      null,
+      obj,
       '',
       option
     );
@@ -1970,13 +2005,36 @@ export class InstancesComponent
                 this.isLockButton = true;
                 let option = new DialogModel();
                 option.zIndex = 1001;
+                // this.dialogTemplate = this.callfc.openForm(
+                //   this.popupTemplate,
+                //   '',
+                //   600,
+                //   500,
+                //   '',
+                //   null,
+                //   '',
+                //   option
+                // );
+
+                let obj = {
+                  data: this.dataSelected,
+                  formModel: this.view.formModel,
+                  isFormExport : false,
+                  refID: this.process.recID,
+                  refType: 'DP_Processes',
+                  esCategory: this.esCategory,
+                  titleAction: this.titleAction,
+                  loaded: true,
+                  dataEx: this.dataEx,
+                  dataWord: this.dataWord
+                };
                 this.dialogTemplate = this.callfc.openForm(
-                  this.popupTemplate,
+                  PopupSelectTempletComponent,
                   '',
                   600,
                   500,
                   '',
-                  null,
+                  obj,
                   '',
                   option
                 );
@@ -2169,5 +2227,9 @@ export class InstancesComponent
   checkDurationControl(stepID): boolean {
     var stepsDuration = this.process.steps.find((x) => x.recID === stepID);
     return stepsDuration?.durationControl;
+  }
+
+  toolTip(stt){
+    return this.dataVll?.filter(vl=>vl.value==stt)[0]?.text
   }
 }

@@ -132,6 +132,15 @@ export class CodxCmService {
     );
   }
 
+  checkCustomerIDByDealsAsync(customerID) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'CheckCustomerIDByDealsAsync',
+      [customerID]
+    );
+  }
+
   addDealCompetitor(dealCompetitor) {
     return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealCompetitorAsync', [
       dealCompetitor,
@@ -174,6 +183,15 @@ export class CodxCmService {
     );
   }
 
+  addOneAddress(address){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'AddAdressAsync',
+      [address]
+    );
+  }
+
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = {};
@@ -182,6 +200,20 @@ export class CodxCmService {
     formModel['entityName'] = f?.entityName;
     formModel['funcID'] = functionID;
     return formModel;
+  }
+
+  bringDefaultContactToFront(data) {
+    const defaultContactIndex = data.findIndex(
+      (data) => data.isDefault
+    );
+
+    if (defaultContactIndex !== -1) {
+      const defaultContact = data[defaultContactIndex];
+      data.splice(defaultContactIndex, 1);
+      data.unshift(defaultContact);
+    }
+
+    return data;
   }
 
   loadList(data, list = [], action) {
@@ -297,7 +329,7 @@ export class CodxCmService {
       data
     );
   }
-  editInstance(data:any){
+  editInstance(data: any) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
@@ -442,6 +474,14 @@ export class CodxCmService {
       [id]
     );
   }
+  getListContactByCustomerID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContactsBusiness',
+      'GetListContactByCusomerIDAsync',
+      data
+    );
+  }
 
   genAutoNumber(funcID: any, entityName: string, key: any) {
     return this.api.execSv<any>(
@@ -452,7 +492,20 @@ export class CodxCmService {
       [funcID, entityName, key]
     );
   }
-  //#endregion
+  // API for More in deal
+
+  startDeal(data){
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'StartDealAsync',
+      data
+    );
+  }
+
+
+  //#endregion -- Bao
 
   //contracts -- nvthuan
   addContracts(data) {
@@ -471,8 +524,8 @@ export class CodxCmService {
       data
     );
   }
- //quotation lines test
-  getQuotationsLinesByTransID(transID){
+  //quotation lines test
+  getQuotationsLinesByTransID(transID) {
     return this.api.exec<any>(
       'CM',
       'QuotationsLinesBusiness',
@@ -480,4 +533,43 @@ export class CodxCmService {
       transID
     );
   }
+  getPaymentsByContract(contractID) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'GetPaymentsAsync',
+      contractID
+    );
+  }
+  addPayments(contracts) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'AddPaymentsAsync',
+      contracts
+    );
+  }
+  editPayments(contracts) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'UpdatePaymentsAsync',
+      contracts
+    );
+  }
+  deletePayments(contractsID) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'DeletePaymentsAsync',
+      contractsID
+    );
+  }
+
+  // QuotationLine
+  // loadItem
+  getItem(itemID) {
+    return this.api.exec<any>('IV', 'ItemsBusiness', 'LoadDataAsync', itemID);
+  }
+
 }

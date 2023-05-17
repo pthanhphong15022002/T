@@ -472,9 +472,7 @@ import { EmployeeDayOffComponent } from './employee-day-off/employee-day-off.com
 import { ViewDayOffDetailComponent } from './employee-day-off/view-day-off-detail/view-day-off-detail.component';
 import { EmployeeInfoDetailComponent } from './employee-list/employee-info-detail/employee-info-detail.component';
 import { PopupForeignWorkerComponent } from './employee-profile/popup-foreign-worker/popup-foreign-worker.component';
-import { PopupViewallBenefitComponent } from './employee-list/employee-info-detail/pop-up/popup-viewall-benefit/popup-viewall-benefit.component';
 import { PopupAddEmployeeComponent } from './employee-list/popup/popup-add-employee/popup-add-employee.component';
-import { PopupViewallSalaryComponent } from './employee-list/employee-info-detail/pop-up/popup-viewall-salary/popup-viewall-salary.component';
 import { PopupViewAllComponent } from './employee-list/employee-info-detail/pop-up/popup-view-all/popup-view-all.component';
 import { EmployeeAppointionsComponent } from './employee-appointions/employee-appointions.component';
 import { ViewDetailEappointionsComponent } from './employee-appointions/view-detail-eappointions/view-detail-eappointions.component';
@@ -495,7 +493,9 @@ export const routes: Routes = [
         children: [
           {
             path: 'empinfosub/:funcID',
-            component: EmployeeInfomationComponent,
+            // component: EmployeeInfomationComponent,
+            component: EmployeeInfoDetailComponent,
+
           },
           {
             path: 'employeedetail/:funcID',
@@ -730,8 +730,6 @@ const T_Component: Type<any>[] = [
   ViewDetailEmployeeBusinessComponent,
   EmployeeInfoDetailComponent,
   PopupForeignWorkerComponent,
-  PopupViewallBenefitComponent,
-  PopupViewallSalaryComponent,
   PopupViewAllComponent,
   EmployeeAppointionsComponent,
   PopupAddEmployeeComponent,

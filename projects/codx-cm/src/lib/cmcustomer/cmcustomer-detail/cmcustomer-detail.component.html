@@ -14,9 +14,7 @@
         <div class="d-flex justify-content-between mb-2">
           <div *ngIf="funcID == 'CM0101'">
             <div class="mb-1">
-              <span
-                class="icon-corporate_fare icon-20 me-2"
-              ></span>
+              <span class="icon-corporate_fare icon-20 me-2"></span>
               <span
                 class="text-dark fw-bold h3"
                 [innerHTML]="
@@ -55,7 +53,9 @@
             <div class="d-flex flex-column w-100">
               <div class="d-flex justify-content-between">
                 <div class="d-flex flex-column">
-                  <div class="fw-bold fs-5-sm text-dark line-clamp line-clamp-1 mb-1">
+                  <div
+                    class="fw-bold fs-5-sm text-dark line-clamp line-clamp-1 mb-1"
+                  >
                     {{
                       funcID == "CM0101"
                         ? dataSelected.customerName
@@ -70,7 +70,10 @@
                     class="d-flex flex-wrap me-4 mb-1"
                     *ngIf="funcID == 'CM0102'"
                   >
-                    <div class="me-3 d-flex align-items-center" *ngIf="dataSelected?.mobile">
+                    <div
+                      class="me-3 d-flex align-items-center"
+                      *ngIf="dataSelected?.mobile"
+                    >
                       <span
                         [ngClass]="
                           dataSelected?.allowCall
@@ -87,7 +90,10 @@
                         >{{ dataSelected?.mobile }}</span
                       >
                     </div>
-                    <div class="d-flex align-items-center" *ngIf="dataSelected?.personalEmail">
+                    <div
+                      class="d-flex align-items-center"
+                      *ngIf="dataSelected?.personalEmail"
+                    >
                       <span
                         [ngClass]="
                           dataSelected?.allowEmail
@@ -105,7 +111,10 @@
                       >
                     </div>
                   </div>
-                  <div class="d-flex align-items-center mb-1" *ngIf="dataSelected.address">
+                  <div
+                    class="d-flex align-items-center mb-1"
+                    *ngIf="dataSelected.address"
+                  >
                     <span
                       class="icon-location_on icon-16 me-2 text-gray-700"
                     ></span>
@@ -125,78 +134,15 @@
               </div>
             </div>
           </div>
-          <div [ngClass]="funcID == 'CM0101' ? 'd-flex flex-wrap align-items-start' : ''">
+          <div
+            [ngClass]="
+              funcID == 'CM0101' ? 'd-flex flex-wrap align-items-start' : ''
+            "
+          >
             <div
-              class="d-flex flex-column w-50 mt-1 pe-9"
-              *ngIf="funcID == 'CM0101' && contactPerson != null"
+              class="d-flex flex-column w-50 mt-1"
+              *ngIf="dataSelected.industries"
             >
-              <div class="me-3" style="white-space: nowrap">
-                <codx-label
-                  class="fw-bold text-primary"
-                  name="lblContact"
-                  [formModel]="formModel"
-                  default="Liên hệ chính"
-                ></codx-label>
-              </div>
-              <div class="d-flex mt-2">
-                <div class="me-3">
-                  <codx-img
-                    [objectId]="contactPerson.recID"
-                    [objectName]="contactPerson.contactName"
-                    [imgOn]="contactPerson?.modifiedOn"
-                    [objectType]="'CM_Contacts'"
-                    [width]="30"
-                  >
-                  </codx-img>
-                </div>
-                <div class="d-flex flex-column flex-grow-1">
-                  <div class="d-flex flex-column">
-                    <div
-                      class="fw-bold fs-6 text-dark line-clamp line-clamp-1 mb-1"
-                    >
-                      {{ contactPerson?.contactName }}
-                    </div>
-                    <div class="d-flex flex-wrap mb-1">
-                      <div class="d-flex align-items-center me-3" *ngIf="contactPerson?.mobile">
-                        <span
-                          [ngClass]="
-                            contactPerson.allowCall
-                              ? 'icon-phone_android text-primary'
-                              : 'icon-phonelink_erase'
-                          "
-                          class="icon-16 me-2"
-                        ></span>
-                        <span
-                          [ngClass]="
-                            contactPerson.allowCall ? 'text-primary' : ''
-                          "
-                          class="text-gray-900"
-                          >{{ contactPerson?.mobile }}</span
-                        >
-                      </div>
-                      <div class="d-flex align-items-center" *ngIf="contactPerson?.personalEmail">
-                        <span
-                          [ngClass]="
-                            contactPerson.allowEmail
-                              ? 'icon-email text-primary'
-                              : 'icon-print_disabled'
-                          "
-                          class="icon-16 me-2 text-gray-900"
-                        ></span>
-                        <span
-                          [ngClass]="
-                            contactPerson.allowEmail ? 'text-primary' : ''
-                          "
-                          class="text-gray-900"
-                          >{{ contactPerson.personalEmail }}</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex flex-column w-50 mt-1" *ngIf="dataSelected.industries">
               <codx-label
                 style="white-space: nowrap"
                 class="fw-bold text-primary"
@@ -303,7 +249,6 @@
                 </ng-container>
               </div> -->
               <codx-list-contacts
-                (contactPerson)="contactPersonEvent($event)"
                 [funcID]="funcID"
                 [objectID]="dataSelected.recID"
                 [objectName]="
@@ -312,7 +257,26 @@
                     : dataSelected.partnerName
                 "
                 [hidenMF]="false"
+                [type]="'formDetail'"
               ></codx-list-contacts>
+            </ng-container>
+            <ng-container *ngIf="name == 'Address'">
+              <div class="mb-1">
+                <div class="mb-3">
+                  <codx-label
+                    class="text-dark text-primary fw-bold"
+                    name="lblAddress"
+                    default="Thông tin địa chỉ"
+                  >
+                  </codx-label>
+                </div>
+                <codx-address-cm
+                  [type]="'formDetail'"
+                  [funcID]="funcID"
+                  [entityName]="entityName"
+                  [id]="dataSelected.recID"
+                ></codx-address-cm>
+              </div>
             </ng-container>
             <ng-container *ngIf="name == 'Deal'">
               <codx-list-deals
@@ -326,6 +290,16 @@
             </ng-container>
             <ng-container *ngIf="name == 'Product'">
               <ng-container [ngTemplateOutlet]="product"> </ng-container>
+            </ng-container>
+            <ng-container *ngIf="name == 'Quotations'">
+              <ng-container>Báo giá </ng-container>
+            </ng-container>
+            <ng-container *ngIf="name == 'Contract'">
+              <ng-container
+                [ngTemplateOutlet]="contract"
+                [ngTemplateOutletContext]="{ $implicit: dataSelected }"
+              >
+              </ng-container>
             </ng-container>
           </div>
         </ng-template>
@@ -384,5 +358,9 @@
 </ng-template>
 
 <ng-template #contract let-data>
-  <list-contracts [projectID]="dataSelected?.recID" [customers]="dataSelected" [contactPerson]="contactPerson"></list-contracts>
+  <list-contracts
+    [projectID]="dataSelected?.recID"
+    [customers]="dataSelected"
+    [contactPerson]="contactPerson"
+  ></list-contracts>
 </ng-template>
