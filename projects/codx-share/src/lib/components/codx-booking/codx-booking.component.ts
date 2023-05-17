@@ -528,7 +528,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
             func.disabled = true;
           }
         });
-      } else if (data.approveStatus == EPCONST.A_STATUS.Approved) {
+      } else if (data?.approveStatus == EPCONST.A_STATUS.Approved) {
         //Đã duyệt
         event.forEach((func) => {
           if (
@@ -591,15 +591,14 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         ) {
           func.disabled = true;
         }
+        if(data?.issueStatus=='1' && data?.approveStatus =='5' && (func.functionID == EPCONST.MFUNCID.S_Allocate || func.functionID == EPCONST.MFUNCID.S_UnAllocate)){
+          func.disabled = false;
+        }
+        else if((data?.issueStatus!='1' || data?.approveStatus !='5') && (func.functionID == EPCONST.MFUNCID.S_Allocate || func.functionID == EPCONST.MFUNCID.S_UnAllocate)){
+          func.disabled = true;
+        }
       });
-
-      if (data?.issueStatus == '3') {
-        event.forEach((func) => {
-          if (func.functionID == EPCONST.MFUNCID.S_Allocate /*MF cấp phát*/) {
-            func.disabled = true;
-          }
-        });
-      }
+     
     }
   }
 
@@ -1033,7 +1032,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               this.codxBookingService
                 .approve(
                   item?.recID, //ApprovelTrans.RecID
-                  status,
+                  this.allocateStatus,
                   '',
                   ''
                 )
