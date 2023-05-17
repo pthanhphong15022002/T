@@ -28,7 +28,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, range } from 'rxjs';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { environment } from 'src/environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -58,6 +58,10 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   functionList: any;
   emptyText = 'Mẫu không có tiêu đề'
   en = environment;
+  valueFrom = 1;
+  valueTo = 5;
+  valueRFrom = "";
+  valueRTo = "";
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -182,6 +186,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   indexSessionA = 0;
   indexQuestionA = 0;
   idSession = "";
+  public r = range(1, 10);
   @Input() changeModeQ: any;
   @Input() formModel: any;
   @Input() dataService: any;
@@ -306,6 +311,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       .subscribe((res: any) => {
         if (res && res[0] && res[0].length > 0) {
           
+          debugger
           this.questions = this.getHierarchy(res[0], res[1]);
           this.SVServices.getFilesByObjectTypeRefer(
             this.functionList.entityName,
@@ -391,8 +397,26 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         {
           for(var a = 0 ; a < dtS[i].children.length ; a++)
           {
-            var check = dtS[i].children[a].answers.filter(x=>x.other);
-            if(check && check.length>0) dtS[i].children[a].other = true;
+            //Phạm vi tuyến tính
+            if(dtS[i].children[a].answerType == "R")
+            {
+              if(dtS[i].children[a].answers[0].answer)
+              {
+                var split = dtS[i].children[a].answers[0].answer.split("/");
+                if(split && split.length > 0)
+                {
+                  this.valueFrom = split[0];
+                  this.valueTo = split[1];
+                  this.valueRFrom = split[2];
+                  this.valueRTo = split[3];
+                }
+              }
+            }
+            else
+            {
+              var check = dtS[i].children[a].answers.filter(x=>x.other);
+              if(check && check.length>0) dtS[i].children[a].other = true;
+            }
           }
         }
       }
@@ -1473,6 +1497,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   clickQuestionMF(seqNoSession, itemQuestion, answerType) {
     this.generateGuid();
     var recID = JSON.parse(JSON.stringify(this.GUID));
+    debugger
     if (answerType) {
       this.defaultMoreFunc = this.listMoreFunc.filter(x=>x.id == answerType)[0];
       var data = this.questions[seqNoSession].children[itemQuestion.seqNo];
@@ -1497,7 +1522,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         //   };
         //   data.answers.push(dataAnswerTemp);
         // }
-          if (answerType != 'O' && answerType != 'C' && answerType != 'L') {
+          if (answerType != 'O' && answerType != 'C' && answerType != 'L' && answerType != 'R') {
             data.answers = new Array();
             let dataAnswerTemp = {
               recID: recID,
@@ -1507,12 +1532,26 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
             };
             data.answers.push(dataAnswerTemp);
           }
+          
+          if(answerType == 'R')
+          {
+            data.answers = new Array();
+            let dataAnswerTemp = {
+              recID: recID,
+              seqNo: 0,
+              answer: '1/5//',
+              other: false,
+            };
+            data.answers.push(dataAnswerTemp);
+          }
 
-          if(answerType != 'O' && answerType != 'C')
+          //Xóa File
+          if (answerType != 'O' && answerType != 'C')
           {
             this.lstEditIV = [];
-            this.SVServices.deleteFilesByContainRefer(this.recID).subscribe();;
+            this.SVServices.deleteFilesByContainRefer(this.recID).subscribe();
           }
+         
         } 
         else if (answerType == 'O2' || answerType == 'C2') 
         {
@@ -1625,11 +1664,31 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     }
   }
 
-  valueFrom = 1;
-  valueTo = 5;
-  changeRating(value, type) {
-    if (type == 'FROM') this.valueFrom = value;
-    else this.valueTo = value;
+  
+  changeRating(value, type ,seqNoQuestion = null, itemQuestion = null,itemAnswer = null) {
+    debugger
+    var valueFrom = "1";
+    var valueTo = "5";
+    var valueRFrom = "";
+    var valueRTo = "";
+
+    var split = itemAnswer.answer.split("/");
+    valueFrom = split[0];
+    valueTo = split[1];
+    valueRFrom = split[2];
+    valueRTo = split[3];
+
+    if (type == 'FROM') valueFrom = value;
+    else if(type == "TO") valueTo = value;
+    else if(type == "RFROM" ) valueRFrom = value?.data;
+    else if(type == "RTO") valueRTo = value?.data;
+
+    var data = 
+    {
+      data : valueFrom + "/" + valueTo + "/" + valueRFrom + "/" + valueRTo,
+      field : "answer"
+    }
+    this.valueChangeAnswer(data,seqNoQuestion,itemQuestion,itemAnswer);
   }
 
   sortSession() {
@@ -1847,6 +1906,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   valueChangeAnswer(e, seqNoSession, itemQuestion, itemAnswer) {
+    debugger
     if (e.data && e.data != itemAnswer[e.field]) {
       // let dataTemp = JSON.parse(JSON.stringify(this.questions));
       // dataTemp[seqNoSession].children[itemQuestion.seqNo].answers[
@@ -1863,6 +1923,31 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     }
   }
 
+  convertAnswer(answer:any,type=null)
+  {
+    if(answer)
+    {
+      var spilts = answer.split("/");
+      if(spilts && spilts.length > 0)
+      {
+        if(type == 'l') return spilts[2]
+        else if(type == 'r') return spilts[3]
+        else if(type == 'f') return spilts[0] ? spilts[0] : "1"
+        else if(type == 't') return spilts[1] ? spilts[1] : "5"
+        else
+        {
+          var arr = [];
+          for(var i = Number(spilts[0]) ; i<= spilts[1] ; i++)
+          {
+            arr.push(i);
+          }
+          return arr
+        }
+      }
+      return null
+    }
+    return null;
+  }
   // onUpdateList(data) {
   //   return this.api.execSv(
   //     'SV',

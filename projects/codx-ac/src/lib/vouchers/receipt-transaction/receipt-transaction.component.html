@@ -168,7 +168,7 @@
       </div>
     </div>
     <div class="me-2">
-      <codx-img [objectId]="data?.voucherNo" [objectName]="data?.voucherNo" [objectType]="view?.entityName"
+      <codx-img [ngbTooltip]="data?.createdBy" [objectId]="data?.createdBy" [objectName]="data?.createdBy" [objectType]="view?.entityName"
         [width]="25">
       </codx-img>
     </div>
@@ -183,7 +183,7 @@
             <th class="w-50 min-w-350px">
               <div class="d-flex">
                 <!-- <i class="icon-i-box icon-16 me-2"></i> -->
-                <codx-label class="fw-bold line-clamp line-clamp-1 text-dark" fiedName="ItemID"
+                <codx-label [setRequire]="false" class="fw-bold line-clamp line-clamp-1  text-dark" fiedName="ItemID"
                   [formModel]="fmInventoryJournalLines">
                 </codx-label>
               </div>
@@ -265,7 +265,7 @@
                   
                   <div class="d-flex align-items-center mb-1 me-6">
                     <!-- <span class="icon-i-dot icon-22"></span> -->
-                  <codx-label class="text-gray-700 label-colon" fiedName="IDIM4" [formModel]="fmInventoryJournalLines">
+                  <codx-label [setRequire]="false" class="text-gray-700 label-colon" fiedName="IDIM4" [formModel]="fmInventoryJournalLines">
                   </codx-label>
                   
                   <span #idiM4 class="fs-6 fw-bold" [innerHTML]="

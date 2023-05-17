@@ -110,17 +110,22 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     private activatedRoute: ActivatedRoute
   ) {
     super(injector);
+    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   onInit(): void {
+    if(this.funcID==EPCONST.FUNCID.S_Allocate){
+      this.method="GetAllocateStationeryAsync";
+    }
     this.getBaseVariable();
     this.roleCheck();
 
     this.buttons = {
       id: 'btnAdd',
     };
+    
   }
 
   onLoading(evt: any) {
@@ -528,7 +533,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
             func.disabled = true;
           }
         });
-      } else if (data.approveStatus == EPCONST.A_STATUS.Approved) {
+      } else if (data?.approveStatus == EPCONST.A_STATUS.Approved) {
         //Đã duyệt
         event.forEach((func) => {
           if (
@@ -591,15 +596,14 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         ) {
           func.disabled = true;
         }
+        if(data?.issueStatus=='1' && data?.approveStatus =='5' && (func.functionID == EPCONST.MFUNCID.S_Allocate || func.functionID == EPCONST.MFUNCID.S_UnAllocate)){
+          func.disabled = false;
+        }
+        else if((data?.issueStatus!='1' || data?.approveStatus !='5') && (func.functionID == EPCONST.MFUNCID.S_Allocate || func.functionID == EPCONST.MFUNCID.S_UnAllocate)){
+          func.disabled = true;
+        }
       });
-
-      if (data?.issueStatus == '3') {
-        event.forEach((func) => {
-          if (func.functionID == EPCONST.MFUNCID.S_Allocate /*MF cấp phát*/) {
-            func.disabled = true;
-          }
-        });
-      }
+     
     }
   }
 
@@ -1023,17 +1027,20 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     this.view.dataService.delete([deleteItem]).subscribe(() => {});
   }
   allocate(data: any) {
+    if(data.approverID!=this.authService?.userValue?.userID){
+      this.notificationsService.notifyCode('TM052');
+        return;
+    }
     if (data.approval == '1') {
       this.api
         .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [data?.recID])
         .subscribe((trans: any) => {
           trans.map((item: any) => {
             if (item.stepType === 'I') {
-              //???????
               this.codxBookingService
                 .approve(
                   item?.recID, //ApprovelTrans.RecID
-                  status,
+                  this.allocateStatus,
                   '',
                   ''
                 )
