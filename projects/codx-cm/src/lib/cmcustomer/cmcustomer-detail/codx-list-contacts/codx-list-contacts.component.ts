@@ -49,7 +49,7 @@ export class CodxListContactsComponent implements OnInit {
   className = 'ContactsBusiness';
   method = 'GetListContactAsync';
   isButton = true;
-
+  currentRecID = '';
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -79,6 +79,9 @@ export class CodxListContactsComponent implements OnInit {
     this.className = 'ContactsBusiness';
     this.fetch().subscribe((item) => {
       this.listContacts = this.cmSv.bringDefaultContactToFront(item);
+      if(this.listContacts != null && this.listContacts.length > 0){
+        this.changeContacts(this.listContacts[0]);
+      }
       this.loaded = true;
     });
   }
@@ -100,6 +103,11 @@ export class CodxListContactsComponent implements OnInit {
           return response ? response[0] : [];
         })
       );
+  }
+
+  changeContacts(item) {
+    this.currentRecID = item.recID;
+    this.changeDetectorRef.detectChanges();
   }
 
   clickMFContact(e, data) {
@@ -204,6 +212,8 @@ export class CodxListContactsComponent implements OnInit {
                   this.cmSv.loadList(e.event, this.listContacts, 'update')
                 );
               }
+              var index = this.listContacts.findIndex(x => x.recID == e.event?.recID);
+              this.changeContacts(this.listContacts[index]);
               this.lstContactEmit.emit(this.listContacts);
               this.changeDetectorRef.detectChanges();
             }
@@ -251,6 +261,8 @@ export class CodxListContactsComponent implements OnInit {
                 this.cmSv.loadList(e.event, this.listContacts, 'update')
               );
               this.lstContactEmit.emit(this.listContacts);
+              var index = this.listContacts.findIndex(x => x.recID == e.event?.recID);
+              this.changeContacts(this.listContacts[index]);
               this.changeDetectorRef.detectChanges();
             }
           }
@@ -283,7 +295,7 @@ export class CodxListContactsComponent implements OnInit {
             this.lstContactDeleteEmit.emit(lstDelete);
           }
         }
-
+        this.changeContacts(this.listContacts[0]);
       }
     });
   }
