@@ -12,6 +12,7 @@ import {
   AlertConfirmInputConfig,
   AuthStore,
   ButtonModel,
+  CacheService,
   CallFuncService,
   CodxListviewComponent,
   CodxService,
@@ -146,6 +147,7 @@ export class IncommingComponent
     this.notifySvr = inject.get(NotificationsService);
     this.atSV = inject.get(AttachmentService);
     this.authStore = inject.get(AuthStore);
+
     // this.codxService = inject.get(CodxService);
     this.fileService = inject.get(FileService);
   }
@@ -380,11 +382,13 @@ export class IncommingComponent
   }
 
   getGridViewSetup(funcID: any) {
+    
     var funcList = this.codxODService.loadFunctionList(funcID);
     if(isObservable(funcList))
     {
       this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
         this.funcList = fuc;
+        if(this.funcList.runMode == "1") alert("nó đó");
         var gw =  this.codxODService.loadGridView(fuc?.formName, fuc?.gridViewName)
         if(isObservable(gw))
         {
@@ -404,6 +408,7 @@ export class IncommingComponent
     else
     {
       this.funcList = funcList;
+      if(this.funcList.runMode == "1") alert("nó đó");
       var gw =  this.codxODService.loadGridView(this.funcList?.formName, this.funcList?.gridViewName)
       if(isObservable(gw))
       {

@@ -24,6 +24,7 @@ import {
 import { CmcustomerDetailComponent } from './cmcustomer-detail/cmcustomer-detail.component';
 import { PopupAddCmCustomerComponent } from './popup-add-cmcustomer/popup-add-cmcustomer.component';
 import { CodxCmService } from '../codx-cm.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-cmcustomer',
@@ -755,5 +756,11 @@ export class CmCustomerComponent
     } else {
       return data.competitorName;
     }
+  }
+
+  addressNameCMEmit(e){
+    this.dataSelected.address = e;
+    this.view.dataService.update(this.dataSelected).subscribe();
+    this.detectorRef.detectChanges();
   }
 }

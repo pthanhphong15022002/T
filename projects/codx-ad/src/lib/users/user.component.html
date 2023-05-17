@@ -32,7 +32,6 @@
           #tempFull
           [hideMF]="true"
           [imageObjName]="data?.userName"
-          
         >
         </codx-temp-full>
       </div>
@@ -205,6 +204,16 @@
     >
       <span class="icon-group icon-14 me-1"></span
       ><span>{{ data.groupName }}</span>
+    </div>
+    <div *ngIf="data?.administrator">
+      <codx-vll
+        [name]="'AD013'"
+        [value]="1"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light-primary d-flex align-items-center me-2"
+      >
+      </codx-vll>
     </div>
   </div>
 </ng-template>

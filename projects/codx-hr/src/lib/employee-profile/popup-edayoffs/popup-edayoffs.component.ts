@@ -1,6 +1,11 @@
 import { FormGroup } from '@angular/forms';
 import { CodxHrService } from './../../codx-hr.service';
-import { Injector, ChangeDetectorRef } from '@angular/core';
+import {
+  Injector,
+  ChangeDetectorRef,
+  TemplateRef,
+  ElementRef,
+} from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
@@ -46,6 +51,15 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   // genderGrvSetup: any;
   allowToViewEmSelector: boolean = false;
   //@ViewChild('listView') listView: CodxListviewComponent;
+
+  knowType = {
+    type1: ['N20', 'N22', 'N23', 'N24', 'N25', 'N26', 'N35'],
+    type2: ['N21'],
+    type3: ['N31'],
+    type4: ['N33'],
+    type5: ['N34'],
+  };
+  groupKowTypeView: any;
 
   fromListView: boolean = false;
   constructor(
@@ -110,8 +124,9 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     //   .subscribe((res) => {
     //     this.genderGrvSetup = res?.Gender;
     //   });
-
     if (this.employId) this.getEmployeeInfoById(this.employId, 'employeeID');
+    this.getGroupKowTypeView();
+    if (this.dayoffObj?.kowID) this.checkViewKowTyeGroup();
   }
 
   ngAfterViewInit() {
@@ -187,7 +202,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    if(this.formGroup.invalid){
+    if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
@@ -207,8 +222,12 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       this.hrSevice.notifyInvalidFromTo('BeginDate', 'EndDate', this.formModel);
       return;
     }
+
     this.dayoffObj.employeeID = this.employId;
     this.dayoffObj.totalSubDays = 0;
+
+    this.deletedKowGroupValue();
+
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrSevice.AddEmployeeDayOffInfo(this.dayoffObj).subscribe((p) => {
         if (p != null) {
@@ -220,20 +239,18 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         } else this.notify.notifyCode('SYS023');
       });
     } else {
-      this.hrSevice
-        .UpdateEmployeeDayOffInfo(this.formModel.currentData)
-        .subscribe((p) => {
-          if (p != null) {
-            this.successFlag = true;
-            this.notify.notifyCode('SYS007');
-            p.emp = this.empObj;
-            this.dialog && this.dialog.close(p);
-            // this.lstDayoffs[this.indexSelected] = p;
-            // if(this.listView){
-            //   (this.listView.dataService as CRUDService).update(this.lstDayoffs[this.indexSelected]).subscribe()
-            // }
-          } else this.notify.notifyCode('SYS021');
-        });
+      this.hrSevice.UpdateEmployeeDayOffInfo(this.dayoffObj).subscribe((p) => {
+        if (p != null) {
+          this.successFlag = true;
+          this.notify.notifyCode('SYS007');
+          p.emp = this.empObj;
+          this.dialog && this.dialog.close(p);
+          // this.lstDayoffs[this.indexSelected] = p;
+          // if(this.listView){
+          //   (this.listView.dataService as CRUDService).update(this.lstDayoffs[this.indexSelected]).subscribe()
+          // }
+        } else this.notify.notifyCode('SYS021');
+      });
     }
   }
 
@@ -405,6 +422,65 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           });
         }
         break;
+    }
+  }
+
+  kowIDValuechange() {
+    this.checkViewKowTyeGroup();
+  }
+  getGroupKowTypeView() {
+    this.groupKowTypeView = {
+      groupA: {
+        value: this.knowType.type1
+          .concat(this.knowType.type2)
+          .concat(this.knowType.type4)
+          .concat(this.knowType.type5),
+        isShow: false,
+        field: ['siLeaveNo', 'hospitalLine'],
+      },
+      groupB: {
+        value: this.knowType.type2,
+        isShow: false,
+        field: ['childID', 'childHICardNo'],
+      },
+      groupC: {
+        value: this.knowType.type4.concat(this.knowType.type5),
+        isShow: false,
+        field: ['pregnancyFrom', 'pregnancyWeeks'],
+      },
+      groupD: {
+        value: this.knowType.type3,
+        isShow: false,
+        field: [
+          'newChildBirthDate',
+          'newChildNum',
+          'isNewChildUnder32W',
+          'newChildBirthType',
+          'wifeID',
+          'wifeIDCardNo',
+          'wifeSINo',
+        ],
+      },
+    };
+  }
+  checkViewKowTyeGroup() {
+    if (this.dayoffObj['kowID']) {
+      for (let i in this.groupKowTypeView) {
+        this.groupKowTypeView[i].isShow = this.groupKowTypeView[
+          i
+        ].value.includes(this.dayoffObj['kowID']);
+      }
+    } else this.getGroupKowTypeView();
+  }
+  deletedKowGroupValue() {
+    for (let i in this.groupKowTypeView) {
+      if(this.groupKowTypeView[i].isShow)
+        continue;
+      else {
+        for (let j in this.groupKowTypeView[i].field){
+          this.dayoffObj[this.groupKowTypeView[i].field[j]] = null;
+        }
+      }
     }
   }
 }

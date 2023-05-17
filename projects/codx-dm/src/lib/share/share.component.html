@@ -95,7 +95,7 @@
                             </ng-container>
                         </div>
                     </div>
-                    <codx-input type="share" field="addUser" refValue="DM002" [showInput]="false"
+                    <codx-input type="share" field="addUser" [refValue]="!isShare ? 'DM002' : 'DM001'" [showInput]="false"
                         (valueChange)="onSaveRole($event, 'to')" [crrValue]="ownerID"> </codx-input>
                 </div>
                 <div *ngIf="isShare" class="d-flex justify-content-between border-bottom py-1">

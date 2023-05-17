@@ -1484,7 +1484,10 @@ a {
 .codx-label.required::after {
   margin-left: -5px;
 }
+.required:after {
+  content: "*"!important;
 
+}
 codx-processsteps .e-kanban-content {
   height: calc(100vh - 250px);
   overflow-y: hidden !important;
@@ -2354,12 +2357,14 @@ codx-valuelist .btn.select-icon {
   .dialog-more {
     width: 350px;
     position: absolute;
-    top: 9;
+    top: 0;
     bottom: 0;
     right: 0;
     overflow: auto;
     padding: 0 15px;
     display: block;
+    border-left: 1px var(--gray-150) solid;
+    z-index: 99;
   }
   .icon-login {
     rotate: 180deg;
@@ -2374,7 +2379,6 @@ codx-calendar {
   }
 }
 
-//
 
  .btn:not(.btn-outline-default):focus {
    border-color: transparent !important;
@@ -2661,10 +2665,14 @@ codx-input .e-icons.e-check:before {
     left: 0;
   }
 }
-.e-grid .e-table {
-  table-layout: auto;
+// .e-grid .e-table {
+//   table-layout: auto; /**vannguvaichuong**/
+// }
+doc-category{
+  .e-grid .e-table {
+    table-layout: auto!important;
+  }
 }
-
 .e-richtexteditor .e-toolbar-wrapper {
   position: relative;
 }

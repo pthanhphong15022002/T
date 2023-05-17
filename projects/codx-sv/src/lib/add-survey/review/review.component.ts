@@ -225,6 +225,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   lstAnswer: any = [];
   valueChange(e, itemSession, itemQuestion, itemAnswer) {
     //itemAnswer.choose = true
+    debugger
     if(itemQuestion.answerType == "L")
     {
       this.lstQuestion[itemSession.seqNo].children[
@@ -240,7 +241,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
         e.field == 'D' ||
         e.field == 'H' ||
         e.field == 'T' ||
-        e.field == 'T2'
+        e.field == 'T2'||
+        e.field == 'R'
       ) {
         let data = '';
         if (e.field == 'D' || e.field == 'H') data = e.data.fromDate;
@@ -392,11 +394,32 @@ export class ReviewComponent extends UIComponent implements OnInit {
     }
     
   }
-
+  convertAnswer(answer:any,type=null)
+  {
+    if(answer)
+    {
+      var spilts = answer.split("/");
+      if(spilts && spilts.length > 0)
+      {
+        if(type == 'l') return spilts[2]
+        else if(type == 'r') return spilts[3]
+        else
+        {
+          var arr = [];
+          for(var i = Number(spilts[0]) ; i<= spilts[1] ; i++)
+          {
+            arr.push(i);
+          }
+          return arr
+        }
+      }
+      return null
+    }
+    return null;
+  }
 
   checkRequired()
   {
-    debugger
     var a = this.itemSession;
   }
 

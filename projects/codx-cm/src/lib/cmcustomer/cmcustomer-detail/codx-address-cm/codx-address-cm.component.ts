@@ -1,4 +1,11 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
@@ -26,6 +33,8 @@ export class CodxAddressCmComponent implements OnInit {
   @Input() type: any;
   @Output() lstAddressEmit = new EventEmitter<any>();
   @Output() lstAddressDeleteEmit = new EventEmitter<any>();
+  @Output() addressName = new EventEmitter<any>();
+
   listAddress = [];
   listAddressDelete = [];
   formModelAddress: FormModel;
@@ -36,6 +45,7 @@ export class CodxAddressCmComponent implements OnInit {
   predicates = 'ObjectID=@0 && ObjectType=@1';
   dataValues = '';
   service = 'BS';
+  currentRecID = '';
   assemblyName = 'ERM.Business.BS';
   className = 'AddressBookBusiness';
   method = 'GetListAddressAsync';
@@ -45,7 +55,7 @@ export class CodxAddressCmComponent implements OnInit {
     private notiService: NotificationsService,
     private callFc: CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,
-    private api: ApiHttpService,
+    private api: ApiHttpService
   ) {}
 
   ngOnInit(): void {
@@ -62,15 +72,17 @@ export class CodxAddressCmComponent implements OnInit {
   getListAddress() {
     this.loaded = false;
     this.request.predicates = 'ObjectID=@0 && ObjectType=@1';
-    this.request.dataValues = this.id + ';' +this.entityName;
+    this.request.dataValues = this.id + ';' + this.entityName;
     this.request.entityName = 'BS_AddressBook';
     this.request.funcID = this.funcID;
     this.className = 'AddressBookBusiness';
     this.fetch().subscribe((item) => {
       this.listAddress = this.cmSv.bringDefaultContactToFront(item);
+      if (this.listAddress != null && this.listAddress.length > 0) {
+        this.changeAddress(this.listAddress[0]);
+      }
       this.loaded = true;
     });
-
   }
 
   private fetch(): Observable<any[]> {
@@ -93,6 +105,10 @@ export class CodxAddressCmComponent implements OnInit {
       );
   }
 
+  changeAddress(data) {
+    this.currentRecID = data?.recID;
+    this.changeDetectorRef.detectChanges();
+  }
   clickMFAddress(e, data) {
     this.moreFuncEdit = e.text;
     switch (e.functionID) {
@@ -149,7 +165,7 @@ export class CodxAddressCmComponent implements OnInit {
             listAddress: this.listAddress,
             type: this.type,
             objectID: this.id,
-            objectType: this.entityName
+            objectType: this.entityName,
           };
           var dialog = this.callFc.openForm(
             PopupAddressComponent,
@@ -184,6 +200,18 @@ export class CodxAddressCmComponent implements OnInit {
                     this.cmSv.loadList(e.event, this.listAddress, 'update')
                   );
                 }
+                var checkIsDefault = this.listAddress.some((x) => x.isDefault);
+                if (!checkIsDefault) {
+                  this.addressName.emit(null);
+                } else {
+                  if (this.type == 'formDetail' && e?.event?.isDefault) {
+                    this.addressName.emit(e?.event?.adressName);
+                  }
+                }
+                var index = this.listAddress.findIndex(
+                  (x) => x.recID == e.event?.recID
+                );
+                this.changeAddress(this.listAddress[index]);
                 this.lstAddressEmit.emit(this.listAddress);
                 this.changeDetectorRef.detectChanges();
               }
@@ -198,13 +226,28 @@ export class CodxAddressCmComponent implements OnInit {
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
+        var index = this.listAddress.findIndex((x) => x.recID == data.recID);
         if (this.type == 'formAdd') {
-          var index = this.listAddress.findIndex(x => x.recID == data.recID);
-          if(index != -1){
+          if (index != -1) {
             this.listAddress.splice(index, 1);
             this.listAddressDelete.push(data);
+            this.changeAddress(this.listAddress[0]);
             this.lstAddressDeleteEmit.emit(this.listAddressDelete);
           }
+        } else {
+          this.cmSv.deleteOneAddress(data.recID).subscribe((res) => {
+            if (res) {
+              this.listAddress = this.cmSv.bringDefaultContactToFront(
+                this.cmSv.loadList(data, this.listAddress, 'delete')
+              );
+              if (data.isDefault) {
+                this.addressName.emit(null);
+              }
+              this.notiService.notifyCode('SYS008');
+              this.changeAddress(this.listAddress[0]);
+              this.changeDetectorRef.detectChanges();
+            }
+          });
         }
       }
     });
