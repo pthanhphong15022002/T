@@ -59,6 +59,8 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   ) {
     this.user = this.authStore.get();
     this.dialog = dialog;
+    this.dataSource = dt?.data?.data;
+    this.type = dt?.data?.type;
     this.id = "progress" + Math.floor((Math.random() * 100000000)).toString();
   }
 
@@ -66,20 +68,21 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
     if (this.isUpdate && this.step) {
       this.actualEndMax = this.step?.actualStart;
     }
-    if(this.isPopup){
-      this.openPopup();
-    }
+    this.progressData = Number(this.dataSource['progress'] || 0) ;
+    this.actualEnd = this.dataSource['actualEnd'] || null;
+    this.note == this.dataSource['note'] || '';
+    this.progressOld = this.progressData ;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.isUpdate){
-      if(changes?.progress && changes?.progress?.previousValue != changes?.progress?.currentValue && this.dataSource){
-        this.progressData = Number(this.dataSource['progress'] || 0) ;
-        this.actualEnd = this.dataSource['actualEnd'] || null;
-        this.note == this.dataSource['note'] || '';
-        this.progressOld = this.progressData ;
-      }
-    }
+    // if(this.isUpdate){
+    //   if(changes?.progress && changes?.progress?.previousValue != changes?.progress?.currentValue && this.dataSource){
+    //     this.progressData = Number(this.dataSource['progress'] || 0) ;
+    //     this.actualEnd = this.dataSource['actualEnd'] || null;
+    //     this.note == this.dataSource['note'] || '';
+    //     this.progressOld = this.progressData ;
+    //   }
+    // }
   }
 
   openPopup() {

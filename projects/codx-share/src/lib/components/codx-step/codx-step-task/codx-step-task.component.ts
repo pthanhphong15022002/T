@@ -227,12 +227,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return type == "ID" ? role?.objectID : role?.objectName;
   }
 
-  changeProgress(event) {
-    if (event) {  
-      this.updateProgress(event)
-      this.valueChangeProgress.emit(event);
-    }
-  }
+  // changeProgress(event) {
+  //   if (event) {  
+  //     this.updateProgress(event)
+  //     this.valueChangeProgress.emit(event);
+  //   }
+  // }
 
   updateProgress(event){
     if (event.type == 'P') {//step
@@ -405,15 +405,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         break;
       case 'DP20': // tien do
         // this.openUpdateProgress(task);
-        this.openPopupUpdateProgress(task);
+        // this.openPopupUpdateProgress(task);
+        this.openPopupUpdateProgress(task,'T');
         break;
     }
   }
 
-  openPopupUpdateProgress(data){
-    this.isOpenPopupProgress = true;
-    this.dataPopupProgress = data;
-  }
+  // openPopupUpdateProgress(data){
+  //   this.isOpenPopupProgress = true;
+  //   this.dataPopupProgress = data;
+  // }
 
   clickMFTaskGroup(e: any, group: any) {
     switch (e.functionID) {
@@ -755,18 +756,18 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   viewTask(data){
 
   }
-  // async openPopupUpdateProgress(data){
-  //   let dataInput = {
-  //     data
-  //   };
-  //   let popupTask = this.callfc.openForm(
-  //     UpdateProgressComponent,'',
-  //     500,
-  //     500,
-  //     '', 
-  //     dataInput);
+  async openPopupUpdateProgress(data, type){
+    let dataInput = {
+      data,
+      type
+    };
+    let popupTask = this.callfc.openForm(
+      UpdateProgressComponent,'',
+      550, 400,
+      '', 
+      dataInput);
 
-  //   let dataPopupOutput = await firstValueFrom(popupTask.closed);
-  //   return dataPopupOutput;
-  // }
+    let dataPopupOutput = await firstValueFrom(popupTask.closed);
+    return dataPopupOutput;
+  }
 }
