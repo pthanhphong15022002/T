@@ -1484,7 +1484,10 @@ a {
 .codx-label.required::after {
   margin-left: -5px;
 }
+.required:after {
+  content: "*"!important;
 
+}
 codx-processsteps .e-kanban-content {
   height: calc(100vh - 250px);
   overflow-y: hidden !important;

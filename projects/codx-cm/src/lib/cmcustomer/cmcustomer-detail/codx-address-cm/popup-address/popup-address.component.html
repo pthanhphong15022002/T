@@ -13,7 +13,6 @@
   <div class="form-group mt-4">
     <codx-label fiedName="AdressType" [formModel]="form.formModel"></codx-label>
     <codx-input
-      [disabled]="isDisable"
       [formModel]="form.formModel"
       (valueChange)="valueChange($event)"
       [crrValue]="data?.adressType"
@@ -109,8 +108,9 @@
     <div>
       <codx-input
         [field]="'isDefault'"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
+        [crrValue]="isDefault"
+        type="switch"
+        (valueChange)="valueIsDefault($event)"
       ></codx-input>
     </div>
     <div class="w-100 ms-1">
