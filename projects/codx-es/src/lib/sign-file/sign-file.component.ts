@@ -110,7 +110,7 @@ export class SignFileComponent extends UIComponent {
     this.request.service = this.service;
     this.request.assemblyName = this.assemblyName;
     this.request.className = this.className;
-    this.request.method = 'LoadDataAsync';
+    this.request.method = this.method;
     this.request.idField = this.idField;
 
     this.esService.getFormModel(this.funcID).then((fm) => {
