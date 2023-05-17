@@ -28,10 +28,10 @@ export class CodxViewDetailLittleComponent implements OnInit ,OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.loadingData();
+   
   }
   ngOnInit(): void {
-   
+    this.loadingData();
   }
 
   loadingData() {
