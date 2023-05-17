@@ -197,7 +197,7 @@
       <span class="">
       <span
         *ngFor="let item of data?.industries.split(';'); index as i"
-        
+
           >
             <span
               [innerHTML]="
@@ -242,6 +242,7 @@
     (clickMoreFunc)="clickMoreFunc($event)"
     [entityName]="entityName"
     (changeMoreMF)="changeMoreMF($event)"
+    (addressNameCMEmit)="addressNameCMEmit($event)"
   >
   </codx-cmcustomer-detail>
 </ng-template>

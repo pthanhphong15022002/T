@@ -48,14 +48,14 @@ export class PopupAddressComponent implements OnInit {
     this.dialog = dialog;
     this.title = dt?.data?.title;
     this.gridViewSetup = dt?.data?.gridViewSetup;
-    if(this.action == 'edit'){
+    if (this.action == 'edit') {
       this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+      this.isDefault = this.data?.isDefault;
     }
     this.type = dt?.data?.type;
     this.objectID = dt?.data?.objectID;
     this.objectType = dt?.data?.objectType;
     this.lstAddress = dt?.data?.listAddress;
-
   }
 
   ngOnInit(): void {
@@ -152,14 +152,20 @@ export class PopupAddressComponent implements OnInit {
     if (this.type == 'formAdd') {
       this.dialog.close(this.data);
     } else {
-      this.data.objectID = this.objectID;
-      this.data.objectType = this.objectType;
-      if(this.action == 'add'){
-        this.cmSv.addOneAddress(this.data).subscribe(res => {
-          if(res){
+      if (this.action == 'add') {
+        this.data.objectID = this.objectID;
+        this.data.objectType = this.objectType;
+        this.cmSv.addOneAddress(this.data).subscribe((res) => {
+          if (res) {
             this.dialog.close(res);
           }
-        })
+        });
+      } else {
+        this.cmSv.updateOneAddress(this.data).subscribe((res) => {
+          if (res) {
+            this.dialog.close(res);
+          }
+        });
       }
     }
   }
