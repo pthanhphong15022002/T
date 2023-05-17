@@ -1,4 +1,4 @@
-import { CodxCmService } from './../../../codx-cm.service';
+import { CodxCmService } from '../../../../codx-cm.service';
 import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
 import {
   CallFuncService,

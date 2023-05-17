@@ -100,7 +100,7 @@ export class CM_QuotationsLines {
   iDIM3: string;
   IDIM4: string;
   quantity: number;
-  uMID: string;
+  umid: string;
   conversion: number;
   cWUM: string;
   cWConversion: number;
@@ -140,7 +140,7 @@ export class CM_Deals {
   dealID: string;
   dealName: string;
   dealName2: string;
-  category: string;
+  category: string = "1";
   customerID: string;
   channelID: string;
   campaignID: string;
@@ -149,8 +149,8 @@ export class CM_Deals {
   tags: string;
   dealValue: number;
   probability: number;
-  expectedClosed: number;
-  status: string;
+  expectedClosed: Date;
+  status: string = "1";
   statusCodeID: string;
   stepID: string;
   nextStep: string;
@@ -367,6 +367,11 @@ export class BS_AddressBook {
   orgUnitID: string;
   divisionID: string;
   wardID: string;
+  assign: boolean = true;
+  delete: boolean = true;
+  write: boolean = true;
+  share: boolean = true;
+
 }
 export class CM_ContractsPayments {
   recID: string = Util.uid(); //Mã thanh toán

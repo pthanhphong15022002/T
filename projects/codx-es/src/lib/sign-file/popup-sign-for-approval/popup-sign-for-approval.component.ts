@@ -171,7 +171,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
       case 'SYS203': {
         //nhieu file
         if (this.pdfView?.lstFiles?.length > 1) {
-          this.notify.alertCode('ES019').subscribe((x) => {
+          this.notify.alertCode('ES031').subscribe((x) => {
             if (x.event.status == 'Y') {
               this.clickOpenPopupADR(mf);
             } else {

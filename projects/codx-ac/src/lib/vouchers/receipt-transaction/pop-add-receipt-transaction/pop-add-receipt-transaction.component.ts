@@ -42,7 +42,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   formType: any;
   gridViewSetup: any;
   gridViewSetupLine: any;
-  validate: any;
+  validate: any = 0;
   journalNo: any;
   modeGrid: any;
   inventoryJournalLines: Array<InventoryJournalLines> = [];
@@ -559,6 +559,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       this.notification.notifyCode('SYS023', 0, '');
       return;
     } else {
+      if(e.costAmt == 0 && e.costPrice > 0 && e.quantity > 0)
+        e.costAmt = e.quantity * e.costPrice;
       this.api
         .execAction<any>('IV_InventoryJournalLines', [e], 'SaveAsync')
         .subscribe((save) => {

@@ -20,6 +20,7 @@ import {
   SidebarModel,
   ResourceModel,
   RequestOption,
+  NotificationsService,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
@@ -99,22 +100,17 @@ export class DealsComponent
     private cacheSv: CacheService,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
-    private codxCmService: CodxCmService
+    private codxCmService: CodxCmService,
+    private notificationsService: NotificationsService,
   ) {
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
-
-    // Get API
-   // this.getListCustomer();
   }
   ngOnChanges(changes: SimpleChanges): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
   }
 
   onInit(): void {
-     //test no chosse
      this.dataObj = {
       processID:'327eb334-5695-468c-a2b6-98c0284d0620'
     }
@@ -174,18 +170,8 @@ export class DealsComponent
   }
 
   onLoading(e) {
-    // this.afterLoad();
   }
 
-  //#region  get data
-  // getListCustomer() {
-  //   this.codxCmService.getListCustomer().subscribe((res) => {
-  //     if (res) {
-  //       this.listCustomer = res[0];
-  //     }
-  //   });
-  // }
-  //#endregion
 
   changeView(e) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -207,7 +193,39 @@ export class DealsComponent
     this.clickMF(e.e, e.data);
   }
 
-  changeDataMF($event, data) {}
+  changeDataMF($event, data) {
+
+    if ($event != null && data != null)
+    {
+      if(data.status == "1") {
+        for(let more of $event ) {
+          switch (more.functionID) {
+            case 'SYS03':
+            case 'SYS04':
+            case 'SYS02':
+            case 'CM0201_2':
+              more.isblur = false;
+              break;
+            default:
+              more.isblur = true;
+          }
+        }
+      }
+
+    }
+  }
+  checkMoreReason(data, isUseReason) {
+    if (data.status != '2' || isUseReason) {
+      return true;
+    }
+    if (data.closed) {
+      return true;
+    }
+    if (!data.permissionMoveInstances) {
+      return true;
+    }
+    return false;
+  }
 
   clickMF(e, data) {
     this.dataSelected = data;
@@ -222,10 +240,46 @@ export class DealsComponent
       case 'SYS02':
         this.delete(data);
         break;
+      case 'CM0201_2':
+        this.handelStartDay(data);
+        break;
+
     }
   }
+  changeMF(e) {
+    this.changeDataMF(e.e, e.data);
+  }
 
-  dblClick(e, data) {}
+  handelStartDay(data) {
+
+    this.notificationsService
+    .alertCode('DP033', null, ['"' + data?.title + '"' || ''])
+    .subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.startDeal(data.recID);
+      }
+    });
+  }
+
+  startDeal(recId) {
+    var data = [recId];
+    this.codxCmService.startDeal(data).subscribe((res) => {
+      if (res) {
+        // data.status = '2';
+        // data.startDate = res?.length > 0 ? res[0].startDate : null;
+             //   this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+     //   this.listInstanceStep = res;
+        this.dataSelected = res[0];
+        this.notificationsService.notifyCode('SYS007');
+        this.view.dataService.update(this.dataSelected).subscribe();
+        if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      }
+      this.detectorRef.detectChanges();
+    });
+  }
+
+
+
 
   getPropertiesHeader(data, type) {
     if (this.listHeader?.length == 0) {
@@ -394,8 +448,5 @@ export class DealsComponent
   }
   //#endregion
 
-  getCustomerName(customerID: any) {
-    return this.listCustomer.find((x) => x.recID === customerID);
-  }
 
 }

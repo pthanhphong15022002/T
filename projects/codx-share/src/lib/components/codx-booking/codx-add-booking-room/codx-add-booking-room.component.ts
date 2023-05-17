@@ -489,14 +489,14 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             tempAttender.roleName = element?.text;
           }
         });
-        if (tempAttender.userID != this.data.createdBy) {
+        if (tempAttender?.userID != this.data?.createdBy) {
           this.resources.push(tempAttender);
         }
-        if (tempAttender.userID == this.data.createdBy) {
+        else if (tempAttender?.userID == this.data?.createdBy) {
           this.curUser = tempAttender;
+          this.resources.push(tempAttender);
         }
 
-        this.resources.push(tempAttender);
       });
     }
   }
