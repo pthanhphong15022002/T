@@ -158,12 +158,22 @@ export class PopupAddressComponent implements OnInit {
         this.cmSv.addOneAddress(this.data).subscribe((res) => {
           if (res) {
             this.dialog.close(res);
+            this.notiService.notifyCode('SYS006');
+          }else{
+            this.dialog.close();
+            this.notiService.notifyCode('SYS023');
+
           }
         });
       } else {
         this.cmSv.updateOneAddress(this.data).subscribe((res) => {
           if (res) {
             this.dialog.close(res);
+            this.notiService.notifyCode('SYS007');
+          }else{
+            this.dialog.close();
+            this.notiService.notifyCode('SYS021');
+
           }
         });
       }
