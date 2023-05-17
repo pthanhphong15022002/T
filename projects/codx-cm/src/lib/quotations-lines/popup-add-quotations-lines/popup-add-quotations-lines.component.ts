@@ -1,5 +1,10 @@
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { CodxFormComponent, DialogData, DialogRef } from 'codx-core';
+import {
+  CacheService,
+  CodxFormComponent,
+  DialogData,
+  DialogRef,
+} from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 
 @Component({
@@ -14,8 +19,10 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
   quotationsLine: any;
   listQuotationLines = [];
   taxrate = 0;
+  action: string = 'add';
   constructor(
     private codxCM: CodxCmService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -23,6 +30,8 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
     this.quotationsLine = JSON.parse(JSON.stringify(dt?.data?.quotationsLine));
     this.listQuotationLines = dt?.data?.listQuotationLines ?? [];
     this.headerText = dt?.data?.headerText;
+    this.action = dt?.data?.action
+    
   }
 
   ngOnInit(): void {}
@@ -107,4 +116,5 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
       this.form.formGroup.patchValue(this.quotationsLine);
     });
   }
+
 }

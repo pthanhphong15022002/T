@@ -66,6 +66,7 @@ export class CM_Quotations {
   deadline: Date;
   memo: string;
   totalAmt: number;
+  totalTaxAmt:number
   discPct: number;
   discAmt: number;
   tags: string;
@@ -122,6 +123,7 @@ export class CM_QuotationsLines {
   exciseTaxPct: number;
   exciseTaxAmt: number;
   vATID: string;
+  vatRate :number
   vatBase: number;
   vatAmt: number;
   refType: string;
