@@ -24,6 +24,7 @@ import {
 import { CmcustomerDetailComponent } from './cmcustomer-detail/cmcustomer-detail.component';
 import { PopupAddCmCustomerComponent } from './popup-add-cmcustomer/popup-add-cmcustomer.component';
 import { CodxCmService } from '../codx-cm.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-cmcustomer',
@@ -493,8 +494,7 @@ export class CmCustomerComponent
         formMD.funcID = this.funcID;
         option.FormModel = JSON.parse(JSON.stringify(formMD));
         option.Width = '800px';
-        this.titleAction =
-          this.titleAction + ' ' + this.view?.function.customName;
+
         this.cmSv
           .getAutonumber(
             this.funcID,
@@ -552,8 +552,7 @@ export class CmCustomerComponent
           formMD.funcID = this.funcID;
           option.FormModel = JSON.parse(JSON.stringify(formMD));
           option.Width = '800px';
-          this.titleAction =
-            this.titleAction + ' ' + this.view?.function.customName;
+
           var obj = {
             action: 'edit',
             title: this.titleAction,
@@ -593,8 +592,7 @@ export class CmCustomerComponent
         formMD.funcID = this.funcID;
         option.FormModel = JSON.parse(JSON.stringify(formMD));
         option.Width = '800px';
-        this.titleAction =
-          this.titleAction + ' ' + this.view?.function.customName;
+
         this.cmSv
           .getAutonumber(
             this.funcID,
@@ -758,5 +756,11 @@ export class CmCustomerComponent
     } else {
       return data.competitorName;
     }
+  }
+
+  addressNameCMEmit(e){
+    this.dataSelected.address = e;
+    this.view.dataService.update(this.dataSelected).subscribe();
+    this.detectorRef.detectChanges();
   }
 }

@@ -12,8 +12,9 @@ export class DealDetailComponent  implements OnInit {
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
-  @Input() funcID = 'CM0201'; //True - Khách hàng; False - Liên hệ
+  @Input() funcID = 'CM0201'; //
   @Output() clickMoreFunc = new EventEmitter<any>();
+  @Output() changeMF = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
   @ViewChild('tabDetailViewDetail') tabDetailViewDetail: TabDetailCustomComponent;
@@ -49,8 +50,6 @@ export class DealDetailComponent  implements OnInit {
   }
 
   ngAfterViewInit(): void {
-   // this.tabControl.push({ name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: this.quotations});
-    //this.tabControl.push({ name: 'References', textDefault: 'Liên kết', isActive: false, template: null});
     let index = this.tabControl.findIndex(item => item.name == 'Contract');
     if(index >= 0){
       let contract = { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract};
@@ -81,9 +80,16 @@ export class DealDetailComponent  implements OnInit {
     this.clickMoreFunc.emit({e: e, data: data});
   }
 
+  changeDataMF(e, data) {
+    this.changeMF.emit({
+      e: e,
+      data: data,
+    });
+
+  }
+
   changeFooter(e){
     console.log(e);
-
   }
 }
 

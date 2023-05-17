@@ -65,6 +65,7 @@ export class CodxBookingViewDetailComponent
   @Output('invite') invite: EventEmitter<any> = new EventEmitter();
   @Output('cancel') cancel: EventEmitter<any> = new EventEmitter();
   @Output('allocate') allocate: EventEmitter<any> = new EventEmitter();
+  @Output('setAllocateStatus') setAllocateStatus: EventEmitter<any> = new EventEmitter();
   @Output('reschedule') reschedule: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
     new EventEmitter();
@@ -217,6 +218,11 @@ export class CodxBookingViewDetailComponent
        
         //Stationery
         case EPCONST.MFUNCID.S_Allocate:
+          this.setAllocateStatus.emit(EPCONST.A_STATUS.Approved);
+          this.allocate.emit(data);
+          break;
+        case EPCONST.MFUNCID.S_Allocate:
+          this.setAllocateStatus.emit(EPCONST.A_STATUS.Rejected);
           this.allocate.emit(data);
           break;
       }
@@ -396,15 +402,14 @@ export class CodxBookingViewDetailComponent
           ) {
             func.disabled = true;
           }
-        });
-      
-      if (data?.issueStatus =='3') {
-        event.forEach((func) => {
-          if (func.functionID == EPCONST.MFUNCID.S_Allocate /*MF cấp phát*/) {
+          if(data?.issueStatus=='1' && data?.approveStatus =='5' && (func.functionID == EPCONST.MFUNCID.S_Allocate || func.functionID == EPCONST.MFUNCID.S_UnAllocate)){
+            func.disabled = false;
+          }
+          else if((data?.issueStatus!='1' || data?.approveStatus !='5') && (func.functionID == EPCONST.MFUNCID.S_Allocate || func.functionID == EPCONST.MFUNCID.S_UnAllocate)){
             func.disabled = true;
           }
-        });
-      }
+        });      
+      
     }
     } else if (this.viewMode == '2') {
       event.forEach((func) => {
@@ -520,11 +525,7 @@ export class CodxBookingViewDetailComponent
             func.disabled = true;
           }
         });
-      } else if (
-        (data?.approveStatus == '5' &&
-          data?.stepType == 'I' &&
-          data?.issueStatus == '3') ||
-        (data?.approveStatus == '4' && data?.stepType == 'I')
+      } else if (data?.stepType == 'I' && (data?.approveStatus == '5' &&  data?.issueStatus != '1') || (data?.approveStatus == '4') 
       ) {
         //Đã cấp phát
         event.forEach((func) => {

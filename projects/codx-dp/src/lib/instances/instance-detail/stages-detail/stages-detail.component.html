@@ -310,7 +310,6 @@
       </div>
     </div>
     <div id="step-task" class="main p-5" [ngClass]="'show-main'">
-      <div id="step-task" class="main p-1" [ngClass]="'show-main'">
         <!-- drap drop công việc ngoài-->
         <div class="main-body" *ngIf="taskGroupList?.length > 0">
           <div
@@ -336,7 +335,7 @@
                         class="d-flex justify-content-start align-items-center has-action-menu ps-3 pt-1"
                         style="flex-grow: 1"
                       >
-                        <!-- show hiden group task -->
+              
                         <span class="">
                           <button
                             type="button"
@@ -394,7 +393,7 @@
                         groupTask?.task?.length == 0 ? { height: '30px' } : {}
                       "
                     ></div>
-                    <!-- kéo thả ở trong  -->
+ 
                     <div
                       cdkDropList
                       [cdkDropListData]="groupTask?.task || []"
@@ -422,7 +421,6 @@
                               <div
                                 class="d-flex justify-content-start align-items-center"
                               >
-                                <!-- icon task -->
                                 <div
                                   class="icon-container me-3"
                                   [ngStyle]="getColor(task)"
@@ -451,8 +449,6 @@
                                       [formModel]="frmModelInstancesTask"
                                     >
                                     </codx-label>
-                                    <!-- <span [innerHTML]="task?.modifiedOn | formatvalue: frmModel : 'ModifiedOn' | async"> -->
-                                    <!-- <span>{{task?.modifiedOn | formatvalue: frmModel: "modifiedOn"| async}}</span> -->
                                     <span
                                       >{{
                                         task?.modifiedOn || task?.createdOn
@@ -555,16 +551,14 @@
             ></codx-label>
           </button>
         </div>
-      </div>
-    </div>
       <!-- <codx-step-task
-      [dataSources]="step"
-      [isShowButton]="true"
-      [isShowMore]="true"
-      [typeProgress]="2"
-      [isDeepCopy]="false"
-    ></codx-step-task> -->
-    <!-- </div> -->
+        [dataSources]="step"
+        [isShowButton]="true"
+        [isShowMore]="true"
+        [typeProgress]="2"
+        [isDeepCopy]="false"
+      ></codx-step-task> -->
+    </div>
   </div>
   <!-- <codx-task [stepId]="dataStep?.recID"></codx-task> -->
 </ng-template>
@@ -576,15 +570,6 @@
       {{ data?.value?.endDate | date : dateFomat }}</span
     >
     <div class="disabled-inline">
-      <!-- <codx-progress
-        [progress]="data?.value?.progress"
-        [dataSource]="data?.value"
-        [step]=""
-        [type]="data?.type"
-        [isSave]="true"
-        [typeProgress]="2"
-        (valueChange)="changeProgress1($event)"
-      ></codx-progress> -->
     </div>
     <div
       class="disabled-inline"

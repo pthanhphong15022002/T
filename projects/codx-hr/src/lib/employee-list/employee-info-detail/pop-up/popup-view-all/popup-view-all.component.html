@@ -279,6 +279,199 @@
 
 <!-- #endregion -->
 
+<!-- #region Lương cơ bản columnGrid templates-->
+<ng-template #basicSalaryCol1 let-data>
+  <div class="d-flex align-items-center">
+    <span
+      class="bullet bullet-vertical d-flex align-items-center min-h-30px mh-100 me-3"
+      [class]="data.isCurrent ? 'bg-primary' : 'bg-transparent'"
+    ></span>
+    <div class="d-flex flex-column">
+      <div
+        class="d-flex align-items-center"
+        [ngClass]="
+          data.isCurrent
+            ? 'text-primary fs-6 fw-bold'
+            : 'text-dark fs-6 fw-bold'
+        "
+      >
+        <span class="icon-attach_money icon-16 me-1"></span>
+        <span class="">
+          <span
+            [innerHTML]="
+              data?.bSalary
+                | formatvalue : formModel : 'bSalary'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #basicSalaryCol2 let-data>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center">
+      <span
+        class="icon-monetization_on icon-16 me-2"
+        [ngClass]="
+          data.isCurrent
+            ? 'text-primary fs-6 fw-bold'
+            : 'text-dark fs-6 fw-bold'
+        "
+      ></span>
+      <span
+        [ngClass]="
+          data.isCurrent ? 'text-primary fw-bold' : 'text-dark fs-6 fw-bold'
+        "
+      >
+        <span
+          [innerHTML]="
+            data?.siSalary
+              | formatvalue : formModel : 'siSalary'
+              | async
+          "
+        ></span>
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #basicSalaryCol3 let-data>
+  <div class="d-flex flex-column">
+    <div
+      class="d-flex align-items-center mb-5px"
+      [ngClass]="
+        data.isCurrent ? 'text-primary fs-6 fw-bold' : 'text-dark fs-6 fw-bold'
+      "
+    >
+      <span class="icon-attach_money icon-16 me-2"></span>
+      <span
+        [innerHTML]="
+          data?.jSalary
+            | formatvalue : formModel : 'jSalary'
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #basicSalaryCol4 let-data>
+  <div class="has-action-menu">
+    <div class="d-flex flex-column">
+      <div
+        class="d-flex align-items-center"
+        [ngClass]="
+          data.isCurrent
+            ? 'text-primary fs-6 fw-bold'
+            : 'text-dark fs-6 fw-bold'
+        "
+      >
+        <span class="icon-event icon-16 text-gray-500 me-2"></span>
+        <span
+          [innerHTML]="
+            data?.effectedDate
+              | formatvalue : formModel : 'effectedDate'
+              | async
+          "
+        ></span>
+        <span class="mx-2">-</span>
+        <span
+          [innerHTML]="
+            data?.expiredDate
+              | formatvalue : formModel : 'expiredDate'
+              | async
+          "
+        ></span>
+      </div>
+    </div>
+    <codx-mfunc
+      (changeDataMF)="handleShowHideMf($event, data)"
+      [formModel]="formModel"
+      (clickMF)="clickMF($event, data, funcID)"
+      type="hover"
+      [dataItem]="data"
+    >
+    </codx-mfunc>
+  </div>
+</ng-template>
+<!-- #endregion -->
+
+<!-- #region template Phụ cấp  -->
+<ng-template #templateBenefitID let-data>
+  <div
+    [class]="data.isCurrent ? 'text-primary' : ''"
+    [innerHTML]="
+      data?.benefitID | formatvalue : formModel : 'benefitID' | async
+    "
+  >
+    <span
+      *ngIf="data.isCurrent == true"
+      class="bullet bullet-vertical d-flex align-items-center min-h-30px mh-100 me-3 bg-primary"
+    >
+    </span>
+
+    <span
+      class="icon-i-plus-circle icon-12 pe-2"
+    ></span>
+  </div>
+</ng-template>
+
+<ng-template #templateBenefitAmt let-data>
+  <div #benefitNorm [class]="data.isCurrent ? 'text-primary' : ''">
+    <span
+      [innerHTML]="
+        data?.benefitAmt | formatvalue : formModel : 'benefitAmt' | async
+      "
+    >
+    </span>
+    <span class="mx-2"> / </span>
+    <span
+      [innerHTML]="
+        data?.benefitNorm
+          | formatvalue : formModel : 'benefitNorm'
+          | async
+      "
+    ></span>
+  </div>
+</ng-template>
+
+<ng-template #templateBenefitEffected let-data>
+  <div
+    [class]="
+      data.isCurrent ? 'text-primary has-action-menu' : 'has-action-menu'
+    "
+  >
+    <span
+      [innerHTML]="
+        data?.effectedDate
+          | formatvalue : formModel : 'effectedDate'
+          | async
+      "
+    ></span>
+    <span class="mx-2"> - </span>
+    <span
+      [innerHTML]="
+        data?.expiredDate
+          | formatvalue : formModel : 'expiredDate'
+          | async
+      "
+    ></span>
+    <codx-mfunc
+      (changeDataMF)="handleShowHideMf($event, data)"
+      [formModel]="formModel"
+      (clickMF)="clickMF($event, data, funcID)"
+      type="hover"
+      [dataItem]="data"
+    >
+    </codx-mfunc>
+  </div>
+</ng-template>
+
+<!--#endregion -->
+
 <!-- #region customeHeader html-->
 <ng-template #customeHeader>
     <div class="card-header flex-column w-100">
@@ -480,6 +673,35 @@
             [cssClass]="'rounded-pill'"
           ></codx-dropdown-calendar>
         </span>
+      </div> 
+</ng-template>
+
+<ng-template #filterBenefit>
+    <div class="d-flex align-items-center">
+      <span class="ms-2">
+        <codx-dropdown-select
+          *ngIf="eBenefitGrvSetup"
+          [cssClass]="'rounded-pill border-1'"
+          cssPopup="h-350px w-300px"
+          [emptyText]="benefitHeaderText['BenefitID']"
+          [isMulti]="true"
+          type="combobox"
+          field="BenefitID"
+          [refValue]="eBenefitGrvSetup?.BenefitID?.referedValue"
+          (valueChange)="valueChangeFilterBenefit($event)"
+        ></codx-dropdown-select>
+      </span>
+      <span class="ms-2">
+        <codx-dropdown-calendar
+          [cssPopup]="'w-600px h-400px'"
+          emptyText="Chọn năm"
+          [firstChange]="false"
+          [displayOption]="ops"
+          [selectedType]="'y'"
+          [cssClass]="'rounded-pill'"
+          (change)="valueChangeYearFilterBenefit($event)"
+        ></codx-dropdown-calendar>
+      </span> 
       </div> 
 </ng-template>
 

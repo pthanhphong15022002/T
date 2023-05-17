@@ -113,13 +113,13 @@
                   </div>
                   <div
                     class="d-flex align-items-center mb-1"
-                    *ngIf="dataSelected.address"
+                    *ngIf="addressNameCM != null"
                   >
                     <span
                       class="icon-location_on icon-16 me-2 text-gray-700"
                     ></span>
                     <span class="text-gray-700">{{
-                      dataSelected.address
+                      addressNameCM
                     }}</span>
                   </div>
                 </div>
@@ -261,10 +261,7 @@
               ></codx-list-contacts>
             </ng-container>
             <ng-container *ngIf="name == 'Address'">
-              <div
-                class="mb-3"
-                *ngIf="listAddress != null && listAddress.length > 0"
-              >
+              <div class="mb-1">
                 <div class="mb-3">
                   <codx-label
                     class="text-dark text-primary fw-bold"
@@ -273,32 +270,13 @@
                   >
                   </codx-label>
                 </div>
-                <div class="d-flex flex-column">
-                  <ng-container *ngFor="let item of listAddress">
-                    <div class="d-flex w-100 mb-2">
-                      <div class="w-150px min-w-150px">
-                        <span
-                          class="label-colon text-gray-600 codx-textlabel"
-                          [innerHTML]="
-                            item?.adressType
-                              | formatvalue : formModelAddress : 'AdressType'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                      <div class="text-dark fw-bold codx-textcontent">
-                        <span
-                          *ngIf="item?.adressName"
-                          [innerHTML]="
-                            item?.adressName
-                              | formatvalue : formModelAddress : 'AdressName'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                  </ng-container>
-                </div>
+                <codx-address-cm
+                  [type]="'formDetail'"
+                  [funcID]="funcID"
+                  [entityName]="entityName"
+                  [id]="dataSelected.recID"
+                  (addressName)="addressName($event)"
+                ></codx-address-cm>
               </div>
             </ng-container>
             <ng-container *ngIf="name == 'Deal'">

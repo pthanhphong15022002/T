@@ -93,6 +93,7 @@ export class PopupMoveStageComponent implements OnInit {
   readonly viewTask: string = 'Task';
   readonly viewTaskGroup: string = 'TaskGroup';
   fieldsNull = [];
+  dateMessage: any;
   constructor(
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -312,11 +313,11 @@ export class PopupMoveStageComponent implements OnInit {
         return;
       }
       if(this.compareDates(this.instancesStepOld.actualStart,this.instancesStepOld.actualEnd)) {
-        var dateMessage = new Date(this.instancesStepOld.actualStart).toLocaleDateString('en-AU');
+       // var dateMessage = new Date(this.instancesStepOld.actualStart).toLocaleDateString('en-AU');
         this.notiService.notifyCode(
           'DP032',
           0,
-          '"' + this.gridViewInstanceStep['ActualEnd']?.headerText + '"', '"' +  dateMessage + '"'
+          '"' + this.gridViewInstanceStep['ActualEnd']?.headerText + '"', '"' +  this.dateMessage + '"'
         );
         return;
       }
@@ -752,14 +753,12 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   compareDates(actualStart, actualEnd) {
-    const startMoment = moment(actualStart);
-    const endMoment = moment(actualEnd);
-
-    if (startMoment.isAfter(endMoment)) {
-      return true;
-    }
-
-    return false;
+    var date1 = new Date(actualStart);
+    var date2 = new Date(actualEnd);
+    this.dateMessage = new Date(date1).toLocaleDateString('en-AU');
+    date1.setHours(0, 0, 0, 0);
+    date2.setHours(0, 0, 0, 0);
+    return date1 > date2;
   }
 
   checkDuration(isCheck: boolean, actualEnd: Date): Date{
