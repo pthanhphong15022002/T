@@ -26,7 +26,7 @@ import { PopupListContactsComponent } from './codx-list-contacts/popup-list-cont
 @Component({
   selector: 'codx-cmcustomer-detail',
   templateUrl: './cmcustomer-detail.component.html',
-  styleUrls: ['./cmcustomer-detail.component.css'],
+  styleUrls: ['./cmcustomer-detail.component.scss'],
 })
 export class CmcustomerDetailComponent implements OnInit {
   @ViewChild('contract') contract: TemplateRef<any>;

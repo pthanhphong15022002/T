@@ -88,7 +88,7 @@ export class PdfComponent
   @Input() oApprovalTrans;
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
   @Input() approver: string = ''; // ký ngoài hệ thống
-  @Output() confirmChange = new EventEmitter<boolean>();
+  // @Output() confirmChange = new EventEmitter<boolean>();
 
   @Input() hideActions = false;
   @Input() isSignMode = false;
@@ -1451,10 +1451,10 @@ export class PdfComponent
     this.curSignDateType = this.lstSignDateType[0];
   }
 
-  changeConfirmState(e: any) {
-    this.checkedConfirm = e.data;
-    this.confirmChange.emit(e.data);
-  }
+  // changeConfirmState(e: any) {
+  //   this.checkedConfirm = e.data;
+  //   this.confirmChange.emit(e.data);
+  // }
 
   changeSignature_StampImg(area: tmpSignArea) {
     let setupShowForm = new SetupShowSignature();
