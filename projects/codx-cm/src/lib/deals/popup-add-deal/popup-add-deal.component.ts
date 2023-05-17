@@ -119,7 +119,6 @@ export class PopupAddDealComponent
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
     this.executeApiCalls();
-    this.deal.status = '1';
     if (this.action != this.actionAdd) {
       this.deal = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.customerIDOld = this.deal?.customerID;
@@ -451,6 +450,8 @@ export class PopupAddDealComponent
       deal.refID = instance.recID;
     }
     deal.owner = this.owner;
+    deal.salespersonID = this.owner;
+    deal.expectedClosed = deal.endDate;
   }
   checkFormat(field) {
     if (field.dataType == 'T') {

@@ -199,7 +199,7 @@ saveCases() {
     this.notificationsService.notifyCode(messageCheckFormat);
     return;
   }
-  this.updateDateCases(this.instance, this.case);
+  this.updateDataCases(this.instance, this.case);
   this.convertDataInstance(this.case, this.instance);
   if (this.action !== this.actionEdit) {
     this.insertInstance();
@@ -333,7 +333,6 @@ async getGridView(formModel) {
     .gridViewSetup(formModel.formName, formModel.gridViewName)
     .subscribe((res) => {
       if (res) {
-        debugger;
         this.gridViewSetup = res;
       }
     });
@@ -402,7 +401,7 @@ async getListInstanceSteps(processId: any) {
 async getListContacts(customerID: any) {
   customerID = this.action === this.actionCopy ? this.case.customerID : customerID;
   var data = [customerID];
-  this.codxCmService.getListContactByCustomerID(data).subscribe(async (res) => {
+  this.codxCmService.getListContactByCustomerID(data).subscribe((res) => {
     if (res && res.length > 0) {
       var obj = {
         id: customerID,
@@ -413,7 +412,9 @@ async getListContacts(customerID: any) {
         this.listMemoryContact.push(obj);
       }
       this.listCbxContacts = res[0];
-      this.contactID = this.case?.contactID;
+      if(this.action != this.actionAdd) {
+        this.contactID = this.case.contactID;
+      }
       this.changeDetectorRef.detectChanges();
     }
   });
@@ -466,7 +467,7 @@ convertDataInstance(cases: CM_Cases, instance: tmpInstances) {
   instance.processID = cases.processID;
   instance.stepID = cases.stepID;
 }
-updateDateCases(instance: tmpInstances, cases: CM_Cases) {
+updateDataCases(instance: tmpInstances, cases: CM_Cases) {
   if (this.action !== this.actionEdit) {
     cases.stepID = this.listInstanceSteps[0].stepID;
     cases.nextStep = this.listInstanceSteps[1].stepID;
@@ -474,6 +475,7 @@ updateDateCases(instance: tmpInstances, cases: CM_Cases) {
     cases.refID = instance.recID;
   }
   cases.owner = this.owner;
+  cases.contactID = this.contactID;
 }
 checkFormat(field) {
   if (field.dataType == 'T') {

@@ -483,7 +483,20 @@ export class CodxCmService {
       [funcID, entityName, key]
     );
   }
-  //#endregion
+  // API for More in deal
+
+  startDeal(data){
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'StartDealAsync',
+      data
+    );
+  }
+
+
+  //#endregion -- Bao
 
   //contracts -- nvthuan
   addContracts(data) {

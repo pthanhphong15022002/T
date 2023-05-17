@@ -98,14 +98,14 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.action = dt?.data?.action;
     this.disableRefID = dt?.data?.disableRefID;
     this.listQuotationLines = [];
-    if(this.action=='edit'){
+    if (this.action == 'edit') {
       this.codxCM
-      .getQuotationsLinesByTransID(this.quotations.recID)
-      .subscribe((res) => {
-        if (res) {
-          this.listQuotationLines = res;
-        }
-      });
+        .getQuotationsLinesByTransID(this.quotations.recID)
+        .subscribe((res) => {
+          if (res) {
+            this.listQuotationLines = res;
+          }
+        });
     }
     this.cache
       .gridViewSetup(
@@ -386,14 +386,16 @@ export class PopupAddQuotationsComponent implements OnInit {
           dialogQuotations.closed.subscribe((res) => {
             if (res?.event) {
               let data = res?.event;
-              let idxUp =this.listQuotationLines.findIndex(x=>x.recID==data.recID)
-              if(idxUp!=-1){
+              let idxUp = this.listQuotationLines.findIndex(
+                (x) => x.recID == data.recID
+              );
+              if (idxUp != -1) {
                 this.listQuotationLines[idxUp] = data;
                 let check = this.quotationLinesEdit.some(
                   (x) => x.recID == data.recID
                 );
                 if (!check) this.quotationLinesEdit.push(data);
-               
+
                 this.gridQuationsLines.refresh();
                 // this.dialog.dataService.updateDatas.set(
                 //   this.quotations['_uuid'],
@@ -402,7 +404,6 @@ export class PopupAddQuotationsComponent implements OnInit {
                 this.loadTotal();
                 this.changeDetector.detectChanges();
               }
-             
             }
           });
         });
@@ -482,17 +483,20 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   loadTotal() {
+    var totals = 0;
+    var totalVAT = 0;
+    var totalDis = 0;
     if (this.listQuotationLines?.length > 0) {
-      var totals = 0;
-      var totalsdr = 0;
       this.listQuotationLines.forEach((element) => {
         //tisnh tong tien
-        totals = totals + element.netAmt ?? 0;
-        // totalsdr = totalsdr + element.dR2;
+        totals += element['netAmt'] ?? 0;
+        totalVAT += element['VATAmt'] ?? 0;
+        totalDis += element['discAmt'] ?? 0;
       });
-      this.quotations.totalAmt = totals;
-      // this.totaldr2 = totalsdr.toLocaleString('it-IT');
-    } else this.quotations.totalAmt = 0;
+    }
+    this.quotations['totalAmt'] = totals;
+    // this.quotations['DiscAmt'] = totalVAT;
+    this.quotations['DiscAmt'] = totalDis;
   }
 
   clearQuotationsLines() {
