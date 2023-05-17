@@ -65,7 +65,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     mode: 'Normal',
   };
 
-  quotationLines: Array<any> = [];
+  listQuotationLines: Array<any> = [];
   lockFields = [];
   dataParent: any;
   gridViewSetupQL: any;
@@ -75,6 +75,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   disableRefID = false;
   modelObjectIDContacs: any;
   modelCustomerIDDeals: any;
+  titleActionLine = '';
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -96,7 +97,16 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
     this.disableRefID = dt?.data?.disableRefID;
-    this.quotationLines = [];
+    this.listQuotationLines = [];
+    if (this.action == 'edit') {
+      this.codxCM
+        .getQuotationsLinesByTransID(this.quotations.recID)
+        .subscribe((res) => {
+          if (res) {
+            this.listQuotationLines = res;
+          }
+        });
+    }
     this.cache
       .gridViewSetup(
         this.fmQuotationLines.formName,
@@ -113,11 +123,16 @@ export class PopupAddQuotationsComponent implements OnInit {
     let data = [];
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddQuotationsAsync';
-      data = [this.quotations, this.quotationLines];
+      data = [this.quotations, this.listQuotationLines];
     }
     if (this.action == 'edit') {
       op.methodName = 'EditQuotationsAsync';
-      data = [this.quotations, this.quotationLinesAddNew,this.quotationLinesEdit,this.quotationLinesDeleted];
+      data = [
+        this.quotations,
+        this.quotationLinesAddNew,
+        this.quotationLinesEdit,
+        this.quotationLinesDeleted,
+      ];
     }
     op.data = data;
     return true;
@@ -140,7 +155,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     } else {
       this.api
         .exec<any>('CM', 'QuotationsBusiness', 'AddQuotationsAsync', [
-          [this.quotations, this.quotationLines],
+          [this.quotations, this.listQuotationLines],
         ])
         .subscribe((res) => {
           if (res) {
@@ -172,7 +187,12 @@ export class PopupAddQuotationsComponent implements OnInit {
     } else {
       this.api
         .exec<any>('CM', 'QuotationsBusiness', 'EditQuotationsAsync', [
-          [this.quotations, this.quotationLinesAddNew,this.quotationLinesEdit,this.quotationLinesDeleted],
+          [
+            this.quotations,
+            this.quotationLinesAddNew,
+            this.quotationLinesEdit,
+            this.quotationLinesDeleted,
+          ],
         ])
         .subscribe((res) => {
           if (res) {
@@ -235,9 +255,22 @@ export class PopupAddQuotationsComponent implements OnInit {
     //grid.disableField(this.lockFields);
   }
 
-  clickMF(e, data) {}
+  // region QuotationLines
+  clickMFQuotationLines(e, data) {
+    this.titleActionLine = e.text;
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteLine(data);
+        break;
+      case 'SYS03':
+        this.editLine(data);
+        break;
+      case 'SYS04':
+        this.copyLine(data);
+        break;
+    }
+  }
 
-  // region Product
   addPopup() {
     let idx = this.gridQuationsLines.dataSource?.length;
     let data = this.genData(idx);
@@ -251,7 +284,7 @@ export class PopupAddQuotationsComponent implements OnInit {
           var obj = {
             headerText: 'Thêm sản phẩm báo giá',
             quotationsLine: data,
-            quotationsLines: this.quotationLines,
+            listQuotationLines: this.listQuotationLines,
           };
           let opt = new DialogModel();
           opt.zIndex = 1000;
@@ -270,10 +303,9 @@ export class PopupAddQuotationsComponent implements OnInit {
           dialogQuotations.closed.subscribe((res) => {
             if (res?.event) {
               data = res?.event;
-              // this.gridQuationsLines.addRow(data, idx);
               this.quotationLinesAddNew.push(data);
-              this.quotationLines.push(data);
-              // this.gridQuationsLines.dataSource = this.quotationLines
+              this.listQuotationLines.push(data);
+              this.gridQuationsLines.refresh();
               this.loadTotal();
               this.changeDetector.detectChanges();
             }
@@ -298,6 +330,89 @@ export class PopupAddQuotationsComponent implements OnInit {
     data.transID = this.quotations?.recID;
     return data;
   }
+
+  deleteLine(data) {
+    this.notiService.alertCode('SYS030').subscribe((res) => {
+      if (res.event.status === 'Y') {
+        //=> delete fe
+        this.quotationLinesDeleted.push(data);
+        this.gridQuationsLines.deleteRow(data);
+        if (this.gridQuationsLines.dataSource.length > 0) {
+          for (let i = 0; i < this.gridQuationsLines.dataSource.length; i++) {
+            if (
+              this.gridQuationsLines.dataSource[i].rowNo != i + 1 &&
+              this.action == 'edit'
+            ) {
+              if (!this.quotationLinesEdit.some((x) => x.recID == data.recID))
+                this.quotationLinesEdit.push(data);
+            }
+            this.gridQuationsLines.dataSource[i].rowNo = i + 1;
+          }
+        }
+        this.listQuotationLines = this.gridQuationsLines.dataSource;
+        this.loadTotal();
+        this.changeDetector.detectChanges();
+      }
+    });
+  }
+
+  editLine(dt) {
+    this.cache.functionList(this.fmQuotationLines.funcID).subscribe((f) => {
+      this.cache
+        .gridViewSetup(
+          this.fmQuotationLines.formName,
+          this.fmQuotationLines.gridViewName
+        )
+        .subscribe((res) => {
+          var obj = {
+            headerText: this.titleActionLine + f?.customName || f?.description,
+            quotationsLine: dt,
+            listQuotationLines: this.listQuotationLines,
+          };
+          let opt = new DialogModel();
+          opt.zIndex = 1000;
+          opt.FormModel = this.fmQuotationLines;
+
+          let dialogQuotations = this.callFc.openForm(
+            PopupAddQuotationsLinesComponent,
+            '',
+            650,
+            570,
+            '',
+            obj,
+            '',
+            opt
+          );
+          dialogQuotations.closed.subscribe((res) => {
+            if (res?.event) {
+              let data = res?.event;
+              let idxUp = this.listQuotationLines.findIndex(
+                (x) => x.recID == data.recID
+              );
+              if (idxUp != -1) {
+                this.listQuotationLines[idxUp] = data;
+                let check = this.quotationLinesEdit.some(
+                  (x) => x.recID == data.recID
+                );
+                if (!check) this.quotationLinesEdit.push(data);
+
+                this.gridQuationsLines.refresh();
+                // this.dialog.dataService.updateDatas.set(
+                //   this.quotations['_uuid'],
+                //   this.quotations
+                // );
+                this.loadTotal();
+                this.changeDetector.detectChanges();
+              }
+            }
+          });
+        });
+    });
+  }
+
+  copyLine(dt) {}
+
+  // endregion QuotationLines
 
   loadModegrid() {}
 
@@ -368,22 +483,26 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   loadTotal() {
-    if (this.quotationLines?.length > 0) {
-      var totals = 0;
-      var totalsdr = 0;
-      this.quotationLines.forEach((element) => {
+    var totals = 0;
+    var totalVAT = 0;
+    var totalDis = 0;
+    if (this.listQuotationLines?.length > 0) {
+      this.listQuotationLines.forEach((element) => {
         //tisnh tong tien
-        totals = totals + element.netAmt ?? 0;
-        // totalsdr = totalsdr + element.dR2;
+        totals += element['netAmt'] ?? 0;
+        totalVAT += element['VATAmt'] ?? 0;
+        totalDis += element['discAmt'] ?? 0;
       });
-      this.quotations.totalAmt = totals;
-      // this.totaldr2 = totalsdr.toLocaleString('it-IT');
-    } else this.quotations.totalAmt = 0;
+    }
+    this.quotations['totalAmt'] = totals;
+    // this.quotations['DiscAmt'] = totalVAT;
+    this.quotations['DiscAmt'] = totalDis;
   }
 
   clearQuotationsLines() {
-    let idx = this.quotationLines.length;
+    let idx = this.listQuotationLines.length;
     let data = new CM_QuotationsLines();
   }
+
   //#endregion
 }

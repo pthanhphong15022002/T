@@ -1,12 +1,15 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import {
+  ApiHttpService,
+  AuthStore,
   CacheService,
   DialogData,
   DialogRef,
   FormModel,
   NotificationsService,
+  Util,
 } from 'codx-core';
-import { DP_Instances_Steps_TaskGroups } from 'projects/codx-dp/src/lib/models/models';
+import { DP_Instances_Steps_TaskGroups, DP_Instances_Steps_TaskGroups_Roles } from 'projects/codx-dp/src/lib/models/models';
 
 @Component({
   selector: 'codx-add-group-task',
@@ -22,15 +25,21 @@ export class CodxAddGroupTaskComponent implements OnInit {
   isSave = true;
   isEditTime = false;
   checkShow = false;
+  action = '';
+  user;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
+    private api: ApiHttpService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.taskGroup = dt?.data?.taskGroup;
+    this.taskGroup = dt?.data?.dataGroup;
     this.isEditTime = dt?.data?.isEditTime;
+    this.action = dt?.data?.action;
+    this.user = this.authStore.get();
     this.grvTaskGroupsForm = {
       entityName: 'DP_Instances_Steps_TaskGroups',
       formName: 'DPInstancesStepsTaskGroups',
@@ -40,6 +49,19 @@ export class CodxAddGroupTaskComponent implements OnInit {
 
   ngOnInit(): void {
     this.getFormModel();
+    let role = new DP_Instances_Steps_TaskGroups_Roles();
+    this.setRole(role);
+    this.taskGroup['roles'] = [role];
+  }
+
+  setRole<T>(role: T) {
+    role['recID'] = Util.uid();
+    role['objectName'] = this.user['userName'];
+    role['objectID'] = this.user['userID'];
+    role['createdOn'] = new Date();
+    role['createdBy'] = this.user['userID'];
+    role['roleType'] = 'O';
+    return role;
   }
 
   getFormModel() {
@@ -115,15 +137,43 @@ export class CodxAddGroupTaskComponent implements OnInit {
         message.push(this.view[key]);
       }
     }
-    // if (!this.taskGroup['durationDay'] && !this.taskGroup['durationHour']) {
-    //   message.push(this.view['durationDay']);
-    // }
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else if (!this.isSave) {
       this.notiService.notifyCode('DP019');
     } else {
-      this.dialog.close(this.taskGroup);
+      if(this.action == 'add' || this.action == 'copy'){
+        this.addGroupTask();
+      }
+      if(this.action == 'edit'){
+        this.editGroupTask();
+      }
     }
+  }
+  
+  addGroupTask(){
+    this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'AddGroupTaskStepAsync',
+      this.taskGroup
+    ).subscribe(res => {
+      if(res){        
+        this.dialog.close({ groupTask:res[0],progressStep: res[1]});
+      }
+    });
+  }
+
+  editGroupTask(){
+    this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateTaskStepAsync',
+      this.taskGroup
+    ).subscribe(res => {
+      if(res){        
+        this.dialog.close({ task:res, progressGroup: null, progressStep: null });
+      }
+    });
   }
 }

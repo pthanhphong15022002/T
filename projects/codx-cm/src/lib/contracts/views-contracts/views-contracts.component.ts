@@ -34,6 +34,7 @@ import { ListContractsComponent } from '../list-contracts/list-contracts.compone
 import { AddContractsComponent } from '../add-contracts/add-contracts.component';
 import { CM_Contracts } from '../../models/cm_model';
 import { PaymentsComponent } from '../component/payments/payments.component';
+import { CodxCmService } from '../../codx-cm.service';
 
 @Component({
   selector: 'lib-views-contracts',
@@ -110,6 +111,7 @@ export class ViewsContractsComponent extends UIComponent{
     private callFunc: CallFuncService,
     private notiService: NotificationsService,
     private changeDetector: ChangeDetectorRef,
+    private cmService: CodxCmService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -174,6 +176,7 @@ export class ViewsContractsComponent extends UIComponent{
 
   selectedChange(val: any) {
     this.itemSelected = val?.data;
+    this.getPayMentByContract(this.itemSelected?.recID)
     this.detectorRef.detectChanges();
   }
 
@@ -284,6 +287,14 @@ export class ViewsContractsComponent extends UIComponent{
     })
   }
 
+  getPayMentByContract(contractID){
+    this.cmService.getPaymentsByContract(contractID).subscribe(res => {
+      if(res){
+        this.listPayment = res;
+      }
+    })
+  }
+
   async getForModel  (functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = new FormModel;
@@ -306,6 +317,7 @@ export class ViewsContractsComponent extends UIComponent{
       action,
       data,
       type,
+      contractID: this.itemSelected?.recID
     };
     let option = new DialogModel();
     option.IsFull = false;

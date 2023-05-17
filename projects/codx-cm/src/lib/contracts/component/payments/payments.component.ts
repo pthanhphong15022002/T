@@ -12,6 +12,7 @@ export class PaymentsComponent  implements OnInit {
   type: 'pay' | 'payHistory';
   action = '';
   payment: CM_ContractsPayments;
+  contractID = null;
 
   title: string;
   dialog: DialogRef;
@@ -23,6 +24,7 @@ export class PaymentsComponent  implements OnInit {
     this.dialog = dialog;
     this.type = dt?.data?.type;
     this.action = dt?.data?.action;
+    this.contractID = dt?.data?.contractID;
   }
 
   ngOnInit(): void {
@@ -33,6 +35,7 @@ export class PaymentsComponent  implements OnInit {
   setDataInput(){
     if(this.action == 'add'){
       this.payment = new CM_ContractsPayments();
+      this.payment.refNo = this.contractID;
     }
     if(this.action == 'edit'){
 

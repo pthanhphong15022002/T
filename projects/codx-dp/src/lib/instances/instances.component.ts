@@ -229,6 +229,8 @@ export class InstancesComponent
   idTemp = '';
   nameTemp = '';
   ownerRoles = '';
+  dataVll :any;
+
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -267,6 +269,11 @@ export class InstancesComponent
         if (grv) {
           this.grvSetup = grv;
           this.vllStatus = grv['Status'].referedValue ?? this.vllStatus;
+          this.cache.valueList(this.vllStatus).subscribe(res=>{
+            if (res && res.datas) {
+               this.dataVll = res.datas
+            }
+          })
         }
       });
     this.cache.valueList('DP034').subscribe((res) => {
@@ -282,6 +289,7 @@ export class InstancesComponent
         this.tabInstances = tabIns;
       }
     });
+  
 
     this.cache.functionList(this.funcID).subscribe((f) => {
       // if (f) this.pageTitle.setSubTitle(f?.customName);
@@ -2219,5 +2227,9 @@ export class InstancesComponent
   checkDurationControl(stepID): boolean {
     var stepsDuration = this.process.steps.find((x) => x.recID === stepID);
     return stepsDuration?.durationControl;
+  }
+
+  toolTip(stt){
+    return this.dataVll?.filter(vl=>vl.value==stt)[0]?.text
   }
 }

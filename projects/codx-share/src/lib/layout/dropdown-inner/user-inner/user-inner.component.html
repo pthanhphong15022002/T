@@ -67,7 +67,7 @@
       </div>
 
       <div class="separator my-2"></div>
-
+<ng-container *ngIf="hasMenu">
       <div class="menu-item">
         <a (click)="myProfile()" class="menu-link px-5">
           <codx-label
@@ -218,7 +218,7 @@
           ></codx-label>
         </span>
       </div>
-
+    </ng-container>
       <div
         class="menu-item"
         *ngIf="user && user.tenant == 'default' && user.userID == 'CODXAMIN'"

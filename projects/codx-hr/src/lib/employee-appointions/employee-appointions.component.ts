@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import {
   ButtonModel,
+  DataRequest,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -97,11 +98,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
       }
     });
   }
-
-  onInit(): void {
-    this.initForm();
-  }
-
+  
   initForm() {
     //Load headertext from grid view setup database
     this.cache
@@ -109,7 +106,8 @@ export class EmployeeAppointionsComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.grvSetup = res;
-          // this.grvSetup = Util.camelizekeyObj(res);
+          // this.grvSetup = Util.camelizekeyObj(res); 
+
         }
       });
 
@@ -119,6 +117,11 @@ export class EmployeeAppointionsComponent extends UIComponent {
       .subscribe((res) => {
         this.genderGrvSetup = res?.Gender;
       });
+
+  }
+
+  onInit(): void {
+    this.initForm();
   }
 
   //Fix change when change codx-view
@@ -360,8 +363,6 @@ export class EmployeeAppointionsComponent extends UIComponent {
     });
   }
 
-  //#endregion
-
   clickMF(event, data): void {
     this.itemDetail = data;
 
@@ -424,6 +425,8 @@ export class EmployeeAppointionsComponent extends UIComponent {
   changeDataMF(event, data): void {
     this.hrService.handleShowHideMF(event, data, this.view);
   }
+
+  //#endregion
 
   //#region Handle detail data
   changeItemDetail(event) {
