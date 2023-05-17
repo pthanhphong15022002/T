@@ -122,8 +122,8 @@ export class CM_QuotationsLines {
   exciseTaxPct: number;
   exciseTaxAmt: number;
   vATID: string;
-  vATBase: number;
-  vATAmt: number;
+  vatBase: number;
+  vatAmt: number;
   refType: string;
   refNo: string;
   refID: string;

@@ -1,0 +1,270 @@
+<codx-layout-add
+  #form
+  [title]="headerText"
+  [tabInfo]="tabInfo"
+  [formModel]="formModel"
+  [subHeader]=""
+  [footer]="footer"
+  [dialog]="dialog"
+  [openMore]="true"
+  [tabContent]="[commonInfo, empResponsible, compResponsible]"
+  [data]="quitJobObj"
+  *ngIf="isAfterRender"
+>
+</codx-layout-add>
+
+<ng-template #commonInfo> 
+    <div class="form-group row">
+        <div class="col-6">
+          <codx-label fiedName="SubmitDate" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              field="submitDate"
+              [formModel]="formModel"
+              [Group]="formGroup"
+              (valueChange)="HandleInputSubmitDate($event)"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <codx-label fiedName="StoppedOn" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="stoppedOn"
+              (valueChange)="HandleInputStopOn($event)"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label fiedName="QuitForetellDays" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+            [disabled]="true"
+              field="quitForetellDays"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <codx-label fiedName="ViolatedDays" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="violatedDays"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+          <codx-label fiedName="QuitForm" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="quitForm"
+            ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <codx-label fiedName="QuitReason" [formModel]="formModel"></codx-label>
+        <div>
+          <codx-input
+            [formModel]="formModel"
+            [Group]="formGroup"
+            field="quitReason"
+          ></codx-input>
+      </div>
+
+    </div>
+
+    <div class="form-group row">
+        <codx-label fiedName="QuitNote" [formModel]="formModel"></codx-label>
+        <div>
+          <codx-input
+            [formModel]="formModel"
+            [Group]="formGroup"
+            field="quitNote"
+          ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-6">
+          <codx-label fiedName="QuitDecisionNo" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              field="quitDecisionNo"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <codx-label fiedName="QuitSignedDate" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="quitSignedDate"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label fiedName="ContractClosedDate" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              field="contractClosedDate"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <codx-label fiedName="ContractNo" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="contractNo"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+</ng-template>
+
+<ng-template #empResponsible>   
+    <div class="form-group row">
+
+    <div class="d-flex flex-wrap">
+          <codx-input
+            [formModel]="formModel"
+            [Group]="formGroup"
+            field="isHandOverWork"
+          ></codx-input>
+        <codx-label class="ms-3" fiedName="IsHandOverWork" [formModel]="formModel"></codx-label>
+    </div>
+    <div class="d-flex flex-wrap">
+        <codx-input
+          [formModel]="formModel"
+          [Group]="formGroup"
+          field="isHandOverProperty"
+        ></codx-input>
+      <codx-label class="ms-3" fiedName="IsHandOverProperty" [formModel]="formModel"></codx-label>
+  </div>
+  <div class="d-flex flex-wrap">
+    <codx-input
+      [formModel]="formModel"
+      [Group]="formGroup"
+      field="IsPaidDebt"
+    ></codx-input>
+  <codx-label class="ms-3" fiedName="isPaidDebt" [formModel]="formModel"></codx-label>
+</div>
+
+<div class="form-group row">
+    <codx-label fiedName="QuitNoteEmployee" [formModel]="formModel"></codx-label>
+    <div>
+      <codx-input
+        [formModel]="formModel"
+        [Group]="formGroup"
+        field="quitNoteEmployee"
+      ></codx-input>
+    </div>
+</div>
+</div>
+</ng-template>
+
+<ng-template #compResponsible> 
+    <div class="form-group row">
+
+        <div class="d-flex flex-wrap">
+              <codx-input
+                [formModel]="formModel"
+                [Group]="formGroup"
+                field="isLockAccount"
+              ></codx-input>
+            <codx-label class="ms-3" fiedName="IsLockAccount" [formModel]="formModel"></codx-label>
+        </div>
+        <div class="d-flex flex-wrap">
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="isNotify"
+            ></codx-input>
+          <codx-label class="ms-3" fiedName="IsNotify" [formModel]="formModel"></codx-label>
+      </div>
+      <div class="d-flex flex-wrap">
+        <codx-input
+          [formModel]="formModel"
+          [Group]="formGroup"
+          field="isReductedSI"
+        ></codx-input>
+      <codx-label class="ms-3" fiedName="IsReductedSI" [formModel]="formModel"></codx-label>
+    </div>
+    <div class="d-flex flex-wrap">
+        <codx-input
+          [formModel]="formModel"
+          [Group]="formGroup"
+          field="isClosedSI"
+        ></codx-input>
+      <codx-label class="ms-3" fiedName="isClosedSI" [formModel]="formModel"></codx-label>
+    </div>
+    
+    <div class="form-group row">
+        <codx-label fiedName="ReturnSIBook" [formModel]="formModel"></codx-label>
+        <div>
+          <codx-input
+            [formModel]="formModel"
+            [Group]="formGroup"
+            field="returnSIBook"
+          ></codx-input>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <codx-label fiedName="ReturnTermination" [formModel]="formModel"></codx-label>
+        <div>
+          <codx-input
+            [formModel]="formModel"
+            [Group]="formGroup"
+            field="returnTermination"
+          ></codx-input>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <codx-label fiedName="QuitNoteCompany" [formModel]="formModel"></codx-label>
+        <div>
+          <codx-input
+            [formModel]="formModel"
+            [Group]="formGroup"
+            field="quitNoteCompany"
+          ></codx-input>
+        </div>
+    </div>
+    </div>
+</ng-template>
+
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="onSaveForm()">
+        <i class="icon-save"></i>
+        <codx-label
+          default="Lưu"
+          name="lblSave"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>

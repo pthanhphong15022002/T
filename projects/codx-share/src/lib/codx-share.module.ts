@@ -187,6 +187,7 @@ import { CodxFieldsDetailTempComponent } from './components/codx-fields-detail-t
 import { PopupCustomFieldComponent } from './components/codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 import { CodxTaskbarComponent } from './components/codx-step/codx-taskbar/codx-taskbar.component';
 import { GroupModulePipe } from './pipe/groupmodoule.pipe';
+import { CodxViewDetailLittleComponent } from './components/codx-view-detail-little/codx-view-detail-little.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -315,7 +316,6 @@ const T_Component: Type<any>[] = [
   CountChartComponent,
   TopChartComponent,
   CodxMeetingOnlineComponent,
-
   //CM+DP
   CodxStepTaskComponent,
   UpdateProgressComponent,
@@ -331,6 +331,7 @@ const T_Component: Type<any>[] = [
   CodxInputCustomFieldComponent,
   CodxFieldsDetailTempComponent,
   PopupCustomFieldComponent,
+  CodxViewDetailLittleComponent,
 ];
 
 const T_Pipe: Type<any>[] = [

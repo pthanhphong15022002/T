@@ -7,19 +7,21 @@
 <!-- header -->
 <ng-template #headerTemplate let-data>
     <div class="d-flex w-100 ps-2 pe-4">
-        <div class="w-50 text-dark fw-bold p-3 fw-500">
+        <div class="w-30 text-dark fw-bold p-3 fw-500">
             <codx-label fiedName="lblEmployeeID" [formModel]="view.formModel"
-                [default]="grvSetup?.EmployeeID?.description"></codx-label>
+                [default]="grvSetup?.EmployeeID?.headerText"></codx-label>
         </div>
-        <div class="w-25 text-dark fw-bold p-3 fw-500">
-            <codx-label fiedName="lblKowID" [formModel]="view.formModel" [default]="grvSetup?.KowID?.description">
+        <div class="w-30 text-dark fw-bold p-3 fw-500">
+            <codx-label fiedName="lblKowID" [formModel]="view.formModel" [default]="grvSetup?.KowID?.headerText">
             </codx-label> |
             <codx-label fiedName="lblPeriodType" [formModel]="view.formModel"
-                [default]="grvSetup?.PeriodType?.description">
+                [default]="grvSetup?.PeriodType?.headerText">
+            </codx-label> |
+            <codx-label fiedName="lblReason" [formModel]="view.formModel" [default]="grvSetup?.Reason?.headerText">
             </codx-label>
         </div>
-        <div class="w-25 text-dark fw-bold p-3 fw-500">
-            <codx-label fiedName="lblReason" [formModel]="view.formModel" [default]="grvSetup?.Reason?.description">
+        <div class="w-40 text-dark fw-bold p-3 fw-500">
+            <codx-label fiedName="lblStatus" [formModel]="view.formModel" [default]="grvSetup?.Status?.headerText">
             </codx-label>
         </div>
     </div>
@@ -30,7 +32,7 @@
 <ng-template #templateList let-data>
     <div class="d-flex align-items-center min-h-100px">
         <!-- emp info -->
-        <div class="w-50 p-3">
+        <div class="w-30 p-3">
             <div class="d-flex align-items-start">
                 <div class="d-flex flex-column flex-center me-2 w-50px">
                     <codx-img [width]="35" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
@@ -43,8 +45,8 @@
                 <div class="d-flex flex-column">
                     <div class="d-flex align-items-center">
                         <span class="me-2 text-dark fw-bold text-nowrap">{{ data?.emp?.employeeName }}</span>
-                        <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
-                        <span class="text-danger">{{ data?.emp?.employeeID }}</span>
+                        <!-- <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+                        <span class="text-danger">{{ data?.emp?.employeeID }}</span> -->
                     </div>
                     <div class="text-gray-500 fs-7 mb-1">
                         <span
@@ -60,49 +62,36 @@
         <!-- end emp info -->
 
         <!-- day off type / day off periods-->
-        <div class="w-25 p-3">
+        <div class="w-30 p-3">
             <div class="d-flex flex-column text-gray-700">
-                <div class="d-flex flex-row mb-2 fs-5">
-                    <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.PeriodType?.headerText">
+                <div class="d-flex mb-2 fs-5">
+                    <div class="align-self-center fw-bold me-2" [ngbTooltip]="grvSetup?.KowID?.headerText">
                         <span class="align-self-center fw-bold fs-5"
-                            [innerHTML]=" data?.periodType | formatvalue : view.formModel : 'periodType' | async">
+                            [innerHTML]=" data?.kowID | formatvalue : view.formModel : 'kowID' | async">
                         </span>
                     </div>
-                </div>
-                <div class="d-flex flex-row align-items-center"
-                    *ngIf="dateCompare(data?.beginDate, data?.endDate); else justFromDate">
-                    <span class="icon-event_notes icon-16 me-1"></span>
-                    <span [innerHTML]="data?.beginDate | formatvalue : view.formModel : 'beginDate'| async"></span>
-                    <span class="px-1"> - </span>
-                    <span [innerHTML]="data?.endDate | formatvalue : view.formModel : 'endDate'| async"></span>
-                </div>
-                <ng-template #justFromDate>
-                    <div class="d-flex flex-row align-items-center">
-                        <span class="icon-event_notes icon-16 me-1"></span>
-                        <span [innerHTML]="data?.beginDate | formatvalue : view.formModel : 'beginDate'| async"></span>
+                    <div class="d-flex flex-row" *ngIf="data?.attachments > 0">
+                        <codx-attachment-temp [objectID]="data.recID" [formModel]="view.formModel">
+                        </codx-attachment-temp>
                     </div>
-                </ng-template>
-                <div class="d-flex flex-row align-items-center">
+                </div>
+                <div class="d-flex flex-wrap align-items-center">
+                    <span class="icon-event_notes icon-16 me-1"></span>
+                    <span [ngbTooltip]="grvSetup?.BeginDate?.headerText"
+                        [innerHTML]="data?.beginDate | formatvalue : view.formModel : 'beginDate'| async"></span>
+                    <span class="px-1" *ngIf="data?.endDate"> - </span>
+                    <span *ngIf="data?.endDate" [ngbTooltip]="grvSetup?.EndDate?.headerText"
+                        [innerHTML]="data?.endDate | formatvalue : view.formModel : 'endDate'| async"></span>
                     <span class="bi-circle-fill fs-icon fs-10 mx-2 text-gray-400 me-2"></span>
-                    <div *ngIf="data?.totalDaysOff > 0; else noTotalDayOff">
+                    <div *ngIf="data?.totalDaysOff > 0; else noTotalDayOff" [ngbTooltip]="grvSetup?.TotalDaysOff?.headerText">
                         <span class="text-primary fw-bold"
                             [innerHTML]="data?.totalDaysOff | formatvalue : view.formModel : 'totalDaysOff'| async"></span>
                         <span> ngày </span>
                     </div>
                     <ng-template #noTotalDayOff>
-                        <div>
-                            <span
-                                [innerHTML]="data?.totalDaysOff | formatvalue : view.formModel : 'totalDaysOff'| async"></span>
-                        </div>
+                        <span [innerHTML]="data?.totalDaysOff | formatvalue : view.formModel : 'totalDaysOff'| async"></span>
                     </ng-template>
                 </div>
-            </div>
-        </div>
-        <!-- day off type / day off periods -->
-
-        <!-- reason -->
-        <div class="w-25 p-3">
-            <div class="d-flex flex-column w-75">
                 <div class="d-flex mb-2" #reasonField>
                     <span [ngbTooltip]="reasonTooltip" class="line-clamp line-clamp-1 text-dark"
                         #titleContent>{{data?.reason}}</span>
@@ -115,23 +104,17 @@
                         </span>
                     </div>
                 </ng-template>
-                <div class="d-flex flex-row">
-                    <div class="d-flex flex-row me-2" *ngIf="data?.attachments > 0">
-                        <codx-attachment-temp [objectID]="data.recID" [formModel]="view.formModel">
-                        </codx-attachment-temp>
-                    </div>
-                    <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
-                        [showIcon]="false" [showBgColor]="true" ngClass="badge badge-sm">
-                    </codx-vll>
-                </div>
             </div>
-
-            <codx-attachment #attachment [objectId]="data?.recID" [objectType]="view.formModel.entityName"
-                hideFolder="1" hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline"
-                allowMultiFile="1" [formModel]="view.formModel" displayThumb="full" showMessage="0">
-            </codx-attachment>
         </div>
-        <!-- end reason -->
+        <!-- day off type / day off periods -->
+
+        <!-- status -->
+        <div class="w-40 p-3">
+            <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
+                [showIcon]="false" [showBgColor]="true" ngClass="badge badge-sm">
+            </codx-vll>
+        </div>
+        <!-- end status -->
 
         <!-- approve status -->
         <!-- <div class="w-25 p-3">

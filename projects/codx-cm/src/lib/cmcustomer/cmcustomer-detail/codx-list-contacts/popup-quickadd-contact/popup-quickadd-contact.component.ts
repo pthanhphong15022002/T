@@ -120,9 +120,10 @@ export class PopupQuickaddContactComponent implements OnInit {
           this.data.isDefault = this.isDefault;
           this.data.contactType = this.contactType;
           this.dialog.close(this.data);
-          this.notiService.notifyCode('SYS007');
+          this.notiService.notifyCode('SYS006');
         } else {
           this.dialog.close();
+          this.notiService.notifyCode('SYS023');
         }
       });
     } else {
@@ -132,6 +133,9 @@ export class PopupQuickaddContactComponent implements OnInit {
           this.data.contactType = this.contactType;
           this.dialog.close(res);
           this.notiService.notifyCode('SYS007');
+        } else {
+          this.dialog.close();
+          this.notiService.notifyCode('SYS021');
         }
       });
     }

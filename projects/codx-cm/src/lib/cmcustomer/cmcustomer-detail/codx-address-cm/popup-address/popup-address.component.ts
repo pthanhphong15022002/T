@@ -48,14 +48,14 @@ export class PopupAddressComponent implements OnInit {
     this.dialog = dialog;
     this.title = dt?.data?.title;
     this.gridViewSetup = dt?.data?.gridViewSetup;
-    if(this.action == 'edit'){
+    if (this.action == 'edit') {
       this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+      this.isDefault = this.data?.isDefault;
     }
     this.type = dt?.data?.type;
     this.objectID = dt?.data?.objectID;
     this.objectType = dt?.data?.objectType;
     this.lstAddress = dt?.data?.listAddress;
-
   }
 
   ngOnInit(): void {
@@ -152,14 +152,30 @@ export class PopupAddressComponent implements OnInit {
     if (this.type == 'formAdd') {
       this.dialog.close(this.data);
     } else {
-      this.data.objectID = this.objectID;
-      this.data.objectType = this.objectType;
-      if(this.action == 'add'){
-        this.cmSv.addOneAddress(this.data).subscribe(res => {
-          if(res){
+      if (this.action == 'add') {
+        this.data.objectID = this.objectID;
+        this.data.objectType = this.objectType;
+        this.cmSv.addOneAddress(this.data).subscribe((res) => {
+          if (res) {
             this.dialog.close(res);
+            this.notiService.notifyCode('SYS006');
+          }else{
+            this.dialog.close();
+            this.notiService.notifyCode('SYS023');
+
           }
-        })
+        });
+      } else {
+        this.cmSv.updateOneAddress(this.data).subscribe((res) => {
+          if (res) {
+            this.dialog.close(res);
+            this.notiService.notifyCode('SYS007');
+          }else{
+            this.dialog.close();
+            this.notiService.notifyCode('SYS021');
+
+          }
+        });
       }
     }
   }
@@ -187,7 +203,7 @@ export class PopupAddressComponent implements OnInit {
       this.data[e.field] = e?.data;
       switch (e.field) {
         case 'countryID':
-          this.model = { CountryID: this.data?.countryID };
+          this.model = { CountryID: JSON.parse(JSON.stringify(e?.data)) };
           this.nameCountry =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
@@ -195,7 +211,7 @@ export class PopupAddressComponent implements OnInit {
               : null;
           break;
         case 'provinceID':
-          this.modelDistrictID = { ProvinceID: this.data?.provinceID };
+          this.modelDistrictID = { ProvinceID: JSON.parse(JSON.stringify(e?.data)) };
           this.nameProvince =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
@@ -203,7 +219,7 @@ export class PopupAddressComponent implements OnInit {
               : null;
           break;
         case 'districtID':
-          this.modelWardID = { DistrictID: this.data?.districtID };
+          this.modelWardID = { DistrictID: JSON.parse(JSON.stringify(e?.data)) };
           this.nameDistrict =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
