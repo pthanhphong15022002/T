@@ -90,6 +90,15 @@ export class CodxCmService {
     );
   }
 
+  countDealCompetiorsByCompetitorID(competitorID) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'CountCompetitorByDealCompetitorAsync',
+      [competitorID]
+    );
+  }
+
   updateContactCrm(recID) {
     return this.api.exec<any>(
       'CM',
