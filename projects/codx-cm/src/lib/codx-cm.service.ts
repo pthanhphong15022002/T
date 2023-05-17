@@ -192,6 +192,32 @@ export class CodxCmService {
     );
   }
 
+  updateOneAddress(address){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'UpdateAdressAsync',
+      [address]
+    );
+  }
+
+  deleteOneAddress(recID){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'DeleteAdressAsync',
+      [recID]
+    );
+  }
+
+  getAdressNameByIsDefault(id, entityName){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'GetAdressNameByIsDefaultAsync',
+      [id, entityName]
+    );
+  }
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = {};
