@@ -231,6 +231,7 @@ export class CodxAddressCmComponent implements OnInit {
           if (index != -1) {
             this.listAddress.splice(index, 1);
             this.listAddressDelete.push(data);
+            this.changeAddress(this.listAddress[0]);
             this.lstAddressDeleteEmit.emit(this.listAddressDelete);
           }
         } else {
@@ -243,11 +244,11 @@ export class CodxAddressCmComponent implements OnInit {
                 this.addressName.emit(null);
               }
               this.notiService.notifyCode('SYS008');
+              this.changeAddress(this.listAddress[0]);
               this.changeDetectorRef.detectChanges();
             }
           });
         }
-        this.changeAddress(this.listAddress[0]);
       }
     });
   }
