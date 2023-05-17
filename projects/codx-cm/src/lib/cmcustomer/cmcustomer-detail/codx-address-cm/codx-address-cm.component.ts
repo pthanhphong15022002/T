@@ -45,6 +45,7 @@ export class CodxAddressCmComponent implements OnInit {
   predicates = 'ObjectID=@0 && ObjectType=@1';
   dataValues = '';
   service = 'BS';
+  currentRecID = '';
   assemblyName = 'ERM.Business.BS';
   className = 'AddressBookBusiness';
   method = 'GetListAddressAsync';
@@ -77,6 +78,9 @@ export class CodxAddressCmComponent implements OnInit {
     this.className = 'AddressBookBusiness';
     this.fetch().subscribe((item) => {
       this.listAddress = this.cmSv.bringDefaultContactToFront(item);
+      if(this.listAddress != null && this.listAddress.length > 0){
+        this.changeAddress(this.listAddress[0]);
+      }
       this.loaded = true;
     });
   }
@@ -101,6 +105,10 @@ export class CodxAddressCmComponent implements OnInit {
       );
   }
 
+  changeAddress(data){
+    this.currentRecID = data?.recID;
+    this.changeDetectorRef.detectChanges();
+  }
   clickMFAddress(e, data) {
     this.moreFuncEdit = e.text;
     switch (e.functionID) {
@@ -237,6 +245,7 @@ export class CodxAddressCmComponent implements OnInit {
             }
           })
         }
+        this.changeAddress(this.listAddress[0]);
       }
     });
   }

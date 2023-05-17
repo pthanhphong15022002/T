@@ -212,6 +212,8 @@ export class CodxListContactsComponent implements OnInit {
                   this.cmSv.loadList(e.event, this.listContacts, 'update')
                 );
               }
+              var index = this.listContacts.findIndex(x => x.recID == e.event?.recID);
+              this.changeContacts(this.listContacts[index]);
               this.lstContactEmit.emit(this.listContacts);
               this.changeDetectorRef.detectChanges();
             }
@@ -259,6 +261,8 @@ export class CodxListContactsComponent implements OnInit {
                 this.cmSv.loadList(e.event, this.listContacts, 'update')
               );
               this.lstContactEmit.emit(this.listContacts);
+              var index = this.listContacts.findIndex(x => x.recID == e.event?.recID);
+              this.changeContacts(this.listContacts[index]);
               this.changeDetectorRef.detectChanges();
             }
           }
@@ -291,7 +295,7 @@ export class CodxListContactsComponent implements OnInit {
             this.lstContactDeleteEmit.emit(lstDelete);
           }
         }
-
+        this.changeContacts(this.listContacts[0]);
       }
     });
   }
