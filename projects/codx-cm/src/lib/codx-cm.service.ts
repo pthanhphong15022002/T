@@ -183,6 +183,15 @@ export class CodxCmService {
     );
   }
 
+  addOneAddress(address){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'AddAdressAsync',
+      [address]
+    );
+  }
+
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = {};
