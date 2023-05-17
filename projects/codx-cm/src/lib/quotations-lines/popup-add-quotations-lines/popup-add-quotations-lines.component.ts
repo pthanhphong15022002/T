@@ -18,7 +18,6 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
   headerText: any;
   quotationsLine: any;
   listQuotationLines = [];
-  taxrate = 0;
   action: string = 'add';
   constructor(
     private codxCM: CodxCmService,
@@ -30,15 +29,14 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
     this.quotationsLine = JSON.parse(JSON.stringify(dt?.data?.quotationsLine));
     this.listQuotationLines = dt?.data?.listQuotationLines ?? [];
     this.headerText = dt?.data?.headerText;
-    this.action = dt?.data?.action
-    
+    this.action = dt?.data?.action;
   }
 
   ngOnInit(): void {}
   onSave() {
     // this.quotationsLine['costAmt'] = ???
     this.quotationsLine['netAmt'] =
-      (this.quotationsLine['salesAmt'] ?? 0) +
+      (this.quotationsLine['salesAmt'] ?? 0) -
       (this.quotationsLine['discAmt'] ?? 0) +
       (this.quotationsLine['vatAmt'] ?? 0);
     this.dialog.close(this.quotationsLine);
@@ -53,9 +51,7 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
         break;
       case 'VATID':
         let crrtaxrate = e?.component?.itemsSelected[0]?.TaxRate;
-        if (crrtaxrate) {
-          this.taxrate = crrtaxrate;
-        }
+        this.quotationsLine['vatRate'] = crrtaxrate ?? 0;
         this.loadChange();
         break;
       case 'discPct':
@@ -79,20 +75,21 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
       100;
 
     this.quotationsLine['vatBase'] =
-      (this.quotationsLine['salesAmt'] ?? 0) +
+      (this.quotationsLine['salesAmt'] ?? 0) -
       (this.quotationsLine['discAmt'] ?? 0);
 
     this.quotationsLine['vatAmt'] =
-      this.taxrate * (this.quotationsLine['vatBase'] ?? 0);
+      (this.quotationsLine['vatRate'] ?? 0) *
+      (this.quotationsLine['vatBase'] ?? 0);
   }
 
   loadItem(itemID) {
     this.codxCM.getItem(itemID).subscribe((items) => {
       if (items) {
         this.quotationsLine['onhand'] = items.quantity;
-        this.quotationsLine['iDIM4'] = items.warehouseID; // kho
+        this.quotationsLine['idiM4'] = items.warehouseID; // kho
         this.quotationsLine['costPrice'] = items.costPrice; // gia von
-        this.quotationsLine['uMID'] = items.umid; // don vi tinh
+        this.quotationsLine['umid'] = items.umid; // don vi tinh
         this.quotationsLine['quantity'] = items.minSettledQty; //so luong mua nhieu nhat
       }
       // (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
@@ -116,5 +113,4 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
       this.form.formGroup.patchValue(this.quotationsLine);
     });
   }
-
 }

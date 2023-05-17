@@ -95,11 +95,11 @@ export class CM_QuotationsLines {
   barcode: string;
   itemID: string;
   itemNote: string;
-  iDIM0: string;
-  iDIM1: string;
-  iDIM2: string;
-  iDIM3: string;
-  IDIM4: string;
+  idiM0: string;
+  idiM1: string;
+  idiM2: string;
+  idiM3: string;
+  idiM4: string;
   quantity: number;
   umid: string;
   conversion: number;
