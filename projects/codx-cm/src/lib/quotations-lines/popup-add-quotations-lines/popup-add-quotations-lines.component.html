@@ -111,11 +111,11 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label
-            fiedName="CostAmt"
+            fiedName="SalesAmt"
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
-            field="costAmt"
+            field="salesAmt"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="true"
@@ -131,7 +131,7 @@
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
-            field="DiscPct"
+            field="discPct"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
@@ -145,7 +145,7 @@
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
-            field="DiscAmt"
+            field="discAmt"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
@@ -179,6 +179,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
+            [disabled]="true"
           ></codx-input>
         </div>
       </div>

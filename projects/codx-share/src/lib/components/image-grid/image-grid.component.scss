@@ -12,17 +12,13 @@
     top: 6px;
     right: 6px;
     z-index: 999;
-    border-radius: 30px;
-    background-color: #fff;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.remove-file a {
-    padding-top: 3px;
+    width: 26px;
+    height: 26px;
+    .btn{
+        border-radius: 26px!important;
+        width: 26px!important;
+        height: 26px!important;
+    }
 }
 
 .pic>img {
@@ -33,8 +29,4 @@
 .pic-320>img {
     width: 100%;
     height: 320px;
-}
-
-.feed-img {
-    // border: 1px red solid;
 }

@@ -7,7 +7,7 @@ import {
   Input,
 } from '@angular/core';
 import { UIComponent, ViewModel, ViewType, ViewsComponent } from 'codx-core';
-import { CodxShareService } from '../../../codx-share.service';
+import { CodxCalendarService } from '../codx-calendar.service';
 
 @Component({
   selector: 'lib-calendar-center',
@@ -45,7 +45,10 @@ export class CalendarCenterComponent
   dayoff: any;
   calendarID = 'STD';
 
-  constructor(injector: Injector, private shareService: CodxShareService) {
+  constructor(
+    injector: Injector,
+    private calendarService: CodxCalendarService
+  ) {
     super(injector);
   }
 
@@ -73,6 +76,7 @@ export class CalendarCenterComponent
     this.detectorRef.detectChanges();
   }
 
+  //navigate scheduler
   onAction(event: any) {
     if (
       event.data.fromDate == 'Invalid Date' &&
@@ -83,12 +87,12 @@ export class CalendarCenterComponent
       (event?.type == 'navigate' && event.data.fromDate && event.data.toDate) ||
       event?.data?.type == undefined
     ) {
-      var obj = {
+      let obj = {
         fromDate: event.data.fromDate,
         toDate: event.data.toDate,
         type: event?.data.type,
       };
-      this.shareService.dateChange.next(obj);
+      this.calendarService.dateChange$.next(obj);
     }
   }
 
@@ -103,19 +107,6 @@ export class CalendarCenterComponent
       }
     });
   }
-
-  // changeNewMonth(date: any) {
-  //   let myInterval = setInterval(() => {
-  //     this.calendar_center = (this.view.currentView as any).schedule;
-  //     if (this.calendar_center) {
-  //       clearInterval(myInterval);
-  //       debugger;
-  //       this.calendar_center.selectedDate = new Date(date);
-  //       this.calendar_center.isNavigateInside = true;
-  //       this.detectorRef.detectChanges();
-  //     }
-  //   });
-  // }
 
   //region EP
   showHour(stringDate: any) {

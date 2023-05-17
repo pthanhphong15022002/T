@@ -210,7 +210,7 @@
 
 <ng-template #contentTmp let-data>
   <div>
-    <h5>{{ data.taskName }}</h5>
+    <h5>{{ data?.taskName }}</h5>
   </div>
 
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
@@ -252,7 +252,7 @@
       <i class="icon-calendar_today icon-16 me-2"></i>
       <span class="ms-1 fw-bold">
         <span
-          *ngIf="data.dueDate"
+         
           class="text-gray-700"
           #dueDate
           [innerHTML]="
@@ -266,7 +266,7 @@
               | async
           "
         ></span>
-        <span
+        <!-- <span
           #dueDate
           *ngIf="!data.dueDate"
           [innerHTML]="
@@ -279,7 +279,7 @@
                 : 'grvTasks'
               | async
           "
-        ></span>
+        ></span> -->
       </span>
     </div>
   </div>
@@ -328,6 +328,7 @@
   <ng-template #tempHtml>
     <ng-container *ngIf="data?.category == '2'">
       <span
+       *ngIf="data?.memo2"
         [innerHTML]="data?.memo2"
         (mouseenter)="popoverMemo2.open()"
         (mouseover)="popoverMemo2.close()"
@@ -354,6 +355,7 @@
 
     <ng-container *ngIf="data?.category != '2'">
       <span
+        *ngIf="data?.memo"
         [innerHTML]="data?.memo"
         (mouseenter)="popoverMemo.open()"
         (mouseover)="popoverMemo.close()"

@@ -716,7 +716,7 @@ export class ViewDetailComponent implements OnInit {
     } else if (this.cancelControl == '3') {
       //comment bat buoc
       if (this.comment == '') {
-        this.notify.notifyCode('ES031');
+        this.notify.notifyCode('ES032');
         return;
       }
       this.cancel(this.oCancelSF);

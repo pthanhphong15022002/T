@@ -183,6 +183,41 @@ export class CodxCmService {
     );
   }
 
+  addOneAddress(address){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'AddAdressAsync',
+      [address]
+    );
+  }
+
+  updateOneAddress(address){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'UpdateAdressAsync',
+      [address]
+    );
+  }
+
+  deleteOneAddress(recID){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'DeleteAdressAsync',
+      [recID]
+    );
+  }
+
+  getAdressNameByIsDefault(id, entityName){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'GetAdressNameByIsDefaultAsync',
+      [id, entityName]
+    );
+  }
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = {};
@@ -191,6 +226,20 @@ export class CodxCmService {
     formModel['entityName'] = f?.entityName;
     formModel['funcID'] = functionID;
     return formModel;
+  }
+
+  bringDefaultContactToFront(data) {
+    const defaultContactIndex = data.findIndex(
+      (data) => data.isDefault
+    );
+
+    if (defaultContactIndex !== -1) {
+      const defaultContact = data[defaultContactIndex];
+      data.splice(defaultContactIndex, 1);
+      data.unshift(defaultContact);
+    }
+
+    return data;
   }
 
   loadList(data, list = [], action) {
@@ -469,7 +518,20 @@ export class CodxCmService {
       [funcID, entityName, key]
     );
   }
-  //#endregion
+  // API for More in deal
+
+  startDeal(data){
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'StartDealAsync',
+      data
+    );
+  }
+
+
+  //#endregion -- Bao
 
   //contracts -- nvthuan
   addContracts(data) {
@@ -535,5 +597,5 @@ export class CodxCmService {
   getItem(itemID) {
     return this.api.exec<any>('IV', 'ItemsBusiness', 'LoadDataAsync', itemID);
   }
-  
+
 }
