@@ -13,6 +13,7 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('popupProgress') popupProgress: AttachmentComponent;
 
+  @Input() isPopup = false;
   @Input() height = '55';
   @Input() width = '55';
   @Input() formModel: FormModel;
@@ -64,6 +65,9 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   async ngOnInit() {
     if (this.isUpdate && this.step) {
       this.actualEndMax = this.step?.actualStart;
+    }
+    if(this.isPopup){
+      this.openPopup();
     }
   }
 

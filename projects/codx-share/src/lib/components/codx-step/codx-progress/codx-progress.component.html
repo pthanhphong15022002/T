@@ -1,50 +1,6 @@
 <div class="disabled-inline progressbar cursor-pointer" (click)="openPopup()">
   <codx-progressbar
-    [progress]="progress"
-    *ngIf="typeProgress == 1"
-  ></codx-progressbar>
-  
-  <ejs-progressbar
-    *ngIf="typeProgress == 2"
-    [id]="id"
-    type="Circular"
-    [height]="height"
-    [width]="width"
-    trackThickness="4"
-    progressThickness="4"
-    [value]="progressData"
-    [progressColor]="'#005DC7'"
-    trackColor="#d8d8d8"
-    progressValueColor="red"
-    [labelStyle]="{ color: '#005DC7' }"
-    [showProgressValue]="false"
-    [animation]="{ enable: true, duration: 1000, delay: 0 }"
-  >
-    <e-progressbar-annotations>
-      <e-progressbar-annotation [content]="HTMLProgress">
-      </e-progressbar-annotation>
-    </e-progressbar-annotations>
-  </ejs-progressbar>
-
-  <ejs-progressbar
-    *ngIf="typeProgress == 3"
-    [id]="id"
-    type="Circular"
-    height="55"
-    width="55"
-    trackThickness="4"
-    progressThickness="4"
-    [value]="progress"
-    [progressColor]="'#005DC7'"
-    trackColor="#d8d8d8"
-    progressValueColor="red"
-    [labelStyle]="{ color: '#005DC7' }"
-    [showProgressValue]="true"
-    [animation]="{ enable: true, duration: 1000, delay: 0 }"
-  >
-  </ejs-progressbar>
-  <codx-progressbar
-    *ngIf="typeProgress == 3"
+    *ngIf="!isPopup"
     [progress]="progress"
   ></codx-progressbar>
 </div>

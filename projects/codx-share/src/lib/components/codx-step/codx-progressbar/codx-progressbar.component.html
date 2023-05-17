@@ -1,8 +1,102 @@
-<div class="progress-pie-chart" [style]="getbackgroundColor()">
-  <div class="container">
-    <div class="circular-progress" [ngClass]="'circular-progress-' + id">
-        <span class="progress-value" [ngClass]="'progress-value-' + id">0%</span>
+
+<div id="annotation">
+  <ejs-progressbar
+    #annotation1
+    [id]="id"
+    [type]="type"
+    [maximum]="max"
+    [minimum]="min"
+    [value]="progress"
+    [width]="width"
+    [height]="height"
+    [animation]="animation"
+    [startAngle]="startAngle"
+    [endAngle]="endAngle"
+  >
+    <e-progressbar-annotations>
+      <e-progressbar-annotation [content]="HTMLProgress">
+      </e-progressbar-annotation>
+    </e-progressbar-annotations>
+  </ejs-progressbar>
+</div>
+
+<div>
+  <!-- <ejs-progressbar
+    *ngIf="type == 10"
+    [id]="id"
+    type="Circular"
+    [height]="size"
+    [width]="size"
+    trackThickness="4"
+    progressThickness="4"
+    [value]="progress"
+    progressColor="#005DC7"
+    trackColor="#d8d8d8"
+    progressValueColor="red"
+    [showProgressValue]="false"
+    [labelStyle]="{ color: '#005DC7' }"
+    [animation]="{ enable: true, duration: 1000, delay: 0 }"
+  >
+    <e-progressbar-annotations>
+      <e-progressbar-annotation [content]="HTMLProgress">
+      </e-progressbar-annotation>
+    </e-progressbar-annotations>
+  </ejs-progressbar> -->
+
+  <!-- <ejs-progressbar
+    *ngIf="type == 1"
+    #annotation1
+    id="label-container"
+    type="'Circular'"
+    maximum="100"
+    minimum="0"
+    [value]="progress"
+    width="'55'"
+    height="'55'"
+    [animation]="{ enable: true, duration: 1000, delay: 0 }"
+    startAngle="180"
+    endAngle="180"
+  >
+    <e-progressbar-annotations>
+      <e-progressbar-annotation
+        content='<div id="point1" style="font-size:20px;font-weight:bold;color:#b52123;fill:#b52123"><span>80%</span></div>'
+      >
+      </e-progressbar-annotation>
+    </e-progressbar-annotations>
+  </ejs-progressbar> -->
+
+  <!-- <ng-container
+    *ngIf="type == 2"
+    [ngTemplateOutlet]="progressCustom"
+    [ngTemplateOutletContext]="{}"
+  ></ng-container> -->
+
+  <!-- <ejs-progressbar
+    *ngIf="type == 3"
+    [id]="id"
+    type="Circular"
+    [height]="size"
+    width="size"
+    trackThickness="4"
+    progressThickness="4"
+    [value]="progress"
+    progressColor="'#005DC7'"
+    trackColor="#d8d8d8"
+    progressValueColor="red"
+    [labelStyle]="{ color: '#005DC7' }"
+    [showProgressValue]="true"
+    [animation]="{ enable: true, duration: 1000, delay: 0 }"
+  ></ejs-progressbar> -->
+</div>
+
+<!-- <ng-template #progressCustom let-data="value">
+  <div class="progress-pie-chart" [style]="getbackgroundColor()">
+    <div class="container">
+      <div class="circular-progress" [ngClass]="'circular-progress-' + id">
+        <span class="progress-value" [ngClass]="'progress-value-' + id"
+          >0%</span
+        >
+      </div>
     </div>
   </div>
-</div>
-<!-- <div>{{progress}}</div> -->
+</ng-template> -->

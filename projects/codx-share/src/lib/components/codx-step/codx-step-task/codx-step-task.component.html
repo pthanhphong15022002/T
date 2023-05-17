@@ -92,7 +92,19 @@
   <ng-container
     *ngIf="isShowButton"
     [ngTemplateOutlet]="buttonTemplate"
-    [ngTemplateOutletContext]="{ value: '' }"></ng-container>
+    [ngTemplateOutletContext]="{ value: '' }"
+  ></ng-container>
+  <codx-progress
+    *ngIf="isOpenPopupProgress"
+    [isPopup]="isOpenPopupProgress"
+    [progress]="dataPopupProgress?.value?.progress"
+    [dataSource]="dataPopupProgress?.value"
+    [step]="currentStep"
+    [type]="dataPopupProgress?.type"
+    [isSave]="isSaveProgress"
+    [typeProgress]="2"
+    [typeProgress]="typeProgress"
+    (valueChange)="changeProgress($event)"></codx-progress>
 </div>
 
 <ng-template #groupTemplate let-groupTask="groupTask">
