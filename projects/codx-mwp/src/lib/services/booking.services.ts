@@ -490,15 +490,7 @@ export class BookingService {
     );
   }
 
-  getApprovalTransByTransID(booking: any) {
-    return this.api.execSv(
-      'ES',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'GetApprovalTransByTransIDAsync',
-      [booking.recID]
-    );
-  }
+  
 
   getAvailableResources(
     resourceType: string,
