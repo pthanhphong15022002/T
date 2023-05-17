@@ -597,6 +597,7 @@ export class PdfComponent
             ? false
             : true
         );
+        let isUrl = this.curSelectedArea.attrs?.image != null;
 
         this.tr?.enabledAnchors(
           this.isEditable == false
@@ -606,7 +607,7 @@ export class PdfComponent
             : area.isLock == true
             ? []
             : this.imgConfig.includes(area.labelType)
-            ? this.checkIsUrl(area.labelValue)
+            ? isUrl //this.checkIsUrl(area.labelValue)
               ? this.fullAnchor
               : this.textAnchor
             : this.textAnchor
@@ -1392,26 +1393,33 @@ export class PdfComponent
         img.referrerPolicy = 'noreferrer';
         img.src = url;
         img.onload = () => {
-          let imgW = 200;
-          let imgH = 100;
+          let imgScale = 200;
           let imgArea = new Konva.Image({
             image: img,
-            width: 200,
-            height: tmpName.LabelType == '8' ? 200 : 100,
+            // width: 200,
+            // height: tmpName.LabelType == '8' ? 200 : 100,
             id: recID,
             name: JSON.stringify(tmpName),
             draggable: draggable,
           });
+          let scaleH = (imgScale / img.height) * this.xScale;
 
           if (isSaveToDB) {
-            imgArea.scale({ x: this.xScale, y: this.yScale });
+            imgArea.scale({
+              x: scaleH,
+              y: scaleH * (img.height / img.width) * this.yScale,
+            });
             this.needAddKonva = imgArea;
           } else {
             imgArea.id(area.recID);
             imgArea.draggable(!area.allowEditAreas ? false : !area.isLock);
             imgArea.scale({
-              x: this.xScale * area.location.width,
-              y: this.yScale * area.location.height,
+              x: +area.location.width * scaleH,
+              y:
+                scaleH *
+                (img.height / img.width) *
+                +area.location.height *
+                this.yScale,
             });
             let imgX = Number(area.location.left) * this.xScale;
             let imgY = Number(area.location.top) * this.yScale;

@@ -412,7 +412,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.deleteGroupTask(group);
         break;
       case 'SYS03': //edit
-        this.copyGroupTask(group);
+        this.editGroupTask(group);
         break;
       case 'SYS04': //copy
         this.copyGroupTask(group);
@@ -620,12 +620,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         break;
       }
     }
-
     if(taskBeforeIndex >=0 ){
       taskGroup['startDate'] = this.listGroupTask[taskBeforeIndex]?.endDate || this.currentStep?.startDate;
       taskGroup['indexNo'] = taskBeforeIndex + 1;
     }
-
     let taskOutput = await this.openPopupGroup('add',taskGroup);
     if(taskOutput?.event.groupTask){
       let data = taskOutput?.event;
@@ -666,13 +664,20 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async editGroupTask(group){
     if(group){
       let groupEdit = JSON.parse(JSON.stringify(group));
-      let taskOutput = await this.openPopupGroup('copy',groupEdit);
+      let task = groupEdit?.task || [];
+      delete groupEdit?.task;
+      let groupOutput = await this.openPopupGroup('edit',groupEdit);
 
-      if(taskOutput?.event.task){
-        let data = taskOutput?.event;
-        this.currentStep?.tasks?.push(data.task);
-        this.currentStep['progress'] = data.progressStep;
-        let group = this.listGroupTask.find(group => group.refID == data.task.taskGroupID);
+      if(groupOutput?.event.groupTask){
+        let data = groupOutput?.event;
+        let index = this.currentStep?.taskGroups?.findIndex(groupFind => groupFind.recID == data?.groupTask?.recID);
+        let indexView = this.listGroupTask?.findIndex(groupFind => groupFind.recID == data?.groupTask?.recID);
+        if(index >= 0 && indexView >= 0){
+          this.currentStep?.taskGroups?.splice(index,1,data?.groupTask);
+          let groupView = JSON.parse(JSON.stringify(data?.groupTask));
+          groupView['task'] = task 
+        }
+
         if(group){
           group?.task.push(data.task);
           group['progress'] = data.progressGroup;

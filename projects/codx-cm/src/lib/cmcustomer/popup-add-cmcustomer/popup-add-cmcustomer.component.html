@@ -443,6 +443,8 @@
     </div>
     <div>
       <codx-address-cm
+        (lstAddressEmit)="lstAddressEmit($event)"
+        (lstAddressDeleteEmit)="lstAddressDeleteEmit($event)"
         [type]="'formAdd'"
         [funcID]="funcID"
         [entityName]="dialog.formModel.entityName"
@@ -779,16 +781,6 @@
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               [field]="funcID == 'CM0101' ? 'customerFrom' : 'partnerFrom'"
-            >
-            </codx-input>
-          </div>
-          <div class="form-group" *ngIf="funcID == 'CM0101'">
-            <codx-label [formModel]="form.formModel" fiedName="ConsultantID">
-            </codx-label>
-            <codx-input
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              field="consultantID"
             >
             </codx-input>
           </div>
