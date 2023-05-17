@@ -483,6 +483,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
+  lstAddressEmit(e){
+    if (e != null && e.length > 0) {
+      this.listAddress = e;
+    }
+  }
+
+  lstAddressDeleteEmit(e){
+    if (e != null && e.length > 0) {
+      this.listAddressDelete = e;
+    }
+  }
+
   fileImgAdded(e) {
     if (e?.data && e?.data?.length > 0) {
       var countListFile = e.data.length;

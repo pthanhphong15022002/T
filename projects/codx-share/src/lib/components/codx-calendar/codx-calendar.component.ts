@@ -81,10 +81,13 @@ export class CodxCalendarComponent
   fields: Object = { text: 'defaultName', value: 'functionID' };
 
   calendarTypes = [];
-  calendarData: any;
+  calendarData = [];
+  calendarFilterData = [];
 
   //Để tạm
   resources = [];
+
+  locale = 'vi';
 
   constructor(
     injector: Injector,
@@ -132,6 +135,7 @@ export class CodxCalendarComponent
       )
       .subscribe((res: any) => {
         if (res) {
+          debugger;
           for (const prop in res) {
             let param = JSON.parse(res[prop]);
             this.resources.push({
@@ -251,7 +255,7 @@ export class CodxCalendarComponent
   }
 
   navigate() {
-    this.calendarService.dateChange.subscribe((res) => {
+    this.calendarService.dateChange$.subscribe((res) => {
       if (res?.fromDate == 'Invalid Date' && res?.toDate == 'Invalid Date')
         return;
       if (res?.fromDate && res?.toDate) {
@@ -353,7 +357,8 @@ export class CodxCalendarComponent
               }
               return x.transType != transType;
             });
-          } else {
+          }
+          if (value == '1') {
             if (this.checkWP_NotesParam)
               if (transType == 'WP_Notes') {
                 this.WP_Notes = this.WP_NotesTemp;
@@ -438,7 +443,7 @@ export class CodxCalendarComponent
             this.ejCalendar.value = this.FDdate;
           }
 
-          this.calendarService.dataResourceModel.next(this.calendarData);
+          this.calendarService.calendarData$.next(this.calendarData);
         }
       });
   }
@@ -706,7 +711,7 @@ export class CodxCalendarComponent
           JSON.stringify(this.EP_BookingCars)
         );
 
-        this.calendarService.dataResourceModel.next(this.calendarData);
+        this.calendarService.calendarData$.next(this.calendarData);
       }
     }
   }
@@ -737,7 +742,7 @@ export class CodxCalendarComponent
         clearInterval(myInterval);
         this.calendarCenter.resources = this.resources;
         this.calendarCenter.resourceModel = this.dataResourceModel;
-        this.calendarService.dataResourceModel.subscribe((res) => {
+        this.calendarService.calendarData$.subscribe((res) => {
           if (res) {
             this.calendarCenter && this.calendarCenter.updateData(res);
           }
@@ -792,5 +797,22 @@ export class CodxCalendarComponent
         : query;
     //pass the filter data source, filter query to updateData method.
     e.updateData(this.calendarTypes, query);
+  }
+
+  updateSettingValue2() {
+    // this.api
+    //   .exec<any>(
+    //     'ERM.Business.SYS',
+    //     'SettingValuesBusiness',
+    //     'AddUpdateByUserIDVer2Async',
+    //     ['WPCalendars', this.lstTransType]
+    //   )
+    //   .subscribe((res) => {
+    //     this.getParamCalendar(
+    //       this.curStartDateOfWeek,
+    //       this.curEndDateOfWeek,
+    //       false
+    //     );
+    //   });
   }
 }

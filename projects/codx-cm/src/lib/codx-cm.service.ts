@@ -183,6 +183,15 @@ export class CodxCmService {
     );
   }
 
+  addOneAddress(address){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'AddAdressAsync',
+      [address]
+    );
+  }
+
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = {};
@@ -483,7 +492,20 @@ export class CodxCmService {
       [funcID, entityName, key]
     );
   }
-  //#endregion
+  // API for More in deal
+
+  startDeal(data){
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'StartDealAsync',
+      data
+    );
+  }
+
+
+  //#endregion -- Bao
 
   //contracts -- nvthuan
   addContracts(data) {
