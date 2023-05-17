@@ -48,6 +48,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="true"
+            (valueChange)="valueChange($event)"
           ></codx-input>
         </div>
       </div>
@@ -148,7 +149,7 @@
             field="discAmt"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
+             [disabled]="true"
           ></codx-input>
         </div>
       </div>
@@ -175,7 +176,7 @@
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
-            field="VATBase"
+            field="vatBase"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
@@ -190,7 +191,7 @@
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
-            field="VATAmt"
+            field="vatAmt"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="true"

@@ -88,7 +88,7 @@ export class PdfComponent
   @Input() oApprovalTrans;
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
   @Input() approver: string = ''; // ký ngoài hệ thống
-  @Output() confirmChange = new EventEmitter<boolean>();
+  // @Output() confirmChange = new EventEmitter<boolean>();
 
   @Input() hideActions = false;
   @Input() isSignMode = false;
@@ -770,8 +770,8 @@ export class PdfComponent
 
     let y = konva.position().y;
     let x = konva.position().x;
-    let w = this.xScale;
-    let h = this.yScale;
+    let w = konva.scale().x * this.xScale;
+    let h = konva.scale().y * this.yScale;
 
     let tmpArea: tmpSignArea = {
       signer: authorID,
@@ -1393,7 +1393,7 @@ export class PdfComponent
         img.referrerPolicy = 'noreferrer';
         img.src = url;
         img.onload = () => {
-          let imgScale = 200;
+          let imgFixH = 200;
           let imgArea = new Konva.Image({
             image: img,
             // width: 200,
@@ -1402,7 +1402,7 @@ export class PdfComponent
             name: JSON.stringify(tmpName),
             draggable: draggable,
           });
-          let scaleH = (imgScale / img.height) * this.xScale;
+          let scaleH = (imgFixH / img.height) * this.xScale;
 
           if (isSaveToDB) {
             imgArea.scale({
@@ -1414,12 +1414,8 @@ export class PdfComponent
             imgArea.id(area.recID);
             imgArea.draggable(!area.allowEditAreas ? false : !area.isLock);
             imgArea.scale({
-              x: +area.location.width * scaleH,
-              y:
-                scaleH *
-                (img.height / img.width) *
-                +area.location.height *
-                this.yScale,
+              x: +area.location.width * this.xScale,
+              y: +area.location.height * this.yScale,
             });
             let imgX = Number(area.location.left) * this.xScale;
             let imgY = Number(area.location.top) * this.yScale;
@@ -1455,10 +1451,10 @@ export class PdfComponent
     this.curSignDateType = this.lstSignDateType[0];
   }
 
-  changeConfirmState(e: any) {
-    this.checkedConfirm = e.data;
-    this.confirmChange.emit(e.data);
-  }
+  // changeConfirmState(e: any) {
+  //   this.checkedConfirm = e.data;
+  //   this.confirmChange.emit(e.data);
+  // }
 
   changeSignature_StampImg(area: tmpSignArea) {
     let setupShowForm = new SetupShowSignature();

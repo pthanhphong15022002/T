@@ -110,17 +110,22 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     private activatedRoute: ActivatedRoute
   ) {
     super(injector);
+    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   onInit(): void {
+    if(this.funcID==EPCONST.FUNCID.S_Allocate){
+      this.method="GetAllocateStationeryAsync";
+    }
     this.getBaseVariable();
     this.roleCheck();
 
     this.buttons = {
       id: 'btnAdd',
     };
+    
   }
 
   onLoading(evt: any) {
@@ -1022,13 +1027,16 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     this.view.dataService.delete([deleteItem]).subscribe(() => {});
   }
   allocate(data: any) {
+    if(data.approverID!=this.authService?.userValue?.userID){
+      this.notificationsService.notifyCode('TM052');
+        return;
+    }
     if (data.approval == '1') {
       this.api
         .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [data?.recID])
         .subscribe((trans: any) => {
           trans.map((item: any) => {
             if (item.stepType === 'I') {
-              //???????
               this.codxBookingService
                 .approve(
                   item?.recID, //ApprovelTrans.RecID

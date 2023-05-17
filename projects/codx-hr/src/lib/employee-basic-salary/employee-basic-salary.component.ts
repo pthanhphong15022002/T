@@ -1,35 +1,24 @@
-import { EventHandler } from '@syncfusion/ej2-base';
-import { FuncID } from './../../../../codx-ep/src/lib/models/enum/enum';
-import { change } from '@syncfusion/ej2-grids';
 import {
   Component,
   Injector,
   ChangeDetectorRef,
   TemplateRef,
   ViewChild,
-  AfterViewInit,
 } from '@angular/core';
 import {
-  AuthService,
   ButtonModel,
-  DataService,
-  DialogModel,
   DialogRef,
-  FormModel,
   NotificationsService,
   RequestOption,
   SidebarModel,
   UIComponent,
-  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { PopupEBasicSalariesComponent } from '../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
-import { environment } from 'src/environments/environment';
 import { ViewBasicSalaryDetailComponent } from './view-basic-salary-detail/view-basic-salary-detail.component';
-import { PopupAddNewHRComponent } from '../employee-list/popup-add-new-hr/popup-add-new-hr.component';
 import { FormGroup } from '@angular/forms';
 
 @Component({

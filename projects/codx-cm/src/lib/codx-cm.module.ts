@@ -55,6 +55,10 @@ import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.com
 import { TabCaseDetailComponent } from './cases/case-detail/tab-case-detail/tab-case-detail.component';
 import { PaymentsComponent } from './contracts/component/payments/payments.component';
 import { CodxAddressCmComponent } from './cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
+import { LeadsComponent } from './leads/leads.component';
+import { PopupAddLeadComponent } from './leads/popup-add-lead/popup-add-lead.component';
+import { TabLeadDetailComponent } from './leads/lead-detail/tab-lead-detail/tab-lead-detail.component';
+import { LeadDetailComponent } from './leads/lead-detail/lead-detail.component';
 
 const routes: Routes = [
   {
@@ -82,6 +86,10 @@ const routes: Routes = [
       {
         path: 'cases/:funcID',
         component: CasesComponent,
+      },
+      {
+        path: 'leads/:funcID',
+        component: LeadsComponent,
       },
       {
         path: '**',
@@ -132,6 +140,10 @@ const T_Component: Type<any>[] = [LayoutComponent];
     TabCaseDetailComponent,
     PaymentsComponent,
     CodxAddressCmComponent,
+    LeadsComponent,
+    PopupAddLeadComponent,
+    TabLeadDetailComponent,
+    LeadDetailComponent
   ],
   imports: [
     RouterModule.forChild(routes),

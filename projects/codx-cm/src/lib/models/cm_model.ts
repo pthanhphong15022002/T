@@ -122,8 +122,8 @@ export class CM_QuotationsLines {
   exciseTaxPct: number;
   exciseTaxAmt: number;
   vATID: string;
-  vATBase: number;
-  vATAmt: number;
+  vatBase: number;
+  vatAmt: number;
   refType: string;
   refNo: string;
   refID: string;
@@ -305,7 +305,7 @@ export class CM_Contacts {
   objectType: string;
   objectID: string;
   objectName: string;
-  cumulatedPoints: number;
+  cumulatedPonumbers: number;
   loyaltyGroupID: string;
   vIP: boolean;
   isDefault: boolean;
@@ -367,6 +367,11 @@ export class BS_AddressBook {
   orgUnitID: string;
   divisionID: string;
   wardID: string;
+  assign: boolean = true;
+  delete: boolean = true;
+  write: boolean = true;
+  share: boolean = true;
+
 }
 export class CM_ContractsPayments {
   recID: string = Util.uid(); //Mã thanh toán
@@ -377,7 +382,7 @@ export class CM_ContractsPayments {
   schedulePct: number; //
   scheduleBaseOn: string; //
   scheduleAmt: number; //Số tiền hẹn thanh toán
-  interestAmt: number; //Số tiền lãi
+  numbererestAmt: number; //Số tiền lãi
   adjustedAmt: number; //Số tiền được điều chỉnh
   vATAmt: number; //Số tiền thuế VAT
   totalAmt: number; //Tổng tiền
@@ -629,4 +634,61 @@ export class CM_Competitors {
   createdBy: string;
   modifiedOn: number;
   modifiedBy: string;
+}
+
+export class CM_Leads {
+  recID: string;
+  leadID: string;
+  leadName: string;
+  leadName2: string;
+  category: string;
+  channelID: string;
+  campaignID: string;
+  businesslineID: string;
+  memo: string;
+  companyName: string;
+  tags: string;
+  industries: string;
+  annualRevenue: number;
+  headcounts: number;
+  establishDate: Date;
+  addresses: string;
+  countryID: string;
+  provinceID: string;
+  districtID: string;
+  postalCode: string;
+  companyPhone: string;
+  faxNo: string;
+  webPage: string;
+  contactName: string;
+  firstName: string;
+  salutation: string;
+  jobTitle: string;
+  occupation: string;
+  email: string;
+  phone: string;
+  phoneExt: string;
+  mobile: string;
+  status: string;
+  statusCode: string;
+  currentStep: string;
+  nextStep: string;
+  lastUpdated: Date;
+  note: string;
+  attachments: number;
+  comments: number;
+  isDuplicated: boolean;
+  contactID: string;
+  customerID: string;
+  salespersonID: string;
+  consultantID: string;
+  // datas: Json;
+  customerResource: string;
+  owner: string;
+  bUID: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+
 }

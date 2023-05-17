@@ -205,7 +205,7 @@
 <!-- Start:CashPaymentLine -->
 <ng-template #tabLine>
   <ng-container *ngIf="
-      (cashpayment?.subType === '1' || cashpayment?.subType === '3') &&
+      (cashpayment?.subType === '1' || cashpayment?.subType === '9') &&
       modegrid == '1'
     ">
     <div class="h-100">
@@ -216,17 +216,19 @@
         [height]="gridHeight" [autoLoad]="false" rowHeight="50" (onEdit)="onEdit($event)"
         (cellChanged)="lineChanged($event)" (created)="gridCreated($event, gridCashPaymentLine)"></codx-gridview-v2> -->
         <ejs-grid #grid [dataSource]='cashpaymentline' [editSettings]='editSettings' allowSorting="true" [allowReordering]='true'
-        [showColumnChooser]= 'true' allowRowDragAndDrop="true" [toolbar]='toolbar' rowHeight="50" height="320px" (actionBegin)='actionBegin($event)' (actionComplete)='actionComplete($event)'>
+        [showColumnChooser]= 'true' showColumnMenu='true' allowFiltering='true' [filterSettings]='filterSettings' [allowExcelExport] ='true'
+        [allowPdfExport] = 'true' [contextMenuItems]="contextMenuItems" allowRowDragAndDrop="true" [toolbar]='toolbar' rowHeight="50" height="320px"
+        (actionBegin)='actionBegin($event)' (actionComplete)='actionComplete($event)'>
           <e-columns>
               <e-column field='rowNo' [editTemplate]="RowNoTmp" headerText='STT' width='50'></e-column>
               <e-column field='reasonID' [editTemplate]="ReasonTmp"  headerText='Lí do chi' width='130'></e-column>
               <e-column field='dr' [editTemplate]="DrTmp" headerText='Số tiền' width='120' textAlign='Right'></e-column>
               <e-column field='accountID' [editTemplate]="AccountTmp" headerText='Tài khoản nợ' width='130'></e-column>
               <e-column field='offsetAcctID' [editTemplate]="OffsetAcctTmp" headerText='Tài khoản có' width='130'></e-column>
-              <e-column field='diM1' [editTemplate]="DIM1Tmp" headerText='Phòng ban' width='130'></e-column>
-              <e-column field='diM2' [editTemplate]="DIM2Tmp" headerText='TTCP' width='130'></e-column>
-              <e-column field='diM3' [editTemplate]="DIM3Tmp" headerText='Mục phí' width='130'></e-column>
-              <e-column field='projectID' [editTemplate]="ProjectTmp" headerText='Dự án' width='130'></e-column>
+              <e-column *ngIf="loadControl('DIM1')" field='diM1' [editTemplate]="DIM1Tmp" headerText='Phòng ban' width='130'></e-column>
+              <e-column *ngIf="loadControl('DIM2')" field='diM2' [editTemplate]="DIM2Tmp" headerText='TTCP' width='130'></e-column>
+              <e-column *ngIf="loadControl('DIM3')" field='diM3' [editTemplate]="DIM3Tmp" headerText='Mục phí' width='130'></e-column>
+              <e-column *ngIf="loadControl('ProjectID')"field='projectID' [editTemplate]="ProjectTmp" headerText='Dự án' width='130'></e-column>
               <e-column field='assetType' [editTemplate]="AssetTypeTmp" headerText='Loại tài sản' width='130'></e-column>
               <e-column field='assetGroupID' [editTemplate]="AssetGroupTmp" headerText='Nhóm tài sản' width='130'></e-column>
           </e-columns>
@@ -241,14 +243,6 @@
                 </div>            
             </ng-container>
           </ng-template>
-          <ng-template #ReasonTmp>
-            <ng-container *ngIf="fgLine">                    
-              <div class="form-group mt-3">
-                <codx-input [Group]="fgLine" field="reasonID" [formModel]="fmCashPaymentsLines">
-                </codx-input>
-              </div>            
-          </ng-container>
-          </ng-template>
           <ng-template #DrTmp>
             <ng-container *ngIf="fgLine">                    
               <div class="form-group mt-3">
@@ -260,7 +254,7 @@
           <ng-template #AccountTmp>
             <ng-container *ngIf="fgLine">                    
               <div class="form-group mt-3">
-                <codx-input [Group]="fgLine" field="accountID" [formModel]="fmCashPaymentsLines">
+                <codx-input #cbxAccountID [Group]="fgLine" field="accountID" [formModel]="fmCashPaymentsLines">
                 </codx-input>
               </div>            
           </ng-container>
@@ -268,7 +262,7 @@
           <ng-template #OffsetAcctTmp>
             <ng-container *ngIf="fgLine">                    
               <div class="form-group mt-3">
-                <codx-input [Group]="fgLine" field="offsetAcctID" [formModel]="fmCashPaymentsLines">
+                <codx-input #cbxOffsetAcctID [Group]="fgLine" field="offsetAcctID" [formModel]="fmCashPaymentsLines">
                 </codx-input>
               </div>            
           </ng-container>
@@ -668,16 +662,22 @@
   <div class="container w-90 h-90">
     <div style="background: none" class="list-empty card card-flush h-100">
       <div class="d-flex flex-center justify-content-center mt-2">
-        <button class="btn btn-sm btn-success mr-2" (click)="openVoucher(0)">
-          <i class="icon-i-clipboard-plus icon-18"></i>
-          <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice1"
-            default="Đề xuất thanh toán"></codx-label>
-        </button>
-        <button class="btn btn-sm btn-danger" (click)="openVoucher(1)">
-          <i class="icon-i-clipboard-plus icon-18"></i>
-          <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice"
-            default="Thanh toán tự động"></codx-label>
-        </button>
+        <div class="d-flex align-items-center me-3">
+          <div *ngIf="formType != 'edit'" class="ms-2">
+            <button class="btn btn-sm btn-success mr-2" (click)="openVoucher(0)">
+              <i class="icon-i-clipboard-plus icon-18"></i>
+              <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice1"
+                default="Đề xuất thanh toán"></codx-label>
+            </button>
+          </div>
+          <div class="ms-2">
+            <button class="btn btn-sm btn-danger" (click)="openVoucher(1)">
+              <i class="icon-i-clipboard-plus icon-18"></i>
+              <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice"
+                default="Thanh toán tự động"></codx-label>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
