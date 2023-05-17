@@ -6,8 +6,8 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class CodxCalendarService {
-  dateChange = new BehaviorSubject<any>(null);
-  dataResourceModel = new BehaviorSubject<any>(null);
+  dateChange$ = new BehaviorSubject<any>(null);
+  calendarData$ = new BehaviorSubject<any>(null);
 
   constructor(private api: ApiHttpService) {}
 

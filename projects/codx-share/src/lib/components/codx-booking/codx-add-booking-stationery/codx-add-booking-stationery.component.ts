@@ -104,6 +104,10 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
         this.radioGroupCheck = true;
       }
     }
+    else{
+      this.radioPersonalCheck = true;
+      this.radioGroupCheck = false;
+    }
   }
 
   onInit(): void {

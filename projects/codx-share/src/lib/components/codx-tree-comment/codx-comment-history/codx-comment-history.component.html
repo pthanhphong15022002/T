@@ -53,9 +53,9 @@
                     </ng-container>
                 </div>
                 <div class="remove-file">
-                    <a href="javascript:void(0)" class="h-100" (click)="removeFile()">
-                        <i class="icon-close icon-18 text-danger"></i>
-                    </a>
+                    <button type="button" href="javascript:void(0)" class="btn btn-icon btn-sm btn-light-danger" (click)="removeFile()">
+                        <i class="icon-close icon-18"></i>
+                    </button>
                 </div>
             </div>
             
@@ -142,9 +142,9 @@
                         </div>
                         <ng-container *ngIf="allowEdit">
                             <div class="remove-file">
-                                <a href="javascript:void(0)" class="h-100" (click)="removeFile()">
-                                    <i class="icon-close icon-18 text-danger"></i>
-                                </a>
+                                <button type="button" href="javascript:void(0)" class="btn btn-icon btn-sm btn-light-danger" (click)="removeFile()">
+                                    <i class="icon-close icon-18"></i>
+                                </button>
                             </div>
                         </ng-container>
                     </div>

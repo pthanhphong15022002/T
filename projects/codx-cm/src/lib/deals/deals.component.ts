@@ -265,12 +265,11 @@ export class DealsComponent
     var data = [recId];
     this.codxCmService.startDeal(data).subscribe((res) => {
       if (res) {
-        debugger;
         // data.status = '2';
         // data.startDate = res?.length > 0 ? res[0].startDate : null;
-        this.dataSelected = res;
-     //   this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+             //   this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
      //   this.listInstanceStep = res;
+        this.dataSelected = res[0];
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
@@ -449,8 +448,5 @@ export class DealsComponent
   }
   //#endregion
 
-  getCustomerName(customerID: any) {
-    return this.listCustomer.find((x) => x.recID === customerID);
-  }
 
 }

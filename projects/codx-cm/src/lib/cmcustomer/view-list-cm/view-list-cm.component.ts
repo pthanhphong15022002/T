@@ -29,15 +29,18 @@ export class ViewListCmComponent implements OnInit {
 
   listContacts = [];
   countDeal = 0;
+  countDealCompetitor = 0;
   contactPerson: any;
   constructor(private cmSv: CodxCmService, private callFunc: CallFuncService) {}
 
   ngOnInit(): void {
     if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
-      this.getListContactByObjectID(this.dataSelected.recID);
+      this.getListContactByObjectID(this.dataSelected?.recID);
     if (this.funcID == 'CM0101') {
-      this.countDealsByCustomerID(this.dataSelected.recID);
+      this.countDealsByCustomerID(this.dataSelected?.recID);
     }
+    if (this.funcID == 'CM0104')
+      this.countDealCompetiorsByCompetitorID(this.dataSelected?.recID);
   }
 
   clickMF(e, data) {
@@ -60,9 +63,7 @@ export class ViewListCmComponent implements OnInit {
     this.cmSv.getListContactByObjectID(objectID).subscribe((res) => {
       if (res && res.length > 0) {
         this.listContacts = res;
-        this.contactPerson = this.listContacts.find((x) =>
-          x.isDefault
-        );
+        this.contactPerson = this.listContacts.find((x) => x.isDefault);
       }
     });
   }
@@ -75,6 +76,19 @@ export class ViewListCmComponent implements OnInit {
         this.countDeal = 0;
       }
     });
+  }
+
+  countDealCompetiorsByCompetitorID(competitorID) {
+    this.cmSv
+      .countDealCompetiorsByCompetitorID(competitorID)
+      .subscribe((res) => {
+        if(res && res > 0){
+          this.countDealCompetitor = res;
+        }else{
+          this.countDealCompetitor = 0;
+        }
+
+      });
   }
 
   getNameCrm(data) {

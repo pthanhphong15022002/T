@@ -90,6 +90,15 @@ export class CodxCmService {
     );
   }
 
+  countDealCompetiorsByCompetitorID(competitorID) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'CountCompetitorByDealCompetitorAsync',
+      [competitorID]
+    );
+  }
+
   updateContactCrm(recID) {
     return this.api.exec<any>(
       'CM',
@@ -183,6 +192,41 @@ export class CodxCmService {
     );
   }
 
+  addOneAddress(address){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'AddAdressAsync',
+      [address]
+    );
+  }
+
+  updateOneAddress(address){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'UpdateAdressAsync',
+      [address]
+    );
+  }
+
+  deleteOneAddress(recID){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'DeleteAdressAsync',
+      [recID]
+    );
+  }
+
+  getAdressNameByIsDefault(id, entityName){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'GetAdressNameByIsDefaultAsync',
+      [id, entityName]
+    );
+  }
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = {};

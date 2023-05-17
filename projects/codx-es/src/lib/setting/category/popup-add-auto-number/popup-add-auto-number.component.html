@@ -355,11 +355,18 @@
             </div>
           </div>
         </div> -->
-        <div class="row px-5 pb-5">
+        <div class="row px-5 py-3">
           <div class="col-12">
-            <div class="form-group">
-              <codx-label name="formatDetail" default="Chi tiết định dạng" formName="sys">
-              </codx-label>
+            <div class="form-group mb-0">
+              <div class="d-flex justify-content-between align-items-center">
+                <codx-label class="text-primary fs-6 mt-1" name="formatDetail" default="Chi tiết định dạng" formName="sys">
+                </codx-label>
+                <button class="btn btn-sm btn-light-primary" (click)="addSegment()">
+                  <i class="icon-i-plus icon-16 ms-n1"></i><span>
+                    <codx-label name="AddSegment" default="Thêm yếu tố" formName="sys"></codx-label>
+                  </span>
+                </button>
+              </div>
               <div class="w-100 border mt-2" *ngIf="columns.length">
                 <codx-gridview-v2
                   #grid
@@ -372,18 +379,14 @@
                   [dataSource]="autoNoSegments"
 
                   service="EI"
-                  [height]="400"
+                  [height]="200"
                   [autoLoad]="false"
                   rowHeight="40"
 
                 ></codx-gridview-v2>
               </div>
             </div>
-            <button class="btn btn-sm btn-light-primary" (click)="addSegment()">
-              <i class="icon-i-plus"></i><span>
-                <codx-label name="AddSegment" default="Thêm yếu tố" formName="sys"></codx-label>
-              </span>
-            </button>
+            
           </div>
           <!-- <div class="col-3">
             <div class="form-group">
