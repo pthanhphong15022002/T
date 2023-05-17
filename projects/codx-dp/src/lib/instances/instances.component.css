@@ -10,5 +10,13 @@
 .flex-body{
   width: 100%;
 }
-
+.line-clamp-vll {
+  display: inline-block!important;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 150px;
+}
 /* tesst pussh */

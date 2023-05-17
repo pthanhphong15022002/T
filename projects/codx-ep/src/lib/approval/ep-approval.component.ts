@@ -386,12 +386,7 @@ export class EPApprovalComponent extends UIComponent {
             func.disabled = true;
           }
         });
-      } else if (
-        (data?.approveStatus == '5' &&
-          data?.stepType == 'I' &&
-          data?.issueStatus == '3') ||
-        (data?.approveStatus == '4' && data?.stepType == 'I')
-      ) {
+      } else if (data?.stepType == 'I' && (data?.approveStatus == '5' &&  data?.issueStatus != '1') || (data?.approveStatus == '4') ) {
         //Đã cấp phát
         event.forEach((func) => {
           if (
@@ -475,11 +470,13 @@ export class EPApprovalComponent extends UIComponent {
       )
       .subscribe((res: any) => {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
-          this.notificationsService.notifyCode('SYS034'); //đã duyệt
-          data.approveStatus = '5';
-          //nếu bước duyệt VPP hiện tại là Cấp phát thì đổi cả IssueStatus
-          if (data?.stepType == 'I') {
-            data.issueStatus = '3';
+          this.notificationsService.notifyCode('SYS034'); //đã duyệt          
+          //nếu bước duyệt VPP hiện tại là Cấp phát thì đổi IssueStatus
+          if (data?.stepType != 'I') {
+            data.approveStatus = '5';
+          }
+          else{
+            data.issueStatus = '3';            
           }
           this.view.dataService.update(data).subscribe();
         } else {
@@ -499,7 +496,13 @@ export class EPApprovalComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
           this.notificationsService.notifyCode('SYS034'); //đã duyệt
-          data.approveStatus = '4';
+          //nếu bước duyệt VPP hiện tại là Cấp phát thì đổi IssueStatus
+          if (data?.stepType != 'I') {
+            data.approveStatus = '4';
+          }
+          else{
+            data.issueStatus = '4';            
+          }
           this.view.dataService.update(data).subscribe();
         } else {
           this.notificationsService.notifyCode(res?.msgCodeError);

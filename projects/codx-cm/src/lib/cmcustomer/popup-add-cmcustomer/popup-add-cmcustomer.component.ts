@@ -111,7 +111,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.autoNumber = dt?.data?.autoNumber;
     if (this.action == 'copy') {
       this.recID = dt?.data[2];
-      this.getListAddress(this.dialog.formModel.entityName, this.recID);
     }
     this.recID = dt?.data[2];
     if (this.action == 'edit' || this.action == 'copy') {
@@ -130,7 +129,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (this.data?.objectID) {
       this.getListContactByObjectID(this.data?.objectID);
     }
-    this.getFormModelAddress();
     this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
@@ -215,25 +213,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
-    if (this.action == 'edit') {
-      this.contactsPerson = await firstValueFrom(
-        this.cmSv.getContactByObjectID(this.data?.recID)
-      );
-      this.getListAddress(this.dialog.formModel.entityName, this.data.recID);
-    }
 
-    this.changeDetectorRef.detectChanges();
   }
 
-  getListAddress(entityName, recID) {
-    this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
-      if (res && res.length > 0) {
-        this.listAddress = res;
-      }
-    });
-  }
+
   // getLastAndFirstName(contactName) {
   //   if (contactName != null) {
   //     var nameArr = contactName.split(' ');
@@ -500,6 +483,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
+  lstAddressEmit(e){
+    if (e != null && e.length > 0) {
+      this.listAddress = e;
+    }
+  }
+
+  lstAddressDeleteEmit(e){
+    if (e != null && e.length > 0) {
+      this.listAddressDelete = e;
+    }
+  }
+
   fileImgAdded(e) {
     if (e?.data && e?.data?.length > 0) {
       var countListFile = e.data.length;
@@ -544,101 +539,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
-  getFormModelAddress() {
-    let dataModel = new FormModel();
-    dataModel.formName = 'CMAddressBook';
-    dataModel.gridViewName = 'grvCMAddressBook';
-    dataModel.entityName = 'BS_AddressBook';
-    dataModel.funcID = this.funcID;
-    this.formModelAddress = dataModel;
-  }
 
-  openPopupAddress(data = new BS_AddressBook(), action = 'add') {
-    let opt = new DialogModel();
-    let dataModel = new FormModel();
-    var title =
-      (action == 'add' ? this.moreFuncAdd : this.moreFuncEdit) +
-      ' ' +
-      this.gridViewSetup?.Address?.headerText;
-    dataModel.formName = 'CMAddressBook';
-    dataModel.gridViewName = 'grvCMAddressBook';
-    dataModel.entityName = 'BS_AddressBook';
-    dataModel.funcID = this.funcID;
-    opt.FormModel = dataModel;
-    this.cache
-      .gridViewSetup('CMAddressBook', 'grvCMAddressBook')
-      .subscribe((res) => {
-        if (res) {
-          var obj = {
-            title: title,
-            gridViewSetup: res,
-            action: action,
-            data: data,
-            listAddress: this.listAddress,
-          };
-          var dialog = this.callFc.openForm(
-            PopupAddressComponent,
-            '',
-            500,
-            700,
-            '',
-            obj,
-            '',
-            opt
-          );
-          dialog.closed.subscribe((e) => {
-            if (e && e.event != null) {
-              if (e?.event?.adressType) {
-                var address = new BS_AddressBook();
-                address = e.event;
-                var index = this.listAddress.findIndex(
-                  (x) => x.recID != null && x.recID == address.recID
-                );
-                var checkCoincide = this.listAddress.some(
-                  (x) =>
-                    x.recID != address.recID &&
-                    x.adressType == address.adressType &&
-                    x.street == address.street &&
-                    x.countryID == address.countryID &&
-                    x.provinceID == address.provinceID &&
-                    x.districtID == address.districtID &&
-                    x.regionID == x.regionID
-                );
-                var check = this.listAddress.some(
-                  (x) =>
-                    x.recID != address.recID &&
-                    x.adressType == '1' &&
-                    address.adressType == '1'
-                );
-                if (!checkCoincide && !check) {
-                  if (index != -1) {
-                    this.listAddress.splice(index, 1);
-                  }
-                  this.listAddress.push(address);
-                } else {
-                  this.notiService.notifyCode(
-                    'CM003',
-                    0,
-                    '"' + this.gridViewSetup['Address'].headerText + '"'
-                  );
-                }
-              }
-            }
-          });
-        }
-      });
-  }
 
-  removeAddress(data, index) {
-    var config = new AlertConfirmInputConfig();
-    config.type = 'YesNo';
-    this.notiService.alertCode('SYS030').subscribe((x) => {
-      if (x.event.status == 'Y') {
-        this.listAddress.splice(index, 1);
-        this.listAddressDelete.push(data);
-      }
-    });
-  }
 
   //#region Contact
   //Open list contacts

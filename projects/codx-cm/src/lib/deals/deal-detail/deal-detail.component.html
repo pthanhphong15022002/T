@@ -6,40 +6,87 @@
     [dataItem]="dataSelected"
     [hideMF]="false"
     [footer]="tabs"
+    (changeDataMF)="changeDataMF($event, dataSelected)"
     (clickMF)="clickMF($event, dataSelected)"
   >
     <ng-template #header let-data>
       <div class="container_detail mt-3">
-        <div class="d-flex justify-content-start pb-3">
+        <div class="d-flex justify-content-between mb-3">
           <div class="fs-2">{{ dataSelected?.dealName }}</div>
           <div></div>
-          <div class="fs-2 ms-auto">
-            <span class="icon-monetization_on pe-1" style="color: gold"></span>
-            {{dataSelected?.dealValue}}
+          <div class="d-flex align-items-center">
+            <span class="icon-monetization_on pe-1 text-wraning"></span>
+            <span class="fs-2 fw-bold">{{dataSelected?.dealValue}}</span>
           </div>
         </div>
         <div class="d-flex justify-content-between pb-3">
           <div class="d-flex flex-row">
-            <div class="d-flex align-items-stretch">
-              <div class="pe-2">
-                <codx-imgs
-                  [isToolTip]="true"
-                  [width]="25"
-                  [objectId]="dataSelected.createdBy"
-                  objectType="AD_Users"
-                  [numberImages]="1"
-                >
-                </codx-imgs>
-              </div>
-              <div>
-                <div
-                  class="fw-bold fs-6 text-dark codx-text-overflow-1line pb-2"
-                >
-                {{dataSelected?.createdBy}}
-                </div>
+            <div class=" d-flex justify-content-start">
+              <codx-label default="Khách hàng:" class="fs-6 me-1"></codx-label>
+              <i class="icon-business pe-1"></i>
+              <div class="fs-6">
+
+                <span
+                class="fs-7"
+                #customerID
+                [innerHTML]="
+                dataSelected?.customerID
+                    | formatvalue
+                      : formModel
+                      : 'customerID'
+                      : customerID
+                      : 'CMDeals'
+                      : 'grvCMDeals'
+                    | async
+                "
+              ></span>
+
               </div>
             </div>
           </div>
+          <div>
+            <div class=" d-flex justify-content-start">
+              <codx-label default="Dòng sản phẩm:" class="fs-6 me-1"></codx-label>
+              <div class="fs-6">
+                <span
+                class="fs-7"
+                #businessLineID
+                [innerHTML]="
+                data?.businessLineID
+                    | formatvalue
+                      : formModel
+                      : 'businessLineID'
+                      : businessLineID
+                      : 'CMDeals'
+                      : 'grvCMDeals'
+                    | async
+                "
+              ></span>
+              </div>
+            </div>
+          </div>
+          <div>
+            % <span class="pe-2">{{dataSelected?.probability}}</span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between pb-3" >
+          <div class="d-flex justify-content-start">
+            <span style="white-space: nowrap;" class="me-2">
+              <codx-label default="Quy trình:" class="text-break fs-6 me-1"></codx-label>
+            </span>
+
+            <div class="fs-6">{{dataSelected?.processName}}</div>
+          </div>
+          <div>
+
+          </div>
+          <div class="badge badge-primary ms-5">
+              <span>
+              {{dataSelected?.currentStepName}}
+              </span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between pb-3">
           <div>
             <div class=" d-flex justify-content-start">
               <codx-label default="Ngày tạo:" class="fs-6 me-1"></codx-label>
@@ -104,82 +151,18 @@
             </div>
           </div>
           <div>
-            % <span class="pe-2">{{dataSelected?.probability}}</span>
-          </div>
-        </div>
-        <div class="d-flex justify-content-start pb-3" >
-          <div class=" d-flex justify-content-start">
-            <codx-label default="Khách hàng:" class="fs-6 me-1"></codx-label>
-            <i class="icon-business pe-1"></i>
-            <div class="fs-6">{{dataSelected?.customerName}}</div>
-          </div>
-          <div>
 
-          </div>
-          <div class="fs-6 ms-auto">
-            <div class="badge badge-primary">
-              <span>
-              {{dataSelected?.currentStepName}}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div class="d-flex justify-content-between pb-3">
-          <div class="d-flex flex-row">
             <div class="d-flex align-items-stretch">
-              <div class="pe-2">
-                <codx-img
-                  [width]="25"
-                  [objectId]="dataSelected?.contacts?.recId"
-                  objectType="CM_Contacts"
-                  [imgOn]="dataSelected?.contacts?.modifiedOn"
-                  [objectName]="dataSelected?.contacts?.contactName"
-
-                >
-                </codx-img>
-              </div>
-              <div>
-                <div
-                  class="fw-bold fs-6 text-dark codx-text-overflow-1line pb-2"
-                >
-                {{dataSelected?.contacts?.contactName}}
-                </div>
-                <div class="d-flex align-items-start me-4 mb-1">
-                  <div class="me-3 pe-5">
-                    <span
-                      class="icon-phone_android text-primary icon-16 me-1"
-                    ></span>
-                    <span class="text-gray-900">   {{dataSelected?.contacts?.mobile}}</span>
-                  </div>
-                  <div>
-                    <span
-                      class="icon-print_disabled icon-16 me-1 text-gray-500"
-                    ></span>
-                    <span class="text-gray-900"> {{dataSelected?.contacts?.personalEmail}}</span>
-                  </div>
-                </div>
-              </div>
+              <codx-label default="Nhân viên bán hàng:" class="fs-6 me-2"></codx-label>
+              <codx-imgs
+              [isToolTip]="true"
+              [width]="25"
+              [objectId]="dataSelected.owner"
+              ojectType="AD_Users"
+              [numberImages]="1"
+            >
+            </codx-imgs>
             </div>
-          </div>
-        </div>
-        <div class="d-flex justify-content-start" >
-          <div class=" d-flex justify-content-start">
-            <codx-label default="Quy trình:" class="fs-6 me-1"></codx-label>
-            <div class="fs-6">{{dataSelected?.processName}}</div>
-          </div>
-          <div class="fs-6">
-
-          </div>
-          <div class="fs-6 ms-auto">
-            <codx-imgs
-            [isToolTip]="true"
-            [width]="25"
-            [objectId]="dataSelected.owner"
-            objectType="AD_Users"
-            [numberImages]="1"
-          >
-          </codx-imgs>
           </div>
         </div>
         <div class="d-flex justify-content-start">

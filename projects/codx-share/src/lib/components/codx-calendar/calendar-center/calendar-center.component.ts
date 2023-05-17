@@ -92,7 +92,7 @@ export class CalendarCenterComponent
         toDate: event.data.toDate,
         type: event?.data.type,
       };
-      this.calendarService.dateChange.next(obj);
+      this.calendarService.dateChange$.next(obj);
     }
   }
 
@@ -107,19 +107,6 @@ export class CalendarCenterComponent
       }
     });
   }
-
-  // changeNewMonth(date: any) {
-  //   let myInterval = setInterval(() => {
-  //     this.calendar_center = (this.view.currentView as any).schedule;
-  //     if (this.calendar_center) {
-  //       clearInterval(myInterval);
-  //       debugger;
-  //       this.calendar_center.selectedDate = new Date(date);
-  //       this.calendar_center.isNavigateInside = true;
-  //       this.detectorRef.detectChanges();
-  //     }
-  //   });
-  // }
 
   //region EP
   showHour(stringDate: any) {

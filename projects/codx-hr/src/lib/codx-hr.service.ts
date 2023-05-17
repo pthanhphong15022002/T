@@ -250,6 +250,16 @@ export class CodxHrService {
     );
   }
 
+  getGrossSalary(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EmployeesBusiness',
+      'LoadGrossSalaryAsync',
+      data
+    );
+  }
+
   //#endregion
 
   //#region EPassportsBusiness

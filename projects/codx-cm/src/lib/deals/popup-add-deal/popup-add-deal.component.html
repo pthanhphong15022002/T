@@ -144,12 +144,51 @@
           type="valuelist"
           refValue="CRM010"
           crrValue="2"
+          [disabled]="true"
           [crrValue]="deal?.category"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
     </div>
+
+
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="BusinesslineID"
+          default="Dòng sản phẩm"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="businesslineID"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="Owner"
+          default="Người phụ trách"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+    <ejs-combobox [dataSource]="listParticipants"
+    (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
+    [allowFiltering]='true' [value]="owner"></ejs-combobox>
+      </div>
+    </div>
+
     <div class="col-6">
       <div class="form-group">
         <codx-label
@@ -168,50 +207,9 @@
         </codx-input>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          fiedName="Owner"
-          default="Người phụ trách"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-label>
 
-    <!-- <codx-popup-participants
-      [lstParticipants]="listParticipants"
-      [dialog]="dialog"
-      [isType]="'I'"
-      (eventUser)="eventUser($event)"
-      [owner]="owner"
-    ></codx-popup-participants> -->
-    <ejs-combobox [dataSource]="listParticipants"
-    (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
-    [allowFiltering]='true' [value]="owner"></ejs-combobox>
 
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          fiedName="Probability"
-          default="Tỷ lệ thành công"
-        >
-        </codx-label>
-        <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="probability"
 
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
-      </div>
-    </div>
   </div>
   <div class="row">
     <div class="col-6">
@@ -233,24 +231,24 @@
       </codx-input>
       </div>
     </div>
+
     <div class="col-6">
       <div class="form-group">
         <codx-label
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          fiedName="SalespersonID"
-          default="Nhân viên bán hàng"
+          fiedName="Probability"
+          default="Tỷ lệ thành công"
         >
         </codx-label>
         <codx-input
         [formModel]="form.formModel"
         [Group]="form.formGroup"
-        field="salespersonID"
-        [crrValue]="deal?.salespersonID"
+        field="probability"
+
         (valueChange)="valueChange($event)"
       >
       </codx-input>
-
       </div>
     </div>
   </div>
