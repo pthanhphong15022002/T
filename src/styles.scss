@@ -2357,12 +2357,14 @@ codx-valuelist .btn.select-icon {
   .dialog-more {
     width: 350px;
     position: absolute;
-    top: 9;
+    top: 0;
     bottom: 0;
     right: 0;
     overflow: auto;
     padding: 0 15px;
     display: block;
+    border-left: 1px var(--gray-150) solid;
+    z-index: 99;
   }
   .icon-login {
     rotate: 180deg;

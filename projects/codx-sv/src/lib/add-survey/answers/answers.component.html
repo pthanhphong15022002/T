@@ -269,7 +269,7 @@
                     <span class="me-2">:</span>
                     <div>
                       <ng-container *ngFor="let z of x.results">
-                        <div class=""><span>{{z.answer}}</span></div>
+                        <div class=""><span>{{z.answer ? z.answer : 'Để trống' }}</span></div>
                       </ng-container>
                     </div>
                   </div>

@@ -213,10 +213,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
-
+    if(this.action == 'edit'){
+      this.getListAddress(this.dialog.formModel.entityName, this.data.recID);
+    }
   }
 
-
+  getListAddress(entityName, recID) {
+    this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.listAddress = res;
+      }
+    });
+  }
   // getLastAndFirstName(contactName) {
   //   if (contactName != null) {
   //     var nameArr = contactName.split(' ');
