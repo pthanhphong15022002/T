@@ -283,6 +283,7 @@ export class CodxListContactsComponent implements OnInit {
               this.listContacts = this.cmSv.bringDefaultContactToFront(
                 this.cmSv.loadList(data, this.listContacts, 'delete')
               );
+              this.changeContacts(this.listContacts[0]);
               this.notiService.notifyCode('SYS008');
               this.changeDetectorRef.detectChanges();
             }
@@ -292,10 +293,11 @@ export class CodxListContactsComponent implements OnInit {
           if(index != -1){
             this.listContacts.splice(index, 1);
             lstDelete.push(data);
+            this.changeContacts(this.listContacts[0]);
+
             this.lstContactDeleteEmit.emit(lstDelete);
           }
         }
-        this.changeContacts(this.listContacts[0]);
       }
     });
   }
