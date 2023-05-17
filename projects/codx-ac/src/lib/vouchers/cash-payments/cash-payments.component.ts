@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   Injector,
   Optional,
   TemplateRef,
@@ -40,6 +41,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  @ViewChild('accountRef') accountRef: ElementRef;
   dialog!: DialogRef;
   button?: ButtonModel = { id: 'btnAdd' };
   headerText: any;
@@ -117,6 +119,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
+      console.log(this.accountRef);
       if (res) this.funcName = res.defaultName;
     });
     this.views = [
@@ -393,6 +396,7 @@ export class CashPaymentsComponent extends UIComponent {
           .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
             this.settledInvoices = res;
+            //this.loadTotal();
           });
         this.api
           .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])

@@ -17,6 +17,7 @@ import {
   CacheService,
   SortModel,
 } from 'codx-core';
+import { CodxAcService } from '../../codx-ac.service';
 
 @Component({
   selector: 'lib-voucher',
@@ -52,6 +53,7 @@ export class VoucherComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
+    private acService: CodxAcService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -86,8 +88,8 @@ export class VoucherComponent implements OnInit {
     if (this.cardbodyRef)
       hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
     if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
-
     this.gridHeight = hBody - (hTab + 120);
+    this.acService.setPopupSize(this.dialog,'80%','80%');
   }
   //#endregion
 
@@ -222,9 +224,7 @@ export class VoucherComponent implements OnInit {
 
   apply() {
     let data = this.grid.arrSelectedRows;
-    if (this.type == 0) {
-      this.api.exec('AC', 'AC', 'SettledInvoicesBusiness');
-    } else this.dialog.close(data);
+    this.dialog.close(data);
   }
 
   paymentAmt(data) {
