@@ -1014,6 +1014,7 @@ export class CodxTasksComponent
   //#endregion
   //#region Event đã có dùng clickChildrenMenu truyền về
   changeView(evt: any) {
+    return;
     this.viewCrr = evt?.view?.type;
 
     if (this.crrFuncID != this.funcID) {
