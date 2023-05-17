@@ -6,7 +6,7 @@ import { ApiHttpService, DialogData, DialogRef, FormModel } from 'codx-core';
   templateUrl: './codx-view-detail-little.component.html',
   styleUrls: ['./codx-view-detail-little.component.css'],
 })
-export class CodxViewDetailLittleComponent implements OnInit ,OnChanges{
+export class CodxViewDetailLittleComponent implements OnInit {
   @ViewChild('tempTask') tempTask?: TemplateRef<any>;
   @ViewChild('tempMeeting') tempMeeting?: TemplateRef<any>;
 
@@ -27,9 +27,6 @@ export class CodxViewDetailLittleComponent implements OnInit ,OnChanges{
     
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-   
-  }
   ngOnInit(): void {
     this.loadingData();
   }
