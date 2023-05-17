@@ -37,6 +37,7 @@ export class CmcustomerDetailComponent implements OnInit {
   @Input() entityName = '';
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
+  @Output() addressNameCMEmit = new EventEmitter<any>();
 
   moreFuncAdd = '';
   moreFuncEdit = '';
@@ -90,6 +91,7 @@ export class CmcustomerDetailComponent implements OnInit {
   viewTag = '';
   nameCbxCM = '';
   loaded: boolean;
+  addressNameCM: any;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -124,20 +126,22 @@ export class CmcustomerDetailComponent implements OnInit {
     this.loaded = false;
     this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
     // this.getListContactByObjectID(this.dataSelected?.recID);
-    this.getContactByObjectID(this.dataSelected?.recID);
+    this.getAdressNameByIsDefault(this.dataSelected?.recID, this.entityName);
     this.listTab(this.funcID);
     this.loaded = true;
   }
 
-  getContactByObjectID(objectID) {
-    this.cmSv.getContactByObjectID(objectID).subscribe((res) => {
-      if (res) this.contactPerson = res;
-      this.viewTag = this.dataSelected?.tags;
-    });
-  }
-
-  contactPersonEvent(e) {
-    if (e) this.contactPerson = e;
+  getAdressNameByIsDefault(objectID, entityName) {
+    this.cmSv
+      .getAdressNameByIsDefault(objectID, entityName)
+      .subscribe((res) => {
+        if (res) {
+          this.addressNameCM = res?.adressName;
+        }else{
+          this.addressNameCM = null;
+        }
+        this.viewTag = this.dataSelected?.tags;
+      });
   }
 
   getGridviewSetup() {
@@ -162,6 +166,11 @@ export class CmcustomerDetailComponent implements OnInit {
     this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
       this.listAddress = res;
     });
+  }
+
+  addressName(e) {
+    this.addressNameCM = e;
+    this.addressNameCMEmit.emit(this.addressNameCM);
   }
 
   getNameCbx(recID, objectID) {
