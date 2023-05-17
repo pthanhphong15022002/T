@@ -498,29 +498,26 @@
       />
     </div>
     <div *ngIf="itemQuestion.answerType == 'R'">
-      <div class="d-flex ps-6">
+      <div class="d-flex ps-6 py-2">
         <div ngbDropdown container="body" class="pe-3">
           <button
             type="button"
             class="btn btn-outline-primary btn-sm dropdown"
             ngbDropdownToggle
           >
-            <div class="d-flex">
-              <span>{{ valueFrom }}</span>
+            <div class="d-flex align-items-center">
+              <span>{{ convertAnswer(itemQuestion.answers[0].answer,"f") }}</span>
               <span class="icon-arrow_drop_down icon-18"></span>
             </div>
           </button>
           <div ngbDropdownMenu>
-            <button ngbDropdownItem (click)="changeRating('0', 'FROM')">
-              <div class="d-flex">
-                <span>0</span>
-              </div>
-            </button>
-            <button ngbDropdownItem (click)="changeRating('1', 'FROM')">
-              <div class="d-flex">
-                <span>1</span>
-              </div>
-            </button>
+            <div *ngFor="let i of [0,1]">
+              <button ngbDropdownItem (click)="changeRating(i, 'FROM',seqNoSession,itemQuestion,itemAnswer)">
+                <div class="d-flex">
+                  <span>{{i}}</span>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
         <codx-label fiedName="To" default="đến"></codx-label>
@@ -530,69 +527,32 @@
             class="btn btn-outline-primary btn-sm dropdown"
             ngbDropdownToggle
           >
-            <div class="d-flex">
-              <span>{{ valueTo }}</span>
+            <div class="d-flex align-items-center ">
+              <span>{{ convertAnswer(itemQuestion.answers[0].answer,"t") }}</span>
               <span class="icon-arrow_drop_down icon-18"></span>
             </div>
           </button>
           <div ngbDropdownMenu>
-            <button ngbDropdownItem (click)="changeRating('2', 'TO')">
-              <div class="d-flex">
-                <span>2</span>
-              </div>
-            </button>
-            <button ngbDropdownItem (click)="changeRating('3', 'TO')">
-              <div class="d-flex">
-                <span>3</span>
-              </div>
-            </button>
-            <button ngbDropdownItem (click)="changeRating('4', 'TO')">
-              <div class="d-flex">
-                <span>4</span>
-              </div>
-            </button>
-            <button ngbDropdownItem (click)="changeRating('5', 'TO')">
-              <div class="d-flex">
-                <span>5</span>
-              </div>
-            </button>
-            <button ngbDropdownItem (click)="changeRating('6', 'TO')">
-              <div class="d-flex">
-                <span>6</span>
-              </div>
-            </button>
-            <button ngbDropdownItem (click)="changeRating('7', 'TO')">
-              <div class="d-flex">
-                <span>7</span>
-              </div>
-            </button>
-            <button ngbDropdownItem (click)="changeRating('8', 'TO')">
-              <div class="d-flex">
-                <span>8</span>
-              </div>
-            </button>
-            <button ngbDropdownItem (click)="changeRating('9', 'TO')">
-              <div class="d-flex">
-                <span>9</span>
-              </div>
-            </button>
-            <button ngbDropdownItem (click)="changeRating('10', 'TO')">
-              <div class="d-flex">
-                <span>10</span>
-              </div>
-            </button>
+            <div *ngFor="let i of [2,3,4,5,6,7,8,9,10]">
+              <button ngbDropdownItem (click)="changeRating(i, 'TO',seqNoSession,itemQuestion,itemAnswer)">
+                <div class="d-flex">
+                  <span>{{i}}</span>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-      <div class="d-flex e-input-group e-input-group-full me-2">
-        <span>{{ valueFrom }}</span>
-        <input
-          class="e-input ps-6"
+      <div class="d-flex align-items-center  e-input-group-full me-2 ps-6 py-2">
+        <span>{{ convertAnswer(itemQuestion.answers[0].answer,"f") }}</span>
+        <codx-input 
           type="text"
           placeholder="Nhãn (không bắt buộc)"
-          (focus)="focusIn($event.target)"
-          (blur)="focusOut($event.target)"
-        />
+          [field]="'RForm'"
+          [crrValue]="convertAnswer(itemQuestion.answers[0].answer,'l')"
+          (valueChange)="changeRating($event , 'RFROM', seqNoSession, itemQuestion, itemAnswer)"
+        >
+        </codx-input>
         <!-- <codx-input
           type="text"
           class="border-0"
@@ -604,15 +564,16 @@
         >
         </codx-input> -->
       </div>
-      <div class="d-flex e-input-group e-input-group-full me-2">
-        <span>{{ valueTo }}</span>
-        <input
-          class="e-input ps-6"
+      <div class="d-flex  align-items-center e-input-group-full me-2 ps-6 py-2">
+        <span>{{ convertAnswer(itemQuestion.answers[0].answer,"t") }}</span>
+        <codx-input 
           type="text"
           placeholder="Nhãn (không bắt buộc)"
-          (focus)="focusIn($event.target)"
-          (blur)="focusOut($event.target)"
-        />
+          [field]="'RTo'"
+          [crrValue]="convertAnswer(itemQuestion.answers[0].answer,'r')"
+          (valueChange)="changeRating($event , 'RTO', seqNoSession, itemQuestion, itemAnswer)"
+        >
+        </codx-input>
       </div>
     </div>
     <ng-container

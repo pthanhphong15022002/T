@@ -294,27 +294,29 @@
       </div>
       <div class="col-6">
         <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            name="lblAvatar"
-            default="Ảnh đại diện"
-          ></codx-label>
-          <div>
-            <codx-img
-              #imageUpload
-              class="image-inpt-wrapper fullImage"
-              [referType]="'avt'"
-              [width]="90"
-              [funcId]="funcID"
-              [objectId]="data?.recID"
-              [objectType]="form.formModel.entityName"
-              [objectName]="getNameCrm(data)"
-              [isAllowEdit]="true"
-              [isDefaulImg]="true"
-              [imgOn]="data?.modifiedOn"
-              (handleInput)="changeAvatar()"
-            >
-            </codx-img>
+          <div style="height: 122px;">
+            <codx-label
+              [formModel]="form.formModel"
+              name="lblAvatar"
+              default="Ảnh đại diện"
+            ></codx-label>
+            <div>
+              <codx-img
+                #imageUpload
+                class="image-inpt-wrapper fullImage"
+                [referType]="'avt'"
+                [width]="90"
+                [funcId]="funcID"
+                [objectId]="data?.recID"
+                [objectType]="form.formModel.entityName"
+                [objectName]="getNameCrm(data)"
+                [isAllowEdit]="true"
+                [isDefaulImg]="true"
+                [imgOn]="data?.modifiedOn"
+                (handleInput)="changeAvatar()"
+              >
+              </codx-img>
+            </div>
           </div>
         </div>
         <div class="form-group" *ngIf="funcID != 'CM0102'">
