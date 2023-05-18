@@ -259,6 +259,11 @@ setTitle(e: any) {
 changeAvatar(){
 
 }
+lstAddressEmit($event) {}
+lstAddressDeleteEmit($event) {}
 
+
+lstContactDeleteEmit($event){}
+lstContactEmit($event){}
 }
 

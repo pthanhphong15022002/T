@@ -441,11 +441,27 @@
 </ng-template>
 
 <ng-template #contact>
-  <h1>helllo 2</h1>
+  <codx-list-contacts
+  (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
+  (lstContactEmit)="lstContactEmit($event)"
+  [funcID]="'CM0101'"
+  [objectID]="lead?.recID"
+  [objectType]="'1'"
+  [objectName]=""
+  [hidenMF]="false"
+  [type]="'formAdd'"
+></codx-list-contacts>
 </ng-template>
 
 <ng-template #address>
-  <h1>helllo 3</h1>
+  <codx-address-cm
+  (lstAddressEmit)="lstAddressEmit($event)"
+  (lstAddressDeleteEmit)="lstAddressDeleteEmit($event)"
+  [type]="'formAdd'"
+  [funcID]="'CM0101'"
+  [entityName]="dialog.formModel.entityName"
+  [id]="lead.recID"
+></codx-address-cm>
 </ng-template>
 <!-- <codx-form
   #form
