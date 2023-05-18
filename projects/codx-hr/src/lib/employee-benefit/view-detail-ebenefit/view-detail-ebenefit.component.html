@@ -39,7 +39,7 @@
     <div class="d-flex flex-wrap">
       <div class="d-flex w-100">
         <div class="d-flex align-items-center me-5 mb-5">
-          <codx-label fiedName="decisionNo" [formModel]="formModel" class="text-gray-700 label-colon">
+          <codx-label fiedName="decisionNo" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false">
           </codx-label>
           <span class="fw-bold" [innerHTML]="
               itemDetail.decisionNo
@@ -64,7 +64,7 @@
 
       <div class="d-flex w-100">
         <div class="d-flex align-items-center me-5 mb-5">
-          <codx-label fiedName="benefitID" [formModel]="formModel" class="text-gray-700 label-colon">
+          <codx-label fiedName="benefitID" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false"> 
           </codx-label>
           <span class="fw-bold" [innerHTML]="
               itemDetail.benefitID
@@ -88,7 +88,7 @@
     
       <div class="d-flex w-100">
         <div class="d-flex align-items-center me-5 mb-5">
-          <codx-label fiedName="effectedDate" [formModel]="formModel" class="text-gray-700 label-colon">
+          <codx-label fiedName="effectedDate" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false">
           </codx-label>
           <span class="fw-bold" [innerHTML]="
               itemDetail?.effectedDate
