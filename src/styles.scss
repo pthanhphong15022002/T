@@ -195,7 +195,15 @@ textarea:focus,
   box-shadow: none !important;
   border-color: $primary !important;
 }
-
+.e-checkbox-wrapper .e-frame, .e-css.e-checkbox-wrapper .e-frame {
+  border-color: var(--gray-500);
+}
+.e-checkbox-wrapper:hover .e-frame, .e-css.e-checkbox-wrapper:hover .e-frame {
+  border-color: var(--gray-700)!important;
+}
+.e-checkbox-wrapper.e-checkbox-disabled .e-frame, .e-css.e-checkbox-wrapper.e-checkbox-disabled .e-frame {
+  border-color: var(--gray-150);
+}
 .codx-search.codx-focus {
   border-color: $primary !important;
 }

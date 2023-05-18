@@ -80,7 +80,7 @@
                             ? 'icon-phone_android text-primary'
                             : 'icon-phonelink_erase'
                         "
-                        class="icon-16 me-2"
+                        class="icon-16 me-1 text-gray-700"
                       ></span>
                       <span
                         [ngClass]="
@@ -100,7 +100,7 @@
                             ? 'icon-email text-primary'
                             : 'icon-print_disabled'
                         "
-                        class="icon-16 me-2 text-gray-900"
+                        class="icon-16 me-2 text-gray-700"
                       ></span>
                       <span
                         [ngClass]="
@@ -112,13 +112,13 @@
                     </div>
                   </div>
                   <div
-                    class="d-flex align-items-center mb-1"
+                    class="d-flex align-items-top mb-1"
                     *ngIf="addressNameCM != null && addressNameCM.trim() != ''"
                   >
                     <span
-                      class="icon-location_on icon-16 me-2 text-gray-700"
+                      class="icon-location_on icon-16 me-1 text-gray-600"
                     ></span>
-                    <span class="text-gray-700">{{
+                    <span class="text-gray-600">{{
                       addressNameCM
                     }}</span>
                   </div>
@@ -202,7 +202,7 @@
                       "
                       class="me-2"
                     ></i
-                    ><span>
+                    ><span class="fs-6">
                       <codx-label
                         [name]="'tab' + item.name"
                         [formModel]="'SYS'"
@@ -224,7 +224,7 @@
               </li>
             </ng-container>
           </ul>
-          <div [ngbNavOutlet]="nav" class="py-5"></div>
+          <div [ngbNavOutlet]="nav" class="pt-3 cmdetail-scroll"></div>
         </div>
         <ng-template #tabIns let-name>
           <div id="viewModeDetail" class="view-step-box">
