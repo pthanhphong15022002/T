@@ -20,7 +20,6 @@ export class EmployeeContractComponent extends UIComponent {
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
   @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
-  @ViewChild('eInfoTemplate') eInfoTemplate?: TemplateRef<any>;
   @ViewChild('contractTemplate') contractTemplate?: TemplateRef<any>;
   @ViewChild('templateUpdateStatus', { static: true }) templateUpdateStatus: TemplateRef<any>;
   views: Array<ViewModel> = []

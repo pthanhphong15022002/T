@@ -1851,7 +1851,7 @@
                   <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
 
                   <span class="fw-bold text-dark fs-6">
-                    {{ infoPersonal.foKind }}
+                    {{ infoPersonal?.foKind }}
                   </span>
                 </div>
               </div>
@@ -2125,7 +2125,7 @@
 
                 <div #family class="mb-1">
                   <div class="d-flex flex-wrap py-3">
-                    <div *ngIf="lstFamily.length > 0; else emptyDataTemplate">
+                    <div *ngIf="lstFamily?.length > 0; else emptyDataTemplate">
                       <ng-container *ngFor="let item of lstFamily">
                         <div class="w-50">
                           <div
@@ -5412,80 +5412,251 @@
                 <span>({{ eDiseasesRowCount }})</span>
               </span> -->
             </div>
-            <div class="d-flex align-items-center ms-5">
-              <span>
-                <codx-dropdown-select
-                  *ngIf="eDiseasesGrvSetup"
-                  [emptyText]="eDiseasesHeaderText['DiseaseID']"
-                  [cssClass]="'rounded-pill border-1'"
-                  cssPopup="h-350px w-300px"
-                  [isMulti]="true"
-                  type="combobox"
-                  field="DiseaseID"
-                  [refValue]="eDiseasesGrvSetup.DiseaseID.referedValue"
-                  (valueChange)="valueChangeFilterDiseasesTypeID($event)"
-                >
-                  <i class="icon-filter_alt"></i>
-                </codx-dropdown-select>
-              </span>
-              <span class="text-gray-400 mx-2">|</span>
-              <button
-                type="button"
-                class="btn btn-icon btn-sm btn-white"
-                (click)="
-                  HandleEmployeeEDiseasesInfo(addHeaderText, 'add', null)
-                "
-              >
-                <!--topdiseases-->
-                <span class="icon-add icon-18"></span>
-              </button>
-              <span class="text-gray-500 mx-2">|</span>
-              <button class="btn btn-icon btn-sm btn-white">
-                <span class="icon-more_vert icon-18"></span>
+                        <div class="d-flex align-items-center ms-5">
+              <button type="button" class="btn btn-icon btn-white">
+                <span
+                  class="icon-edit icon-18"
+                  (click)="editEmployeeQuitJobInfo(editHeaderText)"
+                ></span>
               </button>
             </div>
-          </div>
 
-          <!--Griddiseases-->
-          <div class="profile-grid mt-7">
-            <codx-gridview
-              *ngIf="eDiseasesColumnsGrid && eDiseasesFormModel"
-              #eDiseasesGridView
-              [formModel]="eDiseasesFormModel"
-              [columnsGrid]="eDiseasesColumnsGrid"
-              [service]="'HR'"
-              [assemblyName]="'Core'"
-              [className]="'DataBusiness'"
-              [method]="'LoadDataAsync'"
-              [predicates]="'EmployeeID=@0'"
-              [dataValues]="employeeID"
-              [pageSize]="numPageSizeGridView"
-              [entityName]="'HR_EDiseases'"
-              height="auto"
-            >
-            </codx-gridview>
-            <!-- <div
-                      class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                    ></div>
-                    <div class="d-flex flex-wrap mt-6 mb-3">
-                      <div
-                        [style.background]="'black'"
-                        class="badge border-0 me-2"
-                        *ngFor="let disease of lstEdiseases"
-                      >
-                        <div class="has-action-menu">
-                          {{ disease.treatDoctor }} gan cung du lieu,dang gan sai
-                          field
-                          <codx-mfunc
-                            [formModel]="formModel"
-                            (clickMF)="clickMF($event, disease, 'Diseases')"
-                            type="hover"
-                            [dataItem]="disease"
-                          >
-                          </codx-mfunc>
-                        </div>
-                      </div>
-                    </div> -->
+          </div>
+          <div>
+            <div class="row mb-5">
+              <div class="col">
+                <div class="text-gray-600 pb-1">
+                  <span
+                    class="icon-wysiwyg icon-16 text-gray-600 me-2"
+                  ></span>
+                  <codx-label
+                    fiedName="submitDate"
+                    [formModel]="formModel"
+                  >
+                  </codx-label>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class=" text-dark fs-6 fw-bold">
+                    {{ infoPersonal?.submitDate | fmDT}}
+                  </span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="text-gray-600 pb-1">
+                  <codx-label
+                    fiedName="StoppedOn"
+                    [formModel]="formModel"
+                  >
+                  </codx-label>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class="text-dark fw-bold">
+                    {{ infoPersonal?.stoppedOn | fmDT }}</span
+                  >
+                </div>
+              </div>
+              <div class="col has-action-menu">
+                <div class="text-gray-600 pb-1">
+                  <codx-label
+                    fiedName="ViolatedDays"
+                    [formModel]="formModel"
+                  >
+                  </codx-label>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class=" text-dark fs-6 fw-bold">
+                    {{ infoPersonal?.violatedDays}}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-5">
+              <div class="col-4">
+                <div class="text-gray-600 pb-1 d-flex">
+                  <span class="icon-email icon-16 text-gray-600 me-2"></span>
+                  <codx-label fiedName="QuitForm" [formModel]="formModel">
+                  </codx-label>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class=" text-dark fs-6 fw-bold"
+                  [innerHTML]="
+                  infoPersonal?.quitForm | formatvalue : formModel : 'quitForm' | async
+                "
+                  >
+                  </span>
+                </div>
+              </div>
+              <div class="col-4">
+                <codx-label fiedName="QuitReason" [formModel]="formModel">
+                </codx-label>
+                <div class="d-flex align-items-center">
+                  <span class=" text-dark fs-6 fw-bold"
+                  [innerHTML]="
+                  infoPersonal?.quitReason | formatvalue : formModel : 'quitReason' | async
+                "
+                  >
+                    {{ infoPersonal?.quitReason}}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center mt-6 mb-4">
+              <span class="icon-i-filter-right icon-20 me-2"></span>
+              <div class="fw-bold text-uppercase fs-5 text-gray-600">
+                <codx-label
+                  name="lblEmpResponsible"
+                  [formModel]="formModel"
+                  default="Trách nhiệm nhân viên"
+                >
+                </codx-label>
+              </div>
+            </div>
+
+            <div class="d-flex flex-wrap">
+              <codx-input
+                [formModel]="formModel"
+                [type]="'checkbox'"
+                [checked]="infoPersonal?.isHandOverWork"
+                [disabled]="true"
+                field="isHandOverWork"
+              ></codx-input>
+            <codx-label class="ms-3" fiedName="IsHandOverWork" [formModel]="formModel"></codx-label>
+        </div>
+        <div class="d-flex flex-wrap">
+          <codx-input
+          [formModel]="formModel"
+          [type]="'checkbox'"
+          [checked]="infoPersonal?.isHandOverProperty"
+          [disabled]="true"
+          field="isHandOverProperty"
+        ></codx-input>
+
+        <codx-label class="ms-3" fiedName="IsHandOverProperty" [formModel]="formModel"></codx-label>
+    </div>
+    <div class="d-flex flex-wrap">
+      <codx-input
+      [formModel]="formModel"
+      [type]="'checkbox'"
+      [checked]="infoPersonal?.isPaidDebt"
+      [disabled]="true"
+      field="isPaidDebt"
+    ></codx-input>
+    <codx-label class="ms-3" fiedName="IsPaidDebt" [formModel]="formModel"></codx-label>
+</div>
+
+            <div class="d-flex align-items-center mt-6 mb-4">
+              <span class="icon-i-filter-right icon-20 me-2"></span>
+              <div class="fw-bold text-uppercase fs-5 text-gray-600">
+                <codx-label
+                  name="lblEmpResponsible"
+                  [formModel]="eInfoFormModel"
+                  default="Trách nhiệm công ty"
+                >
+                </codx-label>
+              </div>
+            </div>
+
+            <div class="d-flex flex-wrap">
+              <codx-input
+              [formModel]="formModel"
+              [type]="'checkbox'"
+              [checked]="infoPersonal?.isLockAccount"
+              [disabled]="true"
+              field="isLockAccount"
+            ></codx-input>
+            <codx-label class="ms-3" fiedName="IsLockAccount" [formModel]="formModel"></codx-label>
+        </div>
+
+        <div class="d-flex flex-wrap">
+          <codx-input
+          [formModel]="formModel"
+          [type]="'checkbox'"
+          [checked]="infoPersonal?.isNotify"
+          [disabled]="true"
+          field="isNotify"
+        ></codx-input>
+        <codx-label class="ms-3" fiedName="IsNotify" [formModel]="formModel"></codx-label>
+    </div>
+
+    <div class="d-flex flex-wrap">
+      <codx-input
+      [formModel]="formModel"
+      [type]="'checkbox'"
+      [checked]="infoPersonal?.isReductedSI"
+      [disabled]="true"
+      field="isReductedSI"
+    ></codx-input>
+    <codx-label class="ms-3" fiedName="IsReductedSI" [formModel]="formModel"></codx-label>
+</div>
+
+<div class="d-flex flex-wrap">
+  <codx-input
+  [formModel]="formModel"
+  [type]="'checkbox'"
+  [checked]="infoPersonal?.isClosedSI"
+  [disabled]="true"
+  field="isClosedSI"
+></codx-input>
+<codx-label class="ms-3" fiedName="IsClosedSI" [formModel]="formModel"></codx-label>
+</div>
+
+<div class="d-flex flex-wrap" *ngIf="!infoPersonal?.returnSIBook">
+  <codx-input
+  [type]="'checkbox'"
+  [checked]="'false'"
+  [disabled]="true"
+  ></codx-input>
+<codx-label class="ms-3" fiedName="ReturnSIBook" [formModel]="formModel"></codx-label>
+</div>
+
+<div class="d-flex flex-wrap" *ngIf="infoPersonal?.returnSIBook">
+  <codx-input
+  [type]="'checkbox'"
+  [disabled]="true"
+  class="me-3" 
+  [checked]="'true'"
+  ></codx-input>
+  <codx-vll
+  [showText]="true"
+  [showBgColor]="false"
+  [showIcon]="false"
+  [formModel]="formModel"
+  [field]="'ReturnSIBook'"
+  [value]="infoPersonal?.returnSIBook"
+>
+</codx-vll>
+<!-- <codx-label class="ms-3" fiedName="ReturnSIBook" [formModel]="formModel"></codx-label> -->
+</div>
+
+<div class="d-flex flex-wrap" *ngIf="!infoPersonal?.returnTermination">
+  <codx-input
+  [type]="'checkbox'"
+  [disabled]="true"
+  [checked]="'false'"
+  ></codx-input>
+<codx-label class="ms-3" fiedName="ReturnTermination" [formModel]="formModel"></codx-label>
+</div>
+
+<div class="d-flex flex-wrap" *ngIf="infoPersonal?.returnTermination">
+  <codx-input
+  [disabled]="true"
+  [type]="'checkbox'"
+  class="me-3" 
+  [checked]="'true'"
+  ></codx-input>
+  <codx-vll
+  [showText]="true"
+  [showBgColor]="false"
+  [showIcon]="false"
+  [formModel]="formModel"
+  [field]="'ReturnTermination'"
+  [value]="infoPersonal?.returnTermination"
+>
+</codx-vll>
+<!-- <codx-label class="ms-3" fiedName="ReturnTermination" [formModel]="formModel"></codx-label> -->
+</div>
           </div>
         </div>
       </div>

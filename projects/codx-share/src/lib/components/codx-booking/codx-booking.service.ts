@@ -45,6 +45,16 @@ export class CodxBookingService {
       [recID]
     );
   }
+  addEditBooking(data: any, isAdd:boolean, listAttendees:any, listStationery:any) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'AddEditItemAsync',
+      [data,isAdd,listAttendees,listStationery]
+    );
+  }
+
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
       this.cache.functionList(functionID).subscribe((funcList) => {

@@ -69,8 +69,8 @@
                   | async
               ">
             </span>
-            <span> - </span>
-            <span [title]="eJobSalaryHeader ? eJobSalaryHeader['ExpiredDate'] : ''"
+            <span *ngIf="data.expiredDate"> - </span>
+            <span *ngIf="data.expiredDate" [title]="eJobSalaryHeader ? eJobSalaryHeader['ExpiredDate'] : ''"
               [ngbTooltip]="grvSetup?.expiredDate?.headerText" [innerHTML]="
                 data.expiredDate
                   | formatvalue : view.formModel : 'expiredDate'

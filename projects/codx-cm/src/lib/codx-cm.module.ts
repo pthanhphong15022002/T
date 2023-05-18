@@ -60,6 +60,7 @@ import { PopupAddLeadComponent } from './leads/popup-add-lead/popup-add-lead.com
 import { TabLeadDetailComponent } from './leads/lead-detail/tab-lead-detail/tab-lead-detail.component';
 import { LeadDetailComponent } from './leads/lead-detail/lead-detail.component';
 import { CampaignsComponent } from './campaigns/campaigns.component';
+import { PopupAddCampaignComponent } from './campaigns/popup-add-campaign/popup-add-campaign.component';
 
 const routes: Routes = [
   {
@@ -149,7 +150,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddLeadComponent,
     TabLeadDetailComponent,
     LeadDetailComponent,
-    CampaignsComponent
+    CampaignsComponent,
+    PopupAddCampaignComponent
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -69,34 +69,41 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
     }
   }
 
-  initForm(){
-    if (this.actionType == 'add') {
-      this.hrSevice
-        .getDataDefault(
-          this.formModel.funcID,
-          this.formModel.entityName,
-          this.idField
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.quitJobObj = res?.data;
-            this.quitJobObj.employeeID = this.employeeId;
-            this.formModel.currentData = this.quitJobObj;
-            this.formGroup.patchValue(this.quitJobObj);
-            this.cr.detectChanges();
-            this.isAfterRender = true;
-            console.log('data sau khi init', this.quitJobObj);
+  // initForm(){
+  //   if (this.actionType == 'add') {
+  //     this.hrSevice
+  //       .getDataDefault(
+  //         this.formModel.funcID,
+  //         this.formModel.entityName,
+  //         this.idField
+  //       )
+  //       .subscribe((res: any) => {
+  //         if (res) {
+  //           this.quitJobObj = res?.data;
+  //           this.quitJobObj.employeeID = this.employeeId;
+  //           this.formModel.currentData = this.quitJobObj;
+  //           this.formGroup.patchValue(this.quitJobObj);
+  //           this.cr.detectChanges();
+  //           this.isAfterRender = true;
+  //           console.log('data sau khi init', this.quitJobObj);
             
-          }
-        });
-    } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
-        this.formModel.currentData = this.quitJobObj;
-        this.formGroup.patchValue(this.quitJobObj);
-        this.cr.detectChanges();
-        this.isAfterRender = true;
-      }
-    }
+  //         }
+  //       });
+  //   } else {
+  //     if (this.actionType === 'edit' || this.actionType === 'copy') {
+  //       this.formModel.currentData = this.quitJobObj;
+  //       this.formGroup.patchValue(this.quitJobObj);
+  //       this.cr.detectChanges();
+  //       this.isAfterRender = true;
+  //     }
+  //   }
+  // }
+
+  initForm() {
+    this.formGroup.patchValue(this.quitJobObj);
+    this.formModel.currentData = this.quitJobObj;
+    this.cr.detectChanges();
+    this.isAfterRender = true;
   }
 
   getECurrentContract(){
@@ -111,6 +118,9 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
       rqContract.pageSize = 1;
 
       this.hrSevice.getCrrEContract(rqContract).subscribe((res) => {
+        debugger
+        console.log('current contract', res);
+        
         if (res && res[0]) {
           this.crrEContract = res[0][0];
         }
@@ -156,8 +166,10 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
     if(this.quitJobObj.stoppedOn != null){
       if(this.crrEContract){
         this.hrSevice.getEContractQuitFortelDays(this.crrEContract).subscribe((res) => {
-          if(res.event){
-            this.quitJobObj.quitForetellDays = res.event;
+          console.log('so ngay la', res);
+          
+          if(res){
+            this.quitJobObj.quitForetellDays = res;
         this.formGroup.patchValue({ quitForetellDays: this.quitJobObj.quitForetellDays });
           }
         })
@@ -185,8 +197,9 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
     if(this.quitJobObj.submitDate != null){
       if(this.crrEContract){
         this.hrSevice.getEContractQuitFortelDays(this.crrEContract).subscribe((res) => {
-          if(res.event){
-            this.quitJobObj.quitForetellDays = res.event;
+          console.log('so ngay la', res);
+          if(res){
+            this.quitJobObj.quitForetellDays = res;
         this.formGroup.patchValue({ quitForetellDays: this.quitJobObj.quitForetellDays });
           }
         })
@@ -216,6 +229,8 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
 
     this.hrSevice.SaveEmployeeQuitJobInfo(this.quitJobObj).subscribe((p) => {
       if (p != null) {
+        console.log('du lieu tra ve', p);
+        
         this.notify.notifyCode('SYS007');
         this.dialog && this.dialog.close(p);
       } else this.notify.notifyCode('SYS021');
