@@ -24,18 +24,6 @@
   <ng-container *ngIf="form.formGroup">
     <div class="form-group">
       <codx-label
-        fiedName="journalDesc"
-        [formModel]="form.formModel"
-      ></codx-label>
-      <codx-input
-        field="journalDesc"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      ></codx-input>
-    </div>
-
-    <div class="form-group">
-      <codx-label
         fiedName="journalType"
         [formModel]="form.formModel"
       ></codx-label>
@@ -43,66 +31,82 @@
         field="journalType"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (valueChange)="onInputChange2($event)"
       ></codx-input>
     </div>
 
-    <div class="form-group">
-      <codx-label
-        fiedName="inputMode"
-        [formModel]="form.formModel"
-      ></codx-label>
+    <div
+      class="form-group"
+      *ngIf="journalTypes106.includes(journal.journalType)"
+    >
+      <codx-label fiedName="reasonID" [formModel]="form.formModel"></codx-label>
       <codx-input
-        field="inputMode"
+        field="reasonID"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div
+      class="form-group"
+      *ngIf="journalTypes107.includes(journal.journalType)"
+    >
+      <codx-label fiedName="reasonID" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        type="combobox"
+        field="reasonID"
+        refType="3"
+        refValue="InventoryReasonsAC"
+        [crrValue]="journal.reasonID"
+        (valueChange)="onInputChange($event)"
+      ></codx-input>
+    </div>
+
+    <div
+      class="form-group"
+      *ngIf="journalTypes104.includes(journal.journalType)"
+    >
+      <codx-label fiedName="vatType" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="vatType"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
       ></codx-input>
     </div>
 
-    <div class="form-group">
-      <ng-container
-        *ngIf="journal.journalType == '0803' || journal.journalType == '0805'"
-      >
-        <codx-label
-          fiedName="subType"
-          [formModel]="form.formModel"
-        ></codx-label>
-        <codx-input
-          field="subType"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </ng-container>
-      <ng-container
-        *ngIf="journal.journalType == '0802' || journal.journalType == '0804'"
-      >
-        <codx-label
-          fiedName="subType"
-          [formModel]="form.formModel"
-          default="Loại thu mặc định"
-        ></codx-label>
-        <codx-input
-          type="combobox"
-          field="subType"
-          refType="2"
-          refValue="AC065"
-          [crrValue]="journal.subType"
-          (valueChange)="onInputChange($event)"
-        ></codx-input>
-      </ng-container>
-    </div>
-
-    <div class="form-group">
-      <ng-container *ngIf="journal.journalType == '0202'">
-        <codx-label
-          fiedName="vatType"
-          [formModel]="form.formModel"
-        ></codx-label>
-        <codx-input
-          field="vatType"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </ng-container>
+    <div
+      class="d-flex align-items-top justify-content-between mb-3"
+      *ngIf="journalTypes105.includes(journal.journalType)"
+    >
+      <div class="d-flex flex-column">
+        <div class="mb-2">
+          <codx-label
+            fiedName="lblUnknown"
+            [formModel]="form.formModel"
+            default="Thiết lập hóa đơn GTGT theo sổ nhật ký"
+            class="fw-bold"
+          ></codx-label>
+        </div>
+        <div class="d-flex align-items-center">
+          <div class="w-100 me-1">
+            <codx-label
+              fiedName="lblUnknown"
+              [formModel]="form.formModel"
+              default="Cấu hình loại hóa đơn & cách đánh số Hóa đơn GTGT cho hóa đơn bán hàng, phiếu xuất kho, phiếu xuất điều chuyển."
+              class="text-gray-500"
+            ></codx-label>
+          </div>
+        </div>
+      </div>
+      <div class="w-30px ms-3">
+        <button
+          type="button"
+          class="btn btn-icon btn-light-primary"
+          role="button"
+          (click)="onClickOpenInvoiceForm()"
+        >
+          <span class="icon-edit-one icon-18"></span>
+        </button>
+      </div>
     </div>
 
     <div class="row">
@@ -129,8 +133,45 @@
           field="periodID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          (valueChange)="onInputChange2($event)"
         ></codx-input>
       </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="journalDesc"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="journalDesc"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="inputMode"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="inputMode"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="postingMode"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="postingMode"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
     </div>
 
     <div class="row">
@@ -164,7 +205,7 @@
               type="button"
               class="btn btn-icon btn-light-primary"
               role="button"
-              (click)="openAutoNumberPopup()"
+              (click)="onClickOpenAutoNumberPopup()"
             >
               <span class="icon-edit-one icon-18"></span>
             </button>
@@ -185,46 +226,6 @@
         ></codx-input>
       </div>
     </div>
-    <ng-container
-      *ngIf="
-        journal.journalType == '0102' ||
-        journal.journalType == '0302' ||
-        journal.journalType == '0304'
-      "
-    >
-      <div class="d-flex align-items-top justify-content-between">
-        <div class="d-flex flex-column">
-          <div class="mb-2">
-            <codx-label
-              fiedName="lblUnknown"
-              [formModel]="form.formModel"
-              default="Thiết lập hóa đơn GTGT theo sổ nhật ký"
-              class="fw-bold"
-            ></codx-label>
-          </div>
-          <div class="d-flex align-items-center">
-            <div class="w-100 me-1">
-              <codx-label
-                fiedName="lblUnknown"
-                [formModel]="form.formModel"
-                default="Cấu hình loại hóa đơn & cách đánh số Hóa đơn GTGT cho hóa đơn bán hàng, phiếu xuất kho, phiếu xuất điều chuyển."
-                class="text-gray-500"
-              ></codx-label>
-            </div>
-          </div>
-        </div>
-        <div class="w-30px ms-3">
-          <button
-            type="button"
-            class="btn btn-icon btn-light-primary"
-            role="button"
-            (click)="openInvoiceForm()"
-          >
-            <span class="icon-edit-one icon-18"></span>
-          </button>
-        </div>
-      </div>
-    </ng-container>
   </ng-container>
 </ng-template>
 
@@ -309,262 +310,151 @@
       </div>
     </ng-container>
 
-    <div class="form-group row mt-5">
-      <div class="col-8">
-        <div class="mb-1">
-          <codx-label
-            fiedName="drAcctControl"
-            [formModel]="form.formModel"
-          ></codx-label>
-        </div>
-        <div class="d-flex align-items-center">
-          <codx-label
-            fiedName="lblDRAcctControl"
-            [formModel]="form.formModel"
-            [default]="gvs.DRAcctControl?.description"
-            class="text-gray-500 font-italic fw-normal"
-          ></codx-label>
-          <span
-            class="badge badge-pill badge-secondary ms-2"
-            *ngIf="
-              ['0', '1'].includes(journal.drAcctControl) && journal.drAcctID
-            "
-          >
-            {{ journal.drAcctID }}
-          </span>
-        </div>
-      </div>
+    <codx-combobox-popup
+      *ngIf="!isHidden"
+      [comboboxName]="comboboxName"
+      [multiple]="isMultiple"
+      [width]="600"
+      [height]="500"
+      [value]="comboboxValue"
+      (clickSave)="onClickHideComboboxPopup($event)"
+    >
+    </codx-combobox-popup>
 
-      <div class="col-4 d-flex align-items-center">
-        <div class="w-100">
-          <codx-input
-            field="drAcctControl"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [placeholder]="' '"
-            (valueChange)="journal.drAcctID = null"
-          ></codx-input>
-        </div>
-        <div class="w-auto ms-1">
-          <button
-            type="button"
-            *ngIf="['0', '1', '2'].includes(journal.drAcctControl)"
-            class="btn btn-icon btn-light-primary"
-            role="button"
-            (click)="onClickOpenSelectPopup('dr', journal.drAcctControl)"
-          >
-            <i class="icon-edit-one icon-18"></i>
-          </button>
+    <lib-group067
+      [formModel]="form.formModel"
+      [formGroup]="form.formGroup"
+      fieldName="drAcctControl"
+      subFieldName="lblDRAcctControl"
+      [subLabel]="gvs.DRAcctControl?.description"
+      [vll067]="journal.drAcctControl"
+      [data]="journal.drAcctID"
+      (change)="journal.drAcctID = null"
+      (buttonClick)="
+        onClickOpenComboboxPopup(
+          gvs.DRAcctID.referedValue,
+          journal.drAcctID,
+          'drAcctID',
+          journal.drAcctControl
+        )
+      "
+    ></lib-group067>
 
-          <codx-combobox-popup
-            *ngIf="!isPopupDrHidden"
-            comboboxName="AccountsAC"
-            [multiple]="isMultiple"
-            [width]="600"
-            [height]="500"
-            [value]="journal.drAcctID"
-            (clickSave)="hideMultiSelectPopup($event, 'drAcctID')"
-          >
-          </codx-combobox-popup>
-        </div>
-      </div>
-      <div
-        class="mt-3 w-100"
-        *ngIf="journal.drAcctControl === '2' && journal.drAcctID"
-      >
-        <div class="text-truncate p-1">
-          <span
-            *ngFor="let a of journal.drAcctID?.split(';')"
-            class="badge badge-pill badge-secondary me-2"
-          >
-            {{ a }}
-          </span>
-        </div>
-      </div>
-    </div>
+    <lib-group067
+      [formModel]="form.formModel"
+      [formGroup]="form.formGroup"
+      fieldName="crAcctControl"
+      subFieldName="lblCRAcctControl"
+      [subLabel]="gvs.CRAcctControl?.description"
+      [vll067]="journal.crAcctControl"
+      [data]="journal.crAcctID"
+      (change)="journal.crAcctID = null"
+      (buttonClick)="
+        onClickOpenComboboxPopup(
+          gvs.CRAcctID.referedValue,
+          journal.crAcctID,
+          'crAcctID',
+          journal.crAcctControl
+        )
+      "
+    ></lib-group067>
 
-    <div class="form-group mt-5">
-      <div class="row">
-        <div class="col-8">
-          <div class="mb-1">
-            <codx-label
-              fiedName="crAcctControl"
-              [formModel]="form.formModel"
-            ></codx-label>
-          </div>
-          <codx-label
-            fiedName="lblCRAcctControl"
-            [formModel]="form.formModel"
-            [default]="gvs.CRAcctControl?.description"
-            class="text-gray-500 font-italic fw-normal"
-          ></codx-label>
+    <lib-group067
+      [formModel]="form.formModel"
+      [formGroup]="form.formGroup"
+      fieldName="diM1Control"
+      subFieldName="lblDIM1Control"
+      [subLabel]="gvs.DIM1Control?.description"
+      [vll067]="journal.diM1Control"
+      [data]="journal.diM1"
+      (change)="journal.diM1 = null"
+      (buttonClick)="
+        onClickOpenComboboxPopup(
+          gvs.DIM1.referedValue,
+          journal.diM1,
+          'diM1',
+          journal.diM1Control
+        )
+      "
+    ></lib-group067>
 
-          <span
-            class="badge badge-pill badge-secondary ms-2"
-            *ngIf="
-              ['0', '1'].includes(journal.crAcctControl) && journal.crAcctID
-            "
-          >
-            {{ journal.crAcctID }}
-          </span>
-        </div>
+    <lib-group067
+      [formModel]="form.formModel"
+      [formGroup]="form.formGroup"
+      fieldName="diM2Control"
+      subFieldName="lblDIM2Control"
+      [subLabel]="gvs.DIM2Control?.description"
+      [vll067]="journal.diM2Control"
+      [data]="journal.diM2"
+      (change)="journal.diM2 = null"
+      (buttonClick)="
+        onClickOpenComboboxPopup(
+          gvs.DIM2.referedValue,
+          journal.diM2,
+          'diM2',
+          journal.diM2Control
+        )
+      "
+    ></lib-group067>
 
-        <div class="col-4 d-flex align-items-center">
-          <div class="w-100">
-            <codx-input
-              field="crAcctControl"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              [placeholder]="' '"
-              (valueChange)="journal.crAcctID = null"
-            ></codx-input>
-          </div>
-          <div class="w-auto ms-1">
-            <button
-              type="button"
-              *ngIf="['0', '1', '2'].includes(journal.crAcctControl)"
-              class="btn btn-icon btn-light-primary"
-              role="button"
-              (click)="onClickOpenSelectPopup('cr', journal.crAcctControl)"
-            >
-              <i class="icon-edit-one icon-18"></i>
-            </button>
+    <lib-group067
+      [formModel]="form.formModel"
+      [formGroup]="form.formGroup"
+      fieldName="diM3Control"
+      subFieldName="lblDIM3Control"
+      [subLabel]="gvs.DIM3Control?.description"
+      [vll067]="journal.diM3Control"
+      [data]="journal.diM3"
+      (change)="journal.diM3 = null"
+      (buttonClick)="
+        onClickOpenComboboxPopup(
+          gvs.DIM3.referedValue,
+          journal.diM3,
+          'diM3',
+          journal.diM3Control
+        )
+      "
+    ></lib-group067>
 
-            <codx-combobox-popup
-              *ngIf="!isPopupCrHidden"
-              comboboxName="AccountsAC"
-              [multiple]="isMultiple"
-              [width]="600"
-              [height]="500"
-              [value]="journal.crAcctID"
-              (clickSave)="hideMultiSelectPopup($event, 'crAcctID')"
-            >
-            </codx-combobox-popup>
-          </div>
-        </div>
-
-        <div
-          class="mt-5"
-          *ngIf="journal.crAcctControl === '2' && journal.crAcctID"
-        >
-          <div class="text-truncate p-1">
-            <span
-              *ngFor="let a of journal.crAcctID?.split(';')"
-              class="badge badge-pill badge-secondary me-2"
-            >
-              {{ a }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group mt-5">
-      <div class="row">
-        <div class="col-8">
-          <div class="mb-1">
-            <codx-label
-              fiedName="diM1Control"
-              [formModel]="form.formModel"
-            ></codx-label>
-          </div>
-          <codx-label
-            fiedName="lblDIM1Control"
-            [formModel]="form.formModel"
-            [default]="gvs.DIM1Control?.description"
-            class="text-gray-500 font-italic fw-normal"
-          ></codx-label>
-        </div>
-
-        <div class="col-4">
-          <div class="w-100">
-            <codx-input
-              field="diM1Control"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              [placeholder]="' '"
-            ></codx-input>
-          </div>
-        </div>
-      </div>
-    </div>
+    <lib-group067
+      [formModel]="form.formModel"
+      [formGroup]="form.formGroup"
+      fieldName="projectControl"
+      subFieldName="lblProjectControl"
+      [subLabel]="gvs.ProjectControl?.description"
+      [vll067]="journal.projectControl"
+      [data]="journal.projectID"
+      (change)="journal.projectID = null"
+      (buttonClick)="
+        onClickOpenComboboxPopup(
+          gvs.ProjectID.referedValue,
+          journal.projectID,
+          'projectID',
+          journal.projectControl
+        )
+      "
+    ></lib-group067>
 
     <div class="form-group mt-5">
       <div class="row align-items-center">
         <div class="col-8">
           <div class="mb-1">
             <codx-label
-              fiedName="projectControl"
+              fiedName="loanControl"
               [formModel]="form.formModel"
             ></codx-label>
           </div>
           <codx-label
-            fiedName="lblProjectControl"
+            fiedName="lblLoanControl"
             [formModel]="form.formModel"
-            [default]="gvs.ProjectControl?.description"
+            [default]="gvs.LoanControl?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
 
         <div class="col-4">
           <codx-input
-            field="projectControl"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [placeholder]="' '"
-          ></codx-input>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group mt-5">
-      <div class="row align-items-center">
-        <div class="col-8">
-          <div class="mb-1">
-            <codx-label
-              fiedName="diM2Control"
-              [formModel]="form.formModel"
-            ></codx-label>
-          </div>
-          <codx-label
-            fiedName="lblDIM2Control"
-            [formModel]="form.formModel"
-            [default]="gvs.DIM2Control?.description"
-            class="text-gray-500 font-italic fw-normal"
-          ></codx-label>
-        </div>
-
-        <div class="col-4">
-          <codx-input
-            field="diM2Control"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [placeholder]="' '"
-          ></codx-input>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group mt-5">
-      <div class="row align-items-center">
-        <div class="col-8">
-          <div class="mb-1">
-            <codx-label
-              fiedName="diM3Control"
-              [formModel]="form.formModel"
-            ></codx-label>
-          </div>
-          <codx-label
-            fiedName="lblDIM3Control"
-            [formModel]="form.formModel"
-            [default]="gvs.DIM3Control?.description"
-            class="text-gray-500 font-italic fw-normal"
-          ></codx-label>
-        </div>
-
-        <div class="col-4">
-          <codx-input
-            field="diM3Control"
+            field="loanControl"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [placeholder]="' '"
@@ -600,43 +490,19 @@
         </div>
       </div>
     </div>
+
     <div class="mt-9 fs-5 text-primary">
       <codx-label
-        fiedName="lblWarehouseSettings"
+        fiedName="lblDebtSettings"
         [formModel]="form.formModel"
-        default="Thiết lập kho"
-        class=""
+        default="Thiết lập công nợ"
       ></codx-label>
     </div>
-    <div class="form-group mt-3">
-      <div class="row align-items-center">
-        <div class="col-8">
-          <div class="mb-1">
-            <codx-label
-              fiedName="subControl"
-              [formModel]="form.formModel"
-            ></codx-label>
-          </div>
-          <codx-label
-            fiedName="lblSubControl"
-            [formModel]="form.formModel"
-            [default]="gvs.SubControl?.description"
-            class="text-gray-500 font-italic fw-normal"
-          ></codx-label>
-        </div>
 
-        <div class="col-4">
-          <codx-input
-            field="subControl"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [placeholder]="' '"
-          ></codx-input>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group mt-5">
+    <div
+      class="form-group mt-5"
+      *ngIf="journalTypes108.includes(journal.journalType)"
+    >
       <div class="row align-items-center">
         <div class="col-8">
           <div class="mb-1">
@@ -648,7 +514,7 @@
           <codx-label
             fiedName="lblSettleControl"
             [formModel]="form.formModel"
-            [default]="gvs.settleControl?.description"
+            [default]="gvs.SettleControl?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -664,79 +530,69 @@
       </div>
     </div>
 
-    <div class="d-flex gap-2 mb-3">
-      <codx-input
-        field="mixedPayment"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      ></codx-input>
-      <codx-label
-        class="text-gray-600"
-        fiedName="mixedPayment"
-        [formModel]="form.formModel"
-      ></codx-label>
-    </div>
-
     <div class="mt-9 fs-5 text-primary">
       <codx-label
-        fiedName="lblDebtSettings"
+        fiedName="lblWarehouseSettings"
         [formModel]="form.formModel"
-        default="Thiết lập công nợ"
-        class=""
+        default="Thiết lập kho"
       ></codx-label>
     </div>
 
-    <div class="form-group mt-3">
-      <codx-label
-        fiedName="warehouseIssue"
-        [formModel]="form.formModel"
-      ></codx-label>
-
-      <div class="row align-items-center">
-        <div class="col-8">
+    <div
+      class="form-group row align-items-center mt-5"
+      *ngIf="journalTypes110.includes(journal.journalType)"
+    >
+      <div class="col-8">
+        <div class="mb-1">
           <codx-label
-            fiedName="lblWarehouseIssue"
+            fiedName="warehouseIssue"
             [formModel]="form.formModel"
-            [default]="gvs.WarehouseIssue?.description"
-            class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
+        <codx-label
+          fiedName="lblWarehouseIssue"
+          [formModel]="form.formModel"
+          [default]="gvs.WarehouseIssue?.description"
+          class="text-gray-500 font-italic fw-normal"
+        ></codx-label>
+      </div>
 
-        <div class="col-4">
-          <codx-input
-            field="warehouseIssue"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [placeholder]="' '"
-          ></codx-input>
-        </div>
+      <div class="col-4">
+        <codx-input
+          field="warehouseIssue"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [placeholder]="' '"
+        ></codx-input>
       </div>
     </div>
 
-    <div class="form-group">
-      <codx-label
-        fiedName="warehouseReceipt"
-        [formModel]="form.formModel"
-      ></codx-label>
-
-      <div class="row align-items-center">
-        <div class="col-8">
+    <div
+      class="form-group row align-items-center mt-5"
+      *ngIf="journalTypes111.includes(journal.journalType)"
+    >
+      <div class="col-8">
+        <div class="mb-1">
           <codx-label
-            fiedName="lblWarehouseReceipt"
+            fiedName="warehouseReceipt"
             [formModel]="form.formModel"
-            [default]="gvs.WarehouseReceipt?.description"
-            class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
+        <codx-label
+          fiedName="lblWarehouseReceipt"
+          [formModel]="form.formModel"
+          [default]="gvs.WarehouseReceipt?.description"
+          class="text-gray-500 font-italic fw-normal"
+        ></codx-label>
+      </div>
 
-        <div class="col-4">
-          <codx-input
-            field="warehouseReceipt"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [placeholder]="' '"
-          ></codx-input>
-        </div>
+      <div class="col-4">
+        <codx-input
+          field="warehouseReceipt"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [placeholder]="' '"
+        ></codx-input>
       </div>
     </div>
 
@@ -751,7 +607,7 @@
           type="button"
           class="btn btn-icon btn-light-primary"
           role="button"
-          (click)="openCustomizedMultiSelectPopup()"
+          (click)="onClickOpenCustomizedMultiSelectPopup()"
         >
           <i class="icon-edit-one icon-18"></i>
         </button>
@@ -775,7 +631,7 @@
 
 <ng-template #tabRoles>
   <ng-container *ngIf="form.formGroup">
-    <div class="mb-6">
+    <div class="mb-6 form-group">
       <div class="d-flex align-items-center justify-content-between">
         <div class="w-100">
           <div class="mb-1">
@@ -933,64 +789,69 @@
       ></codx-label>
     </div>
 
-    <div class="form-group">
-      <codx-label fiedName="unposter" [formModel]="form.formModel"></codx-label>
-
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="w-100">
-          <codx-label
-            fiedName="lblUnposter"
-            [formModel]="form.formModel"
-            [default]="gvs.Unposter?.description"
-            class="text-gray-500 font-italic fw-normal"
-          ></codx-label>
-        </div>
-
-        <div class="ms-5">
-          <codx-input
-            type="share"
-            field="unposter"
-            refValue="AC068"
-            [showInput]="false"
-            (valueChange)="onInputChange($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="mb-5 mt-2">
-        <lib-dropdown-detail
-          [modelShares]="journal.unposter"
+    <ng-container *ngIf="journal.unpostControl">
+      <div class="form-group">
+        <codx-label
+          fiedName="unposter"
           [formModel]="form.formModel"
-        ></lib-dropdown-detail>
-      </div>
-    </div>
+        ></codx-label>
 
-    <div class="form-group">
-      <codx-label
-        fiedName="unPostDays"
-        [formModel]="form.formModel"
-      ></codx-label>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="w-100">
+            <codx-label
+              fiedName="lblUnposter"
+              [formModel]="form.formModel"
+              [default]="gvs.Unposter?.description"
+              class="text-gray-500 font-italic fw-normal"
+            ></codx-label>
+          </div>
 
-      <div class="row align-items-center">
-        <div class="col-8">
-          <codx-label
-            fiedName="lblUnPostDays"
-            [formModel]="form.formModel"
-            [default]="gvs.UnPostDays?.description"
-            class="text-gray-500 font-italic fw-normal"
-          ></codx-label>
+          <div class="ms-5">
+            <codx-input
+              type="share"
+              field="unposter"
+              refValue="AC068"
+              [showInput]="false"
+              (valueChange)="onInputChange($event)"
+            >
+            </codx-input>
+          </div>
         </div>
-
-        <div class="col-4">
-          <codx-input
-            field="unPostDays"
+        <div class="mb-5 mt-2">
+          <lib-dropdown-detail
+            [modelShares]="journal.unposter"
             [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [placeholder]="' '"
-          ></codx-input>
+          ></lib-dropdown-detail>
         </div>
       </div>
-    </div>
+
+      <div class="form-group">
+        <codx-label
+          fiedName="unPostDays"
+          [formModel]="form.formModel"
+        ></codx-label>
+
+        <div class="row align-items-center">
+          <div class="col-8">
+            <codx-label
+              fiedName="lblUnPostDays"
+              [formModel]="form.formModel"
+              [default]="gvs.UnPostDays?.description"
+              class="text-gray-500 font-italic fw-normal"
+            ></codx-label>
+          </div>
+
+          <div class="col-4">
+            <codx-input
+              field="unPostDays"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              [placeholder]="' '"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+    </ng-container>
 
     <div class="form-group">
       <codx-label fiedName="sharer" [formModel]="form.formModel"></codx-label>

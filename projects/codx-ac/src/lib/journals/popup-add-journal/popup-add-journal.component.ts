@@ -13,7 +13,6 @@ import {
   DialogModel,
   DialogRef,
   NotificationsService,
-  RequestOption,
   UIComponent,
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
@@ -23,6 +22,7 @@ import { CustomizedMultiSelectPopupComponent } from '../customized-multi-select-
 import { IJournal } from '../interfaces/IJournal.interface';
 import { JournalService } from '../journals.service';
 import { PopupSetupInvoiceComponent } from '../popup-setup-invoice/popup-setup-invoice.component';
+import { Observable } from 'rxjs';
 
 const irrPropNames: string[] = [
   'drAcctControl',
@@ -53,11 +53,11 @@ export class PopupAddJournalComponent
   @ViewChild('periodID') periodID: CodxInputComponent;
 
   journal: IJournal = {
-    mixedPayment: false,
     unpostControl: false,
     autoPost: false,
   } as IJournal;
   oldJournal: IJournal;
+  dataService: CRUDService;
   formTitle: string;
   gvs: any;
   tabInfo: any[] = [
@@ -74,20 +74,31 @@ export class PopupAddJournalComponent
     },
   ];
   fiscalYears: any[] = [];
-  isPopupDrHidden: boolean = true;
-  isPopupCrHidden: boolean = true;
-  isMultiple: boolean = true;
   isEdit: boolean = false;
   hasVouchers: boolean = false;
   tempIDIMControls: any[] = [];
-  notAllowEditingFields: string[] = [];
-  dataValueProps: string[] = [];
-  autoPostLabelText: string;
 
-  vllIDIMControls: any;
+  isHidden: boolean = true;
+  isMultiple: boolean = true;
+  comboboxName: string;
+  comboboxValue: string;
+  propName: string;
+
+  dataValueProps088: string[] = [];
+  notAllowEditingFields087: string[] = [];
+
+  journalTypes104: string[] = [];
+  journalTypes105: string[] = [];
+  journalTypes106: string[] = [];
+  journalTypes107: string[] = [];
+  journalTypes108: string[] = [];
+  journalTypes110: string[] = [];
+  journalTypes111: string[] = [];
+
+  vllJournalTypes064: any[] = [];
+  vllIDIMControls069: any[] = [];
   vllDateFormat: any;
-  vllStringFormat: any;
-  vllAcctControl: any;
+  vll067: any[] = [];
 
   constructor(
     private injector: Injector,
@@ -99,6 +110,7 @@ export class PopupAddJournalComponent
   ) {
     super(injector);
 
+    this.dataService = dialogRef.dataService;
     this.journal = { ...this.journal, ...dialogRef.dataService?.dataSelected };
     this.oldJournal = { ...this.journal };
     this.journal.multiCurrency =
@@ -132,10 +144,10 @@ export class PopupAddJournalComponent
   //#region Init
   onInit(): void {
     this.cache.valueList('AC069').subscribe((res) => {
-      this.vllIDIMControls = res.datas;
+      this.vllIDIMControls069 = res.datas;
 
-      this.tempIDIMControls = this.vllIDIMControls.filter((d) =>
-        this.journal.idimControl.split(',').includes(d.value)
+      this.tempIDIMControls = this.vllIDIMControls069.filter((d) =>
+        this.journal.idimControl?.split(',').includes(d.value)
       );
     });
 
@@ -145,7 +157,7 @@ export class PopupAddJournalComponent
         this.dialogRef.formModel.gridViewName
       )
       .subscribe((res) => {
-        console.log(res);
+        console.log('gvs', res);
         this.gvs = res;
       });
 
@@ -162,25 +174,14 @@ export class PopupAddJournalComponent
         ),
         tap((t) => console.log(t))
       )
-      .subscribe((res) => (this.dataValueProps = res));
+      .subscribe((res) => (this.dataValueProps088 = res));
 
     if (this.isEdit) {
-      this.cache
-        .valueList('AC087')
-        .pipe(
-          map((v) => v.datas.map((d) => d.value)),
-          tap((t) => console.log(t))
-        )
-        .subscribe((res) => (this.notAllowEditingFields = res));
+      this.assignVllToProp2('AC087', 'notAllowEditingFields087');
 
-      this.api
-        .exec(
-          'ERM.Business.AC',
-          'JournalsBusiness',
-          'IsEditableAsync',
-          this.journal.recID
-        )
-        .subscribe((res: boolean) => (this.hasVouchers = !res));
+      this.journalService.hasVouchers(this.journal).subscribe((res) => {
+        this.hasVouchers = res;
+      });
     }
 
     this.acService
@@ -193,9 +194,7 @@ export class PopupAddJournalComponent
       console.log(res);
 
       if (!res.event && !this.isEdit) {
-        this.journalService
-          .deleteAutoNumber(this.journal.journalNo)
-          .subscribe((res) => console.log(res));
+        this.journalService.deleteAutoNumber(this.journal.journalNo);
       }
     });
 
@@ -207,23 +206,28 @@ export class PopupAddJournalComponent
             .valueList(gv['DateFormat']?.referedValue ?? 'L0088')
             .subscribe((vllDFormat) => {
               this.vllDateFormat = vllDFormat.datas;
-            });
 
-          this.cache
-            .valueList(gv['StringFormat']?.referedValue ?? 'L0089')
-            .subscribe((vllSFormat) => {
-              this.vllStringFormat = vllSFormat.datas;
+              this.getAutoNumber(this.journal.journalNo).subscribe(
+                (autoNumber) => {
+                  this.form.formGroup.patchValue({
+                    voucherFormat: this.getAutoNumberFormat(autoNumber),
+                  });
+                }
+              );
             });
         }
       });
 
-    this.cache
-      .valueList('AC067')
-      .pipe(
-        tap((t) => console.log(t)),
-        map((d) => d.datas)
-      )
-      .subscribe((res) => (this.vllAcctControl = res));
+    this.assignVllToProp1('AC067', 'vll067');
+    this.assignVllToProp1('AC064', 'vllJournalTypes064');
+
+    this.assignVllToProp2('AC104', 'journalTypes104');
+    this.assignVllToProp2('AC105', 'journalTypes105');
+    this.assignVllToProp2('AC106', 'journalTypes106');
+    this.assignVllToProp2('AC107', 'journalTypes107');
+    this.assignVllToProp2('AC108', 'journalTypes108');
+    this.assignVllToProp2('AC110', 'journalTypes110');
+    this.assignVllToProp2('AC111', 'journalTypes111');
   }
 
   ngAfterViewInit(): void {
@@ -233,7 +237,7 @@ export class PopupAddJournalComponent
 
   //#region Event
   onInputChange(e): void {
-    console.log(e);
+    console.log('onInputChange', e);
 
     const irrFields = ['creater', 'approver', 'poster', 'unposter', 'sharer'];
     if (irrFields.includes(e.field)) {
@@ -246,8 +250,36 @@ export class PopupAddJournalComponent
     }
   }
 
+  onInputChange2(e): void {
+    console.log('onInputChange2', e);
+
+    if (e.field === 'periodID') {
+      this.journal.fiscalYear = e.data.substring(0, 4);
+
+      if (this.journal.journalType) {
+        let journalTypeName: string = this.vllJournalTypes064
+          .filter((d) => d.value === this.journal.journalType)
+          .map((d) => d.text)[0];
+
+        this.form.formGroup.patchValue({
+          journalDesc: `${journalTypeName} ${e.data}`,
+        });
+      }
+    } else if (e.field === 'journalType') {
+      let journalDesc: string = this.vllJournalTypes064
+        .filter((d) => d.value === e.data)
+        .map((d) => d.text)[0];
+
+      if (this.journal.periodID) {
+        journalDesc += ' ' + this.journal.periodID;
+      }
+
+      this.form.formGroup.patchValue({ journalDesc: journalDesc });
+    }
+  }
+
   onSelect(e): void {
-    console.log(e);
+    console.log('onSelect', e);
     this.journal.fiscalYear = e.itemData.value;
 
     this.form.formGroup.controls.periodID.reset();
@@ -271,27 +303,43 @@ export class PopupAddJournalComponent
       return;
     }
 
-    if (
-      !this.validateAcctControl(
-        this.journal.drAcctControl,
-        'drAcctID',
-        'DRAcctControl'
-      )
-    ) {
-      return;
+    const propNames1: string[] = [
+      'drAcctControl',
+      'crAcctControl',
+      'diM1Control',
+      'diM2Control',
+      'diM3Control',
+      'projectControl',
+    ];
+    const propNames2: string[] = [
+      'drAcctID',
+      'crAcctID',
+      'diM1',
+      'diM2',
+      'diM3',
+      'projectID',
+    ];
+    const gvsPropNames: string[] = [
+      'DRAcctControl',
+      'CRAcctControl',
+      'DIM1Control',
+      'DIM2Control',
+      'DIM3Control',
+      'ProjectControl',
+    ];
+    for (let i = 0; i < propNames1.length; i++) {
+      if (
+        !this.validateVll067(
+          this.journal[propNames1[i]],
+          propNames2[i],
+          gvsPropNames[i]
+        )
+      ) {
+        return;
+      }
     }
 
-    if (
-      !this.validateAcctControl(
-        this.journal.crAcctControl,
-        'crAcctID',
-        'CRAcctControl'
-      )
-    ) {
-      return;
-    }
-
-    if (!['0102', '0302', '0304'].includes(this.journal.journalType)) {
+    if (!this.journalTypes105.includes(this.journal.journalType)) {
       this.journal.invoiceForm = null;
       this.journal.invoiceSeriNo = null;
     }
@@ -323,7 +371,7 @@ export class PopupAddJournalComponent
       : this.journal.sharer;
 
     const dataValueObj = {};
-    for (const prop of this.dataValueProps) {
+    for (const prop of this.dataValueProps088) {
       dataValueObj[prop] = tempJournal[prop];
     }
     tempJournal.dataValue = JSON.stringify(dataValueObj);
@@ -335,7 +383,7 @@ export class PopupAddJournalComponent
         tempJournal
       ).map((f) => f.toLowerCase());
 
-      const changedFields: string[] = this.notAllowEditingFields
+      const changedFields: string[] = this.notAllowEditingFields087
         .filter((d) => changedProps.includes(d.toLowerCase()))
         .map((d) => this.gvs?.[d]?.headerText);
 
@@ -353,26 +401,20 @@ export class PopupAddJournalComponent
 
     console.log(tempJournal);
 
-    this.dialogRef.dataService
-      .save((req: RequestOption) => {
-        req.methodName = !this.isEdit
-          ? 'AddJournalAsync'
-          : 'UpdateJournalAsync';
-        req.className = 'JournalsBusiness';
-        req.assemblyName = 'ERM.Business.AC';
-        req.service = 'AC';
-        req.data = tempJournal;
-
-        return true;
-      })
-      .subscribe((res) => {
-        if (res.save || res.update) {
-          this.dialogRef.close(true);
-        }
-      });
+    if (this.isEdit) {
+      this.dataService.updateDatas.set(tempJournal.recID, tempJournal);
+    } else {
+      this.dataService.addDatas.set(tempJournal.recID, tempJournal);
+    }
+    this.dataService.save().subscribe((res: any) => {
+      console.log(res);
+      if (res.save.data || res.update.data) {
+        this.dialogRef.close(true);
+      }
+    });
   }
 
-  openInvoiceForm(): void {
+  onClickOpenInvoiceForm(): void {
     const options = new DialogModel();
     options.FormModel = {
       entityName: 'AC_Journals',
@@ -401,34 +443,37 @@ export class PopupAddJournalComponent
       });
   }
 
-  onClickOpenSelectPopup(type: string, acctControl: string): void {
-    if (acctControl === '0' || acctControl === '1') {
+  onClickOpenComboboxPopup(
+    comboboxName: string,
+    comboboxValue: string,
+    propName: string,
+    vll067: string
+  ): void {
+    if (['0', '1'].includes(vll067)) {
       this.isMultiple = false;
     }
 
-    if (acctControl === '2') {
+    if (vll067 === '2') {
       this.isMultiple = true;
     }
 
-    if (type === 'dr') {
-      this.isPopupDrHidden = false;
-    } else {
-      this.isPopupCrHidden = false;
-    }
+    this.comboboxName = comboboxName;
+    this.comboboxValue = comboboxValue;
+    this.propName = propName;
+    this.isHidden = false;
   }
 
-  hideMultiSelectPopup(e, prop: string): void {
-    console.log(e);
+  onClickHideComboboxPopup(e): void {
+    console.log('onClickHideComboboxPopup', e);
 
     if (e) {
-      this.journal[prop] = e.id;
+      this.journal[this.propName] = e.id;
     }
 
-    this.isPopupDrHidden = true;
-    this.isPopupCrHidden = true;
+    this.isHidden = true;
   }
 
-  openCustomizedMultiSelectPopup(): void {
+  onClickOpenCustomizedMultiSelectPopup(): void {
     this.callfc
       .openForm(
         CustomizedMultiSelectPopupComponent,
@@ -443,16 +488,14 @@ export class PopupAddJournalComponent
       .closed.subscribe(({ event }) => {
         console.log(event);
 
-        if (event) {
-          this.journal.idimControl = event;
-          this.tempIDIMControls = this.vllIDIMControls.filter((d) =>
-            this.journal.idimControl.split(',').includes(d.value)
-          );
-        }
+        this.journal.idimControl = event;
+        this.tempIDIMControls = this.vllIDIMControls069.filter((d) =>
+          this.journal.idimControl.split(',').includes(d.value)
+        );
       });
   }
 
-  openAutoNumberPopup() {
+  onClickOpenAutoNumberPopup() {
     this.callfc
       .openForm(
         PopupAddAutoNumberComponent,
@@ -478,9 +521,40 @@ export class PopupAddJournalComponent
   //#endregion
 
   //#region Method
+  /** vll with pipe(map((d) => d.datas)) */
+  assignVllToProp1(vllCode: string, propName: string): void {
+    this.cache
+      .valueList(vllCode)
+      .pipe(
+        tap((t) => console.log(vllCode, t)),
+        map((d) => d.datas)
+      )
+      .subscribe((res) => {
+        this[propName] = res;
+      });
+  }
+
+  /** vll with pipe(map((d) => d.datas.map((v) => v.value))) */
+  assignVllToProp2(vllCode: string, propName: string): void {
+    this.cache
+      .valueList(vllCode)
+      .pipe(
+        tap((t) => console.log(vllCode, t)),
+        map((d) => d.datas.map((v) => v.value))
+      )
+      .subscribe((res) => {
+        this[propName] = res;
+      });
+  }
   //#endregion
 
   //#region Function
+  getAutoNumber(journalNo: string): Observable<any> {
+    return this.api
+      .exec('AD', 'AutoNumbersBusiness', 'GetAutoNumberAsync', journalNo)
+      .pipe(tap((t) => console.log('getAutoNumber', t)));
+  }
+
   getAutoNumberFormat(autoNumber): string {
     let autoNumberFormat: string = '';
 
@@ -603,16 +677,16 @@ export class PopupAddJournalComponent
     );
   }
 
-  validateAcctControl(
-    acctControl: string,
+  validateVll067(
+    vll067: string,
     propName: string,
-    gvsPropName
+    gvsPropName: string
   ): boolean {
-    if (acctControl && acctControl !== '9' && !this.journal[propName]) {
+    if (['0', '1', '2'].includes(vll067) && !this.journal[propName]) {
       this.notiService.notifyCode(
         'AC0009',
         null,
-        `"${this.vllAcctControl?.find((v) => v.value === acctControl)?.text}"`,
+        `"${this.vll067?.find((v) => v.value === vll067)?.text}"`,
         `"${this.gvs?.[gvsPropName]?.headerText}"`
       );
 
