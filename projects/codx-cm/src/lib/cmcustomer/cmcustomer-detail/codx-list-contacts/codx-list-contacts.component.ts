@@ -240,7 +240,7 @@ export class CodxListContactsComponent implements OnInit {
           type: this.type,
           recIDCm: this.objectID,
           objectName: this.objectName,
-          objectType: this.funcID == 'CM0101' ? '1' : '3',
+          objectType: this.objectType,
           gridViewSetup: res,
           lstContactCm: this.listContacts,
         };
