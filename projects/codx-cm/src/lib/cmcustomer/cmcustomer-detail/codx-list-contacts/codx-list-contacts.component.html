@@ -1,19 +1,22 @@
 <div [class]="'detail-form'">
   <div class="d-flex" *ngIf="!hidenMF">
-    <button *ngIf="objectType != '2' || !isConvertLeadToCus"
-      type="button"
-      class="btn btn-sm btn-icon btn-primary me-2 d-flex"
-      style="min-width: 180px"
-      (click)="isButton ? clickPopupContacts() : null"
-    >
-      <i class="icon-check-correct icon-16 me-1"></i>
-      <codx-label
-        name="lblSelectContacts"
-        [formModel]="formModel"
-        default="Chọn liên hệ từ hệ thống"
-      ></codx-label>
-    </button>
-    <button *ngIf="!isConvertLeadToCus"
+    <div *ngIf="objectType != '2'">
+      <button
+        type="button"
+        class="btn btn-sm btn-icon btn-primary me-2 d-flex"
+        style="min-width: 180px"
+        (click)="isButton ? clickPopupContacts() : null"
+      >
+        <i class="icon-check-correct icon-16 me-1"></i>
+        <codx-label
+          name="lblSelectContacts"
+          [formModel]="formModel"
+          default="Chọn liên hệ từ hệ thống"
+        ></codx-label>
+      </button>
+    </div>
+
+    <button
       type="button"
       class="btn btn-sm btn-icon btn-primary d-flex"
       style="min-width: 180px"
