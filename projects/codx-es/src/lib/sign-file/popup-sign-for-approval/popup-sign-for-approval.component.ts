@@ -150,9 +150,9 @@ export class PopupSignForApprovalComponent extends UIComponent {
     }
   }
 
-  changeConfirmState(state: boolean) {
+  changeConfirmState(state) {
     if (this.oApprovalTrans.confirmControl == '1') {
-      this.isConfirm = state;
+      this.isConfirm = state?.data;
     }
   }
 

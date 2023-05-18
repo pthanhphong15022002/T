@@ -449,7 +449,7 @@ import { EmployeeDetailComponent } from './employee-list/employee-detail/employe
 import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.component';
 import { ScrollSpyDirective } from './scroll-spy.directive';
 import { PopupEProcessContractComponent } from './employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
-import { ViewContractDetailComponent } from './employee-contract/view-contracts-detail/view-contracts-detail.component';
+// import { ViewContractDetailComponent } from './employee-contract/view-contracts-detail/view-contracts-detail.component';
 import { EmployeeBasicSalaryComponent } from './employee-basic-salary/employee-basic-salary.component';
 import { EmployeeJobSalaryComponent } from './employee-job-salary/employee-job-salary.component';
 import { PopupEmployeeJobsalaryComponent } from './employee-job-salary/popup-employee-jobsalary/popup-employee-jobsalary.component';
@@ -476,6 +476,7 @@ import { PopupAddEmployeeComponent } from './employee-list/popup/popup-add-emplo
 import { PopupViewAllComponent } from './employee-list/employee-info-detail/pop-up/popup-view-all/popup-view-all.component';
 import { EmployeeAppointionsComponent } from './employee-appointions/employee-appointions.component';
 import { ViewDetailEappointionsComponent } from './employee-appointions/view-detail-eappointions/view-detail-eappointions.component';
+import { PopupEquitjobComponent } from './employee-profile/popup-equitjob/popup-equitjob.component';
 export const routes: Routes = [
       {
         path: '',
@@ -708,7 +709,7 @@ const T_Component: Type<any>[] = [
   ScrollSpyDirective,
   PopupEProcessContractComponent,
   PopupEmployeeJobsalaryComponent,
-  ViewContractDetailComponent,
+  // ViewContractDetailComponent,
   EmployeeBasicSalaryComponent,
   ViewBasicSalaryDetailComponent,
   EmployeeJobSalaryComponent,
@@ -733,7 +734,8 @@ const T_Component: Type<any>[] = [
   PopupViewAllComponent,
   EmployeeAppointionsComponent,
   PopupAddEmployeeComponent,
-  ViewDetailEappointionsComponent
+  ViewDetailEappointionsComponent,
+  PopupEquitjobComponent
 ];
 @NgModule({
   imports: [

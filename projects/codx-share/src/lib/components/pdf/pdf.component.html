@@ -203,6 +203,7 @@
           </ejs-toolbar>
         </div>
         <div
+          *ngIf="inputUrl == null"
           class="chooseSignFile w-100 d-flex justify-content-center align-items-center"
           #pdfToolbar
         >
@@ -301,8 +302,6 @@
             </e-items>
           </ejs-toolbar>
         </div>
-        <ng-container *ngIf="isConfirm" [ngTemplateOutlet]="confirmCheckbox">
-        </ng-container>
       </div>
       <!-- [customToolbar]="pdfToolbar" -->
       <ngx-extended-pdf-viewer
@@ -1045,24 +1044,6 @@
 </ng-template>
 
 <ng-template #panelLeft> </ng-template>
-<ng-template #confirmCheckbox>
-  <div class="pdf-check-add btn-flex flex-center btn-white">
-    <codx-input
-      type="checkbox"
-      class="check-add me-2"
-      name="select"
-      (valueChange)="changeConfirmState($event)"
-    >
-    </codx-input>
-    {{ "ES011" | mssg | async }}
-    <!-- <codx-label
-      name="lblConfirmSeen"
-      [formModel]=""
-      [default]="'Xác nhận đã xem văn bản'"
-      class="text-header"
-    ></codx-label> -->
-  </div>
-</ng-template>
 
 <div id="contextMenu" style="display: none; position: absolute">
   <div style="z-index: 2">

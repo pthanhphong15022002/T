@@ -4,6 +4,7 @@ import { UIComponent, ViewModel, ButtonModel, FormModel, ResourceModel, CacheSer
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
 import { CM_Customers } from '../models/cm_model';
+import { PopupAddLeadComponent } from './popup-add-lead/popup-add-lead.component';
 
 @Component({
   selector: 'lib-leads',
@@ -290,9 +291,9 @@ searchChanged(e) {}
 //#region CRUD
 add() {
   switch (this.funcID) {
-    case 'CM0201': {
+    case 'CM0205': {
       //statements;
-      this.addDeal();
+      this.addLead();
       break;
     }
     default: {
@@ -302,7 +303,7 @@ add() {
   }
 }
 
-addDeal() {
+addLead() {
   this.view.dataService.addNew().subscribe((res) => {
 
     let option = new SidebarModel();
@@ -316,18 +317,18 @@ addDeal() {
     // formMD.gridViewName = fun.gridViewName;
     option.Width = '800px';
     option.zIndex = 1001;
-    this.openFormDeal(formMD, option, 'add');
+    this.openFormLead(formMD, option, 'add');
   });
 }
 
-openFormDeal(formMD, option, action) {
+openFormLead(formMD, option, action) {
   var obj = {
     action: action === 'add' ? 'add' : 'copy',
     formMD: formMD,
-    titleAction: action === 'add' ? 'Thêm cơ hội' : 'Sao chép cơ hội',
+    titleAction: action === 'add' ? 'Thêm tiền năng' : 'Sao chép tiềm năng',
   };
   let dialogCustomDeal = this.callfc.openSide(
-    PopupAddDealComponent,
+    PopupAddLeadComponent,
     obj,
     option
   );
@@ -362,7 +363,7 @@ edit(data) {
       titleAction: 'Chỉnh sửa cơ hội',
     };
     let dialogCustomDeal = this.callfc.openSide(
-      PopupAddDealComponent,
+      PopupAddLeadComponent,
       obj,
       option
     );
@@ -393,7 +394,7 @@ copy(data) {
     // formMD.gridViewName = fun.gridViewName;
     option.Width = '800px';
     option.zIndex = 1001;
-    this.openFormDeal(formMD, option, 'copy');
+    this.openFormLead(formMD, option, 'copy');
   });
 
 

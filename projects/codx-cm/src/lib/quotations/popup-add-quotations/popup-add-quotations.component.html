@@ -273,7 +273,7 @@
 
   <!-- Start: Chi tiết sản phẩm -->
   <ng-template #tabDetaildQuotationLines>
-    <div class="h-100" >
+    <div class="h-100">
       <codx-gridview-v2
         #gridQuationsLines
         service="CM"
@@ -294,7 +294,7 @@
       ></codx-gridview-v2>
     </div>
     <ng-template #morefunction let-data>
-      <div class="has-action-menu" style="height: 30px; z-index: 1;">
+      <div class="has-action-menu" style="height: 30px; z-index: 1">
         <codx-mfunc
           [dataItem]="data"
           [formModel]="fmQuotationLines"
@@ -370,12 +370,17 @@
             <div>
               <codx-label
                 class="label-colon"
-                fiedName=""
+                fiedName="totalTaxAmt"
                 [formModel]="form.formModel"
-                default="Tiền thuế"
               ></codx-label>
             </div>
-            <div>2.300.000</div>
+            <div
+              [innerHTML]="
+                quotations?.totalTaxAmt
+                  | formatvalue : form.formModel : 'totalTaxAmt'
+                  | async
+              "
+            ></div>
           </div>
           <div class="d-flex justify-content-between">
             <div class="">

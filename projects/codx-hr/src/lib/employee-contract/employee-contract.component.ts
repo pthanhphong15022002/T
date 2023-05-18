@@ -8,7 +8,6 @@ import { Component, OnInit, ViewChild, TemplateRef, Injector, ChangeDetectorRef 
 import { DataRequest } from '@shared/models/data.request';
 import { ActivatedRoute } from '@angular/router';
 import { PopupEContractComponent } from '../employee-profile/popup-econtract/popup-econtract.component';
-import { ViewContractDetailComponent } from './view-contracts-detail/view-contracts-detail.component';
 
 @Component({
   selector: 'lib-employee-contract',
@@ -17,7 +16,7 @@ import { ViewContractDetailComponent } from './view-contracts-detail/view-contra
 })
 export class EmployeeContractComponent extends UIComponent {
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
-  @ViewChild('viewdetail') viewdetail: ViewContractDetailComponent;
+  @ViewChild('viewdetail') viewdetail: ViewDetailContractsComponent;
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
   @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
