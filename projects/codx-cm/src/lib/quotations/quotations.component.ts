@@ -74,12 +74,12 @@ export class QuotationsComponent extends UIComponent {
   arrFieldIsVisible = [];
   itemSelected: any;
   button?: ButtonModel;
-  titleAction= '' ;
-  dataSource =[]
+  titleAction = '';
+  dataSource = [];
 
   constructor(
     private inject: Injector,
-    private codxCM :CodxCmService,
+    private codxCM: CodxCmService,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
     @Optional() dialog?: DialogRef
@@ -158,7 +158,7 @@ export class QuotationsComponent extends UIComponent {
           width: grvSetup[key].width,
           template: template,
           // textAlign: 'center',
-        };  
+        };
       } else {
         colums = {
           field: field,
@@ -187,11 +187,11 @@ export class QuotationsComponent extends UIComponent {
         model: {
           resources: this.columnGrids,
           template2: this.templateMore,
-           frozenColumns: 1,
+          frozenColumns: 1,
         },
       },
     ];
-    this.detectorRef.detectChanges() ;
+    this.detectorRef.detectChanges();
   }
 
   click(e) {
@@ -219,7 +219,7 @@ export class QuotationsComponent extends UIComponent {
     this.clickMF(e.e, e.data);
   }
   clickMF(e, data) {
-    this.titleAction = e.text
+    this.titleAction = e.text;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -253,9 +253,11 @@ export class QuotationsComponent extends UIComponent {
   }
 
   openPopup(res) {
-    res.versionNo = res.versionNo??'V1.0';
-    res.status = res.status??'0';
-    res.exchangeRate = res.exchangeRate??1;
+    res.versionNo = res.versionNo ?? 'V1';
+    res.revision = res.revision ?? 0;
+    res.versionName = res.versionNo + '.' + res.revision;
+    res.status = res.status ?? '0';
+    res.exchangeRate = res.exchangeRate ?? 1;
     res.totalAmt = res.totalAmt ?? 0;
 
     var obj = {
@@ -309,12 +311,12 @@ export class QuotationsComponent extends UIComponent {
 
   copy(data) {
     this.codxCM
-    .getQuotationsLinesByTransID(this.itemSelected.recID)
-    .subscribe((res) => {
-      if (res) {
-        this.dataSource = res;
-      }
-    });
+      .getQuotationsLinesByTransID(this.itemSelected.recID)
+      .subscribe((res) => {
+        if (res) {
+          this.dataSource = res;
+        }
+      });
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -362,8 +364,6 @@ export class QuotationsComponent extends UIComponent {
     opt.data = data;
     return true;
   }
-
-  
 
   getIndex(recID) {
     return (

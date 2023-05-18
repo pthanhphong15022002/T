@@ -67,6 +67,7 @@ export class CM_Quotations {
   memo: string;
   totalAmt: number;
   totalTaxAmt:number
+  totalSalesAmt:number
   discPct: number;
   discAmt: number;
   tags: string;
@@ -74,6 +75,7 @@ export class CM_Quotations {
   refNo: string;
   refID: string;
   versionNo: string;
+  versionName: string;
   revision: number;
   parentID: string;
   attachments: number;

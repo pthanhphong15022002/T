@@ -1,6 +1,6 @@
 <div [class]="'detail-form'">
   <div class="d-flex" *ngIf="!hidenMF">
-    <button
+    <button *ngIf="objectType != '2' || !isConvertLeadToCus"
       type="button"
       class="btn btn-sm btn-icon btn-primary me-2 d-flex"
       style="min-width: 180px"
@@ -13,7 +13,7 @@
         default="Chọn liên hệ từ hệ thống"
       ></codx-label>
     </button>
-    <button
+    <button *ngIf="!isConvertLeadToCus"
       type="button"
       class="btn btn-sm btn-icon btn-primary d-flex"
       style="min-width: 180px"

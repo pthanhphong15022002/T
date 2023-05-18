@@ -195,7 +195,15 @@ textarea:focus,
   box-shadow: none !important;
   border-color: $primary !important;
 }
-
+.e-checkbox-wrapper .e-frame, .e-css.e-checkbox-wrapper .e-frame {
+  border-color: var(--gray-500);
+}
+.e-checkbox-wrapper:hover .e-frame, .e-css.e-checkbox-wrapper:hover .e-frame {
+  border-color: var(--gray-700)!important;
+}
+.e-checkbox-wrapper.e-checkbox-disabled .e-frame, .e-css.e-checkbox-wrapper.e-checkbox-disabled .e-frame {
+  border-color: var(--gray-150);
+}
 .codx-search.codx-focus {
   border-color: $primary !important;
 }
@@ -1115,6 +1123,10 @@ codx-layout-add .card-header {
 }
 .badge-md.fs-7{
   font-size: 11px!important;
+}
+.badge.badge-md{
+  font-size: 1rem;
+  padding: 0.3em 0.85em 0.5em;
 }
 /*** list view srcoll ngang ***/
 .e-listview .e-content {
@@ -2884,4 +2896,11 @@ codx-toolbar-report{
 
 .cal-notes .checkbox-list {
   padding: 7px 16px;
+}
+
+.e-gantt-splitter table tr{
+  height: 40px!important;
+}
+.e-gantt-splitter table tr.e-chart-row div{
+  height: 40px!important;
 }
