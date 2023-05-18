@@ -43,7 +43,7 @@ export class CodxListContactsComponent implements OnInit {
   moreFuncAdd = '';
   loaded: boolean;
   request = new DataRequest();
-  predicates = 'ObjectID=@0';
+  predicates = 'ObjectID=@0 && ObjectType=@1';
   dataValues = '';
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -73,8 +73,8 @@ export class CodxListContactsComponent implements OnInit {
 
   getListContacts() {
     this.loaded = false;
-    this.request.predicates = 'ObjectID=@0';
-    this.request.dataValues = this.objectID;
+    this.request.predicates = 'ObjectID=@0 && ObjectType=@1';
+    this.request.dataValues = this.objectID + ';' + this.objectType;
     this.request.entityName = 'CM_Contacts';
     this.request.funcID = 'CM0102';
     this.className = 'ContactsBusiness';
