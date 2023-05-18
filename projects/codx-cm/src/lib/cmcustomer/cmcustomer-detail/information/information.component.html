@@ -1,5 +1,36 @@
 <div *ngIf="dataSelected != null">
   <div class="d-flex flex-column px-5">
+    <div class="mb-5">
+      <ng-container [ngTemplateOutlet]="customers"> </ng-container>
+    </div>
+    <div class="mb-5" *ngIf="dataSelected?.memo">
+      <div class="mb-3">
+        <codx-label
+          class="text-dark text-primary fw-bold"
+          fiedName="Memo"
+          [formModel]="formModel"
+          default="Mô tả"
+        >
+        </codx-label>
+      </div>
+      <div class="text-dark fw-bold">
+        {{ dataSelected?.memo }}
+      </div>
+    </div>
+    <div class="mb-5" *ngIf="dataSelected?.note">
+      <div class="mb-2">
+        <codx-label
+          class="text-dark text-primary fw-bold"
+          fiedName="Note"
+          [formModel]="formModel"
+          default="Mô tả"
+        >
+        </codx-label>
+      </div>
+      <div class="text-dark fw-bold">
+        {{ dataSelected?.note }}
+      </div>
+    </div>
     <div
       class="mb-5"
       *ngIf="
@@ -72,21 +103,43 @@
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <ng-container
-                *ngFor="let item of dataSelected?.contactType.split(';')"
+                *ngFor="
+                  let item of dataSelected?.contactType.split(';');
+                  index as i
+                "
               >
-                <div
-                  class="mb-1"
+                <span
                   [innerHTML]="
                     item | formatvalue : formModel : 'ContactType' | async
                   "
+                ></span
+                ><span
+                  class="me-1"
+                  *ngIf="i < dataSelected?.contactType.split(';').length - 1"
+                  >,</span
                 >
-                  <!-- {{
-                    item
-                      | vll : gridViewSetup?.ContactType?.referedValue : "text"
-                      | async
-                  }} -->
-                </div>
               </ng-container>
+            </div>
+          </div>
+          <div class="mb-2 d-flex flex-wrap align-items-top">
+            <div class="w-150px min-w-150px">
+              <codx-label
+                class="label-colon text-gray-600 codx-textlabel"
+                fiedName="IsDefault"
+                [formModel]="formModel"
+              >
+              </codx-label>
+            </div>
+            <div class="text-dark fw-bold codx-textcontent">
+              <codx-input
+                class="test-check"
+                type="switch"
+                style="width: 100%"
+                [checked]="dataSelected?.isDefault"
+                field="IsDefault"
+                [disabled]="true"
+              >
+              </codx-input>
             </div>
           </div>
         </div>
@@ -726,7 +779,12 @@
                     | async
                 "
               ></span>
-              <span *ngIf="dataSelected?.phone && dataSelected?.phoneExt" class="me-1 ms-1"> / </span>
+              <span
+                *ngIf="dataSelected?.phone && dataSelected?.phoneExt"
+                class="me-1 ms-1"
+              >
+                /
+              </span>
               <span
                 class="text-dark fw-bold codx-textcontent"
                 [innerHTML]="
