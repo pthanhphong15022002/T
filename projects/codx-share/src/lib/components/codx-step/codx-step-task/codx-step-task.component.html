@@ -92,7 +92,18 @@
   <ng-container
     *ngIf="isShowButton"
     [ngTemplateOutlet]="buttonTemplate"
-    [ngTemplateOutletContext]="{ value: '' }"></ng-container>
+    [ngTemplateOutletContext]="{ value: '' }"
+  ></ng-container>
+  <!-- <codx-progress
+    *ngIf="isOpenPopupProgress"
+    [isPopup]="isOpenPopupProgress"
+    [progress]="dataPopupProgress?.progress"
+    [dataSource]="dataPopupProgress"
+    [step]="currentStep"
+    [type]="'T'"
+    [isSave]="isSaveProgress"
+    [typeProgress]="1"
+    (valueChange)="changeProgress($event)"></codx-progress> -->
 </div>
 
 <ng-template #groupTemplate let-groupTask="groupTask">
@@ -242,8 +253,11 @@
         [objectName]="getRole(data?.value, 'name')">
       </codx-imgs>
     </span>
-    <div class="disabled-inline">
-      <codx-progress
+    <div class="disabled-inline cursor-pointer" (click)="openPopupUpdateProgress(data?.value, data?.type)">
+      <codx-progressbar 
+        [progress]="data?.value?.progress"
+      ></codx-progressbar>
+      <!-- <codx-progress
         [progress]="data?.value?.progress"
         [dataSource]="data?.value"
         [step]="currentStep"
@@ -251,7 +265,7 @@
         [isSave]="isSaveProgress"
         [typeProgress]="2"
         [typeProgress]="typeProgress"
-        (valueChange)="changeProgress($event)"></codx-progress>
+        (valueChange)="changeProgress($event)"></codx-progress> -->
     </div>
     <div class="notify" style="min-width: 40px" *ngIf="isShowFile">
       <codx-attachment-temp

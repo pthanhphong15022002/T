@@ -1,4 +1,4 @@
-<div class="pt-3 px-5 rounded-2" *ngIf="dataSelected; else noData">
+<div class="p-3 rounded-2" *ngIf="dataSelected; else noData">
   <ng-container
     [ngTemplateOutlet]="customers"
     [ngTemplateOutletContext]="{ $implicit: dataSelected }"
@@ -22,8 +22,8 @@
   </div>
 </ng-template>
 <ng-template #customers let-data>
-  <div class="d-flex justify-content-between border-bottom" (dblclick)="dbClick(data)">
-    <div class="col-4 justify-content-start">
+  <div class="d-flex justify-content-between" (dblclick)="dbClick(data)">
+    <div class="w-100 pe-6">
       <codx-temp-full
         cardCss="card-template p-3 list-task"
         [imageId]="data.recID"
@@ -75,7 +75,7 @@
         </div>
       </ng-template>
     </div>
-    <div class="col-4 row" *ngIf="funcID == 'CM0102'">
+    <div class="w-100 pe-6" *ngIf="funcID == 'CM0102'">
       <div class="col-6 d-flex align-items-center" *ngIf="data?.mobile">
         <span
           [ngClass]="
@@ -105,8 +105,8 @@
         >
       </div>
     </div>
-    <div *ngIf="funcID != 'CM0102'" class="col-6 d-flex align-items-center row">
-      <div
+    <div *ngIf="funcID != 'CM0102'" class="w-250px min-w-250px">
+      <!-- <div
         class="d-flex justify-content-start col-5"
         *ngIf="
           (funcID == 'CM0101' || funcID == 'CM0103') && contactPerson != null
@@ -162,8 +162,8 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-7" *ngIf="data?.industries">
+      </div> -->
+      <div class="me-3" *ngIf="data?.industries">
         <div class="d-flex ms-3">
           <span class="icon-work_outline icon-16 me-1 text-gray-500"></span>
           <div>
@@ -187,7 +187,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="funcID == 'CM0102'" class="col-4 d-flex align-items-center">
+    <div *ngIf="funcID == 'CM0102'">
       <div class="d-flex flex-column">
         <div class="mb-1">
           <span class="icon-corporate_fare text-primary icon-16 me-1"></span>
@@ -222,11 +222,11 @@
     </div>
     <div
       *ngIf="funcID != 'CM0102'"
-      class="col-2 d-flex justify-content-end align-items-center"
+      class="d-flex justify-content-end align-items-top w-150px min-w-150px"
     >
       <span
         *ngIf="funcID == 'CM0103'"
-        class="icon-date_range icon-18 text-gray-700 me-1"
+        class="icon-date_range icon-18 text-gray-700 me-2"
       ></span>
       <span
         *ngIf="funcID == 'CM0103'"
@@ -240,7 +240,7 @@
       </span>
       <span
         *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
-        class="icon-contact_phone icon-18 text-gray-700 me-1"
+        class="icon-contact_phone icon-18 text-gray-700 me-2"
       ></span>
       <span
         *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"

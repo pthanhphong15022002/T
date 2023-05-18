@@ -1,29 +1,32 @@
-import {  Component, EventEmitter, Input, Output, SimpleChanges, ViewChild, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  OnInit,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, FormModel, ViewsComponent } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  FormModel,
+  ViewsComponent,
+} from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-view-detail-eappointions',
   templateUrl: './view-detail-eappointions.component.html',
-  styleUrls: ['./view-detail-eappointions.component.css']
+  styleUrls: ['./view-detail-eappointions.component.css'],
 })
-export class ViewDetailEappointionsComponent implements OnInit{
-  constructor(
-    private authStore: AuthStore,
-    private hrService: CodxHrService,
-    private router: ActivatedRoute, 
-  ) {
-    this.funcID = this.router.snapshot.params['funcID'];
-    this.user = this.authStore.get();
-  }
-
-
+export class ViewDetailEappointionsComponent implements OnInit {
   @ViewChild('attachment') attachment;
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
-
 
   @Input() funcID;
   @Input() formModel;
@@ -37,19 +40,43 @@ export class ViewDetailEappointionsComponent implements OnInit{
   renderFooter = false;
   isAfterRender = true;
   benefitFuncID = 'HRTApp02';
-  benefitFormModel : FormModel;
-  benefitFormGroup : FormGroup;
+  benefitFormModel: FormModel;
+  benefitFormGroup: FormGroup;
   lstBenefit;
   active = 1;
   console = console;
   isLoaded: boolean = false;
 
-  ngOnInit(): void { 
+  //Using render file
+  services: string = 'DM';
+  assamplyName: string = 'ERM.Business.DM';
+  className: string = 'FileBussiness';
+  REFERTYPE = {
+    IMAGE: 'image',
+    VIDEO: 'video',
+    APPLICATION: 'application',
+  };
+  lstFile: any[] = [];
+
+  constructor(
+    private authStore: AuthStore,
+    private hrService: CodxHrService,
+    private router: ActivatedRoute,
+    private api: ApiHttpService
+  ) {
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.user = this.authStore.get();
+  }
+
+  ngOnInit(): void {
     this.hrService.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;
         this.hrService
-          .getFormGroup(this.benefitFormModel.formName, this.benefitFormModel.gridViewName)
+          .getFormGroup(
+            this.benefitFormModel.formName,
+            this.benefitFormModel.gridViewName
+          )
           .then((fg) => {
             if (fg) {
               this.benefitFormGroup = fg;
@@ -59,10 +86,9 @@ export class ViewDetailEappointionsComponent implements OnInit{
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    // if(this.itemDetail.benefits){
-    //   this.lstBenefit = JSON.parse(this.itemDetail.benefits)
-    // }
+  ngOnChanges() {
+    this.lstFile = [];
+    this.getFileDataAsync(this.itemDetail?.recID);
   }
 
   ngAfterViewInit(): void {
@@ -72,16 +98,39 @@ export class ViewDetailEappointionsComponent implements OnInit{
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
-    
   }
 
   changeDataMF(e: any, data: any) {
     this.hrService.handleShowHideMF(e, data, this.view);
-  } 
- 
-  
+  }
 
-  clickMF(evt: any, data: any = null){
-    this.clickMFunction.emit({event: evt, data: data});
+  clickMF(evt: any, data: any = null) {
+    this.clickMFunction.emit({ event: evt, data: data });
+  }
+
+  getFileDataAsync(pObjectID: string) {
+    if (pObjectID) {
+      this.api
+        .execSv(
+          this.services,
+          this.assamplyName,
+          this.className,
+          'GetFilesByIbjectIDAsync',
+          pObjectID
+        )
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            let files = res;
+            files.map((e: any) => {
+              if (e && e.referType == this.REFERTYPE.VIDEO) {
+                e[
+                  'srcVideo'
+                ] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
+              }
+            });
+            this.lstFile = res;
+          }
+        });
+    }
   }
 }

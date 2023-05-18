@@ -232,6 +232,10 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   valueChange(e) {
     if (!e?.data || !e?.field) return;
+
+    if (e.field == 'currencyID' && this.quotations.contactID != e.data) {
+      this.loadExchangeRate();
+    }
     this.quotations[e.field] = e.data;
   }
   controlBlur(e) {}
@@ -496,8 +500,15 @@ export class PopupAddQuotationsComponent implements OnInit {
       });
     }
     this.quotations['totalAmt'] = totals;
-    // this.quotations['DiscAmt'] = totalVAT;
+    this.quotations['totalTaxAmt'] = totalVAT;
     this.quotations['discAmt'] = totalDis;
+  }
+
+  loadExchangeRate() {
+    this.codxCM.getExchangeRate(this.quotations.currencyID).subscribe((res) => {
+      this.quotations.exchangeRate = res?.exchRate ?? 0;
+      this.form.formGroup.patchValue(this.quotations);
+    });
   }
 
   clearQuotationsLines() {

@@ -652,15 +652,6 @@ export class CodxEpService {
     );
   }
 
-  getApprovalTransByTransID(booking: any) {
-    return this.api.execSv(
-      'ES',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'GetApprovalTransByTransIDAsync',
-      [booking.recID]
-    );
-  }
 
   checkRole(curUser: any, owner: string, isAdmin: boolean, host: string = '') {
     return (

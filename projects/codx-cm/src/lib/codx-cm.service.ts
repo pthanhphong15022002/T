@@ -601,10 +601,15 @@ export class CodxCmService {
     );
   }
 
-  // QuotationLine
+  // -----QuotationLine-----
   // loadItem
   getItem(itemID) {
     return this.api.exec<any>('IV', 'ItemsBusiness', 'LoadDataAsync', itemID);
+  }
+
+   // load Tỉ giá
+   getExchangeRate(CurrencyID) {
+    return this.api.exec<any>('BS', 'CurrenciesBusiness', 'GetExchangeRateAsync', [CurrencyID,new Date()]);
   }
 
 }
