@@ -654,7 +654,7 @@ export class CM_Leads {
   tags: string;
   industries: string;
   annualRevenue: number;
-  headcounts: number;
+  headcounts: string;
   establishDate: Date;
   addresses: string;
   countryID: string;

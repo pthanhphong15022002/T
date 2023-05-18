@@ -1712,7 +1712,7 @@ export class CodxHrService {
       'ERM.Business.HR',
       'EContractsBusiness',
       'GetEmpContractQuitFortelDaysAsync',
-      null
+      data
     );
   }
 

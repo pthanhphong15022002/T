@@ -94,27 +94,29 @@ export class CodxFdService {
         break;
       }
     }
-    let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
-    if (gridViewSetup == null) {
-      this.cache
-        .gridViewSetup(formModel.formName, formModel.gridViewName)
-        .subscribe((res) => {
-          if (res) {
-            if (fieldName == 'Buid') fieldName = 'BUID';
-            gridViewSetup = res;
-            this.notificationsService.notifyCode(
-              'SYS009',
-              0,
-              '"' + gridViewSetup[fieldName]?.headerText + '"'
-            );
-          }
-        });
-    } else {
-      this.notificationsService.notifyCode(
-        'SYS009',
-        0,
-        '"' + gridViewSetup[fieldName]?.headerText + '"'
-      );
+    let fieldName = invalid[0]?.charAt(0).toUpperCase() + invalid[0]?.slice(1);
+    if(fieldName){
+      if (gridViewSetup == null) {
+        this.cache
+          .gridViewSetup(formModel.formName, formModel.gridViewName)
+          .subscribe((res) => {
+            if (res) {
+              if (fieldName == 'Buid') fieldName = 'BUID';
+              gridViewSetup = res;
+              this.notificationsService.notifyCode(
+                'SYS009',
+                0,
+                '"' + gridViewSetup[fieldName]?.headerText + '"'
+              );
+            }
+          });
+      } else {
+        this.notificationsService.notifyCode(
+          'SYS009',
+          0,
+          '"' + gridViewSetup[fieldName]?.headerText + '"'
+        );
+      }
     }
   }
 

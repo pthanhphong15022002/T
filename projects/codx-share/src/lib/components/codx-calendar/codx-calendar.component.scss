@@ -112,8 +112,6 @@ body.tailwind #selected {
   color: rgb(0, 0, 255);
 }
 
-
-
 /* custom generated icons styles */
 
 @font-face {
@@ -122,4 +120,86 @@ body.tailwind #selected {
     format("truetype");
   font-weight: normal;
   font-style: normal;
+}
+
+@keyframes come-in {
+  0% {
+    transform: translatey(100px);
+    opacity: 0;
+  }
+  30% {
+    transform: translateX(-50px) scale(0.4);
+  }
+  70% {
+    transform: translateX(0px) scale(1.2);
+  }
+  100% {
+    transform: translatey(0px) scale(1);
+    opacity: 1;
+  }
+}
+
+.floating-container {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  bottom: 0;
+  right: 0;
+  margin: 35px 25px;
+
+  &:hover {
+    height: 300px;
+
+    .floating-button {
+      box-shadow: 0 10px 25px rgba(44, 179, 240, 0.6);
+      transform: translatey(5px);
+      transition: all 0.3s;
+    }
+
+    .element-container .float-element {
+      &:nth-child(n) {
+        animation: come-in 0.4s forwards 0.2s;
+      }
+    }
+  }
+
+  .floating-button {
+    position: absolute;
+    width: 65px;
+    height: 65px;
+    background: #2cb3f0;
+    bottom: 0;
+    border-radius: 50%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    color: white;
+    line-height: 65px;
+    text-align: center;
+    font-size: 23px;
+    z-index: 100;
+    box-shadow: 0 10px 25px -5px rgba(44, 179, 240, 0.6);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .float-element {
+    position: relative;
+    display: block;
+    width: 100px;
+    height: 30px;
+    margin: 15px auto;
+    padding: 20px;
+    text-align: center;
+    z-index: 0;
+    opacity: 0;
+    cursor: pointer;
+    transform: translateX(100px);
+    transform: translateY(200px);
+
+    &:nth-child(n) {
+      background-color: #ffffff;
+      box-shadow: 0 20px 20px -10px rgba(66, 165, 245, 0.5);
+    }
+  }
 }
