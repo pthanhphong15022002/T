@@ -73,10 +73,11 @@ export class PopupListContactsComponent implements OnInit {
 
   onSave() {
     this.contact.isDefault = false;
-    if (
-      this.contactType == null ||
-      this.contactType.trim() == ''
-    ) {
+    this.contact.contactType = this.contactType;
+    this.contact.objectID = this.recIDCm;
+    this.contact.objectType = this.objectType;
+    this.contact.objectName = this.objectName;
+    if (this.contactType == null || this.contactType.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -85,23 +86,15 @@ export class PopupListContactsComponent implements OnInit {
       return;
     }
     if (this.type == 'formDetail') {
-      this.contact.contactType = this.contactType;
-      this.contact.objectID = this.recIDCm;
-      this.contact.objectType = this.objectType;
-      this.contact.objectName = this.objectName;
-
-
       this.cmSv.updateContactByPopupListCt(this.contact).subscribe((res) => {
         if (res) {
           this.dialog.close(res);
         }
       });
     } else {
-      if (this.contact != null){
-        this.contact.contactType = this.contactType;
+      if (this.contact != null) {
         this.dialog.close(this.contact);
-      }
-      else return;
+      } else return;
     }
   }
 

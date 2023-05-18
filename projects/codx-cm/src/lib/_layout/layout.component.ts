@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Injector } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Injector, ViewEncapsulation } from '@angular/core';
 import { CallFuncService, DialogRef, LayoutBaseComponent, SidebarModel } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { Observable, of } from 'rxjs';
@@ -7,6 +7,7 @@ import { Observable, of } from 'rxjs';
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
+  encapsulation:ViewEncapsulation.None,
 })
 export class LayoutComponent extends LayoutBaseComponent {
   dialog!: DialogRef;
