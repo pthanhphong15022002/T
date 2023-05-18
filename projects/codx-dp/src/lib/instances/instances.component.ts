@@ -1766,7 +1766,7 @@ export class InstancesComponent
     this.isUseSuccess = this.stepSuccess?.isUsed;
     this.isUseFail = this.stepFail?.isUsed;
     this.showButtonAdd = this.isCreate;
-    this.viewMode = this.process?.viewMode;
+    this.viewMode = this.process?.viewMode??6;
     this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
     //f5 hoặc copy link dán
     if (reload) {
