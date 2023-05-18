@@ -1116,6 +1116,10 @@ codx-layout-add .card-header {
 .badge-md.fs-7{
   font-size: 11px!important;
 }
+.badge.badge-md{
+  font-size: 1rem;
+  padding: 0.3em 0.85em 0.5em;
+}
 /*** list view srcoll ngang ***/
 .e-listview .e-content {
   overflow-x: auto;
