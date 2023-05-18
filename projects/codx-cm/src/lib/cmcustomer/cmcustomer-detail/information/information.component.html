@@ -1,37 +1,5 @@
 <div *ngIf="dataSelected != null">
-  <div class="d-flex flex-column">
-
-    <div class="mb-5">
-      <ng-container [ngTemplateOutlet]="customers"> </ng-container>
-    </div>
-    <div class="mb-5" *ngIf="dataSelected?.memo">
-      <div class="mb-3">
-        <codx-label
-          class="text-dark text-primary fw-bold"
-          fiedName="Memo"
-          [formModel]="formModel"
-          default="Mô tả"
-        >
-        </codx-label>
-      </div>
-      <div class="text-dark fw-bold">
-        {{ dataSelected?.memo }}
-      </div>
-    </div>
-    <div class="mb-5" *ngIf="dataSelected?.note">
-      <div class="mb-2">
-        <codx-label
-          class="text-dark text-primary fw-bold"
-          fiedName="Note"
-          [formModel]="formModel"
-          default="Mô tả"
-        >
-        </codx-label>
-      </div>
-      <div class="text-dark fw-bold">
-        {{ dataSelected?.note }}
-      </div>
-    </div>
+  <div class="d-flex flex-column px-5">
     <div
       class="mb-5"
       *ngIf="

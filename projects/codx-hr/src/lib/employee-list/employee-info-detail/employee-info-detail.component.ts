@@ -1854,13 +1854,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       });
 
       // Asset
-      if (!this.lstAsset)
-        this.hrService.LoadListEAsset(this.employeeID).subscribe((res) => {
-          if (res) {
-            this.lstAsset = res;
-            this.df.detectChanges();
-          }
-        });
+      // if (!this.lstAsset)
+      //   this.hrService.LoadListEAsset(this.employeeID).subscribe((res) => {
+      //     if (res) {
+      //       this.lstAsset = res;
+      //       this.df.detectChanges();
+      //     }
+      //   });
     }
     if (!this.jobSalaryColumnGrid) {
       //#region get columnGrid EJobSalary - Lương chức danh
@@ -5258,7 +5258,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       (this.eAssetGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEAssetPredicates],
-          [this.filterByAssetCatIDArr.join(';')]
+          [this.filterByAssetCatIDArr]
         )
         .subscribe();
     } else if (
@@ -5267,7 +5267,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     ) {
       this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}" and IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}")`;
       (this.eAssetGrid.dataService as CRUDService)
-        .setPredicates([this.filterEAssetPredicates], [])
+        .setPredicates(["time"], [this.employeeID,this.startDateEAssetFilterValue,this.endDateEAssetFilterValue])
         .subscribe();
       console.log('truong hop 3', this.filterEAssetPredicates);
     } else if (
@@ -5278,7 +5278,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}")`;
       console.log('truong hop 4', this.filterEAssetPredicates);
       (this.eAssetGrid.dataService as CRUDService)
-        .setPredicates([this.filterEAssetPredicates], [''])
+        .setPredicates([this.filterEAssetPredicates], [this.employeeID])
         .subscribe();
     }
   }
@@ -5304,7 +5304,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }
   }
   valueChangeYearFilterEAsset(evt) {
-    console.log('chon year', evt);
     if (evt.formatDate == undefined && evt.toDate == undefined) {
       this.startDateEAssetFilterValue = null;
       this.endDateEAssetFilterValue = null;
