@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   Component,
   ComponentRef,
+  ElementRef,
   Injector,
   TemplateRef,
   ViewChild,
@@ -11,10 +12,10 @@ import {
 } from '@angular/core';
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
 import {
-  DataRequest,
+  FormModel,
   ResourceModel,
+  SidebarModel,
   UIComponent,
-  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -24,6 +25,9 @@ import { CalendarCenterComponent } from './calendar-center/calendar-center.compo
 import { Query } from '@syncfusion/ej2-data';
 import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxCalendarService } from './codx-calendar.service';
+import { CodxAddBookingCarComponent } from '../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
+import { CodxAddBookingRoomComponent } from '../codx-booking/codx-add-booking-room/codx-add-booking-room.component';
+import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 
 @Component({
   selector: 'app-codx-calendar',
@@ -86,7 +90,12 @@ export class CodxCalendarComponent
   celendarTypes = [];
 
   resources = [];
-
+  carFM: FormModel = new FormModel();
+  roomFM: FormModel = new FormModel();
+  addCarTitle = '';
+  addRoomTitle = '';
+  carFG: any;
+  roomFG: any;
   constructor(
     injector: Injector,
     private calendarService: CodxCalendarService,
@@ -157,6 +166,26 @@ export class CodxCalendarComponent
         }
         this.detectorRef.detectChanges();
       });
+
+    this.calendarService.getFormModel(EPCONST.FUNCID.C_Bookings).then((res) => {
+      this.carFM = res;
+      this.carFG = this.codxService.buildFormGroup(this.carFM?.formName,this.carFM?.gridViewName);
+    });
+    this.calendarService.getFormModel(EPCONST.FUNCID.R_Bookings).then((res) => {
+      this.roomFM = res;
+      this.roomFG = this.codxService.buildFormGroup(this.roomFM?.formName,this.roomFM?.gridViewName);
+    });
+    this.cache.functionList(EPCONST.FUNCID.C_Bookings).subscribe((res) => {
+      if (res) {
+        this.addCarTitle = res?.customName?.toString();        
+      }
+    });
+    this.cache.functionList(EPCONST.FUNCID.R_Bookings).subscribe((res) => {
+      if (res) {
+        this.addRoomTitle = res?.customName?.toString();        
+      }
+    });
+
   }
 
   ngAfterViewInit() {
@@ -678,4 +707,44 @@ export class CodxCalendarComponent
     //pass the filter data source, filter query to updateData method.
     e.updateData(this.celendarTypes, query);
   }
+
+  addBookingCar() {
+    let option = new SidebarModel();
+    option.FormModel = this.carFM;
+    option.Width = '800px';
+    let dialogAdd = this.callfc.openSide(
+      CodxAddBookingCarComponent,
+      [this.carFG?.value, 'SYS01', this.addCarTitle,null,null,false],
+      option
+    );
+    dialogAdd.closed.subscribe((returnData) => {
+      if (!returnData.event) {
+        this.view.dataService.clear();
+      }
+    });
+  }
+
+  addBookingRoom() {
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.roomFM;
+    option.Width = '800px';
+    let dialogAdd = this.callfc.openSide(
+      CodxAddBookingRoomComponent,
+      [this.roomFG?.value, 'SYS01', this.addRoomTitle,null,null,true],
+      option
+    );
+    dialogAdd.closed.subscribe((returnData) => {
+      if (!returnData.event) {
+        this.view.dataService.clear();
+      }
+    });
+  }
+
+
+  addNote() {}
+
+  addMeeting() {}
+
+  addMyTask() {}
 }

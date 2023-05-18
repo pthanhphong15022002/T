@@ -245,12 +245,48 @@
           </div>
         </ng-container>
       </div>
-      <div class="w-100">
+      <div class="position-relative w-100">
         <lib-calendar-center
           #calendarCenter
           [resources]="resources"
           [resourceModel]="dataResourceModel"
         ></lib-calendar-center>
+        <div class="position-absolute bottom-0 end-0">
+          <!-- Floating Action Button -->
+          <div class="floating-container">
+            <div class="floating-button">+</div>
+            <div class="element-container">
+              <div class="float-element">
+                <codx-label
+                  fiedName="WP_Notes"
+                  default="Ghi chú"
+                  class="fw-bold"
+                ></codx-label>
+              </div>
+              <div class="float-element">
+                <codx-label
+                  fiedName="TM_MyTasks"
+                  default="Công việc cá nhân"
+                  class="fw-bold"
+                ></codx-label>
+              </div>
+              <div class="float-element">
+                <codx-label
+                  fiedName="CO_Meetings"
+                  default="Lịch họp cá nhân"
+                  class="fw-bold"
+                ></codx-label>
+              </div>
+              <div class="float-element" (click)="addBookingCar()">
+                <codx-label
+                  fiedName="EP_BookingCars"
+                  default="Đặt xe"
+                  class="fw-bold"
+                ></codx-label>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
