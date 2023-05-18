@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   ComponentRef,
+  Injector,
   OnInit,
   TemplateRef,
   Type,
@@ -14,6 +15,7 @@ import {
   CodxService,
   LayoutService,
   PageTitleService,
+  UIComponent,
   ViewModel,
   ViewsComponent,
   ViewType,
@@ -25,14 +27,13 @@ import { CatagoryComponent } from './catagory/catagory.component';
   templateUrl: './dynamic-setting.component.html',
   styleUrls: ['./dynamic-setting.component.css'],
 })
-export class DynamicSettingComponent implements OnInit {
+export class DynamicSettingComponent extends UIComponent implements OnInit {
   views: Array<ViewModel> = [];
   listName = 'SYS001';
   dataSetting = {};
   itemMenu = [];
   catagory = '';
   valuelist = {};
-  view: ViewsComponent;
   loaded = false;
   components = new Map<string, ComponentRef<CatagoryComponent>>();
   currentView!: CatagoryComponent;
@@ -40,14 +41,16 @@ export class DynamicSettingComponent implements OnInit {
   @ViewChild('content', { read: ViewContainerRef, static: false })
   content!: ViewContainerRef;
   constructor(
+    private inject: Injector,
     private layout: LayoutService,
     private pageTitle: PageTitleService,
     private cacheService: CacheService,
-    private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) {
+    super(inject);
+  }
 
-  ngOnInit(): void {}
+  onInit(): void {}
 
   ngAfterViewInit(): void {
     this.views = [

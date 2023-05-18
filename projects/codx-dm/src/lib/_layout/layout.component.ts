@@ -41,10 +41,10 @@ export class LayoutComponent
   implements AfterViewInit
 {
   // Public variables
-  override contentContainerClasses = '';
-  override headerHTMLAttributes: any = {};
-  override headerLeft: string = 'menu';
-  override asideDisplay: boolean = false;
+  // override contentContainerClasses = '';
+  // override headerHTMLAttributes: any = {};
+  // override headerLeft: string = 'menu';
+  // override asideDisplay: boolean = false;
   disableInput = false;
   dialog: DialogRef;
   percentUsed: any;
@@ -104,22 +104,27 @@ db.DM_FolderInfo.updateMany(
       //  totalUsed: any;
       // totalHdd: any;
       this.getHDDInformaton(item);
-      if(document.body.getElementsByClassName('btn-minimize')[0])
-        document.body.getElementsByClassName('btn-minimize')[0].addEventListener('click',()=>{
-          this.showtitle = !this.showtitle;
-        });      
-    })
+      if (document.body.getElementsByClassName('btn-minimize')[0])
+        document.body
+          .getElementsByClassName('btn-minimize')[0]
+          .addEventListener('click', () => {
+            this.showtitle = !this.showtitle;
+          });
+    });
 
     //  this.funcs$= this.codxService.getFuncs('OD');
   }
 
   onInit(): void {
-    this.asideDisplay = this.layout.getProp('aside.display') as boolean;
-    this.asideCSSClasses = this.layout.getStringCSSClasses('aside');
-    this.contentContainerClasses =
+    this.codxService.asideDisplay = this.layout.getProp(
+      'aside.display'
+    ) as boolean;
+    this.codxService.asideCSSClasses = this.layout.getStringCSSClasses('aside');
+    this.codxService.contentContainerClasses =
       this.layout.getStringCSSClasses('contentContainer');
-    this.headerCSSClasses = this.layout.getStringCSSClasses('header');
-    this.headerLeft = this.layout.getProp('header.left') as string;
+    this.codxService.headerCSSClasses =
+      this.layout.getStringCSSClasses('header');
+    this.codxService.headerLeft = this.layout.getProp('header.left') as string;
     this.user = this.auth.userValue;
     this.dmSV.isMenuIdActive.subscribe((res) => {
       this.submenu = res;
@@ -146,8 +151,8 @@ db.DM_FolderInfo.updateMany(
         this.submenu == 'DMT02' ||
         this.submenu == 'DMT03' ||
         this.submenu == 'DMT04' ||
-        this.submenu == 'DMT00'      
-        )
+        this.submenu == 'DMT00'
+      )
         css = css + ' disabled';
     }
     // console.log(css);
@@ -159,14 +164,14 @@ db.DM_FolderInfo.updateMany(
     breadcumb.push(title);
     breadcumb.push(subtitle);
     this.dmSV.idMenuActive = id;
-    this.dmSV.page =0;
+    this.dmSV.page = 0;
     this.dmSV.breadcumb.next(breadcumb);
     this.dmSV.menuIdActive.next(id);
     this.dmSV.menuActive.next(title);
     this.dmSV.currentNode = '';
     this.dmSV.folderId.next(id);
-    this.dmSV.dmFavoriteID = "2";
-    this.dmSV.folderID = "";
+    this.dmSV.dmFavoriteID = '2';
+    this.dmSV.folderID = '';
     this.folderService.options.favoriteID = subid;
     this.fileService.options.favoriteID = subid;
     this.dmSV.refeshData.next(true);
@@ -229,9 +234,7 @@ db.DM_FolderInfo.updateMany(
           },
         ];
       }
-    }
-    else if(typeof item === 'string')
-      this.titleHddUsed = item;
+    } else if (typeof item === 'string') this.titleHddUsed = item;
   }
 
   //Pie Chart
@@ -267,10 +270,10 @@ db.DM_FolderInfo.updateMany(
 
   onAfterViewInit(): void {
     if (this.codxHeader) {
-      for (const key in this.headerHTMLAttributes) {
-        if (this.headerHTMLAttributes.hasOwnProperty(key)) {
+      for (const key in this.codxService.headerHTMLAttributes) {
+        if (this.codxService.headerHTMLAttributes.hasOwnProperty(key)) {
           this.codxHeader.nativeElement.attributes[key] =
-            this.headerHTMLAttributes[key];
+            this.codxService.headerHTMLAttributes[key];
         }
       }
     }
@@ -326,14 +329,21 @@ db.DM_FolderInfo.updateMany(
   }
   onJump() {
     //Tài liệu chia sẻ hoặc tài liệu yêu cầu chia sẻ
-    if(this.dmSV.idMenuActive == "DMT06" || this.dmSV.idMenuActive == "DMT05" || this.dmSV.idMenuActive == "DMT07" || this.dmSV.idMenuActive == "DMT00") return ;
+    if (
+      this.dmSV.idMenuActive == 'DMT06' ||
+      this.dmSV.idMenuActive == 'DMT05' ||
+      this.dmSV.idMenuActive == 'DMT07' ||
+      this.dmSV.idMenuActive == 'DMT00'
+    )
+      return;
     var data = {} as any;
     data.recID = '';
-    this.dmSV.folderID = ""
+    this.dmSV.folderID = '';
     this.dmSV.isSearchView = false;
     this.dmSV.refreshTree.next(true);
     this.dmSV.breadcumb.next([this.dmSV.menuActive.getValue()]);
-    if(this.dmSV.breadcumbLink) this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0,1);
+    if (this.dmSV.breadcumbLink)
+      this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0, 1);
     this.changeDetectorRef.detectChanges();
   }
   /* public funcs$: Observable<any> = of([

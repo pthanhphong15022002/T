@@ -229,7 +229,7 @@ export class InstancesComponent
   idTemp = '';
   nameTemp = '';
   ownerRoles = '';
-  dataVll :any;
+  dataVll: any;
 
   constructor(
     private inject: Injector,
@@ -269,11 +269,11 @@ export class InstancesComponent
         if (grv) {
           this.grvSetup = grv;
           this.vllStatus = grv['Status'].referedValue ?? this.vllStatus;
-          this.cache.valueList(this.vllStatus).subscribe(res=>{
+          this.cache.valueList(this.vllStatus).subscribe((res) => {
             if (res && res.datas) {
-               this.dataVll = res.datas
+              this.dataVll = res.datas;
             }
-          })
+          });
         }
       });
     this.cache.valueList('DP034').subscribe((res) => {
@@ -289,7 +289,6 @@ export class InstancesComponent
         this.tabInstances = tabIns;
       }
     });
-  
 
     this.cache.functionList(this.funcID).subscribe((f) => {
       // if (f) this.pageTitle.setSubTitle(f?.customName);
@@ -355,7 +354,7 @@ export class InstancesComponent
         .getProcessByProcessID(this.processID)
         .subscribe((ps) => {
           if (ps && ps.read && !ps.isDelete) {
-            this.loadData(ps);
+            this.loadData(ps, true);
             this.getListCbxProccess(ps?.applyFor);
           } else {
             this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
@@ -1395,7 +1394,9 @@ export class InstancesComponent
           this.codxDpService.autoMoveStage(data).subscribe((res) => {
             if (res) {
               var stepsUpdate = dataInstance.listStep.map((item1) => {
-                var item2 = instanceStepId.find((item2) => item1.stepID === item2.stepID);
+                var item2 = instanceStepId.find(
+                  (item2) => item1.stepID === item2.stepID
+                );
                 if (item2) {
                   return { ...item2 };
                 } else {
@@ -1738,7 +1739,7 @@ export class InstancesComponent
     if (e) this.handelStartDay(this.dataSelected);
   }
   //load DATA
-  async loadData(ps) {
+  async loadData(ps, reload = false) {
     this.process = ps;
     this.loadEx();
     this.loadWord();
@@ -1765,9 +1766,42 @@ export class InstancesComponent
     this.isUseSuccess = this.stepSuccess?.isUsed;
     this.isUseFail = this.stepFail?.isUsed;
     this.showButtonAdd = this.isCreate;
-
-    this.viewMode = this.process?.viewMode ?? 6;
+    this.viewMode = this.process?.viewMode??6;
     this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
+    //f5 hoặc copy link dán
+    if (reload) {
+      // if (!this.views) {
+      //   this.views = [
+      //     {
+      //       type: ViewType.listdetail,
+      //       active: true,
+      //       sameData: true,
+      //       toolbarTemplate: this.footerButton,
+      //       model: {
+      //         template: this.itemTemplate,
+      //         panelRightRef: this.templateDetail,
+      //       },
+      //     },
+      //     {
+      //       type: ViewType.kanban,
+      //       active: false,
+      //       sameData: false,
+      //       request: this.request,
+      //       request2: this.resourceKanban,
+      //       toolbarTemplate: this.footerButton,
+      //       model: {
+      //         template: this.cardKanban,
+      //         template2: this.viewColumKaban,
+      //         setColorHeader: true,
+      //       },
+      //     },
+      //   ];
+      // }
+      // this.views.forEach((x) => {
+      //   if (x.type == this.viewMode) x.active == true;
+      //   else x.active = false;
+      // });
+    }
 
     if (
       this.process?.permissions != null &&
@@ -1836,14 +1870,14 @@ export class InstancesComponent
     let obj = {
       data: this.dataSelected,
       formModel: this.view.formModel,
-      isFormExport : true,
+      isFormExport: true,
       refID: this.process.recID,
       refType: 'DP_Processes',
       esCategory: this.esCategory,
       titleAction: this.titleAction,
       loaded: true,
       dataEx: this.dataEx,
-      dataWord: this.dataWord
+      dataWord: this.dataWord,
     };
     this.dialogTemplate = this.callfc.openForm(
       PopupSelectTempletComponent,
@@ -2019,14 +2053,14 @@ export class InstancesComponent
                 let obj = {
                   data: this.dataSelected,
                   formModel: this.view.formModel,
-                  isFormExport : false,
+                  isFormExport: false,
                   refID: this.process.recID,
                   refType: 'DP_Processes',
                   esCategory: this.esCategory,
                   titleAction: this.titleAction,
                   loaded: true,
                   dataEx: this.dataEx,
-                  dataWord: this.dataWord
+                  dataWord: this.dataWord,
                 };
                 this.dialogTemplate = this.callfc.openForm(
                   PopupSelectTempletComponent,
@@ -2229,7 +2263,7 @@ export class InstancesComponent
     return stepsDuration?.durationControl;
   }
 
-  toolTip(stt){
-    return this.dataVll?.filter(vl=>vl.value==stt)[0]?.text
+  toolTip(stt) {
+    return this.dataVll?.filter((vl) => vl.value == stt)[0]?.text;
   }
 }
