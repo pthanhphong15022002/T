@@ -109,13 +109,13 @@
         <span>
           <codx-label
             class="label-colon"
-            fiedName="VersionNo"
+            fiedName="VersionName"
             [formModel]="view.formModel"
           ></codx-label
         ></span>
         <span
           [innerHTML]="
-            data?.versionNo | formatvalue : view.formModel : 'versionNo' | async
+            data?.versionName | formatvalue : view.formModel : 'versionName' | async
           "
         ></span>
       </div>
@@ -174,8 +174,8 @@
       [dataItem]="data"
       [formModel]="view.formModel"
       (clickMF)="clickMF($event, data)"
-      [isBookMark]="true"
-      type="hover"
+      [isBookMark]="false"
+      type="view"
     ></codx-mfunc>
   </div>
 </ng-template>
@@ -201,6 +201,35 @@
     <span
       [innerHTML]="
         data?.customerID | formatvalue : view.formModel : 'customerID' | async
+      "
+    ></span>
+  </div>
+</ng-template>
+<ng-template #templateTotalAmt let-data>
+  <div class="">
+    <span
+      [innerHTML]="
+        data?.totalAmt | formatvalue : view.formModel : 'totalAmt' | async
+      "
+    ></span>
+  </div>
+</ng-template>
+
+<ng-template #templateTotalSalesAmt let-data>
+  <div class="">
+    <span
+      [innerHTML]="
+        data?.totalSalesAmt | formatvalue : view.formModel : 'totalSalesAmt' | async
+      "
+    ></span>
+  </div>
+</ng-template>
+
+<ng-template #templateTotalTaxAmt let-data>
+  <div class="">
+    <span
+      [innerHTML]="
+        data?.totalTaxAmt | formatvalue : view.formModel : 'totalTaxAmt' | async
       "
     ></span>
   </div>

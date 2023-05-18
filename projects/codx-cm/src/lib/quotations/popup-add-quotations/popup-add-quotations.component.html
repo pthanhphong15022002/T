@@ -140,7 +140,7 @@
               field="versionName"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
-              [disable]="true"
+              [disabled]="true"
             ></codx-input>
           </div>
         </div>
@@ -285,7 +285,7 @@
         [allowSorting]="true"
         [dataSource]="listQuotationLines"
         [autoLoad]="false"
-        rowHeight="40"
+        rowHeight="25"
         predicates="TransID=@0"
         [dataValues]="quotations.recID"
         (cellChanged)="quotationsLineChanged($event)"
@@ -297,7 +297,7 @@
         <codx-mfunc
           [dataItem]="data"
           [formModel]="fmQuotationLines"
-          type="hover"
+          type="view"
           [isBookMark]="false"
           (clickMF)="clickMFQuotationLines($event, data)"
         ></codx-mfunc>
