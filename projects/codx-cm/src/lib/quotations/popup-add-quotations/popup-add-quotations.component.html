@@ -26,7 +26,7 @@
           </div>
         </div>
         <div class="ms-3 input-circle input-sm">
-          <div *ngIf="form?.formGroup">
+          <!-- <div *ngIf="form?.formGroup">
             <codx-input
               [Group]="form.formGroup"
               field="status"
@@ -35,7 +35,7 @@
               [disabled]="true"
             >
             </codx-input>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="d-flex justify-content-end me-3">
@@ -138,11 +138,16 @@
               [formModel]="form.formModel"
             ></codx-label>
             <codx-input
+              type="text"
+              crrValue="{{ quotations.versionNo + '.' + quotations.revision }}"
+              [disable]="true"
+            ></codx-input>
+            <!-- <codx-input
               field="versionNo"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               [disable]="true"
-            ></codx-input>
+            ></codx-input> -->
           </div>
         </div>
         <div class="col-6 row">
@@ -191,7 +196,7 @@
                 field="createdOn"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
-                (valueChange)="valueChangeDate($event)"
+                (valueChange)="valueChange($event)"
               ></codx-input>
             </div>
             <div class="form-group col-6">
@@ -203,7 +208,7 @@
                 field="deadline"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
-                (valueChange)="valueChangeDate($event)"
+                (valueChange)="valueChange($event)"
               ></codx-input>
             </div>
           </div>
@@ -217,7 +222,7 @@
               [formModel]="form.formModel"
             ></codx-label>
             <codx-input
-              field="customerID"
+              field="CustomerID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               [disabled]="disableRefID"
@@ -294,11 +299,12 @@
       ></codx-gridview-v2>
     </div>
     <ng-template #morefunction let-data>
-      <div class="has-action-menu" style="height: 30px; z-index: 1">
+      <div class="has-action-menu" style="height: 30px">
         <codx-mfunc
           [dataItem]="data"
           [formModel]="fmQuotationLines"
           type="hover"
+          [isBookMark]="false"
           (clickMF)="clickMFQuotationLines($event, data)"
         ></codx-mfunc>
       </div>

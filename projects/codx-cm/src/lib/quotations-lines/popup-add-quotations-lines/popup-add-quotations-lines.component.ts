@@ -34,7 +34,7 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
 
   ngOnInit(): void {}
   onSave() {
-    // this.quotationsLine['costAmt'] = ???
+    this.quotationsLine['revision'] += 1
     this.quotationsLine['netAmt'] =
       (this.quotationsLine['salesAmt'] ?? 0) -
       (this.quotationsLine['discAmt'] ?? 0) +

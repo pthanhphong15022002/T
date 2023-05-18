@@ -242,7 +242,8 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   valueChangeDate(e) {
     if (!e?.data || !e?.field) return;
-    this.quotations[e.field] = e.data?.fromDate;
+    //luc truoc add formDate 
+    this.quotations[e.field] = e.data?.fromDate??e?.data;
   }
 
   select(e) {}

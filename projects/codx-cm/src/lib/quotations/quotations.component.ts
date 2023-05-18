@@ -253,7 +253,8 @@ export class QuotationsComponent extends UIComponent {
   }
 
   openPopup(res) {
-    res.versionNo = res.versionNo??'V1.0';
+    res.versionNo = res.versionNo??'V1';
+    res.revision = res.revision??0;
     res.status = res.status??'0';
     res.exchangeRate = res.exchangeRate??1;
     res.totalAmt = res.totalAmt ?? 0;
