@@ -254,6 +254,10 @@ export class PopupAddJournalComponent
   onInputChange2(e): void {
     console.log('onInputChange2', e);
 
+    if (!e.data) {
+      return;
+    }
+
     if (e.field === 'periodID') {
       this.journal.fiscalYear = e.data.substring(0, 4);
 
@@ -690,9 +694,12 @@ export class PopupAddJournalComponent
   }
 
   findChangedProps(oldJournal: IJournal, newJournal: IJournal): string[] {
-    return Object.keys(oldJournal).filter(
-      (k) => oldJournal[k] !== newJournal[k]
-    );
+    return Object.keys(oldJournal).filter((k) => {
+      if (!oldJournal[k] && !newJournal[k]) {
+        return false;
+      }
+      return oldJournal[k] !== newJournal[k];
+    });
   }
 
   validateVll067(
