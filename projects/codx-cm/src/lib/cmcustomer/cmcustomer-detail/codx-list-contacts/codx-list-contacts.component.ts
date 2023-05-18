@@ -30,6 +30,7 @@ export class CodxListContactsComponent implements OnInit {
   @Input() objectID: any;
   @Input() funcID: any;
   @Input() objectName: any;
+  @Input() objectType: any;
   @Input() hidenMF = true;
   @Input() type = '';
   @Input() formModel: FormModel;
@@ -173,7 +174,7 @@ export class CodxListContactsComponent implements OnInit {
           dataContact: data,
           type: this.type,
           recIDCm: this.objectID,
-          objectType: this.funcID == 'CM0101' ? '1' : '3',
+          objectType: this.objectType,
           objectName: this.objectName,
           gridViewSetup: res,
           listContacts: this.listContacts,

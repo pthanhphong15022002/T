@@ -251,6 +251,7 @@
               <codx-list-contacts
                 [funcID]="funcID"
                 [objectID]="dataSelected.recID"
+                [objectType]="funcID == 'CM0101' ? '1' : '3'"
                 [objectName]="
                   funcID == 'CM0101'
                     ? dataSelected.customerName
