@@ -231,5 +231,11 @@
 </ng-template>
 
 <ng-template #address>
-  <H1>Địa chỉ nè</H1>
+  <codx-address-cm
+  [type]="'formDetail'"
+  [funcID]="'CM0101'"
+  [entityName]=""
+  [id]="dataSelected.recID"
+  (addressName)="addressName($event)"
+></codx-address-cm>
 </ng-template>
