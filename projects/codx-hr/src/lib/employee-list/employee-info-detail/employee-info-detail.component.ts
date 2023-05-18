@@ -2496,9 +2496,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       case this.eAccidentsFuncID:
         this.HandleEmployeeAccidentInfo(this.addHeaderText, 'add', null);
         break;
-      case this.eQuitJobFuncID:
-        this.HandleEmployeeQuitJobInfo(this.addHeaderText, 'add', null);
-        break;
+      // case this.eQuitJobFuncID:
+      //   this.HandleEmployeeQuitJobInfo(this.addHeaderText, 'add', null);
+      //   break;
     }
   }
 
@@ -3299,10 +3299,34 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       case this.healthInfoFuncID:
         this.lstBtnAdd = this.lstFuncHealth;
         break;
-      case this.quitJobInfoFuncID:
-        this.lstBtnAdd = this.lstFuncQuitJob;
-        break;
+      // case this.quitJobInfoFuncID:
+      //   this.lstBtnAdd = this.lstFuncQuitJob;
+      //   break;
     }
+  }
+
+  editEmployeeQuitJobInfo(actionHeaderText){
+    let option = new SidebarModel();
+    option.FormModel = this.eInfoFormModel;
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEquitjobComponent,
+      {
+        funcID: this.eQuitJobFuncID,
+        headerText:
+          actionHeaderText + ' ' + this.getFormHeader(this.ePartyFuncID),
+        employeeId: this.employeeID,
+        dataObj: this.infoPersonal,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res?.event) {
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
+    });
   }
 
   editEmployeePartyInfo(actionHeaderText) {
@@ -3746,32 +3770,32 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
-  HandleEmployeeQuitJobInfo(actionHeaderText, actionType: string, data: any) {
-    let option = new SidebarModel();
-    //option.DataService = this.passportGridview?.dataService;
-    option.FormModel = this.eInfoFormModel;
-    option.Width = '850px';
-    let dialogAdd = this.callfunc.openSide(
-      PopupEquitjobComponent,
-      {
-        actionType: actionType,
-        funcID: this.quitJobInfoFuncID,
-        headerText:
-          actionHeaderText + ' ' + this.getFormHeader(this.quitJobInfoFuncID),
-        employeeId: this.employeeID,
-        dataObj: data,
-      },
-      option
-    );
+  // HandleEmployeeQuitJobInfo(actionHeaderText, actionType: string, data: any) {
+  //   let option = new SidebarModel();
+  //   //option.DataService = this.passportGridview?.dataService;
+  //   option.FormModel = this.eInfoFormModel;
+  //   option.Width = '850px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     PopupEquitjobComponent,
+  //     {
+  //       actionType: actionType,
+  //       funcID: this.quitJobInfoFuncID,
+  //       headerText:
+  //         actionHeaderText + ' ' + this.getFormHeader(this.quitJobInfoFuncID),
+  //       employeeId: this.employeeID,
+  //       dataObj: data,
+  //     },
+  //     option
+  //   );
 
-    dialogAdd.closed.subscribe((res) => {
-      if (res?.event) {
-        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
-        this.df.detectChanges();
-        this.view.dataService.clear();
-      }
-    });
-  }
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (res?.event) {
+  //       this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+  //       this.df.detectChanges();
+  //       this.view.dataService.clear();
+  //     }
+  //   });
+  // }
 
   HandleEmployeeDayOffInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
@@ -5573,12 +5597,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   UpdateEDayOffsPredicate() {
     this.filterEDayoffPredicates = '';
     if (
-      this.filterByKowIDArr.length > 0 &&
+      this.filterByKowIDArr?.length > 0 &&
       this.startDateEDayoffFilterValue != null
     ) {
       this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
-      for (i; i < this.filterByKowIDArr.length; i++) {
+      for (i; i < this.filterByKowIDArr?.length; i++) {
         if (i > 0) {
           this.filterEDayoffPredicates += ' or ';
         }
