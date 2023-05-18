@@ -33,8 +33,8 @@ export class ProgressbarComponent implements OnInit, OnChanges {
   type: string = 'Circular';
   min: number = 0;
   max: number = 100;
-  startAngle: number = 180;
-  endAngle: number = 180;
+  startAngle: number = 0;
+  endAngle: number = 0;
   width: string = '55';
   height: string = '55';
   animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };

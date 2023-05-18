@@ -1,8 +1,9 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { UIComponent, DialogRef, FormModel, NotificationsService, AuthStore, DialogData, RequestOption } from 'codx-core';
+import { UIComponent, DialogRef, FormModel, NotificationsService, AuthStore, DialogData, RequestOption, ImageViewerComponent } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Deals, CM_Leads } from '../../models/cm_model';
 import { tmpInstances } from '../../models/tmpModel';
+import { recordEdited } from '@syncfusion/ej2-pivotview';
 
 @Component({
   selector: 'lib-popup-add-lead',
@@ -17,6 +18,7 @@ implements OnInit, AfterViewInit
 @ViewChild('tabGeneralSystemDetail') tabGeneralSystemDetail: TemplateRef<any>;
 @ViewChild('tabGeneralContactDetail') tabGeneralContactDetail: TemplateRef<any>;
 @ViewChild('tabGeneralAddressDetail') tabGeneralAddressDetail: TemplateRef<any>;
+@ViewChild('imageUpload') imageUpload: ImageViewerComponent;
 // setting values in system
 dialog: DialogRef;
 //type any
@@ -90,6 +92,7 @@ customerIDOld: any;
 instance: tmpInstances = new tmpInstances();
 instanceSteps: any;
 listInstanceSteps: any[] = [];
+avatarChange: boolean = false;
 
 constructor(
   private inject: Injector,
@@ -125,45 +128,46 @@ valueChangeDate($event) {
   }
 }
 
-saveOpportunity() {
+saveLead() {
 
-  if (!this.lead?.leadName?.trim()) {
-    this.notificationsService.notifyCode(
-      'SYS009',
-      0,
-      '"' + this.gridViewSetup['DealName']?.headerText + '"'
-    );
-    return;
-  }
-  if (!this.lead?.customerID) {
-    this.notificationsService.notifyCode(
-      'SYS009',
-      0,
-      '"' + this.gridViewSetup['CustomerID']?.headerText + '"'
-    );
-    return;
-  }
-  if(!this.lead?.owner){
-    this.notificationsService.notifyCode(
-      'SYS009',
-      0,
-      '"' + this.gridViewSetup['Owner']?.headerText + '"'
-    );
-    return;
-  }
-  var ischeck = true;
-  var ischeckFormat = true;
-  var title = '';
-  var messageCheckFormat = '';
+  // if (!this.lead?.leadName?.trim()) {
+  //   this.notificationsService.notifyCode(
+  //     'SYS009',
+  //     0,
+  //     '"' + this.gridViewSetup['DealName']?.headerText + '"'
+  //   );
+  //   return;
+  // }
+  // if (!this.lead?.customerID) {
+  //   this.notificationsService.notifyCode(
+  //     'SYS009',
+  //     0,
+  //     '"' + this.gridViewSetup['CustomerID']?.headerText + '"'
+  //   );
+  //   return;
+  // }
+  // if(!this.lead?.owner){
+  //   this.notificationsService.notifyCode(
+  //     'SYS009',
+  //     0,
+  //     '"' + this.gridViewSetup['Owner']?.headerText + '"'
+  //   );
+  //   return;
+  // }
+  // var ischeck = true;
+  // var ischeckFormat = true;
+  // var title = '';
+  // var messageCheckFormat = '';
 
-  if (!ischeck) {
-    this.notificationsService.notifyCode('SYS009', 0, '"' + title + '"');
-    return;
-  }
-  if (!ischeckFormat) {
-    this.notificationsService.notifyCode(messageCheckFormat);
-    return;
-  }
+  // if (!ischeck) {
+  //   this.notificationsService.notifyCode('SYS009', 0, '"' + title + '"');
+  //   return;
+  // }
+  // if (!ischeckFormat) {
+  //   this.notificationsService.notifyCode(messageCheckFormat);
+  //   return;
+  // }
+  this.onAdd();
 }
 cbxChange($event, field) {
   if ($event) {
@@ -177,11 +181,23 @@ valueChangeOwner($event) {
   }
 }
 onAdd() {
+//  var data = this.lead;
   this.dialog.dataService
     .save((option: any) => this.beforeSave(option), 0)
     .subscribe((res) => {
       if (res) {
-        this.dialog.close(res.save[0]);
+        var recID = res?.save?.recID;
+        if (this.avatarChange) {
+          this.imageUpload
+            .updateFileDirectReload(recID)
+            .subscribe((result) => {
+              if (result) {
+                this.dialog.close([res.save]);
+                return;
+              }
+            });
+          }
+      this.dialog.close([res.save]);
       } else this.dialog.close();
     });
 }
@@ -197,8 +213,8 @@ onEdit() {
 beforeSave(option: RequestOption) {
   var data = this.lead;
   option.methodName =
-    this.action !== this.actionEdit ? 'AddDealAsync' : 'EditDealAsync';
-  option.className = 'DealsBusiness';
+    this.action !== this.actionEdit ? 'AddLeadAsync' : '';
+  option.className = 'LeadsBusiness';
   option.data = this.action != this.actionEdit ? data : [data, this.customerIDOld];
   return true;
 }
@@ -210,6 +226,7 @@ ngAfterViewInit(): void {
 async executeApiCalls() {
   try {
     await this.getGridView(this.formModel);
+    this.action != this.actionEdit && await this.getAutoNumber(this.formModel);
   } catch (error) {
     console.error('Error executing API calls:', error);
   }
@@ -222,6 +239,19 @@ async getGridView(formModel) {
         this.gridViewSetup = res;
       }
     });
+}
+async getAutoNumber(formModel){
+  this.codxCmService
+  .getAutonumber(
+    formModel.funcID,
+    formModel.entityName,'DealID'
+  )
+  .subscribe((leadID) => {
+
+    if(leadID) {
+      this.lead.leadID = leadID;
+    }
+  });
 }
 
 // Đợi chị khanh thiết lập xong
@@ -256,9 +286,14 @@ setTitle(e: any) {
   this.changeDetectorRef.detectChanges();
 }
 
-changeAvatar(){
-
+changeAvatar() {
+  this.avatarChange = true;
 }
+lstAddressEmit($event) {}
+lstAddressDeleteEmit($event) {}
 
+
+lstContactDeleteEmit($event){}
+lstContactEmit($event){}
 }
 

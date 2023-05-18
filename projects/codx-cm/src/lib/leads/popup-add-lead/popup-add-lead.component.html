@@ -22,9 +22,9 @@
           </codx-label>
           <codx-input
             field="leadID"
+            type="text"
+            [crrValue]="lead?.leadID"
             [disabled]="true"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
           ></codx-input>
         </div>
         <div class="form-group">
@@ -142,8 +142,16 @@
     </div>
   </div>
   <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Note" > </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="note"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
-
     <codx-input
       [formModel]="form.formModel"
       [Group]="form.formGroup"
@@ -159,7 +167,7 @@
     <button
       type="button"
       class="btn btn-primary ms-1"
-      (click)="saveOpportunity()"
+      (click)="saveLead()"
     >
       <codx-label default="Lưu"></codx-label>
     </button>
@@ -222,7 +230,6 @@
     <h4>
       <codx-label
         [formModel]="form.formModel"
-        fiedName="LeadID"
         [Group]="form.formGroup"
         default="Thông tin bổ sung"
       >
@@ -242,7 +249,7 @@
           <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="headcounts"
+          field="industries"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -303,7 +310,7 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label
-            fiedName="Industries"
+            fiedName="CustomerResource"
             default="Nguồn dữ liệu"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
@@ -313,7 +320,7 @@
           <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="headcounts"
+          field="customerResource"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -382,14 +389,14 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label
-            fiedName="Industries"
-            default="Phân khúc"
+            fiedName="SalespersonID"
+            default="Nhân viên bán hàng"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
           >
           </codx-label>
           <codx-input
-            field="Headcounts"
+            field="salespersonID"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
@@ -416,36 +423,32 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            fiedName="SalespersonID"
-            default="Nhân viên bán hàng"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          >
-          </codx-label>
-          <codx-input
-            field="salespersonID"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
-    </div>
   </div>
 
 </ng-template>
 
 <ng-template #contact>
-  <h1>helllo 2</h1>
+  <codx-list-contacts
+  (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
+  (lstContactEmit)="lstContactEmit($event)"
+  [funcID]="formModel.funcID"
+  [objectID]="lead?.recID"
+  [objectType]="'2'"
+  [objectName]="lead?.leadName"
+  [hidenMF]="false"
+  [type]="'formAdd'"
+></codx-list-contacts>
 </ng-template>
 
 <ng-template #address>
-  <h1>helllo 3</h1>
+  <codx-address-cm
+  (lstAddressEmit)="lstAddressEmit($event)"
+  (lstAddressDeleteEmit)="lstAddressDeleteEmit($event)"
+  [type]="'formAdd'"
+  [funcID]="formModel.funcID"
+  [entityName]="dialog.formModel.entityName"
+  [id]="lead.recID"
+></codx-address-cm>
 </ng-template>
 <!-- <codx-form
   #form

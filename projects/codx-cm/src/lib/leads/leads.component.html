@@ -28,7 +28,7 @@
     [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
-    [title]="'Công ty CPTH Lạc việt'"
+    [title]="data.leadName"
     [descTmp]="descTmp"
     [body]="footer"
     [formModel]="view.formModel"
@@ -73,8 +73,8 @@
               : formModel
               : 'businessLineID'
               : businessLineID
-              : 'CMDeals'
-              : 'grvCMDeals'
+              : 'CMLeads'
+              : 'grvCMLeads'
             | async
         "
       ></span>
@@ -95,15 +95,15 @@
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
         class="fs-7"
-        #endDate
+        #createdOn
         [innerHTML]="
-        data.endDate
+        data.createdOn
             | formatvalue
               : formModel
-              : 'endDate'
-              : endDate
-              : 'CMDeals'
-              : 'grvCMDeals'
+              : 'createdOn'
+              : createdOn
+              : 'CMLeads'
+              : 'grvCMLeads'
             | async
         "
       ></span>

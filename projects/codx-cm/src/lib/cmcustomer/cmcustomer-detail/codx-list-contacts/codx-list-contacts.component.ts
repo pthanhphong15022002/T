@@ -33,6 +33,7 @@ export class CodxListContactsComponent implements OnInit {
   @Input() objectType: any;
   @Input() hidenMF = true;
   @Input() type = '';
+  @Input() isConvertLeadToCus = false;
   @Input() formModel: FormModel;
   @Output() lstContactEmit = new EventEmitter<any>();
   @Output() lstContactDeleteEmit = new EventEmitter<any>();

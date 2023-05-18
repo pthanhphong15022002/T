@@ -404,17 +404,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.assignTask(e.data, task);
         break;
       case 'DP20': // tien do
-        // this.openUpdateProgress(task);
-        // this.openPopupUpdateProgress(task);
         this.openPopupUpdateProgress(task,'T');
         break;
     }
   }
-
-  // openPopupUpdateProgress(data){
-  //   this.isOpenPopupProgress = true;
-  //   this.dataPopupProgress = data;
-  // }
 
   clickMFTaskGroup(e: any, group: any) {
     switch (e.functionID) {
@@ -427,7 +420,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       case 'SYS04': //copy
         this.copyGroupTask(group);
         break;
-      case 'DP08': //
+      case 'DP08': //them task
         // this.groupTaskID = group?.refID;
         // this.openTypeTask();
         break;
@@ -435,7 +428,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         // this.viewTask(group, 'G');
         break;
       case 'DP20': //Progress
-        // this.openUpdateProgress(group);
+      this.openPopupUpdateProgress(group,'T');
         break;
     }
   }
@@ -759,7 +752,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async openPopupUpdateProgress(data, type){
     let dataInput = {
       data,
-      type
+      type,
+      step: this.currentStep,
     };
     let popupTask = this.callfc.openForm(
       UpdateProgressComponent,'',
@@ -768,6 +762,23 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       dataInput);
 
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
+    let dataProgress = dataPopupOutput?.event;
+    if(dataProgress){
+      if(dataProgress?.type == 'T'){
+        data.progress = dataProgress?.progressTask;
+        data.note = dataProgress?.note;
+        data.actualEnd = dataProgress?.actualEnd;
+        if(dataProgress?.isUpdate){
+          
+        }
+      }
+      if(dataProgress?.type == 'G'){
+        data.progress = dataProgress?.progressGroupTask;
+      }
+      if(dataProgress?.type == 'P'){
+        data.progress = dataProgress?.progressStep;
+      }
+    }    
     return dataPopupOutput;
   }
 }
