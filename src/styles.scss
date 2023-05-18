@@ -2885,3 +2885,10 @@ codx-toolbar-report{
 .cal-notes .checkbox-list {
   padding: 7px 16px;
 }
+
+.e-gantt-splitter table tr{
+  height: 40px!important;
+}
+.e-gantt-splitter table tr.e-chart-row div{
+  height: 40px!important;
+}
