@@ -2,8 +2,7 @@
   <div class="d-flex" *ngIf="!hidenMF">
     <button
       type="button"
-      class="btn btn-sm btn-icon btn-primary me-2 d-flex"
-      style="min-width: 180px"
+      class="btn btn-sm btn-primary me-2"
       (click)="isButton ? clickPopupContacts() : null"
     >
       <i class="icon-check-correct icon-16 me-1"></i>
@@ -15,8 +14,7 @@
     </button>
     <button
       type="button"
-      class="btn btn-sm btn-icon btn-primary d-flex"
-      style="min-width: 180px"
+      class="btn btn-sm btn-primary"
       (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
     >
       <i class="icon-person_add_alt_1 icon-16 me-1"></i>
@@ -31,7 +29,7 @@
 
 <ng-container *ngIf="loaded">
   <div
-    class="mt-2"
+    class="codx-listcontact pb-10"
     *ngIf="listContacts != null && listContacts.length > 0; else noData"
   >
     <div *ngFor="let item of listContacts">

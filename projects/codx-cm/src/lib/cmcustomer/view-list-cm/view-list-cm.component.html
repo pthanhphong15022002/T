@@ -1,4 +1,4 @@
-<div class="p-3 rounded-2" *ngIf="dataSelected; else noData">
+<div class="px-3 py-4 mx-3 border-bottom" *ngIf="dataSelected; else noData">
   <ng-container
     [ngTemplateOutlet]="customers"
     [ngTemplateOutletContext]="{ $implicit: dataSelected }"
@@ -22,14 +22,14 @@
   </div>
 </ng-template>
 <ng-template #customers let-data>
-  <div class="d-flex justify-content-between" (dblclick)="dbClick(data)">
+  <div class="d-flex align-items-center justify-content-between" (dblclick)="dbClick(data)">
     <div class="w-100 pe-6">
       <codx-temp-full
-        cardCss="card-template p-3 list-task"
+        cardCss="card-template list-task"
         [imageId]="data.recID"
         [imageObjName]="getNameCrm(data)"
-        [imageWidth]="40"
-        imgCss="me-3"
+        [imageWidth]="35"
+        imgCss="me-4"
         [imageObjType]="entityName"
         [titleTmp]="titleTmp"
         [titleCss]="'fs-6'"
@@ -41,7 +41,7 @@
       </codx-temp-full>
       <ng-template #titleTmp let-data>
         <div class="d-flex align-items-center mb-1 min-w-350px">
-          <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1 me-2">
+          <div class="text-dark line-clamp line-clamp-1 me-2">
             {{
               funcID == "CM0101"
                 ? data.customerName
@@ -53,15 +53,15 @@
             }}
           </div>
           <div class="d-flex align-items-center" *ngIf="data.isBlackList">
-            <span class="icon-do_disturb_alt icon-16"></span>
+            <span class="icon-do_disturb_alt icon-16 ms-3"></span>
           </div>
         </div>
       </ng-template>
       <ng-template #descTmp let-data>
-        <div class="d-flex flex-column">
-          <div class="mb-1" *ngIf="dataSelected.address">
+        <div class="d-flex flex-column mb-1">
+          <div class="d-flex align-items-top mb-1" *ngIf="dataSelected.address">
             <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
-            <span class="text-gray-900">{{ dataSelected.address }}</span>
+            <span class="text-gray-700">{{ dataSelected.address }}</span>
           </div>
           <div *ngIf="funcID != 'CM0102'">
             <codx-tag
@@ -75,7 +75,7 @@
         </div>
       </ng-template>
     </div>
-    <div class="w-100 pe-6" *ngIf="funcID == 'CM0102'">
+    <div class="w-250px min-w-250px pe-6" *ngIf="funcID == 'CM0102'">
       <div class="col-6 d-flex align-items-center" *ngIf="data?.mobile">
         <span
           [ngClass]="
@@ -83,7 +83,7 @@
               ? 'icon-phone_android text-primary'
               : 'icon-phonelink_erase'
           "
-          class="icon-16 me-1"
+          class="icon-16 me-2"
         ></span>
         <span
           [ngClass]="data?.allowCall ? 'text-primary' : ''"
@@ -96,7 +96,7 @@
           [ngClass]="
             data?.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'
           "
-          class="icon-16 me-1 text-gray-900"
+          class="icon-16 me-2 text-gray-900"
         ></span>
         <span
           [ngClass]="data?.allowEmail ? 'text-primary' : ''"
@@ -105,7 +105,7 @@
         >
       </div>
     </div>
-    <div *ngIf="funcID != 'CM0102'" class="w-250px min-w-250px">
+    <div *ngIf="funcID != 'CM0102'" class="w-250px min-w-250px me-6">
       <!-- <div
         class="d-flex justify-content-start col-5"
         *ngIf="
@@ -135,7 +135,7 @@
                         ? 'icon-phone_android text-primary'
                         : 'icon-phonelink_erase'
                     "
-                    class="icon-16 me-1"
+                    class="icon-18 me-1"
                   ></span>
                   <span
                     [ngClass]="contactPerson?.allowCall ? 'text-primary' : ''"
@@ -150,7 +150,7 @@
                         ? 'icon-email text-primary'
                         : 'icon-print_disabled'
                     "
-                    class="icon-16 me-1 text-gray-900"
+                    class="icon-18 me-1 text-gray-900"
                   ></span>
                   <span
                     [ngClass]="contactPerson?.allowEmail ? 'text-primary' : ''"
@@ -163,9 +163,9 @@
           </div>
         </div>
       </div> -->
-      <div class="me-3" *ngIf="data?.industries">
-        <div class="d-flex ms-3">
-          <span class="icon-work_outline icon-16 me-1 text-gray-500"></span>
+      <div *ngIf="data?.industries">
+        <div class="d-flex align-items-top ms-3">
+          <span class="icon-work_outline icon-18 me-2 text-gray-700"></span>
           <div>
             <div
               *ngFor="let item of data?.industries.split(';'); index as i"
@@ -187,10 +187,10 @@
         </div>
       </div>
     </div>
-    <div *ngIf="funcID == 'CM0102'">
+    <div class="w-250px min-w-250px me-6" *ngIf="funcID == 'CM0102'">
       <div class="d-flex flex-column">
-        <div class="mb-1">
-          <span class="icon-corporate_fare text-primary icon-16 me-1"></span>
+        <div class="d-flex align-items-top mb-1">
+          <span class="icon-corporate_fare icon-16 me-1"></span>
           <span
             [innerHTML]="
               dataSelected?.objectName
@@ -222,15 +222,16 @@
     </div>
     <div
       *ngIf="funcID != 'CM0102'"
-      class="d-flex justify-content-end align-items-top w-150px min-w-150px"
+      class="d-flex justify-content-end align-items-center w-150px min-w-150px"
     >
+    <div class="me-4 d-flex align-items-center">
       <span
         *ngIf="funcID == 'CM0103'"
-        class="icon-date_range icon-18 text-gray-700 me-2"
+        class="icon-date_range icon-18 text-gray-500 me-2"
       ></span>
       <span
         *ngIf="funcID == 'CM0103'"
-        class="me-5"
+        class="text-gray-900"
         [innerHTML]="
           dataSelected?.partnerFrom
             | formatvalue : formModel : 'PartnerFrom'
@@ -238,29 +239,39 @@
         "
       >
       </span>
+    </div>
+    <div class="me-4 d-flex align-items-center">    
       <span
         *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
-        class="icon-contact_phone icon-18 text-gray-700 me-2"
+        class="icon-contact_phone icon-18 text-gray-500 me-2"
       ></span>
-      <span
-        *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
-        class="icon-18 text-gray-700"
-        >{{ listContacts.length }}</span
-      >
-      <span
+        <span
+          *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
+          class="text-gray-900"
+          >{{ listContacts.length }}</span
+        >
+    </div>
+
+    <div
         *ngIf="funcID == 'CM0101'"
-        class="icon-add_shopping_cart icon-18 text-gray-700 me-2"
-        >{{ countDeal }}</span
-      >
-      <span
-        *ngIf="funcID == 'CM0101'"
-        class="icon-shopping_bag icon-18 text-gray-700 me-2"
-        >0</span
-      >
-      <span
+        class="d-flex align-items-center me-4"
+    >
+        <span class="icon-add_shopping_cart icon-18 text-gray-500 me-2"></span>
+        <span class="text-gray-900">{{ countDeal }}</span>
+    </div>
+
+      <div *ngIf="funcID == 'CM0101'" class="d-flex align-items-center me-4">
+        <span class="icon-shopping_bag icon-18 text-gray-500 me-2"></span>
+        <span class="text-gray-900">0</span>
+      </div>
+
+      <div
         *ngIf="funcID == 'CM0104'"
-        class="icon-shopping_cart icon-18 text-gray-700 me-2"
-        >{{countDealCompetitor}}</span
+        class="d-flex align-items-center me-2"
+        >
+          <span class="icon-shopping_cart icon-18 text-gray-500 me-2"></span>
+          <span class="text-gray-900">{{countDealCompetitor}}</span>
+        </div
       >
     </div>
     <div class="w-10px min-w-10px">
