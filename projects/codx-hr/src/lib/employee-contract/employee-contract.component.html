@@ -64,7 +64,7 @@
           <div class="text-gray-700">
             <span
               [innerHTML]="
-              data?.emp?.orgUnitID
+              data?.orgUnitID
                   | formatvalue : view.formModel : 'orgUnitID'
                   | async
               "
@@ -131,6 +131,26 @@
       </div>
     </div>
 
+    <ng-template  #popIsNewest>
+      <span>
+        <codx-label
+          name="lblIsCurrent"
+          [formModel]="view.formModel"
+          default="Mới nhất"
+        ></codx-label>
+      </span>
+    </ng-template>
+  
+    <ng-template #popOverDue>
+      <span>
+        <codx-label
+          name="lblOverDue"
+          [formModel]="view.formModel"
+          default="Đã quá hạn!"
+        ></codx-label>
+      </span>
+    </ng-template>
+
     <div class="w-30 min-w-200px px-2">
       <div class="d-flex flex-row">
         <codx-vll
@@ -143,12 +163,31 @@
           ngClass="badge badge-sm"
         >
         </codx-vll>
-        
-        <span *ngIf="data?.isCurrent && !data?.isExpire" class="badge badge-sm text-primary badge-light">
-          Mới nhất
+        <span *ngIf="data?.isCurrent && !data?.isExpire" class="badge badge-sm text-primary">
+          <span
+          [style.color]="'#0078FF'"
+          [style.background]="''"
+          class="icon-bookmark icon-18"
+          [ngbPopover]="popIsNewest"
+          #popOver="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="popOver.open()"
+          (mouseleave)="popOver.close()"
+          placement="left"
+        >
         </span>
-        <span *ngIf="data?.isCurrent && data?.isExpire" class="badge badge-sm text-primary badge-light">
-          Hết hạn
+        </span>
+        <span *ngIf="data?.isCurrent && data?.isExpire" class="badge badge-sm text-primary">
+          <span class="icon-notifications icon-18"
+          [style.color]="'#F64E60'"
+          [ngbPopover]="popOverDue"
+          #p="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="p.open()"
+          (mouseleave)="p.close()"
+          placement="left"
+        >
+        </span>
         </span>
 
       </div>
@@ -238,22 +277,6 @@
   </div>
 </ng-template>
 
-<ng-template #eInfoTemplate let-data>
-  <div class="row">
-    <div class="fw-bold fs-6 text-dark">
-      {{ data?.emp?.employeeName }}
-    </div>
-
-    <div class="fw-bold fs-6 text-dark">
-      {{ data?.emp?.employeeName }}
-    </div>
-
-    <div class="fw-bold fs-6 text-dark">
-      {{ data?.emp?.employeeName }}
-    </div>
-  </div>
-</ng-template>
-
 <ng-template #contractTemplate let-data>
   <div>
     <div>data?.contractTypeID</div>
@@ -301,7 +324,7 @@
       <div class="fs-7 text-gray-600">
         <span
           [innerHTML]="
-            data?.emp?.positionID
+            data?.positionID
               | formatvalue : view.formModel : 'PositionID'
               | async
           "
@@ -317,7 +340,7 @@
           <span
             [title]="eContractHeaderText.ContractTypeID"
             [innerHTML]="
-              data.contractTypeID
+              data?.contractTypeID
                 | formatvalue : view.formModel : 'contractTypeID'
                 | async
             "

@@ -59,70 +59,6 @@
           </div>
           <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
             <div
-              class="d-flex align-items-center mt-3"
-              *ngIf="WP_NotesParam != null"
-            >
-              <div class="w-5px me-2">
-                <li
-                  [style.background-color]="WP_NotesParam?.ShowColor"
-                  [style.color]="WP_NotesParam?.ShowColor"
-                ></li>
-              </div>
-              <div class="w-100 show-list-event">
-                <codx-label
-                  name="lblNote"
-                  formName="WP_Notes"
-                  default="Ghi chú"
-                ></codx-label>
-              </div>
-              <div
-                class="show-event-check me-2 w-50px d-flex justify-content-end"
-              >
-                <codx-input
-                  type="checkbox"
-                  field="WP_Notes"
-                  [checked]="WP_NotesParam.ShowEvent == '1'"
-                  labelPosition="Before"
-                  [disabled]="false"
-                  class="test-check"
-                  (valueChange)="valueChangeSetting($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div
-              class="d-flex mt-3 align-items-center"
-              *ngIf="TM_TasksParam != null"
-            >
-              <div class="w-5px me-2">
-                <li
-                  [style.background-color]="TM_TasksParam?.ShowColor"
-                  [style.color]="TM_TasksParam?.ShowColor"
-                ></li>
-              </div>
-              <div class="show-list-event w-100">
-                <codx-label
-                  name="lblTask"
-                  formName="WP_Task"
-                  default="Công việc cá nhân"
-                ></codx-label>
-              </div>
-              <div
-                class="show-event-check me-2 w-50px d-flex justify-content-end"
-              >
-                <codx-input
-                  type="checkbox"
-                  field="TM_Tasks"
-                  [checked]="TM_TasksParam.ShowEvent == '1'"
-                  labelPosition="Before"
-                  [disabled]="false"
-                  class="test-check"
-                  (valueChange)="valueChangeSetting($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div
               class="d-flex mt-3 align-items-center"
               *ngIf="CO_MeetingsParam != null"
             >
@@ -136,7 +72,7 @@
                 <codx-label
                   name="lblMeeting"
                   formName="CO_Meetings"
-                  default="Lịch họp cá nhân"
+                  default="Lịch họp"
                 >
                 </codx-label>
               </div>
@@ -147,39 +83,6 @@
                   type="checkbox"
                   field="CO_Meetings"
                   [checked]="CO_MeetingsParam.ShowEvent == '1'"
-                  labelPosition="Before"
-                  [disabled]="false"
-                  class="test-check"
-                  (valueChange)="valueChangeSetting($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div
-              class="d-flex mt-3 align-items-center"
-              *ngIf="EP_BookingRoomsParam != null"
-            >
-              <div class="w-5px me-2">
-                <li
-                  [style.background-color]="EP_BookingRoomsParam?.ShowColor"
-                  [style.color]="EP_BookingRoomsParam?.ShowColor"
-                ></li>
-              </div>
-              <div class="show-list-event w-100">
-                <codx-label
-                  name="lblBookingRoom"
-                  formName="EP_BookingRooms"
-                  default="Đặt phòng"
-                >
-                </codx-label>
-              </div>
-              <div
-                class="show-event-check me-2 w-50px d-flex justify-content-end"
-              >
-                <codx-input
-                  type="checkbox"
-                  field="EP_BookingRooms"
-                  [checked]="EP_BookingRoomsParam.ShowEvent == '1'"
                   labelPosition="Before"
                   [disabled]="false"
                   class="test-check"
@@ -213,6 +116,70 @@
                   type="checkbox"
                   field="EP_BookingCars"
                   [checked]="EP_BookingCarsParam.ShowEvent == '1'"
+                  labelPosition="Before"
+                  [disabled]="false"
+                  class="test-check"
+                  (valueChange)="valueChangeSetting($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+            <div
+              class="d-flex mt-3 align-items-center"
+              *ngIf="TM_TasksParam != null"
+            >
+              <div class="w-5px me-2">
+                <li
+                  [style.background-color]="TM_TasksParam?.ShowColor"
+                  [style.color]="TM_TasksParam?.ShowColor"
+                ></li>
+              </div>
+              <div class="show-list-event w-100">
+                <codx-label
+                  name="lblTask"
+                  formName="WP_Task"
+                  default="Công việc"
+                ></codx-label>
+              </div>
+              <div
+                class="show-event-check me-2 w-50px d-flex justify-content-end"
+              >
+                <codx-input
+                  type="checkbox"
+                  field="TM_Tasks"
+                  [checked]="TM_TasksParam.ShowEvent == '1'"
+                  labelPosition="Before"
+                  [disabled]="false"
+                  class="test-check"
+                  (valueChange)="valueChangeSetting($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+            <div
+              class="d-flex align-items-center mt-3"
+              *ngIf="WP_NotesParam != null"
+            >
+              <div class="w-5px me-2">
+                <li
+                  [style.background-color]="WP_NotesParam?.ShowColor"
+                  [style.color]="WP_NotesParam?.ShowColor"
+                ></li>
+              </div>
+              <div class="w-100 show-list-event">
+                <codx-label
+                  name="lblNote"
+                  formName="WP_Notes"
+                  default="Ghi chú"
+                ></codx-label>
+              </div>
+              <div
+                class="show-event-check me-2 w-50px d-flex justify-content-end"
+              >
+                <codx-input
+                  type="checkbox"
+                  field="WP_Notes"
+                  [checked]="WP_NotesParam.ShowEvent == '1'"
                   labelPosition="Before"
                   [disabled]="false"
                   class="test-check"
@@ -266,14 +233,14 @@
               <div class="float-element">
                 <codx-label
                   fiedName="TM_MyTasks"
-                  default="Công việc cá nhân"
+                  default="Công việc"
                   class="fw-bold"
                 ></codx-label>
               </div>
               <div class="float-element">
                 <codx-label
                   fiedName="CO_Meetings"
-                  default="Lịch họp cá nhân"
+                  default="Lịch họp"
                   class="fw-bold"
                 ></codx-label>
               </div>
