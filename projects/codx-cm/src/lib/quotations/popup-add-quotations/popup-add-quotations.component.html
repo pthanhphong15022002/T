@@ -129,25 +129,19 @@
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               [crrValue]="quotations.quotationName"
-              (valueChange)="controlBlur($event)"
             ></codx-input>
           </div>
           <div class="form-group col-3">
             <codx-label
-              fiedName="VersionNo"
+              fiedName="VersionName"
               [formModel]="form.formModel"
             ></codx-label>
             <codx-input
-            type="text"
-            crrValue="{{quotations.versionNo + '.'+ quotations.revision}}"
-            [disable]="true"
-          ></codx-input>
-            <!-- <codx-input
-              field="versionNo"
+              field="versionName"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               [disable]="true"
-            ></codx-input> -->
+            ></codx-input>
           </div>
         </div>
         <div class="col-6 row">
@@ -299,11 +293,12 @@
       ></codx-gridview-v2>
     </div>
     <ng-template #morefunction let-data>
-      <div class="has-action-menu" style="height: 30px; z-index: 1">
+      <div class="has-action-menu" style="height: 30px">
         <codx-mfunc
           [dataItem]="data"
           [formModel]="fmQuotationLines"
           type="hover"
+          [isBookMark]="false"
           (clickMF)="clickMFQuotationLines($event, data)"
         ></codx-mfunc>
       </div>
@@ -349,8 +344,8 @@
             </div>
             <div
               [innerHTML]="
-                quotations.totalAmt
-                  | formatvalue : form.formModel : 'TotalAmt'
+                quotations.totalSalesAmt
+                  | formatvalue : form.formModel : 'totalSalesAmt'
                   | async
               "
             ></div>

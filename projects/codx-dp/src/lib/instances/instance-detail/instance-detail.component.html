@@ -331,8 +331,7 @@
                   [isUpdate]="
                     dataSelect.write &&
                     !dataSelect.closed &&
-                    (dataSelect.status == '1' || dataSelect.status == '2') &&
-                    item.stepStatus < '2'
+                    (dataSelect.status == '1' || dataSelect.status == '2') 
                   "
                   [currentElmID]="currentElmID"
                   (inputElmIDCF)="inputElmIDCustomField($event)"
