@@ -68,6 +68,7 @@ import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-eco
 import { PopupEProcessContractComponent } from '../../employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { PopupForeignWorkerComponent } from '../../employee-profile/popup-foreign-worker/popup-foreign-worker.component';
 import { PopupViewAllComponent } from './pop-up/popup-view-all/popup-view-all.component';
+import { PopupEquitjobComponent } from '../../employee-profile/popup-equitjob/popup-equitjob.component';
 
 @Component({
   selector: 'lib-employee-info-detail',
@@ -504,6 +505,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   eContractFuncID = 'HRTEM0501';
   eDisciplineFuncID = 'HRTEM0702';
   eDiseasesFuncID = 'HRTEM0803';
+  eQuitJobFuncID = 'HRTEM0901'
   eAccidentsFuncID = 'HRTEM0804';
   eNeedToSubmitProfileFuncID = 'HRTEM0304';
   //#endregion
@@ -520,6 +522,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   eInfoFormModel: FormModel; // Thông tin bản thân/ Bảo hiểm
   eFamilyFormModel: FormModel; //Quan hệ gia đình
   ePassportFormModel: FormModel; //Hộ chiếu
+  eQuitJobFormModel: FormModel; //Hộ chiếu
   eVisaFormModel: FormModel;
   eWorkPermitFormModel: FormModel; //Giay phep lao dong
   eCertificateFormModel: FormModel; // Chứng chỉ
@@ -874,6 +877,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     this.hrService.getFormModel(this.eWorkPermitFuncID).then((res) => {
       this.eWorkPermitFormModel = res;
     });
+
+    this.hrService.getFormModel(this.quitJobInfoFuncID).then((res) => {
+      console.log('formModel thoi viec', res);
+      this.eQuitJobFormModel = res;
+    })
 
     this.hrService.getFormModel(this.eExperienceFuncID).then((res) => {
       this.eExperienceFormModel = res;
@@ -1846,13 +1854,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       });
 
       // Asset
-      if (!this.lstAsset)
-        this.hrService.LoadListEAsset(this.employeeID).subscribe((res) => {
-          if (res) {
-            this.lstAsset = res;
-            this.df.detectChanges();
-          }
-        });
+      // if (!this.lstAsset)
+      //   this.hrService.LoadListEAsset(this.employeeID).subscribe((res) => {
+      //     if (res) {
+      //       this.lstAsset = res;
+      //       this.df.detectChanges();
+      //     }
+      //   });
     }
     if (!this.jobSalaryColumnGrid) {
       //#region get columnGrid EJobSalary - Lương chức danh
@@ -2188,7 +2196,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       rqContract.pageSize = 1;
 
       this.hrService.getCrrEContract(rqContract).subscribe((res) => {
-        debugger;
         if (res && res[0]) {
           this.crrEContract = res[0][0];
         } else {
@@ -2489,6 +2496,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       case this.eAccidentsFuncID:
         this.HandleEmployeeAccidentInfo(this.addHeaderText, 'add', null);
         break;
+      // case this.eQuitJobFuncID:
+      //   this.HandleEmployeeQuitJobInfo(this.addHeaderText, 'add', null);
+      //   break;
     }
   }
 
@@ -3289,7 +3299,34 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       case this.healthInfoFuncID:
         this.lstBtnAdd = this.lstFuncHealth;
         break;
+      // case this.quitJobInfoFuncID:
+      //   this.lstBtnAdd = this.lstFuncQuitJob;
+      //   break;
     }
+  }
+
+  editEmployeeQuitJobInfo(actionHeaderText){
+    let option = new SidebarModel();
+    option.FormModel = this.eInfoFormModel;
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEquitjobComponent,
+      {
+        funcID: this.eQuitJobFuncID,
+        headerText:
+          actionHeaderText + ' ' + this.getFormHeader(this.ePartyFuncID),
+        employeeId: this.employeeID,
+        dataObj: this.infoPersonal,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res?.event) {
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
+    });
   }
 
   editEmployeePartyInfo(actionHeaderText) {
@@ -3732,6 +3769,33 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.df.detectChanges();
     });
   }
+
+  // HandleEmployeeQuitJobInfo(actionHeaderText, actionType: string, data: any) {
+  //   let option = new SidebarModel();
+  //   //option.DataService = this.passportGridview?.dataService;
+  //   option.FormModel = this.eInfoFormModel;
+  //   option.Width = '850px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     PopupEquitjobComponent,
+  //     {
+  //       actionType: actionType,
+  //       funcID: this.quitJobInfoFuncID,
+  //       headerText:
+  //         actionHeaderText + ' ' + this.getFormHeader(this.quitJobInfoFuncID),
+  //       employeeId: this.employeeID,
+  //       dataObj: data,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (res?.event) {
+  //       this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+  //       this.df.detectChanges();
+  //       this.view.dataService.clear();
+  //     }
+  //   });
+  // }
 
   HandleEmployeeDayOffInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
@@ -4253,7 +4317,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      debugger;
       if (!res?.event) this.view.dataService.clear();
       else if (res.event) {
         if (res.event.isCurrent == true) {
@@ -5219,7 +5282,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       (this.eAssetGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEAssetPredicates],
-          [this.filterByAssetCatIDArr.join(';')]
+          [this.filterByAssetCatIDArr]
         )
         .subscribe();
     } else if (
@@ -5228,7 +5291,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     ) {
       this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}" and IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}")`;
       (this.eAssetGrid.dataService as CRUDService)
-        .setPredicates([this.filterEAssetPredicates], [])
+        .setPredicates(["time"], [this.employeeID,this.startDateEAssetFilterValue,this.endDateEAssetFilterValue])
         .subscribe();
       console.log('truong hop 3', this.filterEAssetPredicates);
     } else if (
@@ -5239,7 +5302,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}")`;
       console.log('truong hop 4', this.filterEAssetPredicates);
       (this.eAssetGrid.dataService as CRUDService)
-        .setPredicates([this.filterEAssetPredicates], [''])
+        .setPredicates([this.filterEAssetPredicates], [this.employeeID])
         .subscribe();
     }
   }
@@ -5265,7 +5328,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }
   }
   valueChangeYearFilterEAsset(evt) {
-    console.log('chon year', evt);
     if (evt.formatDate == undefined && evt.toDate == undefined) {
       this.startDateEAssetFilterValue = null;
       this.endDateEAssetFilterValue = null;
@@ -5534,12 +5596,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   UpdateEDayOffsPredicate() {
     this.filterEDayoffPredicates = '';
     if (
-      this.filterByKowIDArr.length > 0 &&
+      this.filterByKowIDArr?.length > 0 &&
       this.startDateEDayoffFilterValue != null
     ) {
       this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
-      for (i; i < this.filterByKowIDArr.length; i++) {
+      for (i; i < this.filterByKowIDArr?.length; i++) {
         if (i > 0) {
           this.filterEDayoffPredicates += ' or ';
         }

@@ -96,11 +96,7 @@
     </div>
     <div class="form-group row">
       <codx-label fiedName="KowID" [formModel]="formModel"></codx-label>
-      <codx-input
-        [Group]="formGroup"
-        [formModel]="formModel"
-        field="kowID"
-      ></codx-input>
+      <codx-input field="kowID" [formModel]="formModel" [Group]="formGroup"></codx-input>
     </div>
     <div class="form-group row">
       <div class="col-6">
@@ -113,12 +109,6 @@
           (valueChange)="valueChangedDate($event)"
         >
         </codx-input>
-        <!-- <codx-input
-          [Group]="formGroup"
-          [formModel]="formModel"
-          field="beginDate"
-          (valueChanged)="valueChangedDate($event)"
-        ></codx-input> -->
       </div>
       <div class="col-6">
         <codx-label fiedName="EndDate" [formModel]="formModel"></codx-label>

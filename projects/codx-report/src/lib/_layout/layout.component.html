@@ -3,7 +3,7 @@
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
-      <codx-aside *ngIf="asideDisplay"> </codx-aside>
+      <codx-aside *ngIf="codxService.asideDisplay"> </codx-aside>
 
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <div class="header align-items-stretch">
@@ -12,7 +12,6 @@
               <div ngbDropdown class="nav-item dropdown mr-1">
                 <button
                   ngbDropdownToggle
-
                   type="button"
                   id="dropdownMenuButton"
                   data-toggle="dropdown"
@@ -36,21 +35,21 @@
                       <a class="dropdown-item">
                         <div class="d-flex align-items-center">
                           <codx-label
-                          fiedName="lblMyRequest"
-                          [formName]="'fmLayOutDM'"
-                          default="Yêu cầu của tôi"
-                        >
-                        </codx-label>
+                            fiedName="lblMyRequest"
+                            [formName]="'fmLayOutDM'"
+                            default="Yêu cầu của tôi"
+                          >
+                          </codx-label>
                         </div>
                       </a>
                       <a class="dropdown-item">
                         <div class="d-flex align-items-center">
                           <codx-label
-                          fiedName="lblRequestWaitForMeToGrant"
-                          [formName]="'fmLayOutDM'"
-                          default="Yêu cầu chờ tôi cấp"
-                        >
-                        </codx-label>
+                            fiedName="lblRequestWaitForMeToGrant"
+                            [formName]="'fmLayOutDM'"
+                            default="Yêu cầu chờ tôi cấp"
+                          >
+                          </codx-label>
                         </div>
                       </a>
                     </some-element>
@@ -58,10 +57,7 @@
                 </div>
               </div>
               <a>
-                <h4
-                  class="text-dark font-weight-bold my-0 mr-2 cursor-pointer"
-
-                >
+                <h4 class="text-dark font-weight-bold my-0 mr-2 cursor-pointer">
                   hahahahah
                 </h4>
               </a>
@@ -108,7 +104,10 @@
     <!-- CHAT -->
     <codx-chat></codx-chat>
     <!-- NOTES -->
-    <div class="d-flex align-items-center ms-1 ms-lg-3" (click)="openFormNoteDrawer()">
+    <div
+      class="d-flex align-items-center ms-1 ms-lg-3"
+      (click)="openFormNoteDrawer()"
+    >
       <!-- begin::Menu wrapper -->
       <div
         class="btn btn-icon btn-clean position-relative"
@@ -174,7 +173,7 @@
     ></codx-user-inner>
     <!-- end::User -->
 
-    <ng-container *ngIf="headerLeft === 'menu'">
+    <ng-container *ngIf="codxService.headerLeft === 'menu'">
       <div
         class="d-flex align-items-center d-lg-none ms-2 me-n3"
         title="Show header menu"

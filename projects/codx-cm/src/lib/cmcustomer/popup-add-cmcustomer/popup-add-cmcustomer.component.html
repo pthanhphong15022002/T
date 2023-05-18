@@ -461,6 +461,7 @@
         (lstContactEmit)="lstContactEmit($event)"
         [funcID]="funcID"
         [objectID]="data?.recID"
+        [objectType]="funcID == 'CM0101' ? '1' : '3'"
         [objectName]="funcID == 'CM0101' ? data.customerName : data.partnerName"
         [hidenMF]="false"
         [type]="'formAdd'"

@@ -38,7 +38,7 @@
     </div>
     <codx-vll name="HR014" [value]="itemDetail?.appoint" [showText]="true" [showBgColor]="false"></codx-vll>
     <div class="d-flex align-items-center me-5 mt-4">
-      <codx-label fiedName="decisionNo" [formModel]="formModel" class="text-gray-700 label-colon">
+      <codx-label fiedName="decisionNo" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false">
       </codx-label>
       <div class="fw-bold me-4" [innerHTML]="
           itemDetail?.decisionNo
@@ -46,7 +46,7 @@
             | async
         "></div>
 
-      <codx-label fiedName="EffectedDate" [formModel]="formModel" class="text-gray-700 label-colon">
+      <codx-label fiedName="EffectedDate" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false">
       </codx-label>
       <div class="fw-bold" [innerHTML]="
           itemDetail?.effectedDate

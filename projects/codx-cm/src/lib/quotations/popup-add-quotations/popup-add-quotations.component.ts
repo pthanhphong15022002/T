@@ -76,6 +76,8 @@ export class PopupAddQuotationsComponent implements OnInit {
   modelObjectIDContacs: any;
   modelCustomerIDDeals: any;
   titleActionLine = '';
+  columnsGrid = [];
+  arrFieldIsVisible: any[];
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -110,10 +112,18 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.cache
       .gridViewSetup(
         this.fmQuotationLines.formName,
-        this.fmQuotationLines.formName
+        this.fmQuotationLines.gridViewName
       )
       .subscribe((res) => {
         this.gridViewSetupQL = res;
+        //lay grid view
+        let arrField = Object.values(res).filter((x: any) => x.isVisible);
+        if (Array.isArray(arrField)) {
+          this.arrFieldIsVisible = arrField
+            .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+            .map((x: any) => x.fieldName);
+          this.getColumsGrid(res);
+        }
       });
   }
 
@@ -232,13 +242,18 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   valueChange(e) {
     if (!e?.data || !e?.field) return;
+
+    if (e.field == 'currencyID' && this.quotations.contactID != e.data) {
+      this.loadExchangeRate();
+    }
     this.quotations[e.field] = e.data;
   }
   controlBlur(e) {}
 
   valueChangeDate(e) {
     if (!e?.data || !e?.field) return;
-    this.quotations[e.field] = e.data?.fromDate;
+    //luc truoc add formDate
+    this.quotations[e.field] = e.data?.fromDate ?? e?.data;
   }
 
   select(e) {}
@@ -328,6 +343,16 @@ export class PopupAddQuotationsComponent implements OnInit {
     data.delete = true;
     data.read = true;
     data.rowNo = idx + 1;
+
+    //add tam do loi
+    data.salesAmt =  data.salesAmt??0 ;
+    data.quantity =  data.quantity??0 ;
+    data.discPct =  data.discPct??0 ;
+    data.discAmt =  data.discAmt??0 ;
+    data.vatBase =  data.vatBase??0 ;
+    data.vatAmt =  data.vatAmt??0 ;
+    data.vatRate =  data.vatRate??0 ;
+
     data.transID = this.quotations?.recID;
     return data;
   }
@@ -417,53 +442,6 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   loadModegrid() {}
 
-  quotationsLineChanged(e) {
-    //cái này change vào để xuất file
-    //  const field = [
-    //  'rowno',
-    //  'itemid',
-    //  'quantity',
-    //  'umid',
-    //  'salesprice',
-    //  'salesamt',
-    //  'discamt',
-    //  'vatid',
-    //  'vatamt',
-    //  'note'
-    //  ];
-    // if (field.includes(e.field.toLowerCase())) {
-    //   this.api
-    //     .exec('CM', 'ProductsBusiness', 'ValueChangedAsync', [
-    //       this.dataParent,
-    //       e.data,
-    //       e.field,
-    //       e.data?.isAddNew,
-    //     ])
-    //     .subscribe((res: any) => {
-    //       if (res && res.line)
-    //         this.setDataGrid(res.line.updateColumns, res.line);
-    //     });
-    // }
-    // if (e.field.toLowerCase() == 'sublgtype' && e.value) {
-    //   if (e.value === '3') {
-    //     //Set lock field
-    //   } else {
-    //     this.api
-    //       .exec<any>(
-    //         'AC',
-    //         'AC',
-    //         'CashPaymentsLinesBusiness',
-    //         'SetLockFieldAsync'
-    //       )
-    //       .subscribe((res) => {
-    //         if (res) {
-    //           //Set lock field
-    //         }
-    //       });
-    //   }
-    //}
-  }
-
   setDataGrid(updateColumn, data) {
     if (updateColumn) {
       var arrColumn = [];
@@ -484,20 +462,31 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   loadTotal() {
-    var totals = 0;
-    var totalVAT = 0;
-    var totalDis = 0;
+    let totals = 0;
+    let totalVAT = 0;
+    let totalDis = 0;
+    let totalSales = 0;
     if (this.listQuotationLines?.length > 0) {
       this.listQuotationLines.forEach((element) => {
         //tisnh tong tien
+        totalSales += element['salesAmt'] ?? 0;
         totals += element['netAmt'] ?? 0;
         totalVAT += element['vatAmt'] ?? 0;
         totalDis += element['discAmt'] ?? 0;
       });
     }
+
+    this.quotations['totalSalesAmt'] = totalSales;
     this.quotations['totalAmt'] = totals;
-    // this.quotations['DiscAmt'] = totalVAT;
+    this.quotations['totalTaxAmt'] = totalVAT;
     this.quotations['discAmt'] = totalDis;
+  }
+
+  loadExchangeRate() {
+    this.codxCM.getExchangeRate(this.quotations.currencyID).subscribe((res) => {
+      this.quotations.exchangeRate = res?.exchRate ?? 0;
+      this.form.formGroup.patchValue(this.quotations);
+    });
   }
 
   clearQuotationsLines() {
@@ -506,4 +495,101 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   //#endregion
+
+  //Begin add line
+  quotationsLineChanged(e) {
+    if (!e.field || !e.data) return;
+    let lineCrr = e.data;
+
+    switch (e.field) {
+      case 'itemID':
+        this.loadItem(e.value, lineCrr);
+        break;
+      case 'VATID':
+        let crrtaxrate = e?.component?.itemsSelected[0]?.TaxRate;
+        lineCrr['vatRate'] = crrtaxrate ?? 0;
+        this.loadChange(lineCrr);
+        break;
+      case 'discPct':
+      case 'quantity':
+      case 'salesPrice':
+        this.loadChange(lineCrr);
+        break;
+    }
+  }
+
+  loadDataLines(lineCrr) {
+    var idxLine = this.listQuotationLines.findIndex(
+      (x) => x.recID == lineCrr.recID
+    );
+    if (idxLine != -1) {
+      this.listQuotationLines[idxLine] = lineCrr;
+    } else {
+      this.listQuotationLines.push(lineCrr);
+    }
+    this.loadTotal();
+    this.gridQuationsLines.refresh();
+  }
+
+  checkLines(lineCrr) {
+    let check = this.quotationLinesAddNew.some((x) => x.recID == lineCrr.recID);
+    if (!check) this.quotationLinesAddNew.push(lineCrr);
+  }
+
+  loadChange(lineCrr) {
+    lineCrr['salesAmt'] =
+      (lineCrr['quantity'] ?? 0) * (lineCrr['salesPrice'] ?? 0);
+
+    lineCrr['discAmt'] =
+      ((lineCrr['discPct'] ?? 0) * (lineCrr['salesAmt'] ?? 0)) / 100;
+
+    lineCrr['vatBase'] = (lineCrr['salesAmt'] ?? 0) - (lineCrr['discAmt'] ?? 0);
+
+    lineCrr['vatAmt'] = (lineCrr['vatRate'] ?? 0) * (lineCrr['vatBase'] ?? 0);
+
+    lineCrr['netAmt'] =
+      (lineCrr['salesAmt'] ?? 0) -
+      (lineCrr['discAmt'] ?? 0) +
+      (lineCrr['vatAmt'] ?? 0);
+
+    this.loadDataLines(lineCrr);
+  }
+
+  loadItem(itemID, lineCrr) {
+    this.codxCM.getItem(itemID).subscribe((items) => {
+      if (items) {
+        lineCrr['onhand'] = items.quantity;
+        lineCrr['idiM4'] = items.warehouseID; // kho
+        lineCrr['costPrice'] = items.costPrice; // gia von
+        lineCrr['umid'] = items.umid; // don vi tinh
+        lineCrr['quantity'] = items.minSettledQty; //so luong mua nhieu nhat
+      }
+      this.loadDataLines(lineCrr);
+      // this.form.formGroup.patchValue(this.quotationsLine);
+    });
+  }
+
+  getColumsGrid(grvSetup) {
+    this.columnsGrid = [];
+    this.arrFieldIsVisible.forEach((key) => {
+      let field = Util.camelize(key);
+      let alowEdit = true;
+      let colums: any;
+      switch (key) {
+        case 'RowNo':
+          alowEdit = false;
+          break;
+      }
+
+      colums = {
+        field: field,
+        headerText: grvSetup[key].headerText,
+        width: grvSetup[key].width,
+        alowEdit: alowEdit
+      };
+
+      this.columnsGrid.push(colums);
+    });
+  }
+  //end
 }
