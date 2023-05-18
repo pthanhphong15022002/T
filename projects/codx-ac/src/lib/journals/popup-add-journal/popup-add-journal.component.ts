@@ -23,6 +23,7 @@ import { IJournal } from '../interfaces/IJournal.interface';
 import { JournalService } from '../journals.service';
 import { PopupSetupInvoiceComponent } from '../popup-setup-invoice/popup-setup-invoice.component';
 import { Observable } from 'rxjs';
+import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 
 const irrPropNames: string[] = [
   'drAcctControl',
@@ -495,7 +496,7 @@ export class PopupAddJournalComponent
       });
   }
 
-  onClickOpenAutoNumberPopup() {
+  onClickOpenAutoNumberPopup(): void {
     this.callfc
       .openForm(
         PopupAddAutoNumberComponent,
@@ -517,6 +518,23 @@ export class PopupAddJournalComponent
           });
         }
       });
+  }
+
+  onCickOpenApprovalProcessPopup(): void {
+    const dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    this.callfc.openForm(
+      CodxApproveStepsComponent,
+      '',
+      screen.width,
+      screen.height,
+      '',
+      {
+        type: '0',
+      },
+      '',
+      dialogModel
+    );
   }
   //#endregion
 
