@@ -682,12 +682,19 @@
           ></codx-label>
         </div>
 
-        <div class="col-4">
+        <div class="col-4 d-flex align-items-center gap-1">
           <codx-input
             field="approvalControl"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
           ></codx-input>
+          <button
+            class="btn btn-icon btn-light-primary"
+            *ngIf="journal.approvalControl === '2'"
+            (click)="onCickOpenApprovalProcessPopup()"
+          >
+            <i class="icon-edit-one icon-18"></i>
+          </button>
         </div>
       </div>
     </div>
