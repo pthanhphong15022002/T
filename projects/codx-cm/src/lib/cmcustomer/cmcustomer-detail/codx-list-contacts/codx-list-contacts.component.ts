@@ -33,6 +33,7 @@ export class CodxListContactsComponent implements OnInit {
   @Input() objectType: any;
   @Input() hidenMF = true;
   @Input() type = '';
+  @Input() isConvertLeadToCus = false;
   @Input() formModel: FormModel;
   @Output() lstContactEmit = new EventEmitter<any>();
   @Output() lstContactDeleteEmit = new EventEmitter<any>();
@@ -43,7 +44,7 @@ export class CodxListContactsComponent implements OnInit {
   moreFuncAdd = '';
   loaded: boolean;
   request = new DataRequest();
-  predicates = 'ObjectID=@0 && ObjectType=@1';
+  predicates = 'ObjectID=@0';
   dataValues = '';
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -73,8 +74,8 @@ export class CodxListContactsComponent implements OnInit {
 
   getListContacts() {
     this.loaded = false;
-    this.request.predicates = 'ObjectID=@0 && ObjectType=@1';
-    this.request.dataValues = this.objectID + ';' + this.objectType;
+    this.request.predicates = 'ObjectID=@0';
+    this.request.dataValues = this.objectID;
     this.request.entityName = 'CM_Contacts';
     this.request.funcID = 'CM0102';
     this.className = 'ContactsBusiness';

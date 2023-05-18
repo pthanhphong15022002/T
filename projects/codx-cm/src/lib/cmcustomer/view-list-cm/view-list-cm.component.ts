@@ -32,9 +32,11 @@ export class ViewListCmComponent implements OnInit {
   countDeal = 0;
   countDealCompetitor = 0;
   contactPerson: any;
+  addressNameCM: any;
   constructor(private cmSv: CodxCmService, private callFunc: CallFuncService) {}
 
   ngOnInit(): void {
+    this.getAdressNameByIsDefault(this.dataSelected?.recID, this.entityName);
     if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
       this.getListContactByObjectID(this.dataSelected?.recID);
     if (this.funcID == 'CM0101') {
@@ -67,6 +69,18 @@ export class ViewListCmComponent implements OnInit {
         this.contactPerson = this.listContacts.find((x) => x.isDefault);
       }
     });
+  }
+
+  getAdressNameByIsDefault(objectID, entityName) {
+    this.cmSv
+      .getAdressNameByIsDefault(objectID, entityName)
+      .subscribe((res) => {
+        if (res) {
+          this.addressNameCM = res?.adressName;
+        }else{
+          this.addressNameCM = null;
+        }
+      });
   }
 
   countDealsByCustomerID(customerID) {
@@ -120,6 +134,8 @@ export class ViewListCmComponent implements OnInit {
       option
     );
     this.dialogDetail.closed.subscribe((e) => {
+      this.getAdressNameByIsDefault(this.dataSelected?.recID, this.entityName);
+
       if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
         this.getListContactByObjectID(this.dataSelected.recID);
       if (this.funcID == 'CM0101') {

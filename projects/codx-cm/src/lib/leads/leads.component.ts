@@ -42,9 +42,9 @@ kanban: any;
 // config api get data
 service = 'CM';
 assemblyName = 'ERM.Business.CM';
-entityName = 'CM_Deals';
-className = 'DealsBusiness';
-method = 'GetListDealsAsync';
+entityName = 'CM_Leads';
+className = 'LeadsBusiness';
+method = 'GetListLeadsAsync';
 idField = 'recID';
 
 // data structure
@@ -73,7 +73,7 @@ request: ResourceModel;
 resourceKanban?: ResourceModel;
 hideMoreFC = true;
 listHeader: any;
-
+deadId:string = '';
 constructor(
   private inject: Injector,
   private cacheSv: CacheService,
@@ -83,8 +83,11 @@ constructor(
   private notificationsService: NotificationsService,
 ) {
   super(inject);
-  if (!this.funcID)
+  if (!this.funcID) {
+    debugger;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
+
 }
 ngOnChanges(changes: SimpleChanges): void {
 }
@@ -96,8 +99,8 @@ onInit(): void {
   this.request = new ResourceModel();
   this.request.service = 'CM';
   this.request.assemblyName = 'CM';
-  this.request.className = 'DealsBusiness';
-  this.request.method = 'GetListDealsAsync';
+  this.request.className = 'LeadsBusiness';
+  this.request.method = 'GetListLeadsAsync';
   this.request.idField = 'recID';
   this.request.dataObj = this.dataObj;
 
@@ -305,19 +308,24 @@ add() {
 
 addLead() {
   this.view.dataService.addNew().subscribe((res) => {
+    this.cache.functionList(this.funcID).subscribe((fun) => {
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        var formMD = new FormModel();
+        formMD.funcID = this.funcID;
+        formMD.entityName = fun.entityName;
+        formMD.formName = fun.formName;
+        formMD.gridViewName = fun.gridViewName;
+        option.Width = '800px';
+        option.zIndex = 1001;
+        this.openFormLead(formMD, option, 'add');
+      // }
 
-    let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
+    // });
 
-    var formMD = new FormModel();
-    // formMD.funcID = funcIDApplyFor;
-    // formMD.entityName = fun.entityName;
-    // formMD.formName = fun.formName;
-    // formMD.gridViewName = fun.gridViewName;
-    option.Width = '800px';
-    option.zIndex = 1001;
-    this.openFormLead(formMD, option, 'add');
+    });
+
   });
 }
 
@@ -360,7 +368,7 @@ edit(data) {
     var obj = {
       action: 'edit',
       formMD: formMD,
-      titleAction: 'Chỉnh sửa cơ hội',
+      titleAction: 'Chỉnh sửa tiềm năng',
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,

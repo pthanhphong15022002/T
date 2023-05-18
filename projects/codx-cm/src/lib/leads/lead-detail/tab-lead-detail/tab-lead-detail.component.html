@@ -222,9 +222,10 @@
 
 <ng-template #contact>
   <codx-list-contacts
-    [funcID]="'CM0101'"
-    [objectID]="dataSelected.recID"
-    [objectName]="'customerName'"
+    [funcID]="'CM0205'"
+    [objectID]="dataSelected?.recID"
+    [objectName]="dataSelected?.leadName"
+    [objectType]="'2'"
     [hidenMF]="false"
     [type]="'formDetail'"
   ></codx-list-contacts>
