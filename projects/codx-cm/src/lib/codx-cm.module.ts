@@ -58,6 +58,7 @@ import { CodxAddressCmComponent } from './cmcustomer/cmcustomer-detail/codx-addr
 import { LeadsComponent } from './leads/leads.component';
 import { PopupAddLeadComponent } from './leads/popup-add-lead/popup-add-lead.component';
 import { TabLeadDetailComponent } from './leads/lead-detail/tab-lead-detail/tab-lead-detail.component';
+import { LeadDetailComponent } from './leads/lead-detail/lead-detail.component';
 
 const routes: Routes = [
   {
@@ -142,6 +143,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     LeadsComponent,
     PopupAddLeadComponent,
     TabLeadDetailComponent,
+    LeadDetailComponent
   ],
   imports: [
     RouterModule.forChild(routes),

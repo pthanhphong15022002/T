@@ -311,7 +311,7 @@
     </div>
     <div id="step-task" class="main p-5" [ngClass]="'show-main'">
         <!-- drap drop công việc ngoài-->
-        <div class="main-body" *ngIf="taskGroupList?.length > 0">
+        <!-- <div class="main-body" *ngIf="taskGroupList?.length > 0">
           <div
             cdkDropList
             class="list"
@@ -550,14 +550,14 @@
               [default]="'Thêm công việc'"
             ></codx-label>
           </button>
-        </div>
-      <!-- <codx-step-task
+        </div> -->
+      <codx-step-task
         [dataSources]="step"
         [isShowButton]="true"
         [isShowMore]="true"
         [typeProgress]="2"
         [isDeepCopy]="false"
-      ></codx-step-task> -->
+      ></codx-step-task>
     </div>
   </div>
   <!-- <codx-task [stepId]="dataStep?.recID"></codx-task> -->
