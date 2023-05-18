@@ -59,9 +59,9 @@
       </ng-template>
       <ng-template #descTmp let-data>
         <div class="d-flex flex-column">
-          <div class="mb-1" *ngIf="dataSelected.address">
+          <div class="mb-1" *ngIf="addressNameCM">
             <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
-            <span class="text-gray-900">{{ dataSelected.address }}</span>
+            <span class="text-gray-900">{{ addressNameCM }}</span>
           </div>
           <div *ngIf="funcID != 'CM0102'">
             <codx-tag

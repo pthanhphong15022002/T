@@ -7,7 +7,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormModel, UIComponent } from 'codx-core';
-import { IModelShare } from '../interfaces/IModelShare.interface';
+import { IModelShare } from '../../interfaces/IModelShare.interface';
 
 @Component({
   selector: 'lib-dropdown-detail',

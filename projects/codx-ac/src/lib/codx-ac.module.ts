@@ -15,7 +15,7 @@ import { ApprovalsComponent } from './approvals/approvals.component';
 import { CodxAcComponent } from './codx-ac.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CustomizedMultiSelectPopupComponent } from './journals/customized-multi-select-popup/customized-multi-select-popup.component';
-import { DropdownDetailComponent } from './journals/dropdown-detail/dropdown-detail.component';
+import { DropdownDetailComponent } from './journals/components/dropdown-detail/dropdown-detail.component';
 import { JournalsComponent } from './journals/journals.component';
 import { PopupAddJournalComponent } from './journals/popup-add-journal/popup-add-journal.component';
 import { PopupSetupInvoiceComponent } from './journals/popup-setup-invoice/popup-setup-invoice.component';
@@ -42,6 +42,7 @@ import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/po
 import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
 import { TableLineDetailComponent } from './vouchers/sales-invoices/table-line-detail/table-line-detail.component';
 import { PopAddLineinventoryComponent } from './vouchers/receipt-transaction/pop-add-lineinventory/pop-add-lineinventory.component';
+import { Group067Component } from './journals/components/group067/group067.component';
 
 export const routes: Routes = [
   {
@@ -150,7 +151,8 @@ export const routes: Routes = [
     PopAddReceiptTransactionComponent,
     ReportsComponent,
     ApprovalsComponent,
-    PopAddLineinventoryComponent
+    PopAddLineinventoryComponent,
+    Group067Component,
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -489,17 +489,21 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   loadTotal() {
-    var totals = 0;
-    var totalVAT = 0;
-    var totalDis = 0;
+    let totals = 0;
+    let totalVAT = 0;
+    let totalDis = 0;
+    let totalSales = 0;
     if (this.listQuotationLines?.length > 0) {
       this.listQuotationLines.forEach((element) => {
         //tisnh tong tien
+        totalSales += element['salesAmt'] ?? 0;
         totals += element['netAmt'] ?? 0;
         totalVAT += element['vatAmt'] ?? 0;
         totalDis += element['discAmt'] ?? 0;
       });
     }
+    
+    this.quotations['totalSalesAmt'] = totalSales;
     this.quotations['totalAmt'] = totals;
     this.quotations['totalTaxAmt'] = totalVAT;
     this.quotations['discAmt'] = totalDis;

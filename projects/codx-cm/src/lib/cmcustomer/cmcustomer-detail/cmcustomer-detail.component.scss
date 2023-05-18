@@ -16,3 +16,10 @@ codx-crmcustomer codx-crmcustomer-detail .codx-detail-main{
 .has-action-menu-od:hover .action-menu-od {
   opacity: 1;
 }
+
+
+.cmdetail-scroll{
+	height: calc(100vh - 380px);
+	overflow: auto;
+	padding-bottom: 10px;
+}
