@@ -1768,9 +1768,9 @@ export class InstancesComponent
     this.showButtonAdd = this.isCreate;
     this.viewMode = this.process?.viewMode;
     this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
-    if (reload) {
-      this.view.load();
-    }  
+    // if (reload) {
+    //   this.view.load();
+    // }  
     if (
       this.process?.permissions != null &&
       this.process?.permissions.length > 0
