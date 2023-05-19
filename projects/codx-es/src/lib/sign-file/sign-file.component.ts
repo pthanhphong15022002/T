@@ -1,3 +1,4 @@
+import { copy } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   ChangeDetectorRef,
   Component,
@@ -316,6 +317,9 @@ export class SignFileComponent extends UIComponent {
       (x: { functionID: string }) => x.functionID == 'EST01104'
     );
     var edit = e.filter((x: { functionID: string }) => x.functionID == 'SYS03');
+    var del = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
+    var copy = e.filter((x: { functionID: string }) => x.functionID == 'SYS04');    
+    if (copy?.length) copy[0].disabled = true;
     var release = e.filter(
       (x: { functionID: string }) => x.functionID == 'EST01105'
     );
@@ -337,6 +341,7 @@ export class SignFileComponent extends UIComponent {
     if (data.approveStatus != 1 && data.approveStatus != 2) {
       if (edit?.length) edit[0].disabled = true;
       if (release?.length) release[0].disabled = true;
+      if (del?.length) del[0].disabled = true;
     }
   }
 

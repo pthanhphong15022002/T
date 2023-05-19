@@ -293,28 +293,32 @@ export class ViewDetailComponent implements OnInit {
     var unbm = e.filter(
       (x: { functionID: string }) => x.functionID == 'EST01104'
     );
+    var edit = e.filter((x: { functionID: string }) => x.functionID == 'SYS03');
+    var del = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
+    var copy = e.filter((x: { functionID: string }) => x.functionID == 'SYS04');    
+    if (copy?.length) copy[0].disabled = true;
     var release = e.filter(
       (x: { functionID: string }) => x.functionID == 'EST01105'
     );
 
-    this.mfRelease = release;
-
     if (bookmarked == true) {
-      if (bm && bm.length) bm[0].disabled = true;
-      if (unbm && unbm.length) unbm[0].disabled = false;
+      if (bm?.length) bm[0].disabled = true;
+      if (unbm?.length) unbm[0].disabled = false;
     } else {
-      if (unbm && unbm.length) unbm[0].disabled = true;
-      if (bm && bm.length) bm[0].disabled = false;
+      if (unbm?.length) unbm[0].disabled = true;
+      if (bm?.length) bm[0].disabled = false;
     }
 
-    if (data.approveStatus != '3') {
+    if (data.approveStatus != 3) {
       var cancel = e.filter(
         (x: { functionID: string }) => x.functionID == 'EST01101'
       );
-      if (cancel && cancel.length) cancel[0].disabled = true;
+      if (cancel?.length) cancel[0].disabled = true;
     }
     if (data.approveStatus != 1 && data.approveStatus != 2) {
+      if (edit?.length) edit[0].disabled = true;
       if (release?.length) release[0].disabled = true;
+      if (del?.length) del[0].disabled = true;
     }
   }
 
