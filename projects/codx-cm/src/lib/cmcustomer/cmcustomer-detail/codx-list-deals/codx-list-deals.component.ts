@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { CodxCmService } from '../../../codx-cm.service';
 import { ApiHttpService, DataRequest, FormModel } from 'codx-core';
 import { Observable, finalize, map, pipe } from 'rxjs';
@@ -23,26 +23,19 @@ export class CodxListDealsComponent implements OnInit {
   method = 'GetListDealsByCustomerIDAsync';
   constructor(private cmSv: CodxCmService, private api: ApiHttpService) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
+    this.getListDealsByCustomerID();
+
+  }
+
   async ngOnInit() {
-    this.getListContacts();
     this.formModel = await this.cmSv.getFormModel('CM0201');
   }
 
-  getListDealsByCustomerID(customerID) {
-    this.loaded = false;
-    this.cmSv.getListDealsByCustomerID(customerID).subscribe((res) => {
-      if (res && res.length > 0) {
-        this.lstDeals = res;
-        var lstRef = this.lstDeals.map((x) => x.refID);
-        var lstSteps = this.lstDeals.map((x) => x.stepID);
-        if (lstRef != null && lstRef.length > 0)
-          this.getStepsByListID(lstSteps, lstRef);
-      }
-      this.loaded = true;
-    });
-  }
 
-  getListContacts() {
+  getListDealsByCustomerID() {
     this.loaded = false;
     this.request.predicates = 'CustomerID=@0';
     this.request.dataValues = this.customerID;
