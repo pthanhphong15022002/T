@@ -96,11 +96,11 @@ export class CodxCalendarComponent
 
   meetingFM: FormModel;
   meetingFG: FormGroup;
-  addMeetingTitle = '';
+  //addMeetingTitle = '';
 
   myTaskFM: FormModel;
   myTaskFG: FormGroup;
-  addMyTaskTitle = '';
+  //addMyTaskTitle = '';
 
   constructor(
     injector: Injector,
@@ -198,11 +198,11 @@ export class CodxCalendarComponent
       );
     });
 
-    this.cache.functionList('TMT0501').subscribe((res) => {
-      if (res) {
-        this.addMeetingTitle = res?.customName?.toString();
-      }
-    });
+    // this.cache.functionList('TMT0501').subscribe((res) => {
+    //   if (res) {
+    //     this.addMeetingTitle = res?.customName?.toString();
+    //   }
+    // });
 
     this.calendarService.getFormModel('TMT0201').then((res) => {
       this.myTaskFM = res;
@@ -212,11 +212,11 @@ export class CodxCalendarComponent
       );
     });
 
-    this.cache.functionList('TMT0201').subscribe((res) => {
-      if (res) {
-        this.addMyTaskTitle = res?.customName?.toString();
-      }
-    });
+    // this.cache.functionList('TMT0201').subscribe((res) => {
+    //   if (res) {
+    //     this.addMyTaskTitle = res?.customName?.toString();
+    //   }
+    // });
   }
 
   ngAfterViewInit() {
@@ -788,7 +788,7 @@ export class CodxCalendarComponent
     this.callfc
       .openSide(
         PopupAddMeetingComponent,
-        ['add', this.addMeetingTitle, false, ''],
+        ['add', 'Thêm', false, ''],
         option
       )
       .closed.subscribe();
@@ -812,7 +812,7 @@ export class CodxCalendarComponent
           this.view.dataService.dataSelected,
           'add',
           '',
-          '',
+          'Thêm',
           'TMT0201',
           null,
           false,
