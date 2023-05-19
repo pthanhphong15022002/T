@@ -15,7 +15,7 @@
           <div class="w-100 d-flex flex-column">    
             <div class="fs-2 fw-bold mb-2">{{ dataSelected?.dealName }}</div>
             <div class=" d-flex align-items-top justify-content-start mb-2">
-              <codx-label default="Khách hàng:" class="text-dark me-2"></codx-label>
+              <codx-label default="Khách hàng:" class="text-dark fw-bold me-2"></codx-label>
               <i class="icon-business icon-16 me-2"></i>
               <div
                 class="text-gray-600"
@@ -33,7 +33,7 @@
               ></div>
             </div>
             <div class="d-flex align-items-top mb-2">
-              <codx-label default="Dòng sản phẩm:" class="text-dark me-2"></codx-label>
+              <codx-label default="Dòng sản phẩm:" class="text-dark fw-bold me-2"></codx-label>
               <div
                 class="text-gray-600"
                 #businessLineID
@@ -50,7 +50,7 @@
               ></div>
             </div>
             <div class="d-flex align-items-top justify-content-start mb-2">
-              <codx-label default="Quy trình:" class="text-dark me-2"></codx-label>
+              <codx-label default="Quy trình:" class="text-dark fw-bold me-2"></codx-label>
               <div class="text-gray-600">{{dataSelected?.processName}}</div>
             </div>
             <div class="mb-2">
@@ -64,7 +64,7 @@
             </div>
             <div class="d-flex flex-wrap align-items-top mb-2">
               <div class="d-flex align-items-center me-6 mb-1">
-                <codx-label default="Ngày tạo:" class="text-dark me-1"></codx-label>
+                <codx-label default="Ngày tạo:" class="text-dark fw-bold me-1"></codx-label>
                 <span
                   class="text-gray-600"
                   #createdOn
@@ -81,7 +81,7 @@
                 ></span>
               </div>
               <div class="d-flex align-items-center me-6 mb-1">
-                <codx-label default="Ngày bắt đầu:" class="text-dark me-1"></codx-label>
+                <codx-label default="Ngày bắt đầu:" class="text-dark fw-bold me-1"></codx-label>
                 <span
                   class="text-gray-600"
                   #startDate
@@ -98,7 +98,7 @@
                 ></span>
               </div>
               <div class="d-flex align-items-center me-3 mb-1">
-                <codx-label default="Ngày đến hạn:" class="text-dark me-1"></codx-label>
+                <codx-label default="Ngày đến hạn:" class="text-dark fw-bold me-1"></codx-label>
                 <span
                   class="text-gray-600"
                   #endDate
@@ -118,12 +118,13 @@
           </div>
           <div class="w-150px min-w-150px d-flex flex-column">
             <div class="d-flex flex-column">
-              <div class="d-flex align-items-center justify-content-end mb-2">
-                <span class="icon-monetization_on pe-1 text-wraning"></span>
+              <div class="d-flex align-items-top justify-content-end mb-2">
+                <span class="icon-monetization_on pe-1 text-warning"></span>
                 <span class="fs-5 fw-bold">{{dataSelected?.dealValue}}</span>
               </div>
-              <div class="mb-2 d-flex justify-content-end">
-                % <span class="pe-2">{{dataSelected?.probability}}</span>
+              <div class="mb-2 d-flex align-items-center justify-content-end">
+                <span class="icon-check_circle text-green icon-16 me-1"></span>
+                <span class="fs-6">{{dataSelected?.probability}}%</span>
               </div>
               <div class="d-flex justify-content-end mb-2">
                 <span class="badge badge-md badge-primary">
@@ -132,7 +133,7 @@
               </div>
               <div class="d-flex flex-column align-items-top">
                 <div class="d-flex justify-content-end">
-                  <codx-label default="Nhân viên bán hàng:" class="text-dark mb-2"></codx-label>
+                  <codx-label default="Nhân viên bán hàng:" class="text-dark fw-bold mb-1"></codx-label>
                 </div>
                 <div class="d-flex justify-content-end">
                   <codx-imgs
