@@ -2,6 +2,7 @@
   <div class="nav nav-tabs">
     <ng-container *ngFor="let item of listTaskConvert">
         <a 
+          (click)="clickMenu(item)"
           class="nav-item d-flex align-items-center" 
           [ngClass]="'tab-item text-dark' +' ' +(item.isActive ? 'tab-active' : '')"
         >
@@ -14,7 +15,6 @@
             [name]="'lbl' + item.name"
             [formName]="'SYS'"
             [default]="item.textDefault"
-            (click)="clickMenu(item)"
         >
         </codx-label>
       </a>

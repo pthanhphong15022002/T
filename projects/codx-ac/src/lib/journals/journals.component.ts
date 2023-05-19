@@ -39,6 +39,10 @@ export class JournalsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
+    // let data = {"sourceAccountNumber":"0001100012473007","payeeType":"ACCOUNT","tranferAmount":100000,"transferDescription":"TRANSFER AMOUNT TO","payeeAccountNumber":"0129837294","payeeCardNumber":"","bankCode":"970406"}
+    // this.api.execSv("AC","Core","CMBusiness","SendRequestBankHubAsync",[JSON.stringify(data),"FastTransferOrder"]).subscribe(res=>{
+    //   console.log(res);
+    // })
     this.cache.valueList('AC077').subscribe((func) => {
       if (func) this.func = func.datas;
     });
