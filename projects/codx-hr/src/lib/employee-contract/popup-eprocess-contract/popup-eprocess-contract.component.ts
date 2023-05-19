@@ -232,6 +232,9 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   initForm() {
     if (this.actionType == 'add') {
       // this.hrSevice.getEContractDefault().subscribe((res) => {
+        console.log('this.formModel.funcID', this.formModel.funcID);
+        console.log('this.formModel.entityName', this.formModel.entityName);
+
         this.hrSevice.getDataDefault(this.formModel.funcID, this.formModel.entityName, this.idField).subscribe((res) => {
         if (res) {
           debugger

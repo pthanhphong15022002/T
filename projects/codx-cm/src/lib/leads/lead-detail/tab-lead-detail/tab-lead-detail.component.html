@@ -24,27 +24,43 @@
         <div class="col-2">
           <codx-label default="Mã tiềm năng:"></codx-label>:
         </div>
-        <div class="col-4">KH17042023</div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #leadID
+          [innerHTML]="
+          dataSelected?.leadID
+              | formatvalue
+                : formModel
+                : 'leadID'
+                : leadID
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+        </div>
 
         <div class="col-2">
           <codx-label default="Ngày thành lập/ Ngày sinh:"></codx-label>
         </div>
         <div class="col-4">
-          <!-- <span
+          <span
           class="fs-7"
-          #campaignID
+          #establishDate
           [innerHTML]="
-          dataSelected?.campaignID
+          dataSelected?.establishDate
               | formatvalue
                 : formModel
-                : 'campaignID'
-                : campaignID
-                : 'CMDeals'
-                : 'grvCMDeals'
+                : 'establishDate'
+                : establishDate
+                : 'CMLeads'
+                : 'grvCMLeads'
               | async
           "
-        ></span> -->
-          03/02/1994
+        ></span>
+
         </div>
       </div>
 
@@ -52,44 +68,63 @@
         <div class="col-2">
           <codx-label default="Điện thoại:"></codx-label>:
         </div>
-        <div class="col-4">0938877431</div>
-        <div class="col-2"><codx-label default="Website:"></codx-label>:</div>
         <div class="col-4">
-          <!-- <span
+          <span
           class="fs-7"
-          #channelID
+          #phone
           [innerHTML]="
-          dataSelected?.channelID
+          dataSelected?.phone
               | formatvalue
                 : formModel
-                : 'channelID'
-                : channelID
-                : 'CMDeals'
-                : 'grvCMDeals'
+                : 'phone'
+                : phone
+                : 'CMLeads'
+                : 'grvCMLeads'
               | async
           "
-        ></span> -->
-          https://lacviet.vn.
+        ></span>
+
+        </div>
+        <div class="col-2"><codx-label default="Website:"></codx-label>:</div>
+        <div class="col-4">
+
+          <span
+          class="fs-7"
+          #webPage
+          [innerHTML]="
+          dataSelected?.webPage
+              | formatvalue
+                : formModel
+                : 'webPage'
+                : webPage
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+
         </div>
       </div>
       <div class="row py-2">
         <div class="col-2"><codx-label default="Fax"></codx-label>:</div>
         <div class="col-4">
-          <!-- <span
+
+          <span
           class="fs-7"
-          #salespersonID
+          #faxNo
           [innerHTML]="
-          dataSelected?.salespersonID
+          dataSelected?.faxNo
               | formatvalue
                 : formModel
-                : 'salespersonID'
-                : salespersonID
-                : 'CMDeals'
-                : 'grvCMDeals'
+                : 'faxNo'
+                : faxNo
+                : 'CMLeads'
+                : 'grvCMLeads'
               | async
           "
-        ></span> -->
-          038877431
+        ></span>
+
         </div>
       </div>
     </div>
@@ -102,26 +137,43 @@
         <div class="col-2 nowrap">
           <codx-label default="Doanh thu hàng năm:"></codx-label>
         </div>
-        <div class="col-4">3,000,0000,0000</div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #annualRevenue
+          [innerHTML]="
+          dataSelected?.annualRevenue
+              | formatvalue
+                : formModel
+                : 'annualRevenue'
+                : annualRevenue
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+        </div>
         <div class="col-2">
           <codx-label default="Quy mô nhân sự:"></codx-label>:
         </div>
         <div class="col-4">
-          <!-- <span
+          <span
           class="fs-7"
-          #channelID
+          #headcounts
           [innerHTML]="
-          dataSelected?.channelID
+          dataSelected?.headcounts
               | formatvalue
                 : formModel
-                : 'channelID'
-                : channelID
-                : 'CMDeals'
-                : 'grvCMDeals'
+                : 'headcounts'
+                : headcounts
+                : 'CMLeads'
+                : 'grvCMLeads'
               | async
           "
-        ></span> -->
-          >10000
+        ></span>
+
+
         </div>
       </div>
     </div>
@@ -130,11 +182,20 @@
         <h2><codx-label default="Mô tả nhu cầu"></codx-label></h2>
       </div>
       <span class="py-2">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe facilis
-        eaque dolorem expedita, sint provident magni. Veritatis, earum labore
-        reiciendis quos minus nihil eum enim iure culpa maxime omnis vel
-        deleniti possimus ipsam sed et quas facilis ex rem obcaecati.
-        Voluptatibus illo deserunt esse placeat eos odio dolores facere a.
+        <span
+          class="fs-7"
+          #note
+          [innerHTML]="
+          dataSelected?.note
+              | formatvalue
+                : formModel
+                : 'note'
+                : note
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
       </span>
     </div>
     <div class="mt-5">
@@ -146,24 +207,41 @@
         <div class="col-2 nowrap">
           <codx-label default="Nguồn dữ liệu:"></codx-label>
         </div>
-        <div class="col-4">Khách hàng tự tìm đến</div>
-        <div class="col-2"><codx-label default="Chiến dịch:"></codx-label></div>
         <div class="col-4">
-          <!-- <span
+          <span
           class="fs-7"
-          #channelID
+          #customerResource
           [innerHTML]="
-          dataSelected?.channelID
+          dataSelected?.customerResource
               | formatvalue
                 : formModel
-                : 'channelID'
-                : channelID
-                : 'CMDeals'
-                : 'grvCMDeals'
+                : 'customerResource'
+                : customerResource
+                : 'CMLeads'
+                : 'grvCMLeads'
               | async
           "
-        ></span> -->
-          Marketing 1
+        ></span>
+
+
+        </div>
+        <div class="col-2"><codx-label default="Chiến dịch:"></codx-label></div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #campaignID
+          [innerHTML]="
+          dataSelected?.campaignID
+              | formatvalue
+                : formModel
+                : 'campaignID'
+                : campaignID
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
         </div>
       </div>
       <div class="row py-2">
@@ -173,7 +251,8 @@
         <div class="col-4">Cao</div>
         <div class="col-2"><codx-label default="Kênh:"></codx-label></div>
         <div class="col-4">
-          <!-- <span
+
+          <span
           class="fs-7"
           #channelID
           [innerHTML]="
@@ -182,38 +261,57 @@
                 : formModel
                 : 'channelID'
                 : channelID
-                : 'CMDeals'
-                : 'grvCMDeals'
+                : 'CMLeads'
+                : 'grvCMLeads'
               | async
           "
-        ></span> -->
-          Email
+        ></span>
+
         </div>
       </div>
       <div class="row py-2">
         <div class="col-2 nowrap">
           <codx-label default="Nhân viên bán hàng:"></codx-label>
         </div>
-        <div class="col-4">Nguyễn Văn A</div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #salespersonID
+          [innerHTML]="
+          dataSelected?.salespersonID
+              | formatvalue
+                : formModel
+                : 'salespersonID'
+                : salespersonID
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+
+        </div>
         <div class="col-2">
           <codx-label default="Nhân viên tư vấn:"></codx-label>
         </div>
         <div class="col-4">
-          <!-- <span
+
+          <span
           class="fs-7"
-          #channelID
+          #consultantID
           [innerHTML]="
-          dataSelected?.channelID
+          dataSelected?.consultantID
               | formatvalue
                 : formModel
-                : 'channelID'
-                : channelID
-                : 'CMDeals'
-                : 'grvCMDeals'
+                : 'consultantID'
+                : consultantID
+                : 'CMLeads'
+                : 'grvCMLeads'
               | async
           "
-        ></span> -->
-          Nguyễn văn A
+        ></span>
+
+
         </div>
       </div>
     </div>
@@ -232,11 +330,11 @@
 </ng-template>
 
 <ng-template #address>
-  <codx-address-cm
-  [type]="'formDetail'"
-  [funcID]="'CM0101'"
-  [entityName]=""
-  [id]="dataSelected.recID"
-  (addressName)="addressName($event)"
+<codx-address-cm
+[type]="'formDetail'"
+[funcID]="'CM0205'"
+[entityName]="'CM_Leads'"
+[id]="dataSelected.recID"
+(addressName)="addressName($event)"
 ></codx-address-cm>
 </ng-template>
