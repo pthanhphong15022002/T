@@ -251,7 +251,7 @@ export class UserComponent extends UIComponent {
           if (!x?.event) this.view.dataService.clear();
           if (x.event) {
             x.event.modifiedOn = new Date();
-            this.view.dataService.data
+            this.view.dataService.data;
             this.view.dataService.update(x.event).subscribe((res) => {
               console.log('edit xong', res);
             });
@@ -333,6 +333,13 @@ export class UserComponent extends UIComponent {
       let activeMF = e.find((x) => x.functionID == 'ADS0502');
       if (activeMF) {
         activeMF.disabled = true;
+      }
+    }
+    if (data.stop) {
+      //disabled mf user.stop = true
+      let stopMF = e.find((x) => x.functionID == 'ADS0501');
+      if (stopMF) {
+        stopMF.disabled = true;
       }
     }
   }
