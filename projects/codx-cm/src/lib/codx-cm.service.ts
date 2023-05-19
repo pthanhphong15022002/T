@@ -165,6 +165,12 @@ export class CodxCmService {
     ]);
   }
 
+  updateStatusDealsCompetitorAsync(dealCompetitor) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'UpdateStatusDealsCompetitorAsync', [
+      dealCompetitor,
+    ]);
+  }
+
   updateDealCompetitorAsync(dealCompetitor) {
     return this.api.exec<any>(
       'CM',
@@ -619,6 +625,17 @@ export class CodxCmService {
    // load Tỉ giá
    getExchangeRate(CurrencyID) {
     return this.api.exec<any>('BS', 'CurrenciesBusiness', 'GetExchangeRateAsync', [CurrencyID,new Date()]);
+  }
+
+  //getDefault
+  getDefault(service,funcID,entityName) {
+    return this.api.execSv<any>(
+      service,
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName]
+    );
   }
 
 }

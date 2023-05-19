@@ -7,21 +7,21 @@
   <div class="d-flex w-100 ps-2 pe-4">
     <div class="w-50 text-dark p-3 fw-bold fw-500">
       <codx-label fiedName="lblEmployeeID" [formModel]="view.formModel"
-                [default]="grvSetup?.EmployeeID?.description"></codx-label>
+        [default]="grvSetup?.EmployeeID?.description"></codx-label>
     </div>
     <div class="w-20 text-dark p-3 fw-bold fw-500">
       <codx-label fiedName="lblBSalary" [formModel]="view.formModel"
-                [default]="grvSetup?.BSalary?.description"></codx-label>
+        [default]="grvSetup?.BSalary?.description"></codx-label>
       <span> | </span>
       <codx-label fiedName="lblEffectedDate" [formModel]="view.formModel"
-                [default]="grvSetup?.EffectedDate?.description"></codx-label>
+        [default]="grvSetup?.EffectedDate?.description"></codx-label>
     </div>
     <div class="w-30 text-dark p-3 fw-bold fw-500">
       <codx-label fiedName="lblDecisionNo" [formModel]="view.formModel"
-                [default]="grvSetup?.DecisionNo?.description"></codx-label>
+        [default]="grvSetup?.DecisionNo?.description"></codx-label>
       <span> | </span>
       <codx-label fiedName="lblSignedDate" [formModel]="view.formModel"
-                [default]="grvSetup?.SignedDate?.description"></codx-label>
+        [default]="grvSetup?.SignedDate?.description"></codx-label>
     </div>
     <!-- <div class="w-25 text-dark p-3 fw-bold fw-500">
       <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
@@ -106,7 +106,7 @@
           <span class="icon-event_notes icon-16 me-1"></span>
           <div class="align-self-center fw-bold">
             <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['DecisionNo'] : ''"
-            [innerHTML]="data?.decisionNo | formatvalue : view.formModel : 'decisionNo'| async">
+              [innerHTML]="data?.decisionNo | formatvalue : view.formModel : 'decisionNo'| async">
             </span>
             <span> - </span>
             <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['SignedDate'] : ''"
@@ -163,8 +163,10 @@
 <ng-template #templateListDetail let-data>
   <div class="border-bottom position-relative avatar-vllbadge">
     <codx-temp-full cardCss="codx_cardcenter p-3" (clickMF)="clickMF($event, data)" [imageId]="data?.emp?.employeeID"
-      [imageObjType]="'HR_Employees'" [imageWidth]="40" [formModel]="view.formModel" [titleTmp]="titleTmp"
-      [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'" (changeDataMF)="changeDataMF($event, data)">
+      [imageObjType]="'HR_Employees'" [imageWidth]="40" [formModel]="view.formModel" [subTitleTmp]="subTitleTmp"
+      [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'" (changeDataMF)="changeDataMF($event, data)"
+      [title]="data?.emp?.employeeName"
+      [baseHeaderRightTmp]="baseHeaderRightTmp">
     </codx-temp-full>
     <!-- <div class="d-flex flex-center vll-badge">
       <codx-vll class="badge badge-sm me-0 badge-light" [name]="genderGrvSetup?.referedValue"
@@ -174,14 +176,14 @@
   </div>
 </ng-template>
 <!-- info view -->
-<ng-template #titleTmp let-data>
+<ng-template #subTitleTmp let-data>
   <div class="w-100">
     <!-- emp info -->
-    <div class="d-flex align-items-center mb-1">
+    <!-- <div class="d-flex align-items-center mb-1">
       <span class="fw-bold fs-6 text-dark me-2">{{ data?.emp?.employeeName }}</span>
-      <!-- <i class="icon-qr_code_scanner icon-14 me-1"></i>
-      <span class="text-danger">{{ data?.emp?.employeeID }}</span> -->
-    </div>
+      <i class="icon-qr_code_scanner icon-14 me-1"></i>
+      <span class="text-danger">{{ data?.emp?.employeeID }}</span>
+    </div> -->
     <div class="fs-7 text-gray-600">
       <span [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'PositionID' | async"></span>
     </div>
@@ -244,6 +246,7 @@
 <!-- end list & detail view -->
 
 <!-- update status -->
+
 <ng-template #templateUpdateStatus let-dialog1>
   <div class="codx-form card w-100 h-100 rounded-0 border-0">
     <div class="card-header flex-column">
@@ -294,3 +297,25 @@
   </div>
 </ng-template>
 <!-- end update status -->
+
+<ng-template #baseHeaderRightTmp let-data>
+  <div>
+    <ng-container *ngIf="data?.isCurrent">
+      <span [style.color]="'#0078FF'" class="icon-bookmark icon-18" [ngbPopover]="popIsNewest" #popOver="ngbPopover"
+        [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()" placement="left">
+      </span>
+    </ng-container>
+  </div>
+
+  <ng-template #popIsNewest>
+    <span>
+      <codx-label name="lblIsCurrent" [formModel]="view.formModel" default="Mới nhất"></codx-label>
+    </span>
+  </ng-template>
+
+  <ng-template #popOverDue>
+    <span>
+      <codx-label name="lblOverDue" [formModel]="view.formModel" default="Đã quá hạn!"></codx-label>
+    </span>
+  </ng-template>
+</ng-template>

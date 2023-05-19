@@ -27,7 +27,6 @@ export class AppropvalNewsDetailComponent implements OnInit {
     VIDEO:"2"
   }
   data: any = null;
-  model = new DataRequest();
   service = "WP";
   assemblyName = "ERM.Business.WP";
   className = "NewsBusiness";
@@ -43,20 +42,17 @@ export class AppropvalNewsDetailComponent implements OnInit {
     ) { }
   ngOnInit(): void {
     this.getPostInfor(this.objectID);
-    this.cache.functionList(this.funcID).subscribe((func: any) => 
+    this.cache.functionList(this.funcID)
+    .subscribe((func: any) => 
       {
         if(func)
-        {
-          this.functionName = func.customName;
-        }
+          this.functionName = func.defaultName;
       });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.objectID)
-    {
+    if(changes.objectID.currentValue != changes.objectID.previousValue && !changes.firstChange)
       this.getPostInfor(this.objectID);
-    }
   }
   // get data detail
   getPostInfor(objectID:string){
@@ -66,22 +62,18 @@ export class AppropvalNewsDetailComponent implements OnInit {
         "WP",
         "ERM.Business.WP",
         "NewsBusiness",
-        "GetPostInfoAsync",
+        "GetPostByApprovalAsync",
         [this.objectID,this.funcID])
         .subscribe((res:any) => {
           if(res)
           {
             this.data = JSON.parse(JSON.stringify(res));
-            this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
             this.hideMFC = this.data.approvalStatus === '5';            
             this.dt.detectChanges();
           }
         });
     }
-    else
-    {
-      this.data = null;
-    }
+    else this.data = null;
   }
   clickMF(event:any){
     if(event?.functionID){

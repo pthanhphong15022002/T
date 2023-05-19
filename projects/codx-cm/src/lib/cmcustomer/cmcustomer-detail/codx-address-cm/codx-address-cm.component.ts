@@ -191,20 +191,12 @@ export class CodxAddressCmComponent implements OnInit {
                 if (index != -1) {
                   if (e?.event?.isDefault) {
                     this.listAddress[index].isDefault = false;
-
-                    this.listAddress = this.cmSv.bringDefaultContactToFront(
-                      this.cmSv.loadList(e.event, this.listAddress, 'update')
-                    );
-                  } else {
-                    this.listAddress = this.cmSv.bringDefaultContactToFront(
-                      this.cmSv.loadList(e.event, this.listAddress, 'update')
-                    );
                   }
-                } else {
-                  this.listAddress = this.cmSv.bringDefaultContactToFront(
-                    this.cmSv.loadList(e.event, this.listAddress, 'update')
-                  );
                 }
+
+                this.listAddress = this.cmSv.bringDefaultContactToFront(
+                  this.cmSv.loadList(e.event, this.listAddress, 'update')
+                );
                 var checkIsDefault = this.listAddress.some((x) => x.isDefault);
                 if (!checkIsDefault) {
                   this.addressName.emit(null);
