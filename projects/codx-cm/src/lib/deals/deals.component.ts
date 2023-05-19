@@ -25,6 +25,7 @@ import {
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
 import { CM_Customers } from '../models/cm_model';
+import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
 
 @Component({
   selector: 'lib-deals',
@@ -200,6 +201,15 @@ export class DealsComponent
       if(data.status == "1") {
         for(let more of $event ) {
           switch (more.functionID) {
+            case 'CM0201_1':
+              more.disabled = true;
+              break;
+            case 'CM0201_3':
+              more.disabled = true;
+              break;
+            case 'CM0201_4':
+              more.disabled = true;
+              break;
             case 'SYS03':
             case 'SYS04':
             case 'SYS02':
@@ -208,6 +218,20 @@ export class DealsComponent
               break;
             default:
               more.isblur = true;
+          }
+        }
+      }
+      else {
+        for(let more of $event ) {
+          switch (more.functionID) {
+            case 'CM0201_2':
+              more.disabled = true;
+              break;
+            case 'SYS03':
+            case 'SYS04':
+            case 'SYS02':
+            default:
+              more.isblur = false;
           }
         }
       }
@@ -240,6 +264,9 @@ export class DealsComponent
       case 'SYS02':
         this.delete(data);
         break;
+      case 'CM0201_1':
+        this.moveStage(data);
+        break;
       case 'CM0201_2':
         this.handelStartDay(data);
         break;
@@ -251,13 +278,87 @@ export class DealsComponent
   }
 
   handelStartDay(data) {
-
     this.notificationsService
     .alertCode('DP033', null, ['"' + data?.title + '"' || ''])
     .subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
         this.startDeal(data.recID);
       }
+    });
+  }
+  moveStage(data:any){
+    // if (!this.isClick) {
+    //   return;
+    // }
+    // if (listStepCbx.length == 0 || listStepCbx == null) {
+    //   listStepCbx = this.listSteps;
+    // }
+    // this.isClick = false;
+    // this.crrStepID = data.stepID;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    this.cache.functionList('DPT0402').subscribe((fun) => {
+      this.cache
+        .gridViewSetup(fun.formName, fun.gridViewName)
+        .subscribe((grvSt) => {
+          var formMD = new FormModel();
+          formMD.funcID = fun.functionID;
+          formMD.entityName = fun.entityName;
+          formMD.formName = fun.formName;
+          formMD.gridViewName = fun.gridViewName;
+          // var stepReason = {
+          //   isUseFail: this.isUseFail,
+          //   isUseSuccess: this.isUseSuccess,
+          // };
+          var obj = {
+           // stepName: this.getStepNameById(data.stepID),
+            formModel: formMD,
+            instance: data,
+            // listStepCbx: listStepCbx,
+            // stepIdClick: this.stepIdClick,
+            // stepReason: stepReason,
+            headerTitle: this.titleAction,
+            // listStepProccess: this.process.steps,
+            // lstParticipants: this.lstOrg,
+          //  isDurationControl: this.checkDurationControl(data.stepID),
+          };
+          var dialogMoveStage = this.callfc.openForm(
+            PopupMoveStageComponent,
+            '',
+            850,
+            900,
+            '',
+            obj
+          );
+          dialogMoveStage.closed.subscribe((e) => {
+            // this.isClick = true;
+            // this.stepIdClick = '';
+            if (!e || !e.event) {
+              //data.stepID = this.crrStepID;
+              this.changeDetectorRef.detectChanges();
+            }
+            if (e && e.event != null) {
+              //xu ly data đổ về
+              // data = e.event.instance;
+              // this.listStepInstances = e.event.listStep;
+              // if (e.event.isReason != null) {
+              //   this.moveReason(null, data, e.event.isReason);
+              // }
+              // this.view.dataService.update(data).subscribe();
+              // if (this.kanban) this.kanban.updateCard(data);
+              // this.dataSelected = data;
+
+              // if (this.detailViewInstance) {
+              //   this.detailViewInstance.dataSelect = this.dataSelected;
+              //   this.detailViewInstance.listSteps = this.listStepInstances;
+              // }
+
+              this.detectorRef.detectChanges();
+            }
+          });
+        });
+      // });
     });
   }
 

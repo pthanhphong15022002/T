@@ -99,9 +99,10 @@
           (mouseleave)="p.close()"
           placement="right left"
         >
-          <codx-attachment-temp
-            [objectID]="data?.recID"
+          <codx-attachment-temp 
+            [objectID]="recID"
             [viewType]="2"
+            [referType]="'source'"
           ></codx-attachment-temp>
         </div>
       </div>
@@ -110,7 +111,6 @@
 
   <ng-template #popperAttachment>
     <span class="text-nowrap fs-7">
-      <codx-label name="lblAttachment" default="Tài liệu đính kèm"></codx-label>
       <codx-label name="lblAttachment" default="Tài liệu đính kèm"></codx-label>
     </span>
   </ng-template>

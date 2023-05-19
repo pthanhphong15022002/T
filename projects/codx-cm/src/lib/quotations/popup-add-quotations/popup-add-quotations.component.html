@@ -26,16 +26,15 @@
           </div>
         </div>
         <div class="ms-3 input-circle input-sm">
-          <!-- <div *ngIf="form?.formGroup">
+          <div *ngIf="form?.formGroup">
             <codx-input
               [Group]="form.formGroup"
               field="status"
               [formModel]="form.formModel"
               (valueChange)="valueChange($event)"
-              [disabled]="true"
             >
             </codx-input>
-          </div> -->
+          </div>
         </div>
       </div>
       <div class="d-flex justify-content-end me-3">
@@ -219,7 +218,7 @@
               field="CustomerID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
-              [disabled]="disableRefID"
+              [disabled]="disableCusID"
               (valueChange)="changeCombox($event)"
             ></codx-input>
           </div>
@@ -280,18 +279,18 @@
         [gridViewName]="fmQuotationLines.gridViewName"
         [entityName]="fmQuotationLines.entityName"
         [templateMore]="morefunction"
-        [editSettings]="editSettings"
         [allowFiltering]="true"
         [allowSorting]="true"
         [dataSource]="listQuotationLines"
         [autoLoad]="false"
-        rowHeight="30"
+        rowHeight="50"
         predicates="TransID=@0"
         [dataValues]="quotations.recID"
         (cellChanged)="quotationsLineChanged($event)"
         (created)="gridCreated($event, gridQuationsLines)"
       ></codx-gridview-v2>
     </div>
+    <!-- //  [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
     <ng-template #morefunction let-data>
       <div class="has-action-menu" style="height: 30px">
         <codx-mfunc
@@ -301,6 +300,152 @@
           [isBookMark]="false"
           (clickMF)="clickMFQuotationLines($event, data)"
         ></codx-mfunc>
+      </div>
+    </ng-template>
+    <!-- tem grid -->
+    <ng-template #itemTemp let-data>
+      <div class="d-flex align-items-center me-5 mb-1">
+        <span
+          class="fw-bold line-clamp line-clamp-2"
+          #itemID
+          [innerHTML]="
+            data?.itemID
+              | formatvalue
+                : formModel
+                : 'itemID'
+                : itemID
+                : fmQuotationLines.formName
+                : fmQuotationLines.gridViewName
+              | async
+          "
+        ></span>
+      </div>
+      <div class="d-flex flex-wrap text-nowrap">
+        <div class="d-flex align-items-center mb-1 me-6">
+          <!-- <span class="icon-i-dot icon-22"></span> -->
+          <codx-label
+            class="text-gray-700 label-colon"
+            fiedName="IDIM0"
+            [formName]="fmQuotationLines.formName"
+            [gridViewName]="fmQuotationLines.gridViewName"
+          >
+          </codx-label>
+          <span
+            class="fs-6 fw-bold"
+            #idiM0
+            [innerHTML]="
+              data?.idiM0
+                | formatvalue
+                  : formModel
+                  : 'idiM0'
+                  : idiM0
+                  : fmQuotationLines.formName
+                  : fmQuotationLines.gridViewName
+                | async
+            "
+          ></span>
+        </div>
+
+        <div class="d-flex align-items-center mb-1 me-6">
+          <!-- <span class="icon-i-dot icon-22"></span> -->
+          <codx-label
+            class="text-gray-700 label-colon"
+            fiedName="IDIM1"
+            [formName]="fmQuotationLines.formName"
+            [gridViewName]="fmQuotationLines.gridViewName"
+          >
+          </codx-label>
+          <span
+            class="fs-6 fw-bold"
+            #idiM1
+            [innerHTML]="
+              data?.idiM1
+                | formatvalue
+                  : formModel
+                  : 'idiM1'
+                  : idiM1
+                  : fmQuotationLines.formName
+                  : fmQuotationLines.gridViewName
+                | async
+            "
+          ></span>
+        </div>
+
+        <div class="d-flex align-items-center mb-1 me-6">
+          <!-- <span class="icon-i-dot icon-22"></span> -->
+          <codx-label
+            class="text-gray-700 label-colon"
+            fiedName="IDIM2"
+            [formName]="fmQuotationLines.formName"
+            [gridViewName]="fmQuotationLines.gridViewName"
+          >
+          </codx-label>
+          <span
+            class="fs-6 fw-bold"
+            #idiM2
+            [innerHTML]="
+              data?.idiM2
+                | formatvalue
+                  : formModel
+                  : 'idiM2'
+                  : idiM2
+                  : fmQuotationLines.formName
+                  : fmQuotationLines.gridViewName
+                | async
+            "
+          ></span>
+        </div>
+
+        <div class="d-flex align-items-center mb-1 me-6">
+          <!-- <span class="icon-i-dot icon-22"></span> -->
+          <codx-label
+            class="text-gray-700 label-colon"
+            fiedName="IDIM3"
+            [formName]="fmQuotationLines.formName"
+            [gridViewName]="fmQuotationLines.gridViewName"
+          >
+          </codx-label>
+          <span
+            class="fs-6 fw-bold"
+            #idiM3
+            [innerHTML]="
+              data?.idiM3
+                | formatvalue
+                  : formModel
+                  : 'idiM3'
+                  : idiM3
+                  : fmQuotationLines.formName
+                  : fmQuotationLines.gridViewName
+                | async
+            "
+          ></span>
+        </div>
+
+        <div class="d-flex align-items-center mb-1 me-6">
+          <!-- <span class="icon-i-dot icon-22"></span> -->
+          <codx-label
+            class="text-gray-700 label-colon"
+            fiedName="IDIM4"
+            [formName]="fmQuotationLines.formName"
+            [gridViewName]="fmQuotationLines.gridViewName"
+          >
+          </codx-label>
+
+          <span
+            class="fs-6 fw-bold"
+            #idiM4
+            [innerHTML]="
+              data?.idiM4
+                | formatvalue
+                  : formModel
+                  : 'idiM4'
+                  : idiM4
+                  : fmQuotationLines.formName
+                  : fmQuotationLines.gridViewName
+                | async
+            "
+          ></span>
+        </div>
       </div>
     </ng-template>
   </ng-template>

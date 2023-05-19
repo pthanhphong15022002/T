@@ -93,6 +93,10 @@ instance: tmpInstances = new tmpInstances();
 instanceSteps: any;
 listInstanceSteps: any[] = [];
 avatarChange: boolean = false;
+lstContact:  any[] = [];
+lstContactDeletes:  any[] = [];
+listAddress:  any[] = [];
+listAddressDelete: any[] = [];
 
 constructor(
   private inject: Injector,
@@ -186,18 +190,19 @@ onAdd() {
     .save((option: any) => this.beforeSave(option), 0)
     .subscribe((res) => {
       if (res) {
-        var recID = res?.save?.recID;
+        debugger;
+        var recID = res?.save[0]?.recID;
         if (this.avatarChange) {
           this.imageUpload
             .updateFileDirectReload(recID)
             .subscribe((result) => {
               if (result) {
-                this.dialog.close([res.save]);
+                this.dialog.close([res.save[0]]);
                 return;
               }
             });
           }
-      this.dialog.close([res.save]);
+      this.dialog.close([res.save[0]]);
       } else this.dialog.close();
     });
 }
@@ -205,17 +210,22 @@ onEdit() {
   this.dialog.dataService
     .save((option: any) => this.beforeSave(option))
     .subscribe((res) => {
-      if (res.update) {
+      if (res.update[0]) {
         this.dialog.close(res.update[0]);
       }
     });
 }
 beforeSave(option: RequestOption) {
-  var data = this.lead;
-  option.methodName =
-    this.action !== this.actionEdit ? 'AddLeadAsync' : '';
+  if(this.action !== this.actionEdit) {
+    var data = [this.lead, this.lstContact, this.listAddress, this.formModel.funcID, this.formModel.entityName];
+  }
+  else {
+     var data = [this.lead, this.lstContact,this.lstContactDeletes, this.listAddress, this.listAddressDelete,this.formModel.entityName];
+  }
+
+  option.methodName = this.action !== this.actionEdit ? 'AddLeadAsync' : 'EditLeadAsync';
   option.className = 'LeadsBusiness';
-  option.data = this.action != this.actionEdit ? data : [data, this.customerIDOld];
+  option.data = data;
   return true;
 }
 
@@ -289,11 +299,28 @@ setTitle(e: any) {
 changeAvatar() {
   this.avatarChange = true;
 }
-lstAddressEmit($event) {}
-lstAddressDeleteEmit($event) {}
+lstContactEmit(e) {
+  if (e != null && e.length > 0) {
+    this.lstContact = e;
+  }
+}
 
+lstContactDeleteEmit(e) {
+  if (e != null && e.length > 0) {
+    this.lstContactDeletes = e;
+  }
+}
 
-lstContactDeleteEmit($event){}
-lstContactEmit($event){}
+lstAddressEmit(e){
+  if (e != null && e.length > 0) {
+    this.listAddress = e;
+  }
+}
+
+lstAddressDeleteEmit(e){
+  if (e != null && e.length > 0) {
+    this.listAddressDelete = e;
+  }
+}
 }
 

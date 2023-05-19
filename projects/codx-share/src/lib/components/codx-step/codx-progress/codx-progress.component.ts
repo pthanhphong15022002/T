@@ -60,6 +60,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     this.actualEnd = this.dataSource['actualEnd'] || null;
     this.progressData = Number(this.dataSource['progress'] || 0);
     this.getgridViewSetup(this.dialog.formModel);
+    this.disabledProgressInput = this.progressData == 100 ? true : false;
   }
 
   ngOnChanges(changes: SimpleChanges): void {

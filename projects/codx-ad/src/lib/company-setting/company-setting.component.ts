@@ -471,10 +471,11 @@ export class CompanySettingComponent
       (md: TN_OrderModule) =>
         md.boughtModule?.refID == module?.boughtModule?.moduleID
     );
+    module.childModule = childModule;
     let data = {
       grvView: this.grvTNOrders,
-      module: module,
-      childModule: childModule,
+      lstModule: [module],
+      extendMode: 'module',
     };
     let orderDialog = this.callfc.openForm(
       PopupExtendModuleComponent,
@@ -484,5 +485,15 @@ export class CompanySettingComponent
       '',
       data
     );
+  }
+
+  loginHCS(m) {
+    this.adService.loginHCS().subscribe((token: string) => {
+      let returnUrl = 'https://surehcs.lacviet.vn/UI2017';
+      let url = `http://surehcs.lacviet.vn/UI2017/verifytoken.aspx?tklid=${token}&returnUrl=${returnUrl}`;
+      if (url != '') {
+        window.open(url, '_blank');
+      }
+    });
   }
 }

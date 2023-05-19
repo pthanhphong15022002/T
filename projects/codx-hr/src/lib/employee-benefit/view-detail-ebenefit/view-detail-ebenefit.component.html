@@ -35,11 +35,21 @@
       <codx-temp-full class="user-center" [title]="itemDetail?.ownerName" [imageId]="itemDetail?.emp?.employeeID"
         imageObjType="'HR_Employees'" [referType]="'avt'" [imageWidth]="80" [titleTmp]="titleTmp">
       </codx-temp-full>
+
+      <span *ngIf="itemDetail.isCurrent" class="ms-auto" #popOver="ngbPopover" [openDelay]="500" (mouseenter)="popOver.open()"
+        (mouseleave)="popOver.close()" placement="left" [ngbPopover]="popIsNewest" [style.color]="'#0078FF'"
+        class="icon-bookmark icon-25 ms-auto"></span>
     </div>
+    <ng-template #popIsNewest>
+      <span>
+        <codx-label name="lblIsCurrent" [formModel]="view.formModel" default="Mới nhất"></codx-label>
+      </span>
+    </ng-template>
     <div class="d-flex flex-wrap">
       <div class="d-flex w-100">
         <div class="d-flex align-items-center me-5 mb-5">
-          <codx-label fiedName="decisionNo" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false">
+          <codx-label fiedName="decisionNo" [formModel]="formModel" class="text-gray-700 label-colon"
+            [setRequire]="false">
           </codx-label>
           <span class="fw-bold" [innerHTML]="
               itemDetail.decisionNo
@@ -64,7 +74,8 @@
 
       <div class="d-flex w-100">
         <div class="d-flex align-items-center me-5 mb-5">
-          <codx-label fiedName="benefitID" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false"> 
+          <codx-label fiedName="benefitID" [formModel]="formModel" class="text-gray-700 label-colon"
+            [setRequire]="false">
           </codx-label>
           <span class="fw-bold" [innerHTML]="
               itemDetail.benefitID
@@ -73,7 +84,7 @@
             ">
           </span>
         </div>
-  
+
         <div class="d-flex align-items-center me-5 mb-5">
           <codx-label fiedName="benefitAmt" [formModel]="formModel" class="text-gray-700 label-colon">
           </codx-label>
@@ -85,10 +96,11 @@
           </span>
         </div>
       </div>
-    
+
       <div class="d-flex w-100">
         <div class="d-flex align-items-center me-5 mb-5">
-          <codx-label fiedName="effectedDate" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false">
+          <codx-label fiedName="effectedDate" [formModel]="formModel" class="text-gray-700 label-colon"
+            [setRequire]="false">
           </codx-label>
           <span class="fw-bold" [innerHTML]="
               itemDetail?.effectedDate
@@ -97,7 +109,7 @@
             ">
           </span>
         </div>
-  
+
         <div class="d-flex align-items-center me-5 mb-5">
           <codx-label fiedName="expiredDate" [formModel]="formModel" class="text-gray-700 label-colon">
           </codx-label>
@@ -109,7 +121,7 @@
           </span>
         </div>
       </div>
-  
+
 
       <div class="d-flex align-items-center me-5 mb-5 ">
         <codx-label fiedName="note" [formModel]="formModel" class="text-gray-700 label-colon">

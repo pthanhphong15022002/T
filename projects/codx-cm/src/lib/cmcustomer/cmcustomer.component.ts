@@ -72,7 +72,7 @@ export class CmCustomerComponent
   assemblyName = 'ERM.Business.CM';
   entityName = 'CM_Customers';
   className = 'CustomersBusiness';
-  method = 'GetListCRMLAsync';
+  method = 'GetListCRMAsync';
   idField = 'recID';
   //endregion
 

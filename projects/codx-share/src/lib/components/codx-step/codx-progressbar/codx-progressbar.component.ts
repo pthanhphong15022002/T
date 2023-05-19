@@ -49,7 +49,6 @@ export class ProgressbarComponent implements OnInit, OnChanges {
     if(changes.progress){
       this.progressChange = JSON.parse(JSON.stringify(this.progress));
       // this.load(Math.floor(this.progress));
-      console.log(this.progress);
       setTimeout(() => {
         this.onLoad();
       },100);

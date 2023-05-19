@@ -2,6 +2,8 @@ import { Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/co
 import { ViewModel, AuthService, CallFuncService, ViewType, DataRequest, RequestOption, UIComponent, DialogModel } from 'codx-core';
 import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupEditComponent } from '../popup/popup-edit/popup-edit.component';
+import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
+import { Z } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'wp-appropval-news',
@@ -12,8 +14,6 @@ export class AppropvalNewsComponent extends UIComponent {
 
   service: string = 'WP';
   assemblyName: string = 'ERM.Business.WP';
-  className: string = 'NewsBusiness';
-  method: string = 'GetDataApprovalAsync';
   entityName: string = '';
   predicate: string = '';
   dataValue: string = '';
@@ -42,8 +42,6 @@ export class AppropvalNewsComponent extends UIComponent {
       text: 'Chờ duyệt',
       value: '3',
       total: 0,
-      predicate: 'ApproveStatus = @0',
-      datavalue: '3',
       active: false,
     },
     {
@@ -51,8 +49,6 @@ export class AppropvalNewsComponent extends UIComponent {
       text: 'Đã duyệt',
       value: '5',
       total: 0,
-      predicate: 'ApproveStatus = @0',
-      datavalue: '5',
       active: false,
     },
     {
@@ -60,17 +56,13 @@ export class AppropvalNewsComponent extends UIComponent {
       text: 'Từ chối',
       value: '4',
       total: 0,
-      predicate: 'ApproveStatus = @0',
-      datavalue: '4',
       active: false,
     },
     {
       name: 'all',
       text: 'Tất cả',
-      value: '0',
+      value: '',
       total: 0,
-      predicate: '',
-      datavalue: '',
       active: true,
     },
   ];
@@ -78,23 +70,24 @@ export class AppropvalNewsComponent extends UIComponent {
     private auth: AuthService,
     private callFuc: CallFuncService,
     private injector: Injector
-  ) {
+  ) 
+  {
     super(injector);
+    this.user = this.auth.userValue;
+
   }
   onInit(): void {
-    this.user = this.auth.userValue;
     this.router.params.subscribe((param) => {
-      if (param) {
+      if (param['funcID']) {
         this.funcID = param['funcID'];
-        this.cache.functionList(this.funcID).subscribe((func: any) => {
+        this.cache.functionList(this.funcID)
+        .subscribe((func: any) => {
           if (func) {
             this.functionName = func.customName;
             this.cache
               .gridViewSetup(func.formName, func.gridViewName)
               .subscribe((grd: any) => {
-                if (grd) {
                   this.gridViewSetUp = grd;
-                }
               });
           }
         });
@@ -117,20 +110,19 @@ export class AppropvalNewsComponent extends UIComponent {
     ];
     this.detectorRef.detectChanges();
   }
+  // get data tab list
   loadDataTab(funcID: string) {
-    if (funcID) {
-      let model = new DataRequest();
-      model.funcID = funcID;
+    if (funcID){
       this.api
         .execSv(
-          'WP',
-          'ERM.Business.WP',
-          'NewsBusiness',
-          'GetDataByApproSatusAsync',
-          [model]
-        )
+          this.service,
+          this.assemblyName,
+          funcID == 'WPT0213'? 'CommentsBusiness' : 'NewsBusiness',
+          'GetDataTabApproAsync',
+          [funcID])
         .subscribe((res: any) => {
-          if (res) {
+          if (res) 
+          {
             this.tabAsside.map((tab: any) => {
               tab.total = res[tab.value];
             });
@@ -139,6 +131,7 @@ export class AppropvalNewsComponent extends UIComponent {
         });
     }
   }
+  //selected change
   selectedChange(event: any) {
     if (event?.data?.recID) 
     {
@@ -146,94 +139,101 @@ export class AppropvalNewsComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
+  
   realoadData(event: any) {
+    debugger
     this.loadDataTab(this.view.funcID);
   }
-  clickTabApprove(item, predicate: string, dataValue: string) {
-    this.view.dataService.setPredicates([predicate], [dataValue]).subscribe();
+  // click tab approval
+  clickTabApprove(item) {
+    debugger
+    let predicates = [item.value ? "ApproveStatus = @0" : ""];
+    let dataValues = [item.value];
+    this.view.dataService.page = 0;
+    this.view.dataService.setPredicates(predicates, dataValues).subscribe();
     this.tabAsside.forEach((e) => {
-      if (e.value == item.value) {
-        e.active = true;
-      } else {
-        e.active = false;
-      }
+        e.active = e.value === item.value ;
     });
   }
+  // click moreFunc
   clickMF(event: any, data: any) {
-    if (event.functionID) {
-      let headerText = event.text + ' ' + this.functionName;
-      switch (event.functionID) {
-        case 'SYS02': //delete
-          this.deletedPost(data);
-          break;
-        case 'SYS03': //edit
-          let option = new DialogModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          if (this.view.funcID == 'WPT0211' || this.view.funcID == 'WPT0212') {
-            // tin tức sự kiện
-            option.IsFull = true;
-            let object = {
-              headerText: headerText,
-              data: data,
-            };
-            let popup = this.callFuc.openForm(
-              PopupEditComponent,
-              '',
-              0,
-              0,
-              this.view.funcID,
-              object,
-              '',
-              option
-            );
-            popup.closed.subscribe((res: any) => {
-              if (res?.event) {
-                this.view.dataService.update(res.event).subscribe();
+    debugger
+    this.itemSelected = data;
+    switch (event.functionID) {
+      case 'SYS02': //delete
+        this.deletedPost(data);
+        break;
+      case 'SYS03': //edit
+        let option = new DialogModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        // WP_News
+        if(this.view.funcID !== 'WPT0213') 
+        {
+          option.IsFull = true;
+          option.zIndex = 100;
+          let obj = {
+            action: event.text,
+            isAdd:false,
+            data: data
+          };
+          let popup = this.callFuc.openForm(
+            PopupAddComponent,
+            '',
+            0,
+            0,
+            this.view.funcID,
+            obj,
+            '',
+            option
+          );
+          popup.closed.subscribe((res: any) => {
+            if (res?.event) {
+              this.view.dataService.update(res.event).subscribe();
+            }
+          });
+        } 
+        // MXH
+        else 
+        {
+          this.api
+            .execSv(
+              this.service,
+              this.assemblyName,
+              'CommentsBusiness',
+              'GetPostByIDAsync',
+              [data.recID])
+              .subscribe((res: any) => {
+              if (res) {
+                let obj = {
+                  data: res,
+                  status: 'edit',
+                  headerText: event.text,
+                };
+                let option = new DialogModel();
+                option.DataService = this.view.dataService;
+                option.FormModel = this.view.formModel;
+                let popup = this.callfc.openForm(
+                  PopupAddPostComponent,
+                  event.text,
+                  700,
+                  550,
+                  '',
+                  obj,
+                  '',
+                  option
+                );
+                popup.closed.subscribe((res: any) => {
+                  if (res?.event) {
+                    this.view.dataService.update(res.event).subscribe();
+                  }
+                });
               }
             });
-          } // MXH
-          else {
-            this.api
-              .execSv(
-                this.service,
-                this.assemblyName,
-                'CommentsBusiness',
-                'GetPostByIDAsync',
-                [data.recID]
-              )
-              .subscribe((res: any) => {
-                if (res) {
-                  let obj = {
-                    data: res,
-                    status: 'edit',
-                    headerText: headerText,
-                  };
-                  let option = new DialogModel();
-                  option.DataService = this.view.dataService;
-                  option.FormModel = this.view.formModel;
-                  let popup = this.callfc.openForm(
-                    PopupAddPostComponent,
-                    headerText,
-                    700,
-                    550,
-                    '',
-                    obj,
-                    '',
-                    option
-                  );
-                  popup.closed.subscribe((res: any) => {
-                    if (res?.event) {
-                      this.view.dataService.update(res.event).subscribe();
-                    }
-                  });
-                }
-              });
-          }
-          break;
-        default:
-          break;
-      }
+        }
+        break;
+      default:
+        break;
     }
   }
 
@@ -241,11 +241,10 @@ export class AppropvalNewsComponent extends UIComponent {
     option.service = 'WP';
     option.assemblyName = 'ERM.Business.WP';
     option.className = 'NewsBusiness';
-    if (this.view.funcID == 'WPT0211' || this.view.funcID == 'WPT0212') {
+    if (this.view.funcID == 'WPT0211' || this.view.funcID == 'WPT0212') 
       option.methodName = 'DeleteNewsAsync';
-    } else {
+    else
       option.methodName = 'DeletePostAsync';
-    }
     option.data = data;
     return true;
   }
@@ -257,7 +256,6 @@ export class AppropvalNewsComponent extends UIComponent {
       .subscribe();
   }
 
-  clickBtnAdd() {}
 
   setStyles(data: any) {
     let styles = {

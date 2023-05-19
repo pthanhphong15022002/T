@@ -32,6 +32,7 @@ import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.co
 import { InstancesComponent } from '../instances.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
+import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -538,6 +539,44 @@ export class InstanceDetailComponent implements OnInit {
     return this.ganttDs[idx]?.color;
   }
   clickDetailGanchart(recID) {
+    // let data = this.ganttDsClone?.find((item) => item.recID === recID);
+    // viewTask(data,type){
+    //   let listTaskConvert = this.currentStep?.tasks?.map((item) => {
+    //     return {
+    //       ...item,
+    //       name: item?.taskName,
+    //       type: item?.taskType,
+    //     };
+    //   });
+    //   let value = JSON.parse(JSON.stringify(data));
+    //   value['name'] = value['taskName'] || value['taskGroupName'];
+    //   value['type'] = value['taskType'] || type;
+    //   if (data) {
+    //     let frmModel: FormModel = {
+    //       entityName: 'DP_Instances_Steps_Tasks',
+    //       formName: 'DPInstancesStepsTasks',
+    //       gridViewName: 'grvDPInstancesStepsTasks',
+    //     };
+    //     let listData = {
+    //       value: value,
+    //       listValue: listTaskConvert,
+    //       step: this.currentStep,
+    //       isRoleAll: this.isRoleAll,
+    //       isUpdate: this.isUpdate,
+    //     };
+    //     let option = new SidebarModel();
+    //     option.Width = '550px';
+    //     option.zIndex = 1011;
+    //     option.FormModel = frmModel;
+    //     let dialog = this.callfc.openSide(CodxViewTaskComponent, listData, option);
+    //     dialog.closed.subscribe((dataOuput) => {
+    //       if(dataOuput?.event){
+    //         this.handelProgress(data,dataOuput?.event)
+    //       }
+    //     })
+  
+    //   }
+    // }
     let data = this.ganttDsClone?.find((item) => item.recID === recID);
     if (data) {
       let frmModel: FormModel = {
@@ -554,7 +593,7 @@ export class InstanceDetailComponent implements OnInit {
       option.Width = '550px';
       option.zIndex = 1011;
       option.FormModel = frmModel;
-      let dialog = this.callfc.openSide(ViewJobComponent, listData, option);
+      let dialog = this.callfc.openSide(CodxViewTaskComponent, listData, option);
       // this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
       //   value: data,
       //   listValue: this.ganttDsClone,

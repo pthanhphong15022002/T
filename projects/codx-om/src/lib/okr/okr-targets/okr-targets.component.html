@@ -53,14 +53,14 @@
             <codx-label default="Mở rộng" fiedName="lblExpand"></codx-label>
           </div>
         </div>
-        <span class="btn-extend">
+        <span class="btn-extend" *ngIf="dataOKRPlans && dataOKRPlans?.status=='1'">
           <codx-toolbar-button [button]="button" (buttonClick)="click($event)">
           </codx-toolbar-button>
         </span>
       </div>
     </div>
 
-    <div class="" >
+    <div class="okr-treeview" >
       <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="dataOKR" [enableCheck]="false"
         idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="true"
         (selectionChange)="selectionChange($event)" class="overflow-auto h-100">

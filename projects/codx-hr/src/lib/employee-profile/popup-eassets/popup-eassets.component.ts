@@ -136,16 +136,16 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
             this.assetObj.employeeID = this.employeeId;
             this.formModel.currentData = this.assetObj;
             this.formGroup.patchValue(this.assetObj);
-            this.cr.detectChanges();
             this.isAfterRender = true;
+            this.cr.detectChanges();
           }
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
         this.formGroup.patchValue(this.assetObj);
         this.formModel.currentData = this.assetObj;
-        this.cr.detectChanges();
         this.isAfterRender = true;
+        this.cr.detectChanges();
       }
     }
   }
@@ -154,18 +154,18 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
     console.log('select tai san', evt);
   }
 
-  ngAfterViewInit(){
-    this.dialog && this.dialog.closed.subscribe(res => {
-      if(!res.event){
-        if(this.successFlag == true){
-          this.dialog.close(this.assetObj);
-        }
-        else{
-          this.dialog.close(null);
-        }
-      }
-    })
-  }
+  // ngAfterViewInit(){
+  //   this.dialog && this.dialog.closed.subscribe(res => {
+  //     if(!res.event){
+  //       if(this.successFlag == true){
+  //         this.dialog.close(this.assetObj);
+  //       }
+  //       else{
+  //         this.dialog.close(null);
+  //       }
+  //     }
+  //   })
+  // }
 
   onSaveForm() {
     // if (this.formGroup.invalid) {
@@ -178,6 +178,7 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
     }
     this.assetObj.employeeID = this.employeeId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
+      console.log(this.assetObj);
       this.hrService.AddEmployeeAssetInfo(this.assetObj).subscribe((p) => {
         if (p != null) {
           this.assetObj.recID = p.recID;
