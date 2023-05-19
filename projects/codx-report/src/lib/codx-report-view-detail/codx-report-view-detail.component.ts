@@ -191,6 +191,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     this.api.execSv("SYS","ERM.Business.SYS","FunctionListBusiness","GetFuncByModuleIDAsync",[module,type]).subscribe((res:any)=>{
       if(res){
         this.rootFunction = res;
+        this.getReportList(this.funcItem.moduleID, this.funcItem.reportType);
       }
     })
   }
@@ -206,23 +207,30 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     .subscribe((res: any) => {
       if (res) {
         this.funcItem = res;
-        this.setBreadCrumb(this.funcItem);
+
         this.getRootFunction(this.funcItem.moduleID, this.funcItem.reportType);
-        this.getReportList(this.funcItem.moduleID, this.funcItem.reportType);
+
+
       }
     });
   }
-  setBreadCrumb(func:any){
+  setBreadCrumb(func:any,deleteChild:boolean=false){
     if(func){
       let eleHeader = document.querySelector('codx-header');
       if(eleHeader){
-        let span = document.createElement('span');
-          span.innerHTML = '> '+ this.funcItem.customName;
-          let titleEle = eleHeader.querySelector('codx-page-title');
+        let titleEle = eleHeader.querySelector('codx-page-title');
           if(titleEle){
-            (titleEle as HTMLElement).style.width ='100%';
-            if(!titleEle.querySelector('#breadCrumb'))
-              titleEle.appendChild(this.breadCrumb.nativeElement);
+            (titleEle as HTMLElement).innerHTML='';
+
+            if(!titleEle.querySelector('#clonedBreadCrumb') && !deleteChild){
+              let clone = this.breadCrumb.nativeElement
+              clone.id = 'clonedBreadCrumb';
+              if(clone.classList.contains('invisible')) clone.classList.remove('invisible')
+              titleEle.appendChild(clone);
+            }
+            if(deleteChild){
+              titleEle.querySelector('#clonedBreadCrumb')?.remove();
+            }
           }
       }
     }
@@ -231,6 +239,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     this.api.execSv("rptsys",'Codx.RptBusiniess.SYS',"ReportListBusiness","GetReportsByModuleAsync",[reportType,moduleID]).subscribe((res:any)=>{
       this.orgReportList = res;
       this.reportList = this.orgReportList.filter((x:any)=>x.reportID != this.funcItem.reportID);
+      this.setBreadCrumb(this.funcItem);
     })
   }
   itemSelect(e:any){
@@ -242,6 +251,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   }
   homeClick(){
     this.codxService.navigate('', this.rootFunction.module.toLowerCase()+'/report/' + this.rootFunction.functionID);
-    this.breadCrumb.nativeElement.remove()
+    this.setBreadCrumb(this.funcItem,true);
   }
+
 }

@@ -115,31 +115,32 @@ export class PopupAddPositionsComponent implements OnInit {
 
   // value change
   dataChange(e: any, field: string) {
+    debugger
     if (e) {
       if (e?.length == undefined) {
         this.data[field] = e?.data;
       } else {
         this.data[field] = e[0];
-        // if(field == "positionID"){
-        //   let itemSelected = e.component?.itemsSelected[0];
-        //   if(itemSelected){
-        //     if(itemSelected.hasOwnProperty("DepartmentID"))
-        //     {
-        //       let departmentID = itemSelected["DepartmentID"];
-        //       this.data["departmentID"] = departmentID;
-        //     }
-        //     if(itemSelected.hasOwnProperty("DivisionID"))
-        //     {
-        //       let departmentID = itemSelected["DivisionID"];
-        //       this.data["divisionID"] = departmentID;
-        //     }
-        //     if(itemSelected.hasOwnProperty("CompanyID"))
-        //     {
-        //       let departmentID = itemSelected["CompanyID"];
-        //       this.data["companyID"] = departmentID;
-        //     }
-        //   }
-        // }
+        if(field == "positionID"){
+          let itemSelected = e.component?.itemsSelected[0];
+          if(itemSelected){
+            if(itemSelected.hasOwnProperty("DepartmentID"))
+            {
+              let departmentID = itemSelected["DepartmentID"];
+              this.data["departmentID"] = departmentID;
+            }
+            if(itemSelected.hasOwnProperty("DivisionID"))
+            {
+              let departmentID = itemSelected["DivisionID"];
+              this.data["divisionID"] = departmentID;
+            }
+            if(itemSelected.hasOwnProperty("CompanyID"))
+            {
+              let departmentID = itemSelected["CompanyID"];
+              this.data["companyID"] = departmentID;
+            }
+          }
+        }
       }
     }
   }

@@ -25,6 +25,29 @@
 <!--End Card-->
 
 <!--List detail-->
-<ng-template #itemTemplate let-data> </ng-template>
-<ng-template #templateDetail> </ng-template>
+<ng-template #itemTemplate let-data>
+  <codx-temp-full
+    cardCss="card-template border-bottom p-3 list-task"
+    [typeMF]="'hover'"
+    [title]="data?.campaignName"
+    [titleCss]="'fs-6 mb-1'"
+    [descTmp]="descTmp"
+    (clickMF)="clickMF($event, data)"
+    [moreFuncCss]="'me-9'"
+    [typeMF]="'hover'"
+    [formModel]="view.formModel"
+    [footer]="footer"
+    [dataItem]="data"
+  >
+  </codx-temp-full>
+</ng-template>
+<ng-template #descTmp let-data> desc </ng-template>
+<ng-template #footer> footer </ng-template>
+<ng-template #templateDetail>
+  <codx-campaigns-detail
+    [dataService]="view.dataService"
+    [dataSelected]="dataSelected"
+    [formModel]="view.formModel"
+  ></codx-campaigns-detail>
+</ng-template>
 <!--End List detail-->
