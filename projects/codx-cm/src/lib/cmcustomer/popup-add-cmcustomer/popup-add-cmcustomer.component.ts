@@ -355,6 +355,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async onSave() {
+    if(this.funcID == 'CM0101'){
+      this.data.customerName = this.data?.customerName;
+    }else if(this.funcID == 'CM0103'){
+      this.data.partnerName = this.data?.partnerName;
+    }
     if (this.funcID == 'CM0102') {
       if (this.data.firstName != null && this.data.firstName.trim() != '') {
         if (this.data.lastName != null && this.data.lastName.trim() != '') {
