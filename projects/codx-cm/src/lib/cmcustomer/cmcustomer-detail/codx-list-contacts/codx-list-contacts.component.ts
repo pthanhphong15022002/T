@@ -66,7 +66,6 @@ export class CodxListContactsComponent implements OnInit {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
     this.getListContacts();
-
   }
 
   async ngOnInit() {
@@ -89,7 +88,7 @@ export class CodxListContactsComponent implements OnInit {
     this.className = 'ContactsBusiness';
     this.fetch().subscribe((item) => {
       this.listContacts = this.cmSv.bringDefaultContactToFront(item);
-      if(this.listContacts != null && this.listContacts.length > 0){
+      if (this.listContacts != null && this.listContacts.length > 0) {
         this.changeContacts(this.listContacts[0]);
       }
       this.loaded = true;
@@ -208,21 +207,15 @@ export class CodxListContactsComponent implements OnInit {
               if (index != -1) {
                 if (e?.event?.isDefault) {
                   this.listContacts[index].isDefault = false;
-
-                  this.listContacts = this.cmSv.bringDefaultContactToFront(
-                    this.cmSv.loadList(e.event, this.listContacts, 'update')
-                  );
-                } else {
-                  this.listContacts = this.cmSv.bringDefaultContactToFront(
-                    this.cmSv.loadList(e.event, this.listContacts, 'update')
-                  );
                 }
-              } else {
-                this.listContacts = this.cmSv.bringDefaultContactToFront(
-                  this.cmSv.loadList(e.event, this.listContacts, 'update')
-                );
               }
-              var index = this.listContacts.findIndex(x => x.recID == e.event?.recID);
+
+              this.listContacts = this.cmSv.bringDefaultContactToFront(
+                this.cmSv.loadList(e.event, this.listContacts, 'update')
+              );
+              var index = this.listContacts.findIndex(
+                (x) => x.recID == e.event?.recID
+              );
               this.changeContacts(this.listContacts[index]);
               this.lstContactEmit.emit(this.listContacts);
               this.changeDetectorRef.detectChanges();
@@ -271,7 +264,9 @@ export class CodxListContactsComponent implements OnInit {
                 this.cmSv.loadList(e.event, this.listContacts, 'update')
               );
               this.lstContactEmit.emit(this.listContacts);
-              var index = this.listContacts.findIndex(x => x.recID == e.event?.recID);
+              var index = this.listContacts.findIndex(
+                (x) => x.recID == e.event?.recID
+              );
               this.changeContacts(this.listContacts[index]);
               this.changeDetectorRef.detectChanges();
             }
@@ -286,7 +281,7 @@ export class CodxListContactsComponent implements OnInit {
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
-        if(this.type == 'formDetail'){
+        if (this.type == 'formDetail') {
           this.cmSv.updateContactCrm(data.recID).subscribe((res) => {
             if (res) {
               // this.getListContactByObjectID(this.objectID);
@@ -298,9 +293,9 @@ export class CodxListContactsComponent implements OnInit {
               this.changeDetectorRef.detectChanges();
             }
           });
-        }else{
-          var index = this.listContacts.findIndex(x => x.recID == data.recID);
-          if(index != -1){
+        } else {
+          var index = this.listContacts.findIndex((x) => x.recID == data.recID);
+          if (index != -1) {
             this.listContacts.splice(index, 1);
             lstDelete.push(data);
             this.changeContacts(this.listContacts[0]);
@@ -311,7 +306,6 @@ export class CodxListContactsComponent implements OnInit {
       }
     });
   }
-
 
   //#endregion
 }
