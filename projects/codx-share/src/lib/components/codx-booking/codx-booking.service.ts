@@ -45,6 +45,16 @@ export class CodxBookingService {
       [recID]
     );
   }
+  addEditBooking(data: any, isAdd:boolean, listAttendees:any, listStationery:any) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'AddEditItemAsync',
+      [data,isAdd,listAttendees,listStationery]
+    );
+  }
+
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
       this.cache.functionList(functionID).subscribe((funcList) => {
@@ -609,15 +619,6 @@ export class CodxBookingService {
     );
   }
 
-  getApprovalTransByTransID(booking: any) {
-    return this.api.execSv(
-      'ES',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'GetApprovalTransByTransIDAsync',
-      [booking.recID]
-    );
-  }
 
   checkRole(curUser: any, owner: string, isAdmin: boolean, host: string = '') {
     return (

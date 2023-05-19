@@ -198,6 +198,16 @@ export class CodxHrService {
     );
   }
 
+  SaveEmployeeQuitJobInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'UpdateEmployeeQuitJobInfoAsync',
+      data
+    );
+  }
+
   saveEmployeeContactInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -1696,6 +1706,16 @@ export class CodxHrService {
   //#endregion
 
   //#region HR_EContracts
+  getEContractQuitFortelDays(data){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EContractsBusiness',
+      'GetEmpContractQuitFortelDaysAsync',
+      data
+    );
+  }
+
   getEContractDefault() {
     return this.api.execSv<any>(
       'HR',

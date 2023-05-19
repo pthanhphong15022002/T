@@ -22,7 +22,7 @@
         </div>
       </div>
       <span [innerHTML]="
-          itemDetail.orgUnitID
+          itemDetail?.emp.orgUnitID
             | formatvalue : view.formModel : 'orgUnitID'
             | async
         "></span>
@@ -49,7 +49,7 @@
       </div>
 
       <div class="d-flex align-items-center me-5 mb-5 col-12">
-        <codx-label fiedName="kowID" [formModel]="formModel" class="text-gray-700 label-colon">
+        <codx-label fiedName="kowID" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false">
         </codx-label>
         <span class="fw-bold" [innerHTML]="
             itemDetail?.kowID
@@ -61,7 +61,7 @@
 
       <div class="d-flex w-100">
         <div class="d-flex align-items-center me-5 mb-5">
-          <codx-label fiedName="beginDate" [formModel]="formModel" class="text-gray-700 label-colon">
+          <codx-label fiedName="beginDate" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false">
           </codx-label>
           <span class="fw-bold" [innerHTML]="
               itemDetail?.beginDate
@@ -72,7 +72,7 @@
         </div>
 
         <div class="d-flex align-items-center me-5 mb-5">
-          <codx-label fiedName="endDate" [formModel]="formModel" class="text-gray-700 label-colon">
+          <codx-label fiedName="endDate" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false">
           </codx-label>
           <span class="fw-bold" [innerHTML]="
               itemDetail?.endDate
@@ -85,7 +85,7 @@
 
       <div class="d-flex w-100">
         <div class="d-flex align-items-center me-5 mb-5">
-          <codx-label fiedName="periodType" [formModel]="formModel" class="text-gray-700 label-colon">
+          <codx-label fiedName="periodType" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false">
           </codx-label>
           <span class="fw-bold" [innerHTML]="
             itemDetail?.periodType | formatvalue : formModel : 'periodType' | async
@@ -104,7 +104,7 @@
 
 
       <div class="d-flex align-items-center me-5 mb-5 col-12">
-        <codx-label fiedName="businessPlace" [formModel]="formModel" class="text-gray-700 label-colon">
+        <codx-label fiedName="businessPlace" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false">
         </codx-label>
         <span class="fw-bold" [innerHTML]="
             itemDetail?.businessPlace | formatvalue : formModel : 'businessPlace' | async

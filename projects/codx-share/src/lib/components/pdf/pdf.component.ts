@@ -88,7 +88,7 @@ export class PdfComponent
   @Input() oApprovalTrans;
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
   @Input() approver: string = ''; // ký ngoài hệ thống
-  @Output() confirmChange = new EventEmitter<boolean>();
+  // @Output() confirmChange = new EventEmitter<boolean>();
 
   @Input() hideActions = false;
   @Input() isSignMode = false;
@@ -953,7 +953,8 @@ export class PdfComponent
                   false,
                   area.signer,
                   area.stepNo,
-                  area
+                  area,
+                  isChangeUrl
                 );
                 break;
               }
@@ -971,7 +972,8 @@ export class PdfComponent
                   false,
                   area.signer,
                   area.stepNo,
-                  area
+                  area,
+                  isChangeUrl
                 );
                 break;
               }
@@ -989,7 +991,8 @@ export class PdfComponent
                   false,
                   area.signer,
                   area.stepNo,
-                  area
+                  area,
+                  isChangeUrl
                 );
                 break;
               }
@@ -1038,19 +1041,6 @@ export class PdfComponent
                 );
                 break;
               }
-            }
-            if (isChangeUrl) {
-              area.labelValue = url;
-              if (this.imgConfig.includes(area.labelType)) {
-                area.labelValue = area.labelValue.replace(
-                  environment.urlUpload + '/',
-                  ''
-                );
-              }
-              this.esService
-                .addOrEditSignArea(this.recID, this.curFileID, area, area.recID)
-                .subscribe((res) => {});
-            } else {
             }
           }
         });
@@ -1322,7 +1312,8 @@ export class PdfComponent
     isSaveToDB: boolean,
     stepRecID: string,
     stepNo: number,
-    area?: tmpSignArea
+    area?: tmpSignArea,
+    isChangeUrl: boolean = false
   ) {
     let tmpName: tmpAreaName = {
       Signer: stepRecID,
@@ -1333,7 +1324,6 @@ export class PdfComponent
       LabelValue: url,
     };
     let recID = Guid.newGuid();
-    this.stepNo = stepNo;
 
     switch (type) {
       case 'text':
@@ -1351,6 +1341,8 @@ export class PdfComponent
             x: this.xScale,
             y: this.yScale,
           });
+          this.stepNo = stepNo;
+
           this.needAddKonva = textArea;
         } else {
           textArea.id(area.recID ? area.recID : textArea.id());
@@ -1393,7 +1385,19 @@ export class PdfComponent
         img.referrerPolicy = 'noreferrer';
         img.src = url;
         img.onload = () => {
+          let imgFixW = 200;
           let imgFixH = 200;
+
+          let scaleW = imgFixW / img.width;
+          let scaleH = scaleW * (img.height / img.width) * this.yScale;
+          if (img.width < imgFixW) {
+            scaleW = 1;
+          }
+          if (img.height < imgFixH) {
+            scaleH = 1;
+          }
+
+          scaleW *= this.xScale;
           let imgArea = new Konva.Image({
             image: img,
             // width: 200,
@@ -1402,15 +1406,29 @@ export class PdfComponent
             name: JSON.stringify(tmpName),
             draggable: draggable,
           });
-          let scaleH = (imgFixH / img.height) * this.xScale;
 
           if (isSaveToDB) {
             imgArea.scale({
-              x: scaleH,
-              y: scaleH * (img.height / img.width) * this.yScale,
+              x: scaleW,
+              y: scaleH,
             });
             this.needAddKonva = imgArea;
           } else {
+            if (isChangeUrl) {
+              area.labelValue = url;
+              if (this.imgConfig.includes(area.labelType)) {
+                area.labelValue = area.labelValue.replace(
+                  environment.urlUpload + '/',
+                  ''
+                );
+                area.location.width = scaleW / this.xScale;
+                area.location.height = scaleH / this.yScale;
+              }
+              this.esService
+                .addOrEditSignArea(this.recID, this.curFileID, area, area.recID)
+                .subscribe((res) => {});
+            } else {
+            }
             imgArea.id(area.recID);
             imgArea.draggable(!area.allowEditAreas ? false : !area.isLock);
             imgArea.scale({
@@ -1451,10 +1469,10 @@ export class PdfComponent
     this.curSignDateType = this.lstSignDateType[0];
   }
 
-  changeConfirmState(e: any) {
-    this.checkedConfirm = e.data;
-    this.confirmChange.emit(e.data);
-  }
+  // changeConfirmState(e: any) {
+  //   this.checkedConfirm = e.data;
+  //   this.confirmChange.emit(e.data);
+  // }
 
   changeSignature_StampImg(area: tmpSignArea) {
     let setupShowForm = new SetupShowSignature();
@@ -1820,20 +1838,20 @@ export class PdfComponent
 
   changeAnnotationItem(type: any) {
     let curStepType = this.signerInfo.stepType;
-    let hasCA = false;
-    if (curStepType != 'S') {
-      let hasCAStep = this.lstSigners.find(
-        (signer) => signer.stepNo < this.stepNo && signer.stepType == 'S'
-      );
-      if (hasCAStep) {
-        hasCA = true;
-      }
-    }
+    // let hasCA = false;
+    // if (curStepType != 'S') {
+    //   let hasCAStep = this.lstSigners.find(
+    //     (signer) => signer.stepNo < this.stepNo && signer.stepType == 'S'
+    //   );
+    //   if (hasCAStep) {
+    //     hasCA = true;
+    //   }
+    // }
 
-    if (hasCA) {
-      this.notificationsService.notifyCode('ES022');
-      return;
-    }
+    // if (hasCA) {
+    //   this.notificationsService.notifyCode('ES022');
+    //   return;
+    // }
     if (!type) return;
     /** action: object vll
     {value: 'S1', text: 'Chữ ký chính', default: 'Chữ ký chính', color: null, textColor: null, …}

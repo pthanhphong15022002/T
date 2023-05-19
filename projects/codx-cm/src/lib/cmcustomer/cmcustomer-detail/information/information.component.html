@@ -1,5 +1,36 @@
 <div *ngIf="dataSelected != null">
-  <div class="d-flex flex-column">
+  <div class="d-flex flex-column px-5">
+    <div class="mb-5">
+      <ng-container [ngTemplateOutlet]="customers"> </ng-container>
+    </div>
+    <div class="mb-5" *ngIf="dataSelected?.memo">
+      <div class="mb-3">
+        <codx-label
+          class="text-dark text-primary fw-bold"
+          fiedName="Memo"
+          [formModel]="formModel"
+          default="Mô tả"
+        >
+        </codx-label>
+      </div>
+      <div class="text-dark fw-bold">
+        {{ dataSelected?.memo }}
+      </div>
+    </div>
+    <div class="mb-5" *ngIf="dataSelected?.note">
+      <div class="mb-2">
+        <codx-label
+          class="text-dark text-primary fw-bold"
+          fiedName="Note"
+          [formModel]="formModel"
+          default="Mô tả"
+        >
+        </codx-label>
+      </div>
+      <div class="text-dark fw-bold">
+        {{ dataSelected?.note }}
+      </div>
+    </div>
     <div
       class="mb-5"
       *ngIf="
@@ -72,55 +103,46 @@
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <ng-container
-                *ngFor="let item of dataSelected?.contactType.split(';')"
+                *ngFor="
+                  let item of dataSelected?.contactType.split(';');
+                  index as i
+                "
               >
-                <div
-                  class="mb-1"
+                <span
                   [innerHTML]="
                     item | formatvalue : formModel : 'ContactType' | async
                   "
+                ></span
+                ><span
+                  class="me-1"
+                  *ngIf="i < dataSelected?.contactType.split(';').length - 1"
+                  >,</span
                 >
-                  <!-- {{
-                    item
-                      | vll : gridViewSetup?.ContactType?.referedValue : "text"
-                      | async
-                  }} -->
-                </div>
               </ng-container>
             </div>
           </div>
+          <div class="mb-2 d-flex flex-wrap align-items-top">
+            <div class="w-150px min-w-150px">
+              <codx-label
+                class="label-colon text-gray-600 codx-textlabel"
+                fiedName="IsDefault"
+                [formModel]="formModel"
+              >
+              </codx-label>
+            </div>
+            <div class="text-dark fw-bold codx-textcontent">
+              <codx-input
+                class="test-check"
+                type="switch"
+                style="width: 100%"
+                [checked]="dataSelected?.isDefault"
+                field="IsDefault"
+                [disabled]="true"
+              >
+              </codx-input>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="mb-5">
-      <ng-container [ngTemplateOutlet]="customers"> </ng-container>
-    </div>
-    <div class="mb-5" *ngIf="dataSelected?.memo">
-      <div class="mb-3">
-        <codx-label
-          class="text-dark text-primary fw-bold"
-          fiedName="Memo"
-          [formModel]="formModel"
-          default="Mô tả"
-        >
-        </codx-label>
-      </div>
-      <div class="text-dark fw-bold">
-        {{ dataSelected?.memo }}
-      </div>
-    </div>
-    <div class="mb-5" *ngIf="dataSelected?.note">
-      <div class="mb-2">
-        <codx-label
-          class="text-dark text-primary fw-bold"
-          fiedName="Note"
-          [formModel]="formModel"
-          default="Mô tả"
-        >
-        </codx-label>
-      </div>
-      <div class="text-dark fw-bold">
-        {{ dataSelected?.note }}
       </div>
     </div>
   </div>
@@ -344,10 +366,6 @@
               "
             ></div>
           </div>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="d-flex flex-column">
           <div
             class="mb-2 d-flex flex-wrap align-items-top"
             *ngIf="dataSelected?.taxCode"
@@ -499,23 +517,6 @@
               "
             ></div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="mb-3">
-    <div class="mb-3">
-      <codx-label
-        class="text-dark text-primary fw-bold"
-        name="lblInformationDefault"
-        [formModel]="formModel"
-        default="Thông tin khác"
-      >
-      </codx-label>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="d-flex flex-column">
           <div
             class="mb-2 d-flex flex-wrap align-items-top"
             *ngIf="dataSelected?.idCardNo"
@@ -579,6 +580,10 @@
               "
             ></div>
           </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="d-flex flex-column">
           <div
             class="mb-2 d-flex flex-wrap align-items-top"
             *ngIf="dataSelected?.nationality"
@@ -684,29 +689,7 @@
               "
             ></div>
           </div>
-          <div
-            class="mb-2 d-flex flex-wrap align-items-top"
-            *ngIf="funcID != 'CM0102' && dataSelected?.bankAccount"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="BankAccount"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.bankAccount
-                  | formatvalue : formModel : 'BankAccount'
-                  | async
-              "
-            >
-              <!-- {{ dataSelected?.bankAccount }} -->
-            </div>
-          </div>
+
           <div
             class="mb-2 d-flex flex-wrap align-items-top"
             *ngIf="dataSelected?.annualRevenue"
@@ -730,10 +713,6 @@
               <!-- {{ dataSelected?.annualRevenue }} -->
             </div>
           </div>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="d-flex flex-column">
           <div
             class="mb-2 d-flex flex-wrap align-items-top"
             *ngIf="dataSelected?.headcounts"
@@ -791,33 +770,30 @@
               >
               </codx-label>
             </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.phone | formatvalue : formModel : 'Phone' | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-2 d-flex flex-wrap align-items-top"
-            *ngIf="funcID == 'CM0102' && dataSelected?.phoneExt"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="PhoneExt"
-                [formModel]="formModel"
+            <div class="d-flex">
+              <span
+                class="text-dark fw-bold codx-textcontent"
+                [innerHTML]="
+                  dataSelected?.phone
+                    | formatvalue : formModel : 'Phone'
+                    | async
+                "
+              ></span>
+              <span
+                *ngIf="dataSelected?.phone && dataSelected?.phoneExt"
+                class="me-1 ms-1"
               >
-              </codx-label>
+                /
+              </span>
+              <span
+                class="text-dark fw-bold codx-textcontent"
+                [innerHTML]="
+                  dataSelected?.phoneExt
+                    | formatvalue : formModel : 'PhoneExt'
+                    | async
+                "
+              ></span>
             </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.phoneExt
-                  | formatvalue : formModel : 'PhoneExt'
-                  | async
-              "
-            ></div>
           </div>
           <div
             class="mb-2 d-flex flex-wrap align-items-top"
@@ -841,6 +817,29 @@
           <div
             class="mb-2 d-flex flex-wrap align-items-top"
             *ngIf="funcID == 'CM0102' && dataSelected?.bankAccount"
+          >
+            <div class="w-150px min-w-150px">
+              <codx-label
+                class="label-colon text-gray-600 codx-textlabel"
+                fiedName="BankAccount"
+                [formModel]="formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="text-dark fw-bold codx-textcontent"
+              [innerHTML]="
+                dataSelected?.bankAccount
+                  | formatvalue : formModel : 'BankAccount'
+                  | async
+              "
+            >
+              <!-- {{ dataSelected?.bankAccount }} -->
+            </div>
+          </div>
+          <div
+            class="mb-2 d-flex flex-wrap align-items-top"
+            *ngIf="funcID != 'CM0102' && dataSelected?.bankAccount"
           >
             <div class="w-150px min-w-150px">
               <codx-label
@@ -948,31 +947,6 @@
               "
             ></div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div
-    class="mb-3"
-    *ngIf="
-      dataSelected?.customerResource ||
-      dataSelected?.customerFrom ||
-      dataSelected?.partnerFrom ||
-      dataSelected?.segmentID
-    "
-  >
-    <div class="mb-3">
-      <codx-label
-        class="text-dark text-primary fw-bold"
-        name="lblSystemInfo"
-        [formModel]="formModel"
-        default="Thông tin hệ thống"
-      >
-      </codx-label>
-    </div>
-    <div class="row">
-      <div class="col-6" *ngIf="funcID == 'CM0101'">
-        <div class="d-flex flex-column">
           <div
             class="mb-2 d-flex flex-wrap align-items-top"
             *ngIf="funcID == 'CM0101' && dataSelected?.customerResource"
@@ -996,10 +970,6 @@
               <!-- {{ dataSelected?.source }} -->
             </div>
           </div>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="d-flex flex-column">
           <div
             class="mb-2 d-flex flex-wrap align-items-top"
             *ngIf="funcID == 'CM0101' && dataSelected?.customerFrom"

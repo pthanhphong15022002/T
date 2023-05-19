@@ -67,7 +67,7 @@
           <div class="text-gray-700">
             <span
               [innerHTML]="
-                data?.emp?.orgUnitID
+                data?.orgUnitID
                   | formatvalue : view.formModel : 'orgUnitID'
                   | async
               "
@@ -373,6 +373,15 @@
         {{ data?.emp?.employeeID }}
       </span> -->
     </div>
+    <div class="fs-7 text-gray-600">
+      <span
+        [innerHTML]="
+          data?.positionID
+            | formatvalue : view.formModel : 'PositionID'
+            | async
+        "
+      ></span>
+    </div>
 
       <div class="fs-7 text-gray-600">
         <span
@@ -387,7 +396,6 @@
         ></span>
       </div>
       <div
-      [class]="data?.isCurrent ? 'text-dark' : ''"
     >
       <div class="justify-content-between mb-1">
         <span
@@ -422,15 +430,19 @@
       </div>
     </div>
 
-      <div class="d-flex justify-content-between text-dark mt-1">
+      <div class="d-flex mt-1">
         <codx-vll
-          class="badge badge-sm me-0 badge-light"
-          [name]="econtractGrvSetup.referedValue"
+          class="badge badge-sm me-4"
+          [name]="eDisciplineGrvSetup?.referedValue"
           [value]="data?.status"
           [showText]="true"
           [showBgColor]="true"
         >
         </codx-vll>
+        <!-- HRS104 -->
+        <span class="me-4">
+          {{ data?.signedDate | fmDT }}
+        </span>
 
         <!-- <span class="d-flex flex-row justify-content-end">
           <codx-imgs

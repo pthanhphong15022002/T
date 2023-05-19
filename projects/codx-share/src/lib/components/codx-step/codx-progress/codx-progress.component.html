@@ -1,53 +1,15 @@
-<div class="disabled-inline progressbar cursor-pointer" (click)="openPopup()">
-  <codx-progressbar
-    [progress]="progress"
-    *ngIf="typeProgress == 1"
-  ></codx-progressbar>
-  
-  <ejs-progressbar
-    *ngIf="typeProgress == 2"
-    [id]="id"
-    type="Circular"
-    [height]="height"
-    [width]="width"
-    trackThickness="4"
-    progressThickness="4"
-    [value]="progressData"
-    [progressColor]="'#005DC7'"
-    trackColor="#d8d8d8"
-    progressValueColor="red"
-    [labelStyle]="{ color: '#005DC7' }"
-    [showProgressValue]="false"
-    [animation]="{ enable: true, duration: 1000, delay: 0 }"
-  >
-    <e-progressbar-annotations>
-      <e-progressbar-annotation [content]="HTMLProgress">
-      </e-progressbar-annotation>
-    </e-progressbar-annotations>
-  </ejs-progressbar>
-
-  <ejs-progressbar
-    *ngIf="typeProgress == 3"
-    [id]="id"
-    type="Circular"
-    height="55"
-    width="55"
-    trackThickness="4"
-    progressThickness="4"
-    [value]="progress"
-    [progressColor]="'#005DC7'"
-    trackColor="#d8d8d8"
-    progressValueColor="red"
-    [labelStyle]="{ color: '#005DC7' }"
-    [showProgressValue]="true"
-    [animation]="{ enable: true, duration: 1000, delay: 0 }"
-  >
-  </ejs-progressbar>
-  <codx-progressbar
-    *ngIf="typeProgress == 3"
-    [progress]="progress"
-  ></codx-progressbar>
+<div class="d-flex flex-column p-5 h-100">
+  <div>
+    <ng-container [ngTemplateOutlet]="header"></ng-container>
+  </div>
+  <div style="flex-grow: 1">
+    <ng-container [ngTemplateOutlet]="updateProgressBody"></ng-container>
+  </div>
+  <div class="">
+    <ng-container [ngTemplateOutlet]="updateProgressFooter"></ng-container>
+  </div>
 </div>
+
 <ng-template #popupProgress>
   <div class="d-flex flex-column p-5 h-100">
     <div>
@@ -84,7 +46,7 @@
     <div>
       <span
         class="icon-close icon-18 cursor-pointer"
-        (click)="popupUpdateProgress.close()"
+        (click)="dialog.close()"
       ></span>
     </div>
   </div>
@@ -190,22 +152,20 @@
       </div>
       <div>
         <codx-attachment
-          #attachment
-          [objectId]="dataSource?.recID"
-          hideFolder="1"
-          hideImageUpload="0"
-          hideImageThumb="0"
-          hideUploadBtn="1"
-          hideDes="1"
-          type="inline"
-          allowMultiFile="1"
-          (fileAdded)="fileAdded($event)"
-          (fileCount)="getfileCount($event)"
-          (viewFile)="getfileDelete($event)"
-          displayThumb="full"
-          showMessage="0"
-        >
-        </codx-attachment>
+        #attachment
+        [objectType]="'DP_Instances_Steps_Tasks'"
+        [objectId]="dataSource?.recID"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        [showMessage]="0"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        referType="source"
+        displayThumb="full">
+      </codx-attachment>
       </div>
     </ng-container>
   </div>
@@ -228,7 +188,7 @@
         ></codx-label>
       </span>
     </button>
-    <button type="button" class="btn btn-primary" (click)="handelProgress()">
+    <button type="button" class="btn btn-primary" (click)="save()">
       <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
     </button>
   </div>

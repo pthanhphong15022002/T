@@ -131,6 +131,7 @@ export class ViewsContractsComponent extends UIComponent{
   }
 
   async ngOnChanges(changes: SimpleChanges) {
+    this.listClicked = JSON.parse(JSON.stringify(this.listClicked));
   }
 
   ngAfterViewInit() {
@@ -208,7 +209,7 @@ export class ViewsContractsComponent extends UIComponent{
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = new CM_Contracts();
       let contractOutput = await this.openPopupContract(null, "add",contracts);
-    })    
+    })
   }
 
   async editContract(contract){
@@ -242,7 +243,7 @@ export class ViewsContractsComponent extends UIComponent{
       .subscribe((res: any) => {
         if (res) {
         }
-      });     
+      });
     }
   }
 
@@ -328,7 +329,7 @@ export class ViewsContractsComponent extends UIComponent{
       PaymentsComponent,'',
       600,
       400,
-      '', 
+      '',
       dataInput,
       '',
       option,

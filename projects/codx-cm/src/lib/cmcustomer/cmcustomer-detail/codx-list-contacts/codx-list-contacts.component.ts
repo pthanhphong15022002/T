@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import {
   AlertConfirmInputConfig,
@@ -30,8 +31,10 @@ export class CodxListContactsComponent implements OnInit {
   @Input() objectID: any;
   @Input() funcID: any;
   @Input() objectName: any;
+  @Input() objectType: any;
   @Input() hidenMF = true;
   @Input() type = '';
+  @Input() isConvertLeadToCus = false;
   @Input() formModel: FormModel;
   @Output() lstContactEmit = new EventEmitter<any>();
   @Output() lstContactDeleteEmit = new EventEmitter<any>();
@@ -59,8 +62,15 @@ export class CodxListContactsComponent implements OnInit {
     private notiService: NotificationsService
   ) {}
 
-  async ngOnInit() {
+  ngOnChanges(changes: SimpleChanges): void {
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
     this.getListContacts();
+
+  }
+
+  async ngOnInit() {
+    // this.getListContacts();
     this.formModelContact = await this.cmSv.getFormModel('CM0102');
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -173,7 +183,7 @@ export class CodxListContactsComponent implements OnInit {
           dataContact: data,
           type: this.type,
           recIDCm: this.objectID,
-          objectType: this.funcID == 'CM0101' ? '1' : '3',
+          objectType: this.objectType,
           objectName: this.objectName,
           gridViewSetup: res,
           listContacts: this.listContacts,
@@ -182,7 +192,7 @@ export class CodxListContactsComponent implements OnInit {
           PopupQuickaddContactComponent,
           '',
           500,
-          action != 'editType' ? 600 : 100,
+          action != 'editType' ? 600 : 350,
           '',
           obj,
           '',
@@ -239,7 +249,7 @@ export class CodxListContactsComponent implements OnInit {
           type: this.type,
           recIDCm: this.objectID,
           objectName: this.objectName,
-          objectType: this.funcID == 'CM0101' ? '1' : '3',
+          objectType: this.objectType,
           gridViewSetup: res,
           lstContactCm: this.listContacts,
         };

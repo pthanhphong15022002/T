@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import {
   AlertConfirmInputConfig,
@@ -58,8 +59,12 @@ export class CodxAddressCmComponent implements OnInit {
     private api: ApiHttpService
   ) {}
 
+    ngOnChanges(changes: SimpleChanges): void {
+      this.getListAddress();
+
+    }
+
   ngOnInit(): void {
-    this.getListAddress();
     this.getFormModelAddress();
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {

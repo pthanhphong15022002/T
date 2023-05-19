@@ -146,11 +146,14 @@ export class CodxAddGroupTaskComponent implements OnInit {
     } else if (!this.isSave) {
       this.notiService.notifyCode('DP019');
     } else {
-      if(this.action == 'add' || this.action == 'copy'){
+      if(this.action == 'add'){
         this.addGroupTask();
       }
       if(this.action == 'edit'){
         this.editGroupTask();
+      }
+      if(this.action == 'copy'){
+        this.copyGroupTask();
       }
     }
   }
@@ -177,6 +180,18 @@ export class CodxAddGroupTaskComponent implements OnInit {
     ).subscribe(res => {
       if(res){        
         this.dialog.close({ groupTask:res,progressStep: null});
+      }
+    });
+  }
+  copyGroupTask(){
+    this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'copyGroupTaskStepAsync',
+      this.taskGroup
+    ).subscribe(res => {
+      if(res){        
+        this.dialog.close({ groupTask:res[0],listTask: res[1], progressStep: res[2]});
       }
     });
   }

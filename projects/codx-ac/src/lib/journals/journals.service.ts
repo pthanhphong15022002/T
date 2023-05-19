@@ -8,7 +8,7 @@ import {
   DataRequest,
   NotificationsService,
 } from 'codx-core';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, Subject, map, tap } from 'rxjs';
 import { CodxAcService } from '../codx-ac.service';
 import { IJournal } from './interfaces/IJournal.interface';
 
@@ -23,14 +23,12 @@ export class JournalService {
     private cacheService: CacheService
   ) {}
 
-  deleteAutoNumber(autoNoCode: string): Observable<any> {
-    return this.api.execSv(
-      'SYS',
-      'AD',
-      'AutoNumbersBusiness',
-      'DeleteAutoNumberAsync',
-      [autoNoCode]
-    );
+  deleteAutoNumber(autoNoCode: string): void {
+    this.api
+      .execSv('SYS', 'AD', 'AutoNumbersBusiness', 'DeleteAutoNumberAsync', [
+        autoNoCode,
+      ])
+      .subscribe((res) => console.log(res));
   }
 
   /**
@@ -96,19 +94,27 @@ export class JournalService {
   getHiddenFields(journal: IJournal): string[] {
     let hiddenFields: string[] = [];
 
-    if (journal?.diM1Control == '0') {
+    if (journal?.drAcctControl == '9') {
+      hiddenFields.push('DRAcctID');
+    }
+
+    if (journal?.crAcctControl == '9') {
+      hiddenFields.push('CRAcctID');
+    }
+
+    if (journal?.diM1Control == '9') {
       hiddenFields.push('DIM1');
     }
 
-    if (journal?.diM2Control == '0') {
+    if (journal?.diM2Control == '9') {
       hiddenFields.push('DIM2');
     }
 
-    if (journal?.diM3Control == '0') {
+    if (journal?.diM3Control == '9') {
       hiddenFields.push('DIM3');
     }
 
-    if (journal?.projectControl == '0') {
+    if (journal?.projectControl == '9') {
       hiddenFields.push('ProjectID');
     }
 
@@ -165,5 +171,40 @@ export class JournalService {
         tap((t) => console.log(t)),
         map((data) => data.find((m) => m.functionID === 'ACT04')?.defaultName)
       );
+  }
+
+  hasVouchers(journal: IJournal): Observable<boolean> {
+    const subject = new Subject<boolean>();
+
+    this.cacheService
+      .valueList('AC076')
+      .pipe(
+        tap((t) => console.log('AC076', t)),
+        map(
+          (m) =>
+            m.datas
+              .filter((d) => d.value === journal.journalType)
+              .map((d) => d.text)[0]
+        )
+      )
+      .subscribe((entityName: string) => {
+        const service = entityName.split('_')[0];
+        const options = new DataRequest();
+        options.entityName = entityName;
+        options.predicates = 'JournalNo=@0';
+        options.dataValues = journal.journalNo;
+        options.pageLoading = false;
+        this.acService.loadDataAsync(service, options).subscribe((res) => {
+          if (res.length > 0) {
+            subject.next(true);
+          } else {
+            subject.next(false);
+          }
+        });
+      });
+
+    return subject
+      .asObservable()
+      .pipe(tap((t) => console.log('hasVouchers', t)));
   }
 }
