@@ -310,7 +310,7 @@ export class EmployeeAwardsComponent extends UIComponent {
               this.view.formModel.entityName,
               'C1',
               null,
-              'EAwardBusiness'
+              'EAwardsBusiness'
             )
             .subscribe((res) => {});
           this.dialogEditStatus && this.dialogEditStatus.close(res);

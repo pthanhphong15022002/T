@@ -1,11 +1,30 @@
-<div class="d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2">
-  <div>
+<div [class]="'detail-form'" *ngIf="!hidenMF">
+  <div class="d-flex">
     <button
       type="button"
-      class="btn btn-clean btn-sm btn-icon btn-icon-md"
-      (click)="clickAddCompetitor(moreFuncAdd, 'add')"
+      class="btn btn-sm btn-icon btn-primary me-2 d-flex"
+      style="min-width: 180px"
+      (click)="clickAddCompetitor(moreFuncAdd, 'add', null)"
     >
-      <i class="icon-person_add_alt_1 icon-18 text-primary"></i>
+      <i class="icon-check-correct icon-16 me-1"></i>
+      <codx-label
+        name="lblSelectCompetitors"
+        [formModel]="formModel"
+        default="Chọn đối thủ từ hệ thống"
+      ></codx-label>
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-sm btn-primary"
+      (click)="clickAddCompetitor(moreFuncAdd, 'add', null, true)"
+    >
+      <i class="icon-person_add_alt_1 icon-16 me-1"></i>
+      <codx-label
+        name="lblAddCompetitors"
+        [formModel]="formModel"
+        default="Thêm đối thủ"
+      ></codx-label>
     </button>
   </div>
 </div>
@@ -48,7 +67,7 @@
 
 <ng-template #dealCompetitors let-data>
   <div class="d-flex justify-content-between has-action-menu-od mt-2">
-    <div class="col-4 d-flex justify-content-start">
+    <div class="col-3 d-flex justify-content-start">
       <div class="me-3">
         <codx-img
           [objectId]="data.competitorID"
@@ -76,10 +95,15 @@
             [innerHTML]="getAddress(data?.competitorID)"
           ></span>
         </div>
+        <div class="">
+          <span
+            [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"
+          ></span>
+        </div>
       </div>
     </div>
-    <div class="col-4 row">
-      <div class="d-flex col-6 align-items-start">
+    <div class="col-3">
+      <div class="d-flex align-items-start">
         <span class="icon-star_purple500 icon-16 me-1"> </span>
         <span
           class="text-dark fw-bold"
@@ -88,7 +112,9 @@
           "
         ></span>
       </div>
-      <div class="d-flex col-6 align-items-start">
+    </div>
+    <div class="col-3 justify-content-between d-flex align-items-start ms-2">
+      <div class="d-flex align-items-start">
         <span class="icon-star_border_purple500 icon-16 me-1"> </span>
         <span
           class="text-dark fw-bold"
@@ -98,17 +124,21 @@
         ></span>
       </div>
     </div>
-    <div class="col-4 justify-content-between d-flex align-items-start ms-2">
-      <div class="d-flex justify-content-start">
+    <div class="col-3 justify-content-between d-flex align-items-start ms-2">
+      <div class="d-flex justify-content-center align-items-start">
         <span
-          [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"
-        ></span>
+        class="icon-16 me-2"
+        [class]="data?.status | vll : 'CRM036' : 'icon' | async"
+      >
+      </span>
       </div>
       <div class="d-flex justify-content-end align-items-start action-menu-od">
         <codx-mfunc
           [formModel]="formModel"
           (clickMF)="clickMF($event, data)"
+          (changeDataMF)="changeDataMF($event, data)"
           [isBookMark]="true"
+          [hidden]="hidenMF"
           [dataItem]="data"
           type="hover"
         >

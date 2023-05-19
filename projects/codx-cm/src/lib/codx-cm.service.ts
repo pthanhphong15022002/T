@@ -108,6 +108,15 @@ export class CodxCmService {
     );
   }
 
+  addCompetitorByName(name) {
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'AddCompetitorByDealCompetitorAsync',
+      [name]
+    );
+  }
+
   updateContactByPopupListCt(contact) {
     return this.api.exec<any>(
       'CM',
@@ -152,6 +161,12 @@ export class CodxCmService {
 
   addDealCompetitor(dealCompetitor) {
     return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealCompetitorAsync', [
+      dealCompetitor,
+    ]);
+  }
+
+  updateStatusDealsCompetitorAsync(dealCompetitor) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'UpdateStatusDealsCompetitorAsync', [
       dealCompetitor,
     ]);
   }
@@ -610,6 +625,17 @@ export class CodxCmService {
    // load Tỉ giá
    getExchangeRate(CurrencyID) {
     return this.api.exec<any>('BS', 'CurrenciesBusiness', 'GetExchangeRateAsync', [CurrencyID,new Date()]);
+  }
+
+  //getDefault
+  getDefault(service,funcID,entityName) {
+    return this.api.execSv<any>(
+      service,
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName]
+    );
   }
 
 }
