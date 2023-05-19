@@ -133,7 +133,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
       })
     }
   }
-
+  
   //Get content form string html
   extractContent(s:any) {
     var span = document.createElement('span');

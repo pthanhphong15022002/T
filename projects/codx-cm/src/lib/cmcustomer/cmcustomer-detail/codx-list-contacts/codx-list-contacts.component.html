@@ -1,25 +1,41 @@
-<div
-  class="d-flex justify-content-end mb-4 mt-n2"
-  *ngIf="!hidenMF"
->
-  <button
-  type="button"
-  class="btn btn-sm btn-icon btn-light-primary me-2"
-  (click)="isButton ? clickPopupContacts() : null"
-  >
-  <i class="icon-check-correct icon-16"></i>
-  </button>
-  <button
-  type="button"
-  class="btn btn-sm btn-icon btn-primary"
-  (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
-  >
-  <i class="icon-person_add_alt_1 icon-16"></i>
-  </button>
+<div [class]="'detail-form'">
+  <div class="d-flex" *ngIf="!hidenMF">
+    <div *ngIf="objectType != '2'">
+      <button
+        type="button"
+        class="btn btn-sm btn-icon btn-primary me-2 d-flex"
+        style="min-width: 180px"
+        (click)="isButton ? clickPopupContacts() : null"
+      >
+        <i class="icon-check-correct icon-16 me-1"></i>
+        <codx-label
+          name="lblSelectContacts"
+          [formModel]="formModel"
+          default="Chọn liên hệ từ hệ thống"
+        ></codx-label>
+      </button>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-sm btn-primary"
+      (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
+    >
+      <i class="icon-person_add_alt_1 icon-16 me-1"></i>
+      <codx-label
+        name="lblQuickAdd"
+        [formModel]="formModel"
+        default="Thêm nhanh liên hệ"
+      ></codx-label>
+    </button>
+  </div>
 </div>
 
 <ng-container *ngIf="loaded">
-  <div *ngIf="listContacts != null && listContacts.length > 0; else noData">
+  <div
+    class="codx-listcontact pb-10"
+    *ngIf="listContacts != null && listContacts.length > 0; else noData"
+  >
     <div *ngFor="let item of listContacts">
       <ng-container
         [ngTemplateOutlet]="contacts"
@@ -31,10 +47,7 @@
 </ng-container>
 
 <ng-template #noData>
-  <div
-    class="empty-data"
-    *ngIf="listContacts == null || listContacts.length == 0"
-  >
+  <div class="empty-data">
     <div class="container h-100">
       <div class="list-empty card card-flush h-100">
         <div class="d-flex flex-column flex-center justify-content-center">
@@ -52,24 +65,36 @@
 </ng-template>
 
 <ng-template #contacts let-data>
-  <div class="d-flex align-items-top mb-5 border-bottom has-action-menu-od">
-    <div class="d-flex align-items-center w-100 me-3">
-      <div class="me-3">
-        <codx-img
-          [objectId]="data.recID"
-          [objectName]="data?.contactName"
-          [objectType]="'CM_Contacts'"
-          [width]="30"
-        >
-        </codx-img>
-      </div>
-      <div class="d-flex flex-column">
-        <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
-          {{ data?.contactName }}
+  <div
+    (click)="changeContacts(data)"
+    [ngClass]="data.recID == this.currentRecID ? 'user-nav-active' : null"
+    class="d-flex align-items-top p-3 border-bottom border-gray-150 has-action-menu-od user-nav-item"
+  >
+    <div class="d-flex flex-column w-100 me-3">
+      <div class="d-flex align-items-center">
+        <div class="me-3">
+          <codx-img
+            [objectId]="data.recID"
+            [objectName]="data?.contactName"
+            [objectType]="'CM_Contacts'"
+            [width]="30"
+          >
+          </codx-img>
         </div>
-        <div class="me-4" *ngIf="data.jobTitle">
-          <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
-          <span class="text-gray-900">{{ data.jobTitle }}</span>
+        <div class="d-flex flex-column">
+          <div class="fw-bold text-dark line-clamp line-clamp-1 mb-1">
+            {{ data?.contactName }}
+          </div>
+          <div class="" *ngIf="data.jobTitle">
+            <span class="text-gray-900">{{ data.jobTitle }}</span>
+          </div>
+          <div class="" *ngIf="data.isDefault">
+            <codx-label
+              class="text-gray-900 text-primary"
+              fiedName="IsDefault"
+              [formModel]="formModelContact"
+            ></codx-label>
+          </div>
         </div>
       </div>
     </div>
@@ -105,7 +130,7 @@
     </div>
     <div class="w-150px min-w-150px">
       <div
-        class="mb-1 text-gray-700"
+        class="mb-1 text-gray-500"
         *ngIf="
           data?.contactType != null && data?.contactType.split(';').length > 0
         "
@@ -122,19 +147,17 @@
         </ng-container>
       </div>
     </div>
-    <div
-        class="action-menu-od w-50px"
+    <div class="action-menu-od w-50px">
+      <codx-mfunc
+        [hidden]="hidenMF"
+        [formModel]="formModelContact"
+        [isBookMark]="true"
+        [dataItem]="data"
+        [type]="'hover'"
+        (clickMF)="clickMFContact($event, data)"
+        (changeDataMF)="changeDataMFContact($event, data)"
       >
-        <codx-mfunc
-          [hidden]="hidenMF"
-          [formModel]="formModelContact"
-          [isBookMark]="true"
-          [dataItem]="data"
-          [type]="'hover'"
-          (clickMF)="clickMFContact($event, data)"
-          (changeDataMF)="changeDataMFContact($event, data)"
-        >
-        </codx-mfunc>
-      </div>
+      </codx-mfunc>
+    </div>
   </div>
 </ng-template>

@@ -59,7 +59,7 @@ export class CodxAddTaskComponent implements OnInit {
   isHaveFile = false;
 
   folderID = '';
-  groupTaskID = '';
+  groupTaskID = null;
   view = [];
   isSaveTimeTask = true;
   isSaveTimeGroup = true;
@@ -100,7 +100,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.listTask = dt?.data?.listTask;
     this.stepsTasks = dt?.data?.dataTask;
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
-    this.groupTaskID = this.stepsTasks?.taskGroupID;
+    this.groupTaskID = dt?.data?.groupTaskID;
   }
 
   ngOnInit(): void {
@@ -114,33 +114,6 @@ export class CodxAddTaskComponent implements OnInit {
     if (this.stepsTasks['parentID']) {
       this.litsParentID = this.stepsTasks['parentID'].split(';');
     }
-    // if (this.listTask.length > 0) {
-    //   this.dataCombobox = this.listTask.map((data) => {
-    //     if (this.litsParentID.some((x) => x == data.refID)) {
-    //       return {
-    //         key: data.refID,
-    //         value: data.taskName,
-    //         checked: true,
-    //       };
-    //     } else {
-    //       return {
-    //         key: data.refID,
-    //         value: data.taskName,
-    //         checked: false,
-    //       };
-    //     }
-    //   });
-    //   if (this.action == 'edit') {
-    //     let index = this.dataCombobox?.findIndex(
-    //       (x) => x.key === this.stepsTasks.refID
-    //     );
-    //     this.dataCombobox.splice(index, 1);
-    //   }
-    //   this.valueInput = this.dataCombobox
-    //     .filter((x) => x.checked)
-    //     .map((y) => y.value)
-    //     .join('; ');
-    // }
     this.owner = this.roles?.filter((role) => role.roleType === 'O');
     if(this.taskType == "M"){
       this.participant = this.roles?.filter((role) => role.roleType === 'P');
@@ -157,7 +130,7 @@ export class CodxAddTaskComponent implements OnInit {
     role['objectID'] = this.user['userID'];
     role['createdOn'] = new Date();
     role['createdBy'] = this.user['userID'];
-    role['roleType'] = 'P';
+    role['roleType'] = 'O';
     return role;
   }
 
@@ -181,17 +154,20 @@ export class CodxAddTaskComponent implements OnInit {
     this.stepsTasks[event?.field] = event?.data;
   }
 
-  filterText(value, key) {
-    this.stepsTasks[key] = value;
-    if(value){
-      this.groupTask = this.listGroup.find((x) => x.refID === value);
+  filterText(event, key) {
+    this.stepsTasks[key] = event;
+    if(event){
+      this.groupTask = this.listGroup.find((x) => x.refID === event);
       this.startDateParent = new Date(this.groupTask['startDate']);
       this.endDateParent = new Date(this.groupTask['endDate']);
       this.stepsTasks['startDate'] = this.startDateParent || new Date();
+      this.stepsTasks['indexNo'] = this.groupTask?.task?.length + 1 || 1;
     }else{
+      this.groupTask = this.listGroup.find((x) => x.recID === null);
       this.startDateParent = new Date(this.step['startDate']);
       this.endDateParent = new Date(this.step['endDate']);
       this.stepsTasks['startDate'] = this.startDateParent || new Date();
+      this.stepsTasks['indexNo'] = this.groupTask?.task?.length + 1 || 1;
     }
   }
   valueChangeAlert(event) {
@@ -278,21 +254,6 @@ export class CodxAddTaskComponent implements OnInit {
     this.participant = listRole;
   }
 
-  // applyOwner(e, datas) {
-  //   if (!e || e?.data.length == 0) return;
-  //   let listUser = e?.data;
-  //   listUser.forEach((element) => {
-  //     if (!datas.some((item) => item.id == element.id)) {
-  //       datas.push({
-  //         objectID: element.id,
-  //         objectName: element.text,
-  //         objectType: element.objectType,
-  //         roleType: element.objectName,
-  //       });
-  //     }
-  //   });
-  // }
-
   onDeleteOwner(objectID, data) {
     let index = data.findIndex((item) => item.objectID == objectID);
     if (index != -1) data.splice(index, 1);
@@ -301,8 +262,15 @@ export class CodxAddTaskComponent implements OnInit {
   async saveData() {
     this.stepsTasks['roles'] = [...this.participant,...this.owner];
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
-
     let message = [];
+    if(!this.isSaveTimeTask){
+      this.notiService.notifyCode('DP019');
+      return;
+    }
+    if(!this.isSaveTimeGroup){
+      this.notiService.notifyCode('DP020');
+      return;
+    }
     for (let key of this.REQUIRE) {
       if (
         (typeof this.stepsTasks[key] === 'string' &&
@@ -320,14 +288,6 @@ export class CodxAddTaskComponent implements OnInit {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
       return;
     } 
-    if(!this.isSaveTimeTask){
-      this.notiService.notifyCode('DP019');
-      return;
-    }
-    if(!this.isSaveTimeGroup){
-      this.notiService.notifyCode('DP020');
-      return;
-    }
 
     if (this.attachment && this.attachment.fileUploadList.length) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
@@ -339,6 +299,14 @@ export class CodxAddTaskComponent implements OnInit {
   }
 
   save(task){
+    if(this.action == 'add' || this.action == 'copy'){
+      this.addTask(task);
+    }
+    if(this.action == 'edit'){
+      this.editTask(task);
+    }
+  }
+  addTask(task){
     this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -347,6 +315,18 @@ export class CodxAddTaskComponent implements OnInit {
     ).subscribe(res => {
       if(res){        
         this.dialog.close({ task:res[0],progressGroup: res[1], progressStep: res[2] });
+      }
+    });
+  }
+  editTask(task){
+    this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateTaskStepAsync',
+      task
+    ).subscribe(res => {
+      if(res){        
+        this.dialog.close({ task:res, progressGroup: null, progressStep: null });
       }
     });
   }

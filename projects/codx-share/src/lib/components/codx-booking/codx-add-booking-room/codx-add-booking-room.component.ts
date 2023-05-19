@@ -136,6 +136,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   guestControl: any;
   viewOnly = false;
   onSaving=false;
+  isEP=true;
   categoryID: any;
   constructor(
     injector: Injector,
@@ -156,12 +157,11 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     this.optionalData = dialogData?.data[3];
     if (dialogData?.data[4] != null && dialogData?.data[4] == true) {
       this.viewOnly = true;
-    }
+    }    
     this.dialogRef = dialogRef;
-    this.formModel = this.dialogRef.formModel;
-    this.funcID = this.formModel.funcID;
+    this.formModel = this.dialogRef?.formModel;
+    this.funcID = this.formModel?.funcID;
     this.user = this.authStore.get();
-
     if (this.funcType == _addMF) {
       if (this.optionalData != null) {
         this.data.bookingOn = this.optionalData.startDate;
@@ -170,6 +170,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         this.data.bookingOn = new Date();
       }
       this.data.attendees = 1;
+      this.data.category = '1';
       this.attendeesNumber = this.data?.attendees;
       this.data.reminder = 15;
     } else if (this.funcType != _addMF) {
@@ -414,7 +415,13 @@ export class CodxAddBookingRoomComponent extends UIComponent {
                 }
               });
           }
-          this.guestNumber = this.data.attendees - this.data.resources.length;
+          if( this.data?.attendees !=null && this.data?.resources!=null){
+
+            this.guestNumber = this.data?.attendees - this.data?.resources.length;
+          }
+          else{
+            this.guestNumber=0;
+          }
           this.detectorRef.detectChanges();
         }
       }
@@ -489,14 +496,14 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             tempAttender.roleName = element?.text;
           }
         });
-        if (tempAttender.userID != this.data.createdBy) {
+        if (tempAttender?.userID != this.data?.createdBy) {
           this.resources.push(tempAttender);
         }
-        if (tempAttender.userID == this.data.createdBy) {
+        else if (tempAttender?.userID == this.data?.createdBy) {
           this.curUser = tempAttender;
+          this.resources.push(tempAttender);
         }
 
-        this.resources.push(tempAttender);
       });
     }
   }

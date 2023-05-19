@@ -89,6 +89,7 @@ export class CodxTasksComponent
 
   @Input() viewsInput: Array<ViewModel> = [];
   views: Array<ViewModel> = [];
+  viewsDefault: Array<ViewModel> = [];
 
   button?: ButtonModel = {
     id: 'btnAdd',
@@ -157,6 +158,7 @@ export class CodxTasksComponent
   crrFuncID = '';
   isHoverPop = false;
   timeoutId: any;
+  viewCrr: any;
 
   constructor(
     inject: Injector,
@@ -338,7 +340,7 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
-    this.views = [
+    this.viewsDefault = [
       {
         type: ViewType.list,
         active: false,
@@ -419,14 +421,14 @@ export class CodxTasksComponent
       },
     ];
 
-    if (this.funcID == 'TMT03011')
+    if (this.funcID == 'TMT03011') {
       this.cache.viewSettings(this.funcID).subscribe((res) => {
         if (res && res.length > 0) {
           var viewFunc = [];
           res.forEach((x) => {
-            var idx = this.views.findIndex((obj) => obj.type == x.view);
+            var idx = this.viewsDefault.findIndex((obj) => obj.type == x.view);
             if (idx != -1) {
-              viewFunc.push(this.views[idx]);
+              viewFunc.push(this.viewsDefault[idx]);
               if (x.isDefault && !this.viewMode) this.viewMode = x.view;
             }
           });
@@ -435,6 +437,7 @@ export class CodxTasksComponent
           });
         }
       });
+    } else this.views = this.viewsDefault;
 
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
@@ -960,63 +963,7 @@ export class CodxTasksComponent
             this.itemSelected = res[0];
             this.detectorRef.detectChanges();
             this.notiService.notifyCode('TM009');
-            //send mail BE
-            // if (taskAction.category == '3' && status == '80')
-            //   this.tmSv
-            //     .sendAlertMail(taskAction.recID, 'TM_0004', this.funcID)
-            //     .subscribe();
-            // if (status == '90') {
-            //   if (this.itemSelected.taskGroupID) {
-            //     this.api
-            //       .execSv<any>(
-            //         'TM',
-            //         'ERM.Business.TM',
-            //         'TaskGroupBusiness',
-            //         'GetAsync',
-            //         taskAction.taskGroupID
-            //       )
-            //       .subscribe((res) => {
-            //         if (res && res.approveControl == '1') {
-            //           this.tmSv
-            //             .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
-            //             .subscribe();
-            //         } else
-            //           this.tmSv
-            //             .sendAlertMail(taskAction.recID, 'TM_0005', this.funcID)
-            //             .subscribe();
-            //       });
-            //   } else {
-            //     this.api
-            //       .execSv<any>(
-            //         'SYS',
-            //         'ERM.Business.SYS',
-            //         'SettingValuesBusiness',
-            //         'GetByModuleWithCategoryAsync',
-            //         ['TMParameters', '1']
-            //       )
-            //       .subscribe((res) => {
-            //         if (res) {
-            //           let param = JSON.parse(res.dataValue);
-            //           if (param?.ApproveControl == '1') {
-            //             this.tmSv
-            //               .sendAlertMail(
-            //                 taskAction.recID,
-            //                 'TM_0012',
-            //                 this.funcID
-            //               )
-            //               .subscribe();
-            //           } else
-            //             this.tmSv
-            //               .sendAlertMail(
-            //                 taskAction.recID,
-            //                 'TM_0005',
-            //                 this.funcID
-            //               )
-            //               .subscribe();
-            //         }
-            //       });
-            //   }
-            // }
+
             if (kanban) kanban.updateCard(taskAction);
           } else this.notiService.notifyCode('SYS021');
         });
@@ -1067,10 +1014,52 @@ export class CodxTasksComponent
   //#endregion
   //#region Event đã có dùng clickChildrenMenu truyền về
   changeView(evt: any) {
-    if (this.crrFuncID != this.funcID) {
-      this.afterLoad();
-      this.crrFuncID = this.funcID;
-    }
+    return;
+    // core Hảo sua roi nên không cân đoạn này nữa
+    // this.viewCrr = evt?.view?.type;
+
+    // if (this.crrFuncID != this.funcID) {
+    //   this.cache.viewSettings(this.funcID).subscribe((views) => {
+    //     if (views) {
+    //       this.afterLoad();
+    //       this.crrFuncID = this.funcID;
+    //       this.views = [];
+    //       let idxActive = -1;
+    //       this.viewsDefault.forEach((v, index) => {
+    //         let idx = views.findIndex((x) => x.view == v.type);
+    //         if (idx != -1) {
+    //           v.hide = false;
+    //           if (v.type != this.viewCrr) v.active = false;
+    //           else v.active = true;
+    //           if (views[idx].isDefault) idxActive = index;
+    //         } else {
+    //           v.hide = true;
+    //           v.active = false;
+    //         }
+    //         this.views.push(v);
+    //       });
+    //       if (!this.views.some((x) => x.active)) {
+    //         if (idxActive != -1) this.views[idxActive].active = true;
+    //         else this.views[0].active = true;
+
+    //         let viewModel =
+    //           idxActive != -1 ? this.views[idxActive] : this.views[0];
+    //         //this.view.viewActiveType = viewModel.type;
+    //         this.view.viewChange(viewModel);
+    //         this.view.load();
+    //       }
+
+    //       this.detectorRef.detectChanges();
+    //     }
+    //   });
+    // } else {
+    //   //con loi daon nay khi select cung viewModel giua 2 componant
+    //   // if (this.view.currentView.funcID != this.funcID) {
+    //   //   this.view.currentView.funcID = this.funcID
+    //   //   this.view.load();
+    //   // }
+    //   // this.view.currentView.refesh()
+    // }
   }
 
   requestEnded(evt: any) {}

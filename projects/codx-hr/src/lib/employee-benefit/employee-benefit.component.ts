@@ -88,6 +88,14 @@ export class EmployeeBenefitComponent extends UIComponent {
     }
 
     this.cache
+    .gridViewSetup('EBenefits', 'grvEBenefits')
+    .subscribe((res) => {
+      if (res) {
+        this.grvSetup = res;
+      }
+    });
+
+    this.cache
       .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
       .subscribe((res) => {
         this.genderGrvSetup = res?.Gender;

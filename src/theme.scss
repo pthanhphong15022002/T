@@ -23,6 +23,7 @@
   --gray-100: #f5f8fa;
 
   --bs-border-color:#e1e6e7;
+  --bs-green:rgb(22, 182, 49);
 }
 
 /*** css for theme********/
@@ -49,7 +50,9 @@
     --border-light: #d3e8ff;
     --bg-aside-dark: #041b33;
     --menu-active: #96addf;
+
   }
+
 
   &.orange {
     --primary: #ff7619;
@@ -773,5 +776,9 @@
 
 .separator {
   border-bottom-color:var(--gray-150);
+}
+
+.text-green{
+  color: var(--bs-green);
 }
 /// end 22/12/2022

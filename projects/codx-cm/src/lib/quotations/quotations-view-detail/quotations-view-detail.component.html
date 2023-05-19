@@ -70,14 +70,14 @@
               <span>
                 <codx-label
                   class="label-colon"
-                  fiedName="VersionNo"
+                  fiedName="VersionName"
                   [formModel]="formModel"
                 ></codx-label
               ></span>
               <span
                 [innerHTML]="
-                  itemSelected?.versionNo
-                    | formatvalue : formModel : 'versionNo'
+                  itemSelected?.versionName
+                    | formatvalue : formModel : 'versionName'
                     | async
                 "
               ></span>
@@ -289,40 +289,25 @@
         >
         </codx-label>
       </div>
+
       <codx-gridview-v2
         #gridQuationsLines
         service="CM"
         [formName]="fmQuotationLines.formName"
         [gridViewName]="fmQuotationLines.gridViewName"
         [entityName]="fmQuotationLines.entityName"
-       
+        [hideMoreFunc]="'1'"
+   
         [contentEditable]="false"
         [allowFiltering]="true"
         [allowSorting]="true"
         [dataSource]="dataSource"
-        [height]="gridHeight"
         [autoLoad]="false"
         rowHeight="40"
         predicates="TransID=@0"
         [dataValues]="itemSelected.recID"
       ></codx-gridview-v2>
-       <!-- [editSettings]="editSettings" -->
-      <!-- <codx-gridview-v2
-        idField="recID"
-        [service]="'CM'"
-        [gridViewName]="fmQuotationLines.gridViewName"
-        [formName]="fmQuotationLines.formName"
-        [entityName]="fmQuotationLines.entityName"
-        [assemblyName]="'Core'"
-        [className]="'DataBusiness'"
-        [method]="'LoadDataAsync'"
-        predicates="TransID=@0"
-        [autoLoad]="true"
-        [height]="gridHeight"
-        [dataValues]="itemSelected.recID"
-        [contentEditable]="false"
-        [allowResizing]="true"
-      ></codx-gridview-v2> -->
+     
 
       <div #tabsNote class="row mt-5">
         <div class="form-group col-7">
@@ -347,14 +332,14 @@
             <div class="">
               <codx-label
                 class="label-colon"
-                fiedName="TotalAmt"
+                fiedName="totalSalesAmt"
                 [formModel]="formModel"
               ></codx-label>
             </div>
             <div
               [innerHTML]="
-                itemSelected.totalAmt
-                  | formatvalue : formModel : 'TotalAmt'
+                itemSelected.totalSalesAmt
+                  | formatvalue : formModel : 'totalSalesAmt'
                   | async
               "
             ></div>
@@ -379,12 +364,17 @@
             <div>
               <codx-label
                 class="label-colon"
-                fiedName=""
+                fiedName="totalTaxAmt"
                 [formModel]="formModel"
-                default="Tiền thuế"
               ></codx-label>
             </div>
-            <div>2.300.000</div>
+            <div
+              [innerHTML]="
+              itemSelected?.totalTaxAmt
+                  | formatvalue : formModel : 'totalTaxAmt'
+                  | async
+              "
+            ></div>
           </div>
           <div class="d-flex justify-content-between">
             <div class="">

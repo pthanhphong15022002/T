@@ -53,7 +53,7 @@
               </div>
               <div class="row">
                 <div class="col-6">
-                  <div class="form-group w-40">
+                  <div class="form-group w-100">
                     <div class="fw-bold text-dark mb-1">
                       <codx-label
                         fiedName="LegalName"
@@ -529,7 +529,11 @@
                           >
                           </codx-label>
                         </button>
-                        <button type="button" class="btn btn-primary ms-2">
+                        <button
+                          type="button"
+                          class="btn btn-primary ms-2"
+                          (click)="extendModule(module)"
+                        >
                           <codx-label
                             name="lblExtend"
                             [formModel]="view.formModel"

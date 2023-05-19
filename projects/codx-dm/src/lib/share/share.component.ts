@@ -118,7 +118,7 @@ export class ShareComponent implements OnInit {
     });  
     this.user = this.auth.get();       
     if(this.dmSV.breakCumArr.length>0 && this.dmSV.breakCumArr.includes(this.fullName)) this.fullName= null
-    this.getOwner();
+    if(!this.isShare) this.getOwner();
   }
 
 

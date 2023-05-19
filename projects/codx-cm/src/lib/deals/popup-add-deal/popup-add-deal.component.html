@@ -73,20 +73,22 @@
       <div class="form-group">
         <codx-label
           [formModel]="form.formModel"
-          fiedName="CampaignID"
+          fiedName="ChannelID"
           [Group]="form.formGroup"
-          default="Chiến dịch"
+          default="Kênh"
         >
         </codx-label>
         <ejs-combobox
         id="recID"
-        [dataSource]="listCbxCampaigns"
-        [fields]="fieldCbxCampaigns"
-        (valueChange)="cbxChange($event,'campaignID')"
-        [value]="deal?.campaignID"
+        [dataSource]="listCbxChannels"
+        [fields]="fieldCbxChannels"
+        (valueChange)="cbxChange($event,'channelID')"
+        [value]="deal?.channelID"
       ></ejs-combobox>
       </div>
     </div>
+
+
   </div>
   <div class="row">
     <div class="col-6">
@@ -113,19 +115,20 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
-          [formModel]="form.formModel"
-          fiedName="ChannelID"
-          [Group]="form.formGroup"
-          default="Kênh"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+          fiedName="ConsultantID"
+          default="Nhân viên tư vấn"
         >
         </codx-label>
-        <ejs-combobox
-        id="recID"
-        [dataSource]="listCbxChannels"
-        [fields]="fieldCbxChannels"
-        (valueChange)="cbxChange($event,'channelID')"
-        [value]="deal?.channelID"
-      ></ejs-combobox>
+        <codx-input
+        field="consultantID"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        [crrValue]="deal?.salespersonID"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
       </div>
     </div>
   </div>
@@ -144,12 +147,74 @@
           type="valuelist"
           refValue="CRM010"
           crrValue="2"
+          [disabled]="true"
           [crrValue]="deal?.category"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
     </div>
+
+
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="BusinesslineID"
+          default="Dòng sản phẩm"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="businesslineID"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="Owner"
+          default="Người phụ trách"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+    <ejs-combobox [dataSource]="listParticipants"
+    (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
+    [allowFiltering]='true' [value]="owner"></ejs-combobox>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+          fiedName="EndDate"
+          default="Ngày đến hạn dự kiến"
+        >
+        </codx-label>
+        <codx-input
+        type="datetime"
+        field="endDate"
+        format="d"
+        [crrValue]="deal?.endDate"
+        (valueChange)="valueChangeDate($event)"
+      >
+      </codx-input>
+      </div>
+    </div>
+
+
+
+  </div>
+  <div class="row">
     <div class="col-6">
       <div class="form-group">
         <codx-label
@@ -168,31 +233,8 @@
         </codx-input>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          fiedName="Owner"
-          default="Người phụ trách"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-label>
 
-    <!-- <codx-popup-participants
-      [lstParticipants]="listParticipants"
-      [dialog]="dialog"
-      [isType]="'I'"
-      (eventUser)="eventUser($event)"
-      [owner]="owner"
-    ></codx-popup-participants> -->
-    <ejs-combobox [dataSource]="listParticipants"
-    (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
-    [allowFiltering]='true' [value]="owner"></ejs-combobox>
 
-      </div>
-    </div>
     <div class="col-6">
       <div class="form-group">
         <codx-label
@@ -214,52 +256,11 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-          fiedName="EndDate"
-          default="Ngày đến hạn dự kiến"
-        >
-        </codx-label>
-        <codx-input
-        type="datetime"
-        field="endDate"
-        format="d"
-        [crrValue]="deal?.endDate"
-        (valueChange)="valueChangeDate($event)"
-      >
-      </codx-input>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          fiedName="SalespersonID"
-          default="Nhân viên bán hàng"
-        >
-        </codx-label>
-        <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="salespersonID"
-        [crrValue]="deal?.salespersonID"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
-
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
+    <div class="col-12">
       <div class="form-group">
         <codx-label
           fiedName="Memo"
-          default="Mô tả"
+          default="Nhu cầu"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -274,25 +275,29 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6">
+
+  </div>
+  <div class="row">
+    <div class="col-12">
       <div class="form-group">
         <codx-label
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-          fiedName="ConsultantID"
-          default="Nhân viên tư vấn"
+          fiedName="Memo"
+          default="Mô tả chi tiết"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-label>
         <codx-input
-        field="consultantID"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        [crrValue]="deal?.salespersonID"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="memo"
+          [crrValue]="deal?.memo"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
       </div>
     </div>
+
   </div>
 </ng-template>
 

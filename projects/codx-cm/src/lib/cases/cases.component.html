@@ -129,7 +129,7 @@
     [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
-    [title]="data.dealName"
+    [title]="data.caseName"
     [descTmp]="descTmp"
     [body]="footer"
     [formModel]="view.formModel"
@@ -144,17 +144,32 @@
 </ng-template>
 <ng-template #descTmp let-data>
 
-  <div class="d-flex flex-column py-2">
-    <div class="d-flex justify-content-start py-1">
+  <div class="d-flex flex-column">
+    <div class="d-flex justify-content-start mb-1">
       <i class="icon-view_comfy pe-1"></i>
-      <div> {{data?.customerName}} </div>
+      <div>
+        <span
+        class="fs-7"
+        #customerID
+        [innerHTML]="
+        data?.customerID
+            | formatvalue
+              : formModel
+              : 'customerID'
+              : customerID
+              : 'CMCases'
+              : 'grvCMCases'
+            | async
+        "
+      ></span>
+      </div>
     </div>
   </div>
 </ng-template>
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-end codx-badge">
-      <div class="me-2 badge badge-primary">
+      <div class="me-2 badge badge-light-primary">
         <span>
         {{data?.currentStepName}}
         </span>

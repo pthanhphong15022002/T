@@ -1,10 +1,15 @@
 <codx-layout-add
   #form
-  [headerText]="title"
+  [title]="title"
+  (setTitle)="setTitle($event)"
   [subHeader]="subHeader"
   [tabInfo]="tabInfo"
-  [tabContent]="[tabGeneralInfo, tabAddress, tabContacts, tabDefault]"
-  [openMore]="true"
+  [tabContent]="
+    funcID == 'CM0101' || funcID == 'CM0103'
+      ? [tabGeneralInfo, tabDefault, tabAddress, tabContacts]
+      : [tabGeneralInfo, tabDefault, tabAddress]
+  "
+  [openMore]="false"
   [dialog]="dialog"
   [formModel]="dialog.formModel"
   [footer]="footer"
@@ -21,72 +26,82 @@
   ></codx-tag>
 </ng-template>
 
-<ng-template #tabGeneralInfo></ng-template>
-<ng-template #tabAddress></ng-template>
-<ng-template #tabContacts></ng-template>
-<ng-template #tabDefault></ng-template>
-
-<ng-template #body>
-  <div class="mb-3" *ngIf="funcID == 'CM0102'">
-    <div class="mb-4">
-      <codx-label
-        name="lblLink"
-        class="h4 text-dark text-primary fw-bold"
-        [formModel]="dialog.formModel"
-        default="Đối tượng liên kết"
-      >
-      </codx-label>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" [fiedName]="'objectType'">
-          </codx-label>
-          <codx-input
-            [field]="'objectType'"
-            [crrValue]="data.objectType"
-            [type]="'valuelist'"
-            [refValue]="gridViewSetup?.ObjectType?.referedValue"
-            (valueChange)="valueChangeContact($event)"
-          ></codx-input>
+<ng-template #tabGeneralInfo>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="mb-3" *ngIf="funcID == 'CM0102'">
+      <div class="mb-4">
+        <codx-label
+          name="lblLink"
+          class="h4 text-dark text-primary fw-bold"
+          [formModel]="dialog.formModel"
+          default="Đối tượng liên kết"
+        >
+        </codx-label>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" [fiedName]="'objectType'">
+            </codx-label>
+            <codx-input
+              [field]="'objectType'"
+              [crrValue]="data.objectType"
+              [type]="'valuelist'"
+              [refValue]="gridViewSetup?.ObjectType?.referedValue"
+              (valueChange)="valueChangeContact($event)"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group" *ngIf="data.objectType">
+            <codx-label [formModel]="form.formModel" [fiedName]="'ContactType'">
+            </codx-label>
+            <codx-input
+              #vllCbx
+              [field]="'contactType'"
+              id="vllCbx"
+              [crrValue]="data?.contactType"
+              [formModel]="form.formModel"
+              [type]="'valuelist'"
+              [refValue]="gridViewSetup?.ContactType?.referedValue"
+              (valueChange)="valueChangeContact($event)"
+            ></codx-input>
+          </div>
         </div>
       </div>
-      <div class="col-6">
-        <div class="form-group" *ngIf="data.objectType">
-          <codx-label [formModel]="form.formModel" [fiedName]="'ContactType'">
-          </codx-label>
-          <codx-input
-            #vllCbx
-            [field]="'contactType'"
-            id="vllCbx"
-            [crrValue]="data?.contactType"
-            [formModel]="form.formModel"
-            [type]="'valuelist'"
-            [refValue]="gridViewSetup?.ContactType?.referedValue"
-            (valueChange)="valueChangeContact($event)"
-          ></codx-input>
+      <div class="form-group" *ngIf="data.objectType">
+        <codx-label
+          [formModel]="form.formModel"
+          [fiedName]="'ObjectID'"
+        ></codx-label>
+        <codx-input
+          [field]="'objectID'"
+          [crrValue]="data?.objectID"
+          type="combobox"
+          [refValue]="refValueCbx"
+          (valueChange)="valueChangeContact($event)"
+        ></codx-input>
+      </div>
+      <div class="form-group" *ngIf="data.objectType">
+        <div class="d-flex justify-content-between">
+          <div class="me-2">
+            <codx-input
+              [field]="'isDefault'"
+              [crrValue]="data?.isDefault"
+              type="switch"
+              (valueChange)="valueChangeContact($event)"
+            ></codx-input>
+          </div>
+          <div class="w-100 ms-1">
+            <codx-label [formModel]="form.formModel" fiedName="IsDefault">
+            </codx-label>
+          </div>
         </div>
       </div>
     </div>
-    <div class="form-group" *ngIf="data.objectType">
+    <div class="mb-4" *ngIf="funcID == 'CM0102'">
       <codx-label
-        [formModel]="form.formModel"
-        [fiedName]="'ObjectID'"
-      ></codx-label>
-      <codx-input
-        [field]="'objectID'"
-        [crrValue]="data?.objectID"
-        type="combobox"
-        [refValue]="refValueCbx"
-        (valueChange)="valueChangeContact($event)"
-      ></codx-input>
-    </div>
-  </div>
-
-  <div class="mb-3">
-    <div class="mb-4">
-      <codx-label
-        name="lblGeneral"
+        name="lblInformation"
         class="h4 text-dark text-primary fw-bold"
         [formModel]="dialog.formModel"
         default="Thông tin chung"
@@ -159,7 +174,6 @@
           >
           </codx-input>
         </div>
-
         <div class="form-group" *ngIf="funcID == 'CM0102'">
           <codx-label [formModel]="form.formModel" [fiedName]="'Salutation'">
           </codx-label>
@@ -200,53 +214,6 @@
           >
           </codx-input>
         </div>
-        <div class="form-group" *ngIf="funcID != 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="ShortName">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="shortName"
-          >
-          </codx-input>
-        </div>
-        <div
-          class="form-group"
-          *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
-        >
-          <div class="d-flex justify-content-between">
-            <div class="d-flex align-items-center">
-              <codx-label
-                [formModel]="form.formModel"
-                name="lblContacts"
-                default="Liên hệ chính"
-              >
-              </codx-label>
-              <span style="color: red; margin-right: 2px">*</span>
-            </div>
-            <div class="d-flex justify-content-end">
-              <div class="me-3">
-                <button
-                  type="button"
-                  class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                  (click)="clickPopupContacts()"
-                >
-                  <i class="icon-check-correct icon-18 text-primary"></i>
-                </button>
-              </div>
-              <div class="">
-                <button
-                  type="button"
-                  class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                  (click)="clickAddContact()"
-                >
-                  <i class="icon-person_add_alt_1 icon-18 text-primary"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-          <ng-container [ngTemplateOutlet]="contacts"></ng-container>
-        </div>
         <div class="form-group">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
@@ -276,16 +243,6 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [field]="funcID != 'CM0102' ? 'phone' : 'mobile'"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID != 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="FaxNo">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="faxNo"
           >
           </codx-input>
         </div>
@@ -320,137 +277,13 @@
           >
           </codx-input>
         </div>
-
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" [fiedName]="'WebPage'">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [field]="'webPage'"
-          >
-          </codx-input>
-        </div>
-        <div
-          class="form-group"
-          *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
-        >
-          <codx-label
-            [formModel]="form.formModel"
-            [fiedName]="funcID == 'CM0101' ? 'CustomerFrom' : 'PartnerFrom'"
-          >
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [field]="funcID == 'CM0101' ? 'customerFrom' : 'partnerFrom'"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="Birthday">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="birthday"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="BirthPlace">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="birthPlace"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="IDCardNo">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="idCardNo"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="IssuedOn">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="issuedOn"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="IssuedBy">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="issuedBy"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0101'">
-          <codx-label [formModel]="form.formModel" fiedName="CustomerResource">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="customerResource"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" [fiedName]="'Memo'">
-          </codx-label>
-
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [field]="'memo'"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            name="lblAvatar"
-            default="Ảnh đại diện"
-          ></codx-label>
-          <div>
-            <codx-img
-              #imageUpload
-              class="image-inpt-wrapper fullImage"
-              [referType]="'avt'"
-              [width]="90"
-              [funcId]="funcID"
-              [objectId]="data?.recID"
-              [objectType]="form.formModel.entityName"
-              [objectName]="getNameCrm(data)"
-              [isAllowEdit]="true"
-              [isDefaulImg]="true"
-              [imgOn]="data?.modifiedOn"
-              (handleInput)="changeAvatar()"
-            >
-            </codx-img>
-          </div>
-        </div>
         <div class="form-group" *ngIf="funcID != 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="TaxCode">
+          <codx-label [formModel]="form.formModel" fiedName="EstablishDate">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            field="taxCode"
+            field="establishDate"
           >
           </codx-input>
         </div>
@@ -466,73 +299,62 @@
           >
           </codx-input>
         </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <div style="height: 122px;">
+            <codx-label
+              [formModel]="form.formModel"
+              name="lblAvatar"
+              default="Ảnh đại diện"
+            ></codx-label>
+            <div>
+              <codx-img
+                #imageUpload
+                class="image-inpt-wrapper fullImage"
+                [referType]="'avt'"
+                [width]="90"
+                [funcId]="funcID"
+                [objectId]="data?.recID"
+                [objectType]="form.formModel.entityName"
+                [objectName]="getNameCrm(data)"
+                [isAllowEdit]="true"
+                [isDefaulImg]="true"
+                [imgOn]="data?.modifiedOn"
+                (handleInput)="changeAvatar()"
+              >
+              </codx-img>
+            </div>
+          </div>
+        </div>
         <div class="form-group" *ngIf="funcID != 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="EstablishDate">
+          <codx-label [formModel]="form.formModel" fiedName="ShortName">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            field="establishDate"
+            field="shortName"
+          >
+          </codx-input>
+        </div>
+
+        <div class="form-group" *ngIf="funcID != 'CM0102'">
+          <codx-label [formModel]="form.formModel" fiedName="FaxNo">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="faxNo"
           >
           </codx-input>
         </div>
         <div class="form-group" *ngIf="funcID == 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="Nationality">
+          <codx-label [formModel]="form.formModel" fiedName="Birthday">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            field="nationality"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="EthnicGroup">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="ethnicGroup"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="Religion">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="religion"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="Education">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="education"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="MaritalStatus">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="maritalStatus"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="Income">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="income"
+            field="birthday"
           >
           </codx-input>
         </div>
@@ -566,298 +388,399 @@
           >
           </codx-input>
         </div>
-        <div class="form-group row" *ngIf="funcID == 'CM0102'">
-          <div class="col-8">
-            <codx-label [formModel]="form.formModel" fiedName="Phone">
-            </codx-label>
-            <codx-input
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              field="phone"
-            >
-            </codx-input>
-          </div>
-          <div class="col-4">
-            <codx-label [formModel]="form.formModel" fiedName="PhoneExt">
-            </codx-label>
-            <codx-input
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              field="phoneExt"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="Email">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" [fiedName]="'WebPage'">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            field="email"
+            [field]="'webPage'"
           >
           </codx-input>
         </div>
         <div class="form-group" *ngIf="funcID != 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="Headcounts">
+          <codx-label [formModel]="form.formModel" fiedName="TaxCode">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            field="headcounts"
+            field="taxCode"
           >
           </codx-input>
-        </div>
-        <div
-          class="form-group"
-          *ngIf="funcID == 'CM0104' || funcID == 'CM0103'"
-        >
-          <codx-label [formModel]="form.formModel" fiedName="Capital">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="capital"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID != 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="annualRevenue"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID != 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="SegmentID">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="segmentID"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID != 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="Industries">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [crrValue]="data?.industries"
-            [type]="'combobox'"
-            [refValue]="gridViewSetup?.Industries?.referedValue"
-            (valueChange)="valueIndustries($event)"
-            field="industries"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0101'">
-          <codx-label [formModel]="form.formModel" fiedName="WorkingDays">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="workingDays"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0101'">
-          <div class="d-flex justify-content-between">
-            <div>
-              <codx-input
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-                field="officialHour"
-              >
-              </codx-input>
-            </div>
-            <div class="w-100 ms-1">
-              <codx-label [formModel]="form.formModel" fiedName="OfficialHour">
-              </codx-label>
-            </div>
-          </div>
-        </div>
-        <div
-          class="form-group"
-          *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
-        >
-          <codx-label [formModel]="form.formModel" [fiedName]="'BankAccount'">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [field]="'bankAccount'"
-          >
-          </codx-input>
-        </div>
-        <div
-          class="form-group"
-          *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
-        >
-          <codx-label [formModel]="form.formModel" [fiedName]="'BankID'">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [field]="'bankID'"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0101'">
-          <codx-label [formModel]="form.formModel" fiedName="ConsultantID">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="consultantID"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group" *ngIf="funcID == 'CM0101'">
-          <div class="d-flex justify-content-between">
-            <div>
-              <codx-input
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-                field="isBlackList"
-              >
-              </codx-input>
-            </div>
-            <div class="w-100 ms-1">
-              <codx-label [formModel]="form.formModel" fiedName="IsBlackList">
-              </codx-label>
-            </div>
-          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- <div class="mb-4" *ngIf="funcID == 'CM0104'">
-    <div class="mb-3">
-      <codx-label
-        name="lblProsCons"
-        class="text-dark fw-bold"
-        [formModel]="dialog.formModel"
-        default="Ưu / Nhược điểm"
-      >
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" [fiedName]="'Memo'">
       </codx-label>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            fiedName="Advantage"
-            default="Ưu điểm"
-          >
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="advantage"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            fiedName="Disadvantage"
-            default="Nhược điểm"
-          >
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="disadvantage"
-          >
-          </codx-input>
-        </div>
-      </div>
-    </div>
-  </div> -->
-  <div class="d-flex justify-content-between">
-    <div class="mb-2">
-      <codx-label
-        fiedName="Address"
-        class="h4 text-dark text-primary fw-bold"
+
+      <codx-input
         [formModel]="form.formModel"
-        default="Địa chỉ"
+        [Group]="form.formGroup"
+        [field]="'memo'"
       >
-      </codx-label>
+      </codx-input>
     </div>
-    <div class="mb-2">
-      <button
-        type="button"
-        (click)="openPopupAddress()"
-        class="btn btn-outline-primary"
-      >
-        <i class="icon-add_location_alt icon-16 text-primary"></i>
-
+    <div class="form-group" *ngIf="funcID == 'CM0101'">
+      <div class="d-flex justify-content-between">
+        <div>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="isBlackList"
+          >
+          </codx-input>
+        </div>
+        <div class="w-100 ms-1">
+          <codx-label [formModel]="form.formModel" fiedName="IsBlackList">
+          </codx-label>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #tabAddress>
+  <ng-container *ngIf="form?.formGroup">
+    <div>
+      <codx-address-cm
+        (lstAddressEmit)="lstAddressEmit($event)"
+        (lstAddressDeleteEmit)="lstAddressDeleteEmit($event)"
+        [type]="'formAdd'"
+        [funcID]="funcID"
+        [entityName]="dialog.formModel.entityName"
+        [id]="data.recID"
+      ></codx-address-cm>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #tabContacts>
+  <ng-container *ngIf="form?.formGroup">
+    <div>
+      <codx-list-contacts
+        (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
+        (lstContactEmit)="lstContactEmit($event)"
+        [funcID]="funcID"
+        [objectID]="data?.recID"
+        [objectType]="funcID == 'CM0101' ? '1' : '3'"
+        [objectName]="funcID == 'CM0101' ? data.customerName : data.partnerName"
+        [hidenMF]="false"
+        [type]="'formAdd'"
+      ></codx-list-contacts>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #tabDefault>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="mb-4">
+      <div class="mb-4" *ngIf="funcID != 'CM0102'">
         <codx-label
-          name="lblAddAddress"
+          name="lblUpdateInfo"
+          class="h4 text-dark text-primary fw-bold"
           [formModel]="dialog.formModel"
-          default="Thêm"
-        ></codx-label>
-      </button>
-      <!-- <button
-        type="button"
-        class="btn btn-clean btn-sm btn-icon btn-icon-md"
-        (click)="openPopupAddress()"
-      ></button> -->
-    </div>
-  </div>
-  <div
-    class="d-flex flex-column"
-    *ngIf="listAddress != null && listAddress.length > 0"
-  >
-    <ng-container *ngFor="let item of listAddress; index as i">
-      <div class="row mb-1">
-        <div class="col-4">
-          <span
-            class="label-colon text-gray-600"
-            [innerHTML]="
-              item?.adressType
-                | formatvalue : formModelAddress : 'AdressType'
-                | async
-            "
-          ></span>
+          default="Thông tin bổ sung"
+        >
+        </codx-label>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div
+            class="form-group"
+            *ngIf="funcID == 'CM0104' || funcID == 'CM0103'"
+          >
+            <codx-label [formModel]="form.formModel" fiedName="Capital">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="capital"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID == 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="IDCardNo">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="idCardNo"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID == 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="IssuedOn">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="issuedOn"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID == 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="IssuedBy">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="issuedBy"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID == 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="BirthPlace">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="birthPlace"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group row" *ngIf="funcID == 'CM0102'">
+            <div class="col-7">
+              <codx-label [formModel]="form.formModel" fiedName="Phone">
+              </codx-label>
+              <codx-input
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+                field="phone"
+              >
+              </codx-input>
+            </div>
+            <div class="col-5">
+              <codx-label [formModel]="form.formModel" fiedName="PhoneExt">
+              </codx-label>
+              <codx-input
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+                field="phoneExt"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="funcID == 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="Email">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="email"
+            >
+            </codx-input>
+          </div>
+          <div
+            class="form-group"
+            *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
+          >
+            <codx-label [formModel]="form.formModel" [fiedName]="'BankAccount'">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              [field]="'bankAccount'"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID != 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="annualRevenue"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID == 'CM0101'">
+            <codx-label [formModel]="form.formModel" fiedName="WorkingDays">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="workingDays"
+            >
+            </codx-input>
+          </div>
         </div>
         <div class="col-6">
-          <span
-            *ngIf="item?.adressName"
-            [innerHTML]="
-              item?.adressName
-                | formatvalue : formModelAddress : 'AdressName'
-                | async
-            "
-          ></span>
-        </div>
-        <div class="col-2">
-          <div class="d-flex justify-content-end align-items-center">
-            <button
-              class="btn btn-sm btn-icon btn-light-warning"
-              (click)="openPopupAddress(item, 'edit')"
+          <div class="form-group" *ngIf="funcID != 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="Headcounts">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="headcounts"
             >
-              <i class="icon icon-14 icon-edit"></i>
-            </button>
-            <button
-              class="btn btn-sm btn-icon btn-light-danger ms-2"
-              (click)="removeAddress(item, i)"
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID == 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="Nationality">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="nationality"
             >
-              <i class="icon icon-14 icon-close"></i>
-            </button>
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID == 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="EthnicGroup">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="ethnicGroup"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID == 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="Religion">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="religion"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID == 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="Education">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="education"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID == 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="MaritalStatus">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="maritalStatus"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID == 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="Income">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="income"
+            >
+            </codx-input>
+          </div>
+          <div
+            class="form-group"
+            *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
+          >
+            <codx-label [formModel]="form.formModel" [fiedName]="'BankID'">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              [field]="'bankID'"
+            >
+            </codx-input>
+          </div>
+
+          <div class="form-group" *ngIf="funcID != 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="Industries">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [crrValue]="data?.industries"
+              [type]="'combobox'"
+              [refValue]="gridViewSetup?.Industries?.referedValue"
+              (valueChange)="valueIndustries($event)"
+              field="industries"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID == 'CM0101'">
+            <div class="d-flex justify-content-between">
+              <div>
+                <codx-input
+                  [formModel]="form.formModel"
+                  [Group]="form.formGroup"
+                  field="officialHour"
+                >
+                </codx-input>
+              </div>
+              <div class="w-100 ms-1">
+                <codx-label
+                  [formModel]="form.formModel"
+                  fiedName="OfficialHour"
+                >
+                </codx-label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </ng-container>
-  </div>
+    </div>
+    <div>
+      <div class="mb-4" *ngIf="funcID != 'CM0102'">
+        <codx-label
+          name="lblSystemInfo"
+          class="h4 text-dark text-primary fw-bold"
+          [formModel]="dialog.formModel"
+          default="Thông tin hệ thống"
+        >
+        </codx-label>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group" *ngIf="funcID == 'CM0101'">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="CustomerResource"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="customerResource"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group" *ngIf="funcID != 'CM0102'">
+            <codx-label [formModel]="form.formModel" fiedName="SegmentID">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="segmentID"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div
+            class="form-group"
+            *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
+          >
+            <codx-label
+              [formModel]="form.formModel"
+              [fiedName]="funcID == 'CM0101' ? 'CustomerFrom' : 'PartnerFrom'"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              [field]="funcID == 'CM0101' ? 'customerFrom' : 'partnerFrom'"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </ng-template>
+
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-primary" (click)="onSave()">

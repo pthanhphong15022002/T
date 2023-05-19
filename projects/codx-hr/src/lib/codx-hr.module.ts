@@ -449,7 +449,7 @@ import { EmployeeDetailComponent } from './employee-list/employee-detail/employe
 import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.component';
 import { ScrollSpyDirective } from './scroll-spy.directive';
 import { PopupEProcessContractComponent } from './employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
-import { ViewContractDetailComponent } from './employee-contract/view-contracts-detail/view-contracts-detail.component';
+// import { ViewContractDetailComponent } from './employee-contract/view-contracts-detail/view-contracts-detail.component';
 import { EmployeeBasicSalaryComponent } from './employee-basic-salary/employee-basic-salary.component';
 import { EmployeeJobSalaryComponent } from './employee-job-salary/employee-job-salary.component';
 import { PopupEmployeeJobsalaryComponent } from './employee-job-salary/popup-employee-jobsalary/popup-employee-jobsalary.component';
@@ -472,12 +472,11 @@ import { EmployeeDayOffComponent } from './employee-day-off/employee-day-off.com
 import { ViewDayOffDetailComponent } from './employee-day-off/view-day-off-detail/view-day-off-detail.component';
 import { EmployeeInfoDetailComponent } from './employee-list/employee-info-detail/employee-info-detail.component';
 import { PopupForeignWorkerComponent } from './employee-profile/popup-foreign-worker/popup-foreign-worker.component';
-import { PopupViewallBenefitComponent } from './employee-list/employee-info-detail/pop-up/popup-viewall-benefit/popup-viewall-benefit.component';
 import { PopupAddEmployeeComponent } from './employee-list/popup/popup-add-employee/popup-add-employee.component';
-import { PopupViewallSalaryComponent } from './employee-list/employee-info-detail/pop-up/popup-viewall-salary/popup-viewall-salary.component';
 import { PopupViewAllComponent } from './employee-list/employee-info-detail/pop-up/popup-view-all/popup-view-all.component';
 import { EmployeeAppointionsComponent } from './employee-appointions/employee-appointions.component';
 import { ViewDetailEappointionsComponent } from './employee-appointions/view-detail-eappointions/view-detail-eappointions.component';
+import { PopupEquitjobComponent } from './employee-profile/popup-equitjob/popup-equitjob.component';
 export const routes: Routes = [
       {
         path: '',
@@ -710,7 +709,7 @@ const T_Component: Type<any>[] = [
   ScrollSpyDirective,
   PopupEProcessContractComponent,
   PopupEmployeeJobsalaryComponent,
-  ViewContractDetailComponent,
+  // ViewContractDetailComponent,
   EmployeeBasicSalaryComponent,
   ViewBasicSalaryDetailComponent,
   EmployeeJobSalaryComponent,
@@ -732,12 +731,11 @@ const T_Component: Type<any>[] = [
   ViewDetailEmployeeBusinessComponent,
   EmployeeInfoDetailComponent,
   PopupForeignWorkerComponent,
-  PopupViewallBenefitComponent,
-  PopupViewallSalaryComponent,
   PopupViewAllComponent,
   EmployeeAppointionsComponent,
   PopupAddEmployeeComponent,
-  ViewDetailEappointionsComponent
+  ViewDetailEappointionsComponent,
+  PopupEquitjobComponent
 ];
 @NgModule({
   imports: [

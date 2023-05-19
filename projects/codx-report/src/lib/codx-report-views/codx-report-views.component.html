@@ -1,10 +1,19 @@
-<div class="card-ep-report">
+<div class="card-ep-report" *ngIf="module">
 <codx-views
   #view
   [funcID]="funcID"
+  service="rptsys"
+  entityName="RP_ReportList"
+  idField="reportID"
+  assemblyName="Codx.RptBusiniess.SYS"
+  className="ReportListBusiness"
+  method="GetReportsByModule1Async"
+  [predicates]="'Module=@0&&ReportType=@1'"
+  [dataValues]="this.module.toUpperCase()+';R'"
   (viewChanged)="viewChanged($event)"
   [toolbarDisplay]="true"
   [views]="views"
+  [autoLoad]="false"
   [button]="button"
   (onActions)="onActions($event)"
   >
@@ -14,7 +23,7 @@
   <!-- <codx-img [cssClass]="'w-100 h-100'" [objectId]="data.recID" [objectName]="data.reportName" [objectType]="'SYS_ReportList'"  [imageType]="'square'" [isFull]="true"></codx-img> -->
   <codx-card-img
     cardCss="border w-250px h-200px card-vpp"
-    [imageObjType]="'SYS_ReportList'"
+    [imageObjType]="'RP_ReportList'"
     [imageObjName]="data.reportName"
     [imageId]="data.recID"
     [hideMF]="true"
@@ -28,6 +37,7 @@
     [content]="data.customName"
     [dataItem]="data"
     [imageRecId]="data.recID"
+
 
   >
   </codx-card-img>

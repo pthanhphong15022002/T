@@ -1,4 +1,4 @@
-import { Util } from "codx-core";
+import { Util } from 'codx-core';
 
 export class CM_Products {
   recID: string;
@@ -66,6 +66,8 @@ export class CM_Quotations {
   deadline: Date;
   memo: string;
   totalAmt: number;
+  totalTaxAmt:number
+  totalSalesAmt:number
   discPct: number;
   discAmt: number;
   tags: string;
@@ -73,6 +75,7 @@ export class CM_Quotations {
   refNo: string;
   refID: string;
   versionNo: string;
+  versionName: string;
   revision: number;
   parentID: string;
   attachments: number;
@@ -94,13 +97,13 @@ export class CM_QuotationsLines {
   barcode: string;
   itemID: string;
   itemNote: string;
-  iDIM0: string;
-  iDIM1: string;
-  iDIM2: string;
-  iDIM3: string;
-  IDIM4: string;
+  idiM0: string;
+  idiM1: string;
+  idiM2: string;
+  idiM3: string;
+  idiM4: string;
   quantity: number;
-  uMID: string;
+  umid: string;
   conversion: number;
   cWUM: string;
   cWConversion: number;
@@ -122,8 +125,9 @@ export class CM_QuotationsLines {
   exciseTaxPct: number;
   exciseTaxAmt: number;
   vATID: string;
-  vATBase: number;
-  vATAmt: number;
+  vatRate :number
+  vatBase: number;
+  vatAmt: number;
   refType: string;
   refNo: string;
   refID: string;
@@ -140,7 +144,7 @@ export class CM_Deals {
   dealID: string;
   dealName: string;
   dealName2: string;
-  category: string;
+  category: string = "1";
   customerID: string;
   channelID: string;
   campaignID: string;
@@ -149,8 +153,8 @@ export class CM_Deals {
   tags: string;
   dealValue: number;
   probability: number;
-  expectedClosed: number;
-  status: string;
+  expectedClosed: Date;
+  status: string = "1";
   statusCodeID: string;
   stepID: string;
   nextStep: string;
@@ -232,17 +236,20 @@ export class CM_Customers {
   email: string;
   webPage: string;
   establishDate: Date;
-  headcounts: string;
+  headcounts: number;
   annualRevenue: number;
   workingDays: string;
   officialHour: boolean;
   countryID: string;
   provinceID: string;
   districtID: string;
+  wardID: string;
   regionID: string;
   consultantID: string;
   invoiceAccount: string;
   isBlackList: boolean;
+  isNew: boolean;
+  isSale: boolean;
   stop: boolean;
   stopReason: string;
   customerFrom: Date;
@@ -291,6 +298,7 @@ export class CM_Contacts {
   provinceID: string;
   districtID: string;
   wardID: string;
+  regionID: string;
   postalCode: string;
   mobile: string;
   phone: string;
@@ -363,6 +371,11 @@ export class BS_AddressBook {
   orgUnitID: string;
   divisionID: string;
   wardID: string;
+  assign: boolean = true;
+  delete: boolean = true;
+  write: boolean = true;
+  share: boolean = true;
+
 }
 export class CM_ContractsPayments {
   recID: string = Util.uid(); //Mã thanh toán
@@ -373,7 +386,7 @@ export class CM_ContractsPayments {
   schedulePct: number; //
   scheduleBaseOn: string; //
   scheduleAmt: number; //Số tiền hẹn thanh toán
-  interestAmt: number; //Số tiền lãi
+  numbererestAmt: number; //Số tiền lãi
   adjustedAmt: number; //Số tiền được điều chỉnh
   vATAmt: number; //Số tiền thuế VAT
   totalAmt: number; //Tổng tiền
@@ -491,13 +504,14 @@ export class CM_Cases {
   recID: string;
   caseNo: string;
   caseName: string;
-  caseType: string;
+  caseType: string = '2';
   category: string;
   channelID: string;
   objectType: string;
   objectID: string;
   objectName: string;
   contactID: string;
+  customerID: string;
   contactName: string;
   mobile: string;
   email: string;
@@ -539,15 +553,146 @@ export class CM_Cases {
   called: string;
   sendMail: string;
   sendSMS: string;
-  attachments: string;
+  attachments: Number = 0;
   processID: string;
   startDate: Date;
   endDate: Date;
   // datas: Json;
   bUID: string;
   owner: string;
+  createdOn: Date = new Date();
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+}
+
+export class CM_Partners {
+  recID: string;
+  partnerID: string;
+  partnerName: string;
+  partnerName2: string;
+  shortName: string;
+  website: string;
+  partnerFrom: Date;
+  taxCode: string;
+  establishDate: Date;
+  memo: string;
+  address: string;
+  countryID: string;
+  provinceID: string;
+  districtID: string;
+  wardID: string;
+  regionID: string;
+  industries: string;
+  phone: string;
+  faxNo: string;
+  email: string;
+  channelID: string;
+  segmentID: string;
+  capital: number;
+  annualRevenue: number;
+  headcounts: number;
+  cEO: string;
+  owner: string;
+  bUID: string;
+  tags: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+}
+
+export class CM_Competitors {
+  recID: string;
+  competitorID: string;
+  competitorName: string;
+  competitorName2: string;
+  shortName: string;
+  category: string;
+  channelID: string;
+  segmentID: string;
+  capital: number;
+  annualRevenue: number;
+  headcounts: number;
+  establishDate: number;
+  rating: string;
+  cEO: string;
+  status: string;
+  address: string;
+  countryID: string;
+  provinceID: string;
+  districtID: string;
+  wardID: string;
+  regionID: string;
+  phone: string;
+  faxNo: string;
+  email: string;
+  webPage: string;
+  memo: string;
+  taxCode: string;
+  industries: string;
+  tags: string;
+  owner: string;
+  bUID: string;
+  createdOn: number;
+  createdBy: string;
+  modifiedOn: number;
+  modifiedBy: string;
+}
+
+export class CM_Leads {
+  recID: string;
+  leadID: string;
+  leadName: string;
+  leadName2: string;
+  category: string;
+  channelID: string;
+  campaignID: string;
+  businesslineID: string;
+  memo: string;
+  companyName: string;
+  tags: string;
+  industries: string;
+  annualRevenue: number;
+  headcounts: string;
+  establishDate: Date;
+  addresses: string;
+  countryID: string;
+  provinceID: string;
+  districtID: string;
+  postalCode: string;
+  companyPhone: string;
+  faxNo: string;
+  webPage: string;
+  contactName: string;
+  firstName: string;
+  salutation: string;
+  jobTitle: string;
+  occupation: string;
+  email: string;
+  phone: string;
+  phoneExt: string;
+  mobile: string;
+  status: string;
+  statusCode: string;
+  currentStep: string;
+  nextStep: string;
+  lastUpdated: Date;
+  note: string;
+  attachments: number;
+  comments: number;
+  isDuplicated: boolean;
+  contactID: string;
+  customerID: string;
+  salespersonID: string;
+  consultantID: string;
+  // datas: Json;
+  customerResource: string;
+  owner: string;
+  bUID: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+
 }

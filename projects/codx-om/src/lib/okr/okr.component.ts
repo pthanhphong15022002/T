@@ -117,6 +117,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   listUM = [];
   loadedData: boolean;
   loadedDataTree: boolean;
+  useSKR = false;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -286,6 +287,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         });
       }
     });
+    this.codxOmService
+      .getSettingValue(OMCONST.OMPARAM)
+      .subscribe((omSetting: any) => {
+        if (omSetting) {
+          let settingVal = JSON.parse(omSetting?.dataValue);
+          if (settingVal?.UseSubKR == '1' || settingVal?.UseSubKR == true) {
+            this.useSKR = true;            
+          }
+        }
+      });
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//
@@ -811,6 +822,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.okrVll,
         curFunc,
         this.okrGrv,
+        this.useSKR,
       ],
       '',
       dialogModel

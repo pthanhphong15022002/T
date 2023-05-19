@@ -1,0 +1,77 @@
+<div *ngIf="module" class="container w-100 h-100 p-2">
+  <div class="row header">
+    <div class="close d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn btn-light-primary me-4"
+        (click)="closePopup()"
+      >
+        <codx-label formName="" default="X"></codx-label>
+      </button>
+    </div>
+  </div>
+  <div class="moduleInfo w-100">
+    <!-- [imageSrc]="module.boughtModule?.image" -->
+    <codx-temp-full
+      cardCss="card-template border-bottom px-2 pt-4 pb-2"
+      [typeMF]="'hover'"
+      [title]="module.boughtModule.moduleName"
+      [descTmp]="moduleOperatorDescTmp"
+      [desc2Tmp]="moduleEmplDescTmp"
+      [descLine]="2"
+      [icoCss]="
+        'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 '
+      "
+      [titleLine]="2"
+      [icoDateCss]="'icon-access_alarm'"
+      typeMF="hover"
+      [dataItem]="module.boughtModule"
+    >
+    </codx-temp-full>
+  </div>
+
+  <div class="grvModule"></div>
+</div>
+
+<ng-template #moduleOperatorDescTmp let-module>
+  <div class="d-flex" *ngIf="module.price != null">
+    <codx-label name="lblPriceForOperator" default="Nhân viên nghiệp vụ: ">
+    </codx-label>
+    <span>
+      {{ module.price + " " + module.currency + "/" + module.umid + "/ " }}
+    </span>
+    <codx-vll
+      [name]="grvTNOrders['Interval']?.referedValue"
+      [value]="module?.interval"
+      [showText]="true"
+      [showBgColor]="false"
+      class="badge badge-light badge-square badge-md fs-7 p-2"
+    >
+    </codx-vll>
+  </div>
+</ng-template>
+
+<ng-template #moduleEmplDescTmp let-module>
+  <div class="d-flex" *ngIf="childModule?.price">
+    <codx-label name="lblPriceForEmpl" default="Nhân viên thường: ">
+    </codx-label>
+    <span>
+      {{
+        childModule.price +
+          " " +
+          childModule.currency +
+          "/" +
+          childModule.umid +
+          "/ "
+      }}
+    </span>
+    <codx-vll
+      [name]="grvTNOrders['Interval']?.referedValue"
+      [value]="childModule?.interval"
+      [showText]="true"
+      [showBgColor]="false"
+      class="badge badge-light badge-square badge-md fs-7 p-2"
+    >
+    </codx-vll>
+  </div>
+</ng-template>

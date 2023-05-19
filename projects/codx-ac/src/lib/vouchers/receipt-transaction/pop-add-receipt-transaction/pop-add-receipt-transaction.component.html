@@ -189,7 +189,7 @@
               <th style="width: 40%;">
                 <div class="d-flex">
                   <i class="icon-i-box icon-16 me-2 icon-add text-gray-700"></i>
-                  <codx-label class="fw-bold" fiedName="ItemID" [formModel]="fmInventoryJournalLines">
+                  <codx-label [setRequire]="false" class="fw-bold" fiedName="ItemID" [formModel]="fmInventoryJournalLines">
                   </codx-label>
                 </div>
               </th>
@@ -249,7 +249,7 @@
                   </ng-container>
   
                   <ng-container *ngIf="item.idiM4 != null && item.idiM4 != ''">
-                    <codx-label class="text-gray-700 label-colon" fiedName="IDIM4" [formModel]="fmInventoryJournalLines">
+                    <codx-label [setRequire]="false" class="text-gray-700 label-colon" fiedName="IDIM4" [formModel]="fmInventoryJournalLines">
                     </codx-label>
                     &nbsp;
                     <span #idiM4 class="fs-6 fw-bold" [innerHTML]="
@@ -420,9 +420,9 @@
   <span *ngIf="modeGrid == '2'" ngbTooltip="Sửa" placement="top" type="button" class="btn btn-icon btn-light-primary ms-1" (click)="editRow(data)">
     <i class="icon-edit icon-16"></i>
   </span>
-  <!-- <span ngbTooltip="copy" placement="top" type="button" class="btn btn-icon btn-light-primary ms-1" (click)="copyRow(data)">
+  <span ngbTooltip="copy" placement="top" type="button" class="btn btn-icon btn-light-primary ms-1" (click)="copyRow(data)">
     <i class="icon-content_copy icon-16"></i>
-  </span> -->
+  </span>
   <span ngbTooltip="Xóa" placement="bottom" type="button" class="btn btn-icon btn-light-danger ms-1"
     (click)="deleteRow(data)">
     <i class="icon-delete icon-16"></i>

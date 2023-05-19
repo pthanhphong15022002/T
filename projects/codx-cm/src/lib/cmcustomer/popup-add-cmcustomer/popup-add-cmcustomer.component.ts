@@ -22,11 +22,17 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
-import { PopupAddressComponent } from '../popup-address/popup-address.component';
-import { PopupListContactsComponent } from './popup-list-contacts/popup-list-contacts.component';
-import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
+import { PopupAddressComponent } from '../cmcustomer-detail/codx-address-cm/popup-address/popup-address.component';
+import { PopupListContactsComponent } from '../cmcustomer-detail/codx-list-contacts/popup-list-contacts/popup-list-contacts.component';
+import { PopupQuickaddContactComponent } from '../cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxCmService } from '../../codx-cm.service';
-import { BS_AddressBook } from '../../models/cm_model';
+import {
+  BS_AddressBook,
+  CM_Competitors,
+  CM_Contacts,
+  CM_Customers,
+  CM_Partners,
+} from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -55,12 +61,14 @@ export class PopupAddCmCustomerComponent implements OnInit {
   recID: any;
   refValueCbx = '';
   refContactType = '';
-
+  titleAction = '';
   listAddress: BS_AddressBook[] = [];
   formModelAddress: FormModel;
   listAddressDelete: BS_AddressBook[] = [];
   disableObjectID = true;
   lstContact = [];
+  lstContactDeletes = [];
+
   contactType: any;
   count = 0;
   avatarChange = false;
@@ -95,15 +103,14 @@ export class PopupAddCmCustomerComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
+    this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.action = dt?.data?.action;
-    this.title = dt?.data?.title;
+    this.titleAction = dt?.data?.title;
     this.autoNumber = dt?.data?.autoNumber;
     if (this.action == 'copy') {
       this.recID = dt?.data[2];
-      this.getListAddress(this.dialog.formModel.entityName, this.recID);
     }
     this.recID = dt?.data[2];
     if (this.action == 'edit' || this.action == 'copy') {
@@ -116,12 +123,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getTab();
     if (this.action == 'add' || this.action == 'copy')
       this.getAutoNumber(this.autoNumber);
     if (this.data?.objectID) {
       this.getListContactByObjectID(this.data?.objectID);
     }
-    this.getFormModelAddress();
     this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
@@ -143,6 +150,51 @@ export class PopupAddCmCustomerComponent implements OnInit {
     });
   }
 
+  setTitle(e: any) {
+    this.title =
+      this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
+    //this.changDetec.detectChanges();
+  }
+
+  getTab() {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0103') {
+      this.tabInfo = [
+        { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
+        {
+          icon: 'icon-info',
+          text: 'Thông tin khác',
+          name: 'InformationDefault',
+        },
+        {
+          icon: 'icon-location_on',
+          text: 'Danh sách địa chỉ',
+          name: 'Address',
+        },
+        {
+          icon: 'icon-contact_phone',
+          text: 'Người liên hệ',
+          name: 'Contacts',
+        }
+
+      ];
+    } else {
+      this.tabInfo = [
+        { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
+        {
+          icon: 'icon-info',
+          text: 'Thông tin khác',
+          name: 'InformationDefault',
+        },
+        {
+          icon: 'icon-location_on',
+          text: 'Danh sách địa chỉ',
+          name: 'Address',
+        },
+
+      ];
+    }
+  }
+
   getAutoNumber(autoNumber) {
     switch (this.funcID) {
       case 'CM0101':
@@ -161,16 +213,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
-    if (this.action == 'edit') {
-      this.contactsPerson = await firstValueFrom(
-        this.cmSv.getContactByObjectID(this.data?.recID)
-      );
+    if(this.action == 'edit'){
       this.getListAddress(this.dialog.formModel.entityName, this.data.recID);
     }
-
-    this.changeDetectorRef.detectChanges();
   }
 
   getListAddress(entityName, recID) {
@@ -233,6 +278,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.contactType = null;
       this.data.objectID = null;
       this.data.objectName = null;
+      this.data.isDefault = false;
     }
     if (this.action === 'add' || this.action == 'copy') {
       op.method = 'AddCrmAsync';
@@ -248,8 +294,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.funcID == 'CM0104' ? this.data : null,
       this.funcID,
       this.dialog.formModel.entityName,
-      this.contactsPerson?.recID,
-      this.funcID == 'CM0101' ? '1' : this.funcID == 'CM0103' ? '3' : null,
+      this.lstContact,
+      this.action == 'edit' ? this.lstContactDeletes : [],
       this.listAddress,
       this.listAddressDelete,
     ];
@@ -269,12 +315,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
               .subscribe((result) => {
                 if (result) {
                   this.dialog.close([res.save]);
-                }else{
+                } else {
                   this.dialog.close([res.save]);
-
                 }
               });
-          }else{
+          } else {
             this.dialog.close([res.save]);
           }
         }
@@ -294,17 +339,17 @@ export class PopupAddCmCustomerComponent implements OnInit {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
-            if (this.avatarChange) {
-              this.imageUpload
-                .updateFileDirectReload(recID)
-                .subscribe((result) => {
-                  if (result) {
-                    this.dialog.close(res.update);
-                  }
-                });
-            }else{
-              this.dialog.close(res.update);
-            }
+          if (this.avatarChange) {
+            this.imageUpload
+              .updateFileDirectReload(recID)
+              .subscribe((result) => {
+                if (result) {
+                  this.dialog.close(res.update);
+                }
+              });
+          } else {
+            this.dialog.close(res.update);
+          }
         }
       });
   }
@@ -338,12 +383,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
       }
     }
 
-    if (this.funcID != 'CM0102' && this.funcID != 'CM0104') {
-      if (this.contactsPerson == null) {
-        this.notiService.notifyCode('CM002'); //Chưa có msssg
-        return;
-      }
-    }
+    // if (this.funcID != 'CM0102' && this.funcID != 'CM0104') {
+    //   if (this.contactsPerson == null) {
+    //     this.notiService.notifyCode('CM002'); //Chưa có msssg
+    //     return;
+    //   }
+    // }
     if (this.data.phone != null && this.data.phone.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.phone, 'P')) return;
     }
@@ -357,12 +402,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (this.funcID == 'CM0102') {
       if (this.lstContact != null && this.lstContact.length > 0) {
         var checkMainLst = this.lstContact.some(
-          (x) =>
-            x.contactType.split(';').some((x) => x == '1') &&
-            x.recID != this.data.recID
+          (x) => x.isDefault && x.recID != this.data.recID
         );
         if (checkMainLst) {
-          if (this.data?.contactType?.split(';').some((x) => x == '1')) {
+          if (this.data?.isDefault) {
             var config = new AlertConfirmInputConfig();
             config.type = 'YesNo';
             this.notiService.alertCode('CM001').subscribe((x) => {
@@ -374,11 +417,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
             this.hanleSave();
           }
         } else {
-          if (!this.data.contactType.split(';').some((x) => x == '1')) {
-            this.notiService.notifyCode('CM002');
-          } else {
-            this.hanleSave();
-          }
+          this.hanleSave();
         }
       } else {
         this.hanleSave();
@@ -440,6 +479,30 @@ export class PopupAddCmCustomerComponent implements OnInit {
     });
   }
 
+  lstContactEmit(e) {
+    if (e != null && e.length > 0) {
+      this.lstContact = e;
+    }
+  }
+
+  lstContactDeleteEmit(e) {
+    if (e != null && e.length > 0) {
+      this.lstContactDeletes = e;
+    }
+  }
+
+  lstAddressEmit(e){
+    if (e != null && e.length > 0) {
+      this.listAddress = e;
+    }
+  }
+
+  lstAddressDeleteEmit(e){
+    if (e != null && e.length > 0) {
+      this.listAddressDelete = e;
+    }
+  }
+
   fileImgAdded(e) {
     if (e?.data && e?.data?.length > 0) {
       var countListFile = e.data.length;
@@ -484,101 +547,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
-  getFormModelAddress() {
-    let dataModel = new FormModel();
-    dataModel.formName = 'CMAddressBook';
-    dataModel.gridViewName = 'grvCMAddressBook';
-    dataModel.entityName = 'BS_AddressBook';
-    dataModel.funcID = this.funcID;
-    this.formModelAddress = dataModel;
-  }
 
-  openPopupAddress(data = new BS_AddressBook(), action = 'add') {
-    let opt = new DialogModel();
-    let dataModel = new FormModel();
-    var title =
-      (action == 'add' ? this.moreFuncAdd : this.moreFuncEdit) +
-      ' ' +
-      this.gridViewSetup?.Address?.headerText;
-    dataModel.formName = 'CMAddressBook';
-    dataModel.gridViewName = 'grvCMAddressBook';
-    dataModel.entityName = 'BS_AddressBook';
-    dataModel.funcID = this.funcID;
-    opt.FormModel = dataModel;
-    this.cache
-      .gridViewSetup('CMAddressBook', 'grvCMAddressBook')
-      .subscribe((res) => {
-        if (res) {
-          var obj = {
-            title: title,
-            gridViewSetup: res,
-            action: action,
-            data: data,
-            listAddress: this.listAddress,
-          };
-          var dialog = this.callFc.openForm(
-            PopupAddressComponent,
-            '',
-            500,
-            550,
-            '',
-            obj,
-            '',
-            opt
-          );
-          dialog.closed.subscribe((e) => {
-            if (e && e.event != null) {
-              if (e?.event?.adressType) {
-                var address = new BS_AddressBook();
-                address = e.event;
-                var index = this.listAddress.findIndex(
-                  (x) => x.recID != null && x.recID == address.recID
-                );
-                var checkCoincide = this.listAddress.some(
-                  (x) =>
-                    x.recID != address.recID &&
-                    x.adressType == address.adressType &&
-                    x.street == address.street &&
-                    x.countryID == address.countryID &&
-                    x.provinceID == address.provinceID &&
-                    x.districtID == address.districtID &&
-                    x.regionID == x.regionID
-                );
-                var check = this.listAddress.some(
-                  (x) =>
-                    x.recID != address.recID &&
-                    x.adressType == '1' &&
-                    address.adressType == '1'
-                );
-                if (!checkCoincide && !check) {
-                  if (index != -1) {
-                    this.listAddress.splice(index, 1);
-                  }
-                  this.listAddress.push(address);
-                } else {
-                  this.notiService.notifyCode(
-                    'CM003',
-                    0,
-                    '"' + this.gridViewSetup['Address'].headerText + '"'
-                  );
-                }
-              }
-            }
-          });
-        }
-      });
-  }
 
-  removeAddress(data, index) {
-    var config = new AlertConfirmInputConfig();
-    config.type = 'YesNo';
-    this.notiService.alertCode('SYS030').subscribe((x) => {
-      if (x.event.status == 'Y') {
-        this.listAddress.splice(index, 1);
-        this.listAddressDelete.push(data);
-      }
-    });
-  }
 
   //#region Contact
   //Open list contacts
@@ -599,7 +569,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         var dialog = this.callFc.openForm(
           PopupListContactsComponent,
           '',
-          500,
+          650,
           550,
           '',
           obj,

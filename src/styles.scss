@@ -97,7 +97,7 @@ codx-view-list-detail {
 }
 .fs-6 {
   //font-size: var(--fs-6) !important;
-  font-size: 1.035rem !important;
+  font-size: 13.5px!important;
 }
 /** custom bootstrap  **/
 .rounded-4 {
@@ -195,7 +195,15 @@ textarea:focus,
   box-shadow: none !important;
   border-color: $primary !important;
 }
-
+.e-checkbox-wrapper .e-frame, .e-css.e-checkbox-wrapper .e-frame {
+  border-color: var(--gray-500);
+}
+.e-checkbox-wrapper:hover .e-frame, .e-css.e-checkbox-wrapper:hover .e-frame {
+  border-color: var(--gray-700)!important;
+}
+.e-checkbox-wrapper.e-checkbox-disabled .e-frame, .e-css.e-checkbox-wrapper.e-checkbox-disabled .e-frame {
+  border-color: var(--gray-150);
+}
 .codx-search.codx-focus {
   border-color: $primary !important;
 }
@@ -1116,6 +1124,10 @@ codx-layout-add .card-header {
 .badge-md.fs-7{
   font-size: 11px!important;
 }
+.badge.badge-md{
+  font-size: 1rem;
+  padding: 0.3em 0.85em 0.5em;
+}
 /*** list view srcoll ngang ***/
 .e-listview .e-content {
   overflow-x: auto;
@@ -1163,6 +1175,12 @@ codx-layout-add .card-header {
   height: auto !important;
 }
 
+.list-empty{
+  padding-top: 20px;
+  .fs-5{
+    font-size: 14px!important;
+  }
+}
 .list-empty.card.card-flush {
   display: flex;
   align-items: center;
@@ -1466,7 +1484,7 @@ a {
 
 .label-colon span{
   //position: relative;
-  //padding-right: 10px;
+  padding-right: 7px;
   min-height: 18px;
  // display: block;
   line-height: 18px;
@@ -1484,7 +1502,10 @@ a {
 .codx-label.required::after {
   margin-left: -5px;
 }
+.required:after {
+  content: "*"!important;
 
+}
 codx-processsteps .e-kanban-content {
   height: calc(100vh - 250px);
   overflow-y: hidden !important;
@@ -1920,13 +1941,13 @@ codx-vll.badge.badge-light.badge-md > span[class*="fa"] {
 }
 
 a.nav-link {
-  color: var(--gray-800);
-  font-weight: bold;
+  color: var(--gray-700);
+  font-weight: 500;
   font-size: var(--fs-6);
 }
 .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
-  color: var(--gray-800);
-  font-weight: bold;
+  color: var(--gray-700);
+  font-weight: 500;
   font-size: var(--fs-6);
 }
 .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
@@ -2354,12 +2375,14 @@ codx-valuelist .btn.select-icon {
   .dialog-more {
     width: 350px;
     position: absolute;
-    top: 9;
+    top: 0;
     bottom: 0;
     right: 0;
     overflow: auto;
     padding: 0 15px;
     display: block;
+    border-left: 1px var(--gray-150) solid;
+    z-index: 99;
   }
   .icon-login {
     rotate: 180deg;
@@ -2374,7 +2397,6 @@ codx-calendar {
   }
 }
 
-//
 
  .btn:not(.btn-outline-default):focus {
    border-color: transparent !important;
@@ -2661,10 +2683,14 @@ codx-input .e-icons.e-check:before {
     left: 0;
   }
 }
-.e-grid .e-table {
-  table-layout: auto;
+// .e-grid .e-table {
+//   table-layout: auto; /**vannguvaichuong**/
+// }
+doc-category{
+  .e-grid .e-table {
+    table-layout: auto!important;
+  }
 }
-
 .e-richtexteditor .e-toolbar-wrapper {
   position: relative;
 }
@@ -2802,12 +2828,65 @@ codx-vll.vll-post{
 }
 
 
+.card-report {
+  .codx-image {
+    display: unset !important;
+    height: 140px !important;
+    min-height: 140px!important;
+    border-radius: 4px 4px 0 0;
+  }
+  .card-body{
+    min-height: 50px!important;
+    font-weight: 500;
+    padding-top: 10px!important;
+  }
+}
+
+codx-toolbar-report{
+  .btn-sm.h-25px{
+    height: 28px!important;
+  }
+  .e-control.e-datepicker.e-lib{
+    .e-input-group.e-control-wrapper.e-date-wrapper{
+      height: 28px!important;
+      border-radius: 20px!important;
+      padding-left: 5px!important;
+      padding-right: 5px!important;
+    }
+  }
+  .e-input-group-icon {
+    min-height: 26px!important;
+  }
+  .e-input-group.e-control-wrapper .e-input-group-icon {
+    font-size: 15px!important;
+  }
+  .container-fluid.w-100>.row>.col-2{
+    align-items: center;
+    display: flex;
+    justify-content: end;
+  }
+
+  
+}
 // boostraps\
+.e-multi-select-wrapper .e-delim-values{
+  font-size: 13px!important;
+}
 .e-multi-select-wrapper .e-chips {
+  
+  .e-delim-values{
+    font-size: 13px!important;
+    font-weight: normal!important;
+
+  }
   background-color: var(--primary);
   border-radius: 2px;
-  height: 20px;
+  span{
+    font-size: 13px!important;
+    font-weight: normal!important;
+  }
 }
+
 //calendar
 .codx_title_sub_primary {
   color:var(--primary-dark);
@@ -2818,4 +2897,16 @@ codx-vll.vll-post{
 }
 .text-primary-dark{
   color: var(--primary-dark);
+}
+
+
+.cal-notes .checkbox-list {
+  padding: 7px 16px;
+}
+
+.e-gantt-splitter table tr{
+  height: 40px!important;
+}
+.e-gantt-splitter table tr.e-chart-row div{
+  height: 40px!important;
 }

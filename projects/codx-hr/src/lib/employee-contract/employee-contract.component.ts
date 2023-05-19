@@ -8,7 +8,6 @@ import { Component, OnInit, ViewChild, TemplateRef, Injector, ChangeDetectorRef 
 import { DataRequest } from '@shared/models/data.request';
 import { ActivatedRoute } from '@angular/router';
 import { PopupEContractComponent } from '../employee-profile/popup-econtract/popup-econtract.component';
-import { ViewContractDetailComponent } from './view-contracts-detail/view-contracts-detail.component';
 
 @Component({
   selector: 'lib-employee-contract',
@@ -17,11 +16,10 @@ import { ViewContractDetailComponent } from './view-contracts-detail/view-contra
 })
 export class EmployeeContractComponent extends UIComponent {
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
-  @ViewChild('viewdetail') viewdetail: ViewContractDetailComponent;
+  @ViewChild('viewdetail') viewdetail: ViewDetailContractsComponent;
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
   @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
-  @ViewChild('eInfoTemplate') eInfoTemplate?: TemplateRef<any>;
   @ViewChild('contractTemplate') contractTemplate?: TemplateRef<any>;
   @ViewChild('templateUpdateStatus', { static: true }) templateUpdateStatus: TemplateRef<any>;
   views: Array<ViewModel> = []
@@ -42,7 +40,7 @@ export class EmployeeContractComponent extends UIComponent {
   dialogEditStatus: any;
   statusCbx = true;
   
-  genderGrvSetup: any
+  //genderGrvSetup: any
 
   //#region eContractFuncID
   actionAddNew = 'HRTPro01A01'
@@ -83,9 +81,9 @@ export class EmployeeContractComponent extends UIComponent {
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
-    this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
-      this.genderGrvSetup = res?.Gender;
-    });
+    // this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
+    //   this.genderGrvSetup = res?.Gender;
+    // });
   } 
 
 
@@ -295,19 +293,20 @@ export class EmployeeContractComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
+        debugger
         if(actionType == 'add'){
           // console.log('moi add hop dong xong', res.event[0]);
-          this.view.dataService.add(res.event[0],0).subscribe((res) => {
+          this.view.dataService.add(res.event,0).subscribe((res) => {
           });
           this.df.detectChanges();
         }
         else if(actionType == 'copy'){
-          this.view.dataService.add(res.event[0],0).subscribe((res) => {
+          this.view.dataService.add(res.event,0).subscribe((res) => {
           });
           this.df.detectChanges();
         }
         else if(actionType == 'edit'){
-          this.view.dataService.update(res.event[0]).subscribe((res) => {
+          this.view.dataService.update(res.event).subscribe((res) => {
           })
           this.df.detectChanges();
         }

@@ -24,6 +24,7 @@ import {
 import { CmcustomerDetailComponent } from './cmcustomer-detail/cmcustomer-detail.component';
 import { PopupAddCmCustomerComponent } from './popup-add-cmcustomer/popup-add-cmcustomer.component';
 import { CodxCmService } from '../codx-cm.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-cmcustomer',
@@ -71,7 +72,7 @@ export class CmCustomerComponent
   assemblyName = 'ERM.Business.CM';
   entityName = 'CM_Customers';
   className = 'CustomersBusiness';
-  method = 'GetListCRMLAsync';
+  method = 'GetListCRMAsync';
   idField = 'recID';
   //endregion
 
@@ -395,7 +396,6 @@ export class CmCustomerComponent
         if (this.isButton) this.add();
         break;
     }
-    this.isButton = false;
   }
 
   clickMF(e, data) {
@@ -422,7 +422,7 @@ export class CmCustomerComponent
         this.deleteContactToCM(data);
         break;
     }
-    this.isButton = false;
+
   }
 
   clickMoreFunc(e) {
@@ -482,6 +482,7 @@ export class CmCustomerComponent
 
   //#region CRUD
   add() {
+    this.isButton = false;
     this.view.dataService.addNew().subscribe((res: any) => {
       this.cache.functionList(this.funcID).subscribe((fun) => {
         let option = new SidebarModel();
@@ -493,8 +494,7 @@ export class CmCustomerComponent
         formMD.funcID = this.funcID;
         option.FormModel = JSON.parse(JSON.stringify(formMD));
         option.Width = '800px';
-        this.titleAction =
-          this.titleAction + ' ' + this.view?.function.customName;
+
         this.cmSv
           .getAutonumber(
             this.funcID,
@@ -523,7 +523,9 @@ export class CmCustomerComponent
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
                 e.event.modifiedOn = new Date();
+                this.dataSelected = JSON.parse(JSON.stringify(e?.event));
                 this.view.dataService.update(e?.event).subscribe();
+
                 this.detectorRef.detectChanges();
                 // this.customerDetail.listTab(this.funcID);
               }
@@ -534,6 +536,7 @@ export class CmCustomerComponent
   }
 
   edit(data) {
+    this.isButton = false;
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -550,8 +553,7 @@ export class CmCustomerComponent
           formMD.funcID = this.funcID;
           option.FormModel = JSON.parse(JSON.stringify(formMD));
           option.Width = '800px';
-          this.titleAction =
-            this.titleAction + ' ' + this.view?.function.customName;
+
           var obj = {
             action: 'edit',
             title: this.titleAction,
@@ -577,6 +579,7 @@ export class CmCustomerComponent
   }
 
   copy(data) {
+    this.isButton = false;
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -591,8 +594,7 @@ export class CmCustomerComponent
         formMD.funcID = this.funcID;
         option.FormModel = JSON.parse(JSON.stringify(formMD));
         option.Width = '800px';
-        this.titleAction =
-          this.titleAction + ' ' + this.view?.function.customName;
+
         this.cmSv
           .getAutonumber(
             this.funcID,
@@ -643,54 +645,41 @@ export class CmCustomerComponent
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    var checkContact = false;
     if (this.funcID == 'CM0101') {
-      this.cmSv.checkCustomerIDByDealsAsync(data?.recID).subscribe(res =>{
-        if(res){
-          this.notiService.notifyCode('Đang tồn tại trong cơ hội, không được xóa');
+      this.cmSv.checkCustomerIDByDealsAsync(data?.recID).subscribe((res) => {
+        if (res) {
+          this.notiService.notifyCode(
+            'Đang tồn tại trong cơ hội, không được xóa'
+          );
           return;
-        }else{
+        } else {
           this.view.dataService
-          .delete([this.view.dataService.dataSelected], true, (opt) =>
-            this.beforeDel(opt)
-          )
-          .subscribe((res) => {
-            if (res) {
-              this.view.dataService.onAction.next({
-                type: 'delete',
-                data: data,
-              });
-            }
-          });
+            .delete([this.view.dataService.dataSelected], true, (opt) =>
+              this.beforeDel(opt)
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.view.dataService.onAction.next({
+                  type: 'delete',
+                  data: data,
+                });
+              }
+            });
         }
-      })
+      });
     } else {
-      if (this.funcID == 'CM0102') {
-        checkContact =
-          data?.contactType?.split(';').some((x) => x == '1') &&
-          data.objectID != null &&
-          data.objectID.trim() != ''
-            ? true
-            : false;
-      }
-
-      if (!checkContact) {
-        this.view.dataService
-          .delete([this.view.dataService.dataSelected], true, (opt) =>
-            this.beforeDel(opt)
-          )
-          .subscribe((res) => {
-            if (res) {
-              this.view.dataService.onAction.next({
-                type: 'delete',
-                data: data,
-              });
-            }
-          });
-      } else {
-        this.notiService.notifyCode('CM004');
-        return;
-      }
+      this.view.dataService
+        .delete([this.view.dataService.dataSelected], true, (opt) =>
+          this.beforeDel(opt)
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.view.dataService.onAction.next({
+              type: 'delete',
+              data: data,
+            });
+          }
+        });
     }
 
     this.detectorRef.detectChanges();
@@ -769,5 +758,11 @@ export class CmCustomerComponent
     } else {
       return data.competitorName;
     }
+  }
+
+  addressNameCMEmit(e){
+    this.dataSelected.address = e;
+    this.view.dataService.update(this.dataSelected).subscribe();
+    this.detectorRef.detectChanges();
   }
 }

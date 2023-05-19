@@ -23,10 +23,10 @@ import { CmcustomerDetailComponent } from './cmcustomer/cmcustomer-detail/cmcust
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { InformationComponent } from './cmcustomer/cmcustomer-detail/information/information.component';
 import { PopupAddCmCustomerComponent } from './cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
-import { PopupAddressComponent } from './cmcustomer/popup-address/popup-address.component';
+import { PopupAddressComponent } from './cmcustomer/cmcustomer-detail/codx-address-cm/popup-address/popup-address.component';
 import { ViewListCmComponent } from './cmcustomer/view-list-cm/view-list-cm.component';
-import { PopupListContactsComponent } from './cmcustomer/popup-add-cmcustomer/popup-list-contacts/popup-list-contacts.component';
-import { PopupQuickaddContactComponent } from './cmcustomer/popup-add-cmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
+import { PopupListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/popup-list-contacts/popup-list-contacts.component';
+import { PopupQuickaddContactComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { QuotationsComponent } from './quotations/quotations.component';
 import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/popup-add-quotations.component';
 import { CodxDpModule } from 'projects/codx-dp/src/lib/codx-dp.module';
@@ -54,6 +54,14 @@ import { CaseDetailComponent } from './cases/case-detail/case-detail.component';
 import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.component';
 import { TabCaseDetailComponent } from './cases/case-detail/tab-case-detail/tab-case-detail.component';
 import { PaymentsComponent } from './contracts/component/payments/payments.component';
+import { CodxAddressCmComponent } from './cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
+import { LeadsComponent } from './leads/leads.component';
+import { PopupAddLeadComponent } from './leads/popup-add-lead/popup-add-lead.component';
+import { TabLeadDetailComponent } from './leads/lead-detail/tab-lead-detail/tab-lead-detail.component';
+import { LeadDetailComponent } from './leads/lead-detail/lead-detail.component';
+import { CampaignsComponent } from './campaigns/campaigns.component';
+import { PopupAddCampaignComponent } from './campaigns/popup-add-campaign/popup-add-campaign.component';
+import { PopupStatusCompetitorComponent } from './deals/deal-detail/codx-tab-dealcompetitors/popup-status-competitor/popup-status-competitor.component';
 
 const routes: Routes = [
   {
@@ -69,6 +77,10 @@ const routes: Routes = [
         component: DealsComponent,
       },
       {
+        path: 'marketings/:funcID',
+        component: CampaignsComponent,
+      },
+      {
         path: 'quotations/:funcID',
         component: QuotationsComponent,
         // data: { noReuse: true },
@@ -81,6 +93,10 @@ const routes: Routes = [
       {
         path: 'cases/:funcID',
         component: CasesComponent,
+      },
+      {
+        path: 'leads/:funcID',
+        component: LeadsComponent,
       },
       {
         path: '**',
@@ -130,6 +146,14 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddCaseComponent,
     TabCaseDetailComponent,
     PaymentsComponent,
+    CodxAddressCmComponent,
+    LeadsComponent,
+    PopupAddLeadComponent,
+    TabLeadDetailComponent,
+    LeadDetailComponent,
+    CampaignsComponent,
+    PopupAddCampaignComponent,
+    PopupStatusCompetitorComponent
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -33,8 +33,8 @@ export class EmployeeDisciplineComponent extends UIComponent {
   cmtStatus: string = '';
   currentEmpObj: any = null;
   dialogEditStatus: any;
-  genderGrvSetup: any
-  econtractGrvSetup: any;
+  //genderGrvSetup: any
+  eDisciplineGrvSetup: any;
 
     //#region eDisciplineFuncID
     actionAddNew = 'HRTPro07A01'
@@ -62,9 +62,9 @@ export class EmployeeDisciplineComponent extends UIComponent {
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
-    this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
-      this.genderGrvSetup = res?.Gender;
-    });
+    // this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
+    //   this.genderGrvSetup = res?.Gender;
+    // });
   }
 
   clickEvent(event, data){
@@ -108,9 +108,11 @@ export class EmployeeDisciplineComponent extends UIComponent {
         this.formGroup = res;
       });
     }
-    this.cache.gridViewSetup(this.view?.formModel?.formName, this.view?.formModel?.gridViewName).subscribe((res) => {
-      this.econtractGrvSetup = res?.Status
-    });
+    if(!this.eDisciplineGrvSetup){
+      this.cache.gridViewSetup(this.view?.formModel?.formName, this.view?.formModel?.gridViewName).subscribe((res) => {
+        this.eDisciplineGrvSetup = res?.Status
+      });
+    }
   }
 
   changeDataMf(event, data){

@@ -503,11 +503,14 @@
     width: 760px !important;
     height: 100% !important;
   }
-
+  .tb-100
+  {
+    width: 100% !important;
+  }
   table,
   th,
   td {
-    padding: 1rem;
+    padding: 5px;
   }
   th,
   td {
@@ -533,7 +536,10 @@
   .pb-10px {
     padding-bottom: 10px;
   }
-
+  .ip-r-radio
+  {
+    margin-left: -11px;
+  }
   .w-fit-content {
     width: fit-content !important;
   }

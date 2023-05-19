@@ -23,7 +23,7 @@
           ></codx-input>
         </div>
       </div>
-      <div class="col-10">
+      <div class="col-6">
         <div class="form-group">
           <codx-label
             fiedName="ItemID"
@@ -37,12 +37,100 @@
           ></codx-input>
         </div>
       </div>
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label
+            fiedName="CostPrice"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            field="costPrice"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [disabled]="true"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+      </div>
     </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="IDIM0"
+          ></codx-label>
+          <codx-input
+            #idiM0
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+            field="idiM0"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="IDIM1"
+          ></codx-label>
+          <codx-input
+            #idiM1
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+            field="idiM1"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="IDIM2"
+          ></codx-label>
+          <codx-input
+            #idiM2
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+            field="idiM2"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="IDIM3"
+          ></codx-label>
+          <codx-input
+            #idiM3
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+            field="idiM3"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-8">
         <div class="form-group">
-          <codx-label fiedName="IDIM4" [formModel]="form.formModel"></codx-label>
+          <codx-label
+            fiedName="IDIM4"
+            [formModel]="form.formModel"
+          ></codx-label>
           <codx-input
+            #idiM4
             field="IDIM4"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
@@ -97,11 +185,11 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label
-            fiedName="CostAmt"
+            fiedName="SalesAmt"
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
-            field="costAmt"
+            field="salesAmt"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="true"
@@ -117,7 +205,7 @@
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
-            field="DiscPct"
+            field="discPct"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
@@ -131,10 +219,10 @@
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
-            field="DiscAmt"
+            field="discAmt"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
+            [disabled]="true"
           ></codx-input>
         </div>
       </div>
@@ -161,10 +249,11 @@
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
-            field="VATBase"
+            field="vatBase"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
+            [disabled]="true"
           ></codx-input>
         </div>
       </div>
@@ -175,7 +264,7 @@
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
-            field="VATAmt"
+            field="vatAmt"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="true"
