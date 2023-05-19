@@ -2551,7 +2551,7 @@ export class EmployeeDetailComponent extends UIComponent {
                   }
                 });
             } else if (funcID == 'eSkill') {
-              this.hrService.deleteESkill1(data).subscribe((res) => {
+              this.hrService.deleteESkill(data).subscribe((res) => {
                 if (res) {
                   if (!this.skillGrid && res[0] == true) {
                     this.lstESkill = res[1];

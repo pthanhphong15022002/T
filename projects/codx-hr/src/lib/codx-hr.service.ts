@@ -1643,15 +1643,6 @@ export class CodxHrService {
       recID
     );
   }
-  deleteESkill1(obj: any) {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.HR',
-      'ESkillsBusiness',
-      'DeleteESkillAsync',
-      obj
-    );
-  }
   //#endregion
 
   getHRDataDefault(funcID: string, entityName: string, idField: string) {
@@ -1712,7 +1703,7 @@ export class CodxHrService {
       'ERM.Business.HR',
       'EContractsBusiness',
       'GetEmpContractQuitFortelDaysAsync',
-      null
+      data
     );
   }
 

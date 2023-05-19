@@ -4,19 +4,19 @@
 
   <ng-template #header>
     <div class="d-flex mb-2">
-      <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" cardCss=" p-3"
-        [imageId]="itemDetail?.emp?.employeeID" [imageObjType]="'HR_Employees'" [imageWidth]="70"
-        [formModel]="view.formModel" [titleTmp]="title" [hideMF]="false">
+      <codx-temp-full [title]="itemDetail?.ownerName" [imageId]="itemDetail?.emp?.employeeID"
+        imageObjType="'HR_Employees'" [imageWidth]="50" [titleTmp]="title">
         <!-- info view -->
         <ng-template #title>
           <div class="w-100 d-flex flex-column">
             <!-- emp info -->
-            <div class="justify-content-between text-dark fw-bold mb-2">
+            <div class="justify-content-between text-dark mb-2">
               <span class="fs-5 me-1">{{ itemDetail?.emp?.employeeName }}</span>
             </div>
-            <div class="d-flex flex-wrap text-dark fw-bold mb-2 align-items-center">
+            <div class="d-flex flex-wrap text-dark fw-bold mb-1 align-items-center">
               <div class="d-flex me-10">
-                <span [innerHTML]="itemDetail?.emp?.positionID| formatvalue : view.formModel : 'positionID'| async"></span>
+                <span
+                  [innerHTML]="itemDetail?.emp?.positionID| formatvalue : view.formModel : 'positionID'| async"></span>
               </div>
               <div class="d-flex me-10" *ngIf="itemDetail?.emp?.email">
                 <i class="icon-email me-2"></i>
@@ -27,7 +27,7 @@
                 {{ itemDetail?.emp?.mobile }}
               </div>
             </div>
-            <div class="text-gray-500">
+            <div class="text-gray-700">
               <span [innerHTML]="itemDetail?.emp?.orgUnitID | formatvalue : view.formModel : 'orgUnitID'| async"></span>
             </div>
           </div>
@@ -36,87 +36,94 @@
       </codx-temp-full>
     </div>
     <div class="d-flex flex-wrap">
-      <div class="d-flex flex-wrap align-items-center mb-2 px-4">
-        <codx-label fiedName="decisionNo" [formModel]="formModel" [setRequire]="false" class="text-gray-500 label-colon">
+      <div class="d-flex flex-wrap align-items-center mb-2 me-4">
+        <codx-label fiedName="decisionNo" [formModel]="formModel" [setRequire]="false"
+          class="text-gray-700 label-colon">
         </codx-label>
         <span>
           {{ itemDetail?.decisionNo }}
         </span>
       </div>
 
-      <div class="d-flex flex-wrap align-items-center mb-2 px-4">
-        <codx-label fiedName="signedDate" [formModel]="formModel" [setRequire]="false" class="text-gray-500 label-colon">
+      <div class="d-flex flex-wrap align-items-center mb-2 me-4">
+        <codx-label fiedName="signedDate" [formModel]="formModel" [setRequire]="false"
+          class="text-gray-700 label-colon">
         </codx-label>
         <span [innerHTML]="itemDetail?.signedDate | formatvalue : formModel : 'signedDate'| async">
         </span>
       </div>
 
-      <div class="d-flex flex-wrap align-items-center mb-2 px-4">
-        <codx-label fiedName="signer" [formModel]="formModel" [setRequire]="false" class="text-gray-500 label-colon">
+      <div class="d-flex flex-wrap align-items-center mb-2 me-4">
+        <codx-label fiedName="signer" [formModel]="formModel" [setRequire]="false" class="text-gray-700 label-colon">
         </codx-label>
         <span [innerHTML]="itemDetail?.signer | formatvalue : formModel : 'signer'| async">
         </span>
       </div>
 
-      <div class="d-flex flex-wrap align-items-center mb-2 px-4">
-        <codx-label fiedName="awardID" [formModel]="formModel" [setRequire]="false" class="text-gray-500 label-colon">
+      <div class="d-flex flex-wrap align-items-center mb-2 me-4">
+        <codx-label fiedName="awardID" [formModel]="formModel" [setRequire]="false" class="text-gray-700 label-colon">
         </codx-label>
         <span class="fw-bold" [innerHTML]="itemDetail?.awardID| formatvalue : formModel : 'awardID' | async">
         </span>
       </div>
 
-      <div class="d-flex flex-wrap align-items-center mb-2 px-4">
-        <codx-label fiedName="awardFormCategory" [formModel]="formModel" [setRequire]="false" class="text-gray-500 label-colon">
+      <div class="d-flex flex-wrap align-items-center mb-2 me-4">
+        <codx-label fiedName="awardFormCategory" [formModel]="formModel" [setRequire]="false"
+          class="text-gray-700 label-colon">
         </codx-label>
         <span [innerHTML]="itemDetail?.awardFormCategory| formatvalue : formModel : 'awardFormCategory' | async">
         </span>
       </div>
 
-      <div class="d-flex flex-wrap align-items-center mb-2 px-4">
-        <codx-label fiedName="awardDate" [formModel]="formModel" [setRequire]="false" class="text-gray-500 label-colon">
+      <div class="d-flex flex-wrap align-items-center mb-2 me-4">
+        <codx-label fiedName="awardDate" [formModel]="formModel" [setRequire]="false" class="text-gray-700 label-colon">
         </codx-label>
         <span [innerHTML]="itemDetail?.awardDate | formatvalue : formModel : 'awardDate'| async">
         </span>
       </div>
 
-      <div class="d-flex flex-wrap align-items-center mb-2 px-4">
-        <codx-label fiedName="inYear" [formModel]="formModel" [setRequire]="false" class="text-gray-500 label-colon">
+      <div class="d-flex flex-wrap align-items-center mb-2 me-4">
+        <codx-label fiedName="inYear" [formModel]="formModel" [setRequire]="false" class="text-gray-700 label-colon">
         </codx-label>
         <span class="fw-bold">
           {{ itemDetail?.inYear}}
         </span>
       </div>
 
-      <div class="d-flex flex-wrap align-items-center mb-2 px-4">
-        <codx-label fiedName="awardPlace" [formModel]="formModel" [setRequire]="false" class="text-gray-500 label-colon">
+      <div class="d-flex flex-wrap align-items-center mb-2 me-4">
+        <codx-label fiedName="awardPlace" [formModel]="formModel" [setRequire]="false"
+          class="text-gray-700 label-colon">
         </codx-label>
         <span [innerHTML]="itemDetail?.awardPlace | formatvalue : formModel : 'awardPlace'| async">
         </span>
       </div>
 
-      <div class="d-flex flex-wrap align-items-center mb-2 px-4">
-        <codx-label fiedName="awardLevelCategory" [formModel]="formModel" [setRequire]="false" class="text-gray-500 label-colon">
+      <div class="d-flex flex-wrap align-items-center mb-2 me-4">
+        <codx-label fiedName="awardLevelCategory" [formModel]="formModel" [setRequire]="false"
+          class="text-gray-700 label-colon">
         </codx-label>
         <span [innerHTML]="itemDetail?.awardLevelCategory | formatvalue : formModel : 'awardLevelCategory'| async">
         </span>
       </div>
 
-      <div class="d-flex flex-wrap align-items-top mb-2 col-12 px-4 mb-4">
-        <codx-label fiedName="note" [formModel]="formModel" [setRequire]="false" class="text-gray-500 label-colon min-w-60px">
+      <div class="d-flex flex-wrap align-items-top mb-2 col-12 me-4 mb-4">
+        <codx-label fiedName="note" [formModel]="formModel" [setRequire]="false"
+          class="text-gray-700 label-colon min-w-60px">
         </codx-label>
         <span [innerHTML]="itemDetail?.note | formatvalue : formModel : 'note'| async">
         </span>
       </div>
 
-      <div class="d-flex flex-column align-items-start-2 col-12 px-4">
-        <codx-label fiedName="reason" [formModel]="formModel" [setRequire]="false" class="text-primary fw-bold fs-6 label-colon mb-2">
+      <div class="d-flex flex-column align-items-start-2 col-12 me-4">
+        <codx-label fiedName="reason" [formModel]="formModel" [setRequire]="false"
+          class="text-primary fw-bold fs-6 label-colon mb-2">
         </codx-label>
         <span [innerHTML]="itemDetail?.reason | formatvalue : formModel : 'reason'| async">
         </span>
       </div>
 
     </div>
-    <!-- <div class="mt-2 px-4">
+    <!-- <div class="mt-2 me-4">
       <ng-container *ngIf="lstFile.length > 0">
         <codx-thumbnail [files]="lstFile" displayThumb="simple">
         </codx-thumbnail>

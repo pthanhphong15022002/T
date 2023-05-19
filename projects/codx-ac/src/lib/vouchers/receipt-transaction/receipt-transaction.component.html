@@ -168,9 +168,9 @@
       </div>
     </div>
     <div class="me-2">
-      <codx-img [ngbTooltip]="data?.createdBy" [objectId]="data?.createdBy" [objectName]="data?.createdBy" [objectType]="view?.entityName"
-        [width]="25">
-      </codx-img>
+      <codx-imgs [isToolTip]="true" [objectId]="data?.createdBy" [objectName]="data?.createdBy" [objectType]="'AD_Users'"
+        [width]="25" [numberImages]="1">
+      </codx-imgs>
     </div>
   </div>
 </ng-template>

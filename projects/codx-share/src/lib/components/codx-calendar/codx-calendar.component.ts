@@ -11,10 +11,11 @@ import {
 } from '@angular/core';
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
 import {
-  DataRequest,
+  DialogModel,
+  FormModel,
   ResourceModel,
+  SidebarModel,
   UIComponent,
-  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -24,6 +25,12 @@ import { CalendarCenterComponent } from './calendar-center/calendar-center.compo
 import { Query } from '@syncfusion/ej2-data';
 import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxCalendarService } from './codx-calendar.service';
+import { CodxAddBookingCarComponent } from '../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
+import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
+import { PopupAddMeetingComponent } from '../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
+import { FormGroup } from '@angular/forms';
+import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
+import { PopupAddComponent } from '../codx-tasks/popup-add/popup-add.component';
 
 @Component({
   selector: 'app-codx-calendar',
@@ -77,15 +84,23 @@ export class CodxCalendarComponent
   isCollapsed = false;
   defaultCalendar;
   calendarData = [];
-
   locale = 'vi';
-
   fields: Object = { text: 'defaultName', value: 'functionID' };
-
   calendarTypes: string;
   celendarTypes = [];
-
   resources = [];
+
+  carFM: FormModel;
+  carFG: FormGroup;
+  addCarTitle = '';
+
+  meetingFM: FormModel;
+  meetingFG: FormGroup;
+  //addMeetingTitle = '';
+
+  myTaskFM: FormModel;
+  myTaskFG: FormGroup;
+  //addMyTaskTitle = '';
 
   constructor(
     injector: Injector,
@@ -93,6 +108,9 @@ export class CodxCalendarComponent
     private codxShareSV: CodxShareService
   ) {
     super(injector);
+    this.carFM = new FormModel();
+    this.meetingFM = new FormModel();
+    this.myTaskFM = new FormModel();
   }
 
   onInit(): void {
@@ -157,6 +175,48 @@ export class CodxCalendarComponent
         }
         this.detectorRef.detectChanges();
       });
+
+    this.calendarService.getFormModel(EPCONST.FUNCID.C_Bookings).then((res) => {
+      this.carFM = res;
+      this.carFG = this.codxService.buildFormGroup(
+        this.carFM?.formName,
+        this.carFM?.gridViewName
+      );
+    });
+
+    this.cache.functionList(EPCONST.FUNCID.C_Bookings).subscribe((res) => {
+      if (res) {
+        this.addCarTitle = res?.customName?.toString();
+      }
+    });
+
+    this.calendarService.getFormModel('TMT0501').then((res) => {
+      this.meetingFM = res;
+      this.meetingFG = this.codxService.buildFormGroup(
+        this.meetingFM?.formName,
+        this.meetingFM?.gridViewName
+      );
+    });
+
+    // this.cache.functionList('TMT0501').subscribe((res) => {
+    //   if (res) {
+    //     this.addMeetingTitle = res?.customName?.toString();
+    //   }
+    // });
+
+    this.calendarService.getFormModel('TMT0201').then((res) => {
+      this.myTaskFM = res;
+      this.myTaskFG = this.codxService.buildFormGroup(
+        this.myTaskFM?.formName,
+        this.myTaskFM?.gridViewName
+      );
+    });
+
+    // this.cache.functionList('TMT0201').subscribe((res) => {
+    //   if (res) {
+    //     this.addMyTaskTitle = res?.customName?.toString();
+    //   }
+    // });
   }
 
   ngAfterViewInit() {
@@ -677,5 +737,88 @@ export class CodxCalendarComponent
         : query;
     //pass the filter data source, filter query to updateData method.
     e.updateData(this.celendarTypes, query);
+  }
+
+  addBookingCar() {
+    let option = new SidebarModel();
+    option.FormModel = this.carFM;
+    option.Width = '800px';
+    this.callfc
+      .openSide(
+        CodxAddBookingCarComponent,
+        [this.carFG?.value, 'SYS01', this.addCarTitle, null, null, false],
+        option
+      )
+      .closed.subscribe((returnData) => {
+        if (!returnData.event) {
+        }
+      });
+  }
+
+  addNote() {
+    let obj = {
+      //data: this.WP_Notes,
+      // typeLst: this.typeList,
+      formType: 'add',
+      // currentDate: this.dateSelected,
+      component: 'calendar-notes',
+      // maxPinNotes: this.maxPinNotes,
+    };
+
+    let option = new DialogModel();
+    // option.DataService = this.lstView.dataService as CRUDService;
+    // option.FormModel = this.lstView.formModel;
+
+    this.callfc.openForm(
+      AddNoteComponent,
+      'Thêm mới ghi chú',
+      700,
+      500,
+      '',
+      obj,
+      '',
+      option
+    );
+  }
+
+  addMeeting() {
+    let option = new SidebarModel();
+    option.FormModel = this.meetingFM;
+    option.Width = '800px';
+    this.callfc
+      .openSide(
+        PopupAddMeetingComponent,
+        ['add', 'Thêm', false, ''],
+        option
+      )
+      .closed.subscribe();
+  }
+
+  addMyTask() {
+    let option = new SidebarModel();
+    option.FormModel = this.myTaskFM;
+    option.Width = '800px';
+    option.zIndex = 1001;
+    // if (this.projectID) {
+    //   this.view.dataService.dataSelected.projectID = this.projectID;
+    //   this.disabledProject = true;
+    // } else this.disabledProject = false;
+    // if (this.refID) this.view.dataService.dataSelected.refID = this.refID;
+    // if (this.refType) this.view.dataService.dataSelected.refType = this.refType;
+    this.callfc
+      .openSide(
+        PopupAddComponent,
+        [
+          this.view.dataService.dataSelected,
+          'add',
+          '',
+          'Thêm',
+          'TMT0201',
+          null,
+          false,
+        ],
+        option
+      )
+      .closed.subscribe();
   }
 }

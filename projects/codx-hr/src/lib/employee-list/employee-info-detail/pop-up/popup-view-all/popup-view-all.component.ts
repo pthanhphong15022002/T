@@ -442,12 +442,12 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         if (this.funcID == this.ebenefitFuncID) {
           this.columnGrid = this.benefitColumnGrid;
           this.filter = this.filterBenefit;
+          this.GetGrvBenefit();
           //Get row count
           this.getRowCount();
         }
       });
     }
-    this.GetGrvBenefit();
     //#endregion
   }
 

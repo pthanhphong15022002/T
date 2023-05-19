@@ -4,6 +4,7 @@ import {
   ElementRef,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -33,6 +34,8 @@ import {
 import { PopupAddQuotationsLinesComponent } from '../../quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/tmpCrm.model';
+import { TempComponent } from 'codx-core/lib/templates/base-temp/base.component';
+import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -45,6 +48,8 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
+
+  @ViewChild('itemTemp') itemTemp: TemplateRef<any>;
 
   quotations: CM_Quotations;
   action = 'add';
@@ -76,6 +81,9 @@ export class PopupAddQuotationsComponent implements OnInit {
   modelObjectIDContacs: any;
   modelCustomerIDDeals: any;
   titleActionLine = '';
+  columnsGrid = [];
+  arrFieldIsVisible: any[];
+  formModel: FormModel;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -110,10 +118,18 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.cache
       .gridViewSetup(
         this.fmQuotationLines.formName,
-        this.fmQuotationLines.formName
+        this.fmQuotationLines.gridViewName
       )
       .subscribe((res) => {
         this.gridViewSetupQL = res;
+        //lay grid view
+        let arrField = Object.values(res).filter((x: any) => x.isVisible);
+        if (Array.isArray(arrField)) {
+          this.arrFieldIsVisible = arrField
+            .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+            .map((x: any) => x.fieldName);
+          this.getColumsGrid(res);
+        }
       });
   }
 
@@ -242,8 +258,8 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   valueChangeDate(e) {
     if (!e?.data || !e?.field) return;
-    //luc truoc add formDate 
-    this.quotations[e.field] = e.data?.fromDate??e?.data;
+    //luc truoc add formDate
+    this.quotations[e.field] = e.data?.fromDate ?? e?.data;
   }
 
   select(e) {}
@@ -279,62 +295,127 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   addPopup() {
     let idx = this.gridQuationsLines.dataSource?.length;
-    let data = this.genData(idx);
-    this.cache.functionList(this.fmQuotationLines.funcID).subscribe((f) => {
-      this.cache
-        .gridViewSetup(
-          this.fmQuotationLines.formName,
-          this.fmQuotationLines.gridViewName
-        )
-        .subscribe((res) => {
-          var obj = {
-            headerText: 'Thêm sản phẩm báo giá',
-            quotationsLine: data,
-            listQuotationLines: this.listQuotationLines,
-          };
-          let opt = new DialogModel();
-          opt.zIndex = 1000;
-          opt.FormModel = this.fmQuotationLines;
+    this.genData(idx);
+    // cu
+    // let data = this.genData(idx) ;
+    // this.cache.functionList(this.fmQuotationLines.funcID).subscribe((f) => {
+    //   this.cache
+    //     .gridViewSetup(
+    //       this.fmQuotationLines.formName,
+    //       this.fmQuotationLines.gridViewName
+    //     )
+    //     .subscribe((res) => {
+    //       var obj = {
+    //         headerText: 'Thêm sản phẩm báo giá',
+    //         quotationsLine: data,
+    //         listQuotationLines: this.listQuotationLines,
+    //       };
+    //       let opt = new DialogModel();
+    //       opt.zIndex = 1000;
+    //       opt.FormModel = this.fmQuotationLines;
 
-          let dialogQuotations = this.callFc.openForm(
-            PopupAddQuotationsLinesComponent,
-            '',
-            650,
-            570,
-            '',
-            obj,
-            '',
-            opt
-          );
-          dialogQuotations.closed.subscribe((res) => {
-            if (res?.event) {
-              data = res?.event;
-              this.quotationLinesAddNew.push(data);
-              this.listQuotationLines.push(data);
-              this.gridQuationsLines.refresh();
-              this.loadTotal();
-              this.changeDetector.detectChanges();
-            }
-          });
-        });
-    });
+    //       let dialogQuotations = this.callFc.openForm(
+    //         PopupAddQuotationsLinesComponent,
+    //         '',
+    //         650,
+    //         700,
+    //         '',
+    //         obj,
+    //         '',
+    //         opt
+    //       );
+    //       dialogQuotations.closed.subscribe((res) => {
+    //         if (res?.event) {
+    //           data = res?.event;
+    //           this.quotationLinesAddNew.push(data);
+    //           this.listQuotationLines.push(data);
+    //           this.gridQuationsLines.refresh();
+    //           this.loadTotal();
+    //           this.changeDetector.detectChanges();
+    //         }
+    //       });
+    //     });
+    // });
   }
   addRow() {
-    let idx = this.gridQuationsLines.dataSource?.length;
-    let data = this.genData(idx);
-    this.gridQuationsLines.addRow(data, idx); //add row gridview
+    this.addPopup(); //tam add popup
+    // let idx = this.gridQuationsLines.dataSource?.length;
+    // let data = this.genData(idx);
+    // this.gridQuationsLines.addRow(data, idx); //add row gridview
   }
 
   genData(idx) {
-    let data = this.gridQuationsLines.formGroup.value; //ddooi tuong
-    data.recID = Util.uid();
-    data.transID = this.quotations.recID;
-    data.write = true;
-    data.delete = true;
-    data.read = true;
-    data.rowNo = idx + 1;
-    data.transID = this.quotations?.recID;
-    return data;
+    this.codxCM
+      .getDefault(
+        'CM',
+        this.fmQuotationLines.funcID,
+        this.fmQuotationLines.entityName
+      )
+      .subscribe((dt) => {
+        if (dt && dt.data) {
+          //this.gridQuationsLines.formGroup.value = dt.data
+          let data = dt.data; //ddooi tuong
+
+          data.recID = Util.uid();
+          data.transID = this.quotations.recID;
+          data.write = true;
+          data.delete = true;
+          data.read = true;
+          data.rowNo = idx + 1;
+
+          //add tam do loi
+          data.salesAmt = data.salesAmt ?? 0;
+          data.quantity = data.quantity ?? 0;
+          data.discPct = data.discPct ?? 0;
+          data.discAmt = data.discAmt ?? 0;
+          data.vatBase = data.vatBase ?? 0;
+          data.vatAmt = data.vatAmt ?? 0;
+          data.vatRate = data.vatRate ?? 0;
+
+          data.transID = this.quotations?.recID;
+
+          this.cache
+            .functionList(this.fmQuotationLines.funcID)
+            .subscribe((f) => {
+              this.cache
+                .gridViewSetup(
+                  this.fmQuotationLines.formName,
+                  this.fmQuotationLines.gridViewName
+                )
+                .subscribe((res) => {
+                  var obj = {
+                    headerText: 'Thêm sản phẩm báo giá',
+                    quotationsLine: data,
+                    listQuotationLines: this.listQuotationLines,
+                  };
+                  let opt = new DialogModel();
+                  opt.zIndex = 1000;
+                  opt.FormModel = this.fmQuotationLines;
+
+                  let dialogQuotations = this.callFc.openForm(
+                    PopupAddQuotationsLinesComponent,
+                    '',
+                    650,
+                    700,
+                    '',
+                    obj,
+                    '',
+                    opt
+                  );
+                  dialogQuotations.closed.subscribe((res) => {
+                    if (res?.event) {
+                      data = res?.event;
+                      this.quotationLinesAddNew.push(data);
+                      this.listQuotationLines.push(data);
+                      this.gridQuationsLines.refresh();
+                      this.loadTotal();
+                      this.changeDetector.detectChanges();
+                    }
+                  });
+                });
+            });
+        }
+      });
   }
 
   deleteLine(data) {
@@ -422,53 +503,6 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   loadModegrid() {}
 
-  quotationsLineChanged(e) {
-    //cái này change vào để xuất file
-    //  const field = [
-    //  'rowno',
-    //  'itemid',
-    //  'quantity',
-    //  'umid',
-    //  'salesprice',
-    //  'salesamt',
-    //  'discamt',
-    //  'vatid',
-    //  'vatamt',
-    //  'note'
-    //  ];
-    // if (field.includes(e.field.toLowerCase())) {
-    //   this.api
-    //     .exec('CM', 'ProductsBusiness', 'ValueChangedAsync', [
-    //       this.dataParent,
-    //       e.data,
-    //       e.field,
-    //       e.data?.isAddNew,
-    //     ])
-    //     .subscribe((res: any) => {
-    //       if (res && res.line)
-    //         this.setDataGrid(res.line.updateColumns, res.line);
-    //     });
-    // }
-    // if (e.field.toLowerCase() == 'sublgtype' && e.value) {
-    //   if (e.value === '3') {
-    //     //Set lock field
-    //   } else {
-    //     this.api
-    //       .exec<any>(
-    //         'AC',
-    //         'AC',
-    //         'CashPaymentsLinesBusiness',
-    //         'SetLockFieldAsync'
-    //       )
-    //       .subscribe((res) => {
-    //         if (res) {
-    //           //Set lock field
-    //         }
-    //       });
-    //   }
-    //}
-  }
-
   setDataGrid(updateColumn, data) {
     if (updateColumn) {
       var arrColumn = [];
@@ -489,17 +523,21 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   loadTotal() {
-    var totals = 0;
-    var totalVAT = 0;
-    var totalDis = 0;
+    let totals = 0;
+    let totalVAT = 0;
+    let totalDis = 0;
+    let totalSales = 0;
     if (this.listQuotationLines?.length > 0) {
       this.listQuotationLines.forEach((element) => {
         //tisnh tong tien
+        totalSales += element['salesAmt'] ?? 0;
         totals += element['netAmt'] ?? 0;
         totalVAT += element['vatAmt'] ?? 0;
         totalDis += element['discAmt'] ?? 0;
       });
     }
+
+    this.quotations['totalSalesAmt'] = totalSales;
     this.quotations['totalAmt'] = totals;
     this.quotations['totalTaxAmt'] = totalVAT;
     this.quotations['discAmt'] = totalDis;
@@ -518,4 +556,151 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   //#endregion
+
+  //Begin add line
+  quotationsLineChanged(e) {
+    if (!e.field || !e.data) return;
+    let lineCrr = e.data;
+
+    switch (e.field) {
+      case 'itemID':
+        this.loadItem(e.value, lineCrr);
+        break;
+      case 'VATID':
+        let crrtaxrate = e?.component?.itemsSelected[0]?.TaxRate;
+        lineCrr['vatRate'] = crrtaxrate ?? 0;
+        this.loadChange(lineCrr);
+        break;
+      case 'discPct':
+      case 'quantity':
+      case 'salesPrice':
+        this.loadChange(lineCrr);
+        break;
+    }
+  }
+
+  loadDataLines(lineCrr) {
+    var idxLine = this.listQuotationLines.findIndex(
+      (x) => x.recID == lineCrr.recID
+    );
+    if (idxLine != -1) {
+      this.listQuotationLines[idxLine] = lineCrr;
+    } else {
+      this.listQuotationLines.push(lineCrr);
+    }
+    this.loadTotal();
+    this.gridQuationsLines.refresh();
+  }
+
+  checkLines(lineCrr) {
+    let check = this.quotationLinesAddNew.some((x) => x.recID == lineCrr.recID);
+    if (!check) this.quotationLinesAddNew.push(lineCrr);
+  }
+
+  loadChange(lineCrr) {
+    lineCrr['salesAmt'] =
+      (lineCrr['quantity'] ?? 0) * (lineCrr['salesPrice'] ?? 0);
+
+    lineCrr['discAmt'] =
+      ((lineCrr['discPct'] ?? 0) * (lineCrr['salesAmt'] ?? 0)) / 100;
+
+    lineCrr['vatBase'] = (lineCrr['salesAmt'] ?? 0) - (lineCrr['discAmt'] ?? 0);
+
+    lineCrr['vatAmt'] = (lineCrr['vatRate'] ?? 0) * (lineCrr['vatBase'] ?? 0);
+
+    lineCrr['netAmt'] =
+      (lineCrr['salesAmt'] ?? 0) -
+      (lineCrr['discAmt'] ?? 0) +
+      (lineCrr['vatAmt'] ?? 0);
+
+    this.loadDataLines(lineCrr);
+  }
+
+  loadItem(itemID, lineCrr) {
+    this.codxCM.getItem(itemID).subscribe((items) => {
+      if (items) {
+        lineCrr['onhand'] = items.quantity;
+        lineCrr['idiM4'] = items.warehouseID; // kho
+        lineCrr['costPrice'] = items.costPrice; // gia von
+        lineCrr['umid'] = items.umid; // don vi tinh
+        lineCrr['quantity'] = items.minSettledQty; //so luong mua nhieu nhat
+      }
+      this.loadDataLines(lineCrr);
+      // this.form.formGroup.patchValue(this.quotationsLine);
+    });
+  }
+
+  getColumsGrid(grvSetup) {
+    this.columnsGrid = [];
+    this.arrFieldIsVisible.forEach((key) => {
+      let field = Util.camelize(key);
+      let template: any;
+      let colums: any;
+      switch (key) {
+        case 'ItemID':
+          template = this.itemTemp;
+          break;
+      }
+
+      if (template) {
+        colums = {
+          field: field,
+          headerText: grvSetup[key].headerText,
+          width: grvSetup[key].width,
+          template: template,
+          // textAlign: 'center',
+        };
+      } else {
+        colums = {
+          field: field,
+          headerText: grvSetup[key].headerText,
+          width: grvSetup[key].width,
+        };
+      }
+
+      this.columnsGrid.push(colums);
+    });
+    // this.cache.companySetting().subscribe((res) => {
+    //   let baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
+    //   this.columnsGrid = this.columnsGrid.slice();
+    //   if (this.gridQuationsLines) {
+    //     this.gridQuationsLines.refresh();
+    //   }
+    // });
+  }
+  //end
+
+  //setDefault
+
+  //check Validate
+  // checkValidate(ignoredFields: string[] = []) {
+  //   ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+  //   var keygrid = Object.keys(this.gridViewSetup);
+  //   var keymodel = Object.keys(this.purchaseinvoices);
+  //   for (let index = 0; index < keygrid.length; index++) {
+  //     if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+  //       if (ignoredFields.includes(keygrid[index].toLowerCase())) {
+  //         continue;
+  //       }
+
+  //       for (let i = 0; i < keymodel.length; i++) {
+  //         if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+  //           if (
+  //             this.purchaseinvoices[keymodel[i]] === null ||
+  //             String(this.purchaseinvoices[keymodel[i]]).match(/^ *$/) !==
+  //               null ||
+  //             this.purchaseinvoices[keymodel[i]] == 0
+  //           ) {
+  //             this.notification.notifyCode(
+  //               'SYS009',
+  //               0,
+  //               '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+  //             );
+  //             this.validate++;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  //}
 }

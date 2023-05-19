@@ -78,7 +78,6 @@ export class CodxViewFilesComponent implements OnInit {
       [this.objectID])
       .subscribe((res:any[]) => {
         if(Array.isArray(res)){
-          debugger
           this.medias = res.reduce((count,ele) => (ele.referType == this.FILE_REFERTYPE.IMAGE || ele.referType == this.FILE_REFERTYPE.VIDEO) ? count = count + 1 : count, 0);
           this.documents = res.length - this.medias;
           // mode grid view file ở dạng khung chat

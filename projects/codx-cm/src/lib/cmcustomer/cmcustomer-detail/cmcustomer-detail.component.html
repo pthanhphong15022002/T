@@ -80,7 +80,7 @@
                             ? 'icon-phone_android text-primary'
                             : 'icon-phonelink_erase'
                         "
-                        class="icon-16 me-1 text-gray-700"
+                        class="icon-16 me-2 text-gray-700"
                       ></span>
                       <span
                         [ngClass]="
@@ -116,7 +116,7 @@
                     *ngIf="addressNameCM != null && addressNameCM.trim() != ''"
                   >
                     <span
-                      class="icon-location_on icon-16 me-1 text-gray-600"
+                      class="icon-location_on icon-16 me-2 text-gray-600"
                     ></span>
                     <span class="text-gray-600">{{
                       addressNameCM
@@ -193,7 +193,7 @@
             <ng-container *ngFor="let item of tabDetail; let i = index">
               <li [ngbNavItem]="item.name" class="nav-item">
                 <a ngbNavLink class="nav-link">
-                  <div class="d-flex align-item-center">
+                  <div class="d-flex align-items-center">
                     <i
                       [ngClass]="
                         item.icon +
@@ -202,7 +202,7 @@
                       "
                       class="me-2"
                     ></i
-                    ><span class="fs-6">
+                    ><span class="">
                       <codx-label
                         [name]="'tab' + item.name"
                         [formModel]="'SYS'"
@@ -224,7 +224,7 @@
               </li>
             </ng-container>
           </ul>
-          <div [ngbNavOutlet]="nav" class="pt-3 cmdetail-scroll"></div>
+          <div [ngbNavOutlet]="nav" class="pt-4 cmdetail-scroll"></div>
         </div>
         <ng-template #tabIns let-name>
           <div id="viewModeDetail" class="view-step-box">

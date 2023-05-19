@@ -1766,39 +1766,41 @@ export class InstancesComponent
     this.isUseSuccess = this.stepSuccess?.isUsed;
     this.isUseFail = this.stepFail?.isUsed;
     this.showButtonAdd = this.isCreate;
-    this.viewMode = this.process?.viewMode;
+    this.viewMode = this.process?.viewMode??6;
     this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
     //f5 hoặc copy link dán
-    if (reload && this.view.currentView?.viewModel?.type != this.viewMode) {
-      if (!this.views) {
-        this.views = [
-          {
-            type: ViewType.listdetail,
-            active: true,
-            sameData: true,
-            toolbarTemplate: this.footerButton,
-            model: {
-              template: this.itemTemplate,
-              panelRightRef: this.templateDetail,
-            },
-          },
-          {
-            type: ViewType.kanban,
-            active: false,
-            sameData: false,
-            request: this.request,
-            request2: this.resourceKanban,
-            toolbarTemplate: this.footerButton,
-            model: {
-              template: this.cardKanban,
-              template2: this.viewColumKaban,
-              setColorHeader: true,
-            },
-          },
-        ];
-      }
-      let viewCrr = this.views.filter((x) => x.type == this.viewMode)[0];
-      this.view.viewChange(viewCrr);
+    if (reload) {
+      // if (!this.views) {
+      //   this.views = [
+      //     {
+      //       type: ViewType.listdetail,
+      //       active: true,
+      //       sameData: true,
+      //       toolbarTemplate: this.footerButton,
+      //       model: {
+      //         template: this.itemTemplate,
+      //         panelRightRef: this.templateDetail,
+      //       },
+      //     },
+      //     {
+      //       type: ViewType.kanban,
+      //       active: false,
+      //       sameData: false,
+      //       request: this.request,
+      //       request2: this.resourceKanban,
+      //       toolbarTemplate: this.footerButton,
+      //       model: {
+      //         template: this.cardKanban,
+      //         template2: this.viewColumKaban,
+      //         setColorHeader: true,
+      //       },
+      //     },
+      //   ];
+      // }
+      // this.views.forEach((x) => {
+      //   if (x.type == this.viewMode) x.active == true;
+      //   else x.active = false;
+      // });
     }
 
     if (

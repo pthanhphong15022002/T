@@ -1,7 +1,9 @@
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CacheService,
+  CodxComboboxComponent,
   CodxFormComponent,
+  CodxInputComponent,
   DialogData,
   DialogRef,
 } from 'codx-core';
@@ -14,6 +16,12 @@ import { CodxCmService } from '../../codx-cm.service';
 })
 export class PopupAddQuotationsLinesComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('idiM0') idiM0: CodxInputComponent;
+  @ViewChild('idiM1') idiM1: CodxInputComponent;
+  @ViewChild('idiM2') idiM2: CodxInputComponent;
+  @ViewChild('idiM3') idiM3: CodxInputComponent;
+  @ViewChild('idiM4') idiM4: CodxInputComponent;
+
   dialog: DialogRef;
   headerText: any;
   quotationsLine: any;
@@ -34,7 +42,6 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
 
   ngOnInit(): void {}
   onSave() {
-    this.quotationsLine['revision'] += 1
     this.quotationsLine['netAmt'] =
       (this.quotationsLine['salesAmt'] ?? 0) -
       (this.quotationsLine['discAmt'] ?? 0) +
@@ -91,25 +98,42 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
         this.quotationsLine['costPrice'] = items.costPrice; // gia von
         this.quotationsLine['umid'] = items.umid; // don vi tinh
         this.quotationsLine['quantity'] = items.minSettledQty; //so luong mua nhieu nhat
+        this.quotationsLine['idiM0'] = items.minSettledQty;
+        this.quotationsLine['idiM1'] = items.minSettledQty;
+        this.quotationsLine['idiM2'] = items.minSettledQty;
+        this.quotationsLine['idiM3'] = items.minSettledQty;
       }
-      // (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-      // (this.idiM1.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-      // (this.idiM2.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-      // (this.idiM3.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-      // (this.idiM6.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-      // (this.idiM7.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-      // this.idiM0.crrValue = null;
-      // this.idiM1.crrValue = null;
-      // this.idiM2.crrValue = null;
-      // this.idiM3.crrValue = null;
-      // this.idiM6.crrValue = null;
-      // this.idiM7.crrValue = null;
-      // this.inventoryJournalLine.idiM0 = null;
-      // this.inventoryJournalLine.idiM1 = null;
-      // this.inventoryJournalLine.idiM2 = null;
-      // this.inventoryJournalLine.idiM3 = null;
-      // this.inventoryJournalLine.idiM6 = null;
-      // this.inventoryJournalLine.idiM7 = null;
+      (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        [];
+      (this.idiM1.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        [];
+      (this.idiM2.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        [];
+      (this.idiM3.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        [];
+      (this.idiM4.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        [];
+      this.idiM0.crrValue = null;
+      this.idiM1.crrValue = null;
+      this.idiM2.crrValue = null;
+      this.idiM3.crrValue = null;
+      this.idiM4.crrValue = null;
+
+      this.quotationsLine.idiM0 = null;
+      this.quotationsLine.idiM1 = null;
+      this.quotationsLine.idiM2 = null;
+      this.quotationsLine.idiM3 = null;
+      this.quotationsLine.idiM4 = null;
+
+      //       8	ItemNote	String	500	1						1					Ghi chú mặt hàng	Riêng của mặt hàng (từ products)	Ghi chú mặt hàng		No UI
+      // 9	IDIM0	String	30	1						1					Quy cách đóng gói		Quy cách đóng gói		No UI
+      // 10	IDIM1	String	30	1						1					Thuộc tính		Thuộc tính		No UI
+      // 11	IDIM2	String	30	1						1					Màu sắc		Màu sắc		x
+      // 12	IDIM3	String	30	1						1					Quy cách		Quy cách		x
+      // 13	IDIM4	String	30	1						1					Kho		Kho		No UI
+      // 14	CostPrice	decimal	50	0						1					Giá vốn		Giá vốn		No UI
+      // 15	UMID	String	20	0						1					Đơn vị tính		Đơn vị tính		x
+
       this.form.formGroup.patchValue(this.quotationsLine);
     });
   }

@@ -28,7 +28,7 @@
       <div class="text-gray-600 fs-7">
         <span class="me-3"
           [innerHTML]="
-            itemDetail?.emp?.positionID
+            itemDetail.positionID
               | formatvalue : formModel : 'positionID'
               | async
           "
@@ -76,6 +76,7 @@
           <codx-label
             fiedName="contractTypeID"
             [formModel]="formModel"
+            [setRequire]="false"
             class="text-gray-700 label-colon"
           >
           </codx-label>
@@ -110,6 +111,7 @@
         <div class="d-flex align-item-center mb-1">
           <codx-label
             fiedName="contractNo"
+            [setRequire]="false"
             [formModel]="formModel"
             class="text-gray-700 label-colon"
           >
@@ -127,12 +129,16 @@
           >
           </codx-label>
           <span >
-            {{ itemDetail?.effectedDate | fmDT }} - {{ itemDetail?.expiredDate | fmDT }}
+            {{ itemDetail?.effectedDate | fmDT }} 
+            <span *ngIf="itemDetail.expiredDate">
+              - {{ itemDetail?.expiredDate | fmDT }}
+            </span>
           </span>
         </div>
         <div class="d-flex align-item-center mb-1 ms-6">
           <codx-label
             fiedName="signedDate"
+            [setRequire]="false"
             [formModel]="formModel"
             class="text-gray-700 label-colon"
           >
