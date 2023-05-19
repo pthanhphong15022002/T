@@ -74,24 +74,6 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-6 ac-line">
-        <div class="form-group">
-          <codx-label fiedName="AssetType" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input [Group]="form.formGroup" field="assetType" [formModel]="form.formModel"
-            (valueChange)="lineChanged($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6 ac-line">
-        <div class="form-group">
-          <codx-label fiedName="AssetGroupID" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input [Group]="form.formGroup" field="assetGroupID" [formModel]="form.formModel"
-            (valueChange)="lineChanged($event)">
-          </codx-input>
-        </div>
-      </div>
     </div>
     <div *ngIf="lockFields.length != 4" class="extend-function pt-0">
       <hr />
@@ -139,6 +121,24 @@
             <codx-label fiedName="ProjectID" [formModel]="form.formModel">
             </codx-label>
             <codx-input [Group]="form.formGroup" field="projectID" [formModel]="form.formModel"
+              (valueChange)="lineChanged($event)">
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6 ac-line">
+          <div class="form-group">
+            <codx-label fiedName="AssetType" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input [Group]="form.formGroup" field="assetType" [formModel]="form.formModel"
+              (valueChange)="lineChanged($event)">
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6 ac-line">
+          <div class="form-group">
+            <codx-label fiedName="AssetGroupID" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input [Group]="form.formGroup" field="assetGroupID" [formModel]="form.formModel"
               (valueChange)="lineChanged($event)">
             </codx-input>
           </div>

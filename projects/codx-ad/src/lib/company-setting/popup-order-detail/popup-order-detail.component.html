@@ -220,7 +220,6 @@
           [value]="order?.pmtMethod"
           [showText]="true"
           [showBgColor]="true"
-          class="badge badge-light badge-square badge-md fs-7 p-2"
         >
         </codx-vll>
       </div>
@@ -235,6 +234,13 @@
     <span>
       {{ module.price + " " + order.currencyID + "/" + module.umid }}
     </span>
+    <codx-vll
+      [name]="grvTNOrders['Interval']?.referedValue"
+      [value]="'1'"
+      [showText]="true"
+      [showBgColor]="false"
+    >
+    </codx-vll>
   </div>
 </ng-template>
 <ng-template #moduleEmplDescTmp let-module>
@@ -244,6 +250,13 @@
     <span>
       {{ module.childPrice + " " + order.currencyID + "/" + module.umid }}
     </span>
+    <codx-vll
+      [name]="grvTNOrders['Interval']?.referedValue"
+      [value]="'1'"
+      [showText]="true"
+      [showBgColor]="false"
+    >
+    </codx-vll>
   </div>
 </ng-template>
 
@@ -313,11 +326,6 @@
 <!-- Gridview -->
 <ng-template #gridModules>
   <div class="row d-flex">
-    <!-- [formName]="fmUserRole?.formName"
-  [gridViewName]="fmUserRole?.gridViewName"
-  [entityName]="fmUserRole?.entityName" -->
-    <!-- [predicates]="predicate"
-  [dataValues]="dataValue" -->
     <codx-gridview-v2
       #grid
       [dataSource]="lstModule"

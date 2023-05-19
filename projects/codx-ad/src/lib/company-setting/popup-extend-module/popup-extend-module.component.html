@@ -1,4 +1,4 @@
-<div *ngIf="module" class="container w-100 h-100 p-2">
+<div *ngIf="lstModule" class="container w-100 h-100 p-2">
   <div class="row header">
     <div class="close d-flex justify-content-end">
       <button
@@ -10,12 +10,12 @@
       </button>
     </div>
   </div>
-  <div class="moduleInfo w-100">
+  <div *ngIf="extendMode == 'module'" class="moduleInfo w-100">
     <!-- [imageSrc]="module.boughtModule?.image" -->
     <codx-temp-full
       cardCss="card-template border-bottom px-2 pt-4 pb-2"
       [typeMF]="'hover'"
-      [title]="module.boughtModule.moduleName"
+      [title]="lstModule[0].boughtModule.moduleName"
       [descTmp]="moduleOperatorDescTmp"
       [desc2Tmp]="moduleEmplDescTmp"
       [descLine]="2"
@@ -25,12 +25,40 @@
       [titleLine]="2"
       [icoDateCss]="'icon-access_alarm'"
       typeMF="hover"
-      [dataItem]="module.boughtModule"
+      [dataItem]="lstModule[0].boughtModule"
     >
     </codx-temp-full>
   </div>
 
-  <div class="grvModule"></div>
+  <div class="grvModule">
+    <div class="title d-flex justify-content-between">
+      <div class="space"></div>
+      <div class="title-name">
+        <h1>
+          <codx-label name="lblBill" default="Đơn hàng"></codx-label>
+        </h1>
+      </div>
+      <div class="months d-flex">
+        <codx-input
+          type="valuelist"
+          field=""
+          refValue="TN001"
+          (valueChange)="changeMonths($event)"
+          [showInput]="true"
+        >
+        </codx-input>
+        <codx-vll
+          [name]="grvTNOrders['Interval']?.referedValue"
+          [value]="'1'"
+          [showText]="true"
+          [showBgColor]="false"
+          class="badge badge-light badge-square badge-md fs-7 p-2"
+        >
+        </codx-vll>
+      </div>
+    </div>
+    <ng-container [ngTemplateOutlet]="gridModules"> </ng-container>
+  </div>
 </div>
 
 <ng-template #moduleOperatorDescTmp let-module>
@@ -52,22 +80,22 @@
 </ng-template>
 
 <ng-template #moduleEmplDescTmp let-module>
-  <div class="d-flex" *ngIf="childModule?.price">
+  <div class="d-flex" *ngIf="module.childModule?.price">
     <codx-label name="lblPriceForEmpl" default="Nhân viên thường: ">
     </codx-label>
     <span>
       {{
-        childModule.price +
+        module.childModule.price +
           " " +
-          childModule.currency +
+          module.childModule.currency +
           "/" +
-          childModule.umid +
+          module.childModule.umid +
           "/ "
       }}
     </span>
     <codx-vll
       [name]="grvTNOrders['Interval']?.referedValue"
-      [value]="childModule?.interval"
+      [value]="module.childModule?.interval"
       [showText]="true"
       [showBgColor]="false"
       class="badge badge-light badge-square badge-md fs-7 p-2"
@@ -75,3 +103,100 @@
     </codx-vll>
   </div>
 </ng-template>
+
+<!-- Gridview -->
+<ng-template #gridModules>
+  <div class="row d-flex">
+    <codx-gridview-v2
+      #grid
+      [dataSource]="lstModule"
+      [hideMoreFunc]="true"
+      [columnsGrid]="clmnGrid"
+      [autoLoad]="false"
+      rowHeight="40"
+    ></codx-gridview-v2>
+  </div>
+</ng-template>
+
+<!-- Column Name -->
+<ng-template #moduleHT>
+  <codx-label [name]="'lblModuleHT'" [default]="'Ứng dụng'"> </codx-label>
+</ng-template>
+<ng-template #operatorHT>
+  <codx-label [name]="'lblOperatorHeaderText'" [default]="'Nghiệp vụ'">
+  </codx-label>
+</ng-template>
+<ng-template #employeeHT>
+  <codx-label [name]="'lblemployeeHeaderText'" [default]="'Nhân viên'">
+  </codx-label>
+</ng-template>
+<ng-template #totalHT>
+  <codx-label [name]="'lblOrderTotalHeaderText'" [default]="'Thành tiền'">
+  </codx-label>
+</ng-template>
+<!-- Column Content -->
+<ng-template #emplTmp let-module>
+  <span *ngIf="module.childModule" class="d-flex">
+    <div class="d-flex">
+      <codx-input
+        type="number"
+        (valueChange)="
+          changeUserQty($event, module.boughtModule.moduleID, true)
+        "
+      >
+      </codx-input>
+      <span>
+        {{ module.childModule.boughtModule.umid }}
+      </span>
+    </div>
+  </span>
+</ng-template>
+
+<ng-template #operatorTmp let-module>
+  <div class="d-flex">
+    <codx-input
+      type="number"
+      (valueChange)="changeUserQty($event, module.boughtModule.moduleID, false)"
+    >
+    </codx-input>
+    <span>
+      {{ module.boughtModule.umid }}
+    </span>
+  </div>
+</ng-template>
+
+<ng-template #moduleTmp let-module>
+  {{ module.moduleName }}
+  <codx-temp-full
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [typeMF]="'hover'"
+    [title]="module.boughtModule.moduleName"
+    [descTmp]="moduleOperatorDescTmp"
+    [desc2Tmp]="moduleEmplDescTmp"
+    [descLine]="2"
+    [imageSrc]="module.boughtModule.image"
+    [icoCss]="
+      'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 '
+    "
+    [titleLine]="2"
+    [icoDateCss]="'icon-access_alarm'"
+    typeMF="hover"
+    [dataItem]="module"
+  >
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #totalTmp let-module>
+  <div *ngIf="defaultSettings" class="d-flex">
+    {{
+      (+module.boughtModule.quantity * +module.boughtModule.price +
+        +module?.childModule?.boughtModule?.quantity *
+          +module?.childModule?.boughtModule?.price) *
+        this.months
+    }}
+    <span>
+      {{ " " + defaultSettings.CurrencyID }}
+    </span>
+  </div>
+</ng-template>
+<ng-template #moduleInfo> </ng-template>
