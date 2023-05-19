@@ -53,10 +53,15 @@ export class CodxTabsComponent implements OnInit {
   //Quotations - CM
   @Input() customerID : string ;
   @Input() funcIDQuotations ='CM0202' ;
-  @Input() refType : string ;
-  @Input() refID :string;
+  @Input() refType: string;
+  @Input() refID: string;
+  @Input() predicates : string ;
+  @Input() dataValues :string;
   @Input() salespersonID: string;
   @Input() consultantID: string;
+  @Input() disableRefID = false;
+  @Input() disableCusID = false;
+  @Input() disableContactsID = false;
   
   private all: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },

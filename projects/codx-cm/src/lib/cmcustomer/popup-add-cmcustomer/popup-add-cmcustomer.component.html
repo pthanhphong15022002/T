@@ -174,6 +174,16 @@
           >
           </codx-input>
         </div>
+        <div class="form-group" *ngIf="funcID != 'CM0102'">
+          <codx-label [formModel]="form.formModel" fiedName="ShortName">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="shortName"
+          >
+          </codx-input>
+        </div>
         <div class="form-group" *ngIf="funcID == 'CM0102'">
           <codx-label [formModel]="form.formModel" [fiedName]="'Salutation'">
           </codx-label>
@@ -246,6 +256,81 @@
           >
           </codx-input>
         </div>
+        <div class="form-group" *ngIf="funcID != 'CM0102'">
+          <codx-label [formModel]="form.formModel" fiedName="FaxNo">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="faxNo"
+          >
+          </codx-input>
+        </div>
+
+        <div
+          class="form-group"
+          *ngIf="funcID == 'CM0104' || funcID == 'CM0103'"
+        >
+          <codx-label [formModel]="form.formModel" fiedName="CEO"> </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="ceo"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group" *ngIf="funcID != 'CM0102'">
+          <codx-label [formModel]="form.formModel" fiedName="Industries">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [crrValue]="data?.industries"
+            [type]="'combobox'"
+            [refValue]="gridViewSetup?.Industries?.referedValue"
+            (valueChange)="valueIndustries($event)"
+            field="industries"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <div style="height: 122px">
+            <codx-label
+              [formModel]="form.formModel"
+              name="lblAvatar"
+              default="Ảnh đại diện"
+            ></codx-label>
+            <div>
+              <codx-img
+                #imageUpload
+                class="image-inpt-wrapper fullImage"
+                [referType]="'avt'"
+                [width]="90"
+                [funcId]="funcID"
+                [objectId]="data?.recID"
+                [objectType]="form.formModel.entityName"
+                [objectName]="getNameCrm(data)"
+                [isAllowEdit]="true"
+                [isDefaulImg]="true"
+                [imgOn]="data?.modifiedOn"
+                (handleInput)="changeAvatar()"
+              >
+              </codx-img>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="funcID != 'CM0102'">
+          <codx-label [formModel]="form.formModel" fiedName="TaxCode">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="taxCode"
+          >
+          </codx-input>
+        </div>
         <div class="form-group">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
@@ -277,77 +362,7 @@
           >
           </codx-input>
         </div>
-        <div class="form-group" *ngIf="funcID != 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="EstablishDate">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="establishDate"
-          >
-          </codx-input>
-        </div>
-        <div
-          class="form-group"
-          *ngIf="funcID == 'CM0104' || funcID == 'CM0103'"
-        >
-          <codx-label [formModel]="form.formModel" fiedName="CEO"> </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="ceo"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <div style="height: 122px;">
-            <codx-label
-              [formModel]="form.formModel"
-              name="lblAvatar"
-              default="Ảnh đại diện"
-            ></codx-label>
-            <div>
-              <codx-img
-                #imageUpload
-                class="image-inpt-wrapper fullImage"
-                [referType]="'avt'"
-                [width]="90"
-                [funcId]="funcID"
-                [objectId]="data?.recID"
-                [objectType]="form.formModel.entityName"
-                [objectName]="getNameCrm(data)"
-                [isAllowEdit]="true"
-                [isDefaulImg]="true"
-                [imgOn]="data?.modifiedOn"
-                (handleInput)="changeAvatar()"
-              >
-              </codx-img>
-            </div>
-          </div>
-        </div>
-        <div class="form-group" *ngIf="funcID != 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="ShortName">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="shortName"
-          >
-          </codx-input>
-        </div>
 
-        <div class="form-group" *ngIf="funcID != 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="FaxNo">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="faxNo"
-          >
-          </codx-input>
-        </div>
         <div class="form-group" *ngIf="funcID == 'CM0102'">
           <codx-label [formModel]="form.formModel" fiedName="Birthday">
           </codx-label>
@@ -399,12 +414,22 @@
           </codx-input>
         </div>
         <div class="form-group" *ngIf="funcID != 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="TaxCode">
+          <codx-label [formModel]="form.formModel" fiedName="EstablishDate">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            field="taxCode"
+            field="establishDate"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group" *ngIf="funcID != 'CM0102'">
+          <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="annualRevenue"
           >
           </codx-input>
         </div>
@@ -581,16 +606,6 @@
             >
             </codx-input>
           </div>
-          <div class="form-group" *ngIf="funcID != 'CM0102'">
-            <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
-            </codx-label>
-            <codx-input
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              field="annualRevenue"
-            >
-            </codx-input>
-          </div>
           <div class="form-group" *ngIf="funcID == 'CM0101'">
             <codx-label [formModel]="form.formModel" fiedName="WorkingDays">
             </codx-label>
@@ -687,19 +702,6 @@
             </codx-input>
           </div>
 
-          <div class="form-group" *ngIf="funcID != 'CM0102'">
-            <codx-label [formModel]="form.formModel" fiedName="Industries">
-            </codx-label>
-            <codx-input
-              [formModel]="form.formModel"
-              [crrValue]="data?.industries"
-              [type]="'combobox'"
-              [refValue]="gridViewSetup?.Industries?.referedValue"
-              (valueChange)="valueIndustries($event)"
-              field="industries"
-            >
-            </codx-input>
-          </div>
           <div class="form-group" *ngIf="funcID == 'CM0101'">
             <div class="d-flex justify-content-between">
               <div>
