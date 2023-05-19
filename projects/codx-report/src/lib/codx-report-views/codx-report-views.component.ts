@@ -1,6 +1,6 @@
 
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { Route } from '@angular/router';
+import { NavigationEnd, Route, Router } from '@angular/router';
 import { AuthStore, ButtonModel, CacheService, LayoutService, PageTitleService, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 
 @Component({
@@ -28,6 +28,7 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
     private cacheSv:CacheService,
     private layout: LayoutService,
     private pageTitle: PageTitleService,
+    private routerNg:Router,
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -66,17 +67,26 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
       //   // },
       // },
     ];
-
+    this.routerNg.events.subscribe((event: any)=>{
+      if(event instanceof NavigationEnd){
+        let arr = event.url.split('/');
+        if(arr.findIndex((item:any)=> item == this.funcID) > -1){
+          this.view.viewChanged.emit(this.view.currentView);
+        }
+        this.changeDetectorRef.detectChanges();
+      }
+    })
     this.changeDetectorRef.detectChanges();
   }
   viewChanged(e:any){
     this.funcID = this.router.snapshot.params['funcID'];
-    // this.layout.setLogo(null);
-    // this.pageTitle.setBreadcrumbs([]);
+    this.pageTitle.calculateTitle();
+    this.pageTitle.calculateBreadcrumbs();
   }
   onActions(e:any){
     if (e.type == 'detail') {
       this.codxService.navigate('', this.module+'/report/detail/' + e.data.reportID);
+      this.detectorRef.reattach();
     }
   }
   cardClick(e:any){
