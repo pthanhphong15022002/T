@@ -1,167 +1,250 @@
-<div class="p-6 pe-1 pb-1">
-    <!-- header -->
-    <div class="d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center">
-            <div class="me-4">
-                <codx-label class="fw-bolder fs-1" 
-                    [formModel]="dialogRef.formModel" 
-                    name="lblHeaderText"
-                    [default]="headerText">
-                </codx-label>
+<ng-container *ngIf="grvSetup">
+    <div class="p-6 pe-1 pb-1">
+        <!-- header -->
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <div class="me-4">
+                    <span class="fw-bolder fs-1" >{{headerText}}</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-start ">
+                    <ng-container *ngIf="data.shareControl">
+                        <div (click)="openControlShare(controlShare)" class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
+                            <codx-vll 
+                                [name]="'WP001'" 
+                                [value]="data.shareControl" 
+                                [showText]="true" 
+                                [showIcon]="true" 
+                                [path]="'assets/themes/sys/default/img/'"
+                                [icoCss]="'symbol-12px symbol-circle'"  
+                                [showBgColor]="true">
+                            </codx-vll>
+                            <i class="icon-arrow_drop_down icon-18 text-dark"></i> 
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="data.shareName">
+                        <div class="ms-2">
+                            <ng-container
+                                *ngTemplateOutlet="templateShares; context: { $implicit: data }">
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </div>
             </div>
-            <div class="d-flex align-items-center justify-content-start ">
-                <ng-container *ngIf="data.shareControl">
-                    <div (click)="openFormShare(controlShare)" class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
-                        <codx-vll 
-                            [name]="'WP001'" 
-                            [value]="data.shareControl" 
-                            [showText]="true" 
-                            [showIcon]="true" 
-                            [path]="'assets/themes/sys/default/img/'"
-                            [icoCss]="'symbol-12px symbol-circle'"  
-                            [showBgColor]="true">
-                        </codx-vll>
-                        <i class="icon-arrow_drop_down icon-18 text-dark"></i> 
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="data.shareName">
-                    <div class="ms-2">
-                        <ng-container
-                            *ngTemplateOutlet="templateShares; context: { $implicit: data }">
-                        </ng-container>
-                    </div>
-                </ng-container>
-            </div>
+            <button class="btn" (click)="clickClosePopup()">
+                <i class="icon-close"></i>
+            </button>
         </div>
-        <button class="btn" (click)="clickClosePopup()">
-            <i class="icon-close"></i>
-        </button>
-    </div>
-    <div class="my-3">
-        <codx-tag 
-            entityName="WP_News" 
-            [isEdit]="true" 
-            field="Tags" 
-            [value]="data.tags"
-            (valueChange)="valueChange($event)">
-        </codx-tag>
-    </div>
-    <!-- body -->
-    <div class="card-body p-0 addnews-body">
-        <div class="row mt-1">
-            <div class="col-5">
-                <div class="card add-news-left w-100 rounded-0 border-0">
-                    <div class="form-group">
-                        <codx-label 
-                            class="fw-bolder" 
-                            [fiedName]="'Category'"
-                            [formModel]="dialogRef.formModel" 
-                            [default]="grvSetup['Category']['headerText']">
-                        </codx-label>
-                        <codx-input 
-                            field="Category"
-                            [crrValue]="data.category" 
-                            [formModel]="dialogRef.formModel" 
-                            (valueChange)="valueChange($event)">
-                        </codx-input>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <codx-label 
-                                    class="fw-bolder" 
-                                    [fiedName]="'StartDate'"
-                                    [formModel]="dialogRef.formModel" 
-                                    [default]="grvSetup['StartDate']['headerText']">
-                                </codx-label>
-                                <codx-input 
-                                    field="StartDate"
-                                    [formModel]="dialogRef.formModel" 
-                                    [crrValue]="data.startDate" 
-                                    format="d"
-                                    (valueChange)="valueChange($event)">
-                                </codx-input>
-                            </div>
+        <div class="my-3">
+            <codx-tag 
+                entityName="WP_News" 
+                [isEdit]="true" 
+                field="Tags" 
+                [value]="data.tags"
+                (valueChange)="valueChange($event)">
+            </codx-tag>
+        </div>
+        <!-- body -->
+        <div class="card-body p-0 addnews-body">
+            <div class="row mt-1">
+                <div class="col-5">
+                    <div class="card add-news-left w-100 rounded-0 border-0">
+                        <div class="form-group">
+                            <codx-label 
+                                class="fw-bolder" 
+                                [fiedName]="'Category'"
+                                [formModel]="dialogRef.formModel" 
+                                [default]="grvSetup['Category']['headerText']">
+                            </codx-label>
+                            <codx-input 
+                                field="Category"
+                                [crrValue]="data.category" 
+                                [formModel]="dialogRef.formModel" 
+                                (valueChange)="valueChange($event)">
+                            </codx-input>
                         </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <codx-label 
-                                    class="fw-bolder" 
-                                    [formModel]="dialogRef.formModel" 
-                                    [fiedName]="'EndDate'"
-                                    [default]="grvSetup['EndDate']['headerText']">
-                                </codx-label>
-                                <codx-input 
-                                    field="EndDate"
-                                    [formModel]="dialogRef.formModel" 
-                                    [crrValue]="data.endDate" 
-                                    format="F"
-                                    (valueChange)="valueChange($event)">
-                                </codx-input>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <codx-label 
-                            class="fw-bolder" 
-                            [formModel]="dialogRef.formModel" 
-                            [fiedName]="'Subject'"
-                            [default]="grvSetup['Subject']['headerText']">
-                        </codx-label>
-                        <codx-input 
-                            field="Subject"
-                            [crrValue]="data.subject"
-                            [formModel]="dialogRef.formModel" 
-                            (valueChange)="valueChange($event)">
-                        </codx-input>
-                    </div>
-                    <div class="form-group">
-                        <codx-label 
-                            class="fw-bolder" 
-                            [formModel]="dialogRef.formModel" 
-                            [fiedName]="'SubContent'"
-                            [default]="grvSetup['SubContent']['headerText']">
-                        </codx-label>
-                        <codx-input 
-                            format="ed2" 
-                            [rows]="'4'" 
-                            field="SubContent" 
-                            [crrValue]="data.subContent"
-                            [formModel]="dialogRef.formModel" 
-                            (valueChange)="valueChange($event)">
-                        </codx-input>
-                    </div>
-                    <div class="form-group">
-                        <codx-label 
-                            class="fw-bolder mb-2" 
-                            [formModel]="dialogRef.formModel" 
-                            [fiedName]="'Image'"
-                            [default]="grvSetup['Image']['headerText']">
-                        </codx-label>
-                        <div class="w-100 px-9 bg-gray-100 rounded-2 py-4 150px" (click)="clickUploadImage()">
-                           <ng-container *ngIf="fileImage;else defaultImage">
-                                <div class="d-flex justify-content-center" >
-                                    <img class="pic-news w-100 h-100 " [src]="fileImage.source">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <codx-label 
+                                        class="fw-bolder" 
+                                        [fiedName]="'StartDate'"
+                                        [formModel]="dialogRef.formModel" 
+                                        [default]="grvSetup['StartDate']['headerText']">
+                                    </codx-label>
+                                    <codx-input 
+                                        field="StartDate"
+                                        [formModel]="dialogRef.formModel" 
+                                        [crrValue]="data.startDate" 
+                                        format="d"
+                                        (valueChange)="valueChange($event)">
+                                    </codx-input>
                                 </div>
-                           </ng-container>
-                            <ng-template #defaultImage>
-                                <div class="text-center d-flex flex-column justify-content-center">
-                                    <img class="pic-default w-auto h-75px"
-                                        src="../assets/themes/wp/default/img/upload_image.svg">
-                                    <div class="text-center">
-                                        <codx-label 
-                                            class="fw-bolder" 
-                                            [formModel]="dialogRef.formModel" 
-                                            name="lblImage"
-                                            default="Chọn hình ảnh">
-                                        </codx-label>
-                                        <p class="text-gray-500">{{messageImage}}</p>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <codx-label 
+                                        class="fw-bolder" 
+                                        [formModel]="dialogRef.formModel" 
+                                        [fiedName]="'EndDate'"
+                                        [default]="grvSetup['EndDate']['headerText']">
+                                    </codx-label>
+                                    <codx-input 
+                                        field="EndDate"
+                                        [formModel]="dialogRef.formModel" 
+                                        [crrValue]="data.endDate" 
+                                        format="F"
+                                        (valueChange)="valueChange($event)">
+                                    </codx-input>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <codx-label 
+                                class="fw-bolder" 
+                                [formModel]="dialogRef.formModel" 
+                                [fiedName]="'Subject'"
+                                [default]="grvSetup['Subject']['headerText']">
+                            </codx-label>
+                            <codx-input 
+                                field="Subject"
+                                [crrValue]="data.subject"
+                                [formModel]="dialogRef.formModel" 
+                                (valueChange)="valueChange($event)">
+                            </codx-input>
+                        </div>
+                        <div class="form-group">
+                            <codx-label 
+                                class="fw-bolder" 
+                                [formModel]="dialogRef.formModel" 
+                                [fiedName]="'SubContent'"
+                                [default]="grvSetup['SubContent']['headerText']">
+                            </codx-label>
+                            <codx-input 
+                                format="ed2" 
+                                [rows]="'4'" 
+                                field="SubContent" 
+                                [crrValue]="data.subContent"
+                                [formModel]="dialogRef.formModel" 
+                                (valueChange)="valueChange($event)">
+                            </codx-input>
+                        </div>
+                        <div class="form-group">
+                            <codx-label 
+                                class="fw-bolder mb-2" 
+                                [formModel]="dialogRef.formModel" 
+                                [fiedName]="'Image'"
+                                [default]="grvSetup['Image']['headerText']">
+                            </codx-label>
+                            <div class="images-300"  (click)="clickUpload('image')">
+                                <img [ngClass]="fileImage ? 'w-100 h-300px' : 'w-100 h-250px'"
+                                    [src]="fileImage ? fileImage.source: defaultImgSrc">
+                                <ng-container *ngIf="!fileImage">
+                                    <div class="text-center" [innerHTML]="messageImage">
                                     </div>
+                                </ng-container>
+                                <div class="d-none">
+                                    <codx-attachment 
+                                        #codxATMImage
+                                        [functionID]="dialogRef.formModel.funcID"
+                                        [allowMultiFile]="'0'"
+                                        [objectId]="data.recID"
+                                        [objectType]="'WP_News'" 
+                                        [showMessage]="'0'"
+                                        [hideImageUpload]="'1'" 
+                                        [hideUploadBtn]="'1'" 
+                                        [hideBtnSave]="'1'" 
+                                        [hideImageThumb]="'1'"
+                                        [hideUploadBtn]="'1'" 
+                                        allowExtensions=".png, .jpg, .jpeg"
+                                        (fileAdded)="addFiles($event)">
+                                    </codx-attachment>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="me-4">
+                                <codx-label 
+                                    class="fw-bolder" 
+                                    [formModel]="dialogRef.formModel" 
+                                    [fiedName]="'AllowShare'"
+                                    [default]="grvSetup['AllowShare']['headerText']">
+                                </codx-label>
+                            </div>
+                            <div class="mt-1">
+                                <codx-input 
+                                    type="switch" 
+                                    [formModel]="dialogRef.formModel" 
+                                    id="switchShared"
+                                    labelPosition="Before" 
+                                    field="AllowShare"
+                                    [crrValue]="data.allowShare" 
+                                    (valueChange)="valueChange($event)">
+                                </codx-input>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="me-4">
+                                <codx-label 
+                                    class="fw-bolder" 
+                                    [formModel]="dialogRef.formModel" 
+                                    [fiedName]="'CreatePost'"
+                                    [default]="grvSetup['CreatePost']['headerText']">
+                                </codx-label>
+                            </div>
+                            <div class="mt-1">
+                                <codx-input 
+                                    type="switch"
+                                    [formModel]="dialogRef.formModel" 
+                                    id="switchCreated"
+                                    labelPosition="Before" 
+                                    field="CreatePost"
+                                    [crrValue]="data.createPost" 
+                                    (valueChange)="valueChange($event)">
+                                </codx-input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-7 h-100  ps-12">
+                    <div>
+                        <codx-label 
+                            class="fw-bolder" 
+                            [formModel]="dialogRef.formModel" 
+                            [fiedName]="'Contents'"
+                            [default]="grvSetup['Contents']['headerText']">
+                        </codx-label>
+                    </div>
+                    <ng-container *ngIf="data.newsType == NEWSTYPE.POST; else tmpUploadVideo">
+                        <div class="form-group mb-0">
+                            <codx-input 
+                                [height]="'100%'" 
+                                field="Contents" 
+                                format="ed" 
+                                type="textarea" 
+                                [crrValue]="data.contents" 
+                                (valueChange)="valueChange($event)">
+                            </codx-input>
+                        </div>
+                    </ng-container>
+                    <ng-template #tmpUploadVideo>
+                        <div class="add-video border">
+                            <ng-container *ngIf="fileVideo;else btnUploadVideo">
+                                <video 
+                                    [autoplay]="false" 
+                                    controls 
+                                    class="w-100 h-100" 
+                                    [src]="fileVideo.source | safe:'resourceUrl'">
+                                </video>
+                            </ng-container>
+                            <ng-template #btnUploadVideo>
+                                <button type="button" class="btn btn-light" (click)="clickUpload('video')">
+                                    <codx-label [formModel]="dialogRef.formModel" name="lblUploadVideo" default="Video"></codx-label>
+                                </button>
                             </ng-template>
+                            <!-- bổ sung tạm thời chờ core hỗ trợ attachment files - mode select single file-->
                             <div class="d-none">
                                 <codx-attachment 
-                                    #codxATM 
+                                    #codxATMVideo
                                     [functionID]="dialogRef.formModel.funcID"
                                     [allowMultiFile]="'0'"
                                     [objectType]="'WP_News'" 
@@ -171,105 +254,54 @@
                                     [hideBtnSave]="'1'" 
                                     [hideImageThumb]="'1'"
                                     [hideUploadBtn]="'1'" 
-                                    allowExtensions=".png, .jpg, .jpeg"
+                                    allowExtensions=".mp4,.m4p"
                                     (fileAdded)="addFiles($event)">
                                 </codx-attachment>
                             </div>
                         </div>
-                    </div>
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="me-4">
-                            <codx-label 
-                                class="fw-bolder" 
-                                [formModel]="dialogRef.formModel" 
-                                [fiedName]="'AllowShare'"
-                                [default]="grvSetup['AllowShare']['headerText']">
-                            </codx-label>
-                        </div>
-                        <div class="mt-1">
-                            <codx-input 
-                                type="switch" 
-                                [formModel]="dialogRef.formModel" 
-                                id="switchShared"
-                                labelPosition="Before" 
-                                field="AllowShare"
-                                [crrValue]="data.allowShare" 
-                                (valueChange)="valueChange($event)">
-                            </codx-input>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <div class="me-4">
-                            <codx-label 
-                                class="fw-bolder" 
-                                [formModel]="dialogRef.formModel" 
-                                [fiedName]="'CreatePost'"
-                                [default]="grvSetup['CreatePost']['headerText']">
-                            </codx-label>
-                        </div>
-                        <div class="mt-1">
-                            <codx-input 
-                                type="switch"
-                                [formModel]="dialogRef.formModel" 
-                                id="switchCreated"
-                                labelPosition="Before" 
-                                field="CreatePost"
-                                [crrValue]="data.createPost" 
-                                (valueChange)="valueChange($event)">
-                            </codx-input>
-                        </div>
-                    </div>
+                    </ng-template>
                 </div>
             </div>
-            <div class="col-7 h-100  ps-12">
-                <ng-container *ngIf="data.newsType == NEWSTYPE.POST; else video">
-                    <div class="form-group mb-0">
-                        <codx-label 
-                            class="fw-bolder" 
-                            [formModel]="dialogRef.formModel" 
-                            [fiedName]="'Contents'"
-                            [default]="grvSetup['Contents']['headerText']">
-                        </codx-label>
-                        <codx-input 
-                            [height]="'100%'" 
-                            field="Contents" 
-                            format="ed" 
-                            type="textarea" 
-                            [crrValue]="data.contents" 
-                            (valueChange)="valueChange($event)">
-                        </codx-input>
+        </div>
+        <!-- footer -->
+        <div class="card-footer pt-4">
+            <div class="d-flex align-items-center justify-content-end">
+                <ng-container *ngIf="isAdd;else tmpEdit">
+                    <div class="me-3">
+                        <button [disabled]="loading" (click)="clickInsert()" type="button" class="btn btn-primary">
+                            <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
+                        </button>
+                    </div>
+                    <div>
+                        <button [disabled]="loading" (click)="clickRelease()" type="button" class="btn btn-primary">
+                            <codx-label [formModel]="dialogRef.formModel" name="lblRelease" default="Phát hành"></codx-label>
+                        </button>
                     </div>
                 </ng-container>
-                <ng-template #video>
-                    <div class="w-100 border add-video">
-                        <div class="w-100">
-                            <ng-container *ngIf="fileVideo; else defaultVideo ">
-                                <video controls class="w-100 h-300px">
-                                    <source [src]="fileVideo.source | safe:'resourceUrl'"/>
-                                </video>
-                            </ng-container>
+                <ng-template #tmpEdit>
+                    <ng-container *ngIf="data.createdBy == user.userID ">
+                        <div class="card-footer px-0">
+                            <div class="d-flex align-items-center justify-content-end">
+                                <div *ngIf="data.approveStatus != APPROVE_STATUS.APPROVETED">
+                                    <button [disabled]="loading" (click)="clickUpdate()" type="button" class="btn btn-primary">
+                                        <codx-label [formModel]="dialogRef.formModel" name="lblUpdate" default="Cập nhật"></codx-label>
+                                    </button>
+                                </div>
+                                <ng-container *ngIf="data.approveStatus == APPROVE_STATUS.NEW">
+                                    <div class="ms-3">
+                                        <button [disabled]="loading" (click)="clickRelease()" type="button" class="btn btn-primary">
+                                            <codx-label [formModel]="dialogRef.formModel" name="lblRelease" default="Phát hành"></codx-label>
+                                        </button>
+                                    </div>
+                                </ng-container>
+                            </div>
                         </div>
-                    </div>
+                    </ng-container>
                 </ng-template>
             </div>
         </div>
     </div>
-    <!-- footer -->
-    <div class="card-footer pt-4">
-        <div class="d-flex align-items-center justify-content-end">
-            <div class="me-3">
-                <button [disabled]="loading" (click)="clickInsertNews()" type="button" class="btn btn-primary">
-                    <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
-                </button>
-            </div>
-            <div>
-                <button [disabled]="loading" (click)="releaseNews()" type="button" class="btn btn-primary">
-                    <codx-label [formModel]="dialogRef.formModel" name="lblRelease" default="Phát hành"></codx-label>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+</ng-container>
 <!-- templateshare -->
 <ng-template #controlShare let-dialog>
     <codx-share 
@@ -280,30 +312,7 @@
     </codx-share>
 </ng-template>
 
-<ng-template #defaultVideo>
-    <div class="d-flex justify-content-center align-items-center h-100">
-        <button type="button" class="btn btn-light" (click)="clickUploadVideo()">
-            <codx-label [formModel]="dialogRef.formModel" name="lblUploadVideo" default="Video"></codx-label>
-        </button>
-        <!-- bổ sung tạm thời chờ core hỗ trợ attachment files - mode select single file-->
-        <div class="d-none">
-            <codx-attachment 
-                #codxATMVideo
-                [functionID]="dialogRef.formModel.funcID"
-                [allowMultiFile]="'0'"
-                [objectType]="'WP_News'" 
-                [showMessage]="'0'"
-                [hideImageUpload]="'1'" 
-                [hideUploadBtn]="'1'" 
-                [hideBtnSave]="'1'" 
-                [hideImageThumb]="'1'"
-                [hideUploadBtn]="'1'" 
-                allowExtensions=".mp4,.m4p"
-                (fileAdded)="addFiles($event)">
-            </codx-attachment>
-        </div>
-    </div>
-</ng-template>
+
 <ng-template #templateShares let-post>
     <div ngbDropdown class="symbol-more">
         <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
