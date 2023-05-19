@@ -612,7 +612,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (res && res[1] > 0) {
         this.lstTab = res[0].filter((p) => p.parentID == this.funcID);
         console.log('list tab', this.lstTab);
-
+        debugger
         this.crrFuncTab = this.lstTab[this.crrTab].functionID;
         console.log('crrFuncTab', this.crrFuncTab);
         this.lstFuncID = res[0];
@@ -3053,7 +3053,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           this.HandleEmployeeECertificateInfo(event.text, 'copy', data);
           this.df.detectChanges();
         } else if (funcID == 'eAppointions') {
-          this.HandleEmployeeAppointionInfo(event.text, 'copy', data);
+          this.copyValue(event.text, data, 'eAppointions');
+          // this.HandleEmployeeAppointionInfo(event.text, 'copy', data);
           this.df.detectChanges();
         } else if (funcID == 'eExperiences') {
           this.copyValue(event.text, data, 'eExperiences');
@@ -4389,8 +4390,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      debugger
       if (!res?.event) (this.AwardGrid?.dataService as CRUDService).clear();
-      if (res.event) this.updateGridView(this.AwardGrid, actionType, res.event);
+      if (res.event[0]) this.updateGridView(this.AwardGrid, actionType, res.event[0]);
       this.df.detectChanges();
     });
   }
@@ -5618,13 +5620,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         )
         .subscribe();
     } else if (
-      this.filterByKowIDArr.length > 0 &&
+      this.filterByKowIDArr?.length > 0 &&
       (this.startDateEDayoffFilterValue == undefined ||
         this.startDateEDayoffFilterValue == null)
     ) {
       this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
-      for (i; i < this.filterByKowIDArr.length; i++) {
+      for (i; i < this.filterByKowIDArr?.length; i++) {
         if (i > 0) {
           this.filterEDayoffPredicates += ' or ';
         }
