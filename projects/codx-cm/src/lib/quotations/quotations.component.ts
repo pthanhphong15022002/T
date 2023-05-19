@@ -282,6 +282,7 @@ export class QuotationsComponent extends UIComponent {
     }
   }
 
+  // region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res) => {
       if (!res.quotationsID) {
@@ -418,6 +419,7 @@ export class QuotationsComponent extends UIComponent {
     return true;
   }
 
+  // end region CRUD
   getIndex(recID) {
     return (
       this.view.dataService.data.findIndex((obj) => obj.recID == recID) + 1
@@ -427,9 +429,11 @@ export class QuotationsComponent extends UIComponent {
   //function More
   //gửi duyệt
   sendApprover(dt) {
-    dt.status = '1' ;
-    this.itemSelected.status='1';
+    //test
+    dt.status = '1';
+    this.itemSelected.status = '1';
     this.view.dataService.update(this.itemSelected).subscribe();
+    this.itemSelected = JSON.parse(JSON.stringify(this.view.dataService.dataSelected))
   }
 
   // tạo phiên bản mới
@@ -454,9 +458,11 @@ export class QuotationsComponent extends UIComponent {
 
   //huy yêu cầu duyệt
   rejectApprove(dt) {
-    dt.status = '0' ;
-    this.itemSelected.status='0';
+    //test
+    dt.status = '0';
+    this.itemSelected.status = '0';
     this.view.dataService.update(this.itemSelected).subscribe();
+    this.itemSelected = JSON.parse(JSON.stringify(this.view.dataService.dataSelected))
   }
 
   // tạo hợp đồng
