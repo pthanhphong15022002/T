@@ -78,6 +78,8 @@ export class PopupAddQuotationsComponent implements OnInit {
   quotationLinesEdit = [];
   quotationLinesDeleted = [];
   disableRefID = false;
+  disableCusID = false;
+  disableContactsID = false;
   modelObjectIDContacs: any;
   modelCustomerIDDeals: any;
   titleActionLine = '';
@@ -105,13 +107,19 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
     this.disableRefID = dt?.data?.disableRefID;
+    this.disableCusID = dt?.data?.disableCusID;
+    this.disableContactsID = dt?.data?.disableContactsID;
     this.listQuotationLines = [];
-    if (this.action == 'edit') {
+
+    if (this.action == 'edit' || this.action == 'copy') {
       this.codxCM
         .getQuotationsLinesByTransID(this.quotations.recID)
         .subscribe((res) => {
           if (res) {
             this.listQuotationLines = res;
+            if (this.action == 'copy') {
+              this.listQuotationLines.forEach((x) => (x.recID = Util.uid()));
+            }
           }
         });
     }
