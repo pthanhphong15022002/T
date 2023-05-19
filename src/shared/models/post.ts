@@ -5,6 +5,7 @@ export class Post {
   id: string;
   recID:string;
   connectId: string;
+  user:any;
   userID: string;
   userName: string;
   status: string;
@@ -41,14 +42,9 @@ export class Post {
   listTag:any[];
   listShare:any[];
   shares:any;
-  shared: number = 0;
+  news:any;
   card: any;
-  shareMode: any[];
-  files: any[];
-  isPortal:boolean;
   share: any;
-  shareIcon:string;
-  shareText:string;
   shareName: string;
   tagName:string;
   shortConent: string;
@@ -61,19 +57,44 @@ export class Post {
   myVoteType:string;
   myVoted:string;
   listVoteType:string;
+  newsType:string;
+  startDate:Date;
+  endDate:Date;
+  contents:string;
+  image:number;
+  approveStatus:string
+  approveLevels:string;
+  approver:string;
+  approveOn:Date;
+  autoCreate:boolean;
+  views:number;
+  createPost:boolean;
+  allowShare:boolean;
+  stop:boolean;
+  isActive:boolean;
 
 
   constructor(){
     this.recID = Util.uid();
-    this.createdOn = new Date();
+    this.shareControl = "9";
     this.permissions = [];
-    this.files = [];
     this.listComment = [];
     this.medias = 0;
     this.attachments = 0;
     this.totalComment = 0;
     this.votes = [];
-
+    this.image = 0;
+    this.allowShare = false;
+    this.createPost = false;
+    this.contents = "";
+    this.permissions = [];
+    this.startDate = new Date();
+    this.endDate = null;
+    this.views = 0;
+    this.news = null;
+    this.shares = null;
+    this.user = null;
+    this.createdOn = new Date();
 }
 
 }

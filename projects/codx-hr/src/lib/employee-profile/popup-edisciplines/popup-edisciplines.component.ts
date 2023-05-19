@@ -156,6 +156,17 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       this.hrService.notifyInvalidFromTo('FromDate', 'ToDate', this.formModel);
       return;
     }
+
+    this.disciplineObj.orgUnitID = this.employeeObj?.orgUnitID;
+    this.disciplineObj.parentUnit = this.employeeObj?.parentUnit;
+    this.disciplineObj.departmentID = this.employeeObj?.departmentID;
+    this.disciplineObj.divisionID = this.employeeObj?.divisionID;
+    this.disciplineObj.companyID = this.employeeObj?.companyID;
+    this.disciplineObj.positionID = this.employeeObj?.positionID;
+    console.log('ki luat chuan bi luuuu', this.disciplineObj);
+    console.log('thong tin nhan viennn', this.employeeObj);
+    
+
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
         .AddEmployeeDisciplineInfo(this.disciplineObj)

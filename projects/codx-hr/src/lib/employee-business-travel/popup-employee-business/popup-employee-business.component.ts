@@ -36,7 +36,7 @@ export class PopupEmployeeBusinessComponent
   funcID;
   // employId;
   data;
-  isNotOverseaFlag;
+  isNotOverseaFlag: boolean;
   employeeObj: any;
 
   idField = 'RecID';
@@ -97,16 +97,16 @@ export class PopupEmployeeBusinessComponent
           if (res) {
             this.data = res?.data;
             this.data.beginDate = null;
-            this.data.isOversea = false;
+            // this.data.isOversea = false;
             this.data.country = null;
             this.data.endDate = null;
             this.data.employeeID = this.employeeId;
             this.formModel.currentData = this.data;
             this.formGroup.patchValue(this.data);
             //Attache value checked oversea
-            this.formGroup.patchValue({
-              isOversea: true,
-            });
+              this.formGroup.patchValue({
+                IsOversea: false,
+              });
             this.isAfterRender = true;
             this.cr.detectChanges();
           }
@@ -171,8 +171,8 @@ export class PopupEmployeeBusinessComponent
   }
 
   changOverSeaFlag(event) {
-    this.isNotOverseaFlag = !event.checked;
-    if (this.isNotOverseaFlag === true) {
+    this.isNotOverseaFlag = event.data;
+    if (event.data === true) {
       this.data.country = null;
       this.formGroup.patchValue(this.data.country);
     }
@@ -261,7 +261,7 @@ export class PopupEmployeeBusinessComponent
     //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
     //   return;
     // }
-    if (this.data.isOversea == true && this.data.country == null) {
+    if (this.data.IsOversea == true && this.data.country == null) {
       this.notitfy.notifyCode('HR011');
       return;
     }

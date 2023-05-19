@@ -198,7 +198,8 @@
               </div>
             </div>
             <div class="mt-1">
-              <codx-progressbar [progress]="progress"></codx-progressbar>
+              
+             <!-- <codx-progressbar [progress]="progress"></codx-progressbar> -->
             </div>
           </div>
         </div>
@@ -330,8 +331,7 @@
                   [isUpdate]="
                     dataSelect.write &&
                     !dataSelect.closed &&
-                    (dataSelect.status == '1' || dataSelect.status == '2') &&
-                    item.stepStatus < '2'
+                    (dataSelect.status == '1' || dataSelect.status == '2') 
                   "
                   [currentElmID]="currentElmID"
                   (inputElmIDCF)="inputElmIDCustomField($event)"

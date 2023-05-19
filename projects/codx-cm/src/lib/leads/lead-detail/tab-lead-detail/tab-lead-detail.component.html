@@ -1,1 +1,340 @@
-<p>tab-lead-detail works!</p>
+<container-element [ngSwitch]="tabClicked">
+  <some-element
+    *ngSwitchCase="tabInformation"
+    [ngTemplateOutlet]="information"
+  ></some-element>
+  <some-element
+    *ngSwitchCase="tabContact"
+    [ngTemplateOutlet]="contact"
+  ></some-element>
+  <some-element
+    *ngSwitchCase="tabAddress"
+    [ngTemplateOutlet]="address"
+  ></some-element>
+  <some-element *ngSwitchDefault></some-element>
+</container-element>
+
+<ng-template #information>
+  <div class="d-flex flex-column">
+    <div>
+      <h2><codx-label default="Thông tin chung"></codx-label></h2>
+    </div>
+    <div class="mb-3">
+      <div class="row py-2">
+        <div class="col-2">
+          <codx-label default="Mã tiềm năng:"></codx-label>:
+        </div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #leadID
+          [innerHTML]="
+          dataSelected?.leadID
+              | formatvalue
+                : formModel
+                : 'leadID'
+                : leadID
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+        </div>
+
+        <div class="col-2">
+          <codx-label default="Ngày thành lập/ Ngày sinh:"></codx-label>
+        </div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #establishDate
+          [innerHTML]="
+          dataSelected?.establishDate
+              | formatvalue
+                : formModel
+                : 'establishDate'
+                : establishDate
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+        </div>
+      </div>
+
+      <div class="row py-2">
+        <div class="col-2">
+          <codx-label default="Điện thoại:"></codx-label>:
+        </div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #phone
+          [innerHTML]="
+          dataSelected?.phone
+              | formatvalue
+                : formModel
+                : 'phone'
+                : phone
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+        </div>
+        <div class="col-2"><codx-label default="Website:"></codx-label>:</div>
+        <div class="col-4">
+
+          <span
+          class="fs-7"
+          #webPage
+          [innerHTML]="
+          dataSelected?.webPage
+              | formatvalue
+                : formModel
+                : 'webPage'
+                : webPage
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+
+        </div>
+      </div>
+      <div class="row py-2">
+        <div class="col-2"><codx-label default="Fax"></codx-label>:</div>
+        <div class="col-4">
+
+          <span
+          class="fs-7"
+          #faxNo
+          [innerHTML]="
+          dataSelected?.faxNo
+              | formatvalue
+                : formModel
+                : 'faxNo'
+                : faxNo
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+        </div>
+      </div>
+    </div>
+    <div class="mt-5">
+      <div class="mb-3">
+        <h2><codx-label default="Thông tin khác"></codx-label></h2>
+      </div>
+
+      <div class="row py-2">
+        <div class="col-2 nowrap">
+          <codx-label default="Doanh thu hàng năm:"></codx-label>
+        </div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #annualRevenue
+          [innerHTML]="
+          dataSelected?.annualRevenue
+              | formatvalue
+                : formModel
+                : 'annualRevenue'
+                : annualRevenue
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+        </div>
+        <div class="col-2">
+          <codx-label default="Quy mô nhân sự:"></codx-label>:
+        </div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #headcounts
+          [innerHTML]="
+          dataSelected?.headcounts
+              | formatvalue
+                : formModel
+                : 'headcounts'
+                : headcounts
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="mt-5">
+      <div class="mb-3">
+        <h2><codx-label default="Mô tả nhu cầu"></codx-label></h2>
+      </div>
+      <span class="py-2">
+        <span
+          class="fs-7"
+          #note
+          [innerHTML]="
+          dataSelected?.note
+              | formatvalue
+                : formModel
+                : 'note'
+                : note
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+      </span>
+    </div>
+    <div class="mt-5">
+      <div class="mb-3">
+        <h2><codx-label default="Thông tin hệ thống"></codx-label></h2>
+      </div>
+
+      <div class="row py-2">
+        <div class="col-2 nowrap">
+          <codx-label default="Nguồn dữ liệu:"></codx-label>
+        </div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #customerResource
+          [innerHTML]="
+          dataSelected?.customerResource
+              | formatvalue
+                : formModel
+                : 'customerResource'
+                : customerResource
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+
+        </div>
+        <div class="col-2"><codx-label default="Chiến dịch:"></codx-label></div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #campaignID
+          [innerHTML]="
+          dataSelected?.campaignID
+              | formatvalue
+                : formModel
+                : 'campaignID'
+                : campaignID
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+        </div>
+      </div>
+      <div class="row py-2">
+        <div class="col-2 nowrap">
+          <codx-label default="Phân khúc:"></codx-label>
+        </div>
+        <div class="col-4">Cao</div>
+        <div class="col-2"><codx-label default="Kênh:"></codx-label></div>
+        <div class="col-4">
+
+          <span
+          class="fs-7"
+          #channelID
+          [innerHTML]="
+          dataSelected?.channelID
+              | formatvalue
+                : formModel
+                : 'channelID'
+                : channelID
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+        </div>
+      </div>
+      <div class="row py-2">
+        <div class="col-2 nowrap">
+          <codx-label default="Nhân viên bán hàng:"></codx-label>
+        </div>
+        <div class="col-4">
+          <span
+          class="fs-7"
+          #salespersonID
+          [innerHTML]="
+          dataSelected?.salespersonID
+              | formatvalue
+                : formModel
+                : 'salespersonID'
+                : salespersonID
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+
+        </div>
+        <div class="col-2">
+          <codx-label default="Nhân viên tư vấn:"></codx-label>
+        </div>
+        <div class="col-4">
+
+          <span
+          class="fs-7"
+          #consultantID
+          [innerHTML]="
+          dataSelected?.consultantID
+              | formatvalue
+                : formModel
+                : 'consultantID'
+                : consultantID
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #contact>
+  <codx-list-contacts
+    [funcID]="'CM0205'"
+    [objectID]="dataSelected?.recID"
+    [objectName]="dataSelected?.leadName"
+    [objectType]="'2'"
+    [hidenMF]="false"
+    [type]="'formDetail'"
+  ></codx-list-contacts>
+</ng-template>
+
+<ng-template #address>
+<codx-address-cm
+[type]="'formDetail'"
+[funcID]="'CM0205'"
+[entityName]="'CM_Leads'"
+[id]="dataSelected.recID"
+(addressName)="addressName($event)"
+></codx-address-cm>
+</ng-template>

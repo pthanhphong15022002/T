@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import {
   AlertConfirmInputConfig,
@@ -45,6 +46,7 @@ export class CodxAddressCmComponent implements OnInit {
   predicates = 'ObjectID=@0 && ObjectType=@1';
   dataValues = '';
   service = 'BS';
+  currentRecID = '';
   assemblyName = 'ERM.Business.BS';
   className = 'AddressBookBusiness';
   method = 'GetListAddressAsync';
@@ -57,8 +59,12 @@ export class CodxAddressCmComponent implements OnInit {
     private api: ApiHttpService
   ) {}
 
+    ngOnChanges(changes: SimpleChanges): void {
+      this.getListAddress();
+
+    }
+
   ngOnInit(): void {
-    this.getListAddress();
     this.getFormModelAddress();
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -77,6 +83,9 @@ export class CodxAddressCmComponent implements OnInit {
     this.className = 'AddressBookBusiness';
     this.fetch().subscribe((item) => {
       this.listAddress = this.cmSv.bringDefaultContactToFront(item);
+      if (this.listAddress != null && this.listAddress.length > 0) {
+        this.changeAddress(this.listAddress[0]);
+      }
       this.loaded = true;
     });
   }
@@ -101,6 +110,10 @@ export class CodxAddressCmComponent implements OnInit {
       );
   }
 
+  changeAddress(data) {
+    this.currentRecID = data?.recID;
+    this.changeDetectorRef.detectChanges();
+  }
   clickMFAddress(e, data) {
     this.moreFuncEdit = e.text;
     switch (e.functionID) {
@@ -178,29 +191,24 @@ export class CodxAddressCmComponent implements OnInit {
                 if (index != -1) {
                   if (e?.event?.isDefault) {
                     this.listAddress[index].isDefault = false;
-
-                    this.listAddress = this.cmSv.bringDefaultContactToFront(
-                      this.cmSv.loadList(e.event, this.listAddress, 'update')
-                    );
-
-                  } else {
-                    this.listAddress = this.cmSv.bringDefaultContactToFront(
-                      this.cmSv.loadList(e.event, this.listAddress, 'update')
-                    );
                   }
-                } else {
-                  this.listAddress = this.cmSv.bringDefaultContactToFront(
-                    this.cmSv.loadList(e.event, this.listAddress, 'update')
-                  );
                 }
+
+                this.listAddress = this.cmSv.bringDefaultContactToFront(
+                  this.cmSv.loadList(e.event, this.listAddress, 'update')
+                );
                 var checkIsDefault = this.listAddress.some((x) => x.isDefault);
                 if (!checkIsDefault) {
                   this.addressName.emit(null);
-                }else{
+                } else {
                   if (this.type == 'formDetail' && e?.event?.isDefault) {
                     this.addressName.emit(e?.event?.adressName);
                   }
                 }
+                var index = this.listAddress.findIndex(
+                  (x) => x.recID == e.event?.recID
+                );
+                this.changeAddress(this.listAddress[index]);
                 this.lstAddressEmit.emit(this.listAddress);
                 this.changeDetectorRef.detectChanges();
               }
@@ -220,22 +228,23 @@ export class CodxAddressCmComponent implements OnInit {
           if (index != -1) {
             this.listAddress.splice(index, 1);
             this.listAddressDelete.push(data);
+            this.changeAddress(this.listAddress[0]);
             this.lstAddressDeleteEmit.emit(this.listAddressDelete);
-            this.lstAddressEmit.emit(this.listAddress);
           }
-        }else{
-          this.cmSv.deleteOneAddress(data.recID).subscribe(res => {
-            if(res){
+        } else {
+          this.cmSv.deleteOneAddress(data.recID).subscribe((res) => {
+            if (res) {
               this.listAddress = this.cmSv.bringDefaultContactToFront(
                 this.cmSv.loadList(data, this.listAddress, 'delete')
               );
-              if(data.isDefault){
+              if (data.isDefault) {
                 this.addressName.emit(null);
               }
               this.notiService.notifyCode('SYS008');
+              this.changeAddress(this.listAddress[0]);
               this.changeDetectorRef.detectChanges();
             }
-          })
+          });
         }
       }
     });

@@ -232,6 +232,9 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   initForm() {
     if (this.actionType == 'add') {
       // this.hrSevice.getEContractDefault().subscribe((res) => {
+        console.log('this.formModel.funcID', this.formModel.funcID);
+        console.log('this.formModel.entityName', this.formModel.entityName);
+
         this.hrSevice.getDataDefault(this.formModel.funcID, this.formModel.entityName, this.idField).subscribe((res) => {
         if (res) {
           debugger
@@ -281,7 +284,6 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   }
 
   onSaveForm() {
-    debugger
     console.log('data chuan bi luu', this.data);
     if(this.data.payForm == null) this.data.payForm = '';
     if(this.data.benefits == null) this.data.benefits = '';
@@ -299,6 +301,13 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
       );
       return;
     }
+
+    this.data.orgUnitID = this.employeeObj?.orgUnitID;
+    this.data.parentUnit = this.employeeObj?.parentUnit;
+    this.data.departmentID = this.employeeObj?.departmentID;
+    this.data.divisionID = this.employeeObj?.divisionID;
+    this.data.companyID = this.employeeObj?.companyID;
+    this.data.positionID = this.employeeObj?.positionID;
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrSevice.validateBeforeSaveContract(this.data, true).subscribe((res) => {

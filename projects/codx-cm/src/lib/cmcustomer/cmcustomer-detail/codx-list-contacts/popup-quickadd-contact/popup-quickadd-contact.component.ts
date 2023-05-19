@@ -119,19 +119,30 @@ export class PopupQuickaddContactComponent implements OnInit {
           this.data = res;
           this.data.isDefault = this.isDefault;
           this.data.contactType = this.contactType;
+          this.data.objectID =  this.recIDCm;
+          this.data.objectType =  this.objectType;
+          this.data.objectName =  this.objectName;
           this.dialog.close(this.data);
-          this.notiService.notifyCode('SYS007');
+          this.notiService.notifyCode('SYS006');
         } else {
           this.dialog.close();
+          this.notiService.notifyCode('SYS023');
         }
       });
     } else {
       this.cmSv.updateContactByPopupListCt(this.data).subscribe((res) => {
         if (res) {
-          res.isDefault = this.isDefault;
+          this.data = res;
+          this.data.isDefault = this.isDefault;
           this.data.contactType = this.contactType;
-          this.dialog.close(res);
+          this.data.objectID =  this.recIDCm;
+          this.data.objectType =  this.objectType;
+          this.data.objectName =  this.objectName;
+          this.dialog.close(this.data);
           this.notiService.notifyCode('SYS007');
+        } else {
+          this.dialog.close();
+          this.notiService.notifyCode('SYS021');
         }
       });
     }

@@ -146,6 +146,7 @@ export class IncommingComponent
     this.notifySvr = inject.get(NotificationsService);
     this.atSV = inject.get(AttachmentService);
     this.authStore = inject.get(AuthStore);
+    
     // this.codxService = inject.get(CodxService);
     this.fileService = inject.get(FileService);
   }

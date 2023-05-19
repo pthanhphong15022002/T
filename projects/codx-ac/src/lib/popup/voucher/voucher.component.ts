@@ -17,6 +17,7 @@ import {
   CacheService,
   SortModel,
 } from 'codx-core';
+import { CodxAcService } from '../../codx-ac.service';
 
 @Component({
   selector: 'lib-voucher',
@@ -32,7 +33,7 @@ export class VoucherComponent implements OnInit {
   vouchers: Array<any> = [];
   gridModel: DataRequest = new DataRequest();
   invoiceDueDate: any;
-  gridHeight: number = 0;
+  gridHeight: any='100%';
   formModel: FormModel = {
     gridViewName: 'grvSettledInvoices',
     formName: 'SettledInvoices',
@@ -49,9 +50,16 @@ export class VoucherComponent implements OnInit {
   @ViewChild('cashRef') cashRef: ElementRef;
   morefunction: any;
   payAmt: number = 0;
+  editSettings: any = {
+    allowAdding: true,
+    allowDeleting: true,
+    allowEditing: true,
+    mode: 'Normal',
+  };
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
+    private acService: CodxAcService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -86,8 +94,8 @@ export class VoucherComponent implements OnInit {
     if (this.cardbodyRef)
       hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
     if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
-
     this.gridHeight = hBody - (hTab + 120);
+    this.acService.setPopupSize(this.dialog,'80%','80%');
   }
   //#endregion
 
@@ -103,6 +111,7 @@ export class VoucherComponent implements OnInit {
     this.payAmt = e.data;
   }
 
+  oldSelected:any=[]
   onSelected(e) {
     let data = e.data;
     if(data.settledAmt != 0) return;
@@ -121,10 +130,22 @@ export class VoucherComponent implements OnInit {
         this.payAmt])
       .subscribe((res) => {
         if (res) {
-          this.grid.updateRow(e.rowIndex,res);
+          this.grid.dataSource[e.rowIndex] =res;
+          this.grid.gridRef.dataSource = [...this.grid.dataSource];
+          if(e.rowIndexes && Array.isArray(e.rowIndexes)){
+            this.oldSelected = e.rowIndexes
+          }
+
           setTimeout(() => {
-            this.grid.gridRef?.selectRows(e.rowIndexes);
-          }, 100);
+            if(this.isDblCLick){
+              this.isDblCLick = false;
+              this.grid.gridRef.startEdit();
+            }
+            else{
+              this.grid.gridRef?.selectRows(this.oldSelected);
+            }
+
+          }, 200);
         }
       });
   }
@@ -222,9 +243,7 @@ export class VoucherComponent implements OnInit {
 
   apply() {
     let data = this.grid.arrSelectedRows;
-    if (this.type == 0) {
-      this.api.exec('AC', 'AC', 'SettledInvoicesBusiness');
-    } else this.dialog.close(data);
+    this.dialog.close(data);
   }
 
   paymentAmt(data) {
@@ -352,4 +371,21 @@ export class VoucherComponent implements OnInit {
       });
   }
   //#endregion
+
+  isDblCLick:boolean=false;
+  onDoubleClick(e:any){
+    if(e.rowIndex){
+      this.isDblCLick = true;
+      this.grid.gridRef.selectRow(e.rowIndex);
+    }
+  }
+  actions(e:any){
+    if(e.type=='endEdit'){
+      if(this.oldSelected && this.oldSelected.length && this.grid.gridRef){
+        setTimeout(()=>{
+          this.grid.gridRef.selectRows(this.oldSelected);
+        },500)
+      }
+    }
+  }
 }

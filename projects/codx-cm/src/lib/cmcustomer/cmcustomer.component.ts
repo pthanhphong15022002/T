@@ -72,7 +72,7 @@ export class CmCustomerComponent
   assemblyName = 'ERM.Business.CM';
   entityName = 'CM_Customers';
   className = 'CustomersBusiness';
-  method = 'GetListCRMLAsync';
+  method = 'GetListCRMAsync';
   idField = 'recID';
   //endregion
 
@@ -396,7 +396,6 @@ export class CmCustomerComponent
         if (this.isButton) this.add();
         break;
     }
-    this.isButton = false;
   }
 
   clickMF(e, data) {
@@ -423,7 +422,7 @@ export class CmCustomerComponent
         this.deleteContactToCM(data);
         break;
     }
-    this.isButton = false;
+
   }
 
   clickMoreFunc(e) {
@@ -483,6 +482,7 @@ export class CmCustomerComponent
 
   //#region CRUD
   add() {
+    this.isButton = false;
     this.view.dataService.addNew().subscribe((res: any) => {
       this.cache.functionList(this.funcID).subscribe((fun) => {
         let option = new SidebarModel();
@@ -536,6 +536,7 @@ export class CmCustomerComponent
   }
 
   edit(data) {
+    this.isButton = false;
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -578,6 +579,7 @@ export class CmCustomerComponent
   }
 
   copy(data) {
+    this.isButton = false;
     if (data) {
       this.view.dataService.dataSelected = data;
     }

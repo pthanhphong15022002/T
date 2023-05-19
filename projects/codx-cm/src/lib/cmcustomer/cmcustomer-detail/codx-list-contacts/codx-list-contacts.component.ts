@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import {
   AlertConfirmInputConfig,
@@ -30,8 +31,10 @@ export class CodxListContactsComponent implements OnInit {
   @Input() objectID: any;
   @Input() funcID: any;
   @Input() objectName: any;
+  @Input() objectType: any;
   @Input() hidenMF = true;
   @Input() type = '';
+  @Input() isConvertLeadToCus = false;
   @Input() formModel: FormModel;
   @Output() lstContactEmit = new EventEmitter<any>();
   @Output() lstContactDeleteEmit = new EventEmitter<any>();
@@ -49,7 +52,7 @@ export class CodxListContactsComponent implements OnInit {
   className = 'ContactsBusiness';
   method = 'GetListContactAsync';
   isButton = true;
-
+  currentRecID = '';
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -59,8 +62,14 @@ export class CodxListContactsComponent implements OnInit {
     private notiService: NotificationsService
   ) {}
 
-  async ngOnInit() {
+  ngOnChanges(changes: SimpleChanges): void {
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
     this.getListContacts();
+  }
+
+  async ngOnInit() {
+    // this.getListContacts();
     this.formModelContact = await this.cmSv.getFormModel('CM0102');
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -79,6 +88,9 @@ export class CodxListContactsComponent implements OnInit {
     this.className = 'ContactsBusiness';
     this.fetch().subscribe((item) => {
       this.listContacts = this.cmSv.bringDefaultContactToFront(item);
+      if (this.listContacts != null && this.listContacts.length > 0) {
+        this.changeContacts(this.listContacts[0]);
+      }
       this.loaded = true;
     });
   }
@@ -100,6 +112,11 @@ export class CodxListContactsComponent implements OnInit {
           return response ? response[0] : [];
         })
       );
+  }
+
+  changeContacts(item) {
+    this.currentRecID = item.recID;
+    this.changeDetectorRef.detectChanges();
   }
 
   clickMFContact(e, data) {
@@ -165,7 +182,7 @@ export class CodxListContactsComponent implements OnInit {
           dataContact: data,
           type: this.type,
           recIDCm: this.objectID,
-          objectType: this.funcID == 'CM0101' ? '1' : '3',
+          objectType: this.objectType,
           objectName: this.objectName,
           gridViewSetup: res,
           listContacts: this.listContacts,
@@ -174,7 +191,7 @@ export class CodxListContactsComponent implements OnInit {
           PopupQuickaddContactComponent,
           '',
           500,
-          action != 'editType' ? 600 : 100,
+          action != 'editType' ? 600 : 350,
           '',
           obj,
           '',
@@ -190,20 +207,16 @@ export class CodxListContactsComponent implements OnInit {
               if (index != -1) {
                 if (e?.event?.isDefault) {
                   this.listContacts[index].isDefault = false;
-
-                  this.listContacts = this.cmSv.bringDefaultContactToFront(
-                    this.cmSv.loadList(e.event, this.listContacts, 'update')
-                  );
-                } else {
-                  this.listContacts = this.cmSv.bringDefaultContactToFront(
-                    this.cmSv.loadList(e.event, this.listContacts, 'update')
-                  );
                 }
-              } else {
-                this.listContacts = this.cmSv.bringDefaultContactToFront(
-                  this.cmSv.loadList(e.event, this.listContacts, 'update')
-                );
               }
+
+              this.listContacts = this.cmSv.bringDefaultContactToFront(
+                this.cmSv.loadList(e.event, this.listContacts, 'update')
+              );
+              var index = this.listContacts.findIndex(
+                (x) => x.recID == e.event?.recID
+              );
+              this.changeContacts(this.listContacts[index]);
               this.lstContactEmit.emit(this.listContacts);
               this.changeDetectorRef.detectChanges();
             }
@@ -229,7 +242,7 @@ export class CodxListContactsComponent implements OnInit {
           type: this.type,
           recIDCm: this.objectID,
           objectName: this.objectName,
-          objectType: this.funcID == 'CM0101' ? '1' : '3',
+          objectType: this.objectType,
           gridViewSetup: res,
           lstContactCm: this.listContacts,
         };
@@ -251,6 +264,10 @@ export class CodxListContactsComponent implements OnInit {
                 this.cmSv.loadList(e.event, this.listContacts, 'update')
               );
               this.lstContactEmit.emit(this.listContacts);
+              var index = this.listContacts.findIndex(
+                (x) => x.recID == e.event?.recID
+              );
+              this.changeContacts(this.listContacts[index]);
               this.changeDetectorRef.detectChanges();
             }
           }
@@ -264,30 +281,31 @@ export class CodxListContactsComponent implements OnInit {
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
-        if(this.type == 'formDetail'){
+        if (this.type == 'formDetail') {
           this.cmSv.updateContactCrm(data.recID).subscribe((res) => {
             if (res) {
               // this.getListContactByObjectID(this.objectID);
               this.listContacts = this.cmSv.bringDefaultContactToFront(
                 this.cmSv.loadList(data, this.listContacts, 'delete')
               );
+              this.changeContacts(this.listContacts[0]);
               this.notiService.notifyCode('SYS008');
               this.changeDetectorRef.detectChanges();
             }
           });
-        }else{
-          var index = this.listContacts.findIndex(x => x.recID == data.recID);
-          if(index != -1){
+        } else {
+          var index = this.listContacts.findIndex((x) => x.recID == data.recID);
+          if (index != -1) {
             this.listContacts.splice(index, 1);
             lstDelete.push(data);
+            this.changeContacts(this.listContacts[0]);
+
             this.lstContactDeleteEmit.emit(lstDelete);
           }
         }
-
       }
     });
   }
-
 
   //#endregion
 }

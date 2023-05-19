@@ -3,12 +3,11 @@ import { Router } from '@angular/router';
 import {
   ButtonModel,
   NotificationsService,
-  RequestOption,
   SidebarModel,
   UIComponent,
   UrlUtil,
   ViewModel,
-  ViewType,
+  ViewType
 } from 'codx-core';
 import { JournalService } from './journals.service';
 import { PopupAddJournalComponent } from './popup-add-journal/popup-add-journal.component';
@@ -138,12 +137,13 @@ export class JournalsComponent extends UIComponent {
   edit(e, data): void {
     console.log('edit', { data });
 
+    let tempData = { ...data };
     if (data.dataValue) {
-      data = { ...data, ...JSON.parse(data.dataValue) };
+      tempData = { ...data, ...JSON.parse(data.dataValue) };
     }
 
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.edit(data).subscribe(() => {
+    this.view.dataService.dataSelected = tempData;
+    this.view.dataService.edit(tempData).subscribe(() => {
       const options = new SidebarModel();
       options.Width = '800px';
       options.DataService = this.view.dataService;
@@ -164,11 +164,12 @@ export class JournalsComponent extends UIComponent {
   copy(e, data): void {
     console.log('copy', data);
 
+    let tempData = { ...data };
     if (data.dataValue) {
-      data = { ...data, ...JSON.parse(data.dataValue) };
+      tempData = { ...data, ...JSON.parse(data.dataValue) };
     }
 
-    this.view.dataService.dataSelected = data;
+    this.view.dataService.dataSelected = tempData;
     this.view.dataService.copy().subscribe(() => {
       const options = new SidebarModel();
       options.Width = '800px';
@@ -188,27 +189,20 @@ export class JournalsComponent extends UIComponent {
   }
 
   delete(data): void {
-    console.log('delete', data);
+    this.journalService.hasVouchers(data).subscribe((hasVouchers) => {
+      if (hasVouchers) {
+        this.notiService.notifyCode('AC0002', 0, `"${data.journalName}"`);
+        return;
+      }
 
-    this.view.dataService
-      .delete([data], true, (req: RequestOption) => {
-        req.methodName = 'DeleteJournalAsync';
-        req.className = 'JournalsBusiness';
-        req.assemblyName = 'ERM.Business.AC';
-        req.service = 'AC';
-        req.data = data.recID;
-
-        return true;
-      })
-      .subscribe((res: any) => {
+      this.view.dataService.delete([data]).subscribe((res: any) => {
         console.log(res);
 
         if (res) {
-          this.journalService
-            .deleteAutoNumber(data.journalNo)
-            .subscribe((res) => console.log(res));
+          this.journalService.deleteAutoNumber(data.journalNo);
         }
       });
+    });
   }
   //#region Method
 

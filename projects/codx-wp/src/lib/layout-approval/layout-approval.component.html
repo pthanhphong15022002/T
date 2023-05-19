@@ -5,7 +5,7 @@
     <div class="page d-flex flex-row flex-column-fluid">
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header
-          [class]="headerCSSClasses"
+          [class]="codxService.headerCSSClasses"
           [headerBar]="headerBar"
           class="header align-items-stretch"
           [headerRightBar]="headerRightBar"
@@ -82,7 +82,7 @@
     ></codx-user-inner>
     <!-- end::User -->
 
-    <ng-container *ngIf="headerLeft === 'menu'">
+    <ng-container *ngIf="codxService.headerLeft === 'menu'">
       <div
         class="d-flex align-items-center d-lg-none ms-2 me-n3"
         title="Show header menu"

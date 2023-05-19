@@ -4,6 +4,7 @@ import {
   Input,
   OnInit,
   Output,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -29,15 +30,20 @@ export class ViewListCmComponent implements OnInit {
 
   listContacts = [];
   countDeal = 0;
+  countDealCompetitor = 0;
   contactPerson: any;
+  addressNameCM: any;
   constructor(private cmSv: CodxCmService, private callFunc: CallFuncService) {}
 
   ngOnInit(): void {
+    this.getAdressNameByIsDefault(this.dataSelected?.recID, this.entityName);
     if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
-      this.getListContactByObjectID(this.dataSelected.recID);
+      this.getListContactByObjectID(this.dataSelected?.recID);
     if (this.funcID == 'CM0101') {
-      this.countDealsByCustomerID(this.dataSelected.recID);
+      this.countDealsByCustomerID(this.dataSelected?.recID);
     }
+    if (this.funcID == 'CM0104')
+      this.countDealCompetiorsByCompetitorID(this.dataSelected?.recID);
   }
 
   clickMF(e, data) {
@@ -60,11 +66,21 @@ export class ViewListCmComponent implements OnInit {
     this.cmSv.getListContactByObjectID(objectID).subscribe((res) => {
       if (res && res.length > 0) {
         this.listContacts = res;
-        this.contactPerson = this.listContacts.find((x) =>
-          x.isDefault
-        );
+        this.contactPerson = this.listContacts.find((x) => x.isDefault);
       }
     });
+  }
+
+  getAdressNameByIsDefault(objectID, entityName) {
+    this.cmSv
+      .getAdressNameByIsDefault(objectID, entityName)
+      .subscribe((res) => {
+        if (res) {
+          this.addressNameCM = res?.adressName;
+        }else{
+          this.addressNameCM = null;
+        }
+      });
   }
 
   countDealsByCustomerID(customerID) {
@@ -75,6 +91,19 @@ export class ViewListCmComponent implements OnInit {
         this.countDeal = 0;
       }
     });
+  }
+
+  countDealCompetiorsByCompetitorID(competitorID) {
+    this.cmSv
+      .countDealCompetiorsByCompetitorID(competitorID)
+      .subscribe((res) => {
+        if(res && res > 0){
+          this.countDealCompetitor = res;
+        }else{
+          this.countDealCompetitor = 0;
+        }
+
+      });
   }
 
   getNameCrm(data) {
@@ -105,6 +134,8 @@ export class ViewListCmComponent implements OnInit {
       option
     );
     this.dialogDetail.closed.subscribe((e) => {
+      this.getAdressNameByIsDefault(this.dataSelected?.recID, this.entityName);
+
       if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
         this.getListContactByObjectID(this.dataSelected.recID);
       if (this.funcID == 'CM0101') {

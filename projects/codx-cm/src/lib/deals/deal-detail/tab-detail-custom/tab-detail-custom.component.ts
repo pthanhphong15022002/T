@@ -47,7 +47,7 @@ export class TabDetailCustomComponent
     allowDeleting: true,
   };
 
-  constructor(private inject: Injector, private cmService: CodxCmService) {
+  constructor(private inject: Injector, private codxCmService: CodxCmService) {
     super(inject);
 
   }
@@ -60,6 +60,8 @@ export class TabDetailCustomComponent
     //nvthuan
     if(changes.dataSelected){
       this.getListInstanceStep();
+    //  this.dataSelected? = ch
+    //  this.getListContactByObjectID(this.dataSelected?.recID);
     }
   }
 
@@ -74,11 +76,20 @@ export class TabDetailCustomComponent
   getListInstanceStep() {
     let instanceID = this.dataSelected?.refID;
     if (instanceID) {
-      this.cmService.getStepInstance([instanceID]).subscribe((res) => {
+      this.codxCmService.getStepInstance([instanceID]).subscribe((res) => {
         this.listStep = res;
       });
     }
   }
+
+  // getListContactByObjectID(objectID) {
+  //   this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
+  //     if (res && res.length > 0) {
+  //       this.listContacts = res;
+  //       this.contactPerson = this.listContacts.find((x) => x.isDefault);
+  //     }
+  //   });
+  // }
 
   async getValueList() {
     this.cache.valueList('CRM010').subscribe((res) => {

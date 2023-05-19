@@ -11,12 +11,12 @@
       (clickMF)="clickMF($event, dataSelected)"
     >
       <ng-template #header let-data>
-        <div class="d-flex justify-content-between mb-2">
+        <div class="d-flex align-items-center justify-content-between mb-1">
           <div *ngIf="funcID == 'CM0101'">
-            <div class="mb-1">
-              <span class="icon-corporate_fare icon-20 me-2"></span>
+            <div class="d-flex align-items-center mb-1">
+              <span class="icon-corporate_fare icon-18 text-gray-700 me-2"></span>
               <span
-                class="text-dark fw-bold h3"
+                class="text-dark fs-6 fw-bold"
                 [innerHTML]="
                   dataSelected?.custGroupID
                     | formatvalue : formModel : 'CustGroupID'
@@ -54,7 +54,7 @@
               <div class="d-flex justify-content-between">
                 <div class="d-flex flex-column">
                   <div
-                    class="fw-bold fs-5-sm text-dark line-clamp line-clamp-1 mb-1"
+                    class="fw-bold fs-5 text-dark line-clamp line-clamp-1 mb-1"
                   >
                     {{
                       funcID == "CM0101"
@@ -80,13 +80,13 @@
                             ? 'icon-phone_android text-primary'
                             : 'icon-phonelink_erase'
                         "
-                        class="icon-16 me-2"
+                        class="icon-16 me-2 text-gray-700"
                       ></span>
                       <span
                         [ngClass]="
                           dataSelected?.allowCall ? 'text-primary' : ''
                         "
-                        class="text-gray-700"
+                        class="text-gray-600"
                         >{{ dataSelected?.mobile }}</span
                       >
                     </div>
@@ -100,7 +100,7 @@
                             ? 'icon-email text-primary'
                             : 'icon-print_disabled'
                         "
-                        class="icon-16 me-2 text-gray-900"
+                        class="icon-16 me-2 text-gray-700"
                       ></span>
                       <span
                         [ngClass]="
@@ -112,13 +112,13 @@
                     </div>
                   </div>
                   <div
-                    class="d-flex align-items-center mb-1"
-                    *ngIf="addressNameCM != null"
+                    class="d-flex align-items-top mb-1"
+                    *ngIf="addressNameCM != null && addressNameCM.trim() != ''"
                   >
                     <span
-                      class="icon-location_on icon-16 me-2 text-gray-700"
+                      class="icon-location_on icon-16 me-2 text-gray-600"
                     ></span>
-                    <span class="text-gray-700">{{
+                    <span class="text-gray-600">{{
                       addressNameCM
                     }}</span>
                   </div>
@@ -140,7 +140,7 @@
             "
           >
             <div
-              class="d-flex flex-column w-50 mt-1"
+              class="w-100 mt-1"
               *ngIf="dataSelected.industries"
             >
               <codx-label
@@ -149,7 +149,7 @@
                 fiedName="Industries"
                 [formModel]="formModel"
               ></codx-label>
-              <div class="mt-2">
+              <div class="mt-1">
                 <div
                   *ngFor="
                     let item of dataSelected?.industries.split(';');
@@ -174,7 +174,7 @@
             </div>
           </div>
           <div
-            class="d-flex align-items-start mt-3"
+            class="d-flex align-items-start mt-2"
             *ngIf="viewTag && viewTag != ''"
           >
             <codx-tag
@@ -193,7 +193,7 @@
             <ng-container *ngFor="let item of tabDetail; let i = index">
               <li [ngbNavItem]="item.name" class="nav-item">
                 <a ngbNavLink class="nav-link">
-                  <div class="d-flex align-item-center">
+                  <div class="d-flex align-items-center">
                     <i
                       [ngClass]="
                         item.icon +
@@ -202,7 +202,7 @@
                       "
                       class="me-2"
                     ></i
-                    ><span>
+                    ><span class="">
                       <codx-label
                         [name]="'tab' + item.name"
                         [formModel]="'SYS'"
@@ -224,7 +224,7 @@
               </li>
             </ng-container>
           </ul>
-          <div [ngbNavOutlet]="nav" class="py-5"></div>
+          <div [ngbNavOutlet]="nav" class="pt-4 cmdetail-scroll"></div>
         </div>
         <ng-template #tabIns let-name>
           <div id="viewModeDetail" class="view-step-box">
@@ -251,6 +251,7 @@
               <codx-list-contacts
                 [funcID]="funcID"
                 [objectID]="dataSelected.recID"
+                [objectType]="funcID == 'CM0101' ? '1' : '3'"
                 [objectName]="
                   funcID == 'CM0101'
                     ? dataSelected.customerName
@@ -262,14 +263,6 @@
             </ng-container>
             <ng-container *ngIf="name == 'Address'">
               <div class="mb-1">
-                <div class="mb-3">
-                  <codx-label
-                    class="text-dark text-primary fw-bold"
-                    name="lblAddress"
-                    default="Thông tin địa chỉ"
-                  >
-                  </codx-label>
-                </div>
                 <codx-address-cm
                   [type]="'formDetail'"
                   [funcID]="funcID"

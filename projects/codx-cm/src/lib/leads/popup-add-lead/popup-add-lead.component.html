@@ -1,1 +1,463 @@
-<p>popup-add-lead works!</p>
+<ng-template #subHeader let-form>
+  <codx-tag
+    field="tags"
+    [entityName]="formModel.entityName"
+    [isEdit]="true"
+    [disabled]="false"
+    (valueChange)="valueChange($event)"
+  ></codx-tag>
+</ng-template>
+
+<ng-template #body let-form>
+  <div class="contaner">
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="LeadID"
+            [Group]="form.formGroup"
+            default="Mã tiềm năng"
+          >
+          </codx-label>
+          <codx-input
+            field="leadID"
+            type="text"
+            [crrValue]="lead?.leadID"
+            [disabled]="true"
+          ></codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="LeadName">
+          </codx-label>
+          <codx-input
+            field="LeadName"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
+            name="lblAvatar"
+            default="Ảnh đại diện"
+          ></codx-label>
+          <div>
+            <codx-img
+              #imageUpload
+              class="image-inpt-wrapper fullImage"
+              [referType]="'avt'"
+              [width]="90"
+              [objectId]="lead?.recID"
+              [objectType]="form.formModel.entityName"
+              [isAllowEdit]="true"
+              [isDefaulImg]="true"
+              [imgOn]="lead?.modifiedOn"
+              (handleInput)="changeAvatar()"
+            >
+            </codx-img>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="Phone"
+          default="Điện thoại"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+          field="phone"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="EstablishDate"
+          default="Ngày thành lập/Ngày sinh"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="establishDate"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="WebPage"
+          default="Website"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+          field="webPage"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="FaxNo"
+          default="Fax"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="faxNo"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Note" > </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="note"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="memo"
+    >
+    </codx-input>
+  </div>
+</ng-template>
+
+<ng-template #footer let-form>
+  <div class="d-flex justify-content-between">
+    <div></div>
+    <button
+      type="button"
+      class="btn btn-primary ms-1"
+      (click)="saveLead()"
+    >
+      <codx-label default="Lưu"></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="addFieldsControl == '1'">
+  <codx-layout-add
+    #formlayoutadd
+    [title]="title"
+    [subHeader]="subHeader"
+    [tabInfo]="tabInfo"
+    [tabContent]="tabContent"
+    [openMore]="true"
+    [dialog]="dialog"
+    [formModel]="formModel"
+    [footer]="footer"
+    [data]="lead"
+    (setTitle)="setTitle($event)"
+  ></codx-layout-add>
+
+  <ng-template #tabGeneralInfoDetail>
+    <ng-container
+      [ngTemplateOutlet]="body"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+
+  <ng-template #tabGeneralSystemDetail>
+    <ng-container
+      [ngTemplateOutlet]="system"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+
+  <ng-template #tabGeneralContactDetail>
+    <ng-container
+      [ngTemplateOutlet]="contact"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+
+  <ng-template #tabGeneralAddressDetail>
+    <ng-container
+      [ngTemplateOutlet]="address"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+</ng-container>
+
+<ng-template #dataIsEmpty>
+  <codx-no-data> </codx-no-data>
+</ng-template>
+
+<!-- <ng-container *ngIf="addFieldsControl == '2'"> </ng-container>
+
+<ng-template #tabGeneralInfoDetail let-form> </ng-template> -->
+<ng-template #system let-form>
+  <div class="pb-2">
+    <h4>
+      <codx-label
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        default="Thông tin bổ sung"
+      >
+      </codx-label>
+    </h4>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            fiedName="Industries"
+            default="Lĩnh vực hoạt động"
+            type="valuelist"
+          >
+          </codx-label>
+
+          <!-- gán tạm -->
+          <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="industries"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            fiedName="Headcounts"
+            default="Quy mô nhân sự"
+          >
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="headcounts"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            fiedName="AnnualRevenue"
+            default="doanh thu hàng năm"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-label>
+          <codx-input
+            field="annualRevenue"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pb-2">
+    <h4>
+      <codx-label
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        default="Thông tin hệ thống"
+      >
+      </codx-label>
+    </h4>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            fiedName="CustomerResource"
+            default="Nguồn dữ liệu"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-label>
+          <!-- gán tạm -->
+          <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="customerResource"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            fiedName="CampaignID"
+            default="Chiến dịch"
+          >
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="campaignID"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            fiedName="BusinesslineID"
+            default="Dòng sản phẩm"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-label>
+          <codx-input
+            field="businesslineID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            fiedName="ChannelID"
+            default="Kênh"
+          >
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="channelID"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            fiedName="SalespersonID"
+            default="Nhân viên bán hàng"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-label>
+          <codx-input
+            field="salespersonID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            fiedName="ConsultantID"
+            default="Nhân viên tư vấn"
+          >
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="consultantID"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #contact>
+  <codx-list-contacts
+  (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
+  (lstContactEmit)="lstContactEmit($event)"
+  [funcID]="formModel.funcID"
+  [objectID]="lead?.recID"
+  [objectType]="'2'"
+  [objectName]="lead?.leadName"
+  [hidenMF]="false"
+  [type]="'formAdd'"
+></codx-list-contacts>
+</ng-template>
+
+<ng-template #address>
+  <codx-address-cm
+  (lstAddressEmit)="lstAddressEmit($event)"
+  (lstAddressDeleteEmit)="lstAddressDeleteEmit($event)"
+  [type]="'formAdd'"
+  [funcID]="formModel.funcID"
+  [entityName]="dialog.formModel.entityName"
+  [id]="lead.recID"
+></codx-address-cm>
+</ng-template>
+<!-- <codx-form
+  #form
+  [headerText]="titleAction"
+  [subHeader]="subHeader"
+  [body]="body"
+  [openMore]="true"
+  [dialog]="dialog"
+  [formModel]="formModel"
+  [footer]="footer"
+  [data]=""
+></codx-form> -->

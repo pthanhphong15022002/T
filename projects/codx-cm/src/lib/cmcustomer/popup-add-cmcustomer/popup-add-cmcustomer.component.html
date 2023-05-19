@@ -9,7 +9,7 @@
       ? [tabGeneralInfo, tabDefault, tabAddress, tabContacts]
       : [tabGeneralInfo, tabDefault, tabAddress]
   "
-  [openMore]="true"
+  [openMore]="false"
   [dialog]="dialog"
   [formModel]="dialog.formModel"
   [footer]="footer"
@@ -99,7 +99,15 @@
         </div>
       </div>
     </div>
-
+    <div class="mb-4" *ngIf="funcID == 'CM0102'">
+      <codx-label
+        name="lblInformation"
+        class="h4 text-dark text-primary fw-bold"
+        [formModel]="dialog.formModel"
+        default="Thông tin chung"
+      >
+      </codx-label>
+    </div>
     <div class="row">
       <div class="col-6">
         <div class="form-group" *ngIf="funcID == 'CM0101'">
@@ -433,16 +441,6 @@
 </ng-template>
 <ng-template #tabAddress>
   <ng-container *ngIf="form?.formGroup">
-    <div class="d-flex align-items-center mt-2 mb-4">
-      <div class="fw-bold fs-6 text-primary">
-        <codx-label
-          fiedName="Address"
-          [formModel]="form.formModel"
-          default="Địa chỉ"
-        >
-        </codx-label>
-      </div>
-    </div>
     <div>
       <codx-address-cm
         (lstAddressEmit)="lstAddressEmit($event)"
@@ -457,22 +455,13 @@
 </ng-template>
 <ng-template #tabContacts>
   <ng-container *ngIf="form?.formGroup">
-    <div class="d-flex align-items-center mt-2 mb-4">
-      <div class="fw-bold fs-6 text-primary">
-        <codx-label
-          name="lblListContacts"
-          [formModel]="form.formModel"
-          default="Danh sách người liên hệ"
-        >
-        </codx-label>
-      </div>
-    </div>
     <div>
       <codx-list-contacts
         (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
         (lstContactEmit)="lstContactEmit($event)"
         [funcID]="funcID"
         [objectID]="data?.recID"
+        [objectType]="funcID == 'CM0101' ? '1' : '3'"
         [objectName]="funcID == 'CM0101' ? data.customerName : data.partnerName"
         [hidenMF]="false"
         [type]="'formAdd'"

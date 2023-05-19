@@ -90,12 +90,30 @@ export class CodxCmService {
     );
   }
 
+  countDealCompetiorsByCompetitorID(competitorID) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'CountCompetitorByDealCompetitorAsync',
+      [competitorID]
+    );
+  }
+
   updateContactCrm(recID) {
     return this.api.exec<any>(
       'CM',
       'ContactsBusiness',
       'DeleteContactInCMAsync',
       [recID]
+    );
+  }
+
+  addCompetitorByName(name) {
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'AddCompetitorByDealCompetitorAsync',
+      [name]
     );
   }
 
@@ -143,6 +161,12 @@ export class CodxCmService {
 
   addDealCompetitor(dealCompetitor) {
     return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealCompetitorAsync', [
+      dealCompetitor,
+    ]);
+  }
+
+  updateStatusDealsCompetitorAsync(dealCompetitor) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'UpdateStatusDealsCompetitorAsync', [
       dealCompetitor,
     ]);
   }
@@ -592,10 +616,26 @@ export class CodxCmService {
     );
   }
 
-  // QuotationLine
+  // -----QuotationLine-----
   // loadItem
   getItem(itemID) {
     return this.api.exec<any>('IV', 'ItemsBusiness', 'LoadDataAsync', itemID);
+  }
+
+   // load Tỉ giá
+   getExchangeRate(CurrencyID) {
+    return this.api.exec<any>('BS', 'CurrenciesBusiness', 'GetExchangeRateAsync', [CurrencyID,new Date()]);
+  }
+
+  //getDefault
+  getDefault(service,funcID,entityName) {
+    return this.api.execSv<any>(
+      service,
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName]
+    );
   }
 
 }

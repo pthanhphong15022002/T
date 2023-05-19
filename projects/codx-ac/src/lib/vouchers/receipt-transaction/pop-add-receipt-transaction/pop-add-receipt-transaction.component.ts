@@ -540,10 +540,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       this.notification.notifyCode('SYS021', 0, '');
       return;
     } else {
-      if(e.data)
-      {
-        this.api
-        .execAction<any>('IV_InventoryJournalLines', [e.data], 'UpdateAsync')
+      this.api
+        .execAction<any>('IV_InventoryJournalLines', [e], 'UpdateAsync')
         .subscribe((save) => {
           if (save) {
             this.notification.notifyCode('SYS007', 0, '');
@@ -551,7 +549,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             this.loadTotal();
           }
         });
-      }
     }
   }
   onAddNew(e: any) {

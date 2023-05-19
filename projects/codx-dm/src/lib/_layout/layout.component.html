@@ -4,7 +4,7 @@
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
       <codx-aside
-        *ngIf="asideDisplay"
+        *ngIf="codxService.asideDisplay"
         [asideMenuHeader]="header"
         [asideMenuFooter]="footer"
         [hasSecond]="false"
@@ -21,7 +21,12 @@
               data-toggle="tooltip"
             >
               <i class="icon-add"></i>
-              <codx-label [default]="titleAddFolder" [fiedName]="'lbltitleAddFolder'" [formName]="'fmLayOutDM'" class="fs-5-sm label-addnew"></codx-label>
+              <codx-label
+                [default]="titleAddFolder"
+                [fiedName]="'lbltitleAddFolder'"
+                [formName]="'fmLayOutDM'"
+                class="fs-5-sm label-addnew"
+              ></codx-label>
             </button>
           </a>
         </div>
@@ -319,21 +324,21 @@
                       <a class="dropdown-item">
                         <div class="d-flex align-items-center">
                           <codx-label
-                          fiedName="lblMyRequest"
-                          [formName]="'fmLayOutDM'"
-                          default="Yêu cầu của tôi"
-                        >
-                        </codx-label>
+                            fiedName="lblMyRequest"
+                            [formName]="'fmLayOutDM'"
+                            default="Yêu cầu của tôi"
+                          >
+                          </codx-label>
                         </div>
                       </a>
                       <a class="dropdown-item">
                         <div class="d-flex align-items-center">
                           <codx-label
-                          fiedName="lblRequestWaitForMeToGrant"
-                          [formName]="'fmLayOutDM'"
-                          default="Yêu cầu chờ tôi cấp"
-                        >
-                        </codx-label>
+                            fiedName="lblRequestWaitForMeToGrant"
+                            [formName]="'fmLayOutDM'"
+                            default="Yêu cầu chờ tôi cấp"
+                          >
+                          </codx-label>
                         </div>
                       </a>
                     </some-element>
@@ -389,7 +394,10 @@
     <!-- CHAT -->
     <codx-chat></codx-chat>
     <!-- NOTES -->
-    <div class="d-flex align-items-center ms-1 ms-lg-3" (click)="openFormNoteDrawer()">
+    <div
+      class="d-flex align-items-center ms-1 ms-lg-3"
+      (click)="openFormNoteDrawer()"
+    >
       <!-- begin::Menu wrapper -->
       <div
         class="btn btn-icon btn-clean position-relative"
@@ -455,7 +463,7 @@
     ></codx-user-inner>
     <!-- end::User -->
 
-    <ng-container *ngIf="headerLeft === 'menu'">
+    <ng-container *ngIf="codxService.headerLeft === 'menu'">
       <div
         class="d-flex align-items-center d-lg-none ms-2 me-n3"
         title="Show header menu"
