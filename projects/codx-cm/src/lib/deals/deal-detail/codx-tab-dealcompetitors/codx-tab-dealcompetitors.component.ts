@@ -146,7 +146,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     }
   }
 
-  clickAddCompetitor(titleMore, action, data = new CM_DealsCompetitors()) {
+  clickAddCompetitor(titleMore, action, data, isAddCompetitor = false) {
     this.cache
       .gridViewSetup('CMDealsCompetitors', 'grvCMDealsCompetitors')
       .subscribe((res) => {
@@ -159,6 +159,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
           dealID: this.dealID,
           data: data,
           lstDealCompetitors: this.lstDealCompetitors,
+          isAddCompetitor: isAddCompetitor
         };
         var dialog = this.callFc.openForm(
           PopupAddDealcompetitorComponent,

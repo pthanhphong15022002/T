@@ -32,13 +32,25 @@
   </div>
 </ng-template>
 <ng-template #body>
-  <div class="form-group">
+  <div class="form-group" *ngIf="!isAddCompetitor">
     <codx-label [formModel]="form.formModel" fiedName="CompetitorID">
     </codx-label>
     <codx-input
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="competitorID"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group" *ngIf="isAddCompetitor">
+    <codx-label default="Tên đối thủ" [formModel]="form.formModel" name="lblCompetitorName">
+    </codx-label>
+    <span class="text-danger ms-1">*</span>
+    <codx-input
+      type="text"
+      [crrValue]="competitorName"
+      field="CompetitorName"
+      (valueChange)="valueChange($event)"
     >
     </codx-input>
   </div>
