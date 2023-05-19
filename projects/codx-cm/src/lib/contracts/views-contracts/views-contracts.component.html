@@ -152,7 +152,7 @@
   <codx-taskbar
     [listTab]="listClicked"
     (tab)="changeTab($event)"
-    [change]="itemSelected"
+
     size="20"
     class="mt-5"
   ></codx-taskbar>
@@ -242,7 +242,7 @@
       <div class="col-8">
         <span>Tình trạng thanh toán: </span>
         <span>{{itemSelected?.paymentStatus}}</span>
-      </div>  
+      </div>
     </div>
     <div class="row">
       <div class="col-4">
@@ -252,7 +252,7 @@
       <div class="col-8">
         <span>Phương thức thanh toán: </span>
         <span>{{itemSelected?.pmtMethodID}}</span>
-      </div>  
+      </div>
     </div>
   </div>
 
@@ -302,7 +302,7 @@
     </div>
   </div>
 
- 
+
   <div>
     <div class="fs-6 fw-bold"><span>Lịch sử thanh toán</span></div>
     <!-- <product></product> -->
@@ -350,7 +350,7 @@
       <div class="col-4">
         <span>Ngày giao hàng thành công: </span>
       </div>
-       
+
     </div>
     <div class="row">
       <div class="col-4">
@@ -358,12 +358,12 @@
       </div>
       <div class="col-8">
         <span>Số diện thoại: </span>
-      </div>  
+      </div>
     </div>
     <div class="row">
       <div class="col-12">
       <span>Địa chỉ giao hàng: </span>
-      </div> 
+      </div>
     </div>
   </div>
 </ng-template>

@@ -2729,7 +2729,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       let checkAdd = this.listStepAdd?.some((id) => id == stepID)
       let checkDelete = this.listStepDelete?.some((id) => id == stepID)
 
-      if (!checkEdit && !checkAdd && !checkDelete) {          
+      if (!checkEdit && !checkAdd && !checkDelete) {
         this.listStepEdit.push(stepID);
       }
       let step = this.stepList.find(x => x.recID == stepID);
@@ -2741,7 +2741,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             if(!check){
               this.listStepDrop.push(stepDrop.recID);
             }
-          })           
+          })
         }
       }
 
@@ -3940,5 +3940,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       return newProccessID;
     }
     return this.guidEmpty;
+  }
+
+  getNameReasonControl(view:any){
+    var reason = this.LowercaseFirstPipe(this.stepNameFail);
+    if(view === this.viewStepReasonSuccess) {
+      var reason = this.LowercaseFirstPipe(this.stepNameSuccess);
+    }
+    return this.gridViewSetupStep['ReasonControl']?.headerText.replace('{0}', reason);
   }
 }

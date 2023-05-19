@@ -22,7 +22,7 @@
         </div>
       </div>
       <span [innerHTML]="
-          itemDetail.orgUnitID
+          itemDetail?.emp.orgUnitID
             | formatvalue : view.formModel : 'orgUnitID'
             | async
         "></span>
