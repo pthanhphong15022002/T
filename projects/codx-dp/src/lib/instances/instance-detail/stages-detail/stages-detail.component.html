@@ -563,13 +563,16 @@
         [isShowMore]="true"
         [typeProgress]="2"
         [isDeepCopy]="false"
+        [isEditTimeDefault]="leadtimeControl"
+        [isUpdateProgressGroup]="progressTaskGroupControl"
+        [isOnlyView]="isOnlyView"
       ></codx-step-task>
     </div>
   </div>
   <!-- <codx-task [stepId]="dataStep?.recID"></codx-task> -->
 </ng-template>
 
-<ng-template #timeAndProgress let-data="value">
+<!-- <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
     <span class="date" *ngIf="data?.value?.startDate && data?.value?.endDate">
       {{ data?.value?.startDate | date : dateFomat }} -
@@ -623,10 +626,10 @@
       </span>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
 
 <!-- Cập nhật kết quả thực hiện -- nvthuan -->
-<ng-template #updateProgress>
+<!-- <ng-template #updateProgress>
   <div class="d-flex flex-column p-5 h-100">
     <div>
       <ng-container [ngTemplateOutlet]="header"></ng-container>
@@ -638,8 +641,8 @@
       <ng-container [ngTemplateOutlet]="updateProgressFooter"></ng-container>
     </div>
   </div>
-</ng-template>
-<ng-template #header>
+</ng-template> -->
+<!-- <ng-template #header>
   <div class="d-flex justify-content-between">
     <div>
       <div>
@@ -666,8 +669,8 @@
       ></span>
     </div>
   </div>
-</ng-template>
-<ng-template #updateProgressBody>
+</ng-template> -->
+<!-- <ng-template #updateProgressBody>
   <div class="mt-5">
     <div class="form-group d-flex justify-content-between row">
       <div class="col-6">
@@ -789,8 +792,8 @@
       </div>
     </ng-container>
   </div>
-</ng-template>
-<ng-template #updateProgressFooter>
+</ng-template> -->
+<!-- <ng-template #updateProgressFooter>
   <div class="mb-4 d-flex justify-content-between w-100">
     <button
       style="float: left"
@@ -811,7 +814,7 @@
       <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
     </button>
   </div>
-</ng-template>
+</ng-template> -->
 
 <!--Control group user-->
 

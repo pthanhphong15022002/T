@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import {
   AlertConfirmInputConfig,
@@ -58,8 +59,12 @@ export class CodxAddressCmComponent implements OnInit {
     private api: ApiHttpService
   ) {}
 
+    ngOnChanges(changes: SimpleChanges): void {
+      this.getListAddress();
+
+    }
+
   ngOnInit(): void {
-    this.getListAddress();
     this.getFormModelAddress();
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -186,20 +191,12 @@ export class CodxAddressCmComponent implements OnInit {
                 if (index != -1) {
                   if (e?.event?.isDefault) {
                     this.listAddress[index].isDefault = false;
-
-                    this.listAddress = this.cmSv.bringDefaultContactToFront(
-                      this.cmSv.loadList(e.event, this.listAddress, 'update')
-                    );
-                  } else {
-                    this.listAddress = this.cmSv.bringDefaultContactToFront(
-                      this.cmSv.loadList(e.event, this.listAddress, 'update')
-                    );
                   }
-                } else {
-                  this.listAddress = this.cmSv.bringDefaultContactToFront(
-                    this.cmSv.loadList(e.event, this.listAddress, 'update')
-                  );
                 }
+
+                this.listAddress = this.cmSv.bringDefaultContactToFront(
+                  this.cmSv.loadList(e.event, this.listAddress, 'update')
+                );
                 var checkIsDefault = this.listAddress.some((x) => x.isDefault);
                 if (!checkIsDefault) {
                   this.addressName.emit(null);

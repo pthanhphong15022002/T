@@ -48,6 +48,7 @@ export class ViewDetailEmployeeBusinessComponent implements OnInit{
   console = console;
 
   ngOnInit(): void { 
+    console.log(this.itemDetail);
     this.hrService.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;
