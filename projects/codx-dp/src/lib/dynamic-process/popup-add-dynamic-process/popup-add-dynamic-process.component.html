@@ -2454,7 +2454,7 @@
             <div class="text-dark fw-bold">
               <codx-label
                 field="ReasonControl"
-                default="Cho phép chọn lý do thành công"
+                [default]="getNameReasonControl(viewStepReasonSuccess)"
               ></codx-label>
             </div>
           </div>
@@ -2674,7 +2674,7 @@
             <div class="text-dark fw-bold">
               <codx-label
                 fiedName="ReasonControl"
-                default="Cho phép chọn lý do thất bại"
+                [default]='getNameReasonControl(viewStepReasonFail)'
               >
               </codx-label>
             </div>

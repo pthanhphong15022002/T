@@ -1966,11 +1966,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         rqESkill.predicates = 'EmployeeID=@0';
         rqESkill.page = 1;
         rqESkill.pageSize = 20;
-        this.hrService.getViewSkillAsync(rqESkill).subscribe((res) => {
-          if (res) {
-            this.lstESkill = res;
-          }
-        });
+        // this.hrService.getViewSkillAsync(rqESkill).subscribe((res) => {
+        //   if (res) {
+        //     this.lstESkill = res;
+        //   }
+        // });
       }
       this.df.detectChanges();
     }
@@ -2842,24 +2842,33 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                   }
                 });
             } else if (funcID == 'eSkill') {
-              this.hrService.deleteESkill1(data).subscribe((res) => {
-                if (res) {
-                  if (!this.skillGrid && res[0] == true) {
-                    this.lstESkill = res[1];
-                    this.eSkillRowCount--;
-                  } else if (this.lstESkill && res[0] == true) {
-                    this.notify.notifyCode('SYS008');
-                    this.lstESkill = res[1];
-                    this.eSkillRowCount += this.updateGridView(
-                      this.skillGrid,
-                      'delete',
-                      data
-                    );
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
+              this.hrService.deleteESkill(data.recID).subscribe((res) => {
+                if (res == true) {
+                  this.notify.notifyCode('SYS008');
+                  (this.skillGrid?.dataService as CRUDService)
+                    ?.remove(data)
+                    .subscribe();
                   this.df.detectChanges();
+                } else {
+                  this.notify.notifyCode('SYS022');
                 }
+                // if (res) {
+                //   if (!this.skillGrid && res[0] == true) {
+                //     this.lstESkill = res[1];
+                //     this.eSkillRowCount--;
+                //   } else if (this.lstESkill && res[0] == true) {
+                //     this.notify.notifyCode('SYS008');
+                //     this.lstESkill = res[1];
+                //     this.eSkillRowCount += this.updateGridView(
+                //       this.skillGrid,
+                //       'delete',
+                //       data
+                //     );
+                //   } else {
+                //     this.notify.notifyCode('SYS022');
+                //   }
+                //   this.df.detectChanges();
+                // }
               });
             } else if (funcID == 'eCertificate') {
               this.hrService
@@ -5712,7 +5721,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   isMaxGrade(eSkill: any) {
-    let item = this.lstESkill.filter((p) => p.skillID == eSkill.skillID);
+    let item = this.lstESkill?.filter((p) => p.skillID == eSkill.skillID);
     if (item) {
       let lstSkill = item[0].listSkill;
       if (lstSkill && eSkill.recID == lstSkill[0].recID) {

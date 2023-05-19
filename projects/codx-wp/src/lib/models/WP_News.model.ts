@@ -1,7 +1,7 @@
 import { Permission } from "@shared/models/file.model";
 import { Util } from "codx-core";
 
-export class WP_News{
+export class WP_News {
     public id:string;
     public recID:string;
     public newsType:string;

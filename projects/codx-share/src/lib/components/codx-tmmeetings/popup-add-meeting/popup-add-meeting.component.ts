@@ -22,7 +22,13 @@ import {
 import moment from 'moment';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CheckBox, CheckBoxComponent } from '@syncfusion/ej2-angular-buttons';
-import { CO_Meetings, CO_Permissions, EP_BookingAttendees, EP_Boooking, TmpRoom } from '../models/CO_Meetings.model';
+import {
+  CO_Meetings,
+  CO_Permissions,
+  EP_BookingAttendees,
+  EP_Boooking,
+  TmpRoom,
+} from '../models/CO_Meetings.model';
 import { CO_MeetingTemplates } from '../models/CO_MeetingTemplates.model';
 import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
 import { TemplateComponent } from '../template/template.component';
@@ -103,7 +109,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
+    this.data = dialog.dataService?.dataSelected
+      ? JSON.parse(JSON.stringify(dialog.dataService?.dataSelected))
+      : new CO_Meetings();
     this.meeting = this.data;
     this.dialog = dialog;
     this.user = this.authStore.get();
@@ -211,7 +219,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         'EP',
         'ResourcesBusiness',
         'GetListAvailableResourceAsync',
-        ['1', this.meeting.startDate, this.meeting.endDate, this.meeting.recID, false]
+        [
+          '1',
+          this.meeting.startDate,
+          this.meeting.endDate,
+          this.meeting.recID,
+          false,
+        ]
       )
       .subscribe((res) => {
         if (res) {
@@ -668,7 +682,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   setDate() {
-    if(this.startTime != null && this.endTime != null){
+    if (this.startTime != null && this.endTime != null) {
       if (this.startTime) {
         this.beginHour = parseInt(this.startTime.split(':')[0]);
         this.beginMinute = parseInt(this.startTime.split(':')[1]);
@@ -702,7 +716,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       }
       this.changDetec.detectChanges();
     }
-
   }
 
   openPopupLink(addLink) {
@@ -974,20 +987,27 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   selectRoseType(idUserSelected, value) {
-    //thay doi theo mail ngay 05/05/2023 + clean 
-    if(value=="A"){
-      let idxRoleA = this.meeting.permissions.findIndex(x=>x.roleType=="A");
-      if(idxRoleA!=-1 && this.meeting.permissions[idxRoleA]!=idUserSelected){
-        this.meeting.permissions[idxRoleA].roleType="P";
-        this.meeting.permissions[idxRoleA].objectType="U";
-        this.setPermissions(this.meeting.permissions[idxRoleA], "P")
+    //thay doi theo mail ngay 05/05/2023 + clean
+    if (value == 'A') {
+      let idxRoleA = this.meeting.permissions.findIndex(
+        (x) => x.roleType == 'A'
+      );
+      if (
+        idxRoleA != -1 &&
+        this.meeting.permissions[idxRoleA] != idUserSelected
+      ) {
+        this.meeting.permissions[idxRoleA].roleType = 'P';
+        this.meeting.permissions[idxRoleA].objectType = 'U';
+        this.setPermissions(this.meeting.permissions[idxRoleA], 'P');
       }
     }
-    let idxSelected = this.meeting.permissions.findIndex(x=>x.objectID==idUserSelected);
-    if(idxSelected!=-1 ){
-      this.meeting.permissions[idxSelected].roleType=value;
-      this.meeting.permissions[idxSelected].objectType="U";
-      this.setPermissions(this.meeting.permissions[idxSelected], value)
+    let idxSelected = this.meeting.permissions.findIndex(
+      (x) => x.objectID == idUserSelected
+    );
+    if (idxSelected != -1) {
+      this.meeting.permissions[idxSelected].roleType = value;
+      this.meeting.permissions[idxSelected].objectType = 'U';
+      this.setPermissions(this.meeting.permissions[idxSelected], value);
     }
 
     // this.meeting.permissions.forEach((res) => {
