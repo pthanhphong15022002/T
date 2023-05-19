@@ -73,6 +73,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
 
   quotation: any;
   titleAction: any='';
+  loaded = false ;
 
   constructor(
     private inject: Injector,
@@ -113,6 +114,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
 
     this.fetch().subscribe((res) => {
       this.listQuotations = res;
+      this.loaded =true
     });
   }
 
