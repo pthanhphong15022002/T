@@ -22,10 +22,12 @@
 <!-- <ng-template #breadCrumb>
 
 </ng-template> -->
-<div class="w-100 h-100 pt-5" id="breadCrumb" #breadCrumb>
-  <div ngbDropdown class="d-inline-block flex-column" *ngIf="this.funcItem" >
+
+
+<div class="w-100 h-100 pt-5 invisible" id="breadCrumb" #breadCrumb>
+  <div ngbDropdown class="d-inline-block flex-column" *ngIf="reportList.length" #drop="ngbDropdown" >
     <span class="me-3 fw-bolder fs-3 text-dark" *ngIf="rootFunction" (click)="homeClick()">{{rootFunction.customName}}</span>
-    <a type="button"  id="dropdownReport" style="font-size: 1rem !important" ngbDropdownToggle>
+    <a type="button"  id="dropdownReport" style="font-size: 1rem !important" ngbDropdownToggle >
       <span class="text-muted text-hover-primary pt-1"> > {{this.funcItem.customName}}</span>
     </a>
     <div ngbDropdownMenu aria-labelledby="dropdownReport">

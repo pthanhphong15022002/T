@@ -33,7 +33,7 @@
 <ng-template #titleTmp let-data>
   <div class="d-flex align-items-center">
     <div
-      class="title fs-6 fw-bold me-3"
+      class="title fs-6 me-3"
       [innerHTML]="
         data.groupName | formatvalue : view.formModel : 'GroupName' | async
       "
@@ -50,7 +50,7 @@
 </ng-template>
 
 <ng-template #subTitleTmp let-data>
-  <div class="d-flex">
+  <div class="d-flex mt-2">
     <div
       class="note"
       [innerHTML]="data.note | formatvalue : view.formModel : 'Note' | async"
@@ -61,7 +61,7 @@
 <ng-template #item2 let-data>
   <div class="tm-viewlist">
     <div class="d-flex flex-row align-items-top p-3 border-bottom">
-      <div class="w-100 min-w-200px ps-3">
+      <div class="w-100 min-w-300px ps-3">
         <codx-temp-full
           cardCss="card-template"
           (clickMF)="moreFunction($event, data)"

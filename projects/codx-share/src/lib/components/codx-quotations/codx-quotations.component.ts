@@ -31,13 +31,17 @@ import { Observable, finalize, map } from 'rxjs';
   styleUrls: ['./codx-quotations.component.css'],
 })
 export class CodxQuotationsComponent extends UIComponent implements OnChanges {
-  @Input() funcID: string;
+  @Input() funcID: string = 'CM0202';
+  @Input() predicates: any; // 'RefType==@0 && RefID==@1';
+  @Input() dataValues: any; //= '
   @Input() customerID: string;
-  @Input() refType: string = 'CM_Deals';
+  @Input() refType: string;
   @Input() refID: string;
   @Input() salespersonID: string;
   @Input() consultantID: string;
-  @Input() disableRefID = true;
+  @Input() disableRefID = false;
+  @Input() disableCusID = false;
+  @Input() disableContactsID = false;
 
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -66,9 +70,10 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   customerIDCrr = '';
   requestData = new DataRequest();
   listQuotations = [];
-  predicates = 'RefType==@0 && RefID==@1';
-  dataValues = '';
+
   quotation: any;
+  titleAction: any='';
+  loaded = false ;
 
   constructor(
     private inject: Injector,
@@ -89,7 +94,6 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.dataValues = this.refType + ';' + this.refID;
     if (changes['customerID']) {
       if (changes['customerID'].currentValue === this.customerIDCrr) return;
       this.customerIDCrr = changes['customerID'].currentValue;
@@ -99,18 +103,18 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
 
   onInit(): void {}
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   getQuotations() {
-    this.requestData.predicates = 'RefType==@0 && RefID==@1';
-    this.requestData.dataValues = this.refType + ';' + this.refID;
+    this.requestData.predicates = this.predicates; // 'RefType==@0 && RefID==@1';
+    this.requestData.dataValues = this.dataValues; //this.refType + ';' + this.refID;
     this.requestData.entityName = this.entityName;
     this.requestData.funcID = this.funcID;
     this.requestData.pageLoading = false;
- 
+
     this.fetch().subscribe((res) => {
       this.listQuotations = res;
+      this.loaded =true
     });
   }
 
@@ -139,6 +143,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   changeDataMF(e, data) {}
 
   clickMF(e, data) {
+    this.titleAction = e.text
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -186,13 +191,15 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
     res.salespersonID = res.salespersonID ?? this.salespersonID;
     res.consultantID = res.consultantID ?? this.consultantID;
     res.totalAmt = res.totalAmt ?? 0;
-    res.exchangeRate = res.exchangeRate??1;
+    res.exchangeRate = res.exchangeRate ?? 1;
 
     var obj = {
       data: res,
       disableRefID: this.disableRefID,
+      disableCusID: this.disableCusID,
+      disableContactsID: this.disableContactsID,
       action: action,
-      headerText: 'sdasdsadasdasd',
+      headerText: this.titleAction,
     };
     let option = new DialogModel();
     option.IsFull = true;
@@ -222,6 +229,9 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
       data: quotation,
       action: 'edit',
       headerText: e.text,
+      disableRefID: this.disableRefID,
+      disableCusID: this.disableCusID,
+      disableContactsID: this.disableContactsID,
     };
     let option = new DialogModel();
     option.IsFull = true;
