@@ -165,6 +165,12 @@ export class CodxCmService {
     ]);
   }
 
+  updateStatusDealsCompetitorAsync(dealCompetitor) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'UpdateStatusDealsCompetitorAsync', [
+      dealCompetitor,
+    ]);
+  }
+
   updateDealCompetitorAsync(dealCompetitor) {
     return this.api.exec<any>(
       'CM',

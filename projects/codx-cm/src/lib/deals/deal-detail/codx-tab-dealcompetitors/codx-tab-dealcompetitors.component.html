@@ -1,4 +1,4 @@
-<div [class]="'detail-form'">
+<div [class]="'detail-form'" *ngIf="!hidenMF">
   <div class="d-flex">
     <button
       type="button"
@@ -127,12 +127,15 @@
     <div class="col-3 justify-content-between d-flex align-items-start ms-2">
       <div class="d-flex justify-content-center align-items-start">
         <span class="icon-check_circle_outline icon-16"></span>
+        {{data?.status}}
       </div>
       <div class="d-flex justify-content-end align-items-start action-menu-od">
         <codx-mfunc
           [formModel]="formModel"
           (clickMF)="clickMF($event, data)"
+          (changeDataMF)="changeDataMF($event, data)"
           [isBookMark]="true"
+          [hidden]="hidenMF"
           [dataItem]="data"
           type="hover"
         >

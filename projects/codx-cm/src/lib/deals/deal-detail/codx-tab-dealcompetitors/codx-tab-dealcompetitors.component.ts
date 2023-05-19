@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { CodxCmService } from '../../../codx-cm.service';
 import {
   AlertConfirmInputConfig,
@@ -13,6 +19,7 @@ import {
 import { PopupAddDealcompetitorComponent } from './popup-add-dealcompetitor/popup-add-dealcompetitor.component';
 import { CM_DealsCompetitors } from '../../../models/cm_model';
 import { Observable, finalize, map } from 'rxjs';
+import { PopupStatusCompetitorComponent } from './popup-status-competitor/popup-status-competitor.component';
 
 @Component({
   selector: 'codx-tab-dealcompetitors',
@@ -34,6 +41,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   assemblyName = 'ERM.Business.CM';
   className = 'DealsBusiness';
   method = 'GetListDealAndDealCompetitorAsync';
+  hidenMF: boolean;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -44,8 +52,6 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     this.getListDealAndDealCompetitor();
-
-
   }
   async ngOnInit() {
     this.formModel = await this.cmSv.getFormModel('CM02011');
@@ -59,6 +65,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
 
   getListDealAndDealCompetitor() {
     this.loaded = false;
+    this.hidenMF = true;
     this.request.predicates = 'DealID=@0';
     this.request.dataValues = this.dealID;
     this.request.entityName = 'CM_DealsCompetitors';
@@ -67,6 +74,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     this.fetch().subscribe((item) => {
       this.lstDealCompetitors = item;
       var lstID = this.lstDealCompetitors.map((x) => x.competitorID);
+      this.hidenMF = false;
       this.getAddressCompetitors(lstID);
 
       this.loaded = true;
@@ -143,7 +151,58 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
       case 'SYS04':
         this.clickAddCompetitor(e.text, 'copy', data);
         break;
+      case 'CM02011_1':
+        this.setStatus(e.text, data);
+        break;
     }
+  }
+
+  changeDataMF(e, data){
+    if (e != null && data != null) {
+      if(data.status == '1'){
+        this.hidenMF = true;
+      }
+    }
+  }
+
+  setStatus(title, data) {
+    data.dealID = this.dealID;
+    var obj = {
+      title: title,
+      data: data,
+    };
+    let opt = new DialogModel();
+    opt.FormModel = this.formModel;
+    var dialog = this.callFc.openForm(
+      PopupStatusCompetitorComponent,
+      '',
+      500,
+      350,
+      '',
+      obj,
+      '',
+      opt
+    );
+    dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        if (e?.event?.recID) {
+          if (e?.event?.status == '1') {
+            if(this.lstDealCompetitors != null){
+              this.lstDealCompetitors.forEach(res => {
+                if(res.recID != e?.event?.recID){
+                  res.status = "2";
+                }
+              });
+            }
+          }
+          this.lstDealCompetitors = this.cmSv.loadList(
+            e?.event,
+            this.lstDealCompetitors,
+            "update"
+          );
+        }
+      }
+    });
   }
 
   clickAddCompetitor(titleMore, action, data, isAddCompetitor = false) {
@@ -159,7 +218,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
           dealID: this.dealID,
           data: data,
           lstDealCompetitors: this.lstDealCompetitors,
-          isAddCompetitor: isAddCompetitor
+          isAddCompetitor: isAddCompetitor,
         };
         var dialog = this.callFc.openForm(
           PopupAddDealcompetitorComponent,
