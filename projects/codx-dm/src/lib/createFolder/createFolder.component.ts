@@ -42,6 +42,7 @@ import { FolderInfo } from '@shared/models/folder.model';
 import { RolesComponent } from '../roles/roles.component';
 import { PhysicalComponent } from './physical/physical.component';
 import { SubFolderComponent } from './subFolder/subFolder.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'createFolder',
@@ -607,7 +608,6 @@ export class CreateFolderComponent implements OnInit {
   }
 
   checkPermission() {
-    debugger
     //this.isSystem = false;
     this.readRight = this.dmSV.parentRead;
     this.createRight = this.dmSV.parentCreate;
@@ -889,7 +889,6 @@ export class CreateFolderComponent implements OnInit {
   }
 
   disableRight(item: string) {
-    debugger
     var ret = false;
     if (this.updateRight == false) return true;
     if (this.propertiesFolder) return true;

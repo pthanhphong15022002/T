@@ -10,24 +10,15 @@
     (clickMF)="clickMF($event, dataSelected)"
   >
     <ng-template #header let-data>
-      <div class="container_detail mt-3">
-        <div class="d-flex justify-content-between mb-3">
-          <div class="fs-2">{{ dataSelected?.dealName }}</div>
-          <div></div>
-          <div class="d-flex align-items-center">
-            <span class="icon-monetization_on pe-1 text-wraning"></span>
-            <span class="fs-2 fw-bold">{{dataSelected?.dealValue}}</span>
-          </div>
-        </div>
-        <div class="d-flex justify-content-between pb-3">
-          <div class="d-flex flex-row">
-            <div class=" d-flex justify-content-start">
-              <codx-label default="Khách hàng:" class="fs-6 me-1"></codx-label>
-              <i class="icon-business pe-1"></i>
-              <div class="fs-6">
-
-                <span
-                class="fs-7"
+      <div class="container_detail mt-2">
+        <div class="d-flex align-items-top justify-content-between">        
+          <div class="w-100 d-flex flex-column">    
+            <div class="fs-2 fw-bold mb-2">{{ dataSelected?.dealName }}</div>
+            <div class=" d-flex align-items-top justify-content-start mb-2">
+              <codx-label default="Khách hàng:" class="text-dark me-2"></codx-label>
+              <i class="icon-business icon-16 me-2"></i>
+              <div
+                class="text-gray-600"
                 #customerID
                 [innerHTML]="
                 dataSelected?.customerID
@@ -39,17 +30,12 @@
                       : 'grvCMDeals'
                     | async
                 "
-              ></span>
-
-              </div>
+              ></div>
             </div>
-          </div>
-          <div>
-            <div class=" d-flex justify-content-start">
-              <codx-label default="Dòng sản phẩm:" class="fs-6 me-1"></codx-label>
-              <div class="fs-6">
-                <span
-                class="fs-7"
+            <div class="d-flex align-items-top mb-2">
+              <codx-label default="Dòng sản phẩm:" class="text-dark me-2"></codx-label>
+              <div
+                class="text-gray-600"
                 #businessLineID
                 [innerHTML]="
                 data?.businessLineID
@@ -61,116 +47,118 @@
                       : 'grvCMDeals'
                     | async
                 "
-              ></span>
+              ></div>
+            </div>
+            <div class="d-flex align-items-top justify-content-start mb-2">
+              <codx-label default="Quy trình:" class="text-dark me-2"></codx-label>
+              <div class="text-gray-600">{{dataSelected?.processName}}</div>
+            </div>
+            <div class="mb-2">
+              <codx-tag
+                [entityName]="formModel.entityName"
+                [disabled]="true"
+                [isEdit]="false"
+                [value]="dataSelected?.tags"
+              >
+              </codx-tag>
+            </div>
+            <div class="d-flex flex-wrap align-items-top mb-2">
+              <div class="d-flex align-items-center me-6 mb-1">
+                <codx-label default="Ngày tạo:" class="text-dark me-1"></codx-label>
+                <span
+                  class="text-gray-600"
+                  #createdOn
+                  [innerHTML]="
+                  dataSelected?.createdOn
+                      | formatvalue
+                        : formModel
+                        : 'createdOn'
+                        : createdOn
+                        : 'CMDeals'
+                        : 'grvCMDeals'
+                      | async
+                  "
+                ></span>
+              </div>
+              <div class="d-flex align-items-center me-6 mb-1">
+                <codx-label default="Ngày bắt đầu:" class="text-dark me-1"></codx-label>
+                <span
+                  class="text-gray-600"
+                  #startDate
+                  [innerHTML]="
+                  dataSelected?.startDate
+                      | formatvalue
+                        : formModel
+                        : 'startDate'
+                        : createdOn
+                        : 'CMDeals'
+                        : 'grvCMDeals'
+                      | async
+                  "
+                ></span>
+              </div>
+              <div class="d-flex align-items-center me-3 mb-1">
+                <codx-label default="Ngày đến hạn:" class="text-dark me-1"></codx-label>
+                <span
+                  class="text-gray-600"
+                  #endDate
+                  [innerHTML]="
+                  dataSelected?.endDate
+                      | formatvalue
+                        : formModel
+                        : 'endDate'
+                        : createdOn
+                        : 'CMDeals'
+                        : 'grvCMDeals'
+                      | async
+                  "
+                ></span>
               </div>
             </div>
           </div>
-          <div>
-            % <span class="pe-2">{{dataSelected?.probability}}</span>
+          <div class="w-150px min-w-150px d-flex flex-column">
+            <div class="d-flex flex-column">
+              <div class="d-flex align-items-center justify-content-end mb-2">
+                <span class="icon-monetization_on pe-1 text-wraning"></span>
+                <span class="fs-5 fw-bold">{{dataSelected?.dealValue}}</span>
+              </div>
+              <div class="mb-2 d-flex justify-content-end">
+                % <span class="pe-2">{{dataSelected?.probability}}</span>
+              </div>
+              <div class="d-flex justify-content-end mb-2">
+                <span class="badge badge-md badge-primary">
+                    {{dataSelected?.currentStepName}}
+                  </span>
+              </div>
+              <div class="d-flex flex-column align-items-top">
+                <div class="d-flex justify-content-end">
+                  <codx-label default="Nhân viên bán hàng:" class="text-dark mb-2"></codx-label>
+                </div>
+                <div class="d-flex justify-content-end">
+                  <codx-imgs
+                    [isToolTip]="true"
+                    [width]="30"
+                    [objectId]="dataSelected.owner"
+                    ojectType="AD_Users"
+                    [numberImages]="1"
+                  >
+                  </codx-imgs>
+                </div>
+              </div>
+              
+            </div>
           </div>
         </div>
-        <div class="d-flex justify-content-between pb-3" >
-          <div class="d-flex justify-content-start">
-            <span class="nowrap me-2">
-              <codx-label default="Quy trình:" class="text-break fs-6 me-1"></codx-label>
-            </span>
-
-            <div class="fs-6">{{dataSelected?.processName}}</div>
-          </div>
-          <div>
-
-          </div>
-          <div class="badge badge-primary ms-5">
-              <span>
-              {{dataSelected?.currentStepName}}
-              </span>
-          </div>
-        </div>
-        <div class="d-flex flex-wrap align-items-top mb-3">
-          <div class=" d-flex align-items-center">
-            <codx-label default="Ngày tạo:" class="text-dark me-1"></codx-label>
-            <span
-              class="text-gray-600"
-              #createdOn
-              [innerHTML]="
-              dataSelected?.createdOn
-                  | formatvalue
-                    : formModel
-                    : 'createdOn'
-                    : createdOn
-                    : 'CMDeals'
-                    : 'grvCMDeals'
-                  | async
-              "
-            ></span>
-          </div>
-          <div class="d-flex align-items-center">
-            <codx-label default="Ngày bắt đầu:" class="text-dark me-1"></codx-label>
-            <span
-              class="text-gray-600"
-              #startDate
-              [innerHTML]="
-              dataSelected?.startDate
-                  | formatvalue
-                    : formModel
-                    : 'startDate'
-                    : createdOn
-                    : 'CMDeals'
-                    : 'grvCMDeals'
-                  | async
-              "
-            ></span>
-          </div>
-          <div class=" d-flex align-items-center">
-            <codx-label default="Ngày đến hạn:" class="text-dark me-1"></codx-label>
-            <span
-              class="text-gray-600"
-              #endDate
-              [innerHTML]="
-              dataSelected?.endDate
-                  | formatvalue
-                    : formModel
-                    : 'endDate'
-                    : createdOn
-                    : 'CMDeals'
-                    : 'grvCMDeals'
-                  | async
-              "
-            ></span>
-          </div>
-          <div class="d-flex align-items-top">
-            <codx-label default="Nhân viên bán hàng:" class="text-dark me-2"></codx-label>
-            <codx-imgs
-              [isToolTip]="true"
-              [width]="25"
-              [objectId]="dataSelected.owner"
-              ojectType="AD_Users"
-              [numberImages]="1"
-            >
-            </codx-imgs>
-          </div>
-        </div>
-        <div class="d-flex justify-content-start">
-          <codx-tag
-            [entityName]="formModel.entityName"
-            [disabled]="true"
-            [isEdit]="false"
-            [value]="dataSelected?.tags"
-          >
-          </codx-tag>
-        </div>
-
+        
         <div class="view-details-header bg-body scroll-y me-3 h-100">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex tab-header">
               <codx-taskbar
-              [listTab]="tabDetail"
-              (tab)="changeTab($event)"
-              size="18"
-              class="mb-3"
-            ></codx-taskbar>
-
-
+                [listTab]="tabDetail"
+                (tab)="changeTab($event)"
+                size="18"
+                class="mb-3"
+              ></codx-taskbar>
             </div>
           </div>
         </div>
