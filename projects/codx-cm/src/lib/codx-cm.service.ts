@@ -108,6 +108,15 @@ export class CodxCmService {
     );
   }
 
+  addCompetitorByName(name) {
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'AddCompetitorByDealCompetitorAsync',
+      [name]
+    );
+  }
+
   updateContactByPopupListCt(contact) {
     return this.api.exec<any>(
       'CM',

@@ -20,6 +20,8 @@ export class PopupAddDealcompetitorComponent implements OnInit {
   title = '';
   gridViewSetup: any;
   lstDealCompetitors = [];
+  isAddCompetitor = false;
+  competitorName: any;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -27,13 +29,16 @@ export class PopupAddDealcompetitorComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = JSON.parse(JSON.stringify(dt?.data?.data));
-    this.data.dealID = dt?.data?.dealID;
     this.dialog = dialog;
     this.title = dt?.data?.title;
     this.action = dt?.data?.action;
+    if (this.action != 'add') {
+      this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+    }
+    this.data.dealID = dt?.data?.dealID;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.lstDealCompetitors = dt?.data?.lstDealCompetitors;
+    this.isAddCompetitor = dt?.data?.isAddCompetitor;
   }
   ngOnInit(): void {
     if (this.action == 'copy') {
@@ -43,6 +48,34 @@ export class PopupAddDealcompetitorComponent implements OnInit {
   }
 
   onSave() {
+    if(this.isAddCompetitor){
+      if(this.competitorName == null && this.competitorName.trim() == ''){
+        {
+          this.notiService.notifyCode(
+            'SYS009',
+            0,
+            '"' + this.gridViewSetup['CompetitorID'].headerText + '"'
+          );
+          return;
+        }
+      }
+      this.cmSv.addCompetitorByName(this.competitorName).subscribe(x => {
+        if(x){
+          this.data.competitorID = x;
+          this.addHandle();
+        }else{
+          this.dialog.close();
+          this.notiService.notifyCode('SYS023');
+        }
+      })
+
+    }else{
+      this.addHandle();
+    }
+
+  }
+
+  addHandle(){
     if (
       this.data?.competitorID == null ||
       this.data?.competitorID.trim() == ''
@@ -96,17 +129,20 @@ export class PopupAddDealcompetitorComponent implements OnInit {
       return true;
     }
 
-    const hasDifferentCompetitorID = this.lstDealCompetitors.some(x => x.competitorID == this.data?.competitorID && x.recID != this.data?.recID);
+    const hasDifferentCompetitorID = this.lstDealCompetitors.some(
+      (x) =>
+        x.competitorID == this.data?.competitorID && x.recID != this.data?.recID
+    );
     if (hasDifferentCompetitorID) {
       return false;
-    }else{
+    } else {
       return true;
     }
   }
 
   valueChange(e) {
     if (e.data) {
-      this.data[e.field] = e?.data;
+      this.competitorName = e?.data;
     }
   }
 }
