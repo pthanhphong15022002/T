@@ -41,7 +41,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   assemblyName = 'ERM.Business.CM';
   className = 'DealsBusiness';
   method = 'GetListDealAndDealCompetitorAsync';
-  hidenMF = false;
+  hidenMF: boolean;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -65,6 +65,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
 
   getListDealAndDealCompetitor() {
     this.loaded = false;
+    this.hidenMF = false;
     this.request.predicates = 'DealID=@0';
     this.request.dataValues = this.dealID;
     this.request.entityName = 'CM_DealsCompetitors';
@@ -73,6 +74,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     this.fetch().subscribe((item) => {
       this.lstDealCompetitors = item;
       var lstID = this.lstDealCompetitors.map((x) => x.competitorID);
+      this.hidenMF = false;
       this.getAddressCompetitors(lstID);
 
       this.loaded = true;
