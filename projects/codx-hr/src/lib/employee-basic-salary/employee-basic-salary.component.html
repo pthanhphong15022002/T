@@ -162,11 +162,10 @@
 <!-- list & detail view -->
 <ng-template #templateListDetail let-data>
   <div class="border-bottom position-relative avatar-vllbadge">
-    <codx-temp-full cardCss="codx_cardcenter p-3" (clickMF)="clickMF($event, data)" [imageId]="data?.emp?.employeeID"
-      [imageObjType]="'HR_Employees'" [imageWidth]="40" [formModel]="view.formModel" [subTitleTmp]="subTitleTmp"
-      [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'" (changeDataMF)="changeDataMF($event, data)"
-      [title]="data?.emp?.employeeName"
-      [baseHeaderRightTmp]="baseHeaderRightTmp">
+    <codx-temp-full cardCss="codx_cardcenter p-3" (clickMF)="clickMF($event, data)" moreFuncCss="me-10"
+      [imageId]="data?.emp?.employeeID" [imageObjType]="'HR_Employees'" [imageWidth]="40" [formModel]="view.formModel"
+      [titleTmp]="titleTmp" [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'"
+      (changeDataMF)="changeDataMF($event, data)">
     </codx-temp-full>
     <!-- <div class="d-flex flex-center vll-badge">
       <codx-vll class="badge badge-sm me-0 badge-light" [name]="genderGrvSetup?.referedValue"
@@ -176,56 +175,52 @@
   </div>
 </ng-template>
 <!-- info view -->
-<ng-template #subTitleTmp let-data>
+<ng-template #titleTmp let-data>
   <div class="w-100">
     <!-- emp info -->
-    <!-- <div class="d-flex align-items-center mb-1">
+    <div class="d-flex align-items-center justify-content-between mb-1">
       <span class="fw-bold fs-6 text-dark me-2">{{ data?.emp?.employeeName }}</span>
-      <i class="icon-qr_code_scanner icon-14 me-1"></i>
-      <span class="text-danger">{{ data?.emp?.employeeID }}</span>
-    </div> -->
-    <div class="fs-7 text-gray-600">
+      <!-- <i class="icon-qr_code_scanner icon-14 me-1"></i>
+      <span class="text-danger">{{ data?.emp?.employeeID }}</span> -->
+      <ng-container *ngIf="data?.isCurrent">
+        <span [style.color]="'#0078FF'" class="icon-bookmark icon-18" [ngbPopover]="popIsNewest" #popOver="ngbPopover"
+          [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()" placement="left">
+        </span>
+      </ng-container>
+    </div>
+    <div class="text-gray-600">
       <span [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'PositionID' | async"></span>
     </div>
     <!-- end emp info -->
-    <!-- salaries -->
-    <div class="justify-content-between">
-      <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'" *ngIf="data?.siSalary >0 ;else noSiSalary"
-        class="d-flex align-self-center">
-        <span class="icon-attach_money align-self-center icon-14 me-1"></span>
-        <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.BSalary?.headerText"
-          [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
-        </span>
-        <span class="mx-1">-</span>
-        <span class="icon-monetization_on icon-15 align-self-center fw-bold me-1"></span>
-        <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.SISalary?.headerText"
-          [innerHTML]=" data?.siSalary | formatvalue : view.formModel : 'siSalary' | async">
+
+    <!-- decisionNo, effectedDate, expiredDate -->
+    <div class="d-flex align-items-center mb-2">
+      <div class="d-flex align-items-center me-4" [ngbTooltip]="grvSetup?.DecisionNo?.headerText">
+        <span class="icon-book me-1"></span>
+        <span [innerHTML]=" data?.decisionNo | formatvalue : view.formModel : 'decisionNo' | async">
         </span>
       </div>
-      <ng-template #noSiSalary>
-        <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'" class="d-flex align-self-center gap-1">
-          <span class="icon-attach_money align-self-center icon-14"></span>
-          <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.BSalary?.headerText"
-            [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
-          </span>
-        </div>
-      </ng-template>
-    </div>
-    <!-- end salaries -->
-    <!-- effected day -->
-    <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'">
-      <span class="icon-calendar_today icon-14 me-1"></span>
-      <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['EffectedDate'] : ''"
-        [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
-        [innerHTML]="data?.effectedDate  | formatvalue : view.formModel : 'effectedDate'| async">
-      </span>
+      <div class="d-flex align-items-center" [ngbTooltip]="grvSetup?.EffectedDate?.headerText">
+        <span class="icon-calendar_today me-1"></span>
+        <span class="align-self-center"
+          [innerHTML]=" data?.effectedDate | formatvalue : view.formModel : 'effectedDate' | async">
+        </span>
+      </div>
+      <ng-container *ngIf="data?.expiredDate">
+        <span class="px-1"> - </span>
+        <span class="align-self-center"
+          [innerHTML]=" data?.expiredDate | formatvalue : view.formModel : 'expiredDate' | async">
+        </span>
+      </ng-container>
     </div>
     <!-- end day -->
     <!-- status & owner -->
-    <div class="d-flex justify-content-between text-dark">
-      <span class="mt-2">
-        <codx-vll class="badge fw-bold" [name]="'HRS102'" [value]="data?.status" [showText]="true" [showBgColor]="true">
-        </codx-vll>
+    <div class="d-flex align-items-center text-dark">
+      <codx-vll class="badge fw-bold me-4" [name]="'HRS102'" [value]="data?.status" [showText]="true"
+        [showBgColor]="true">
+      </codx-vll>
+      <span *ngIf="data?.signedDate" [ngbTooltip]="grvSetup?.SignedDate?.headerText"
+        [innerHTML]=" data?.signedDate | formatvalue : view.formModel : 'signedDate' | async">
       </span>
       <!-- <span class="d-flex flex-row justify-content-end">
         <codx-imgs [objectId]="getIdUser(data.createdBy, data.owner)" [objectType]="'AD_Users'" [width]="30"
@@ -298,7 +293,7 @@
 </ng-template>
 <!-- end update status -->
 
-<ng-template #baseHeaderRightTmp let-data>
+<!-- <ng-template #baseHeaderRightTmp let-data>
   <div>
     <ng-container *ngIf="data?.isCurrent">
       <span [style.color]="'#0078FF'" class="icon-bookmark icon-18" [ngbPopover]="popIsNewest" #popOver="ngbPopover"
@@ -306,16 +301,16 @@
       </span>
     </ng-container>
   </div>
+</ng-template> -->
 
-  <ng-template #popIsNewest>
-    <span>
-      <codx-label name="lblIsCurrent" [formModel]="view.formModel" default="Mới nhất"></codx-label>
-    </span>
-  </ng-template>
+<ng-template #popIsNewest>
+  <span>
+    <codx-label name="lblIsCurrent" [formModel]="view.formModel" default="Mới nhất"></codx-label>
+  </span>
+</ng-template>
 
-  <ng-template #popOverDue>
-    <span>
-      <codx-label name="lblOverDue" [formModel]="view.formModel" default="Đã quá hạn!"></codx-label>
-    </span>
-  </ng-template>
+<ng-template #popOverDue>
+  <span>
+    <codx-label name="lblOverDue" [formModel]="view.formModel" default="Đã quá hạn!"></codx-label>
+  </span>
 </ng-template>
