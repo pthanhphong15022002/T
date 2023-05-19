@@ -42,6 +42,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   className = 'DealsBusiness';
   method = 'GetListDealAndDealCompetitorAsync';
   hidenMF: boolean;
+  vllStatus = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -138,6 +139,11 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     formModel.gridViewName = 'grvCMDealsCompetitors';
     formModel.entityName = 'CM_DealsCompetitors';
     this.formModel = formModel;
+    this.cache
+      .gridViewSetup('CMDealsCompetitors', 'grvCMDealsCompetitors')
+      .subscribe((res) => {
+        this.vllStatus = res?.Status?.ReferedValue;
+      });
   }
 
   clickMF(e, data) {
