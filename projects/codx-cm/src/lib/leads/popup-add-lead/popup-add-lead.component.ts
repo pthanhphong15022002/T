@@ -93,6 +93,10 @@ instance: tmpInstances = new tmpInstances();
 instanceSteps: any;
 listInstanceSteps: any[] = [];
 avatarChange: boolean = false;
+lstContact:  any[] = [];
+lstContactDeletes:  any[] = [];
+listAddress:  any[] = [];
+listAddressDelete: any[] = [];
 
 constructor(
   private inject: Injector,
@@ -211,9 +215,14 @@ onEdit() {
     });
 }
 beforeSave(option: RequestOption) {
-  var data = this.lead;
-  option.methodName =
-    this.action !== this.actionEdit ? 'AddLeadAsync' : '';
+  if(this.action !== this.actionEdit) {
+    var data = [this.lead, this.lstContact, this.listAddress, this.formModel.funcID, this.formModel.entityName];
+  }
+  else {
+    // var data = [this.lead, this.lstContact,this.lstContactDeletes, this.listAddress, this.listAddressDelete];
+  }
+
+  option.methodName = this.action !== this.actionEdit ? 'AddLeadAsync' : '';
   option.className = 'LeadsBusiness';
   option.data = this.action != this.actionEdit ? data : [data, this.customerIDOld];
   return true;
@@ -289,11 +298,28 @@ setTitle(e: any) {
 changeAvatar() {
   this.avatarChange = true;
 }
-lstAddressEmit($event) {}
-lstAddressDeleteEmit($event) {}
+lstContactEmit(e) {
+  if (e != null && e.length > 0) {
+    this.lstContact = e;
+  }
+}
 
+lstContactDeleteEmit(e) {
+  if (e != null && e.length > 0) {
+    this.lstContactDeletes = e;
+  }
+}
 
-lstContactDeleteEmit($event){}
-lstContactEmit($event){}
+lstAddressEmit(e){
+  if (e != null && e.length > 0) {
+    this.listAddress = e;
+  }
+}
+
+lstAddressDeleteEmit(e){
+  if (e != null && e.length > 0) {
+    this.listAddressDelete = e;
+  }
+}
 }
 
