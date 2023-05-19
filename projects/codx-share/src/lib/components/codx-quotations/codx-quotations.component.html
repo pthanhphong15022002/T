@@ -1,5 +1,8 @@
-<div>
-  <div *ngIf="disableRefID" class="custom-toolbar d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2">
+<div >
+  <div
+    *ngIf="disableRefID"
+    class="custom-toolbar d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2"
+  >
     <div>
       <button
         type="button"
@@ -18,10 +21,12 @@
     data-kt-scroll-wrappers=".tab-pane"
     [attr.data-kt-scroll-offset]="'0px'"
   > -->
-    <ng-container
-      *ngIf="listQuotations?.length > 0"
-      [ngTemplateOutlet]="itemViewList"
-    ></ng-container>
+  <ng-container *ngIf="loaded">
+  <ng-container
+    *ngIf="listQuotations?.length > 0; else noData"
+    [ngTemplateOutlet]="itemViewList"
+  ></ng-container>
+</ng-container>
   <!-- </div> -->
 </div>
 
@@ -116,4 +121,22 @@
       </codx-mfunc>
     </div>
   </ng-container>
+</ng-template>
+
+<ng-template #noData>
+  <div class="empty-data">
+    <div class="container h-100">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+          />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            {{ "SYS011" | mssg | async }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
