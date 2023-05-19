@@ -12,8 +12,8 @@
 >
   <ng-template #titleTmp>
     <div class="d-flex flex-column ms-1">
-      <div class="flex-wrap justify-content-between w-100">
-        <span class="text-dark fs-5 fw-bold">
+      <div class="flex-wrap justify-content-between w-100 mb-1">
+        <span class="text-dark fs-6 fw-bold">
           {{ itemDetail?.emp?.employeeName }}
         </span>
         <span *ngIf="itemDetail?.isCurrent && !itemDetail?.isExpire" class="badge badge-sm text-primary badge-light">
@@ -25,7 +25,7 @@
       </div>
 
       <!-- 1 -->
-      <div class="text-gray-600 fs-7">
+      <div class=" d-flex align-items-center text-gray-700 mb-1">
         <span class="me-3"
           [innerHTML]="
             itemDetail.positionID
@@ -34,11 +34,11 @@
           "
           >' '</span
         >
-        <span class="me-3" *ngIf="itemDetail?.emp?.email">
+        <span class="me-3 d-flex align-items-center" *ngIf="itemDetail?.emp?.email">
           <i class="icon-email"></i>
           {{ itemDetail?.emp?.email }}
         </span>
-        <span class="me-3" *ngIf="itemDetail?.emp?.mobile">
+        <span class="me-3 d-flex align-items-center" *ngIf="itemDetail?.emp?.mobile">
           <i class="icon-phone_android"></i>
           {{ itemDetail?.emp?.mobile }}
         </span>

@@ -134,7 +134,7 @@
     [body]="footer"
     [formModel]="view.formModel"
     [footer]="footer"
-    [titleCss]="'fw-bold fs-4'"
+    [titleCss]="'fw-bold fs-6 mb-1'"
     [dataItem]="data"
     [baseHeaderRightTmp]="baseHeaderRightTmp"
 
@@ -146,10 +146,9 @@
 
   <div class="d-flex flex-column">
     <div class="d-flex justify-content-start mb-1">
-      <i class="icon-view_comfy pe-1"></i>
-      <div>
-        <span
-        class="fs-7"
+      <i class="icon-view_comfy me-2"></i>
+      <span
+        class="text-gray-800"
         #customerID
         [innerHTML]="
         data?.customerID
@@ -162,7 +161,6 @@
             | async
         "
       ></span>
-      </div>
     </div>
   </div>
 </ng-template>
@@ -177,7 +175,7 @@
       <div class="d-flex align-items-center text-gray-600">
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
-        class="fs-7"
+        class="text-gray-700"
         #endDate
         [innerHTML]="
         data.endDate
