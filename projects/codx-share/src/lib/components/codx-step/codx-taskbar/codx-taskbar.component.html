@@ -3,14 +3,14 @@
     <ng-container *ngFor="let item of listTaskConvert">
         <a 
           class="nav-item d-flex align-items-center" 
-          [ngClass]="'tab-item text-dark fw-bold' +' ' +(item.isActive ? 'tab-active' : '')"
+          [ngClass]="'tab-item text-dark' +' ' +(item.isActive ? 'tab-active' : '')"
         >
         <span
-            class="me-2 icon-20"
+            class="me-2 icon-18"
             [ngClass]="item.isActive ? item.icon + ' text-primary' + ' icon-' + sizeIcon : item.icon + ' icon-' + sizeIcon"
         ></span>
         <codx-label
-            class="fs-6"
+            class=""
             [name]="'lbl' + item.name"
             [formName]="'SYS'"
             [default]="item.textDefault"
