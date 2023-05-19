@@ -612,4 +612,15 @@ export class CodxCmService {
     return this.api.exec<any>('BS', 'CurrenciesBusiness', 'GetExchangeRateAsync', [CurrencyID,new Date()]);
   }
 
+  //getDefault
+  getDefault(service,funcID,entityName) {
+    return this.api.execSv<any>(
+      service,
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName]
+    );
+  }
+
 }
