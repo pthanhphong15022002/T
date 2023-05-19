@@ -223,21 +223,7 @@
           <div class="floating-container">
             <div class="floating-button">+</div>
             <div class="element-container">
-              <div class="float-element">
-                <codx-label
-                  fiedName="WP_Notes"
-                  default="Ghi chú"
-                  class="fw-bold"
-                ></codx-label>
-              </div>
-              <div class="float-element">
-                <codx-label
-                  fiedName="TM_MyTasks"
-                  default="Công việc"
-                  class="fw-bold"
-                ></codx-label>
-              </div>
-              <div class="float-element">
+              <div class="float-element" (click)="addMeeting()">
                 <codx-label
                   fiedName="CO_Meetings"
                   default="Lịch họp"
@@ -248,6 +234,20 @@
                 <codx-label
                   fiedName="EP_BookingCars"
                   default="Đặt xe"
+                  class="fw-bold"
+                ></codx-label>
+              </div>
+              <div class="float-element" (click)="addMyTask()">
+                <codx-label
+                  fiedName="TM_MyTasks"
+                  default="Công việc"
+                  class="fw-bold"
+                ></codx-label>
+              </div>
+              <div class="float-element" (click)="addNote()">
+                <codx-label
+                  fiedName="WP_Notes"
+                  default="Ghi chú"
                   class="fw-bold"
                 ></codx-label>
               </div>

@@ -42,13 +42,17 @@
   </div>
 </div>
 <ng-template #elsePdf>
-  <div
-    *ngIf="isClose"
-    class="d-flex justify-content-end  align-items-center cursor-pointer me-2"
+  <div class="d-flex justify-content-between align-items-center" *ngIf="isClose">
+    <span class="fs-5 fw-bold p-2">{{dataFile?.fileName}}</span>
+    <div
+    class="d-flex justify-content-between  cursor-pointer me-2"
     (click)="close()"
     >
+   
     <span class="icon-close"></span>
   </div>
+  </div>
+ 
 </ng-template>
 
 <div id="dm_viewFile">
