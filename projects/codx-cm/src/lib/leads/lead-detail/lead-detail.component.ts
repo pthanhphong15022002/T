@@ -65,7 +65,7 @@ export class LeadDetailComponent  implements OnInit {
     this.tabDetail = [
       { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
       { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-contact_phone', isActive: false },
-      { name: 'Opponent', textDefault: 'Địa chỉ', icon: 'icon-location_on', isActive: false },
+      { name: 'Address', textDefault: 'Địa chỉ', icon: 'icon-location_on', isActive: false },
     ]
   }
 
