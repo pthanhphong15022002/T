@@ -79,6 +79,7 @@ export class QuotationsComponent extends UIComponent {
   button?: ButtonModel;
   titleAction = '';
   dataSource = [];
+  isNewVersion = false;
 
   constructor(
     private inject: Injector,
@@ -203,6 +204,7 @@ export class QuotationsComponent extends UIComponent {
         },
       },
     ];
+
     this.detectorRef.detectChanges();
   }
 
@@ -225,7 +227,30 @@ export class QuotationsComponent extends UIComponent {
     this.changeDataMF(e.e, e.data);
   }
 
-  changeDataMF(e, data) {}
+  changeDataMF(e, data) {
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'CM0202_1':
+            if (data.status != 0) {
+              res.disabled = true;
+            }
+            break;
+          case 'CM0202_2':
+            if (data.status != 1) {
+              res.disabled = true;
+            }
+            break;
+          case 'CM0202_3':
+          case 'CM0202_4':
+            if (data.status < 2) {
+              res.isblur = true;
+            }
+            break;
+        }
+      });
+    }
+  }
 
   clickMoreFunction(e) {
     this.clickMF(e.e, e.data);
@@ -241,6 +266,18 @@ export class QuotationsComponent extends UIComponent {
         break;
       case 'SYS04':
         this.copy(data);
+        break;
+      case 'CM0202_1':
+        this.sendApprover(data);
+        break;
+      case 'CM0202_2':
+        this.rejectApprove(data);
+        break;
+      case 'CM0202_3':
+        this.createNewVersion(data);
+        break;
+      case 'CM0202_4':
+        this.createNewVersion(data);
         break;
     }
   }
@@ -322,37 +359,41 @@ export class QuotationsComponent extends UIComponent {
   }
 
   copy(data) {
-    this.codxCM
-      .getQuotationsLinesByTransID(this.itemSelected.recID)
-      .subscribe((res) => {
-        if (res) {
-          this.dataSource = res;
-        }
-      });
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.copy(data).subscribe((res) => {
-      var obj = {
-        data: res,
-        action: 'copy',
-        headerText: this.titleAction,
-      };
-      let option = new DialogModel();
-      option.IsFull = true;
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      let dialog = this.callfc.openForm(
-        PopupAddQuotationsComponent,
-        '',
-        null,
-        null,
-        '',
-        obj,
-        '',
-        option
-      );
-    });
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        if (this.isNewVersion) {
+          res.revision = data.revision;
+          res.revisionNo = data.revisionNo;
+          res.revisionName = data.revisionName;
+        }
+        var obj = {
+          data: res,
+          action: 'copy',
+          headerText: this.titleAction,
+        };
+        let option = new DialogModel();
+        option.IsFull = true;
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        let dialog = this.callfc.openForm(
+          PopupAddQuotationsComponent,
+          '',
+          null,
+          null,
+          '',
+          obj,
+          '',
+          option
+        );
+
+        dialog.closed.subscribe((e) => {
+          if (this.isNewVersion) this.isNewVersion = false;
+        });
+      });
   }
 
   delete(data) {
@@ -383,35 +424,44 @@ export class QuotationsComponent extends UIComponent {
     );
   }
 
-  //tham khao
-  // getQuotations(){
-  //   this.requestData.predicates = 'RefType==@0 && RefID==@1';
-  //   this.requestData.dataValues= this.refType+";"+this.refID;
-  //   this.requestData.entityName = this.entityName;
-  //   this.requestData.funcID = this.funcID;
-  //   this.fetch().subscribe(res=>{
-  //     this.listQuotations = res ;
-  //    // this.view.dataService.data = this.listQuotations
-  //   })
-  // }
+  //function More
+  //gửi duyệt
+  sendApprover(dt) {
+    dt.status = '1' ;
+    this.itemSelected.status='1';
+    this.view.dataService.update(this.itemSelected).subscribe();
+  }
 
-  // fetch(): Observable<any[]> {
-  //   return this.api
-  //     .execSv<Array<any>>(
-  //       this.service,
-  //       this.assemblyName,
-  //       this.className,
-  //       this.methodLoadData,
-  //       this.requestData
-  //     )
-  //     .pipe(
-  //       finalize(() => {
-  //         /*  this.onScrolling = this.loading = false;
-  //         this.loaded = true; */
-  //       }),
-  //       map((response: any) => {
-  //         return response[0];
-  //       })
-  //     );
-  // }
+  // tạo phiên bản mới
+  createNewVersion(dt) {
+    this.isNewVersion = true;
+    switch (dt.status) {
+      case '4':
+      case '2':
+        dt.versionNo =
+          dt.versionNo[0] + (Number.parseInt(dt.versionNo.slice(1)) + 1);
+        dt.revision = 0;
+        dt.versionName = dt.versionNo + '.' + dt.revision;
+        this.copy(dt);
+        break;
+      case '3':
+        dt.revision += 1;
+        dt.versionName = dt.versionNo + '.' + dt.revision;
+        this.edit(dt);
+        break;
+    }
+  }
+
+  //huy yêu cầu duyệt
+  rejectApprove(dt) {
+    dt.status = '0' ;
+    this.itemSelected.status='0';
+    this.view.dataService.update(this.itemSelected).subscribe();
+  }
+
+  // tạo hợp đồng
+  createContract(dt) {
+    //viet vao day thuan
+  }
+  // end
 }
