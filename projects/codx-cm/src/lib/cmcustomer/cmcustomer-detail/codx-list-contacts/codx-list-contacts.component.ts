@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import {
   AlertConfirmInputConfig,
@@ -61,8 +62,15 @@ export class CodxListContactsComponent implements OnInit {
     private notiService: NotificationsService
   ) {}
 
-  async ngOnInit() {
+  ngOnChanges(changes: SimpleChanges): void {
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
     this.getListContacts();
+
+  }
+
+  async ngOnInit() {
+    // this.getListContacts();
     this.formModelContact = await this.cmSv.getFormModel('CM0102');
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -184,7 +192,7 @@ export class CodxListContactsComponent implements OnInit {
           PopupQuickaddContactComponent,
           '',
           500,
-          action != 'editType' ? 600 : 100,
+          action != 'editType' ? 600 : 350,
           '',
           obj,
           '',

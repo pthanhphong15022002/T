@@ -42,6 +42,9 @@ export class QuotationsComponent extends UIComponent {
   @ViewChild('templateCreatedBy') templateCreatedBy: TemplateRef<any>;
   @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
   @ViewChild('templateCustomer') templateCustomer: TemplateRef<any>;
+  @ViewChild('templateTotalSalesAmt') templateTotalSalesAmt: TemplateRef<any>;
+  @ViewChild('templateTotalAmt') templateTotalAmt: TemplateRef<any>;
+  @ViewChild('templateTotalTaxAmt') templateTotalTaxAmt: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   service = 'CM';
@@ -147,6 +150,15 @@ export class QuotationsComponent extends UIComponent {
           break;
         case 'CreatedBy':
           template = this.templateCreatedBy;
+          break;
+        case 'TotalTaxAmt':
+          template = this.templateTotalTaxAmt;
+          break;
+        case 'TotalAmt':
+          template = this.templateTotalAmt;
+          break;
+        case 'TotalSalesAmt':
+          template = this.templateTotalSalesAmt;
           break;
         default:
           break;

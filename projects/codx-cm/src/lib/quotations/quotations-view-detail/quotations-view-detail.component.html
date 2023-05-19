@@ -70,14 +70,14 @@
               <span>
                 <codx-label
                   class="label-colon"
-                  fiedName="VersionNo"
+                  fiedName="VersionName"
                   [formModel]="formModel"
                 ></codx-label
               ></span>
               <span
                 [innerHTML]="
-                  itemSelected?.versionNo
-                    | formatvalue : formModel : 'versionNo'
+                  itemSelected?.versionName
+                    | formatvalue : formModel : 'versionName'
                     | async
                 "
               ></span>

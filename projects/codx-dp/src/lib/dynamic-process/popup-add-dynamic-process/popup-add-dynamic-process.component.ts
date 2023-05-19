@@ -2419,7 +2419,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             listIDEdit.forEach((id) => {
               let check = this.listStepAdd?.some((step) => step == id);
               if (!check) {
-                this.listStepAdd.push(id);
+                this.listStepEdit.push(id);
               }
             });
           }
@@ -2725,22 +2725,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   updateStepChange(stepID,isChangeTime = false) {
     if(stepID){
-      let check = this.listStepEdit.some((id) => id == stepID);
-        if (!check) {
-          this.listStepEdit.push(stepID);
+      let checkEdit = this.listStepEdit?.some((id) => id == stepID);
+      let checkAdd = this.listStepAdd?.some((id) => id == stepID)
+      let checkDelete = this.listStepDelete?.some((id) => id == stepID)
+
+      if (!checkEdit && !checkAdd && !checkDelete) {
+        this.listStepEdit.push(stepID);
+      }
+      let step = this.stepList.find(x => x.recID == stepID);
+      if(step){
+        let listDrop = this.stepList.filter(x => x.stepNo > step.stepNo);
+        if(listDrop?.length > 0){
+          listDrop.forEach((stepDrop) => {
+            let check = this.listStepDrop.some((id) => stepDrop.recID == id);
+            if(!check){
+              this.listStepDrop.push(stepDrop.recID);
+            }
+          })
         }
-        let step = this.stepList.find(x => x.recID == stepID);
-        if(step){
-          let listDrop = this.stepList.filter(x => x.stepNo > step.stepNo);
-          if(listDrop?.length > 0){
-            listDrop.forEach((stepDrop) => {
-              let check = this.listStepDrop.some((id) => stepDrop.recID == id);
-              if(!check){
-                this.listStepDrop.push(stepDrop.recID);
-              }
-            })
-          }
-        }
+      }
 
     }
   }

@@ -11,57 +11,43 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 })
 export class UpdateProgressComponent implements OnInit, OnChanges {
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('popupProgress') popupProgress: AttachmentComponent;
-
-  @Input() isPopup = false;
-  @Input() height = '55';
-  @Input() width = '55';
   @Input() formModel: FormModel;
-
   @Input() typeProgress = 1; // nếu % ko lên dùng type 2
   @Input() dataSource: any; // data chứa tiến độ
   @Input() progress = 0; // tiến độ
   @Input() type: string;
-
   @Input() isSave = true; //true:lưu lên db không
   @Input() isUpdate = true; // true: hiện form cho update
-
   @Input() dataAll: any; // gantchart
   @Input() step: any; // No gantchart
-
   @Output() valueChange = new EventEmitter<any>();
 
-  progressOld = 0;
-  disabledProgressInput = false;
-  showLabelAttachment = false;
-  user: any;
-  dialog: DialogRef;
-  isHaveFile = false;
-  actualEndMax: Date;
-  headerTextInsStep = {};
   id = '';
-  HTMLProgress = '<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>'
-  popupUpdateProgress: DialogRef;
-
-  progressData = 0;
-  actualEnd: Date;
   note = '';
-
+  user: any;
+  actualEnd: Date;
+  dialog: DialogRef;
+  actualEndMax: Date;
+  progressOld = 0;
+  progressData = 0;
+  isHaveFile = false;
+  headerTextInsStep = {};
+  showLabelAttachment = false;
+  disabledProgressInput = false;
+  HTMLProgress = '<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>'
   constructor(
-    private callfc: CallFuncService,
-    private notiService: NotificationsService,
     private cache: CacheService,
-    private authStore: AuthStore,
     private api: ApiHttpService,
-    private changeDetectorRef: ChangeDetectorRef,
+    private authStore: AuthStore,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.user = this.authStore.get();
     this.dialog = dialog;
-    this.dataSource = dt?.data?.data;
+    this.user = this.authStore.get();
     this.type = dt?.data?.type;
     this.step = dt?.data?.step;
+    this.dataSource = dt?.data?.data;
     this.id = "progress" + Math.floor((Math.random() * 100000000)).toString();
   }
 
@@ -69,30 +55,14 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     if (this.isUpdate && this.step) {
       this.actualEndMax = this.step?.actualStart;
     }
-    this.progressData = Number(this.dataSource['progress'] || 0);
-    this.actualEnd = this.dataSource['actualEnd'] || null;
-    this.note == this.dataSource['note'] || '';
     this.progressOld = this.progressData;
+    this.note == this.dataSource['note'] || '';
+    this.actualEnd = this.dataSource['actualEnd'] || null;
+    this.progressData = Number(this.dataSource['progress'] || 0);
+    this.getgridViewSetup(this.dialog.formModel);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // if(this.isUpdate){
-    //   if(changes?.progress && changes?.progress?.previousValue != changes?.progress?.currentValue && this.dataSource){
-    //     this.progressData = Number(this.dataSource['progress'] || 0) ;
-    //     this.actualEnd = this.dataSource['actualEnd'] || null;
-    //     this.note == this.dataSource['note'] || '';
-    //     this.progressOld = this.progressData ;
-    //   }
-    // }
-  }
-
-  openPopup() {
-    if (this.isUpdate) {
-      const checkOpen = this.checkConditionOpenPopup();
-      if (!checkOpen) {
-        this.popupUpdateProgress = this.callfc.openForm(this.popupProgress, '', 550, 400);
-      }
-    }
   }
 
   checkConditionOpenPopup() {
@@ -151,14 +121,14 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
   }
 
   changeValueDate(event, data) {
-    data[event?.field] = event?.data?.fromDate;
-    if (data['progress'] < 100) {
-      data['actualEnd'] = null;
+    this.actualEnd = event?.data?.fromDate;
+    if (this.progressData < 100) {
+      this.actualEnd = null;
     }
   }
 
   changeValueInput(event, data) {
-    data[event?.field] = event?.data;
+    this.note = event?.data;
   }
 
   addFile(evt: any) {
@@ -178,11 +148,11 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
   }
 
   async save() {
-    if (this.dataSource?.progress == 100 && !this.dataSource?.actualEnd) {
+    if (this.progressData == 100 && !this.actualEnd) {
       this.notiService.notifyCode('SYS009', 0, this.headerTextInsStep['ActualEnd']);
       return;
     }
-    if (this.dataSource?.actualEnd && new Date(this.actualEndMax) > new Date(this.dataSource?.actualEnd)) {
+    if (this.actualEnd && new Date(this.actualEndMax) > new Date(this.actualEnd)) {
       this.notiService.notifyCode('DP035',0,this.headerTextInsStep['ActualEnd']);
       return;
     }
@@ -218,28 +188,18 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     let dataSave = new Progress();
     dataSave.stepID = this.step['recID'];
     dataSave.recID = this.dataSource['recID'];
-    dataSave.progress = this.progressData
+    dataSave.progress = this.progressData;
     dataSave.note = this.note;
     dataSave.actualEnd = this.actualEnd;
     dataSave.type = this.type;
     dataSave.isUpdate = isUpdate;
     if (this.isSave) {
       this.api.exec<any>('DP', 'InstanceStepsBusiness', 'UpdateProgressAsync', dataSave).subscribe(res => {
-        // this.valueChange.emit(res)
-        // this.dataSource['progress'] = this.progressData ;
-        // this.dataSource['note'] = this.note ;
-        // this.dataSource['actualEnd'] = this.actualEnd;
-        // this.progress = this.progressData;
         this.dialog.close(res)
         this.notiService.notifyCode('SYS007');
       });
     } else {
       let dataOutput = this.handelDataOutput(isUpdate)
-      // this.dataSource['progress'] = this.progressData ;
-      // this.dataSource['note'] = this.note ;
-      // this.dataSource['actualEnd'] = this.actualEnd;
-      // // this.progress = this.progressData;
-      // this.popupUpdateProgress.close();
       this.dialog.close(dataOutput);
     }
   }

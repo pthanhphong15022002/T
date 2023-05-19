@@ -117,6 +117,7 @@ export class CodxAddBookingCarComponent
   viewOnly=false;
   cardTransInfo: any;
   categoryID: any;
+  isEP=true;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -133,13 +134,15 @@ export class CodxAddBookingCarComponent
     this.optionalData = dialogData?.data[3];
     if(dialogData?.data[4]!=null && dialogData?.data[4]==true){
       this.viewOnly=true;
-    }
+    }    
+    this.isEP = dialogData?.data[5]==false ? dialogData?.data[5] : true;
     this.user = this.authStore.get();
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
     if (this.funcType == _addMF) {
       this.data.requester = this.authService?.userValue?.userName;
+      this.data.category='1';
     }
     if (this.funcType == _addMF && this.optionalData != null) {
       this.data.resourceID = this.optionalData.resourceId;
@@ -788,7 +791,7 @@ export class CodxAddBookingCarComponent
       isAdd = false;
     }
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, isAdd, this.attendeesList, null, null];
+    option.data = [itemData, isAdd, this.attendeesList, null];
     return true;
   }
   onSaveForm(approval: boolean = false) {
@@ -961,7 +964,11 @@ export class CodxAddBookingCarComponent
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   startSave(approval) {
-    this.dialogRef.dataService
+    if(!this.isEP){
+      this.startSaveNotEP(approval);
+    }
+    else{
+      this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
       .subscribe((res) => {
         if (res.save || res.update) {
@@ -1020,7 +1027,68 @@ export class CodxAddBookingCarComponent
           return;
         }
       });
+    }
+    
   }
+
+  startSaveNotEP(approval){
+    let isAdd = this.funcType == _addMF? true: false;
+    this.codxBookingService.addEditBooking(this.data,isAdd,this.attendeesList, null)
+      .subscribe((res) => {
+        if (res) {
+          this.returnData = res;          
+          if (approval) {
+            if (this.approvalRule != '0') {
+              this.codxBookingService
+                .getProcessByCategoryID(this.categoryID)
+                .subscribe((res: any) => {
+                  this.codxBookingService
+                    .release(
+                      this.returnData,
+                      res?.processID,
+                      'EP_Bookings',
+                      this.formModel.funcID
+                    )
+                    .subscribe((res) => {
+                      if (res?.msgCodeError == null && res?.rowCount) {
+                        this.notificationsService.notifyCode('ES007');
+                        this.returnData.approveStatus = '3';
+                        this.returnData.write = false;
+                        this.returnData.delete = false;
+                        (this.dialogRef.dataService as CRUDService)
+                          .update(this.returnData)
+                          .subscribe();
+                        this.dialogRef && this.dialogRef.close(this.returnData);
+                      } else {
+                        this.notificationsService.notifyCode(res?.msgCodeError);
+                        // Thêm booking thành công nhưng gửi duyệt thất bại
+                        this.dialogRef && this.dialogRef.close(this.returnData);
+                      }
+                    });
+                });
+            } else {
+              this.notificationsService.notifyCode('ES007');
+              this.codxBookingService
+                .afterApprovedManual(
+                  this.formModel.entityName,
+                  this.returnData.recID,
+                  '5'
+                )
+                .subscribe();
+              this.dialogRef && this.dialogRef.close(this.returnData);
+            }
+
+            this.dialogRef && this.dialogRef.close(this.returnData);
+          } else {
+            this.dialogRef && this.dialogRef.close(this.returnData);
+          }
+        } else {
+          this.onSaving = false;
+          return;
+        }
+      });
+  }
+
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//

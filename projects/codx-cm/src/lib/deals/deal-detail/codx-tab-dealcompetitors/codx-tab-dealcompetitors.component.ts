@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { CodxCmService } from '../../../codx-cm.service';
 import {
   AlertConfirmInputConfig,
@@ -42,8 +42,12 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     private cache: CacheService,
     private cmSv: CodxCmService
   ) {}
-  async ngOnInit() {
+  ngOnChanges(changes: SimpleChanges): void {
     this.getListDealAndDealCompetitor();
+
+
+  }
+  async ngOnInit() {
     this.formModel = await this.cmSv.getFormModel('CM02011');
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
