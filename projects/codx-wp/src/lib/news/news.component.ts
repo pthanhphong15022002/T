@@ -3,9 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbCarousel, NgbSlideEvent, NgbSlideEventSource } from '@ng-bootstrap/ng-bootstrap';
 import { load } from '@syncfusion/ej2-angular-charts';
 import { ListViewComponent } from '@syncfusion/ej2-angular-lists';
-import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel, UIComponent, NotificationsService, CRUDService } from 'codx-core';
+import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel, UIComponent, NotificationsService, CRUDService, AuthStore } from 'codx-core';
 import { PopupAddComponent } from './popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from './popup/popup-search/popup-search.component';
+import { WP_News } from '../models/WP_News.model';
+import { Post } from '@shared/models/post';
 
 @Component({
   selector: 'lib-news',
@@ -20,6 +22,7 @@ export class NewsComponent extends UIComponent {
   @HostBinding('class') get class() {
     return "bg-body h-100 news-main card-body hover-scroll-overlay-y";
   }
+  user:any = null;
   funcID: string = "";
   posts: any[] = [];
   videos: any[] = [];
@@ -35,7 +38,7 @@ export class NewsComponent extends UIComponent {
   showNavigation:boolean = false;
   page:number = 0;
   pageIndex:number = 0;
-  moreFunction:any = null;
+  sysMoreFunction:any = null;
 
   NEWSTYPE = {
     POST: "1",
@@ -55,10 +58,12 @@ export class NewsComponent extends UIComponent {
   @ViewChild('carousel') carousel: NgbCarousel;
   constructor
   (
-    private injector: Injector
+    private injector: Injector,
+    private auth:AuthStore
   ) 
   { 
-    super(injector)
+    super(injector);
+    this.user = this.auth.get();
   }
 
   onInit(): void {
@@ -104,26 +109,17 @@ export class NewsComponent extends UIComponent {
   // get message default
   getMessageDefault() {
     this.cache.message("WP025").subscribe((mssg: any) => {
-      if (mssg && mssg?.defaultName) {
-        this.mssgWP025 = mssg.defaultName;
-      }
+      if (mssg && mssg?.defaultName) this.mssgWP025 = mssg.defaultName;
     });
     this.cache.message("WP026").subscribe((mssg: any) => {
-      if (mssg && mssg?.defaultName) {
-        this.mssgWP026 = mssg.defaultName;
-      }
+      if (mssg && mssg?.defaultName) this.mssgWP026 = mssg.defaultName;
     });
     this.cache.message("WP027").subscribe((mssg: any) => {
-      if (mssg && mssg?.defaultName) {
-        this.mssgWP027 = mssg.defaultName;
-      }
+      if (mssg && mssg?.defaultName) this.mssgWP027 = mssg.defaultName;
     });
     this.cache.moreFunction("CoDXSystem","")
     .subscribe((mFuc:any) => {
-      if(mFuc)
-      {
-        this.moreFunction = mFuc;
-      }
+      if(mFuc) this.sysMoreFunction = mFuc;
     });
   }
   // get data async
@@ -137,8 +133,9 @@ export class NewsComponent extends UIComponent {
     this.getVideoAsync(category,this.pageIndex);
   }
   // get post
-  getPostAsync(category:string){
-    this.loaded = false;
+  getPostAsync(category:string)
+  {
+    this.loaded = false
     this.api
       .execSv(
         'WP',
@@ -236,54 +233,53 @@ export class NewsComponent extends UIComponent {
   }
   // open popup create
   openPopupAdd(type: string) {
-    if(type){
-      debugger
-      let option = new DialogModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.IsFull = true;
-      let mfc = Array.from<any>(this.moreFunction).find((x:any) => x.functionID === "SYS01");
-      let data = {
-        action: mfc.defaultName,
-        type:type
-      }
-      let popup = this.callfc.openForm(PopupAddComponent, '', 0, 0, '', data, '', option);
-      popup.closed.subscribe((res: any) => {
-        debugger
-        if (res?.event) {
-          let data = res.event;
-          //post
-          if(data.newsType == this.NEWSTYPE.POST)
-          {
-            this.posts.unshift(data);
-            if(this.posts.length > 4){
-              this.posts.pop();
-            }
-          }
-          //video
-          else
-          {
-            if(this.videos.length > 0){
-              this.videos.unshift(data);
-            }
-            let slideIndex = 0;
-            for (let idx = 0; idx < this.videos.length; idx += 3) {
-              this.slides[slideIndex] = [];
-              this.slides[slideIndex] = this.videos.slice(idx,idx+3);
-              slideIndex++;
-            }
-            let ins = setInterval(()=>{
-              if(this.carousel){
-                this.carousel.pause();
-                this.detectorRef.detectChanges();
-                clearInterval(ins);
-              }
-            },100);
-          }
-          this.detectorRef.detectChanges();
-        }
-      });
+    let option = new DialogModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.IsFull = true;
+    option.zIndex = 100;
+    let mfc = Array.from<any>(this.sysMoreFunction).find((x:any) => x.functionID === "SYS01");
+    let post = new Post();
+    post.newsType = type;
+    let data = {
+      action: mfc.defaultName,
+      isAdd:true,
+      data:post
     }
+    let popup = this.callfc.openForm(PopupAddComponent, '', 0, 0, '', data, '', option);
+    popup.closed.subscribe((res: any) => {
+      debugger
+      if (res?.event) {
+        let data = res.event;
+        //post
+        if(data.newsType == this.NEWSTYPE.POST)
+        {
+          this.posts.unshift(data);
+          if(this.posts.length > 4)
+            this.posts.pop();
+        }
+        //video
+        else
+        {
+          if(this.videos.length > 0)
+            this.videos.unshift(data);
+          let slideIndex = 0;
+          for (let idx = 0; idx < this.videos.length; idx += 3) {
+            this.slides[slideIndex] = [];
+            this.slides[slideIndex] = this.videos.slice(idx,idx+3);
+            slideIndex++;
+          }
+          let ins = setInterval(()=>{
+            if(this.carousel){
+              this.carousel.pause();
+              this.detectorRef.detectChanges();
+              clearInterval(ins);
+            }
+          },100);
+        }
+        this.detectorRef.detectChanges();
+      }
+    });
   }
   // open popup search
   openPopupSearch() {

@@ -1,34 +1,34 @@
 <codx-detail-tmp #itemDetailTemplate [header]="header" [dataItem]="itemDetail" [footer]="!hideFooter ? footer : null"
     [body]="body" [hideMF]="hideMF" [formModel]="formModel" (clickMF)="clickMF($event, itemDetail)"
     (changeDataMF)="changeDataMF($event, itemDetail)" class="h-100 dt-es-view">
-
     <ng-template #header>
         <div class="d-flex mb-2">
-            <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" cardCss=" p-3"
-                [imageId]="itemDetail?.emp?.employeeID" [imageObjType]="'HR_Employees'" [imageWidth]="70"
-                [formModel]="view.formModel" [titleTmp]="title" [hideMF]="true">
+            <codx-temp-full [title]="itemDetail?.ownerName" [imageId]="itemDetail?.emp?.employeeID"
+                imageObjType="'HR_Employees'" [imageWidth]="50" [titleTmp]="title">
                 <!-- info view -->
                 <ng-template #title>
                     <div class="w-100 d-flex flex-column">
                         <!-- emp info -->
-                        <div class="justify-content-between text-dark fw-bold mb-2">
+                        <div class="justify-content-between text-dark mb-2">
                             <span class="fs-5 me-1">{{ itemDetail?.emp?.employeeName }}</span>
                         </div>
-                        <div class="d-flex text-dark fw-bold mb-2 gap-10 align-items-center">
-                            <span
-                                [innerHTML]="itemDetail?.emp?.positionID| formatvalue : view.formModel : 'positionID'| async"></span>
-                            <div class="d-flex" *ngIf="itemDetail?.emp?.email">
+                        <div class="d-flex flex-wrap text-dark fw-bold mb-1 align-items-center">
+                            <div class="d-flex me-10">
+                                <span
+                                    [innerHTML]="itemDetail?.emp?.positionID| formatvalue : view.formModel : 'positionID'| async"></span>
+                            </div>
+                            <div class="d-flex me-10" *ngIf="itemDetail?.emp?.email">
                                 <i class="icon-email me-2"></i>
                                 {{ itemDetail?.emp?.email }}
                             </div>
-                            <div class="d-flex" *ngIf="itemDetail?.emp?.mobile">
+                            <div class="d-flex me-10" *ngIf="itemDetail?.emp?.mobile">
                                 <i class="icon-phone_android me-2"></i>
                                 {{ itemDetail?.emp?.mobile }}
                             </div>
                         </div>
                         <div class="text-gray-700">
                             <span
-                                [innerHTML]="itemDetail?.emp?.orgUnitID  | formatvalue : view.formModel : 'orgUnitID'| async"></span>
+                                [innerHTML]="itemDetail?.emp?.orgUnitID | formatvalue : view.formModel : 'orgUnitID'| async"></span>
                         </div>
                     </div>
                 </ng-template>
@@ -37,7 +37,7 @@
         </div>
 
         <div class="d-flex flex-wrap">
-            <div class="d-flex align-items-center  mb-2 px-4">
+            <div class="d-flex align-items-center  mb-2 me-4">
                 <codx-label fiedName="kowID" [formModel]="formModel" [setRequire]="false"
                     class="text-gray-500 label-colon">
                 </codx-label>
@@ -45,7 +45,7 @@
                 </span>
             </div>
 
-            <div class="d-flex align-items-center  mb-2 px-4">
+            <div class="d-flex align-items-center  mb-2 me-4">
                 <codx-label fiedName="registeredDate" [formModel]="formModel" [setRequire]="false"
                     class="text-gray-500 label-colon">
                 </codx-label>
@@ -53,7 +53,7 @@
                 </span>
             </div>
 
-            <div class="d-flex align-items-center  mb-2 px-4">
+            <div class="d-flex align-items-center  mb-2 me-4">
                 <codx-label fiedName="registeredDate" [formModel]="formModel" [setRequire]="false"
                     class="text-gray-500 label-colon">
                 </codx-label>
@@ -61,7 +61,7 @@
                 </span>
             </div>
 
-            <div class="d-flex align-items-center  mb-2 px-4">
+            <div class="d-flex align-items-center  mb-2 me-4">
                 <!-- <codx-label fiedName="beginDate" [formModel]="formModel" [setRequire]="false"
                     class="text-gray-500 label-colon">
                 </codx-label>
@@ -87,7 +87,7 @@
                 <span *ngIf="itemDetail.totalDaysOff">ngày</span>
             </div>
 
-            <div class="d-flex align-items-top flex-wrap mb-2 px-4 col-12">
+            <div class="d-flex align-items-top flex-wrap mb-2 me-4 col-12">
                 <codx-label fiedName="reason" [formModel]="formModel" [setRequire]="false"
                     class="text-gray-500 label-colon">
                 </codx-label>
@@ -96,7 +96,7 @@
                 </span>
             </div>
 
-            <div class="d-flex align-items-top flex-wrap mb-2 px-4 col-12">
+            <div class="d-flex align-items-top flex-wrap mb-2 me-4 col-12">
                 <codx-label fiedName="note" [formModel]="formModel" [setRequire]="false"
                     class="text-gray-500 label-colon">
                 </codx-label>
