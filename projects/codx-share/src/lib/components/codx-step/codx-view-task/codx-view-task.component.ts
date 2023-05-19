@@ -9,7 +9,10 @@ import {
   DialogRef,
   FormModel,
 } from 'codx-core';
-import { UpdateProgressComponent } from 'projects/codx-dp/src/lib/componnent-task/update-progress/update-progress.component';
+import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
+import { firstValueFrom } from 'rxjs';
+import { UpdateProgressComponent } from '../codx-progress/codx-progress.component';
+
 
 @Component({
   selector: 'codx-view-task',
@@ -17,17 +20,21 @@ import { UpdateProgressComponent } from 'projects/codx-dp/src/lib/componnent-tas
   styleUrls: ['./codx-view-task.component.scss'],
 })
 export class CodxViewTaskComponent implements OnInit {
+  instanceStep: DP_Instances_Steps;
+  dataView: any;
+  type = '';
   title = '';
   dialog!: DialogRef;
+  participant = [];//role
+  owner = [];//role
+  person = [];//role
+  listDataLink = [];
   dataInput: any; //format về như vậy {recID,name,startDate,type, roles, durationHour, durationDay,parentID }
-  type = '';
-  owner = [];
-  person = [];
-  participant = [];
+
+
   connection = '';
   listDataInput = [];
   listTypeTask = [];
-  listDataLink = [];
   tabInstances = [
     { type: 'history', title: 'History'},
     { type: 'comment', title: 'Comment'},
@@ -59,32 +66,77 @@ export class CodxViewTaskComponent implements OnInit {
     this.dialog = dialog;
     this.type = dt?.data?.value?.type;
     this.dataInput = dt?.data?.value;
-    this.listDataInput = dt?.data?.listValue;
-    this.step = dt?.data?.step;
     this.isRoleAll = dt?.data?.isRoleAll;
     this.isUpdate = dt?.data?.isUpdate;
+
+
+    this.listDataInput = dt?.data?.listValue;
+    this.step = dt?.data?.step;
     this.getModeFunction();
-    console.log(this.dataInput);
-    console.log(this.listDataInput);
-    //TODO: check quyền cập nhật tiến độ 
+
+
+    //TODO: check quyền cập nhật tiến độ
     //TODO: role và công việc liên kết
     this.isShowUpdate = this.isRoleAll && this.isUpdate;
+    // this.dataView = dt?.data?.dataView;
+    console.log(this.dataView);
   }
 
+
   ngOnInit(): void {
-    if (this.dataInput['parentID']) {
-      this.listDataInput?.forEach((task) => {
-        if (this.dataInput['parentID']?.includes(task.refID)) {
+    if(this.type == 'P'){
+      this.getInstanceStepByRecID(this.dataInput?.recID);
+    }else{
+      this.getInstanceStepByRecID(this.dataInput?.stepID);
+    }
+  }
+
+
+  getInstanceStepByRecID(recID) {
+    this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetInstanceStepByRecIDAsync',
+      recID
+    ).subscribe(async res => {
+      if(res){
+        this.instanceStep = res;
+        await this.setDataView();
+        this.settingData();
+      }
+    })
+  }
+
+
+  async setDataView(){
+    if(this.type == 'P'){
+      this.dataView = this.instanceStep;
+    }else if(this.type == 'G'){
+      let groupView = this.instanceStep.taskGroups.find(group => group.recID == this.dataInput.recID)
+      this.dataView = groupView;
+    }else{
+      let taskView = this.instanceStep.tasks.find(task => task.recID == this.dataInput.recID)
+        this.dataView = taskView;
+    }
+  }
+
+
+  settingData(){
+    if(this.type == 'T' && this.dataView?.parentID){
+      this.instanceStep?.tasks?.forEach((task) => {
+        if (this.dataView?.parentID?.includes(task.refID)) {
           this.listDataLink.push(task);
         }
       });
     }
-    if (this.dataInput['type'] == 'G') {
-      this.listDataLink = this.listDataInput?.filter(
-        (data) =>
-          data['taskGroupID'] && data['taskGroupID'] == this.dataInput['refID']
+
+
+    if (this.type == 'G') {
+      this.listDataLink = this.instanceStep?.tasks?.filter(
+        (data) => data?.taskGroupID == this.dataView.refID
       );
     }
+
 
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
@@ -94,11 +146,13 @@ export class CodxViewTaskComponent implements OnInit {
       }
     });
 
-    this.owner = this.dataInput['roles']?.filter((role) => role.roleType === 'O') || [];
-    this.participant = this.dataInput['roles']?.filter((role) => role.roleType === 'P') || [];
-    this.person = this.dataInput['roles']?.filter((role) => role.roleType === 'S') || [];
-    this.connection = this.dataInput['roles']?.filter((role) => role.roleType === 'R')?.map(item => {return item.objectID}).join(';') || [];
+
+    this.owner = this.dataView?.roles?.filter((role) => role.roleType === 'O') || [];
+    this.participant = this.dataView?.roles?.filter((role) => role.roleType === 'P') || [];
+    this.person = this.dataView?.roles?.filter((role) => role.roleType === 'S') || [];
+    this.connection = this.dataView?.roles?.filter((role) => role.roleType === 'R')?.map(item => {return item.objectID}).join(';') || [];
   }
+
 
   getModeFunction() {
     var functionID = 'DPT0206';
@@ -112,23 +166,30 @@ export class CodxViewTaskComponent implements OnInit {
     });
   }
 
+
   getIconTask(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.type);
+    let type = task?.taskType || this.type;
+    let color = this.listTypeTask?.find((x) => x.value === type);
     return color?.icon;
   }
 
+
   getColor(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.type);
+    let type = task?.taskType || this.type;
+    let color = this.listTypeTask?.find((x) => x.value === type);
     return { 'background-color': color?.color, with: '40px', height: '40px' };
   }
   getColorTile(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.type);
+    let type = task?.taskType || this.type;
+    let color = this.listTypeTask?.find((x) => x.value === type);
     return { 'border-left': '3px solid' + color?.color };
   }
+
 
   clickMenu(e) {
     this.viewModelDetail = e;
   }
+
 
   checRoleTask(data, type) {
     return (
@@ -138,10 +199,10 @@ export class CodxViewTaskComponent implements OnInit {
       ) || false
     );
   }
-  
+ 
   openUpdateProgress(data?: any) {
     console.log('======');
-    
+   
     this.callfc.openForm(UpdateProgressComponent, '', 550, 400);
     if (data?.parentID) {
       //check công việc liên kết hoàn thành trước
@@ -196,5 +257,31 @@ export class CodxViewTaskComponent implements OnInit {
       }
     }
 
+
+  }
+  async openPopupUpdateProgress(data, type){
+    let dataInput = {
+      data,
+      type,
+      step: this.instanceStep,
+    };
+    let popupTask = this.callfc.openForm(
+      UpdateProgressComponent,'',
+      550, 400,
+      '',
+      dataInput);
+
+
+    let dataPopupOutput = await firstValueFrom(popupTask.closed);
+    if(dataPopupOutput?.event){
+      if(this.type == 'P'){
+        this.dataView.progress = dataPopupOutput?.event?.progressStep;
+      }else if(this.type == 'G'){
+        this.dataView.progress = dataPopupOutput?.event?.progressGroupTask;
+      }else{
+        this.dataView.progress = dataPopupOutput?.event?.progressTask;
+      }
+    }
+   
   }
 }

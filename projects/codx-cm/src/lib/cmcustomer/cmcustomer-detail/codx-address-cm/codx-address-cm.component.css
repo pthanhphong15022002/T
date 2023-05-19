@@ -16,5 +16,5 @@
   border-left-color: #3699ff;
 }
 .user-nav-item:hover{
-  background-color: #c6f5fd;
+  background-color:var(--primary-lighter);
 }

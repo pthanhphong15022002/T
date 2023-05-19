@@ -37,53 +37,51 @@
     </div>
 
     <div class="w-25 p-3">
-      <div class="d-flex flex-column" [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'">
-        <div class="d-flex">
-          <div class="fw-bold" [innerHTML]="
+      <div class="d-flex">
+        <div class="fw-bold" [innerHTML]="
                   data.kowID | formatvalue : view.formModel : 'kowID' | async
                 ">
-          </div>
-          <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel">
-          </codx-attachment-temp>
         </div>
+        <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel">
+        </codx-attachment-temp>
+      </div>
 
-        <div class="d-flex flex-row">
-          <span class="icon-calendar_today icon-15 me-1"></span>
-          <div class="align-self-center fw-bold">
-            <span [title]="eJobSalaryHeader ? eJobSalaryHeader['BeginDate'] : ''"
-              [ngbTooltip]="grvSetup?.beginDate?.headerText" [innerHTML]="
+      <div class="d-flex flex-row">
+        <span class="icon-calendar_today icon-15 me-1"></span>
+        <div class="align-self-center fw-bold">
+          <span [title]="eJobSalaryHeader ? eJobSalaryHeader['BeginDate'] : ''"
+            [ngbTooltip]="grvSetup?.beginDate?.headerText" [innerHTML]="
                   data.beginDate
                     | formatvalue : view.formModel : 'beginDate'
                     | async
                 ">
-            </span>
-            <span *ngIf="data.beginDate !== data.endDate"> - </span>
-            <span *ngIf="data.beginDate !== data.endDate" [title]="eJobSalaryHeader ? eJobSalaryHeader['EndDate'] : ''"
-              [ngbTooltip]="grvSetup?.endDate?.headerText" [innerHTML]="
+          </span>
+          <span *ngIf="data.beginDate !== data.endDate"> - </span>
+          <span *ngIf="data.beginDate !== data.endDate" [title]="eJobSalaryHeader ? eJobSalaryHeader['EndDate'] : ''"
+            [ngbTooltip]="grvSetup?.endDate?.headerText" [innerHTML]="
                   data.endDate
                     | formatvalue : view.formModel : 'endDate'
                     | async
                 ">
-            </span>
+          </span>
 
-            <span class="mx-2">-</span>
+          <span class="mx-2">-</span>
 
-            <span class="align-self-center fw-bold" [innerHTML]="
+          <span class="align-self-center fw-bold" [innerHTML]="
             data.days | formatvalue : view.formModel : 'days' | async
           ">
-            </span>
-            <span *ngIf="!!data.days"> ngày </span>
-          </div>
+          </span>
+          <span *ngIf="!!data.days"> ngày </span>
         </div>
+      </div>
 
+      <div class="d-flex flex-row">
         <div class="d-flex flex-row">
-          <div class="d-flex flex-row">
-            <div class="align-self-center fw-bold">
-              <span class="align-self-center fw-bold" [innerHTML]="
+          <div class="align-self-center fw-bold">
+            <span class="align-self-center fw-bold" [innerHTML]="
                   data.businessPlace | formatvalue : view.formModel : 'businessPlace' | async
                 ">
-              </span>
-            </div>
+            </span>
           </div>
         </div>
       </div>

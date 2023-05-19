@@ -108,6 +108,15 @@ export class CodxCmService {
     );
   }
 
+  addCompetitorByName(name) {
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'AddCompetitorByDealCompetitorAsync',
+      [name]
+    );
+  }
+
   updateContactByPopupListCt(contact) {
     return this.api.exec<any>(
       'CM',
@@ -152,6 +161,12 @@ export class CodxCmService {
 
   addDealCompetitor(dealCompetitor) {
     return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealCompetitorAsync', [
+      dealCompetitor,
+    ]);
+  }
+
+  updateStatusDealsCompetitorAsync(dealCompetitor) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'UpdateStatusDealsCompetitorAsync', [
       dealCompetitor,
     ]);
   }
