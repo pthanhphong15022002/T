@@ -65,7 +65,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
 
   getListDealAndDealCompetitor() {
     this.loaded = false;
-    this.hidenMF = false;
+    this.hidenMF = true;
     this.request.predicates = 'DealID=@0';
     this.request.dataValues = this.dealID;
     this.request.entityName = 'CM_DealsCompetitors';
