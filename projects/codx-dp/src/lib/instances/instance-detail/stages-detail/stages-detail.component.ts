@@ -45,6 +45,7 @@ import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.
 import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
 import { InstancesComponent } from '../../instances.component';
 import { firstValueFrom } from 'rxjs';
+import { UpdateProgressComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-progress/codx-progress.component';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
@@ -77,8 +78,8 @@ export class StagesDetailComponent implements OnInit {
   @Input() frmModelInstancesTask: FormModel;
   @Output() saveAssign = new EventEmitter<any>();
   @Output() outDataStep = new EventEmitter<any>();
-  @Output() isChangeData = new EventEmitter<any>();
   @Output() progressEmit = new EventEmitter<any>();
+  @Output() isChangeProgress = new EventEmitter<any>();
 
   stepID: any;
   isDelete: boolean = false;
@@ -850,43 +851,28 @@ export class StagesDetailComponent implements OnInit {
   //     return { background: '#34CDEF' };
   //   }
   // }
-  openUpdateProgress(data?: any) {
-    if (data?.parentID) {
-      //check công việc liên kết hoàn thành trước
-      let check = false;
-      let taskName = '';
-      let listID = data?.parentID.split(';');
-      listID?.forEach((item) => {
-        let taskFind = this.taskList?.find((task) => task.refID == item);
-        if (taskFind?.progress != 100) {
-          check = true;
-          taskName = taskFind?.taskName;
-        } else {
-          this.actualEndMax =
-            !this.actualEndMax || taskFind?.actualEnd > this.actualEndMax
-              ? taskFind?.actualEnd
-              : this.actualEndMax;
-        }
-      });
-      if (check) {
-        this.notiService.notifyCode('DP023', 0, taskName);
-        return;
-      }
-    } else {
-      this.actualEndMax = this.step?.actualStart;
+  async openUpdateProgress(data?: any) {
+    let dataInput = {
+      data: this.step,
+      type: "P",
+      step: this.step,
+    };
+    let popupTask = this.callfc.openForm(
+      UpdateProgressComponent,'',
+      550, 400,
+      '', 
+      dataInput);
+
+    let dataPopupOutput = await firstValueFrom(popupTask.closed);
+    let dataProgress = dataPopupOutput?.event;
+    console.log(dataProgress);
+    if(dataProgress){
+      this.step.progress = dataProgress?.progressStep;
+      this.step.note = dataProgress?.note;
+      this.step.actualEnd = dataProgress?.actualEnd;    
+      this.isChangeProgress.emit({recID: this.step?.recID, progress: this.step?.progress}); 
     }
-    if (data) {
-      this.dataProgress = JSON.parse(JSON.stringify(data));
-      this.dataProgressClone = data;
-      this.progressOld = data['progress'] == 100 ? 0 : data['progress'];
-      this.disabledProgressInput = data['progress'] == 100 ? true : false;
-    }
-    this.popupUpdateProgress = this.callfc.openForm(
-      this.updateProgress,
-      '',
-      550,
-      450
-    );
+    
   }
   // checkEventProgress(data, group) {
   //   if (group) {
@@ -969,27 +955,27 @@ export class StagesDetailComponent implements OnInit {
   //   }
   // }
 
-  // updateProgressStep() {
-  //   let idStep = this.dataProgress['recID'];
-  //   let progress = this.dataProgress['progress'];
-  //   let actualEnd = this.dataProgress['actualEnd'];
-  //   let note = this.dataProgress['note'];
-  //   this.dpService
-  //     .updateProgressStep([idStep, Number(progress), actualEnd, note])
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.step.progress = Number(progress);
-  //         this.step.actualEnd = actualEnd;
-  //         this.step.note = note;
-  //         this.progress = progress;
-  //         this.notiService.notifyCode('SYS006');
-  //         this.popupUpdateProgress.close();
-  //         this.progressEmit.emit({
-  //           stepID: this.step.recID, progress: progress
-  //         });
-  //       }
-  //     });
-  // }
+  updateProgressStep() {
+    let idStep = this.dataProgress['recID'];
+    let progress = this.dataProgress['progress'];
+    let actualEnd = this.dataProgress['actualEnd'];
+    let note = this.dataProgress['note'];
+    this.dpService
+      .updateProgressStep([idStep, Number(progress), actualEnd, note])
+      .subscribe((res) => {
+        if (res) {
+          this.step.progress = Number(progress);
+          this.step.actualEnd = actualEnd;
+          this.step.note = note;
+          this.progress = progress;
+          this.notiService.notifyCode('SYS006');
+          this.popupUpdateProgress.close();
+          this.progressEmit.emit({
+            stepID: this.step.recID, progress: progress
+          });
+        }
+      });
+  }
 
   // updateProgressGroupTask() {
   //   this.notiService.alertCode('DP031').subscribe((x) => {
@@ -1073,36 +1059,43 @@ export class StagesDetailComponent implements OnInit {
   //   });
   // }
 
-  checkContinueStep() {
-    if (this.dataProgress['progress'] == 100) {
-      this.isContinueTaskAll = this.checkSuccessTaskRequired('', '', true);
-      this.isShowFromTaskEnd = !this.checkSuccessTaskRequired(
-        this.dataProgress?.recID
-      );
-      this.isContinueTaskEnd =
-        this.dataProgress?.recID == this.idTaskEnd
-          ? true
-          : this.checkSuccessTaskRequired('', this.idTaskEnd, true);
-      this.isShowFromTaskAll = !this.isContinueTaskAll;
-      var isAuto = {
-        isShowFromTaskAll: this.isShowFromTaskAll,
-        isShowFromTaskEnd: this.isShowFromTaskEnd,
-        isContinueTaskEnd: this.isContinueTaskEnd,
-        isContinueTaskAll: this.isContinueTaskAll,
-      };
+  continueStep(isTaskEnd){
+    let isShowFromTaskAll = false;
+    let isShowFromTaskEnd = this.checkContinueStep(true);
+    let isContinueTaskEnd = isTaskEnd;
+    let isContinueTaskAll = this.checkContinueStep(false);
+    let dataInstance = {
+      instance: this.instance,
+      listStep: this.listStep,
+      step: this.step,
+      isAuto: {
+        isShowFromTaskAll,
+        isShowFromTaskEnd,
+        isContinueTaskEnd,
+        isContinueTaskAll,
+      },
+    };
+    console.log(this.step.tasks.map(task => {return {t: task.progress,name: task.taskName}})); 
+    this.serviceInstance.autoMoveStage(dataInstance);
+  }
 
-      let dataInstance = {
-        instance: this.instance,
-        listStep: this.listStep,
-        step: this.step,
-        isAuto: isAuto,
-      };
-      this.serviceInstance.autoMoveStage(dataInstance);
-    } else {
-      this.isShowFromTaskAll = false;
-      this.isShowFromTaskEnd = false;
-      this.isContinueTaskEnd = false;
-      this.isContinueTaskAll = false;
+  checkContinueStep(isDefault) {
+    let listTask = isDefault ? this.step?.tasks?.filter(task => task?.requireCompleted) : this.step?.tasks;
+    if(listTask?.length <= 0){
+      return isDefault ? true : false;
+    } 
+    for(let task of listTask){
+      if(task.progress != 100){
+        return false;
+      }
+    }
+    return true;
+   
+  }
+
+  changeProgressStep(event){
+    if(event){
+      this.isChangeProgress.emit({recID: this.step?.recID, progress: this.step?.progress});
     }
   }
 
