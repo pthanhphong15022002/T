@@ -76,9 +76,9 @@ export class PopupAddCampaignComponent implements OnInit {
   }
 
   onSave() {
-    if(this.action == 'edti'){
+    if (this.action == 'edti') {
       this.onUpdate();
-    }else{
+    } else {
       this.onAdd();
     }
   }
