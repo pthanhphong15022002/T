@@ -1,35 +1,26 @@
-<codx-views
-  #view
-  [views]="views"
-  [button]="button"
-  (buttonClick)="add()"
-  service="HR"
-  idField="employeeID"
-  [selectedFirst]="true"
-  (selectedChange)="selectedChange($event)">
+<codx-views #view [views]="views" [button]="button" (buttonClick)="add()" service="HR" idField="employeeID"
+  [selectedFirst]="true" (selectedChange)="selectedChange($event)">
 </codx-views>
 
 <!--column Nhân viên -->
 <ng-template #colEmployee let-data>
-  <div class="d-flex align-items-center cursor-pointer hover-active" (dblclick)="clickViewEmpInfo(data)">
+  <div class="d-flex align-items-center cursor-pointer hover-active p-2" (dblclick)="clickViewEmpInfo(data)">
     <div class="d-flex flex-column me-4">
-      <codx-img
-        [funcId]="funcID"
-        [objectId]="data.employeeID"
-        [objectName]="data.employeeName"
-        objectType="HR_Employees"
-        [width]="40">
+      <codx-img [funcId]="funcID" [objectId]="data.employeeID" [objectName]="data.employeeName"
+        objectType="HR_Employees" [width]="40">
       </codx-img>
       <ng-container *ngIf="data.gender">
-        <div class="mt-2">
-          <codx-vll [name]="'HR001'" [value]="data.gender" showText="true" [showBgColor]="true" [classList]="'badge badge-sm badge-inline flex-wrap me-0'"></codx-vll>
+        <div class="mt-2 mx-auto">
+          <codx-vll [name]="'HR001'" [value]="data.gender" showText="true" [showBgColor]="true"
+            [classList]="'badge badge-sm badge-inline flex-wrap me-0'"></codx-vll>
         </div>
       </ng-container>
     </div>
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-1">
         <ng-container *ngIf="data.employeeName">
-          <span class="fw-bold fs-6 me-3 text-nowrap item-active" (click)="clickViewEmpInfo(data)">{{ data.employeeName }}</span>
+          <span class="fw-bold fs-6 me-3 text-nowrap item-active" (click)="clickViewEmpInfo(data)">{{ data.employeeName
+            }}</span>
         </ng-container>
       </div>
 
@@ -72,19 +63,17 @@
   <div (dblclick)="clickViewEmpInfo(data)">
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-1">
-        <span class="icon-email icon-16 text-gray-600 me-2"></span>
         <span class="text-gray-700" [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async">
         </span>
       </div>
       <div class="d-flex align-items-center mb-1">
-        <span class="icon-phone_android icon-16 text-gray-600 me-2"></span>
         <span class="text-gray-700" [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async">
         </span>
       </div>
       <div class="d-flex align-items-center">
-        <span class="icon-place icon-16 text-gray-600 me-2"></span>
-        <span class="text-gray-700" [innerHTML]="data.street
-        | formatvalue : view.formModel : 'street'
+        <span class="icon-place icon-16 text-dark me-2"></span>
+        <span class="text-gray-700" [innerHTML]="data.address
+        | formatvalue : view.formModel : 'address'
         | async">
         </span>
       </div>
@@ -97,12 +86,8 @@
     <div class="d-flex flex-column">
       <div class="align-items-center1 mb-1">
         <span class="text-gray-700 me-1">
-          <codx-label
-          [setRequire]="false"
-          [fiedName]="'Birthday'"
-            [formModel]="view.formModel"
-            default="Ngày sinh:"
-          ></codx-label>
+          <codx-label [setRequire]="false" [fiedName]="'Birthday'" [formModel]="view.formModel"
+            default="Ngày sinh:"></codx-label>
         </span>
         <span class="text-gray-700" [innerHTML]="data.birthday
         | formatvalue : view.formModel : 'birthday'
@@ -111,12 +96,8 @@
       </div>
       <div class="align-items-center mb-1">
         <span class="text-gray-700 me-1">
-          <codx-label
-          [setRequire]="false"
-            [fiedName]="'BirthPlace'"
-            [formModel]="view.formModel"
-            default="Nơi sinh: "
-          ></codx-label>
+          <codx-label [setRequire]="false" [fiedName]="'BirthPlace'" [formModel]="view.formModel"
+            default="Nơi sinh: "></codx-label>
         </span>
         <span class="text-gray-700" [innerHTML]="data?.birthPlace
         | formatvalue : view.formModel : 'birthPlace'
@@ -125,12 +106,8 @@
       </div>
       <div class="align-items-center">
         <span class="text-gray-700 me-1">
-          <codx-label
-          [setRequire]="false"
-          [fiedName]="'Education'"
-          [formModel]="view.formModel"
-            default="Trình độ: "
-          ></codx-label>
+          <codx-label [setRequire]="false" [fiedName]="'Education'" [formModel]="view.formModel"
+            default="Trình độ: "></codx-label>
         </span>
 
         <span class="text-gray-700" [innerHTML]="data.education
@@ -146,17 +123,14 @@
   <div (dblclick)="clickViewEmpInfo(data)" class="w-100 has-action-menu">
     <div class="d-flex flex-column">
       <div class="d-flex mb-1">
-        <codx-vll [name]="'HR003'" [value]="data.status" [showBgColor]="true" [showText]="true" [className]="'badge badge-sm badge-inline'">
+        <codx-vll [name]="'HR003'" [value]="data.status" [showBgColor]="true" [showText]="true"
+          [className]="'badge badge-sm badge-inline'">
         </codx-vll>
       </div>
       <div class="align-items-center mb-1">
         <span class="text-gray-700 me-1">
-          <codx-label
-          [setRequire]="false"
-          [fiedName]="'JoinedOn'"
-          [formModel]="view.formModel"
-            default="Ngày vào làm: "
-          >
+          <codx-label [setRequire]="false" [fiedName]="'JoinedOn'" [formModel]="view.formModel"
+            default="Ngày vào làm: ">
           </codx-label>
         </span>
         <ng-container *ngIf="data.joinedOn">
@@ -168,24 +142,15 @@
       </div>
       <div class="align-items-center">
         <span class="text-gray-700 me-1">
-          <codx-label
-            name="lblSenioritydate"
-            [setRequire]="false"
-            [formModel]="view.formModel"
-            default="Thâm niên: "
-          >
+          <codx-label name="lblSenioritydate" [setRequire]="false" [formModel]="view.formModel" default="Thâm niên: ">
           </codx-label>
         </span>
         <ng-container *ngIf="data.senioritydate">
           <span class="text-gray-700">{{ data.senioritydate | timeAgo }}</span>
-        </ng-container>  
+        </ng-container>
       </div>
     </div>
-    <codx-mfunc
-      [formModel]="view.formModel"
-      (clickMF)="clickMF($event, data)"
-      [dataItem]="data"
-      type="hover">
+    <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data" type="hover">
     </codx-mfunc>
   </div>
 </ng-template>

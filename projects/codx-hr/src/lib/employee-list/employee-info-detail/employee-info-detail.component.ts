@@ -74,6 +74,7 @@ import { PopupEquitjobComponent } from '../../employee-profile/popup-equitjob/po
   selector: 'lib-employee-info-detail',
   templateUrl: './employee-info-detail.component.html',
   styleUrls: ['./employee-info-detail.component.scss'],
+  encapsulation:ViewEncapsulation.None,
 })
 export class EmployeeInfoDetailComponent extends UIComponent {
   valueChangeViewAllEContract() {
@@ -3423,6 +3424,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      debugger
       if (res?.event) {
         this.infoPersonal = JSON.parse(JSON.stringify(res.event));
         this.df.detectChanges();

@@ -10,13 +10,13 @@
 >
   <ng-template #body>
     <div class="fw-bold mb-3 mt-6 text-primary">
-      <codx-label default="THÔNG TIN ĐOÀN TNCS HCM" [formModel]="formModel">
+      <codx-label class="fs-6" default="THÔNG TIN ĐOÀN TNCS HCM" [formModel]="formModel">
       </codx-label>
     </div>
 
     <div class="form-group d-flex align-items-bottom">
       <codx-input
-        class="me-2"
+        class="me-3"
         field="isYUnion"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -74,7 +74,7 @@
 
     <div class="fw-bold mb-3 mt-6 text-primary">
       <codx-label
-        class="text-primary"
+        class="text-primary fs-6"
         [name]="'lblTitleAddPartyInfo'"
         default="THÔNG TIN ĐẢNG CSVN"
         [formModel]="formModel"
@@ -84,7 +84,7 @@
 
     <div class="form-group d-flex align-items-bottom">
       <codx-input
-        class="me-2"
+        class="me-3"
         field="isParty"
         [formModel]="formModel"
         [Group]="formGroup"

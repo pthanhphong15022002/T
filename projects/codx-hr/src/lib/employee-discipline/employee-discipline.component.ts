@@ -1,6 +1,21 @@
-import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { AuthService, ButtonModel, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  AuthService,
+  ButtonModel,
+  DialogRef,
+  NotificationsService,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { PopupEDisciplinesComponent } from '../employee-profile/popup-edisciplines/popup-edisciplines.component';
@@ -8,9 +23,10 @@ import { PopupEDisciplinesComponent } from '../employee-profile/popup-edisciplin
 @Component({
   selector: 'lib-employee-discipline',
   templateUrl: './employee-discipline.component.html',
-  styleUrls: ['./employee-discipline.component.css']
+  styleUrls: ['./employee-discipline.component.css'],
 })
 export class EmployeeDisciplineComponent extends UIComponent {
+  console = console;
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
   @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
@@ -18,33 +34,34 @@ export class EmployeeDisciplineComponent extends UIComponent {
   @ViewChild('eInfoTemplate') eInfoTemplate?: TemplateRef<any>;
   @ViewChild('templateUpdateStatus') templateUpdateStatus: TemplateRef<any>;
   // @ViewChild('disciplineTemplate') disciplineTemplate?: TemplateRef<any>;
-  views: Array<ViewModel> = []
+  views: Array<ViewModel> = [];
   funcID: string;
   editStatusObj: any;
   dataCategory;
   eDisciplineHeaderText;
   method = 'LoadDataEDisciplineWithEmployeeInfoAsync';
-  itemDetail
+  itemDetail;
   buttonAdd: ButtonModel = {
-    id : 'btnAdd',
-    text: 'Thêm'
-  }
+    id: 'btnAdd',
+    text: 'Thêm',
+  };
   formGroup: FormGroup;
   cmtStatus: string = '';
   currentEmpObj: any = null;
   dialogEditStatus: any;
   //genderGrvSetup: any
   eDisciplineGrvSetup: any;
+  grvSetup: any;
 
-    //#region eDisciplineFuncID
-    actionAddNew = 'HRTPro07A01'
-    actionSubmit = 'HRTPro07A03'
-    actionUpdateCanceled = 'HRTPro07AU0'
-    actionUpdateInProgress = 'HRTPro07AU3'
-    actionUpdateRejected = 'HRTPro07AU4'
-    actionUpdateApproved = 'HRTPro07AU5'
-    actionUpdateClosed = 'HRTPro07AU9'
-    //#endregion
+  //#region eDisciplineFuncID
+  actionAddNew = 'HRTPro07A01';
+  actionSubmit = 'HRTPro07A03';
+  actionUpdateCanceled = 'HRTPro07AU0';
+  actionUpdateInProgress = 'HRTPro07AU3';
+  actionUpdateRejected = 'HRTPro07AU4';
+  actionUpdateApproved = 'HRTPro07AU5';
+  actionUpdateClosed = 'HRTPro07AU9';
+  //#endregion
 
   constructor(
     inject: Injector,
@@ -52,23 +69,24 @@ export class EmployeeDisciplineComponent extends UIComponent {
     private activedRouter: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
-    private auth: AuthService,
-    ) {
+    private auth: AuthService
+  ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-   }
+  }
 
   onInit(): void {
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
-    // this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
-    //   this.genderGrvSetup = res?.Gender;
-    // });
+    this.cache
+      .gridViewSetup('EDisciplines', 'grvEDisciplines')
+      .subscribe((res) => {
+        this.grvSetup = res;
+      });
   }
 
-  clickEvent(event, data){
-    console.log('clickEvent', event);
+  clickEvent(event, data) {
     // this.popupUpdateEContractStatus(event?.event?.functionID , event?.data);
     this.clickMF(event?.event, event?.data);
   }
@@ -81,8 +99,8 @@ export class EmployeeDisciplineComponent extends UIComponent {
         sameData: true,
         model: {
           template: this.itemTemplate,
-          headerTemplate: this.headerTemplate
-        }
+          headerTemplate: this.headerTemplate,
+        },
       },
       {
         type: ViewType.listdetail,
@@ -93,35 +111,40 @@ export class EmployeeDisciplineComponent extends UIComponent {
           panelRightRef: this.panelRightListDetail,
         },
       },
-    ]
-    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
+    ];
+    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) => {
       this.eDisciplineHeaderText = res;
-      console.log('hed do` text ne',this.eDisciplineHeaderText);
-    })
-    console.log('view cua e discipline', this.view);
+    });
   }
 
-  ngAfterViewChecked(){
-
-    if(!this.formGroup?.value){
-      this.hrService.getFormGroup(this.view?.formModel?.formName, this.view?.formModel?.gridViewName).then((res) => {
-        this.formGroup = res;
-      });
+  ngAfterViewChecked() {
+    if (!this.formGroup?.value) {
+      this.hrService
+        .getFormGroup(
+          this.view?.formModel?.formName,
+          this.view?.formModel?.gridViewName
+        )
+        .then((res) => {
+          this.formGroup = res;
+        });
     }
-    if(!this.eDisciplineGrvSetup){
-      this.cache.gridViewSetup(this.view?.formModel?.formName, this.view?.formModel?.gridViewName).subscribe((res) => {
-        this.eDisciplineGrvSetup = res?.Status
-      });
+    if (!this.eDisciplineGrvSetup) {
+      this.cache
+        .gridViewSetup(
+          this.view?.formModel?.formName,
+          this.view?.formModel?.gridViewName
+        )
+        .subscribe((res) => {
+          this.eDisciplineGrvSetup = res?.Status;
+        });
     }
   }
 
-  changeDataMf(event, data){
-    console.log('mf di vs data', event);
-    
+  changeDataMf(event, data) {
     this.hrService.handleShowHideMF(event, data, this.view);
   }
 
-  ValueChangeComment(evt){
+  ValueChangeComment(evt) {
     this.cmtStatus = evt.data;
   }
 
@@ -129,28 +152,30 @@ export class EmployeeDisciplineComponent extends UIComponent {
     dialog.close();
   }
 
-  onSaveUpdateForm(){
-    this.hrService.UpdateEmployeeDisciplineInfo(this.editStatusObj).subscribe((res) => {
-      if(res != null){
-        this.notify.notifyCode('SYS007');
-        res.emp = this.currentEmpObj;
-        this.view.formModel.entityName
-        this.hrService.addBGTrackLog(
-          res.recID,
-          this.cmtStatus,
-          this.view.formModel.entityName,
-          'C1',
-          null,
-          'EDisciplinesBusiness'
-        ).subscribe((res) => {
-          console.log('kq luu track log', res);
-          
-        });
-        this.dialogEditStatus && this.dialogEditStatus.close(res);
-      }
-    })
+  onSaveUpdateForm() {
+    this.hrService
+      .UpdateEmployeeDisciplineInfo(this.editStatusObj)
+      .subscribe((res) => {
+        if (res != null) {
+          this.notify.notifyCode('SYS007');
+          res.emp = this.currentEmpObj;
+          this.view.formModel.entityName;
+          this.hrService
+            .addBGTrackLog(
+              res.recID,
+              this.cmtStatus,
+              this.view.formModel.entityName,
+              'C1',
+              null,
+              'EDisciplinesBusiness'
+            )
+            .subscribe((res) => {
+              console.log('kq luu track log', res);
+            });
+          this.dialogEditStatus && this.dialogEditStatus.close(res);
+        }
+      });
   }
-
 
   HandleEDisciplineInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
@@ -165,31 +190,24 @@ export class EmployeeDisciplineComponent extends UIComponent {
       {
         actionType: actionType,
         dataInput: data,
-        empObj: actionType == 'add' ? null: this.currentEmpObj,
-        headerText:
-          actionHeaderText,
+        empObj: actionType == 'add' ? null : this.currentEmpObj,
+        headerText: actionHeaderText,
         employeeId: data?.employeeID,
         funcID: this.view.funcID,
-        openFrom: "empDisciplinesProcess",
+        openFrom: 'empDisciplinesProcess',
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        debugger
-        if(actionType == 'add'){
-          this.view.dataService.add(res.event,0).subscribe((res) => {
-          });
+        if (actionType == 'add') {
+          this.view.dataService.add(res.event, 0).subscribe((res) => {});
           this.df.detectChanges();
-        }
-        else if(actionType == 'copy'){
-          this.view.dataService.add(res.event,0).subscribe((res) => {
-          });
+        } else if (actionType == 'copy') {
+          this.view.dataService.add(res.event, 0).subscribe((res) => {});
           this.df.detectChanges();
-        }
-        else if(actionType == 'edit'){
-          this.view.dataService.update(res.event).subscribe((res) => {
-          })
+        } else if (actionType == 'edit') {
+          this.view.dataService.update(res.event).subscribe((res) => {});
           this.df.detectChanges();
         }
       }
@@ -197,21 +215,22 @@ export class EmployeeDisciplineComponent extends UIComponent {
     });
   }
 
-  addDiscipline(evt){
-    if(evt.id == 'btnAdd'){
-      this.HandleEDisciplineInfo(evt.text + ' ' + this.view.function.description,'add',null);
+  addDiscipline(evt) {
+    if (evt.id == 'btnAdd') {
+      this.HandleEDisciplineInfo(
+        evt.text + ' ' + this.view.function.description,
+        'add',
+        null
+      );
     }
   }
 
-  popupUpdateEDisciplineStatus(funcID, data){
+  popupUpdateEDisciplineStatus(funcID, data) {
     this.hrService.handleUpdateRecordStatus(funcID, data);
-    debugger
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;
     this.formGroup.patchValue(this.editStatusObj);
-    console.log('form group sau khi mo form', this.formGroup);
 
-    // console.log('edit object', this.editStatusObj);
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,
@@ -221,62 +240,62 @@ export class EmployeeDisciplineComponent extends UIComponent {
       null
     );
     this.dialogEditStatus.closed.subscribe((res) => {
-      // console.log('res sau khi update status', res);
-      if(res?.event){
-        debugger
-        this.view.dataService.update(res.event).subscribe((res) => {
-        })
+      if (res?.event) {
+        this.view.dataService.update(res.event).subscribe((res) => {});
       }
       this.df.detectChanges();
     });
   }
 
-  clickMF(event, data){
+  clickMF(event, data) {
     this.itemDetail = data;
     switch (event.functionID) {
       case this.actionSubmit:
         this.beforeRelease();
         break;
-        case this.actionUpdateCanceled:
-          case this.actionUpdateInProgress:
-            case this.actionUpdateRejected:
-              case this.actionUpdateApproved:
-                case this.actionUpdateClosed:
-      let oUpdate = JSON.parse(JSON.stringify(data));
-      this.popupUpdateEDisciplineStatus(event.functionID , oUpdate)
-      break;
+      case this.actionUpdateCanceled:
+      case this.actionUpdateInProgress:
+      case this.actionUpdateRejected:
+      case this.actionUpdateApproved:
+      case this.actionUpdateClosed:
+        let oUpdate = JSON.parse(JSON.stringify(data));
+        this.popupUpdateEDisciplineStatus(event.functionID, oUpdate);
+        break;
       case this.actionAddNew:
-      this.HandleEDisciplineInfo(event.text, 'add', data);
-      break;
+        this.HandleEDisciplineInfo(event.text, 'add', data);
+        break;
 
       case 'SYS03':
-      this.currentEmpObj = data.emp;
-        this.HandleEDisciplineInfo(event.text + ' ' + this.view.function.description, 'edit', data);
+        this.currentEmpObj = data.emp;
+        this.HandleEDisciplineInfo(
+          event.text + ' ' + this.view.function.description,
+          'edit',
+          data
+        );
         this.df.detectChanges();
         break;
       case 'SYS02': //delete
-      this.view.dataService.delete([data]).subscribe((res) => {
-        if(res){
-          // debugger
-          // this.view.dataService.remove(data).subscribe((res) => {
-          //   console.log('res sau khi remove', res);
-            
-          // });
-          // this.df.detectChanges();
-        }
-      })
-      // this.hrService.deleteEContract(data.contract).subscribe((p) => {
-      //   if (p) {
-      //     this.notify.notifyCode('SYS008');
-      //     this.view.dataService.delete(data).subscribe((res) => {});
-      //     this.df.detectChanges();
-      //   } else {
-      //     this.notify.notifyCode('SYS022');
-      //   }
-      // });
+        this.view.dataService.delete([data]).subscribe((res) => {
+          if (res) {
+            // debugger
+            // this.view.dataService.remove(data).subscribe((res) => {
+            //   console.log('res sau khi remove', res);
+            // });
+            // this.df.detectChanges();
+          }
+        });
+        // this.hrService.deleteEContract(data.contract).subscribe((p) => {
+        //   if (p) {
+        //     this.notify.notifyCode('SYS008');
+        //     this.view.dataService.delete(data).subscribe((res) => {});
+        //     this.df.detectChanges();
+        //   } else {
+        //     this.notify.notifyCode('SYS022');
+        //   }
+        // });
         break;
       case 'SYS04': //copy
-      this.currentEmpObj = data.emp;
+        this.currentEmpObj = data.emp;
         this.copyValue(event.text, data, 'eDiscipline');
         this.df.detectChanges();
         break;
@@ -305,11 +324,9 @@ export class EmployeeDisciplineComponent extends UIComponent {
   }
 
   changeItemDetail(event) {
-    debugger
     this.itemDetail = event?.data;
   }
 
-  
   release() {
     this.hrService
       .getCategoryByEntityName(this.view.formModel.entityName)
@@ -347,13 +364,14 @@ export class EmployeeDisciplineComponent extends UIComponent {
   }
 
   copyValue(actionHeaderText, data, flag) {
-    this.hrService
-    .copy(data, this.view.formModel, 'RecID')
-    .subscribe((res) => {
-      if(flag == 'eDiscipline'){
-        this.HandleEDisciplineInfo(actionHeaderText + ' ' + this.view.function.description, 'copy', res);
+    this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
+      if (flag == 'eDiscipline') {
+        this.HandleEDisciplineInfo(
+          actionHeaderText + ' ' + this.view.function.description,
+          'copy',
+          res
+        );
       }
     });
   }
-
 }

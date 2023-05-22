@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthComponent } from './auth.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './logout/logout.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,11 @@ const routes: Routes = [
         path: 'login',
         component: LoginComponent,
         data: { returnUrl: window.location.pathname, noReuse: true },
+      },
+      {
+        path: 'logout',
+        component: LogoutComponent,
+        // data: { returnUrl: window.location.pathname, noReuse: true },
       },
       {
         path: 'forgotpassword',

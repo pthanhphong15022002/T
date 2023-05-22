@@ -1140,7 +1140,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       bookingAttendees.push(attender);
     });
     this.api
-      .execSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
+      .execSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'SaveAsync', [
         booking,
         true,
         bookingAttendees,
