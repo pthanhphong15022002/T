@@ -379,6 +379,7 @@
                 </codx-label>
               </div>
             </th>
+            <td *ngIf="cashpaymentline.length> 0" style="width: 5%;"></td>
           </tr>
         </thead>
         <tbody>
@@ -596,6 +597,7 @@
                   </ng-template>
                 </div>
               </td>
+              <td></td>
             </tr>
             <tr class="border-bottom">
               <td style="padding-top: 0;"></td>
@@ -805,6 +807,18 @@
                   <ng-template #popnote>
                     <span class="fw-bold">{{ item.note }}</span>
                   </ng-template>
+                </div>
+              </td>
+              <td>
+                <div class="d-flex align-items-center justify-content-start">
+                  <span  type="button" class="btn btn-icon btn-light-primary ms-1"
+                    (click)="editRow(item)">
+                    <i class="icon-edit icon-16"></i>
+                  </span>
+                  <span type="button" class="btn btn-icon btn-light-danger ms-1"
+                    (click)="deleteRow(item)">
+                    <i class="icon-delete icon-16"></i>
+                  </span>
                 </div>
               </td>
             </tr>
