@@ -25,14 +25,12 @@ import {
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
 import { CM_Customers } from '../models/cm_model';
-import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
 
 @Component({
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
   styleUrls: ['./deals.component.scss'],
-})
-export class DealsComponent
+})export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -307,24 +305,25 @@ export class DealsComponent
           formMD.entityName = fun.entityName;
           formMD.formName = fun.formName;
           formMD.gridViewName = fun.gridViewName;
-          // var stepReason = {
-          //   isUseFail: this.isUseFail,
-          //   isUseSuccess: this.isUseSuccess,
-          // };
+          var stepReason = {
+            isUseFail: false,
+            isUseSuccess:  false,
+          };
           var obj = {
-           // stepName: this.getStepNameById(data.stepID),
+            stepName: null,
             formModel: formMD,
-            instance: data,
-            // listStepCbx: listStepCbx,
-            // stepIdClick: this.stepIdClick,
-            // stepReason: stepReason,
+            deal: data,
+            listStepCbx: null,
+            stepIdClick: null,
+            stepReason: stepReason,
             headerTitle: this.titleAction,
-            // listStepProccess: this.process.steps,
-            // lstParticipants: this.lstOrg,
-          //  isDurationControl: this.checkDurationControl(data.stepID),
+            listStepProccess: null,
+            lstParticipants: null,
+            isDurationControl: null,
+            applyFor: '1'
           };
           var dialogMoveStage = this.callfc.openForm(
-            PopupMoveStageComponent,
+            PopupAddDealComponent,
             '',
             850,
             900,
