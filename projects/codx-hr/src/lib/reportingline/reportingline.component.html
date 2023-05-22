@@ -16,14 +16,14 @@
 
 <ng-template #tmpList let-data>
     <div class="d-flex align-items-center py-3 px-5 border-bottom">
-        <div class="d-flex justify-content-between align-items-center w-50 min-w-250px">
+        <div class="d-flex justify-content-between align-items-center w-40 min-w-350px">
             <!-- HR_Positions infor -->
-            <div class="reportingline-cell-positioninfo">
+            <div class="reportingline-cell-positioninfo ps-2">
                 <div class="text-start w-100">
-                    <div class="fw-bold text-dark fs-5 mb-1">
+                    <div class="fw-bold text-dark fs-5-sm mb-1">
                         {{data.positionName}}
                     </div>
-                    <!-- <div class="mb-1 text-gray-500">
+                    <!-- <div class="mb-1 text-gray-600">
                         <ng-container *ngIf="data.orgUnitName">
                             <span>{{data.orgUnitName}}</span>
                         </ng-container>
@@ -32,16 +32,16 @@
                         </ng-template>
                     </div> -->
                     <div class="mb-1">
-                        <codx-label class="text-gray-500" [formModel]="view.formModel" fiedName="JobID">
+                        <codx-label class="text-gray-600" [formModel]="view.formModel" fiedName="JobID">
                         </codx-label>
-                        <span class="text-gray-500 me-1"> : </span>
+                        <span class="text-gray-600 me-1">: </span>
                         <span class="text-dark fw-bold" *ngIf="data?.jobID"
                             [innerHTML]="data?.jobID | formatvalue: view.formModel: 'jobID' |async"></span>
                     </div>
                     <div class="mb-1">
-                        <codx-label class="text-gray-500" [formModel]="view.formModel" fiedName="JobLevel">
+                        <codx-label class="text-gray-600" [formModel]="view.formModel" fiedName="JobLevel">
                         </codx-label>
-                        <span class="text-gray-500 me-1"> : </span>
+                        <span class="text-gray-600 me-1">: </span>
                         <span class="text-dark fw-bold" *ngIf="data?.jobLevel"
                             [innerHTML]="data?.jobLevel | formatvalue: view.formModel: 'jobLevel' |async"></span>
                     </div>
@@ -72,27 +72,27 @@
             </div>
         </div>
 
-        <div class="w-40 min-w-250px ms-6">
+        <div class="w-30 min-w-250px ms-6">
             <div class="text-start w-100">
                 <div class="mb-1">
-                    <codx-label class="text-gray-500" [formModel]="view.formModel" fiedName="ReportTo">
+                    <codx-label class="text-gray-600" [formModel]="view.formModel" fiedName="ReportTo">
                     </codx-label>
                     <span class="text-gray me-1"> : </span>
                     <span class="text-dark fw-bold" *ngIf="data?.reportTo"
                         [innerHTML]="data?.reportTo | formatvalue : view.formModel: 'reportTo' | async "></span>
                 </div>
                 <div class="mb-1">
-                    <codx-label class="text-gray-500" [formModel]="view.formModel" fiedName="ReportTo2">
+                    <codx-label class="text-gray-600" [formModel]="view.formModel" fiedName="ReportTo2">
                     </codx-label>
-                    <span class="text-gray-500 me-1"> : </span>
+                    <span class="text-gray-600 me-1"> : </span>
                     <span class="text-dark fw-bold" *ngIf="data.reportTo2"
                         [innerHTML]="data?.reportTo2 | formatvalue : view.formModel : 'reportTo2' | async">
                     </span>
                 </div>
                 <div>
-                    <codx-label class="text-gray-500" [formModel]="view.formModel" fiedName="OrgUnitID">
+                    <codx-label class="text-gray-600" [formModel]="view.formModel" fiedName="OrgUnitID">
                     </codx-label>
-                    <span class="text-gray-500 me-1"> : </span>
+                    <span class="text-gray-600 me-1"> : </span>
                     <span class="text-dark fw-bold" *ngIf="data?.orgUnitID"
                         [innerHTML]="data?.orgUnitID | formatvalue : view.formModel : 'OrgUnitID' | async"></span>
                 </div>
@@ -108,7 +108,7 @@
                     </span>
                     <span *ngIf="data.reportToName">{{data.reportToName}}</span>
                 </div>
-                <div class="text-gray-500">
+                <div class="text-gray-600">
                     <span class="me-1">
                         <codx-label [formModel]="view.formModel" fiedName="ReportTo2" default="Báo cáo gián tiếp:">
                         </codx-label>
@@ -118,7 +118,7 @@
             </div>
         </div> -->
 
-        <div class="d-flex w-100 align-items-center justify-content-end ms-6">
+        <div class="d-flex w-20 min-w-150px align-items-center justify-content-end ms-6">
             <div class="d-flex flex-column align-items-center">
                 <div class="text-gray-600 mt-1 mb-2">
                     <codx-label [formModel]="view.formModel" default="Nhân viên">
@@ -133,7 +133,7 @@
                 </ng-container>
             </div>
         </div>
-        <div class="d-flex align-items-center justify-content-end min-w-100px">
+        <div class="d-flex align-items-center justify-content-end w-10 min-w-150px">
             <div style="height: 35px" class="has-action-menu">
                 <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
                     [dataItem]="data" type="hover">
@@ -143,7 +143,7 @@
         <!-- <div class="d-flex align-items-top w-350px mw-350px min-w-350px">
             <div class="reportingline-cell-quantily w-25">
                 <div class="d-flex flex-column align-items-center pos-item" (click)="loadEmployByCountStatus()">
-                    <div class="pos-number text-gray-500 fs-2 fw-bold">{{data.headcounts}}</div>
+                    <div class="pos-number text-gray-600 fs-2 fw-bold">{{data.headcounts}}</div>
                     <div class="text-gray-600 mt-1 mb-2">
                         <codx-label [formModel]="view.formModel" fiedName="Headcounts" default="Định biên">
                         </codx-label>

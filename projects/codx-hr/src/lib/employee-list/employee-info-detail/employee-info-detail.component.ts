@@ -4021,13 +4021,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.eAccidentGridView?.dataService as CRUDService)?.clear();
-      // else {
-      //   this.eAccidentsRowCount += this.updateGridView(
-      //     this.eAccidentGridView,
-      //     actionType,
-      //     res.event
-      //   );
-      // }
+      else {
+        this.updateGridView(
+          this.eAccidentGridView,
+          actionType,
+          res.event
+        );
+      }
       this.df.detectChanges();
     });
   }
@@ -4422,12 +4422,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         actionHeaderText + ' ' + this.getFormHeader(this.eDiseasesFuncID),
     });
     dialogAdd.closed.subscribe((res) => {
-      // if (res)
-      //   this.eDiseasesRowCount += this.updateGridView(
-      //     this.eDiseasesGrid,
-      //     actionType,
-      //     res.event
-      //   );
+      if (res)
+        this.updateGridView(
+          this.eDiseasesGrid,
+          actionType,
+          res.event
+        );
       this.df.detectChanges();
     });
 

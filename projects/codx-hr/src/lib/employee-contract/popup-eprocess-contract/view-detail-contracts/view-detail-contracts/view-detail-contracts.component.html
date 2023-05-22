@@ -12,8 +12,8 @@
 >
   <ng-template #titleTmp>
     <div class="d-flex flex-column ms-1">
-      <div class="flex-wrap justify-content-between w-100">
-        <span class="text-dark fs-5 fw-bold">
+      <div class="flex-wrap justify-content-between w-100 mb-2">
+        <span class="text-dark fs-5-sm fw-bold me-3">
           {{ itemDetail?.emp?.employeeName }}
         </span>
         <span *ngIf="itemDetail?.isCurrent && !itemDetail?.isExpire" class="badge badge-sm text-primary badge-light">
@@ -25,8 +25,8 @@
       </div>
 
       <!-- 1 -->
-      <div class="text-gray-600 fs-7">
-        <span class="me-3"
+      <div class=" d-flex align-items-center text-gray-600 mb-1">
+        <span class="me-4 fw-bold text-dark"
           [innerHTML]="
             itemDetail.positionID
               | formatvalue : formModel : 'positionID'
@@ -34,17 +34,17 @@
           "
           >' '</span
         >
-        <span class="me-3" *ngIf="itemDetail?.emp?.email">
-          <i class="icon-email"></i>
+        <span class="me-4 d-flex align-items-center" *ngIf="itemDetail?.emp?.email">
+          <i class="icon-email icon-16 me-2"></i>
           {{ itemDetail?.emp?.email }}
         </span>
-        <span class="me-3" *ngIf="itemDetail?.emp?.mobile">
-          <i class="icon-phone_android"></i>
+        <span class="me-3 d-flex align-items-center" *ngIf="itemDetail?.emp?.mobile">
+          <i class="icon-phone_android icon-16 me-2"></i>
           {{ itemDetail?.emp?.mobile }}
         </span>
       </div>
       <!-- 2 -->
-      <div class="justify-content-between text-dark">
+      <div class="text-gray-600 fs-7">
         <span
           [innerHTML]="
             itemDetail?.emp?.orgUnitID
@@ -69,19 +69,19 @@
       >
       </codx-temp-full>
     </div>
-    <div class="">
+    <div class="mt-1">
 
       <div class="d-flex flex-wrap">
-        <div class="d-flex align-item-center mb-1">
+        <div class="d-flex align-item-center mb-1 me-5 ">
           <codx-label
             fiedName="contractTypeID"
             [formModel]="formModel"
             [setRequire]="false"
-            class="text-gray-700 label-colon"
+            class="text-dark fw-bold label-colon"
           >
           </codx-label>
           <span
-            class="fw-bold"
+            class="text-gray-600"
             [innerHTML]="
               itemDetail?.contractTypeID
                 | formatvalue : formModel : 'contractTypeID'
@@ -90,14 +90,14 @@
           >
           </span>
         </div>
-        <div class="d-flex align-item-center mb-1 ms-6">
+        <div class="d-flex align-item-center mb-1">
           <codx-label
             fiedName="limitMonths"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-dark fw-bold label-colon"
           >
           </codx-label>
-          <span
+          <span class="text-gray-600"
             [innerHTML]="
               itemDetail?.limitMonths
                 | formatvalue : formModel : 'limitMonths'
@@ -108,53 +108,53 @@
 
       </div>
       <div class="d-flex flex-wrap">
-        <div class="d-flex align-item-center mb-1">
+        <div class="d-flex align-item-center mb-1 me-5">
           <codx-label
             fiedName="contractNo"
             [setRequire]="false"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-dark fw-bold label-colon"
           >
           </codx-label>
-          <span >
+          <span class="text-gray-600">
             {{ itemDetail?.contractNo }}
           </span>
         </div>
-        <div class="d-flex align-item-center mb-1 ms-6">
+        <div class="d-flex align-item-center mb-1 me-5">
           <codx-label
             [default]="'Hiệu lực'"
             [name]="'contractTime'"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-dark fw-bold label-colon"
           >
           </codx-label>
-          <span >
+          <span class="text-gray-600">
             {{ itemDetail?.effectedDate | fmDT }} 
             <span *ngIf="itemDetail.expiredDate">
               - {{ itemDetail?.expiredDate | fmDT }}
             </span>
           </span>
         </div>
-        <div class="d-flex align-item-center mb-1 ms-6">
+        <div class="d-flex align-item-center mb-1">
           <codx-label
             fiedName="signedDate"
             [setRequire]="false"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-dark fw-bold label-colon"
           >
           </codx-label>
-          <span>
+          <span class="text-gray-600">
             {{ itemDetail?.signedDate | fmDT }}
           </span>
         </div>
       </div>
       
-      <div class="d-flex flex-column">
-        <div class="d-flex align-item-center mb-1 min-w-50">
+      <div class="d-flex flex-wrap">
+        <div class="d-flex align-item-center mb-1 me-5">
           <codx-label
             fiedName="OrgUnitID"
             [formModel]="formModel"
-            class="text-gray-700 label-colon text-nowrap"
+            class="text-dark label-colon fw-bold"
           >
           </codx-label>
           <span
@@ -166,14 +166,14 @@
           >
           </span>
         </div>
-        <div class="d-flex align-item-center mb-1 min-w-50">
+        <div class="d-flex align-item-center mb-1">
           <codx-label
             fiedName="PositionID"
             [formModel]="formModel"
-            class="text-gray-700 label-colon text-nowrap"
+            class="text-dark label-colon fw-bold"
           >
           </codx-label>
-          <span
+          <span class="text-gray-600"
             [innerHTML]="
               itemDetail?.positionID
                 | formatvalue : formModel : 'positionID'
@@ -217,7 +217,7 @@
                   <codx-label
                     fiedName="TimeWork"
                     [formModel]="formModel"
-                    class="text-gray-700 label-colon"
+                    class="text-gray-600 label-colon"
                   >
                   </codx-label>
                   <span >
@@ -228,7 +228,7 @@
                   <codx-label
                     fiedName="LocationID"
                     [formModel]="formModel"
-                    class="text-gray-700 label-colon"
+                    class="text-gray-600 label-colon"
                   >
                   </codx-label>
                   <span
@@ -245,7 +245,7 @@
                   <codx-label
                     fiedName="transportType"
                     [formModel]="formModel"
-                    class="text-gray-700 label-colon"
+                    class="text-gray-600 label-colon"
                   >
                   </codx-label>
                   <span
@@ -285,7 +285,7 @@
                   <codx-label
                     fiedName="MainWork"
                     [formModel]="formModel"
-                    class="text-gray-700 label-colon"
+                    class="text-gray-600 label-colon"
                   >
                   </codx-label>
                   <span class="fw-bold" [innerHTML]="itemDetail?.mainWork">
@@ -318,7 +318,7 @@
                   <codx-label
                     fiedName="MainSalary"
                     [formModel]="formModel"
-                    class="text-gray-700 label-colon"
+                    class="text-gray-600 label-colon"
                   >
                   </codx-label>
                   <span >
@@ -330,7 +330,7 @@
                   <codx-label
                     fiedName="JobSalary"
                     [formModel]="formModel"
-                    class="text-gray-700 label-colon"
+                    class="text-gray-600 label-colon"
                   >
                   </codx-label>
                   <span>

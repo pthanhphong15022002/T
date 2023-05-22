@@ -116,6 +116,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
         );
       this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
+    } else if (this.formType == 'view') {
+      this.isSaved = true;
+      this.isSaving = true;
     } else if (this.formType == 'copy') {
       this.isSaved = false;
 
