@@ -49,7 +49,7 @@ export class PopupAddDealcompetitorComponent implements OnInit {
 
   onSave() {
     if(this.isAddCompetitor){
-      if(this.competitorName == null && this.competitorName.trim() == ''){
+      if(this.competitorName == null || this.competitorName.trim() == ''){
         {
           this.notiService.notifyCode(
             'SYS009',
