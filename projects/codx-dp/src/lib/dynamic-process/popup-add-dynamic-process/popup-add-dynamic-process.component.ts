@@ -2333,6 +2333,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (this.action == 'edit' && this.stepNew.recID) {
         this.listStepEdit.push(this.stepNew.recID);
       }
+      if(this.step?.recID == this.stepEdit?.recID){
+        this.titleViewStepCrr = this.stepEdit?.stepName;
+      }
     }
     this.popupAddStage.close();
     // this.isSaveStep = false;
@@ -3324,6 +3327,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   getRole(task, type) {
     let role = task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
     return type == "ID" ? role?.objectID : role?.objectName;
+  }
+
+  checkOverflow(event: any, popup: any) {
+    let parent = event.currentTarget.parentElement;
+    let child = event.currentTarget;
+    if (child.scrollWidth >= parent.scrollWidth) {
+      popup.open();
+    }
   }
   //#End stage -- nvthuan
 

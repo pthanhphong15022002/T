@@ -1,4 +1,3 @@
-import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 import {
   Component,
   EventEmitter,
@@ -17,9 +16,8 @@ import {
   ImageViewerComponent,
   AuthService,
   UIComponent,
-  CRUDService,
-  NotificationsService,
   Util,
+  CodxFormComponent,
 } from 'codx-core';
 import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
 import { Device, Equipments } from 'projects/codx-ep/src/lib/models/equipments.model';
@@ -32,28 +30,22 @@ import { EPCONST } from '../../codx-ep.constant';
 })
 export class PopupAddResourcesComponent extends UIComponent {
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
+  @ViewChild('form') form: CodxFormComponent;
 
   @Input() data!: any;
   @Input() editResources: any;
   @Input() isAdd = true;
   @Output() closeEdit = new EventEmitter();
   dialogRef: DialogRef;
-  cacheGridViewSetup: any;
-  CbxName: any;
-  fGroupAddRoom: FormGroup;
   vllDevices = [];
-  lstDevices: [];
   isAfterRender = false;
   isDone = true;
   tmplstDevice = [];
-  lstDeviceRoom = [];
+  lstShowDevice = [];
   returnData: any;
   formModel: FormModel;
   headerText = '';
   subHeaderText = '';
-  lstEquipment = [];
-  moreFunc: any;
-  functionList: any;
   imgRecID: any;
   grView: any;
   funcID:string;
@@ -62,6 +54,7 @@ export class PopupAddResourcesComponent extends UIComponent {
     dr_FuncID=EPCONST.FUNCID.DR_Category;
     ca_FuncID=EPCONST.FUNCID.CA_Category;
   autoNumDisable: boolean;
+  moreDevice: number;
   constructor(
     injector: Injector,
     private authService: AuthService,
@@ -91,8 +84,6 @@ export class PopupAddResourcesComponent extends UIComponent {
   
   onInit(): void {  
     this.getCacheData();  
-    this.initForm();
-
   }
 
   
@@ -122,8 +113,9 @@ export class PopupAddResourcesComponent extends UIComponent {
             }
           });
         }
-        this.lstDeviceRoom.push(device);
-        this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
+        this.tmplstDevice.push(device);
+        this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
+        this.getSelectedDevice();
       });
     });
     this.codxEpService
@@ -140,14 +132,7 @@ export class PopupAddResourcesComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
-  initForm() {
-    this.codxEpService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.fGroupAddRoom = item;
-        //this.isAfterRender = true;
-      });
-  }
+  
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Event------------------------------------//
   //---------------------------------------------------------------------------------//
@@ -173,8 +158,10 @@ export class PopupAddResourcesComponent extends UIComponent {
   checkedChange(event: any, device: any) {
     let index = this.tmplstDevice.indexOf(device);
     if (index != -1) {
-      this.tmplstDevice[index].isSelected = event.data;
+      this.tmplstDevice[index].isSelected = event?.data;
     }
+    this.getSelectedDevice();
+    this.detectorRef.detectChanges();
   }
   changeCategory(event:any){
     if(event?.data && event?.data!='1'){
@@ -193,33 +180,30 @@ export class PopupAddResourcesComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
 
   beforeSave(option: RequestOption) {
-    option.methodName = 'AddEditItemAsync';
+    option.methodName = 'SaveAsync';
     option.data = [this.data, this.isAdd];
     return true;
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
-  onSaveForm() {
-    
-    this.fGroupAddRoom.patchValue(this.data);
-    if (this.fGroupAddRoom.invalid == true) {
-      this.codxEpService.notifyInvalid(this.fGroupAddRoom, this.formModel);
-      return;
-    }
-    this.lstEquipment = [];
+  onSaveForm() {       
+    let lstEquipment = [];
+    this.data.equipments=[];
     this.tmplstDevice.forEach((element) => {
       if (element.isSelected) {
         let tempEquip = new Equipments();
         tempEquip.equipmentID = element.id;
         tempEquip.createdBy = this.authService.userValue.userID;
-        this.lstEquipment.push(tempEquip);
+        lstEquipment.push(tempEquip);
       }
     });
-    this.fGroupAddRoom.patchValue({
-      equipments: this.lstEquipment,
-      category: '1',
-    });
+    this.data.equipments = lstEquipment;
+    this.form?.formGroup.patchValue(this.data);
+    if (this.form?.formGroup.invalid == true) {
+      this.codxEpService.notifyInvalid(this.form?.formGroup, this.formModel);
+      return;
+    }
     let index: any;
     if (this.isAdd) {
       index = 0;
@@ -264,7 +248,22 @@ export class PopupAddResourcesComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
-
+  getSelectedDevice(){
+    if(this.tmplstDevice!=null && this.tmplstDevice.length >0){
+      this.lstShowDevice=[];
+      this.moreDevice=0;
+      this.tmplstDevice.forEach(dev => {
+        if(dev?.isSelected && this.lstShowDevice!=null && this.lstShowDevice.length < 5 ){
+          this.lstShowDevice.push(dev);
+        }
+        if(dev?.isSelected){
+          this.moreDevice++;
+        }
+      });
+      this.detectorRef.detectChanges();
+    }
+  }
+  
 
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//

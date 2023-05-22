@@ -86,7 +86,7 @@ export class PopupSelectTempletComponent implements OnInit {
     this.classNameTemp = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataWord = item;
-      this.loaded =true ;
+      // this.loaded =true ;  //tam thoi tắt
     });
   }
   private fetch(): Observable<any[]> {
