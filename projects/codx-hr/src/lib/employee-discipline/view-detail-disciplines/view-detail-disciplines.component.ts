@@ -73,7 +73,6 @@ export class ViewDetailDisciplinesComponent implements OnInit  {
       });
     }
 
-    console.log('thong tin ky luat', this.itemDetail);
   }
 
   changeDataMF(e: any, data: any) {
