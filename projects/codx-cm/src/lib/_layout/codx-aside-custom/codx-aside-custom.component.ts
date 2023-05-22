@@ -38,6 +38,7 @@ import { Observable, of, Subscription } from 'rxjs';
   selector: 'codx-aside-custom',
   templateUrl: './codx-aside-custom.component.html',
   styleUrls: ['./codx-aside-custom.component.css'],
+  host: { class: 'aside' },
 })
 export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   asideTheme: string = '';
