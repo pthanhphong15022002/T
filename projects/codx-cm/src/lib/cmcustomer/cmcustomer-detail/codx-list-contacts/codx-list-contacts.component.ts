@@ -38,8 +38,9 @@ export class CodxListContactsComponent implements OnInit {
   @Input() formModel: FormModel;
   @Output() lstContactEmit = new EventEmitter<any>();
   @Output() lstContactDeleteEmit = new EventEmitter<any>();
+  @Output() objectConvert = new EventEmitter<any>();
 
-  listContacts = [];
+  @Input() listContacts = [];
   formModelContact: FormModel;
   moreFuncEdit = '';
   moreFuncAdd = '';
@@ -53,6 +54,7 @@ export class CodxListContactsComponent implements OnInit {
   method = 'GetListContactAsync';
   isButton = true;
   currentRecID = '';
+  lstConvertContact = [];
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -65,7 +67,26 @@ export class CodxListContactsComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    this.getListContacts();
+    this.loaded = false;
+    if (this.listContacts != null && this.listContacts.length > 0) {
+      this.listContacts = this.cmSv.bringDefaultContactToFront(
+        this.listContacts
+      );
+      if (this.listContacts != null && this.listContacts.length > 0) {
+        this.changeContacts(this.listContacts[0]);
+      }
+      this.loaded = true;
+    } else {
+      if (changes['objectID']) {
+        if (changes['objectID'].currentValue != null) {
+          this.getListContacts();
+        } else {
+          this.loaded = true;
+        }
+      }else{
+        this.loaded = true;
+      }
+    }
   }
 
   async ngOnInit() {
@@ -80,7 +101,6 @@ export class CodxListContactsComponent implements OnInit {
   }
 
   getListContacts() {
-    this.loaded = false;
     this.request.predicates = 'ObjectID=@0';
     this.request.dataValues = this.objectID;
     this.request.entityName = 'CM_Contacts';
@@ -308,4 +328,8 @@ export class CodxListContactsComponent implements OnInit {
   }
 
   //#endregion
+
+  valueChange(e, data) {
+    this.objectConvert.emit({ e: e, data: data });
+  }
 }

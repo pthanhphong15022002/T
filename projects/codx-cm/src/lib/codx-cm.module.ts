@@ -64,6 +64,7 @@ import { PopupAddCampaignComponent } from './campaigns/popup-add-campaign/popup-
 import { PopupStatusCompetitorComponent } from './deals/deal-detail/codx-tab-dealcompetitors/popup-status-competitor/popup-status-competitor.component';
 import { PopupMoveStageComponent } from './deals/popup-move-stage/popup-move-stage.component';
 import { CampaignsDetailComponent } from './campaigns/campaigns-detail/campaigns-detail.component';
+import { PopupConvertLeadComponent } from './leads/popup-convert-lead/popup-convert-lead.component';
 
 const routes: Routes = [
   {
@@ -157,7 +158,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddCampaignComponent,
     PopupStatusCompetitorComponent,
     CampaignsDetailComponent,
-    PopupMoveStageComponent
+    PopupMoveStageComponent,
+    PopupConvertLeadComponent
   ],
   imports: [
     RouterModule.forChild(routes),

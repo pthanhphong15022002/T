@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService, CacheService, NotificationsService } from 'codx-core';
-import { Observable, Subject, firstValueFrom } from 'rxjs';
+import { ApiHttpService, CacheService, DataRequest, NotificationsService } from 'codx-core';
+import { Observable, Subject, firstValueFrom, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -312,6 +312,16 @@ export class CodxCmService {
       }
     }
     return countValidate;
+  }
+
+  loadDataAsync(service: string, options: DataRequest): Observable<any[]> {
+    return this.api
+      .execSv(service, 'ERM.Business.Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(
+        tap((r) => console.log(r)),
+        map((r) => r[0]),
+        tap((r) => console.log(r))
+      );
   }
 
   getAutonumber(functionID, entityName, fieldName): Observable<any> {
