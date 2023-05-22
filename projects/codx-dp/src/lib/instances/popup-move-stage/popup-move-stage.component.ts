@@ -94,6 +94,11 @@ export class PopupMoveStageComponent implements OnInit {
   readonly viewTaskGroup: string = 'TaskGroup';
   fieldsNull = [];
   dateMessage: any;
+  applyFor:any;
+
+
+  // CM
+
   constructor(
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -108,16 +113,24 @@ export class PopupMoveStageComponent implements OnInit {
     this.user = this.authStore.get();
     this.dialog = dialog;
     this.formModel = dt?.data.formModel;
-    this.stepName = dt?.data?.stepName;
     this.isUseReason = dt?.data?.stepReason;
     this.headerText = dt?.data?.headerTitle; //  gán sau button add
     this.durationControl = dt?.data?.isDurationControl;
+    this.applyFor = dt?.data?.applyFor;
     this.viewClick = this.viewKanban;
     this.listStepProccess = dt?.data?.listStepProccess;
-    this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
 
+
+
+    if(this.applyFor == '0'){
+      this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
+    }
+    else if(this.applyFor == '1'){
+
+    }
+
+    this.stepName = this.getStepNameById( this.instance.stepID,this.listStepProccess);
     this.lstParticipants = dt?.data.lstParticipants;
-
     this.stepIdOld = this.instance.stepID;
 
     this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.listStepCbx));
@@ -313,7 +326,6 @@ export class PopupMoveStageComponent implements OnInit {
         return;
       }
       if(this.compareDates(this.instancesStepOld.actualStart,this.instancesStepOld.actualEnd)) {
-       // var dateMessage = new Date(this.instancesStepOld.actualStart).toLocaleDateString('en-AU');
         this.notiService.notifyCode(
           'DP032',
           0,
@@ -495,15 +507,6 @@ export class PopupMoveStageComponent implements OnInit {
     let idx = list.findIndex((x) => x.isFailStep);
     if (idx >= 0) list.splice(idx, 1);
   }
-  getIconTask(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
-    return color?.icon;
-  }
-  getColor(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
-    return { 'background-color': color?.color };
-  }
-
   removeReasonInSteps(listStepCbx, stepReason) {
     !stepReason.isUseFail && this.removeItemFail(listStepCbx);
     !stepReason.isUseSuccess && this.removeItemSuccess(listStepCbx);
@@ -773,5 +776,9 @@ export class PopupMoveStageComponent implements OnInit {
       this.isDurationControl = true;
     }
     return actualEnd;
+  }
+
+  getStepNameById(stepId: string, listSteps:any): string {
+    return listSteps.find(x=>x.stepId === stepId).stepName;
   }
 }
