@@ -367,8 +367,7 @@ export class RoleDetailComponent
     this.api
       .call('ERM.Business.AD', 'RolesBusiness', 'DeleteRolePermissionAsync', [
         roleID,
-        funcID,
-        formName,
+        this.parent,
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
