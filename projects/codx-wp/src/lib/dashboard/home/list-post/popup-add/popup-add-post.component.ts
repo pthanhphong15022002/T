@@ -132,11 +132,11 @@ export class PopupAddPostComponent implements OnInit {
       if (this.status !== 'edit') {
         this.data.recID = Util.uid();
         this.data.contents = "";
-        this.data.createdBy = this.user.userID;
-        this.data.createdName = this.user.userName;
         this.data.shareControl = this.SHARECONTROLS.EVERYONE;
         this.data.category = this.status === "share" ? this.CATEGORY.SHARE : this.CATEGORY.POST;
         this.data.refType = this.dialogData.refType ? this.dialogData.refType : 'WP_Comments';
+        this.data.createdBy = this.user.userID;
+        this.data.createdName = this.user.userName;
         let permission = {
           objectID: '',
           objectName: '',
@@ -266,13 +266,12 @@ export class PopupAddPostComponent implements OnInit {
     .subscribe((res1: boolean) => {
       if (res1) {
         this.insertPost(this.data).subscribe((res2: any) => {
-          if (res2) {
+          if (res2) 
             this.notifySvr.notifyCode('WP024');
-            this.dialogRef.close(res2);
-          } else {
+          else 
             this.notifySvr.notifyCode('WP013');
-          }
           this.loaded = false;
+          this.dialogRef.close(res2);
         });
       } else this.loaded = false;
     });
@@ -322,7 +321,6 @@ export class PopupAddPostComponent implements OnInit {
     debugger;
     this.loaded = true;
     this.data.category = this.CATEGORY.SHARE;
-    this.data.approveControl = '0'; // không bật xét duyệt
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
