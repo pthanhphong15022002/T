@@ -13,7 +13,6 @@ import {
   DialogRef,
 } from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
-import { TN_OrderModule } from '../../models/tmpModule.model';
 
 @Component({
   selector: 'lib-popup-extend-module',
@@ -66,6 +65,7 @@ export class PopupExtendModuleComponent extends UIComponent {
   onInit() {
     this.adService.getTenantDefaultSetting().subscribe((setting) => {
       this.defaultSettings = JSON.parse(setting.dataValue);
+      this.months = Number(this.defaultSettings?.HireInervalNum);
       console.log('settings', this.defaultSettings);
       this.detectorRef.detectChanges();
     });
@@ -78,19 +78,19 @@ export class PopupExtendModuleComponent extends UIComponent {
       },
       {
         headerTemplate: this.operatorHT,
-        width: 30,
+        width: 45,
         template: this.operatorTmp,
         textAlign: 'center',
       },
       {
         headerTemplate: this.employeeHT,
-        width: 30,
+        width: 45,
         template: this.emplTmp,
         textAlign: 'center',
       },
       {
         headerTemplate: this.totalHT,
-        width: 30,
+        width: 45,
         template: this.totalTmp,
         textAlign: 'center',
       },
@@ -120,6 +120,7 @@ export class PopupExtendModuleComponent extends UIComponent {
         curMD.quantity = Number(e.data);
       }
       console.log('curMD', curMD);
+      console.log('isChildMD', isChildMD);
     }
   }
 }

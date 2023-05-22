@@ -408,7 +408,7 @@
   </ng-container>
 </ng-template>
 <ng-template #tabLine>
-  <div *ngIf="modegrid == 1" class="h-100 w-100 border">
+  <div *ngIf="modegrid == '1'" class="h-100 w-100 border">
     <codx-gridview-v2 #grid class="tabLine" #gridPurchase autoLoad="true" [formName]="fmPurchaseInvoicesLines.formName"
       [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
       [templateMore]="morefunction" [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true"
@@ -416,7 +416,7 @@
       (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event, gridPurchase)"
       [allowTextWrap]="false"></codx-gridview-v2>
   </div>
-  <ng-container *ngIf="form?.formGroup && modegrid == 2 && gridViewLines">
+  <ng-container *ngIf="form?.formGroup && modegrid == '2' && gridViewLines">
     <div class="table-responsive mt-3">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered mb-2">
         <thead>
@@ -434,19 +434,16 @@
             </th>
             <th>
               <div class="d-flex">
-                <i class="icon-list-check icon-16 me-2"></i>
                 <span class="fw-bold">Thông tin mua hàng</span>
               </div>
             </th>
             <th>
               <div class="d-flex">
-                <i class="icon-i-journal-text icon-16 me-2"></i>
                 <span class="fw-bold">Thông tin thuế</span>
               </div>
             </th>
             <th>
               <div class="d-flex">
-                <i class="icon-i-graph-up icon-16 me-2"></i>
                 <span class="fw-bold">Thông tin phân tích</span>
               </div>
             </th>

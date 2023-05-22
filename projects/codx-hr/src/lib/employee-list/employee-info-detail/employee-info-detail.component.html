@@ -414,8 +414,8 @@
                 ></codx-vll>
               </div>
             </div>
-            <div class="d-flex align-items-center mb-1">
-              <span class="icon-email icon-16 text-gray-800 me-2"></span>
+            <div class="d-flex align-items-center mb-2">
+              <span class=""></span>
               <span class="text-primary text-decoration-underline">
                 <span
                   #email
@@ -428,21 +428,15 @@
                 ></span>
               </span>
             </div>
-            <div class="d-flex align-items-center mb-1">
-              <span class="icon-local_phone icon-16 text-gray-600 me-2"></span>
-              <span class="text-dark me-5">
-                <span
-                  #phone
-                  *ngIf="eInfoFormModel"
-                  [innerHTML]="
-                    infoPersonal?.phone
+            <div class="d-flex align-items-center mb-2">
+              <span class=""></span>
+              <span class="text-dark me-3">
                       | formatvalue : eInfoFormModel : 'phone'
                       | async
                   "
                 ></span>
-              </span>
               <span
-                class="icon-phone_android icon-16 text-gray-600 me-2"
+                class=""
               ></span>
               <span class="text-dark">
                 <span
@@ -1065,10 +1059,8 @@
                   </div>
                 </div>
                 <div class="col-4">
-                  
-                  <div class="d-flex align-items-center">
-                    <span
-                    class="icon-local_phone icon-16 text-gray-600 me-2"
+                  <span
+                    class=""
                   ></span>
                   <codx-label fiedName="Phone" [formModel]="eInfoFormModel">
                   </codx-label>
@@ -1109,7 +1101,7 @@
                 <div class="col-4">
                   <div class="text-gray-600 pb-1 d-flex">
                     <span
-                      class="icon-phone_android icon-16 text-gray-600 me-2"
+                      class=""
                     ></span>
                     <codx-label fiedName="Mobile" [formModel]="eInfoFormModel">
                     </codx-label>
@@ -5489,7 +5481,7 @@
             <div class="row mb-5">
               <div class="col-4">
                 <div class="text-gray-600 pb-1 d-flex">
-                  <span class="icon-email icon-16 text-gray-600 me-2"></span>
+                  <span class=""></span>
                   <codx-label fiedName="QuitForm" [formModel]="formModel">
                   </codx-label>
                 </div>

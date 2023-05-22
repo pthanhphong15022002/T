@@ -71,7 +71,7 @@
 <ng-template #templateDetail>
   <codx-detail-tmp
     [header]="headerRightTemp"
-    [formModel]="formModel"
+    [formModel]="view.formModel"
     [body]="mainRightTemp"
     [footer]="footerRightTemp"
     (clickMF)="clickMF($event, itemSelected)"
@@ -184,11 +184,11 @@
 
 <ng-template #footerRightTemp>
   <codx-tabs
-    [entityName]="formModel.entityName"
-    [formModel]="formModel"
+    [entityName]="view.formModel.entityName"
+    [formModel]="view.formModel"
     [TabControl]="tabControl"
     [objectID]="itemSelected.recID"
-    [funcID]="formModel.funcID"
+    [funcID]="view.formModel.funcID"
   ></codx-tabs>
 </ng-template>
 

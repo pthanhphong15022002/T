@@ -144,7 +144,7 @@ export class PopupAddStationeryComponent
 
   beforeSave(option: RequestOption) {
     let itemData = this.data;
-    option.methodName = 'AddEditItemAsync';
+    option.methodName = 'SaveAsync';
     option.data = [itemData, this.isAdd];
     return true;
   }
