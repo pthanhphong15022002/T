@@ -746,7 +746,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   eventAction(args: any) {
-    // this.gridCashPaymentLine.enableEdit(0, ['reasonID']);
+    this.gridCashPaymentLine.enableEdit(0, ['reasonID']);
   }
 
   setDefaultDataLine() {
