@@ -35,6 +35,7 @@
         >
           <span class="icon-16 icon-update me-1"></span>
           <codx-label
+            class="text-nowrap"
             fiedName="lblProgress"
             formName="DPInstancesSteps"
             gridViewName="grvDPInstancesSteps"
@@ -268,6 +269,7 @@
     </ng-template>
   </codx-form>
 </ng-template>
+
 <ng-template #task>
   <div class="back-info">
     <div
@@ -314,8 +316,7 @@
         </button>
       </div>
     </div>
-    <div id="step-task" class="main p-5" [ngClass]="'show-main'">
-        
+    <div id="step-task" class="main p-5" [ngClass]="'show-main'">   
       <codx-step-task
         [dataSources]="step"
         [isShowButton]="true"
@@ -332,8 +333,6 @@
   </div>
 
 </ng-template>
-
-
 
 <ng-template #reason>
   <div class="back-info mb-4">

@@ -212,7 +212,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-      .copy(this.view.dataService.dataSelected)
+      .copy((o) => this.setDefault(o))
       .subscribe((res: any) => {
         var obj = {
           formType: 'copy',

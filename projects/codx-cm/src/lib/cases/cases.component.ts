@@ -1,6 +1,26 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  Input,
+  OnInit,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UIComponent, ViewModel, ButtonModel, FormModel, ResourceModel, CacheService, ViewType, SidebarModel, RequestOption } from 'codx-core';
+import {
+  UIComponent,
+  ViewModel,
+  ButtonModel,
+  FormModel,
+  ResourceModel,
+  CacheService,
+  ViewType,
+  SidebarModel,
+  RequestOption,
+} from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
 import { CM_Customers } from '../models/cm_model';
@@ -9,304 +29,274 @@ import { PopupAddCaseComponent } from './popup-add-case/popup-add-case.component
 @Component({
   selector: 'lib-cases',
   templateUrl: './cases.component.html',
-  styleUrls: ['./cases.component.scss']
+  styleUrls: ['./cases.component.scss'],
 })
-export class CasesComponent   extends UIComponent
-implements OnInit, AfterViewInit
+export class CasesComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
 {
-@ViewChild('templateDetail', { static: true })
-templateDetail: TemplateRef<any>;
-@ViewChild('itemTemplate', { static: true })
-itemTemplate: TemplateRef<any>;
-@ViewChild('itemViewList', { static: true })
-itemViewList: TemplateRef<any>;
-@ViewChild('itemMoreFunc', { static: true })
-itemMoreFunc: TemplateRef<any>;
-@ViewChild('itemFields', { static: true })
-itemFields: TemplateRef<any>;
-@ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
-@ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
-@ViewChild('popDetail') popDetail: TemplateRef<any>;
-@ViewChild('footerButton') footerButton?: TemplateRef<any>;
+  @ViewChild('templateDetail', { static: true })
+  templateDetail: TemplateRef<any>;
+  @ViewChild('itemTemplate', { static: true })
+  itemTemplate: TemplateRef<any>;
+  @ViewChild('itemViewList', { static: true })
+  itemViewList: TemplateRef<any>;
+  @ViewChild('itemMoreFunc', { static: true })
+  itemMoreFunc: TemplateRef<any>;
+  @ViewChild('itemFields', { static: true })
+  itemFields: TemplateRef<any>;
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
+  @ViewChild('popDetail') popDetail: TemplateRef<any>;
+  @ViewChild('footerButton') footerButton?: TemplateRef<any>;
 
-// extension core
-views: Array<ViewModel> = [];
-moreFuncs: Array<ButtonModel> = [];
-formModel: FormModel;
+  // extension core
+  views: Array<ViewModel> = [];
+  moreFuncs: Array<ButtonModel> = [];
+  formModel: FormModel;
 
-// type any for view detail
-funcID: any;
-dataObj?: any;
-kanban: any;
+  // type any for view detail
+  funcID: any;
+  dataObj?: any;
+  kanban: any;
 
-// config api get data
-service = 'CM';
-assemblyName = 'ERM.Business.CM';
-entityName = 'CM_Cases';
-className = 'CasesBusiness';
-method = 'GetListCasesAsync';
-idField = 'recID';
+  // config api get data
+  service = 'CM';
+  assemblyName = 'ERM.Business.CM';
+  entityName = 'CM_Cases';
+  className = 'CasesBusiness';
+  method = 'GetListCasesAsync';
+  idField = 'recID';
 
-// data structure
-listCustomer: CM_Customers[] = [];
+  // data structure
+  listCustomer: CM_Customers[] = [];
 
-// type of string
-customerName: string = '';
-oldIdDeal: string = '';
+  // type of string
+  customerName: string = '';
+  oldIdDeal: string = '';
 
-@Input() showButtonAdd = false;
+  @Input() showButtonAdd = false;
 
-columnGrids = [];
-// showButtonAdd = false;
-button?: ButtonModel;
-dataSelected: any;
-//region Method
-//endregion
+  columnGrids = [];
+  // showButtonAdd = false;
+  button?: ButtonModel;
+  dataSelected: any;
+  //region Method
+  //endregion
 
-titleAction = '';
-vllPriority = 'TM005';
-crrFuncID = '';
-viewMode = 2;
-// const set value
-readonly btnAdd: string = 'btnAdd';
-request: ResourceModel;
-resourceKanban?: ResourceModel;
-hideMoreFC = true;
-listHeader: any;
+  titleAction = '';
+  vllPriority = 'TM005';
+  crrFuncID = '';
+  viewMode = 2;
+  // const set value
+  readonly btnAdd: string = 'btnAdd';
+  request: ResourceModel;
+  resourceKanban?: ResourceModel;
+  hideMoreFC = true;
+  listHeader: any;
 
-constructor(
-  private inject: Injector,
-  private cacheSv: CacheService,
-  private activedRouter: ActivatedRoute,
-  private changeDetectorRef: ChangeDetectorRef,
-  private codxCmService: CodxCmService
-) {
-  super(inject);
-  if (!this.funcID)
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  constructor(
+    private inject: Injector,
+    private cacheSv: CacheService,
+    private activedRouter: ActivatedRoute,
+    private changeDetectorRef: ChangeDetectorRef,
+    private codxCmService: CodxCmService
+  ) {
+    super(inject);
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
 
-  // Get API
- // this.getListCustomer();
-}
-ngOnChanges(changes: SimpleChanges): void {
-  //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-  //Add '${implements OnChanges}' to the class.
-}
-
-onInit(): void {
-   //test no chosse
-   this.dataObj = {
-    processID:'327eb334-5695-468c-a2b6-98c0284d0620'
+    // Get API
+    // this.getListCustomer();
   }
-  this.request = new ResourceModel();
-  this.request.service = 'CM';
-  this.request.assemblyName = 'CM';
-  this.request.className = 'CasesBusiness';
-  this.request.method = 'GetListCasesAsync';
-  this.request.idField = 'recID';
-  this.request.dataObj = this.dataObj;
+  ngOnChanges(changes: SimpleChanges): void {
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
+  }
 
-  this.resourceKanban = new ResourceModel();
-  this.resourceKanban.service = 'DP';
-  this.resourceKanban.assemblyName = 'DP';
-  this.resourceKanban.className = 'ProcessesBusiness';
-  this.resourceKanban.method = 'GetColumnsKanbanAsync';
-  this.resourceKanban.dataObj = this.dataObj;
+  onInit(): void {
+    //test no chosse
+    this.dataObj = {
+      processID: '327eb334-5695-468c-a2b6-98c0284d0620',
+    };
+    this.request = new ResourceModel();
+    this.request.service = 'CM';
+    this.request.assemblyName = 'CM';
+    this.request.className = 'CasesBusiness';
+    this.request.method = 'GetListCasesAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj;
 
-  this.button = {
-    id: this.btnAdd,
-  };
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'DP';
+    this.resourceKanban.assemblyName = 'DP';
+    this.resourceKanban.className = 'ProcessesBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = this.dataObj;
 
-  this.views = [
-    {
-      type: ViewType.listdetail,
-      sameData: true,
-      model: {
-        template: this.itemTemplate,
-        panelRightRef: this.templateDetail,
+    this.button = {
+      id: this.btnAdd,
+    };
+
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
       },
-    },
-    {
-      type: ViewType.kanban,
-      active: false,
-      sameData: false,
-      request: this.request,
-      request2: this.resourceKanban,
-      toolbarTemplate: this.footerButton,
-      model: {
-        template: this.cardKanban,
-        template2: this.viewColumKaban,
-        setColorHeader: true,
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        toolbarTemplate: this.footerButton,
+        model: {
+          template: this.cardKanban,
+          template2: this.viewColumKaban,
+          setColorHeader: true,
+        },
       },
-    },
-  ];
+    ];
 
-  this.router.params.subscribe((param: any) => {
-    if (param.funcID) {
-      this.funcID = param.funcID;
-    }
-  });
-}
+    this.router.params.subscribe((param: any) => {
+      if (param.funcID) {
+        this.funcID = param.funcID;
+      }
+    });
+  }
 
-ngAfterViewInit(): void {
-  this.crrFuncID = this.funcID;
-  this.changeDetectorRef.detectChanges();
-}
-
-onLoading(e) {
-  // this.afterLoad();
-}
-
-//#region  get data
-// getListCustomer() {
-//   this.codxCmService.getListCustomer().subscribe((res) => {
-//     if (res) {
-//       this.listCustomer = res[0];
-//     }
-//   });
-// }
-//#endregion
-
-changeView(e) {
-  this.funcID = this.activedRouter.snapshot.params['funcID'];
-  if (this.crrFuncID != this.funcID) {
+  ngAfterViewInit(): void {
     this.crrFuncID = this.funcID;
+    this.changeDetectorRef.detectChanges();
   }
-}
 
-click(evt: ButtonModel) {
-  this.titleAction = evt.text;
-  switch (evt.id) {
-    case 'btnAdd':
-      this.add();
-      break;
+  onLoading(e) {
+    // this.afterLoad();
   }
-}
 
-clickMoreFunc(e) {
-  this.clickMF(e.e, e.data);
-}
+  //#region  get data
+  // getListCustomer() {
+  //   this.codxCmService.getListCustomer().subscribe((res) => {
+  //     if (res) {
+  //       this.listCustomer = res[0];
+  //     }
+  //   });
+  // }
+  //#endregion
 
-changeDataMF($event, data) {}
-
-clickMF(e, data) {
-  this.dataSelected = data;
-  this.titleAction = e.text;
-  switch (e.functionID) {
-    case 'SYS03':
-      this.edit(data);
-      break;
-    case 'SYS04':
-      this.copy(data);
-      break;
-    case 'SYS02':
-      this.delete(data);
-      break;
-  }
-}
-
-dblClick(e, data) {}
-
-getPropertiesHeader(data, type) {
-  if (this.listHeader?.length == 0) {
-    this.listHeader = this.getPropertyColumn();
-  }
-  let find = this.listHeader?.find((item) => item.recID === data.keyField);
-  return find ? find[type] : '';
-}
-
-getPropertyColumn() {
-  let dataColumns =
-    this.kanban?.columns?.map((column) => {
-      return {
-        recID: column['dataColums']?.recID,
-        icon: column['dataColums']?.icon || null,
-        iconColor: column['dataColums']?.iconColor || null,
-        backgroundColor: column['dataColums']?.backgroundColor || null,
-        textColor: column['dataColums']?.textColor || null,
-      };
-    }) || [];
-
-  return dataColumns;
-}
-
-//#region Search
-searchChanged(e) {}
-//#endregion
-
-//#region CRUD
-add() {
-  switch (this.funcID) {
-    case 'CM0401': {
-      //statements;
-      this.addCases();
-      break;
-    }
-    default: {
-      //statements;
-      break;
+  changeView(e) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (this.crrFuncID != this.funcID) {
+      this.crrFuncID = this.funcID;
     }
   }
-}
 
-addCases() {
-  this.view.dataService.addNew().subscribe((res) => {
-
-    let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-
-    var formMD = new FormModel();
-    // formMD.funcID = funcIDApplyFor;
-    // formMD.entityName = fun.entityName;
-    // formMD.formName = fun.formName;
-    // formMD.gridViewName = fun.gridViewName;
-    option.Width = '800px';
-    option.zIndex = 1001;
-    this.openFormCases(formMD, option, 'add');
-  });
-}
-
-openFormCases(formMD, option, action) {
-  var obj = {
-    action: action === 'add' ? 'add' : 'copy',
-    formMD: formMD,
-    titleAction: 'Phiếu ghi nhận thông tin',
-  };
-  let dialogCustomDeal = this.callfc.openSide(
-    PopupAddCaseComponent,
-    obj,
-    option
-  );
-  dialogCustomDeal.closed.subscribe((e) => {
-    if (e && e.event != null) {
-      this.view.dataService.update(e.event).subscribe();
-     this.changeDetectorRef.detectChanges();
+  click(evt: ButtonModel) {
+    this.titleAction = evt.text;
+    switch (evt.id) {
+      case 'btnAdd':
+        this.add();
+        break;
     }
-  });
-}
-
-edit(data) {
-  if (data) {
-    this.view.dataService.dataSelected = data;
   }
-  this.view.dataService
-  .edit(this.view.dataService.dataSelected)
-  .subscribe((res) => {
-    let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    option.Width = '800px';
-    option.zIndex = 1001;
-    var formMD = new FormModel();
-    // formMD.funcID = funcIDApplyFor;
-    // formMD.entityName = fun.entityName;
-    // formMD.formName = fun.formName;
-    // formMD.gridViewName = fun.gridViewName;
+
+  clickMoreFunc(e) {
+    this.clickMF(e.e, e.data);
+  }
+
+  changeDataMF($event, data) {}
+
+  clickMF(e, data) {
+    this.dataSelected = data;
+    this.titleAction = e.text;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+      //xuất file
+      case 'CM0401_5':
+      case 'CM0402_5':
+        this.codxCmService.exportFile(data, this.titleAction);
+        break;
+    }
+  }
+
+  dblClick(e, data) {}
+
+  getPropertiesHeader(data, type) {
+    if (this.listHeader?.length == 0) {
+      this.listHeader = this.getPropertyColumn();
+    }
+    let find = this.listHeader?.find((item) => item.recID === data.keyField);
+    return find ? find[type] : '';
+  }
+
+  getPropertyColumn() {
+    let dataColumns =
+      this.kanban?.columns?.map((column) => {
+        return {
+          recID: column['dataColums']?.recID,
+          icon: column['dataColums']?.icon || null,
+          iconColor: column['dataColums']?.iconColor || null,
+          backgroundColor: column['dataColums']?.backgroundColor || null,
+          textColor: column['dataColums']?.textColor || null,
+        };
+      }) || [];
+
+    return dataColumns;
+  }
+
+  //#region Search
+  searchChanged(e) {}
+  //#endregion
+
+  //#region CRUD
+  add() {
+    switch (this.funcID) {
+      case 'CM0401': {
+        //statements;
+        this.addCases();
+        break;
+      }
+      default: {
+        //statements;
+        break;
+      }
+    }
+  }
+
+  addCases() {
+    this.view.dataService.addNew().subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+
+      var formMD = new FormModel();
+      // formMD.funcID = funcIDApplyFor;
+      // formMD.entityName = fun.entityName;
+      // formMD.formName = fun.formName;
+      // formMD.gridViewName = fun.gridViewName;
+      option.Width = '800px';
+      option.zIndex = 1001;
+      this.openFormCases(formMD, option, 'add');
+    });
+  }
+
+  openFormCases(formMD, option, action) {
     var obj = {
-      action: 'edit',
+      action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
-      titleAction: 'Chỉnh sửa Phiếu ghi nhận sự cố',
+      titleAction: 'Phiếu ghi nhận thông tin',
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddCaseComponent,
@@ -316,66 +306,97 @@ edit(data) {
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event).subscribe();
-       this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
       }
     });
-  });
-}
-
-copy(data) {
-  if (data) {
-    this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
-    this.oldIdDeal= data.recID;
   }
-  this.view.dataService.copy().subscribe((res) => {
 
-    let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
+  edit(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
+        option.zIndex = 1001;
+        var formMD = new FormModel();
+        // formMD.funcID = funcIDApplyFor;
+        // formMD.entityName = fun.entityName;
+        // formMD.formName = fun.formName;
+        // formMD.gridViewName = fun.gridViewName;
+        var obj = {
+          action: 'edit',
+          formMD: formMD,
+          titleAction: 'Chỉnh sửa Phiếu ghi nhận sự cố',
+        };
+        let dialogCustomDeal = this.callfc.openSide(
+          PopupAddCaseComponent,
+          obj,
+          option
+        );
+        dialogCustomDeal.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            this.view.dataService.update(e.event).subscribe();
+            this.changeDetectorRef.detectChanges();
+          }
+        });
+      });
+  }
 
-    var formMD = new FormModel();
-    // formMD.funcID = funcIDApplyFor;
-    // formMD.entityName = fun.entityName;
-    // formMD.formName = fun.formName;
-    // formMD.gridViewName = fun.gridViewName;
-    option.Width = '800px';
-    option.zIndex = 1001;
-    this.openFormCases(formMD, option, 'copy');
-  });
+  copy(data) {
+    if (data) {
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
+      this.oldIdDeal = data.recID;
+    }
+    this.view.dataService.copy().subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
 
-
-}
-
-delete(data: any) {
-  this.view.dataService.dataSelected = data;
-  this.view.dataService
-    .delete([this.view.dataService.dataSelected], true, (opt) =>
-      this.beforeDel(opt)
-    )
-    .subscribe((res) => {
-      if (res) {
-        this.view.dataService.onAction.next({ type: 'delete', data: data });
-      }
+      var formMD = new FormModel();
+      // formMD.funcID = funcIDApplyFor;
+      // formMD.entityName = fun.entityName;
+      // formMD.formName = fun.formName;
+      // formMD.gridViewName = fun.gridViewName;
+      option.Width = '800px';
+      option.zIndex = 1001;
+      this.openFormCases(formMD, option, 'copy');
     });
-  this.changeDetectorRef.detectChanges();
-}
-beforeDel(opt: RequestOption) {
-  var itemSelected = opt.data[0];
-  opt.methodName = 'DeletedCasesAsync';
-  opt.data = [itemSelected.recID];
-  return true;
-}
-//#endregion
+  }
 
-//#region event
-selectedChange(data) {
-  this.dataSelected = data?.data ? data?.data : data;
-  this.changeDetectorRef.detectChanges();
-}
-//#endregion
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+        }
+      });
+    this.changeDetectorRef.detectChanges();
+  }
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeletedCasesAsync';
+    opt.data = [itemSelected.recID];
+    return true;
+  }
+  //#endregion
 
-getCustomerName(customerID: any) {
-  return this.listCustomer.find((x) => x.recID === customerID);
-}
+  //#region event
+  selectedChange(data) {
+    this.dataSelected = data?.data ? data?.data : data;
+    this.changeDetectorRef.detectChanges();
+  }
+  //#endregion
 
+  getCustomerName(customerID: any) {
+    return this.listCustomer.find((x) => x.recID === customerID);
+  }
 }

@@ -47,9 +47,10 @@
           <codx-label fiedName="UserID" [formModel]="form.formModel">
           </codx-label>
           <codx-input
-            [disabled]="true"
             field="UserID"
-            [disabled]="(dialog?.dataService)!.keyField === 'UserID'"
+            [disabled]="
+              (dialog?.dataService)!.keyField === 'UserID' || formType == 'view'
+            "
             [Group]="form.formGroup"
             [formModel]="form.formModel"
           >
@@ -61,7 +62,7 @@
           <codx-label fiedName="EmployeeID" [formModel]="form?.formModel">
           </codx-label>
           <codx-input
-            [disabled]="isEmpIDNotNull"
+            [disabled]="isEmpIDNotNull || formType == 'view'"
             field="employeeID"
             (valueChange)="valueEmp($event)"
             [Group]="form.formGroup"
@@ -89,6 +90,7 @@
         (valueChange)="valueChangeU($event)"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
+        [disabled]="formType == 'view'"
       >
       </codx-input>
     </div>
@@ -100,6 +102,7 @@
         (valueChange)="valueUG($event)"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
+        [disabled]="formType == 'view'"
       >
       </codx-input>
     </div>
@@ -110,6 +113,7 @@
         (valueChange)="valueBU($event)"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
+        [disabled]="formType == 'view'"
       >
       </codx-input>
     </div>
@@ -123,7 +127,9 @@
           [formModel]="form.formModel"
           (valueChange)="valueChangeM($event)"
           [disabled]="true"
-          *ngIf="formType == 'edit' || formType == 'invite'"
+          *ngIf="
+            formType == 'edit' || formType == 'invite' || formType == 'view'
+          "
         >
         </codx-input>
         <codx-input
@@ -144,6 +150,7 @@
           (valueChange)="valueChangeP($event)"
           [Group]="form.formGroup"
           [formModel]="form.formModel"
+          [disabled]="formType == 'view'"
         >
         </codx-input>
       </div>
@@ -157,6 +164,7 @@
         type="button"
         class="btn btn-primary"
         (click)="openPopup(viewChooseRole)"
+        [disabled]="this.isSaving || formType == 'view'"
       >
         <codx-label
           fiedName="titleUserRoles"
@@ -243,7 +251,7 @@
       type="button"
       class="btn btn-primary"
       (click)="saveUser('closePopup', false, false)"
-      [disabled]="this.isSaving"
+      [disabled]="this.isSaving || formType == 'view'"
     >
       <codx-label
         fiedName="Save"
