@@ -50,7 +50,7 @@ export class CodxBookingService {
       'EP',
       'ERM.Business.EP',
       'BookingsBusiness',
-      'AddEditItemAsync',
+      'SaveAsync',
       [data,isAdd,listAttendees,listStationery]
     );
   }
@@ -447,7 +447,7 @@ export class CodxBookingService {
       'EP',
       'ERM.Business.EP',
       'ResourcesBusiness',
-      'AddEditItemAsync',
+      'SaveAsync',
       [model, isAdd]
     );
   }
@@ -463,7 +463,7 @@ export class CodxBookingService {
       'EP',
       'ERM.Business.EP',
       'BookingsBusiness',
-      'AddEditItemAsync',
+      'SaveAsync',
       [data, isAdd, attendees, items, order]
     );
   }

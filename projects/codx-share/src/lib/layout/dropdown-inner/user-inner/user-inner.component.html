@@ -219,7 +219,10 @@
           </span>
         </div>
       </ng-container>
-      <div class="menu-item" *ngIf="user && user.tenant == 'default'">
+      <div
+        class="menu-item"
+        *ngIf="user && user.tenant == 'default' && user.userID == 'CODXAMIN'"
+      >
         <span (click)="runCompare()" class="menu-link px-5">
           <codx-label
             fiedName="lblCompare"

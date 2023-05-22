@@ -111,7 +111,7 @@
     </span>
 
     <div class="steplist-hearder ms-3">
-      <div class="text-dark fw-bold fs-6">
+      <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1">
         {{ groupTask?.taskGroupName }}
       </div>
       <div class="text-gray-500" *ngIf="!isViewStep">
@@ -149,7 +149,7 @@
         [ngClass]="getIconTask(data?.task)"></span>
     </div>
     <div class="steplist-hearder">
-      <div class="text-dark fw-bold fs-6">
+      <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1">
         <span>{{ data?.task?.taskName }}</span>
         <span
           [ngClass]="checkExitsParentID(data?.group?.task, data?.task)"
@@ -229,7 +229,7 @@
 
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
-    <span class="date" *ngIf="data?.value?.startDate && data?.value?.endDate">
+    <span class="date text-nowrap" *ngIf="data?.value?.startDate && data?.value?.endDate">
       {{ data?.value?.startDate | date : dateFomat }} -
       {{ data?.value?.endDate | date : dateFomat }}</span>
     <span class="d-flex align-items-center">
