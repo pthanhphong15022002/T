@@ -9,7 +9,6 @@ import {
   DialogRef,
   FormModel,
 } from 'codx-core';
-import { UpdateProgressComponent } from 'projects/codx-dp/src/lib/componnent-task/update-progress/update-progress.component';
 
 @Component({
   selector: 'lib-view-job',
@@ -139,43 +138,6 @@ export class ViewJobComponent implements OnInit {
     );
   }
   
-  openUpdateProgress(data?: any) {
-    console.log('======');
-    
-    this.callfc.openForm(UpdateProgressComponent, '', 550, 400);
-    if (data?.parentID) {
-      //check công việc liên kết hoàn thành trước
-    //   let check = false;
-    //   let taskName = '';
-    //   let listID = data?.parentID.split(';');
-    //   listID?.forEach((item) => {
-    //     let taskFind = this.taskList?.find((task) => task.refID == item);
-    //     if (taskFind?.progress != 100) {
-    //       check = true;
-    //       taskName = taskFind?.taskName;
-    //     } else {
-    //       this.actualEndMax =
-    //         !this.actualEndMax || taskFind?.actualEnd > this.actualEndMax
-    //           ? taskFind?.actualEnd
-    //           : this.actualEndMax;
-    //     }
-    //   });
-    //   if (check) {
-    //     this.notiService.notifyCode('DP023', 0, taskName);
-    //     return;
-    //   }
-    // } else {
-    //   this.actualEndMax = this.step?.actualStart;
-    // }
-    // if (data) {
-    //   this.dataProgress = JSON.parse(JSON.stringify(data));
-    //   this.dataProgressClone = data;
-    //   this.progressOld = data['progress'] == 100 ? 0 : data['progress'];
-    //   this.disabledProgressInput = data['progress'] == 100 ? true : false;
-    // }
-   
-    }
-  }
   extendShow(): void {
     this.hideExtend = !this.hideExtend;
     var doc = document.getElementsByClassName('extend-more')[0];

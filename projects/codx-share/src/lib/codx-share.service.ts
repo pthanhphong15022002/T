@@ -11,6 +11,7 @@ import { Injectable } from '@angular/core';
 import { TM_Tasks } from './components/codx-tasks/model/task.model';
 import {
   ApiHttpService,
+  AuthService,
   AuthStore,
   CacheService,
   CallFuncService,
@@ -33,6 +34,7 @@ import { AssignTaskModel } from './models/assign-task.model';
 import { lvFileClientAPI } from '@shared/services/lv.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileService } from '@shared/services/file.service';
+import { SignalRService } from './layout/drawers/chat/services/signalr.service';
 
 @Injectable({
   providedIn: 'root',
@@ -45,16 +47,24 @@ export class CodxShareService {
   settingValue = new BehaviorSubject<any>(null);
   public caches = new Map<string, Map<string, any>>();
   private cachedObservables = new Map<string, Observable<any>>();
+
+  //
+  user;
+  //
   constructor(
     private notificationsService: NotificationsService,
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private auth: AuthStore,
+    private authService: AuthService,
     private cache: CacheService,
     private fb: FormBuilder,
     private dmSV: CodxDMService,
-    private fileService: FileService
-  ) {}
+    private fileService: FileService,
+    private signalRSV: SignalRService
+  ) {
+    this.user = this.auth.get();
+  }
   loadFuncID(functionID: any): Observable<any> {
     let paras = [functionID];
     let keyRoot = 'MFunc' + functionID;
@@ -664,6 +674,22 @@ export class CodxShareService {
     this.fileService
       .addFile(fileItem, actionType, entityName, false, null)
       .toPromise();
+  }
+
+  logout() {
+    if (this.user) {
+      let ele = document.getElementsByTagName('codx-chat-container');
+      if (ele.length > 0) {
+        ele[0].remove();
+      }
+      this.signalRSV.sendData(
+        'LogOutAsync',
+        this.user.tenant,
+        this.user.userID
+      );
+    }
+    this.authService.logout('');
+    // document.location.reload();
   }
 }
 

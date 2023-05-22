@@ -55,8 +55,7 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
   selector: 'codx-instances',
   templateUrl: './instances.component.html',
   styleUrls: ['./instances.component.css'],
-})
-export class InstancesComponent
+})export class InstancesComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -1225,7 +1224,6 @@ export class InstancesComponent
             isUseSuccess: this.isUseSuccess,
           };
           var obj = {
-            stepName: this.getStepNameById(data.stepID),
             formModel: formMD,
             instance: data,
             listStepCbx: listStepCbx,
@@ -1235,6 +1233,7 @@ export class InstancesComponent
             listStepProccess: this.process.steps,
             lstParticipants: this.lstOrg,
             isDurationControl: this.checkDurationControl(data.stepID),
+            applyFor: this.process.applyFor
           };
           var dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
@@ -2134,19 +2133,19 @@ export class InstancesComponent
     // }
   }
   approvalTrans(processID: any, datas: any) {
-    this.api
-      .execSv(
-        'ES',
-        'ES',
-        'ApprovalTransBusiness',
-        'GetCategoryByProcessIDAsync',
-        processID
-      )
-      .subscribe((res2: any) => {
+    // this.api
+    //   .execSv(
+    //     'ES',
+    //     'ES',
+    //     'ApprovalTransBusiness',
+    //     'GetCategoryByProcessIDAsync',
+    //     processID
+    //   )
+    //   .subscribe((res2: any) => {
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         //trình ký
-        if (res2?.eSign == true) {
+        if (this.esCategory?.eSign == true) {
           //   let signFile = new ES_SignFile();
           //   signFile.recID = datas.recID;
           //   signFile.title = datas.title;
@@ -2187,10 +2186,10 @@ export class InstancesComponent
           //       //update lại data
           //     }
           //   });
-        } else if (res2?.eSign == false)
+        } else if (this.esCategory?.eSign == false)
           //xét duyệt
           this.release(datas, processID);
-      });
+     // });
   }
   //Gửi duyệt
   release(data: any, processID: any) {

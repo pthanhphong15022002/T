@@ -942,7 +942,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   beforeSave(option: RequestOption) {
     let itemData = this.data;
-    option.methodName = 'AddEditItemAsync';
+    option.methodName = 'SaveAsync';
     let isAdd = true;
     if (this.funcType == _editMF) {
       isAdd = false;

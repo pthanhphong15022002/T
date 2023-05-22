@@ -261,6 +261,21 @@ export class UserComponent extends UIComponent {
       });
   }
 
+  viewInfo(formType: string, data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    var obj = {
+      formType: formType,
+      headerText: this.headerText,
+    };
+    let option = new SidebarModel();
+    option.DataService = this.view?.currentView?.dataService;
+    option.FormModel = this.view?.currentView?.formModel;
+    option.Width = 'Auto';
+    let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+  }
+
   copy(data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
