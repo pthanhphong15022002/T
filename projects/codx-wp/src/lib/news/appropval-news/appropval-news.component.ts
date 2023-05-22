@@ -1,5 +1,5 @@
 import { Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ViewModel, AuthService, CallFuncService, ViewType, DataRequest, RequestOption, UIComponent, DialogModel } from 'codx-core';
+import { ViewModel, AuthService, CallFuncService, ViewType, DataRequest, RequestOption, UIComponent, DialogModel, AuthStore, CacheService } from 'codx-core';
 import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupEditComponent } from '../popup/popup-edit/popup-edit.component';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
@@ -32,7 +32,7 @@ export class AppropvalNewsComponent extends UIComponent {
   dataSelected: any = null;
   itemSelected: any = null;
   selectedID: string = '';
-
+  vllWP004:any[] = [];
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
@@ -67,13 +67,13 @@ export class AppropvalNewsComponent extends UIComponent {
     },
   ];
   constructor(
-    private auth: AuthService,
-    private callFuc: CallFuncService,
-    private injector: Injector
+    private injector: Injector,
+    private auth: AuthStore,
+    private callFuc: CallFuncService
   ) 
   {
     super(injector);
-    this.user = this.auth.userValue;
+    this.user = this.auth.get();
 
   }
   onInit(): void {
@@ -94,6 +94,14 @@ export class AppropvalNewsComponent extends UIComponent {
         this.loadDataTab(this.funcID);
       }
     });
+    this.cache.valueList("WP004")
+    .subscribe((vll:any)=> {
+      debugger
+      if(Array.isArray(vll?.datas))
+      {
+        vll.datas.forEach(e => this.vllWP004[e.value] = e);
+      }
+    })
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -117,7 +125,7 @@ export class AppropvalNewsComponent extends UIComponent {
         .execSv(
           this.service,
           this.assemblyName,
-          funcID == 'WPT0213'? 'CommentsBusiness' : 'NewsBusiness',
+          'NewsBusiness',
           'GetDataTabApproAsync',
           [funcID])
         .subscribe((res: any) => {
@@ -146,7 +154,6 @@ export class AppropvalNewsComponent extends UIComponent {
   }
   // click tab approval
   clickTabApprove(item) {
-    debugger
     let predicates = [item.value ? "ApproveStatus = @0" : ""];
     let dataValues = [item.value];
     this.view.dataService.page = 0;
@@ -237,32 +244,40 @@ export class AppropvalNewsComponent extends UIComponent {
     }
   }
 
-  beforDeletedPost(option: RequestOption, data: any) {
+  beforDeletedPost(option: RequestOption, recID: string) {
     option.service = 'WP';
     option.assemblyName = 'ERM.Business.WP';
-    option.className = 'NewsBusiness';
-    if (this.view.funcID == 'WPT0211' || this.view.funcID == 'WPT0212') 
-      option.methodName = 'DeleteNewsAsync';
-    else
-      option.methodName = 'DeletePostAsync';
-    option.data = data;
+    option.className = this.funcID == "WPT0213" ? "CommentsBusiness" : "NewsBusiness";
+    option.methodName =  this.funcID == "WPT0213" ? "DeletePostAsync" : "DeleteNewsAsync";
+    option.data = recID;
     return true;
   }
 
   deletedPost(data: any) {
-    if (!data) return;
-    this.view.dataService
-      .delete([data], true, (opt: any) => this.beforDeletedPost(opt, data))
+    if (data?.recID)
+    {
+      this.view.dataService
+      .delete([data], true, (opt: any) => this.beforDeletedPost(opt, data.recID))
       .subscribe();
+    }
   }
 
 
-  setStyles(data: any) {
+  setStyles(value: string) {
     let styles = {
-      backgroundColor: data,
-      color: 'white',
+      backgroundColor: this.vllWP004[value].color,
+      color: this.vllWP004[value].textcolor,
     };
     return styles;
+  }
+  setDescription(data:any):string
+  {
+    let des = "";
+    if(data.category == "1" || data.category == "3" || data.category == "4" || data.category == "companyinfo")
+      des = data.contents;
+    else
+      des = data.subject;
+    return des;
   }
 
   deleteData() {

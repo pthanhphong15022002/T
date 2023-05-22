@@ -185,10 +185,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      debugger
-      let data = res?.event;
-      if (data?.approveStatus == "5") 
-        (this.listview.dataService as CRUDService).add(data).subscribe();
+      if(res?.event)
+        (this.listview.dataService as CRUDService).add(res.event).subscribe();
     });
   }
 
@@ -233,9 +231,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      let data = res.event;
-      if (data?.approveStatus == "5")
-        (this.listview.dataService as CRUDService).update(data).subscribe();
+      if (res.event)
+        (this.listview.dataService as CRUDService).update(res.event).subscribe();
     });
   }
   
@@ -266,9 +263,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         option
       );
       popup.closed.subscribe((res: any) => {
-        let data = res?.event; 
-        if (data.approveStatus === "5") 
-          (this.listview.dataService as CRUDService).add(data).subscribe();
+        if (res?.event) 
+          (this.listview.dataService as CRUDService).add(res.event).subscribe();
       });
     }
   }
