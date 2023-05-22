@@ -542,39 +542,40 @@ export class DealsComponent
 
   //xuất file
   exportFile(dt) {
-    this.codxCmService
-      .getDataInstance(dt.refID)
-      .subscribe((res) => {
-        if (res) {
-          let option = new DialogModel();
-          option.zIndex = 1001;
-          let formModel = new FormModel() ;
+    this.codxCmService.exportFile(dt,this.titleAction) ;
+    // this.codxCmService
+    //   .getDataInstance(dt.refID)
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       let option = new DialogModel();
+    //       option.zIndex = 1001;
+    //       let formModel = new FormModel() ;
           
-          formModel.entityName = 'DP_Instances';
-          formModel.formName = 'DPInstances';
-          formModel.gridViewName = 'grvDPInstances';
-          formModel.funcID = 'DPT04';
+    //       formModel.entityName = 'DP_Instances';
+    //       formModel.formName = 'DPInstances';
+    //       formModel.gridViewName = 'grvDPInstances';
+    //       formModel.funcID = 'DPT04';
 
-          let obj = {
-            data: res,
-            formModel: formModel,
-            isFormExport: true,
-            refID: dt.processID,
-            refType: 'DP_Processes',
-            titleAction: this.titleAction,
-            loaded: false,
-          };
-          let dialogTemplate = this.callfc.openForm(
-            PopupSelectTempletComponent,
-            '',
-            600,
-            500,
-            '',
-            obj,
-            '',
-            option
-          );
-        }
-      });
+    //       let obj = {
+    //         data: res,
+    //         formModel: formModel,
+    //         isFormExport: true,
+    //         refID: dt.processID,
+    //         refType: 'DP_Processes',
+    //         titleAction: this.titleAction,
+    //         loaded: false,
+    //       };
+    //       let dialogTemplate = this.callfc.openForm(
+    //         PopupSelectTempletComponent,
+    //         '',
+    //         600,
+    //         500,
+    //         '',
+    //         obj,
+    //         '',
+    //         option
+    //       );
+    //     }
+    //   });
   }
 }

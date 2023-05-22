@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService, CacheService, NotificationsService } from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, DialogModel, FormModel, NotificationsService } from 'codx-core';
+import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
 import { Observable, Subject, firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxCmService {
+  titleAction: any;
   constructor(
     private api: ApiHttpService,
+    private callfc: CallFuncService,  
     private cache: CacheService,
     private notification: NotificationsService
   ) {}
@@ -703,5 +706,42 @@ export class CodxCmService {
       'GetInstanceByRecIDAsync',
       recID
     );
+  }
+
+   //xuất file - hàm chung
+   exportFile(dt,titleAction) {
+    this.getDataInstance(dt.refID)
+      .subscribe((res) => {
+        if (res) {
+          let option = new DialogModel();
+          option.zIndex = 1001;
+          let formModel = new FormModel() ;
+          
+          formModel.entityName = 'DP_Instances';
+          formModel.formName = 'DPInstances';
+          formModel.gridViewName = 'grvDPInstances';
+          formModel.funcID = 'DPT04';
+
+          let obj = {
+            data: res,
+            formModel: formModel,
+            isFormExport: true,
+            refID: dt.processID,
+            refType: 'DP_Processes',
+            titleAction: titleAction,
+            loaded: false,
+          };
+          let dialogTemplate = this.callfc.openForm(
+            PopupSelectTempletComponent,
+            '',
+            600,
+            500,
+            '',
+            obj,
+            '',
+            option
+          );
+        }
+      });
   }
 }
