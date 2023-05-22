@@ -23,12 +23,11 @@
   <div class="modules">
     <ng-template [ngTemplateOutlet]="gridModules"> </ng-template>
   </div>
-  <div class="close d-flex justify-content-end">
-    <button
-      type="button"
-      class="btn btn-light-primary me-4"
-      (click)="onClose()"
-    >
+  <div class="close d-flex justify-content-between">
+    <button type="button" class="btn btn-primary me-4" (click)="extendOrder()">
+      <codx-label formName="" default="Gia hạn đơn hàng"></codx-label>
+    </button>
+    <button type="button" class="btn btn-primary me-4" (click)="onClose()">
       <codx-label formName="" default="OK"></codx-label>
     </button>
   </div>
