@@ -107,12 +107,13 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    let ele = document.getElementsByTagName('codx-chat-container');
-    if (ele.length > 0) {
-      ele[0].remove();
-    }
-    this.signalRSV.sendData('LogOutAsync', this.user.tenant, this.user.userID);
-    this.auth.logout('');
+    // let ele = document.getElementsByTagName('codx-chat-container');
+    // if (ele.length > 0) {
+    //   ele[0].remove();
+    // }
+    // this.signalRSV.sendData('LogOutAsync', this.user.tenant, this.user.userID);
+    // this.auth.logout('');
+    this.codxShareSV.logout();
     // document.location.reload();
   }
 

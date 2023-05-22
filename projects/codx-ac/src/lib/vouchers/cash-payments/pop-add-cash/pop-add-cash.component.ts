@@ -149,7 +149,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   dataLine: any;
   columnsGrid: any;
   columnsGridM1: any = [];
-  toolbar: ToolbarItems[] = ['Add', 'Edit', 'Delete', 'Update', 'Cancel'];
+  lsAccount = [];
   filterSettings: FilterSettingsModel = { type: 'CheckBox' };
   contextMenuItems: ContextMenuItem[] = [
     'AutoFit',
@@ -372,7 +372,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
 
-    this.gridHeight = hBody - (hTab + hNote + 140);
+    this.gridHeight = hBody - (hTab + hNote + 160);
   }
 
   lineChanged(e: any) {
@@ -501,7 +501,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             .save(null, 0, '', '', false)
             .subscribe((res) => {
               if (res && res.update.data != null) {
-                this.loadformSettledInvoices(type);
+                this.loadformSettledInvoices(type);              
               }
             });
           break;
@@ -593,6 +593,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               for (let i = 0; i < this.cashpaymentline.length; i++) {
                 this.cashpaymentline[i].rowNo = i + 1;
               }
+              this.gridCashPaymentLine.refresh();
               break;
           }
           this.api
@@ -696,6 +697,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       type: 'add',
       lockFields: this.lockFields,
       journal: this.journal,
+      grid: this.gridCashPaymentLine,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -743,244 +745,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       });
   }
 
-  onEdit(e: any) {
-    if (e.action == 'edit') {
-      //this.checkValidateLine(e.data);
-      if (this.validate > 0) {
-        this.validate = 0;
-        this.notification.notifyCode('SYS021', 0, '');
-        this.gridCashPaymentLine.gridRef.selectRow(e.rowIndex);
-        return;
-      } else {
-        this.api
-          .execAction<any>(this.entityNameLine, [e], 'UpdateAsync')
-          .subscribe((save) => {
-            if (save) {
-              this.notification.notifyCode('SYS007', 0, '');
-              this.hasAddrow = true;
-            }
-          });
-      }
-    }
-  }
-
   eventAction(args: any) {
-    this.gridCashPaymentLine.gridRef.selectRow(args.data.rowIndex);
-    this.gridCashPaymentLine.gridRef.startEdit();
+    this.gridCashPaymentLine.enableEdit(0, ['reasonID']);
   }
-
-  onAddNew(e: any) {
-    //this.checkValidateLine(e);
-    if (this.validate > 0) {
-      this.validate = 0;
-      e.isAddNew = true;
-      this.notification.notifyCode('SYS023', 0, '');
-      return;
-    } else {
-      this.api
-        .execAction<any>(this.entityNameLine, [e], 'SaveAsync')
-        .subscribe((save) => {
-          if (save) {
-            this.notification.notifyCode('SYS006', 0, '');
-            this.hasAddrow = true;
-          }
-        });
-    }
-  }
-
-  actionComplete(args: any): void {
-    switch (args.action) {
-      case 'add':
-        if (args.requestType == 'save') {
-          this.cashpaymentline[args.index] = this.fgLine.value;
-          this.cashpaymentline.sort((a, b) => a.rowNo - b.rowNo);
-          this.loadTotal();
-          this.hasSaved = true;
-          this.grid.refresh();
-          this.api
-            .execAction<any>(
-              this.entityNameLine,
-              [this.fgLine.value],
-              'SaveAsync'
-            )
-            .subscribe((save) => {
-              if (save) {
-                this.fgLine.reset();
-                this.dialog.dataService.updateDatas.set(
-                  this.cashpayment['_uuid'],
-                  this.cashpayment
-                );
-                this.dialog.dataService
-                  .save(null, 0, '', '', false)
-                  .subscribe((res) => {});
-              }
-            });
-        }
-        break;
-      case 'edit':
-        if (args.requestType == 'save') {
-          this.cashpaymentline[args.rowIndex] = this.fgLine.value;
-          this.cashpaymentline.sort((a, b) => a.rowNo - b.rowNo);
-          this.hasSaved = true;
-          this.loadTotal();
-          this.grid.refresh();
-          this.api
-            .execAction<any>(
-              this.entityNameLine,
-              [this.fgLine.value],
-              'UpdateAsync'
-            )
-            .subscribe((save) => {
-              if (save) {
-                this.fgLine.reset();
-                this.dialog.dataService.updateDatas.set(
-                  this.cashpayment['_uuid'],
-                  this.cashpayment
-                );
-                this.dialog.dataService
-                  .save(null, 0, '', '', false)
-                  .subscribe((res) => {});
-              }
-            });
-        }
-        break;
-    }
-  }
-
-  actionBegin(args: SaveEventArgs): void {
-    switch (args.requestType) {
-      case 'beginEdit':
-        this.fgLine.patchValue(args.rowData);
-        const options = new DataRequest();
-        options.entityName = 'AC_Journals';
-        options.predicates = 'JournalNo=@0';
-        options.dataValues = this.cashpayment.journalNo;
-        options.pageLoading = false;
-        this.api
-          .execSv<any>('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
-          .pipe(map((r) => r[0]))
-          .subscribe((res) => {
-            this.journal = res[0];
-            this.loadAccountControl(this.journal);
-          });
-        break;
-      case 'add':
-        this.checkValidate();
-        if (this.validate > 0) {
-          this.validate = 0;
-          args.cancel = true;
-          return;
-        } else {
-          switch (this.formType) {
-            case 'add':
-              if (this.hasSaved) {
-                this.dialog.dataService.updateDatas.set(
-                  this.cashpayment['_uuid'],
-                  this.cashpayment
-                );
-                this.dialog.dataService
-                  .save(null, 0, '', '', false)
-                  .subscribe((res) => {
-                    if (res && res.update.data != null) {
-                      this.setDefaultDataLine();
-                    }
-                  });
-              } else {
-                this.journalService.handleVoucherNoAndSave(
-                  this.journal,
-                  this.cashpayment,
-                  'AC',
-                  'AC_CashPayments',
-                  this.form,
-                  this.formType === 'edit',
-                  () => {
-                    this.dialog.dataService
-                      .save(null, 0, '', '', false)
-                      .subscribe((res) => {
-                        if (res && res.save.data != null) {
-                          this.hasSaved = true;
-                          this.setDefaultDataLine();
-                        }
-                      });
-                  }
-                );
-              }
-              break;
-            case 'edit':
-              this.dialog.dataService.updateDatas.set(
-                this.cashpayment['_uuid'],
-                this.cashpayment
-              );
-              this.dialog.dataService
-                .save(null, 0, '', '', false)
-                .subscribe((res) => {
-                  if (res != null) {
-                    this.setDefaultDataLine();
-                  }
-                });
-              break;
-          }
-        }
-        break;
-      case 'save':
-        this.checkValidateLine(this.fgLine.value, args);
-        if (this.validate > 0) {
-          this.validate = 0;
-          args.cancel = true;
-          return;
-        }
-        break;
-      case 'delete':
-        args.cancel = true;
-        this.notification.alertCode('SYS030', null).subscribe((res) => {
-          if (res.event.status === 'Y') {
-            let index = this.cashpaymentline.findIndex(
-              (x) => x.recID == args.data[0].recID
-            );
-            this.cashpaymentline.splice(index, 1);
-            for (let i = 0; i < this.cashpaymentline.length; i++) {
-              this.cashpaymentline[i].rowNo = i + 1;
-            }
-            this.cashpaymentline.sort((a, b) => a.rowNo - b.rowNo);
-            this.grid.refresh();
-            this.api
-              .execAction<any>(
-                this.entityNameLine,
-                [args.data[0]],
-                'DeleteAsync'
-              )
-              .subscribe((res) => {
-                if (res) {
-                  this.hasSaved = true;
-                  this.api
-                    .exec('AC', this.classNameLine, 'UpdateAfterDelete', [
-                      this.cashpaymentline,
-                    ])
-                    .subscribe((res) => {});
-                }
-              });
-          }
-        });
-        break;
-    }
-  }
-  // contextMenuClick(args: MenuEventArgs): void {
-  //   if (args.item.id === 'grid_1910395208_3_cmenu_PdfExport') {
-  //     let content = this.content.nativeElement;
-  //     let doc = new jsPDF();
-  //     let _elementHandlers = {
-  //       '#editor': function (element, renderer) {
-  //         return true;
-  //       },
-  //     };
-  //     doc.fromHTML(content.innerHTML, 15, 15, {
-  //       width: 190,
-  //       elementHandlers: _elementHandlers,
-  //     });
-
-  //     doc.save('test.pdf');
-  //   }
-  // }
 
   setDefaultDataLine() {
     let idx;
@@ -1020,6 +787,16 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               .save(null, 0, '', 'SYS006', true)
               .subscribe((res) => {
                 if (res && res.update.data != null) {
+                  if (this.cashpayment.subType == '2') {
+                    this.api
+                      .exec<any>(
+                        'AC',
+                        'SettledInvoicesBusiness',
+                        'AddListAsync',
+                        [this.cashpayment, this.settledInvoices]
+                      )
+                      .subscribe((res) => {});
+                  }
                   this.dialog.close({
                     update: true,
                     data: res.update,
@@ -1041,6 +818,16 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 this.cashpayment.status = '1';
                 this.dialog.dataService.save().subscribe((res) => {
                   if (res && res.save.data != null) {
+                    if (this.cashpayment.subType == '2') {
+                      this.api
+                        .exec<any>(
+                          'AC',
+                          'SettledInvoicesBusiness',
+                          'AddListAsync',
+                          [this.cashpayment, this.settledInvoices]
+                        )
+                        .subscribe((res) => {});
+                    }
                     this.dialog.close();
                     this.dt.detectChanges();
                   }
@@ -1082,10 +869,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   onSaveAdd() {
-    // if (this.cashpaymentline.length == 0) {
-    //   this.notification.notifyCode('AC0013', 0, '');
-    //   return;
-    // }
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
@@ -1107,6 +890,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 this.form.formGroup.patchValue(this.cashpayment);
                 this.hasSaved = false;
               });
+            if (this.cashpayment.subType == '2') {
+              this.api
+                .exec<any>('AC', 'SettledInvoicesBusiness', 'AddListAsync', [
+                  this.cashpayment,
+                  this.settledInvoices,
+                ])
+                .subscribe((res) => {});
+            }
           }
         });
       } else {
@@ -1379,16 +1170,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       if (res && res.event && res.event.length) {
         // this.setVoucherRef(res.event);
         this.settledInvoices = res.event;
-        this.api
-          .exec<any>('AC', 'SettledInvoicesBusiness', 'AddListAsync', [
-            this.cashpayment,
-            this.settledInvoices,
-          ])
-          .subscribe((res) => {
-            if (res) {
-              this.gridSettledInvoices.gridRef.refresh();
-            }
-          });
+        this.gridSettledInvoices.gridRef.refresh();
       }
     });
   }
@@ -1463,6 +1245,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.cache.companySetting().subscribe((res) => {
       this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
     });
+    this.api
+      .exec('AC', 'CommonBusiness', 'GetAccountName')
+      .subscribe((res: any) => {
+        this.lsAccount = res;
+      });
     this.loadcolumnsGrid();
     this.loadTotal();
     this.loadReason();
@@ -1494,7 +1281,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       {
         headerText: 'Tài khoản',
         template: this.account,
-        width: '50',
+        width: '200',
       },
       {
         headerText: 'Nợ',
@@ -1571,6 +1358,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         ['@0.Contains(AccountID)'],
         [`[${this.journal?.crAcctID}]`]
       );
+    }
+  }
+
+  loadAccountName(accountID) {
+    for (let index = 0; index < this.lsAccount.length; index++) {
+      if (this.lsAccount[index].accountID == accountID) {
+        return this.lsAccount[index].accountName.toLocaleString();
+      }
     }
   }
   //#endregion
