@@ -25,18 +25,18 @@ import { PopupEmployeeBusinessComponent } from './popup-employee-business/popup-
 @Component({
   selector: 'lib-employee-business-travel',
   templateUrl: './employee-business-travel.component.html',
-  styleUrls: ['./employee-business-travel.component.css']
+  styleUrls: ['./employee-business-travel.component.css'],
 })
-export class EmployeeBusinessTravelComponent extends UIComponent{
+export class EmployeeBusinessTravelComponent extends UIComponent {
   console = console;
   //#region view
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
 
-   //Detail
-   @ViewChild('templateListDetail') templateListDetail?: TemplateRef<any>;
-   @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
-   itemDetail;
+  //Detail
+  @ViewChild('templateListDetail') templateListDetail?: TemplateRef<any>;
+  @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
+  itemDetail;
 
   views: Array<ViewModel> = [];
   funcID: string;
@@ -69,7 +69,6 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
   actionUpdateApproved = 'HRTPro10AU5';
   actionUpdateClosed = 'HRTPro10AU9';
 
-
   constructor(
     inject: Injector,
     private hrService: CodxHrService,
@@ -87,7 +86,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
       .gridViewSetup('EBusinessTravels', 'grvEBusinessTravels')
       .subscribe((res) => {
         if (res) {
-          this.grvSetup = Util.camelizekeyObj(res);
+          this.grvSetup = res;
         }
       });
 
@@ -273,7 +272,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
               '<div> Công tác - ' + this.itemDetail.decisionNo + '</div>'
             )
             .subscribe((result) => {
-              console.log(result)
+              console.log(result);
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
@@ -281,7 +280,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
                 this.hrService
                   .EditEmployeeContactMoreFunc(this.itemDetail)
                   .subscribe((res) => {
-                    console.log('Result after send edit' + res)
+                    console.log('Result after send edit' + res);
                     if (res) {
                       this.view?.dataService
                         ?.update(this.itemDetail)

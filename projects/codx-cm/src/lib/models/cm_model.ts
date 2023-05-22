@@ -182,6 +182,7 @@ export class CM_Deals {
   modifiedOn: Date;
   modifiedBy: string;
   boolean;
+  note: string;
 }
 
 export class CM_Permissions {

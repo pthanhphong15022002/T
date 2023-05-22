@@ -78,51 +78,39 @@
     </div>
 
     <div class="w-40 min-w-250px px-2">
-      <div class="d-flex flex-column">
-        <div class="d-flex flex-row">
-          <span
-            [title]="
-              eDisciplineHeaderText ? eDisciplineHeaderText['DisciplineID'] : ''
-            "
-            [innerHTML]="
-              data?.disciplineID
-                | formatvalue : view.formModel : 'disciplineID'
-                | async
-            "
+      <div class="d-flex flex-row">
+        <span
+          class="fw-bold fs-6"
+          [ngbTooltip]="grvSetup?.DisciplineID?.headerText"
+          [innerHTML]="
+            data?.disciplineID
+              | formatvalue : view.formModel : 'disciplineID'
+              | async
+          "
+        >
+        </span>
+        <div class="d-flex flex-row me-2" *ngIf="data?.attachments > 0">
+          <codx-attachment-temp
+            [objectID]="data.recID"
+            [formModel]="view.formModel"
           >
-          </span>
-          <div class="d-flex flex-row me-2" *ngIf="data?.attachments > 0">
-            <codx-attachment-temp [objectID]="data.recID" [formModel]="view.formModel">
-            </codx-attachment-temp>
-        </div>
-        </div>
-        <div>
-          <span
-            [title]="
-              eDisciplineHeaderText
-                ? eDisciplineHeaderText['DisciplineFormCategory']
-                : ''
-            "
-            [innerHTML]="
-              data?.disciplineFormCategory
-                | formatvalue : view.formModel : 'disciplineFormCategory'
-                | async
-            "
-          >
-          </span>
-        </div>
-        <div class="d-flex flex-row">
-          <div class="align-self-center fw-bold">
-            <span
-              [title]="
-                eDisciplineHeaderText ? eDisciplineHeaderText['Reason'] : ''
-              "
-            >
-              {{ data?.reason }}</span
-            >
-          </div>
+          </codx-attachment-temp>
         </div>
       </div>
+      <div>
+        <span
+          class="text-warning fs-6"
+          [ngbTooltip]="grvSetup?.DisciplineFormCategory?.headerText"
+          [innerHTML]="
+            data?.disciplineFormCategory
+              | formatvalue : view.formModel : 'disciplineFormCategory'
+              | async
+          "
+        ></span>
+      </div>
+      <span [ngbTooltip]="grvSetup?.Reason?.headerText">
+        {{ data?.reason }}
+      </span>
     </div>
 
     <div class="w-30 min-w-200px px-2">
@@ -140,32 +128,28 @@
       </div>
       <div class="d-flex flex-column">
         <div class="fw-bold">
-          <span
-          >
-          <codx-label
-            [default]="'Ngày vi phạm:'"
-            [formModel]="view?.formModel"
-            [name]="'lblEDisciplineDate'"
-          >
-          </codx-label>
-             {{ data?.disciplineDate | fmDT }}</span
+          <span>
+            <codx-label
+              [default]="'Ngày vi phạm:'"
+              [formModel]="view?.formModel"
+              [name]="'lblEDisciplineDate'"
+            >
+            </codx-label>
+            {{ data?.disciplineDate | fmDT }}</span
           >
         </div>
         <div class="fw-bold">
-          <span
-          
-          >
-          <codx-label
-          [default]="'Ngày xử lý:'"
-          [formModel]="view?.formModel"
-          [name]="'lblEDisciplineFromDate'"
-          >
-          </codx-label>
+          <span>
+            <codx-label
+              [default]="'Ngày xử lý:'"
+              [formModel]="view?.formModel"
+              [name]="'lblEDisciplineFromDate'"
+            >
+            </codx-label>
             {{ data?.fromDate | fmDT }}</span
           >
         </div>
       </div>
-
 
       <!-- <codx-attachment
         #attachment
@@ -217,28 +201,22 @@
 
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 ps-2 pe-4">
-  <div class="w-30 p-3 fw-bold text-dark">
-    <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
-  </div>
-  <div class="w-40 min-w-250px p-3 fw-bold text-dark">
-    <codx-label
-      name="lblContractType"
-      [default]="'Kỷ luật'"
-    ></codx-label>
-  </div>
-  <div class="w-30 min-w-200px p-3 fw-bold text-dark">
-    <codx-label
-      name="lblContractNum"
-      [default]="'Trạng thái'"
-    ></codx-label>
-  </div>
-  <!-- <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <div class="w-30 p-3 fw-bold text-dark">
+      <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+    </div>
+    <div class="w-40 min-w-250px p-3 fw-bold text-dark">
+      <codx-label name="lblContractType" [default]="'Kỷ luật'"></codx-label>
+    </div>
+    <div class="w-30 min-w-200px p-3 fw-bold text-dark">
+      <codx-label name="lblContractNum" [default]="'Trạng thái'"></codx-label>
+    </div>
+    <!-- <div class="w-25 text-primary p-3 fs-5 fw-500">
     <codx-label
       name="lblApproveStatus"
       [default]="'Tình trạng duyệt'"
     ></codx-label>
   </div> -->
-</div>
+  </div>
 </ng-template>
 
 <ng-template #eInfoTemplate let-data>
@@ -304,11 +282,10 @@
             ></codx-label>
           </label>
           <codx-input
-          type = "text"
-          [formModel]="view.formModel"
-          (valueChange)="ValueChangeComment($event)"
+            type="text"
+            [formModel]="view.formModel"
+            (valueChange)="ValueChangeComment($event)"
           >
-
           </codx-input>
           <!-- <codx-input
             field="note"
@@ -363,74 +340,61 @@
   </div>
 
   <ng-template #titleTmp let-data>
-    <div class="w-100">    
-    <div class="d-flex align-items-center mb-1">
-      <span class="fw-bold fs-6 text-dark me-2">
-        {{ data?.emp?.employeeName }}
-      </span>
-      <!-- <i class="icon-qr_code_scanner icon-14 me-1"></i>
-      <span class="text-danger">
-        {{ data?.emp?.employeeID }}
-      </span> -->
-    </div>
-    <div class="fs-7 text-gray-600">
-      <span
-        [innerHTML]="
-          data?.positionID
-            | formatvalue : view.formModel : 'PositionID'
-            | async
-        "
-      ></span>
-    </div>
-
+    <div class="w-100">
+      <div class="d-flex align-items-center mb-1">
+        <span class="fw-bold fs-6 text-dark me-2">
+          {{ data?.emp?.employeeName }}
+        </span>
+      </div>
       <div class="fs-7 text-gray-600">
         <span
-        [title]="
-        eDisciplineHeaderText ? eDisciplineHeaderText['DisciplineID'] : ''
-      "
-      [innerHTML]="
-        data?.disciplineID
-          | formatvalue : view.formModel : 'disciplineID'
-          | async
-      "
+          [innerHTML]="
+            data?.positionID
+              | formatvalue : view.formModel : 'PositionID'
+              | async
+          "
         ></span>
       </div>
-      <div
-    >
-      <div class="justify-content-between mb-1">
+
+      <div class="fw-bold fs-7">
         <span
-        [title]="
-        eDisciplineHeaderText
-          ? eDisciplineHeaderText['DisciplineFormCategory']
-          : ''
-      "
-      [innerHTML]="
-        data?.disciplineFormCategory
-          | formatvalue : view.formModel : 'disciplineFormCategory'
-          | async
-      "
+          [ngbTooltip]="grvSetup?.DisciplineID?.headerText"
+          [innerHTML]="
+            data?.disciplineID
+              | formatvalue : view.formModel : 'disciplineID'
+              | async
+          "
         ></span>
       </div>
-      <div class="justify-content-between">
+      <div>
+        <!-- <div class="justify-content-between mb-1"> -->
         <span
-          [title]="eDisciplineHeaderText.DisciplineDate"
-          >
-          <span>
+          class="text-warning"
+          [ngbTooltip]="grvSetup?.DisciplineFormCategory?.headerText"
+          [innerHTML]="
+            data?.disciplineFormCategory
+              | formatvalue : view.formModel : 'disciplineFormCategory'
+              | async
+          "
+        ></span>
+        <!-- </div> -->
+        <div class="d-flex align-items-center">
+          <span [ngbTooltip]="grvSetup?.DisciplineDate?.headerText">
             <i class="icon-calendar_today icon-14 me-1"></i>
             {{ data?.disciplineDate | fmDT }}
-        </span>
-        <span class="text-gray-500 mx-1">-</span> 
-        </span>
-        <span
-          [title]="eDisciplineHeaderText.FromDate"
-          >
-          <i class="icon-calendar_today icon-14 me-1"></i>
-          {{ data?.fromDate | fmDT }}
-        </span>
+          </span>
+          <span
+            *ngIf="data?.fromDate"
+            class="icon-i-info-circle-fill fs-9 icon-6 mx-2 text-gray-400"
+          ></span>
+          <span [ngbTooltip]="grvSetup?.FromDate?.headerText">
+            <i class="icon-calendar_today icon-14 me-1"></i>
+            {{ data?.fromDate | fmDT }}
+          </span>
+        </div>
       </div>
-    </div>
 
-      <div class="d-flex mt-1">
+      <div class="d-flex mt-1 align-items-center">
         <codx-vll
           class="badge badge-sm me-4"
           [name]="eDisciplineGrvSetup?.referedValue"
@@ -440,8 +404,16 @@
         >
         </codx-vll>
         <!-- HRS104 -->
-        <span class="me-4">
-          {{ data?.signedDate | fmDT }}
+        <span
+          *ngIf="data.signedDate"
+          class="me-4"
+          [ngbTooltip]="grvSetup?.SignedDate?.headerText"
+          [innerHTML]="
+            data?.signedDate
+              | formatvalue : view.formModel : 'signedDate'
+              | async
+          "
+        >
         </span>
 
         <!-- <span class="d-flex flex-row justify-content-end">
@@ -465,7 +437,7 @@
     [itemDetail]="itemDetail"
     [funcID]="funcID"
     [view]="view"
-    [formModel] = "view.formModel"
+    [formModel]="view.formModel"
     (clickMFunction)="clickEvent($event, data)"
   >
   </lib-view-detail-disciplines>

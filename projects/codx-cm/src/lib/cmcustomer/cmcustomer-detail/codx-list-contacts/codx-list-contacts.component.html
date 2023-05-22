@@ -72,6 +72,9 @@
   >
     <div class="d-flex flex-column w-100 me-3">
       <div class="d-flex align-items-center">
+        <div class="me-1" *ngIf="isConvertLeadToCus">
+          <codx-input type="checkbox" [crrValue]="false" (valueChange)="valueChange($event, data)"></codx-input>
+        </div>
         <div class="me-3">
           <codx-img
             [objectId]="data.recID"

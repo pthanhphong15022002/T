@@ -174,12 +174,17 @@ export class EmployeeDayOffComponent extends UIComponent {
           emp: data?.emp,
           employeeID: data?.employeeID,
         };
-        this.handlerEDayOffs(event.text + ' ' + this.view.function.description,
-          'add', newData);
+        this.handlerEDayOffs(
+          event.text + ' ' + this.view.function.description,
+          'add',
+          newData
+        );
         break;
       //Delete
       case this.delete:
-        if (data) {this.view.dataService.dataSelected = data; }
+        if (data) {
+          this.view.dataService.dataSelected = data;
+        }
         this.view.dataService
           .delete([data], true, (option: RequestOption) =>
             this.beforeDelete(option, data.recID)
@@ -210,17 +215,17 @@ export class EmployeeDayOffComponent extends UIComponent {
     this.clickMF(event?.event, event?.data);
   }
 
-  dateCompare(beginDate, endDate) {
-    if (beginDate && endDate) {
-      let date1 = new Date(beginDate);
-      let date2 = new Date(endDate);
-      return date1 <=date2;
-    }
-    return false;
-  }
+  // dateCompare(beginDate, endDate) {
+  //   if (beginDate && endDate) {
+  //     let date1 = new Date(beginDate);
+  //     let date2 = new Date(endDate);
+  //     return date1 <=date2;
+  //   }
+  //   return false;
+  // }
 
   //add/edit/copy/delete
-  handlerEDayOffs(actionHeaderText: string, actionType: string, data: any){
+  handlerEDayOffs(actionHeaderText: string, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.view.formModel;
@@ -318,14 +323,16 @@ export class EmployeeDayOffComponent extends UIComponent {
         if (res) {
           this.notify.notifyCode('SYS007');
           res.emp = this.currentEmpObj;
-          this.hrService.addBGTrackLog(
-            res.recID,
-            this.cmtStatus,
-            this.view.formModel.entityName,
-            'C1',
-            null,
-            'EDayOffsBusiness'
-          ).subscribe(res =>{});
+          this.hrService
+            .addBGTrackLog(
+              res.recID,
+              this.cmtStatus,
+              this.view.formModel.entityName,
+              'C1',
+              null,
+              'EDayOffsBusiness'
+            )
+            .subscribe((res) => {});
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });
@@ -364,22 +371,22 @@ export class EmployeeDayOffComponent extends UIComponent {
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> ' + this.view.function.description +' - ' 
-                + this.itemDetail.decisionNo + '</div>'
+              '<div> ' +
+                this.view.function.description +
+                ' - ' +
+                this.itemDetail.decisionNo +
+                '</div>'
             )
             .subscribe((result) => {
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
-                this.hrService
-                  .UpdateEmployeeDayOffInfo((res) => {
-                    if (res) {
-                      this.view?.dataService
-                        ?.update(this.itemDetail)
-                        .subscribe();
-                    }
-                  });
+                this.hrService.UpdateEmployeeDayOffInfo((res) => {
+                  if (res) {
+                    this.view?.dataService?.update(this.itemDetail).subscribe();
+                  }
+                });
               } else this.notify.notifyCode(result?.msgCodeError);
             });
         }

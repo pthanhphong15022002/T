@@ -64,6 +64,9 @@ export class CashPaymentsComponent extends UIComponent {
   settledInvoices: any;
   acctTrans: any;
   baseCurr: any;
+  cashbookName: any;
+  reasonName: any;
+  lsAccount = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
@@ -106,8 +109,8 @@ export class CashPaymentsComponent extends UIComponent {
       this.journalNo = params?.journalNo;
     });
     this.cache.companySetting().subscribe((res) => {
-      this.baseCurr = res.filter(x => x.baseCurr != null)[0].baseCurr;
-    })
+      this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
+    });
   }
   //#endregion
 
@@ -119,7 +122,6 @@ export class CashPaymentsComponent extends UIComponent {
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      console.log(this.accountRef);
       if (res) this.funcName = res.defaultName;
     });
     this.views = [
@@ -157,6 +159,11 @@ export class CashPaymentsComponent extends UIComponent {
         this.className = 'CashReceiptsBusiness';
         break;
     }
+    this.api
+      .exec('AC', 'CommonBusiness', 'GetAccountName')
+      .subscribe((res: any) => {
+        this.lsAccount = res;
+      });
     this.detectorRef.detectChanges();
   }
 
@@ -384,6 +391,7 @@ export class CashPaymentsComponent extends UIComponent {
           .subscribe((res: any) => {
             this.cashpaymentline = res;
             this.loadTotal();
+            this.loadAccountName(res);
           });
         this.api
           .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
@@ -405,6 +413,8 @@ export class CashPaymentsComponent extends UIComponent {
           });
         break;
     }
+    this.loadCashbookName(this.itemSelected);
+    this.loadReasonName(this.itemSelected);
   }
 
   release(data: any) {
@@ -463,6 +473,34 @@ export class CashPaymentsComponent extends UIComponent {
       totals = totals + element.dr;
     });
     this.total = totals.toLocaleString('it-IT');
+  }
+
+  loadCashbookName(data) {
+    this.api
+      .exec('AC', 'CashBookBusiness', 'LoadDataAsync')
+      .subscribe((res: any) => {
+        for (let index = 0; index < res.length; index++) {
+          if (res[index].cashBookID == data.cashBookID) {
+            this.cashbookName = res[index].cashBookName;
+          }
+        }
+      });
+  }
+
+  loadReasonName(data) {
+    this.api
+      .exec('AC', 'CommonBusiness', 'GetReasonName', [data])
+      .subscribe((res: any) => {
+        this.reasonName = res;
+      });
+  }
+
+  loadAccountName(accountID) {
+    for (let index = 0; index < this.lsAccount.length; index++) {
+      if (this.lsAccount[index].accountID == accountID) {
+        return this.lsAccount[index].accountName.toLocaleString();
+      }
+    }
   }
 
   //#endregion
