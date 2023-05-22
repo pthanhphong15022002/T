@@ -1,21 +1,43 @@
-<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
-  [className]="className" [method]="method" [views]="views" [autoLoad]="true" idField="recID" [button]="buttonAdd"
-  (buttonClick)="addBasicSalary($event)" (onActions)="handleAction($event)" (oneMoreMulti)="onMoreMulti($event)"
-  (selectedChange)="changeItemDetail($event)">
+<codx-views
+  #view
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="method"
+  [views]="views"
+  [autoLoad]="true"
+  idField="recID"
+  [button]="buttonAdd"
+  (buttonClick)="addBasicSalary($event)"
+  (onActions)="handleAction($event)"
+  (oneMoreMulti)="onMoreMulti($event)"
+  (selectedChange)="changeItemDetail($event)"
+>
 </codx-views>
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 ps-2 pe-4">
     <div class="w-30 text-dark p-3 fw-bold fw-500">
-      <codx-label fiedName="lblEmployeeID" [formModel]="view.formModel"
-        [default]="grvSetup?.EmployeeID?.description"></codx-label>
+      <codx-label
+        fiedName="lblEmployeeID"
+        [formModel]="view.formModel"
+        [default]="grvSetup?.EmployeeID?.description"
+      ></codx-label>
     </div>
     <div class="w-40 text-dark p-3 fw-bold fw-500">
-      <codx-label fiedName="lblDecisionNo" [formModel]="view.formModel"
-        [default]="grvSetup?.DecisionNo?.description"></codx-label>
+      <codx-label
+        fiedName="lblDecisionNo"
+        [formModel]="view.formModel"
+        [default]="grvSetup?.DecisionNo?.description"
+      ></codx-label>
     </div>
     <div class="w-30 text-dark p-3 fw-bold fw-500">
-      <codx-label fiedName="lblStatus" [formModel]="view.formModel"
-        [default]="grvSetup?.Status?.description"></codx-label>
+      <codx-label
+        fiedName="lblStatus"
+        [formModel]="view.formModel"
+        [default]="grvSetup?.Status?.description"
+      ></codx-label>
       <!-- <div class="w-25 text-dark p-3 fw-bold fw-500">
       <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
     </div> -->
@@ -30,8 +52,13 @@
     <div class="w-30 px-3">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column flex-center me-2 w-50px">
-          <codx-img [width]="35" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
-            [objectName]="data?.emp?.employeeName" [objectType]="'HR_Employees'">
+          <codx-img
+            [width]="35"
+            [objectId]="data?.emp?.employeeID"
+            [referType]="'avt'"
+            [objectName]="data?.emp?.employeeName"
+            [objectType]="'HR_Employees'"
+          >
           </codx-img>
           <!-- <codx-vll class="badge badge-sm badge-light me-0" [name]="genderGrvSetup?.referedValue"
             [value]="data?.emp?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
@@ -39,15 +66,29 @@
         </div>
         <div class="d-flex flex-column">
           <div class="d-flex align-items-center">
-            <span class="me-2 text-dark fw-bold text-nowrap">{{ data?.emp?.employeeName }}</span>
+            <span class="me-2 text-dark fw-bold text-nowrap">{{
+              data?.emp?.employeeName
+            }}</span>
             <!-- <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
             <span class="text-danger">{{ data?.emp?.employeeID }}</span> -->
           </div>
           <div class="text-gray-500 fs-7 mb-1">
-            <span [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'positionID'| async"></span>
+            <span
+              [innerHTML]="
+                data?.emp?.positionID
+                  | formatvalue : view.formModel : 'positionID'
+                  | async
+              "
+            ></span>
           </div>
           <div class="text-gray-700">
-            <span [innerHTML]="data?.emp?.orgUnitID  | formatvalue : view.formModel : 'orgUnitID'| async"></span>
+            <span
+              [innerHTML]="
+                data?.emp?.orgUnitID
+                  | formatvalue : view.formModel : 'orgUnitID'
+                  | async
+              "
+            ></span>
           </div>
         </div>
       </div>
@@ -59,21 +100,44 @@
         <div class="d-flex align-items-center mb-1">
           <span class="icon-event_notes icon-16 me-1"></span>
           <div class="fw-bold me-4">
-            <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['DecisionNo'] : ''"
-              [innerHTML]="data?.decisionNo | formatvalue : view.formModel : 'decisionNo'| async">
+            <span
+              [ngbTooltip]="grvSetup?.DecisionNo?.headerText"
+              [innerHTML]="
+                data?.decisionNo
+                  | formatvalue : view.formModel : 'decisionNo'
+                  | async
+              "
+            >
             </span>
           </div>
           <div class="me-2" *ngIf="data?.attachments > 0">
-            <codx-attachment-temp [objectID]="data.recID" [formModel]="view.formModel"></codx-attachment-temp>
+            <codx-attachment-temp
+              [objectID]="data.recID"
+              [formModel]="view.formModel"
+            ></codx-attachment-temp>
           </div>
         </div>
         <div class="d-flex align-items-center">
           <span class="icon-calendar_today icon-14 me-1"></span>
-          <span [innerHTML]=" data?.effectedDate | formatvalue : view.formModel : 'effectedDate' | async">
+          <span
+            [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
+            [innerHTML]="
+              data?.effectedDate
+                | formatvalue : view.formModel : 'effectedDate'
+                | async
+            "
+          >
           </span>
           <ng-container *ngIf="data?.expiredDate">
             <span class="px-1"> - </span>
-            <span [innerHTML]=" data?.expiredDate | formatvalue : view.formModel : 'expiredDate' | async">
+            <span
+              [ngbTooltip]="grvSetup?.ExpiredDate?.headerText"
+              [innerHTML]="
+                data?.expiredDate
+                  | formatvalue : view.formModel : 'expiredDate'
+                  | async
+              "
+            >
             </span>
           </ng-container>
         </div>
@@ -85,17 +149,40 @@
       <div class="d-flex flex-column">
         <div class="d-flex flex-row mb-2">
           <div class="w-15">
-            <codx-vll *ngIf="data.status" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
-              [showText]="true" [showIcon]="false" [showBgColor]="true" ngClass="badge badge-sm badge-light">
+            <codx-vll
+              *ngIf="data.status"
+              [formModel]="view.formModel"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showIcon]="false"
+              [showBgColor]="true"
+              ngClass="badge badge-sm badge-light"
+            >
             </codx-vll>
           </div>
-          <span *ngIf="data.isCurrent" [style.color]="'#0078FF'" class="icon-bookmark icon-18"
-            [ngbPopover]="popIsNewest" #popOver="ngbPopover" [openDelay]="500" (mouseenter)="popOver.open()"
-            (mouseleave)="popOver.close()" placement="left">
+          <span
+            *ngIf="data.isCurrent"
+            [style.color]="'#0078FF'"
+            class="icon-bookmark icon-18"
+            [ngbPopover]="popIsNewest"
+            #popOver="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="popOver.open()"
+            (mouseleave)="popOver.close()"
+            placement="left"
+          >
           </span>
         </div>
-        <span *ngIf="data?.signedDate" class="text-gray-600"
-          [innerHTML]="data?.signedDate  | formatvalue : view.formModel : 'signedDate'| async">
+        <span
+          *ngIf="data?.signedDate"
+          class="text-gray-600"
+          [innerHTML]="
+            data?.signedDate
+              | formatvalue : view.formModel : 'signedDate'
+              | async
+          "
+        >
         </span>
       </div>
     </div>
@@ -104,8 +191,13 @@
     <!-- moreMF -->
     <div class="align-self-center">
       <div style="height: 35px" class="has-action-menu">
-        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
-          (changeDataMF)="changeDataMF($event, data)" [dataItem]="data" type="hover">
+        <codx-mfunc
+          [formModel]="view.formModel"
+          (clickMF)="clickMF($event, data)"
+          (changeDataMF)="changeDataMF($event, data)"
+          [dataItem]="data"
+          type="hover"
+        >
         </codx-mfunc>
       </div>
     </div>
@@ -117,10 +209,20 @@
 <!-- list & detail view -->
 <ng-template #templateListDetail let-data>
   <div class="border-bottom position-relative avatar-vllbadge">
-    <codx-temp-full cardCss="codx_cardcenter p-3" (clickMF)="clickMF($event, data)" moreFuncCss="me-10"
-      [imageId]="data?.emp?.employeeID" [imageObjType]="'HR_Employees'" [imageWidth]="40" [formModel]="view.formModel"
-      [titleTmp]="titleTmp" [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'"
-      (changeDataMF)="changeDataMF($event, data)">
+    <codx-temp-full
+      cardCss="codx_cardcenter p-3"
+      (clickMF)="clickMF($event, data)"
+      moreFuncCss="me-10"
+      [imageId]="data?.emp?.employeeID"
+      [imageObjType]="'HR_Employees'"
+      [imageWidth]="40"
+      [formModel]="view.formModel"
+      [titleTmp]="titleTmp"
+      [dataItem]="data"
+      [imgOn]="data?.modifiedOn"
+      [typeMF]="'hover'"
+      (changeDataMF)="changeDataMF($event, data)"
+    >
     </codx-temp-full>
     <!-- <div class="d-flex flex-center vll-badge">
       <codx-vll class="badge badge-sm me-0 badge-light" [name]="genderGrvSetup?.referedValue"
@@ -134,48 +236,96 @@
   <div class="w-100">
     <!-- emp info -->
     <div class="d-flex align-items-center justify-content-between mb-1">
-      <span class="fw-bold fs-6 text-dark me-2">{{ data?.emp?.employeeName }}</span>
-      <!-- <i class="icon-qr_code_scanner icon-14 me-1"></i>
-      <span class="text-danger">{{ data?.emp?.employeeID }}</span> -->
+      <span class="fw-bold fs-6 text-dark me-2">{{
+        data?.emp?.employeeName
+      }}</span>
       <ng-container *ngIf="data?.isCurrent">
-        <span [style.color]="'#0078FF'" class="icon-bookmark icon-18" [ngbPopover]="popIsNewest" #popOver="ngbPopover"
-          [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()" placement="left">
+        <span
+          [style.color]="'#0078FF'"
+          class="icon-bookmark icon-18"
+          [ngbPopover]="popIsNewest"
+          #popOver="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="popOver.open()"
+          (mouseleave)="popOver.close()"
+          placement="left"
+        >
         </span>
       </ng-container>
     </div>
     <div class="text-gray-600">
-      <span [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'PositionID' | async"></span>
+      <span
+        [innerHTML]="
+          data?.emp?.positionID
+            | formatvalue : view.formModel : 'PositionID'
+            | async
+        "
+      ></span>
     </div>
     <!-- end emp info -->
 
     <!-- decisionNo, effectedDate, expiredDate -->
     <div class="d-flex align-items-center mb-2">
-      <div class="d-flex align-items-center me-4" [ngbTooltip]="grvSetup?.DecisionNo?.headerText">
+      <div
+        class="d-flex align-items-center me-4"
+        [ngbTooltip]="grvSetup?.DecisionNo?.headerText"
+      >
         <span class="icon-book icon-14 me-1"></span>
-        <span [innerHTML]=" data?.decisionNo | formatvalue : view.formModel : 'decisionNo' | async">
+        <span
+          [innerHTML]="
+            data?.decisionNo
+              | formatvalue : view.formModel : 'decisionNo'
+              | async
+          "
+        >
         </span>
       </div>
       <div class="d-flex align-items-center">
         <span class="icon-calendar_today icon-14 me-1"></span>
-        <span class="align-self-center" [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
-          [innerHTML]=" data?.effectedDate | formatvalue : view.formModel : 'effectedDate' | async">
+        <span
+          class="align-self-center"
+          [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
+          [innerHTML]="
+            data?.effectedDate
+              | formatvalue : view.formModel : 'effectedDate'
+              | async
+          "
+        >
         </span>
       </div>
       <ng-container *ngIf="data?.expiredDate">
         <span class="px-1"> - </span>
-        <span class="align-self-center" [ngbTooltip]="grvSetup?.ExpiredDate?.headerText"
-          [innerHTML]=" data?.expiredDate | formatvalue : view.formModel : 'expiredDate' | async">
+        <span
+          class="align-self-center"
+          [ngbTooltip]="grvSetup?.ExpiredDate?.headerText"
+          [innerHTML]="
+            data?.expiredDate
+              | formatvalue : view.formModel : 'expiredDate'
+              | async
+          "
+        >
         </span>
       </ng-container>
     </div>
     <!-- end day -->
     <!-- status & owner -->
     <div class="d-flex align-items-center text-dark">
-      <codx-vll class="badge fw-bold me-4" [name]="'HRS102'" [value]="data?.status" [showText]="true"
-        [showBgColor]="true">
+      <codx-vll
+        class="badge fw-bold me-4"
+        [name]="'HRS102'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+      >
       </codx-vll>
-      <span *ngIf="data?.signedDate" [ngbTooltip]="grvSetup?.SignedDate?.headerText"
-        [innerHTML]=" data?.signedDate | formatvalue : view.formModel : 'signedDate' | async">
+      <span
+        *ngIf="data?.signedDate"
+        [ngbTooltip]="grvSetup?.SignedDate?.headerText"
+        [ngbTooltip]="grvSetup?.SignedDate?.headerText"
+        [innerHTML]="
+          data?.signedDate | formatvalue : view.formModel : 'signedDate' | async
+        "
+      >
       </span>
     </div>
     <!-- end status & owner -->
@@ -184,8 +334,14 @@
 <!-- end -->
 
 <ng-template #templateItemDetailRight let-data>
-  <lib-view-basic-salary-detail #viewDetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.formModel"
-    [view]="view" (clickMF)="clickEvent($event, data)">
+  <lib-view-basic-salary-detail
+    #viewDetail
+    [itemDetail]="itemDetail"
+    [funcID]="funcID"
+    [formModel]="view?.formModel"
+    [view]="view"
+    (clickMF)="clickEvent($event, data)"
+  >
   </lib-view-basic-salary-detail>
 </ng-template>
 <!-- end list & detail view -->
@@ -198,13 +354,20 @@
       <div class="d-flex align-items-center justify-content-between w-100">
         <div class="card-title">
           <div class="d-flex flex-column">
-            <codx-label class="dialog-title line-clamp line-clamp-1" name="lblEquipment" default="Cập nhật trạng thái"
-              [formModel]="view.formModel"></codx-label>
+            <codx-label
+              class="dialog-title line-clamp line-clamp-1"
+              name="lblEquipment"
+              default="Cập nhật trạng thái"
+              [formModel]="view.formModel"
+            ></codx-label>
           </div>
         </div>
         <div class="card-toolbar">
-          <button type="button" class="btn btn-flex text-dark-75 text-hover-primary px-0"
-            (click)="closeUpdateStatusForm(dialog1)">
+          <button
+            type="button"
+            class="btn btn-flex text-dark-75 text-hover-primary px-0"
+            (click)="closeUpdateStatusForm(dialog1)"
+          >
             <span class="icon-close icon-18"></span>
           </button>
         </div>
@@ -218,15 +381,26 @@
             </codx-label>
           </label>
           <div class="p-disabled">
-            <codx-input field="status" [formModel]="view.formModel" [Group]="formGroup"></codx-input>
+            <codx-input
+              field="status"
+              [formModel]="view.formModel"
+              [Group]="formGroup"
+            ></codx-input>
           </div>
           <!-- <codx-input [disabled]="true" field="status" [formModel]="view.formModel" [Group]="formGroup"></codx-input> -->
         </div>
         <div class="form-group">
           <label>
-            <codx-label [default]="'Bình luận'" [name]="'lblComment'"></codx-label>
+            <codx-label
+              [default]="'Bình luận'"
+              [name]="'lblComment'"
+            ></codx-label>
           </label>
-          <codx-input type="text" [formModel]="view.formModel" (valueChange)="valueChangeComment($event)">
+          <codx-input
+            type="text"
+            [formModel]="view.formModel"
+            (valueChange)="valueChangeComment($event)"
+          >
           </codx-input>
         </div>
       </div>
@@ -235,7 +409,11 @@
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary" (click)="onSaveUpdateForm()">
           <i class="icon-save"></i>
-          <codx-label default="Lưu" name="lblSave" [formModel]="view.formModel"></codx-label>
+          <codx-label
+            default="Lưu"
+            name="lblSave"
+            [formModel]="view.formModel"
+          ></codx-label>
         </button>
       </div>
     </div>
@@ -255,12 +433,20 @@
 
 <ng-template #popIsNewest>
   <span>
-    <codx-label name="lblIsCurrent" [formModel]="view.formModel" default="Mới nhất"></codx-label>
+    <codx-label
+      name="lblIsCurrent"
+      [formModel]="view.formModel"
+      default="Mới nhất"
+    ></codx-label>
   </span>
 </ng-template>
 
 <ng-template #popOverDue>
   <span>
-    <codx-label name="lblOverDue" [formModel]="view.formModel" default="Đã quá hạn!"></codx-label>
+    <codx-label
+      name="lblOverDue"
+      [formModel]="view.formModel"
+      default="Đã quá hạn!"
+    ></codx-label>
   </span>
 </ng-template>

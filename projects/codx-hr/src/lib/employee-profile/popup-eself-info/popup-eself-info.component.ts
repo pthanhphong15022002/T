@@ -24,6 +24,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   dialog: DialogRef;
   data;
+  saveflag = false;
   isAfterRender = false;
   headerText: '';
   @ViewChild('form') form: CodxFormComponent;
@@ -41,7 +42,6 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.formModel = dialog.FormModel;
-    debugger
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
   }
 
@@ -83,7 +83,9 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.dialog.closed.subscribe((res) => {
       if (!res.event) {
-        this.dialog && this.dialog.close(this.data);
+        if(this.saveflag){
+          this.dialog && this.dialog.close(this.data);
+        }
       }
     });
   }
@@ -135,6 +137,12 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
       return;
     }
 
+    let ddd = new Date();
+    if(this.data.issuedOn > ddd.toISOString()){
+      this.notitfy.notifyCode('HR014');
+      return;
+    }
+
     if(this.data.personalEmail && !this.hrService.checkEmail(this.data.personalEmail)){
       this.notitfy.notifyCode('SYS037');
       return;
@@ -160,6 +168,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe((p) => {
       if (p != null) {
         this.notitfy.notifyCode('SYS007');
+        this.saveflag = true;
         this.dialog && this.dialog.close(p);
       } else this.notitfy.notifyCode('SYS021');
     });
