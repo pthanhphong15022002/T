@@ -65,8 +65,8 @@ export class PopupConvertLeadComponent implements OnInit {
   lstCustomer = [];
   avatarChange = false;
   customerID: any;
-  lstConvertLead = [];
   lstContactCustomer = [];
+  lstContactDeal = [];
   countAddNew = 0;
   countAddSys = 0;
   customerOld: any;
@@ -152,6 +152,7 @@ export class PopupConvertLeadComponent implements OnInit {
       this.customerID = e?.data ? e.data : null;
       if (this.customerID) {
         this.customerOld = this.customerID;
+        this.lead.customerID = this.customerID;
         this.getListContactByObjectID(this.customerID);
       }
     }
@@ -203,6 +204,7 @@ export class PopupConvertLeadComponent implements OnInit {
   objectConvert(e) {
     if (e.e.data == true) {
       if (e?.data != null) {
+        e.data.objectType = '1';
         var check = this.lstContactCustomer.findIndex(
           (x) => x.isDefault == true
         );
@@ -217,16 +219,16 @@ export class PopupConvertLeadComponent implements OnInit {
                 e.data.isDefault = false;
               }
               this.lstContactCustomer.push(Object.assign({}, e?.data));
-              this.codxListContact.listContacts = this.cmSv.bringDefaultContactToFront(JSON.parse(JSON.stringify(this.lstContactCustomer)));
+              this.codxListContact.listContacts = this.cmSv.bringDefaultContactToFront(this.lstContactCustomer);
               this.changeDetectorRef.detectChanges();
             });
           } else {
             this.lstContactCustomer.push(Object.assign({}, e?.data));
-            this.codxListContact.listContacts = this.cmSv.bringDefaultContactToFront(JSON.parse(JSON.stringify(this.lstContactCustomer)));
+            this.codxListContact.listContacts = this.cmSv.bringDefaultContactToFront(this.lstContactCustomer);
           }
         } else {
           this.lstContactCustomer.push(Object.assign({}, e?.data));
-          this.codxListContact.listContacts = this.cmSv.bringDefaultContactToFront(JSON.parse(JSON.stringify(this.lstContactCustomer)));
+          this.codxListContact.listContacts = this.cmSv.bringDefaultContactToFront(this.lstContactCustomer);
         }
       }
     } else {
@@ -234,16 +236,35 @@ export class PopupConvertLeadComponent implements OnInit {
         (x) => x.recID == e?.data?.recID
       );
       if (index != -1) {
+        var indexDeal = this.lstContactDeal.findIndex(x => this.lstContactCustomer[index].recID == x.recID);
         this.lstContactCustomer.splice(index, 1);
-        this.codxListContact.listContacts = this.cmSv.bringDefaultContactToFront(JSON.parse(JSON.stringify(this.lstContactCustomer)));
+        this.codxListContact.listContacts = this.cmSv.bringDefaultContactToFront(this.lstContactCustomer);
+        if(indexDeal != -1){
+          this.lstContactDeal.splice(indexDeal, 1);
+        }
       }
     }
     this.changeDetectorRef.detectChanges();
 
   }
 
+  objectConvertDeal(e){
+    if (e.e.data == true) {
+      if(e.data){
+        e.data.objectType = '4';
+        this.lstContactDeal.push(e?.data);
+      }
+    }else{
+      var index = this.lstContactDeal.findIndex(
+        (x) => x.recID == e?.data?.recID
+      );
+      this.lstContactDeal.splice(index, 1);
+    }
+  }
+
   lstContactEmit(e) {
     this.lstContactCustomer = e;
+
   }
 
   changeAvatar() {
