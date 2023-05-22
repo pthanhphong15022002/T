@@ -370,6 +370,14 @@ export class CodxCmService {
       data
     );
   }
+  // getInstanceStepsByMoveStages(data: any) {
+  //   return this.api.exec<any>(
+  //     'DP',
+  //     'InstancesBusiness',
+  //     'MoveStageInDealAsync',
+  //     data
+  //   );
+  // }
 
   addInstance(data: any) {
     return this.api.exec<any>(
