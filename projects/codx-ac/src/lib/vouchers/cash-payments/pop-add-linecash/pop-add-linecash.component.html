@@ -93,7 +93,16 @@
           <div class="form-group">
             <codx-label fiedName="DIM3" [formModel]="form.formModel">
             </codx-label>
-            <codx-input [Group]="form.formGroup" field="diM3" [formModel]="form.formModel"
+            <codx-input #cbxdiM3 [Group]="form.formGroup" field="diM3" [formModel]="form.formModel"
+              (valueChange)="lineChanged($event)">
+            </codx-input>
+          </div>
+        </div> 
+        <div *ngIf="loadControl('DIM2')" class="col-6 ac-line">
+          <div class="form-group">
+            <codx-label fiedName="DIM2" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input #cbxdiM2 [Group]="form.formGroup" field="diM2" [formModel]="form.formModel"
               (valueChange)="lineChanged($event)">
             </codx-input>
           </div>
@@ -102,16 +111,7 @@
           <div class="form-group">
             <codx-label fiedName="DIM1" [formModel]="form.formModel">
             </codx-label>
-            <codx-input [Group]="form.formGroup" field="diM1" [formModel]="form.formModel"
-              (valueChange)="lineChanged($event)">
-            </codx-input>
-          </div>
-        </div>
-        <div *ngIf="loadControl('DIM2')" class="col-6 ac-line">
-          <div class="form-group">
-            <codx-label fiedName="DIM2" [formModel]="form.formModel">
-            </codx-label>
-            <codx-input [Group]="form.formGroup" field="diM2" [formModel]="form.formModel"
+            <codx-input #cbxdiM1 [Group]="form.formGroup" field="diM1" [formModel]="form.formModel"
               (valueChange)="lineChanged($event)">
             </codx-input>
           </div>
@@ -120,28 +120,40 @@
           <div class="form-group">
             <codx-label fiedName="ProjectID" [formModel]="form.formModel">
             </codx-label>
-            <codx-input [Group]="form.formGroup" field="projectID" [formModel]="form.formModel"
+            <codx-input #cbxproject [Group]="form.formGroup" field="projectID" [formModel]="form.formModel"
               (valueChange)="lineChanged($event)">
             </codx-input>
           </div>
-        </div>
-        <div class="col-6 ac-line">
-          <div class="form-group">
-            <codx-label fiedName="AssetType" [formModel]="form.formModel">
-            </codx-label>
-            <codx-input [Group]="form.formGroup" field="assetType" [formModel]="form.formModel"
-              (valueChange)="lineChanged($event)">
-            </codx-input>
-          </div>
-        </div>
-        <div class="col-6 ac-line">
-          <div class="form-group">
+        </div> 
+          <div *ngIf="loadControl('AssetID')" class="form-group">
             <codx-label fiedName="AssetGroupID" [formModel]="form.formModel">
             </codx-label>
             <codx-input [Group]="form.formGroup" field="assetGroupID" [formModel]="form.formModel"
               (valueChange)="lineChanged($event)">
             </codx-input>
           </div>
+      </div>
+    </div>
+    <div *ngIf="cashpayment.subType == '3'" class="extend-function pt-0 mt-2">
+      <hr />
+      <div class="d-flex justify-content-center" (click)="showinvoice = !showinvoice">
+        <div class="d-flex align-items-center w-auto extend-title">
+          <span class="text-primary text-hover-primary_darker fw-bold me-1">
+            <codx-label default="Hóa đơn GTGT"></codx-label>
+          </span>
+          <span *ngIf="showPlan" class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
+          <span *ngIf="!showPlan" class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="showinvoice && cashpayment.subType == '3'" class="p-5 bg-gray-100 border rounded-1">
+      <div class="container w-90 h-90">
+        <div style="background: none" class="list-empty card card-flush h-100">
+          <button style="border-radius: 50px;" type="button" class="btn btn-light-primary w-200px">
+            <div class="d-flex justify-content-center">
+              <span class="fw-bold fs-5">{{'('+'0'+')'+ 'hóa đơn'}}</span>
+            </div> 
+          </button>
         </div>
       </div>
     </div>
