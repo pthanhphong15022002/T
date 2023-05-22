@@ -357,6 +357,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
               this.adService.createFirstPost(this.tmpPost).subscribe();
               this.dataAfterSave = res.save;
               this.adUser.userID = res.save.userID;
+              this.adUser.status = res.save.status;
             }
             this.isSaved = true;
 

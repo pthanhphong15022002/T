@@ -33,6 +33,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   @Input() viewsCurrent = '';
   @Output() inputElmIDCF = new EventEmitter<any>();
   @Input() isSaving = false;
+  @Input() isShowTitle = true;
   @Output() actionSaveCF = new EventEmitter<any>();
   @Output() saveDataStep = new EventEmitter<any>();
 
