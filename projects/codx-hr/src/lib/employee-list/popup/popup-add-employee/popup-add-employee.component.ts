@@ -1,20 +1,36 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, DialogData, DialogRef, FilesService, FormModel, ImageViewerComponent, LayoutAddComponent, NotificationsService, Util } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  CacheService,
+  DialogData,
+  DialogRef,
+  FilesService,
+  FormModel,
+  ImageViewerComponent,
+  LayoutAddComponent,
+  NotificationsService,
+  Util,
+} from 'codx-core';
 
 @Component({
   selector: 'hr-popup-add-employee',
   templateUrl: './popup-add-employee.component.html',
-  styleUrls: ['./popup-add-employee.component.css']
+  styleUrls: ['./popup-add-employee.component.css'],
 })
-export class PopupAddEmployeeComponent implements OnInit{
-
-  data:any = null;
-  headerText:string = "";
-  action:string = "";
-  formModel:FormModel = null;
-  dialogRef:DialogRef = null;
-  dialogData:any = null;
-  grvSetUp:any[] = [];
+export class PopupAddEmployeeComponent implements OnInit {
+  data: any = null;
+  headerText: string = '';
+  action: string = '';
+  formModel: FormModel = null;
+  dialogRef: DialogRef = null;
+  dialogData: any = null;
+  grvSetUp: any[] = [];
   codxModifiedOn = new Date();
 
   tabInfo: any[] = [
@@ -35,19 +51,18 @@ export class PopupAddEmployeeComponent implements OnInit{
     },
   ];
 
-  @ViewChild("codxImg") codxImg:ImageViewerComponent;
-  @ViewChild("form") form:LayoutAddComponent;
+  @ViewChild('codxImg') codxImg: ImageViewerComponent;
+  @ViewChild('form') form: LayoutAddComponent;
 
   constructor(
-    private api:ApiHttpService,
-    private notifySV:NotificationsService,
-    private cache:CacheService,
-    private fileSV:FilesService,
+    private api: ApiHttpService,
+    private notifySV: NotificationsService,
+    private cache: CacheService,
+    private fileSV: FilesService,
     private dt: ChangeDetectorRef,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
-  )
-  {
+  ) {
     this.dialogRef = dialogRef;
     this.formModel = dialogRef?.formModel;
     this.action = dialogData?.data?.action;
@@ -55,21 +70,19 @@ export class PopupAddEmployeeComponent implements OnInit{
     this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
   }
   ngOnInit(): void {
-    this.getGrvSetup(this.formModel.formName,this.formModel.gridViewName);
+    this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
   }
 
-
   //get grvSetup
-  getGrvSetup(fromName:string , grdViewName:string){
-    this.cache.gridViewSetup(fromName,grdViewName).subscribe((grv:any) => {
-      if(grv) this.grvSetUp = grv;
+  getGrvSetup(fromName: string, grdViewName: string) {
+    this.cache.gridViewSetup(fromName, grdViewName).subscribe((grv: any) => {
+      if (grv) this.grvSetUp = grv;
     });
   }
   //set header text
   setTitle(e) {
-    this.headerText += " " + e;
+    this.headerText += ' ' + e;
   }
-
 
   //value change
   valueChange(event: any) {
@@ -77,16 +90,22 @@ export class PopupAddEmployeeComponent implements OnInit{
       let field = Util.camelize(event.field);
       let value = event.data;
       this.data[field] = value;
-      if(field === 'birthday' && value){
-        if(!this.validateBirthday(value))
-        {
-          this.notifySV.notifyCode("HR001");
+      if (field === 'issuedOn') {
+        let today = new Date();
+        if (this.data.issuedOn >= today.toJSON()) {
+          this.notifySV.notifyCode('HR012');
+          this.data[field] = null;
+        }
+      }
+      if (field === 'birthday' && value) {
+        if (!this.validateBirthday(value)) {
+          this.notifySV.notifyCode('HR001');
           this.data[field] = null;
           // this.form.formGroup.controls[field].patchValue({field : null});
         }
       }
       // if (field == 'positionID') {
-      //   let itemSelected = e.component?.itemsSelected[0];
+      //   let itemSelected = event.component?.itemsSelected[0];
       //   if (itemSelected) {
       //     if (itemSelected['OrgUnitID']) {
       //       let orgUnitID = itemSelected['OrgUnitID'];
@@ -122,83 +141,87 @@ export class PopupAddEmployeeComponent implements OnInit{
   }
 
   // validate age > 18
-  validateBirthday(birthday:any)
-  {
-    debugger
+  validateBirthday(birthday: any) {
     let ageDifMs = Date.now() - Date.parse(birthday);
     let ageDate = new Date(ageDifMs);
     let age = Math.abs(ageDate.getUTCFullYear() - 1970);
     return age >= 18;
   }
   //click Button Save
-  clickBtnSave(){
-    debugger
-    if(this.checkValidate())
-    {
-      this.action != "edit" ? this.save(this.data,this.formModel.funcID) : this.update(this.data); 
+  clickBtnSave() {
+    if (this.checkValidate()) {
+      this.action != 'edit'
+        ? this.save(this.data, this.formModel.funcID)
+        : this.update(this.data);
     }
   }
 
   //check validate
-  checkValidate(){
-    debugger
-    let arrFieldRequire =  Object.values(this.grvSetUp).filter((x:any) => x.isRequire);
-    let arrFieldName = arrFieldRequire.map((x:any) => x.fieldName);
-    if(arrFieldName.length > 0)
-    {
-      let strFieldUnValid:string = "";
+  checkValidate() {
+    let arrFieldRequire = Object.values(this.grvSetUp).filter(
+      (x: any) => x.isRequire
+    );
+    let arrFieldName = arrFieldRequire.map((x: any) => x.fieldName);
+    if (arrFieldName.length > 0) {
+      let strFieldUnValid: string = '';
       arrFieldName.forEach((key) => {
         if (!this.data[Util.camelize(key)])
-          strFieldUnValid += this.grvSetUp[key]['headerText'] + ";";
+          strFieldUnValid += this.grvSetUp[key]['headerText'] + ';';
       });
-      if(strFieldUnValid)
-      {
-        this.notifySV.notifyCode("SYS009",0,strFieldUnValid);
+      if (strFieldUnValid) {
+        this.notifySV.notifyCode('SYS009', 0, strFieldUnValid);
         return false;
       }
+    }
+    let today = new Date();
+    if (this.data.issuedOn >= today.toJSON()) {
+      this.notifySV.notifyCode('HR004');
+      return false;
     }
     return true;
   }
 
   //save data
-  save(data:any,funcID:string)
-  {
-    debugger
-    if(data){
-      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","SaveAsync",[data,funcID])
-      .subscribe((res:any) => {
-        debugger
-        if(res){
-          this.codxImg.updateFileDirectReload(res.employeeID).subscribe((res2:any) => {
-            debugger
-            this.notifySV.notifyCode("SYS006")
-            this.dialogRef.close(res);
-          });
-        }
-        else
-        {
-          this.notifySV.notifyCode("SYS023");
-          this.dialogRef.close(null);
-        }
-      });
+  save(data: any, funcID: string) {
+    if (data) {
+      this.api
+        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'SaveAsync', [
+          data,
+          funcID,
+        ])
+        .subscribe((res: any) => {
+          if (res) {
+            this.codxImg
+              .updateFileDirectReload(res.employeeID)
+              .subscribe((res2: any) => {
+                this.notifySV.notifyCode('SYS006');
+                this.dialogRef.close(res);
+              });
+          } else {
+            this.notifySV.notifyCode('SYS023');
+            this.dialogRef.close(null);
+          }
+        });
     }
   }
   //update data
-  update(data:any){
-    debugger
-    if(data){
-      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","UpdateAsync",[data])
-      .subscribe((res:any) => {
-        debugger
-        this.notifySV.notifyCode(res ? "SYS007" : "SYS021");
-        this.dialogRef.close(res ? data : null );
-      });
+  update(data: any) {
+    if (data) {
+      this.api
+        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'UpdateAsync', [
+          data,
+        ])
+        .subscribe((res: any) => {
+          this.notifySV.notifyCode(res ? 'SYS007' : 'SYS021');
+          this.dialogRef.close(res ? data : null);
+        });
     }
   }
 
   //
-  changeAvatar(event:any){
+  changeAvatar(event: any) {
     this.codxModifiedOn = new Date();
-    this.fileSV.dataRefreshImage.next({userID: this.data.employeeID});
+    this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
   }
+
 }
