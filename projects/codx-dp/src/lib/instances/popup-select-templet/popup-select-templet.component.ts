@@ -163,23 +163,23 @@ export class PopupSelectTempletComponent implements OnInit {
   }
 
   documentApproval() {
-    this.api
-      .execSv(
-        'ES',
-        'ES',
-        'ApprovalTransBusiness',
-        'GetCategoryByProcessIDAsync',
-        this.esCategory?.processID
-      )
-      .subscribe((res2: any) => {
+    // this.api
+    //   .execSv(
+    //     'ES',
+    //     'ES',
+    //     'ApprovalTransBusiness',
+    //     'GetCategoryByProcessIDAsync',
+    //     this.esCategory?.processID
+    //   )
+    //   .subscribe((res2: any) => {
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         //trình ký
-        if (res2?.eSign == true) {
-        } else if (res2?.eSign == false)
+        if (this.esCategory?.eSign == true) {
+        } else if (this.esCategory?.eSign == false)
           //xét duyệt
           this.release(this.data, this.esCategory?.processID);
-      });
+     // });
   }
   //Gửi duyệt
   release(data: any, processID: any) {
