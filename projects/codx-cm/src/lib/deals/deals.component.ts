@@ -21,16 +21,19 @@ import {
   ResourceModel,
   RequestOption,
   NotificationsService,
+  DialogModel,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
 import { CM_Customers } from '../models/cm_model';
+import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
 
 @Component({
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
   styleUrls: ['./deals.component.scss'],
-})export class DealsComponent
+})
+export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -100,19 +103,18 @@ import { CM_Customers } from '../models/cm_model';
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
-    private notificationsService: NotificationsService,
+    private notificationsService: NotificationsService
   ) {
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
-  ngOnChanges(changes: SimpleChanges): void {
-  }
+  ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
-     this.dataObj = {
-      processID:'327eb334-5695-468c-a2b6-98c0284d0620'
-    }
+    this.dataObj = {
+      processID: '327eb334-5695-468c-a2b6-98c0284d0620',
+    };
     this.request = new ResourceModel();
     this.request.service = 'CM';
     this.request.assemblyName = 'CM';
@@ -168,9 +170,7 @@ import { CM_Customers } from '../models/cm_model';
     this.changeDetectorRef.detectChanges();
   }
 
-  onLoading(e) {
-  }
-
+  onLoading(e) {}
 
   changeView(e) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -193,11 +193,9 @@ import { CM_Customers } from '../models/cm_model';
   }
 
   changeDataMF($event, data) {
-
-    if ($event != null && data != null)
-    {
-      if(data.status == "1") {
-        for(let more of $event ) {
+    if ($event != null && data != null) {
+      if (data.status == '1') {
+        for (let more of $event) {
           switch (more.functionID) {
             case 'CM0201_1':
               more.disabled = true;
@@ -218,9 +216,8 @@ import { CM_Customers } from '../models/cm_model';
               more.isblur = true;
           }
         }
-      }
-      else {
-        for(let more of $event ) {
+      } else {
+        for (let more of $event) {
           switch (more.functionID) {
             case 'CM0201_2':
               more.disabled = true;
@@ -233,7 +230,6 @@ import { CM_Customers } from '../models/cm_model';
           }
         }
       }
-
     }
   }
   checkMoreReason(data, isUseReason) {
@@ -268,7 +264,10 @@ import { CM_Customers } from '../models/cm_model';
       case 'CM0201_2':
         this.handelStartDay(data);
         break;
-
+      //xuât file
+      case 'CM0201_5':
+        this.exportFile(data);
+        break;
     }
   }
   changeMF(e) {
@@ -277,14 +276,14 @@ import { CM_Customers } from '../models/cm_model';
 
   handelStartDay(data) {
     this.notificationsService
-    .alertCode('DP033', null, ['"' + data?.title + '"' || ''])
-    .subscribe((x) => {
-      if (x.event && x.event.status == 'Y') {
-        this.startDeal(data.recID);
-      }
-    });
+      .alertCode('DP033', null, ['"' + data?.title + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.startDeal(data.recID);
+        }
+      });
   }
-  moveStage(data:any){
+  moveStage(data: any) {
     // if (!this.isClick) {
     //   return;
     // }
@@ -307,7 +306,7 @@ import { CM_Customers } from '../models/cm_model';
           formMD.gridViewName = fun.gridViewName;
           var stepReason = {
             isUseFail: false,
-            isUseSuccess:  false,
+            isUseSuccess: false,
           };
           var obj = {
             stepName: null,
@@ -320,7 +319,7 @@ import { CM_Customers } from '../models/cm_model';
             listStepProccess: null,
             lstParticipants: null,
             isDurationControl: null,
-            applyFor: '1'
+            applyFor: '1',
           };
           var dialogMoveStage = this.callfc.openForm(
             PopupAddDealComponent,
@@ -367,8 +366,8 @@ import { CM_Customers } from '../models/cm_model';
       if (res) {
         // data.status = '2';
         // data.startDate = res?.length > 0 ? res[0].startDate : null;
-             //   this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-     //   this.listInstanceStep = res;
+        //   this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        //   this.listInstanceStep = res;
         this.dataSelected = res[0];
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
@@ -377,9 +376,6 @@ import { CM_Customers } from '../models/cm_model';
       this.detectorRef.detectChanges();
     });
   }
-
-
-
 
   getPropertiesHeader(data, type) {
     if (this.listHeader?.length == 0) {
@@ -425,7 +421,6 @@ import { CM_Customers } from '../models/cm_model';
 
   addDeal() {
     this.view.dataService.addNew().subscribe((res) => {
-
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
@@ -455,7 +450,7 @@ import { CM_Customers } from '../models/cm_model';
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event).subscribe();
-       this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -465,44 +460,43 @@ import { CM_Customers } from '../models/cm_model';
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-    .edit(this.view.dataService.dataSelected)
-    .subscribe((res) => {
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '800px';
-      option.zIndex = 1001;
-      var formMD = new FormModel();
-      // formMD.funcID = funcIDApplyFor;
-      // formMD.entityName = fun.entityName;
-      // formMD.formName = fun.formName;
-      // formMD.gridViewName = fun.gridViewName;
-      var obj = {
-        action: 'edit',
-        formMD: formMD,
-        titleAction: 'Chỉnh sửa cơ hội',
-      };
-      let dialogCustomDeal = this.callfc.openSide(
-        PopupAddDealComponent,
-        obj,
-        option
-      );
-      dialogCustomDeal.closed.subscribe((e) => {
-        if (e && e.event != null) {
-          this.view.dataService.update(e.event).subscribe();
-         this.changeDetectorRef.detectChanges();
-        }
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
+        option.zIndex = 1001;
+        var formMD = new FormModel();
+        // formMD.funcID = funcIDApplyFor;
+        // formMD.entityName = fun.entityName;
+        // formMD.formName = fun.formName;
+        // formMD.gridViewName = fun.gridViewName;
+        var obj = {
+          action: 'edit',
+          formMD: formMD,
+          titleAction: 'Chỉnh sửa cơ hội',
+        };
+        let dialogCustomDeal = this.callfc.openSide(
+          PopupAddDealComponent,
+          obj,
+          option
+        );
+        dialogCustomDeal.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            this.view.dataService.update(e.event).subscribe();
+            this.changeDetectorRef.detectChanges();
+          }
+        });
       });
-    });
   }
 
   copy(data) {
     if (data) {
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
-      this.oldIdDeal= data.recID;
+      this.oldIdDeal = data.recID;
     }
     this.view.dataService.copy().subscribe((res) => {
-
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
@@ -516,8 +510,6 @@ import { CM_Customers } from '../models/cm_model';
       option.zIndex = 1001;
       this.openFormDeal(formMD, option, 'copy');
     });
-
-
   }
 
   delete(data: any) {
@@ -548,5 +540,41 @@ import { CM_Customers } from '../models/cm_model';
   }
   //#endregion
 
+  //xuất file
+  exportFile(dt) {
+    this.codxCmService
+      .getDataInstance(dt.refID)
+      .subscribe((res) => {
+        if (res) {
+          let option = new DialogModel();
+          option.zIndex = 1001;
+          let formModel = new FormModel() ;
+          
+          formModel.entityName = 'DP_Instances';
+          formModel.formName = 'DPInstances';
+          formModel.gridViewName = 'grvDPInstances';
+          formModel.funcID = 'DPT04';
 
+          let obj = {
+            data: res,
+            formModel: formModel,
+            isFormExport: true,
+            refID: dt.processID,
+            refType: 'DP_Processes',
+            titleAction: this.titleAction,
+            loaded: false,
+          };
+          let dialogTemplate = this.callfc.openForm(
+            PopupSelectTempletComponent,
+            '',
+            600,
+            500,
+            '',
+            obj,
+            '',
+            option
+          );
+        }
+      });
+  }
 }

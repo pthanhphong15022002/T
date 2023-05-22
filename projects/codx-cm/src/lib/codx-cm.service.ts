@@ -677,4 +677,31 @@ export class CodxCmService {
       data
     );
   }
+  ///xuat file
+  getDataExportByRecIDAsync(procesID) {
+    return this.api.exec<any>(
+      'CM',
+      'QuotationsBusiness',
+      'GetDataExportByRecIDAsync',
+      procesID
+    );
+  }
+  //check trinfh ki
+  checkApprovalStep(recID) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'CheckApprovalStepByTranIDAsync',
+      recID
+    );
+  }
+  //get data instance
+  getDataInstance(recID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetInstanceByRecIDAsync',
+      recID
+    );
+  }
 }

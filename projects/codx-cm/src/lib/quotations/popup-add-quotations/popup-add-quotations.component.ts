@@ -13,8 +13,10 @@ import {
   CRUDService,
   CacheService,
   CallFuncService,
+  CodxComboboxComponent,
   CodxFormComponent,
   CodxGridviewV2Component,
+  CodxInputComponent,
   DialogData,
   DialogModel,
   DialogRef,
@@ -46,6 +48,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('gridQuationsLines') gridQuationsLines: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
+  @ViewChild('customerIDCbx') customerIDCbx: CodxInputComponent;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
 
@@ -243,8 +246,18 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.quotations[e.field] = e.data;
     switch (e?.field) {
       case 'refID':
-        this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+        this.modelCustomerIDDeals = { CustomerID: this.quotations.customerID };
+        if(
+        (
+          this.customerIDCbx.ComponentCurrent as CodxComboboxComponent
+        ).load){
+          this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
+        };
+      
+        this.modelCustomerIDDeals = { CustomerID: this.quotations.customerID };
+       
+
+        
         break;
       case 'customerID':
         this.quotations.refID = null;
@@ -326,7 +339,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     //         PopupAddQuotationsLinesComponent,
     //         '',
     //         650,
-    //         700,
+    //         850,
     //         '',
     //         obj,
     //         '',
@@ -404,7 +417,7 @@ export class PopupAddQuotationsComponent implements OnInit {
                     PopupAddQuotationsLinesComponent,
                     '',
                     650,
-                    700,
+                    850,
                     '',
                     obj,
                     '',
