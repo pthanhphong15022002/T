@@ -115,7 +115,6 @@ export class PopupAddDealComponent
     super(inject);
     this.dialog = dialog;
     this.formModel = dialog.formModel;
-    debugger;
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
     this.executeApiCalls();

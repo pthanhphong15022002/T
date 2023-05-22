@@ -10,7 +10,6 @@ import {
   DialogRef,
   FormModel,
   UIComponent,
-  Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Observable, tap } from 'rxjs';
@@ -158,6 +157,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
         this.fmSalesInvoicesLines.gridViewName
       )
       .subscribe((res) => {
+        console.log('gvsSalesInvoicesLines', res);
         this.gvsSalesInvoicesLines = res;
       });
   }
@@ -178,18 +178,6 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     ) {
       return;
     }
-
-    // for (const salesInvoiceLine of this.salesInvoicesLines) {
-    //   if (
-    //     !this.acService.validateFormDataUsingGvs(
-    //       this.gvsSalesInvoicesLines,
-    //       salesInvoiceLine,
-    //       ['umid', 'vatid', 'idiM4']
-    //     )
-    //   ) {
-    //     return;
-    //   }
-    // }
 
     this.journalService.handleVoucherNoAndSave(
       this.journal,
@@ -238,8 +226,21 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     console.log('onCellChange', e);
   }
 
-  onClickDeleteRow(data): void {
-    this.grid.deleteRow(data, true);
+  onClickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteRow(data);
+        break;
+      case 'SYS03':
+        this.editRow(data);
+        break;
+      case 'SYS04':
+        this.copyRow(data);
+        break;
+      case 'SYS002':
+        // this.export(data);
+        break;
+    }
   }
 
   onClickAddRow(): void {
@@ -271,16 +272,21 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     );
   }
 
-  onClickCopyRow(data): void {
-    this.grid.addRow(
-      {
-        ...data,
-        rowNo: this.salesInvoicesLines.length + 1,
-        recID: Util.uid(),
-        transID: '00000000-0000-0000-0000-000000000000',
-      },
-      this.salesInvoicesLines.length
-    );
+  onAddNew(e): void {
+    console.log('onAddNew', e);
+
+    this.detailService
+      .save(null, null, null, null, false)
+      .subscribe((res) => console.log(res));
+  }
+
+  onEdit(e): void {
+    console.log('onEdit', e);
+
+    this.detailService.updateDatas.set(e.recID, e);
+    this.detailService
+      .save(null, null, null, null, false)
+      .subscribe((res) => console.log(res));
   }
   //#endregion
 
@@ -355,6 +361,38 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
           });
         }
       });
+  }
+
+  deleteRow(data): void {
+    console.log('deleteRow', data);
+
+    this.detailService.delete([data]).subscribe((res: any) => {
+      if (res.error === false) {
+        this.grid.deleteRow(data, true);
+      }
+    });
+  }
+
+  editRow(data): void {
+    console.log('editRow', data);
+
+    this.grid.gridRef.selectRow(Number(data.index));
+    this.grid.gridRef.startEdit();
+  }
+
+  copyRow(data): void {
+    console.log('copyRow', data);
+
+    this.detailService.dataSelected = { ...data };
+    this.detailService.copy().subscribe((res: ISalesInvoicesLine) => {
+      console.log(res);
+
+      let index = this.salesInvoicesLines.length;
+      res.rowNo = index + 1;
+      res.transID = this.salesInvoice.recID;
+
+      this.grid.addRow(res, index);
+    });
   }
 
   resetForm(): void {

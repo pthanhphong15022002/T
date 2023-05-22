@@ -160,6 +160,13 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
       return;
     }
 
+    if(this.familyMemberObj.isEmergency == true){
+      if(!this.familyMemberObj.mobile){
+        this.notify.notifyCode('HR013');
+        return;
+      }
+    }
+
     this.familyMemberObj.employeeID = this.employId;
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
