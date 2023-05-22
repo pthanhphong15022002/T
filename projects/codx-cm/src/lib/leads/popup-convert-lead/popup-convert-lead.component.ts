@@ -217,16 +217,16 @@ export class PopupConvertLeadComponent implements OnInit {
                 e.data.isDefault = false;
               }
               this.lstContactCustomer.push(Object.assign({}, e?.data));
-              this.codxListContact.listContacts = JSON.parse(JSON.stringify(this.lstContactCustomer));
+              this.codxListContact.listContacts = this.cmSv.bringDefaultContactToFront(JSON.parse(JSON.stringify(this.lstContactCustomer)));
               this.changeDetectorRef.detectChanges();
             });
           } else {
             this.lstContactCustomer.push(Object.assign({}, e?.data));
-            this.codxListContact.listContacts = JSON.parse(JSON.stringify(this.lstContactCustomer));
+            this.codxListContact.listContacts = this.cmSv.bringDefaultContactToFront(JSON.parse(JSON.stringify(this.lstContactCustomer)));
           }
         } else {
           this.lstContactCustomer.push(Object.assign({}, e?.data));
-          this.codxListContact.listContacts = JSON.parse(JSON.stringify(this.lstContactCustomer));
+          this.codxListContact.listContacts = this.cmSv.bringDefaultContactToFront(JSON.parse(JSON.stringify(this.lstContactCustomer)));
         }
       }
     } else {
@@ -235,7 +235,7 @@ export class PopupConvertLeadComponent implements OnInit {
       );
       if (index != -1) {
         this.lstContactCustomer.splice(index, 1);
-        this.codxListContact.listContacts = JSON.parse(JSON.stringify(this.lstContactCustomer));
+        this.codxListContact.listContacts = this.cmSv.bringDefaultContactToFront(JSON.parse(JSON.stringify(this.lstContactCustomer)));
       }
     }
     this.changeDetectorRef.detectChanges();
