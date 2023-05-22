@@ -254,7 +254,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.view.dataService.methodDelete = 'DeleteBookingAsync';
+
+  }
 
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
@@ -688,8 +691,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
 
   release(data: any) {
-    if (this.authService.userValue.userID != data?.createdBy) {
-      this.notificationsService.notifyCode('TM052');
+    if (this.authService?.userValue?.userID != data?.createdBy) {
+      this.notificationsService.notifyCode('SYS032');
       return;
     }
 
@@ -728,14 +731,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   cancel(data: any) {
-    if (
-      !this.codxBookingService.checkRole(
-        this.authService.userValue,
-        data?.createdBy,
-        this.isAdmin
-      )
-    ) {
-      this.notificationsService.notifyCode('TM052');
+    if (this.authService?.userValue?.userID != data?.createdBy) {
+      this.notificationsService.notifyCode('SYS032');
       return;
     }
     this.codxBookingService
@@ -750,6 +747,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         }
       });
   }
+
   reschedule(data: any) {
     let host: any;
     if (data?.resources != null) {
@@ -762,7 +760,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.isAdmin
       )
     ) {
-      this.notificationsService.notifyCode('TM052');
+      this.notificationsService.notifyCode('SYS032');
       return;
     }
     let dialogReschedule = this.callfc.openForm(
@@ -787,6 +785,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
+
   invite(data: any) {
     let host: any;
     if (data?.resources != null) {
@@ -799,7 +798,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.isAdmin
       )
     ) {
-      this.notificationsService.notifyCode('TM052');
+      this.notificationsService.notifyCode('SYS032');
       return;
     }
     let dialogInvite = this.callfc.openForm(
@@ -874,21 +873,15 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  edit(evt?) {
-    if (evt) {
-      if (
-        !this.codxBookingService.checkRole(
-          this.authService.userValue,
-          evt?.createdBy,
-          this.isAdmin
-        )
-      ) {
-        this.notificationsService.notifyCode('TM052');
+  edit(data?) {
+    if (data) {
+      if (this.authService?.userValue?.userID != data?.createdBy) {
+        this.notificationsService.notifyCode('SYS032');
         return;
       }
       if (true) {
         this.codxBookingService
-          .getBookingByRecID(evt?.recID)
+          .getBookingByRecID(data?.recID)
           .subscribe((booking) => {
             if (booking) {
               this.view.dataService.edit(booking).subscribe(() => {
@@ -996,39 +989,36 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  viewDetail(evt: any) {
+  delete(data?) {
+    if (this.authService?.userValue?.userID != data?.createdBy) {
+      this.notificationsService.notifyCode('SYS032');
+      return;
+    }
+    let deleteItem = this.view.dataService.dataSelected;
+    if (data) {
+      deleteItem = data;      
+    }
+    this.view.dataService.delete([deleteItem]).subscribe(() => {});
+  }
+  
+  viewDetail(data: any) {
+    if(data.resourceType==EPCONST.VLL.ResourceType.Stationery){
+      return;
+    }
     let option = new SidebarModel();
     option.Width = '800px';
     option.DataService = this.view?.dataService;
     option.FormModel = this.formModel;
     let dialogview = this.callfc.openSide(
       this.popupBookingComponent,
-      [evt, EPCONST.MFUNCID.Edit, 'Xem chi tiết', null, true],
+      [data, EPCONST.MFUNCID.Edit, 'Xem chi tiết', null, true],
       option
     );
   }
 
-  delete(evt?) {
-    this.view.dataService.methodDelete = 'DeleteBookingAsync';
-    let deleteItem = this.view.dataService.dataSelected;
-    if (evt) {
-      deleteItem = evt;
-      if (
-        !this.codxBookingService.checkRole(
-          this.authService.userValue,
-          deleteItem?.createdBy,
-          this.isAdmin
-        )
-      ) {
-        this.notificationsService.notifyCode('TM052');
-        return;
-      }
-    }
-    this.view.dataService.delete([deleteItem]).subscribe(() => {});
-  }
   allocate(data: any) {
     if(data.approverID!=this.authService?.userValue?.userID){
-      this.notificationsService.notifyCode('TM052');
+      this.notificationsService.notifyCode('SYS032');
         return;
     }
     if (data.approval == '1') {

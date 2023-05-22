@@ -494,7 +494,7 @@ export class MWPPopupAddBookingCarComponent extends UIComponent {
   ngAfterViewInit(): void {}
   beforeSave(option: RequestOption) {
     let itemData = this.data;
-    option.methodName = 'AddEditItemAsync';
+    option.methodName = 'SaveAsync';
     option.data = [itemData, this.isAdd, this.attendeesList, null, null];
     return true;
   }
