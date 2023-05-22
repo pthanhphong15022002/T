@@ -49,7 +49,7 @@
 <ng-template #body>
   <div class="offcanvas-content offcanvas-extend fixed-extend">
     <div class="d-flex">
-      <div class="flex-grow-1 extend-main">
+      <div class="flex-grow-1 extend-main w-550px">
         <ng-container [ngTemplateOutlet]="nav"></ng-container>
         <ng-container [ngTemplateOutlet]="main"></ng-container>
       </div>
@@ -146,11 +146,21 @@
       style="font-weight: 500"
     >
     </codx-label>
-    <ul *ngIf="dataInput['fields']?.length > 0">
+    <!-- <ul *ngIf="dataInput['fields']?.length > 0">
       <li *ngFor="let feild of dataInput['fields']" class="fs-6">
         {{ feild?.fieldName }}: {{ feild?.dataValue }}
       </li>
-    </ul>
+    </ul> -->
+    <div>
+      <codx-fields-detail-temp
+      *ngIf="instanceStep"
+      [dataStep]="instanceStep"
+      [showColumnControl]="1"
+      [isUpdate]="false"
+      [isShowTitle]="false"
+  >
+  </codx-fields-detail-temp>
+    </div>
   </div>
 
 

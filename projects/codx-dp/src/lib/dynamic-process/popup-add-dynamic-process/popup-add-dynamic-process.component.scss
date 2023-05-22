@@ -528,3 +528,8 @@ codx-attachment{
   background-color: white;
   box-shadow: 0 0 35px rgba(0, 0, 0, 0.07);
 }
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
