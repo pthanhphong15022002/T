@@ -340,6 +340,7 @@ export class InstanceDetailComponent implements OnInit {
         this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
         this.getStageByStep(this.listSteps);
+        this.handleProgressInstance();
       } else {
         this.listSteps = [];
         this.stepName = '';
@@ -378,7 +379,6 @@ export class InstanceDetailComponent implements OnInit {
   getStageByStep(listSteps) {
     this.isStart =
       listSteps?.length > 0 && listSteps[0]['startDate'] ? true : false;
-    var total = 0;
     for (var i = 0; i < listSteps.length; i++) {
       var stepNo = i;
       var data = listSteps[i];
@@ -396,13 +396,7 @@ export class InstanceDetailComponent implements OnInit {
           iconColor: data.iconColor,
         };
       }
-      total += data.progress;
       stepNo = i + 1;
-    }
-    if (listSteps != null && listSteps.length - 2 > 0) {
-      this.progress = (total / (listSteps.length - 2)).toFixed(1).toString();
-    } else {
-      this.progress = '0';
     }
     this.currentStep = listSteps.findIndex((x) => x.stepStatus === '1');
     this.checkCompletedInstance(this.instanceStatus);
@@ -767,9 +761,6 @@ export class InstanceDetailComponent implements OnInit {
       );
     }
   }
-  changeDataStep(e){
-    this.isChangeData = e;
-  }
 
   startInstances() {
     this.clickStartInstances.emit(true);
@@ -783,5 +774,23 @@ export class InstanceDetailComponent implements OnInit {
     } else {
       return null;
     }
+  }
+
+  handleProgressInstance(event?){
+    let listStepConvert = this.listSteps?.filter(step => !step.isSuccessStep && !step.isFailStep);
+    if(listStepConvert?.length <= 0){
+      this.progress = '0';
+      return;
+    }
+    if(event){
+      let stepFind = listStepConvert?.find(step => step.recID === event.recID);
+      if(stepFind){
+        stepFind.progress = event?.progress || 0;
+      }
+    }
+    let sumProgress = listStepConvert.reduce((sum, step) => {
+      return sum +(Number(step.progress) || 0)
+    },0)
+    this.progress = (sumProgress / listStepConvert?.length).toFixed(1);
   }
 }

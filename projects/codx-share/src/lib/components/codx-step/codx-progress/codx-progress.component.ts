@@ -22,7 +22,6 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
   @Input() step: any; // No gantchart
   @Output() valueChange = new EventEmitter<any>();
 
-  id = '';
   note = '';
   user: any;
   actualEnd: Date;
@@ -34,7 +33,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
   headerTextInsStep = {};
   showLabelAttachment = false;
   disabledProgressInput = false;
-  HTMLProgress = '<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>'
+
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -48,7 +47,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     this.type = dt?.data?.type;
     this.step = dt?.data?.step;
     this.dataSource = dt?.data?.data;
-    this.id = "progress" + Math.floor((Math.random() * 100000000)).toString();
+    this.isSave = dt?.data?.isSave;
   }
 
   async ngOnInit() {
@@ -56,7 +55,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
       this.actualEndMax = this.step?.actualStart;
     }
     this.progressOld = this.progressData;
-    this.note == this.dataSource['note'] || '';
+    this.note = this.dataSource['note'] || '';
     this.actualEnd = this.dataSource['actualEnd'] || null;
     this.progressData = Number(this.dataSource['progress'] || 0);
     this.getgridViewSetup(this.dialog.formModel);
@@ -211,25 +210,21 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     dataOutput.actualEnd = this.actualEnd;
     dataOutput.note = this.note;
     dataOutput.type = this.type;
-    switch (this.type) {
-      case 'P':
-        dataOutput.progressStep = this.progressData;
+    if(this.type == 'P'){
+      dataOutput.progressStep = this.progressData;
         dataOutput.stepID = this.dataSource['recID'];
-        break;
-      case 'G':
-        dataOutput.progressGroupTask = this.progressData;
-        dataOutput.groupTaskID = this.dataSource['recID'];
-        dataOutput.stepID = this.step['recID'];
-        break
-      case 'T':
-        dataOutput.groupTaskID = this.dataSource['taskGroupID'];
-        dataOutput.taskID = this.dataSource['recID'];
-        dataOutput.stepID = this.step['recID'];
-        dataOutput.progressTask = this.progressData;
-        if (isUpdate) {
-          this.progressGroupTask(dataOutput);
-        }
-        break
+    }else if(this.type == 'G'){
+      dataOutput.progressGroupTask = this.progressData;
+      dataOutput.groupTaskID = this.dataSource['recID'];
+      dataOutput.stepID = this.step['recID'];
+    }else{
+      dataOutput.groupTaskID = this.dataSource['taskGroupID'];
+      dataOutput.taskID = this.dataSource['recID'];
+      dataOutput.stepID = this.step['recID'];
+      dataOutput.progressTask = this.progressData;
+      if (isUpdate) {
+        this.progressGroupTask(dataOutput);
+      }
     }
     return dataOutput;
   }
