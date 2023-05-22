@@ -11,7 +11,16 @@
   <div class="content-step mt-2">
     <div class="row">
       <div class="col-6">
-        <ng-container [ngTemplateOutlet]="test"></ng-container>
+        <div class="form-group">
+          <codx-label fiedName="stepID" formName="Instances" gridViewName="grvInstances" default="Giai đoạn chuyển đến">
+          </codx-label>
+          <div *ngIf="listStepsCbx.length > 0 && listStepsCbx !== null">
+            <ejs-combobox [dataSource]="listStepsCbx" [fields]="fieldCbxStep" [value]="stepIdClick"
+            [allowFiltering]="true" [readonly]="false" (valueChange)="cbxChange($event)"></ejs-combobox>
+
+          </div>
+
+        </div>
       </div>
       <div class="col-3">
         <div class="form-group">
@@ -110,14 +119,6 @@
   </div>
 </ng-template>
 
-<ng-template #test>
-  <div class="form-group">
-    <codx-label fiedName="stepID" formName="Instances" gridViewName="grvInstances" default="Giai đoạn chuyển đến">
-    </codx-label>
-    <ejs-combobox [dataSource]="listStepsCbx" [fields]="fieldCbxStep" [value]="stepIdClick"
-    [allowFiltering]="true" [readonly]="false" (valueChange)="cbxChange($event)"></ejs-combobox>
-  </div>
-</ng-template>
 
 <ng-template #popupParticipants let-dialog>
   <codx-popup-participants [lstParticipants]="lstParticipants" [dialog]="dialog" [isType]="'I'"

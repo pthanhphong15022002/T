@@ -46,6 +46,18 @@
         [value]="deal?.processID"
         (valueChange)="cbxProcessChange($event,'processID')"
       ></ejs-combobox>
+
+      <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="ProcessID"
+      [refValue]="'CMProcesses'"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+
+
+
       </div>
     </div>
   </div>

@@ -162,11 +162,11 @@
                 </div> -->
             </div>
           </div>
-          <div class="d-flex flex-column align-items-end">
-            <div class="d-flex align-items-top w-100 h-25px">
+          <div class="d-flex justify-content-end me-3 mt-2">
+            <div class="d-flex align-items-center w-100 h-25px">
               <div class="d-flex flex-column">
                 <div
-                  class="badge badge-sm d-flex align-items-center"
+                  class="badge badge-sm d-flex align-items-center p-2"
                   [ngStyle]="{
                     'background-color':
                       dataSelect.status == '3' || dataSelect.status == '4'
@@ -179,27 +179,27 @@
                   <span
                     [ngClass]="stepValue['icon']"
                     [ngStyle]="{ color: stepValue['iconColor'] }"
-                    class="me-1 icon-14"
+                    class="me-1"
                   ></span>
                   <span [ngStyle]="{ color: stepValue['textColor'] }">{{
                     stepName
                   }}</span>
                 </div>
-              </div>
-              <div class="ms-2" *ngIf="dataSelect.owner">
-                <codx-imgs
-                  [isToolTip]="true"
-                  [width]="25"
-                  [objectId]="dataSelect.owner"
-                  ojectType="AD_Users"
-                  [numberImages]="1"
-                >
-                </codx-imgs>
-              </div>
-            </div>
-            <div class="mt-1">
-              
-             <!-- <codx-progressbar [progress]="progress"></codx-progressbar> -->
+              </div>             
+                <div class="d-flex align-items-center mx-2" *ngIf="dataSelect.owner">
+                  <codx-imgs
+                    class="d-flex align-items-center"
+                    [isToolTip]="true"
+                    [width]="25"
+                    [objectId]="dataSelect.owner"
+                    ojectType="AD_Users"
+                    [numberImages]="1"
+                  >
+                  </codx-imgs>
+                </div>           
+              <div class="mt-1">
+                <codx-progressbar [progress]="progress" [stype]="2" [size]="34"></codx-progressbar>
+               </div>
             </div>
           </div>
         </div>
@@ -287,7 +287,7 @@
                   [frmModelInstancesTask]="frmModelInstancesTask"
                   [lstStepProcess]="lstStepProcess"
                   [isOnlyView]="isOnlyView"
-                  (isChangeData)="changeDataStep($event)"
+                  (isChangeProgress)="handleProgressInstance($event)"
                 ></codx-stages-detail>
                 <!-- [stepID]="dataSelect.stepID"
               [permissionCloseInstances]="dataSelect?.permissionCloseInstances"
@@ -417,14 +417,12 @@
         (click)="clickDetailGanchart(data.recID)"
         [ngStyle]="{
           'background-color': getColor(data.recID),
-          'min-height': '35px',
-          'border-radius': '5px',
-          'min-width': '20px'
+          'border-radius': '3px',
         }"
       >
-        <div class="fw-bold text-dark line-clamp line-clamp-1 px-1">
+        <span class="fw-bold text-dark line-clamp line-clamp-1 px-1">
           {{ data.name }}
-        </div>
+        </span>
       </div>
     </ng-template>
   </div>

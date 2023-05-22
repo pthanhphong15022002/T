@@ -333,7 +333,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
 
   getOKRPlans(periodID: any, interval: any, year: any) {
-    
     this.showPlanMF=false;
     this.loadedData=false;
     if (

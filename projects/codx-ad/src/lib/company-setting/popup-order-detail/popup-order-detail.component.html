@@ -23,12 +23,11 @@
   <div class="modules">
     <ng-template [ngTemplateOutlet]="gridModules"> </ng-template>
   </div>
-  <div class="close d-flex justify-content-end">
-    <button
-      type="button"
-      class="btn btn-light-primary me-4"
-      (click)="onClose()"
-    >
+  <div class="close d-flex justify-content-between">
+    <button type="button" class="btn btn-primary me-4" (click)="extendOrder()">
+      <codx-label formName="" default="Gia hạn đơn hàng"></codx-label>
+    </button>
+    <button type="button" class="btn btn-primary me-4" (click)="onClose()">
       <codx-label formName="" default="OK"></codx-label>
     </button>
   </div>
@@ -220,7 +219,6 @@
           [value]="order?.pmtMethod"
           [showText]="true"
           [showBgColor]="true"
-          class="badge badge-light badge-square badge-md fs-7 p-2"
         >
         </codx-vll>
       </div>
@@ -235,6 +233,13 @@
     <span>
       {{ module.price + " " + order.currencyID + "/" + module.umid }}
     </span>
+    <codx-vll
+      [name]="grvTNOrders['Interval']?.referedValue"
+      [value]="'1'"
+      [showText]="true"
+      [showBgColor]="false"
+    >
+    </codx-vll>
   </div>
 </ng-template>
 <ng-template #moduleEmplDescTmp let-module>
@@ -244,6 +249,13 @@
     <span>
       {{ module.childPrice + " " + order.currencyID + "/" + module.umid }}
     </span>
+    <codx-vll
+      [name]="grvTNOrders['Interval']?.referedValue"
+      [value]="'1'"
+      [showText]="true"
+      [showBgColor]="false"
+    >
+    </codx-vll>
   </div>
 </ng-template>
 
@@ -313,11 +325,6 @@
 <!-- Gridview -->
 <ng-template #gridModules>
   <div class="row d-flex">
-    <!-- [formName]="fmUserRole?.formName"
-  [gridViewName]="fmUserRole?.gridViewName"
-  [entityName]="fmUserRole?.entityName" -->
-    <!-- [predicates]="predicate"
-  [dataValues]="dataValue" -->
     <codx-gridview-v2
       #grid
       [dataSource]="lstModule"

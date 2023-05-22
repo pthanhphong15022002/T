@@ -26,16 +26,15 @@
           </div>
         </div>
         <div class="ms-3 input-circle input-sm">
-          <!-- <div *ngIf="form?.formGroup">
+          <div *ngIf="form?.formGroup">
             <codx-input
               [Group]="form.formGroup"
               field="status"
               [formModel]="form.formModel"
               (valueChange)="valueChange($event)"
-              [disabled]="true"
             >
             </codx-input>
-          </div> -->
+          </div>
         </div>
       </div>
       <div class="d-flex justify-content-end me-3">
@@ -216,10 +215,11 @@
               [formModel]="form.formModel"
             ></codx-label>
             <codx-input
-              field="CustomerID"
+              #customerIDCbx
+              field="customerID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
-              [disabled]="disableRefID"
+              [disabled]="disableCusID"
               (valueChange)="changeCombox($event)"
             ></codx-input>
           </div>

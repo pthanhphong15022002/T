@@ -371,12 +371,12 @@
                     [class]="crrFuncTab == item.functionID ? 'active' : ''"
                     (click)="clickTab(item)"
                   >
-                    <span class="me-2">
-                      <span class="icon-person icon-18"></span>
-                    </span>
-                    <div class="fw-bold">
+                  <span class="d-flex align-items-center">
+                    <span class="icon-person icon-18 me-2"></span>
+                    <span class="fw-bold fs-6">
                       {{ item.customName }}
-                    </div>
+                    </span>
+                  </span>
                   </a>
                 </li>
               </ng-container>

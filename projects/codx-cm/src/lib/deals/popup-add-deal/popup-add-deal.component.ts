@@ -115,7 +115,6 @@ export class PopupAddDealComponent
     super(inject);
     this.dialog = dialog;
     this.formModel = dialog.formModel;
-    debugger;
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
     this.executeApiCalls();
@@ -328,7 +327,7 @@ export class PopupAddDealComponent
       // await this.getListCampaigns();
       // await this.getListChannels();
     } catch (error) {
-      console.error('Error executing API calls:', error);
+
     }
   }
   async getGridView(formModel) {
@@ -371,7 +370,7 @@ export class PopupAddDealComponent
   async getListInstanceSteps(processId: any) {
     processId =
       this.action === this.actionCopy ? this.deal.processID : processId;
-    var data = [processId, this.deal.refID, this.action];
+    var data = [processId, this.deal.refID, this.action,'1'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
         var obj = {

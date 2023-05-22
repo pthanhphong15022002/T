@@ -13,8 +13,10 @@ import {
   CRUDService,
   CacheService,
   CallFuncService,
+  CodxComboboxComponent,
   CodxFormComponent,
   CodxGridviewV2Component,
+  CodxInputComponent,
   DialogData,
   DialogModel,
   DialogRef,
@@ -46,6 +48,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('gridQuationsLines') gridQuationsLines: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
+  @ViewChild('customerIDCbx') customerIDCbx: CodxInputComponent;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
 
@@ -78,6 +81,8 @@ export class PopupAddQuotationsComponent implements OnInit {
   quotationLinesEdit = [];
   quotationLinesDeleted = [];
   disableRefID = false;
+  disableCusID = false;
+  disableContactsID = false;
   modelObjectIDContacs: any;
   modelCustomerIDDeals: any;
   titleActionLine = '';
@@ -105,13 +110,19 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
     this.disableRefID = dt?.data?.disableRefID;
+    this.disableCusID = dt?.data?.disableCusID;
+    this.disableContactsID = dt?.data?.disableContactsID;
     this.listQuotationLines = [];
-    if (this.action == 'edit') {
+
+    if (this.action == 'edit' || this.action == 'copy') {
       this.codxCM
         .getQuotationsLinesByTransID(this.quotations.recID)
         .subscribe((res) => {
           if (res) {
             this.listQuotationLines = res;
+            if (this.action == 'copy') {
+              this.listQuotationLines.forEach((x) => (x.recID = Util.uid()));
+            }
           }
         });
     }
@@ -235,8 +246,18 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.quotations[e.field] = e.data;
     switch (e?.field) {
       case 'refID':
-        this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+        this.modelCustomerIDDeals = { CustomerID: this.quotations.customerID };
+        if(
+        (
+          this.customerIDCbx.ComponentCurrent as CodxComboboxComponent
+        ).load){
+          this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
+        };
+      
+        this.modelCustomerIDDeals = { CustomerID: this.quotations.customerID };
+       
+
+        
         break;
       case 'customerID':
         this.quotations.refID = null;
@@ -318,7 +339,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     //         PopupAddQuotationsLinesComponent,
     //         '',
     //         650,
-    //         700,
+    //         850,
     //         '',
     //         obj,
     //         '',
@@ -396,7 +417,7 @@ export class PopupAddQuotationsComponent implements OnInit {
                     PopupAddQuotationsLinesComponent,
                     '',
                     650,
-                    700,
+                    850,
                     '',
                     obj,
                     '',

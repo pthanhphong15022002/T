@@ -14,6 +14,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
+import { PopupExtendModuleComponent } from '../popup-extend-module/popup-extend-module.component';
 
 @Component({
   selector: 'lib-popup-order-detail',
@@ -102,5 +103,21 @@ export class PopupOrderDetailComponent extends UIComponent {
 
   onClose() {
     this.dialog.close();
+  }
+
+  extendOrder() {
+    let data = {
+      grvView: this.grvTNOrders,
+      lstModule: this.lstOrderModule,
+      extendMode: 'order',
+    };
+    let orderDialog = this.callfc.openForm(
+      PopupExtendModuleComponent,
+      '',
+      900,
+      900,
+      '',
+      data
+    );
   }
 }

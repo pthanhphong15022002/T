@@ -70,12 +70,12 @@ export class CmcustomerDetailComponent implements OnInit {
       isActive: false,
       template: null,
     },
-    {
-      name: 'Quotations',
-      textDefault: 'Báo giá',
-      icon: 'icon-monetization_on',
-      isActive: false,
-    },
+    // {
+    //   name: 'Quotations',
+    //   textDefault: 'Báo giá',
+    //   icon: 'icon-monetization_on',
+    //   isActive: false,
+    // },
     { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
   ];
   treeTask = [];

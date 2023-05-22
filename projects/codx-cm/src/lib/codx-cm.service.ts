@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService, CacheService, NotificationsService } from 'codx-core';
-import { Observable, Subject, firstValueFrom } from 'rxjs';
+import { ApiHttpService, CacheService, CallFuncService, DialogModel, FormModel, NotificationsService, DataRequest } from 'codx-core';
+import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
+import { Observable, Subject, firstValueFrom, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxCmService {
+  titleAction: any;
   constructor(
     private api: ApiHttpService,
+    private callfc: CallFuncService,
     private cache: CacheService,
     private notification: NotificationsService
   ) {}
@@ -166,9 +169,12 @@ export class CodxCmService {
   }
 
   updateStatusDealsCompetitorAsync(dealCompetitor) {
-    return this.api.exec<any>('CM', 'DealsBusiness', 'UpdateStatusDealsCompetitorAsync', [
-      dealCompetitor,
-    ]);
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'UpdateStatusDealsCompetitorAsync',
+      [dealCompetitor]
+    );
   }
 
   updateDealCompetitorAsync(dealCompetitor) {
@@ -207,16 +213,13 @@ export class CodxCmService {
     );
   }
 
-  addOneAddress(address){
-    return this.api.exec<any>(
-      'BS',
-      'AddressBookBusiness',
-      'AddAdressAsync',
-      [address]
-    );
+  addOneAddress(address) {
+    return this.api.exec<any>('BS', 'AddressBookBusiness', 'AddAdressAsync', [
+      address,
+    ]);
   }
 
-  updateOneAddress(address){
+  updateOneAddress(address) {
     return this.api.exec<any>(
       'BS',
       'AddressBookBusiness',
@@ -225,7 +228,7 @@ export class CodxCmService {
     );
   }
 
-  deleteOneAddress(recID){
+  deleteOneAddress(recID) {
     return this.api.exec<any>(
       'BS',
       'AddressBookBusiness',
@@ -234,7 +237,7 @@ export class CodxCmService {
     );
   }
 
-  getAdressNameByIsDefault(id, entityName){
+  getAdressNameByIsDefault(id, entityName) {
     return this.api.exec<any>(
       'BS',
       'AddressBookBusiness',
@@ -253,9 +256,7 @@ export class CodxCmService {
   }
 
   bringDefaultContactToFront(data) {
-    const defaultContactIndex = data.findIndex(
-      (data) => data.isDefault
-    );
+    const defaultContactIndex = data.findIndex((data) => data.isDefault);
 
     if (defaultContactIndex !== -1) {
       const defaultContact = data[defaultContactIndex];
@@ -314,6 +315,16 @@ export class CodxCmService {
     return countValidate;
   }
 
+  loadDataAsync(service: string, options: DataRequest): Observable<any[]> {
+    return this.api
+      .execSv(service, 'ERM.Business.Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(
+        tap((r) => console.log(r)),
+        map((r) => r[0]),
+        tap((r) => console.log(r))
+      );
+  }
+
   getAutonumber(functionID, entityName, fieldName): Observable<any> {
     var subject = new Subject<any>();
     this.api
@@ -370,6 +381,14 @@ export class CodxCmService {
       data
     );
   }
+  // getInstanceStepsByMoveStages(data: any) {
+  //   return this.api.exec<any>(
+  //     'DP',
+  //     'InstancesBusiness',
+  //     'MoveStageInDealAsync',
+  //     data
+  //   );
+  // }
 
   addInstance(data: any) {
     return this.api.exec<any>(
@@ -544,7 +563,7 @@ export class CodxCmService {
   }
   // API for More in deal
 
-  startDeal(data){
+  startDeal(data) {
     return this.api.execSv<any>(
       'CM',
       'ERM.Business.CM',
@@ -553,7 +572,15 @@ export class CodxCmService {
       data
     );
   }
-
+  moveStageDeal(data){
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'MoveStageDealAsync',
+      data
+    );
+  }
 
   //#endregion -- Bao
 
@@ -622,13 +649,18 @@ export class CodxCmService {
     return this.api.exec<any>('IV', 'ItemsBusiness', 'LoadDataAsync', itemID);
   }
 
-   // load Tỉ giá
-   getExchangeRate(CurrencyID) {
-    return this.api.exec<any>('BS', 'CurrenciesBusiness', 'GetExchangeRateAsync', [CurrencyID,new Date()]);
+  // load Tỉ giá
+  getExchangeRate(CurrencyID) {
+    return this.api.exec<any>(
+      'BS',
+      'CurrenciesBusiness',
+      'GetExchangeRateAsync',
+      [CurrencyID, new Date()]
+    );
   }
 
   //getDefault
-  getDefault(service,funcID,entityName) {
+  getDefault(service, funcID, entityName) {
     return this.api.execSv<any>(
       service,
       'Core',
@@ -637,5 +669,98 @@ export class CodxCmService {
       [funcID, entityName]
     );
   }
+  //trinh ký
+  getESCategoryByCategoryID(categoryID) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDAsync',
+      categoryID
+    );
+  }
 
+  /// cance trifnh ki
+  cancelSubmit(recID, entityName) {
+    return this.api.execSv(
+      'CM',
+      'ERM.Business.Core',
+      'DataBusiness',
+      'CancelAsync',
+      [recID, '', entityName]
+    );
+  }
+
+  updateStatusQuotatitons(data) {
+    return this.api.exec<any>(
+      'CM',
+      'QuotationsBusiness',
+      'UpdateStatusQuotatitonsByRecIDAsync',
+      data
+    );
+  }
+  ///xuat file
+  getDataExportByRecIDAsync(procesID) {
+    return this.api.exec<any>(
+      'CM',
+      'QuotationsBusiness',
+      'GetDataExportByRecIDAsync',
+      procesID
+    );
+  }
+  //check trinfh ki
+  checkApprovalStep(recID) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'CheckApprovalStepByTranIDAsync',
+      recID
+    );
+  }
+  //get data instance
+  getDataInstance(recID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetInstanceByRecIDAsync',
+      recID
+    );
+  }
+
+   //xuất file - hàm chung
+   exportFile(dt,titleAction) {
+    this.getDataInstance(dt.refID)
+      .subscribe((res) => {
+        if (res) {
+          let option = new DialogModel();
+          option.zIndex = 1001;
+          let formModel = new FormModel() ;
+
+          formModel.entityName = 'DP_Instances';
+          formModel.formName = 'DPInstances';
+          formModel.gridViewName = 'grvDPInstances';
+          formModel.funcID = 'DPT04';
+
+          let obj = {
+            data: res,
+            formModel: formModel,
+            isFormExport: true,
+            refID: dt.processID,
+            refType: 'DP_Processes',
+            titleAction: titleAction,
+            loaded: false,
+          };
+          let dialogTemplate = this.callfc.openForm(
+            PopupSelectTempletComponent,
+            '',
+            600,
+            500,
+            '',
+            obj,
+            '',
+            option
+          );
+        }
+      });
+  }
 }

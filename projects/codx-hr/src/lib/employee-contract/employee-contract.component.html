@@ -17,9 +17,9 @@
 >
 </codx-views>
 <!-- <<<< -->
-<ng-template #templateList let-data >
+<ng-template #templateList let-data>
   <div class="d-flex align-items-center p-4 border-bottom w-100">
-    <div class="w-30 min-w-250px px-2">
+    <div class="w-50 min-w-350px px-2">
       <div class="d-flex align-items-start">
         <!-- highlight row -->
         <!-- <span class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-4"
@@ -27,7 +27,6 @@
         </span> -->
         <!-- end highlight -->
         <div class="d-flex flex-column flex-center me-2 w-50px">
-          
           <codx-img
             [width]="35"
             [objectId]="data?.emp?.employeeID"
@@ -48,14 +47,16 @@
         </div>
         <div class="d-flex flex-column">
           <div class="d-flex align-items-center">
-            <span class="me-2 text-dark fw-bold text-nowrap">{{ data?.emp?.employeeName }}</span>
+            <span class="me-2 text-dark fw-bold text-nowrap">{{
+              data?.emp?.employeeName
+            }}</span>
             <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
             <span class="text-danger">{{ data?.emp?.employeeID }}</span>
           </div>
           <div class="text-gray-500 fs-7 mb-1">
             <span
               [innerHTML]="
-              data?.positionID
+                data?.positionID
                   | formatvalue : view.formModel : 'positionID'
                   | async
               "
@@ -64,7 +65,7 @@
           <div class="text-gray-700">
             <span
               [innerHTML]="
-              data?.orgUnitID
+                data?.orgUnitID
                   | formatvalue : view.formModel : 'orgUnitID'
                   | async
               "
@@ -74,66 +75,55 @@
       </div>
     </div>
 
-    <div class="w-40 min-w-250px px-2">
+    <div class="w-30 min-w-250px px-2">
       <div class="d-flex flex-row">
         <div>
           <span
+            [ngbTooltip]="grvSetup?.ContractNo?.headerText"
             [title]="
               eContractHeaderText ? eContractHeaderText['ContractNo'] : ''
             "
           >
-          {{ data?.contractNo }}</span
+            {{ data?.contractNo }}</span
           >
 
           <div class="d-flex flex-row me-2" *ngIf="data?.attachments > 0">
-            <codx-attachment-temp [objectID]="data.recID" [formModel]="view.formModel">
+            <codx-attachment-temp
+              [objectID]="data.recID"
+              [formModel]="view.formModel"
+            >
             </codx-attachment-temp>
-        </div>
+          </div>
         </div>
       </div>
-      <div class="d-flex flex-column ">
-        <div class="fw-bold">
-          <span
-            [title]="
-              eContractHeaderText ? eContractHeaderText['ContractTypeID'] : ''
-            "
-            [innerHTML]="
-              data?.contractTypeID
-                | formatvalue : view.formModel : 'contractTypeID'
-                | async
-            "
+      <div class="fw-bold">
+        <span
+          [ngbTooltip]="grvSetup?.ContractTypeID?.headerText"
+          [innerHTML]="
+            data?.contractTypeID
+              | formatvalue : view.formModel : 'contractTypeID'
+              | async
+          "
+        >
+        </span>
+      </div>
+      <div class="d-flex mt-2">
+        <i class="icon-calendar_today icon-15 me-1"></i>
+        <div>
+          <span [ngbTooltip]="grvSetup?.EffectedDate?.headerText">
+            {{ data?.effectedDate | fmDT }}</span
           >
-          </span>
-        </div>
-        <div class="d-flex flex-row">
-          <i
-            class="icon-calendar_today icon-14"
-          ></i>
-          <div
-          >
-            <span
-              [title]="
-                eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''
-              "
-            >
-              {{ data?.effectedDate | fmDT }}</span
-            >
-            <span *ngIf="data.expiredDate">
-              <span> - </span>
-              <span
-                [title]="
-                  eContractHeaderText ? eContractHeaderText['ExpiredDate'] : ''
-                "
-              >
-                {{ data?.expiredDate | fmDT }}
-              </span>
+          <span *ngIf="data.expiredDate">
+            <span *ngIf="data.expiredDate"> - </span>
+            <span [ngbTooltip]="grvSetup?.ExpiredDate?.headerText">
+              {{ data?.expiredDate | fmDT }}
             </span>
-          </div>
+          </span>
         </div>
       </div>
     </div>
 
-    <ng-template  #popIsNewest>
+    <ng-template #popIsNewest>
       <span>
         <codx-label
           name="lblIsCurrent"
@@ -142,7 +132,7 @@
         ></codx-label>
       </span>
     </ng-template>
-  
+
     <ng-template #popOverDue>
       <span>
         <codx-label
@@ -153,7 +143,7 @@
       </span>
     </ng-template>
 
-    <div class="w-30 min-w-200px px-2">
+    <div class="w-20 min-w-200px px-2">
       <div class="d-flex flex-row">
         <codx-vll
           [formModel]="view.formModel"
@@ -165,56 +155,24 @@
           ngClass="badge badge-sm"
         >
         </codx-vll>
-        <span *ngIf="data?.isCurrent && !data?.isExpire" class="badge badge-sm text-primary">
-          <span
-          [style.color]="'#0078FF'"
-          [style.background]="''"
-          class="icon-bookmark icon-18"
-          [ngbPopover]="popIsNewest"
-          #popOver="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="popOver.open()"
-          (mouseleave)="popOver.close()"
-          placement="left"
+        <span
+          *ngIf="data?.isCurrent && !data?.isExpire"
+          class="icon-bookmark text-primary icon-25"
         >
         </span>
-        </span>
-        <span *ngIf="data?.isCurrent && data?.isExpire" class="badge badge-sm text-primary">
-          <span class="icon-notifications icon-18"
+        <span
+          *ngIf="data?.isCurrent && data?.isExpire"
+          class="icon-notifications icon-25"
           [style.color]="'#F64E60'"
-          [ngbPopover]="popOverDue"
-          #p="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="p.open()"
-          (mouseleave)="p.close()"
-          placement="left"
         >
         </span>
-        </span>
-
       </div>
-      <div class="d-flex flex-column">
-        <div class="text-gray-700 d-flex flex-row mb-1">
-          <!-- <span class="icon-event_notes icon-16 me-1"></span> -->
-          <div class="align-self-center">
-            <!-- <span
-              [title]="
-                eContractHeaderText ? eContractHeaderText['ContractNo'] : ''
-              "
-            >
-              {{ data?.contractNo }}
-            </span>
-            <span> - </span> -->
-            <span
-              [title]="
-                eContractHeaderText ? eContractHeaderText['SignedDate'] : ''
-              "
-            >
-              {{ data?.signedDate | fmDT }}</span
-            >
-          </div>
-        </div>
-
+      <div class="mt-1">
+        <span
+          [title]="eContractHeaderText ? eContractHeaderText['SignedDate'] : ''"
+        >
+          {{ data?.signedDate | fmDT }}</span
+        >
       </div>
       <codx-attachment
         #attachment
@@ -234,19 +192,6 @@
       </codx-attachment>
     </div>
 
-    <!-- <div class="w-150px min-w-150px px-2">
-      <codx-vll
-        [formModel]="view.formModel"
-        [field]="'ApproveStatus'"
-        [value]="data?.approveStatus"
-        [showText]="true"
-        [showIcon]="false"
-        [showBgColor]="true"
-        ngClass="badge badge-sm"
-      >
-      </codx-vll>
-    </div> -->
-
     <div class="align-self-center">
       <div style="height: 35px" class="has-action-menu">
         <codx-mfunc
@@ -264,13 +209,13 @@
 
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 ps-2 pe-4">
-    <div class="w-30 p-3 fw-bold text-dark">
+    <div class="w-50 min-w-350px p-3 fw-bold text-dark">
       <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
     </div>
-    <div class="w-40 min-w-250px p-3 fw-bold text-dark">
+    <div class="w-30 min-w-250px p-3 fw-bold text-dark">
       <codx-label name="lblContractType" [default]="'Hợp đồng'"></codx-label>
     </div>
-    <div class="w-30 min-w-200px p-3 fw-bold text-dark">
+    <div class="w-20 min-w-200px p-3 fw-bold text-dark">
       <codx-label name="lblContractNum" [default]="'Tình trạng'"></codx-label>
     </div>
     <!-- <div class="w-150px min-w-150px p-3 fw-bold text-dark">
@@ -288,41 +233,73 @@
 </ng-template>
 
 <ng-template #templateListDetail let-data>
-  <div class="border-bottom position-relative avatar-vllbadge">
-    <codx-temp-full
-      cardCss="card-template border-bottom p-3"
-      (clickMF)="clickMF($event, data)"
-      [moreFuncCss]="'me-10'"
-      [imageId]="data?.emp?.employeeID"
-      [imageObjType]="'HR_Employees'"
-      imgCss="me-3"
-      [imageWidth]="35"
-      [formModel]="view.formModel"
-      [title]="data?.emp?.employeeName"
-      [dataItem]="data"
-      [subTitleTmp]="subtitleTmp"
-      [imgOn]="data?.modifiedOn"
-      [descTmp]="descTmp"
-      [typeMF]="'hover'"
-      (changeDataMF)="changeDataMf($event, data)"
-      [baseHeaderRightTmp]="baseHeaderRightTmp"
-    >
-    </codx-temp-full>
-    <!-- <div class="d-flex flex-center vll-badge">
-      <codx-vll
-        class="badge badge-sm me-0 badge-light"
-        [name]="genderGrvSetup?.referedValue"
-        [value]="data?.emp?.gender"
-        [showText]="true"
-        [showIcon]="false"
-        [showBgColor]="false"
-      >
-      </codx-vll>
-    </div> -->
-  </div>
+  <codx-temp-full
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (clickMF)="clickMF($event, data)"
+    [moreFuncCss]="'me-10'"
+    [imageId]="data?.emp?.employeeID"
+    [imageObjType]="'HR_Employees'"
+    [imageWidth]="40"
+    [formModel]="view.formModel"
+    [titleTmp]="titleTmp"
+    [dataItem]="data"
+    [imgOn]="data?.modifiedOn"
+    [typeMF]="'hover'"
+    (changeDataMF)="changeDataMf($event, data)"
+  >
+  </codx-temp-full>
 
-  <ng-template #subtitleTmp>
-    <div class="w-100">    
+  <ng-template #titleTmp>
+    <div class="w-100">
+      <div class="d-flex">
+        <div class="justify-content-between">
+          {{ data?.emp?.employeeName }}
+        </div>
+        <div
+          *ngIf="data?.isCurrent && !data?.isExpire"
+          #popOver="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="popOver.open()"
+          (mouseleave)="popOver.close()"
+          placement="left"
+          [ngbPopover]="popIsNewest"
+          [style.color]="'#0078FF'"
+          class="icon-bookmark icon-18 ms-auto"
+        ></div>
+
+        <div
+          *ngIf="data?.isCurrent && data?.isExpire"
+          #popOver="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="popOver.open()"
+          (mouseleave)="popOver.close()"
+          placement="left"
+          [ngbPopover]="popOverDue"
+          [style.color]="'#F64E60'"
+          class="icon-notifications icon-18"
+        ></div>
+
+        <ng-template #popIsNewest>
+          <span>
+            <codx-label
+              name="lblIsCurrent"
+              [formModel]="view.formModel"
+              default="Mới nhất"
+            ></codx-label>
+          </span>
+        </ng-template>
+
+        <ng-template #popOverDue>
+          <span>
+            <codx-label
+              name="lblOverDue"
+              [formModel]="view.formModel"
+              default="Đã quá hạn!"
+            ></codx-label>
+          </span>
+        </ng-template>
+      </div>
+
       <div class="fs-7 text-gray-600">
         <span
           [innerHTML]="
@@ -332,63 +309,51 @@
           "
         ></span>
       </div>
-    </div>
-  </ng-template>
-
-  <ng-template #descTmp>
-    <div class="w-100">
-      <div>
-        <div class="justify-content-between mb-1">
-          <span
-            [title]="eContractHeaderText.ContractTypeID"
-            [innerHTML]="
-              data?.contractTypeID
-                | formatvalue : view.formModel : 'contractTypeID'
-                | async
-            "
-          ></span>
-        </div>
-        <div class="justify-content-between">
-          <span class="icon-calendar_today icon-14"></span>
-          <span class="me-3">
-            {{ data.contractNo }}
-          </span>
-          <span
-            [title]="eContractHeaderText.EffectedDate"
-            >
-            <span class="icon-calendar_today icon-14"></span>
-            <span>
-            {{ data.effectedDate | fmDT }}
-          </span>
-          <span *ngIf="data.expiredDate">
-            <span class="text-gray-500 mx-1">-</span> 
-            </span>
-            <span
-              [title]="eContractHeaderText.ExpiredDate"
-              >
-                {{ data.expiredDate | fmDT }}
-            </span>
-          </span>
-        </div>
+      <div class="justify-content-between mb-1">
+        <span
+          [ngbTooltip]="grvSetup?.ContractTypeID?.headerText"
+          [innerHTML]="
+            data?.contractTypeID
+              | formatvalue : view.formModel : 'contractTypeID'
+              | async
+          "
+        ></span>
       </div>
-  
-        <div class="d-flex mt-1">
-          <codx-vll
-            class="badge badge-sm  me-4"
-            [name]="'HRS102'"
-            [value]="data?.status"
-            [showText]="true"
-            [showBgColor]="true"
-          >
-          </codx-vll>
-  
-          <span class="me-4">
-            {{ data?.signedDate | fmDT }}
-          </span>
-  
-  
-  
-          <!-- <span class="d-flex flex-row justify-content-end">
+      <div class="justify-content-between">
+        <span class="icon-calendar_today icon-14"></span>
+        <span class="me-3" [ngbTooltip]="grvSetup?.ContractNo?.headerText">
+          {{ data.contractNo }}
+        </span>
+        <span class="icon-calendar_today icon-14"></span>
+        <span [ngbTooltip]="grvSetup?.ContractTypeID?.headerText">
+          {{ data.effectedDate | fmDT }}
+        </span>
+        <span *ngIf="data.expiredDate">
+          <span class="text-gray-500 mx-1">-</span>
+        </span>
+        <span
+          *ngIf="data.expiredDate"
+          [ngbTooltip]="grvSetup?.ContractTypeID?.headerText"
+        >
+          {{ data.expiredDate | fmDT }}
+        </span>
+      </div>
+
+      <div class="d-flex mt-1">
+        <codx-vll
+          class="badge badge-sm badge-light-primary me-3"
+          [name]="'HRS102'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+        >
+        </codx-vll>
+
+        <span class="me-4" [ngbTooltip]="grvSetup?.SignedDate?.headerText">
+          {{ data?.signedDate | fmDT }}
+        </span>
+
+        <!-- <span class="d-flex flex-row justify-content-end">
             <codx-imgs
               [objectId]="getIdUser(data.createdBy, data.owner)"
               [objectType]="'AD_Users'"
@@ -398,7 +363,7 @@
             >
             </codx-imgs>
           </span> -->
-        </div>
+      </div>
     </div>
   </ng-template>
 </ng-template>
@@ -407,28 +372,29 @@
   <div>
     <ng-container *ngIf="data?.isCurrent && !data?.isExpire">
       <span
-      [style.color]="'#0078FF'"
-      class="icon-bookmark icon-18"
-      [ngbPopover]="popIsNewest"
-      #popOver="ngbPopover"
-      [openDelay]="500"
-      (mouseenter)="popOver.open()"
-      (mouseleave)="popOver.close()"
-      placement="left"
-    >
-    </span>
+        [style.color]="'#0078FF'"
+        class="icon-bookmark icon-18"
+        [ngbPopover]="popIsNewest"
+        #popOver="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="popOver.open()"
+        (mouseleave)="popOver.close()"
+        placement="left"
+      >
+      </span>
     </ng-container>
     <ng-container *ngIf="data?.isCurrent && data?.isExpire">
-      <span class="icon-notifications icon-18"
-      [style.color]="'#F64E60'"
-      [ngbPopover]="popOverDue"
-      #p="ngbPopover"
-      [openDelay]="500"
-      (mouseenter)="p.open()"
-      (mouseleave)="p.close()"
-      placement="left"
-    >
-    </span>
+      <span
+        class="icon-notifications icon-18"
+        [style.color]="'#F64E60'"
+        [ngbPopover]="popOverDue"
+        #p="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="p.open()"
+        (mouseleave)="p.close()"
+        placement="left"
+      >
+      </span>
     </ng-container>
     <!-- <ng-template #tmpTest *ngIf="data?.isCurrent">
       <span class="icon-notifications icon-18"
@@ -444,7 +410,7 @@
     </ng-template> -->
   </div>
 
-  <ng-template  #popIsNewest>
+  <ng-template #popIsNewest>
     <span>
       <codx-label
         name="lblIsCurrent"
@@ -471,7 +437,7 @@
     [itemDetail]="itemDetail"
     [funcID]="funcID"
     [view]="view"
-    [formModel] = "view.formModel"
+    [formModel]="view.formModel"
     (uploaded)="getDetailContract($event, data)"
     (clickMFunction)="clickEvent($event, data)"
   >
@@ -526,9 +492,9 @@
             ></codx-label>
           </label>
           <codx-input
-          type = "text"
-          [formModel]="view.formModel"
-          (valueChange)="ValueChangeComment($event)"
+            type="text"
+            [formModel]="view.formModel"
+            (valueChange)="ValueChangeComment($event)"
           >
           </codx-input>
           <!-- <codx-input

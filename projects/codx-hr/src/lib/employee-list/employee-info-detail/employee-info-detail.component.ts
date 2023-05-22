@@ -74,6 +74,7 @@ import { PopupEquitjobComponent } from '../../employee-profile/popup-equitjob/po
   selector: 'lib-employee-info-detail',
   templateUrl: './employee-info-detail.component.html',
   styleUrls: ['./employee-info-detail.component.scss'],
+  encapsulation:ViewEncapsulation.None,
 })
 export class EmployeeInfoDetailComponent extends UIComponent {
   valueChangeViewAllEContract() {
@@ -3423,6 +3424,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      debugger
       if (res?.event) {
         this.infoPersonal = JSON.parse(JSON.stringify(res.event));
         this.df.detectChanges();
@@ -4021,13 +4023,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.eAccidentGridView?.dataService as CRUDService)?.clear();
-      // else {
-      //   this.eAccidentsRowCount += this.updateGridView(
-      //     this.eAccidentGridView,
-      //     actionType,
-      //     res.event
-      //   );
-      // }
+      else {
+        this.updateGridView(
+          this.eAccidentGridView,
+          actionType,
+          res.event
+        );
+      }
       this.df.detectChanges();
     });
   }
@@ -4422,12 +4424,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         actionHeaderText + ' ' + this.getFormHeader(this.eDiseasesFuncID),
     });
     dialogAdd.closed.subscribe((res) => {
-      // if (res)
-      //   this.eDiseasesRowCount += this.updateGridView(
-      //     this.eDiseasesGrid,
-      //     actionType,
-      //     res.event
-      //   );
+      if (res)
+        this.updateGridView(
+          this.eDiseasesGrid,
+          actionType,
+          res.event
+        );
       this.df.detectChanges();
     });
 

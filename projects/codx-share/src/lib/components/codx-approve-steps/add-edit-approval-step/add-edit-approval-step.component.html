@@ -123,7 +123,7 @@
         >
           <codx-temp-full
             cardCss="card-template mb-4"
-            *ngIf="item.roleType?.length == 1"
+            *ngIf="item?.roleType=='U' "
             [imageId]="item.approver"
             [title]="item.name"
             [subTitle]="item.position ?? positionDefault"
@@ -139,7 +139,7 @@
 
           <codx-temp-full
             cardCss="card-template mb-4"
-            *ngIf="item.roleType?.length > 1"
+            *ngIf="item.roleType!='U' "
             [imageSrc]="
               './assets/themes/sys/default/img/' +
               (item.icon ? item.icon : 'share_default.svg')

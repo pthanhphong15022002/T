@@ -26,6 +26,7 @@ import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
 import { CM_Customers } from '../models/cm_model';
 import { PopupAddLeadComponent } from './popup-add-lead/popup-add-lead.component';
+import { PopupConvertLeadComponent } from './popup-convert-lead/popup-convert-lead.component';
 
 @Component({
   selector: 'lib-leads',
@@ -106,7 +107,6 @@ export class LeadsComponent
   ) {
     super(inject);
     if (!this.funcID) {
-      debugger;
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
   }
@@ -239,6 +239,9 @@ export class LeadsComponent
         break;
       case 'CM0201_2':
         this.handelStartDay(data);
+        break;
+      case 'CM0205_1':
+        this.convertLead(data);
         break;
     }
   }
@@ -437,6 +440,48 @@ export class LeadsComponent
     opt.methodName = 'DeletedLeadAsync';
     opt.data = [itemSelected.recID, entityName];
     return true;
+  }
+  //#endregion
+
+
+  //#region convertLead
+  convertLead(data){
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        this.cache.functionList(this.funcID).subscribe((fun) => {
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          var formMD = new FormModel();
+          formMD.entityName = fun.entityName;
+          formMD.formName = fun.formName;
+          formMD.gridViewName = fun.gridViewName;
+          formMD.funcID = this.funcID;
+          option.FormModel = JSON.parse(JSON.stringify(formMD));
+          option.Width = '800px';
+          var obj = {
+            action: 'edit',
+            title: this.titleAction,
+          };
+          var dialog = this.callfc.openSide(
+            PopupConvertLeadComponent,
+            obj,
+            option
+          );
+          dialog.closed.subscribe((e) => {
+            if (!e?.event) this.view.dataService.clear();
+            if (e && e.event != null) {
+              e.event.modifiedOn = new Date();
+              this.view.dataService.update(e.event).subscribe();
+              this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+              this.detectorRef.detectChanges();
+            }
+          });
+        });
+      });
   }
   //#endregion
 
