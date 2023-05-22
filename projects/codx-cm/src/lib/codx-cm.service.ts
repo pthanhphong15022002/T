@@ -166,9 +166,12 @@ export class CodxCmService {
   }
 
   updateStatusDealsCompetitorAsync(dealCompetitor) {
-    return this.api.exec<any>('CM', 'DealsBusiness', 'UpdateStatusDealsCompetitorAsync', [
-      dealCompetitor,
-    ]);
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'UpdateStatusDealsCompetitorAsync',
+      [dealCompetitor]
+    );
   }
 
   updateDealCompetitorAsync(dealCompetitor) {
@@ -207,16 +210,13 @@ export class CodxCmService {
     );
   }
 
-  addOneAddress(address){
-    return this.api.exec<any>(
-      'BS',
-      'AddressBookBusiness',
-      'AddAdressAsync',
-      [address]
-    );
+  addOneAddress(address) {
+    return this.api.exec<any>('BS', 'AddressBookBusiness', 'AddAdressAsync', [
+      address,
+    ]);
   }
 
-  updateOneAddress(address){
+  updateOneAddress(address) {
     return this.api.exec<any>(
       'BS',
       'AddressBookBusiness',
@@ -225,7 +225,7 @@ export class CodxCmService {
     );
   }
 
-  deleteOneAddress(recID){
+  deleteOneAddress(recID) {
     return this.api.exec<any>(
       'BS',
       'AddressBookBusiness',
@@ -234,7 +234,7 @@ export class CodxCmService {
     );
   }
 
-  getAdressNameByIsDefault(id, entityName){
+  getAdressNameByIsDefault(id, entityName) {
     return this.api.exec<any>(
       'BS',
       'AddressBookBusiness',
@@ -253,9 +253,7 @@ export class CodxCmService {
   }
 
   bringDefaultContactToFront(data) {
-    const defaultContactIndex = data.findIndex(
-      (data) => data.isDefault
-    );
+    const defaultContactIndex = data.findIndex((data) => data.isDefault);
 
     if (defaultContactIndex !== -1) {
       const defaultContact = data[defaultContactIndex];
@@ -370,6 +368,14 @@ export class CodxCmService {
       data
     );
   }
+  // getInstanceStepsByMoveStages(data: any) {
+  //   return this.api.exec<any>(
+  //     'DP',
+  //     'InstancesBusiness',
+  //     'MoveStageInDealAsync',
+  //     data
+  //   );
+  // }
 
   addInstance(data: any) {
     return this.api.exec<any>(
@@ -544,7 +550,7 @@ export class CodxCmService {
   }
   // API for More in deal
 
-  startDeal(data){
+  startDeal(data) {
     return this.api.execSv<any>(
       'CM',
       'ERM.Business.CM',
@@ -553,7 +559,6 @@ export class CodxCmService {
       data
     );
   }
-
 
   //#endregion -- Bao
 
@@ -622,13 +627,18 @@ export class CodxCmService {
     return this.api.exec<any>('IV', 'ItemsBusiness', 'LoadDataAsync', itemID);
   }
 
-   // load Tỉ giá
-   getExchangeRate(CurrencyID) {
-    return this.api.exec<any>('BS', 'CurrenciesBusiness', 'GetExchangeRateAsync', [CurrencyID,new Date()]);
+  // load Tỉ giá
+  getExchangeRate(CurrencyID) {
+    return this.api.exec<any>(
+      'BS',
+      'CurrenciesBusiness',
+      'GetExchangeRateAsync',
+      [CurrencyID, new Date()]
+    );
   }
 
   //getDefault
-  getDefault(service,funcID,entityName) {
+  getDefault(service, funcID, entityName) {
     return this.api.execSv<any>(
       service,
       'Core',
@@ -637,5 +647,34 @@ export class CodxCmService {
       [funcID, entityName]
     );
   }
+  //trinh ký
+  getESCategoryByCategoryID(categoryID) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDAsync',
+      categoryID
+    );
+  }
 
+  /// cance trifnh ki
+  cancelSubmit(recID, entityName) {
+    return this.api.execSv(
+      'CM',
+      'ERM.Business.Core',
+      'DataBusiness',
+      'CancelAsync',
+      [recID, '', entityName]
+    );
+  }
+
+  updateStatusQuotatitons(data) {
+    return this.api.exec<any>(
+      'CM',
+      'QuotationsBusiness',
+      'UpdateStatusQuotatitonsByRecIDAsync',
+      data
+    );
+  }
 }

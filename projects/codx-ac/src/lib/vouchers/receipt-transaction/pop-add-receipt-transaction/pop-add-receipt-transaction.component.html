@@ -174,7 +174,7 @@
         [gridViewName]="fmInventoryJournalLines.gridViewName" [entityName]="fmInventoryJournalLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="inventoryJournalLines" service="IV"
-        [height]="gridHeight"  [autoLoad]="false" rowHeight="30" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"
+        [height]="gridHeight"  [autoLoad]="false" rowHeight="40" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"
         (created)="gridCreated($event, gridInventoryJournalLine)"></codx-gridview-v2>
     </div>
     <ng-container *ngIf="form?.formGroup && modeGrid == 2 && gridViewSetupLine">

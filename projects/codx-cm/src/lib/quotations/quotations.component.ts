@@ -16,6 +16,7 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  NotificationsService,
   RequestOption,
   UIComponent,
   Util,
@@ -85,6 +86,7 @@ export class QuotationsComponent extends UIComponent {
     private inject: Injector,
     private codxCM: CodxCmService,
     private callfunc: CallFuncService,
+    private notiService: NotificationsService,
     private routerActive: ActivatedRoute,
     @Optional() dialog?: DialogRef
   ) {
@@ -433,7 +435,9 @@ export class QuotationsComponent extends UIComponent {
     dt.status = '1';
     this.itemSelected.status = '1';
     this.view.dataService.update(this.itemSelected).subscribe();
-    this.itemSelected = JSON.parse(JSON.stringify(this.view.dataService.dataSelected))
+    this.itemSelected = JSON.parse(
+      JSON.stringify(this.view.dataService.dataSelected)
+    );
   }
 
   // tạo phiên bản mới
@@ -462,8 +466,51 @@ export class QuotationsComponent extends UIComponent {
     dt.status = '0';
     this.itemSelected.status = '0';
     this.view.dataService.update(this.itemSelected).subscribe();
-    this.itemSelected = JSON.parse(JSON.stringify(this.view.dataService.dataSelected))
+    this.itemSelected = JSON.parse(
+      JSON.stringify(this.view.dataService.dataSelected)
+    );
+
+    // ES016 - Hủy
+    let processNo;
+    this.notiService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        //check truoc ben quy trình có thiết lập chưa ?? cos la lam tiep
+        this.codxCM
+          .getESCategoryByCategoryID(processNo)
+          .subscribe((res2: any) => {
+            if (res2) {
+              //trình ký
+              if (res2?.eSign == true) {
+                // this.cancelAproval(item);
+                //this.callfunc.openForm();
+              } else if (res2?.eSign == false) {
+                this.codxCM
+                  .cancelSubmit(dt?.recID, this.view.formModel.entityName)
+                  .subscribe((res3) => {
+                    if (res3) {
+                      this.itemSelected.status = '0';
+                      this.codxCM
+                        .updateStatusQuotatitons([this.itemSelected.recID, '0'])
+                        .subscribe((res4) => {
+                          if (res4.status == 0) {
+                            this.view.dataService
+                              .update(this.itemSelected)
+                              .subscribe();
+                            this.notiService.notifyCode('SYS007');
+                          } else this.notiService.notifyCode('SYS021');
+                        });
+                    } else this.notiService.notifyCode('SYS021');
+                  });
+              }
+            }
+          });
+      }
+    });
   }
+
+  //cance ki so
+  cancelAproval(item) {}
+  //end trình ký
 
   // tạo hợp đồng
   createContract(dt) {
