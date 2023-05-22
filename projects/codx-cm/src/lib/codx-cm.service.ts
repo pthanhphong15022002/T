@@ -561,6 +561,15 @@ export class CodxCmService {
       data
     );
   }
+  moveStageDeal(data){
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'MoveStageDealAsync',
+      data
+    );
+  }
 
 
   //#endregion -- Bao

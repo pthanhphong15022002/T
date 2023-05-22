@@ -751,5 +751,14 @@ export class CodxDpService {
     );
   }
 
+  getInstanceStepsMoveStage(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'MoveStageInDealAsync',
+      data
+    );
+  }
+
 
 }

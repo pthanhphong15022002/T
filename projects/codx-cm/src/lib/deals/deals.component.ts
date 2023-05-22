@@ -25,12 +25,13 @@ import {
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
 import { CM_Customers } from '../models/cm_model';
+import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
+import { DealDetailComponent } from './deal-detail/deal-detail.component';
 
 @Component({
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
-  styleUrls: ['./deals.component.scss'],
-})export class DealsComponent
+  styleUrls: ['./deals.component.scss'],})export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -48,6 +49,8 @@ import { CM_Customers } from '../models/cm_model';
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+
+  @ViewChild('detailViewDeal') detailViewDeal: DealDetailComponent;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -191,7 +194,6 @@ import { CM_Customers } from '../models/cm_model';
   clickMoreFunc(e) {
     this.clickMF(e.e, e.data);
   }
-
   changeDataMF($event, data) {
 
     if ($event != null && data != null)
@@ -277,7 +279,7 @@ import { CM_Customers } from '../models/cm_model';
 
   handelStartDay(data) {
     this.notificationsService
-    .alertCode('DP033', null, ['"' + data?.title + '"' || ''])
+    .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
     .subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
         this.startDeal(data.recID);
@@ -309,8 +311,14 @@ import { CM_Customers } from '../models/cm_model';
             isUseFail: false,
             isUseSuccess:  false,
           };
+          var dataCM = {
+            refID:data?.refID,
+            processID: data?.processID,
+            stepID: data?.stepID,
+            nextStep: data?.nextStep
+          }
           var obj = {
-            stepName: null,
+            stepName: data?.currentStepName,
             formModel: formMD,
             deal: data,
             listStepCbx: null,
@@ -320,10 +328,11 @@ import { CM_Customers } from '../models/cm_model';
             listStepProccess: null,
             lstParticipants: null,
             isDurationControl: null,
-            applyFor: '1'
+            applyFor: '1',
+            dataCM: dataCM,
           };
           var dialogMoveStage = this.callfc.openForm(
-            PopupAddDealComponent,
+            PopupMoveStageComponent,
             '',
             850,
             900,
@@ -331,13 +340,26 @@ import { CM_Customers } from '../models/cm_model';
             obj
           );
           dialogMoveStage.closed.subscribe((e) => {
-            // this.isClick = true;
-            // this.stepIdClick = '';
-            if (!e || !e.event) {
-              //data.stepID = this.crrStepID;
-              this.changeDetectorRef.detectChanges();
-            }
             if (e && e.event != null) {
+              var instance =  e.event.instance;
+              var index = e.event.listStep.findIndex(x=> x.stepID === instance.stepID)+1;
+              var nextStep = '';
+              if(index != -1){
+                if(index != e.event.listStep.length){
+                  var listStep = e.event.listStep;
+                  nextStep = listStep[index]?.stepID;
+                }
+              }
+
+              var dataUpdate = [data.recID,instance.stepID,nextStep];
+              this.codxCmService.moveStageDeal(dataUpdate).subscribe((res)=> {
+                if(res){
+                  data = res[0];
+                  this.view.dataService.update(data).subscribe();
+                  this.detailViewDeal.dataSelected = data;
+                  this.detectorRef.detectChanges();
+                }
+              })
               //xu ly data đổ về
               // data = e.event.instance;
               // this.listStepInstances = e.event.listStep;
@@ -353,7 +375,7 @@ import { CM_Customers } from '../models/cm_model';
               //   this.detailViewInstance.listSteps = this.listStepInstances;
               // }
 
-              this.detectorRef.detectChanges();
+
             }
           });
         });
