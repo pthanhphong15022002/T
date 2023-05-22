@@ -341,6 +341,7 @@ export class VoucherComponent implements OnInit {
         this.cashpayment.currencyID,
         this.cashpayment.exchangeRate,
         this.payAmt,
+        this.type
       ])
       .subscribe((res) => {
         if (res && res.length) {

@@ -20,8 +20,8 @@ export class QuickLinksInnerComponent {
       this.lstModule = this.lstFull = res || [];
       var arrGroupID = [];
       this.lstFull.filter((x) => {
-        if (x.saleGroup && !arrGroupID.includes(x.saleGroup)) {
-          arrGroupID.push(x.saleGroup);
+        if (x.functionType == 'G' && !arrGroupID.includes(x.functionID)) {
+          arrGroupID.push(x.functionID);
         }
       });
       if (arrGroupID.length > 0) {
