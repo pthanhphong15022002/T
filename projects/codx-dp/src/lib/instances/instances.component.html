@@ -45,11 +45,11 @@
     class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu"
     [id]="data?.keyField"
   >
-    <div class="line-colums d-flex">
+    <div class="line-colums d-flex align-items-center">
       <span
         [ngClass]="getPropertiesHeader(data, 'icon')"
         [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
-        class="me-1 icon-16"
+        class="me-1"
       >
       </span>
       <span class="fs-6" [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
@@ -283,7 +283,7 @@
               <span
                 [ngClass]="item['icon']"
                 [ngStyle]="{ color: item['iconColor'] }"
-                class="me-1 icon-14"
+                class="me-1"
               ></span>
               <span [ngStyle]="{ color: item['textColor'] }">{{
                 item.stepName

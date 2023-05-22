@@ -749,7 +749,15 @@ export class CodxEsService {
       );
     }
   }
-
+  getTemplateByProcess(processID: string){
+    return this.api.execSv(
+      'ES',
+      'ES',
+      'SignFilesBusiness',
+      'GetTemplateByProcessAsync',
+      [processID]
+    );
+  }
   deleteStepByTransID(transID: string): Observable<any> {
     return this.api.execSv(
       'ES',

@@ -127,7 +127,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-
     this.user = this.auth.get();
     this.dialog = dialog;
     this.transId = data?.data.transID;
@@ -433,7 +432,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       this.lstStep.push(this.data);
 
       this.dialog && this.dialog.close(this.data);
-
     } else {
       let i = this.lstStep.indexOf(this.dataEdit);
       if (i != -1) {
@@ -517,7 +515,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   applyShare(event) {
     if (event) {
       event.forEach((element) => {
-        if (element.objectType.length == 1) {
+        if (element?.objectType && element?.objectType.length==1 && element?.objectType != 'S' && element?.objectType != 'A') {
           let lstID = element?.id.split(';');
           let lstUserName = element?.text.split(';');
           let dataSelected = element?.dataSelected;
@@ -576,7 +574,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
             appr.roleType = element?.objectType;
             appr.name = element?.objectName;
             appr.approver = element?.objectType;
-            appr.icon = element?.icon;
+            appr.icon = element?.icon != null ? element?.icon : null;
             this.lstApprover.push(appr);
           }
         }

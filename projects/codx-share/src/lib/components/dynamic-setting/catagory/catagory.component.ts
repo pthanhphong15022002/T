@@ -715,6 +715,7 @@ export class CatagoryComponent implements OnInit {
             });
         }
       } else {
+        if (!this.dataValue) this.dataValue = {};
         if (this.category != '4') {
           if (this.dataValue[transType][field] == value) {
             this.collapseItem(null, data);

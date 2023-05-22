@@ -89,7 +89,7 @@
               [showText]="true" [showIcon]="false" [showBgColor]="true" ngClass="badge badge-sm badge-light">
             </codx-vll>
           </div>
-          <span *ngIf="data?.isCurrent" [style.color]="'#0078FF'" class="icon-bookmark icon-18"
+          <span *ngIf="data.isCurrent" [style.color]="'#0078FF'" class="icon-bookmark icon-18"
             [ngbPopover]="popIsNewest" #popOver="ngbPopover" [openDelay]="500" (mouseenter)="popOver.open()"
             (mouseleave)="popOver.close()" placement="left">
           </span>

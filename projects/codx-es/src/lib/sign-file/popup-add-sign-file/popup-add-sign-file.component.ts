@@ -1,3 +1,4 @@
+import { detach } from '@syncfusion/ej2-base';
 import { I } from '@angular/cdk/keycodes';
 import {
   ChangeDetectorRef,
@@ -63,7 +64,7 @@ export class PopupAddSignFileComponent implements OnInit {
   processID: String = '';
   transID: String = '';
   gvSetup: any;
-
+  sampleProcessName='';
   eSign: boolean = true; //Phân loại là ký số. defaul true for release form others module
   signatureType; //loai chu ki: cong cong - noi bo
 
@@ -96,6 +97,7 @@ export class PopupAddSignFileComponent implements OnInit {
   oldSfRecID: string;
 
   cbxCategory: string;
+  cbbProcess=[];
 
   constructor(
     private auth: AuthStore,
@@ -139,25 +141,34 @@ export class PopupAddSignFileComponent implements OnInit {
 
       this.data = data?.data.dataSelected;
     } else if (this.oSignFile) {
-      this.currentTab = 1;
-      this.processTab = 1;
+      this.currentTab = 0;
+      this.processTab = 0;
       this.lstFile = data?.data?.files;
     } else {
       if (!this.isAddNew) {
         this.data = data?.data.dataSelected;
-        this.processTab = 4;
+        this.processTab = 3;
       }
       if (
         (this.data?.approveStatus != 1 && this.data?.approveStatus != 2) ||
         this.modeView == '1'
       ) {
-        this.currentTab = 3;
-        this.processTab = 4;
+        this.currentTab = 2;
+        this.processTab = 3;
       }
     }
   }
 
   ngOnInit(): void {
+    //Lấy quy trình mẫu cũ
+    if(this.data?.processID && this.data?.approveControl=='2'){
+      this.esService.getTemplateByProcess(this.data?.processID).subscribe((res:any)=>{
+        if(res){
+          this.sampleProcessName=res?.title;
+          this.cr.detectChanges();
+        }
+      })
+    }
     if (this.oSignFile) {
       this.data.permissions;
       this.esService.getFormModel('EST011').then((formModel) => {
@@ -680,19 +691,19 @@ export class PopupAddSignFileComponent implements OnInit {
         let lstFile = oSignFile.files;
         lstFile.forEach((element) => {
           if (element?.areas?.length > 0) {
-            this.processTab = 3;
-            this.currentTab = 3;
+            this.processTab = 2;
+            this.currentTab = 2;
             return;
           }
         });
 
         if (oSignFile.ApproveControl != 1) {
-          this.processTab = 1;
-          this.currentTab = 1;
+          this.processTab = 0;
+          this.currentTab = 0;
           return;
         } else {
-          this.processTab = 2;
-          this.currentTab = 2;
+          this.processTab = 1;
+          this.currentTab = 1;
           return;
         }
       }
@@ -719,7 +730,7 @@ export class PopupAddSignFileComponent implements OnInit {
             permissions: res?.permissions,
           });
           this.isSaved = true;
-          if (this.attachment.fileUploadList.length > 0) {
+          if (this.attachment?.fileUploadList && this.attachment?.fileUploadList.length > 0) {
             this.attachment.objectId = res.recID;
             (await this.attachment.saveFilesObservable()).subscribe(
               (item2: any) => {
@@ -729,10 +740,11 @@ export class PopupAddSignFileComponent implements OnInit {
               }
             );
           }
-          if (this.currentTab == 1) {
+          if (this.currentTab == 0 ) {
             this.updateNodeStatus(this.oldNode, this.newNode);
             this.currentTab++;
             this.processTab++;
+            this.cr.detectChanges();
           }
         }
       });
@@ -750,9 +762,11 @@ export class PopupAddSignFileComponent implements OnInit {
             modifiedOn: res?.modifiedOn,
           });
 
-          if (this.currentTab == 1) {
+          if (this.currentTab == 1 ) {
             this.updateNodeStatus(this.oldNode, this.newNode);
             this.currentTab++;
+            this.processTab == 1 && this.processTab++;   
+            this.cr.detectChanges();
           }
         }
       });
@@ -764,6 +778,9 @@ export class PopupAddSignFileComponent implements OnInit {
     if (event?.field && event?.component && event?.data != '') {
       if (event?.field == 'processID') {
         this.processID = event?.data;
+        if(this.cbbProcess.length==0 && event?.component?.dataService?.data && event?.component?.dataService?.data.length>0){
+          this.cbbProcess = event?.component?.dataService?.data;        
+        }
       }
     }
   }
@@ -780,6 +797,7 @@ export class PopupAddSignFileComponent implements OnInit {
             });
             this.data.processID = this.processID;
             this.data.approveControl = '2';
+            this.getSampleProcessName(this.processID);
             //Apply sign areas from template
             this.esService.getSFByID(this.processID).subscribe((res) => {
               if (res?.signFile && res.signFile?.files?.length > 0) {
@@ -802,7 +820,7 @@ export class PopupAddSignFileComponent implements OnInit {
                   });
                 }
               }
-              this.onSaveSignFile();
+              //this.onSaveSignFile();
               dialogTmp && dialogTmp.close();
             });
           } else {
@@ -818,7 +836,7 @@ export class PopupAddSignFileComponent implements OnInit {
         });
         this.data.processID = this.processID;
         this.data.approveControl = '2';
-
+        this.getSampleProcessName(this.processID);
         //Apply sign areas from template
         this.esService.getSFByID(this.processID).subscribe((res) => {
           if (res?.signFile && res.signFile?.files?.length > 0) {
@@ -841,6 +859,17 @@ export class PopupAddSignFileComponent implements OnInit {
           }
         });
         dialogTmp && dialogTmp.close();
+      }
+      
+    }
+  }
+
+  getSampleProcessName(processID :any){
+    //Lấy tên quy trình mẫu
+    if(this.cbbProcess && this.cbbProcess.length>0 && processID!=null){
+      let curProcess = this.cbbProcess.filter((pr:any) => pr.RecID == this.processID);
+      if(curProcess!=null && curProcess.length>0){
+        this.sampleProcessName = curProcess[0]?.Title;
       }
     }
   }
@@ -884,7 +913,7 @@ export class PopupAddSignFileComponent implements OnInit {
     let newNo = tabNo;
     let oldNo = this.currentTab;
 
-    if (oldNo == 3) {
+    if (oldNo == 2) {
       this.esService.getSFByID(this.data?.recID).subscribe((res) => {
         if (res?.signFile) {
           this.data.files = res?.signFile?.files;
@@ -907,7 +936,7 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   async continue(currentTab) {
-    if (this.currentTab > 3) return;
+    if (this.currentTab > 2) return;
 
     let oldNode = currentTab;
     let newNode = oldNode + 1;
@@ -939,6 +968,14 @@ export class PopupAddSignFileComponent implements OnInit {
                   this.updateNodeStatus(oldNode, newNode);
                   this.currentTab++;
                   this.processTab == 0 && this.processTab++;
+                  //Save signFile
+                  if (this.isAddNew) {
+        
+                  } else {
+                    this.updateNodeStatus(oldNode, newNode);
+                    this.processTab == 1 && this.processTab++;
+                    this.currentTab++;
+                  }
                 }
               }
             );
@@ -950,27 +987,29 @@ export class PopupAddSignFileComponent implements OnInit {
         } else {
           this.notify.notifyCode('ES006');
         }
+        
         break;
-      case 1:
-        // if (this.isAddNew) {
-        this.newNode = newNode;
-        this.oldNode = oldNode;
-        this.onSaveSignFile();
-        // } else {
-        //   this.updateNodeStatus(oldNode, newNode);
-        //   this.processTab == 1 && this.processTab++;
-        //   this.currentTab++;
-        // }
-        break;
+      // case 1:
+      //   // if (this.isAddNew) {
+        
+      //   // } else {
+      //   //   this.updateNodeStatus(oldNode, newNode);
+      //   //   this.processTab == 1 && this.processTab++;
+      //   //   this.currentTab++;
+      //   // }
+      //   break;
 
+      case 1:     
+      this.oldNode=oldNode;
+      this.newNode=newNode;
+      this.onSaveSignFile();
+        //this.viewApprovalStep.updateApprovalStep();
+        // this.updateNodeStatus(oldNode, newNode);
+        // this.currentTab++;
+        // this.processTab == 1 && this.processTab++;   
+        // this.cr.detectChanges();
+        break;
       case 2:
-        this.updateNodeStatus(oldNode, newNode);
-
-        this.currentTab++;
-        this.processTab == 2 && this.processTab++;
-        this.cr.detectChanges();
-        break;
-      case 3:
         if (this.esService.getApprovalStep) break;
     }
 
@@ -985,6 +1024,9 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   updateNodeStatus(oldNode: number, newNode: number) {
+    if(oldNode ==null || newNode==null){
+      return;
+    }
     let nodes = Array.from(
       (this.status.nativeElement as HTMLElement).childNodes
     );
@@ -1126,7 +1168,7 @@ export class PopupAddSignFileComponent implements OnInit {
     if (this.user.userID != this.data.owner) {
       return;
     }
-    if (this.eSign == true && this.processTab < 3 && this.currentTab == 3) {
+    if (this.eSign == true && this.processTab < 2 && this.currentTab == 2) {
       return;
     }
 
@@ -1171,7 +1213,7 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   afterCategoryChange() {
-    if (this.data?.files.length > 0) {
+    if (this.data?.files && this.data?.files.length > 0) {
       this.data?.files.forEach((file) => {
         file.eSign = this.eSign;
       });
@@ -1204,7 +1246,18 @@ export class PopupAddSignFileComponent implements OnInit {
       this.disableContinue = true;
     } else {
       this.disableContinue = false;
+      if(this.data.title==null && event?.data[0]?.fileName!=null){
+        let title = JSON.parse(JSON.stringify(event?.data[0].fileName));
+          for (let i = event?.data[0].fileName.length; i >= 0; i--) {
+            title = title.slice(0, i - 1);
+            if (event?.data[0].fileName[i - 1] === '.') break;
+          }
+          this.data.title = title;
+          this.dialogSignFile.patchValue({ title: title });
+          this.cr.detectChanges();
+      }
     }
+    
     console.log('count sf', event);
   }
 }

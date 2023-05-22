@@ -24,20 +24,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModel: FormModel;
   @Input() stepId: any;
   @Input() dataSources: any;
-  @Input() isLockSuccess = false;
-  @Input() isSaveProgress = true;
   @Input() isShowMore = true;
   @Input() isShowButton = true;
   @Input() isShowFile = true;
   @Input() isShowComment = true;
   @Input() isDeepCopy = true;
   @Input() typeProgress = 1;
+  @Input() isLockSuccess = false;
+  @Input() isSaveProgress = true;
 
   @Input() isOnlyView = true;
   @Input() isEditTimeDefault = true;
   @Input() isUpdateProgressGroup = true;
   @Input() isRoleAll = true;
   @Input() isViewStep = false;
+  @Output() isChangeProgress = new EventEmitter<any>();
+  @Output() continueStep = new EventEmitter<any>();
   @Output() valueChangeProgress = new EventEmitter<any>();
   id = ''
   currentStep: any;
@@ -50,6 +52,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   listGroupTask = [];
   grvMoreFunction: FormModel;
   idTaskEnd = null;
+  progressTaskEnd = 0;
 
   taskType: any;
   frmModelInstancesGroup:FormModel;
@@ -107,6 +110,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
     if(this.isOnlyView){
       this.getTaskEnd();
+    }
+    let isTaskEnd = this.progressTaskEnd == 100 ? true : false;
+    if(this.isOnlyView){
+      this.continueStep.emit(isTaskEnd);
     }
   }
 
@@ -718,6 +725,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       data,
       type,
       step: this.currentStep,
+      isSave: this.isSaveProgress,
     };
     let popupTask = this.callfc.openForm(
       UpdateProgressComponent,'',
@@ -747,6 +755,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         groupData.actualEnd = dataProgress?.actualEnd;
         if(dataProgress?.isUpdate){
           this.currentStep.progress = dataProgress?.progressStep;
+          this.isChangeProgress.emit(true);
         }
       }else{
         data.progress = dataProgress?.progressTask;
@@ -767,6 +776,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             groupData.progress = dataProgress?.progressGroupTask;
           }
           this.currentStep.progress = dataProgress?.progressStep;
+          this.isChangeProgress.emit(true);
         }
         //làm như vậy để cập nhật file
         let dataCopy = JSON.parse(JSON.stringify(data));
@@ -777,7 +787,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             groupFind?.task?.splice(index,1,dataCopy);
           }
         }
-      }      
+        if(dataProgress?.progressTask == 100){
+          let isTaskEnd = dataProgress.taskID == this.idTaskEnd ? true : false;
+          this.continueStep.emit(isTaskEnd);
+        }
+      } 
+      this.valueChangeProgress.emit(dataProgress);     
     } 
   }
 
@@ -817,7 +832,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         const task = groupTask?.task?.slice().reverse().find(t => t?.isTaskDefault);
         if (task) {
           this.idTaskEnd = task.recID;  
-          console.log(task);
+          this.progressTaskEnd = task?.progress ||0;
           return;        
         }
       }

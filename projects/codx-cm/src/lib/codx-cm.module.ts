@@ -155,7 +155,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CampaignsComponent,
     PopupAddCampaignComponent,
     PopupStatusCompetitorComponent,
-    CampaignsDetailComponent
+    CampaignsDetailComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

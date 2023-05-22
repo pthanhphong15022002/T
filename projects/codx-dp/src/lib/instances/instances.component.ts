@@ -55,8 +55,7 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
   selector: 'codx-instances',
   templateUrl: './instances.component.html',
   styleUrls: ['./instances.component.css'],
-})
-export class InstancesComponent
+})export class InstancesComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -1225,7 +1224,6 @@ export class InstancesComponent
             isUseSuccess: this.isUseSuccess,
           };
           var obj = {
-            stepName: this.getStepNameById(data.stepID),
             formModel: formMD,
             instance: data,
             listStepCbx: listStepCbx,
@@ -1235,6 +1233,7 @@ export class InstancesComponent
             listStepProccess: this.process.steps,
             lstParticipants: this.lstOrg,
             isDurationControl: this.checkDurationControl(data.stepID),
+            applyFor: this.process.applyFor
           };
           var dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,

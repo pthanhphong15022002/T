@@ -12,7 +12,7 @@ import { CodxCmService } from '../../codx-cm.service';
 @Component({
   selector: 'lib-popup-add-campaign',
   templateUrl: './popup-add-campaign.component.html',
-  styleUrls: ['./popup-add-campaign.component.css'],
+  styleUrls: ['./popup-add-campaign.component.scss'],
 })
 export class PopupAddCampaignComponent implements OnInit {
   dialog: any;
@@ -76,9 +76,9 @@ export class PopupAddCampaignComponent implements OnInit {
   }
 
   onSave() {
-    if(this.action == 'edti'){
+    if (this.action == 'edti') {
       this.onUpdate();
-    }else{
+    } else {
       this.onAdd();
     }
   }
