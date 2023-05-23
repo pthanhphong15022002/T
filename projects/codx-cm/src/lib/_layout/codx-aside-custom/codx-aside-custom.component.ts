@@ -201,6 +201,9 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
 
   openSecondFunc(funcId: string, func?: any) {
     this.dataMenuCustom = [];
+    //load menuCus
+    if (funcId == 'CM0201' || funcId == 'CM0401' || funcId == 'CM0402')
+      this.loadMenuCustom(funcId);
     if (funcId) {
       this.codxService.activeMenu.func0 = funcId;
 
@@ -286,9 +289,6 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
         if (func) return;
       }
     });
-    //load menuCus
-    if (funcId == 'CM0201' || funcId == 'CM0401' || funcId == 'CM0402')
-      this.loadMenuCustom(funcId);
 
     return func;
   }
@@ -602,7 +602,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
         case 'CM0402':
           this.requestMenuCustom.dataValues = '3';
           break;
-        default: 
+        default:
           return;
       }
       this.requestMenuCustom.entityName = 'DP_Processes';
