@@ -409,11 +409,11 @@
 </ng-template>
 <ng-template #tabLine>
   <div *ngIf="modegrid == '1'" class="h-100 w-100 border">
-    <codx-gridview-v2 #grid class="tabLine" #gridPurchase autoLoad="true" [formName]="fmPurchaseInvoicesLines.formName"
+    <codx-gridview-v2 #gridPurchaseInvoicesLine class="tabLine" #gridPurchase autoLoad="true" [formName]="fmPurchaseInvoicesLines.formName"
       [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
       [templateMore]="morefunction" [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true"
       [dataSource]="purchaseInvoicesLines" service="PS" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
-      (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event, gridPurchase)"
+      (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event, gridPurchase)" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
       [allowTextWrap]="false"></codx-gridview-v2>
   </div>
   <ng-container *ngIf="form?.formGroup && modegrid == '2' && gridViewLines">
@@ -649,15 +649,6 @@
       </table>
     </div>  
   </ng-container>
-
-  <ng-container *ngIf="modegrid == 2">
-    <div class="d-flex flex-center mt-5">
-      <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow()">
-        <i class="icon-add icon-16 me-1"></i>
-          <span>Thêm dòng</span>
-      </button>
-    </div>
-  </ng-container>
   <div class="d-flex flex-wrap mt-6">
     <div class="d-flex align-items-center mb-1 bg-light me-5">
       <span class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 bg-primary"></span>
@@ -673,9 +664,22 @@
     </div>
   </div>
   <div class="row mt-2">
-    <div *ngIf="purchaseInvoicesLines.length > 0" class="d-flex justify-content-end">
+    <div *ngIf="purchaseInvoicesLines.length > 0 && modegrid == 2" class="d-flex justify-content-end">
       <ngb-pagination [(page)]="page" [pageSize]="pageSize"
         [collectionSize]="purchaseInvoicesLines.length"></ngb-pagination>
+    </div>
+  </div>
+  <div class="container w-90 h-90">
+    <div style="background: none" class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center mt-2">
+        <div [ngbTooltip]="popContent" placement="bottom" style="width: 40px !important;height: 40px !important;"
+          class="btn btn-icon btn-bg btn-light-primary btn-circle me-4" (click)="addRow()">
+          <i class="icon-i-file-earmark-plus icon-18"></i>
+        </div>
+        <ng-template #popContent>
+          <span #popContent [ngbTooltip]="popContent" class="fs-6 fw-bold">Thêm dòng</span>
+        </ng-template>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -745,11 +749,13 @@
   </ng-container>
 </ng-template>
 <ng-template #morefunction let-data>
-  <div class="col-6 d-flex align-items-center justify-content-end" (click)="deleteRow(data)">
-    <span type="button" class="btn btn-icon btn-sm btn-light-danger ms-1">
-      <i class="icon-delete icon-16"></i>
-    </span>
-  </div>
+  <span ngbTooltip="copy" placement="top" type="button" class="btn btn-icon btn-light-primary ms-1" (click)="copyRow(data)">
+    <i class="icon-content_copy icon-16"></i>
+  </span>
+  <span ngbTooltip="Xóa" placement="bottom" type="button" class="btn btn-icon btn-light-danger ms-1"
+    (click)="deleteRow(data)">
+    <i class="icon-delete icon-16"></i>
+  </span>
 </ng-template>
 <ng-template #footer>
   <div class="codx-detail-footer dialog-footer" *ngIf="purchaseinvoices">

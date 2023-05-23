@@ -3,4 +3,5 @@ export class TabModel {
   textDefault: string;
   template?: any;
   isActive: boolean = false;
+  icon?:string;
 }

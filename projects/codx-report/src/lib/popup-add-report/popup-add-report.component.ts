@@ -338,7 +338,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     if(action == 'edit'){
       let op = new DialogModel();
       op.DataService = data;
-      let dialog = this.callFuncService.openForm(CodxExportAddComponent,"",screen.width,screen.height,this.funcID,{action:'add',type:'excel',refType:'R',refID:this.reportID},"",op)
+      let dialog = this.callFuncService.openForm(CodxExportAddComponent,"",screen.width,screen.height,this.funcID,{action:'edit',type:'excel',refType:'R',refID:this.reportID},"",op)
       dialog.closed.subscribe((res:any)=>{
         if(res.event){
           debugger
