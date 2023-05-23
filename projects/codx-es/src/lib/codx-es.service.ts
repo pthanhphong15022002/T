@@ -1245,13 +1245,13 @@ export class CodxEsService {
   //#endregion
 
   //#region confirm otp
-  createOTPPin(tranRecID: string, time) {
+  createOTPPin(tranRecID: string, type:string) {
     return this.api.execSv<any>(
-      'es',
+      'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'CreateOTPPinAsync',
-      [tranRecID, time]
+      [tranRecID, type]
     );
   }
 

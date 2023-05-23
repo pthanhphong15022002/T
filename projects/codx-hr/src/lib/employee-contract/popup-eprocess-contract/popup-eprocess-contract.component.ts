@@ -376,6 +376,13 @@ export class PopupEProcessContractComponent
   }
 
   valueChange(event) {
+    if (!event.data) {
+      this.data.signerPosition = '';
+      this.formGroup.patchValue({
+        signerPosition: '',
+      });
+    }
+
     if (event?.field && event?.component && event?.data != '') {
       switch (event.field) {
         case 'contractTypeID': {
@@ -392,26 +399,10 @@ export class PopupEProcessContractComponent
           break;
         }
         case 'signerID': {
-          let employee = event?.component?.itemsSelected[0];
+          let employee = event.data;
+
           if (employee) {
-            if (employee.PositionID) {
-              this.hrSevice
-                .getPositionByID(employee.PositionID)
-                .subscribe((res) => {
-                  if (res) {
-                    this.data.signerPosition = res.positionName;
-                    this.formGroup.patchValue({
-                      signerPosition: this.data.signerPosition,
-                    });
-                    this.cr.detectChanges();
-                  }
-                });
-            } else {
-              this.data.signerPosition = null;
-              this.formGroup.patchValue({
-                signerPosition: this.data.signerPosition,
-              });
-            }
+            this.getEmployeeInfoById(employee, 'signerID');
           }
           break;
         }
@@ -430,25 +421,55 @@ export class PopupEProcessContractComponent
     }
   }
 
+  getEmployeeInfoById(empId: string, fieldName: string) {
+    let empRequest = new DataRequest();
+    empRequest.entityName = 'HR_Employees';
+    empRequest.dataValues = empId;
+    empRequest.predicates = 'EmployeeID=@0';
+    empRequest.pageLoading = false;
+    this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
+      if (emp[1] > 0) {
+        if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
+        if (fieldName === 'signerID') {
+          this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
+            if (emp[1] > 0) {
+              let positionID = emp[0][0].positionID;
+
+              if (positionID) {
+                this.hrSevice.getPositionByID(positionID).subscribe((res) => {
+                  if (res) {
+                    this.data.signerPosition = res.positionName;
+                    this.formGroup.patchValue({
+                      signerPosition: this.data.signerPosition,
+                    });
+                  }
+                });
+              } else {
+                this.data.signerPosition = null;
+                this.formGroup.patchValue({
+                  signerPosition: this.data.signerPosition,
+                });
+              }
+            }
+          });
+        }
+      }
+      this.df.detectChanges();
+    });
+  }
+
   handleSelectEmp(evt) {
     if (!!evt.data) {
       this.employeeId = evt.data;
-      let empRequest = new DataRequest();
-      empRequest.entityName = 'HR_Employees';
-      empRequest.dataValues = this.employeeId;
-      empRequest.predicates = 'EmployeeID=@0';
-      empRequest.pageLoading = false;
-      this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
-        if (emp[1] > 0) {
-          this.employeeObj = emp[0][0];
-          this.df.detectChanges();
-        }
-      });
+      this.getEmployeeInfoById(this.employeeId, evt.field);
     } else {
       delete this.employeeObj;
     }
   }
 
+  clickOpenPopup(codxInput) {
+    codxInput.elRef.nativeElement.querySelector('button').click();
+  }
   clickMFSubContract(evt, data) {
     switch (evt.functionID) {
       case 'SYS02':

@@ -121,9 +121,11 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         },
       },
     ];
-    this.hrService.getHeaderText(this.view?.formModel?.funcID).then(response => {
-      this.eBasicSalariesHeaderText = response;
-    })
+    this.hrService
+      .getHeaderText(this.view?.formModel?.funcID)
+      .then((response) => {
+        this.eBasicSalariesHeaderText = response;
+      });
   }
   ngAfterViewChecked() {
     if (!this.formGroup?.value) {
@@ -143,7 +145,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       this.handlerEBasicSalaries(
         event.text + ' ' + this.view.function.description,
         'add',
-        null
+        this.itemDetail
       );
     }
   }
@@ -367,7 +369,11 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> '+ this.view.function.description + ' - ' + this.itemDetail.decisionNo + '</div>'
+              '<div> ' +
+                this.view.function.description +
+                ' - ' +
+                this.itemDetail.decisionNo +
+                '</div>'
             )
             .subscribe((result) => {
               // console.log('ok', result);
@@ -375,15 +381,12 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
-                this.hrService
-                  .UpdateEmployeeBasicSalariesInfo((res) => {
-                    if (res) {
-                      // console.log('after release', res);
-                      this.view?.dataService
-                        ?.update(this.itemDetail)
-                        .subscribe();
-                    }
-                  });
+                this.hrService.UpdateEmployeeBasicSalariesInfo((res) => {
+                  if (res) {
+                    // console.log('after release', res);
+                    this.view?.dataService?.update(this.itemDetail).subscribe();
+                  }
+                });
               } else this.notify.notifyCode(result?.msgCodeError);
             });
         }

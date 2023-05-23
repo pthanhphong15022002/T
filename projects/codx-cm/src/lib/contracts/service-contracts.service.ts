@@ -64,4 +64,13 @@ export class ContractsService {
     );
   }
 
+  getDataByTransID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetDataByTransIDAsync',
+      data
+    );
+  }
+
 }
