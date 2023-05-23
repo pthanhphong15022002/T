@@ -16,15 +16,10 @@ export class ProductComponent implements OnInit,OnChanges{
   @ViewChild('noteRef') noteRef: ElementRef;
 
   @Input() dataSource: any;
+  @Input() formModel: FormModel;
 
   dialog;
   quotations: CM_Quotations;
-  fmQuotationLines: FormModel = {
-    formName: 'CMQuotationsLines',
-    gridViewName: 'grvCMQuotationsLines',
-    entityName: 'CM_QuotationsLines',
-    funcID: 'CM02021',
-  };
   gridHeight: number = 300;
   editSettings: EditSettingsModel = {
     allowEditing: true,
