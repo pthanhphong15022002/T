@@ -24,11 +24,11 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'detail/:reportID',
+        path: 'detail/:funcID',
         component: CodxReportViewDetailComponent,
       },
       {
-        path: 'view/:reportID',
+        path: 'view/:funcID',
         component: CodxReportViewsComponent,
       },
       // {

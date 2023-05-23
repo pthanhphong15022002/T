@@ -174,6 +174,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
+    option.zIndex = 10;
     let popup = this.callFC.openForm(
       PopupAddPostComponent,
       '',
@@ -185,8 +186,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      if(res?.event)
-        (this.listview.dataService as CRUDService).add(res.event).subscribe();
+      debugger
+      if(!res || res.closedBy=="escape" || !res.event) return;
+      (this.listview.dataService as CRUDService).add(res.event).subscribe();
     });
   }
 
@@ -220,6 +222,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.formModel;
+    option.zIndex = 10;
+
     let popup = this.callFC.openForm(
       PopupAddPostComponent,
       '',
@@ -231,8 +235,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      if (res.event)
-        (this.listview.dataService as CRUDService).update(res.event).subscribe();
+      if(!res || res.closedBy=="escape" || !res.event) return;
+      (this.listview.dataService as CRUDService).update(res.event).subscribe();
     });
   }
   
@@ -252,6 +256,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.formModel;
+      option.zIndex = 10;
+
       let popup = this.callFC.openForm(
         PopupAddPostComponent,
         '',
@@ -263,8 +269,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         option
       );
       popup.closed.subscribe((res: any) => {
-        if (res?.event) 
-          (this.listview.dataService as CRUDService).add(res.event).subscribe();
+        if(!res || res.closedBy=="escape" || !res.event) return;
+        (this.listview.dataService as CRUDService).add(res.event).subscribe();
       });
     }
   }
@@ -280,6 +286,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.formModel;
+      option.zIndex = 10;
+
       this.callFC.openForm(PopupSavePostComponent, '', 500, 400, '', obj, '');
     }
   }
