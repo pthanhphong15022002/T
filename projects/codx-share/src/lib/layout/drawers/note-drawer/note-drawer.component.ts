@@ -1,15 +1,10 @@
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
-  CallFuncService,
-  ApiHttpService,
   CodxListviewComponent,
   UIComponent,
   DialogModel,
   CRUDService,
   DialogRef,
   DialogData,
-  CacheService,
-  DataService,
   AuthStore,
 } from 'codx-core';
 
@@ -23,13 +18,10 @@ import {
   Optional,
 } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
-import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/note-books/add-update-note-book/add-update-note-book.component';
-import { MoreFunctionNote } from '@shared/models/moreFunctionNote.model';
-import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
-import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/update-note-pin/update-note-pin.component';
-import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
-import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
-import * as moment from 'moment';
+import { AddNoteComponent } from '../../../components/calendar-notes/add-note/add-note.component';
+import { UpdateNotePinComponent } from '../../../components/calendar-notes/update-note-pin/update-note-pin.component';
+import { SaveNoteComponent } from '../../../components/calendar-notes/add-note/save-note/save-note.component';
+import { NoteService } from '../../../components/calendar-notes/note.service';
 @Component({
   selector: 'app-note-drawer',
   templateUrl: './note-drawer.component.html',
@@ -68,7 +60,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   constructor(
     private injector: Injector,
     private changeDetectorRef: ChangeDetectorRef,
-    private noteService: NoteServices,
+    private noteService: NoteService,
     private authStore: AuthStore,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
@@ -138,7 +130,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
             type == 'add-otherDate' ||
             type == 'add-note-drawer'
           ) {
-            (this.lstView.dataService as CRUDService) 
+            (this.lstView.dataService as CRUDService)
               .add(data)
               .subscribe((res) => {
                 this.sortDataByDESC('drawer');
@@ -365,16 +357,9 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     // thiểu moreFC để dịch lang
     var obj = {
       itemUpdate: item,
-      headerText: 'Sổ tay'
+      headerText: 'Sổ tay',
     };
-    this.callfc.openForm(
-      SaveNoteComponent,
-      "",
-      900,
-      650,
-      '',
-      obj
-    );
+    this.callfc.openForm(SaveNoteComponent, '', 900, 650, '', obj);
   }
 
   onSearch(e) {

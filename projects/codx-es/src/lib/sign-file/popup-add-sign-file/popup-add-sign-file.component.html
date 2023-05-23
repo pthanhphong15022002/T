@@ -209,6 +209,12 @@
 
           <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
             <div class="w-100 form-content mw-500px mx-auto">
+              <div class="text-center">
+                <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
+                  hideBtnSave="1" hideFolder="1" [hideUploadBtn]="'0'" [functionID]="formModelCustom.funcID" type="inline"
+                  (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="sign">
+                </codx-attachment>
+              </div>
               <div class="form-group">
                 <codx-label fiedName="Title" [formModel]="formModelCustom">
                 </codx-label>
@@ -280,12 +286,7 @@
                   [disabled]="modeView == '2'">
                 </codx-input>
               </div>
-              <div class="text-center">
-                <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
-                  hideBtnSave="1" hideFolder="1" hideUploadBtn="0" [functionID]="formModelCustom.funcID" type="inline"
-                  (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="sign">
-                </codx-attachment>
-              </div>
+             
               <div class="d-flex align-items-center" *ngIf="lstDataFile.length > 0">
                 <div class="text-center"></div>
                 <button type="button" class="btn btn-primary me-3" (click)="popup($event, 0)">
@@ -328,7 +329,7 @@
               (attachment?.fileUploadList?.length <= 0 &&
                 currentTab == 0 &&
                 data.files?.length <= 0) ||
-              disableContinue == true
+              disableContinue == true || data?.title == null || data?.categoryID==null
                 ? 'disabled'
                 : ''
             ">

@@ -252,7 +252,7 @@
   <div class="d-flex justify-content-end me-3">
     <div class="ms-2">
       <button type="button" class="btn btn-light-primary">
-        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+        <codx-label *ngIf="type == 'add'" class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName" (click)="onSaveAdd()"
           [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
       </button>
     </div>

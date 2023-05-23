@@ -46,12 +46,10 @@
           </codx-vll> -->
         </div>
         <div class="d-flex flex-column">
-          <div class="d-flex align-items-center">
-            <span class="me-2 text-dark fw-bold text-nowrap">{{
+          <div class="d-flex align-items-center mb-1">
+            <span class="me-3 text-dark fw-bold fs-6 text-nowrap">{{
               data?.emp?.employeeName
             }}</span>
-            <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
-            <span class="text-danger">{{ data?.emp?.employeeID }}</span>
           </div>
           <div class="text-gray-500 fs-7 mb-1">
             <span
@@ -77,26 +75,20 @@
 
     <div class="w-30 min-w-250px px-2">
       <div class="d-flex flex-row">
-        <div>
-          <span
-            [ngbTooltip]="grvSetup?.ContractNo?.headerText"
-            [title]="
-              eContractHeaderText ? eContractHeaderText['ContractNo'] : ''
-            "
-          >
-            {{ data?.contractNo }}</span
-          >
+        <span
+          [ngbTooltip]="grvSetup?.ContractNo?.headerText"
+          [title]="eContractHeaderText ? eContractHeaderText['ContractNo'] : ''"
+        >
+          {{ data?.contractNo }}</span
+        >
 
-          <div class="d-flex flex-row me-2" *ngIf="data?.attachments > 0">
-            <codx-attachment-temp
-              [objectID]="data.recID"
-              [formModel]="view.formModel"
-            >
-            </codx-attachment-temp>
-          </div>
-        </div>
+        <codx-attachment-temp
+          [objectID]="data.recID"
+          [formModel]="view.formModel"
+        >
+        </codx-attachment-temp>
       </div>
-      <div class="fw-bold">
+      <div class="fw-bold mb-1">
         <span
           [ngbTooltip]="grvSetup?.ContractTypeID?.headerText"
           [innerHTML]="
@@ -107,8 +99,8 @@
         >
         </span>
       </div>
-      <div class="d-flex mt-2">
-        <i class="icon-calendar_today icon-15 me-1"></i>
+      <div class="d-flex">
+        <i class="icon-calendar_today icon-14 me-1"></i>
         <div>
           <span [ngbTooltip]="grvSetup?.EffectedDate?.headerText">
             {{ data?.effectedDate | fmDT }}</span

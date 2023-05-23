@@ -1,26 +1,17 @@
 import {
-  AfterViewInit,
   Component,
   Injector,
-  OnDestroy,
-  OnInit,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
-  CacheService,
-  CallFuncService,
   DialogModel,
-  LayoutService,
   PageTitleService,
   ViewModel,
   ViewType,
-  ApiHttpService,
   CRUDService,
   UIComponent,
-  SortModel,
   AuthStore,
 } from 'codx-core';
 import { PopupSearchPostComponent } from './list-post/popup-search/popup-search.component';

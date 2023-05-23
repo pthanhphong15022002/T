@@ -127,7 +127,7 @@ export class PopupMoveStageComponent implements OnInit {
       this.isDurationControl = dt?.data?.isDurationControl;
       this.getIdReason();
     }
-    else if(this.applyFor == '1' || this.applyFor == '2'  ){
+    else if(this.applyFor != '0' ){
       this.dataCM = JSON.parse(JSON.stringify(dt?.data?.dataCM));
       this.executeApiCalls();
       this.isLoad = true;
@@ -179,7 +179,7 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   async getListMoveStage(data){
-    var datas = [data?.refID, data?.processID, data?.stepID, '1'];
+    var datas = [data?.refID, data?.processID, data?.stepID,this.applyFor];
     this.codxDpService.getInstanceStepsMoveStage(datas).subscribe((res)=> {
       if (res && res.length > 0) {
         this.isDurationControl = res[0];
@@ -245,10 +245,10 @@ export class PopupMoveStageComponent implements OnInit {
           //Phụ trách giai đoạn hiện tại
           case '0':
             if (
-              this.stepCurrent.roles != null &&
-              this.stepCurrent.roles.length > 0
+              this.stepCurrent?.roles != null &&
+              this.stepCurrent?.roles.length > 0
             ) {
-              var role = this.stepCurrent.roles.filter(
+              var role = this.stepCurrent?.roles.filter(
                 (x) =>
                   x.objectID == this.stepCurrent?.owner && x.roleType == 'S'
               );
@@ -277,12 +277,12 @@ export class PopupMoveStageComponent implements OnInit {
             );
 
             if (
-              this.listStepsCbx[index].roles != null &&
-              this.listStepsCbx[index].roles.length > 0
+              this.listStepsCbx[index]?.roles != null &&
+              this.listStepsCbx[index]?.roles.length > 0
             ) {
-              var roleClick = this.listStepsCbx[index].roles.filter(
+              var roleClick = this.listStepsCbx[index]?.roles.filter(
                 (x) =>
-                  x.objectID == this.listStepsCbx[index].owner &&
+                  x.objectID == this.listStepsCbx[index]?.owner &&
                   x.roleType == 'S'
               );
               if (roleClick != null && roleClick.length > 0) {
@@ -312,12 +312,12 @@ export class PopupMoveStageComponent implements OnInit {
               (x) => x.stepID == this.stepCurrent.stepID
             );
             if (
-              this.listStepsCbx[i - 1].roles != null &&
-              this.listStepsCbx[i - 1].roles.length > 0
+              this.listStepsCbx[i - 1]?.roles != null &&
+              this.listStepsCbx[i - 1]?.roles.length > 0
             ) {
-              var roleOld = this.listStepsCbx[i - 1].roles.filter(
+              var roleOld = this.listStepsCbx[i - 1]?.roles.filter(
                 (x) =>
-                  x.objectID == this.listStepsCbx[i - 1].owner &&
+                  x.objectID == this.listStepsCbx[i - 1]?.owner &&
                   x.roleType == 'S'
               );
               if (roleOld != null && roleOld.length > 0) {
