@@ -54,11 +54,6 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
 import { VoucherComponent } from '../../../popup/voucher/voucher.component';
 import { SettledInvoices } from '../../../models/SettledInvoices.model';
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
 import { Double } from '@syncfusion/ej2-angular-charts';
 import { CashReceiptsLines } from '../../../models/CashReceiptsLines.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';

@@ -108,8 +108,8 @@ function appInitializer(authService: AuthService, appConfig: AppConfigService) {
   return () => {
     return new Promise((resolve) => {
       appConfig.load().subscribe((res) => {
-        // authService.getUserByToken().subscribe((v) => {
-           resolve(true);
+        // authService.checkTenant().subscribe((v) => {
+      resolve(true);
         // });
       });
     });
