@@ -66,7 +66,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
       .subscribe((res:any) => {
         this.data = JSON.parse(JSON.stringify(res));
         if(this.data)
-          this.hideMFC = this.data.ApproveStatus === '5';            
+          this.hideMFC = this.data.approveStatus === '5';            
         this.dt.detectChanges();
       });
   }

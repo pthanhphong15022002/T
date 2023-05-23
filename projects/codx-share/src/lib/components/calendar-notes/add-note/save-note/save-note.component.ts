@@ -19,7 +19,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
-import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 import { TemplateRef } from '@angular/core';
 
 @Component({

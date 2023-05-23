@@ -29,6 +29,7 @@ import { CM_Customers } from '../models/cm_model';
 import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 import { DealDetailComponent } from './deal-detail/deal-detail.component';
 import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
+import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 
 @Component({
   selector: 'lib-deals',
@@ -274,6 +275,12 @@ export class DealsComponent
       case 'CM0201_2':
         this.handelStartDay(data);
         break;
+      case 'CM0201_3':
+        this.moveReason(data,true);
+        break;
+      case 'CM0201_4':
+        this.moveReason(data,false);
+        break;
       //xuât file
       case 'CM0201_5':
         this.exportFile(data);
@@ -348,11 +355,8 @@ export class DealsComponent
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
-              var instance = e.event.instance;
-              var index =
-                e.event.listStep.findIndex(
-                  (x) => x.stepID === instance.stepID
-                ) + 1;
+              var instance =  e.event.instance;
+              var index = e.event.listStep.findIndex(x=> x.stepID === instance.stepID && !x.isSuccessStep && !x.isFailStep)+1;
               var nextStep = '';
               if (index != -1) {
                 if (index != e.event.listStep.length) {
@@ -391,14 +395,120 @@ export class DealsComponent
     });
   }
 
+  moveReason(data:any,isMoveSuccess: boolean){
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    var functionID = isMoveSuccess ? 'DPT0403' : 'DPT0404';
+    this.cache.functionList(functionID).subscribe((fun) => {
+          this.openFormReason(data, fun, isMoveSuccess);
+          // var newProccessIdReason = isMoveSuccess
+          //   ? this.stepSuccess.newProcessID
+          //   : this.stepFail.newProcessID;
+          // var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
+          // if (isCheckExist) {
+          //   this.codxDpService
+          //     .getProcess(newProccessIdReason)
+          //     .subscribe((res) => {
+          //       if (res) {
+          //         if (res.permissions != null && res.permissions.length > 0) {
+          //           this.listParticipantReason = res.permissions.filter(
+          //             (x) => x.roleType === 'P'
+          //           );
+          //           this.openFormReason(
+          //             data,
+          //             fun,
+          //             isMoveSuccess,
+          //             dataMore,
+          //             this.listParticipantReason
+          //           );
+          //         }
+          //       }
+          //     });
+          // } else {
+          //   this.openFormReason(data, fun, isMoveSuccess, dataMore, null);
+          // }
+    });
+  }
+
+  openFormReason(data, fun, isMoveSuccess) {
+    var formMD = new FormModel();
+    formMD.funcID = fun.functionID;
+    formMD.entityName = fun.entityName;
+    formMD.formName = fun.formName;
+    formMD.gridViewName = fun.gridViewName;
+    var dataCM = {
+      refID:data?.refID,
+      processID: data?.processID,
+      stepID: data?.stepID,
+      nextStep: data?.nextStep
+    }
+    var obj = {
+      headerTitle: fun.defaultName,
+      formModel: formMD,
+      isReason: isMoveSuccess,
+      applyFor:'1',
+      dataCM:dataCM,
+      stepName:data.currentStepName
+    };
+
+    var dialogRevision = this.callfc.openForm(
+      PopupMoveReasonComponent,
+      '',
+      800,
+      600,
+      '',
+      obj
+    );
+    dialogRevision.closed.subscribe((e) => {
+
+      if (e && e.event != null) {
+        var instance =  e.event?.instance;
+        var instanceMove =  e.event?.instanceMove;
+        if(instanceMove) {
+
+        }
+        else {
+          data = this.updateReasonDeal(instance,data);
+          var datas = [data,data.customerID];
+          this.codxCmService.updateDeal(datas).subscribe((res) => {
+            if(res){
+              data = res;
+              this.view.dataService.update(data).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          })
+        }
+      }
+    });
+  }
+
+  updateMoveReasonDeal(instance:any, deal:any) {
+    // if (this.action !== this.actionEdit) {
+    //   deal.stepID = this.listInstanceSteps[0].stepID;
+    //   deal.nextStep = this.listInstanceSteps[1].stepID;
+    //   deal.status = '1';
+    //   deal.refID = instance.recID;
+    // }
+    // deal.owner = this.owner;
+    // deal.salespersonID = this.owner;
+    // deal.expectedClosed = deal.endDate;
+  }
+
+  updateReasonDeal(instance:any, lead:any) {
+    lead.status = instance.status;
+    lead.stepID = instance.stepID
+    return lead;
+  }
+
+
+
+
+
   startDeal(recId) {
     var data = [recId];
     this.codxCmService.startDeal(data).subscribe((res) => {
       if (res) {
-        // data.status = '2';
-        // data.startDate = res?.length > 0 ? res[0].startDate : null;
-        //   this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-        //   this.listInstanceStep = res;
         this.dataSelected = res[0];
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();

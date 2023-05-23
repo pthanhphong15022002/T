@@ -760,5 +760,13 @@ export class CodxDpService {
     );
   }
 
+  getInstanceStepsMoveReason(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'MoveReasonInDealAsync',
+      data
+    );
+  }
 
 }
