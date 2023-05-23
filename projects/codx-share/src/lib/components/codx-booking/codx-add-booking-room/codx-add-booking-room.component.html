@@ -68,28 +68,26 @@
           [footerTemplate]="showAll"></ejs-dropdownlist>
         
         
-        <div class="row">
-          <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0"
-            class="d-flex align-items-center justify-content-between">
-            <div class="d-flex flex-wrap">
-              <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
-                <li class="d-flex align-items-center me-4 mt-1"
-                  [ngClass]="item?.isSelected ? 'text-primary' : 'text-muted'">
-                  <span class="me-1 icon-16" [className]="item?.icon" [ngClass]="[
-                      item?.isSelected ? 'text-primary' : 'text-muted'
-                    ]">
-                  </span><span>{{ item?.text }}</span>
-                </li>
+          <div class="mt-2">
+            <div *ngIf="tmplstDevice != null && tmplstDevice.length > 0" class="d-flex flex-row justify-content-between">
+              <div class="d-flex justify-content-start flex-wrap">
+                <div class="d-flex" *ngFor="let item of tmplstDevice;let i =index">              
+                  <div *ngIf="i<5" class="d-flex align-items-end me-2" [ngClass]="item?.isSelected ? 'text-primary' : 'text-muted'">
+                    <span class="me-1 ps-2" [className]="item?.icon"
+                      [ngClass]="[item?.isSelected ? 'text-primary' : 'text-muted']">
+                    </span>{{ item?.text }}                
+                    <span *ngIf=" i==4 && tmplstDevice.length >5" class="ps-2 fw-bold">{{ '...' }}</span>
+                  </div>
+                </div>
               </div>
+              <span class="text-end" *ngIf="tmplstDevice != null && tmplstDevice.length > 0 ">
+                <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md"  [disabled]="viewOnly"
+                  (click)="openPopupDevice(popupDevice)">
+                  <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
+                </button>
+              </span>
             </div>
-            <span class="text-end" *ngIf="tmplstDevice?.length > 0 && tmplstDevice != null">
-              <button type="button" class="btn btn-sm btn-icon" data-dismiss="modal"
-                (click)="openPopupDevice(popupDevice)" [disabled]="viewOnly">
-                <i class="icon-select_all text-primary text-hover-primary icon-22"></i>
-              </button>
-            </span>
           </div>
-        </div>
       </div>
       <div class="form-group" *ngIf="grView?.agencyName?.allowPopup">
         <codx-label fiedName="agencyName" [formModel]="form.formModel">

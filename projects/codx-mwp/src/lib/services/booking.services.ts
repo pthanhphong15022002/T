@@ -359,7 +359,7 @@ export class BookingService {
       'EP',
       'ERM.Business.EP',
       'ResourcesBusiness',
-      'AddEditItemAsync',
+      'SaveAsync',
       [model, isAdd]
     );
   }
@@ -375,7 +375,7 @@ export class BookingService {
       'EP',
       'ERM.Business.EP',
       'BookingsBusiness',
-      'AddEditItemAsync',
+      'SaveAsync',
       [data, isAdd, attendees, items, order]
     );
   }

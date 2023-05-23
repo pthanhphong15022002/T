@@ -169,14 +169,15 @@ export class PopRolesComponent extends UIComponent {
         .pipe(
           map((lstAddedRoles: tmpformChooseRole[]) => {
             if (lstAddedRoles) {
-              this.lstNeedAddRoles = this.lstNeedAddRoles.filter(
-                (role) =>
-                  !lstAddedRoles.find(
-                    (addedRole) =>
-                      addedRole.module == role.module &&
-                      addedRole.roleID == role.roleID
-                  )
-              );
+              // this.lstNeedAddRoles = this.lstNeedAddRoles.filter(
+              //   (role) =>
+              //     !lstAddedRoles.find(
+              //       (addedRole) =>
+              //         addedRole.module == role.module &&
+              //         addedRole.roleID == role.roleID
+              //     )
+              // );
+              this.lstNeedAddRoles = [];
               return true;
             } else {
               return false;

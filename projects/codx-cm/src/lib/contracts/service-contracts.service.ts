@@ -38,4 +38,30 @@ export class ContractsService {
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
     return dataPopupOutput;
   }
+
+  getCustomerBydealID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetCustomerBydealIDAsync',
+      data
+    );
+  }
+  getCustomerByRecID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetCustomerByRecIDAsync',
+      data
+    );
+  }
+  getQuotationsLinesByTransID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetQuotationsLinesByTransIDAsync',
+      data
+    );
+  }
+
 }

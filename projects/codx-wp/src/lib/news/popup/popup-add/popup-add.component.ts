@@ -91,6 +91,30 @@ export class PopupAddComponent implements OnInit {
     
   }
   ngOnInit(): void {
+    debugger
+    if(this.isAdd)
+    {
+      this.data.createdBy = this.user.userID;
+      this.data.createdName = this.user.userName;
+      if(this.data.shareControl == this.SHARECONTROLS.EVERYONE)
+      {
+        let permission = {
+          objectID: '',
+          objectName: '',
+          objectType: this.SHARECONTROLS.EVERYONE,
+          memberType: this.MEMBERTYPE.SHARE
+        };
+        if(this.data.permissions)
+          this.data.permissions = [];
+        this.data.permissions.add(permission);
+      }
+      
+    }
+    else
+    {
+      this.getPostInfo(this.data.recID);
+      this.getFileByObjectID(this.data.recID);
+    }
     this.cache.functionList("WPT02")
     .subscribe((func:any) => {
       if(func){
@@ -109,16 +133,25 @@ export class PopupAddComponent implements OnInit {
       }
     });
     this.getMessageDefault();
-    if(this.isAdd)
-    {
-      debugger
-      this.data.createdBy = this.user.userID;
-      this.data.createdName = this.user.userName;
-    }
-    else
-      this.getFileByObjectID(this.data.recID);
+    
   }
   ngAfterViewInit(): void {
+  }
+
+  getPostInfo(recID:string)
+  {
+    if(recID)
+    {
+      this.api.execSv(
+        'WP',
+        'ERM.Business.WP',
+        'NewsBusiness',
+        'GetPostByIDAsync',
+        [recID]).subscribe((res:any) => {
+          this.data = res;
+          this.changedt.detectChanges();
+        });
+    }
   }
   // set data
   getMessageDefault() {
@@ -164,7 +197,7 @@ export class PopupAddComponent implements OnInit {
       [this.data])
       .subscribe((res2:boolean) => {
         this.notifSV.notifyCode( res2 ? "WP024" : "WP013");
-        this.dialogRef.close(res2 ? this.data : null);
+        this.dialogRef.close(res2);
       });
     });
   }
@@ -368,7 +401,7 @@ export class PopupAddComponent implements OnInit {
         .subscribe((res2:any) => {
           this.loading = false;
           this.notifSV.notifyCode(res ? "SYS007" : "SYS021");
-          this.dialogRef.close(res2 ? this.data : null);
+          this.dialogRef.close(res2);
         });
       });
     }
@@ -378,7 +411,7 @@ export class PopupAddComponent implements OnInit {
       .subscribe((res:any) => {
         this.loading = false;
         this.notifSV.notifyCode(res ? "SYS007" : "SYS021");
-        this.dialogRef.close(res ? this.data : null);
+        this.dialogRef.close(res);
       });
     }
   }

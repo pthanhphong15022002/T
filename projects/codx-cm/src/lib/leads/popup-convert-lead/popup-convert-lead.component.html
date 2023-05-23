@@ -1,0 +1,915 @@
+<codx-layout-add
+  #form
+  [title]="title"
+  (setTitle)="setTitle($event)"
+  [subHeader]="subHeader"
+  [tabInfo]="tabInfo"
+  [tabContent]="[tabDeal, tabCustomer, tabContacts, tabAddress, tabInput]"
+  [openMore]="false"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [footer]="footer"
+  [data]="lead"
+></codx-layout-add>
+<ng-template #subHeader>
+  <codx-tag
+    field="tags"
+    [entityName]="dialog.formModel.entityName"
+    [isEdit]="true"
+    [disabled]="false"
+    [value]="data?.tags"
+    (valueChange)="valueTagChange($event)"
+  ></codx-tag>
+</ng-template>
+
+<ng-template #tabDeal>
+  <ng-container *ngIf="formModelDeals != null">
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            fiedName="DealID"
+            default="Mã cơ hội"
+            [formModel]="formModelDeals"
+          >
+          </codx-label>
+          <codx-input
+            type="text"
+            field="dealID"
+            [crrValue]="deal?.dealID"
+            [disabled]="true"
+            [placeholder]="gridViewSetupDeal?.DealID?.description"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="formModelDeals"
+            fiedName="BusinesslineID"
+            default="Dòng sản phẩm"
+          >
+          </codx-label>
+          <codx-input
+            [formModel]="formModelDeals"
+            type="combobox"
+            [crrValue]="deal?.businessLineID"
+            [refValue]="gridViewSetupDeal?.BusinesslineID?.referedValue"
+            [placeholder]="gridViewSetupDeal?.BusinesslineID?.description"
+            field="businesslineID"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            fiedName="DealName"
+            [default]="'Tên cơ hội'"
+            [formModel]="formModelDeals"
+          >
+          </codx-label>
+          <codx-input
+            type="text"
+            [formModel]="formModelDeals"
+            field="dealName"
+            [crrValue]="deal?.dealName"
+            [refValue]="gridViewSetupDeal?.DealName?.referedValue"
+            [placeholder]="gridViewSetupDeal?.DealName?.description"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="formModelDeals"
+            fiedName="ProcessID"
+            default="Quy trình"
+          >
+          </codx-label>
+          <div *ngIf="listCbxProcess.length > 0 && listCbxProcess != null">
+            <ejs-combobox
+              [dataSource]="listCbxProcess"
+              [fields]="fieldCbxProcess"
+              [value]="deal?.processID"
+              [placeholder]="gridViewSetupDeal?.ProcessID?.description"
+              (valueChange)="cbxProcessChange($event)"
+            ></ejs-combobox>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            fiedName="Category"
+            default="Loại cơ hội"
+            [formModel]="formModelDeals"
+          >
+          </codx-label>
+          <codx-input
+            field="category"
+            type="valuelist"
+            [refValue]="
+              gridViewSetupDeal?.Category?.referedValue
+                ? gridViewSetupDeal?.Category?.referedValue
+                : 'CRM010'
+            "
+            [placeholder]="gridViewSetupDeal?.Category?.description"
+            [crrValue]="deal?.category"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="formModelDeals"
+            fiedName="ChannelID"
+            default="Kênh"
+          >
+          </codx-label>
+          <codx-input
+            type="combobox"
+            [formModel]="formModelDeals"
+            field="channelID"
+            [crrValue]="deal?.channelID"
+            [refValue]="gridViewSetupDeal?.ChannelID?.referedValue"
+            [placeholder]="gridViewSetupDeal?.ChannelID?.description"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="formModelDeals"
+            fiedName="DealValue"
+            default="Doanh số dự kiến"
+          >
+          </codx-label>
+          <codx-input
+            type="text"
+            [formModel]="formModelDeals"
+            [crrValue]="deal?.dealValue"
+            [placeholder]="gridViewSetupDeal?.DealValue?.description"
+            field="dealValue"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="formModelDeals"
+            fiedName="EndDate"
+            default="Ngày đến hạn dự kiến"
+          >
+          </codx-label>
+          <codx-input
+            type="datetime"
+            [formModel]="formModelDeals"
+            field="endDate"
+            [placeholder]="gridViewSetupDeal?.EndDate?.description"
+            [crrValue]="deal?.endDate"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="formModelDeals"
+            fiedName="Probability"
+            default="Tỷ lệ thành công"
+          >
+          </codx-label>
+          <codx-input
+            type="text"
+            [formModel]="formModelDeals"
+            [crrValue]="deal?.probability"
+            [placeholder]="gridViewSetupDeal?.Probability?.description"
+            field="probability"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            fiedName="SalespersonID"
+            default="Nhân viên bán hàng"
+            [formModel]="formModelDeals"
+          >
+          </codx-label>
+          <codx-input
+            field="salespersonID"
+            type="combobox"
+            [formModel]="formModelDeals"
+            [refValue]="gridViewSetupDeal?.SalespersonID?.referedValue"
+            [placeholder]="gridViewSetupDeal?.SalespersonID?.description"
+            [crrValue]="deal?.salespersonID"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="formModelDeals"
+            fiedName="ExpectedClosed"
+            default="Ngày dự kiến đóng"
+          >
+          </codx-label>
+          <codx-input
+            type="datetime"
+            [formModel]="formModelDeals"
+            field="expectedClosed"
+            [placeholder]="gridViewSetupDeal?.ExpectedClosed?.description"
+            [crrValue]="deal?.expectedClosed"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="formModelDeals"
+            fiedName="ConsultantID"
+            default="Nhân viên tư vấn"
+          >
+          </codx-label>
+          <codx-input
+            field="consultantID"
+            type="combobox"
+            [formModel]="formModelDeals"
+            [refValue]="gridViewSetupDeal?.ConsultantID?.referedValue"
+            [placeholder]="gridViewSetupDeal?.ConsultantID?.description"
+            [crrValue]="deal?.consultantID"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <codx-label
+        fiedName="Note"
+        default="Tóm tắt nhu cầu"
+        [formModel]="formModelDeals"
+      >
+      </codx-label>
+      <codx-input
+        type="textarea"
+        [formModel]="formModelDeals"
+        field="note"
+        [crrValue]="deal?.note"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label
+        fiedName="Memo"
+        default="Mô tả chi tiết"
+        [formModel]="formModelDeals"
+      >
+      </codx-label>
+      <codx-input
+        type="textarea"
+        [formModel]="formModelDeals"
+        field="memo"
+        [crrValue]="deal?.memo"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #tabCustomer>
+  <div class="row">
+    <div class="d-flex align-items-center col-6">
+      <span class="d-flex align-items-center me-5">
+        <codx-input
+          name="customer-1"
+          class="test-check"
+          type="radio"
+          field="yes"
+          [checked]="radioChecked ?? false"
+          (valueChange)="changeRadio($event)"
+        ></codx-input>
+      </span>
+      <span class="d-flex align-items-center">
+        <codx-label
+          name="lblRadioCustomer"
+          [formModel]="dialog.formModel"
+          default="Chọn khách hàng có sẵn từ hệ thống"
+        ></codx-label>
+      </span>
+    </div>
+    <div class="d-flex col-6">
+      <span class="d-flex justify-content-between align-items-center me-5">
+        <codx-input
+          name="customer-2"
+          class="test-check"
+          type="radio"
+          style="width: 100%"
+          field="no"
+          [checked]="!radioChecked ?? false"
+          (valueChange)="changeRadio($event)"
+        ></codx-input>
+      </span>
+
+      <span class="d-flex justify-content-end align-items-center">
+        <codx-label
+          name="lblRadioAddCustomer"
+          [formModel]="dialog.formModel"
+          default="Tạo khách hàng mới"
+        ></codx-label>
+      </span>
+    </div>
+  </div>
+  <div
+    class="mt-5"
+    *ngIf="radioChecked; then systemCustomer; else addCustomer"
+  ></div
+></ng-template>
+
+<ng-template #tabContacts>
+  <ng-container>
+    <div class="d-flex flex-column mb-1">
+      <div class="title text-primary fs-4 fw-bold">
+        <codx-label
+          [formModel]="form.formModel"
+          name="lblListContactLead"
+          default="Danh sách người liên hệ từ tiềm năng"
+        ></codx-label>
+      </div>
+      <div class="text-gray-600">
+        <codx-label
+          name="lblCheckContactToCustomer"
+          [formModel]="form.formModel"
+          default="Chọn liên hệ muốn thêm vào khách hàng"
+        >
+        </codx-label>
+      </div>
+    </div>
+    <codx-list-contacts
+      [funcID]="form.formModel.funcID"
+      [objectID]="lead?.recID"
+      [objectType]="'2'"
+      [objectName]="lead?.leadName"
+      (objectConvert)="objectConvert($event)"
+      [hidenMF]="true"
+      [isConvertLeadToCus]="customerID ? true : false"
+      [type]="'formAdd'"
+    ></codx-list-contacts>
+  </ng-container>
+  <ng-container>
+    <div class="title text-primary fs-4 fw-bold">
+      <codx-label
+        [formModel]="form.formModel"
+        name="lblListContactCustomer"
+        default="Danh sách người liên hệ từ khách hàng"
+      ></codx-label>
+    </div>
+    <codx-list-contacts
+      #codxListContact
+      [funcID]="'CM0101'"
+      [objectID]="customerID"
+      [listContacts]="lstContactCustomer"
+      [objectType]="'1'"
+      [objectName]="customer?.customerName"
+      [isConvertLeadToCus]="true"
+      (lstContactEmit)="lstContactEmit($event)"
+      (objectConvert)="objectConvertDeal($event)"
+      [hidenMF]="false"
+      [type]="'formAdd'"
+    ></codx-list-contacts>
+  </ng-container>
+  <ng-container>
+    <div class="title text-primary fs-4 fw-bold">
+      <codx-label
+        [formModel]="form.formModel"
+        name="lblListContactDeal"
+        default="Danh sách người liên hệ sử dụng cho cơ hội"
+      ></codx-label>
+    </div>
+    <codx-list-contacts
+      [funcID]="'CM0201'"
+      [objectID]="deal?.recID"
+      [listContacts]="lstContactDeal"
+      [objectType]="'4'"
+      [objectName]="deal?.dealName"
+      [hidenMF]="true"
+      [type]="'formAdd'"
+    ></codx-list-contacts>
+  </ng-container>
+</ng-template>
+<ng-template #tabAddress>
+  <ng-container>
+    <div class="d-flex flex-column mb-1">
+      <div class="title text-primary fs-4 fw-bold">
+        <codx-label
+          [formModel]="form.formModel"
+          name="lblListAdressDeal"
+          default="Danh sách người liên hệ từ tiềm năng"
+        ></codx-label>
+      </div>
+      <div class="text-gray-600">
+        <codx-label
+          name="lblCheckContactToCustomer"
+          [formModel]="form.formModel"
+          default="Chọn liên hệ muốn thêm vào khách hàng"
+        >
+        </codx-label>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container>
+    <div class="title text-primary fs-4 fw-bold">
+      <codx-label
+        [formModel]="form.formModel"
+        name="lblListContactCustomer"
+        default="Danh sách người liên hệ từ khách hàng"
+      ></codx-label>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #tabInput></ng-template>
+<ng-template #footer></ng-template>
+
+<ng-template #systemCustomer>
+  <div class="form-group mt-5">
+    <codx-label
+      name="CustomerID"
+      [formModel]="formModelCustomer"
+      default="Khách hàng"
+    ></codx-label>
+    <codx-input
+      type="combobox"
+      field="customerID"
+      [crrValue]="lead?.customerID"
+      [refValue]="'CMCustomers'"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+</ng-template>
+<ng-template #addCustomer>
+  <ng-container *ngIf="formModelCustomer">
+    <div class="mb-2">
+      <div class="mt-5">
+        <codx-label
+          name="lblInformation"
+          class="h4 text-dark text-primary fw-bold"
+          [formModel]="formModelCustomer"
+          default="Thông tin chung"
+        >
+        </codx-label>
+      </div>
+      <div class="row mt-3">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label
+              [formModel]="formModelCustomer"
+              [fiedName]="'CustGroupID'"
+            >
+            </codx-label>
+            <codx-input
+              type="combobox"
+              [crrValue]="customer?.custGroupID"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.CustGroupID?.description"
+              [refValue]="gridViewSetupCustomer?.CustGroupID?.referedValue"
+              field="custGroupID"
+              (valueChange)="valueChangeCustomer($event)"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group">
+            <codx-label
+              [formModel]="formModelCustomer"
+              [fiedName]="'CustomerID'"
+            >
+            </codx-label>
+            <codx-input
+              type="text"
+              [crrValue]="customer?.customerID"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.CustomerID?.description"
+              [refValue]="gridViewSetupCustomer?.CustomerID?.referedValue"
+              field="customerID"
+              (valueChange)="valueChangeCustomer($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <div style="height: 122px">
+              <codx-label
+                [formModel]="formModelCustomer"
+                name="lblAvatar"
+                default="Ảnh đại diện"
+              ></codx-label>
+              <div>
+                <codx-img
+                  #imageUpload
+                  class="image-inpt-wrapper fullImage"
+                  [referType]="'avt'"
+                  [width]="90"
+                  [funcId]="'CM0101'"
+                  [objectId]="customer?.recID"
+                  [objectType]="formModelCustomer.entityName"
+                  [objectName]="customer?.customerName"
+                  [isAllowEdit]="true"
+                  [isDefaulImg]="true"
+                  [imgOn]="customer?.modifiedOn"
+                  (handleInput)="changeAvatar()"
+                >
+                </codx-img>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="formModelCustomer" [fiedName]="'CustomerName'">
+        </codx-label>
+        <codx-input
+          type="text"
+          [crrValue]="customer?.customerName"
+          [formModel]="formModelCustomer"
+          [placeholder]="gridViewSetupCustomer?.CustomerName?.description"
+          field="customerName"
+          (valueChange)="valueChangeCustomer($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="formModelCustomer" fiedName="ShortName">
+            </codx-label>
+            <codx-input
+              type="text"
+              [crrValue]="customer?.shortName"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.ShortName?.description"
+              field="shortName"
+              (valueChange)="valueChangeCustomer($event)"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group">
+            <codx-label
+              [formModel]="formModelCustomer"
+              fiedName="EstablishDate"
+            >
+            </codx-label>
+            <codx-input
+              [crrValue]="customer?.establishDate"
+              format="d"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.EstablishDate?.description"
+              field="establishDate"
+              (valueChange)="valueChangeCustomer($event)"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group">
+            <codx-label [formModel]="formModelCustomer" fiedName="TaxCode">
+            </codx-label>
+            <codx-input
+              type="text"
+              [crrValue]="customer?.taxCode"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.TaxCode?.description"
+              (valueChange)="valueChangeCustomer($event)"
+              field="taxCode"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group">
+            <codx-label
+              [formModel]="formModelCustomer"
+              fiedName="AnnualRevenue"
+            >
+            </codx-label>
+            <codx-input
+              type="text"
+              [crrValue]="customer?.annualRevenue"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.AnnualRevenue?.description"
+              (valueChange)="valueChangeCustomer($event)"
+              field="annualRevenue"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="formModelCustomer" fiedName="Phone">
+            </codx-label>
+            <codx-input
+              type="text"
+              [crrValue]="customer?.phone"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.Phone?.description"
+              (valueChange)="valueChangeCustomer($event)"
+              field="phone"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group">
+            <codx-label [formModel]="formModelCustomer" fiedName="FaxNo">
+            </codx-label>
+            <codx-input
+              type="text"
+              [crrValue]="customer?.faxNo"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.FaxNo?.description"
+              (valueChange)="valueChangeCustomer($event)"
+              field="faxNo"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group">
+            <codx-label [formModel]="formModelCustomer" fiedName="Email">
+            </codx-label>
+            <codx-input
+              type="text"
+              [crrValue]="customer?.email"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.Email?.description"
+              (valueChange)="valueChangeCustomer($event)"
+              field="email"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group">
+            <codx-label [formModel]="formModelCustomer" fiedName="WebPage">
+            </codx-label>
+            <codx-input
+              type="text"
+              [crrValue]="customer?.webPage"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.WebPage?.description"
+              (valueChange)="valueChangeCustomer($event)"
+              field="webPage"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="formModelCustomer" fiedName="Industries">
+        </codx-label>
+        <codx-input
+          type="combobox"
+          [crrValue]="customer?.industries"
+          [formModel]="formModelCustomer"
+          [placeholder]="gridViewSetupCustomer?.Industries?.description"
+          [refValue]="gridViewSetupCustomer?.Industries?.referedValue"
+          (valueChange)="valueChangeCustomer($event)"
+          field="industries"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="formModelCustomer" fiedName="address">
+        </codx-label>
+        <codx-input
+          type="textarea"
+          [crrValue]="customer?.address"
+          [formModel]="formModelCustomer"
+          [placeholder]="gridViewSetupCustomer?.Address?.description"
+          field="address"
+          (valueChange)="valueChangeCustomer($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="formModelCustomer" fiedName="Memo">
+        </codx-label>
+        <codx-input
+          type="textarea"
+          [crrValue]="customer?.memo"
+          [formModel]="formModelCustomer"
+          [placeholder]="gridViewSetupCustomer?.Headcounts?.description ?? ''"
+          field="memo"
+          (valueChange)="valueChangeCustomer($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <div class="d-flex justify-content-between">
+          <div>
+            <codx-input
+              type="switch"
+              [crrValue]="customer?.isBlackList"
+              (valueChange)="valueChangeCustomer($event)"
+              field="isBlackList"
+            >
+            </codx-input>
+          </div>
+          <div class="w-100 ms-1">
+            <codx-label [formModel]="formModelCustomer" fiedName="IsBlackList">
+            </codx-label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-2">
+      <codx-label
+        name="lblUpdateInfo"
+        class="h4 text-dark text-primary fw-bold"
+        default="Thông tin bổ sung"
+        [formModel]="formModelCustomer"
+      >
+      </codx-label>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="formModelCustomer" fiedName="Headcounts">
+            </codx-label>
+            <codx-input
+              type="valuelist"
+              [crrValue]="customer?.headcounts"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.Headcounts?.description"
+              [refValue]="gridViewSetupCustomer?.Headcounts?.referedValue"
+              (valueChange)="valueChangeCustomer($event)"
+              field="headcounts"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group">
+            <codx-label [formModel]="formModelCustomer" fiedName="WorkingDays">
+            </codx-label>
+            <codx-input
+              type="valuelist"
+              [crrValue]="customer?.workingDays"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.WorkingDays?.description"
+              [refValue]="gridViewSetupCustomer?.WorkingDays?.referedValue"
+              (valueChange)="valueChangeCustomer($event)"
+              field="workingDays"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="formModelCustomer" fiedName="BankAccount">
+            </codx-label>
+            <codx-input
+              type="text"
+              [crrValue]="customer?.bankAccount"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.BankAccount?.description"
+              (valueChange)="valueChangeCustomer($event)"
+              field="bankAccount"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group">
+            <codx-label [formModel]="formModelCustomer" fiedName="bankID">
+            </codx-label>
+            <codx-input
+              type="combobox"
+              [crrValue]="customer?.bankID"
+              [formModel]="formModelCustomer"
+              [placeholder]="gridViewSetupCustomer?.BankID?.description"
+              [refValue]="gridViewSetupCustomer?.BankID?.referedValue"
+              (valueChange)="valueChangeCustomer($event)"
+              field="bankID"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="d-flex justify-content-between">
+          <div>
+            <codx-input
+              type="switch"
+              [crrValue]="customer?.officialHour"
+              (valueChange)="valueChangeCustomer($event)"
+              field="officialHour"
+            >
+            </codx-input>
+          </div>
+          <div class="w-100 ms-1">
+            <codx-label [formModel]="formModelCustomer" fiedName="OfficialHour">
+            </codx-label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-2">
+      <codx-label
+        name="lblSystemInfo"
+        class="h4 text-dark text-primary fw-bold"
+        default="Thông tin hệ thống"
+        [formModel]="formModelCustomer"
+      >
+      </codx-label>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label
+              [formModel]="formModelCustomer"
+              fiedName="CustomerResource"
+            >
+            </codx-label>
+            <codx-input
+              type="valuelist"
+              [crrValue]="customer?.customerResource"
+              [formModel]="formModelCustomer"
+              [placeholder]="
+                gridViewSetupCustomer?.CustomerResource?.description ?? ''
+              "
+              [refValue]="gridViewSetupCustomer?.CustomerResource?.referedValue"
+              field="customerResource"
+              (valueChange)="valueChangeCustomer($event)"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group">
+            <codx-label [formModel]="formModelCustomer" fiedName="SegmentID">
+            </codx-label>
+            <codx-input
+              type="combobox"
+              [crrValue]="customer?.segmentID"
+              [formModel]="formModelCustomer"
+              [placeholder]="
+                gridViewSetupCustomer?.SegmentID?.description ?? ''
+              "
+              [refValue]="gridViewSetupCustomer?.SegmentID?.referedValue"
+              field="segmentID"
+              (valueChange)="valueChangeCustomer($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="formModelCustomer" fiedName="CustomerFrom">
+            </codx-label>
+            <codx-input
+              [crrValue]="customer?.customerFrom"
+              [formModel]="formModelCustomer"
+              format="d"
+              [placeholder]="
+                gridViewSetupCustomer?.CustomerFrom?.description ?? ''
+              "
+              field="customerFrom"
+              (valueChange)="valueChangeCustomer($event)"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group">
+            <codx-label [formModel]="formModelCustomer" fiedName="ConsultantID">
+            </codx-label>
+            <codx-input
+              type="combobox"
+              [crrValue]="customer?.consultantID"
+              [formModel]="formModelCustomer"
+              [placeholder]="
+                gridViewSetupCustomer?.ConsultantID?.description ?? ''
+              "
+              [refValue]="gridViewSetupCustomer?.ConsultantID?.referedValue"
+              field="consultantID"
+              (valueChange)="valueChangeCustomer($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>

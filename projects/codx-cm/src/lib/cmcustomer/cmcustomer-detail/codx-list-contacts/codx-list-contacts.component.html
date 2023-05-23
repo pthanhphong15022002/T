@@ -1,41 +1,40 @@
-<div [class]="'detail-form'">
-  <div class="d-flex" *ngIf="!hidenMF">
-    <div *ngIf="objectType != '2'">
-      <button
-        type="button"
-        class="btn btn-sm btn-icon btn-primary me-2 d-flex"
-        style="min-width: 180px"
-        (click)="isButton ? clickPopupContacts() : null"
-      >
-        <i class="icon-check-correct icon-16 me-1"></i>
-        <codx-label
-          name="lblSelectContacts"
-          [formModel]="formModel"
-          default="Chọn liên hệ từ hệ thống"
-        ></codx-label>
-      </button>
-    </div>
-
-    <button
-      type="button"
-      class="btn btn-sm btn-primary"
-      (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
-    >
-      <i class="icon-person_add_alt_1 icon-16 me-1"></i>
-      <codx-label
-        name="lblQuickAdd"
-        [formModel]="formModel"
-        default="Thêm nhanh liên hệ"
-      ></codx-label>
-    </button>
-  </div>
-</div>
-
 <ng-container *ngIf="loaded">
   <div
     class="codx-listcontact pb-10"
     *ngIf="listContacts != null && listContacts.length > 0; else noData"
   >
+    <div [class]="'detail-form'">
+      <div class="d-flex" *ngIf="!hidenMF">
+        <div *ngIf="objectType != '2'">
+          <button
+            type="button"
+            class="btn btn-sm btn-icon btn-primary me-2 d-flex"
+            style="min-width: 180px"
+            (click)="isButton ? clickPopupContacts() : null"
+          >
+            <i class="icon-check-correct icon-16 me-1"></i>
+            <codx-label
+              name="lblSelectContacts"
+              [formModel]="formModel"
+              default="Chọn liên hệ từ hệ thống"
+            ></codx-label>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-primary"
+          (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
+        >
+          <i class="icon-person_add_alt_1 icon-16 me-1"></i>
+          <codx-label
+            name="lblQuickAdd"
+            [formModel]="formModel"
+            default="Thêm nhanh liên hệ"
+          ></codx-label>
+        </button>
+      </div>
+    </div>
     <div *ngFor="let item of listContacts">
       <ng-container
         [ngTemplateOutlet]="contacts"
@@ -72,6 +71,13 @@
   >
     <div class="d-flex flex-column w-100 me-3">
       <div class="d-flex align-items-center">
+        <div class="me-1" *ngIf="isConvertLeadToCus">
+          <codx-input
+            type="checkbox"
+            [crrValue]="false"
+            (valueChange)="valueChange($event, data)"
+          ></codx-input>
+        </div>
         <div class="me-3">
           <codx-img
             [objectId]="data.recID"

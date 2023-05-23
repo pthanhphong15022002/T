@@ -11,7 +11,7 @@
         <ng-container *ngComponentOutlet="filter"></ng-container>
     </ng-container> -->
 
-    <div class="card-body" >
+    <div class="card-body p-0 mt-3" >
       <codx-gridview
         #gridView
         [funcId]="funcID"
@@ -427,7 +427,7 @@
       "
     >
     </span>
-    <span class="mx-2"> / </span>
+    <span class="mx-1">/</span>
     <span
       [innerHTML]="
         data?.benefitNorm
@@ -474,37 +474,31 @@
 
 <!-- #region customeHeader html-->
 <ng-template #customeHeader>
-    <div class="card-header flex-column w-100">
-        <div class="d-flex align-items-center justify-content-between w-100">
-          <div class="card-title">
-            <div class="d-flex flex-column">
-              <div class="d-flex align-items-center mb-3 mt-5">
-                <span class="icon-i-filter-right icon-20 me-2"></span>
-                <div class="d-flex align-items-center me-3">
-                  <codx-label
-                    [formModel]="formModel"
-                    [default]="headerText"
-                    name='lblViewAllHeader'
-                    class="fw-bold fs-5 text-gray-600"
-                  >
-                  </codx-label>
-                  <span class="text-gray-500 mx-2"> | </span>
-                  <span class="text-gray-500">Tất cả ({{ rowCount }})</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-toolbar">
-            <button
-              type="button"
-              class="btn btn-flex text-dark-75 text-hover-primary px-0"
-              (click)="closeDialog()"
-            >
-              <span class="icon-close icon-18"></span>
-            </button>
-          </div>
-        </div>
+  <div class="d-flex align-items-center justify-content-between w-100">
+    <div class="d-flex align-items-center mb-5 mt-5 fw-normal">
+      <span class="icon-i-filter-right icon-20 me-2"></span>
+      <div class="d-flex align-items-center me-3">
+        <codx-label
+          [formModel]="formModel"
+          [default]="headerText"
+          name='lblViewAllHeader'
+          class="fw-bold fs-5"
+        >
+        </codx-label>
+        <span class="text-gray-400 mx-2 fw-normal fs-body"> | </span>
+        <span class="text-gray-600 fs-6 fw-normal">Tất cả ({{ rowCount }})</span>
       </div>
+    </div>
+    <div class="card-toolbar me-2">
+      <button
+        type="button"
+        class="btn btn-flex text-dark-75 text-hover-primary px-0"
+        (click)="closeDialog()"
+      >
+        <span class="icon-close icon-18"></span>
+      </button>
+    </div>
+  </div>
 </ng-template>
 <!--#endregion -->
 
@@ -677,8 +671,8 @@
 </ng-template>
 
 <ng-template #filterBenefit>
-    <div class="d-flex align-items-center">
-      <span class="ms-2">
+    <div class="d-flex align-items-center fs-body">
+      <span class="me-2">
         <codx-dropdown-select
           *ngIf="eBenefitGrvSetup"
           [cssClass]="'rounded-pill border-1'"
@@ -691,9 +685,9 @@
           (valueChange)="valueChangeFilterBenefit($event)"
         ></codx-dropdown-select>
       </span>
-      <span class="ms-2">
+      <span class="me-2">
         <codx-dropdown-calendar
-          [cssPopup]="'w-600px h-400px'"
+          [cssPopup]="'w-500px h-300px aqua'"
           emptyText="Chọn năm"
           [firstChange]="false"
           [displayOption]="ops"
