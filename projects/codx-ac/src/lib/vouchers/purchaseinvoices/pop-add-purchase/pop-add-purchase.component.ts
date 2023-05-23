@@ -395,6 +395,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       'quantity',
       'unitprice',
       'netamt',
+      'vatid'
     ];
     if (field.includes(e.field.toLowerCase())) {
       this.api
@@ -414,22 +415,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
     if (e.field == 'itemID') {
       this.loadItemID(e.value);
-    }
-    if (e.field == 'vatid')
-    {
-      this.calculateVatAmt(e);
-    }
-    if (e.field == 'quantity')
-    {
-      this.calculateVatAmt(e);
-    }
-    if (e.field == 'unitprice')
-    {
-      this.calculateVatAmt(e);
-    }
-    if (e.field == 'netamt')
-    {
-      this.calculateVatAmt(e);
     }
   }
   cellChangedInvoice(e: any) {
@@ -642,7 +627,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       return;
     } else {
       e.netAmt = e.quantity * e.unitPrice;
-      this.calculateVatAmt(e);
       this.api
         .execAction<any>('PS_PurchaseInvoicesLines', [e], 'UpdateAsync')
         .subscribe((save) => {
@@ -1283,16 +1267,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         });
       }
     }
-  }
-
-  calculateVatAmt(e: any){
-    this.api.exec('BS','VATCodesBusiness', 'GetVatRateAsync', e.data.vatid)
-      .subscribe((res: any) => {
-        if(res == null)
-          res = 0;
-        e.data.vatAmt = res * e.data.netAmt;
-        this.setDataGrid("VATAmt", e.data);
-      });
   }
 
   clearPurchaseInvoicesLines() {
