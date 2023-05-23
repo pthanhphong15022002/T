@@ -27,7 +27,6 @@ export class AppropvalNewsDetailComponent implements OnInit {
     VIDEO:"2"
   }
   data: any = null;
-  model = new DataRequest();
   service = "WP";
   assemblyName = "ERM.Business.WP";
   className = "NewsBusiness";
@@ -43,48 +42,39 @@ export class AppropvalNewsDetailComponent implements OnInit {
     ) { }
   ngOnInit(): void {
     this.getPostInfor(this.objectID);
-    this.cache.functionList(this.funcID).subscribe((func: any) => 
+    this.cache.functionList(this.funcID)
+    .subscribe((func: any) => 
       {
         if(func)
-        {
-          this.functionName = func.customName;
-        }
+          this.functionName = func.defaultName;
       });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.objectID)
-    {
+    if(changes.objectID.currentValue != changes.objectID.previousValue && !changes.firstChange)
       this.getPostInfor(this.objectID);
-    }
   }
+  
   // get data detail
   getPostInfor(objectID:string){
-    if(objectID)
-    {
-      this.api.execSv(
-        "WP",
-        "ERM.Business.WP",
-        "NewsBusiness",
-        "GetPostInfoAsync",
-        [this.objectID,this.funcID])
-        .subscribe((res:any) => {
-          if(res)
-          {
-            this.data = JSON.parse(JSON.stringify(res));
-            this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
-            this.hideMFC = this.data.approvalStatus === '5';            
-            this.dt.detectChanges();
-          }
-        });
-    }
-    else
-    {
-      this.data = null;
-    }
+    this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "NewsBusiness",
+      "GetPostByApprovalAsync",
+      [this.objectID,this.funcID])
+      .subscribe((res:any) => {
+        this.data = JSON.parse(JSON.stringify(res));
+        if(this.data)
+          this.hideMFC = this.data.ApproveStatus === '5';            
+        this.dt.detectChanges();
+      });
   }
+  //  click morefunction
   clickMF(event:any){
-    if(event?.functionID){
+    if(event?.functionID)
+    {
+      debugger
       let headerText = event.text + " " + this.functionName;
       switch(event.functionID){
         case "SYS02": //delete
@@ -131,12 +121,13 @@ export class AppropvalNewsDetailComponent implements OnInit {
               });
             }
           break;
-        case "WPT02121": // duyệt
+        case "WPT02121": 
+        case "WPT02131": // duyệt
             this.notifySvr.alertCode("WP004")
             .subscribe((option:any) =>{
               if(option?.event?.status == "Y")
               {
-                this.updateApprovalStatus(this.data.recID, "5")
+                this.approvalPost(this.funcID,this.data.recID, "5")
                 .subscribe((res:any) => {
                     if(res)
                     {
@@ -154,7 +145,8 @@ export class AppropvalNewsDetailComponent implements OnInit {
           .subscribe((option:any) =>{
             if(option?.event?.status == "Y")
             {
-              this.updateApprovalStatus(this.data.recID, "2").subscribe((res:any) => {
+              this.approvalPost(this.funcID,this.data.recID, "2")
+              .subscribe((res:any) => {
                   if(res)
                   {
                     this.data.approveStatus = "2";
@@ -171,7 +163,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
           .subscribe((option:any) =>{
             if(option?.event?.status == "Y")
             {
-              this.updateApprovalStatus(this.data.recID, "4").subscribe((res:any) => {
+              this.approvalPost(this.funcID,this.data.recID, "4").subscribe((res:any) => {
                   if(res)
                   {
                     this.data.approveStatus = "4";
@@ -188,15 +180,16 @@ export class AppropvalNewsDetailComponent implements OnInit {
       }
     }
   }
-
-  updateApprovalStatus(recID:string,approvalStatus):Observable<any>{
+  //xét duyệt bài viết
+  approvalPost(funcID:string,recID:string,approvalStatus):Observable<any>{
     return this.api.execSv(
       this.service,
       this.assemblyName,
       this.className,
-      "UpdateAprovalStatusAsync",
-      [recID,approvalStatus]);
+      "ApprovalPostAsync",
+      [funcID,recID,approvalStatus]);
   }
+  // xóa bài viết
   deletedPost(data:any){
     if(!data)return;
     this.dataService.delete(
@@ -209,13 +202,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
     option.service = "WP";
     option.assemblyName = "ERM.Business.WP";
     option.className = "NewsBusiness";
-    if(this.entityName == "WP_News"){
-      option.methodName = "DeleteNewsAsync";
-    }
-    else 
-    {
-      option.methodName = "DeletePostAsync";
-    }
+    option.methodName = this.funcID == "WPT0213" ? "DeletePostAsync" : "DeleteNewsAsync";
     option.data = data;
     return true;
   }

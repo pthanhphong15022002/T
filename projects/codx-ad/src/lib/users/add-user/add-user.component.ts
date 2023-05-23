@@ -116,6 +116,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
         );
       this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
+    } else if (this.formType == 'view') {
+      this.isSaved = true;
+      this.isSaving = true;
     } else if (this.formType == 'copy') {
       this.isSaved = false;
 
@@ -354,6 +357,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
               this.adService.createFirstPost(this.tmpPost).subscribe();
               this.dataAfterSave = res.save;
               this.adUser.userID = res.save.userID;
+              this.adUser.status = res.save.status;
             }
             this.isSaved = true;
 

@@ -21,17 +21,19 @@ import {
   ResourceModel,
   RequestOption,
   NotificationsService,
+  DialogModel,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
 import { CM_Customers } from '../models/cm_model';
+import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
+import { DealDetailComponent } from './deal-detail/deal-detail.component';
+import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
 
 @Component({
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
-  styleUrls: ['./deals.component.scss'],
-})
-export class DealsComponent
+  styleUrls: ['./deals.component.scss'],})export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -49,6 +51,8 @@ export class DealsComponent
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+
+  @ViewChild('detailViewDeal') detailViewDeal: DealDetailComponent;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -101,19 +105,18 @@ export class DealsComponent
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
-    private notificationsService: NotificationsService,
+    private notificationsService: NotificationsService
   ) {
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
-  ngOnChanges(changes: SimpleChanges): void {
-  }
+  ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
-     this.dataObj = {
-      processID:'327eb334-5695-468c-a2b6-98c0284d0620'
-    }
+    this.dataObj = {
+      processID: '327eb334-5695-468c-a2b6-98c0284d0620',
+    };
     this.request = new ResourceModel();
     this.request.service = 'CM';
     this.request.assemblyName = 'CM';
@@ -169,9 +172,7 @@ export class DealsComponent
     this.changeDetectorRef.detectChanges();
   }
 
-  onLoading(e) {
-  }
-
+  onLoading(e) {}
 
   changeView(e) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -192,14 +193,20 @@ export class DealsComponent
   clickMoreFunc(e) {
     this.clickMF(e.e, e.data);
   }
-
   changeDataMF($event, data) {
-
-    if ($event != null && data != null)
-    {
-      if(data.status == "1") {
-        for(let more of $event ) {
+    if ($event != null && data != null) {
+      if (data.status == '1') {
+        for (let more of $event) {
           switch (more.functionID) {
+            case 'CM0201_1':
+              more.disabled = true;
+              break;
+            case 'CM0201_3':
+              more.disabled = true;
+              break;
+            case 'CM0201_4':
+              more.disabled = true;
+              break;
             case 'SYS03':
             case 'SYS04':
             case 'SYS02':
@@ -210,8 +217,20 @@ export class DealsComponent
               more.isblur = true;
           }
         }
+      } else {
+        for (let more of $event) {
+          switch (more.functionID) {
+            case 'CM0201_2':
+              more.disabled = true;
+              break;
+            case 'SYS03':
+            case 'SYS04':
+            case 'SYS02':
+            default:
+              more.isblur = false;
+          }
+        }
       }
-
     }
   }
   checkMoreReason(data, isUseReason) {
@@ -240,10 +259,16 @@ export class DealsComponent
       case 'SYS02':
         this.delete(data);
         break;
+      case 'CM0201_1':
+        this.moveStage(data);
+        break;
       case 'CM0201_2':
         this.handelStartDay(data);
         break;
-
+      //xuât file
+      case 'CM0201_5':
+        this.exportFile(data);
+        break;
     }
   }
   changeMF(e) {
@@ -251,13 +276,108 @@ export class DealsComponent
   }
 
   handelStartDay(data) {
-
     this.notificationsService
-    .alertCode('DP033', null, ['"' + data?.title + '"' || ''])
+    .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
     .subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
         this.startDeal(data.recID);
       }
+    });
+  }
+  moveStage(data: any) {
+    // if (!this.isClick) {
+    //   return;
+    // }
+    // if (listStepCbx.length == 0 || listStepCbx == null) {
+    //   listStepCbx = this.listSteps;
+    // }
+    // this.isClick = false;
+    // this.crrStepID = data.stepID;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    this.cache.functionList('DPT0402').subscribe((fun) => {
+      this.cache
+        .gridViewSetup(fun.formName, fun.gridViewName)
+        .subscribe((grvSt) => {
+          var formMD = new FormModel();
+          formMD.funcID = fun.functionID;
+          formMD.entityName = fun.entityName;
+          formMD.formName = fun.formName;
+          formMD.gridViewName = fun.gridViewName;
+          var stepReason = {
+            isUseFail: false,
+            isUseSuccess: false,
+          };
+          var dataCM = {
+            refID:data?.refID,
+            processID: data?.processID,
+            stepID: data?.stepID,
+            nextStep: data?.nextStep
+          }
+          var obj = {
+            stepName: data?.currentStepName,
+            formModel: formMD,
+            deal: data,
+            listStepCbx: null,
+            stepIdClick: null,
+            stepReason: stepReason,
+            headerTitle: this.titleAction,
+            listStepProccess: null,
+            lstParticipants: null,
+            isDurationControl: null,
+            applyFor: '1',
+            dataCM: dataCM,
+          };
+          var dialogMoveStage = this.callfc.openForm(
+            PopupMoveStageComponent,
+            '',
+            850,
+            900,
+            '',
+            obj
+          );
+          dialogMoveStage.closed.subscribe((e) => {
+            if (e && e.event != null) {
+              var instance =  e.event.instance;
+              var index = e.event.listStep.findIndex(x=> x.stepID === instance.stepID)+1;
+              var nextStep = '';
+              if(index != -1){
+                if(index != e.event.listStep.length){
+                  var listStep = e.event.listStep;
+                  nextStep = listStep[index]?.stepID;
+                }
+              }
+
+              var dataUpdate = [data.recID,instance.stepID,nextStep];
+              this.codxCmService.moveStageDeal(dataUpdate).subscribe((res)=> {
+                if(res){
+                  data = res[0];
+                  this.view.dataService.update(data).subscribe();
+                  this.detailViewDeal.dataSelected = data;
+                  this.detectorRef.detectChanges();
+                }
+              })
+              //xu ly data đổ về
+              // data = e.event.instance;
+              // this.listStepInstances = e.event.listStep;
+              // if (e.event.isReason != null) {
+              //   this.moveReason(null, data, e.event.isReason);
+              // }
+              // this.view.dataService.update(data).subscribe();
+              // if (this.kanban) this.kanban.updateCard(data);
+              // this.dataSelected = data;
+
+              // if (this.detailViewInstance) {
+              //   this.detailViewInstance.dataSelect = this.dataSelected;
+              //   this.detailViewInstance.listSteps = this.listStepInstances;
+              // }
+
+
+            }
+          });
+        });
+      // });
     });
   }
 
@@ -267,8 +387,8 @@ export class DealsComponent
       if (res) {
         // data.status = '2';
         // data.startDate = res?.length > 0 ? res[0].startDate : null;
-             //   this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-     //   this.listInstanceStep = res;
+        //   this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        //   this.listInstanceStep = res;
         this.dataSelected = res[0];
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
@@ -277,9 +397,6 @@ export class DealsComponent
       this.detectorRef.detectChanges();
     });
   }
-
-
-
 
   getPropertiesHeader(data, type) {
     if (this.listHeader?.length == 0) {
@@ -325,7 +442,6 @@ export class DealsComponent
 
   addDeal() {
     this.view.dataService.addNew().subscribe((res) => {
-
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
@@ -355,7 +471,7 @@ export class DealsComponent
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event).subscribe();
-       this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -365,44 +481,43 @@ export class DealsComponent
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-    .edit(this.view.dataService.dataSelected)
-    .subscribe((res) => {
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '800px';
-      option.zIndex = 1001;
-      var formMD = new FormModel();
-      // formMD.funcID = funcIDApplyFor;
-      // formMD.entityName = fun.entityName;
-      // formMD.formName = fun.formName;
-      // formMD.gridViewName = fun.gridViewName;
-      var obj = {
-        action: 'edit',
-        formMD: formMD,
-        titleAction: 'Chỉnh sửa cơ hội',
-      };
-      let dialogCustomDeal = this.callfc.openSide(
-        PopupAddDealComponent,
-        obj,
-        option
-      );
-      dialogCustomDeal.closed.subscribe((e) => {
-        if (e && e.event != null) {
-          this.view.dataService.update(e.event).subscribe();
-         this.changeDetectorRef.detectChanges();
-        }
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
+        option.zIndex = 1001;
+        var formMD = new FormModel();
+        // formMD.funcID = funcIDApplyFor;
+        // formMD.entityName = fun.entityName;
+        // formMD.formName = fun.formName;
+        // formMD.gridViewName = fun.gridViewName;
+        var obj = {
+          action: 'edit',
+          formMD: formMD,
+          titleAction: 'Chỉnh sửa cơ hội',
+        };
+        let dialogCustomDeal = this.callfc.openSide(
+          PopupAddDealComponent,
+          obj,
+          option
+        );
+        dialogCustomDeal.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            this.view.dataService.update(e.event).subscribe();
+            this.changeDetectorRef.detectChanges();
+          }
+        });
       });
-    });
   }
 
   copy(data) {
     if (data) {
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
-      this.oldIdDeal= data.recID;
+      this.oldIdDeal = data.recID;
     }
     this.view.dataService.copy().subscribe((res) => {
-
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
@@ -416,8 +531,6 @@ export class DealsComponent
       option.zIndex = 1001;
       this.openFormDeal(formMD, option, 'copy');
     });
-
-
   }
 
   delete(data: any) {
@@ -448,5 +561,42 @@ export class DealsComponent
   }
   //#endregion
 
+  //xuất file
+  exportFile(dt) {
+    this.codxCmService.exportFile(dt,this.titleAction) ;
+    // this.codxCmService
+    //   .getDataInstance(dt.refID)
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       let option = new DialogModel();
+    //       option.zIndex = 1001;
+    //       let formModel = new FormModel() ;
 
+    //       formModel.entityName = 'DP_Instances';
+    //       formModel.formName = 'DPInstances';
+    //       formModel.gridViewName = 'grvDPInstances';
+    //       formModel.funcID = 'DPT04';
+
+    //       let obj = {
+    //         data: res,
+    //         formModel: formModel,
+    //         isFormExport: true,
+    //         refID: dt.processID,
+    //         refType: 'DP_Processes',
+    //         titleAction: this.titleAction,
+    //         loaded: false,
+    //       };
+    //       let dialogTemplate = this.callfc.openForm(
+    //         PopupSelectTempletComponent,
+    //         '',
+    //         600,
+    //         500,
+    //         '',
+    //         obj,
+    //         '',
+    //         option
+    //       );
+    //     }
+    //   });
+  }
 }

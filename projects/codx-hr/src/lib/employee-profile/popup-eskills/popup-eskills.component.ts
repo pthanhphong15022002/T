@@ -78,10 +78,10 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
             this.skillObj.employeeID = this.employId;
             this.formModel.currentData = this.skillObj;
             this.formGroup.patchValue(this.skillObj);
-            this.cr.detectChanges();
             this.isAfterRender = true;
             this.isNullFrom = false;
             this.isNullTo = false;
+            this.cr.detectChanges();
           }
         });
     } else {
@@ -90,8 +90,8 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
         this.formGroup.patchValue(this.skillObj);
         this.formModel.currentData = this.skillObj;
-        this.cr.detectChanges();
         this.isAfterRender = true;
+        this.cr.detectChanges();
         if(this.skillObj.trainFromDate == null)
         this.isNullFrom = false;
         if(this.skillObj.trainToDate == null)
@@ -165,10 +165,10 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     }
   }
 
-  afterRenderListView(evt) {
-    this.listView = evt;
-    console.log(this.listView);
-  }
+  // afterRenderListView(evt) {
+  //   this.listView = evt;
+  //   console.log(this.listView);
+  // }
 
   Date(date) {
     return new Date(date);
@@ -181,7 +181,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     var strYear = `${yearFromDate}`;
     var strMonth = `${yearFromDate}/${monthFromDate}`;
     var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
-    console.log('asdsadasdasdasdsad', strYear, strMonth, strDay);
+    // console.log('asdsadasdasdasdsad', strYear, strMonth, strDay);
 
     if (changeType === 'FromDate') {
       if (event.type === 'year') {

@@ -27,7 +27,7 @@
     [title]="data.contractName"
     [descTmp]="descTmp"
     [formModel]="view.formModel"
-    [titleCss]="'fw-bold fs-4'"
+    [titleCss]="'fw-bold fs-6 mb-1'"
     [dataItem]="data"
     [footer]="footerTmp"
   >
@@ -35,17 +35,17 @@
 </ng-template>
 
 <ng-template #descTmp let-data>
-  <div class="py-2">
-    <span class="icon-business pe-1"></span>
-    <span>{{ data?.companyName || "Cty cổ phần tin học lạc việt" }}</span>
+  <div class="d-flex align-items-top mb-1">
+    <span class="icon-business icon-16 me-2"></span>
+    <span class="text-gray-700">{{ data?.companyName || "Cty cổ phần tin học lạc việt" }}</span>
   </div>
 </ng-template>
 
 <ng-template #footerTmp let-data>
-  <div class="d-flex justify-content-between align-items-center">
+  <div class="d-flex justify-content-between align-items-center mb-1">
     <div>Loại hợp đồng: Mới</div>
     <div class="d-flex justify-content-end align-items-center">
-      <span class="icon-monetization_on pe-1" style="color: gold"></span>
+      <span class="icon-monetization_on icon-16 me-2 text-warning"></span>
       <span class="fs-6 fw-bold">25.000.000</span>
     </div>
   </div>
@@ -54,13 +54,15 @@
     <div class="d-flex justify-content-end align-items-center">
       <span class="icon-16 icon-av_timer me-1"></span>
       <span>{{ data.createdOn | date : "dd/MM/yyyy" }}</span>
+    </div>
+    <div>
       <codx-imgs
-        [width]="25"
-        [objectId]="data.createdBy"
-        ojectType="AD_Users"
-        [numberImages]="1"
-      >
-      </codx-imgs>
+      [width]="25"
+      [objectId]="data.createdBy"
+      ojectType="AD_Users"
+      [numberImages]="1"
+    >
+    </codx-imgs>
     </div>
   </div>
 </ng-template>
@@ -69,7 +71,7 @@
 <ng-template #templateDetail>
   <codx-detail-tmp
     [header]="headerRightTemp"
-    [formModel]="formModel"
+    [formModel]="view.formModel"
     [body]="mainRightTemp"
     [footer]="footerRightTemp"
     (clickMF)="clickMF($event, itemSelected)"
@@ -182,11 +184,11 @@
 
 <ng-template #footerRightTemp>
   <codx-tabs
-    [entityName]="formModel.entityName"
-    [formModel]="formModel"
+    [entityName]="view.formModel.entityName"
+    [formModel]="view.formModel"
     [TabControl]="tabControl"
     [objectID]="itemSelected.recID"
-    [funcID]="formModel.funcID"
+    [funcID]="view.formModel.funcID"
   ></codx-tabs>
 </ng-template>
 

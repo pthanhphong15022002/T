@@ -53,7 +53,7 @@
               </div>
               <div class="row">
                 <div class="col-6">
-                  <div class="form-group w-100">
+                  <div class="form-group w-40">
                     <div class="fw-bold text-dark mb-1">
                       <codx-label
                         fiedName="LegalName"
@@ -308,9 +308,8 @@
                         [formModel]="view.formModel"
                         [default]="'Email: '"
                       ></codx-label>
-                      <span class="url-contact text-primary">{{
-                        data?.email
-                      }}</span>
+                      <span class="url-contact text-primary ms-1">
+                        {{ data?.email}}</span>
                     </div>
                     <div class="text-gray-600">
                       <codx-label
@@ -318,7 +317,7 @@
                         [formModel]="view.formModel"
                         [default]="'Website: '"
                       ></codx-label>
-                      <span class="url-contact text-primary">
+                      <span class="url-contact text-primary ms-1">
                         {{ data?.webPage }}</span
                       >
                     </div>

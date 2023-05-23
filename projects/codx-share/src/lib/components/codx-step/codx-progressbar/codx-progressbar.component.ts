@@ -27,9 +27,11 @@ export class ProgressbarComponent implements OnInit, OnChanges {
   @ViewChild('annotation') annotation: ProgressBar;
   @Input() progress = 0;
   @Input() color = '#005DC7';
-  @Input() size = 40;
+  @Input() size = 36;
+  @Input() stype = 1;
+  @Input() class = '';
   // @Input() type = 1;
-  id = '';
+  id = Util.uid();
   HTMLProgress = '';
   type: string = 'Circular';
   min: number = 0;
@@ -48,42 +50,28 @@ export class ProgressbarComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.progress){
       this.progressChange = JSON.parse(JSON.stringify(this.progress));
-      // this.load(Math.floor(this.progress));
-      console.log(this.progress);
       setTimeout(() => {
         this.onLoad();
+        this.load(Math.floor(this.progress));
       },100);
-    }
-    
+    }    
   }
   ngOnInit(): void {
-    this.id = Util.uid();
     this.HTMLProgress = `<div style="font-size:12px;font-weight:600;color:${this.color};fill:${this.color};margin-top: 2px;"><span></span></div>`;
     this.fontSizeCustom = Math.floor(this.size / 3).toString() + 'px';
     this.sizeCustom = this.size.toString() + 'px';
-    this.sizespan = Math.floor(this.size / 1.25).toString() + 'px';
+    let sizespan = Math.floor(this.size / 1.25);
+    sizespan = sizespan%2 == 0 ? sizespan : sizespan + 1;
+    this.sizespan = sizespan.toString() + 'px';
   }
 
   onLoad(){
-    this.annotation.refresh();
+    console.log(this.annotation);
+    if(this.annotation){
+      this.annotation.refresh();
+    }
   };
-  // type1 = 'Circular';
-  // fontSizeCustom = '';
-  // sizeCustom = '';
-  // sizespan = '';
-  // HTMLProgress = '<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>'
-  // id = Util.uid();
-  // ngOnInit(): void {
-  //   this.fontSizeCustom = Math.floor(this.size / 3).toString() + 'px';
-  //   this.sizeCustom = this.size.toString() + 'px';
-  //   this.sizespan = Math.floor(this.size / 1.25).toString() + 'px';
-  // }
 
-  // ngOnChanges(changes: SimpleChanges) {
-  //   if (changes?.progress) {
-  //     this.load(Math.floor(this.progress));
-  //   }
-  // }
 
   // ngAfterViewInit() {
   //   this.load(Math.floor(this.progress));
@@ -93,9 +81,8 @@ export class ProgressbarComponent implements OnInit, OnChanges {
   }
 
   load(percent) {
-    let circularProgress = document.querySelector(
-      '.circular-progress-' + this.id
-    ) as HTMLElement;
+    let cla = '.circular-progress-' + this.id
+    let circularProgress = document.querySelector(cla) as HTMLElement;
     let progressValue = document.querySelector('.progress-value-' + this.id);
     if (circularProgress && progressValue) {
       let progressStartValue = 0;

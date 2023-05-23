@@ -36,21 +36,14 @@ import { PopupTypeTaskComponent } from './dynamic-process/popup-add-dynamic-proc
 import { StepTaskGroupComponent } from './dynamic-process/popup-add-dynamic-process/step-task/step-task-group/step-task-group.component';
 import { UserComponent } from './dynamic-process/popup-add-dynamic-process/step-task/user/user.component';
 import { FieldDetailComponent } from './instances/instance-detail/field-detail/field-detail.component';
-import { PopupAddStaskComponent } from './instances/instance-detail/stages-detail/popup-add-stask/popup-add-stask.component';
 import { PopupCustomFieldComponent } from './instances/instance-detail/field-detail/popup-custom-field/popup-custom-field.component';
-import { PopupAddGroupTaskComponent } from './instances/instance-detail/stages-detail/popup-add-group-task/popup-add-group-task.component';
 import { StagesDetailComponent } from './instances/instance-detail/stages-detail/stages-detail.component';
 import { PopupRolesDynamicComponent } from './dynamic-process/popup-roles-dynamic/popup-roles-dynamic.component';
 import { PopupPropertiesComponent } from './dynamic-process/popup-properties/popup-properties.component';
 import { PopupUserPropertiesComponent } from './dynamic-process/popup-properties/popup-user-properties/popup-user-properties.component';
 import { PopupParticipantsComponent } from './dynamic-process/popup-participants/popup-participants.component';
 import { LayoutInstancesComponent } from './layout-instances/layout-instances.component';
-import { ProgressComponent } from './instances/instance-detail/stages-detail/progress-layout/progress.component';
 import { CarouselStageComponent } from './instances/instance-detail/carousel-stage/carousel-stage.component';
-
-import { CodxTaskComponent } from './componnent-task/codx-task/codx-task.component';
-import { UpdateProgressComponent } from './componnent-task/update-progress/update-progress.component';
-import { TestComponent } from './componnent-task/test/test.component';
 import { InputNumberDurationComponent } from './dynamic-process/popup-add-dynamic-process/input-number-duration/input-number-duration.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
@@ -80,11 +73,6 @@ const routes: Routes = [
           import('projects/codx-dp/src/lib/codx-dp-approver.module').then(
             (m) => m.ApprovelModule
           ),
-        data: { noReuse: true },
-      },
-      {
-        path: 'test',
-        component: TestComponent,
         data: { noReuse: true },
       },
       {
@@ -135,20 +123,14 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupMoveStageComponent,
     PopupMoveReasonComponent,
     ViewJobComponent,
-    PopupAddStaskComponent,
     PopupCustomFieldComponent,
-    PopupAddGroupTaskComponent,
     PopupTypeTaskComponent,
     StepTaskGroupComponent,
     UserComponent,
     PopupPropertiesComponent,
     PopupUserPropertiesComponent,
     PopupParticipantsComponent,
-    ProgressComponent,
     CarouselStageComponent,
-    UpdateProgressComponent,
-    CodxTaskComponent,
-    TestComponent,
     InputNumberDurationComponent,
     ApprovalsComponent,
     PopupEditOwnerstepComponent,

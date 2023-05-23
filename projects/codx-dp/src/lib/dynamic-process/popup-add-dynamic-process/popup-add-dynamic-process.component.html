@@ -373,7 +373,7 @@
             <div
               *ngIf="!checkGroup"
               class="errorMessage text-danger ms-3"
-              data-field=""
+              data-field
             >
               {{ errorMessage }}
             </div>
@@ -745,7 +745,7 @@
         </ng-container>
       </div>
       <ng-template #popupViewApproverStep>
-        <div class="">
+        <div class>
           <div class="text-gray-600 fw-bold">
             {{ viewApproverStep.stepName }}
           </div>
@@ -1280,7 +1280,7 @@
                   [ngbPopover]="popperHandelSetting"
                   (mouseenter)="popoverSelectView(p, item)"
                   placement="bottom right top left"
-                  [popoverClass]=""
+                  [popoverClass]
                 >
                   <i class="icon-settings icon-18"></i>
                 </button>
@@ -1343,35 +1343,6 @@
                       [cdkDragStartDelay]="200"
                       [cdkDragData]="item1"
                     >
-                      <!-- <div class="fw-bold text-gray-700 fs-6 text-dark mt-2">
-                        {{ item1?.title }} ( {{ item1?.fieldName }} )
-                      </div>
-                      <div class="text-gray-400">{{ item1.note }}</div>
-                      <div class="d-flex">
-                        <div class="datatypes me-4">
-                          <codx-vll
-                            [name]="vllType"
-                            [value]="item1?.dataType"
-                            [showText]="true"
-                            [showBgColor]="true"
-                          >
-                          </codx-vll>
-                        </div>
-                        <codx-label
-                          class="text-danger"
-                          fiedName="IsRequired"
-                          formName="DPStepsFields"
-                          gridViewName="grvDPStepsFields"
-                          default="Bắt buộc *"
-                        ></codx-label>
-                        <codx-input
-                          type="switch"
-                          field="isRequired"
-                          [checked]="item1?.isRequired"
-                          (valueChange)="changeRequired($event, item1)"
-                        >
-                        </codx-input>
-                      </div> -->
                       <codx-input-custom-field
                         [customField]="item1"
                         [objectId]="item1.recID"
@@ -1714,8 +1685,9 @@
         <div
           class="py-2 px-3 border-bottom stage-header d-flex align-items-center justify-content-between"
         >
-          <span class="fw-bold fs-5 text-dark ">
-          <codx-label fiedName="step" default="Giai đoạn"></codx-label></span>
+          <span class="fw-bold fs-5 text-dark">
+            <codx-label fiedName="step" default="Giai đoạn"></codx-label
+          ></span>
           <button
             type="button"
             class="btn btn-sm btn-light-primary"
@@ -1756,15 +1728,29 @@
                       [ngClass]="itemStep?.icon"
                       [ngStyle]="{ color: itemStep?.iconColor }"
                     ></span>
-                    <span
-                      class="fw-bold line-clamp line-clamp-1"
-                      [ngStyle]="{ color: itemStep?.textColor }"
-                    >
-                      {{ itemStep?.stepName }}
-                    </span>
+
+                    <div class="d-flex align-items-center" style="width: 240px">
+                      <div></div>
+                      <div
+                        class="d-inline"
+                        [ngbPopover]="itemStep?.stepName"
+                        #pStep="ngbPopover"
+                        [openDelay]="500"
+                        (mouseenter)="checkOverflow($event, pStep)"
+                        (mouseleave)="pStep.close()"
+                        placement="left bottom right top"
+                      >
+                        <span
+                          class="fw-bold line-clamp line-clamp-1"
+                          [ngStyle]="{ color: itemStep?.textColor }"
+                        >
+                          {{ itemStep?.stepName }}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
-                  <div class="fs-7 text-gray-500" [ngStyle]="{ color: itemStep?.textColor }">
+                  <div class="fs-7" [ngStyle]="{ color: itemStep?.textColor }">
                     <codx-label
                       fiedName="durationTime"
                       [formModel]="dialog.formModel"
@@ -1784,7 +1770,7 @@
                       [default]="strHour"
                     ></codx-label>
                   </div>
-                  <div class="fs-7 text-gray-500" [ngStyle]="{ color: itemStep?.textColor }">
+                  <div class="fs-7" [ngStyle]="{ color: itemStep?.textColor }">
                     <codx-label
                       fiedName="task"
                       [formModel]="dialog.formModel"
@@ -1867,7 +1853,17 @@
         <div
           class="d-flex align-items-center justify-content-between pe-1 pb-2 mb-1 stage-header"
         >
-          <div class="fw-bold fs-4 text-dark w-100">{{ titleViewStepCrr }}</div>
+          <div
+            class="fw-bold fs-4 text-dark w-100 line-clamp line-clamp-1 mt-2"
+            [ngbPopover]="titleViewStepCrr"
+            #p="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="p.open()"
+            (mouseleave)="p.close()"
+            placement="bottom right top"
+          >
+            {{ titleViewStepCrr }}
+          </div>
           <div class="d-flex align-items-center pe-3">
             <div
               *ngIf="isSwitchReason && viewStepCrr === viewStepReasonSuccess"
@@ -2040,7 +2036,7 @@
                         <span class="text-gray-600 me-1">
                           <codx-label
                             fiedName="StepName"
-                            [formModel]=""
+                            [formModel]
                             [default]="'Thời hạn'"
                           >
                           </codx-label>
@@ -2054,7 +2050,7 @@
                         <codx-label
                           class="text-gray-600"
                           fiedName="StepName"
-                          [formModel]=""
+                          [formModel]
                           [default]="'Giờ'"
                         >
                         </codx-label>
@@ -2118,13 +2114,17 @@
                             <div class="steplist-hearder">
                               <div class="text-dark fw-bold fs-6">
                                 <span>{{ task?.taskName?.trim() }}</span>
-                                <span *ngIf="task?.requireCompleted" class="text-danger fw-bold">*</span>
+                                <span
+                                  *ngIf="task?.requireCompleted"
+                                  class="text-danger fw-bold"
+                                  >*</span
+                                >
                               </div>
                               <div class="d-flex align-items-center fs-7">
                                 <span class="text-gray-600 me-1">
                                   <codx-label
                                     fiedName="StepName"
-                                    [formModel]=""
+                                    [formModel]
                                     [default]="'Thời hạn'"
                                   >
                                   </codx-label>
@@ -2138,7 +2138,7 @@
                                 <codx-label
                                   class="text-gray-600"
                                   fiedName="StepName"
-                                  [formModel]=""
+                                  [formModel]
                                   [default]="'Giờ'"
                                 >
                                 </codx-label>
@@ -2230,7 +2230,7 @@
     <div style="flex-grow: 1">
       <ng-container [ngTemplateOutlet]="addStageBody"></ng-container>
     </div>
-    <div class="">
+    <div class>
       <ng-container [ngTemplateOutlet]="addStageFooter"></ng-container>
     </div>
   </div>
@@ -2267,7 +2267,7 @@
     <codx-input
       field="stepName"
       [formModel]="grvStep"
-      [Group]=""
+      [Group]
       type="text"
       [crrValue]="stepName"
       (valueChange)="changeNameStep($event)"
@@ -2358,7 +2358,7 @@
   <hr />
   <div class="form-group mt-5">
     <codx-label
-      fiedName="icon"
+      fiedName="demoStep"
       [formModel]="grvStep"
       default="Demo:"
       class="me-4"
@@ -2674,7 +2674,7 @@
             <div class="text-dark fw-bold">
               <codx-label
                 fiedName="ReasonControl"
-                [default]='getNameReasonControl(viewStepReasonFail)'
+                [default]="getNameReasonControl(viewStepReasonFail)"
               >
               </codx-label>
             </div>
@@ -2920,7 +2920,7 @@
             >
               <div class="me-2">
                 <codx-img
-                  class=""
+                  class
                   [width]="20"
                   [objectId]="perm.objectName"
                   objectType="AD_Users"
@@ -2987,7 +2987,7 @@
                   </codx-img>
                 </div>
                 <div class="text-dark fw-bold">{{ role.objectName }}</div>
-                <span class="mt-1 d-none" >
+                <span class="mt-1 d-none">
                   <a
                     (click)="deleteRoleInstep(step, role, true)"
                     style="cursor: pointer"
@@ -3011,10 +3011,10 @@
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label name="" default="Tùy chỉnh giai đoạn"></codx-label>
+          <codx-label name default="Tùy chỉnh giai đoạn"></codx-label>
         </div>
         <div class="text-gray-600">
-          <codx-label name="" default="Cách thức hoạt động của giai đoạn">
+          <codx-label name default="Cách thức hoạt động của giai đoạn">
           </codx-label>
         </div>
       </div>
@@ -3060,7 +3060,7 @@
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
             <codx-input
-              field=""
+              field
               type="valuelist"
               field="AssignControl"
               refValue="DP019"
@@ -3108,12 +3108,12 @@
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <!-- chưa có -->
-          <codx-label fiedName="" default="Thời hạn"></codx-label>
+          <codx-label fiedName default="Thời hạn"></codx-label>
         </div>
         <div class="text-gray-600">
           <!-- chưa có -->
           <codx-label
-            fiedName=""
+            fiedName
             default="Lên kế hoạch cho các nhiệm vụ trong giai đoạn"
           >
           </codx-label>
@@ -3144,7 +3144,7 @@
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
               <codx-label
-                fiedName=""
+                fiedName
                 default="Thời hạn hoàn tất nhiệm vụ trong giai đoạn"
               >
               </codx-label>
@@ -3158,10 +3158,17 @@
             </div>
           </div>
           <div class="col-6">
-            <codx-input-number-duration [dayMax]="dayStep" [hourMax]="hourStep" [dayOld]="step?.durationDay" [hourOld]="step?.durationHour" [textDay]="strDay" [textHour]="strHour"
-          [noteDay]="noteDay" [noteHour]="noteHour"
-
-            (eventInput)="valueChangeDuration($event)">
+            <codx-input-number-duration
+              [dayMax]="dayStep"
+              [hourMax]="hourStep"
+              [dayOld]="step?.durationDay"
+              [hourOld]="step?.durationHour"
+              [textDay]="strDay"
+              [textHour]="strHour"
+              [noteDay]="noteDay"
+              [noteHour]="noteHour"
+              (eventInput)="valueChangeDuration($event)"
+            >
             </codx-input-number-duration>
           </div>
         </div>
@@ -3367,7 +3374,7 @@
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
               <codx-label
-                fiedName=""
+                fiedName
                 default="Cho phép người phụ trách cập nhật tiến độ nhóm công
                 việc"
               >
@@ -3435,7 +3442,7 @@
         </div>
         <div class="text-gray-600">
           <codx-label
-            name=""
+            name
             default="Mô tả chi tiết cách hoàn thành giai đoạn cho người phụ
             trách"
           >
@@ -3466,7 +3473,7 @@
         <codx-input
           field="memo"
           type="textarea"
-          [placeholder]=""
+          [placeholder]
           [crrValue]="step.memo"
           (valueChange)="valueChangeMemo($event)"
         >

@@ -82,6 +82,7 @@
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
           (valueChange)="valueChange($event)"
+          [disabled]="data?.certificate!=null? true : false"
         >
         </codx-input>
       </div>

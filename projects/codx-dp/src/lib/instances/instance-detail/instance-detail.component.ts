@@ -32,6 +32,7 @@ import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.co
 import { InstancesComponent } from '../instances.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
+import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -339,6 +340,7 @@ export class InstanceDetailComponent implements OnInit {
         this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
         this.getStageByStep(this.listSteps);
+        this.handleProgressInstance();
       } else {
         this.listSteps = [];
         this.stepName = '';
@@ -377,7 +379,6 @@ export class InstanceDetailComponent implements OnInit {
   getStageByStep(listSteps) {
     this.isStart =
       listSteps?.length > 0 && listSteps[0]['startDate'] ? true : false;
-    var total = 0;
     for (var i = 0; i < listSteps.length; i++) {
       var stepNo = i;
       var data = listSteps[i];
@@ -395,13 +396,7 @@ export class InstanceDetailComponent implements OnInit {
           iconColor: data.iconColor,
         };
       }
-      total += data.progress;
       stepNo = i + 1;
-    }
-    if (listSteps != null && listSteps.length - 2 > 0) {
-      this.progress = (total / (listSteps.length - 2)).toFixed(1).toString();
-    } else {
-      this.progress = '0';
     }
     this.currentStep = listSteps.findIndex((x) => x.stepStatus === '1');
     this.checkCompletedInstance(this.instanceStatus);
@@ -538,6 +533,44 @@ export class InstanceDetailComponent implements OnInit {
     return this.ganttDs[idx]?.color;
   }
   clickDetailGanchart(recID) {
+    // let data = this.ganttDsClone?.find((item) => item.recID === recID);
+    // viewTask(data,type){
+    //   let listTaskConvert = this.currentStep?.tasks?.map((item) => {
+    //     return {
+    //       ...item,
+    //       name: item?.taskName,
+    //       type: item?.taskType,
+    //     };
+    //   });
+    //   let value = JSON.parse(JSON.stringify(data));
+    //   value['name'] = value['taskName'] || value['taskGroupName'];
+    //   value['type'] = value['taskType'] || type;
+    //   if (data) {
+    //     let frmModel: FormModel = {
+    //       entityName: 'DP_Instances_Steps_Tasks',
+    //       formName: 'DPInstancesStepsTasks',
+    //       gridViewName: 'grvDPInstancesStepsTasks',
+    //     };
+    //     let listData = {
+    //       value: value,
+    //       listValue: listTaskConvert,
+    //       step: this.currentStep,
+    //       isRoleAll: this.isRoleAll,
+    //       isUpdate: this.isUpdate,
+    //     };
+    //     let option = new SidebarModel();
+    //     option.Width = '550px';
+    //     option.zIndex = 1011;
+    //     option.FormModel = frmModel;
+    //     let dialog = this.callfc.openSide(CodxViewTaskComponent, listData, option);
+    //     dialog.closed.subscribe((dataOuput) => {
+    //       if(dataOuput?.event){
+    //         this.handelProgress(data,dataOuput?.event)
+    //       }
+    //     })
+  
+    //   }
+    // }
     let data = this.ganttDsClone?.find((item) => item.recID === recID);
     if (data) {
       let frmModel: FormModel = {
@@ -554,7 +587,7 @@ export class InstanceDetailComponent implements OnInit {
       option.Width = '550px';
       option.zIndex = 1011;
       option.FormModel = frmModel;
-      let dialog = this.callfc.openSide(ViewJobComponent, listData, option);
+      let dialog = this.callfc.openSide(CodxViewTaskComponent, listData, option);
       // this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
       //   value: data,
       //   listValue: this.ganttDsClone,
@@ -728,9 +761,6 @@ export class InstanceDetailComponent implements OnInit {
       );
     }
   }
-  changeDataStep(e){
-    this.isChangeData = e;
-  }
 
   startInstances() {
     this.clickStartInstances.emit(true);
@@ -744,5 +774,23 @@ export class InstanceDetailComponent implements OnInit {
     } else {
       return null;
     }
+  }
+
+  handleProgressInstance(event?){
+    let listStepConvert = this.listSteps?.filter(step => !step.isSuccessStep && !step.isFailStep);
+    if(listStepConvert?.length <= 0){
+      this.progress = '0';
+      return;
+    }
+    if(event){
+      let stepFind = listStepConvert?.find(step => step.recID === event.recID);
+      if(stepFind){
+        stepFind.progress = event?.progress || 0;
+      }
+    }
+    let sumProgress = listStepConvert.reduce((sum, step) => {
+      return sum +(Number(step.progress) || 0)
+    },0)
+    this.progress = (sumProgress / listStepConvert?.length).toFixed(1);
   }
 }

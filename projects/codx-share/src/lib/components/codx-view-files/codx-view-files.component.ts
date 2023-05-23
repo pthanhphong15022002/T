@@ -1,5 +1,5 @@
 import { I } from '@angular/cdk/keycodes';
-import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
@@ -65,6 +65,10 @@ export class CodxViewFilesComponent implements OnInit {
     this.getFileByObjectID(this.objectID);
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes.objectID.currentValue != changes.objectID.previousValue && !changes.firstChange)
+      this.getFileByObjectID(this.objectID);
+  }
   // get files by objectID
   getFileByObjectID(objectID:string){
     if(objectID)
@@ -78,7 +82,6 @@ export class CodxViewFilesComponent implements OnInit {
       [this.objectID])
       .subscribe((res:any[]) => {
         if(Array.isArray(res)){
-          debugger
           this.medias = res.reduce((count,ele) => (ele.referType == this.FILE_REFERTYPE.IMAGE || ele.referType == this.FILE_REFERTYPE.VIDEO) ? count = count + 1 : count, 0);
           this.documents = res.length - this.medias;
           // mode grid view file ở dạng khung chat

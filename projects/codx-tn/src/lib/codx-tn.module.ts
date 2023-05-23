@@ -14,6 +14,8 @@ import { CodxTnComponent } from './codx-tn.component';
 import { OrderComponent } from './order/order.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { BuyModuleComponent } from './order/buy-module/buy-module.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 
 const routes: Routes = [
   {
@@ -27,6 +29,14 @@ const routes: Routes = [
       {
         path: 'module',
         component: BuyModuleComponent,
+      },
+      {
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
       },
     ],
   },

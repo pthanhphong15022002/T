@@ -58,7 +58,10 @@ export class DealDetailComponent  implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+    if(changes.dataSelected){
+      this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+    }
+
   }
 
   listTab(funcID){
@@ -87,6 +90,7 @@ export class DealDetailComponent  implements OnInit {
     });
 
   }
+
 
   changeFooter(e){
     console.log(e);

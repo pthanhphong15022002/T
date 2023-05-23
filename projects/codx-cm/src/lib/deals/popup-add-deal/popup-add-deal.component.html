@@ -46,6 +46,18 @@
         [value]="deal?.processID"
         (valueChange)="cbxProcessChange($event,'processID')"
       ></ejs-combobox>
+
+      <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="ProcessID"
+      [refValue]="'CMProcesses'"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+
+
+
       </div>
     </div>
   </div>
@@ -260,7 +272,29 @@
       <div class="form-group">
         <codx-label
           fiedName="Memo"
-          default="Mô tả"
+          default="Nhu cầu"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="memo"
+          [crrValue]="deal?.memo"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <codx-label
+          fiedName="Memo"
+          default="Mô tả chi tiết"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >

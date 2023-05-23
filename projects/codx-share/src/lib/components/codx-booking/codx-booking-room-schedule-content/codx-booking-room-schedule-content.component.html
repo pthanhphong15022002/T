@@ -35,15 +35,18 @@
     </div>
     <div class="d-flex align-items-center">
       <i class="icon-access_time icon-16 me-1"></i>
-      <span class="">
-        {{ showHour(data?.startDate) }}
+      <span *ngIf="data?.startDate && data?.endDate">
+        <span class="">
+          {{ showHour(data?.startDate) }}
+        </span>
+        <span *ngIf="data?.startDate && data?.endDate" class="mx-1">{{
+          "-"
+        }}</span>
+        <span class="">
+          {{ showHour(data?.endDate) }}
+        </span>
       </span>
-      <span *ngIf="data?.startDate && data?.endDate" class="mx-1">{{
-        "-"
-      }}</span>
-      <span class="">
-        {{ showHour(data?.endDate) }}
-      </span>
+      
     </div>
     <!-- <span *ngIf="data?.onlineUrl" role="button" class="btn btn-outline-primary position-absolute end-0" style="top:-8px;" (click)="meetingNow(data?.onlineUrl)">
       <codx-label default="Họp ngay" name="lblMeeting" class=""></codx-label>
@@ -99,9 +102,10 @@
           (mouseleave)="p.close()"
           placement="right left"
         >
-          <codx-attachment-temp
-            [objectID]="data?.recID"
+          <codx-attachment-temp 
+            [objectID]="recID"
             [viewType]="2"
+            [referType]="'source'"
           ></codx-attachment-temp>
         </div>
       </div>
@@ -110,7 +114,6 @@
 
   <ng-template #popperAttachment>
     <span class="text-nowrap fs-7">
-      <codx-label name="lblAttachment" default="Tài liệu đính kèm"></codx-label>
       <codx-label name="lblAttachment" default="Tài liệu đính kèm"></codx-label>
     </span>
   </ng-template>

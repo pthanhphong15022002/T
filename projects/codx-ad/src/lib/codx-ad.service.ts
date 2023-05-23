@@ -487,4 +487,16 @@ export class CodxAdService {
     );
   }
   //#endregion
+
+  //#region HCS
+  loginHCS() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'LoginHCSAsync',
+      []
+    );
+  }
+  //#endregion
 }

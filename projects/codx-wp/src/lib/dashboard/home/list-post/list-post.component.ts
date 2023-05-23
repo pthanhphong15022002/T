@@ -56,10 +56,12 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   user: any;
   dataService: CRUDService = null;
+  function:any = null;
+  sysMoreFunc:any = null;
   formModel:FormModel = null;
   gridViewSetup: any = null;
   mssgPlaceHolder: string = '';
-  strEmtyData: string = '';
+  mssgEmtyData: string = '';
   CATEGORY = {
     POST: '1',
     COMMENTS: '2',
@@ -74,13 +76,10 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     private dt: ChangeDetectorRef,
     private callFC: CallFuncService,
     private codxService: CodxService,
-    private codxShareSV: CodxShareService,
     private route:ActivatedRoute
 
   ) 
   {
-    this.dataService = new CRUDService(this.injector);
-    this.formModel = new FormModel();
     this.user = this.authStore.get();
   }
   ngAfterViewInit() {}
@@ -95,6 +94,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
     // set dataService
+    this.dataService = new CRUDService(this.injector);
     this.dataService.service = "WP";
     this.dataService.assemblyName = "ERM.Business.WP";
     this.dataService.className = "CommentsBusiness";
@@ -107,64 +107,37 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.getSetting();
   }
 
-
-  /// test report
-  testApiReport(){
-    let jsParams = {
-      fromDate :null,
-      toDate : null,
-      owner :"",
-      taskGroupID :"",
-      projectID :"",
-      orgUnitID :"",
-      departmentID :"",
-      group1 : false,
-      groupType1 :"",
-      group2 : false,
-      groupType2 :"",
-      group3 : false,
-      groupType3 :"",
-
-    }
-    this.api.execSv(
-      "EP",
-      "ERM.Business.EP",
-      "BookingItemsBusiness",
-      "StationaryReportAsync",
-      [JSON.stringify(jsParams)])
-      .subscribe((res:any) => console.log("testApiReport: ", JSON.parse(res)));
-  }
- 
-
   //get thiết lập
   getSetting() {
     this.cache.message('WP011').subscribe((mssg: any) => {
-      if (mssg){
-        this.mssgPlaceHolder = Util.stringFormat(mssg.defaultName, this.user.userName);
-      }
+      if (mssg) this.mssgPlaceHolder = Util.stringFormat(mssg.defaultName, this.user.userName);
     });
     this.cache.message('WP035').subscribe((mssg: any) => {
-      if (mssg) {
-        this.strEmtyData = mssg.defaultName;
-      }
+      if (mssg) this.mssgEmtyData = mssg.defaultName;
     });
     // get function - formModel 
     this.cache.functionList('WP')
     .subscribe((func) => {
-      if (func) {
+      if (func) 
+      {
+        this.function = func;
+        this.formModel = new FormModel();
         this.formModel.funcID = func.functionID;
         this.formModel.formName = func.formName;
         this.formModel.gridViewName = func.gridViewName;
         this.formModel.entityName = func.entityName;
         // get gridviewSetup
-        this.cache
-          .gridViewSetup(func.formName, func.gridViewName)
-          .subscribe((grd: any) => {
-            if (grd) {
-              this.gridViewSetup = grd;
-            }
-          });
+        this.cache.gridViewSetup(func.formName, func.gridViewName)
+        .subscribe((grd: any) => {
+          this.gridViewSetup = grd;
+        });
       }
+    });
+
+    // get more funtion hệ thống
+    this.cache.moreFunction("CoDXSystem","")
+    .subscribe((mFuc:any) => {
+      this.sysMoreFunc = mFuc;
     });
   }
   // click moreFC
@@ -190,31 +163,13 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     }
   }
 
-  beforDelete(option: RequestOption, data: string) {
-    option.service = 'WP';
-    option.assemblyName = 'ERM.Business.WP';
-    option.className = 'CommentsBusiness';
-    option.methodName = 'DeletePostAsync';
-    option.data = data;
-    return true;
-  }
-  // xóa bài viết
-  deletePost(data: any) {
-    if (data?.recID) {
-      (this.listview.dataService as CRUDService)
-        .delete([data],true,(op: any) => this.beforDelete(op, data.recID),'','WP022','','WP023')
-        .subscribe();
-    }
-  }
-
   // tạo bài viết
   addPost() {
-    let data = new Post();
-    let headerText = 'Tạo bài viết'; 
+    let moreFuc = this.sysMoreFunc.find(x => x.functionID === "SYS01");
     var obj = {
-      data: data,
       status: 'create',
-      headerText: headerText,
+      headerText: `${moreFuc.defaultName} ${this.function.defaultName}`,
+      data: new Post()
     };
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
@@ -230,20 +185,37 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      if (res?.event?.recID) {
+      if(res?.event)
         (this.listview.dataService as CRUDService).add(res.event).subscribe();
-      }
     });
+  }
+
+
+  // xóa bài viết
+  deletePost(data: any) {
+    if (data?.recID) {
+      (this.listview.dataService as CRUDService)
+        .delete([data],true,(op: any) => this.beforDelete(op, data.recID),'','WP022','','WP023')
+        .subscribe();
+    }
+  }
+  
+  beforDelete(option: RequestOption, id: string) {
+    option.service = 'WP';
+    option.assemblyName = 'ERM.Business.WP';
+    option.className = 'CommentsBusiness';
+    option.methodName = 'DeletePostAsync';
+    option.data = id;
+    return true;
   }
 
   // edit bài viết
   editPost(post: any) {
-    let headerText = 'Chỉnh sửa bài viết';
-    let data = JSON.parse(JSON.stringify(post));
+    let moreFuc = this.sysMoreFunc.find(x => x.functionID === "SYS03");
     let obj = {
-      data: data,
       status: 'edit',
-      headerText: headerText,
+      headerText: `${moreFuc.defaultName} ${this.function.defaultName}`,
+      data: JSON.parse(JSON.stringify(post))
     };
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
@@ -259,25 +231,23 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      if (res?.event?.recID) {
-        (this.listview.dataService as CRUDService)
-        .update(res.event).subscribe();
-      }
+      if (res.event)
+        (this.listview.dataService as CRUDService).update(res.event).subscribe();
     });
   }
   
   // share bài viết
   sharePost(post: any) {
     if (post) {
+      let moreFuc = this.sysMoreFunc.find(x => x.functionID === "SYS01");
       let data = new WP_Comments();
       data.refID = post.recID;
       data.shares = JSON.parse(JSON.stringify(post));
-      let headerText = 'Chia sẻ bài viết';
       var obj = {
-        data: data,
         status: 'share',
+        headerText: `${moreFuc.defaultName} ${this.function.defaultName}`,
         refType:'WP_Comments',
-        headerText: headerText,
+        data: data
       };
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
@@ -293,9 +263,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         option
       );
       popup.closed.subscribe((res: any) => {
-        if (res?.event?.recID) {
+        if (res?.event) 
           (this.listview.dataService as CRUDService).add(res.event).subscribe();
-        }
       });
     }
   }
@@ -328,8 +297,12 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       [data.recID])
       .subscribe();
       // naviagte qua WP_News
-      let url = `wp2/news/WPT02/${data.category}/${data.recID}`;
-      this.codxService.navigate('',url);
+      this.cache.functionList("WP2")
+      .subscribe((func:any) => {
+        let url = `${func.url}/${data.category}/${data.recID}`;
+        this.codxService.navigate('',url);
+      });
+      
     }
   }
 

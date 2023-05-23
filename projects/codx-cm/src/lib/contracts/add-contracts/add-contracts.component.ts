@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { CM_Contacts, CM_Contracts } from '../../models/cm_model';
-import { AuthStore, CRUDService, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, RequestOption, Util } from 'codx-core';
+import { CM_Contacts, CM_Contracts, CM_Customers } from '../../models/cm_model';
+import { ApiHttpService, AuthStore, CRUDService, CacheService, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService, RequestOption, Util } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { Observable, map, tap } from 'rxjs';
+import { ContractsService } from '../service-contracts.service';
 
 @Component({
   selector: 'add-contracts',
@@ -21,13 +23,18 @@ export class AddContractsComponent implements OnInit{
   listClicked = [];
   account: any;
   type: 'view' | 'list';
+  customer: CM_Customers;
+  listQuotationsLine = [];
+
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private authStore: AuthStore,
     private cmService: CodxCmService,
+    private contractService: ContractsService,
     private changeDetector: ChangeDetectorRef,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -46,6 +53,27 @@ export class AddContractsComponent implements OnInit{
       { name: 'pay', textDefault: 'Phương thức và tiến độ thanh toán', icon: 'icon-tune', isActive: false },
       { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-tune', isActive: false },
     ]
+    // this.loadComboboxData('CMCustomers','CM').subscribe(data => console.log(data));
+    
+  }
+
+  loadComboboxData(comboboxName: string, service: string): Observable<any> {
+    const dataRequest = new DataRequest();
+    dataRequest.comboboxName = comboboxName;
+    dataRequest.pageLoading = false;
+    return this.api
+      .execSv(
+        service,
+        'ERM.Business.Core',
+        'DataBusiness',
+        'LoadDataCbxAsync',
+        [dataRequest]
+      )
+      .pipe(
+        tap((p) => console.log(p)),
+        map((p) => JSON.parse(p[0])),
+        tap((p) => console.log(p))
+      );
   }
 
   setData(data){
@@ -75,6 +103,54 @@ export class AddContractsComponent implements OnInit{
 
   valueChangeCombobox(event) {
     this.contracts[event?.field] = event?.data;
+    if(event?.field == 'dealID' && event?.data){
+      this.getCustomerByDealID(event?.data);
+    }
+    if(event?.field == 'customerID' && event?.data){
+      this.getCustomerByrecID(event?.data);
+    }
+    if(event?.field == 'quotationID' && event?.data){
+      this.getQuotationsLinesByTransID(event?.data);
+    }
+  }
+
+  getCustomerByDealID(dealID){
+    this.contractService.getCustomerBydealID(dealID).subscribe(res => {
+      if(res){
+        this.contracts.customerID = res?.recID;
+        this.contracts.taxCode = res?.taxCode;
+        this.contracts.address = res?.address;
+        this.contracts.phone = res?.phone;
+        this.contracts.faxNo = res?.faxNo;
+        this.contracts.representative = null;
+        this.contracts.jobTitle = null;
+        this.contracts.bankAccount = res?.bankAccount;
+        this.contracts.bankID = res?.bankID;
+      }
+    })
+  }
+  getCustomerByrecID(recID){
+    this.contractService.getCustomerByRecID(recID).subscribe(res => {
+      if(res){
+        this.contracts.customerID = res?.recID;
+        this.contracts.taxCode = res?.taxCode;
+        this.contracts.address = res?.address;
+        this.contracts.phone = res?.phone;
+        this.contracts.faxNo = res?.faxNo;
+        this.contracts.representative = null;
+        this.contracts.jobTitle = null;
+        this.contracts.bankAccount = res?.bankAccount;
+        this.contracts.bankID = res?.bankID;
+      }
+    })
+  }
+  getQuotationsLinesByTransID(recID){
+    this.contractService.getQuotationsLinesByTransID(recID).subscribe(res => {
+      if(res){
+        console.log(res);
+        this.listQuotationsLine = res;
+      }
+    })
   }
 
   valueChangeAlert(event) {

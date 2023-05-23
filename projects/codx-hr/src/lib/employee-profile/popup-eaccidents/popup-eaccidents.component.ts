@@ -116,19 +116,19 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
-    if (this.accidentObj.accidentDate) {
-      if (this.compareToDate(this.accidentObj.accidentDate)) {
-        let toDate =  new Date().toLocaleDateString('en-AU');;
-        let header = this.grvSetup['AccidentDate']?.headerText ??'AccidentDate';
-        this.notitfy.notifyCode(
-          'HR003',
-          0,
-          '"' + toDate + '"',
-          '"' + header + '"'
-        );
-        return;
-      }
-    }
+    // if (this.accidentObj.accidentDate) {
+    //   if (this.compareToDate(this.accidentObj.accidentDate)) {
+    //     let toDate =  new Date().toLocaleDateString('en-AU');;
+    //     let header = this.grvSetup['AccidentDate']?.headerText ??'AccidentDate';
+    //     this.notitfy.notifyCode(
+    //       'HR003',
+    //       0,
+    //       '"' + toDate + '"',
+    //       '"' + header + '"'
+    //     );
+    //     return;
+    //   }
+    // }
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrSevice.AddEmployeeAccidentInfo(this.accidentObj).subscribe((p) => {
         if (p != null) {

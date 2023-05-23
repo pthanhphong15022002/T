@@ -286,7 +286,14 @@
               <ng-container [ngTemplateOutlet]="product"> </ng-container>
             </ng-container>
             <ng-container *ngIf="name == 'Quotations'">
-              <ng-container>Báo giá </ng-container>
+              <codx-quotations
+              [funcID]="'CM0202'"
+              [customerID]="dataSelected.recID"
+              [predicates]="'CustomerID==@0'"      
+              [dataValues]="dataSelected.recID"    
+              [disableCusID]="true"        
+            >
+            </codx-quotations>
             </ng-container>
             <ng-container *ngIf="name == 'Contract'">
               <ng-container

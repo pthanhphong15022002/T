@@ -141,7 +141,7 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="dealID"
-              type="combobox"
+
               [crrValue]="contracts?.dealID"
               (valueChange)="valueChangeCombobox($event)"
             >
@@ -162,6 +162,7 @@
               [formModel]="dialog.formModel"
               field="quotationID"
               type="combobox"
+              [refValue]="'CMQuotations'"
               [crrValue]="contracts?.quotationID"
               (valueChange)="valueChangeCombobox($event)"
             >
@@ -315,7 +316,7 @@
 </ng-template>
 <!-- chi tiết mặt hàng -->
 <ng-template #itemsTemplate let-data="value">
-  <product></product>
+  <product [dataSource]="listQuotationsLine"></product>
 </ng-template>
 <!-- phương thức thanh toán -->
 <ng-template #payTemplate let-data="value">
@@ -608,9 +609,9 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="customerID"
-            
+              type="combobox"
               (valueChange)="valueChangeCombobox($event)"
-              [crrValue]="contracts?.companyName"
+              [crrValue]="contracts?.customerID"
             >
             </codx-input>
           </div>

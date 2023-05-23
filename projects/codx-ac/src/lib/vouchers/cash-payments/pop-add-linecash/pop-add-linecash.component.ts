@@ -16,6 +16,7 @@ import {
   DialogData,
   CodxInputComponent,
   CodxComboboxComponent,
+  CodxGridviewV2Component,
 } from 'codx-core';
 import { CashPaymentLine } from '../../../models/CashPaymentLine.model';
 import { CashPayment } from '../../../models/CashPayment.model';
@@ -32,6 +33,10 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cbxAccountID') cbxAccountID: CodxInputComponent;
   @ViewChild('cbxOffsetAcctID') cbxOffsetAcctID: CodxInputComponent;
+  @ViewChild('cbxdiM1') cbxdiM1: CodxInputComponent;
+  @ViewChild('cbxdiM2') cbxdiM2: CodxInputComponent;
+  @ViewChild('cbxdiM3') cbxdiM3: CodxInputComponent;
+  @ViewChild('cbxproject') cbxproject: CodxInputComponent;
   @ViewChild('cardbody') cardbody: ElementRef;
   dialog!: any;
   headerText: string;
@@ -45,6 +50,8 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   journal : any;
   baseCurr:any;
   showPlan:any = true;
+  showinvoice:any = true;
+  gridCashPaymentLine: CodxGridviewV2Component;
   objectcashpaymentline: Array<any> = [];
   constructor(
     private inject: Injector,
@@ -64,6 +71,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.type = dialogData.data?.type;
     this.lockFields = dialogData.data?.lockFields;
     this.journal = this.dialogData.data.journal;
+    this.gridCashPaymentLine = this.dialogData.data.grid;
     this.cache
       .gridViewSetup(dialog.formModel.formName, dialog.formModel.gridViewName)
       .subscribe((res) => {
@@ -118,6 +126,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res && res.line)
             this.cashpaymentline = res.line;
+            this.form.formGroup.patchValue(res.line);
         });
     }
 
@@ -146,44 +155,98 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   loadInit() {
     this.form.formGroup.patchValue(this.cashpaymentline);
     this.acService.setPopupSize(this.dialog,'auto','40%');
-    if (this.journal?.drAcctControl === '1') {
-      (
-        this.cbxAccountID.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(
-        ['AccountID=@0'],
-        [this.journal?.drAcctID]
-      );
+    switch(this.journal?.drAcctControl){
+      case '1':
+        (this.cbxAccountID.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+          ['AccountID=@0'],
+          [this.journal?.drAcctID]
+        );
+        break;
+      case '2':
+        (this.cbxAccountID.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+          ['@0.Contains(AccountID)'],
+          [`[${this.journal?.drAcctID}]`]
+        );
+        break;
     }
-    if (this.journal?.drAcctControl === '2') {
-      (
-        this.cbxAccountID.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(
-        ['@0.Contains(AccountID)'],
-        [`[${this.journal?.drAcctID}]`]
-      );
+    switch(this.journal?.crAcctControl){
+      case '1':
+        (this.cbxOffsetAcctID.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+          ['AccountID=@0'],
+          [this.journal?.crAcctID]
+        );
+        break;
+      case '2':
+        (this.cbxOffsetAcctID.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+          ['@0.Contains(AccountID)'],
+          [`[${this.journal?.crAcctID}]`]
+        );
+        break;
     }
-    if (this.journal?.crAcctControl === '1') {
-      (
-        this.cbxOffsetAcctID.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(
-        ['AccountID=@0'],
-        [this.journal?.crAcctID]
-      );
+    switch(this.journal?.diM1Control){
+      case '1':
+        (this.cbxdiM1.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+          ['DepartmentID=@0'],
+          [this.journal?.diM1]
+        );
+        break;
+      case '2':
+        (this.cbxdiM1.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+          ['@0.Contains(DepartmentID)'],
+          [`[${this.journal?.diM1}]`]
+        );
+        break;
     }
-    if (this.journal?.crAcctControl === '2') {
-      (
-        this.cbxOffsetAcctID.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(
-        ['@0.Contains(AccountID)'],
-        [`[${this.journal?.crAcctID}]`]
-      );
+    switch(this.journal?.diM3Control){
+      case '1':
+        (this.cbxdiM3.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+          ['CostItemID=@0'],
+          [this.journal?.diM3]
+        );
+        break;
+      case '2':
+        (this.cbxdiM3.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+          ['@0.Contains(CostItemID)'],
+          [`[${this.journal?.diM3}]`]
+        );
+        break;
+    }
+    switch(this.journal?.diM2Control){
+      case '1':
+        (this.cbxdiM2.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+          ['CostCenterID=@0'],
+          [this.journal?.diM2]
+        );
+        break;
+      case '2':
+        (this.cbxdiM2.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+          ['@0.Contains(CostCenterID)'],
+          [`[${this.journal?.diM2}]`]
+        );
+        break;
+    }
+    switch(this.journal?.projectControl){
+      case '1':
+        (this.cbxproject.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+          ['ProjectID=@0'],
+          [this.journal?.projectID]
+        );
+        break;
+      case '2':
+        (this.cbxproject.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+          ['@0.Contains(ProjectID)'],
+          [`[${this.journal?.projectID}]`]
+        );
+        break;
     }
     this.dt.detectChanges();
 
   }
+
   close() {
     this.dialog.close();
   }
+
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.cashpaymentline);
@@ -207,6 +270,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
       }
     }
   }
+
   clearCashpayment() {
     let idx = this.objectcashpaymentline.length;
     let classname,data;
@@ -233,6 +297,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
         }
       });
   }
+
   loadControl(value) {
     let index = this.lockFields.findIndex((x) => x == value);
     if (index == -1) {
@@ -241,6 +306,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
       return false;
     }
   }
+
   loadCompanySetting(){
     this.api
     .exec<any>('AC', 'CommonBusiness', 'GetCompanySettings')
@@ -266,6 +332,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
         .subscribe((res) => {
           if (res) {
             this.objectcashpaymentline.push({ ...this.cashpaymentline });
+            this.gridCashPaymentLine.refresh();
             this.clearCashpayment();
           }
         });

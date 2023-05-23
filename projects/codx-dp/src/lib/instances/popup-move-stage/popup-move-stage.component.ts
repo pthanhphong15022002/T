@@ -36,7 +36,7 @@ export class PopupMoveStageComponent implements OnInit {
   dialog: any;
   formModel: FormModel;
   listStep: DP_Instances_Steps[];
-  listStepsCbx: DP_Instances_Steps[];
+  listStepsCbx: DP_Instances_Steps[] = [];
 
   headerText: string = '';
   stepName: string = '';
@@ -59,7 +59,7 @@ export class PopupMoveStageComponent implements OnInit {
   //instanceStep = new DP_Instances_Steps;
   lstParticipants = [];
   listCustomFile = [];
-  readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
+  readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };5
   stepCurrent: any;
   lstRoles = [];
   assignControl: any;
@@ -88,19 +88,25 @@ export class PopupMoveStageComponent implements OnInit {
   tmpGroups: any[] = [];
   isMoveNext: boolean = false;
   isDurationControl: boolean = false;
-  durationControl: boolean = false;
   readonly oneHundredNumber: number = 100;
   readonly viewTask: string = 'Task';
   readonly viewTaskGroup: string = 'TaskGroup';
   fieldsNull = [];
   dateMessage: any;
+  applyFor:any;
+
+  // CM
+  dataCM:any;
+  recID:any;
+  processID:any;
+  stepID:any;
+  isLoad: boolean = false;
   constructor(
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
     private cache: CacheService,
-    private dpSv: CodxDpService,
     private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -108,28 +114,35 @@ export class PopupMoveStageComponent implements OnInit {
     this.user = this.authStore.get();
     this.dialog = dialog;
     this.formModel = dt?.data.formModel;
-    this.stepName = dt?.data?.stepName;
     this.isUseReason = dt?.data?.stepReason;
     this.headerText = dt?.data?.headerTitle; //  gán sau button add
-    this.durationControl = dt?.data?.isDurationControl;
+    this.stepName =  dt?.data?.stepName;
+    this.applyFor = dt?.data?.applyFor;
     this.viewClick = this.viewKanban;
-    this.listStepProccess = dt?.data?.listStepProccess;
-    this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
 
-    this.lstParticipants = dt?.data.lstParticipants;
+    if(this.applyFor == '0'){
+      this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
+      this.listStepProccess = dt?.data?.listStepProccess;
+      this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.listStepCbx));
+      this.isDurationControl = dt?.data?.isDurationControl;
+      this.getIdReason();
+    }
+    else if(this.applyFor == '1' || this.applyFor == '2'  ){
+      this.dataCM = JSON.parse(JSON.stringify(dt?.data?.dataCM));
+      this.executeApiCalls();
+      this.isLoad = true;
+    }
+    this.stepID = this.dataCM ? this.dataCM?.stepID:this.instance?.stepID;
+    this.processID = this.dataCM ? this.dataCM?.processID: this.instance?.processID;
+    this.recID = this.dataCM ? this.dataCM?.refID: this.instance?.recID;
+    this.stepIdClick = this.dataCM ? this.dataCM?.nextStep : JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
 
-    this.stepIdOld = this.instance.stepID;
-
-    this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.listStepCbx));
-    this.IdFail =
-      this.listStepsCbx[this.listStepsCbx.findIndex((x) => x.isFailStep)]
-        ?.stepID ?? '';
-    this.IdSuccess =
-      this.listStepsCbx[this.listStepsCbx.findIndex((x) => x.isSuccessStep)]
-        ?.stepID ?? '';
-    this.stepIdClick = JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
-    this.getStepByStepIDAndInID(this.instance?.recID, this.stepIdOld);
-    this.dpSv.getFirstIntance(this.instance?.processID).subscribe((res) => {
+    if(!this.isLoad) {
+      this.lstParticipants = dt?.data.lstParticipants;
+    }
+    this.stepIdOld = this.stepID;
+    this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
+    this.codxDpService.getFirstIntance(this.processID).subscribe((res) => {
       if (res) {
         this.firstInstance = res;
       }
@@ -142,16 +155,73 @@ export class PopupMoveStageComponent implements OnInit {
     this.getGrvInstanceStep();
   }
 
+
   ngOnInit(): void {
-    this.removeReasonInSteps(this.listStepsCbx, this.isUseReason);
-    !this.stepIdClick &&
-      this.stepIdClick != this.stepIdOld &&
-      this.autoClickedSteps(this.listStepsCbx, this.stepName);
+    if(!this.isLoad){
+      this.removeReasonInSteps(this.listStepsCbx, this.isUseReason);
+      !this.stepIdClick && this.stepIdClick != this.stepIdOld &&  this.autoClickedSteps(this.listStepsCbx, this.stepName);
+      this.eventAutoClick();
+    }
+  }
+
+
+  eventAutoClick(){
+   //
     this.isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
   }
 
+  async executeApiCalls(){
+    try {
+      await this.getListMoveStage(this.dataCM);
+    } catch (error) {
+
+    }
+  }
+
+  async getListMoveStage(data){
+    var datas = [data?.refID, data?.processID, data?.stepID, '1'];
+    this.codxDpService.getInstanceStepsMoveStage(datas).subscribe((res)=> {
+      if (res && res.length > 0) {
+        this.isDurationControl = res[0];
+        this.listStepsCbx = res[1];
+        this.getListParticipants(res[2]);
+        this.getIdReason();
+        this.eventAutoClick();
+        this.removeReasonInStepsAuto(res[3],res[4],res[1]);
+        this.changeDetectorRef.detectChanges();
+      }
+
+    })
+  }
+
+  removeReasonInStepsAuto(isUseSuccess,isUseFail,listStepCbx){
+    !isUseFail && this.removeItemFail(listStepCbx);
+    !isUseSuccess && this.removeItemSuccess(listStepCbx);
+  }
+  getIdReason(){
+    this.IdFail = this.listStepsCbx[this.listStepsCbx?.findIndex((x) => x.isFailStep)] ?.stepID ?? '';
+    this.IdSuccess = this.listStepsCbx[this.listStepsCbx?.findIndex((x) => x.isSuccessStep)]?.stepID ?? '';
+  }
+
+  async getListParticipants(permissions){
+
+    if (
+      permissions != null &&
+      permissions.length > 0
+    ) {
+      this.lstParticipants = permissions.filter(
+        (x) => x.roleType === 'P'
+      );
+      if (this.lstParticipants != null && this.lstParticipants.length > 0) {
+        this.lstParticipants = await this.codxDpService.getListUserByOrg(
+          this.lstParticipants
+        );
+      }
+    }
+  }
+
   getNameAndPosition(id) {
-    this.dpSv.getPositionByID(id).subscribe((res) => {
+    this.codxDpService.getPositionByID(id).subscribe((res) => {
       if (res) {
         this.userName = res.userName;
         this.positionName = res.positionName;
@@ -160,7 +230,7 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   getStepByStepIDAndInID(insID, stepID) {
-    this.dpSv.getStepByStepIDAndInID(insID, stepID).subscribe((res) => {
+    this.codxDpService.getStepByStepIDAndInID(insID, stepID).subscribe((res) => {
       if (res) {
         if (this.isStopData) {
           var data = JSON.parse(JSON.stringify(res));
@@ -288,7 +358,7 @@ export class PopupMoveStageComponent implements OnInit {
   updateDataInstance(data: any) {
     this.instancesStepOld = data;
     this.fieldsNull = this.instancesStepOld.fields.filter((x) => !x.dataValue);
-    this.instancesStepOld.actualEnd =  this.checkDuration(this.durationControl,this.instancesStepOld.actualEnd);
+    this.instancesStepOld.actualEnd =  this.checkDuration(this.isDurationControl,this.instancesStepOld?.actualEnd);
     this.listTaskDone = this.instancesStepOld.tasks.filter(
       (x) => x.progress < this.oneHundredNumber
     );
@@ -313,7 +383,6 @@ export class PopupMoveStageComponent implements OnInit {
         return;
       }
       if(this.compareDates(this.instancesStepOld.actualStart,this.instancesStepOld.actualEnd)) {
-       // var dateMessage = new Date(this.instancesStepOld.actualStart).toLocaleDateString('en-AU');
         this.notiService.notifyCode(
           'DP032',
           0,
@@ -392,7 +461,7 @@ export class PopupMoveStageComponent implements OnInit {
       var listTmpGroup = this.convertTmpDataInTask(this.listTaskGroupDone, 'G');
     }
     var data = [
-      this.instance.recID,
+      this.recID,
       this.stepIdOld,
       this.instancesStepOld,
       listTmpTask,
@@ -474,7 +543,7 @@ export class PopupMoveStageComponent implements OnInit {
   cbxChange($event) {
     if ($event && this.stepIdClick !== $event) {
       this.stepIdClick = $event;
-      this.getStepByStepIDAndInID(this.instance.recID, this.stepIdClick);
+      this.getStepByStepIDAndInID(this.recID, this.stepIdClick);
       this.isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
       this.changeDetectorRef.detectChanges();
     }
@@ -495,15 +564,6 @@ export class PopupMoveStageComponent implements OnInit {
     let idx = list.findIndex((x) => x.isFailStep);
     if (idx >= 0) list.splice(idx, 1);
   }
-  getIconTask(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
-    return color?.icon;
-  }
-  getColor(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
-    return { 'background-color': color?.color };
-  }
-
   removeReasonInSteps(listStepCbx, stepReason) {
     !stepReason.isUseFail && this.removeItemFail(listStepCbx);
     !stepReason.isUseSuccess && this.removeItemSuccess(listStepCbx);
