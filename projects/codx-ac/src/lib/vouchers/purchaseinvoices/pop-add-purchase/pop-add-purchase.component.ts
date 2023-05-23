@@ -33,6 +33,7 @@ import { PurchaseInvoicesLines } from '../../../models/PurchaseInvoicesLines.mod
 import { VATInvoices } from '../../../models/VATInvoices.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
+import { map } from 'rxjs';
 declare var window: any;
 @Component({
   selector: 'lib-pop-add-purchase',
@@ -197,12 +198,13 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     options.predicates = 'JournalNo=@0';
     options.dataValues = this.purchaseinvoices.journalNo;
     options.pageLoading = false;
-    this.acService.loadDataAsync('AC', options).subscribe((res) => {
-      this.journal = res[0]?.dataValue
-        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
-        : res[0];
-      this.modegrid = this.journal.inputMode;
-      this.VATType = this.journal.vatType;
+    this.api
+      .execSv<any>('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(map((r) => r[0]))
+      .subscribe((res) => {
+        this.journal = res[0];
+        this.modegrid = this.journal.inputMode;
+        this.VATType = this.journal.vatType;
       if (this.VATType == '1' || this.VATType == '2') {
         this.cache
           .gridViewSetup('VATInvoices', 'grvVATInvoices')
@@ -260,13 +262,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             }
           });
       }
-    });
+      });
   }
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.purchaseinvoices);
-    this.pageCount = '(' + this.purchaseInvoicesLines.length + ')';
     this.loadTotal();
   }
   //#endregion

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, DialogModel, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, DialogModel, FormModel, NotificationsService, DataRequest } from 'codx-core';
 import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
-import { Observable, Subject, firstValueFrom } from 'rxjs';
+import { Observable, Subject, firstValueFrom, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,7 @@ export class CodxCmService {
   titleAction: any;
   constructor(
     private api: ApiHttpService,
-    private callfc: CallFuncService,  
+    private callfc: CallFuncService,
     private cache: CacheService,
     private notification: NotificationsService
   ) {}
@@ -315,6 +315,16 @@ export class CodxCmService {
     return countValidate;
   }
 
+  loadDataAsync(service: string, options: DataRequest): Observable<any[]> {
+    return this.api
+      .execSv(service, 'ERM.Business.Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(
+        tap((r) => console.log(r)),
+        map((r) => r[0]),
+        tap((r) => console.log(r))
+      );
+  }
+
   getAutonumber(functionID, entityName, fieldName): Observable<any> {
     var subject = new Subject<any>();
     this.api
@@ -562,6 +572,15 @@ export class CodxCmService {
       data
     );
   }
+  moveStageDeal(data){
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'MoveStageDealAsync',
+      data
+    );
+  }
 
   //#endregion -- Bao
 
@@ -716,7 +735,7 @@ export class CodxCmService {
           let option = new DialogModel();
           option.zIndex = 1001;
           let formModel = new FormModel() ;
-          
+
           formModel.entityName = 'DP_Instances';
           formModel.formName = 'DPInstances';
           formModel.gridViewName = 'grvDPInstances';

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, Optional, SimpleChanges, ViewChild } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { ApiHttpService, CacheService, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
@@ -9,11 +9,14 @@ import { CM_Quotations } from '../../../models/cm_model';
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css']
 })
-export class ProductComponent implements OnInit{
+export class ProductComponent implements OnInit,OnChanges{
   @ViewChild('gridQuationsLines') gridQuationsLines: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
+
+  @Input() dataSource: any;
+
   dialog;
   quotations: CM_Quotations;
   fmQuotationLines: FormModel = {
@@ -32,8 +35,6 @@ export class ProductComponent implements OnInit{
   product = [];
   listQuotationLines: Array<any> = [];
 
-  dataSource = [];
-
   constructor(
     private codxCM: CodxCmService,
     private cache: CacheService,
@@ -44,16 +45,21 @@ export class ProductComponent implements OnInit{
 
   }
   ngOnInit(): void {
-    console.log('thuan');
-
-    this.codxCM
-    .getQuotationsLinesByTransID('f2c04250-f56d-11ed-a428-c025a5a4cd5d')
-    .subscribe((res) => {
-      if (res) {
-        this.dataSource = res;
-      }
-    });
+    // console.log('thuan');
+    // this.codxCM
+    // .getQuotationsLinesByTransID('f2c04250-f56d-11ed-a428-c025a5a4cd5d')
+    // .subscribe((res) => {
+    //   if (res) {
+    //     this.dataSource = res;
+    //   }
+    // });
     
+  }
+
+  async ngOnChanges(changes: SimpleChanges){
+    if(changes.dataSource && this.dataSource){
+
+    }
   }
   // quotationsLineChanged(e) {
   //   if (!e.field || !e.data) return;
