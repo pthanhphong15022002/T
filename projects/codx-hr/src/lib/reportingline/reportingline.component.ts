@@ -153,11 +153,17 @@ export class ReportinglineComponent extends UIComponent {
             option,
           );
           form.closed.subscribe((res: any) => {
-            if (res?.event?.save) {
-              let node = res.event.save.data;
+            // if (res?.event?.save) {
+            //   let node = res.event.save.data;
+            //   this.codxTreeView.setNodeTree(node);
+            // }
+            if (res?.event) {
+              let node = res.event;
               this.codxTreeView.setNodeTree(node);
+              this.detectorRef.detectChanges();
             }
           });
+          this.detectorRef.detectChanges();
         }
       });
     }

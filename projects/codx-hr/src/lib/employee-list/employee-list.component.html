@@ -65,20 +65,23 @@
   <div (dblclick)="clickViewEmpInfo(data)">
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-1">
-        <span class="text-gray-700" [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async">
+        <span class="text-gray-700" [ngbTooltip]="data.email? grvSetup?.Email.headerText : null"
+          [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async">
         </span>
       </div>
       <div class="d-flex align-items-center mb-1">
-        <span class="text-gray-700" [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async">
+        <span class="text-gray-700" [ngbTooltip]="data.phone? grvSetup?.Phone.headerText : null"
+          [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async">
         </span>
       </div>
       <div class="d-flex align-items-center mb-1">
-        <span class="text-gray-700" [innerHTML]="data.mobile | formatvalue : view.formModel : 'mobile' | async">
+        <span class="text-gray-700" [ngbTooltip]="data.mobile? grvSetup?.Mobile.headerText : null"
+          [innerHTML]="data.mobile | formatvalue : view.formModel : 'mobile' | async">
         </span>
       </div>
       <!-- <div class="d-flex align-items-center">
         <span class="icon-place icon-16 text-dark me-2"></span>
-        <span class="text-gray-700" [innerHTML]="data.address
+        <span class="text-gray-700" [ngbTooltip]="data.address? grvSetup?.Address.headerText : null" [innerHTML]="data.address
         | formatvalue : view.formModel : 'address'
         | async">
         </span>
@@ -95,7 +98,7 @@
           <codx-label [setRequire]="false" [fiedName]="'Birthday'" [formModel]="view.formModel"
             default="Ngày sinh:"></codx-label>
         </span>
-        <span class="text-gray-700" [innerHTML]="data.birthday
+        <span class="text-gray-700" [innerHTML]="data.birthday 
         | formatvalue : view.formModel : 'birthday'
         | async">
         </span>
