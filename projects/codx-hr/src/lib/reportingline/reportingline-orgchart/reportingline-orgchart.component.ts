@@ -44,7 +44,7 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
 
   datasetting: any = null;
   data:any = null;
-
+  onDoneLoading : boolean = false;
   constructor(
     private api:ApiHttpService,
     private notifySV:NotificationsService,
@@ -63,6 +63,7 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.positionID.currentValue != changes.positionID.previousValue){
+      this.onDoneLoading = false;
       this.positionID = changes.positionID.currentValue;
       this.getDataPositionByID(this.positionID);
       this.changeDetectorRef.detectChanges();
@@ -72,7 +73,7 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
   public connDefaults(connector: ConnectorModel,diagram: Diagram): ConnectorModel {
     connector.targetDecorator.shape = 'None';
     connector.type = 'Orthogonal';
-    connector.constraints = 0;
+    // connector.constraints = 0;
     connector.cornerRadius = 5;
     connector.style!.strokeColor = '#6d6d6d';
     return connector;
@@ -131,6 +132,7 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
           this.data = res;
           this.setDataOrg(this.data);
         }
+        this.onDoneLoading = true;
       });
     }
     

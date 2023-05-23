@@ -229,7 +229,7 @@
             </th>
           </tr>
         </thead>
-        <tbody *ngFor="let item of purchaseInvoicesLines">
+        <tbody *ngFor="let item of purchaseInvoicesLines | slice : (page - 1) * pageSize : page * pageSize">
           <tr>
             <td>
               <div class="d-flex align-items-center me-5 mb-1">

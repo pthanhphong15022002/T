@@ -87,9 +87,7 @@ export class EmployeeBenefitComponent extends UIComponent {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
 
-    this.cache
-    .gridViewSetup('EBenefits', 'grvEBenefits')
-    .subscribe((res) => {
+    this.cache.gridViewSetup('EBenefits', 'grvEBenefits').subscribe((res) => {
       if (res) {
         this.grvSetup = res;
       }
@@ -128,6 +126,20 @@ export class EmployeeBenefitComponent extends UIComponent {
     this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) => {
       this.eBenefitHeader = res;
     });
+  }
+
+  //Set form group data when open Modal dialog
+  ngAfterViewChecked() {
+    if (!this.formGroup?.value) {
+      this.hrService
+        .getFormGroup(
+          this.view?.formModel?.formName,
+          this.view?.formModel?.gridViewName
+        )
+        .then((res) => {
+          this.formGroup = res;
+        });
+    }
   }
 
   //Call api delete
@@ -195,63 +207,63 @@ export class EmployeeBenefitComponent extends UIComponent {
     });
   }
 
-    //More function send approved
-    release() {
-      this.hrService
-        .getCategoryByEntityName(this.view.formModel.entityName)
-        .subscribe((res) => {
-          if (res) {
-            this.processID = res;
-            this.hrService
-              .release(
-                this.itemDetail.recID,
-                this.processID.processID,
-                this.view.formModel.entityName,
-                this.view.formModel.funcID,
-                '<div> Phụ cấp - ' + this.itemDetail.decisionNo + '</div>'
-              )
-              .subscribe((result) => {
-                if (result?.msgCodeError == null && result?.rowCount) {
-                  this.notify.notifyCode('ES007');
-                  this.itemDetail.status = '3';
-                  this.itemDetail.approveStatus = '3';
-                  this.hrService
-                    .EditEmployeeBenefitMoreFunc(this.itemDetail)
-                    .subscribe((res) => {
-                      console.log('Result after send edit' + res)
-                      if (res) {
-                        this.view?.dataService
-                          ?.update(this.itemDetail)
-                          .subscribe();
-                      }
-                    });
-                } else this.notify.notifyCode(result?.msgCodeError);
-              });
-          }
-        });
-    }
-  
-    beforeRelease() {
-      let category = '4';
-      let formName = 'HRParameters';
-      this.hrService.getSettingValue(formName, category).subscribe((res) => {
+  //More function send approved
+  release() {
+    this.hrService
+      .getCategoryByEntityName(this.view.formModel.entityName)
+      .subscribe((res) => {
         if (res) {
-          let parsedJSON = JSON.parse(res?.dataValue);
-          let index = parsedJSON.findIndex(
-            (p) => p.Category == this.view.formModel.entityName
-          );
-          if (index > -1) {
-            let eJobSalaryObj = parsedJSON[index];
-            if (eJobSalaryObj['ApprovalRule'] == '1') {
-              this.release();
-            } else {
-            }
-          }
+          this.processID = res;
+          this.hrService
+            .release(
+              this.itemDetail.recID,
+              this.processID.processID,
+              this.view.formModel.entityName,
+              this.view.formModel.funcID,
+              '<div> Phụ cấp - ' + this.itemDetail.decisionNo + '</div>'
+            )
+            .subscribe((result) => {
+              if (result?.msgCodeError == null && result?.rowCount) {
+                this.notify.notifyCode('ES007');
+                this.itemDetail.status = '3';
+                this.itemDetail.approveStatus = '3';
+                this.hrService
+                  .EditEmployeeBenefitMoreFunc(this.itemDetail)
+                  .subscribe((res) => {
+                    console.log('Result after send edit' + res);
+                    if (res) {
+                      this.view?.dataService
+                        ?.update(this.itemDetail)
+                        .subscribe();
+                    }
+                  });
+              } else this.notify.notifyCode(result?.msgCodeError);
+            });
         }
       });
-    }
-  
-    //#endregion
+  }
+
+  beforeRelease() {
+    let category = '4';
+    let formName = 'HRParameters';
+    this.hrService.getSettingValue(formName, category).subscribe((res) => {
+      if (res) {
+        let parsedJSON = JSON.parse(res?.dataValue);
+        let index = parsedJSON.findIndex(
+          (p) => p.Category == this.view.formModel.entityName
+        );
+        if (index > -1) {
+          let eJobSalaryObj = parsedJSON[index];
+          if (eJobSalaryObj['ApprovalRule'] == '1') {
+            this.release();
+          } else {
+          }
+        }
+      }
+    });
+  }
+
+  //#endregion
 
   clickMF(event, data): void {
     this.itemDetail = data;
@@ -313,20 +325,6 @@ export class EmployeeBenefitComponent extends UIComponent {
 
   changeDataMF(event, data): void {
     this.hrService.handleShowHideMF(event, data, this.view);
-  }
-
-  //Set form group data when open Modal dialog
-  ngAfterViewChecked() {
-    if (!this.formGroup?.value) {
-      this.hrService
-        .getFormGroup(
-          this.view?.formModel?.formName,
-          this.view?.formModel?.gridViewName
-        )
-        .then((res) => {
-          this.formGroup = res;
-        });
-    }
   }
 
   //Open, push data to modal add, update

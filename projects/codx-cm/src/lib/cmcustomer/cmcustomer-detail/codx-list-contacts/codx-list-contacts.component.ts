@@ -39,6 +39,7 @@ export class CodxListContactsComponent implements OnInit {
   @Output() lstContactEmit = new EventEmitter<any>();
   @Output() lstContactDeleteEmit = new EventEmitter<any>();
   @Output() objectConvert = new EventEmitter<any>();
+  @Output() contactEvent = new EventEmitter<any>();
 
   @Input() listContacts = [];
   formModelContact: FormModel;
@@ -67,23 +68,18 @@ export class CodxListContactsComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    this.loaded = false;
-    if (this.listContacts != null && this.listContacts.length > 0) {
-      this.listContacts = this.cmSv.bringDefaultContactToFront(
-        this.listContacts
-      );
-      if (this.listContacts != null && this.listContacts.length > 0) {
-        this.changeContacts(this.listContacts[0]);
+    if (changes['listContacts']) {
+      if (
+        changes['listContacts'].currentValue != null &&
+        changes['listContacts']?.currentValue?.length > 0
+      ) {
+        this.loadListContact(changes['listContacts'].currentValue);
       }
       this.loaded = true;
-    } else {
-      if (changes['objectID']) {
-        if (changes['objectID'].currentValue != null) {
-          this.getListContacts();
-        } else {
-          this.loaded = true;
-        }
-      }else{
+    } else if (changes['objectID']) {
+      if (changes['objectID'].currentValue != null) {
+        this.getListContacts();
+      } else {
         this.loaded = true;
       }
     }
@@ -100,7 +96,16 @@ export class CodxListContactsComponent implements OnInit {
     });
   }
 
+  loadListContact(lstContact) {
+    this.listContacts = this.cmSv.bringDefaultContactToFront(lstContact);
+    if (this.listContacts != null && this.listContacts.length > 0) {
+      this.changeContacts(this.listContacts[0]);
+    }
+  }
+
   getListContacts() {
+    this.loaded = false;
+
     this.request.predicates = 'ObjectID=@0';
     this.request.dataValues = this.objectID;
     this.request.entityName = 'CM_Contacts';
@@ -237,6 +242,8 @@ export class CodxListContactsComponent implements OnInit {
                 (x) => x.recID == e.event?.recID
               );
               this.changeContacts(this.listContacts[index]);
+              this.contactEvent.emit({ data: e.event, action: 'edit' });
+
               this.lstContactEmit.emit(this.listContacts);
               this.changeDetectorRef.detectChanges();
             }
@@ -309,6 +316,8 @@ export class CodxListContactsComponent implements OnInit {
                 this.cmSv.loadList(data, this.listContacts, 'delete')
               );
               this.changeContacts(this.listContacts[0]);
+              this.contactEvent.emit(data);
+
               this.notiService.notifyCode('SYS008');
               this.changeDetectorRef.detectChanges();
             }
@@ -316,6 +325,7 @@ export class CodxListContactsComponent implements OnInit {
         } else {
           var index = this.listContacts.findIndex((x) => x.recID == data.recID);
           if (index != -1) {
+            this.contactEvent.emit({ data: data, action: 'delete' });
             this.listContacts.splice(index, 1);
             lstDelete.push(data);
             this.changeContacts(this.listContacts[0]);

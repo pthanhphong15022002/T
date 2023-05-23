@@ -1,338 +1,389 @@
 <ng-container *ngIf="hasSecond; else asideNormal">
-    <ng-container *ngTemplateOutlet="asideExtended"></ng-container>
-  </ng-container>
-  
-  <!-- begin::Aside toggle -->
-  <ng-container *ngIf="asideMinimize!='none'">
+  <ng-container *ngTemplateOutlet="asideExtended"></ng-container>
+</ng-container>
+
+<!-- begin::Aside toggle -->
+<ng-container *ngIf="asideMinimize != 'none'">
   <!-- <ng-container> -->
-    <button
-      class="btn btn-icon btn-light-primary btn-active-primary position-absolute translate-middle start-100 end-0 bottom-0 shadow-sm d-flex btn-minimize"
-      [ngClass]="asideMinimized?'active':''"
-      data-kt-toggle="true"
-      data-kt-toggle-state="active"
-      data-kt-toggle-target=".aside-enabled"
-      data-kt-toggle-name="aside-minimize"
-      style="margin-bottom: 1.2rem"
-      (click)="collapse($event)"
-    >
-      <span class="svg-icon svg-icon-2 rotate-180">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <rect
-            opacity="0.5"
-            x="6"
-            y="11"
-            width="13"
-            height="2"
-            rx="1"
-            fill="currentColor"
-          ></rect>
-          <path
-            d="M8.56569 11.4343L12.75 7.25C13.1642 6.83579 13.1642 6.16421 12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75L5.70711 11.2929C5.31658 11.6834 5.31658 12.3166 5.70711 12.7071L11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25C13.1642 17.8358 13.1642 17.1642 12.75 16.75L8.56569 12.5657C8.25327 12.2533 8.25327 11.7467 8.56569 11.4343Z"
-            fill="currentColor"
-          ></path>
-        </svg>
-      </span>
-      <!--end::Svg Icon-->
-    </button>
-  </ng-container>
-  <!-- end::Aside toggler -->
-  
-  <ng-template #asideNormal>
+  <button
+    class="btn btn-icon btn-light-primary btn-active-primary position-absolute translate-middle start-100 end-0 bottom-0 shadow-sm d-flex btn-minimize"
+    [ngClass]="asideMinimized ? 'active' : ''"
+    data-kt-toggle="true"
+    data-kt-toggle-state="active"
+    data-kt-toggle-target=".aside-enabled"
+    data-kt-toggle-name="aside-minimize"
+    style="margin-bottom: 1.2rem"
+    (click)="collapse($event)"
+  >
+    <span class="svg-icon svg-icon-2 rotate-180">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <rect
+          opacity="0.5"
+          x="6"
+          y="11"
+          width="13"
+          height="2"
+          rx="1"
+          fill="currentColor"
+        ></rect>
+        <path
+          d="M8.56569 11.4343L12.75 7.25C13.1642 6.83579 13.1642 6.16421 12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75L5.70711 11.2929C5.31658 11.6834 5.31658 12.3166 5.70711 12.7071L11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25C13.1642 17.8358 13.1642 17.1642 12.75 16.75L8.56569 12.5657C8.25327 12.2533 8.25327 11.7467 8.56569 11.4343Z"
+          fill="currentColor"
+        ></path>
+      </svg>
+    </span>
+    <!--end::Svg Icon-->
+  </button>
+</ng-container>
+<!-- end::Aside toggler -->
+
+<ng-template #asideNormal>
+  <!-- begin::Brand -->
+  <ng-container *ngTemplateOutlet="brand"></ng-container>
+  <!-- end::Brand  -->
+
+  <!-- begin::Aside menu -->
+  <ng-container *ngTemplateOutlet="asideMenuTemp"></ng-container>
+  <!-- end::Aside menu -->
+
+  <!-- begin::Footer -->
+  <ng-container *ngTemplateOutlet="asideMenuFooterTmp"></ng-container>
+  <!-- end::Footer -->
+</ng-template>
+
+<ng-template #asideExtended>
+  <div
+    class="aside-primary overflow-visible d-flex flex-column align-items-lg-center flex-row-auto"
+  >
     <!-- begin::Brand -->
     <ng-container *ngTemplateOutlet="brand"></ng-container>
     <!-- end::Brand  -->
-  
+
     <!-- begin::Aside menu -->
     <ng-container *ngTemplateOutlet="asideMenuTemp"></ng-container>
     <!-- end::Aside menu -->
-  
+
     <!-- begin::Footer -->
     <ng-container *ngTemplateOutlet="asideMenuFooterTmp"></ng-container>
     <!-- end::Footer -->
-  </ng-template>
-  
-  <ng-template #asideExtended>
-    <div
-      class="aside-primary overflow-visible d-flex flex-column align-items-lg-center flex-row-auto"
-    >
-      <!-- begin::Brand -->
-      <ng-container *ngTemplateOutlet="brand"></ng-container>
-      <!-- end::Brand  -->
-  
-      <!-- begin::Aside menu -->
-      <ng-container *ngTemplateOutlet="asideMenuTemp"></ng-container>
-      <!-- end::Aside menu -->
-  
-      <!-- begin::Footer -->
-      <ng-container *ngTemplateOutlet="asideMenuFooterTmp"></ng-container>
-      <!-- end::Footer -->
-    </div>
-  
-    <div class="aside-secondary d-flex flex-row-fluid">
-      <!--begin::Workspace-->
-      <div class="aside-workspace px-4" id="kt_aside_wordspace">
-        <div class="d-flex h-100 flex-column">
-          <!--begin::Header-->
-          <div
-            class="flex-column-auto aside-logo-text"
-            id="kt_aside_secondary_header"
-          >
-            <div class="fs-3 brand-text fw-bold text-dark">
-              {{ title$ | async }}
-            </div>
-            <ng-container *ngTemplateOutlet="asideSecondHeader"></ng-container>
+  </div>
+
+  <div class="aside-secondary d-flex flex-row-fluid">
+    <!--begin::Workspace-->
+    <div class="aside-workspace px-4" id="kt_aside_wordspace">
+      <div class="d-flex h-100 flex-column">
+        <!--begin::Header-->
+        <div
+          class="flex-column-auto aside-logo-text"
+          id="kt_aside_secondary_header"
+        >
+          <div class="fs-3 brand-text fw-bold text-dark">
+            {{ title$ | async }}
           </div>
-          <!--end::Header-->
-          <!--begin::Wrapper-->
-          <div
-            class="flex-column-fluid hover-scroll-y"
-            data-kt-scroll="true"
-            data-kt-scroll-activate="true"
-            data-kt-scroll-height="auto"
-            data-kt-scroll-wrappers="#kt_aside_wordspace"
-            data-kt-scroll-dependencies="#kt_aside_secondary_header, #kt_aside_secondary_footer"
-            data-kt-scroll-offset="0px"
-          >
-            <div class="tab-content">
-              <ng-container *ngIf="asideSecond == null; else asideSecond">
-                <ng-container *ngFor="let f of funcs">
+          <ng-container *ngTemplateOutlet="asideSecondHeader"></ng-container>
+        </div>
+        <!--end::Header-->
+        <!--begin::Wrapper-->
+        <div
+          class="flex-column-fluid hover-scroll-y"
+          data-kt-scroll="true"
+          data-kt-scroll-activate="true"
+          data-kt-scroll-height="auto"
+          data-kt-scroll-wrappers="#kt_aside_wordspace"
+          data-kt-scroll-dependencies="#kt_aside_secondary_header, #kt_aside_secondary_footer"
+          data-kt-scroll-offset="0px"
+        >
+          <div class="tab-content">
+            <ng-container *ngIf="asideSecond == null; else asideSecond">
+              <ng-container *ngFor="let f of funcs">
+                <div
+                  *ngIf="f.functionType !== 'S'"
+                  role="tabpanel"
+                  class="tab-pane fade"
+                  [attr.data-funcid]="f.functionID"
+                  [ngClass]="
+                    codxService.activeMenu.func0 === f.functionID
+                      ? 'active show'
+                      : ''
+                  "
+                >
                   <div
-                    *ngIf="f.functionType !== 'S'"
-                    role="tabpanel"
-                    class="tab-pane fade"
-                    [attr.data-funcid]="f.functionID"
-                    [ngClass]="
-                      codxService.activeMenu.func0 === f.functionID ? 'active show' : ''
-                    "
+                    class="menu menu-fit menu-rounded menu-title-gray-700 menu-icon-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 my-3"
+                    data-kt-menu="true"
                   >
-                    <div
-                      class="menu menu-fit menu-rounded menu-title-gray-700 menu-icon-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 my-3"
-                      data-kt-menu="true"
-                    >
-                      <div id="kt_aside_menu_wrapper" class="menu-fit">
-                        <div
-                          *ngFor="let c of f.childs"
-                          class="menu-item menu-accordion"
-                          [attr.data-funcid]="c.functionID"
-                          [ngClass]="
-                            codxService.activeMenu.func1 === c.functionID ? 'here show' : ''
-                          "
-                        >
-                          <span class="menu-link" (click)="openChildMenu(c)">
-                            <span class="menu-icon">
-                              <span
-                                class="svg-icon svg-icon-2"
-                                [inlineSVG]="c.smallIcon"
-                              ></span>
-                            </span>
-                            <span class="menu-title fw-bold">{{
-                              c.customName
-                            }}</span>
-                            <span class="menu-arrow"></span>
+                    <div id="kt_aside_menu_wrapper" class="menu-fit">
+                      <div
+                        *ngFor="let c of f.childs"
+                        class="menu-item menu-accordion"
+                        [attr.data-funcid]="c.functionID"
+                        [ngClass]="
+                          codxService.activeMenu.func1 === c.functionID
+                            ? 'here show'
+                            : ''
+                        "
+                      >
+                        <span class="menu-link" (click)="openChildMenu(c)">
+                          <span class="menu-icon">
+                            <span
+                              class="svg-icon svg-icon-2"
+                              [inlineSVG]="c.smallIcon"
+                            ></span>
                           </span>
-                          <div class="menu-sub menu-sub-accordion">
-                            <div class="menu-item" *ngFor="let r of c.reports">
-                              <a
-                                class="menu-link without-sub"
-                                [attr.data-funcid]="r.recID"
-                                (click)="itemClick(c.functionID, r, 'r')"
-                                [attr.data-funcid]="r.recID"
-                                [ngClass]="
-                                  codxService.activeMenu.reportId === r.recID ? 'active' : ''
-                                "
-                              >
-                                <span class="menu-bullet">
-                                  <span class="bullet bullet-dot"></span>
+                          <span class="menu-title fw-bold">{{
+                            c.customName
+                          }}</span>
+                          <span class="menu-arrow"></span>
+                        </span>
+                        <div class="menu-sub menu-sub-accordion">
+                          <div class="menu-item" *ngFor="let r of c.reports">
+                            <a
+                              class="menu-link without-sub"
+                              [attr.data-funcid]="r.recID"
+                              (click)="itemClick(c.functionID, r, 'r')"
+                              [attr.data-funcid]="r.recID"
+                              [ngClass]="
+                                codxService.activeMenu.reportId === r.recID
+                                  ? 'active'
+                                  : ''
+                              "
+                            >
+                              <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                              </span>
+                              <span class="menu-title">{{ r.customName }}</span>
+                            </a>
+                          </div>
+
+                          <div class="menu-item" *ngFor="let fv of c.favs">
+                            <a
+                              class="menu-link without-sub"
+                              (click)="itemClick(c.functionID, fv, 'fv')"
+                              [attr.data-funcid]="fv.recID"
+                              [ngClass]="
+                                codxService.activeMenu.fav === fv.recID
+                                  ? 'active'
+                                  : ''
+                              "
+                            >
+                              <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                              </span>
+                              <span class="menu-title"
+                                >{{ fv.favorite }}
+                                <span
+                                  *ngIf="fv.count && fv.count > 0"
+                                  class="badge badge-light-primary fw-semibold fs-8 ms-2"
+                                  [ngClass]="fv.count > 9 ? 'px-1' : 'px-2'"
+                                  [title]="fv.count"
+                                >
+                                  {{ fv.count | shortNumber : 2 }}
                                 </span>
-                                <span class="menu-title">{{ r.customName }}</span>
-                              </a>
-                            </div>
-  
-                            <div class="menu-item" *ngFor="let fv of c.favs">
-                              <a
-                                class="menu-link without-sub"
-                                (click)="itemClick(c.functionID, fv, 'fv')"
-                                [attr.data-funcid]="fv.recID"
-                                [ngClass]="
-                                  codxService.activeMenu.fav === fv.recID ? 'active' : ''
-                                "
+                              </span>
+                            </a>
+                          </div>
+                          <div
+                            *ngIf="c.formFavs && c.formFavs.length > 0"
+                            class="menu-item menu-accordion"
+                            data-kt-menu-trigger="click"
+                            [ngClass]="
+                              codxService.activeMenu.favType === 'FormFav'
+                                ? 'here show'
+                                : ''
+                            "
+                          >
+                            <span class="menu-link">
+                              <!-- <span class="menu-icon">
+                                    <span class="svg-icon svg-icon-2" [inlineSVG]="c.smallIcon"></span>
+                                  </span> -->
+                              <span
+                                codxLang
+                                [formName]="f.formName"
+                                name="lblFavorite"
+                                default="Favorites"
+                                class="menu-title fw-bold"
+                              ></span>
+                              <span class="menu-arrow"></span>
+                            </span>
+                            <div class="menu-sub menu-sub-accordion">
+                              <div
+                                class="menu-item"
+                                *ngFor="let fv of c.formFavs"
                               >
-                                <span class="menu-bullet">
-                                  <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">{{ fv.favorite }}
-                                  <span *ngIf="fv.count && fv.count>0" class="badge badge-light-primary fw-semibold fs-8 ms-2"
-                                    [ngClass]="fv.count>9?'px-1':'px-2'"
-                                    [title]="fv.count">
-                                    {{fv.count | shortNumber:2}}
+                                <a
+                                  class="menu-link without-sub"
+                                  (click)="itemClick(c.functionID, fv, 'fv')"
+                                  [attr.data-funcid]="fv.recID"
+                                  [ngClass]="
+                                    codxService.activeMenu.fav === fv.recID
+                                      ? 'active'
+                                      : ''
+                                  "
+                                >
+                                  <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
                                   </span>
-                                </span>
-                              </a>
-                            </div>
-                            <div
-                              *ngIf="c.formFavs && c.formFavs.length > 0"
-                              class="menu-item menu-accordion"
-                              data-kt-menu-trigger="click"
-                              [ngClass]="
-                                codxService.activeMenu.favType === 'FormFav'
-                                  ? 'here show'
-                                  : ''
-                              "
-                            >
-                              <span class="menu-link">
-                                <!-- <span class="menu-icon">
-                                    <span class="svg-icon svg-icon-2" [inlineSVG]="c.smallIcon"></span>
-                                  </span> -->
-                                <span
-                                  codxLang
-                                  [formName]="f.formName"
-                                  name="lblFavorite"
-                                  default="Favorites"
-                                  class="menu-title fw-bold"
-                                ></span>
-                                <span class="menu-arrow"></span>
-                              </span>
-                              <div class="menu-sub menu-sub-accordion">
-                                <div
-                                  class="menu-item"
-                                  *ngFor="let fv of c.formFavs"
-                                >
-                                  <a
-                                    class="menu-link without-sub"
-                                    (click)="itemClick(c.functionID, fv, 'fv')"
-                                    [attr.data-funcid]="fv.recID"
-                                    [ngClass]="
-                                      codxService.activeMenu.fav === fv.recID ? 'active' : ''
-                                    "
-                                  >
-                                    <span class="menu-bullet">
-                                      <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">{{
-                                      fv.favorite
-                                    }}</span>
-                                  </a>
-                                </div>
-                              </div>
-                            </div>
-                            <div
-                              *ngIf="c.shareFavs && c.shareFavs.length > 0"
-                              class="menu-item menu-accordion"
-                              data-kt-menu-trigger="click"
-                              [ngClass]="
-                                codxService.activeMenu.favType === 'SharedFav'
-                                  ? 'here show'
-                                  : ''
-                              "
-                            >
-                              <span class="menu-link">
-                                <!-- <span class="menu-icon">
-                                    <span class="svg-icon svg-icon-2" [inlineSVG]="c.smallIcon"></span>
-                                  </span> -->
-                                <span
-                                  codxLang
-                                  [formName]="f.formName"
-                                  name="lblShareFav"
-                                  default="Shared favorites"
-                                  class="menu-title fw-bold"
-                                ></span>
-                                <span class="menu-arrow"></span>
-                              </span>
-                              <div class="menu-sub menu-sub-accordion">
-                                <div
-                                  class="menu-item"
-                                  *ngFor="let fv of c.shareFavs"
-                                >
-                                  <a
-                                    class="menu-link without-sub"
-                                    (click)="itemClick(c.functionID, fv, 'sfv')"
-                                    [attr.data-funcid]="fv.recID"
-                                    [ngClass]="
-                                      codxService.activeMenu.fav === fv.recID ? 'active' : ''
-                                    "
-                                  >
-                                    >
-                                    <span class="menu-bullet">
-                                      <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">{{
-                                      fv.favorite
-                                    }}</span>
-                                  </a>
-                                </div>
+                                  <span class="menu-title">{{
+                                    fv.favorite
+                                  }}</span>
+                                </a>
                               </div>
                             </div>
                           </div>
+                          <div
+                            *ngIf="c.shareFavs && c.shareFavs.length > 0"
+                            class="menu-item menu-accordion"
+                            data-kt-menu-trigger="click"
+                            [ngClass]="
+                              codxService.activeMenu.favType === 'SharedFav'
+                                ? 'here show'
+                                : ''
+                            "
+                          >
+                            <span class="menu-link">
+                              <!-- <span class="menu-icon">
+                                    <span class="svg-icon svg-icon-2" [inlineSVG]="c.smallIcon"></span>
+                                  </span> -->
+                              <span
+                                codxLang
+                                [formName]="f.formName"
+                                name="lblShareFav"
+                                default="Shared favorites"
+                                class="menu-title fw-bold"
+                              ></span>
+                              <span class="menu-arrow"></span>
+                            </span>
+                            <div class="menu-sub menu-sub-accordion">
+                              <div
+                                class="menu-item"
+                                *ngFor="let fv of c.shareFavs"
+                              >
+                                <a
+                                  class="menu-link without-sub"
+                                  (click)="itemClick(c.functionID, fv, 'sfv')"
+                                  [attr.data-funcid]="fv.recID"
+                                  [ngClass]="
+                                    codxService.activeMenu.fav === fv.recID
+                                      ? 'active'
+                                      : ''
+                                  "
+                                >
+                                  >
+                                  <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                  </span>
+                                  <span class="menu-title">{{
+                                    fv.favorite
+                                  }}</span>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- menuCustom -->
+                          <ng-container
+                            *ngIf="
+                              c?.functionID == 'CM0201' ||
+                              c?.functionID == 'CM0401' ||
+                              c?.functionID == 'CM0402'
+                            "
+                          >
+                            <div
+                              class="menu-item"
+                              *ngFor="let menuCus of dataMenuCustom"
+                            >
+                              <a
+                                class="menu-link without-sub"
+                                [attr.data-funcid]="menuCus.recID"
+                                (click)="clickMenuCustom(c.functionID, menuCus)"
+                                [attr.data-funcid]="menuCus.recID"
+                                [ngClass]="
+                                codxService.activeMenu.fav ===
+                                  menuCus.recID
+                                    ? 'active'
+                                    : ''
+                                "
+                              >
+                                <span class="menu-bullet">
+                                  <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span
+                                  class="menu-title line-clamp-menu"
+                                  [ngbTooltip]="menuCus.processName"
+                                  >{{ menuCus.processName }}</span
+                                >
+                              </a>
+                            </div>
+                          </ng-container>
                         </div>
                       </div>
                     </div>
                   </div>
-                </ng-container>
+                </div>
               </ng-container>
-            </div>
+            </ng-container>
           </div>
-          <!--end::Wrapper-->
-          <!--begin::Footer-->
-          <ng-container *ngIf="asideSecondFooter">
-            <div
-              class="aside-footer d-flex flex-column align-items-center flex-column-auto"
-            >
-              <ng-container [ngTemplateOutlet]="asideSecondFooter"></ng-container>
-            </div>
-          </ng-container>
-          <!--end::Footer-->
         </div>
+        <!--end::Wrapper-->
+        <!--begin::Footer-->
+        <ng-container *ngIf="asideSecondFooter">
+          <div
+            class="aside-footer d-flex flex-column align-items-center flex-column-auto"
+          >
+            <ng-container [ngTemplateOutlet]="asideSecondFooter"></ng-container>
+          </div>
+        </ng-container>
+        <!--end::Footer-->
       </div>
-      <!--end::Workspace-->
     </div>
-  </ng-template>
-  
-  <!-- begin::Brand -->
-  <ng-template #brand>
-    <div class="aside-logo flex-column-auto" id="kt_aside_logo">
-      <!-- begin::Logo -->
-      <ng-container *ngIf="asideTheme === 'dark'">
-        <a
-          href="{{ tenant + '/' + (url$ | async) }}"
-          class="brand-logo d-flex align-items-center flex-grow-1"
-        >
-          <img
-            alt="Logo"
-            class="mh-35px logo justify-content-start"
-            src="{{ logo$ | async }}"
-          />
-          <div *ngIf="!this.hasSecond" class="brand-text ms-3 fs-3 text-nowrap">
-            {{ title$ | async }}
-          </div>
-        </a>
-      </ng-container>
-  
-      <ng-container *ngIf="asideTheme === 'light'">
-        <a
-          href="{{ tenant + '/' + (url$ | async) }}"
-          class="brand-logo d-flex align-items-center flex-grow-1"
-        >
-          <img
-            alt="Logo"
-            class="mh-35px logo justify-content-start"
-            src="{{ logo$ | async }}"
-          />
-          <div *ngIf="!this.hasSecond" class="brand-text ms-3 fs-3 text-nowrap">
-            {{ title$ | async }}
-          </div>
-        </a>
-      </ng-container>
-  
-      <!-- end::Logo -->
-  
-      <!-- begin::Aside toggle -->
-      <!-- <ng-container *ngIf="asideMinimize">
+    <!--end::Workspace-->
+  </div>
+</ng-template>
+
+<!-- begin::Brand -->
+<ng-template #brand>
+  <div class="aside-logo flex-column-auto" id="kt_aside_logo">
+    <!-- begin::Logo -->
+    <ng-container *ngIf="asideTheme === 'dark'">
+      <a
+        href="{{ tenant + '/' + (url$ | async) }}"
+        class="brand-logo d-flex align-items-center flex-grow-1"
+      >
+        <img
+          alt="Logo"
+          class="mh-35px logo justify-content-start"
+          src="{{ logo$ | async }}"
+        />
+        <div *ngIf="!this.hasSecond" class="brand-text ms-3 fs-3 text-nowrap">
+          {{ title$ | async }}
+        </div>
+      </a>
+    </ng-container>
+
+    <ng-container *ngIf="asideTheme === 'light'">
+      <a
+        href="{{ tenant + '/' + (url$ | async) }}"
+        class="brand-logo d-flex align-items-center flex-grow-1"
+      >
+        <img
+          alt="Logo"
+          class="mh-35px logo justify-content-start"
+          src="{{ logo$ | async }}"
+        />
+        <div *ngIf="!this.hasSecond" class="brand-text ms-3 fs-3 text-nowrap">
+          {{ title$ | async }}
+        </div>
+      </a>
+    </ng-container>
+
+    <!-- end::Logo -->
+
+    <!-- begin::Aside toggle -->
+    <!-- <ng-container *ngIf="asideMinimize">
         <div *ngIf="asideMinimize" id="kt_aside_toggle"
           class="btn btn-icon  w-auto px-0 btn-color-gray-800 btn-active-color-primary aside-toggle aside-toggle-custom"
           data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body"
@@ -350,153 +401,162 @@
           </span>
         </div>
       </ng-container> -->
-      <!-- end::Aside toggler -->
-    </div>
-  </ng-template>
-  <!-- end::Brand  -->
-  
-  <!--begin:: ASIDE-->
-  <ng-template #asideMenuTemp>
-    <div class="aside-menu flex-column-fluid" id="kt_aside_menu">
-      <!--begin::Header-->
-      <ng-container *ngIf="asideMenuHeader">
-        <div class="flex-column-auto" id="kt_aside_menu_header">
-          <ng-container *ngTemplateOutlet="asideMenuHeader"></ng-container>
-        </div>
-      </ng-container>
-      <!--end::Header-->
-      <!--begin::Menu-->
-      <div
-        #ktAsideScroll
-        class="hover-scroll-overlay-y"
-        data-kt-scroll="true"
-        data-kt-scroll-activate="{default: false, lg: true}"
-        data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_menu_header, #kt_aside_footer"
-        data-kt-scroll-wrappers="#kt_aside_menu"
-        data-kt-scroll-offset="0"
-      >
-        <div
-          id="#kt_aside_menu"
-          data-kt-menu="true"
-          class="menu menu-column menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary py-1"
-          [ngClass]="menuClass"
-        >
-          <ng-container *ngIf="asideMenu; else asideMenuDefault"></ng-container>
-        </div>
-      </div>
-      <!--end::Menu-->
-    </div>
-  </ng-template>
-  
-  <ng-template #asideMenuDefault>
-    <ng-container *ngFor="let f of funcs">
-      <ng-container
-        *ngIf="f.functionType != 'S'"
-        [ngTemplateOutlet]="asideMenuItems"
-        [ngTemplateOutletContext]="{
-          $implicit: f,
-          showName: !hasSecond,
-          subTmp:
-            !hasSecond && (f.childs?.length > 0 || f.reports?.length > 0)
-              ? asideMenuSubDefault
-              : null
-        }"
-      >
-      </ng-container>
-    </ng-container>
-  </ng-template>
-  
-  <ng-template #asideMenuSubDefault let-data>
-    <div class="menu-sub menu-sub-accordion">
-      <ng-container *ngFor="let f of data">
-        <ng-container
-          [ngTemplateOutlet]="asideMenuItems"
-          [ngTemplateOutletContext]="{ $implicit: f, showName: true }"
-        >
-        </ng-container>
-      </ng-container>
-    </div>
-  </ng-template>
-  
-  <ng-template #asideMenuFooterTmp>
-    <ng-container *ngIf="settingFunc || asideMenuFooter">
-      <div
-        id="kt_aside_footer"
-        class="aside-footer"
-        [ngClass]="
-          hasSecond
-            ? 'd-flex flex-column align-items-center flex-column-auto'
-            : 'flex-column-auto py-1'
-        "
-      >
-        <div class="menu" [ngClass]="asideMinimize=='icon-title'?'menu-column':''">
-          <ng-container
-            *ngIf="asideMenuFooter"
-            [ngTemplateOutlet]="asideMenuFooter"
-          ></ng-container>
-          <ng-container
-            *ngIf="settingFunc"
-            [ngTemplateOutlet]="asideMenuItems"
-            [ngTemplateOutletContext]="{
-              $implicit: settingFunc,
-              showName: !hasSecond
-            }"
-          >
-            <!-- <span [attr.setScroll]="!loaded && calcHeight()"></span> -->
-          </ng-container>
-        </div>
+    <!-- end::Aside toggler -->
+  </div>
+</ng-template>
+<!-- end::Brand  -->
+
+<!--begin:: ASIDE-->
+<ng-template #asideMenuTemp>
+  <div class="aside-menu flex-column-fluid" id="kt_aside_menu">
+    <!--begin::Header-->
+    <ng-container *ngIf="asideMenuHeader">
+      <div class="flex-column-auto" id="kt_aside_menu_header">
+        <ng-container *ngTemplateOutlet="asideMenuHeader"></ng-container>
       </div>
     </ng-container>
-  </ng-template>
-  
-  <ng-template
-    #asideMenuItems
-    let-data
-    let-showName="showName"
-    let-subTmp="subTmp"
-  >
-    <div *ngIf="data.displayMode == '0'" class="menu-item px-6">
-      <div class="separator"></div>
-    </div>
+    <!--end::Header-->
+    <!--begin::Menu-->
     <div
-      class="menu-item{{ subTmp ? '' : ' menu-accordion' }}"
-      [attr.data-funcid]="data.functionID"
-      [ngClass]="
-        subTmp && codxService.activeMenu.func0 === data.functionID ? 'here show' : ''
-      "  >
-      <span
-        class="menu-link"
-        (click)="itemClick(data.functionID, data)"
-        [ngClass]="{'active':codxService.activeMenu.func0 == data.functionID, 'menu-center':hasSecond, 'without-sub':!subTmp, 'pe-none':data.displayMode == '0'}"
-        [attr.data-funcid]="data.functionID"
+      #ktAsideScroll
+      class="hover-scroll-overlay-y"
+      data-kt-scroll="true"
+      data-kt-scroll-activate="{default: false, lg: true}"
+      data-kt-scroll-height="auto"
+      data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_menu_header, #kt_aside_footer"
+      data-kt-scroll-wrappers="#kt_aside_menu"
+      data-kt-scroll-offset="0"
+    >
+      <div
+        id="#kt_aside_menu"
+        data-kt-menu="true"
+        class="menu menu-column menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary py-1"
+        [ngClass]="menuClass"
       >
-        <span
-          class="menu-icon"
-          *ngIf="data.displayMode != '0'"
-          [ngbTooltip]="hasSecond || asideMinimize=='icon'?data.customName:''"
-          placement="end"
-          container="body"
-        >
-          <span *ngIf="!data.smallIcon" class="bullet bullet-dot"></span>
-          <img
-            *ngIf="data.smallIcon"
-            src="/{{ data.smallIcon }}"
-          />
-        </span>
-        <span
-          *ngIf="showName || asideMinimize=='icon-title'"
-          [ngClass]="data.displayMode == '0' ? 'menu-heading' : 'menu-title'"
-          >{{ data.customName }}</span
-        >
-        <span *ngIf="subTmp && data.displayMode != '0'" class="menu-arrow"></span>
-      </span>
+        <ng-container *ngIf="asideMenu; else asideMenuDefault"></ng-container>
+      </div>
+    </div>
+    <!--end::Menu-->
+  </div>
+</ng-template>
+
+<ng-template #asideMenuDefault>
+  <ng-container *ngFor="let f of funcs">
+    <ng-container
+      *ngIf="f.functionType != 'S'"
+      [ngTemplateOutlet]="asideMenuItems"
+      [ngTemplateOutletContext]="{
+        $implicit: f,
+        showName: !hasSecond,
+        subTmp:
+          !hasSecond && (f.childs?.length > 0 || f.reports?.length > 0)
+            ? asideMenuSubDefault
+            : null
+      }"
+    >
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #asideMenuSubDefault let-data>
+  <div class="menu-sub menu-sub-accordion">
+    <ng-container *ngFor="let f of data">
       <ng-container
-        [ngTemplateOutlet]="subTmp"
-        [ngTemplateOutletContext]="{ $implicit: data.childs || data.reports }"
+        [ngTemplateOutlet]="asideMenuItems"
+        [ngTemplateOutletContext]="{ $implicit: f, showName: true }"
       >
       </ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #asideMenuFooterTmp>
+  <ng-container *ngIf="settingFunc || asideMenuFooter">
+    <div
+      id="kt_aside_footer"
+      class="aside-footer"
+      [ngClass]="
+        hasSecond
+          ? 'd-flex flex-column align-items-center flex-column-auto'
+          : 'flex-column-auto py-1'
+      "
+    >
+      <div
+        class="menu"
+        [ngClass]="asideMinimize == 'icon-title' ? 'menu-column' : ''"
+      >
+        <ng-container
+          *ngIf="asideMenuFooter"
+          [ngTemplateOutlet]="asideMenuFooter"
+        ></ng-container>
+        <ng-container
+          *ngIf="settingFunc"
+          [ngTemplateOutlet]="asideMenuItems"
+          [ngTemplateOutletContext]="{
+            $implicit: settingFunc,
+            showName: !hasSecond
+          }"
+        >
+          <!-- <span [attr.setScroll]="!loaded && calcHeight()"></span> -->
+        </ng-container>
+      </div>
     </div>
-  </ng-template>
-  <!--end:: ASIDE-->
-  
+  </ng-container>
+</ng-template>
+
+<ng-template
+  #asideMenuItems
+  let-data
+  let-showName="showName"
+  let-subTmp="subTmp"
+>
+  <div *ngIf="data.displayMode == '0'" class="menu-item px-6">
+    <div class="separator"></div>
+  </div>
+  <div
+    class="menu-item{{ subTmp ? '' : ' menu-accordion' }}"
+    [attr.data-funcid]="data.functionID"
+    [ngClass]="
+      subTmp && codxService.activeMenu.func0 === data.functionID
+        ? 'here show'
+        : ''
+    "
+  >
+    <span
+      class="menu-link"
+      (click)="itemClick(data.functionID, data)"
+      [ngClass]="{
+        active: codxService.activeMenu.func0 == data.functionID,
+        'menu-center': hasSecond,
+        'without-sub': !subTmp,
+        'pe-none': data.displayMode == '0'
+      }"
+      [attr.data-funcid]="data.functionID"
+    >
+      <span
+        class="menu-icon"
+        *ngIf="data.displayMode != '0'"
+        [ngbTooltip]="
+          hasSecond || asideMinimize == 'icon' ? data.customName : ''
+        "
+        placement="end"
+        container="body"
+      >
+        <span *ngIf="!data.smallIcon" class="bullet bullet-dot"></span>
+        <img *ngIf="data.smallIcon" src="/{{ data.smallIcon }}" />
+      </span>
+      <span
+        *ngIf="showName || asideMinimize == 'icon-title'"
+        [ngClass]="data.displayMode == '0' ? 'menu-heading' : 'menu-title'"
+        >{{ data.customName }}</span
+      >
+      <span *ngIf="subTmp && data.displayMode != '0'" class="menu-arrow"></span>
+    </span>
+    <ng-container
+      [ngTemplateOutlet]="subTmp"
+      [ngTemplateOutletContext]="{ $implicit: data.childs || data.reports }"
+    >
+    </ng-container>
+  </div>
+</ng-template>
+<!--end:: ASIDE-->

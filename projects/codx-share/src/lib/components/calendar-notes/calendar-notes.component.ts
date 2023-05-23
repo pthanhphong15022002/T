@@ -23,14 +23,14 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { Notes, tmpBookingCalendar } from '@shared/models/notes.model';
-import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
-import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/update-note-pin/update-note-pin.component';
-import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
-import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 import moment from 'moment';
 import { CodxShareService } from '../../codx-share.service';
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
 import { tmpTransType } from './model/tmpTransType.model';
+import { NoteService } from './note.service';
+import { AddNoteComponent } from './add-note/add-note.component';
+import { UpdateNotePinComponent } from './update-note-pin/update-note-pin.component';
+import { SaveNoteComponent } from './add-note/save-note/save-note.component';
 @Component({
   selector: 'app-calendar-notes',
   templateUrl: './calendar-notes.component.html',
@@ -103,7 +103,7 @@ export class CalendarNotesComponent
     injector: Injector,
     private change: ChangeDetectorRef,
     private auth: AuthStore,
-    private noteService: NoteServices,
+    private noteService: NoteService,
     private codxShareSV: CodxShareService,
     private datePipe: DatePipe
   ) {

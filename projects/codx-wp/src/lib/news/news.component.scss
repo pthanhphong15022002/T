@@ -2,24 +2,24 @@
 
     .more-function {
         position: fixed;
-        right: 30px;
+        right: 40px;
         bottom: 20px;
     }
 
-    .postnews {
-        position: relative;
-    }
+    // .postnews {
+    //     position: relative;
+    // }
 
-    .btn-postnews {
-        visibility: hidden;
-        position: absolute;
-        right: 0px;
-        bottom: 0;
-    }
+    // .btn-postnews {
+    //     visibility: hidden;
+    //     position: absolute;
+    //     right: 0px;
+    //     bottom: 0;
+    // }
 
-    .postnews:hover .btn-postnews {
-        visibility: visible;
-    }
+    // .postnews:hover .btn-postnews {
+    //     visibility: visible;
+    // }
 
     .image-300>img {
         width: 100% !important;
