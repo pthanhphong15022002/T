@@ -19,9 +19,11 @@ import {
   Util,
   CallFuncService,
   DialogModel,
+  AlertConfirmInputConfig,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
+import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { utils } from 'xlsx';
 import { PopupEditParamComponent } from '../popup-edit-param/popup-edit-param.component';
 
@@ -34,6 +36,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   @ViewChild('tabInfo') tabInfo: TemplateRef<any>;
   @ViewChild('tabParam') tabParam: TemplateRef<any>;
   @ViewChild('tabSignature') tabSignature: TemplateRef<any>;
+  @ViewChild('tabTemplate') tabTemplate: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   title: string = 'Thêm mới báo cáo';
@@ -73,8 +76,30 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     subName: 'Sinatures',
     subText: 'Sinatures',
   };
+  menuTemplate = {
+    icon: 'icon-grid_on',
+    text: 'Excel Template',
+    name: 'ExcelTemplate',
+    subName: 'ExcelTemplate',
+    subText: 'ExcelTemplate',
+  };
+  moreFunction = [
+    {
+      id: 'edit',
+      icon: 'icon-edit',
+      text: 'Chỉnh sửa',
+      textColor: '#307CD2',
+    },
+    {
+      id: 'delete',
+      icon: 'icon-delete',
+      text: 'Xóa',
+      textColor: '#F54E60',
+    },
+  ];
   parameters: any = [];
   signatures: any = [];
+  dataEx:any=[];
   fields: any = {};
   rootFunction:any;
   constructor(
@@ -102,13 +127,14 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
 
-   }
+  }
 
   ngAfterViewInit(): void {
-    this.tabContent = [this.tabInfo, this.tabParam, this.tabSignature];
-    this.tabTitle = [this.menuInfo, this.menuParam, this.menuSignature];
+    this.tabContent = [this.tabInfo, this.tabParam, this.tabSignature, this.tabTemplate];
+    this.tabTitle = [this.menuInfo, this.menuParam, this.menuSignature,this.menuTemplate];
     if (this.reportID) {
      this.getReport();
+     this.getExcelTemplate();
      //this.getReportParams();
 
     } else this.setDefaut();
@@ -262,11 +288,19 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       })
     }
   }
+
   oldParamData: any;
   actionBegin(evt:any){
     if(evt.requestType == "beginEdit"){
       this.oldParamData = evt.rowData;
     }
+  }
+
+  getExcelTemplate(){
+    this.api.execSv("SYS","ERM.Business.AD","ExcelTemplatesBusiness","GetByRefAsync",['R',this.reportID]).subscribe((res:any)=>{
+      if(res) this.dataEx = res;
+      this.changeDetectorRef.detectChanges();
+    })
   }
 
   // cellSave(evt: any){
@@ -291,6 +325,49 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
 
   buttonClick(evt: any) {}
 
+  excelTemplate(){
+    let op = new DialogModel();
+    let dialog = this.callFuncService.openForm(CodxExportAddComponent,"",screen.width,screen.height,this.funcID,{action:'add',type:'excel',refType:'R',refID:this.reportID},"",op)
+    dialog.closed.subscribe((res:any)=>{
+      if(res.event){
+        debugger
+      }
+    })
+  }
+  editTemplate(action:string,data:any){
+    if(action == 'edit'){
+      let op = new DialogModel();
+      op.DataService = data;
+      let dialog = this.callFuncService.openForm(CodxExportAddComponent,"",screen.width,screen.height,this.funcID,{action:'edit',type:'excel',refType:'R',refID:this.reportID},"",op)
+      dialog.closed.subscribe((res:any)=>{
+        if(res.event){
+          debugger
+        }
+      })
+    }
+    if(action == 'delete'){
+      var config = new AlertConfirmInputConfig();
+      config.type = 'YesNo';
+      //SYS003
+      this.notiService
+        .alert('Thông báo', 'Bạn có chắc chắn muốn xóa ?', config)
+        .closed.subscribe((x) => {
+          if (x.event.status == 'Y') {
+            var entity ='AD_ExcelTemplates';
+            this.api
+              .execAction(entity, [data], 'DeleteAsync')
+              .subscribe((item:any) => {
+                if (item == true) {
+                  this.notiService.notifyCode('RS002');
+                  this.dataEx = this.dataEx.filter(
+                    (x) => x.recID != item[1][0].recID
+                  );
+                } else this.notiService.notifyCode('SYS022');
+              });
+          }
+        });
+    }
+  }
   popup() {
     if (this.attachment && this.attachment.fileUploadList.length == 0) {
       this.attachment.uploadFile();
