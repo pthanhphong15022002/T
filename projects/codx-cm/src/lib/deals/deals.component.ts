@@ -34,7 +34,9 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
 @Component({
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
-  styleUrls: ['./deals.component.scss'],})export class DealsComponent
+  styleUrls: ['./deals.component.scss'],
+})
+export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -50,6 +52,8 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
   itemFields: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
+  @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
+  @ViewChild('footerKanban') footerKanban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
 
@@ -97,7 +101,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
   readonly btnAdd: string = 'btnAdd';
   request: ResourceModel;
   resourceKanban?: ResourceModel;
-  hideMoreFC = true;
+  hideMoreFC = false;
   listHeader: any;
 
   constructor(
@@ -118,20 +122,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
     // this.dataObj = {
     //   processID: '327eb334-5695-468c-a2b6-98c0284d0620',
     // };
-    this.request = new ResourceModel();
-    this.request.service = 'CM';
-    this.request.assemblyName = 'CM';
-    this.request.className = 'DealsBusiness';
-    this.request.method = 'GetListDealsAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj;
-
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'DP';
-    this.resourceKanban.assemblyName = 'DP';
-    this.resourceKanban.className = 'ProcessesBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
+    this.afterLoad();
 
     this.button = {
       id: this.btnAdd,
@@ -151,6 +142,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
         active: false,
         sameData: false,
         request: this.request,
+        hide: true,
         request2: this.resourceKanban,
         toolbarTemplate: this.footerButton,
         model: {
@@ -167,6 +159,22 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
       }
     });
   }
+  afterLoad() {
+    this.request = new ResourceModel();
+    this.request.service = 'CM';
+    this.request.assemblyName = 'CM';
+    this.request.className = 'DealsBusiness';
+    this.request.method = 'GetListDealsAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj;
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'DP';
+    this.resourceKanban.assemblyName = 'DP';
+    this.resourceKanban.className = 'ProcessesBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = this.dataObj;
+  }
 
   ngAfterViewInit(): void {
     this.crrFuncID = this.funcID;
@@ -176,6 +184,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
   onLoading(e) {}
 
   changeView(e) {
+    this.afterLoad();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     if (this.crrFuncID != this.funcID) {
       this.crrFuncID = this.funcID;
@@ -284,12 +293,12 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
 
   handelStartDay(data) {
     this.notificationsService
-    .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
-    .subscribe((x) => {
-      if (x.event && x.event.status == 'Y') {
-        this.startDeal(data.recID);
-      }
-    });
+      .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.startDeal(data.recID);
+        }
+      });
   }
   moveStage(data: any) {
     // if (!this.isClick) {
@@ -317,11 +326,11 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
             isUseSuccess: false,
           };
           var dataCM = {
-            refID:data?.refID,
+            refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: data?.nextStep
-          }
+            nextStep: data?.nextStep,
+          };
           var obj = {
             stepName: data?.currentStepName,
             formModel: formMD,
@@ -349,22 +358,22 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
               var instance =  e.event.instance;
               var index = e.event.listStep.findIndex(x=> x.stepID === instance.stepID && !x.isSuccessStep && !x.isFailStep)+1;
               var nextStep = '';
-              if(index != -1){
-                if(index != e.event.listStep.length){
+              if (index != -1) {
+                if (index != e.event.listStep.length) {
                   var listStep = e.event.listStep;
                   nextStep = listStep[index]?.stepID;
                 }
               }
 
-              var dataUpdate = [data.recID,instance.stepID,nextStep];
-              this.codxCmService.moveStageDeal(dataUpdate).subscribe((res)=> {
-                if(res){
+              var dataUpdate = [data.recID, instance.stepID, nextStep];
+              this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
+                if (res) {
                   data = res[0];
                   this.view.dataService.update(data).subscribe();
                   this.detailViewDeal.dataSelected = data;
                   this.detectorRef.detectChanges();
                 }
-              })
+              });
               //xu ly data đổ về
               // data = e.event.instance;
               // this.listStepInstances = e.event.listStep;
@@ -379,8 +388,6 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
               //   this.detailViewInstance.dataSelect = this.dataSelected;
               //   this.detailViewInstance.listSteps = this.listStepInstances;
               // }
-
-
             }
           });
         });
@@ -676,7 +683,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
 
   //xuất file
   exportFile(dt) {
-    this.codxCmService.exportFile(dt,this.titleAction) ;
+    this.codxCmService.exportFile(dt, this.titleAction);
     // this.codxCmService
     //   .getDataInstance(dt.refID)
     //   .subscribe((res) => {
