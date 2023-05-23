@@ -9,6 +9,9 @@
     <ng-container *ngFor="let item of TabControl; let i = index">
       <li [ngbNavItem]="i + 1" class="nav-item pe-1">
         <a ngbNavLink class="nav-link position-relative">
+          <ng-container *ngIf="item.icon">
+            <span class="me-2 icon-14" [ngClass]="item.icon"></span>
+          </ng-container>
           <codx-label
             [name]="'tab' + item.name"
             [formName]="'SYS'"

@@ -30,7 +30,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     {
       id: 'btnAddReport',
       icon: 'icon-list-chechbox',
-      text: 'Thêm/Sửa report',
+      text: 'Thông tin báo cáo',
     },
   ]
   rootFunction:any;
@@ -45,8 +45,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     private auth : AuthStore
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
-
+    this.funcID = this.router.snapshot.params['reportID'];
 
   }
   ngOnDestroy(): void {

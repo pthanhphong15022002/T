@@ -16,6 +16,7 @@ import {
   CodxComboboxComponent,
 } from 'codx-core';
 import { PurchaseInvoicesLines } from '../../../models/PurchaseInvoicesLines.model';
+import { PurchaseInvoices } from '../../../models/PurchaseInvoices.model';
 
 @Component({
   selector: 'lib-pop-add-line',
@@ -40,7 +41,10 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
   journals: any;
   objectIdim: any;
   lockFields: any;
+  hasSave: boolean = false;
   purchaseInvoicesLines: PurchaseInvoicesLines;
+  purchaseInvoices: PurchaseInvoices;
+  objectPurchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   constructor(
     inject: Injector,
     private notification: NotificationsService,
@@ -49,6 +53,8 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.dialog = dialog;
+    this.objectPurchaseInvoicesLines = dialogData.data?.dataline;
+    this.purchaseInvoices = dialogData.data?.dataPurchaseinvoices;
     this.purchaseInvoicesLines = dialogData.data?.data;
     this.lockFields = dialogData.data?.lockFields;
     if (this.lockFields == null) {
@@ -168,7 +174,13 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     }
   }
   close() {
-    this.dialog.close();
+    if(this.hasSave == false)
+    {
+      this.dialog.close();
+    }
+    this.dialog.close({
+      add: true
+    });
   }
   onSave() {
     this.checkValidate();
@@ -176,13 +188,77 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      window.localStorage.setItem(
-        'dataline',
-        JSON.stringify(this.purchaseInvoicesLines)
-      );
-      this.dialog.close();
+      switch (this.type) {
+        case 'copy':
+        case 'add':
+          this.api
+            .execAction<any>(
+              'PS_PurchaseInvoicesLines',
+              [this.purchaseInvoicesLines],
+              'SaveAsync'
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.dialog.close({data:this.purchaseInvoicesLines});
+              }
+            });
+          break;
+        case 'edit':
+          this.api
+            .execAction<any>(
+              'PS_PurchaseInvoicesLines',
+              [this.purchaseInvoicesLines],
+              'UpdateAsync'
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.dialog.close({data:this.purchaseInvoicesLines});
+              }
+            });
+          break;
+      }
     }
   }
+
+  onSaveAdd() {
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      this.api
+        .execAction<any>(
+          'PS_PurchaseInvoicesLines',
+          [this.purchaseInvoicesLines],
+          'SaveAsync'
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.hasSave = true;
+            this.objectPurchaseInvoicesLines.push({ ...this.purchaseInvoicesLines });
+            this.clearInventoryJournalLines();
+          }
+        });
+    }
+  }
+
+  clearInventoryJournalLines() {
+    let idx = this.objectPurchaseInvoicesLines.length;
+    let data = new PurchaseInvoicesLines();
+    this.api
+      .exec<any>('PS', 'PurchaseInvoicesLinesBusiness', 'SetDefaultAsync', [
+        this.purchaseInvoices,
+        data,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          res.rowNo = idx + 1;
+          this.purchaseInvoicesLines = res;
+          this.form.formGroup.patchValue(res);
+        }
+      });
+  }
+
   loadControl(value) {
     let index = this.lockFields.findIndex((x) => x == value);
     if (index == -1) {

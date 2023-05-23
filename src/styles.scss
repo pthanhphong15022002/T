@@ -2517,7 +2517,7 @@ codx-card-center {
 }
 
 ejs-richtexteditor {
-  .form-control.codx-textarea {
+  textarea.form-control.codx-textarea {
     padding: 0;
   }
 }
@@ -2934,4 +2934,9 @@ codx-toolbar-report{
 }
 .e-gantt-splitter table tr.e-chart-row div{
   height: 40px!important;
+}
+
+///
+.e-grid .e-headercelldiv {
+  margin-left: -5px;
 }

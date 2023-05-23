@@ -32,7 +32,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   dialogData: any = null;
   grvSetUp: any[] = [];
   codxModifiedOn = new Date();
-
+  employeeIDDisable: boolean = false;
   tabInfo: any[] = [
     {
       icon: 'icon-assignment_ind',
@@ -68,6 +68,9 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.action = dialogData?.data?.action;
     this.headerText = dialogData?.data?.text;
     this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
+    if(this.dialogRef.dataService.keyField === 'EmployeeID'){
+      this.employeeIDDisable = false;
+    }this.employeeIDDisable = true;
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
@@ -94,14 +97,16 @@ export class PopupAddEmployeeComponent implements OnInit {
         let today = new Date();
         if (this.data.issuedOn >= today.toJSON()) {
           this.notifySV.notifyCode('HR012');
-          this.data[field] = null;
+          //this.data[field] = null;
+          return;
         }
       }
       if (field === 'birthday' && value) {
         if (!this.validateBirthday(value)) {
           this.notifySV.notifyCode('HR001');
-          this.data[field] = null;
+          //this.data[field] = null;
           // this.form.formGroup.controls[field].patchValue({field : null});
+          return;
         }
       }
       // if (field == 'positionID') {
@@ -175,9 +180,14 @@ export class PopupAddEmployeeComponent implements OnInit {
     }
     let today = new Date();
     if (this.data.issuedOn >= today.toJSON()) {
-      this.notifySV.notifyCode('HR004');
+      this.notifySV.notifyCode('HR012');
       return false;
     }
+    if (!this.validateBirthday(this.data.birthday)) {
+      this.notifySV.notifyCode('HR001');
+      return false;
+    }
+
     return true;
   }
 
@@ -223,5 +233,4 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.codxModifiedOn = new Date();
     this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
   }
-
 }
