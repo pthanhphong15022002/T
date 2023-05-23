@@ -941,7 +941,7 @@ export class PdfComponent
             switch (area.labelType) {
               case 'S1': {
                 url = curSignerInfo?.signature1 ?? area.labelValue;
-                if (area.labelValue != url) {
+                if (area.labelValue != url && url.includes(area.labelType)) {
                   isChangeUrl = true;
                 }
                 let isUrl = this.checkIsUrl(url);
@@ -960,7 +960,7 @@ export class PdfComponent
               }
               case 'S2': {
                 url = curSignerInfo?.signature2 ?? area.labelValue;
-                if (area.labelValue != url) {
+                if (area.labelValue != url && url.includes(area.labelType)) {
                   isChangeUrl = true;
                 }
                 let isUrl = this.checkIsUrl(url);
@@ -979,7 +979,7 @@ export class PdfComponent
               }
               case 'S3': {
                 url = curSignerInfo?.stamp ?? area.labelValue;
-                if (area.labelValue != url) {
+                if (area.labelValue != url && url.includes(area.labelType)) {
                   isChangeUrl = true;
                 }
                 let isUrl = this.checkIsUrl(url);
@@ -1295,8 +1295,8 @@ export class PdfComponent
       }
 
       case 'transformend': {
-        tmpArea.location.width = newScale.x / this.xScale;
-        tmpArea.location.height = newScale.y / this.yScale;
+        tmpArea.location.width = newScale.x;
+        tmpArea.location.height = newScale.y;
 
         break;
       }
