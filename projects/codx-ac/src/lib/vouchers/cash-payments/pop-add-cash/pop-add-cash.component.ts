@@ -78,6 +78,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
   @ViewChild('cashRef') cashRef: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
+  @ViewChild('totalRef') totalRef: ElementRef;
+  @ViewChild('docRef') docRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
   @ViewChild('cashBook') cashBook: CodxInputComponent;
   @ViewChild('rowNo', { static: true }) rowNo: TemplateRef<any>;
@@ -366,13 +368,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   gridCreated(e, grid) {
-    let hBody, hTab, hNote;
+    let hBody, hTab, hNote, hTotal, hDoc;
     if (this.cardbodyRef)
       hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
     if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
+    if (this.totalRef) hTotal = this.totalRef.nativeElement.clientHeight;
+    if (this.docRef) hDoc = this.docRef.nativeElement.clientHeight;
 
-    this.gridHeight = hBody - (hTab + hNote + 160);
+    this.gridHeight = hBody - (hTab + hNote + hTotal + hDoc + 180);
   }
 
   lineChanged(e: any) {
@@ -501,7 +505,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             .save(null, 0, '', '', false)
             .subscribe((res) => {
               if (res && res.update.data != null) {
-                this.loadformSettledInvoices(type);              
+                this.loadformSettledInvoices(type);
               }
             });
           break;
@@ -682,6 +686,50 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
+  onAddNew(e: any) {
+    this.api
+      .execAction<any>(this.entityNameLine, [e], 'SaveAsync')
+      .subscribe((res) => {
+        if (res) {
+          this.hasAddrow = true;
+          this.hasSaved = true;
+          this.loadTotal();
+          if (parseInt(this.total.replace(/\D/g, '')) > this.cashpayment.paymentAmt) {
+            this.notification.notifyCode('AC0012');
+          }
+          this.dialog.dataService.updateDatas.set(
+            this.cashpayment['_uuid'],
+            this.cashpayment
+          );
+          this.dialog.dataService
+            .save(null, 0, '', '', false)
+            .subscribe((res) => {});
+        }
+      });
+  }
+
+  onEdit(e: any) {
+    this.api
+      .execAction<any>(this.entityNameLine, [e], 'UpdateAsync')
+      .subscribe((res) => {
+        if (res) {
+          this.hasAddrow = true;
+          this.hasSaved = true;
+          this.loadTotal();
+          if (parseInt(this.total.replace(/\D/g, '')) > this.cashpayment.paymentAmt) {
+            this.notification.notifyCode('AC0012');
+          }
+          this.dialog.dataService.updateDatas.set(
+            this.cashpayment['_uuid'],
+            this.cashpayment
+          );
+          this.dialog.dataService
+            .save(null, 0, '', '', false)
+            .subscribe((res) => {});
+        }
+      });
+  }
+
   setDefault(o) {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       this.journalNo,
@@ -725,10 +773,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.cashpaymentline.push(dataline);
               this.loadTotal();
               this.hasSaved = true;
-              if (
-                parseInt(this.total.replace(/\D/g, '')) >
-                this.cashpayment.paymentAmt
-              ) {
+              if (parseInt(this.total.replace(/\D/g, '')) > this.cashpayment.paymentAmt) {
                 this.notification.notifyCode('AC0012');
               }
               this.gridCashPaymentLine.refresh();
@@ -743,10 +788,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           });
         }
       });
-  }
-
-  eventAction(args: any) {
-    this.gridCashPaymentLine.enableEdit(0, ['reasonID']);
   }
 
   setDefaultDataLine() {
@@ -1131,7 +1172,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               if (this.hasAddrow) {
                 idx = this.gridCashPaymentLine.dataSource.length;
                 res.rowNo = idx + 1;
-                this.gridCashPaymentLine.gridRef.addRecord(res, idx);
+                this.gridCashPaymentLine.addRow(res, idx);
                 this.hasAddrow = false;
               }
               break;
@@ -1240,6 +1281,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.gridViewSetupLine = res;
+          for (let index = 0; index < this.lockFields.length; index++) {
+            this.gridViewSetupLine[this.lockFields[index]].isVisible = false;
+          }
         }
       });
     this.cache.companySetting().subscribe((res) => {

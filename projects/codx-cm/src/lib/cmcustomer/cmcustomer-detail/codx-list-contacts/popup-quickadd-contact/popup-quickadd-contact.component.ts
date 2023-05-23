@@ -102,6 +102,9 @@ export class PopupQuickaddContactComponent implements OnInit {
     if (this.type == 'formDetail') {
       this.data.contactType = this.contactType;
       this.data.isDefault = this.isDefault;
+      this.data.objectID = this.recIDCm;
+      this.data.objectType = this.objectType;
+      this.data.objectName = this.objectName;
     }
     if (this.action == 'add') {
       data = [
@@ -109,9 +112,6 @@ export class PopupQuickaddContactComponent implements OnInit {
         this.dialog.formModel.formName,
         this.dialog.formModel.funcID,
         this.dialog.formModel.entityName,
-        this.recIDCm,
-        this.objectType,
-        this.objectName,
       ];
 
       this.cmSv.quickAddContacts(data).subscribe((res) => {
@@ -119,9 +119,9 @@ export class PopupQuickaddContactComponent implements OnInit {
           this.data = res;
           this.data.isDefault = this.isDefault;
           this.data.contactType = this.contactType;
-          this.data.objectID =  this.recIDCm;
-          this.data.objectType =  this.objectType;
-          this.data.objectName =  this.objectName;
+          this.data.objectID = this.recIDCm;
+          this.data.objectType = this.objectType;
+          this.data.objectName = this.objectName;
           this.dialog.close(this.data);
           this.notiService.notifyCode('SYS006');
         } else {
@@ -130,21 +130,31 @@ export class PopupQuickaddContactComponent implements OnInit {
         }
       });
     } else {
-      this.cmSv.updateContactByPopupListCt(this.data).subscribe((res) => {
-        if (res) {
-          this.data = res;
-          this.data.isDefault = this.isDefault;
-          this.data.contactType = this.contactType;
-          this.data.objectID =  this.recIDCm;
-          this.data.objectType =  this.objectType;
-          this.data.objectName =  this.objectName;
-          this.dialog.close(this.data);
-          this.notiService.notifyCode('SYS007');
-        } else {
-          this.dialog.close();
-          this.notiService.notifyCode('SYS021');
-        }
-      });
+      if (this.type == 'formDetail') {
+        this.cmSv.updateContactByPopupListCt(this.data).subscribe((res) => {
+          if (res) {
+            this.data = res;
+            this.data.isDefault = this.isDefault;
+            this.data.contactType = this.contactType;
+            this.data.objectID = this.recIDCm;
+            this.data.objectType = this.objectType;
+            this.data.objectName = this.objectName;
+            this.dialog.close(this.data);
+            this.notiService.notifyCode('SYS007');
+          } else {
+            this.dialog.close();
+            this.notiService.notifyCode('SYS021');
+          }
+        });
+      } else {
+        this.data.isDefault = this.isDefault;
+        this.data.contactType = this.contactType;
+        this.data.objectID = this.recIDCm;
+        this.data.objectType = this.objectType;
+        this.data.objectName = this.objectName;
+        this.dialog.close(this.data);
+        this.notiService.notifyCode('SYS007');
+      }
     }
   }
 

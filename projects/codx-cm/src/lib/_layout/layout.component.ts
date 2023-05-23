@@ -20,7 +20,6 @@ export class LayoutComponent extends LayoutBaseComponent {
     this.module = 'CM';
   }
   onInit(): void {
-
   }
 
   onAfterViewInit(): void {

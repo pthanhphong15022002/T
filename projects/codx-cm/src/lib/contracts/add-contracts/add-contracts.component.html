@@ -316,7 +316,7 @@
 </ng-template>
 <!-- chi tiết mặt hàng -->
 <ng-template #itemsTemplate let-data="value">
-  <product></product>
+  <product [dataSource]="listQuotationsLine"></product>
 </ng-template>
 <!-- phương thức thanh toán -->
 <ng-template #payTemplate let-data="value">
