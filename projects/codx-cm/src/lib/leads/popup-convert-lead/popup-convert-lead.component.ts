@@ -197,6 +197,21 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.customerID = this.customer?.recID;
 
     var data = [];
+    if(this.lstContactCustomer != null){
+      this.lstContactCustomer.forEach(res =>{
+        if(res?.objectType == '2'){
+          res.recID = Util.uid();
+        }
+      })
+    }
+
+    if(this.lstContactDeal != null){
+      this.lstContactDeal.forEach(res =>{
+        if(res?.objectType == '2' || res?.objectType == '1'){
+          res.recID = Util.uid();
+        }
+      })
+    }
     data = [this.lead.recID, this.customer, this.deal, this.lstContactCustomer, this.lstContactDeal, this.lstContactDelete, this.listAddressCustomer, this.lstAddressDelete]
     this.api.execSv<any>('CM','ERM.Business.CM','LeadsBusiness','ConvertLeadToCustomerAndDealAsync',data).subscribe(res =>{
       if(res){
