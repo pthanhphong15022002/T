@@ -21,6 +21,8 @@
         <ng-container *ngIf="data.employeeName">
           <span class="fw-bold fs-6 me-3 text-nowrap item-active" (click)="clickViewEmpInfo(data)">{{ data.employeeName
             }}</span>
+          <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+          <span class="text-danger">{{ data.employeeID }}</span>
         </ng-container>
       </div>
 
@@ -70,13 +72,17 @@
         <span class="text-gray-700" [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async">
         </span>
       </div>
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center mb-1">
+        <span class="text-gray-700" [innerHTML]="data.mobile | formatvalue : view.formModel : 'mobile' | async">
+        </span>
+      </div>
+      <!-- <div class="d-flex align-items-center">
         <span class="icon-place icon-16 text-dark me-2"></span>
         <span class="text-gray-700" [innerHTML]="data.address
         | formatvalue : view.formModel : 'address'
         | async">
         </span>
-      </div>
+      </div> -->
     </div>
   </div>
 </ng-template>
@@ -106,6 +112,17 @@
       </div>
       <div class="align-items-center">
         <span class="text-gray-700 me-1">
+          <codx-label [setRequire]="false" [fiedName]="'DegreeName'" [formModel]="view.formModel"
+            default="Chuyên môn: "></codx-label>
+        </span>
+
+        <span class="text-gray-700" [innerHTML]="data.degreeName
+        | formatvalue : view.formModel : 'degreeName'
+        | async">
+        </span>
+      </div>
+      <!-- <div class="align-items-center">
+        <span class="text-gray-700 me-1">
           <codx-label [setRequire]="false" [fiedName]="'Education'" [formModel]="view.formModel"
             default="Trình độ: "></codx-label>
         </span>
@@ -114,7 +131,7 @@
         | formatvalue : view.formModel : 'education'
         | async">
         </span>
-      </div>
+      </div> -->
     </div>
   </div>
 </ng-template>

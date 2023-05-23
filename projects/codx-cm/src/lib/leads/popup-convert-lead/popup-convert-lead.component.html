@@ -377,6 +377,7 @@
       </div>
     </div>
     <codx-list-contacts
+      #codxConvert
       [funcID]="form.formModel.funcID"
       [objectID]="lead?.recID"
       [objectType]="'2'"
@@ -403,6 +404,7 @@
       [objectType]="'1'"
       [objectName]="customer?.customerName"
       [isConvertLeadToCus]="true"
+      (contactEvent)="contactEvent($event)"
       (lstContactEmit)="lstContactEmit($event)"
       (objectConvert)="objectConvertDeal($event)"
       [hidenMF]="false"
@@ -435,27 +437,46 @@
         <codx-label
           [formModel]="form.formModel"
           name="lblListAdressDeal"
-          default="Danh sách người liên hệ từ tiềm năng"
+          default="Danh sách địa chỉ từ tiềm năng"
         ></codx-label>
       </div>
       <div class="text-gray-600">
         <codx-label
-          name="lblCheckContactToCustomer"
+          name="lblCheckAddressToCustomer"
           [formModel]="form.formModel"
-          default="Chọn liên hệ muốn thêm vào khách hàng"
+          default="Chọn địa chỉ muốn thêm vào khách hàng"
         >
         </codx-label>
       </div>
     </div>
+    <codx-address-cm
+    #codxLoadAdress
+      [type]="'formAdd'"
+      [funcID]="'CM0205'"
+      [entityName]="form.formModel.entityName"
+      [id]="lead?.recID"
+      (convertAddress)="convertAddress($event)"
+      [hidden]="true"
+      [isConvertLeadToCus]="customerID ? true : false"
+    ></codx-address-cm>
   </ng-container>
   <ng-container>
     <div class="title text-primary fs-4 fw-bold">
       <codx-label
         [formModel]="form.formModel"
-        name="lblListContactCustomer"
-        default="Danh sách người liên hệ từ khách hàng"
+        name="lblListAddressCustomer"
+        default="Danh sách địa chỉ từ khách hàng"
       ></codx-label>
     </div>
+    <codx-address-cm
+      #codxListAddress
+      [type]="'formAdd'"
+      [funcID]="'CM0101'"
+      [entityName]="'CM_Customers'"
+      (lstAddressEmit)="lstAddressEmit($event)"
+      (lstAddressDeleteEmit)="lstAddressDeleteEmit($event)"
+      [id]="customerID"
+    ></codx-address-cm>
   </ng-container>
 </ng-template>
 <ng-template #tabInput></ng-template>
