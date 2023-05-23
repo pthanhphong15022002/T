@@ -1,12 +1,15 @@
-<div class="codx-news" *ngIf="loaded">
+<div class="codx-news p-6" *ngIf="loaded">
   <codx-views #view  idField="recID" [views]="views">
   </codx-views>
   <div class="more-function">
     <div class="d-flex flex-column">
-      <a (click)="openPopupSearch()" class="cursor-pointer btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
+      <div class="d-flex justify-content-end">
+        <a (click)="openPopupSearch()" class="cursor-pointer btn btn-icon btn-primary">
+          <i class="icon-search fs-1"></i></a>
+      </div>
       <ng-container *ngIf="userPermission && userPermission.create">
         <span class="postnews mt-3" >
-          <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
+          
           <div class="d-flex btn-postnews">
             <a (click)="openPopupAdd(NEWSTYPE.VIDEO)" class="cursor-pointer btn btn-icon btn-primary me-3"><i
                 class="icon-video_call fs-1"></i></a>

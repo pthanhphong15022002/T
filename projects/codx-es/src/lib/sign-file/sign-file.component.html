@@ -3,17 +3,17 @@
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (click)="click(data)"
     [typeMF]="'hover'"
-    [title]="data.categoryName"
-    [desc]="data.title"
+    [title]="data?.categoryName"
+    [desc]="data?.title"
     [icoCss]="
       'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' +
       data?.icon
     "
     [status]="data?.approveStatus"
-    [icoStyle]="setStyles(data.color)"
-    [statusVll]="lstReferValue['ApproveStatus']"
-    [date]="data.createdOn"
-    [resources]="data.createdBy != undefined ? data.createdBy : ''"
+    [icoStyle]="setStyles(data?.color)"
+    [statusVll]="lstReferValue?.ApproveStatus"
+    [date]="data?.createdOn"
+    [resources]="data?.createdBy != undefined ? data?.createdBy : ''"
     [resourceObjType]="'AD_Users'"
     [titleLine]="2"
     [icoDateCss]="'icon-access_alarm'"
@@ -69,14 +69,14 @@
       class="d-flex align-items-center mb-2"
       [innerHTML]="
         convertHtmlAgency(
-          data.agencyName,
+          data?.agencyName,
           this.grvSetup?.AgencyName?.headerText
         )
       "
     ></div>
     <div class="d-flex justify-content-end">
       <codx-imgs
-        [objectId]="data.createdBy != undefined ? data.createdBy : ''"
+        [objectId]="data?.createdBy != undefined ? data?.createdBy : ''"
         objectType="AD_Users"
         [numberImages]="4"
         [width]="30"
