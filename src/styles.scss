@@ -1132,8 +1132,8 @@ codx-layout-add .card-header {
   font-size: 11px!important;
 }
 .badge.badge-md{
-  font-size: 1rem;
-  padding: 0.3em 0.85em 0.5em;
+  font-size: 12px!important;
+  padding: 0.2em 0.75em 0.5em 0.9em;
 }
 /*** list view srcoll ngang ***/
 .e-listview .e-content {
@@ -2731,6 +2731,8 @@ doc-category{
 .e-schedule .e-month-agenda-view .e-date-header-wrap table td {
   font-size: 13px;
 }
+
+/*
 lib-employees{
   #gridViewV2.e-grid .e-table {
     table-layout: auto;
@@ -2748,6 +2750,9 @@ lib-employee-list{
       line-height: normal!important;
     }
   }
+  .e-grid .e-gridheader tr th{
+    padding:8px 10px!important;
+  }
 }
 lib-employees-leave{
   #gridViewV2.e-grid .e-table {
@@ -2758,6 +2763,7 @@ lib-employees-leave{
     }
   }
 }
+*/
 
 codx-vll.rounded-2{
   font-size: 11px!important;
@@ -2782,10 +2788,20 @@ codx-vll.badge.badge-md span::before{
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .aside-menu .menu-link .menu-title{
   flex-grow: inherit;
 }
-.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link.active,
+
+.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link.active{
+  background-color: #ffffff25!important;
+  //background-color: var(--primary-lightest);
+  .menu-title {
+   // color: var(--primary-dark)!important;
+  }
+}
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link:hover {
   // box-shadow:none;
   background-color: #ffffff25!important;
+  .menu-title {
+    color: var(--text-body)!important;
+  }
 }
 .aside-minimize-icon-title .aside .menu-link {
   padding-left: 7px!important;

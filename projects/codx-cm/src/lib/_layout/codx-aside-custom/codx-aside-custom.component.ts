@@ -77,6 +77,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   @HostBinding('attr.data-kt-drawer-activate') dataKtActive =
     '{default: true, lg: false}';
   @HostBinding('attr.data-kt-drawer-overlay') dataKtOverlay = 'true';
+  isClickMenuCus: boolean =false;
 
   @HostBinding('attr.data-kt-drawer-width') get drawerWidth() {
     if (this.hasSecond) return null;
@@ -103,6 +104,8 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   dataMenuCustom = [];
   dataMenuCustom1 = [];
   funcOld = '';
+  predicatesDefault :any;
+  dataValuesDefault :any;
 
   constructor(
     private pageTitle: PageTitleService,
@@ -164,7 +167,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
             .shift();
 
           this.changDefector.detectChanges();
-          this.codxService.activeMenu.func0 = 'CM0101';
+          // this.codxService.activeMenu.func0 = 'CM0101';
           this.openSecondFunc(this.codxService.activeMenu.func0);
         });
 
@@ -294,6 +297,14 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   itemClick(funcId: string, data: any, type?: string) {
+    //trả lại predicate mặc định khi click vào menu cus
+    if(this.isClickMenuCus){
+      this.codxService.activeViews.dataService.predicates = this.predicatesDefault ;
+      this.codxService.activeViews.dataService.dataValues = this.dataValuesDefault ;
+      this.isClickMenuCus = false ;
+    }
+    
+
     let titleEle = document.querySelector('codx-page-title');
     if (titleEle) {
       let oldBrc = titleEle.querySelector('#breadCrumb');
@@ -591,6 +602,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   loadMenuCustom(fun) {
     if (fun != this.funcOld) {
       this.funcOld = fun;
+      this.dataMenuCustom=[]
       this.requestMenuCustom.predicates = 'ApplyFor==@0 && !Deleted';
       switch (fun) {
         case 'CM0201':
@@ -638,11 +650,19 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
       if (oldBrc) oldBrc.remove();
     }
     this.codxService.activeMenu.fav = data.recID;
+    this.isClickMenuCus = true;
+    this.predicatesDefault =  this.codxService.activeViews?.dataService.predicates ;
+    this.dataValuesDefault =  this.codxService.activeViews?.dataService.dataValues ;
     (this.codxService.activeViews?.dataService as CRUDService)
       .setPredicates(['ProcessID==@0'], [data.recID])
       .subscribe();
+     this.codxService.activeViews.dataService.dataObj = {processID:data.recID}
+    
+     //kaban
+     if ((this.codxService.activeViews.currentView as any)?.kanban){
+      (this.codxService.activeViews.currentView as any)?.kanban.loaded();
+     }
 
-    // let url = this.codxService.activeViews.dataService.codxService.activeViews.function.url
     // this.codxService.navigate('', url +`/${data.recID}`);
   }
 }

@@ -31,7 +31,7 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
     private routerNg:Router,
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['reportID'];
+    this.funcID = this.router.snapshot.params['funcID'];
     this.cacheSv.functionList(this.funcID).subscribe((res:any)=>{
       if(res){
         this.module = res.module ? res.module.toLowerCase() : '';

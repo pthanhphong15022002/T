@@ -272,12 +272,12 @@ export class AppropvalNewsComponent extends UIComponent {
   }
   setDescription(data:any):string
   {
-    let des = "";
-    if(data.category == "1" || data.category == "3" || data.category == "4" || data.category == "companyinfo")
-      des = data.contents;
+    if(data.category == "1" || data.category == "3" || data.category == "4" )
+      return data.content;
+    else if(data.category == "companyinfo")
+      return data.contents;
     else
-      des = data.subject;
-    return des;
+      return data.subject;
   }
 
   deleteData() {
