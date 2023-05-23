@@ -2133,19 +2133,19 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
     // }
   }
   approvalTrans(processID: any, datas: any) {
-    this.api
-      .execSv(
-        'ES',
-        'ES',
-        'ApprovalTransBusiness',
-        'GetCategoryByProcessIDAsync',
-        processID
-      )
-      .subscribe((res2: any) => {
+    // this.api
+    //   .execSv(
+    //     'ES',
+    //     'ES',
+    //     'ApprovalTransBusiness',
+    //     'GetCategoryByProcessIDAsync',
+    //     processID
+    //   )
+    //   .subscribe((res2: any) => {
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         //trình ký
-        if (res2?.eSign == true) {
+        if (this.esCategory?.eSign == true) {
           //   let signFile = new ES_SignFile();
           //   signFile.recID = datas.recID;
           //   signFile.title = datas.title;
@@ -2186,10 +2186,10 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
           //       //update lại data
           //     }
           //   });
-        } else if (res2?.eSign == false)
+        } else if (this.esCategory?.eSign == false)
           //xét duyệt
           this.release(datas, processID);
-      });
+     // });
   }
   //Gửi duyệt
   release(data: any, processID: any) {

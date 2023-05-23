@@ -154,12 +154,12 @@ export class EmployeeListComponent extends UIComponent {
 
   // add Employee
   add(moreFunc:any = null) {
-    debugger
+    
     if(!moreFunc)
       moreFunc = this.sysMoreFunc.find(x => x.functionID == "SYS01");
     this.view.dataService.addNew()
     .subscribe((res: any) => {
-      debugger
+      
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
@@ -174,7 +174,7 @@ export class EmployeeListComponent extends UIComponent {
         option
       );
       popup.closed.subscribe((e) => {
-        debugger
+        
         if(e.event)
         {
           (this.view.dataService as CRUDService).add(e.event).subscribe();
@@ -186,14 +186,14 @@ export class EmployeeListComponent extends UIComponent {
   
   //edit Employee
   edit(data:any,moreFunc:any) {
-    debugger
+    
     if(data)
     {
       if(!moreFunc) moreFunc = this.sysMoreFunc.find(x => x.functionID == "SYS03");
       this.view.dataService
         .edit(data)
         .subscribe((res: any) => {
-          debugger
+          
           let option = new SidebarModel();
           option.DataService = this.view?.dataService;
           option.FormModel = this.view?.formModel;
@@ -208,7 +208,7 @@ export class EmployeeListComponent extends UIComponent {
             option
           );
           dialog.closed.subscribe((e) => {
-            debugger
+            
             if(e.event)
             {
               (this.view.dataService as CRUDService).update(e.event).subscribe();
@@ -222,7 +222,7 @@ export class EmployeeListComponent extends UIComponent {
 
   // coppy employee
   copy(data:any,moreFunc:any) {
-    debugger
+    
     if(data)
     {
       if(!moreFunc) moreFunc = this.sysMoreFunc.find(x => x.functionID == "SYS04");
@@ -230,7 +230,7 @@ export class EmployeeListComponent extends UIComponent {
       this.view.dataService
         .copy()
         .subscribe((res: any) => {
-          debugger
+          
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
           option.FormModel = this.view.formModel;
@@ -245,7 +245,7 @@ export class EmployeeListComponent extends UIComponent {
             option
           );
           popup.closed.subscribe((e) => {
-            debugger
+            
             if(e.event){
               (this.view.dataService as CRUDService).add(e.event).subscribe();
               this.detectorRef.detectChanges();
@@ -257,7 +257,7 @@ export class EmployeeListComponent extends UIComponent {
 
   //delete Employee
   delete(data: any) {
-    debugger
+    
     if(data)
     {
       this.view.dataService
@@ -277,7 +277,7 @@ export class EmployeeListComponent extends UIComponent {
 
   // update status
   // updateStatus(data: any, funcID: string) {
-  //   debugger
+  //   
   //   let popup = this.callfc.openForm(
   //     PopupAddNewHRComponent,
   //     'Cập nhật tình trạng',
@@ -325,14 +325,14 @@ export class EmployeeListComponent extends UIComponent {
   
   //selected Change
   selectedChange(val: any) {
-    debugger
+    
     this.itemSelected = val.data;
     this.detectorRef.detectChanges();
   }
   funIDEmpInfor:string = "HRT03b";
   // view imployee infor
   clickViewEmpInfo(data:any){
-    debugger
+    
     this.cache.functionList(this.funIDEmpInfor)
     .subscribe(func => {
       let queryParams =  {

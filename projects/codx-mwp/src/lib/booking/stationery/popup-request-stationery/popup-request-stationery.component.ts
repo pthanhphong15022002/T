@@ -273,7 +273,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.addQuota();
     this.groupByWareHouse();
     this.dialogAddBookingStationery.patchValue({ recID: this.data.recID });
-    option.methodName = 'AddEditItemAsync';
+    option.methodName = 'SaveAsync';
     option.data = [itemData, this.isAddNew, null, this.lstStationery, null];
     return true;
   }

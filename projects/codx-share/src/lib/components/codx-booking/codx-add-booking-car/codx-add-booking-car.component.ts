@@ -790,7 +790,7 @@ export class CodxAddBookingCarComponent
     if (this.funcType == _editMF) {
       isAdd = false;
     }
-    option.methodName = 'AddEditItemAsync';
+    option.methodName = 'SaveAsync';
     option.data = [itemData, isAdd, this.attendeesList, null];
     return true;
   }

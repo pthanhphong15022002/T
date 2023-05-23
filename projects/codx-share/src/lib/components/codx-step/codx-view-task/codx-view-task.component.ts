@@ -82,7 +82,7 @@ export class CodxViewTaskComponent implements OnInit {
     }
   }
 
-  getInstanceStepByRecID(recID) {
+  async getInstanceStepByRecID(recID) {
     this.api
       .exec<any>(
         'DP',

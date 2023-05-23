@@ -3,7 +3,6 @@
         [header]="header" 
         [body]="body" 
         (clickMF)="clickMF($event)" 
-        [hideMF]="hideMFC"
         [formModel]="formModel" 
         [dataItem]="data"
         [footer]="footer">
@@ -128,7 +127,7 @@
                 </div>
             </div>
         </ng-container>
-        <ng-container *ngIf="data.images">
+        <ng-container *ngIf="data.image">
             <div class="row mt-2">
                 <div class="col-2 fw-bolder">
                     <codx-label [formModel]="formModel" [fiedName]="'Image'" [setRequire]="false"></codx-label>
@@ -136,10 +135,10 @@
                 <div class="col-10">
                     <div class="w-50 h-50">
                         <codx-img 
-                            [imageType]="'square'"
                             [objectId]="data.recID"
                             [objectType]="'WP_News'"
                             [referType]="'image'" 
+                            [imageType]="'square'"
                             [isDefaulImg]="true"
                             [width]="250">
                         </codx-img>
@@ -176,7 +175,9 @@
                     </ng-container>
                     <div class="mt-4 p-4">
                         <codx-view-files 
-                            [objectID]="data.recID" [objectType]="'WP_Comments'" 
+                            [objectID]="data.recID" 
+                            [objectType]="'WP_Comments'" 
+                            [medias]="data.attachments"
                             [formModel]="formModel">
                         </codx-view-files>
                     </div>

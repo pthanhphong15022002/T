@@ -79,11 +79,7 @@ export class ViewsContractsComponent extends UIComponent{
   };
   grvSetup: any;
   vllStatus = '';
-  formModel: FormModel = {
-    formName: 'CMQuotations',
-    gridViewName: 'grvCMQuotations',
-    funcID: 'CM0202',
-  };
+  
   customerIDCrr = '';
   requestData = new DataRequest();
   listQuotations = [];
@@ -259,7 +255,7 @@ export class ViewsContractsComponent extends UIComponent{
     option.IsFull = true;
     option.zIndex = 1001;
     option.DataService = this.view.dataService;
-    option.FormModel = this.formModel;
+    option.FormModel = this.view.formModel;
     let popupContract = this.callFunc.openForm(
       AddContractsComponent,
       '',
@@ -324,7 +320,7 @@ export class ViewsContractsComponent extends UIComponent{
     option.IsFull = false;
     option.zIndex = 1001;
     option.DataService = this.view.dataService;
-    option.FormModel = this.formModel;
+    option.FormModel = this.view.formModel;
     let popupTask = this.callfc.openForm(
       PaymentsComponent,'',
       600,

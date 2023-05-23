@@ -329,8 +329,11 @@ export class RoleDetailComponent
         var dt = this.dataFuncRole[parent] as any[];
         var checkbox = element.querySelector('ejs-checkbox');
         var check = 'false';
-        if (checkbox) check = checkbox.getAttribute('aria-checked');
-        if (check === 'false') {
+        if (checkbox) {
+          var input = checkbox.querySelector('input');
+          check = checkbox?.ariaChecked || input?.checked + '';
+        }
+        if (!check || check === 'false') {
           if (dt && dt.length > 0) {
             dt = dt.filter((res) => res != id);
           } else {
@@ -364,8 +367,7 @@ export class RoleDetailComponent
     this.api
       .call('ERM.Business.AD', 'RolesBusiness', 'DeleteRolePermissionAsync', [
         roleID,
-        funcID,
-        formName,
+        this.parent,
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
