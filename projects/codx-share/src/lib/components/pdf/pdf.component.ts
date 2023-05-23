@@ -941,7 +941,10 @@ export class PdfComponent
             switch (area.labelType) {
               case 'S1': {
                 url = curSignerInfo?.signature1 ?? area.labelValue;
-                if (area.labelValue != url) {
+                if (
+                  area.labelValue != url &&
+                  url != environment.urlUpload + '/' + area.labelValue
+                ) {
                   isChangeUrl = true;
                 }
                 let isUrl = this.checkIsUrl(url);
@@ -960,7 +963,10 @@ export class PdfComponent
               }
               case 'S2': {
                 url = curSignerInfo?.signature2 ?? area.labelValue;
-                if (area.labelValue != url) {
+                if (
+                  area.labelValue != url &&
+                  url != environment.urlUpload + '/' + area.labelValue
+                ) {
                   isChangeUrl = true;
                 }
                 let isUrl = this.checkIsUrl(url);
@@ -979,7 +985,10 @@ export class PdfComponent
               }
               case 'S3': {
                 url = curSignerInfo?.stamp ?? area.labelValue;
-                if (area.labelValue != url) {
+                if (
+                  area.labelValue != url &&
+                  url != environment.urlUpload + '/' + area.labelValue
+                ) {
                   isChangeUrl = true;
                 }
                 let isUrl = this.checkIsUrl(url);
@@ -1120,57 +1129,57 @@ export class PdfComponent
             this.needAddKonva.on('dragend', (dragEnd) => {
               if (dragEnd?.evt?.toElement?.tagName == 'CANVAS') {
                 if (this.needAddKonva) {
-                  let curLayer = stage?.children[0]?.children;
-                  let signed = curLayer.filter((child) => {
-                    if (child != this.tr) {
-                      let childName: tmpAreaName = JSON.parse(
-                        child?.attrs?.name
-                      );
+                  // let curLayer = stage?.children[0]?.children;
+                  // let signed = curLayer.filter((child) => {
+                  //   if (child != this.tr) {
+                  //     let childName: tmpAreaName = JSON.parse(
+                  //       child?.attrs?.name
+                  //     );
 
-                      let sameLable = childName.LabelType == name.LabelType;
-                      let isUnique = this.imgConfig.includes(
-                        childName.LabelType.toString()
-                      );
-                      let sameSigner = childName.Signer == name.Signer;
-                      let sameStepNo = childName.StepNo == name.StepNo;
-                      return sameLable && sameSigner && isUnique && sameStepNo;
-                    }
-                    return undefined;
-                  });
+                  //     let sameLable = childName.LabelType == name.LabelType;
+                  //     let isUnique = this.imgConfig.includes(
+                  //       childName.LabelType.toString()
+                  //     );
+                  //     let sameSigner = childName.Signer == name.Signer;
+                  //     let sameStepNo = childName.StepNo == name.StepNo;
+                  //     return sameLable && sameSigner && isUnique && sameStepNo;
+                  //   }
+                  //   return undefined;
+                  // });
                   this.holding = 0;
-                  if (
-                    !this.imgConfig.includes(name.LabelType.toString()) ||
-                    signed?.length == 1
-                  ) {
-                    switch (name.Type) {
-                      case 'text': {
-                        this.saveNewToDB(
-                          attrs.text,
-                          name.Type,
-                          name.LabelType,
-                          name.Signer,
-                          this.stepNo,
-                          this.needAddKonva
-                        );
+                  // if (
+                  //   !this.imgConfig.includes(name.LabelType.toString()) ||
+                  //   signed?.length == 1
+                  // ) {
+                  switch (name.Type) {
+                    case 'text': {
+                      this.saveNewToDB(
+                        attrs.text,
+                        name.Type,
+                        name.LabelType,
+                        name.Signer,
+                        this.stepNo,
+                        this.needAddKonva
+                      );
 
-                        break;
-                      }
-                      case 'img': {
-                        this.saveNewToDB(
-                          name.LabelValue,
-                          name.Type,
-                          name.LabelType,
-                          name.Signer,
-                          this.stepNo,
-                          this.needAddKonva
-                        );
-                        break;
-                      }
+                      break;
                     }
-                  } else {
-                    this.needAddKonva.destroy();
-                    this.tr?.remove();
+                    case 'img': {
+                      this.saveNewToDB(
+                        name.LabelValue,
+                        name.Type,
+                        name.LabelType,
+                        name.Signer,
+                        this.stepNo,
+                        this.needAddKonva
+                      );
+                      break;
+                    }
                   }
+                  // } else {
+                  //   this.needAddKonva.destroy();
+                  //   this.tr?.remove();
+                  // }
                 }
                 this.needAddKonva = null;
               } else {
@@ -1295,8 +1304,8 @@ export class PdfComponent
       }
 
       case 'transformend': {
-        tmpArea.location.width = newScale.x / this.xScale;
-        tmpArea.location.height = newScale.y / this.yScale;
+        tmpArea.location.width = newScale.x;
+        tmpArea.location.height = newScale.y;
 
         break;
       }

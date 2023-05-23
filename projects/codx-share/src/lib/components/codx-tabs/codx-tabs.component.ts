@@ -64,12 +64,12 @@ export class CodxTabsComponent implements OnInit {
   @Input() disableContactsID = false;
   
   private all: TabModel[] = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-    { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
-    { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
-    { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+    { name: 'History', textDefault: 'Lịch sử', isActive: true,icon: "icon-i-clock-history" },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false,icon: "icon-i-paperclip" },
+    { name: 'Comment', textDefault: 'Bình luận', isActive: false,icon: "icon-i-chat-right" },
+    { name: 'AssignTo', textDefault: 'Giao việc', isActive: false,icon: "icon-i-clipboard-check" },
+    { name: 'References', textDefault: 'Nguồn công việc', isActive: false,icon: "icon-i-link" },
+    { name: 'Approve', textDefault: 'Xét duyệt', isActive: false,icon: "" },
   ];
 
   oCountFooter: any = {};
@@ -98,7 +98,9 @@ export class CodxTabsComponent implements OnInit {
       //   else tabModel.isActive = false;
       //   this.TabControl.push(tabModel);
       // });
-    } else {
+    } else 
+    {
+      this.TabControl.map(x => x.icon = this.all.find(e => e.name.toLowerCase() == x.name.toLowerCase())?.icon ?? "");
       this.active = this.TabControl.findIndex(
         (x: TabModel) => x.isActive == true
       );

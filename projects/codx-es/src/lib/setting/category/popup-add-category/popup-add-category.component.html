@@ -17,7 +17,7 @@
           type="vllicon"
           refValue="L1470"
           field="icon"
-          [crrValue]="data.icon"
+          [crrValue]="data?.icon"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -29,7 +29,7 @@
           type="colorpicker"
           [showText]="false"
           [modeSwitcher]="false"
-          [crrValue]="data.color"
+          [crrValue]="data?.color"
           field="color"
           (valueChange)="valueChange($event)"
         >
@@ -89,7 +89,7 @@
         <div class="col-md-4">
           <div
             class="d-flex align-items-center mb-4"
-            *ngIf="hasModuleES == true && data.eSign"
+            *ngIf="hasModuleES == true && data?.eSign"
           >
             <codx-input
               #checkbox
@@ -112,7 +112,7 @@
         <div class="col-md-5">
           <div
             class="d-flex align-items-center mb-4"
-            *ngIf="hasModuleES == true && data.eSign"
+            *ngIf="hasModuleES == true && data?.eSign"
           >
             <codx-input
               #checkbox
@@ -143,7 +143,7 @@
             <codx-input
               *ngIf="grvSetup && grvSetup['SignatureType']"
               field="signatureType"
-              [crrValue]="data.signatureType"
+              [crrValue]="data?.signatureType"
               type="valuelist"
               [refValue]="grvSetup['SignatureType']['referedValue']"
               (valueChange)="valueChange($event)"
@@ -276,9 +276,9 @@
     </div> -->
     <codx-view-approval-step
       #approvalStep
-      [transID]="data.recID"
+      [transID]="data?.recID"
       [approveStatus]="'1'"
-      [eSign]="data.eSign"
+      [eSign]="data?.eSign"
     >
     </codx-view-approval-step>
   </ng-template>

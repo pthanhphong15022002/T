@@ -231,48 +231,25 @@ export class PurchaseinvoicesComponent extends UIComponent {
       });
   }
   delete(data) {
+
     if (data) {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-      .delete([data], true, (option: RequestOption) =>
-        this.beforeDelete(option, data)
-      )
-      .subscribe((res: any) => {
+      .delete([data], true).subscribe((res: any) => {
         if (res) {
-          this.api
-            .exec(
-              'ERM.Business.PS',
-              'PurchaseInvoicesLinesBusiness',
-              'DeleteAsync',
-              [data.recID]
-            )
-            .subscribe((res: any) => {
-              if (res) {
-                this.api
-                  .exec(
-                    'ERM.Business.AC',
-                    'VATInvoicesBusiness',
-                    'DeleteAsync',
-                    [data.recID]
-                  )
-                  .subscribe((res: any) => {});
-              }
-            });
+          this.api.exec(
+            'ERM.Business.AC',
+            'VATInvoicesBusiness',
+            'DeleteAsync',
+            [data.recID])
+            .subscribe((res: any) => {});
         }
       });
   }
   //#endregion
 
   //#region Function
-  beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteAsync';
-    opt.className = 'PurchaseInvoicesBusiness';
-    opt.assemblyName = 'PS';
-    opt.service = 'PS';
-    opt.data = data;
-    return true;
-  }
 
   clickChange(data) {
     this.itemSelected = data;

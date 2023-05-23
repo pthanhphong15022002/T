@@ -115,9 +115,9 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
   ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
-    this.dataObj = {
-      processID: '327eb334-5695-468c-a2b6-98c0284d0620',
-    };
+    // this.dataObj = {
+    //   processID: '327eb334-5695-468c-a2b6-98c0284d0620',
+    // };
     this.request = new ResourceModel();
     this.request.service = 'CM';
     this.request.assemblyName = 'CM';

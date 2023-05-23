@@ -672,8 +672,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
 
     this.routeActive.queryParams.subscribe((params) => {
+      debugger
       if (params.employeeID || this.user.userID) {
         this.employeeID = params.employeeID;
+        this.infoPersonal = null;
+        debugger
         if (history.state.empInfo) {
           this.infoPersonal = history.state.empInfo;
           this.getManagerEmployeeInfoById();
@@ -696,6 +699,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           this.request.page = params?.page ?? 1;
           this.request.predicate = params?.predicate ?? '';
           this.request.dataValue = params?.dataValue ?? '';
+
+          // funcID ; EmpID ; Page ; Index
+
+          
           if (params?.filter) this.request.filter = JSON.parse(params?.filter);
           this.request.pageSize = 20;
           this.hrService.loadData('HR', this.request).subscribe((res) => {
@@ -738,6 +745,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           empRequest.predicates = 'EmployeeID=@0';
           empRequest.pageLoading = false;
           this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+            debugger
             if (emp[1] > 0) {
               this.infoPersonal = emp[0][0];
               this.getManagerEmployeeInfoById();
@@ -5824,22 +5832,22 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         }
       });
     }
-    if (this.infoPersonal?.indirectManager) {
-      let empRequest = new DataRequest();
-      empRequest.entityName = 'HR_Employees';
-      empRequest.dataValues = this.infoPersonal.indirectManager;
-      empRequest.predicates = 'EmployeeID=@0';
-      empRequest.pageLoading = false;
-      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
-        if (emp[1] > 0) {
-          this.indirectManager = emp[0][0];
-        }
-      });
-      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
-        if (emp[1] > 0) {
-          this.indirectManager = emp[0][0];
-        }
-      });
-    }
+    // if (this.infoPersonal?.indirectManager) {
+    //   let empRequest = new DataRequest();
+    //   empRequest.entityName = 'HR_Employees';
+    //   empRequest.dataValues = this.infoPersonal.indirectManager;
+    //   empRequest.predicates = 'EmployeeID=@0';
+    //   empRequest.pageLoading = false;
+    //   this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+    //     if (emp[1] > 0) {
+    //       this.indirectManager = emp[0][0];
+    //     }
+    //   });
+    //   this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+    //     if (emp[1] > 0) {
+    //       this.indirectManager = emp[0][0];
+    //     }
+    //   });
+    // }
   }
 }

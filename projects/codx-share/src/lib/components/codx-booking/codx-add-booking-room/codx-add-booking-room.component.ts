@@ -1057,7 +1057,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             return;
           } else if (result == '2') {
             this.notificationsService.alertCode('EP017').subscribe((x) => {
-              if (x.event.status == 'N') {
+              if (x.event?.status == 'N') {
                 this.onSaving=false;
                 return;
               } else {
@@ -1081,13 +1081,13 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       (this.data.onlineUrl == null || this.data.onlineUrl == '')
     ) {
       this.notificationsService.alertCode('EP012').subscribe((x) => {
-        if (x.event.status == 'N') {
+        if (x.event?.status == 'N') {
           this.onSaving = false;
           return;
         } else {
           if (this.attendeesNumber > this.roomCapacity) {
             this.notificationsService.alertCode('EP004').subscribe((x) => {
-              if (x.event.status == 'N') {
+              if (x.event?.status == 'N') {
                 this.onSaving = false;
                 return;
               } else {
@@ -1102,7 +1102,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     } else {
       if (this.attendeesNumber > this.roomCapacity) {
         this.notificationsService.alertCode('EP004').subscribe((x) => {
-          if (x.event.status == 'N') {
+          if (x.event?.status == 'N') {
             this.onSaving = false;
             return;
           } else {
@@ -1134,7 +1134,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             this.notificationsService
               .alertCode('EP015', null, unAvaiResource)
               .subscribe((x) => {
-                if (x.event.status == 'N') {
+                if (x.event?.status == 'N') {
                   this.onSaving = false;
                   return;
                 } else {
@@ -1168,7 +1168,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           this.notificationsService
             .alertCode('EP005', null, '"' + this.busyAttendees + '"')
             .subscribe((x) => {
-              if (x.event.status == 'N') {
+              if (x.event?.status == 'N') {
                 this.onSaving = false;
                 return;
               } else {
