@@ -329,7 +329,7 @@
               (attachment?.fileUploadList?.length <= 0 &&
                 currentTab == 0 &&
                 data.files?.length <= 0) ||
-              disableContinue == true
+              disableContinue == true || data?.title == null || data?.categoryID==null
                 ? 'disabled'
                 : ''
             ">

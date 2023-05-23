@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import {
   Component,
   Injector,
@@ -31,6 +32,7 @@ export class EmployeeListComponent extends UIComponent {
   itemSelected: any;
   function:any = null;
   sysMoreFunc:any[] = [];
+  grvSetup: any;
   // template columns grid
   @ViewChild('colEmployee', { static: true }) colEmployee: TemplateRef<any>;
   @ViewChild('colContact', { static: true }) colContact: TemplateRef<any>;
@@ -59,6 +61,11 @@ export class EmployeeListComponent extends UIComponent {
     .subscribe((mFuc:any) => {
       if(mFuc) this.sysMoreFunc = mFuc;
     });
+
+    this.cache.gridViewSetup('employees', 'grvEmployees')
+    .subscribe(grv => {
+      if(grv) this.grvSetup = grv;
+    })
   }
 
   ngAfterViewInit(): void {
