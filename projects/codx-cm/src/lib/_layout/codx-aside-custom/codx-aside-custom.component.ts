@@ -19,9 +19,12 @@ import {
 } from '@angular/core';
 import { NavigationCancel, NavigationEnd, Router } from '@angular/router';
 import {
+  ApiHttpService,
   ButtonModel,
   CacheService,
   CodxService,
+  CRUDService,
+  DataRequest,
   DrawerComponent,
   LayoutService,
   MenuComponent,
@@ -32,7 +35,7 @@ import {
   UrlUtil,
 } from 'codx-core';
 
-import { Observable, of, Subscription } from 'rxjs';
+import { finalize, map, Observable, of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'codx-aside-custom',
@@ -74,6 +77,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   @HostBinding('attr.data-kt-drawer-activate') dataKtActive =
     '{default: true, lg: false}';
   @HostBinding('attr.data-kt-drawer-overlay') dataKtOverlay = 'true';
+
   @HostBinding('attr.data-kt-drawer-width') get drawerWidth() {
     if (this.hasSecond) return null;
     else return "{default:'200px', '300px': '250px'}";
@@ -89,6 +93,17 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     return classList;
   }
 
+  services = 'DP';
+  idFieldTemp = 'RecID';
+  serviceTemp: string = 'DP';
+  assemblyNameTemp: string = 'DP';
+  classNameTemp: string = 'ProcessesBusiness';
+  methodTemp: string = 'GetListSubMenuAsync';
+  requestMenuCustom = new DataRequest();
+  dataMenuCustom = [];
+  dataMenuCustom1 = [];
+  funcOld = '';
+
   constructor(
     private pageTitle: PageTitleService,
     private layout: LayoutService,
@@ -97,6 +112,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     private changDefector: ChangeDetectorRef,
     private router: Router,
     private elRef: ElementRef,
+    private api: ApiHttpService,
     private tenantStore: TenantStore
   ) {
     this.tenant = this.tenantStore.get()?.tenant;
@@ -135,7 +151,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
         t.resizedEvent.emit(size);
       };
     }
-    
+
     var cfg = this.layout.getConfig();
     if (cfg.aside) {
       this.codxService
@@ -148,7 +164,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
             .shift();
 
           this.changDefector.detectChanges();
-          this.codxService.activeMenu.func0 = "CM0101"
+          this.codxService.activeMenu.func0 = 'CM0101';
           this.openSecondFunc(this.codxService.activeMenu.func0);
         });
 
@@ -184,6 +200,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   // }
 
   openSecondFunc(funcId: string, func?: any) {
+    this.dataMenuCustom = [];
     if (funcId) {
       this.codxService.activeMenu.func0 = funcId;
 
@@ -191,7 +208,6 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
         this.codxService.activeMenu.func1 = null;
         return;
       }
-
       if (!func) func = this.getFunc(funcId);
 
       if (func) {
@@ -270,6 +286,9 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
         if (func) return;
       }
     });
+    //load menuCus
+    if (funcId == 'CM0201' || funcId == 'CM0401' || funcId == 'CM0402')
+      this.loadMenuCustom(funcId);
 
     return func;
   }
@@ -567,5 +586,62 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     this.codxService.activeMenu.favType = '';
     this.codxService.activeMenu.reportID = '';
   }
-}
 
+  //load menu
+  loadMenuCustom(fun) {
+    if (fun != this.funcOld) {
+      this.funcOld = fun;
+      this.requestMenuCustom.predicates = 'ApplyFor==@0 && !Deleted';
+      switch (fun) {
+        case 'CM0201':
+          this.requestMenuCustom.dataValues = '1';
+          break;
+        case 'CM0401':
+          this.requestMenuCustom.dataValues = '2';
+          break;
+        case 'CM0402':
+          this.requestMenuCustom.dataValues = '3';
+          break;
+        default: 
+          return;
+      }
+      this.requestMenuCustom.entityName = 'DP_Processes';
+      this.fetch().subscribe((item) => {
+        this.dataMenuCustom = item;
+        this.loaded = true;
+      });
+    }
+  }
+
+  fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.serviceTemp,
+        this.assemblyNameTemp,
+        this.classNameTemp,
+        this.methodTemp,
+        this.requestMenuCustom
+      )
+      .pipe(
+        finalize(() => {}),
+        map((response: any) => {
+          return response[0];
+        })
+      );
+  }
+
+  clickMenuCustom(funcID, data) {
+    let titleEle = document.querySelector('codx-page-title');
+    if (titleEle) {
+      let oldBrc = titleEle.querySelector('#breadCrumb');
+      if (oldBrc) oldBrc.remove();
+    }
+    this.codxService.activeMenu.fav = data.recID;
+    (this.codxService.activeViews?.dataService as CRUDService)
+      .setPredicates(['ProcessID==@0'], [data.recID])
+      .subscribe();
+
+    // let url = this.codxService.activeViews.dataService.codxService.activeViews.function.url
+    // this.codxService.navigate('', url +`/${data.recID}`);
+  }
+}
