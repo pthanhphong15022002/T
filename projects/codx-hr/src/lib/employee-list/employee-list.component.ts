@@ -332,7 +332,7 @@ export class EmployeeListComponent extends UIComponent {
   funIDEmpInfor:string = "HRT03b";
   // view imployee infor
   clickViewEmpInfo(data:any){
-    
+    debugger
     this.cache.functionList(this.funIDEmpInfor)
     .subscribe(func => {
       let queryParams =  {

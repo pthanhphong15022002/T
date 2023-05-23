@@ -697,6 +697,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           this.request.page = params?.page ?? 1;
           this.request.predicate = params?.predicate ?? '';
           this.request.dataValue = params?.dataValue ?? '';
+
+          // funcID ; EmpID ; Page ; Index
+
+          
           if (params?.filter) this.request.filter = JSON.parse(params?.filter);
           this.request.pageSize = 20;
           this.hrService.loadData('HR', this.request).subscribe((res) => {
