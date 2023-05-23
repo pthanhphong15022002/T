@@ -879,7 +879,7 @@ export class CodxAddBookingCarComponent
             return;
           } else if (result == '2') {
             this.notificationsService.alertCode('EP018').subscribe((x) => {
-              if (x.event.status == 'N') {
+              if (x.event?.status == 'N') {
                 this.onSaving=false;
                 return;
               } else {
@@ -899,7 +899,7 @@ export class CodxAddBookingCarComponent
   capacityCheck(approval) {
     if (this.data.attendees > this.carCapacity) {
       this.notificationsService.alertCode('EP010').subscribe((x) => {
-        if (x.event.status == 'N') {
+        if (x.event?.status == 'N') {
           this.onSaving = false;
           return;
         } else {
@@ -932,7 +932,7 @@ export class CodxAddBookingCarComponent
           this.notificationsService
             .alertCode('EP005', null, '"' + this.busyAttendees + '"')
             .subscribe((x) => {
-              if (x.event.status == 'N') {
+              if (x.event?.status == 'N') {
                 this.onSaving = false;
                 return;
               } else {

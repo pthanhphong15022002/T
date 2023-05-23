@@ -1,14 +1,8 @@
-import {
-  CodxFormComponent,
-  CRUDService,
-  DialogModel,
-  NotificationsService,
-} from 'codx-core';
+import { CodxFormComponent, NotificationsService } from 'codx-core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { SaveNoteComponent } from './save-note/save-note.component';
 import {
   ApiHttpService,
-  AuthStore,
   CacheService,
   CallFuncService,
   DialogData,
@@ -26,18 +20,12 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-  TempNote,
-  Notes,
-  NoteFile,
-  NoteType,
-} from '@shared/models/notes.model';
+import { TempNote, Notes, NoteType } from '@shared/models/notes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { UpdateNotePinComponent } from '../update-note-pin/update-note-pin.component';
-import { NoteServices } from '../../../services/note.services';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
+import { NoteService } from '../note.service';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',
@@ -100,7 +88,7 @@ export class AddNoteComponent implements OnInit {
     private callfc: CallFuncService,
     private cache: CacheService,
     private notificationsService: NotificationsService,
-    private noteService: NoteServices,
+    private noteService: NoteService,
     private dmSV: CodxDMService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -118,7 +106,7 @@ export class AddNoteComponent implements OnInit {
     });
     if (this.component == 'note-drawer') {
       if (this.formType == 'add') {
-        var date = new Date();
+        let date = new Date();
         this.currentDate = date.toISOString();
       } else
         this.currentDate = JSON.parse(
@@ -132,7 +120,7 @@ export class AddNoteComponent implements OnInit {
       this.listFileUpload = this.note?.files;
       if (this.note?.files)
         this.listFileUploadTemp = JSON.parse(JSON.stringify(this.note?.files));
-      var dtt = {
+      let dtt = {
         status: this.type == 'check' ? 0 : null,
         listNote: '',
       };
@@ -206,22 +194,23 @@ export class AddNoteComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  valueChangeDate(e) {
-    if (e) {
+  valueChangeDate(event) {
+    console.log('âfasfaffasfaff')
+    if (event?.data && event?.data?.fromDate) {
       this.countValueChange++;
-      var date = new Date(e.data.fromDate);
-      var crr = date.toLocaleDateString();
+      let date = new Date(event.data.fromDate);
+      let crr = date
       if (crr != this.currentDate.toLocaleDateString()) {
         this.currentDate = crr;
       }
       if (this.countValueChange == 1) {
-        // var date1 = new Date(e.data.fromDate);
-        // var crr1 = date1.toLocaleDateString();
+        // let date1 = new Date(e.data.fromDate);
+        // let crr1 = date1.toLocaleDateString();
         // this.date1 = crr1;
         this.date1 = crr;
       } else if (this.countValueChange > 1) {
-        // var date2 = new Date(e.data.fromDate);
-        // var crr2 = date2.toLocaleDateString();
+        // let date2 = new Date(e.data.fromDate);
+        // let crr2 = date2.toLocaleDateString();
         // this.date2 = crr2;
         this.date2 = crr;
       }
@@ -230,8 +219,8 @@ export class AddNoteComponent implements OnInit {
 
   valueChange(e, item = null, index = null) {
     if (e) {
-      var field = e.field;
-      var dt = e.data;
+      let field = e.field;
+      let dt = e.data;
       this.note[field] = dt?.value ? dt?.value : dt;
       if (
         this.type == 'check' ||
@@ -250,7 +239,7 @@ export class AddNoteComponent implements OnInit {
       }
       if (field == 'listNote') {
         if (dt == '' && index !== this.listNote.length - 1) {
-          for (var i = 0; i < this.listNote.length; i++) {
+          for (let i = 0; i < this.listNote.length; i++) {
             if (i === index) {
               this.listNote.splice(i, 1);
               return;
@@ -267,7 +256,7 @@ export class AddNoteComponent implements OnInit {
           this.listNote.pop();
         }
         this.keyUpEnter(e);
-        var dt1: any = {
+        let dt1: any = {
           status: this.tempNote.status,
           listNote: this.tempNote.listNote,
         };
@@ -281,14 +270,14 @@ export class AddNoteComponent implements OnInit {
               this.listNote[index].status = this.tempNote.status;
             }
           }
-          var dtt = {
+          let dtt = {
             status: this.type == 'check' ? 0 : null,
             listNote: '',
           };
           this.listNote.push(dtt);
         }
         this.changeDetectorRef.detectChanges();
-        var ele = document.getElementsByClassName('test-textbox');
+        let ele = document.getElementsByClassName('test-textbox');
         if (ele) {
           let htmlEle = ele[ele.length - 1] as HTMLElement;
           htmlEle.focus();
@@ -298,7 +287,7 @@ export class AddNoteComponent implements OnInit {
   }
 
   onCreateNote() {
-    var date = new Date(this.currentDate);
+    let date = new Date(this.currentDate);
     this.note.createdOn = new Date(
       date.getTime() - date.getTimezoneOffset() * 60000
     )
@@ -347,7 +336,7 @@ export class AddNoteComponent implements OnInit {
                 }
               );
             }
-            var object = [];
+            let object = [];
             if (this.component == 'note-drawer')
               object = [{ data: dtNew, type: 'add-note-drawer' }];
             else {
@@ -358,7 +347,7 @@ export class AddNoteComponent implements OnInit {
             this.noteService.data.next(object);
             this.dialog.close(dtNew);
             if (this.note?.showCalendar == true) {
-              var today: any = document.querySelector(
+              let today: any = document.querySelector(
                 ".e-footer-container button[aria-label='Today']"
               );
               if (today) {
@@ -379,7 +368,7 @@ export class AddNoteComponent implements OnInit {
   }
 
   openFormUpdateIsPin(data) {
-    var obj = {
+    let obj = {
       data: this.data,
       itemUpdate: data,
       maxPinNotes: this.maxPinNotes,
@@ -429,7 +418,7 @@ export class AddNoteComponent implements OnInit {
 
   listFileUploadTemp: any = [];
   onEdit() {
-    var date = new Date(this.currentDate);
+    let date = new Date(this.currentDate);
     this.note.createdOn = new Date(
       date.getTime() - date.getTimezoneOffset() * 60000
     )
@@ -458,7 +447,7 @@ export class AddNoteComponent implements OnInit {
               this.deleteFileByRecID(x.transID, true);
             });
           }
-          var checkDifferentFile =
+          let checkDifferentFile =
             JSON.stringify(this.listFileUploadTemp) ===
             JSON.stringify(this.listFileUpload);
           if (this.listFileUpload?.length > 0 && !checkDifferentFile) {
@@ -474,7 +463,7 @@ export class AddNoteComponent implements OnInit {
               }
             );
           }
-          var object = [];
+          let object = [];
           if (this.component == 'note-drawer') {
             if (this.date2 != undefined)
               object = [{ data: dtNew, type: 'edit-note-drawer-otherDate' }];
@@ -494,8 +483,8 @@ export class AddNoteComponent implements OnInit {
 
   keyUpEnter(e: any) {
     if (e) {
-      var field = e.field;
-      var dt = e.data;
+      let field = e.field;
+      let dt = e.data;
       if (dt) {
         if (this.type == 'check') {
           if (field == 'listNote') {
@@ -515,7 +504,7 @@ export class AddNoteComponent implements OnInit {
       this.type = type;
       this.listNote = [];
       if (type == 'list' || type == 'check') {
-        var todoCheck = { status: type == 'check' ? 0 : null, listNote: '' };
+        let todoCheck = { status: type == 'check' ? 0 : null, listNote: '' };
         this.listNote.push(todoCheck);
         this.changeDetectorRef.detectChanges();
       }
@@ -533,7 +522,7 @@ export class AddNoteComponent implements OnInit {
 
   openFormNoteBooks() {
     if (this.formType == 'edit') {
-      var obj = {
+      let obj = {
         itemUpdate: this.note,
         dialogRef: this.dialog,
       };
@@ -549,8 +538,8 @@ export class AddNoteComponent implements OnInit {
       this.dialog.closed.subscribe((res) => {
         if (res) {
           res.event['type'] = 'WP_Notes';
-          var data = res.event;
-          var obj = [{ data: data, type: 'edit' }];
+          let data = res.event;
+          let obj = [{ data: data, type: 'edit' }];
           this.noteService.data.next(obj);
         }
       });
