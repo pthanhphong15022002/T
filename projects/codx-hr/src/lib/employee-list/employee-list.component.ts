@@ -69,7 +69,7 @@ export class EmployeeListComponent extends UIComponent {
         fieldName: 'employeeID',
         controlName: 'lblEmployeeID',
         headerText: 'Nhân viên',
-        width: 250,
+        width: 350,
         template: this.colEmployee,
       },
       {
@@ -338,8 +338,9 @@ export class EmployeeListComponent extends UIComponent {
       let queryParams =  {
         employeeID: data.employeeID,
         page: this.view.dataService.page,
-        filter: JSON.stringify(this.view.dataService?.filter),
+        filter: JSON.stringify(this.view.dataService?.request.filter),
       };
+      debugger
       this.codxService.navigate("",func.url,queryParams);
     });
   }

@@ -1,5 +1,3 @@
-import { update } from '@syncfusion/ej2-angular-inplace-editor';
-import { T } from '@angular/cdk/keycodes';
 import {
   ChangeDetectorRef,
   Component,
@@ -33,9 +31,12 @@ import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-eco
 @Component({
   selector: 'lib-popup-eprocess-contract',
   templateUrl: './popup-eprocess-contract.component.html',
-  styleUrls: ['./popup-eprocess-contract.component.css']
+  styleUrls: ['./popup-eprocess-contract.component.css'],
 })
-export class PopupEProcessContractComponent extends UIComponent implements OnInit{
+export class PopupEProcessContractComponent
+  extends UIComponent
+  implements OnInit
+{
   formModel: FormModel;
   formModelPL: FormModel;
   formGroup: FormGroup;
@@ -49,18 +50,18 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   lstSubContract: any;
   headerText: string;
   openFrom: string;
-  genderGrvSetup: any
+  genderGrvSetup: any;
   employeeObj: any;
 
-    //#region EBenefitInfo Declaration
-    benefitFuncID = 'HRTEM0403';
-    benefitObj: any
-    benefitFormModel : FormModel
-    benefitFormGroup: FormGroup
-    dialogAddBenefit: any;
-    editBenefitObj: any;
-    tempBenefitArr: any = [];
-    //#endregion
+  //#region EBenefitInfo Declaration
+  benefitFuncID = 'HRTEM0403';
+  benefitObj: any;
+  benefitFormModel: FormModel;
+  benefitFormGroup: FormGroup;
+  dialogAddBenefit: any;
+  editBenefitObj: any;
+  tempBenefitArr: any = [];
+  //#endregion
 
   fmSubContract: FormModel;
   tabInfo: any[] = [
@@ -79,7 +80,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
       text: 'Lương & phụ cấp',
       name: 'empBenefit',
     },
-  ]
+  ];
 
   dataCbxContractType: any;
   @ViewChild('form') form: CodxFormComponent;
@@ -109,39 +110,39 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
-    console.log('headertext nhan vao', this.headerText);
-    
+
     this.employeeId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
     this.openFrom = data?.data?.openFrom;
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
-    console.log('data truyen vao ben trong ', this.data);
     this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
-    console.log('emp truyen vao ne', this.employeeObj);
-    
-    if(this.data){
-      if(this.data.benefits){
+
+    if (this.data) {
+      if (this.data.benefits) {
         this.tempBenefitArr = JSON.parse(JSON.stringify(this.data?.benefits));
       }
-      console.log('lst benefit', this.tempBenefitArr);
     }
     this.fmSubContract = new FormModel();
     this.fmSubContract.entityName = 'HR_EContracts';
     this.fmSubContract.gridViewName = 'grvEContractsPL';
     this.fmSubContract.formName = 'EContracts';
-    //Util.camelizekeyObj()
   }
 
   onInit(): void {
-    this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
-      this.genderGrvSetup = res?.Gender;
-    });
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
+      });
     this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;
         this.hrSevice
-          .getFormGroup(this.benefitFormModel.formName, this.benefitFormModel.gridViewName)
+          .getFormGroup(
+            this.benefitFormModel.formName,
+            this.benefitFormModel.gridViewName
+          )
           .then((fg) => {
             if (fg) {
               this.benefitFormGroup = fg;
@@ -175,54 +176,55 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         });
   }
 
-  initFormAddBenefit(){
+  initFormAddBenefit() {
     this.hrSevice
-        .getDataDefault(
-          this.benefitFormModel.funcID,
-          this.benefitFormModel.entityName,
-          'RecID'
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.benefitObj = res?.data;
-            this.benefitObj.effectedDate = null;
-            this.benefitObj.expiredDate = null;
-            // this.benefitObj.employeeID = this.employId;
-            this.benefitFormModel.currentData = this.benefitObj;
-            this.benefitFormGroup.patchValue(this.benefitObj);
-          }
-        });
+      .getDataDefault(
+        this.benefitFormModel.funcID,
+        this.benefitFormModel.entityName,
+        'RecID'
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.benefitObj = res?.data;
+          this.benefitObj.effectedDate = null;
+          this.benefitObj.expiredDate = null;
+          // this.benefitObj.employeeID = this.employId;
+          this.benefitFormModel.currentData = this.benefitObj;
+          this.benefitFormGroup.patchValue(this.benefitObj);
+        }
+      });
   }
 
-  addBenefit(){
-        let option = new DialogModel();
-        //option.zIndex = 999;
-        option.FormModel = this.benefitFormModel;
-        this.dialogAddBenefit = this.callfunc.openForm(
-          this.tmpAddBenefit,
-          '',
-          550,
-          350,
-          '',
-          null,
-          '',
-          option
-        );
-        this.dialogAddBenefit.closed.subscribe((res) => {
-          if(res?.event){
-            this.tempBenefitArr.push({
-              BenefitID: res.event.benefitID,
-              BenefitAmt: res.event.benefitAmt,
-              BenefitNorm: res.event.benefitNorm
-            });
-            this.data.benefits = JSON.stringify(this.tempBenefitArr);
-            this.df.detectChanges();
-          }
+  addBenefit() {
+    let option = new DialogModel();
+    //option.zIndex = 999;
+    option.FormModel = this.benefitFormModel;
+    this.dialogAddBenefit = this.callfunc.openForm(
+      this.tmpAddBenefit,
+      '',
+      550,
+      350,
+      '',
+      null,
+      '',
+      option
+    );
+    this.dialogAddBenefit.closed.subscribe((res) => {
+      if (res?.event) {
+        this.tempBenefitArr.push({
+          BenefitID: res.event.benefitID,
+          BenefitAmt: res.event.benefitAmt,
+          BenefitNorm: res.event.benefitNorm,
         });
+        this.data.benefits = JSON.stringify(this.tempBenefitArr);
+        this.df.detectChanges();
+      }
+    });
   }
 
-  onSaveBenefitForm(dialog1){
-    this.dialogAddBenefit && this.dialogAddBenefit.close(dialog1.formModel.currentData);
+  onSaveBenefitForm(dialog1) {
+    this.dialogAddBenefit &&
+      this.dialogAddBenefit.close(dialog1.formModel.currentData);
   }
 
   close2(dialog: DialogRef) {
@@ -231,26 +233,25 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
 
   initForm() {
     if (this.actionType == 'add') {
-      // this.hrSevice.getEContractDefault().subscribe((res) => {
-        console.log('this.formModel.funcID', this.formModel.funcID);
-        console.log('this.formModel.entityName', this.formModel.entityName);
+      this.hrSevice
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.data = res?.data;
+            this.data.employeeID = this.employeeId;
+            this.data.signedDate = null;
+            this.data.effectedDate = null;
 
-        this.hrSevice.getDataDefault(this.formModel.funcID, this.formModel.entityName, this.idField).subscribe((res) => {
-        if (res) {
-          debugger
-          console.log('data default ne', res);
-          
-          this.data = res?.data;
-          this.data.employeeID = this.employeeId;
-          this.data.signedDate = null;
-          this.data.effectedDate = null;
-
-          this.formModel.currentData = this.data;
-          this.formGroup.patchValue(this.data);
-          this.cr.detectChanges();
-          this.isAfterRender = true;
-        }
-      });
+            this.formModel.currentData = this.data;
+            this.formGroup.patchValue(this.data);
+            this.isAfterRender = true;
+            this.cr.detectChanges();
+          }
+        });
     } else if (this.actionType === 'edit' || this.actionType === 'copy') {
       if (this.actionType == 'copy') {
         if (this.data.signedDate == '0001-01-01T00:00:00') {
@@ -276,17 +277,14 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
       }
       this.formModel.currentData = this.data;
       this.formGroup.patchValue(this.data);
-      this.cr.detectChanges();
       this.isAfterRender = true;
-      
+      this.cr.detectChanges();
     }
-    console.log('form group ne', this.formGroup);
   }
 
   onSaveForm() {
-    console.log('data chuan bi luu', this.data);
-    if(this.data.payForm == null) this.data.payForm = '';
-    if(this.data.benefits == null) this.data.benefits = '';
+    if (this.data.payForm == null) this.data.payForm = '';
+    if (this.data.benefits == null) this.data.benefits = '';
 
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
@@ -310,48 +308,50 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     this.data.positionID = this.employeeObj?.positionID;
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
-      this.hrSevice.validateBeforeSaveContract(this.data, true).subscribe((res) => {
-        console.log('result', res);
-        if (res) {
-          if (res[0]) {
-            //code test
-            this.notify.notifyCode('SYS006');
-            res[0].emp = this.employeeObj;
-            this.dialog && this.dialog.close(res[0]);
-            this.data = res;
-          } else if (res[1]) {
-            this.notify.alertCode(res[1]).subscribe((stt) => {
-              console.log('click', res);
-              if (stt?.event.status == 'Y') {
-                if (res[1] == 'HR010') {
-                  this.hrSevice
-                    .addEContract(this.data)
-                    .subscribe((result) => {
-                      if (result && result[0]) {
-                        this.notify.notifyCode('SYS006');
-                        result[0].emp = this.employeeObj;
-                        this.dialog && this.dialog.close(result[0]);
-                      }
-                    });
-                } else if (res[1] == 'HR009') {
-                  this.data.hiredOn = this.data.effectedDate;
-                  this.formGroup.patchValue({ hiredOn: this.data.hiredOn });
+      this.hrSevice
+        .validateBeforeSaveContract(this.data, true)
+        .subscribe((res) => {
+          console.log('result', res);
+          if (res) {
+            if (res[0]) {
+              //code test
+              this.notify.notifyCode('SYS006');
+              res[0].emp = this.employeeObj;
+              this.dialog && this.dialog.close(res[0]);
+              this.data = res;
+            } else if (res[1]) {
+              this.notify.alertCode(res[1]).subscribe((stt) => {
+                console.log('click', res);
+                if (stt?.event.status == 'Y') {
+                  if (res[1] == 'HR010') {
+                    this.hrSevice
+                      .addEContract(this.data)
+                      .subscribe((result) => {
+                        if (result && result[0]) {
+                          this.notify.notifyCode('SYS006');
+                          result[0].emp = this.employeeObj;
+                          this.dialog && this.dialog.close(result[0]);
+                        }
+                      });
+                  } else if (res[1] == 'HR009') {
+                    this.data.hiredOn = this.data.effectedDate;
+                    this.formGroup.patchValue({ hiredOn: this.data.hiredOn });
 
-                  this.hrSevice
-                    .addEContract(this.data)
-                    .subscribe((result) => {
-                      if (result && result[0]) {
-                        this.notify.notifyCode('SYS006');
-                        result[0].emp = this.employeeObj;
-                        this.dialog && this.dialog.close(result[0]);
-                      }
-                    });
+                    this.hrSevice
+                      .addEContract(this.data)
+                      .subscribe((result) => {
+                        if (result && result[0]) {
+                          this.notify.notifyCode('SYS006');
+                          result[0].emp = this.employeeObj;
+                          this.dialog && this.dialog.close(result[0]);
+                        }
+                      });
+                  }
                 }
-              }
-            });
+              });
+            }
           }
-        }
-      });
+        });
     } else if (this.actionType == 'edit') {
       this.hrSevice.editEContract(this.data).subscribe((res) => {
         if (res && res[0]) {
@@ -381,7 +381,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         case 'contractTypeID': {
           this.data.limitMonths =
             event?.component?.itemsSelected[0]?.LimitMonths;
-          this.formGroup.patchValue({ limitMonths: this.data.limitMonths});
+          this.formGroup.patchValue({ limitMonths: this.data.limitMonths });
           this.setExpiredDate(this.data.limitMonths);
           break;
         }
@@ -430,9 +430,9 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     }
   }
 
-  handleSelectEmp(evt){
-    if(evt.data != null){
-      this.employeeId = evt.data
+  handleSelectEmp(evt) {
+    if (!!evt.data) {
+      this.employeeId = evt.data;
       let empRequest = new DataRequest();
       empRequest.entityName = 'HR_Employees';
       empRequest.dataValues = this.employeeId;
@@ -440,47 +440,45 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
       empRequest.pageLoading = false;
       this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
         if (emp[1] > 0) {
-          this.employeeObj = emp[0][0]
-          console.log('employee cua form', this.employeeObj);
+          this.employeeObj = emp[0][0];
           this.df.detectChanges();
         }
       });
+    } else {
+      delete this.employeeObj;
     }
   }
 
-  clickMFSubContract(evt, data){
-      switch (evt.functionID) {
-        case 'SYS02':
-          this.notify.alertCode('SYS030').subscribe((x) => {
-            if (x.event?.status == 'Y') {
-              this.hrSevice.deleteEContract(data).subscribe((res) => {
-                if(res != null){
-                  this.notify.notifyCode('SYS008');
-                  let i = this.lstSubContract.indexOf(data)
-                  if(i != -1){
-                    this.lstSubContract.splice(i, 1);
-                  }
-                  this.df.detectChanges();
+  clickMFSubContract(evt, data) {
+    switch (evt.functionID) {
+      case 'SYS02':
+        this.notify.alertCode('SYS030').subscribe((x) => {
+          if (x.event?.status == 'Y') {
+            this.hrSevice.deleteEContract(data).subscribe((res) => {
+              if (res != null) {
+                this.notify.notifyCode('SYS008');
+                let i = this.lstSubContract.indexOf(data);
+                if (i != -1) {
+                  this.lstSubContract.splice(i, 1);
                 }
-              })
-            }
-          })
+                this.df.detectChanges();
+              }
+            });
+          }
+        });
 
-          break;
-        case 'SYS03':
-          this.handleSubContract(evt.text, 'edit', data)
-          break;
-        case 'SYS04':
-          this.copyValue(evt.text, data)
-          break;
+        break;
+      case 'SYS03':
+        this.handleSubContract(evt.text, 'edit', data);
+        break;
+      case 'SYS04':
+        this.copyValue(evt.text, data);
+        break;
     }
   }
 
-
-  copyValue(actionHeaderText, data){
-    this.hrSevice
-    .copy(data, this.fmSubContract, 'RecID')
-    .subscribe((res) => {
+  copyValue(actionHeaderText, data) {
+    this.hrSevice.copy(data, this.fmSubContract, 'RecID').subscribe((res) => {
       this.handleSubContract(actionHeaderText, 'copy', res);
     });
   }
@@ -505,14 +503,13 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     );
     popupSubContract.closed.subscribe((res) => {
       if (res.event) {
-        if(actionType == 'add'){
-          if(!this.lstSubContract){
-            this.lstSubContract = []
+        if (actionType == 'add') {
+          if (!this.lstSubContract) {
+            this.lstSubContract = [];
           }
           this.lstSubContract.push(res.event[0]);
           this.df.detectChanges();
-        }
-        else if(actionType == 'edit'){
+        } else if (actionType == 'edit') {
           let index = this.lstSubContract.indexOf(data);
           this.lstSubContract[index] = res.event[0];
           this.df.detectChanges();

@@ -62,8 +62,6 @@ export class PopupEmployeeBenefitComponent
     this.currentEJobSalaries = JSON.parse(JSON.stringify(data?.data?.dataObj));
   }
 
-  ngAfterViewInit() {}
-
   initForm() {
     this.hrSevice
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
@@ -146,7 +144,7 @@ export class PopupEmployeeBenefitComponent
               }
               this.df.detectChanges();
             }
-          }); 
+          });
         }
       }
       this.cr.detectChanges();
@@ -178,13 +176,12 @@ export class PopupEmployeeBenefitComponent
   }
 
   handleSelectEmp(evt) {
-    console.log(evt);
     if (!!evt.data) {
       this.employeeId = evt.data;
       this.getEmployeeInfoById(this.employeeId, evt.field);
     } else {
       delete this.employeeObj;
-    } 
+    }
   }
 
   //Render Signer Position follow Signer ID
