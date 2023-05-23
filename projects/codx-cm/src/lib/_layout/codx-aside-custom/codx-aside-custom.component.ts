@@ -608,9 +608,10 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
       this.requestMenuCustom.entityName = 'DP_Processes';
       this.fetch().subscribe((item) => {
         this.dataMenuCustom = item;
+        this.dataMenuCustom1 =  item
         this.loaded = true;
       });
-    }
+    }else  this.dataMenuCustom =  this.dataMenuCustom1
   }
 
   fetch(): Observable<any[]> {
