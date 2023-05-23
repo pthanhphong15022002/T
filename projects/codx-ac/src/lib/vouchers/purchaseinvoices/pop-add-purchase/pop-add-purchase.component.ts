@@ -969,6 +969,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   //#region Method
 
+
+
   saveVAT() {
     if (this.VATType == '1') {
       this.api
@@ -1094,6 +1096,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         this.formType === 'edit',
         () => {
           if (this.formType == 'add' || this.formType == 'copy') {
+            this.purchaseinvoices.status = '1';
             //this.purchaseInvoicesLines = this.gridPurchase.dataSource;
             this.dialog.dataService.save(null, 0, '', 'SYS006', notify).subscribe((res) => {
               if (res && res.save.data != null) {
@@ -1103,6 +1106,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             });
           }
           if (this.formType == 'edit') {
+            if (this.purchaseinvoices.status == '0') {
+              this.purchaseinvoices.status = '1';
+            }
             this.dialog.dataService.save(null, 0, '', 'SYS006', notify).subscribe((res) => {
                 if (res != null) {
                   this.updateVAT();
