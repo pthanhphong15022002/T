@@ -121,12 +121,14 @@
         <div
           class="d-flex align-items-center w-100"
         >
+        
+          <!--Type User-->
           <codx-temp-full
             cardCss="card-template mb-4"
             *ngIf="item?.roleType=='U' "
-            [imageId]="item.approver"
-            [title]="item.name"
-            [subTitle]="item.position ?? positionDefault"
+            [imageId]="item?.approver"
+            [title]="item?.name"
+            [subTitle]="item?.position ?? positionDefault"
             [imageObjType]="'AD_Users'"
             [imageWidth]="35"
             [titleLine]="3"
@@ -136,37 +138,38 @@
             typeMF="hover"
           >
           </codx-temp-full>
-
-          <codx-temp-full
-            cardCss="card-template mb-4"
-            *ngIf="item.roleType!='U' "
-            [imageSrc]="
-              './assets/themes/sys/default/img/' +
-              (item.icon ? item.icon : 'share_default.svg')
-            "
-            [imageWidth]="20"
-            imgCss="w-30px p-3 me-3 user-mini-icon"
-            [imageWidth]="30"
-            [subTitle]="item.approver | vll : 'ES014' : 'text' | async"
-            [title]="
-              item.name ?? (item.approver | vll : 'ES014' : 'text' | async)
-            "
-            [subTitle]="
-              item.position ??
-              (item.approver | vll : 'ES014' : 'text' | async) ??
-              positionDefault
-            "
-            [titleLine]="3"
-            [formModel]="formModel"
-            (clickMF)="MFClick($event, item, index)"
-            [dataItem]="item"
-            typeMF="hover"
-          >
-          </codx-temp-full>
+          
+        <!--Type còn lại-->
+        <codx-temp-full
+        cardCss="card-template mb-4"
+        *ngIf="item?.roleType!='U' "
+        [imageSrc]="
+          './assets/themes/sys/default/img/' +
+          (item?.icon ? item?.icon : 'share_default.svg')
+        "
+        [imageWidth]="20"
+        imgCss="w-30px p-3 me-3 user-mini-icon"
+        [imageWidth]="30"
+        [subTitle]="item?.approver | vll : 'ES014' : 'text' | async"
+        [title]="
+          item?.name ?? (item?.approver | vll : 'ES014' : 'text' | async)
+        "
+        [subTitle]="
+          item?.position ??
+          (item?.approver | vll : 'ES014' : 'text' | async) ??
+          positionDefault
+        "
+        [titleLine]="3"
+        [formModel]="formModel"
+        (clickMF)="MFClick($event, item, index)"
+        [dataItem]="item"
+        typeMF="hover"
+      >
+      </codx-temp-full>
         </div>
         <!-- <div
                 class="card-survey"
-                [id]="'card-survey-question-' + item.recID"
+                [id]="'card-survey-question-' + item?.recID"
                 
               >
                 <div
@@ -175,7 +178,7 @@
                 >
                   <div
                     [ngClass]="
-                    item.active
+                    item?.active
                         ? 'content-wrapper b-l'
                         : 'content-wrapper'
                     "
@@ -187,21 +190,21 @@
     </div>
     <!-- <ng-container *ngFor="let item of lstApprover; let index = index">
       <div class="d-flex align-items-center w-100">
-        <codx-temp-full cardCss="card-template mb-4" *ngIf="item.roleType?.length == 1" [imageId]="item.approver"
-          [title]="item.name" [subTitle]="item.position ?? positionDefault" [imageObjType]="'AD_Users'"
+        <codx-temp-full cardCss="card-template mb-4" *ngIf="item?.roleType?.length == 1" [imageId]="item?.approver"
+          [title]="item?.name" [subTitle]="item?.position ?? positionDefault" [imageObjType]="'AD_Users'"
           [imageWidth]="35" [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item, index)"
           [dataItem]="item" typeMF="hover">
         </codx-temp-full>
 
-        <codx-temp-full cardCss="card-template mb-4" *ngIf="item.roleType?.length > 1" [imageSrc]="
+        <codx-temp-full cardCss="card-template mb-4" *ngIf="item?.roleType?.length > 1" [imageSrc]="
             './assets/themes/sys/default/img/' +
-            (item.icon ? item.icon : 'share_default.svg')
+            (item?.icon ? item?.icon : 'share_default.svg')
           " [imageWidth]="20" imgCss="w-30px p-3 me-3 user-mini-icon" [imageWidth]="30"
-          [subTitle]="item.approver | vll : 'ES014' : 'text' | async" [title]="
-            item.name ?? (item.approver | vll : 'ES014' : 'text' | async)
+          [subTitle]="item?.approver | vll : 'ES014' : 'text' | async" [title]="
+            item?.name ?? (item?.approver | vll : 'ES014' : 'text' | async)
           " [subTitle]="
-            item.position ??
-            (item.approver | vll : 'ES014' : 'text' | async) ??
+            item?.position ??
+            (item?.approver | vll : 'ES014' : 'text' | async) ??
             positionDefault
           " [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item, index)" [dataItem]="item"
           typeMF="hover">
@@ -213,13 +216,13 @@
   <div class="d-flex flex-column mb-4" *ngIf="lstApprover?.length > 1 && data.stepType != 'I'">
     <div class="row">
       <ng-container *ngFor="let item of lstApproveMode; let index = index">
-        <div class="col-3" *ngIf="data.approveMode == item.value">
+        <div class="col-3" *ngIf="data.approveMode == item?.value">
           <div class="d-flex align-items-center">
             <codx-input
               type="radio"
               [checked]="true"
-              [label]="item.text"
-              [crrValue]="data.approveMode == item.value ? true : false"
+              [label]="item?.text"
+              [crrValue]="data.approveMode == item?.value ? true : false"
               name="radio"
               field="approveMode"
               class="test-switch"
@@ -229,12 +232,12 @@
           </div>
         </div>
 
-        <div class="col-3" *ngIf="data.approveMode != item.value">
+        <div class="col-3" *ngIf="data.approveMode != item?.value">
           <div class="d-flex align-items-center">
             <codx-input
               type="radio"
-              [label]="item.text"
-              [crrValue]="data.approveMode == item.value ? true : false"
+              [label]="item?.text"
+              [crrValue]="data.approveMode == item?.value ? true : false"
               name="radio"
               field="approveMode"
               class="test-switch"
@@ -250,13 +253,13 @@
   <div class="d-flex flex-column mb-4" *ngIf="lstApprover?.length > 1 && data.stepType == 'I'">
     <div class="row">
       <ng-container *ngFor="let item of lstApproveMode; let index = index">
-        <div class="col-3" *ngIf="data.approveMode == item.value">
+        <div class="col-3" *ngIf="data.approveMode == item?.value">
           <div class="d-flex align-items-center">
             <codx-input
               type="radio"
               [checked]="true"
-              [label]="item.text"
-              [crrValue]="data.approveMode == item.value ? true : false"
+              [label]="item?.text"
+              [crrValue]="data.approveMode == item?.value ? true : false"
               name="radio"
               field="approveMode"
               class="test-switch"
