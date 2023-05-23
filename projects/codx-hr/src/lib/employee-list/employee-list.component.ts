@@ -85,7 +85,7 @@ export class EmployeeListComponent extends UIComponent {
         controlName: 'LblEmail',
         fieldName: 'email',
         headerText: 'Liên hệ',
-        width: 250,
+        width: 200,
         template: this.colContact,
       },
       {
