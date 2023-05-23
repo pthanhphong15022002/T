@@ -32,7 +32,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   dialogData: any = null;
   grvSetUp: any[] = [];
   codxModifiedOn = new Date();
-
+  employeeIDDisable: boolean = false;
   tabInfo: any[] = [
     {
       icon: 'icon-assignment_ind',
@@ -68,6 +68,9 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.action = dialogData?.data?.action;
     this.headerText = dialogData?.data?.text;
     this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
+    if(this.dialogRef.dataService.keyField === 'EmployeeID'){
+      this.employeeIDDisable = false;
+    }this.employeeIDDisable = true;
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
