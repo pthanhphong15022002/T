@@ -32,11 +32,13 @@ export class CodxAddressCmComponent implements OnInit {
   @Input() entityName: any;
   @Input() id: any;
   @Input() type: any;
+  @Input() hidden = false;
+  @Input() isConvertLeadToCus = false;
   @Output() lstAddressEmit = new EventEmitter<any>();
   @Output() lstAddressDeleteEmit = new EventEmitter<any>();
   @Output() addressName = new EventEmitter<any>();
-
-  listAddress = [];
+  @Output() convertAddress = new EventEmitter<any>();
+  @Input() listAddress = [];
   listAddressDelete = [];
   formModelAddress: FormModel;
   moreFuncAdd = '';
@@ -60,7 +62,18 @@ export class CodxAddressCmComponent implements OnInit {
   ) {}
 
     ngOnChanges(changes: SimpleChanges): void {
-      this.getListAddress();
+      if (changes['listAddress']) {
+        if (
+          changes['listAddress'].currentValue != null &&
+          changes['listAddress']?.currentValue?.length > 0
+        ) {
+          this.loadListAdress(changes['listAddress'].currentValue);
+        }
+        this.loaded = true;
+      }else{
+        this.getListAddress();
+
+      }
 
     }
 
@@ -73,7 +86,14 @@ export class CodxAddressCmComponent implements OnInit {
       }
     });
   }
-
+  loadListAdress(lstAddress){
+    this.listAddress = this.cmSv.bringDefaultContactToFront(
+      lstAddress
+    );
+    if (this.listAddress != null && this.listAddress.length > 0) {
+      this.changeAddress(this.listAddress[0]);
+    }
+  }
   getListAddress() {
     this.loaded = false;
     this.request.predicates = 'ObjectID=@0 && ObjectType=@1';
@@ -248,5 +268,10 @@ export class CodxAddressCmComponent implements OnInit {
         }
       }
     });
+  }
+
+  valueChange(e, data){
+    this.convertAddress.emit({ e: e, data: data });
+
   }
 }
