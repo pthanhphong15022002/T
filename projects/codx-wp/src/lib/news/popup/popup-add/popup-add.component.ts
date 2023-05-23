@@ -96,19 +96,6 @@ export class PopupAddComponent implements OnInit {
     {
       this.data.createdBy = this.user.userID;
       this.data.createdName = this.user.userName;
-      if(this.data.shareControl == this.SHARECONTROLS.EVERYONE)
-      {
-        let permission = {
-          objectID: '',
-          objectName: '',
-          objectType: this.SHARECONTROLS.EVERYONE,
-          memberType: this.MEMBERTYPE.SHARE
-        };
-        if(this.data.permissions)
-          this.data.permissions = [];
-        this.data.permissions.add(permission);
-      }
-      
     }
     else
     {
@@ -164,6 +151,7 @@ export class PopupAddComponent implements OnInit {
   }
   //close popup
   clickClosePopup() {
+    debugger
     this.dialogRef.close();
   }
   // open popup share

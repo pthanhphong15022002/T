@@ -339,14 +339,15 @@ export class EmployeeListComponent extends UIComponent {
   funIDEmpInfor:string = "HRT03b";
   // view imployee infor
   clickViewEmpInfo(data:any){
-    
+    debugger
     this.cache.functionList(this.funIDEmpInfor)
     .subscribe(func => {
       let queryParams =  {
         employeeID: data.employeeID,
         page: this.view.dataService.page,
-        filter: JSON.stringify(this.view.dataService?.filter),
+        filter: JSON.stringify(this.view.dataService?.request.filter),
       };
+      debugger
       this.codxService.navigate("",func.url,queryParams);
     });
   }

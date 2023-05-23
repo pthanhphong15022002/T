@@ -96,6 +96,15 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     }
   }
 
+  HandleValueChangeIDCard(e){
+    if(e.data.length > 12){
+      e.data = e.data.substring(0, 12);
+    }
+    this.data.idCardNo = e.data;
+    this.formGroup.patchValue({ idCardNo: this.data.idCardNo });
+    this.cr.detectChanges();
+  }
+
   updateDegreeName() {
     let trainFieldId = this.data.trainFieldID;
     let trainLev = this.data.trainLevel;
@@ -106,7 +115,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     } else if (trainLev) {
       this.data.degreeName = trainLev;
     }
-    this.form?.formGroup.patchValue({ degreeName: this.data.degreeName });
+    this.formGroup.patchValue({ degreeName: this.data.degreeName });
   }
 
   handleOnSaveEmployeeContactInfo() {
