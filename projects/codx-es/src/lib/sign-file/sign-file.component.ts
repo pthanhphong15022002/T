@@ -119,14 +119,14 @@ export class SignFileComponent extends UIComponent {
         this.formModel = fm;
 
         this.cache
-          .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+          .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
           .subscribe((grv) => {
             if (grv) {
               this.grvSetup = grv;
             }
           });
         this.esService
-          .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+          .getComboboxName(this.formModel?.formName, this.formModel?.gridViewName)
           .then((cbxName) => {
             if (cbxName) {
               this.lstReferValue = cbxName;
@@ -343,6 +343,7 @@ export class SignFileComponent extends UIComponent {
       if (release?.length) release[0].disabled = true;
       if (del?.length) del[0].disabled = true;
     }
+    
   }
 
   isBookmark(data) {
