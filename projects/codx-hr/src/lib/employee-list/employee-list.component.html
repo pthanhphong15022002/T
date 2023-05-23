@@ -4,13 +4,13 @@
 
 <!--column Nhân viên -->
 <ng-template #colEmployee let-data>
-  <div class="d-flex align-items-center cursor-pointer hover-active p-2" (dblclick)="clickViewEmpInfo(data)">
+  <div class="d-flex align-items-center cursor-pointer hover-active py-3" (dblclick)="clickViewEmpInfo(data)">
     <div class="d-flex flex-column me-4">
       <codx-img [funcId]="funcID" [objectId]="data.employeeID" [objectName]="data.employeeName"
         objectType="HR_Employees" [width]="40">
       </codx-img>
       <ng-container *ngIf="data.gender">
-        <div class="mt-2 mx-auto">
+        <div class="mt-1 mx-auto">
           <codx-vll [name]="'HR001'" [value]="data.gender" showText="true" [showBgColor]="true"
             [classList]="'badge badge-sm badge-inline flex-wrap me-0'"></codx-vll>
         </div>
@@ -63,7 +63,7 @@
 <!-- columns Liên hệ -->
 <ng-template #colContact let-data>
   <div (dblclick)="clickViewEmpInfo(data)">
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column py-3">
       <div class="d-flex align-items-center mb-1">
         <span class="text-gray-700" [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async">
         </span>
@@ -89,7 +89,7 @@
 <!-- columns Thông tin cá nhân -->
 <ng-template #colPersonal let-data>
   <div (dblclick)="clickViewEmpInfo(data)">
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column py-3">
       <div class="align-items-center1 mb-1">
         <span class="text-gray-700 me-1">
           <codx-label [setRequire]="false" [fiedName]="'Birthday'" [formModel]="view.formModel"
@@ -138,7 +138,7 @@
 <!-- columns Tình trạng -->
 <ng-template #colStatus let-data>
   <div (dblclick)="clickViewEmpInfo(data)" class="w-100 has-action-menu">
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column py-3">
       <div class="d-flex mb-1">
         <codx-vll [name]="'HR003'" [value]="data.status" [showBgColor]="true" [showText]="true"
           [className]="'badge badge-sm badge-inline'">
