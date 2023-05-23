@@ -647,6 +647,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   clickMenuCustom(funcID, data) {
+   
     let titleEle = document.querySelector('codx-page-title');
     if (titleEle) {
       let oldBrc = titleEle.querySelector('#breadCrumb');
@@ -659,24 +660,27 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
       this.codxService.activeViews?.dataService.predicates;
     this.dataValuesDefault =
       this.codxService.activeViews?.dataService.dataValues;
-    this.viewsDefault = 
-    this.codxService.activeViews?.views
-
+    this.viewsDefault = this.codxService.activeViews?.views;
+    let viewModel;
     this.codxService.activeViews?.views.forEach((x) => {
       if (x.hide) x.hide = false;
-      if(x.type==6){
-        x.request.dataObj= {processID: data.recID}
-        x.request2.dataObj= {processID: data.recID}
+      if (x.type == 6) {
+        x.request.dataObj = { processID: data.recID };
+        x.request2.dataObj = { processID: data.recID };
+      }
+      if (x.active) {
+        viewModel = x;
       }
     });
-   
+    this.codxService.activeViews?.viewChange(viewModel);
     (this.codxService.activeViews?.dataService as CRUDService)
       .setPredicates(['ProcessID==@0'], [data.recID])
-      .subscribe();
-    // //kaban
-    // if ((this.codxService.activeViews.currentView as any)?.kanban) {
-    //   (this.codxService.activeViews.currentView as any)?.kanban.load();
-    // }
+      .subscribe((res) => {});
+    //kaban
+    if ((this.codxService.activeViews.currentView as any)?.kanban) {
+      let kaban = (this.codxService.activeViews.currentView as any)?.kanban ;
+      kaban.applySetting();
+    }
 
     // this.codxService.navigate('', url +`/${data.recID}`);
   }

@@ -158,6 +158,8 @@ export class DealsComponent
         this.funcID = param.funcID;
       }
     });
+
+    this.detectorRef.detectChanges();
   }
   afterLoad() {
     this.request = new ResourceModel();
@@ -181,14 +183,18 @@ export class DealsComponent
     this.changeDetectorRef.detectChanges();
   }
 
-  onLoading(e) {}
 
   changeView(e) {
     this.afterLoad();
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.crrFuncID != this.funcID) {
-      this.crrFuncID = this.funcID;
+    if (e?.view.type == 6) {
+      if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
+      else this.kanban = (this.view.currentView as any).kanban;
+      this.kanban.refesh();
     }
+    // this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // if (this.crrFuncID != this.funcID) {
+    //   this.crrFuncID = this.funcID;
+    // }
   }
 
   click(evt: ButtonModel) {
@@ -276,10 +282,10 @@ export class DealsComponent
         this.handelStartDay(data);
         break;
       case 'CM0201_3':
-        this.moveReason(data,true);
+        this.moveReason(data, true);
         break;
       case 'CM0201_4':
-        this.moveReason(data,false);
+        this.moveReason(data, false);
         break;
       //xuât file
       case 'CM0201_5':
@@ -355,8 +361,14 @@ export class DealsComponent
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
-              var instance =  e.event.instance;
-              var index = e.event.listStep.findIndex(x=> x.stepID === instance.stepID && !x.isSuccessStep && !x.isFailStep)+1;
+              var instance = e.event.instance;
+              var index =
+                e.event.listStep.findIndex(
+                  (x) =>
+                    x.stepID === instance.stepID &&
+                    !x.isSuccessStep &&
+                    !x.isFailStep
+                ) + 1;
               var nextStep = '';
               if (index != -1) {
                 if (index != e.event.listStep.length) {
@@ -395,39 +407,39 @@ export class DealsComponent
     });
   }
 
-  moveReason(data:any,isMoveSuccess: boolean){
+  moveReason(data: any, isMoveSuccess: boolean) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     var functionID = isMoveSuccess ? 'DPT0403' : 'DPT0404';
     this.cache.functionList(functionID).subscribe((fun) => {
-          this.openFormReason(data, fun, isMoveSuccess);
-          // var newProccessIdReason = isMoveSuccess
-          //   ? this.stepSuccess.newProcessID
-          //   : this.stepFail.newProcessID;
-          // var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
-          // if (isCheckExist) {
-          //   this.codxDpService
-          //     .getProcess(newProccessIdReason)
-          //     .subscribe((res) => {
-          //       if (res) {
-          //         if (res.permissions != null && res.permissions.length > 0) {
-          //           this.listParticipantReason = res.permissions.filter(
-          //             (x) => x.roleType === 'P'
-          //           );
-          //           this.openFormReason(
-          //             data,
-          //             fun,
-          //             isMoveSuccess,
-          //             dataMore,
-          //             this.listParticipantReason
-          //           );
-          //         }
-          //       }
-          //     });
-          // } else {
-          //   this.openFormReason(data, fun, isMoveSuccess, dataMore, null);
-          // }
+      this.openFormReason(data, fun, isMoveSuccess);
+      // var newProccessIdReason = isMoveSuccess
+      //   ? this.stepSuccess.newProcessID
+      //   : this.stepFail.newProcessID;
+      // var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
+      // if (isCheckExist) {
+      //   this.codxDpService
+      //     .getProcess(newProccessIdReason)
+      //     .subscribe((res) => {
+      //       if (res) {
+      //         if (res.permissions != null && res.permissions.length > 0) {
+      //           this.listParticipantReason = res.permissions.filter(
+      //             (x) => x.roleType === 'P'
+      //           );
+      //           this.openFormReason(
+      //             data,
+      //             fun,
+      //             isMoveSuccess,
+      //             dataMore,
+      //             this.listParticipantReason
+      //           );
+      //         }
+      //       }
+      //     });
+      // } else {
+      //   this.openFormReason(data, fun, isMoveSuccess, dataMore, null);
+      // }
     });
   }
 
@@ -438,18 +450,18 @@ export class DealsComponent
     formMD.formName = fun.formName;
     formMD.gridViewName = fun.gridViewName;
     var dataCM = {
-      refID:data?.refID,
+      refID: data?.refID,
       processID: data?.processID,
       stepID: data?.stepID,
-      nextStep: data?.nextStep
-    }
+      nextStep: data?.nextStep,
+    };
     var obj = {
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
-      applyFor:'1',
-      dataCM:dataCM,
-      stepName:data.currentStepName
+      applyFor: '1',
+      dataCM: dataCM,
+      stepName: data.currentStepName,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -461,29 +473,26 @@ export class DealsComponent
       obj
     );
     dialogRevision.closed.subscribe((e) => {
-
       if (e && e.event != null) {
-        var instance =  e.event?.instance;
-        var instanceMove =  e.event?.instanceMove;
-        if(instanceMove) {
-
-        }
-        else {
-          data = this.updateReasonDeal(instance,data);
-          var datas = [data,data.customerID];
+        var instance = e.event?.instance;
+        var instanceMove = e.event?.instanceMove;
+        if (instanceMove) {
+        } else {
+          data = this.updateReasonDeal(instance, data);
+          var datas = [data, data.customerID];
           this.codxCmService.updateDeal(datas).subscribe((res) => {
-            if(res){
+            if (res) {
               data = res;
               this.view.dataService.update(data).subscribe();
               this.detectorRef.detectChanges();
             }
-          })
+          });
         }
       }
     });
   }
 
-  updateMoveReasonDeal(instance:any, deal:any) {
+  updateMoveReasonDeal(instance: any, deal: any) {
     // if (this.action !== this.actionEdit) {
     //   deal.stepID = this.listInstanceSteps[0].stepID;
     //   deal.nextStep = this.listInstanceSteps[1].stepID;
@@ -495,15 +504,11 @@ export class DealsComponent
     // deal.expectedClosed = deal.endDate;
   }
 
-  updateReasonDeal(instance:any, lead:any) {
+  updateReasonDeal(instance: any, lead: any) {
     lead.status = instance.status;
-    lead.stepID = instance.stepID
+    lead.stepID = instance.stepID;
     return lead;
   }
-
-
-
-
 
   startDeal(recId) {
     var data = [recId];
@@ -559,6 +564,8 @@ export class DealsComponent
       }
     }
   }
+
+  onActions(e) {}
 
   addDeal() {
     this.view.dataService.addNew().subscribe((res) => {

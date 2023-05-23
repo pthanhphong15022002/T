@@ -1,5 +1,6 @@
 <codx-views
   #view
+  [idField]="idField"
   [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
@@ -9,15 +10,14 @@
   [views]="views"
   [button]="button"
   (buttonClick)="click($event)"
-  [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
   [autoLoad]="true"
-  [idField]="idField"
   [autoSearch]="true"
+  [selectedFirst]="true"
+  (onActions)="onActions($event)"
+  (viewChanged)="changeView($event)"
   (selectedChange)="selectedChange($event)"
-  (onLoading)="onLoading($event)"
   (searchChanged)="searchChanged($event)"
-  [viewActiveType]="viewMode"
 ></codx-views>
 
 <!-- KANBAN -->
@@ -33,6 +33,7 @@
     [setting]="setting"
     [footer]="footerKanban"
     [rootData]="data"
+    [dataItem]="data"
     (changeDataMF)="changeDataMF($event, data)"
   >
   </codx-card-img>
