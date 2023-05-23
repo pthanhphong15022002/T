@@ -1292,9 +1292,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.gridViewSetupLine = res;
-          for (let index = 0; index < this.lockFields.length; index++) {
-            this.gridViewSetupLine[this.lockFields[index]].isVisible = false;
-          }
+          this.setGridviewSetupLine(this.gridViewSetupLine);
         }
       });
     this.cache.companySetting().subscribe((res) => {
@@ -1421,6 +1419,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       if (this.lsAccount[index].accountID == accountID) {
         return this.lsAccount[index].accountName.toLocaleString();
       }
+    }
+  }
+
+  setGridviewSetupLine(gridViewSetupLine) {
+    this.gridViewSetupLine['DIM1'].isVisible = true;
+    this.gridViewSetupLine['DIM2'].isVisible = true;
+    this.gridViewSetupLine['DIM3'].isVisible = true;
+    this.gridViewSetupLine['ProjectID'].isVisible = true;
+    this.gridViewSetupLine['AssetGroupID'].isVisible = true;
+    for (let index = 0; index < this.lockFields.length; index++) {
+      this.gridViewSetupLine[this.lockFields[index]].isVisible = false;
     }
   }
   //#endregion
