@@ -1,21 +1,13 @@
 import {
   ApiHttpService,
   CacheService,
-  CallFuncService,
   DialogData,
   DialogRef,
   NotificationsService,
 } from 'codx-core';
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectorRef,
-  Optional,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Optional } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
-import { NoteServices } from '../../../services/note.services';
-import { I } from '@angular/cdk/keycodes';
+import { NoteService } from '../note.service';
 
 @Component({
   selector: 'app-update-note-pin',
@@ -43,7 +35,7 @@ export class UpdateNotePinComponent implements OnInit {
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
-    private noteService: NoteServices,
+    private noteService: NoteService,
     private cache: CacheService,
     @Optional() data?: DialogData,
     @Optional() dt?: DialogRef
@@ -133,8 +125,8 @@ export class UpdateNotePinComponent implements OnInit {
     this.dataOld.isPin = isPin;
     this.dataOld.isNote = true;
     this.dataOld['createdOn'] = this.dataOld?.calendarDate
-    ? this.dataOld?.calendarDate
-    : this.dataOld?.createdOn;
+      ? this.dataOld?.calendarDate
+      : this.dataOld?.createdOn;
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
         this.dataOld?.recID ? this.dataOld?.recID : this.dataOld?.transID,

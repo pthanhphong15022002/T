@@ -582,6 +582,16 @@ export class CodxCmService {
     );
   }
 
+  updateDeal(data){
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'EditDealAsync',
+      data
+    );
+  }
+
   //#endregion -- Bao
 
   //contracts -- nvthuan

@@ -57,6 +57,7 @@
               ></span>
             </div>
           </div>
+
           <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
             <div
               class="d-flex mt-3 align-items-center"
@@ -218,39 +219,44 @@
           [resources]="resources"
           [resourceModel]="dataResourceModel"
         ></lib-calendar-center>
-        <div class="position-absolute bottom-0 end-0">
-          <!-- Floating Action Button -->
-          <div class="floating-container">
-            <div class="floating-button">+</div>
-            <div class="element-container">
-              <div class="float-element" (click)="addMeeting()">
-                <codx-label
-                  fiedName="CO_Meetings"
-                  default="Lịch họp"
-                  class="fw-bold"
-                ></codx-label>
-              </div>
-              <div class="float-element" (click)="addBookingCar()">
-                <codx-label
-                  fiedName="EP_BookingCars"
-                  default="Đặt xe"
-                  class="fw-bold"
-                ></codx-label>
-              </div>
-              <div class="float-element" (click)="addMyTask()">
-                <codx-label
-                  fiedName="TM_MyTasks"
-                  default="Công việc"
-                  class="fw-bold"
-                ></codx-label>
-              </div>
-              <div class="float-element" (click)="addNote()">
-                <codx-label
-                  fiedName="WP_Notes"
-                  default="Ghi chú"
-                  class="fw-bold"
-                ></codx-label>
-              </div>
+        <!-- Floating Action Button -->
+        <div class="floating-container">
+          <div class="floating-button">+</div>
+          <div class="element-container">
+            <div class="float-element" (click)="addMeeting()">
+              <codx-label
+                fiedName="CO_Meetings"
+                default="Lịch họp"
+                class="fw-bold"
+              ></codx-label>
+            </div>
+            <div class="float-element" (click)="addBookingCar()">
+              <codx-label
+                fiedName="EP_BookingCars"
+                default="Đặt xe"
+                class="fw-bold"
+              ></codx-label>
+            </div>
+            <div class="float-element" (click)="addMyTask()">
+              <codx-label
+                fiedName="TM_MyTasks"
+                default="Công việc"
+                class="fw-bold"
+              ></codx-label>
+            </div>
+            <div class="float-element" (click)="addAssignTask()">
+              <codx-label
+                fiedName="TM_AssignTasks"
+                default="Giao việc"
+                class="fw-bold"
+              ></codx-label>
+            </div>
+            <div class="float-element" (click)="addNote()">
+              <codx-label
+                fiedName="WP_Notes"
+                default="Ghi chú"
+                class="fw-bold"
+              ></codx-label>
             </div>
           </div>
         </div>

@@ -1,4 +1,3 @@
-import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 import {
   Component,
   OnInit,
@@ -13,6 +12,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { NoteService } from '../../../note.service';
 
 @Component({
   selector: 'lib-popup-title',
@@ -34,7 +34,7 @@ export class PopupTitleComponent extends UIComponent implements OnInit {
   constructor(
     private injector: Injector,
     private notificationsService: NotificationsService,
-    private noteService: NoteServices,
+    private noteService: NoteService,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() data?: DialogData,
     @Optional() dt?: DialogRef
