@@ -87,27 +87,29 @@ export class EmployeeAppointionsComponent extends UIComponent {
   ) {
     super(inject);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      if (res) {
-        this.popupTitle = res.defaultName.toString();
-      }
-    });
-    this.hrService.getFormModel(this.funcID).then((res) => {
-      if (res) {
-        this.eBasicSalariesFormModel = res;
-      }
-    });
+    // this.cache.functionList(this.funcID).subscribe((res) => {
+    //   if (res) {
+    //     this.popupTitle = res.defaultName.toString();
+    //   }
+    // });
+    // this.hrService.getFormModel(this.funcID).then((res) => {
+    //   if (res) {
+    //     this.eBasicSalariesFormModel = res;
+    //   }
+    // });
   }
-  
+
   initForm() {
+    if (!this.funcID) {
+      this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    }
     //Load headertext from grid view setup database
     this.cache
       .gridViewSetup('EAppointions', 'grvEAppointions')
       .subscribe((res) => {
         if (res) {
           this.grvSetup = res;
-          // this.grvSetup = Util.camelizekeyObj(res); 
-
+          // this.grvSetup = Util.camelizekeyObj(res);
         }
       });
 
@@ -117,7 +119,6 @@ export class EmployeeAppointionsComponent extends UIComponent {
       .subscribe((res) => {
         this.genderGrvSetup = res?.Gender;
       });
-
   }
 
   onInit(): void {
@@ -125,53 +126,74 @@ export class EmployeeAppointionsComponent extends UIComponent {
   }
 
   //Fix change when change codx-view
-  viewChanged(evt: any) {
-    this.funcID = this.router.snapshot.params['funcID'];
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      if (res) {
-        this.popupTitle = res.defaultName.toString();
-      }
-    });
-    this.hrService.getFormModel(this.funcID).then((res) => {
-      if (res) {
-        this.eBasicSalariesFormModel = res;
-      }
-    });
-  }
+  // viewChanged(evt: any) {
+  //   this.funcID = this.router.snapshot.params['funcID'];
+  //   this.cache.functionList(this.funcID).subscribe((res) => {
+  //     if (res) {
+  //       this.popupTitle = res.defaultName.toString();
+  //     }
+  //   });
+  //   this.hrService.getFormModel(this.funcID).then((res) => {
+  //     if (res) {
+  //       this.eBasicSalariesFormModel = res;
+  //     }
+  //   });
+  // }
 
   //Fix change when change codx-view
-  onLoading(evt: any) {
-    let formModel = this.view.formModel;
-    if (formModel) {
-      this.cache
-        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
-        .subscribe((gv) => {
-          this.views = [
-            {
-              type: ViewType.list,
-              active: true,
-              sameData: true,
-              model: {
-                template: this.templateList,
-                headerTemplate: this.headerTemplate,
-              },
-            },
-            {
-              type: ViewType.listdetail,
-              sameData: true,
-              active: true,
-              model: {
-                template: this.templateListDetail,
-                panelRightRef: this.panelRightListDetail,
-              },
-            },
-          ];
-          this.detectorRef.detectChanges();
-        });
-    }
-  }
+  // onLoading(evt: any) {
+  //   let formModel = this.view.formModel;
+  //   if (formModel) {
+  //     this.cache
+  //       .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+  //       .subscribe((gv) => {
+  //         this.views = [
+  //           {
+  //             type: ViewType.list,
+  //             active: true,
+  //             sameData: true,
+  //             model: {
+  //               template: this.templateList,
+  //               headerTemplate: this.headerTemplate,
+  //             },
+  //           },
+  //           {
+  //             type: ViewType.listdetail,
+  //             sameData: true,
+  //             active: true,
+  //             model: {
+  //               template: this.templateListDetail,
+  //               panelRightRef: this.panelRightListDetail,
+  //             },
+  //           },
+  //         ];
+  //         this.detectorRef.detectChanges();
+  //       });
+  //   }
+  // }
 
   ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.list,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.templateList,
+          headerTemplate: this.headerTemplate,
+        },
+      },
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.templateListDetail,
+          panelRightRef: this.panelRightListDetail,
+        },
+      },
+    ];
+
     //Get Header text when view detail
     this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) => {
       this.eJobSalaryHeader = res;
@@ -255,10 +277,10 @@ export class EmployeeAppointionsComponent extends UIComponent {
       .subscribe((res) => {
         if (res != null) {
           this.notify.notifyCode('SYS007');
-          let data  = {
+          let data = {
             ...res[0],
-            emp : this.currentEmpObj
-          } 
+            emp: this.currentEmpObj,
+          };
           this.view.formModel.entityName;
           this.hrService
             .addBGTrackLog(
@@ -319,7 +341,9 @@ export class EmployeeAppointionsComponent extends UIComponent {
               this.processID.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> Bổ nhiệm điều chuyển - ' + this.itemDetail.decisionNo + '</div>'
+              '<div> Bổ nhiệm điều chuyển - ' +
+                this.itemDetail.decisionNo +
+                '</div>'
             )
             .subscribe((result) => {
               console.log(result);
@@ -380,7 +404,11 @@ export class EmployeeAppointionsComponent extends UIComponent {
         break;
       //Propose increase salaries
       case this.actionAddNew:
-        this.HandleEJobSalary(event.text + ' ' + this.view.function.description, 'add', data);
+        this.HandleEJobSalary(
+          event.text + ' ' + this.view.function.description,
+          'add',
+          data
+        );
         break;
       //Delete
       case 'SYS02':

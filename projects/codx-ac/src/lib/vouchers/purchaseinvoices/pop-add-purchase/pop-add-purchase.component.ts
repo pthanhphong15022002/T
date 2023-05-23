@@ -123,7 +123,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.routerActive.queryParams.subscribe((res) => {
-      if (res && res?.recID) this.journalNo = res.journalNo;
+      if (res && res?.journalNo) this.journalNo = res.journalNo;
     });
   }
   //#endregion
@@ -309,6 +309,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         });
     }
     if (e.data && e.field.toLowerCase() === 'objectid') {
+      this.purchaseinvoices.objectID = e.data;
       this.api
         .exec<any>('PS', 'PurchaseInvoicesBusiness', 'GetVendorNameAsync', [
           e.data,
@@ -622,6 +623,17 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.dialog.close();
   }
 
+  onDiscard(){
+    this.dialog.dataService
+      .delete([this.purchaseinvoices], true, null, '', 'AC0010', null, null, false)
+      .subscribe((res) => {
+        if (res.data != null) {
+          this.dialog.close();
+          this.dt.detectChanges();
+        }
+      });
+  }
+
   onEdit(e: any) {
     this.checkValidateLine(e);
     if (this.validate > 0) {
@@ -630,6 +642,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       return;
     } else {
       e.netAmt = e.quantity * e.unitPrice;
+      this.calculateVatAmt(e);
       this.api
         .execAction<any>('PS_PurchaseInvoicesLines', [e], 'UpdateAsync')
         .subscribe((save) => {
@@ -964,10 +977,16 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       style: 'currency',
       currency: 'VND',
     });
+    if(this.hasSaved)
+    {
+      this.onSaveData();
+    }
   }
   //#endregion
 
   //#region Method
+
+
 
   saveVAT() {
     if (this.VATType == '1') {
@@ -1063,48 +1082,93 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   //   }
   // }
 
-  onSave()
+  onSaveData()
   {
-    this.onSaveData(true);
+    this.dialog.dataService.updateDatas.set(
+      this.purchaseinvoices['_uuid'],
+      this.purchaseinvoices
+    );
+    this.dialog.dataService
+      .save(null, 0, '', 'SYS006', false)
+      .subscribe((res) => {
+        if (res && res.update.data != null) {
+          this.dt.detectChanges();
+        }
+      });
   }
 
-  onSaveData(notify: boolean) {
+  onSave() {
     // tu dong khi luu, khong check voucherNo
     let ignoredFields = [];
     if (this.journal.voucherNoRule === '2') {
       ignoredFields.push('VoucherNo');
     }
 
-    this.checkValidate(ignoredFields);
-    // if (this.gridPurchase.dataSource.length > 0) {
-    //   this.checkValidateLine();
-    // }
+    this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
       return;
     } else {
-      // nếu voucherNo đã tồn tại,
-      // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
-      this.journalService.handleVoucherNoAndSave(
-        this.journal,
-        this.purchaseinvoices,
-        'PS',
-        'PS_PurchaseInvoices',
-        this.form,
-        this.formType === 'edit',
-        () => {
-          if (this.formType == 'add' || this.formType == 'copy') {
-            //this.purchaseInvoicesLines = this.gridPurchase.dataSource;
-            this.dialog.dataService.save(null, 0, '', 'SYS006', notify).subscribe((res) => {
-              if (res && res.save.data != null) {
-                this.dialog.close();
-                this.dt.detectChanges();
+      switch (this.formType) {
+        case 'add':
+        case 'copy':
+          this.purchaseinvoices.status = '1';
+          if (this.hasSaved) {
+            this.dialog.dataService.updateDatas.set(
+              this.purchaseinvoices['_uuid'],
+              this.purchaseinvoices
+            );
+            this.dialog.dataService
+              .save(null, 0, '', 'SYS006', true)
+              .subscribe((res) => {
+                if (res && res.update.data != null) {
+                  this.dialog.close({
+                    update: true,
+                    data: res.update,
+                  });
+                  this.dt.detectChanges();
+                }
+              });
+          } else {
+            // nếu voucherNo đã tồn tại,
+            // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
+            this.journalService.handleVoucherNoAndSave(
+              this.journal,
+              this.purchaseinvoices,
+              'PS',
+              'PS_PurchaseInvoices',
+              this.form,
+              this.formType === 'edit',
+              () => {
+                this.dialog.dataService.save().subscribe((res) => {
+                  if (res && res.save.data != null) {
+                    this.updateVAT();
+                    this.dialog.close();
+                    this.dt.detectChanges();
+                  }
+                });
               }
-            });
+            );
           }
-          if (this.formType == 'edit') {
-            this.dialog.dataService.save(null, 0, '', 'SYS006', notify).subscribe((res) => {
-                if (res != null) {
+          break;
+        case 'edit':
+          this.journalService.handleVoucherNoAndSave(
+            this.journal,
+            this.purchaseinvoices,
+            'PS',
+            'PS_PurchaseInvoices',
+            this.form,
+            this.formType === 'edit',
+            () => {
+              if (this.purchaseinvoices.status == '0') {
+                this.purchaseinvoices.status = '1';
+              }
+              this.dialog.dataService.updateDatas.set(
+                this.purchaseinvoices['_uuid'],
+                this.purchaseinvoices
+              );
+              this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
+                if (res && res.update.data != null) {
                   this.updateVAT();
                   this.dialog.close({
                     update: true,
@@ -1113,9 +1177,64 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                   this.dt.detectChanges();
                 }
               });
+            }
+          );
+          break;
+      }
+    }
+  }
+
+  onSaveAdd(){
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      this.purchaseinvoices.status = '1';
+      if (this.hasSaved) {
+        this.dialog.dataService.updateDatas.set(
+          this.purchaseinvoices['_uuid'],
+          this.purchaseinvoices
+        );
+        this.dialog.dataService.save().subscribe((res) => {
+          if (res && res.update.data != null) {
+            this.clearPurchaseInvoicesLines();
+            this.dialog.dataService.clear();
+            this.dialog.dataService
+              .addNew((o) => this.setDefault(o))
+              .subscribe((res) => {
+                this.purchaseinvoices = res;
+                this.form.formGroup.patchValue(this.purchaseinvoices);
+                this.hasSaved = false;
+              });
           }
-        }
-      );
+        });
+      } else {
+        // nếu voucherNo đã tồn tại,
+        // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
+        this.journalService.handleVoucherNoAndSave(
+          this.journal,
+          this.purchaseinvoices,
+          'PS',
+          'PS_PurchaseInvoices',
+          this.form,
+          this.formType === 'edit',
+          () => {
+            this.dialog.dataService.save().subscribe((res) => {
+              if (res && res.save.data != null) {
+                this.clearPurchaseInvoicesLines();
+                this.dialog.dataService.clear();
+                this.dialog.dataService
+                  .addNew((o) => this.setDefault(o))
+                  .subscribe((res) => {
+                    this.purchaseinvoices = res;
+                    this.form.formGroup.patchValue(this.purchaseinvoices);
+                  });
+              }
+            });
+          }
+        );
+      }
     }
   }
 
@@ -1172,8 +1291,18 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         if(res == null)
           res = 0;
         e.data.vatAmt = res * e.data.netAmt;
-        this.setDataGrid("VATAmt", res.line);
+        this.setDataGrid("VATAmt", e.data);
       });
+  }
+
+  clearPurchaseInvoicesLines() {
+    this.purchaseInvoicesLines = [];
+  }
+
+  setDefault(o) {
+    return this.api.exec('PS', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
+      this.journalNo
+    ]);
   }
   //#endregion
 }

@@ -12,14 +12,12 @@
   [button]="buttonAdd"
   (buttonClick)="addJobSalaries($event)"
   (selectedChange)="changeItemDetail($event)"
-  (onLoading)="onLoading($event)"
-  (viewChanged)="viewChanged($event)"
 >
 </codx-views>
 
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-3 border-bottom w-100">
-    <div class="w-50 p-3">
+    <div class="w-50 p-2">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
@@ -60,10 +58,10 @@
       </div>
     </div>
 
-    <div class="w-25 p-3">
+    <div class="w-25 p-2">
       <div class="d-flex flex-column">
-        <div class="d-flex">
-          <div
+        <div class="d-flex align-items-center">
+          <div class="me-2"
             [ngbTooltip]="grvSetup?.DecisionNo?.headerText"
             [innerHTML]="
               data.decisionNo
@@ -138,7 +136,7 @@
       </div>
     </div>
 
-    <div class="w-25 p-3">
+    <div class="w-25 p-2">
       <codx-vll
         [formModel]="view.formModel"
         [field]="'Status'"
