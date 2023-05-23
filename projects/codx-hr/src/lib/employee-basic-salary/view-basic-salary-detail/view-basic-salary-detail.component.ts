@@ -59,43 +59,48 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
   grvSetup: any = {};
   itemDetailStt;
   itemDetailDataStt;
-  gridViewSetup: any ={};
-
+  gridViewSetup: any = {};
 
   olderItem: any;
   ngOnInit() {
     this.itemDetailStt = 1;
     this.itemDetailDataStt = 1;
-    if(this.formModel){
+    if (this.formModel) {
       this.cache
-      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-      .subscribe(res =>{
-        if(res) this.gridViewSetup = res;
-      });
+        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) this.gridViewSetup = res;
+        });
     }
-   
-  }
-  ngAfterViewInit() {
+
     this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
       { name: 'Comment', textDefault: 'Thảo Luận', isActive: false },
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
-      // { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
     ];
   }
+  // ngAfterViewInit() {
+  //   this.tabControl = [
+  //     { name: 'History', textDefault: 'Lịch sử', isActive: true },
+  //     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+  //     { name: 'Comment', textDefault: 'Thảo Luận', isActive: false },
+  //     { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+  //     { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+  //   ];
+  // }
   ngOnChanges(changes: SimpleChanges) {
     this.getOldSalaries();
   }
   changeDataMF(e: any, data: any) {}
-  openFormFuncID(event: any, data: any = null){
-    this.clickMF.emit({event: event, data: data});
+  openFormFuncID(event: any, data: any = null) {
+    this.clickMF.emit({ event: event, data: data });
   }
 
-  getOldSalaries(){
-    if(this.itemDetail){
-      this.hrService.getOldBasicSalary(this.itemDetail).subscribe(res =>{
-          this.olderItem = res;
+  getOldSalaries() {
+    if (this.itemDetail) {
+      this.hrService.getOldBasicSalary(this.itemDetail).subscribe((res) => {
+        this.olderItem = res;
       });
     }
     this.df.detectChanges();

@@ -219,6 +219,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
 
   onCreate(e): void {
     this.grid.disableField(this.hiddenFields);
+    // this.grid.hideColums([this.gvsSalesInvoicesLines.ItemName.headerText]);
     // console.log(this.grid.columnsGrid);
   }
 
@@ -287,6 +288,11 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     this.detailService
       .save(null, null, null, null, false)
       .subscribe((res) => console.log(res));
+  }
+
+  onFocusOut(e): void {
+    // for copyRow ???
+    delete this.grid.rowDataSelected.createdOn;
   }
   //#endregion
 

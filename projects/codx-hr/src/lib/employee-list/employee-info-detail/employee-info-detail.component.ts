@@ -672,6 +672,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
 
     this.routeActive.queryParams.subscribe((params) => {
+      debugger
       if (params.employeeID || this.user.userID) {
         this.employeeID = params.employeeID;
         this.infoPersonal = null;
@@ -5827,22 +5828,22 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         }
       });
     }
-    if (this.infoPersonal?.indirectManager) {
-      let empRequest = new DataRequest();
-      empRequest.entityName = 'HR_Employees';
-      empRequest.dataValues = this.infoPersonal.indirectManager;
-      empRequest.predicates = 'EmployeeID=@0';
-      empRequest.pageLoading = false;
-      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
-        if (emp[1] > 0) {
-          this.indirectManager = emp[0][0];
-        }
-      });
-      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
-        if (emp[1] > 0) {
-          this.indirectManager = emp[0][0];
-        }
-      });
-    }
+    // if (this.infoPersonal?.indirectManager) {
+    //   let empRequest = new DataRequest();
+    //   empRequest.entityName = 'HR_Employees';
+    //   empRequest.dataValues = this.infoPersonal.indirectManager;
+    //   empRequest.predicates = 'EmployeeID=@0';
+    //   empRequest.pageLoading = false;
+    //   this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+    //     if (emp[1] > 0) {
+    //       this.indirectManager = emp[0][0];
+    //     }
+    //   });
+    //   this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+    //     if (emp[1] > 0) {
+    //       this.indirectManager = emp[0][0];
+    //     }
+    //   });
+    // }
   }
 }

@@ -69,7 +69,7 @@ export class EmployeeListComponent extends UIComponent {
         fieldName: 'employeeID',
         controlName: 'lblEmployeeID',
         headerText: 'Nhân viên',
-        width: 250,
+        width: 350,
         template: this.colEmployee,
       },
       {
