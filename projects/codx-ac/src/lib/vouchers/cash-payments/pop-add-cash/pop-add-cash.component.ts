@@ -27,6 +27,7 @@ import {
   TabComponent,
 } from '@syncfusion/ej2-angular-navigations';
 import {
+  AuthService,
   AuthStore,
   CallFuncService,
   CodxComboboxComponent,
@@ -174,6 +175,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
+    private auth: AuthService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -694,7 +696,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.hasAddrow = true;
           this.hasSaved = true;
           this.loadTotal();
-          if (parseInt(this.total.replace(/\D/g, '')) > this.cashpayment.paymentAmt) {
+          if (
+            parseInt(this.total.replace(/\D/g, '')) >
+            this.cashpayment.paymentAmt
+          ) {
             this.notification.notifyCode('AC0012');
           }
           this.dialog.dataService.updateDatas.set(
@@ -716,7 +721,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.hasAddrow = true;
           this.hasSaved = true;
           this.loadTotal();
-          if (parseInt(this.total.replace(/\D/g, '')) > this.cashpayment.paymentAmt) {
+          if (
+            parseInt(this.total.replace(/\D/g, '')) >
+            this.cashpayment.paymentAmt
+          ) {
             this.notification.notifyCode('AC0012');
           }
           this.dialog.dataService.updateDatas.set(
@@ -773,7 +781,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.cashpaymentline.push(dataline);
               this.loadTotal();
               this.hasSaved = true;
-              if (parseInt(this.total.replace(/\D/g, '')) > this.cashpayment.paymentAmt) {
+              if (
+                parseInt(this.total.replace(/\D/g, '')) >
+                this.cashpayment.paymentAmt
+              ) {
                 this.notification.notifyCode('AC0012');
               }
               this.gridCashPaymentLine.refresh();
