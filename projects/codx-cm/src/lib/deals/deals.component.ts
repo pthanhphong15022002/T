@@ -120,9 +120,9 @@ export class DealsComponent
   ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
-    this.dataObj = {
-      processID: '30270ac6-f875-11ed-bead-9f729695daee',
-    };
+    // this.dataObj = {
+    //   processID: '30270ac6-f875-11ed-bead-9f729695daee',
+    // };
     this.afterLoad();
 
     this.button = {
@@ -143,7 +143,7 @@ export class DealsComponent
         active: false,
         sameData: false,
         request: this.request,
-        // hide: true,
+        hide: true,
         request2: this.resourceKanban,
         toolbarTemplate: this.footerButton,
         model: {
