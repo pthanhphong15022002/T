@@ -2835,6 +2835,15 @@ codx-vll.badge.badge-md span::before{
 .aside-minimize-icon-title .aside-extended .aside-primary .menu-link.active{
   border-radius: 0!important;
 }
+
+.menu-state-icon-primary .menu-item {
+  .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--primary-lightest);
+  }
+  .menu-link.active .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--primary-light);
+  }
+}
 .toolbar{
   .e-control.e-inplaceeditor .e-editable-value-wrapper {
     min-height: 26px;
