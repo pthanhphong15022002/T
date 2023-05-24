@@ -1133,7 +1133,7 @@ codx-layout-add .card-header {
 }
 .badge.badge-md{
   font-size: 12px!important;
-  padding: 0.2em 0.75em 0.5em 0.9em;
+  //padding: 0.2em 0.75em 0.5em 0.9em;
 }
 /*** list view srcoll ngang ***/
 .e-listview .e-content {
@@ -2852,7 +2852,6 @@ codx-tmmeetings{
 codx-vll.vll-post{
   display: flex;
   align-items:center;
-  margin-top: 3px;
   img{
     margin-right: 4px;
   }
