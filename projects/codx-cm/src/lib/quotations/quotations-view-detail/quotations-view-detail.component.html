@@ -297,7 +297,6 @@
         [gridViewName]="fmQuotationLines.gridViewName"
         [entityName]="fmQuotationLines.entityName"
         [hideMoreFunc]="'1'"
-   
         [contentEditable]="false"
         [allowFiltering]="true"
         [allowSorting]="true"
@@ -307,7 +306,6 @@
         predicates="TransID=@0"
         [dataValues]="itemSelected.recID"
       ></codx-gridview-v2>
-     
 
       <div #tabsNote class="row mt-5">
         <div class="form-group col-7">
@@ -337,12 +335,21 @@
               ></codx-label>
             </div>
             <div
+              class="me-1"
               [innerHTML]="
                 itemSelected.totalSalesAmt
                   | formatvalue : formModel : 'totalSalesAmt'
                   | async
               "
             ></div>
+            <span
+              class="codx-label"
+              [innerHTML]="
+                itemSelected.currencyID
+                  | formatvalue : formModel : 'currencyID'
+                  | async
+              "
+            ></span>
           </div>
           <div class="d-flex justify-content-between">
             <div>
@@ -353,12 +360,21 @@
               ></codx-label>
             </div>
             <div
+              class="me-1"
               [innerHTML]="
                 itemSelected.discAmt
                   | formatvalue : formModel : 'DiscAmt'
                   | async
               "
             ></div>
+            <span
+              class="codx-label"
+              [innerHTML]="
+                itemSelected.currencyID
+                  | formatvalue : formModel : 'currencyID'
+                  | async
+              "
+            ></span>
           </div>
           <div class="d-flex justify-content-between">
             <div>
@@ -369,12 +385,21 @@
               ></codx-label>
             </div>
             <div
+              class="me-1"
               [innerHTML]="
-              itemSelected?.totalTaxAmt
+                itemSelected?.totalTaxAmt
                   | formatvalue : formModel : 'totalTaxAmt'
                   | async
               "
             ></div>
+            <span
+              class="codx-label"
+              [innerHTML]="
+                itemSelected.currencyID
+                  | formatvalue : formModel : 'currencyID'
+                  | async
+              "
+            ></span>
           </div>
           <div class="d-flex justify-content-between">
             <div class="">
@@ -385,12 +410,21 @@
               ></codx-label>
             </div>
             <div
+              class="me-1"
               [innerHTML]="
                 itemSelected.totalAmt
                   | formatvalue : formModel : 'TotalAmt'
                   | async
               "
             ></div>
+            <span
+              class="codx-label"
+              [innerHTML]="
+                itemSelected.currencyID
+                  | formatvalue : formModel : 'currencyID'
+                  | async
+              "
+            ></span>
           </div>
         </div>
       </div>
