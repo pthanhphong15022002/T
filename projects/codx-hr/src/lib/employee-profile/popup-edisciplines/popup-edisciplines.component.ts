@@ -31,13 +31,13 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   notitfy: NotificationsService;
   employeeObj: any;
   funcID;
-  openFrom: string
+  openFrom: string;
   idField = 'RecID';
-  genderGrvSetup: any
+  genderGrvSetup: any;
   employId;
   isAfterRender = false;
   headerText: '';
-  defaultDisciplineDate : string = '0001-01-01T00:00:00';
+  defaultDisciplineDate: string = '0001-01-01T00:00:00';
 
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
@@ -74,9 +74,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     this.lstDiscipline = data?.data?.lstDiscipline;
     this.indexSelected = data?.data?.indexSelected ?? -1;
     this.disciplineObj = JSON.parse(JSON.stringify(data?.data?.dataInput));
-
   }
-  
 
   initForm() {
     if (this.actionType == 'add') {
@@ -89,30 +87,37 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.disciplineObj = res?.data;
-            if(this.disciplineObj.disciplineDate.toString() == this.defaultDisciplineDate){
+            if (
+              this.disciplineObj.disciplineDate.toString() ==
+              this.defaultDisciplineDate
+            ) {
               this.disciplineObj.disciplineDate = null;
             }
-              this.disciplineObj.employeeID = this.employId;
+            this.disciplineObj.employeeID = this.employId;
             this.formModel.currentData = this.disciplineObj;
             this.formGroup.patchValue(this.disciplineObj);
-            this.cr.detectChanges();
             this.isAfterRender = true;
+            this.cr.detectChanges();
           }
         });
     } else {
-      if (this.actionType === 'copy' && this.disciplineObj.disciplineDate.toString() == this.defaultDisciplineDate){
+      if (
+        this.actionType === 'copy' &&
+        this.disciplineObj.disciplineDate.toString() ==
+          this.defaultDisciplineDate
+      ) {
         this.disciplineObj.disciplineDate = null;
-      } 
+      }
       this.formGroup.patchValue(this.disciplineObj);
-        this.formModel.currentData = this.disciplineObj;
-        this.cr.detectChanges();
-        this.isAfterRender = true;
+      this.formModel.currentData = this.disciplineObj;
+      this.isAfterRender = true;
+      this.cr.detectChanges();
     }
   }
 
-  handleSelectEmp(evt){
-    if(evt.data != null){
-      this.employId = evt.data
+  handleSelectEmp(evt) {
+    if (evt.data != null) {
+      this.employId = evt.data;
       let empRequest = new DataRequest();
       empRequest.entityName = 'HR_Employees';
       empRequest.dataValues = this.employId;
@@ -120,7 +125,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       empRequest.pageLoading = false;
       this.hrService.loadData('HR', empRequest).subscribe((emp) => {
         if (emp[1] > 0) {
-          this.employeeObj = emp[0][0]
+          this.employeeObj = emp[0][0];
           console.log('employee cua form', this.employeeObj);
           this.cr.detectChanges();
         }
@@ -129,9 +134,11 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
-      this.genderGrvSetup = res?.Gender;
-    });
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
+      });
     this.hrService.getFormModel(this.funcID).then((formModel) => {
       if (formModel) {
         this.formModel = formModel;
@@ -165,7 +172,6 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     this.disciplineObj.positionID = this.employeeObj?.positionID;
     console.log('ki luat chuan bi luuuu', this.disciplineObj);
     console.log('thong tin nhan viennn', this.employeeObj);
-    
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
@@ -250,5 +256,9 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       }
       this.cr.detectChanges();
     }
+  }
+
+  clickOpenPopup(codxInput) {
+    codxInput.elRef.nativeElement.querySelector('button').click();
   }
 }

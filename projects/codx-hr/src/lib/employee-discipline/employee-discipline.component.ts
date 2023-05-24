@@ -190,7 +190,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
       {
         actionType: actionType,
         dataInput: data,
-        empObj: actionType == 'add' ? null : this.currentEmpObj,
+        empObj: this.currentEmpObj,
         headerText: actionHeaderText,
         employeeId: data?.employeeID,
         funcID: this.view.funcID,
@@ -216,6 +216,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
   }
 
   addDiscipline(evt) {
+    this.currentEmpObj = this.itemDetail.emp;
     if (evt.id == 'btnAdd') {
       this.HandleEDisciplineInfo(
         evt.text + ' ' + this.view.function.description,
