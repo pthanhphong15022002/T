@@ -129,18 +129,18 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     if (this.dayoffObj?.kowID) this.checkViewKowTyeGroup();
   }
 
-  ngAfterViewInit() {
-    this.dialog &&
-      this.dialog.closed.subscribe((res) => {
-        if (!res.event) {
-          if (this.successFlag == true) {
-            this.dialog.close(this.dayoffObj);
-          } else {
-            this.dialog.close(null);
-          }
-        }
-      });
-  }
+  // ngAfterViewInit() {
+  //   this.dialog &&
+  //     this.dialog.closed.subscribe((res) => {
+  //       if (!res.event) {
+  //         if (this.successFlag == true) {
+  //           this.dialog.close(this.dayoffObj);
+  //         } else {
+  //           this.dialog.close();
+  //         }
+  //       }
+  //     });
+  // }
 
   initForm() {
     this.cache
@@ -183,16 +183,16 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
             this.dayoffObj.totalSubDays = 0;
             this.formModel.currentData = this.dayoffObj;
             this.formGroup.patchValue(this.dayoffObj);
-            this.cr.detectChanges();
             this.isAfterRender = true;
+            this.cr.detectChanges();
           }
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
         this.formGroup.patchValue(this.dayoffObj);
         this.formModel.currentData = this.dayoffObj;
-        this.cr.detectChanges();
         this.isAfterRender = true;
+        this.cr.detectChanges();
       }
     }
   }
@@ -474,13 +474,16 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   }
   deletedKowGroupValue() {
     for (let i in this.groupKowTypeView) {
-      if(this.groupKowTypeView[i].isShow)
-        continue;
+      if (this.groupKowTypeView[i].isShow) continue;
       else {
-        for (let j in this.groupKowTypeView[i].field){
+        for (let j in this.groupKowTypeView[i].field) {
           this.dayoffObj[this.groupKowTypeView[i].field[j]] = null;
         }
       }
     }
+  }
+
+  clickOpenPopup(codxInput) {
+    codxInput.elRef.nativeElement.querySelector('button').click();
   }
 }
