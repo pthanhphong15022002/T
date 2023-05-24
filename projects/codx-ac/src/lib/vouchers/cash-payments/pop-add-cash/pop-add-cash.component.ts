@@ -424,7 +424,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }
   }
-
+//Tach thanh component settledinvoice
   voucherLineRefsChanged(e: any) {
     if (e.data) {
       const field = ['balanceamt', 'currencyid', 'exchangerate', 'settledamt'];
@@ -444,7 +444,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  openVoucher(type: number) {
+
+  //rename _> settlement
+  settlement(type: number) {
     if (!this.cashpayment.objectID) {
       this.notification.notifyCode(
         'SYS009',
@@ -511,11 +513,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   addRow() {
+   // Ko CAN CHCK VALIDATE -> GOI HAM SAVE CHUNG
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
       return;
     } else {
+      //THAY DOI TEN FORMTYPE->actionType
       switch (this.formType) {
         case 'add':
           if (this.hasSaved) {
@@ -739,7 +743,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     ]);
   }
 
-  openPopupLine(data) {
+  popupLine(data) {
     var obj = {
       headerText: this.headerText,
       data: { ...data },
@@ -795,7 +799,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
       });
   }
-
+//->setDefaultLine -> kiem tra lai xem con su dung k?
   setDefaultDataLine() {
     let idx;
     this.api
@@ -1185,13 +1189,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             case '2':
               idx = this.cashpaymentline.length;
               res.rowNo = idx + 1;
-              this.openPopupLine(res);
+
+              //rename -> popupLine
+              this.popupLine(res);
               break;
           }
         }
       });
   }
-
+//Viet tăt ten ctrl 3 ky tu vd: gridview -> grv;label ->lbl, 
   loadformSettledInvoices(type: number) {
     var obj = {
       cashpayment: this.cashpayment,
@@ -1408,8 +1414,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       );
     }
   }
-
+//-> k su dung ham nay
   loadAccountName(accountID) {
+    console.log('ee');
     for (let index = 0; index < this.lsAccount.length; index++) {
       if (this.lsAccount[index].accountID == accountID) {
         return this.lsAccount[index].accountName.toLocaleString();
@@ -1417,6 +1424,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
+  //Ẩn column trên control gridview -> hoi Tram ham an column
   setGridviewSetupLine(gridViewSetupLine) {
     this.gridViewSetupLine['DIM1'].isVisible = true;
     this.gridViewSetupLine['DIM2'].isVisible = true;

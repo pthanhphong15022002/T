@@ -881,14 +881,14 @@
       <div class="d-flex flex-center justify-content-center mt-2">
         <div class="d-flex align-items-center me-3">
           <div *ngIf="formType != 'edit'" class="ms-2">
-            <button class="btn btn-sm btn-success mr-2" (click)="openVoucher(0)">
+            <button class="btn btn-sm btn-success mr-2" (click)="settlement(0)">
               <i class="icon-i-clipboard-plus icon-18"></i>
               <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice1"
                 default="Đề xuất thanh toán"></codx-label>
             </button>
           </div>
           <div class="ms-2">
-            <button class="btn btn-sm btn-danger" (click)="openVoucher(1)">
+            <button class="btn btn-sm btn-danger" (click)="settlement(1)">
               <i class="icon-i-clipboard-plus icon-18"></i>
               <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice"
                 default="Thanh toán tự động"></codx-label>
