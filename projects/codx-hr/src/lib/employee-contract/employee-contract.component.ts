@@ -2,7 +2,7 @@ import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-det
 import { FormGroup } from '@angular/forms';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { CodxHrService } from './../codx-hr.service';
-import { filter } from 'rxjs';
+import { filter, map } from 'rxjs';
 import {
   UIComponent,
   ViewModel,
@@ -14,6 +14,8 @@ import {
   DialogRef,
   FormModel,
   AuthService,
+  FormatvaluePipe,
+  AuthStore,
 } from 'codx-core';
 import {
   Component,
@@ -84,6 +86,7 @@ export class EmployeeContractComponent extends UIComponent {
   //     text: 'Xóa',
   //   },
   // ];
+  formatValuePipe: FormatvaluePipe;
 
   constructor(
     inject: Injector,
@@ -91,10 +94,11 @@ export class EmployeeContractComponent extends UIComponent {
     private activedRouter: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
-    private auth: AuthService
+    private auth: AuthStore
   ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.formatValuePipe = new FormatvaluePipe(this.cache, this.auth, this.api);
   }
 
   onInit(): void {
@@ -279,14 +283,14 @@ export class EmployeeContractComponent extends UIComponent {
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
-    option.Width = '800px';
+    option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
+    option.Width = '800px';
     // let isAppendix = false;
     // if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
     //   isAppendix = true;
     // }
     // console.log('nguyen cuc data ne', data);
-
     let dialogAdd = this.callfc.openSide(
       PopupEProcessContractComponent,
       // isAppendix ? PopupSubEContractComponent : PopupEContractComponent,
