@@ -2270,28 +2270,32 @@
           <div class="mx-5 mx-xl-4 pt-0 pb-5">
             <div class="timeline timeline-3">
               <div class="timeline-items">
-                <ng-container *ngFor="let item of lstFamily; let index = index">
-                  <div class="timeline-item" [ngClass]="lstFamily? '' : 'has-action-menu'">
+                <ng-container *ngFor="let item of lstExperiences">
+                  <div class="timeline-item" [ngClass]="lstExperiences? 'has-action-menu':''">
                     <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
-                      <div class="timeline-media w-40px h-40px me-4">
-                        <span class="stepper-number">1</span>
+                      <div class="timeline-media me-4">
+                        <span class="stepper-number">
+                          {{item.fromDate | date: 'MM/y'}}
+                          -
+                          {{item.toDate | date: 'MM/y'}}
+                        </span>
                       </div>
-                      <div class="stepper-label mw-125px">
+                      <div class="stepper-label">
                         <h3 class="stepper-title line-clamp line-clamp-3">
-                          Cty kinh doanh 
+                          {{item?.companyName}}
                         </h3>
                         <div class="stepper-desc">
-                          Nhân viên bán hàng
+                          {{item?.position}}
                         </div>
 
-                        <codx-mfunc *ngIf="!lstFamily" [formModel]="formModel" (clickMF)="clickMF($event, item)"
+                        <codx-mfunc *ngIf="!lstExperiences" [formModel]="eExperienceFormModel" (clickMF)="clickMF($event, item, 'eExperiences')"
                           type="hover" [dataItem]="item">
                         </codx-mfunc>
                       </div>
                     </div>
-                    <div class="timeline-content mx-auto">
+                    <!-- <div class="timeline-content mx-auto">
                       <div class="d-flex flex-wrap">
-                        <ng-container *ngFor="let approver of item?.approvers">
+                        <ng-container *ngFor="let approver of lstFamily">
                           <div class="border border-1 border-gray-300 rounded min-w-250px mw-250px me-4 mb-2">
                             <codx-temp-full cardCss="card-template p-3" *ngIf="
                                 approver.roleType=='U' ||
@@ -2336,7 +2340,8 @@
                         <span class="stepper-number">+</span>
                       </div>
                     </div>
-                  </div> 
+                  </div>  -->
+                </div> 
                 </ng-container>
               </div>
             </div>
@@ -3343,31 +3348,6 @@
       (sectionChange)="onSectionChange($event)"
     > -->
 
-      <div class="user-profile overview d-block">
-        <div class="rounded-2 p-5 bg-white mb-4">
-          <div
-            class="d-flex align-items-center justify-content-between"
-          >
-            <div class="d-flex align-items-center text-primary">
-              <div class="user-status d-flex align-items-center">
-                <span class="icon-attach_money icon-20 me-2"></span>
-              </div>
-              <div class="fs-5-sm fw-bold text-primary text-uppercase"> 
-                Tổng lương (Gross)
-              </div>
-              <span class="ms-20"  
-              [innerHTML]="
-              infoPersonal?.totalGrossSalary
-                  | formatvalue : eInfoFormModel : 'totalGrossSalary'
-                  | async
-              "
-               >
-              </span>
-            </div> 
-          </div> 
-
-        </div>
-      </div>
     <!-- Lương -->
     <div class="user-profile overview d-block" [id]="eBasicSalaryFuncID">
       <div class="rounded-2 p-5 bg-white mb-4">

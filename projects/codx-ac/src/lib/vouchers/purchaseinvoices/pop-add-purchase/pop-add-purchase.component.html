@@ -427,7 +427,7 @@
       (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event, gridPurchase)" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
       [allowTextWrap]="false"></codx-gridview-v2>
   </div>
-  <ng-container *ngIf="form?.formGroup && modegrid == '2' && gridViewLines">
+  <ng-container *ngIf="form?.formGroup && modegrid == '2' && grvPurchaseInvoicesLines">
     <div class="table-responsive mt-3">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered mb-2">
         <thead>

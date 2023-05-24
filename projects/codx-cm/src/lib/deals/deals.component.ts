@@ -120,14 +120,40 @@ export class DealsComponent
   ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
-    // this.dataObj = {
-    //   processID: '327eb334-5695-468c-a2b6-98c0284d0620',
-    // };
     this.afterLoad();
 
     this.button = {
       id: this.btnAdd,
     };
+
+    this.router.params.subscribe((param: any) => {
+      if (param.funcID) {
+        this.funcID = param.funcID;
+      }
+    });
+
+    this.detectorRef.detectChanges();
+  }
+
+  afterLoad() {
+    this.request = new ResourceModel();
+    this.request.service = 'CM';
+    this.request.assemblyName = 'CM';
+    this.request.className = 'DealsBusiness';
+    this.request.method = 'GetListDealsAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj;
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'DP';
+    this.resourceKanban.assemblyName = 'DP';
+    this.resourceKanban.className = 'ProcessesBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = this.dataObj;
+  }
+
+  ngAfterViewInit(): void {
+    this.crrFuncID = this.funcID;
 
     this.views = [
       {
@@ -153,44 +179,15 @@ export class DealsComponent
         },
       },
     ];
-
-    this.router.params.subscribe((param: any) => {
-      if (param.funcID) {
-        this.funcID = param.funcID;
-      }
-    });
-
-    this.detectorRef.detectChanges();
-  }
-  afterLoad() {
-    this.request = new ResourceModel();
-    this.request.service = 'CM';
-    this.request.assemblyName = 'CM';
-    this.request.className = 'DealsBusiness';
-    this.request.method = 'GetListDealsAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj;
-
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'DP';
-    this.resourceKanban.assemblyName = 'DP';
-    this.resourceKanban.className = 'ProcessesBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
-  }
-
-  ngAfterViewInit(): void {
-    this.crrFuncID = this.funcID;
     this.changeDetectorRef.detectChanges();
   }
-
 
   changeView(e) {
     this.afterLoad();
     if (e?.view.type == 6) {
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
-      this.kanban.refesh();
+      // this.kanban.refresh();
     }
     // this.funcID = this.activedRouter.snapshot.params['funcID'];
     // if (this.crrFuncID != this.funcID) {
@@ -474,31 +471,35 @@ export class DealsComponent
       obj
     );
     dialogRevision.closed.subscribe((e) => {
-
       if (e && e.event != null) {
-        var instance =  e.event?.instance;
-        var instanceMove =  e.event?.instanceMove;
-        if(instanceMove) {
+        var instance = e.event?.instance;
+        var instanceMove = e.event?.instanceMove;
+        if (instanceMove) {
           var dealOld = JSON.parse(JSON.stringify(data));
-          var dealNew =JSON.parse(JSON.stringify(data));
-          dealOld = this.updateReasonDeal(e.event?.instance,dealOld);
-          dealNew = this.convertDataInstance(dealNew,instanceMove,e.event?.nextStep);
-          var datas = [dealOld,dealNew];
+          var dealNew = JSON.parse(JSON.stringify(data));
+          dealOld = this.updateReasonDeal(e.event?.instance, dealOld);
+          dealNew = this.convertDataInstance(
+            dealNew,
+            instanceMove,
+            e.event?.nextStep
+          );
+          var datas = [dealOld, dealNew];
           this.codxCmService.moveDealReason(datas).subscribe((res) => {
-            if(res){
+            if (res) {
               data = res[0];
               this.view.dataService.dataSelected = data;
-              this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-              this.view.dataService.add(res[1],0).subscribe((res) => {});
+              this.view.dataService
+                .update(this.view.dataService.dataSelected)
+                .subscribe();
+              this.view.dataService.add(res[1], 0).subscribe((res) => {});
               this.detectorRef.detectChanges();
             }
           });
-        }
-        else {
-          data = this.updateReasonDeal(e.event?.instance,data);
-          var datas = [data,data.customerID];
+        } else {
+          data = this.updateReasonDeal(e.event?.instance, data);
+          var datas = [data, data.customerID];
           this.codxCmService.updateDeal(datas).subscribe((res) => {
-            if(res){
+            if (res) {
               data = res[0];
               this.view.dataService.update(data).subscribe();
               this.detectorRef.detectChanges();
@@ -509,19 +510,12 @@ export class DealsComponent
     });
   }
 
-
-
-
-
-
-
-
-  convertDataInstance(deal: any, instance: any, nextStep:any) {
+  convertDataInstance(deal: any, instance: any, nextStep: any) {
     deal.dealName = instance.title;
     deal.memo = instance.memo;
     deal.endDate = instance.endDate;
-    deal.dealID  =  instance.instanceNo;
-    deal.owner  = instance.owner;
+    deal.dealID = instance.instanceNo;
+    deal.owner = instance.owner;
     deal.salespersonID = instance.owner;
     deal.processID = instance.processID;
     deal.stepID = instance.stepID;
@@ -530,15 +524,13 @@ export class DealsComponent
     deal.status = instance.status;
     deal.nextStep = nextStep;
     return deal;
-
   }
-  updateReasonDeal(instance:any, deal:any) {
+  updateReasonDeal(instance: any, deal: any) {
     deal.status = instance.status;
     deal.stepID = instance.stepID;
     deal.nextStep = '';
     return deal;
   }
-
 
   startDeal(recId) {
     var data = [recId];

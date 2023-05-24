@@ -1,5 +1,5 @@
 <!-- View TM  -->
-<ng-container *ngIf="service == 'TM'">
+<ng-container *ngIf="service == 'TM'; else elseBlock">
   <div>
     <h5>{{ data?.taskName }}</h5>
   </div>
@@ -158,7 +158,7 @@
 </ng-container>
 
 <!--View CO -->
-<ng-template *ngIf="service == 'CO'">
+<ng-template #elseBlock>
   <div>
     <h5
       #meetingName
