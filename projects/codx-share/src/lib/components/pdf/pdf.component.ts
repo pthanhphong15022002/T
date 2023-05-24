@@ -690,25 +690,40 @@ export class PdfComponent
   //sign pdf
   signPDF(mode, comment): any {
     if (this.isEditable && this.transRecID) {
-      let hasCA = this.lstCA ? (this.lstCA.length != 0 ? true : false) : false;
+      // let hasCA = this.lstCA ? (this.lstCA.length != 0 ? true : false) : false;
       return new Promise<any>((resolve, rejects) => {
-        this.esService
-          .SignAsync(
-            this.stepNo,
-            this.isAwait,
-            this.user.userID,
-            this.recID,
-            this.signerInfo.signType,
-            this.signerInfo.supplier,
-            hasCA,
-            mode,
-            comment,
-            this.transRecID
-          )
-          .subscribe((status) => {
-            resolve(status);
-          });
+        // this.esService
+        //   .SignAsync(
+        //     this.stepNo,
+        //     this.isAwait,
+        //     this.user.userID,
+        //     this.recID,
+        //     this.signerInfo.signType,
+        //     this.signerInfo.supplier,
+        //     hasCA,
+        //     mode,
+        //     comment,
+        //     this.transRecID
+        //   )
+        //   .subscribe((status) => {
+        //     resolve(status);
+        //   });    
+        this.api.execSv(
+          'ES',
+          'ERM.Business.ES',
+          'ApprovalTransBusiness',
+          'ApproveAsync',
+          [this.transRecID, mode, "", comment, '']
+        ).subscribe((res :any)=>{
+          if(res?.msgCodeError == null){
+            resolve(true);
+          }
+          else{
+            resolve(false);
+          }
+        })    
       });
+      
     }
   }
 

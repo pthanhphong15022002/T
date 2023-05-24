@@ -70,9 +70,11 @@
             [formModel]="dialog.formModel"
             field="rowNo"
             type="number"
+            [format]=""
             [min]="0"
             [crrValue]="payment?.rowNo"
             (valueChange)="valueChangeText($event)"
+            [disabled]="true"
           >
           </codx-input>
         </div>
@@ -157,6 +159,7 @@
             [min]="0"
             [crrValue]="payment?.rowNo"
             (valueChange)="valueChangeText($event)"
+            [disabled]="true"
           >
           </codx-input>
         </div>
