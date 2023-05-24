@@ -57,137 +57,41 @@
               ></span>
             </div>
           </div>
+
           <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
-            <div
-              class="d-flex mt-3 align-items-center"
-              *ngIf="CO_MeetingsParam != null"
-            >
-              <div class="w-5px me-2">
-                <li
-                  [style.background-color]="CO_MeetingsParam?.ShowColor"
-                  [style.color]="CO_MeetingsParam?.ShowColor"
-                ></li>
-              </div>
-              <div class="show-list-event w-100">
-                <codx-label
-                  name="lblMeeting"
-                  formName="CO_Meetings"
-                  default="Lịch họp"
+            <div *ngFor="let param of calendarParams | keyvalue">
+              <div class="d-flex mt-3 align-items-center">
+                <div class="w-5px me-2">
+                  <li
+                    [style.background-color]="param.value?.ShowColor"
+                    [style.color]="param.value?.ShowColor"
+                  ></li>
+                </div>
+                <div class="show-list-event w-100">
+                  <codx-vll
+                    [showText]="true"
+                    [showBgColor]="false"
+                    name="WP006"
+                    [value]="param.key"
+                  />
+                </div>
+                <div
+                  class="show-event-check me-2 w-50px d-flex justify-content-end"
                 >
-                </codx-label>
-              </div>
-              <div
-                class="show-event-check me-2 w-50px d-flex justify-content-end"
-              >
-                <codx-input
-                  type="checkbox"
-                  field="CO_Meetings"
-                  [checked]="CO_MeetingsParam.ShowEvent == '1'"
-                  labelPosition="Before"
-                  [disabled]="false"
-                  class="test-check"
-                  (valueChange)="valueChangeSetting($event)"
-                >
-                </codx-input>
+                  <codx-input
+                    type="checkbox"
+                    [field]="param.key"
+                    [checked]="param.value?.ShowEvent == '1'"
+                    labelPosition="Before"
+                    [disabled]="false"
+                    class="test-check"
+                    (valueChange)="updateSettingValue($event)"
+                  >
+                  </codx-input>
+                </div>
               </div>
             </div>
-            <div
-              class="d-flex mt-3 align-items-center"
-              *ngIf="EP_BookingCarsParam != null"
-            >
-              <div class="w-5px me-2">
-                <li
-                  [style.background-color]="EP_BookingCarsParam?.ShowColor"
-                  [style.color]="EP_BookingCarsParam?.ShowColor"
-                ></li>
-              </div>
-              <div class="show-list-event w-100">
-                <codx-label
-                  name="lblBookingCar"
-                  formName="EP_BookingCars"
-                  default="Đặt xe"
-                >
-                </codx-label>
-              </div>
-              <div
-                class="show-event-check me-2 w-50px d-flex justify-content-end"
-              >
-                <codx-input
-                  type="checkbox"
-                  field="EP_BookingCars"
-                  [checked]="EP_BookingCarsParam.ShowEvent == '1'"
-                  labelPosition="Before"
-                  [disabled]="false"
-                  class="test-check"
-                  (valueChange)="valueChangeSetting($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div
-              class="d-flex mt-3 align-items-center"
-              *ngIf="TM_TasksParam != null"
-            >
-              <div class="w-5px me-2">
-                <li
-                  [style.background-color]="TM_TasksParam?.ShowColor"
-                  [style.color]="TM_TasksParam?.ShowColor"
-                ></li>
-              </div>
-              <div class="show-list-event w-100">
-                <codx-label
-                  name="lblTask"
-                  formName="WP_Task"
-                  default="Công việc"
-                ></codx-label>
-              </div>
-              <div
-                class="show-event-check me-2 w-50px d-flex justify-content-end"
-              >
-                <codx-input
-                  type="checkbox"
-                  field="TM_Tasks"
-                  [checked]="TM_TasksParam.ShowEvent == '1'"
-                  labelPosition="Before"
-                  [disabled]="false"
-                  class="test-check"
-                  (valueChange)="valueChangeSetting($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div
-              class="d-flex align-items-center mt-3"
-              *ngIf="WP_NotesParam != null"
-            >
-              <div class="w-5px me-2">
-                <li
-                  [style.background-color]="WP_NotesParam?.ShowColor"
-                  [style.color]="WP_NotesParam?.ShowColor"
-                ></li>
-              </div>
-              <div class="w-100 show-list-event">
-                <codx-label
-                  name="lblNote"
-                  formName="WP_Notes"
-                  default="Ghi chú"
-                ></codx-label>
-              </div>
-              <div
-                class="show-event-check me-2 w-50px d-flex justify-content-end"
-              >
-                <codx-input
-                  type="checkbox"
-                  field="WP_Notes"
-                  [checked]="WP_NotesParam.ShowEvent == '1'"
-                  labelPosition="Before"
-                  [disabled]="false"
-                  class="test-check"
-                  (valueChange)="valueChangeSetting($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
+
             <!-- <div
               *ngIf="
                 EP_BookingCarsParam ||
@@ -218,39 +122,44 @@
           [resources]="resources"
           [resourceModel]="dataResourceModel"
         ></lib-calendar-center>
-        <div class="position-absolute bottom-0 end-0">
-          <!-- Floating Action Button -->
-          <div class="floating-container">
-            <div class="floating-button">+</div>
-            <div class="element-container">
-              <div class="float-element" (click)="addMeeting()">
-                <codx-label
-                  fiedName="CO_Meetings"
-                  default="Lịch họp"
-                  class="fw-bold"
-                ></codx-label>
-              </div>
-              <div class="float-element" (click)="addBookingCar()">
-                <codx-label
-                  fiedName="EP_BookingCars"
-                  default="Đặt xe"
-                  class="fw-bold"
-                ></codx-label>
-              </div>
-              <div class="float-element" (click)="addMyTask()">
-                <codx-label
-                  fiedName="TM_MyTasks"
-                  default="Công việc"
-                  class="fw-bold"
-                ></codx-label>
-              </div>
-              <div class="float-element" (click)="addNote()">
-                <codx-label
-                  fiedName="WP_Notes"
-                  default="Ghi chú"
-                  class="fw-bold"
-                ></codx-label>
-              </div>
+        <!-- Floating Action Button -->
+        <div class="floating-container">
+          <div class="floating-button">+</div>
+          <div class="element-container">
+            <div class="float-element" (click)="addMeeting()">
+              <codx-label
+                fiedName="CO_Meetings"
+                default="Lịch họp"
+                class="fw-bold"
+              ></codx-label>
+            </div>
+            <div class="float-element" (click)="addBookingCar()">
+              <codx-label
+                fiedName="EP_BookingCars"
+                default="Đặt xe"
+                class="fw-bold"
+              ></codx-label>
+            </div>
+            <div class="float-element" (click)="addMyTask()">
+              <codx-label
+                fiedName="TM_MyTasks"
+                default="Công việc"
+                class="fw-bold"
+              ></codx-label>
+            </div>
+            <div class="float-element" (click)="addAssignTask()">
+              <codx-label
+                fiedName="TM_AssignTasks"
+                default="Giao việc"
+                class="fw-bold"
+              ></codx-label>
+            </div>
+            <div class="float-element" (click)="addNote()">
+              <codx-label
+                fiedName="WP_Notes"
+                default="Ghi chú"
+                class="fw-bold"
+              ></codx-label>
             </div>
           </div>
         </div>

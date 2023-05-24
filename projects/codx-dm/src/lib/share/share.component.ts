@@ -99,6 +99,7 @@ export class ShareComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
     ) {
+      debugger
       this.dialog = dialog;       
       this.type = data.data[0];
       this.fileEditing = data.data[1];
@@ -260,6 +261,7 @@ export class ShareComponent implements OnInit {
   }
 
   onShare() {
+    debugger
     if (this.shareContent === '') {
       //$('#shareContent').addClass('form-control is-invalid');
       this.errorshow = true;
@@ -283,8 +285,13 @@ export class ShareComponent implements OnInit {
       // this.fileEditing.toPermission[i].read = true;
       // this.fileEditing.toPermission[i].share = this.share;
       // this.fileEditing.toPermission[i].download = this.download;
-      this.fileEditing.byPermission[i].startDate = this.startDate ? new Date(this.startDate).toLocaleString() : "";
-      this.fileEditing.byPermission[i].endDate =   this.endDate ? new Date(this.endDate).toLocaleString() : "";
+      var start = "";
+      var end = "";
+      if(this.startDate instanceof Date)  start = new Date(this.startDate).toLocaleString();
+      if(this.endDate instanceof Date)  end = new Date(this.endDate).toLocaleString();
+
+     
+      
       if (!this.isShare) {
         if (this.shareGroup.value.per == 'modified') {
           this.fileEditing.byPermission[i].create = true;
@@ -293,17 +300,22 @@ export class ShareComponent implements OnInit {
           this.fileEditing.byPermission[i].download = true;
           this.fileEditing.byPermission[i].upload = true;
           this.fileEditing.byPermission[i].read = true;
+          
         }
         else {
           //modified: xem, sua, xoa, download
           //readonly: xem
           this.fileEditing.byPermission[i].read = true;
         }
+        this.fileEditing.byPermission[i].startDate = start;
+        this.fileEditing.byPermission[i].endDate = end;
       }
       else {
         this.fileEditing.toPermission[i].read = true;
         this.fileEditing.toPermission[i].share = this.share;
         this.fileEditing.toPermission[i].download = this.download;
+        this.fileEditing.toPermission[i].startDate = start;
+        this.fileEditing.toPermission[i].endDate = end;
       }
     }
 

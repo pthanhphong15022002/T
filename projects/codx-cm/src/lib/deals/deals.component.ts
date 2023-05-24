@@ -29,11 +29,15 @@ import { CM_Customers } from '../models/cm_model';
 import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 import { DealDetailComponent } from './deal-detail/deal-detail.component';
 import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
+import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
+import { AnyNsRecord } from 'dns';
 
 @Component({
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
-  styleUrls: ['./deals.component.scss'],})export class DealsComponent
+  styleUrls: ['./deals.component.scss'],
+})
+export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -49,6 +53,8 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
   itemFields: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
+  @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
+  @ViewChild('footerKanban') footerKanban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
 
@@ -96,7 +102,7 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
   readonly btnAdd: string = 'btnAdd';
   request: ResourceModel;
   resourceKanban?: ResourceModel;
-  hideMoreFC = true;
+  hideMoreFC = false;
   listHeader: any;
 
   constructor(
@@ -114,9 +120,22 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
   ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
-    // this.dataObj = {
-    //   processID: '327eb334-5695-468c-a2b6-98c0284d0620',
-    // };
+    this.afterLoad();
+
+    this.button = {
+      id: this.btnAdd,
+    };
+
+    this.router.params.subscribe((param: any) => {
+      if (param.funcID) {
+        this.funcID = param.funcID;
+      }
+    });
+
+    this.detectorRef.detectChanges();
+  }
+
+  afterLoad() {
     this.request = new ResourceModel();
     this.request.service = 'CM';
     this.request.assemblyName = 'CM';
@@ -131,10 +150,10 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
     this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
+  }
 
-    this.button = {
-      id: this.btnAdd,
-    };
+  ngAfterViewInit(): void {
+    this.crrFuncID = this.funcID;
 
     this.views = [
       {
@@ -150,6 +169,7 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
         active: false,
         sameData: false,
         request: this.request,
+        hide: true,
         request2: this.resourceKanban,
         toolbarTemplate: this.footerButton,
         model: {
@@ -159,26 +179,20 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
         },
       },
     ];
-
-    this.router.params.subscribe((param: any) => {
-      if (param.funcID) {
-        this.funcID = param.funcID;
-      }
-    });
-  }
-
-  ngAfterViewInit(): void {
-    this.crrFuncID = this.funcID;
     this.changeDetectorRef.detectChanges();
   }
 
-  onLoading(e) {}
-
   changeView(e) {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.crrFuncID != this.funcID) {
-      this.crrFuncID = this.funcID;
+    this.afterLoad();
+    if (e?.view.type == 6) {
+      if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
+      else this.kanban = (this.view.currentView as any).kanban;
+      // this.kanban.refresh();
     }
+    // this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // if (this.crrFuncID != this.funcID) {
+    //   this.crrFuncID = this.funcID;
+    // }
   }
 
   click(evt: ButtonModel) {
@@ -265,6 +279,12 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
       case 'CM0201_2':
         this.handelStartDay(data);
         break;
+      case 'CM0201_3':
+        this.moveReason(data, true);
+        break;
+      case 'CM0201_4':
+        this.moveReason(data, false);
+        break;
       //xuât file
       case 'CM0201_5':
         this.exportFile(data);
@@ -277,12 +297,12 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
 
   handelStartDay(data) {
     this.notificationsService
-    .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
-    .subscribe((x) => {
-      if (x.event && x.event.status == 'Y') {
-        this.startDeal(data.recID);
-      }
-    });
+      .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.startDeal(data.recID);
+        }
+      });
   }
   moveStage(data: any) {
     // if (!this.isClick) {
@@ -310,11 +330,11 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
             isUseSuccess: false,
           };
           var dataCM = {
-            refID:data?.refID,
+            refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: data?.nextStep
-          }
+            nextStep: data?.nextStep,
+          };
           var obj = {
             stepName: data?.currentStepName,
             formModel: formMD,
@@ -339,25 +359,31 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
-              var instance =  e.event.instance;
-              var index = e.event.listStep.findIndex(x=> x.stepID === instance.stepID)+1;
+              var instance = e.event.instance;
+              var index =
+                e.event.listStep.findIndex(
+                  (x) =>
+                    x.stepID === instance.stepID &&
+                    !x.isSuccessStep &&
+                    !x.isFailStep
+                ) + 1;
               var nextStep = '';
-              if(index != -1){
-                if(index != e.event.listStep.length){
+              if (index != -1) {
+                if (index != e.event.listStep.length) {
                   var listStep = e.event.listStep;
                   nextStep = listStep[index]?.stepID;
                 }
               }
 
-              var dataUpdate = [data.recID,instance.stepID,nextStep];
-              this.codxCmService.moveStageDeal(dataUpdate).subscribe((res)=> {
-                if(res){
+              var dataUpdate = [data.recID, instance.stepID, nextStep];
+              this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
+                if (res) {
                   data = res[0];
                   this.view.dataService.update(data).subscribe();
                   this.detailViewDeal.dataSelected = data;
                   this.detectorRef.detectChanges();
                 }
-              })
+              });
               //xu ly data đổ về
               // data = e.event.instance;
               // this.listStepInstances = e.event.listStep;
@@ -372,8 +398,6 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
               //   this.detailViewInstance.dataSelect = this.dataSelected;
               //   this.detailViewInstance.listSteps = this.listStepInstances;
               // }
-
-
             }
           });
         });
@@ -381,14 +405,137 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
     });
   }
 
+  moveReason(data: any, isMoveSuccess: boolean) {
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    var functionID = isMoveSuccess ? 'DPT0403' : 'DPT0404';
+    this.cache.functionList(functionID).subscribe((fun) => {
+      this.openFormReason(data, fun, isMoveSuccess);
+      // var newProccessIdReason = isMoveSuccess
+      //   ? this.stepSuccess.newProcessID
+      //   : this.stepFail.newProcessID;
+      // var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
+      // if (isCheckExist) {
+      //   this.codxDpService
+      //     .getProcess(newProccessIdReason)
+      //     .subscribe((res) => {
+      //       if (res) {
+      //         if (res.permissions != null && res.permissions.length > 0) {
+      //           this.listParticipantReason = res.permissions.filter(
+      //             (x) => x.roleType === 'P'
+      //           );
+      //           this.openFormReason(
+      //             data,
+      //             fun,
+      //             isMoveSuccess,
+      //             dataMore,
+      //             this.listParticipantReason
+      //           );
+      //         }
+      //       }
+      //     });
+      // } else {
+      //   this.openFormReason(data, fun, isMoveSuccess, dataMore, null);
+      // }
+    });
+  }
+
+  openFormReason(data, fun, isMoveSuccess) {
+    var formMD = new FormModel();
+    formMD.funcID = fun.functionID;
+    formMD.entityName = fun.entityName;
+    formMD.formName = fun.formName;
+    formMD.gridViewName = fun.gridViewName;
+    var dataCM = {
+      refID: data?.refID,
+      processID: data?.processID,
+      stepID: data?.stepID,
+      nextStep: data?.nextStep,
+    };
+    var obj = {
+      headerTitle: fun.defaultName,
+      formModel: formMD,
+      isReason: isMoveSuccess,
+      applyFor: '1',
+      dataCM: dataCM,
+      stepName: data.currentStepName,
+    };
+
+    var dialogRevision = this.callfc.openForm(
+      PopupMoveReasonComponent,
+      '',
+      800,
+      600,
+      '',
+      obj
+    );
+    dialogRevision.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        var instance = e.event?.instance;
+        var instanceMove = e.event?.instanceMove;
+        if (instanceMove) {
+          var dealOld = JSON.parse(JSON.stringify(data));
+          var dealNew = JSON.parse(JSON.stringify(data));
+          dealOld = this.updateReasonDeal(e.event?.instance, dealOld);
+          dealNew = this.convertDataInstance(
+            dealNew,
+            instanceMove,
+            e.event?.nextStep
+          );
+          var datas = [dealOld, dealNew];
+          this.codxCmService.moveDealReason(datas).subscribe((res) => {
+            if (res) {
+              data = res[0];
+              this.view.dataService.dataSelected = data;
+              this.view.dataService
+                .update(this.view.dataService.dataSelected)
+                .subscribe();
+              this.view.dataService.add(res[1], 0).subscribe((res) => {});
+              this.detectorRef.detectChanges();
+            }
+          });
+        } else {
+          data = this.updateReasonDeal(e.event?.instance, data);
+          var datas = [data, data.customerID];
+          this.codxCmService.updateDeal(datas).subscribe((res) => {
+            if (res) {
+              data = res[0];
+              this.view.dataService.update(data).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+      }
+    });
+  }
+
+  convertDataInstance(deal: any, instance: any, nextStep: any) {
+    deal.dealName = instance.title;
+    deal.memo = instance.memo;
+    deal.endDate = instance.endDate;
+    deal.dealID = instance.instanceNo;
+    deal.owner = instance.owner;
+    deal.salespersonID = instance.owner;
+    deal.processID = instance.processID;
+    deal.stepID = instance.stepID;
+    deal.refID = instance.recID;
+    deal.stepID = instance.stepID;
+    deal.status = instance.status;
+    deal.nextStep = nextStep;
+    return deal;
+  }
+  updateReasonDeal(instance: any, deal: any) {
+    deal.status = instance.status;
+    deal.stepID = instance.stepID;
+    deal.nextStep = '';
+    return deal;
+  }
+
   startDeal(recId) {
     var data = [recId];
     this.codxCmService.startDeal(data).subscribe((res) => {
       if (res) {
-        // data.status = '2';
-        // data.startDate = res?.length > 0 ? res[0].startDate : null;
-        //   this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-        //   this.listInstanceStep = res;
         this.dataSelected = res[0];
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
@@ -439,6 +586,8 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
       }
     }
   }
+
+  onActions(e) {}
 
   addDeal() {
     this.view.dataService.addNew().subscribe((res) => {
@@ -563,7 +712,7 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
 
   //xuất file
   exportFile(dt) {
-    this.codxCmService.exportFile(dt,this.titleAction) ;
+    this.codxCmService.exportFile(dt, this.titleAction);
     // this.codxCmService
     //   .getDataInstance(dt.refID)
     //   .subscribe((res) => {

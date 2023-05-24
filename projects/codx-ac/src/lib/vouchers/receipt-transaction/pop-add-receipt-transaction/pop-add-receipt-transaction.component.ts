@@ -45,6 +45,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   validate: any = 0;
   journalNo: any;
   modeGrid: any;
+  lsitem: any;
   inventoryJournalLines: Array<InventoryJournalLines> = [];
   inventoryJournalLinesDelete: Array<InventoryJournalLines> = [];
   lockFields = [];
@@ -126,6 +127,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.loadInit();
     this.loadTotal();
     this.loadJournal();
+    this.loadItems();
   }
 
   ngAfterViewInit() {
@@ -224,50 +226,22 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case "quantity":
         if(e.value == null)
           e.data.quantity = 0;
+        e.data.costAmt = this.calculateNetAmt(e.data.quantity, e.data.costPrice);
         break;
       case "costPrice":
         if(e.value == null)
           e.data.costPrice = 0;
+        e.data.costAmt = this.calculateNetAmt(e.data.quantity, e.data.costPrice);
         break;
       case "costAmt":
         if(e.value == null)
           e.data.costAmt = 0;
         break;
     }
-    const field = [
-      'itemid',
-      'idim0',
-      'idim1',
-      'idim2',
-      'idim3',
-      'idim4',
-      'idim5',
-      'idim6',
-      'idim7',
-      'idim8',
-      'idim9',
-      'umid',
-      'quantity',
-      'costprice',
-      'costamt'
-    ];
-    if (field.includes(e.field.toLowerCase())) {
-      this.api
-        .exec('IV', 'InventoryJournalLinesBusiness', 'ValueChangedAsync', [
-          this.inventoryJournal,
-          e.data,
-          e.field,
-          e.data?.isAddNew,
-        ])
-        .subscribe((res: any) => {
-          if (res && res.line)
-          {
-            res.line.isAddNew = e.data?.isAddNew;
-            this.setDataGrid(res.line.updateColumns, res.line);
-          }
-        });
-    }
     if (e.field == 'itemID') {
+      var item = this.getItem(e.data.itemID);
+      e.data.itemName = item.itemName;
+      e.data.umid = item.umid;
       this.loadItemID(e.value);
     }
   }
@@ -559,8 +533,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       this.notification.notifyCode('SYS023', 0, '');
       return;
     } else {
-      if(e.costAmt == 0 && e.costPrice > 0 && e.quantity > 0)
-        e.costAmt = e.quantity * e.costPrice;
       this.api
         .execAction<any>('IV_InventoryJournalLines', [e], 'SaveAsync')
         .subscribe((save) => {
@@ -937,6 +909,27 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           break;
       }
     }
+  }
+
+  loadItems(){
+    this.api.exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
+    .subscribe((res: any) => {
+      if(res)
+        this.lsitem = res;
+    });
+  }
+
+  getItem(itemID: any){
+    var item = this.lsitem.filter(x => x.itemID == itemID);
+    return item[0];
+  }
+
+  calculateNetAmt(quantity: any, costPrice: any)
+  {
+    if(quantity == 0 || costPrice == 0)
+      return 0;
+    var costAmt = quantity * costPrice;
+    return costAmt;
   }
 
   //#endregion

@@ -119,6 +119,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   lstFamily: any;
   lstOrg: any; //view bo phan
   lstBtnAdd: any; //nut add chung
+
+  //Kinh nghiem
+  lstExperiences: any;
   //degree
   lstEDegrees: any = [];
   //passport
@@ -673,11 +676,35 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           this.request.page = params?.page ?? 1;
           this.request.predicate = params?.predicate ?? '';
           this.request.dataValue = params?.dataValue ?? '';
-          if (params?.filter) this.request.filter = JSON.parse(params?.filter);
-          this.request.pageSize = 20;
+
+          // funcID ; EmpID ; Page ; Index
+
+          
+          // if (params?.filter) this.request.filter = JSON.parse(params?.filter);
+          // this.request.pageSize = 20;
+          // this.hrService.loadData('HR', this.request).subscribe((res) => {
+          //   if (res && res[0]) {
+          //     this.listEmp.push(...res[0]);
+          //     let index = this.listEmp?.findIndex(
+          //       (p) => p.employeeID == params.employeeID
+          //     );
+          //     i++;
+          //     if (index > -1) {
+          //       flag = false;
+          //     }
+          //   }
+          // });
+          //}
+        }
+
+        let index = this.listEmp?.findIndex(
+          (p) => p.employeeID == params.employeeID
+        );
+
+        if (index > -1 && !this.listEmp[index + 1]?.employeeID) {
+          this.request.page += 1;
           this.hrService.loadData('HR', this.request).subscribe((res) => {
-            if (res && res[0]) 
-            {
+            if (res && res[0]) {
               this.listEmp.push(...res[0]);
               this.crrIndex = this.listEmp?.findIndex((x) => this.employeeID === x.employeeID);
             }
@@ -1564,6 +1591,25 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         if (res) this.lstFamily = res[0];
       });
 
+      let rqExperience = new DataRequest();
+      rqExperience.gridViewName = 'grvEExperiences';
+      rqExperience.entityName = 'HR_EExperiences';
+      rqExperience.predicate = 'EmployeeID=@0';
+      rqExperience.dataValue = this.employeeID;
+      rqExperience.pageLoading = false;
+      this.hrService.GetExperienceListByEmployeeIDAsync(rqExperience).subscribe((res) => {
+        if (res) {
+          this.lstExperiences = res[0];
+          // this.lstExperiences.sort((a, b) => {
+          //   let da = new Date(a.fromDate),
+          //       db = new Date(b.fromDate);
+          //     return da > db;
+          // });
+          console.log('ds kn 2', this.lstExperiences)
+        }
+      });
+
+
       // let opPassport = new DataRequest();
       // opPassport.gridViewName = 'grvEPassports';
       // opPassport.entityName = 'HR_EPassports';
@@ -1607,10 +1653,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
       // Salary
       if (!this.crrEBSalary) {
+        let date = new Date();
         let rqBSalary = new DataRequest();
         rqBSalary.entityName = 'HR_EBasicSalaries';
-        rqBSalary.dataValues = this.employeeID + ';true';
-        rqBSalary.predicates = 'EmployeeID=@0 and IsCurrent=@1';
+        rqBSalary.dataValues = this.employeeID + ';' +`${date.toISOString()}`;
+        rqBSalary.predicates = 'EmployeeID=@0 and EffectedDate<=@1 and ExpiredDate>=@1';
         rqBSalary.page = 1;
         rqBSalary.pageSize = 1;
         this.loadedESalary = false;
@@ -4549,6 +4596,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.filterEBenefitPredicates += `BenefitID==@${i}`;
       }
       this.filterEBenefitPredicates += ') ';
+      debugger
       this.filterEBenefitPredicates += `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
       this.filterEBenefitPredicates += ') ';
       (this.eBenefitGrid.dataService as CRUDService)

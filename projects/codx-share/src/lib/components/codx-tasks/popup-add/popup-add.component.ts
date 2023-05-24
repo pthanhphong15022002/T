@@ -589,7 +589,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTaskResources,
         this.listTodo,
         null,
-        this.recIDTodoDelete.join(";"),
+        this.recIDTodoDelete.join(';'),
       ];
     } else {
       op.method = 'AddTaskAsync';
@@ -605,41 +605,57 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   addTask(isCloseFormTask: boolean = true) {
-    this.dialog.dataService
-      .save((opt: RequestOption) => {
-        opt.methodName = 'AddTaskAsync';
-        opt.data = [
-          this.task,
-          this.functionID,
-          this.listTaskResources,
-          this.listTodo,
-        ];
-        return true;
-      })
-      .subscribe((res) => {
+    this.api
+      .exec('TM', 'TaskBusiness', 'AddTaskAsync', [
+        this.task,
+        this.functionID,
+        this.listTaskResources,
+        this.listTodo,
+      ])
+      .subscribe((res: any) => {
         this.isClickSave = false;
         this.dialog.close(res);
         this.attachment?.clearData();
         if (res && res.save) {
           var task = res.save[0];
-          //send mail FE
-          // if (task.category == '3') {
-          //   if (this.param?.ConfirmControl == '1')
-          //     this.tmSv
-          //       .sendAlertMail(task?.recID, 'TM_0008', this.functionID)
-          //       .subscribe();
-          //   else
-          //     this.tmSv
-          //       .sendAlertMail(task?.recID, 'TM_0001', this.functionID)
-          //       .subscribe();
-          // }
-
-          // if (task?.category == '1' && task.verifyControl == '1')
-          //   this.tmSv
-          //     .sendAlertMail(task?.recID, 'TM_0018', this.functionID)
-          //     .subscribe();
         }
       });
+
+    // this.dialog.dataService
+    //   .save((opt: RequestOption) => {
+    //     opt.methodName = 'AddTaskAsync';
+    //     opt.data = [
+    //       this.task,
+    //       this.functionID,
+    //       this.listTaskResources,
+    //       this.listTodo,
+    //     ];
+    //     return true;
+    //   })
+    //   .subscribe((res) => {
+    //     this.isClickSave = false;
+    //     this.dialog.close(res);
+    //     this.attachment?.clearData();
+    //     if (res && res.save) {
+    //       var task = res.save[0];
+    //       //send mail FE
+    //       // if (task.category == '3') {
+    //       //   if (this.param?.ConfirmControl == '1')
+    //       //     this.tmSv
+    //       //       .sendAlertMail(task?.recID, 'TM_0008', this.functionID)
+    //       //       .subscribe();
+    //       //   else
+    //       //     this.tmSv
+    //       //       .sendAlertMail(task?.recID, 'TM_0001', this.functionID)
+    //       //       .subscribe();
+    //       // }
+
+    //       // if (task?.category == '1' && task.verifyControl == '1')
+    //       //   this.tmSv
+    //       //     .sendAlertMail(task?.recID, 'TM_0018', this.functionID)
+    //       //     .subscribe();
+    //     }
+    //   });
   }
 
   updateTask() {
@@ -938,7 +954,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
-    var crrRole =this.crrRole
+    var crrRole = this.crrRole;
     this.api
       .execSv<any>(
         'HR',

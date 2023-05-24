@@ -31,33 +31,47 @@
           <div class="d-flex justify-content-between align-items-start mb-3">
             <codx-temp-full
               *ngIf="
-                approver.roleType == 'U' || approver.roleType == 'PA'
+                approver?.roleType == 'U' || approver?.roleType == 'PA'
               "
-              [imageId]="approver.approver"
+              [imageId]="approver?.approver"
               [imageObjType]="'AD_Users'"
               [imageWidth]="35"
               [title]="
-                approver.name ??
-                approver.approverName ??
-                (approver.approver | vll : 'ES014' : 'text' | async)
+                approver?.name ??
+                approver?.approverName ??
+                (approver?.approver | vll : 'ES014' : 'text' | async)
               "
               [desc]="
-                approver.position ??
-                approver.approverPosition ??
+                approver?.position ??
+                approver?.approverPosition ??
                 positionDefault
               "
             >
             </codx-temp-full>
+
             <codx-temp-full
-              *ngIf="approver.roleType!='U' && approver.roleType != 'PA'"
+            *ngIf="approver?.roleType=='P'"
+            [imageSrc]="
+              './assets/themes/sys/default/img/' +
+              (item.icon ? item.icon : 'share_default.svg')
+            "
+            imgCss="w-30px p-3 me-3 user-mini-icon"
+            [imageWidth]="20"
+            [title]="approver?.name"
+            [desc]="approver?.roleType | vll : 'ES014' : 'text' | async"
+          >
+          </codx-temp-full>
+
+            <codx-temp-full
+              *ngIf="approver?.roleType!='U' && approver?.roleType != 'PA' && approver?.roleType != 'P'"
               [imageSrc]="
                 './assets/themes/sys/default/img/' +
                 (item.icon ? item.icon : 'share_default.svg')
               "
               imgCss="w-30px p-3 me-3 user-mini-icon"
               [imageWidth]="20"
-              [title]="approver.approver | vll : 'ES014' : 'text' | async"
-              [desc]="approver.approver | vll : 'ES014' : 'text' | async"
+              [title]="approver?.approver | vll : 'ES014' : 'text' | async"
+              [desc]="approver?.approver | vll : 'ES014' : 'text' | async"
             >
             </codx-temp-full>
             <div class="d-flex align-items-center ms-6 flex-column flex-column">
@@ -69,7 +83,7 @@
                   ></codx-label>
                 </span> -->
                 <codx-vll
-                  [value]="approver.actived ? '1' : '0'"
+                  [value]="approver?.actived ? '1' : '0'"
                   [name]="'ES031'"
                   [showIcon]="true"
                   [showText]="true"
@@ -83,7 +97,7 @@
           </div>
           <div
             class="d-flex align-items-center justify-content-between mb-3"
-            *ngIf="approver.leadtime != 0"
+            *ngIf="approver?.leadtime != 0"
           >
             <div class="d-flex w-250px">
               <div
@@ -237,17 +251,17 @@
         <ng-container *ngFor="let approver of item.approvers">
           <div class="d-flex justify-content-between align-items-start mb-3">
             <codx-temp-full
-              [imageId]="approver.approver"
+              [imageId]="approver?.approver"
               [imageObjType]="'AD_Users'"
               [imageWidth]="35"
               [title]="
-                approver.name ??
-                approver.approverName ??
-                (approver.approver | vll : 'ES014' : 'text' | async)
+                approver?.name ??
+                approver?.approverName ??
+                (approver?.approver | vll : 'ES014' : 'text' | async)
               "
               [desc]="
-                approver.position ??
-                approver.approverPosition ??
+                approver?.position ??
+                approver?.approverPosition ??
                 positionDefault
               "
             >
@@ -255,24 +269,24 @@
             <div class="d-flex justify-content-between">
               <div
                 class="text-dark fs-7 me-4 mt-1"
-                *ngIf="approver.status == '3'"
+                *ngIf="approver?.status == '3'"
               >
-                {{ approver.activedOn | amTimeAgo }}
+                {{ approver?.activedOn | amTimeAgo }}
               </div>
               <div class="d-flex flex-wrap">
-                <div class="d-flex mt-1" *ngIf="approver.status == '5'">
+                <div class="d-flex mt-1" *ngIf="approver?.status == '5'">
                   <!-- <codx-label
                     fiedName="ApprovedOn"
                     [formModel]="fmApprovalTrans"
                   ></codx-label> -->
                   <div class="d-flex text-dark fs-7 me-4">
-                    {{ approver.approvedOn | fmDT }}
+                    {{ approver?.approvedOn | fmDT }}
                   </div>
                 </div>
 
                 <codx-vll
-                  *ngIf="approver.status != '1'"
-                  [value]="approver.status + approver.stepType"
+                  *ngIf="approver?.status != '1'"
+                  [value]="approver?.status + approver?.stepType"
                   [name]="'ES030'"
                   [showIcon]="true"
                   [showText]="true"
@@ -283,11 +297,11 @@
               </div>
 
               <div
-                *ngIf="approver.status == '1'"
+                *ngIf="approver?.status == '1'"
                 class="d-flex align-items-center justify-content-between ms-6 flex-column"
               >
                 <codx-vll
-                  [value]="approver.actived ? '1' : '0'"
+                  [value]="approver?.actived ? '1' : '0'"
                   [name]="'ES031'"
                   [showIcon]="true"
                   [showText]="true"
@@ -300,7 +314,7 @@
           </div>
           <div
             class="d-flex align-items-center justify-content-between mb-3"
-            *ngIf="approver.leadtime != 0"
+            *ngIf="approver?.leadtime != 0"
           >
             <div class="d-flex w-250px">
               <div
@@ -374,13 +388,13 @@
           <div
             class="bg-gray-100 bg-opacity-70 rounded-2 px-3 py-4 mb-3"
             *ngIf="
-              approver.status != '3' &&
-              approver.comment != '' &&
-              approver.comment
+              approver?.status != '3' &&
+              approver?.comment != '' &&
+              approver?.comment
             "
           >
             <div class="text-comment">
-              {{ approver.comment }}
+              {{ approver?.comment }}
             </div>
           </div>
           <!-- <div class="d-attach pb-5">

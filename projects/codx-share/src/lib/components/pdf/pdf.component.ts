@@ -690,25 +690,40 @@ export class PdfComponent
   //sign pdf
   signPDF(mode, comment): any {
     if (this.isEditable && this.transRecID) {
-      let hasCA = this.lstCA ? (this.lstCA.length != 0 ? true : false) : false;
+      // let hasCA = this.lstCA ? (this.lstCA.length != 0 ? true : false) : false;
       return new Promise<any>((resolve, rejects) => {
-        this.esService
-          .SignAsync(
-            this.stepNo,
-            this.isAwait,
-            this.user.userID,
-            this.recID,
-            this.signerInfo.signType,
-            this.signerInfo.supplier,
-            hasCA,
-            mode,
-            comment,
-            this.transRecID
-          )
-          .subscribe((status) => {
-            resolve(status);
-          });
+        // this.esService
+        //   .SignAsync(
+        //     this.stepNo,
+        //     this.isAwait,
+        //     this.user.userID,
+        //     this.recID,
+        //     this.signerInfo.signType,
+        //     this.signerInfo.supplier,
+        //     hasCA,
+        //     mode,
+        //     comment,
+        //     this.transRecID
+        //   )
+        //   .subscribe((status) => {
+        //     resolve(status);
+        //   });    
+        this.api.execSv(
+          'ES',
+          'ERM.Business.ES',
+          'ApprovalTransBusiness',
+          'ApproveAsync',
+          [this.transRecID, mode, "", comment, '']
+        ).subscribe((res :any)=>{
+          if(res?.msgCodeError == null){
+            resolve(true);
+          }
+          else{
+            resolve(false);
+          }
+        })    
       });
+      
     }
   }
 
@@ -941,7 +956,10 @@ export class PdfComponent
             switch (area.labelType) {
               case 'S1': {
                 url = curSignerInfo?.signature1 ?? area.labelValue;
-                if (area.labelValue != url && url.includes(area.labelType)) {
+                if (
+                  area.labelValue != url &&
+                  url != environment.urlUpload + '/' + area.labelValue
+                ) {
                   isChangeUrl = true;
                 }
                 let isUrl = this.checkIsUrl(url);
@@ -960,7 +978,10 @@ export class PdfComponent
               }
               case 'S2': {
                 url = curSignerInfo?.signature2 ?? area.labelValue;
-                if (area.labelValue != url && url.includes(area.labelType)) {
+                if (
+                  area.labelValue != url &&
+                  url != environment.urlUpload + '/' + area.labelValue
+                ) {
                   isChangeUrl = true;
                 }
                 let isUrl = this.checkIsUrl(url);
@@ -979,7 +1000,10 @@ export class PdfComponent
               }
               case 'S3': {
                 url = curSignerInfo?.stamp ?? area.labelValue;
-                if (area.labelValue != url && url.includes(area.labelType)) {
+                if (
+                  area.labelValue != url &&
+                  url != environment.urlUpload + '/' + area.labelValue
+                ) {
                   isChangeUrl = true;
                 }
                 let isUrl = this.checkIsUrl(url);
@@ -1120,57 +1144,57 @@ export class PdfComponent
             this.needAddKonva.on('dragend', (dragEnd) => {
               if (dragEnd?.evt?.toElement?.tagName == 'CANVAS') {
                 if (this.needAddKonva) {
-                  let curLayer = stage?.children[0]?.children;
-                  let signed = curLayer.filter((child) => {
-                    if (child != this.tr) {
-                      let childName: tmpAreaName = JSON.parse(
-                        child?.attrs?.name
-                      );
+                  // let curLayer = stage?.children[0]?.children;
+                  // let signed = curLayer.filter((child) => {
+                  //   if (child != this.tr) {
+                  //     let childName: tmpAreaName = JSON.parse(
+                  //       child?.attrs?.name
+                  //     );
 
-                      let sameLable = childName.LabelType == name.LabelType;
-                      let isUnique = this.imgConfig.includes(
-                        childName.LabelType.toString()
-                      );
-                      let sameSigner = childName.Signer == name.Signer;
-                      let sameStepNo = childName.StepNo == name.StepNo;
-                      return sameLable && sameSigner && isUnique && sameStepNo;
-                    }
-                    return undefined;
-                  });
+                  //     let sameLable = childName.LabelType == name.LabelType;
+                  //     let isUnique = this.imgConfig.includes(
+                  //       childName.LabelType.toString()
+                  //     );
+                  //     let sameSigner = childName.Signer == name.Signer;
+                  //     let sameStepNo = childName.StepNo == name.StepNo;
+                  //     return sameLable && sameSigner && isUnique && sameStepNo;
+                  //   }
+                  //   return undefined;
+                  // });
                   this.holding = 0;
-                  if (
-                    !this.imgConfig.includes(name.LabelType.toString()) ||
-                    signed?.length == 1
-                  ) {
-                    switch (name.Type) {
-                      case 'text': {
-                        this.saveNewToDB(
-                          attrs.text,
-                          name.Type,
-                          name.LabelType,
-                          name.Signer,
-                          this.stepNo,
-                          this.needAddKonva
-                        );
+                  // if (
+                  //   !this.imgConfig.includes(name.LabelType.toString()) ||
+                  //   signed?.length == 1
+                  // ) {
+                  switch (name.Type) {
+                    case 'text': {
+                      this.saveNewToDB(
+                        attrs.text,
+                        name.Type,
+                        name.LabelType,
+                        name.Signer,
+                        this.stepNo,
+                        this.needAddKonva
+                      );
 
-                        break;
-                      }
-                      case 'img': {
-                        this.saveNewToDB(
-                          name.LabelValue,
-                          name.Type,
-                          name.LabelType,
-                          name.Signer,
-                          this.stepNo,
-                          this.needAddKonva
-                        );
-                        break;
-                      }
+                      break;
                     }
-                  } else {
-                    this.needAddKonva.destroy();
-                    this.tr?.remove();
+                    case 'img': {
+                      this.saveNewToDB(
+                        name.LabelValue,
+                        name.Type,
+                        name.LabelType,
+                        name.Signer,
+                        this.stepNo,
+                        this.needAddKonva
+                      );
+                      break;
+                    }
                   }
+                  // } else {
+                  //   this.needAddKonva.destroy();
+                  //   this.tr?.remove();
+                  // }
                 }
                 this.needAddKonva = null;
               } else {

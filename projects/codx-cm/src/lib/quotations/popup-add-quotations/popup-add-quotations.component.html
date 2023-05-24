@@ -218,7 +218,7 @@
               #customerIDCbx
               field="customerID"
               [formModel]="form.formModel"
-              [Group]="form.formGroup"
+              [model]="modelCustomerIDDeals"
               [disabled]="disableCusID"
               (valueChange)="changeCombox($event)"
             ></codx-input>
@@ -231,10 +231,11 @@
             <codx-input
               field="contactID"
               [formModel]="form.formModel"
-              [Group]="form.formGroup"
+              [model]="modelObjectIDContacs"
               (valueChange)="valueChange($event)"
             ></codx-input>
           </div>
+          <!-- xoa  [Group]="form.formGroup" de cbx nhan model de -->
         </div>
         <div class="col-6 row">
           <div class="col-6"></div>
@@ -489,12 +490,21 @@
               ></codx-label>
             </div>
             <div
+              class="me-1"
               [innerHTML]="
                 quotations.totalSalesAmt
                   | formatvalue : form.formModel : 'totalSalesAmt'
                   | async
               "
             ></div>
+            <span
+              class="codx-label"
+              [innerHTML]="
+                quotations.currencyID
+                  | formatvalue : form.formModel : 'currencyID'
+                  | async
+              "
+            ></span>
           </div>
           <div class="d-flex justify-content-between">
             <div>
@@ -505,12 +515,21 @@
               ></codx-label>
             </div>
             <div
+              class="me-1"
               [innerHTML]="
                 quotations.discAmt
                   | formatvalue : form.formModel : 'DiscAmt'
                   | async
               "
             ></div>
+            <span
+              class="codx-label"
+              [innerHTML]="
+                quotations.currencyID
+                  | formatvalue : form.formModel : 'currencyID'
+                  | async
+              "
+            ></span>
           </div>
           <div class="d-flex justify-content-between">
             <div>
@@ -521,12 +540,21 @@
               ></codx-label>
             </div>
             <div
+              class="me-1"
               [innerHTML]="
                 quotations?.totalTaxAmt
                   | formatvalue : form.formModel : 'totalTaxAmt'
                   | async
               "
             ></div>
+            <span
+              class="codx-label"
+              [innerHTML]="
+                quotations.currencyID
+                  | formatvalue : form.formModel : 'currencyID'
+                  | async
+              "
+            ></span>
           </div>
           <div class="d-flex justify-content-between">
             <div class="">
@@ -537,12 +565,21 @@
               ></codx-label>
             </div>
             <div
+              class="me-1"
               [innerHTML]="
                 quotations.totalAmt
                   | formatvalue : form.formModel : 'TotalAmt'
                   | async
               "
             ></div>
+            <span
+              class="codx-label"
+              [innerHTML]="
+                quotations.currencyID
+                  | formatvalue : form.formModel : 'currencyID'
+                  | async
+              "
+            ></span>
           </div>
         </div>
       </div>

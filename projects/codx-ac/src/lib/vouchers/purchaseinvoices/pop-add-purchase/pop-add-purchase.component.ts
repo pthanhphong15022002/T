@@ -56,8 +56,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   dialog!: DialogRef;
   formType: any;
-  gridViewSetup: any;
-  gridViewLines: any;
+  grvPurchaseInvoices: any;
+  grvPurchaseInvoicesLines: any;
   validate: any = 0;
   journalNo: string;
   VATType: any;
@@ -67,6 +67,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   journal: IJournal;
   hasSaved: any = false;
   isClose: any = false;
+  items: any;
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   purchaseInvoicesLinesDelete: Array<PurchaseInvoicesLines> = [];
@@ -130,143 +131,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {
-    this.cache
-      .gridViewSetup('PurchaseInvoices', 'grvPurchaseInvoices')
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
-
-    this.cache
-      .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewLines = res;
-          var keygrid = Object.keys(this.gridViewLines);
-          for (let index = 0; index < keygrid.length; index++) {
-            if (this.gridViewLines[keygrid[index]].isVisible == true) {
-              var column = {
-                field:
-                  this.gridViewLines[keygrid[index]].fieldName.toLowerCase(),
-                headerText: this.gridViewLines[keygrid[index]].headerText,
-                columnOrder: this.gridViewLines[keygrid[index]].columnOrder,
-              };
-              this.columnGrids.push(column);
-            }
-          }
-          this.columnGrids = this.columnGrids.sort(
-            (a, b) => a.columnOrder - b.columnOrder
-          );
-        }
-      });
-
-    if (this.formType == 'edit') {
-      this.api
-        .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [
-          this.purchaseinvoices.recID,
-        ])
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            this.keymodel = Object.keys(res[0]);
-            this.purchaseInvoicesLines = res;
-            this.purchaseInvoicesLines.forEach((element) => {
-              if (element.vatid != null) {
-                this.countDetail++;
-              }
-              this.loadTotal();
-            });
-          }
-        });
-    }
-    this.api
-      .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.lsVatCode = res;
-        }
-      });
-
-    if (
-      this.purchaseinvoices &&
-      this.purchaseinvoices.unbounds &&
-      this.purchaseinvoices.unbounds.lockFields &&
-      this.purchaseinvoices.unbounds.lockFields.length
-    ) {
-      this.lockFields = this.purchaseinvoices.unbounds
-        .lockFields as Array<string>;
-    }
-
-    const options = new DataRequest();
-    options.entityName = 'AC_Journals';
-    options.predicates = 'JournalNo=@0';
-    options.dataValues = this.purchaseinvoices.journalNo;
-    options.pageLoading = false;
-    this.api
-      .execSv<any>('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
-      .pipe(map((r) => r[0]))
-      .subscribe((res) => {
-        this.journal = res[0];
-        this.modegrid = this.journal.inputMode;
-        this.VATType = this.journal.vatType;
-      if (this.VATType == '1' || this.VATType == '2') {
-        this.cache
-          .gridViewSetup('VATInvoices', 'grvVATInvoices')
-          .subscribe((gv: any) => {
-            if (gv) {
-              var arrgv = Object.values(gv) as any[];
-              const group: any = {};
-              arrgv.forEach((element) => {
-                var keytmp = Util.camelize(element.fieldName);
-                var value = null;
-                var type = element.dataType.toLowerCase();
-                if (type === 'bool') value = false;
-                if (type === 'datetime') value = null;
-                if (type === 'int' || type === 'decimal') value = 0;
-                group[keytmp] = element.isRequire
-                  ? new FormControl(value, Validators.required)
-                  : new FormControl(value);
-              });
-              group['updateColumn'] = new FormControl('');
-              var formGroup = new FormGroup(group);
-              this.fgVATInvoices = formGroup;
-              this.api
-                .exec('AC', 'VATInvoicesBusiness', 'SetDefaultAsync', [
-                  this.purchaseinvoices.recID,
-                ])
-                .subscribe((res: any) => {
-                  this.vatinvoices = res;
-                  this.fmVATInvoices.currentData = res;
-                  this.fgVATInvoices.patchValue(this.vatinvoices);
-                  if (this.formType == 'edit') {
-                    if (this.VATType == '1') {
-                      this.api
-                        .exec('AC', 'VATInvoicesBusiness', 'GetAsync', [
-                          this.purchaseinvoices.recID,
-                        ])
-                        .subscribe((res: any) => {
-                          if (res != null) {
-                            this.vatinvoices = res[0];
-                            this.fgVATInvoices.patchValue(this.vatinvoices);
-                          }
-                        });
-                    } else {
-                      this.api
-                        .exec('AC', 'VATInvoicesBusiness', 'GetAsync', [
-                          this.purchaseinvoices.recID,
-                        ])
-                        .subscribe((res: any) => {
-                          if (res != null) {
-                            this.objectvatinvoices = res;
-                          }
-                        });
-                    }
-                  }
-                });
-            }
-          });
-      }
-      });
+    this.loadInit();
+    this.loadItems();
   }
 
   ngAfterViewInit() {
@@ -365,71 +231,33 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       case "quantity":
         if(e.value == null)
           e.data.quantity = 0;
+        e.data.netAmt = this.calculateNetAmt(e.data.quantity, e.data.unitPrice);
+        e.data.vatAmt = this.calculateVatAmt(e.data.netAmt, e.data.vatid);
         break;
       case "unitPrice":
         if(e.value == null)
           e.data.unitPrice = 0;
+        e.data.netAmt = this.calculateNetAmt(e.data.quantity, e.data.unitPrice);
+        e.data.vatAmt = this.calculateVatAmt(e.data.netAmt, e.data.vatid);
         break;
       case "netAmt":
         if(e.value == null)
           e.data.netAmt = 0;
+        e.data.vatAmt = this.calculateVatAmt(e.data.netAmt, e.data.vatid);
         break;
       case "vatAmt":
         if(e.value == null)
           e.data.vatAmt = 0;
         break;
-    }
-    const field = [
-      'itemid',
-      'idim0',
-      'idim1',
-      'idim2',
-      'idim3',
-      'idim4',
-      'idim5',
-      'idim6',
-      'idim7',
-      'idim8',
-      'idim9',
-      'umid',
-      'quantity',
-      'unitprice',
-      'netamt',
-    ];
-    if (field.includes(e.field.toLowerCase())) {
-      this.api
-        .exec('PS', 'PurchaseInvoicesLinesBusiness', 'ValueChangedAsync', [
-          this.purchaseinvoices,
-          e.data,
-          e.field,
-          e.data?.isAddNew,
-        ])
-        .subscribe((res: any) => {
-          if (res && res.line)
-          {
-            res.line.isAddNew = e.data?.isAddNew;
-            this.setDataGrid(res.line.updateColumns, res.line);
-          }
-        });
+      case "vatid":
+        e.data.vatAmt = this.calculateVatAmt(e.data.netAmt, e.data.vatid);
+        break;
     }
     if (e.field == 'itemID') {
+      var item = this.getItem(e.data.itemID);
+      e.data.itemName = item.itemName;
+      e.data.umid = item.umid;
       this.loadItemID(e.value);
-    }
-    if (e.field == 'vatid')
-    {
-      this.calculateVatAmt(e);
-    }
-    if (e.field == 'quantity')
-    {
-      this.calculateVatAmt(e);
-    }
-    if (e.field == 'unitprice')
-    {
-      this.calculateVatAmt(e);
-    }
-    if (e.field == 'netamt')
-    {
-      this.calculateVatAmt(e);
     }
   }
   cellChangedInvoice(e: any) {
@@ -641,12 +469,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       this.notification.notifyCode('SYS021', 0, '');
       return;
     } else {
-      e.netAmt = e.quantity * e.unitPrice;
-      this.calculateVatAmt(e);
       this.api
         .execAction<any>('PS_PurchaseInvoicesLines', [e], 'UpdateAsync')
         .subscribe((save) => {
           if (save) {
+            this.updateVAT();
             this.notification.notifyCode('SYS007', 0, '');
             this.hasSaved = true;
             this.loadTotal();
@@ -662,8 +489,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       this.notification.notifyCode('SYS023', 0, '');
       return;
     } else {
-      if(e.netAmt == 0 && e.unitPrice > 0 && e.quantity > 0)
-        e.netAmt = e.quantity * e.unitPrice;
       this.api
         .execAction<any>('PS_PurchaseInvoicesLines', [e], 'SaveAsync')
         .subscribe((save) => {
@@ -686,6 +511,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       }
     });
   }
+  
   loadItemID(value) {
     let sArray = [
       'packingspecifications',
@@ -706,6 +532,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       }
     });
   }
+
   searchName(e) {
     var filter, table, tr, td, i, txtValue, mySearch, myBtn;
     filter = e.toUpperCase();
@@ -743,6 +570,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       }
     }
   }
+
   editPopupLine(data) {
     let index = this.purchaseInvoicesLines.findIndex(
       (x) => x.recID == data.recID
@@ -789,9 +617,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         }
       });
   }
+
   loadPageCount() {
     this.pageCount = '(' + this.purchaseInvoicesLines.length + ')';
   }
+
   deleteRow(data) {
     // if (this.detailActive == 1) {
     //   if (data.vatid != null) {
@@ -900,12 +730,13 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       }
     });
   }
+
   checkValidate(ignoredFields: string[] = []) {
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
-    var keygrid = Object.keys(this.gridViewSetup);
+    var keygrid = Object.keys(this.grvPurchaseInvoices);
     var keymodel = Object.keys(this.purchaseinvoices);
     for (let index = 0; index < keygrid.length; index++) {
-      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+      if (this.grvPurchaseInvoices[keygrid[index]].isRequire == true) {
         if (ignoredFields.includes(keygrid[index].toLowerCase())) {
           continue;
         }
@@ -921,7 +752,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               this.notification.notifyCode(
                 'SYS009',
                 0,
-                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+                '"' + this.grvPurchaseInvoices[keygrid[index]].headerText + '"'
               );
               this.validate++;
             }
@@ -930,11 +761,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       }
     }
   }
+
   checkValidateLine(e) {
-    var keygrid = Object.keys(this.gridViewLines);
+    var keygrid = Object.keys(this.grvPurchaseInvoicesLines);
       var keymodel = Object.keys(e);
       for (let index = 0; index < keygrid.length; index++) {
-        if (this.gridViewLines[keygrid[index]].isRequire == true) {
+        if (this.grvPurchaseInvoicesLines[keygrid[index]].isRequire == true) {
           for (let i = 0; i < keymodel.length; i++) {
             if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
               if (
@@ -944,7 +776,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                 this.notification.notifyCode(
                   'SYS009',
                   0,
-                  '"' + this.gridViewLines[keygrid[index]].headerText + '"'
+                  '"' + this.grvPurchaseInvoicesLines[keygrid[index]].headerText + '"'
                 );
                 this.validate++;
               }
@@ -953,9 +785,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         }
       }
   }
+
   detaiClick(e) {
     this.detailActive = e;
   }
+
   loadTotal() {
     var totalnet = 0;
     var totalvat = 0;
@@ -982,11 +816,241 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       this.onSaveData();
     }
   }
+
+  loadModegrid(){
+    let data = new PurchaseInvoicesLines();
+    let idx;
+    this.api
+      .exec<any>('PS', 'PurchaseInvoicesLinesBusiness', 'SetDefaultAsync', [
+        this.purchaseinvoices,
+        data,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          switch (this.modegrid) {
+            case '1':
+              idx = this.gridPurchaseInvoicesLine.dataSource.length;
+              res.rowNo = idx + 1;
+              this.gridPurchaseInvoicesLine.addRow(res, idx);
+
+              break;
+            case '2':
+              idx = this.purchaseInvoicesLines.length;
+              res.rowNo = idx + 1;
+              res.transID = this.purchaseinvoices.recID;
+              this.openPopupLine(res, 'add');
+              break;
+          }
+        }
+      });
+  }
+
+  setDataGrid(updateColumn, data) {
+    if (updateColumn) {
+      var arrColumn = [];
+      arrColumn = updateColumn.split(';');
+      if (arrColumn && arrColumn.length) {
+        arrColumn.forEach((e) => {
+          if (e) {
+            let field = Util.camelize(e);
+            this.gridPurchaseInvoicesLine.rowDataSelected[field] = data[field];
+            this.gridPurchaseInvoicesLine.rowDataSelected = {
+              ...data,
+            };
+            this.gridPurchaseInvoicesLine.rowDataSelected.updateColumns = '';
+          }
+        });
+      }
+    }
+  }
+
+  clearPurchaseInvoicesLines() {
+    this.purchaseInvoicesLines = [];
+  }
+
+  setDefault(o) {
+    return this.api.exec('PS', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
+      this.journalNo
+    ]);
+  }
+
+  loadInit(){
+    this.cache
+      .gridViewSetup('PurchaseInvoices', 'grvPurchaseInvoices')
+      .subscribe((res) => {
+        if (res) {
+          this.grvPurchaseInvoices = res;
+        }
+      });
+
+    this.cache
+      .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
+      .subscribe((res) => {
+        if (res) {
+          this.grvPurchaseInvoicesLines = res;
+          var keygrid = Object.keys(this.grvPurchaseInvoicesLines);
+          for (let index = 0; index < keygrid.length; index++) {
+            if (this.grvPurchaseInvoicesLines[keygrid[index]].isVisible == true) {
+              var column = {
+                field:
+                  this.grvPurchaseInvoicesLines[keygrid[index]].fieldName.toLowerCase(),
+                headerText: this.grvPurchaseInvoicesLines[keygrid[index]].headerText,
+                columnOrder: this.grvPurchaseInvoicesLines[keygrid[index]].columnOrder,
+              };
+              this.columnGrids.push(column);
+            }
+          }
+          this.columnGrids = this.columnGrids.sort(
+            (a, b) => a.columnOrder - b.columnOrder
+          );
+        }
+      });
+
+    if (this.formType == 'edit') {
+      this.api
+        .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [
+          this.purchaseinvoices.recID,
+        ])
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            this.keymodel = Object.keys(res[0]);
+            this.purchaseInvoicesLines = res;
+            this.purchaseInvoicesLines.forEach((element) => {
+              if (element.vatid != null) {
+                this.countDetail++;
+              }
+              this.loadTotal();
+            });
+          }
+        });
+    }
+    this.api
+      .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.lsVatCode = res;
+        }
+      });
+
+    if (
+      this.purchaseinvoices &&
+      this.purchaseinvoices.unbounds &&
+      this.purchaseinvoices.unbounds.lockFields &&
+      this.purchaseinvoices.unbounds.lockFields.length
+    ) {
+      this.lockFields = this.purchaseinvoices.unbounds
+        .lockFields as Array<string>;
+    }
+
+    const options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.purchaseinvoices.journalNo;
+    options.pageLoading = false;
+    this.api
+      .execSv<any>('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(map((r) => r[0]))
+      .subscribe((res) => {
+        this.journal = res[0];
+        this.modegrid = this.journal.inputMode;
+        this.VATType = this.journal.vatType;
+      if (this.VATType == '1' || this.VATType == '2') {
+        this.cache
+          .gridViewSetup('VATInvoices', 'grvVATInvoices')
+          .subscribe((gv: any) => {
+            if (gv) {
+              var arrgv = Object.values(gv) as any[];
+              const group: any = {};
+              arrgv.forEach((element) => {
+                var keytmp = Util.camelize(element.fieldName);
+                var value = null;
+                var type = element.dataType.toLowerCase();
+                if (type === 'bool') value = false;
+                if (type === 'datetime') value = null;
+                if (type === 'int' || type === 'decimal') value = 0;
+                group[keytmp] = element.isRequire
+                  ? new FormControl(value, Validators.required)
+                  : new FormControl(value);
+              });
+              group['updateColumn'] = new FormControl('');
+              var formGroup = new FormGroup(group);
+              this.fgVATInvoices = formGroup;
+              this.api
+                .exec('AC', 'VATInvoicesBusiness', 'SetDefaultAsync', [
+                  this.purchaseinvoices.recID,
+                ])
+                .subscribe((res: any) => {
+                  this.vatinvoices = res;
+                  this.fmVATInvoices.currentData = res;
+                  this.fgVATInvoices.patchValue(this.vatinvoices);
+                  if (this.formType == 'edit') {
+                    if (this.VATType == '1') {
+                      this.api
+                        .exec('AC', 'VATInvoicesBusiness', 'GetAsync', [
+                          this.purchaseinvoices.recID,
+                        ])
+                        .subscribe((res: any) => {
+                          if (res != null) {
+                            this.vatinvoices = res[0];
+                            this.fgVATInvoices.patchValue(this.vatinvoices);
+                          }
+                        });
+                    } else {
+                      this.api
+                        .exec('AC', 'VATInvoicesBusiness', 'GetAsync', [
+                          this.purchaseinvoices.recID,
+                        ])
+                        .subscribe((res: any) => {
+                          if (res != null) {
+                            this.objectvatinvoices = res;
+                          }
+                        });
+                    }
+                  }
+                });
+            }
+          });
+      }
+      });
+  }
+
+  loadItems(){
+    this.api.exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
+    .subscribe((res: any) => {
+      if(res)
+        this.items = res;
+    });
+  }
+
+  getItem(itemID: any){
+    var item = this.items.filter(x => x.itemID == itemID);
+    return item[0];
+  }
+
+  getTaxRate(vatCodeID: any){
+    var vatCode = this.lsVatCode.filter(x => x.vatid == vatCodeID)
+    return vatCode[0].taxRate;
+  }
+
+  calculateNetAmt(quantity: any, unitPrice: any)
+  {
+    if(quantity == 0 || unitPrice == 0)
+      return 0;
+    var netAmt = quantity * unitPrice;
+    return netAmt;
+  }
+
+  calculateVatAmt(netAmt: any, vatid: any)
+  {
+    if(vatid == null)
+      return 0;
+    var taxRate = this.getTaxRate(vatid)
+    var vatAmt = netAmt * taxRate;
+    return vatAmt;
+  }
   //#endregion
 
   //#region Method
-
-
 
   saveVAT() {
     if (this.VATType == '1') {
@@ -1238,71 +1302,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
   }
 
-  loadModegrid(){
-    let data = new PurchaseInvoicesLines();
-    let idx;
-    this.api
-      .exec<any>('PS', 'PurchaseInvoicesLinesBusiness', 'SetDefaultAsync', [
-        this.purchaseinvoices,
-        data,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          switch (this.modegrid) {
-            case '1':
-              idx = this.gridPurchaseInvoicesLine.dataSource.length;
-              res.rowNo = idx + 1;
-              this.gridPurchaseInvoicesLine.addRow(res, idx);
-
-              break;
-            case '2':
-              idx = this.purchaseInvoicesLines.length;
-              res.rowNo = idx + 1;
-              res.transID = this.purchaseinvoices.recID;
-              this.openPopupLine(res, 'add');
-              break;
-          }
-        }
-      });
-  }
-
-  setDataGrid(updateColumn, data) {
-    if (updateColumn) {
-      var arrColumn = [];
-      arrColumn = updateColumn.split(';');
-      if (arrColumn && arrColumn.length) {
-        arrColumn.forEach((e) => {
-          if (e) {
-            let field = Util.camelize(e);
-            this.gridPurchaseInvoicesLine.rowDataSelected[field] = data[field];
-            this.gridPurchaseInvoicesLine.rowDataSelected = {
-              ...data,
-            };
-            this.gridPurchaseInvoicesLine.rowDataSelected.updateColumns = '';
-          }
-        });
-      }
-    }
-  }
-
-  calculateVatAmt(e: any){
-    this.api.exec('BS','VATCodesBusiness', 'GetVatRateAsync', e.data.vatid)
-      .subscribe((res: any) => {
-        if(res == null)
-          res = 0;
-        e.data.vatAmt = res * e.data.netAmt;
-        this.setDataGrid("VATAmt", e.data);
-      });
-  }
-
-  clearPurchaseInvoicesLines() {
-    this.purchaseInvoicesLines = [];
-  }
-
-  setDefault(o) {
-    return this.api.exec('PS', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
-      this.journalNo
-    ]);
-  }
+  
   //#endregion
 }

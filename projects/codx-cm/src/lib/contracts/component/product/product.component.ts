@@ -10,21 +10,16 @@ import { CM_Quotations } from '../../../models/cm_model';
   styleUrls: ['./product.component.css']
 })
 export class ProductComponent implements OnInit,OnChanges{
-  @ViewChild('gridQuationsLines') gridQuationsLines: CodxGridviewV2Component;
+  @ViewChild('productTable') productTable: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
 
   @Input() dataSource: any;
+  @Input() formModel: FormModel;
 
   dialog;
   quotations: CM_Quotations;
-  fmQuotationLines: FormModel = {
-    formName: 'CMQuotationsLines',
-    gridViewName: 'grvCMQuotationsLines',
-    entityName: 'CM_QuotationsLines',
-    funcID: 'CM02021',
-  };
   gridHeight: number = 300;
   editSettings: EditSettingsModel = {
     allowEditing: true,
@@ -42,7 +37,9 @@ export class ProductComponent implements OnInit,OnChanges{
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-
+    console.log(this.formModel);
+    console.log(this.dataSource);
+    
   }
   ngOnInit(): void {
     // console.log('thuan');
@@ -58,7 +55,7 @@ export class ProductComponent implements OnInit,OnChanges{
 
   async ngOnChanges(changes: SimpleChanges){
     if(changes.dataSource && this.dataSource){
-
+      // this.productTable.refresh();
     }
   }
   // quotationsLineChanged(e) {

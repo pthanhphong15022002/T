@@ -1,11 +1,10 @@
 <codx-gridview-v2
-	#gridQuationsLines
+	#productTable
 	service="CM"
-	[formName]="fmQuotationLines.formName"
-	[gridViewName]="fmQuotationLines.gridViewName"
-	[entityName]="fmQuotationLines.entityName"
+	[formName]="formModel.formName"
+	[gridViewName]="formModel.gridViewName"
+	[entityName]="formModel.entityName"
 	[hideMoreFunc]="'1'"
-
 	[contentEditable]="false"
 	[allowFiltering]="true"
 	[allowSorting]="true"
@@ -13,5 +12,5 @@
 	[autoLoad]="false"
 	rowHeight="40"
 	predicates="TransID=@0"
-	[dataValues]="'f2c04250-f56d-11ed-a428-c025a5a4cd5d'"
-></codx-gridview-v2>
+	></codx-gridview-v2>
+	<!-- [dataValues]="'f2c04250-f56d-11ed-a428-c025a5a4cd5d'" -->

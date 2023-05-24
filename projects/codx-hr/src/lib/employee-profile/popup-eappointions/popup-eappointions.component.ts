@@ -63,7 +63,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.EAppointionObj = JSON.parse(JSON.stringify(data?.data?.appointionObj));
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
-    this.employeeObj = JSON.parse(JSON.stringify(data.data.empObj ? data.data.empObj : null));
+    this.employeeObj = JSON.parse(
+      JSON.stringify(data.data.empObj ? data.data.empObj : null)
+    );
     this.isUseEmployee = data?.data?.isUseEmployee;
     this.formModel = dialog.formModel;
     //this.lstEAppointions = data?.data?.lstEAppointions;
@@ -205,6 +207,10 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     } else {
       delete this.employeeObj;
     }
+  }
+
+  clickOpenPopup(codxInput) {
+    codxInput.elRef.nativeElement.querySelector('button').click();
   }
 
   valueChange(event) {

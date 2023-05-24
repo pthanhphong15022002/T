@@ -214,6 +214,7 @@ export class CodxApproveStepsComponent
       dataEdit: null,
       type: '0',
       signatureType: this.data?.signatureType ?? this.signatureType,
+      vllShare:this.data?.approverList,
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
       confirmControl: this.data?.confirmControl,
       allowEditAreas: this.data?.allowEditAreas,
@@ -232,6 +233,7 @@ export class CodxApproveStepsComponent
       dataEdit: approvalStep,
       type: '0',
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
+      vllShare:this.data?.approverList,
       hideTabQuery: true,
     };
     this.openPopupAddAppStep(data);
