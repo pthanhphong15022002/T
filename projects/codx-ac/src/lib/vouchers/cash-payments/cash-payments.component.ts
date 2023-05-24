@@ -86,7 +86,7 @@ export class CashPaymentsComponent extends UIComponent {
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Link', textDefault: 'Liên kết', isActive: false },
+    { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
   authStore: AuthStore;
   constructor(

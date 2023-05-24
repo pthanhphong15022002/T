@@ -101,6 +101,7 @@ export class PopupAddDealComponent
   // model of DP
   instance: tmpInstances = new tmpInstances();
   instanceSteps: any;
+  model:any;
   listInstanceSteps: any[] = [];
 
   constructor(
@@ -117,6 +118,7 @@ export class PopupAddDealComponent
     this.formModel = dialog.formModel;
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
+    this.model = { ApplyFor: '1' };
     this.executeApiCalls();
     if (this.action != this.actionAdd) {
       this.deal = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
@@ -370,7 +372,7 @@ export class PopupAddDealComponent
   async getListInstanceSteps(processId: any) {
     processId =
       this.action === this.actionCopy ? this.deal.processID : processId;
-    var data = [processId, this.deal.refID, this.action,'1'];
+    var data = [processId, this.deal?.refID, this.action,'1'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
         var obj = {

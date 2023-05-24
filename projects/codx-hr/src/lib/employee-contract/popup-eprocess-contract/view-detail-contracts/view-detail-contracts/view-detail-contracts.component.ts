@@ -11,6 +11,7 @@ import {
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
+  ApiHttpService,
   AuthStore,
   DataRequest,
   FormModel,
@@ -19,6 +20,7 @@ import {
 } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-view-detail-contracts',
@@ -26,12 +28,24 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
   styleUrls: ['./view-detail-contracts.component.css'],
 })
 export class ViewDetailContractsComponent implements OnInit {
+  //Using render file
+  services: string = 'DM';
+  assamplyName: string = 'ERM.Business.DM';
+  className: string = 'FileBussiness';
+  REFERTYPE = {
+    IMAGE: 'image',
+    VIDEO: 'video',
+    APPLICATION: 'application',
+  };
+  lstFile: any[] = [];
+
   constructor(
     private authStore: AuthStore,
     private hrService: CodxHrService,
     private router: ActivatedRoute,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    private api: ApiHttpService
   ) {
     this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.authStore.get();
@@ -103,6 +117,9 @@ export class ViewDetailContractsComponent implements OnInit {
     if (this.itemDetail?.benefits) {
       this.lstBenefit = JSON.parse(this.itemDetail.benefits);
     }
+
+    this.lstFile = [];
+    this.getFileDataAsync(this.itemDetail?.recID);
   }
 
   // ngAfterViewInit(): void {
@@ -136,5 +153,31 @@ export class ViewDetailContractsComponent implements OnInit {
 
   clickMF(evt: any, data: any = null) {
     this.clickMFunction.emit({ event: evt, data: data });
+  }
+
+  getFileDataAsync(pObjectID: string) {
+    if (pObjectID) {
+      this.api
+        .execSv(
+          this.services,
+          this.assamplyName,
+          this.className,
+          'GetFilesByIbjectIDAsync',
+          pObjectID
+        )
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            let files = res;
+            files.map((e: any) => {
+              if (e && e.referType == this.REFERTYPE.VIDEO) {
+                e[
+                  'srcVideo'
+                ] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
+              }
+            });
+            this.lstFile = res;
+          }
+        });
+    }
   }
 }

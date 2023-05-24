@@ -1,10 +1,14 @@
+<div class="p-6 codx-news-detail">
 <codx-views #view [entityName]="entityName" [views]="views" [showToolBar]="false">
 </codx-views>
+</div>
 <div class="more-function">
     <div class="d-flex flex-column">
-        <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
+        <div class="d-flex justify-content-end">
+            <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
+        </div>
         <span class="postnews mt-3" *ngIf="userPermission && userPermission.create">
-            <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
+            
             <div class="d-flex btn-postnews">
 
                 <a (click)="openPopupAdd(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i

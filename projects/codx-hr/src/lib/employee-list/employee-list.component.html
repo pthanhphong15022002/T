@@ -4,13 +4,13 @@
 
 <!--column Nhân viên -->
 <ng-template #colEmployee let-data>
-  <div class="d-flex align-items-center cursor-pointer hover-active p-2" (dblclick)="clickViewEmpInfo(data)">
+  <div class="d-flex align-items-center cursor-pointer hover-active py-3" (dblclick)="clickViewEmpInfo(data)">
     <div class="d-flex flex-column me-4">
       <codx-img [funcId]="funcID" [objectId]="data.employeeID" [objectName]="data.employeeName"
         objectType="HR_Employees" [width]="40">
       </codx-img>
       <ng-container *ngIf="data.gender">
-        <div class="mt-2 mx-auto">
+        <div class="mt-1 mx-auto">
           <codx-vll [name]="'HR001'" [value]="data.gender" showText="true" [showBgColor]="true"
             [classList]="'badge badge-sm badge-inline flex-wrap me-0'"></codx-vll>
         </div>
@@ -63,22 +63,25 @@
 <!-- columns Liên hệ -->
 <ng-template #colContact let-data>
   <div (dblclick)="clickViewEmpInfo(data)">
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column py-3">
       <div class="d-flex align-items-center mb-1">
-        <span class="text-gray-700" [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async">
+        <span class="text-gray-700" [ngbTooltip]="data.email? grvSetup?.Email.headerText : null"
+          [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async">
         </span>
       </div>
       <div class="d-flex align-items-center mb-1">
-        <span class="text-gray-700" [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async">
+        <span class="text-gray-700" [ngbTooltip]="data.phone? grvSetup?.Phone.headerText : null"
+          [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async">
         </span>
       </div>
       <div class="d-flex align-items-center mb-1">
-        <span class="text-gray-700" [innerHTML]="data.mobile | formatvalue : view.formModel : 'mobile' | async">
+        <span class="text-gray-700" [ngbTooltip]="data.mobile? grvSetup?.Mobile.headerText : null"
+          [innerHTML]="data.mobile | formatvalue : view.formModel : 'mobile' | async">
         </span>
       </div>
       <!-- <div class="d-flex align-items-center">
         <span class="icon-place icon-16 text-dark me-2"></span>
-        <span class="text-gray-700" [innerHTML]="data.address
+        <span class="text-gray-700" [ngbTooltip]="data.address? grvSetup?.Address.headerText : null" [innerHTML]="data.address
         | formatvalue : view.formModel : 'address'
         | async">
         </span>
@@ -89,13 +92,13 @@
 <!-- columns Thông tin cá nhân -->
 <ng-template #colPersonal let-data>
   <div (dblclick)="clickViewEmpInfo(data)">
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column py-3">
       <div class="align-items-center1 mb-1">
         <span class="text-gray-700 me-1">
           <codx-label [setRequire]="false" [fiedName]="'Birthday'" [formModel]="view.formModel"
             default="Ngày sinh:"></codx-label>
         </span>
-        <span class="text-gray-700" [innerHTML]="data.birthday
+        <span class="text-gray-700" [innerHTML]="data.birthday 
         | formatvalue : view.formModel : 'birthday'
         | async">
         </span>
@@ -138,7 +141,7 @@
 <!-- columns Tình trạng -->
 <ng-template #colStatus let-data>
   <div (dblclick)="clickViewEmpInfo(data)" class="w-100 has-action-menu">
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column py-3">
       <div class="d-flex mb-1">
         <codx-vll [name]="'HR003'" [value]="data.status" [showBgColor]="true" [showText]="true"
           [className]="'badge badge-sm badge-inline'">

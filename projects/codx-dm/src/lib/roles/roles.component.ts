@@ -281,6 +281,7 @@ export class RolesComponent implements OnInit {
     }
   }
   onSaveRightChanged($event, ctrl) {
+    debugger
     var value = $event.data;
     switch (ctrl) {
 
@@ -439,6 +440,7 @@ export class RolesComponent implements OnInit {
   }
 
   changePermission(index) {
+    debugger
     // alert(index);
     // save old permission
     // alert(1);

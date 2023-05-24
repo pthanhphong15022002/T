@@ -46,7 +46,7 @@
           class="text-gray-700"
           #dueDate
           [innerHTML]="
-            data.dueDate
+            data?.dueDate
               | formatvalue
                 : formModel
                 : 'dueDate'
