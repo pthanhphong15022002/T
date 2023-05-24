@@ -182,13 +182,12 @@ export class DealsComponent
     this.changeDetectorRef.detectChanges();
   }
 
-
   changeView(e) {
     this.afterLoad();
     if (e?.view.type == 6) {
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
-      this.kanban.refesh();
+      // this.kanban.refresh();
     }
     // this.funcID = this.activedRouter.snapshot.params['funcID'];
     // if (this.crrFuncID != this.funcID) {
@@ -472,31 +471,35 @@ export class DealsComponent
       obj
     );
     dialogRevision.closed.subscribe((e) => {
-
       if (e && e.event != null) {
-        var instance =  e.event?.instance;
-        var instanceMove =  e.event?.instanceMove;
-        if(instanceMove) {
+        var instance = e.event?.instance;
+        var instanceMove = e.event?.instanceMove;
+        if (instanceMove) {
           var dealOld = JSON.parse(JSON.stringify(data));
-          var dealNew =JSON.parse(JSON.stringify(data));
-          dealOld = this.updateReasonDeal(e.event?.instance,dealOld);
-          dealNew = this.convertDataInstance(dealNew,instanceMove,e.event?.nextStep);
-          var datas = [dealOld,dealNew];
+          var dealNew = JSON.parse(JSON.stringify(data));
+          dealOld = this.updateReasonDeal(e.event?.instance, dealOld);
+          dealNew = this.convertDataInstance(
+            dealNew,
+            instanceMove,
+            e.event?.nextStep
+          );
+          var datas = [dealOld, dealNew];
           this.codxCmService.moveDealReason(datas).subscribe((res) => {
-            if(res){
+            if (res) {
               data = res[0];
               this.view.dataService.dataSelected = data;
-              this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-              this.view.dataService.add(res[1],0).subscribe((res) => {});
+              this.view.dataService
+                .update(this.view.dataService.dataSelected)
+                .subscribe();
+              this.view.dataService.add(res[1], 0).subscribe((res) => {});
               this.detectorRef.detectChanges();
             }
           });
-        }
-        else {
-          data = this.updateReasonDeal(e.event?.instance,data);
-          var datas = [data,data.customerID];
+        } else {
+          data = this.updateReasonDeal(e.event?.instance, data);
+          var datas = [data, data.customerID];
           this.codxCmService.updateDeal(datas).subscribe((res) => {
-            if(res){
+            if (res) {
               data = res[0];
               this.view.dataService.update(data).subscribe();
               this.detectorRef.detectChanges();
@@ -507,19 +510,12 @@ export class DealsComponent
     });
   }
 
-
-
-
-
-
-
-
-  convertDataInstance(deal: any, instance: any, nextStep:any) {
+  convertDataInstance(deal: any, instance: any, nextStep: any) {
     deal.dealName = instance.title;
     deal.memo = instance.memo;
     deal.endDate = instance.endDate;
-    deal.dealID  =  instance.instanceNo;
-    deal.owner  = instance.owner;
+    deal.dealID = instance.instanceNo;
+    deal.owner = instance.owner;
     deal.salespersonID = instance.owner;
     deal.processID = instance.processID;
     deal.stepID = instance.stepID;
@@ -528,15 +524,13 @@ export class DealsComponent
     deal.status = instance.status;
     deal.nextStep = nextStep;
     return deal;
-
   }
-  updateReasonDeal(instance:any, deal:any) {
+  updateReasonDeal(instance: any, deal: any) {
     deal.status = instance.status;
     deal.stepID = instance.stepID;
     deal.nextStep = '';
     return deal;
   }
-
 
   startDeal(recId) {
     var data = [recId];
