@@ -1545,6 +1545,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         template: this.healthPeriodID,
       },
     ];
+
+    console.log('awart', this.AwardGrid);
+    
   }
   
   navChange(evt: any, index: number = -1) {
@@ -1672,14 +1675,35 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
 
       // Benefit
-      if (!this.listCrrBenefit) this.loadEBenefit = false;
-      this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
+      if (!this.listCrrBenefit) {
+        this.loadEBenefit = false;
+        let date = new Date();
+        let rqBenefit = new DataRequest();
+        rqBenefit.entityName = 'HR_EBenefits';
+        rqBenefit.dataValues = this.employeeID + ';' +`${date.toISOString()}`;
+        rqBenefit.predicates = 'EmployeeID=@0 and EffectedDate<=@1 and ExpiredDate>=@1';
+        rqBenefit.page = 1;
+        rqBenefit.pageSize = 1;
+
+        this.hrService.loadData('HR', rqBenefit).subscribe((res) => {
+          console.log('ds benefit', res)
         this.loadEBenefit = true;
-        if (res?.length) {
-          this.listCrrBenefit = res;
-          this.df.detectChanges();
-        }
-      });
+          if (res && res[0]) {
+            this.listCrrBenefit = res[0];
+          console.log('ds benefit', this.listCrrBenefit)
+            this.df.detectChanges();
+          }
+        });
+      }
+
+      // if (!this.listCrrBenefit) this.loadEBenefit = false;
+      // this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
+      //   this.loadEBenefit = true;
+      //   if (res?.length) {
+      //     this.listCrrBenefit = res;
+      //     this.df.detectChanges();
+      //   }
+      // });
 
       // Asset
       // if (!this.lstAsset)
@@ -4561,13 +4585,21 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   templateAwardGridCol2: TemplateRef<any>;
   @ViewChild('templateAwardGridCol3', { static: true })
   templateAwardGridCol3: TemplateRef<any>;
+  @ViewChild('headTempAwards1', { static: true }) headTempAwards1: TemplateRef<any>;
+  @ViewChild('headTempAwards2', { static: true }) headTempAwards2: TemplateRef<any>;
+  @ViewChild('headTempAwards3', { static: true }) headTempAwards3: TemplateRef<any>;
 
+  //View child ky luat
   @ViewChild('templateDisciplineGridCol1', { static: true })
   templateDisciplineGridCol1: TemplateRef<any>;
   @ViewChild('templateDisciplineGridCol2', { static: true })
   templateDisciplineGridCol2: TemplateRef<any>;
   @ViewChild('templateDisciplineGridCol3', { static: true })
   templateDisciplineGridCol3: TemplateRef<any>;
+  @ViewChild('headTempDisciplines1', { static: true }) headTempDisciplines1: TemplateRef<any>;
+  @ViewChild('headTempDisciplines2', { static: true }) headTempDisciplines2: TemplateRef<any>;
+  @ViewChild('headTempDisciplines3', { static: true }) headTempDisciplines3: TemplateRef<any>;
+
 
   @ViewChild('templateDiseasesGridCol1', { static: true })
   templateDiseasesGridCol1: TemplateRef<any>;
