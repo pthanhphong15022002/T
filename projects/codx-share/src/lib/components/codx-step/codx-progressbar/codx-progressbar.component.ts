@@ -66,7 +66,6 @@ export class ProgressbarComponent implements OnInit, OnChanges {
   }
 
   onLoad(){
-    console.log(this.annotation);
     if(this.annotation){
       this.annotation.refresh();
     }
