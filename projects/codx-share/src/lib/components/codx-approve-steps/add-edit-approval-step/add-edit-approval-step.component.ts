@@ -588,7 +588,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                         let appr = new Approvers();
                         appr.roleType = element?.objectType;
                         appr.name = element?.text;
-                        appr.approver = element?.objectType;
+                        appr.approver = element?.id;
                         appr.icon = element?.icon != null ? element?.icon : null;
                         this.lstApprover.push(appr);                        
                       } else {
@@ -599,7 +599,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                     let appr = new Approvers();
                     appr.roleType = element?.objectType;
                     appr.name = element?.text;
-                    appr.approver = element?.objectType;
+                    appr.approver = element?.id;
                     appr.icon = element?.icon != null ? element?.icon : null;
                     this.lstApprover.push(appr);
                   }                                    

@@ -27,7 +27,7 @@
     <codx-input
       field="memo"
       type="textarea"
-      [crrValue]="reasonStep.memo"
+      [crrValue]="reasonStep?.memo"
       (valueChange)="valueChange($event)"
     >
     </codx-input>
@@ -43,21 +43,18 @@
         </codx-label>
 
       <div class="mb-1">
-      <ejs-combobox
-        id="recID"
-        [dataSource]="listCbxProccess"
-        [fields]="fieldCbxProccess"
-        (valueChange)="cbxChange($event)"
-        [value]="moveProccess"
-        [enabled]="false"
-      ></ejs-combobox>
+        <div *ngIf="moveProccess">
+          <ejs-combobox
+          id="recID"
+          [dataSource]="listCbxProccess"
+          [fields]="fieldCbxProccess"
+          (valueChange)="cbxChange($event)"
+          [value]="moveProccess"
+          [enabled]="false"
+        ></ejs-combobox>
+        </div>
+
     </div>
-      <div class="mb-1">
-        <codx-label
-          class="text-italic fs-7 text-danger"
-          default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thành công"
-        ></codx-label>
-      </div>
     </div>
   </div>
 
@@ -66,12 +63,15 @@
       <codx-label fiedName="owner" [formModel]="form.formModel" default="Người phụ trách ở quy trình chuyển đến">
       </codx-label>
     </div>
-    <codx-popup-participants [lstParticipants]="listParticipantReason" [dialog]="dialog" [isType]="'I'"
-    (eventUser)="eventUser($event)" [owner]="ownerMove"></codx-popup-participants>
+    <div *ngIf="listParticipantReason.length > 0 && listParticipantReason !== null">
+      <codx-popup-participants [lstParticipants]="listParticipantReason" [dialog]="dialog" [isType]="'I'"
+      (eventUser)="eventUser($event)" [owner]="ownerMove"></codx-popup-participants>
+    </div>
+
   </div>
 
 
-  <div *ngIf="listReason.length > 0 && listReason !== null">
+  <div *ngIf="listReason?.length > 0 && listReason !== null">
     <div class="fw-bold text-dark mb-3">
       <codx-label
         fiedName=""
@@ -79,13 +79,13 @@
         [default]="titleReasonClick"
       >
       </codx-label>
-      <span class="text-danger" *ngIf="reasonStep.reasonControl">*</span>
+      <span class="text-danger" *ngIf="reasonStep?.reasonControl">*</span>
     </div>
     <div class="ms-6" *ngFor="let item of listReason">
       <div class="form-check mb-3">
         <input class="form-check-input rounded-circle w-20px h-20px" type="checkbox" (change)="checkValue($event,item)"/>
         <span class="form-check-label">
-          {{ item.reasonName }}
+          {{ item?.reasonName }}
         </span>
       </div>
     </div>

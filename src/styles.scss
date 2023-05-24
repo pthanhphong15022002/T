@@ -1846,10 +1846,10 @@ codx-dropdown-calendar {
 // }
 
 /*** codx-tabs ***/
-codx-view-list-detail .nav-link {
-  padding: 6px 0px;
-  margin: 0 7px;
-}
+// codx-view-list-detail .nav-link {
+//   padding: 6px 0px;
+//   margin: 0 7px;
+// }
 codx-tabs {
   .nav-link {
     padding: 6px 8px;
@@ -2517,8 +2517,12 @@ codx-card-center {
 }
 
 ejs-richtexteditor {
-  textarea.form-control.codx-textarea {
-    padding: 0;
+  .form-control.codx-textarea {
+    padding: 0; 
+  }
+  .e-rte-content span.form-control.codx-textarea{
+    padding: 10px!important;
+    border: 0!important;
   }
 }
 .btn-light-primary i[class*="icon-"] {
