@@ -48,15 +48,15 @@
         <div class="form-group">
           <codx-label
             [formModel]="formModelDeals"
-            fiedName="BusinesslineID"
+            fiedName="BusinessLineID"
             default="Dòng sản phẩm"
           >
           </codx-label>
           <codx-input
             type="combobox"
             [crrValue]="deal?.businessLineID"
-            [refValue]="gridViewSetupDeal?.BusinesslineID?.referedValue"
-            [placeholder]="gridViewSetupDeal?.BusinesslineID?.description"
+            [refValue]="gridViewSetupDeal?.BusinessLineID?.referedValue"
+            [placeholder]="gridViewSetupDeal?.BusinessLineID?.description"
             field="businessLineID"
             (valueChange)="valueChange($event)"
           >
