@@ -21,18 +21,17 @@
     ></codx-view-detail-little>
   </ng-container>
 
+  <ng-container #tmpTM_Tasks *ngIf="data?.transType == 'TM_AssignTasks'">
+    <codx-view-detail-little
+      [recID]="data?.transID"
+      [service]="'TM'"
+    ></codx-view-detail-little>
+  </ng-container>
+
   <ng-container #EP_BookingCars *ngIf="data?.transType == 'EP_BookingCars'">
     <codx-booking-car-schedule-content
       [recID]="data?.transID"
     ></codx-booking-car-schedule-content>
-  </ng-container>
-  <ng-container
-    #tmpEP_BookingRooms
-    *ngIf="data?.transType == 'EP_BookingRooms'"
-  >
-    <codx-booking-room-schedule-content
-      [recID]="data?.transID"
-    ></codx-booking-room-schedule-content>
   </ng-container>
 
   <ng-container #tmpCO_Meetings *ngIf="data?.transType == 'CO_Meetings'">
@@ -105,20 +104,8 @@
       >
     </div>
   </ng-container>
-  <ng-container *ngIf="data.transType == 'EP_BookingRooms'">
-    <div class="d-flex flex-column w-100">
-      <span class="d-flex flex-start"
-        >{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span
-      >
-      <span
-        class="d-flex flex-start fw-bold"
-        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
-        >{{ data.title }}</span
-      >
-    </div>
-  </ng-container>
   <ng-container
-    *ngIf="data.transType == 'TM_MyTasks' || data.transType == 'CO_Meetings'"
+    *ngIf="data.transType == 'TM_MyTasks' || data.transType == 'TM_AssignTasks' || data.transType == 'CO_Meetings'"
   >
     <div class="d-flex flex-column w-100">
       <span class="d-flex flex-start"
