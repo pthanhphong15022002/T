@@ -591,6 +591,16 @@ export class CodxCmService {
       data
     );
   }
+  moveDealReason(data){
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'MoveDealReasonAsync',
+      data
+    );
+  }
+
 
   //#endregion -- Bao
 
