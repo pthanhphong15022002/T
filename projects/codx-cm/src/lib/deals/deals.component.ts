@@ -120,14 +120,40 @@ export class DealsComponent
   ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
-    // this.dataObj = {
-    //   processID: '327eb334-5695-468c-a2b6-98c0284d0620',
-    // };
     this.afterLoad();
 
     this.button = {
       id: this.btnAdd,
     };
+
+    this.router.params.subscribe((param: any) => {
+      if (param.funcID) {
+        this.funcID = param.funcID;
+      }
+    });
+
+    this.detectorRef.detectChanges();
+  }
+
+  afterLoad() {
+    this.request = new ResourceModel();
+    this.request.service = 'CM';
+    this.request.assemblyName = 'CM';
+    this.request.className = 'DealsBusiness';
+    this.request.method = 'GetListDealsAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj;
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'DP';
+    this.resourceKanban.assemblyName = 'DP';
+    this.resourceKanban.className = 'ProcessesBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = this.dataObj;
+  }
+
+  ngAfterViewInit(): void {
+    this.crrFuncID = this.funcID;
 
     this.views = [
       {
@@ -153,34 +179,6 @@ export class DealsComponent
         },
       },
     ];
-
-    this.router.params.subscribe((param: any) => {
-      if (param.funcID) {
-        this.funcID = param.funcID;
-      }
-    });
-
-    this.detectorRef.detectChanges();
-  }
-  afterLoad() {
-    this.request = new ResourceModel();
-    this.request.service = 'CM';
-    this.request.assemblyName = 'CM';
-    this.request.className = 'DealsBusiness';
-    this.request.method = 'GetListDealsAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj;
-
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'DP';
-    this.resourceKanban.assemblyName = 'DP';
-    this.resourceKanban.className = 'ProcessesBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
-  }
-
-  ngAfterViewInit(): void {
-    this.crrFuncID = this.funcID;
     this.changeDetectorRef.detectChanges();
   }
 

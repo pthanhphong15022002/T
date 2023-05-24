@@ -110,7 +110,9 @@ export class CM_QuotationsLines {
   cWQty: number;
   cWOnhand: number;
   onhand: number;
+  currencyID :string
   costPrice: number;
+  exchangeRate :number
   costAmt: number;
   stdPrice: number;
   salesPrice: number;
