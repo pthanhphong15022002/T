@@ -51,11 +51,7 @@ export class TableLineDetailComponent extends UIComponent {
     this.vats$ = this.acService.loadComboboxData('VATCodesAC', 'BS');
 
     this.columns = [
-      {
-        field: 'rowNo',
-        headerText: this.gvs?.RowNo?.headerText ?? 'STT',
-        width: 55,
-      },
+
       {
         field: 'itemID',
         headerText: this.gvs?.ItemID?.headerText ?? 'Mặt hàng',
