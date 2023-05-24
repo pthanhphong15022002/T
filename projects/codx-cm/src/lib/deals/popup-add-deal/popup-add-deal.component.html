@@ -47,17 +47,14 @@
         (valueChange)="cbxProcessChange($event,'processID')"
       ></ejs-combobox>
 
-      <!-- <codx-input
+      <codx-input
       [formModel]="form.formModel"
-      [Group]="form.formGroup"
       field="processID"
-      []="{ApplyFor: '1'}"
-
+      [disabled]="true"
+      [model]="{ApplyFor: '1'}"
       (valueChange)="valueChange($event)"
     >
-    </codx-input> -->
-
-
+    </codx-input>
 
       </div>
     </div>
@@ -91,13 +88,22 @@
           default="Kênh"
         >
         </codx-label>
-        <ejs-combobox
+        <!-- <ejs-combobox
         id="recID"
         [dataSource]="listCbxChannels"
         [fields]="fieldCbxChannels"
         (valueChange)="cbxChange($event,'channelID')"
         [value]="deal?.channelID"
-      ></ejs-combobox>
+      ></ejs-combobox> -->
+      <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="channelID"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+
+
       </div>
     </div>
 
@@ -174,14 +180,14 @@
         <codx-label
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          fiedName="BusinesslineID"
+          fiedName="BusinessLineID"
           default="Dòng sản phẩm"
         >
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="businesslineID"
+          field="businessLineID"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
