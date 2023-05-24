@@ -138,11 +138,33 @@
             typeMF="hover"
           >
           </codx-temp-full>
+          <!--Type P-->
+          <codx-temp-full
+            cardCss="card-template mb-4"
+            *ngIf="item?.roleType=='P' "
+            [imageSrc]="
+          './assets/themes/sys/default/img/' +
+          (item?.icon ? item?.icon : 'share_default.svg')
+        "
+        [imageWidth]="20"
+        imgCss="w-30px p-3 me-3 user-mini-icon"
+        [imageWidth]="30"
+            [title]="item?.name"
+            [subTitle]="item?.approver | vll : 'ES014' : 'text' | async"
+            [imageObjType]="'AD_Users'"
+            [imageWidth]="35"
+            [titleLine]="3"
+            [formModel]="formModel"
+            (clickMF)="MFClick($event, item, index)"
+            [dataItem]="item"
+            typeMF="hover"
+          >
+          </codx-temp-full>
           
         <!--Type còn lại-->
         <codx-temp-full
         cardCss="card-template mb-4"
-        *ngIf="item?.roleType!='U' "
+        *ngIf="item?.roleType!='U' && item?.roleType!='P'"
         [imageSrc]="
           './assets/themes/sys/default/img/' +
           (item?.icon ? item?.icon : 'share_default.svg')
