@@ -585,19 +585,21 @@
 
 <!-- pane_1 Sơ yếu lí lịch -->
 <ng-template #curriculumVitae>
-  <div class="tab-horizone bg-white h-od-tab mb-4">
-    <ul class="nav nav-tabs px-4">
-      <ng-container *ngFor="let item of lstFuncCurriculumVitae; let i = index">
-        <li class="nav-item" (click)="navChange(item.functionID, 0)">
-          <a
-            class="nav-link"
-            [ngClass]="item.functionID == active[0] ? 'active' : ''"
-          >
-            <div class="text-uppercase fw-bold">{{ item.customName }}</div>
-          </a>
-        </li>
-      </ng-container>
-    </ul>
+  <div class="tab-scroll mb-4">
+    <div class="tab-horizone bg-white h-od-tab">
+      <ul class="nav nav-tabs px-4">
+        <ng-container *ngFor="let item of lstFuncCurriculumVitae; let i = index">
+          <li class="nav-item" (click)="navChange(item.functionID, 0)">
+            <a
+              class="nav-link"
+              [ngClass]="item.functionID == active[0] ? 'active' : ''"
+            >
+              <div class="text-uppercase fw-bold">{{ item.customName }}</div>
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
   </div>
 
   <div
@@ -2267,7 +2269,7 @@
               </button>
             </div>
           </div>
-          <div class="mt-6">
+          <div class="mt-6 ms-9">
             <div class="timeline-exper">
               <div class="timeline-exper-items">
                 <ng-container *ngFor="let item of lstExperiences">
@@ -2377,6 +2379,7 @@
 
 <!-- pane_2 Thông tin công việc-->
 <ng-template #jobInfo>
+ 
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
       <ng-container *ngFor="let item of lstFuncJobInfo; let i = index">
@@ -2391,7 +2394,7 @@
       </ng-container>
     </ul>
   </div>
-
+ 
   <div
     class="pw-content w-100 scroll-y"
     data-kt-scroll="true"
