@@ -110,7 +110,9 @@ export class CM_QuotationsLines {
   cWQty: number;
   cWOnhand: number;
   onhand: number;
+  currencyID :string
   costPrice: number;
+  exchangeRate :number
   costAmt: number;
   stdPrice: number;
   salesPrice: number;
@@ -237,7 +239,7 @@ export class CM_Customers {
   email: string;
   webPage: string;
   establishDate: Date;
-  headcounts: number;
+  headcounts: string;
   annualRevenue: number;
   workingDays: string;
   officialHour: boolean;

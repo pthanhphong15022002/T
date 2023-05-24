@@ -583,12 +583,12 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                 if(res){
                   let listUser= res[0].split(';');
                   if(listUser!=null && listUser.length>2){
-                    this.notifySvr.alertCode('EP017').subscribe((x) => {
+                    this.notifySvr.alertCode('ES033').subscribe((x) => {
                       if (x.event?.status == 'Y') {
                         let appr = new Approvers();
                         appr.roleType = element?.objectType;
                         appr.name = element?.text;
-                        appr.approver = element?.objectType;
+                        appr.approver = element?.id;
                         appr.icon = element?.icon != null ? element?.icon : null;
                         this.lstApprover.push(appr);                        
                       } else {
@@ -599,7 +599,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                     let appr = new Approvers();
                     appr.roleType = element?.objectType;
                     appr.name = element?.text;
-                    appr.approver = element?.objectType;
+                    appr.approver = element?.id;
                     appr.icon = element?.icon != null ? element?.icon : null;
                     this.lstApprover.push(appr);
                   }                                    

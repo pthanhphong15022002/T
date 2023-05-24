@@ -213,7 +213,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
         funcID: this.view.funcID,
         appointionObj: data,
         headerText: actionHeaderText,
-        empObj: actionType == 'add' ? null : this.currentEmpObj,
+        empObj: this.currentEmpObj,
         isUseEmployee: true,
       },
       option
@@ -236,6 +236,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
   }
 
   addJobSalaries(event): void {
+    this.currentEmpObj = this.itemDetail.emp;
     if (event.id == 'btnAdd') {
       this.HandleEJobSalary(
         event.text + ' ' + this.view.function.description,

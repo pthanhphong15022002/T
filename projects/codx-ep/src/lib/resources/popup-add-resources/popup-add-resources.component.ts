@@ -63,15 +63,14 @@ export class PopupAddResourcesComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-
     this.data = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
     this.headerText = dialogData?.data[2];
     this.funcID = dialogData?.data[3];
     this.dialogRef = dialogRef;
-    this.formModel = this.dialogRef.formModel;
+    this.formModel = this.dialogRef?.formModel;
     if (this.isAdd) {
-      this.data.preparator = this.authService.userValue.userID;      
+      this.data.preparator = this.authService?.userValue?.userID;      
       this.imgRecID = null;
     } else {
       this.imgRecID = this.data.recID;
@@ -119,7 +118,7 @@ export class PopupAddResourcesComponent extends UIComponent {
       });
     });
     this.codxEpService
-      .getAutoNumberDefault(this.formModel.funcID)
+      .getAutoNumberDefault(this.formModel?.funcID)
       .subscribe((autoN) => {
         if (autoN) {
           if (!autoN?.stop) {
@@ -190,11 +189,12 @@ export class PopupAddResourcesComponent extends UIComponent {
   onSaveForm() {       
     let lstEquipment = [];
     this.data.equipments=[];
+    this.data.createdBy= this.authService?.userValue?.userID;
     this.tmplstDevice.forEach((element) => {
-      if (element.isSelected) {
+      if (element?.isSelected) {
         let tempEquip = new Equipments();
-        tempEquip.equipmentID = element.id;
-        tempEquip.createdBy = this.authService.userValue.userID;
+        tempEquip.equipmentID = element?.id;
+        tempEquip.createdBy = this.authService?.userValue?.userID;
         lstEquipment.push(tempEquip);
       }
     });
@@ -213,11 +213,11 @@ export class PopupAddResourcesComponent extends UIComponent {
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt), index)
       .subscribe(async (res) => {
-        if (res.save || res.update) {
+        if (res?.save || res?.update) {
           if (!res.save) {
-            this.returnData = res.update;
+            this.returnData = res?.update;
           } else {
-            this.returnData = res.save;
+            this.returnData = res?.save;
           }
           if (this.returnData?.recID) {
             if (this.imageUpload?.imageUpload?.item) {

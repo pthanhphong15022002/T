@@ -48,8 +48,22 @@
               "
             >
             </codx-temp-full>
+
             <codx-temp-full
-              *ngIf="approver.roleType!='U' && approver.roleType != 'PA'"
+            *ngIf="approver.roleType=='P'"
+            [imageSrc]="
+              './assets/themes/sys/default/img/' +
+              (item.icon ? item.icon : 'share_default.svg')
+            "
+            imgCss="w-30px p-3 me-3 user-mini-icon"
+            [imageWidth]="20"
+            [title]="approver.name"
+            [desc]="approver.approver | vll : 'ES014' : 'text' | async"
+          >
+          </codx-temp-full>
+
+            <codx-temp-full
+              *ngIf="approver.roleType!='U' && approver.roleType != 'PA' && approver.roleType != 'P'"
               [imageSrc]="
                 './assets/themes/sys/default/img/' +
                 (item.icon ? item.icon : 'share_default.svg')

@@ -110,8 +110,8 @@
     >
       <span class="icon-close"></span>
     </button>
-    <div class="card-body px-10">
-      <div class="d-flex align-items-start mb-4">
+    <div class="card-body px-2">
+      <div class="d-flex align-items-center mb-4">
         <h2>
           <codx-label
             name="lblInsertCode"
@@ -133,15 +133,15 @@
           field="otpPin"
           [disabled]="false"
           class="test-textbox"
-          [placeholder]="'Mã...'"
+          [placeholder]="'Nhập mã otp'"
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
     </div>
-    <div class="card-footer px-10">
-      <div class="text-center mt-4">
+    <div class="card-footer px-2">
+      <div class="d-flex justify-content-end mt-4">
         <button
-          class="btn btn-primary w-100 my-2"
+          class="btn btn-primary "
           type="submit"
           (click)="confirmOTPPin()"
         >
