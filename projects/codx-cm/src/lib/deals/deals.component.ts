@@ -30,6 +30,7 @@ import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popu
 import { DealDetailComponent } from './deal-detail/deal-detail.component';
 import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
+import { AnyNsRecord } from 'dns';
 
 @Component({
   selector: 'lib-deals',
@@ -454,48 +455,64 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
       obj
     );
     dialogRevision.closed.subscribe((e) => {
-
       if (e && e.event != null) {
-        var instance =  e.event?.instance;
         var instanceMove =  e.event?.instanceMove;
         if(instanceMove) {
-
+          var dealOld = JSON.parse(JSON.stringify(data));
+          var dealNew =JSON.parse(JSON.stringify(data));
+          dealOld = this.updateReasonDeal(e.event?.instance,dealOld);
+          dealNew = this.convertDataInstance(dealNew,instanceMove,e.event?.nextStep);
+          var datas = [dealOld,dealNew];
+          this.codxCmService.moveDealReason(datas).subscribe((res) => {
+            if(res){
+              data = res[0];
+              this.view.dataService.dataSelected = data;
+              this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+              this.view.dataService.add(res[1],0).subscribe((res) => {});
+              this.detectorRef.detectChanges();
+            }
+          });
         }
         else {
-          data = this.updateReasonDeal(instance,data);
+          data = this.updateReasonDeal(e.event?.instance,data);
           var datas = [data,data.customerID];
           this.codxCmService.updateDeal(datas).subscribe((res) => {
             if(res){
-              data = res;
+              data = res[0];
               this.view.dataService.update(data).subscribe();
               this.detectorRef.detectChanges();
             }
-          })
+          });
         }
       }
     });
   }
 
-  updateMoveReasonDeal(instance:any, deal:any) {
-    // if (this.action !== this.actionEdit) {
-    //   deal.stepID = this.listInstanceSteps[0].stepID;
-    //   deal.nextStep = this.listInstanceSteps[1].stepID;
-    //   deal.status = '1';
-    //   deal.refID = instance.recID;
-    // }
-    // deal.owner = this.owner;
-    // deal.salespersonID = this.owner;
-    // deal.expectedClosed = deal.endDate;
+
+
+
+  convertDataInstance(deal: any, instance: any, nextStep:any) {
+    deal.dealName = instance.title;
+    deal.memo = instance.memo;
+    deal.endDate = instance.endDate;
+    deal.dealID  =  instance.instanceNo;
+    deal.owner  = instance.owner;
+    deal.salespersonID = instance.owner;
+    deal.processID = instance.processID;
+    deal.stepID = instance.stepID;
+    deal.refID = instance.recID;
+    deal.stepID = instance.stepID;
+    deal.status = instance.status;
+    deal.nextStep = nextStep;
+    return deal;
+
   }
-
-  updateReasonDeal(instance:any, lead:any) {
-    lead.status = instance.status;
-    lead.stepID = instance.stepID
-    return lead;
+  updateReasonDeal(instance:any, deal:any) {
+    deal.status = instance.status;
+    deal.stepID = instance.stepID;
+    deal.nextStep = '';
+    return deal;
   }
-
-
-
 
 
   startDeal(recId) {

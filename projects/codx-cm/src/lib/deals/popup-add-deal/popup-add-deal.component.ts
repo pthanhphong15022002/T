@@ -95,13 +95,13 @@ export class PopupAddDealComponent
   gridViewSetup: any;
   listProcess: any;
   owner: any;
-  dateMessage:any;
-  dateMax:any;
+  dateMessage: any;
+  dateMax: any;
   customerIDOld: any;
   // model of DP
   instance: tmpInstances = new tmpInstances();
   instanceSteps: any;
-  model:any;
+  model: any;
   listInstanceSteps: any[] = [];
 
   constructor(
@@ -172,7 +172,7 @@ export class PopupAddDealComponent
       );
       return;
     }
-    if(!this.deal?.owner){
+    if (!this.deal?.owner) {
       this.notificationsService.notifyCode(
         'SYS009',
         0,
@@ -184,7 +184,8 @@ export class PopupAddDealComponent
       this.notificationsService.notifyCode(
         'DP032',
         0,
-        '"' + this.gridViewSetup['EndDate']?.headerText + '"', '"' + this.dateMessage + '"'
+        '"' + this.gridViewSetup['EndDate']?.headerText + '"',
+        '"' + this.dateMessage + '"'
       );
       return;
     }
@@ -237,7 +238,11 @@ export class PopupAddDealComponent
           this.listInstanceSteps = result?.steps;
           this.listParticipants = result?.permissions;
           this.deal.dealID = result?.dealId;
-          this.deal.endDate =this.HandleEndDate(this.listInstanceSteps, this.action, null);
+          this.deal.endDate = this.HandleEndDate(
+            this.listInstanceSteps,
+            this.action,
+            null
+          );
           this.changeDetectorRef.detectChanges();
         } else {
           this.getListInstanceSteps($event);
@@ -314,7 +319,8 @@ export class PopupAddDealComponent
     option.methodName =
       this.action !== this.actionEdit ? 'AddDealAsync' : 'EditDealAsync';
     option.className = 'DealsBusiness';
-    option.data = this.action != this.actionEdit ? data : [data, this.customerIDOld];
+    option.data =
+      this.action != this.actionEdit ? data : [data, this.customerIDOld];
     return true;
   }
 
@@ -328,9 +334,7 @@ export class PopupAddDealComponent
       await this.getListProcess(this.typeForDeal);
       // await this.getListCampaigns();
       // await this.getListChannels();
-    } catch (error) {
-
-    }
+    } catch (error) {}
   }
   async getGridView(formModel) {
     this.cache
@@ -372,14 +376,14 @@ export class PopupAddDealComponent
   async getListInstanceSteps(processId: any) {
     processId =
       this.action === this.actionCopy ? this.deal.processID : processId;
-    var data = [processId, this.deal?.refID, this.action,'1'];
+    var data = [processId, this.deal?.refID, this.action, '1'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
         var obj = {
           id: processId,
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
-          dealId: this.action !== this.actionEdit ? this.deal.dealID : res[2],
+          dealId: this.action !== this.actionEdit ? res[2] : this.deal.dealID,
         };
         var isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
@@ -397,7 +401,11 @@ export class PopupAddDealComponent
           );
           this.deal.dealID = res[2];
         }
-        this.dateMax = this.HandleEndDate(this.listInstanceSteps, this.action, this.action != this.actionEdit ? null: this.deal.createdOn );
+        this.dateMax = this.HandleEndDate(
+          this.listInstanceSteps,
+          this.action,
+          this.action != this.actionEdit ? null : this.deal.createdOn
+        );
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -435,6 +443,10 @@ export class PopupAddDealComponent
     if (this.action === this.actionEdit) {
       instance.recID = this.deal.refID;
     }
+    if (this.action !== this.actionEdit) {
+      instance.startDate = null;
+      instance.status = '1';
+    }
     instance.title = deal.dealName;
     instance.memo = deal.memo;
     instance.endDate = deal.endDate;
@@ -449,6 +461,7 @@ export class PopupAddDealComponent
       deal.nextStep = this.listInstanceSteps[1].stepID;
       deal.status = '1';
       deal.refID = instance.recID;
+      deal.startDate = null;
     }
     deal.owner = this.owner;
     deal.salespersonID = this.owner;
@@ -542,19 +555,18 @@ export class PopupAddDealComponent
 
   //#endregion
 
-  isRequired(field:string){
-    return this.gridViewSetup[field]?.h
+  isRequired(field: string) {
+    return this.gridViewSetup[field]?.h;
   }
 
   setTitle(e: any) {
-      // if (this.autoName) {
-      //   this.title = this.titleAction + ' ' + this.autoName;
-      // } else {
-      //   this.title = this.titleAction + ' ' + e;
-      //   this.autoName = e;
-      // }
-      this.title = this.titleAction;
+    // if (this.autoName) {
+    //   this.title = this.titleAction + ' ' + this.autoName;
+    // } else {
+    //   this.title = this.titleAction + ' ' + e;
+    //   this.autoName = e;
+    // }
+    this.title = this.titleAction;
     this.changeDetectorRef.detectChanges();
   }
-
 }
