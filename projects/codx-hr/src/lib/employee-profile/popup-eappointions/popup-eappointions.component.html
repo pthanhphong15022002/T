@@ -279,7 +279,10 @@
     <div *ngIf="isUseEmployee" class="form-group row mt-5">
       <div class="col-6">
         <div class="d-flex">
-          <div class="d-flex flex-column">
+          <div
+            class="d-flex flex-column position-relative"
+            (click)="clickOpenPopup(codxInput)"
+          >
             <codx-img
               [width]="35"
               class="me-3"
@@ -293,17 +296,20 @@
               [objectType]="'HR_Employees'"
             >
             </codx-img>
-            <!-- <div *ngIf="employeeObj">
-              <codx-vll
-                class="badge badge-sm"
-                [name]="genderGrvSetup?.referedValue"
-                [value]="employeeObj?.emp?.gender ?? employeeObj?.gender"
-                [showText]="true"
-                [showIcon]="false"
-                [showBgColor]="false"
-              >
-              </codx-vll>
-            </div> -->
+            <codx-vll
+              [showText]="true"
+              [showBgColor]="true"
+              class="text-primary bi bi-pencil badge badge-primary badge-sm position-absolute"
+              [ngStyle]="{
+                background: 'aliceblue',
+                width: '30px',
+                fontSize: '10px',
+                cursor: 'pointer',
+                right: '-5px',
+                bottom: '-5px'
+              }"
+            >
+            </codx-vll>
           </div>
           <div class="d-flex flex-column">
             <div>
@@ -336,9 +342,10 @@
           </div>
         </div>
       </div>
-      <div class="col-6" *ngIf="actionType != 'edit'">
+      <div class="col-6 d-none">
         <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
         <codx-input
+          #codxInput
           field="employeeID"
           [formModel]="formModel"
           [Group]="formGroup"

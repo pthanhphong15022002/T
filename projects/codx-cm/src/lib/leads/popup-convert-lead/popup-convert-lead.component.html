@@ -186,7 +186,7 @@
             field="endDate"
             [placeholder]="gridViewSetupDeal?.EndDate?.description"
             [crrValue]="deal?.endDate"
-            (valueChange)="valueChange($event)"
+            (valueChange)="valueDateChange($event, 'deal')"
           >
           </codx-input>
         </div>
@@ -220,16 +220,13 @@
             [formModel]="formModelDeals"
           >
           </codx-label>
-          <codx-input
-            field="salespersonID"
-            type="combobox"
-            [formModel]="formModelDeals"
-            [refValue]="gridViewSetupDeal?.SalespersonID?.referedValue"
+          <ejs-combobox
+            [dataSource]="listParticipants"
+            [fields]="fieldCbxParticipants"
+            [value]="deal?.salespersonID"
             [placeholder]="gridViewSetupDeal?.SalespersonID?.description"
-            [crrValue]="deal?.salespersonID"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
+            (valueChange)="valueChangeOwner($event)"
+          ></ejs-combobox>
         </div>
       </div>
     </div>
@@ -248,7 +245,7 @@
             field="expectedClosed"
             [placeholder]="gridViewSetupDeal?.ExpectedClosed?.description"
             [crrValue]="deal?.expectedClosed"
-            (valueChange)="valueChange($event)"
+            (valueChange)="valueDateChange($event, 'deal')"
           >
           </codx-input>
         </div>
@@ -450,7 +447,7 @@
       </div>
     </div>
     <codx-address-cm
-    #codxLoadAdress
+      #codxLoadAdress
       [type]="'formAdd'"
       [funcID]="'CM0205'"
       [entityName]="form.formModel.entityName"
@@ -480,7 +477,17 @@
   </ng-container>
 </ng-template>
 <ng-template #tabInput></ng-template>
-<ng-template #footer></ng-template>
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" (click)="onSave()">
+      <codx-label
+        name="lblSave"
+        [formModel]="dialog.formModel"
+        default="Lưu"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
 
 <ng-template #systemCustomer>
   <div class="form-group mt-5">
@@ -612,12 +619,12 @@
             >
             </codx-label>
             <codx-input
+              type="datetime"
               [crrValue]="customer?.establishDate"
               format="d"
-              [formModel]="formModelCustomer"
               [placeholder]="gridViewSetupCustomer?.EstablishDate?.description"
               field="establishDate"
-              (valueChange)="valueChangeCustomer($event)"
+              (valueChange)="valueDateChange($event, 'customer')"
             >
             </codx-input>
           </div>
@@ -902,14 +909,14 @@
             <codx-label [formModel]="formModelCustomer" fiedName="CustomerFrom">
             </codx-label>
             <codx-input
+              type="datetime"
               [crrValue]="customer?.customerFrom"
-              [formModel]="formModelCustomer"
               format="d"
               [placeholder]="
                 gridViewSetupCustomer?.CustomerFrom?.description ?? ''
               "
               field="customerFrom"
-              (valueChange)="valueChangeCustomer($event)"
+              (valueChange)="valueDateChange($event, 'customer')"
             >
             </codx-input>
           </div>

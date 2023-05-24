@@ -134,7 +134,8 @@
           </div>
       </div>
     </div>
-    <div *ngIf="cashpayment.subType == '3'" class="extend-function pt-0 mt-2">
+    <br>
+    <div *ngIf="cashpayment.subType == '3'" class="extend-function pt-0">
       <hr />
       <div class="d-flex justify-content-center" (click)="showinvoice = !showinvoice">
         <div class="d-flex align-items-center w-auto extend-title">
@@ -147,11 +148,12 @@
       </div>
     </div>
     <div *ngIf="showinvoice && cashpayment.subType == '3'" class="p-5 bg-gray-100 border rounded-1">
-      <div class="container w-90 h-90">
-        <div style="background: none" class="list-empty card card-flush h-100">
-          <button style="border-radius: 50px;" type="button" class="btn btn-light-primary w-200px">
-            <div class="d-flex justify-content-center">
-              <span class="fw-bold fs-5">{{'('+'0'+')'+ 'hóa đơn'}}</span>
+      <div class="container">
+        <div style="background: none" class="justify-content-center align-items-center card card-flush">
+          <button style="border-radius: 50px;" type="button" class="btn btn-light-primary w-150px h-40px">
+            <div class="d-flex justify-content-center align-items-center">
+              <span class="fw-bold fs-6 me-2">{{'('+'0'+')'}}</span>
+              <i class="icon-i-file-earmark-plus icon-18"></i>
             </div> 
           </button>
         </div>

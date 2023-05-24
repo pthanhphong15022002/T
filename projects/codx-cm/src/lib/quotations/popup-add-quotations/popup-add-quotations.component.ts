@@ -246,18 +246,12 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.quotations[e.field] = e.data;
     switch (e?.field) {
       case 'refID':
-        this.modelCustomerIDDeals = { CustomerID: this.quotations.customerID };
-        if(
-        (
-          this.customerIDCbx.ComponentCurrent as CodxComboboxComponent
-        ).load){
-          this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-        };
       
+        this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
         this.modelCustomerIDDeals = { CustomerID: this.quotations.customerID };
-       
-
-        
+        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+        // (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        // [];
         break;
       case 'customerID':
         this.quotations.refID = null;

@@ -35,7 +35,9 @@ import { AnyNsRecord } from 'dns';
 @Component({
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
-  styleUrls: ['./deals.component.scss'],})export class DealsComponent
+  styleUrls: ['./deals.component.scss'],
+})
+export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -51,6 +53,8 @@ import { AnyNsRecord } from 'dns';
   itemFields: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
+  @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
+  @ViewChild('footerKanban') footerKanban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
 
@@ -98,7 +102,7 @@ import { AnyNsRecord } from 'dns';
   readonly btnAdd: string = 'btnAdd';
   request: ResourceModel;
   resourceKanban?: ResourceModel;
-  hideMoreFC = true;
+  hideMoreFC = false;
   listHeader: any;
 
   constructor(
@@ -119,20 +123,7 @@ import { AnyNsRecord } from 'dns';
     // this.dataObj = {
     //   processID: '327eb334-5695-468c-a2b6-98c0284d0620',
     // };
-    this.request = new ResourceModel();
-    this.request.service = 'CM';
-    this.request.assemblyName = 'CM';
-    this.request.className = 'DealsBusiness';
-    this.request.method = 'GetListDealsAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj;
-
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'DP';
-    this.resourceKanban.assemblyName = 'DP';
-    this.resourceKanban.className = 'ProcessesBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
+    this.afterLoad();
 
     this.button = {
       id: this.btnAdd,
@@ -152,6 +143,7 @@ import { AnyNsRecord } from 'dns';
         active: false,
         sameData: false,
         request: this.request,
+        hide: true,
         request2: this.resourceKanban,
         toolbarTemplate: this.footerButton,
         model: {
@@ -167,6 +159,24 @@ import { AnyNsRecord } from 'dns';
         this.funcID = param.funcID;
       }
     });
+
+    this.detectorRef.detectChanges();
+  }
+  afterLoad() {
+    this.request = new ResourceModel();
+    this.request.service = 'CM';
+    this.request.assemblyName = 'CM';
+    this.request.className = 'DealsBusiness';
+    this.request.method = 'GetListDealsAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj;
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'DP';
+    this.resourceKanban.assemblyName = 'DP';
+    this.resourceKanban.className = 'ProcessesBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = this.dataObj;
   }
 
   ngAfterViewInit(): void {
@@ -174,13 +184,18 @@ import { AnyNsRecord } from 'dns';
     this.changeDetectorRef.detectChanges();
   }
 
-  onLoading(e) {}
 
   changeView(e) {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.crrFuncID != this.funcID) {
-      this.crrFuncID = this.funcID;
+    this.afterLoad();
+    if (e?.view.type == 6) {
+      if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
+      else this.kanban = (this.view.currentView as any).kanban;
+      this.kanban.refesh();
     }
+    // this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // if (this.crrFuncID != this.funcID) {
+    //   this.crrFuncID = this.funcID;
+    // }
   }
 
   click(evt: ButtonModel) {
@@ -268,10 +283,10 @@ import { AnyNsRecord } from 'dns';
         this.handelStartDay(data);
         break;
       case 'CM0201_3':
-        this.moveReason(data,true);
+        this.moveReason(data, true);
         break;
       case 'CM0201_4':
-        this.moveReason(data,false);
+        this.moveReason(data, false);
         break;
       //xuât file
       case 'CM0201_5':
@@ -285,12 +300,12 @@ import { AnyNsRecord } from 'dns';
 
   handelStartDay(data) {
     this.notificationsService
-    .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
-    .subscribe((x) => {
-      if (x.event && x.event.status == 'Y') {
-        this.startDeal(data.recID);
-      }
-    });
+      .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.startDeal(data.recID);
+        }
+      });
   }
   moveStage(data: any) {
     // if (!this.isClick) {
@@ -318,11 +333,11 @@ import { AnyNsRecord } from 'dns';
             isUseSuccess: false,
           };
           var dataCM = {
-            refID:data?.refID,
+            refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: data?.nextStep
-          }
+            nextStep: data?.nextStep,
+          };
           var obj = {
             stepName: data?.currentStepName,
             formModel: formMD,
@@ -347,25 +362,31 @@ import { AnyNsRecord } from 'dns';
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
-              var instance =  e.event.instance;
-              var index = e.event.listStep.findIndex(x=> x.stepID === instance.stepID && !x.isSuccessStep && !x.isFailStep)+1;
+              var instance = e.event.instance;
+              var index =
+                e.event.listStep.findIndex(
+                  (x) =>
+                    x.stepID === instance.stepID &&
+                    !x.isSuccessStep &&
+                    !x.isFailStep
+                ) + 1;
               var nextStep = '';
-              if(index != -1){
-                if(index != e.event.listStep.length){
+              if (index != -1) {
+                if (index != e.event.listStep.length) {
                   var listStep = e.event.listStep;
                   nextStep = listStep[index]?.stepID;
                 }
               }
 
-              var dataUpdate = [data.recID,instance.stepID,nextStep];
-              this.codxCmService.moveStageDeal(dataUpdate).subscribe((res)=> {
-                if(res){
+              var dataUpdate = [data.recID, instance.stepID, nextStep];
+              this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
+                if (res) {
                   data = res[0];
                   this.view.dataService.update(data).subscribe();
                   this.detailViewDeal.dataSelected = data;
                   this.detectorRef.detectChanges();
                 }
-              })
+              });
               //xu ly data đổ về
               // data = e.event.instance;
               // this.listStepInstances = e.event.listStep;
@@ -380,8 +401,6 @@ import { AnyNsRecord } from 'dns';
               //   this.detailViewInstance.dataSelect = this.dataSelected;
               //   this.detailViewInstance.listSteps = this.listStepInstances;
               // }
-
-
             }
           });
         });
@@ -389,39 +408,39 @@ import { AnyNsRecord } from 'dns';
     });
   }
 
-  moveReason(data:any,isMoveSuccess: boolean){
+  moveReason(data: any, isMoveSuccess: boolean) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     var functionID = isMoveSuccess ? 'DPT0403' : 'DPT0404';
     this.cache.functionList(functionID).subscribe((fun) => {
-          this.openFormReason(data, fun, isMoveSuccess);
-          // var newProccessIdReason = isMoveSuccess
-          //   ? this.stepSuccess.newProcessID
-          //   : this.stepFail.newProcessID;
-          // var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
-          // if (isCheckExist) {
-          //   this.codxDpService
-          //     .getProcess(newProccessIdReason)
-          //     .subscribe((res) => {
-          //       if (res) {
-          //         if (res.permissions != null && res.permissions.length > 0) {
-          //           this.listParticipantReason = res.permissions.filter(
-          //             (x) => x.roleType === 'P'
-          //           );
-          //           this.openFormReason(
-          //             data,
-          //             fun,
-          //             isMoveSuccess,
-          //             dataMore,
-          //             this.listParticipantReason
-          //           );
-          //         }
-          //       }
-          //     });
-          // } else {
-          //   this.openFormReason(data, fun, isMoveSuccess, dataMore, null);
-          // }
+      this.openFormReason(data, fun, isMoveSuccess);
+      // var newProccessIdReason = isMoveSuccess
+      //   ? this.stepSuccess.newProcessID
+      //   : this.stepFail.newProcessID;
+      // var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
+      // if (isCheckExist) {
+      //   this.codxDpService
+      //     .getProcess(newProccessIdReason)
+      //     .subscribe((res) => {
+      //       if (res) {
+      //         if (res.permissions != null && res.permissions.length > 0) {
+      //           this.listParticipantReason = res.permissions.filter(
+      //             (x) => x.roleType === 'P'
+      //           );
+      //           this.openFormReason(
+      //             data,
+      //             fun,
+      //             isMoveSuccess,
+      //             dataMore,
+      //             this.listParticipantReason
+      //           );
+      //         }
+      //       }
+      //     });
+      // } else {
+      //   this.openFormReason(data, fun, isMoveSuccess, dataMore, null);
+      // }
     });
   }
 
@@ -432,18 +451,18 @@ import { AnyNsRecord } from 'dns';
     formMD.formName = fun.formName;
     formMD.gridViewName = fun.gridViewName;
     var dataCM = {
-      refID:data?.refID,
+      refID: data?.refID,
       processID: data?.processID,
       stepID: data?.stepID,
-      nextStep: data?.nextStep
-    }
+      nextStep: data?.nextStep,
+    };
     var obj = {
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
-      applyFor:'1',
-      dataCM:dataCM,
-      stepName:data.currentStepName
+      applyFor: '1',
+      dataCM: dataCM,
+      stepName: data.currentStepName,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -455,7 +474,9 @@ import { AnyNsRecord } from 'dns';
       obj
     );
     dialogRevision.closed.subscribe((e) => {
+
       if (e && e.event != null) {
+        var instance =  e.event?.instance;
         var instanceMove =  e.event?.instanceMove;
         if(instanceMove) {
           var dealOld = JSON.parse(JSON.stringify(data));
@@ -487,6 +508,10 @@ import { AnyNsRecord } from 'dns';
       }
     });
   }
+
+
+
+
 
 
 
@@ -569,6 +594,8 @@ import { AnyNsRecord } from 'dns';
       }
     }
   }
+
+  onActions(e) {}
 
   addDeal() {
     this.view.dataService.addNew().subscribe((res) => {
@@ -693,7 +720,7 @@ import { AnyNsRecord } from 'dns';
 
   //xuất file
   exportFile(dt) {
-    this.codxCmService.exportFile(dt,this.titleAction) ;
+    this.codxCmService.exportFile(dt, this.titleAction);
     // this.codxCmService
     //   .getDataInstance(dt.refID)
     //   .subscribe((res) => {
