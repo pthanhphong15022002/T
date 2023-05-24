@@ -188,6 +188,10 @@ import { PopupCustomFieldComponent } from './components/codx-fields-detail-temp/
 import { CodxTaskbarComponent } from './components/codx-step/codx-taskbar/codx-taskbar.component';
 import { GroupModulePipe } from './pipe/groupmodoule.pipe';
 import { CodxViewDetailLittleComponent } from './components/codx-view-detail-little/codx-view-detail-little.component';
+import { AddNoteComponent } from './components/calendar-notes/add-note/add-note.component';
+import { PopupTitleComponent } from './components/calendar-notes/add-note/save-note/popup-title/popup-title.component';
+import { SaveNoteComponent } from './components/calendar-notes/add-note/save-note/save-note.component';
+import { UpdateNotePinComponent } from './components/calendar-notes/update-note-pin/update-note-pin.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -332,6 +336,13 @@ const T_Component: Type<any>[] = [
   CodxFieldsDetailTempComponent,
   PopupCustomFieldComponent,
   CodxViewDetailLittleComponent,
+
+  //CO
+  CalendarCenterComponent,
+  AddNoteComponent,
+  PopupTitleComponent,
+  SaveNoteComponent,
+  UpdateNotePinComponent,
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -358,7 +369,6 @@ const T_Pipe: Type<any>[] = [
     AddEditApprovalStepComponent,
     PopupAddApproverComponent,
     CodxClearCacheComponent,
-    CalendarCenterComponent,
   ],
   exports: [T_Component, T_Pipe],
   imports: [

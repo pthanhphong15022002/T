@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import {
   Component,
   Injector,
@@ -31,6 +32,7 @@ export class EmployeeListComponent extends UIComponent {
   itemSelected: any;
   function:any = null;
   sysMoreFunc:any[] = [];
+  grvSetup: any;
   // template columns grid
   @ViewChild('colEmployee', { static: true }) colEmployee: TemplateRef<any>;
   @ViewChild('colContact', { static: true }) colContact: TemplateRef<any>;
@@ -59,6 +61,11 @@ export class EmployeeListComponent extends UIComponent {
     .subscribe((mFuc:any) => {
       if(mFuc) this.sysMoreFunc = mFuc;
     });
+
+    this.cache.gridViewSetup('employees', 'grvEmployees')
+    .subscribe(grv => {
+      if(grv) this.grvSetup = grv;
+    })
   }
 
   ngAfterViewInit(): void {
@@ -69,7 +76,7 @@ export class EmployeeListComponent extends UIComponent {
         fieldName: 'employeeID',
         controlName: 'lblEmployeeID',
         headerText: 'Nhân viên',
-        width: 250,
+        width: 350,
         template: this.colEmployee,
       },
       {
@@ -78,7 +85,7 @@ export class EmployeeListComponent extends UIComponent {
         controlName: 'LblEmail',
         fieldName: 'email',
         headerText: 'Liên hệ',
-        width: 250,
+        width: 200,
         template: this.colContact,
       },
       {
@@ -332,14 +339,15 @@ export class EmployeeListComponent extends UIComponent {
   funIDEmpInfor:string = "HRT03b";
   // view imployee infor
   clickViewEmpInfo(data:any){
-    
+    debugger
     this.cache.functionList(this.funIDEmpInfor)
     .subscribe(func => {
       let queryParams =  {
         employeeID: data.employeeID,
         page: this.view.dataService.page,
-        filter: JSON.stringify(this.view.dataService?.filter),
+        filter: JSON.stringify(this.view.dataService?.request.filter),
       };
+      debugger
       this.codxService.navigate("",func.url,queryParams);
     });
   }

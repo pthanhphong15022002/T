@@ -58,7 +58,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   isInteractPDF: boolean = false;
   isEdited: boolean;
-
+  dialogOtpPin:any;
   constructor(
     private inject: Injector,
     private esService: CodxEsService,
@@ -92,7 +92,9 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.transRecID = this.data.transRecID;
     this.esService.getSFByID(this.data?.oTrans?.transID).subscribe((res) => {
       if (res) {
+        
         let sf = res?.signFile;
+
         if (sf && sf.files) {
           this.isEdited = sf.files[0]?.isEdited;
         }
@@ -135,6 +137,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
           .confirmOTPPin(this.oApprovalTrans.recID, this.confirmValue)
           .subscribe((res) => {
             if (res) {
+              this.dialogOtpPin.dialog.close();
               this.beforeApprove(this.mode, this.title, this.subTitle);
             }
           });
@@ -310,14 +313,15 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   openConfirm() {
-    if (this.otpControl == '2') {
-      this.esService.createOTPPin(this.oApprovalTrans.recID, 1).subscribe();
+    debugger
+    if (this.otpControl == '1' || this.otpControl == '2') {
+      this.esService.createOTPPin(this.oApprovalTrans.recID , this.otpControl).subscribe();
     }
-    let dialogOtpPin = this.callfc.openForm(
+    this.dialogOtpPin = this.callfc.openForm(
       this.popupOTPPin,
       '',
-      350,
-      410,
+      500,
+      300,
       this.funcID
     );
   }
@@ -343,6 +347,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   approve(mode, title: string, subTitle: string, comment: any) {
+    debugger
     switch (this.pdfView.signerInfo.signType) {
       case '2': {
         if (this.pdfView.isAwait) {

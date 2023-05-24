@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { UIComponent, DialogRef, FormModel, NotificationsService, AuthStore, DialogData, RequestOption, ImageViewerComponent } from 'codx-core';
+import { UIComponent, DialogRef, FormModel, NotificationsService, AuthStore, DialogData, RequestOption, ImageViewerComponent, Util } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Deals, CM_Leads } from '../../models/cm_model';
 import { tmpInstances } from '../../models/tmpModel';
@@ -119,7 +119,11 @@ constructor(
   }
 }
 
-onInit(): void {}
+onInit(): void {
+  if(this.action == this.actionAdd || this.action == this.actionCopy){
+    this.lead.recID = Util.uid();
+  }
+}
 
 valueChange($event) {
   if ($event) {
