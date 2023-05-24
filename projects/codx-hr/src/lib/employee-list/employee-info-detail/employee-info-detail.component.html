@@ -2267,24 +2267,27 @@
               </button>
             </div>
           </div>
-          <div class="mx-5 mx-xl-4 pt-0 pb-5">
-            <div class="timeline timeline-3">
-              <div class="timeline-items">
+          <div class="mt-6">
+            <div class="timeline-exper">
+              <div class="timeline-exper-items">
                 <ng-container *ngFor="let item of lstExperiences">
-                  <div class="timeline-item" [ngClass]="lstExperiences? 'has-action-menu':''">
-                    <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
-                      <div class="timeline-media me-4">
+                  <div class="timeline-exper-item" [ngClass]="lstExperiences? 'has-action-menu':''">
+                    <div class="timeline-exper-nav w-100 d-flex pb-4">
+                      <div class="timeline-media w-125px min-w-125px">
                         <span class="stepper-number">
                           {{item.fromDate | date: 'MM/y'}}
                           -
                           {{item.toDate | date: 'MM/y'}}
                         </span>
                       </div>
+                      <div class="me-3 timeline-exper-node">
+                        <span class="icon-fiber_manual_record text-gray-600"></span>
+                      </div>
                       <div class="stepper-label">
-                        <h3 class="stepper-title line-clamp line-clamp-3">
+                        <div class="stepper-title fs-5-sm fw-bold line-clamp line-clamp-3 mb-1">
                           {{item?.companyName}}
-                        </h3>
-                        <div class="stepper-desc">
+                        </div>
+                        <div class="stepper-desc text-gray-500">
                           {{item?.position}}
                         </div>
 

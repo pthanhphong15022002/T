@@ -109,3 +109,13 @@
   .user-family .bg-white{
     min-height: calc(100vh - 130px);
   }
+  .timeline-exper-nav::after{
+    content: "";
+    background-color: var(--gray-300);
+    width: 1px;
+    position: absolute;
+    top: 15px;
+    left: 133.2px;
+    bottom: -3px;
+    z-index: 9;
+}
