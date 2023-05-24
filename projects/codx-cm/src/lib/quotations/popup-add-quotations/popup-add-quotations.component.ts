@@ -438,7 +438,17 @@ export class PopupAddQuotationsComponent implements OnInit {
       if (res.event.status === 'Y') {
         //=> delete fe
         this.gridQuationsLines.deleteRow(data);
-        if (this.action == 'edit') this.quotationLinesDeleted.push(data);
+        if (this.action == 'edit') {
+          this.quotationLinesDeleted.push(data);
+          let indexAdd = this.quotationLinesAddNew.findIndex(
+            (x) => x.recID == data.recID
+          );
+          if (indexAdd != -1) this.quotationLinesAddNew.splice(indexAdd, 1); //xóa 1 pt trong mang
+          let indexEdit = this.quotationLinesEdit.findIndex(
+            (x) => x.recID == data.recID
+          );
+          if (indexEdit != -1) this.quotationLinesEdit.splice(indexAdd, 1);
+        }
         if (this.gridQuationsLines.dataSource.length > 0) {
           for (let i = 0; i < this.gridQuationsLines.dataSource.length; i++) {
             if (
