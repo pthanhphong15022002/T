@@ -28,6 +28,7 @@
 
 <ng-template #tabGeneralInfo>
   <ng-container *ngIf="form?.formGroup">
+    <ng-container *ngIf="funcID == 'CM0101'"></ng-container>
     <div class="mb-3" *ngIf="funcID == 'CM0102'">
       <div class="mb-4">
         <codx-label
@@ -811,70 +812,4 @@
     (handleInput)="changeAvatar()"
   >
   </codx-img>
-</ng-template>
-
-<ng-template #contacts>
-  <div class="body_detail p-6">
-    <ng-container *ngIf="contactsPerson != null">
-      <div class="d-flex">
-        <div class="me-3">
-          <codx-img
-            [objectId]="contactsPerson.recID"
-            [objectName]="contactsPerson.contactName"
-            objectType="CM_Contacts"
-            [imgOn]="contactsPerson?.modifiedOn"
-            [width]="35"
-          >
-          </codx-img>
-        </div>
-        <div class="d-flex flex-column flex-grow-1">
-          <div class="d-flex flex-column">
-            <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
-              {{ contactsPerson.contactName }}
-            </div>
-            <div class="mb-1" *ngIf="contactsPerson?.mobile">
-              <span
-                [ngClass]="
-                  contactsPerson.allowCall
-                    ? 'icon-phone_android text-primary'
-                    : 'icon-phonelink_erase'
-                "
-                class="icon-16 me-1"
-              ></span>
-              <span
-                [ngClass]="contactsPerson.allowCall ? 'text-primary' : ''"
-                class="text-gray-900"
-                >{{ contactsPerson.mobile }}</span
-              >
-            </div>
-            <div *ngIf="contactsPerson?.personalEmail">
-              <span
-                [ngClass]="
-                  contactsPerson.allowEmail
-                    ? 'icon-email text-primary'
-                    : 'icon-print_disabled'
-                "
-                class="icon-16 me-1 text-gray-900"
-              ></span>
-              <span
-                [ngClass]="contactsPerson.allowEmail ? 'text-primary' : ''"
-                class="text-gray-900"
-                >{{ contactsPerson?.personalEmail }}</span
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-container>
-    <ng-container *ngIf="contactsPerson == null">
-      <div class="" style="text-align: center">
-        <codx-label
-          class="text-gray-300"
-          name="lblContactPerson"
-          [formModel]="dialog.formModel"
-          default="Chọn hoặc thêm người liên hệ chính"
-        ></codx-label>
-      </div>
-    </ng-container>
-  </div>
 </ng-template>
