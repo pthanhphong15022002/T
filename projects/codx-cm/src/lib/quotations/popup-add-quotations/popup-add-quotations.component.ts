@@ -437,21 +437,15 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.notiService.alertCode('SYS030').subscribe((res) => {
       if (res.event.status === 'Y') {
         //=> delete fe
-        this.quotationLinesDeleted.push(data);
         this.gridQuationsLines.deleteRow(data);
+        if (this.action == 'edit') this.quotationLinesDeleted.push(data);
         if (this.gridQuationsLines.dataSource.length > 0) {
           for (let i = 0; i < this.gridQuationsLines.dataSource.length; i++) {
             if (
               this.gridQuationsLines.dataSource[i].rowNo != i + 1 &&
               this.action == 'edit'
             ) {
-              if (this.action == 'edit') {
-                let indexEdit = this.quotationLinesEdit.findIndex(
-                  (x) => x.recID == data.recID
-                );
-                if (indexEdit == -1) this.quotationLinesEdit.push(data);
-                else this.quotationLinesEdit[indexEdit] = data;
-              }
+              this.linesUpdate(this.gridQuationsLines.dataSource[i]);
             }
             this.gridQuationsLines.dataSource[i].rowNo = i + 1;
           }
@@ -499,11 +493,7 @@ export class PopupAddQuotationsComponent implements OnInit {
               if (idxUp != -1) {
                 this.listQuotationLines[idxUp] = data;
                 if (this.action == 'edit') {
-                  let indexEdit = this.quotationLinesEdit.findIndex(
-                    (x) => x.recID == data.recID
-                  );
-                  if (indexEdit == -1) this.quotationLinesEdit.push(data);
-                  else this.quotationLinesEdit[indexEdit] = data;
+                  this.linesUpdate(data);
                 }
 
                 this.gridQuationsLines.refresh();
@@ -521,6 +511,21 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   copyLine(dt) {}
+
+  linesUpdate(data) {
+    let indexAdd = this.quotationLinesAddNew.findIndex(
+      (x) => x.recID == data.recID
+    );
+    if (indexAdd != -1) {
+      this.quotationLinesAddNew[indexAdd] = data;
+    } else {
+      let indexEdit = this.quotationLinesEdit.findIndex(
+        (x) => x.recID == data.recID
+      );
+      if (indexEdit == -1) this.quotationLinesEdit.push(data);
+      else this.quotationLinesEdit[indexEdit] = data;
+    }
+  }
 
   // endregion QuotationLines
 
@@ -575,11 +580,7 @@ export class PopupAddQuotationsComponent implements OnInit {
           ql['currencyID'] = this.quotations.currencyID;
           ql['exchangeRate'] = this.quotations.exchangeRate;
           if (this.action == 'edit') {
-            let indexEdit = this.quotationLinesEdit.findIndex(
-              (x) => x.recID == ql.recID
-            );
-            if (indexEdit == -1) this.quotationLinesEdit.push(ql);
-            else this.quotationLinesEdit[indexEdit] = ql;
+            this.linesUpdate(ql);
           }
         });
         this.gridQuationsLines.refresh();
