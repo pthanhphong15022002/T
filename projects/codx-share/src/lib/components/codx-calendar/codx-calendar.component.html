@@ -80,12 +80,12 @@
                 >
                   <codx-input
                     type="checkbox"
-                    field="CO_Meetings"
+                    [field]="param.key"
                     [checked]="param.value?.ShowEvent == '1'"
                     labelPosition="Before"
                     [disabled]="false"
                     class="test-check"
-                    (valueChange)="valueChangeSetting($event)"
+                    (valueChange)="updateSettingValue($event)"
                   >
                   </codx-input>
                 </div>
