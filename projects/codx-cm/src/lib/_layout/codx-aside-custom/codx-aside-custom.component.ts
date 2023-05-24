@@ -107,6 +107,8 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   predicatesDefault: any;
   dataValuesDefault: any;
   viewsDefault: any;
+  componentsDefault: any;
+  idSubCrr = '';
 
   constructor(
     private pageTitle: PageTitleService,
@@ -304,8 +306,29 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
         this.predicatesDefault;
       this.codxService.activeViews.dataService.dataValues =
         this.dataValuesDefault;
-      this.codxService.activeViews.views = this.viewsDefault;
+
+      let viewModel;
+      let viewModelDelete;
+      this.codxService.activeViews?.views.forEach((x) => {
+        if (x.type == 6) {
+          x.hide = true;
+          x.active = false;
+          viewModelDelete = x;
+        }
+        if (x.type == 2) {
+          x.active = true;
+          viewModel = x;
+        }
+      });
+
+      // this.codxService.activeViews?.components.delete(viewModel.id);
+      this.codxService.activeViews.viewActiveType = viewModel.type;
+      //  this.codxService.activeViews?.change(viewModel);
+      this.codxService.activeViews?.viewChange(viewModel);
+
+      this.idSubCrr = '';
       this.isClickMenuCus = false;
+      this.changDefector.detectChanges();
     }
 
     let titleEle = document.querySelector('codx-page-title');
@@ -603,9 +626,25 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
 
   //load menu
   loadMenuCustom(fun) {
+    this.predicatesDefault =
+      this.codxService.activeViews?.dataService.predicates;
+    this.dataValuesDefault =
+      this.codxService.activeViews?.dataService.dataValues;
+    this.viewsDefault = this.codxService.activeViews?.views;
+    if (!this.isClickMenuCus) {
+      this.codxService.activeViews?.views.forEach((x) => {
+        if (x.type == 6) {
+          x.hide = true;
+          x.active = false;
+        }
+        if (x.type == 2) {
+          x.active = true;
+        }
+      });
+    }
+    this.dataMenuCustom = [];
     if (fun != this.funcOld) {
       this.funcOld = fun;
-      this.dataMenuCustom = [];
       this.requestMenuCustom.predicates = 'ApplyFor==@0 && !Deleted';
       switch (fun) {
         case 'CM0201':
@@ -653,31 +692,58 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
       if (oldBrc) oldBrc.remove();
     }
     this.codxService.activeMenu.fav = data.recID;
-
     this.isClickMenuCus = true;
-    this.predicatesDefault =
-      this.codxService.activeViews?.dataService.predicates;
-    this.dataValuesDefault =
-      this.codxService.activeViews?.dataService.dataValues;
-    this.viewsDefault = 
-    this.codxService.activeViews?.views
 
+    let viewModel;
     this.codxService.activeViews?.views.forEach((x) => {
       if (x.hide) x.hide = false;
-      if(x.type==6){
-        x.request.dataObj= {processID: data.recID}
-        x.request2.dataObj= {processID: data.recID}
+      if (x.type == 6) {
+        x.request.dataObj = { processID: data.recID };
+        x.request2.dataObj = { processID: data.recID };
+      }
+      if (x.active) {
+        viewModel = x;
       }
     });
-   
-    (this.codxService.activeViews?.dataService as CRUDService)
-      .setPredicates(['ProcessID==@0'], [data.recID])
-      .subscribe();
-    // //kaban
-    // if ((this.codxService.activeViews.currentView as any)?.kanban) {
-    //   (this.codxService.activeViews.currentView as any)?.kanban.load();
-    // }
+    this.codxService.activeViews?.viewChange(viewModel);
+    if (this.idSubCrr != data.recID) {
+      (this.codxService.activeViews?.dataService as CRUDService)
+        .setPredicates(['ProcessID==@0'], [data.recID])
+        .subscribe();
+    }
 
+    //kaban
+    if (
+      (this.codxService.activeViews.currentView as any)?.kanban &&
+      this.idSubCrr != data.recID
+    ) {
+      let kanban = (this.codxService.activeViews.currentView as any)?.kanban;
+      let settingKanban = kanban.kanbanSetting;
+      settingKanban.isChangeColumn = true;
+      settingKanban.formName =
+        this.codxService.activeViews.currentView?.formModel?.formName;
+      settingKanban.gridViewName =
+        this.codxService.activeViews.currentView?.formModel?.gridViewName;
+      let dataObj = { processID: data.recID };
+      this.api
+        .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+          settingKanban,
+          dataObj,
+        ])
+        .subscribe((resource) => {
+          if (resource?.columns && resource?.columns.length)
+            kanban.columns = resource.columns;
+          kanban.kanbanSetting.isChangeColumn = false;
+          kanban.loadDataSource(
+            kanban.columns,
+            kanban.kanbanSetting?.swimlaneSettings,
+            false
+          );
+
+          kanban.refresh();
+        });
+    }
+    this.idSubCrr = data.recID;
     // this.codxService.navigate('', url +`/${data.recID}`);
   }
 }

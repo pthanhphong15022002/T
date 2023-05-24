@@ -48,7 +48,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   pageSize = 5;
   itemName: any;
   lsVatCode: any;
-  gridViewLines: any;
+  grvPurchaseInvoicesLines: any;
   fmPurchaseInvoicesLines: FormModel = {
     formName: 'PurchaseInvoicesLines',
     gridViewName: 'grvPurchaseInvoicesLines',
@@ -80,7 +80,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
       .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
       .subscribe((res) => {
         if (res) {
-          this.gridViewLines = res;
+          this.grvPurchaseInvoicesLines = res;
         }
       });
   }

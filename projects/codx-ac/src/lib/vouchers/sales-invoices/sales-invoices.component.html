@@ -79,12 +79,7 @@
       </div>
     </div>
 
-    <codx-img
-      [objectId]="data?.recID"
-      [objectName]="data?.createdBy"
-      [objectType]="view?.entityName"
-      [width]="30"
-    >
+    <codx-img [objectId]="data?.createdBy" objectType="AD_Users" [width]="30">
     </codx-img>
   </div>
 </ng-template>
@@ -300,7 +295,9 @@
         </ng-template>
         <ng-template #content>
           <lib-table-line-detail
-            [salesInvoicesLines]="salesInvoicesLines"
+            [transID]="selectedData.recID"
+            [gvs]="salesInvoiceService.gvsSalesInvoicesLines"
+            [height]="300"
           ></lib-table-line-detail>
         </ng-template>
       </e-tabitem>

@@ -115,7 +115,9 @@
         ></span>
         <span
           [innerHTML]="
-            data?.versionName | formatvalue : view.formModel : 'versionName' | async
+            data?.versionName
+              | formatvalue : view.formModel : 'versionName'
+              | async
           "
         ></span>
       </div>
@@ -124,11 +126,20 @@
       <span>
         <span class="icon-monetization_on pe-1" style="color: gold"></span>
         <span
+          class="codx-label me-1"
           [innerHTML]="
             data?.totalAmt | formatvalue : view.formModel : 'totalAmt' | async
           "
         >
         </span>
+        <span
+          class="codx-label"
+          [innerHTML]="
+            data.currencyID
+              | formatvalue : view.formModel : 'currencyID'
+              | async
+          "
+        ></span>
       </span>
     </div>
   </div>
@@ -219,7 +230,9 @@
   <div class="">
     <span
       [innerHTML]="
-        data?.totalSalesAmt | formatvalue : view.formModel : 'totalSalesAmt' | async
+        data?.totalSalesAmt
+          | formatvalue : view.formModel : 'totalSalesAmt'
+          | async
       "
     ></span>
   </div>

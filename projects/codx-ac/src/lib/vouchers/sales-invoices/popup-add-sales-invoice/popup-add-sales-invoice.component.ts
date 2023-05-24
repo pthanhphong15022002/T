@@ -43,7 +43,6 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   gvsSalesInvoicesLines: any;
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
-  columns: any[] = [];
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -56,12 +55,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     allowDeleting: true,
     mode: 'Normal',
   };
-  fmSalesInvoicesLines: FormModel = {
-    entityName: 'SM_SalesInvoicesLines',
-    formName: 'SalesInvoicesLines',
-    gridViewName: 'grvSalesInvoicesLines',
-    entityPer: 'SM_SalesInvoicesLines',
-  };
+  fmSalesInvoicesLines: FormModel;
 
   constructor(
     private injector: Injector,
@@ -72,8 +66,8 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     @Optional() public dialogData: DialogData
   ) {
     super(injector);
-
-    console.log(this.dialogRef);
+    this.fmSalesInvoicesLines = salesInvoiceService.fmSalesInvoicesLines;
+    this.gvsSalesInvoicesLines = salesInvoiceService.gvsSalesInvoicesLines;
 
     this.masterService = dialogRef.dataService;
     this.formTitle = dialogData.data.formTitle;
@@ -92,19 +86,6 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
 
   //#region Init
   override onInit(): void {
-    // this.cache
-    //   .gridViewSetup('SalesInvoicesLines', 'grvSalesInvoicesLines')
-    //   .pipe(
-    //     map((g) =>
-    //       Object.entries(g)
-    //         .map(([k, v]) => v)
-    //         .filter((c: any) => c.isVisible === true)
-    //         .sort((a: any, b: any) => a.columnOrder - b.columnOrder)
-    //     ),
-    //     tap((t) => console.log(t))
-    //   )
-    //   .subscribe((res) => (this.columns = res));
-
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
 
@@ -149,16 +130,6 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
       )
       .subscribe((res) => {
         this.gvsSalesInvoices = res;
-      });
-
-    this.cache
-      .gridViewSetup(
-        this.fmSalesInvoicesLines.formName,
-        this.fmSalesInvoicesLines.gridViewName
-      )
-      .subscribe((res) => {
-        console.log('gvsSalesInvoicesLines', res);
-        this.gvsSalesInvoicesLines = res;
       });
   }
   //#endregion
@@ -350,7 +321,6 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
                   {
                     formType: 'add',
                     index: index,
-                    gvs: this.gvsSalesInvoicesLines,
                     hiddenFields: this.hiddenFields,
                   },
                   '',

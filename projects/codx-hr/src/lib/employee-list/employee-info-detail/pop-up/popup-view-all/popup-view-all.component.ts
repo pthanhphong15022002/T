@@ -808,6 +808,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
 
   //#region filter
   UpdateEBenefitPredicate() {
+    debugger
     this.filterEBenefitPredicates = '';
     if (
       this.filterByBenefitIDArr.length > 0 &&
