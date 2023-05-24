@@ -55,25 +55,24 @@
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex align-items-center ac-cashID mt-n8 mb-5">
+    <div class="d-flex align-items-center ac-cashID mt-n8 mb-3">
       <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
         <i class="text-white icon-16" [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
       </div>
-      <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase me-5">
+      <span class="fw-bold line-clamp line-clamp-1 fs-4 text-uppercase me-5">
         {{ itemSelected?.voucherNo }}
       </span>
       <div class="d-flex align-items-center me-3">
         <!-- <span class="icon-i-calendar-date icon-16 me-2"></span> -->
-        <img src="../assets/themes/ac/default/img/Alarmclock.svg" class="w-16px h-16px me-1" />
-        <codx-label class="fw-bold label-colon mt-1" default="Ngày chứng từ" [formModel]="view.formModel">
+        <img src="../assets/themes/ac/default/img/Alarmclock.svg" class="w-15px h-15px me-2" />
+        <codx-label class="fw-bold label-colon" default="Ngày chứng từ" [formModel]="view.formModel">
         </codx-label>
-        &nbsp;
-        <span class="text-gray-600 mt-1">
+        <span class="text-gray-6001">
           {{formatDate(itemSelected?.voucherDate)}}
         </span>
       </div>
     </div>
-    <div class="d-flex justify-content-between flex-grow-1 mb-5">
+    <div class="d-flex justify-content-between flex-grow-1 mb-2">
       <div class="d-flex align-items-center">
         <!-- <span class="me-2 icon-corporate_fare text-primary icon-20"></span> -->
         <img style="height:18px" src="../assets/themes/ac/default/img/Officebuilding.svg" class="w-16px me-2" />
@@ -84,11 +83,11 @@
           "></span>
       </div>
       <div class="d-flex align-self-center">
-        <span class="badge badge-pill badge-primary me-3">
+        <span class="badge badge-md badge-primary me-3">
           <span *ngIf="journal.multiCurrency == '0'"
-            class="fw-bold fs-6">{{itemSelected?.totalAmt?.toLocaleString('it-IT')}}</span>
+            class="fw-bold">{{itemSelected?.totalAmt?.toLocaleString('it-IT')}}</span>
           <span *ngIf="journal.multiCurrency == '1'"
-            class="fw-bold fs-6">{{itemSelected?.totalAmt?.toLocaleString('it-IT')+' '+itemSelected?.currencyID
+            class="fw-bold">{{itemSelected?.totalAmt?.toLocaleString('it-IT')+' '+itemSelected?.currencyID
             }}</span>
         </span>
       </div>
@@ -114,11 +113,10 @@
           " class="text-gray-600"></span>
       </div>
       <div class="d-flex align-self-center">
-        <span class="me-3">
-          <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
-            [showText]="true" [showBgColor]="true" class="badge badge-light badge-md">
-          </codx-vll>
-        </span>
+        <span>
+        <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
+            [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+          </codx-vll></span>
       </div>
     </div>
     <div class="d-flex align-items-top mb-2">
@@ -230,47 +228,47 @@
       <table style="table-layout: fixed;" class="table table-row-bordered">
         <thead style="position: sticky;top: 0;background-color: white;z-index: 15;">
           <tr class="border-bottom">
-            <th class="10">
+            <th class="w-10">
               <div class="d-flex">
-                <span class="fw-bold line-clamp line-clamp-1 fs-6">STT</span>
+                <span class="fw-bold line-clamp line-clamp-1">STT</span>
               </div>
             </th>
-            <th class="40">
+            <th class="w-30">
               <div class="d-flex">
-                <span class="fw-bold line-clamp line-clamp-1 fs-6">Tài khoản</span>
+                <span class="fw-bold line-clamp line-clamp-1">Tài khoản</span>
               </div>
             </th>
-            <th *ngIf="itemSelected?.currencyID == baseCurr" class="10">
+            <th *ngIf="itemSelected?.currencyID == baseCurr" class="w-10">
               <div class="d-flex justify-content-end">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" default="Nợ" [formModel]="fmCashPaymentsLines">
+                <codx-label class="fw-bold line-clamp line-clamp-1" default="Nợ" [formModel]="fmCashPaymentsLines">
                 </codx-label>
               </div>
             </th>
-            <th *ngIf="itemSelected?.currencyID != baseCurr" class="10">
+            <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-10">
               <div class="d-flex justify-content-end">
                 <codx-label class="fw-bold" default="Nợ,HT" [formModel]="fmCashPaymentsLines">
                 </codx-label>
               </div>
             </th>
-            <th *ngIf="itemSelected?.currencyID == baseCurr" class="20">
+            <th *ngIf="itemSelected?.currencyID == baseCurr" class="w-20">
               <div class="d-flex justify-content-end">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" default="Có" [formModel]="fmCashPaymentsLines">
+                <codx-label class="fw-bold line-clamp line-clamp-1" default="Có" [formModel]="fmCashPaymentsLines">
                 </codx-label>
               </div>
             </th>
-            <th *ngIf="itemSelected?.currencyID != baseCurr" class="20">
+            <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-20">
               <div class="d-flex justify-content-end">
                 <codx-label class="fw-bold" default="Có,HT" [formModel]="fmCashPaymentsLines">
                 </codx-label>
               </div>
             </th>
-            <th *ngIf="itemSelected?.currencyID != baseCurr" class="20">
+            <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-20">
               <div class="d-flex justify-content-end">
                 <codx-label class="fw-bold" default="Số tiền,NT" [formModel]="fmCashPaymentsLines">
                 </codx-label>
               </div>
             </th>
-            <th class="20">
+            <th class="w-20">
               <codx-label class="line-clamp line-clamp-1" fiedName="Note"
                 [formModel]="fmCashPaymentsLines">
               </codx-label>
@@ -724,10 +722,10 @@
         </tfoot>
       </table>
       <div *ngIf="cashpaymentline.length == 0" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100 mt-20">
+        <div class="list-empty card card-flush h-100 mt-9">
           <div class="d-flex flex-column flex-center justify-content-center">
             <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
-            <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            <div class="fs-6 text-dark mt-5 text-center">
               {{ "SYS011" | mssg | async }}
             </div>
           </div>
@@ -742,49 +740,49 @@
           <tr class="border-bottom">
             <th style="width: 20%;">
               <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="InvoiceNo"
+                <codx-label class="fw-bold line-clamp line-clamp-1" fiedName="InvoiceNo"
                   [formModel]="fmSettledInvoices">
                 </codx-label>
               </div>
             </th>
             <th style="width: 30%;">
               <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="InvoiceDate"
+                <codx-label class="fw-bold line-clamp line-clamp-1" fiedName="InvoiceDate"
                   [formModel]="fmSettledInvoices">
                 </codx-label>
               </div>
             </th>
             <th style="width: 30%;">
               <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="DueDate"
+                <codx-label class="fw-bold line-clamp line-clamp-1" fiedName="DueDate"
                   [formModel]="fmSettledInvoices">
                 </codx-label>
               </div>
             </th>
             <th style="width: 20%;">
               <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="BalanceAmt"
+                <codx-label class="fw-bold line-clamp line-clamp-1" fiedName="BalanceAmt"
                   [formModel]="fmSettledInvoices">
                 </codx-label>
               </div>
             </th>
             <th style="width: 20%;">
               <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="CurrencyID"
+                <codx-label class="fw-bold line-clamp line-clamp-1" fiedName="CurrencyID"
                   [formModel]="fmSettledInvoices">
                 </codx-label>
               </div>
             </th>
             <th style="width: 30%;">
               <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="SettledAmt"
+                <codx-label class="fw-bold line-clamp line-clamp-1" fiedName="SettledAmt"
                   [formModel]="fmSettledInvoices">
                 </codx-label>
               </div>
             </th>
             <th style="width: 30%;">
               <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="Note"
+                <codx-label class="fw-bold line-clamp line-clamp-1" fiedName="Note"
                   [formModel]="fmSettledInvoices">
                 </codx-label>
               </div>
@@ -871,10 +869,10 @@
         </tbody>
       </table>
       <div *ngIf="settledInvoices.length == 0" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100 mt-20">
+        <div class="list-empty card card-flush h-100 mt-9">
           <div class="d-flex flex-column flex-center justify-content-center">
             <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
-            <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            <div class="fs-6 text-dark mt-5 text-center">
               {{ "SYS011" | mssg | async }}
             </div>
           </div>
@@ -900,13 +898,13 @@
             <th style="width: 50%;">
               <div class="d-flex">
                 <i style="color: var(--primary-active)" class="icon-account_balance icon-16 me-2"></i>
-                <span class="fw-bold line-clamp line-clamp-1 fs-6">Tài khoản</span>
+                <span class="fw-bold line-clamp line-clamp-1">Tài khoản</span>
               </div>
             </th>
             <th style="width: 15%;">
               <div class="d-flex">
                 <i style="color: var(--primary-active)" class="icon-i-cash icon-16 me-2"></i>
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="Dr"
+                <codx-label class="fw-bold line-clamp line-clamp-1" fiedName="Dr"
                   [formModel]="fmCashPaymentsLines">
                 </codx-label>
               </div>
@@ -914,13 +912,13 @@
             <th style="width: 45%;">
               <div class="d-flex">
                 <i style="color: var(--primary-active)" class="icon-i-graph-up icon-16 me-2"></i>
-                <span class="fw-bold line-clamp line-clamp-1 fs-6">Thông tin phân tích</span>
+                <span class="fw-bold line-clamp line-clamp-1">Thông tin phân tích</span>
               </div>
             </th>
             <th style="width: 20%;">
               <div class="d-flex">
                 <i style="color: var(--primary-active)" class="icon-brush icon-16 me-2"></i>
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="Note"
+                <codx-label class="fw-bold line-clamp line-clamp-1" fiedName="Note"
                   [formModel]="fmCashPaymentsLines">
                 </codx-label>
               </div>
@@ -1122,10 +1120,10 @@
         </tbody>
       </table>
       <div *ngIf="acctTrans.length == 0" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100 mt-20">
+        <div class="list-empty card card-flush h-100 mt-9">
           <div class="d-flex flex-column flex-center justify-content-center">
             <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
-            <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            <div class="fs-6 text-dark mt-5 text-center">
               {{ "SYS011" | mssg | async }}
             </div>
           </div>
