@@ -107,6 +107,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   predicatesDefault: any;
   dataValuesDefault: any;
   viewsDefault: any;
+  componentsDefault: any;
   idSubCrr = '';
 
   constructor(
@@ -305,21 +306,29 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
         this.predicatesDefault;
       this.codxService.activeViews.dataService.dataValues =
         this.dataValuesDefault;
+
       let viewModel;
+      let viewModelDelete;
       this.codxService.activeViews?.views.forEach((x) => {
         if (x.type == 6) {
           x.hide = true;
           x.active = false;
+          viewModelDelete = x;
         }
         if (x.type == 2) {
           x.active = true;
           viewModel = x;
         }
       });
+
+      // this.codxService.activeViews?.components.delete(viewModel.id);
+      this.codxService.activeViews.viewActiveType = viewModel.type;
+      //  this.codxService.activeViews?.change(viewModel);
       this.codxService.activeViews?.viewChange(viewModel);
+
       this.idSubCrr = '';
       this.isClickMenuCus = false;
-      this.changDefector.detectChanges()
+      this.changDefector.detectChanges();
     }
 
     let titleEle = document.querySelector('codx-page-title');
@@ -622,10 +631,20 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     this.dataValuesDefault =
       this.codxService.activeViews?.dataService.dataValues;
     this.viewsDefault = this.codxService.activeViews?.views;
-
+    if (!this.isClickMenuCus) {
+      this.codxService.activeViews?.views.forEach((x) => {
+        if (x.type == 6) {
+          x.hide = true;
+          x.active = false;
+        }
+        if (x.type == 2) {
+          x.active = true;
+        }
+      });
+    }
+    this.dataMenuCustom = [];
     if (fun != this.funcOld) {
       this.funcOld = fun;
-      this.dataMenuCustom = [];
       this.requestMenuCustom.predicates = 'ApplyFor==@0 && !Deleted';
       switch (fun) {
         case 'CM0201':
