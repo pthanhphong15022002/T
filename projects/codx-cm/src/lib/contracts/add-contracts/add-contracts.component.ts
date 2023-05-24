@@ -14,6 +14,7 @@ import { PaymentsComponent } from '../component/payments/payments.component';
 })
 export class AddContractsComponent implements OnInit{
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('test') test: any;
   contracts: CM_Contracts;
   contractsInput: CM_Contracts;
   dialog!: DialogRef;
@@ -225,7 +226,10 @@ export class AddContractsComponent implements OnInit{
   }
 
   addPay(){
-    this.openPopupPay('add', 'pay', null);
+    let payMent = new CM_ContractsPayments();
+    let countPayMent =  this.listPayMent.length;
+    payMent.rowNo = countPayMent + 1;
+    this.openPopupPay('add', 'pay', payMent);
   }
 
   async openPopupPay(action,type,data) {
@@ -257,6 +261,8 @@ export class AddContractsComponent implements OnInit{
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
     if(dataPopupOutput?.event?.action == 'add'){
       this.listPayMent.push(dataPopupOutput?.event?.payment);
+      this.listPayMent = JSON.parse(JSON.stringify(this.listPayMent));
+      this.test.refresh();
     }
     return dataPopupOutput;
   }

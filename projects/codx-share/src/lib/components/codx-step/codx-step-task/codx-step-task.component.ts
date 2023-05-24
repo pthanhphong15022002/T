@@ -33,6 +33,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isLockSuccess = false;
   @Input() isSaveProgress = true;
 
+  @Input() isClose = false;
+  @Input() isStart = true;
   @Input() isOnlyView = true;
   @Input() isEditTimeDefault = true;
   @Input() isUpdateProgressGroup = true;
@@ -426,8 +428,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       let group = this.listGroupTask.find(group => group.refID == data.task.taskGroupID);
       
       if(group){
+        if(!group?.task){
+          group['task'] = [];
+        }
         group?.task?.push(data.task)
-        group['progress'] = JSON.parse(JSON.stringify(data.progressGroup)) ;
+        group['progress'] = data.progressGroup ;
       }       
       if(groupData){
         groupData['progress'] = data.progressGroup;
@@ -714,7 +719,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return dataPopupOutput;
   }
   async openPopupUpdateProgress(data, type){
-    if(this.isViewStep) return;
+    if(this.isViewStep || this.isStart || !this.isClose) return;
     let checkUpdate =this.stepService.checkUpdateProgress(data, type,this.currentStep, this.isRoleAll,this.isOnlyView,this.isUpdateProgressGroup, this.user);
     if(!checkUpdate) return;
     if(type != 'P' && type != 'G'){
@@ -840,7 +845,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   checkUpdateProgress(dataUpdate, type) {
-    if(this.isOnlyView){
+    if(this.isOnlyView && this.isStart && !this.isClose){
       if (type != "G" && type != "P") { //task
         let isGroup = false;
         let isTask = false;

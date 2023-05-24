@@ -1,6 +1,5 @@
 <codx-views
   #view
-  entityName="HR_Employees"
   idField="employeeID"
   [views]="views"
   [viewActiveType]="'16'"
@@ -24,17 +23,17 @@
                 <i class="icon-arrow_back_ios icon-16"></i>
               </span>
               <div class="d-flex justify-content-center">
-                <div class="position-relative mt-3">
+                <div class="position-relative mt-1">
                   <codx-img
-                    class="pic-emloyee"
                     [funcId]="funcID"
-                    [width]="100"
-                    [objectId]="infoPersonal?.employeeID"
+                    [objectId]="employeeID"
                     [objectType]="'HR_Employees'"
                     [referType]="'avt'"
-                    [objectName]="infoPersonal?.employeeName"
+                    [imageType]="'circle'"
                     [isAllowEdit]="true"
                     [updateDirect]="true"
+                    class="pic-emloyee"
+                    [width]="100"
                   >
                   </codx-img>
 
@@ -73,11 +72,8 @@
                                     [showText]="true"
                                     [showBgColor]="true"
                                     [showIcon]="true"
-                                    [formModel]="eInfoFormModel"
-                                    [field]="'Gender'"
                                     [value]="infoPersonal?.gender"
-                                    class="badge badge-light badge-square badge-md fs-7"
-                                  >
+                                    class="badge badge-square badge-md fs-7">
                                   </codx-vll>
                                 </span>
                               </div>
@@ -354,7 +350,7 @@
             <div class="d-flex flex-center">
               <div class="fs-5-sm mb-1 d-flex align-items-center">
                 <span class="icon-qr_code_scanner icon-14 me-1"></span>
-                <span #id>{{ infoPersonal?.employeeID }}</span>
+                <span #id>{{employeeID }}</span>
                 <span class="icon-i-dot text-gray-500"></span>
                 <span class="fw-bold">{{ infoPersonal?.employeeName }}</span>
               </div>
@@ -363,7 +359,7 @@
               class="text-gray-500 mb-1"
               *ngIf="infoPersonal"
               [innerHTML]="
-                infoPersonal?.positionID
+                infoPersonal.positionID
                   | formatvalue : eInfoFormModel : 'positionID'
                   | async
               "
@@ -453,26 +449,26 @@
             </div>
           </div>
           <div class="user-menu scroll-y w-100 border-top">
-            <ul class="nav nav-tabs nav-pills flex-column border-0 px-2 pt-2 w-100">
+            <ul class="nav nav-tabs nav-pills flex-column border-0 p-3 pb-0 w-100">
               <ng-container *ngFor="let item of lstTab; let index = index">
                 <li class="nav-item w-100 mb-1">
                   <a
-                    class="nav-link w-100 btn btn-flex btn-active-light-primary"
+                    class="nav-link w-100 btn btn-lg btn-clean"
                     data-bs-toggle="tab"
                     [id]="'tab_' + index"
                     [class]="crrFuncTab == item.functionID ? 'active' : ''"
                     (click)="clickTab(item)"
                   >
-                    <span class="me-2">
+                    <div class="d-flex align-items-center">
                       <span
-                        class="icon-18"
+                        class="icon-18 me-2"
                         [ngClass]="
                           item?.largeIcon ? item?.largeIcon : 'icon-person'
                         "
                       ></span>
-                    </span>
-                    <div class="fw-bold">
-                      {{ item.customName }}
+                      <div class="fw-bold ">
+                        {{ item.customName }}
+                      </div>
                     </div>
                   </a>
                 </li>
@@ -585,19 +581,21 @@
 
 <!-- pane_1 Sơ yếu lí lịch -->
 <ng-template #curriculumVitae>
-  <div class="tab-horizone bg-white h-od-tab mb-4">
-    <ul class="nav nav-tabs px-4">
-      <ng-container *ngFor="let item of lstFuncCurriculumVitae; let i = index">
-        <li class="nav-item" (click)="navChange(item.functionID, 0)">
-          <a
-            class="nav-link"
-            [ngClass]="item.functionID == active[0] ? 'active' : ''"
-          >
-            <div class="text-uppercase fw-bold">{{ item.customName }}</div>
-          </a>
-        </li>
-      </ng-container>
-    </ul>
+  <div class="tab-scroll mb-4">
+    <div class="tab-horizone bg-white h-od-tab">
+      <ul class="nav nav-tabs px-4">
+        <ng-container *ngFor="let item of lstFuncCurriculumVitae; let i = index">
+          <li class="nav-item" (click)="navChange(item.functionID, 0)">
+            <a
+              class="nav-link"
+              [ngClass]="item.functionID == active[0] ? 'active' : ''"
+            >
+              <div class="text-uppercase fw-bold">{{ item.customName }}</div>
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
   </div>
 
   <div
@@ -2267,31 +2265,38 @@
               </button>
             </div>
           </div>
-          <div class="mx-5 mx-xl-4 pt-0 pb-5">
-            <div class="timeline timeline-3">
-              <div class="timeline-items">
-                <ng-container *ngFor="let item of lstFamily; let index = index">
-                  <div class="timeline-item" [ngClass]="lstFamily? '' : 'has-action-menu'">
-                    <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
-                      <div class="timeline-media w-40px h-40px me-4">
-                        <span class="stepper-number">1</span>
+          <div class="mt-6 ms-9">
+            <div class="timeline-exper">
+              <div class="timeline-exper-items">
+                <ng-container *ngFor="let item of lstExperiences">
+                  <div class="timeline-exper-item" [ngClass]="lstExperiences? 'has-action-menu':''">
+                    <div class="timeline-exper-nav w-100 d-flex pb-4">
+                      <div class="timeline-media w-125px min-w-125px">
+                        <span class="stepper-number">
+                          {{item.fromDate | date: 'MM/y'}}
+                          -
+                          {{item.toDate | date: 'MM/y'}}
+                        </span>
                       </div>
-                      <div class="stepper-label mw-125px">
-                        <h3 class="stepper-title line-clamp line-clamp-3">
-                          Cty kinh doanh 
-                        </h3>
-                        <div class="stepper-desc">
-                          Nhân viên bán hàng
+                      <div class="me-3 timeline-exper-node">
+                        <span class="icon-fiber_manual_record text-gray-600"></span>
+                      </div>
+                      <div class="stepper-label">
+                        <div class="stepper-title fs-5-sm fw-bold line-clamp line-clamp-3 mb-1">
+                          {{item?.companyName}}
+                        </div>
+                        <div class="stepper-desc text-gray-500">
+                          {{item?.position}}
                         </div>
 
-                        <codx-mfunc *ngIf="!lstFamily" [formModel]="formModel" (clickMF)="clickMF($event, item)"
+                        <codx-mfunc *ngIf="!lstExperiences" [formModel]="eExperienceFormModel" (clickMF)="clickMF($event, item, 'eExperiences')"
                           type="hover" [dataItem]="item">
                         </codx-mfunc>
                       </div>
                     </div>
-                    <div class="timeline-content mx-auto">
+                    <!-- <div class="timeline-content mx-auto">
                       <div class="d-flex flex-wrap">
-                        <ng-container *ngFor="let approver of item?.approvers">
+                        <ng-container *ngFor="let approver of lstFamily">
                           <div class="border border-1 border-gray-300 rounded min-w-250px mw-250px me-4 mb-2">
                             <codx-temp-full cardCss="card-template p-3" *ngIf="
                                 approver.roleType=='U' ||
@@ -2336,7 +2341,8 @@
                         <span class="stepper-number">+</span>
                       </div>
                     </div>
-                  </div> 
+                  </div>  -->
+                </div> 
                 </ng-container>
               </div>
             </div>
@@ -2369,6 +2375,7 @@
 
 <!-- pane_2 Thông tin công việc-->
 <ng-template #jobInfo>
+ 
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
       <ng-container *ngFor="let item of lstFuncJobInfo; let i = index">
@@ -2383,7 +2390,7 @@
       </ng-container>
     </ul>
   </div>
-
+ 
   <div
     class="pw-content w-100 scroll-y"
     data-kt-scroll="true"
@@ -3343,31 +3350,6 @@
       (sectionChange)="onSectionChange($event)"
     > -->
 
-      <div class="user-profile overview d-block">
-        <div class="rounded-2 p-5 bg-white mb-4">
-          <div
-            class="d-flex align-items-center justify-content-between"
-          >
-            <div class="d-flex align-items-center text-primary">
-              <div class="user-status d-flex align-items-center">
-                <span class="icon-attach_money icon-20 me-2"></span>
-              </div>
-              <div class="fs-5-sm fw-bold text-primary text-uppercase"> 
-                Tổng lương (Gross)
-              </div>
-              <span class="ms-20"  
-              [innerHTML]="
-              infoPersonal?.totalGrossSalary
-                  | formatvalue : eInfoFormModel : 'totalGrossSalary'
-                  | async
-              "
-               >
-              </span>
-            </div> 
-          </div> 
-
-        </div>
-      </div>
     <!-- Lương -->
     <div class="user-profile overview d-block" [id]="eBasicSalaryFuncID">
       <div class="rounded-2 p-5 bg-white mb-4">

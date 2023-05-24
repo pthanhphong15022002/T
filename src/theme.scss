@@ -437,7 +437,7 @@
   }
 
   .nav-pills .nav-link.active {
-    color: var(--primary-dark);
+    color: var(--primary-dark)!important;
     background-color: var(--primary-lighter);
   }
 

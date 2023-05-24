@@ -311,6 +311,8 @@ export class QuotationsComponent extends UIComponent {
     res.status = res.status ?? '0';
     res.exchangeRate = res.exchangeRate ?? 1;
     res.totalAmt = res.totalAmt ?? 0;
+    res.currencyID = res.currencyID ?? 'VND';
+ 
 
     var obj = {
       data: res,
