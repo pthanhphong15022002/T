@@ -256,7 +256,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         break;
     }
     if (e.field == 'itemID') {
-      e.data.itemName = this.getItemName(e.data.itemID);
+      var item = this.getItem(e.data.itemID);
+      e.data.itemName = item.itemName;
+      e.data.umid = item.umid;
       this.loadItemID(e.value);
     }
   }
@@ -1030,9 +1032,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     });
   }
 
-  getItemName(itemID: any){
+  getItem(itemID: any){
     var item = this.items.filter(x => x.itemID == itemID);
-    return item[0].itemName;
+    return item[0];
   }
 
   getTaxRate(vatCodeID: any){
