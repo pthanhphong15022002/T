@@ -32,7 +32,7 @@
       </div>
       <div class="row ">
         <div class="col-6 hot-left">
-          <ng-container *ngIf="posts[0];else tmpEmpty1">
+          <ng-container *ngIf="posts[0];">
             <div class="post" (click)="clickViewDetail(posts[0])">
               <div class="w-100 position-relative cursor-pointer">
                 <codx-img 
@@ -141,7 +141,7 @@
   
 </ng-template>
 <ng-template #tmpPost let-data="data">
-  <ng-container *ngIf="data ; else tmpEmpty2">
+  <ng-container *ngIf="data">
     <div class="row mb-5 post" (click)="clickViewDetail(data)">
       <div class="col-4">
         <div class="w-100 position-relative cursor-pointer">
@@ -220,46 +220,5 @@
     </div>
   </ng-template> 
 </ng-template>
-<ng-template #tmpEmpty1>
-  <div>
-    <div>
-      <img class="w-100 h-320px" src="/assets/themes/wp/default/img/Image_NoData.svg" />
-    </div>
-    <div>
-      <div class="fw-bolder">{{mssgWP025}}</div>
-      <div class="">{{mssgWP026}}</div>
-      <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">dd/mm/yyyy</div>
-    </div>
-  </div>
-</ng-template>
-<ng-template #tmpEmpty2>
-  <div class="row my-2">
-    <div class="col-4">
-      <img class="w-100 h-100px" src="/assets/themes/wp/default/img/Image_NoData.svg"/>
-    </div>
-    <div class="col-8">
-      <div class="fw-bolder">{{mssgWP025}}</div>
-      <div class="">{{mssgWP026}}</div>
-      <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">dd/mm/yyyy</div>
-    </div>
-  </div>
-</ng-template>
-<ng-template #tmpEmptyListVideo>
-  <div class="d-flex justify-content-between w-100 h-100">
-    <ng-container *ngTemplateOutlet="emptyVideo"></ng-container>
-    <ng-container *ngTemplateOutlet="emptyVideo"></ng-container>
-    <ng-container *ngTemplateOutlet="emptyVideo"></ng-container>
-  </div>
-</ng-template>
-<ng-template #emptyVideo>
-  <div>
-    <div class="w-100 video">
-      <img style="width:300px; height: 200px;" 
-        src="/assets/themes/wp/default/img/Image_NoData.svg"/>
-    </div>
-    <div class="mt-2">
-      <span class="fw-bolder">{{mssgWP025}}</span>
-    </div>
-  </div>
-</ng-template>
+
 

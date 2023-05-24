@@ -68,7 +68,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   hasSaved: any = false;
   isClose: any = false;
   items: any;
-  vatCodes: any;
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   purchaseInvoicesLinesDelete: Array<PurchaseInvoicesLines> = [];
@@ -134,7 +133,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   onInit(): void {
     this.loadInit();
     this.loadItems();
-    this.loadVatCodes();
   }
 
   ngAfterViewInit() {
@@ -1024,21 +1022,13 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     });
   }
 
-  loadVatCodes(){
-    this.api.exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
-    .subscribe((res: any) => {
-      if(res)
-        this.vatCodes = res;
-    });
-  }
-
   getItem(itemID: any){
     var item = this.items.filter(x => x.itemID == itemID);
     return item[0];
   }
 
   getTaxRate(vatCodeID: any){
-    var vatCode = this.vatCodes.filter(x => x.vatid == vatCodeID)
+    var vatCode = this.lsVatCode.filter(x => x.vatid == vatCodeID)
     return vatCode[0].taxRate;
   }
 

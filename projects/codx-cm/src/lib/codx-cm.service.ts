@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, DialogModel, FormModel, NotificationsService, DataRequest } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  CallFuncService,
+  DialogModel,
+  FormModel,
+  NotificationsService,
+  DataRequest,
+  ResourceModel,
+} from 'codx-core';
 import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
 import { Observable, Subject, firstValueFrom, map, tap } from 'rxjs';
 
@@ -317,7 +326,13 @@ export class CodxCmService {
 
   loadDataAsync(service: string, options: DataRequest): Observable<any[]> {
     return this.api
-      .execSv(service, 'ERM.Business.Core', 'DataBusiness', 'LoadDataAsync', options)
+      .execSv(
+        service,
+        'ERM.Business.Core',
+        'DataBusiness',
+        'LoadDataAsync',
+        options
+      )
       .pipe(
         tap((r) => console.log(r)),
         map((r) => r[0]),
@@ -407,6 +422,7 @@ export class CodxCmService {
     );
   }
 
+
   getListCbxCampaigns() {
     return this.api.exec<any>(
       'CM',
@@ -420,6 +436,15 @@ export class CodxCmService {
       'CM',
       'CustomersBusiness',
       'GetListCustomersAsync'
+    );
+  }
+
+  openOrClosedDeal(data:any) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'OpenOrClosedDealAsync',
+      data
     );
   }
   getListChannels() {
@@ -572,7 +597,7 @@ export class CodxCmService {
       data
     );
   }
-  moveStageDeal(data){
+  moveStageDeal(data) {
     return this.api.execSv<any>(
       'CM',
       'ERM.Business.CM',
@@ -582,7 +607,7 @@ export class CodxCmService {
     );
   }
 
-  updateDeal(data){
+  updateDeal(data) {
     return this.api.execSv<any>(
       'CM',
       'ERM.Business.CM',
@@ -591,7 +616,7 @@ export class CodxCmService {
       data
     );
   }
-  moveDealReason(data){
+  moveDealReason(data) {
     return this.api.execSv<any>(
       'CM',
       'ERM.Business.CM',
@@ -600,7 +625,6 @@ export class CodxCmService {
       data
     );
   }
-
 
   //#endregion -- Bao
 
@@ -747,40 +771,39 @@ export class CodxCmService {
     );
   }
 
-   //xuất file - hàm chung
-   exportFile(dt,titleAction) {
-    this.getDataInstance(dt.refID)
-      .subscribe((res) => {
-        if (res) {
-          let option = new DialogModel();
-          option.zIndex = 1001;
-          let formModel = new FormModel() ;
+  //xuất file - hàm chung
+  exportFile(dt, titleAction) {
+    this.getDataInstance(dt.refID).subscribe((res) => {
+      if (res) {
+        let option = new DialogModel();
+        option.zIndex = 1001;
+        let formModel = new FormModel();
 
-          formModel.entityName = 'DP_Instances';
-          formModel.formName = 'DPInstances';
-          formModel.gridViewName = 'grvDPInstances';
-          formModel.funcID = 'DPT04';
+        formModel.entityName = 'DP_Instances';
+        formModel.formName = 'DPInstances';
+        formModel.gridViewName = 'grvDPInstances';
+        formModel.funcID = 'DPT04';
 
-          let obj = {
-            data: res,
-            formModel: formModel,
-            isFormExport: true,
-            refID: dt.processID,
-            refType: 'DP_Processes',
-            titleAction: titleAction,
-            loaded: false,
-          };
-          let dialogTemplate = this.callfc.openForm(
-            PopupSelectTempletComponent,
-            '',
-            600,
-            500,
-            '',
-            obj,
-            '',
-            option
-          );
-        }
-      });
+        let obj = {
+          data: res,
+          formModel: formModel,
+          isFormExport: true,
+          refID: dt.processID,
+          refType: 'DP_Processes',
+          titleAction: titleAction,
+          loaded: false,
+        };
+        let dialogTemplate = this.callfc.openForm(
+          PopupSelectTempletComponent,
+          '',
+          600,
+          500,
+          '',
+          obj,
+          '',
+          option
+        );
+      }
+    });
   }
 }
