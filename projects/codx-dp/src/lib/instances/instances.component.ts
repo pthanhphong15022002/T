@@ -1477,7 +1477,7 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
     return { ischeck: ischeck, transferControl: transferControl };
   }
 
-  openFormReason(data, fun, isMoveSuccess, dataMore, listParticipantReason) {
+  async openFormReason(data, fun, isMoveSuccess, dataMore, listParticipantReason) {
     var formMD = new FormModel();
     formMD.funcID = fun.functionID;
     formMD.entityName = fun.entityName;
@@ -1493,7 +1493,8 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
       instance: data,
       objReason: JSON.parse(JSON.stringify(reason)),
       listProccessCbx: this.listProccessCbx,
-      listParticipantReason: this.lstOrg,
+      listParticipantReason:  await this.codxDpService.getListUserByOrg( listParticipantReason),
+      applyFor:'0'
     };
 
     var dialogRevision = this.callfc.openForm(

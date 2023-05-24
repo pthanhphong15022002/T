@@ -40,9 +40,24 @@
       <div class="col-4">
         <div class="form-group">
           <codx-label
+            class="me-1"
             fiedName="CostPrice"
             [formModel]="form.formModel"
           ></codx-label>
+          <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+            "("
+          }}</span>
+          <span
+            class="codx-label"
+            [innerHTML]="
+              quotationsLine.currencyID
+                | formatvalue : form.formModel : 'currencyID'
+                | async
+            "
+          ></span>
+          <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+            ")"
+          }}</span>
           <codx-input
             field="costPrice"
             [formModel]="form.formModel"
@@ -171,9 +186,24 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label
+            class="me-1"
             fiedName="SalesPrice"
             [formModel]="form.formModel"
           ></codx-label>
+          <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+            "("
+          }}</span>
+          <span
+            class="codx-label"
+            [innerHTML]="
+              quotationsLine.currencyID
+                | formatvalue : form.formModel : 'currencyID'
+                | async
+            "
+          ></span>
+          <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+            ")"
+          }}</span>
           <codx-input
             field="salesPrice"
             [formModel]="form.formModel"
@@ -185,9 +215,24 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label
+            class="me-1"
             fiedName="SalesAmt"
             [formModel]="form.formModel"
           ></codx-label>
+          <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+            "("
+          }}</span>
+          <span
+            class="codx-label"
+            [innerHTML]="
+              quotationsLine.currencyID
+                | formatvalue : form.formModel : 'currencyID'
+                | async
+            "
+          ></span>
+          <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+            ")"
+          }}</span>
           <codx-input
             field="salesAmt"
             [formModel]="form.formModel"
@@ -215,9 +260,24 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label
+            class="me-1"
             fiedName="DiscAmt"
             [formModel]="form.formModel"
           ></codx-label>
+          <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+            "("
+          }}</span>
+          <span
+            class="codx-label"
+            [innerHTML]="
+              quotationsLine.currencyID
+                | formatvalue : form.formModel : 'currencyID'
+                | async
+            "
+          ></span>
+          <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+            ")"
+          }}</span>
           <codx-input
             field="discAmt"
             [formModel]="form.formModel"
@@ -245,9 +305,24 @@
       <div class="col-4">
         <div class="form-group">
           <codx-label
+            class="me-1"
             fiedName="VATBase"
             [formModel]="form.formModel"
           ></codx-label>
+          <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+            "("
+          }}</span>
+          <span
+            class="codx-label"
+            [innerHTML]="
+              quotationsLine.currencyID
+                | formatvalue : form.formModel : 'currencyID'
+                | async
+            "
+          ></span>
+          <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+            ")"
+          }}</span>
           <codx-input
             field="vatBase"
             [formModel]="form.formModel"
@@ -260,9 +335,24 @@
       <div class="col-4">
         <div class="form-group">
           <codx-label
+            class="me-1"
             fiedName="VATAmt"
             [formModel]="form.formModel"
           ></codx-label>
+          <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+            "("
+          }}</span>
+          <span
+            class="codx-label"
+            [innerHTML]="
+              quotationsLine.currencyID
+                | formatvalue : form.formModel : 'currencyID'
+                | async
+            "
+          ></span>
+          <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+            ")"
+          }}</span>
           <codx-input
             field="vatAmt"
             [formModel]="form.formModel"

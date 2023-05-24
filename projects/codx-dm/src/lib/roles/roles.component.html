@@ -192,9 +192,12 @@
                 <codx-label [default]="titleFromDate" [fiedName]="'titleFromDate'" [formName]="'fmPermisstionDM'"></codx-label>
               </label>
               <div class="col-12">
-                <codx-input class="form-control test-datetime" type="dateTime" style="width:100%" format="d"
-                  [crrValue]="startDate" [disabled]="this.checkCurrentRightUpdate()"
-                  (valueChange)="onSaveRightChanged($event, 'fromdate')"></codx-input>
+                <ng-container *ngIf="startDate else datenull">
+                  <codx-input class="form-control test-datetime" type="dateTime" style="width:100%" format="d"
+                    [crrValue]="startDate" [disabled]="this.checkCurrentRightUpdate()"
+                    (valueChange)="onSaveRightChanged($event, 'fromdate')">
+                  </codx-input>
+                </ng-container>
               </div>
             </div>
           </div>
@@ -204,10 +207,12 @@
                 <codx-label [default]="titleToDate" [fiedName]="'titleToDate'" [formName]="'fmPermisstionDM'"></codx-label>
               </label>
               <div class="col-12">
-                <codx-input class="form-control test-datetime" type="dateTime" style="width:100%" format="d"
-                  [crrValue]="endDate" [disabled]="this.checkCurrentRightUpdate()"
-                  (valueChange)="onSaveRightChanged($event, 'todate')">
-                </codx-input>
+                <ng-container *ngIf="endDate else datenull">
+                  <codx-input class="form-control test-datetime" type="dateTime" style="width:100%" format="d"
+                    [crrValue]="endDate" [disabled]="this.checkCurrentRightUpdate()"
+                    (valueChange)="onSaveRightChanged($event, 'todate')">
+                  </codx-input>
+                </ng-container>
               </div>
             </div>
           </div>
@@ -220,3 +225,8 @@
       class="btn btn-primary"><codx-label [default]="titleSave" [fiedName]="'titleSave'" [formName]="'fmPermisstionDM'"></codx-label> </button>
   </ng-template>
 </codx-form>
+<ng-template #datenull>
+  <codx-input class="form-control test-datetime" type="dateTime" style="width:100%" format="d"
+  [disabled]="true">
+  </codx-input>
+</ng-template>

@@ -107,6 +107,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     if (!this.quotations.recID) {
       this.quotations.recID = Util.uid();
     }
+    if (this.quotations.currencyID) this.loadExchangeRate();
     this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
     this.disableRefID = dt?.data?.disableRefID;
@@ -246,18 +247,11 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.quotations[e.field] = e.data;
     switch (e?.field) {
       case 'refID':
+        this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
         this.modelCustomerIDDeals = { CustomerID: this.quotations.customerID };
-        if(
-        (
-          this.customerIDCbx.ComponentCurrent as CodxComboboxComponent
-        ).load){
-          this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-        };
-      
-        this.modelCustomerIDDeals = { CustomerID: this.quotations.customerID };
-       
-
-        
+        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+        // (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        // [];
         break;
       case 'customerID':
         this.quotations.refID = null;
@@ -392,7 +386,8 @@ export class PopupAddQuotationsComponent implements OnInit {
           data.vatBase = data.vatBase ?? 0;
           data.vatAmt = data.vatAmt ?? 0;
           data.vatRate = data.vatRate ?? 0;
-
+          data.exchangeRate =this.quotations?.exchangeRate
+          data.currencyID = this.quotations?.currencyID;
           data.transID = this.quotations?.recID;
 
           this.cache

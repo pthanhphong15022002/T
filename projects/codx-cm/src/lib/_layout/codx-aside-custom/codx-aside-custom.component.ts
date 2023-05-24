@@ -77,7 +77,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   @HostBinding('attr.data-kt-drawer-activate') dataKtActive =
     '{default: true, lg: false}';
   @HostBinding('attr.data-kt-drawer-overlay') dataKtOverlay = 'true';
-  isClickMenuCus: boolean =false;
+  isClickMenuCus: boolean = false;
 
   @HostBinding('attr.data-kt-drawer-width') get drawerWidth() {
     if (this.hasSecond) return null;
@@ -104,8 +104,10 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   dataMenuCustom = [];
   dataMenuCustom1 = [];
   funcOld = '';
-  predicatesDefault :any;
-  dataValuesDefault :any;
+  predicatesDefault: any;
+  dataValuesDefault: any;
+  viewsDefault: any;
+  idSubCrr = '';
 
   constructor(
     private pageTitle: PageTitleService,
@@ -298,12 +300,27 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
 
   itemClick(funcId: string, data: any, type?: string) {
     //trả lại predicate mặc định khi click vào menu cus
-    if(this.isClickMenuCus){
-      this.codxService.activeViews.dataService.predicates = this.predicatesDefault ;
-      this.codxService.activeViews.dataService.dataValues = this.dataValuesDefault ;
-      this.isClickMenuCus = false ;
+    if (this.isClickMenuCus) {
+      this.codxService.activeViews.dataService.predicates =
+        this.predicatesDefault;
+      this.codxService.activeViews.dataService.dataValues =
+        this.dataValuesDefault;
+      let viewModel;
+      this.codxService.activeViews?.views.forEach((x) => {
+        if (x.type == 6) {
+          x.hide = true;
+          x.active = false;
+        }
+        if (x.type == 2) {
+          x.active = true;
+          viewModel = x;
+        }
+      });
+      this.codxService.activeViews?.viewChange(viewModel);
+      this.idSubCrr = '';
+      this.isClickMenuCus = false;
+      this.changDefector.detectChanges()
     }
-    
 
     let titleEle = document.querySelector('codx-page-title');
     if (titleEle) {
@@ -600,9 +617,15 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
 
   //load menu
   loadMenuCustom(fun) {
+    this.predicatesDefault =
+      this.codxService.activeViews?.dataService.predicates;
+    this.dataValuesDefault =
+      this.codxService.activeViews?.dataService.dataValues;
+    this.viewsDefault = this.codxService.activeViews?.views;
+
     if (fun != this.funcOld) {
       this.funcOld = fun;
-      this.dataMenuCustom=[]
+      this.dataMenuCustom = [];
       this.requestMenuCustom.predicates = 'ApplyFor==@0 && !Deleted';
       switch (fun) {
         case 'CM0201':
@@ -620,10 +643,10 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
       this.requestMenuCustom.entityName = 'DP_Processes';
       this.fetch().subscribe((item) => {
         this.dataMenuCustom = item;
-        this.dataMenuCustom1 =  item
+        this.dataMenuCustom1 = item;
         this.loaded = true;
       });
-    }else  this.dataMenuCustom =  this.dataMenuCustom1
+    } else this.dataMenuCustom = this.dataMenuCustom1;
   }
 
   fetch(): Observable<any[]> {
@@ -651,18 +674,57 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     }
     this.codxService.activeMenu.fav = data.recID;
     this.isClickMenuCus = true;
-    this.predicatesDefault =  this.codxService.activeViews?.dataService.predicates ;
-    this.dataValuesDefault =  this.codxService.activeViews?.dataService.dataValues ;
-    (this.codxService.activeViews?.dataService as CRUDService)
-      .setPredicates(['ProcessID==@0'], [data.recID])
-      .subscribe();
-     this.codxService.activeViews.dataService.dataObj = {processID:data.recID}
-    
-     //kaban
-     if ((this.codxService.activeViews.currentView as any)?.kanban){
-      (this.codxService.activeViews.currentView as any)?.kanban.loaded();
-     }
 
+    let viewModel;
+    this.codxService.activeViews?.views.forEach((x) => {
+      if (x.hide) x.hide = false;
+      if (x.type == 6) {
+        x.request.dataObj = { processID: data.recID };
+        x.request2.dataObj = { processID: data.recID };
+      }
+      if (x.active) {
+        viewModel = x;
+      }
+    });
+    this.codxService.activeViews?.viewChange(viewModel);
+    if (this.idSubCrr != data.recID) {
+      (this.codxService.activeViews?.dataService as CRUDService)
+        .setPredicates(['ProcessID==@0'], [data.recID])
+        .subscribe();
+    }
+
+    //kaban
+    if (
+      (this.codxService.activeViews.currentView as any)?.kanban &&
+      this.idSubCrr != data.recID
+    ) {
+      let kanban = (this.codxService.activeViews.currentView as any)?.kanban;
+      let settingKanban = kanban.kanbanSetting;
+      settingKanban.isChangeColumn = true;
+      settingKanban.formName =
+        this.codxService.activeViews.currentView?.formModel?.formName;
+      settingKanban.gridViewName =
+        this.codxService.activeViews.currentView?.formModel?.gridViewName;
+      let dataObj = { processID: data.recID };
+      this.api
+        .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+          settingKanban,
+          dataObj,
+        ])
+        .subscribe((resource) => {
+          if (resource?.columns && resource?.columns.length)
+            kanban.columns = resource.columns;
+          kanban.kanbanSetting.isChangeColumn = false;
+          kanban.loadDataSource(
+            kanban.columns,
+            kanban.kanbanSetting?.swimlaneSettings,
+            false
+          );
+
+          kanban.refresh();
+        });
+    }
+    this.idSubCrr = data.recID;
     // this.codxService.navigate('', url +`/${data.recID}`);
   }
 }

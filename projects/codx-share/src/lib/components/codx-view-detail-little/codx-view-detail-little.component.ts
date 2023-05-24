@@ -1,4 +1,13 @@
-import { Component, Input, OnChanges, OnInit, Optional, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  Optional,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, FormModel } from 'codx-core';
 
 @Component({
@@ -11,8 +20,8 @@ export class CodxViewDetailLittleComponent implements OnInit {
   @ViewChild('tempMeeting') tempMeeting?: TemplateRef<any>;
 
   @Input() recID: any;
-  @Input() service : any = 'TM' ;
- 
+  @Input() service: any;
+
   data: any;
   vllPriority = 'TM005'; //truyền thi view khonbg thi mac định
   formModel: FormModel;
@@ -21,11 +30,8 @@ export class CodxViewDetailLittleComponent implements OnInit {
   startTime: any;
   objectID: string;
   dialog: DialogRef;
-  
 
-  constructor(private api :ApiHttpService) {
-    
-  }
+  constructor(private api: ApiHttpService) {}
 
   ngOnInit(): void {
     this.loadingData();
@@ -34,18 +40,32 @@ export class CodxViewDetailLittleComponent implements OnInit {
   loadingData() {
     switch (this.service) {
       case 'TM':
-        this.api.exec<any>('TM','TaskBusiness','GetTaskDetailsViewCalendarAsync',this.recID).subscribe((res) => {
-          if (res) {
-            this.data = res;
-          }
-        });
+        this.api
+          .exec<any>(
+            'TM',
+            'TaskBusiness',
+            'GetTaskDetailsViewCalendarAsync',
+            this.recID
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.data = res;
+            }
+          });
         break;
       case 'CO':
-        this.api.exec<any>('CO','MeetingsBusiness','GetMeetingByRecIDAsync',this.recID).subscribe((res) => {
-          if (res) {
-            this.data = res;
-          }
-        });
+        this.api
+          .exec<any>(
+            'CO',
+            'MeetingsBusiness',
+            'GetMeetingByRecIDAsync',
+            this.recID
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.data = res;
+            }
+          });
         break;
     }
   }
