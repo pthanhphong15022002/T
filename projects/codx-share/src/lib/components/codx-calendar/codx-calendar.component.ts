@@ -43,12 +43,8 @@ export class CodxCalendarComponent
   extends UIComponent
   implements AfterViewInit
 {
-  @ViewChild('ejCalendar') ejCalendar!: CalendarComponent;
-  @ViewChild('calendar_setting', { read: ViewContainerRef })
-  calendar_setting!: ViewContainerRef;
-  @ViewChild('calendar_setting')
-  calendar_center!: ComponentRef<CalendarCenterComponent>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
+  @ViewChild('ejCalendar') ejCalendar!: CalendarComponent;
   @ViewChild('calendarCenter') calendarCenter!: CalendarCenterComponent;
 
   dataResourceModel = [];
@@ -61,15 +57,7 @@ export class CodxCalendarComponent
   WP_Notes = [];
   CO_Meetings = [];
   EP_BookingCars = [];
-  TM_TasksParam;
-  TM_AssignTasksParam;
-  WP_NotesParam;
-  CO_MeetingsParam;
-  EP_BookingCarsParam;
-  checkTM_TasksParam;
-  checkWP_NotesParam;
-  checkCO_MeetingsParam;
-  checkEP_BookingCarsParam;
+  calendarParams = {};
   dateChange;
   countEvent = 0;
   countDataOfE = 0;
@@ -136,24 +124,8 @@ export class CodxCalendarComponent
               status: param.Template.TransType,
             });
 
-            if (prop === 'CO_Meetings') {
-              this.CO_MeetingsParam = param;
-            }
-
-            if (prop === 'TM_MyTasks') {
-              this.TM_TasksParam = param;
-            }
-
-            if (prop === 'TM_AssignTasks') {
-              this.TM_AssignTasksParam = param;
-            }
-
-            if (prop === 'EP_BookingCars') {
-              this.EP_BookingCarsParam = param;
-            }
-
-            if (prop === 'WP_Notes') {
-              this.WP_NotesParam = param;
+            if (res.hasOwnProperty(prop)) {
+              this.calendarParams[prop] = JSON.parse(res[prop]);
             }
           }
         }
@@ -188,12 +160,11 @@ export class CodxCalendarComponent
 
           let myInterval_Calendar = setInterval(() => {
             if (
-              this.TM_TasksParam &&
-              this.TM_AssignTasksParam &&
-              this.WP_NotesParam &&
-              this.CO_MeetingsParam &&
-              this.CO_MeetingsParam &&
-              this.EP_BookingCarsParam
+              this.calendarParams['TM_MyTasks'] &&
+              this.calendarParams['TM_AssignTasks'] &&
+              this.calendarParams['EP_BookingCars'] &&
+              this.calendarParams['WP_Notes'] &&
+              this.calendarParams['CO_Meetings']
             ) {
               clearInterval(myInterval_Calendar);
               this.getCalendarNotes();
@@ -437,7 +408,7 @@ export class CodxCalendarComponent
             });
           }
           if (value == '1') {
-            if (this.checkWP_NotesParam)
+            if (this.calendarParams['WP_Notes'].ShowEvent)
               if (transType == 'WP_Notes') {
                 this.WP_Notes = this.WP_NotesTemp;
               }
@@ -456,10 +427,11 @@ export class CodxCalendarComponent
             }
 
             if (
-              this.checkWP_NotesParam == '0' ||
-              this.checkTM_TasksParam == '0' ||
-              this.checkCO_MeetingsParam == '0' ||
-              this.checkEP_BookingCarsParam == '0'
+              this.calendarParams['EP_BookingCars'].ShowEvent == '0' ||
+              this.calendarParams['TM_MyTasks'].ShowEvent == '0' ||
+              this.calendarParams['TM_AssignTasks'].ShowEvent == '0' ||
+              this.calendarParams['WP_Notes'].ShowEvent == '0' ||
+              this.calendarParams['CO_Meetings'].ShowEvent == '0'
             ) {
               if (this.ejCalendar) {
                 let tempCalendar = this.ejCalendar.element;
@@ -556,34 +528,26 @@ export class CodxCalendarComponent
             // this.WP_NotesParam = JSON.parse(WP_Notes[1]) ?? null;
             // this.CO_MeetingsParam = JSON.parse(CO_Meetings[1]) ?? null;
             // this.EP_BookingCarsParam = JSON.parse(EP_BookingCars[1]) ?? null;
-            if (updateCheck == true) {
-              this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
-              this.checkWP_NotesParam = this.WP_NotesParam?.ShowEvent;
-              this.checkCO_MeetingsParam = this.CO_MeetingsParam?.ShowEvent;
-
-              this.checkEP_BookingCarsParam =
-                this.EP_BookingCarsParam?.ShowEvent;
-            }
 
             this.getRequestTM(
-              this.TM_TasksParam,
-              this.TM_TasksParam?.ShowEvent
+              this.calendarParams['TM_MyTasks'],
+              this.calendarParams['TM_MyTasks']?.ShowEvent
             );
             this.getRequestTMAssign(
-              this.TM_AssignTasksParam,
-              this.TM_AssignTasksParam?.ShowEvent
+              this.calendarParams['TM_AssignTasks'],
+              this.calendarParams['TM_AssignTasks']?.ShowEvent
             );
             this.getRequestWP(
-              this.WP_NotesParam,
-              this.WP_NotesParam?.ShowEvent
+              this.calendarParams['WP_Notes'],
+              this.calendarParams['WP_Notes']?.ShowEvent
             );
             this.getRequestCO(
-              this.CO_MeetingsParam,
-              this.CO_MeetingsParam?.ShowEvent
+              this.calendarParams['CO_Meetings'],
+              this.calendarParams['CO_Meetings']?.ShowEvent
             );
             this.getRequestEP_BookingCar(
-              this.EP_BookingCarsParam,
-              this.EP_BookingCarsParam?.ShowEvent
+              this.calendarParams['EP_BookingCars'],
+              this.calendarParams['EP_BookingCars']?.ShowEvent
             );
           }
         });
