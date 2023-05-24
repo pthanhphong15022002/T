@@ -48,17 +48,16 @@
         <div class="form-group">
           <codx-label
             [formModel]="formModelDeals"
-            fiedName="BusinesslineID"
+            fiedName="BusinessLineID"
             default="Dòng sản phẩm"
           >
           </codx-label>
           <codx-input
-            [formModel]="formModelDeals"
             type="combobox"
             [crrValue]="deal?.businessLineID"
-            [refValue]="gridViewSetupDeal?.BusinesslineID?.referedValue"
-            [placeholder]="gridViewSetupDeal?.BusinesslineID?.description"
-            field="businesslineID"
+            [refValue]="gridViewSetupDeal?.BusinessLineID?.referedValue"
+            [placeholder]="gridViewSetupDeal?.BusinessLineID?.description"
+            field="businessLineID"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -182,8 +181,8 @@
           </codx-label>
           <codx-input
             type="datetime"
-            [formModel]="formModelDeals"
             field="endDate"
+            format="d"
             [placeholder]="gridViewSetupDeal?.EndDate?.description"
             [crrValue]="deal?.endDate"
             (valueChange)="valueDateChange($event, 'deal')"
@@ -241,7 +240,7 @@
           </codx-label>
           <codx-input
             type="datetime"
-            [formModel]="formModelDeals"
+            format="d"
             field="expectedClosed"
             [placeholder]="gridViewSetupDeal?.ExpectedClosed?.description"
             [crrValue]="deal?.expectedClosed"
@@ -476,7 +475,9 @@
     ></codx-address-cm>
   </ng-container>
 </ng-template>
-<ng-template #tabInput></ng-template>
+<ng-template #tabInput>
+  <ng-container [ngTemplateOutlet]="tabCustomFieldDetail"></ng-container>
+</ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-primary" (click)="onSave()">
@@ -487,6 +488,30 @@
       ></codx-label>
     </button>
   </div>
+</ng-template>
+<ng-template #tabCustomFieldDetail>
+  <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty">
+    <ng-container *ngFor="let step of listInstanceSteps">
+      <ng-container *ngIf="step?.fields?.length > 0">
+        <ng-container *ngFor="let item of step.fields">
+          <div class="form-group">
+            <codx-input-custom-field
+              [customField]="item"
+              [checkValid]="false"
+              [objectId]="item.recID"
+              [objectType]="'DP_Instances'"
+              [formModel]="dialog.formModel"
+              (valueChangeCustom)="valueChangeCustom($event)"
+            >
+            </codx-input-custom-field>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #dataIsEmpty>
+  <codx-no-data> </codx-no-data>
 </ng-template>
 
 <ng-template #systemCustomer>
@@ -747,7 +772,6 @@
           type="textarea"
           [crrValue]="customer?.memo"
           [formModel]="formModelCustomer"
-          [placeholder]="gridViewSetupCustomer?.Headcounts?.description ?? ''"
           field="memo"
           (valueChange)="valueChangeCustomer($event)"
         >

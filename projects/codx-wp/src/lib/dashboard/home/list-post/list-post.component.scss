@@ -364,3 +364,11 @@ codx-img > .news-image > div{
     width: 100% !important;
     height: 300px !important;
 }
+.listpost-share{
+    color: var(--gray-500);
+    b{
+        font-weight: 500!important;
+        margin-left: 2px;
+        color: var(--gray-700);
+    }
+}
