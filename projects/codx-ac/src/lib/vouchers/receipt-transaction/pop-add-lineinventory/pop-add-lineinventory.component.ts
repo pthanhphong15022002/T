@@ -25,6 +25,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
   hasSave: boolean = false;
   type: any;
   lsVatCode: any;
+  lsitem: any;
   journals: any;
   objectIdim: any;
   lockFields: any;
@@ -58,7 +59,9 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
         }
       });
   }
-  onInit(): void {}
+  onInit(): void {
+    this.loadItems();
+  }
   ngAfterViewInit() {
     this.loadInit();
   }
@@ -163,15 +166,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
   this.inventoryJournalLine[e.field] = e.data;
     switch (e.field) {
       case 'itemID':
-        this.api
-          .exec('IV', 'ItemsBusiness', 'LoadDataAsync', [e.data])
-          .subscribe((res: any) => {
-            if (res != null) {
-              this.inventoryJournalLine.itemName = res.itemName;
-              this.inventoryJournalLine.umid = res.umid;
-              this.form.formGroup.patchValue(this.inventoryJournalLine);
-            }
-          });
+        this.loadItemNameAndItemUMID(e.data);
           (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
           (this.idiM1.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
           (this.idiM2.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
@@ -238,4 +233,19 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     }
   }
 
+  loadItems(){
+    this.api.exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
+    .subscribe((res: any) => {
+      if (res != null) {
+        this.lsitem = res;
+      }
+    });
+  }
+
+  loadItemNameAndItemUMID(itemID: any){
+    var item = this.lsitem.filter(x => x.itemID == itemID);
+    this.inventoryJournalLine.itemName = item[0].itemName;
+    this.inventoryJournalLine.umid = item[0].umid;
+    this.form.formGroup.patchValue(this.inventoryJournalLine);
+  }
 }

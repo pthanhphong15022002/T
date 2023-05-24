@@ -104,9 +104,9 @@ export class PopupEmployeeBusinessComponent
             this.formModel.currentData = this.data;
             this.formGroup.patchValue(this.data);
             //Attache value checked oversea
-              this.formGroup.patchValue({
-                IsOversea: false,
-              });
+            this.formGroup.patchValue({
+              IsOversea: false,
+            });
             this.isAfterRender = true;
             this.cr.detectChanges();
           }
@@ -284,5 +284,9 @@ export class PopupEmployeeBusinessComponent
       });
     }
     // this.cr.detectChanges();
+  }
+
+  clickOpenPopup(codxInput) {
+    codxInput.elRef.nativeElement.querySelector('button').click();
   }
 }

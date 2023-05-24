@@ -52,7 +52,7 @@ export class SalesInvoicesComponent
   constructor(
     inject: Injector,
     private acService: CodxAcService,
-    private salesInvoiceService: SalesInvoiceService
+    public salesInvoiceService: SalesInvoiceService
   ) {
     super(inject);
 
@@ -104,17 +104,6 @@ export class SalesInvoicesComponent
     }
 
     this.selectedData = e.data.data ?? e.data;
-
-    const salesInvoicesLinesOptions = new DataRequest();
-    salesInvoicesLinesOptions.entityName = 'SM_SalesInvoicesLines';
-    salesInvoicesLinesOptions.predicates = 'TransID=@0';
-    salesInvoicesLinesOptions.dataValues = this.selectedData.recID;
-    salesInvoicesLinesOptions.pageLoading = false;
-    this.acService
-      .loadDataAsync('SM', salesInvoicesLinesOptions)
-      .subscribe((res: ISalesInvoicesLine[]) => {
-        this.salesInvoicesLines = res.sort((a, b) => a.rowNo - b.rowNo);
-      });
   }
 
   onClickAdd(e): void {

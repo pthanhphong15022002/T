@@ -287,9 +287,10 @@
                           <!-- menuCustom -->
                           <ng-container
                             *ngIf="
-                              c?.functionID == 'CM0201' ||
-                              c?.functionID == 'CM0401' ||
-                              c?.functionID == 'CM0402'
+                            loadedCus &&
+                              (c?.functionID == 'CM0201' ||
+                                c?.functionID == 'CM0401' ||
+                                c?.functionID == 'CM0402')
                             "
                           >
                             <div
@@ -302,8 +303,7 @@
                                 (click)="clickMenuCustom(c.functionID, menuCus)"
                                 [attr.data-funcid]="menuCus.recID"
                                 [ngClass]="
-                                codxService.activeMenu.fav ===
-                                  menuCus.recID
+                                  codxService.activeMenu.fav === menuCus.recID
                                     ? 'active'
                                     : ''
                                 "
