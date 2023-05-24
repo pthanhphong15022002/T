@@ -501,36 +501,30 @@
             ></codx-label>
           </ng-template>
           <ng-template #content>
-            <ng-container
+            <codx-gridview-v2
+              #grid
               *ngIf="editSettings.mode === 'Normal'; else dialogMode"
-            >
-              <codx-gridview-v2
-                #grid
-                [formName]="fmSalesInvoicesLines.formName"
-                [gridViewName]="fmSalesInvoicesLines.gridViewName"
-                [entityName]="fmSalesInvoicesLines.entityName"
-                service="SM"
-                [templateMore]="more"
-                [editSettings]="editSettings"
-                [allowFiltering]="true"
-                [allowSorting]="true"
-                [autoLoad]="false"
-                [height]="200"
-                [dataSource]="salesInvoicesLines"
-                (cellChanged)="onCellChange($event)"
-                (created)="onCreate($event)"
-                (onAddNew)="onAddNew($event)"
-                (onEdit)="onEdit($event)"
-                (eventAction)="onFocusOut($event)"
-              ></codx-gridview-v2>
-            </ng-container>
+              [formName]="fmSalesInvoicesLines.formName"
+              [gridViewName]="fmSalesInvoicesLines.gridViewName"
+              [entityName]="fmSalesInvoicesLines.entityName"
+              service="SM"
+              [templateMore]="more"
+              [editSettings]="editSettings"
+              [allowFiltering]="true"
+              [allowSorting]="true"
+              [autoLoad]="false"
+              [height]="200"
+              [dataSource]="salesInvoicesLines"
+              (cellChanged)="onCellChange($event)"
+              (created)="onCreate($event)"
+              (onAddNew)="onAddNew($event)"
+              (onEdit)="onEdit($event)"
+              (eventAction)="onFocusOut($event)"
+            ></codx-gridview-v2>
             <ng-template #dialogMode>
               <lib-table-line-detail
-                [salesInvoicesLines]="salesInvoicesLines"
-                [hasMF]="true"
                 [gvs]="gvsSalesInvoicesLines"
-                [hiddenFields]="hiddenFields"
-                [dataService]="detailService"
+                [transID]="salesInvoice.recID"
               ></lib-table-line-detail>
             </ng-template>
           </ng-template>
