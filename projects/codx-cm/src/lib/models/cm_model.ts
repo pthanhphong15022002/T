@@ -161,7 +161,7 @@ export class CM_Deals {
   stepID: string;
   nextStep: string;
   lastUpdated: Date;
-  closed: boolean;
+  closed: boolean = false;
   closedOn: Date;
   closedBy: string;
   closeReason: string;

@@ -1,6 +1,5 @@
 <codx-views
   #view
-  entityName="HR_Employees"
   idField="employeeID"
   [views]="views"
   [viewActiveType]="'16'"
@@ -26,15 +25,15 @@
               <div class="d-flex justify-content-center">
                 <div class="position-relative mt-1">
                   <codx-img
-                    class="pic-emloyee"
                     [funcId]="funcID"
-                    [width]="100"
-                    [objectId]="infoPersonal?.employeeID"
+                    [objectId]="employeeID"
                     [objectType]="'HR_Employees'"
                     [referType]="'avt'"
-                    [objectName]="infoPersonal?.employeeName"
+                    [imageType]="'circle'"
                     [isAllowEdit]="true"
                     [updateDirect]="true"
+                    class="pic-emloyee"
+                    [width]="100"
                   >
                   </codx-img>
 
@@ -73,11 +72,8 @@
                                     [showText]="true"
                                     [showBgColor]="true"
                                     [showIcon]="true"
-                                    [formModel]="eInfoFormModel"
-                                    [field]="'Gender'"
                                     [value]="infoPersonal?.gender"
-                                    class="badge badge-light badge-square badge-md fs-7"
-                                  >
+                                    class="badge badge-square badge-md fs-7">
                                   </codx-vll>
                                 </span>
                               </div>
@@ -353,8 +349,8 @@
             </div>
             <div class="d-flex flex-center">
               <div class="fs-5-sm mb-1 d-flex align-items-center">
-                <span class="icon-qr_code_scanner icon-14 me-2"></span>
-                <span style="padding-top: 2px;" #id>{{ infoPersonal?.employeeID }}</span>
+                <span class="icon-qr_code_scanner icon-14 me-1"></span>
+                <span #id>{{employeeID }}</span>
                 <span class="icon-i-dot text-gray-500"></span>
                 <span class="fw-bold">{{ infoPersonal?.employeeName }}</span>
               </div>
@@ -363,7 +359,7 @@
               class="text-gray-500 mb-1"
               *ngIf="infoPersonal"
               [innerHTML]="
-                infoPersonal?.positionID
+                infoPersonal.positionID
                   | formatvalue : eInfoFormModel : 'positionID'
                   | async
               "
@@ -585,19 +581,21 @@
 
 <!-- pane_1 Sơ yếu lí lịch -->
 <ng-template #curriculumVitae>
-  <div class="tab-horizone bg-white h-od-tab mb-4">
-    <ul class="nav nav-tabs px-4">
-      <ng-container *ngFor="let item of lstFuncCurriculumVitae; let i = index">
-        <li class="nav-item" (click)="navChange(item.functionID, 0)">
-          <a
-            class="nav-link"
-            [ngClass]="item.functionID == active[0] ? 'active' : ''"
-          >
-            <div class="text-uppercase fw-bold">{{ item.customName }}</div>
-          </a>
-        </li>
-      </ng-container>
-    </ul>
+  <div class="tab-scroll mb-4">
+    <div class="tab-horizone bg-white h-od-tab">
+      <ul class="nav nav-tabs px-4">
+        <ng-container *ngFor="let item of lstFuncCurriculumVitae; let i = index">
+          <li class="nav-item" (click)="navChange(item.functionID, 0)">
+            <a
+              class="nav-link"
+              [ngClass]="item.functionID == active[0] ? 'active' : ''"
+            >
+              <div class="text-uppercase fw-bold">{{ item.customName }}</div>
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
   </div>
 
   <div
@@ -2267,24 +2265,27 @@
               </button>
             </div>
           </div>
-          <div class="mx-5 mx-xl-4 pt-0 pb-5">
-            <div class="timeline timeline-3">
-              <div class="timeline-items">
+          <div class="mt-6 ms-9">
+            <div class="timeline-exper">
+              <div class="timeline-exper-items">
                 <ng-container *ngFor="let item of lstExperiences">
-                  <div class="timeline-item" [ngClass]="lstExperiences? 'has-action-menu':''">
-                    <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
-                      <div class="timeline-media me-4">
+                  <div class="timeline-exper-item" [ngClass]="lstExperiences? 'has-action-menu':''">
+                    <div class="timeline-exper-nav w-100 d-flex pb-4">
+                      <div class="timeline-media w-125px min-w-125px">
                         <span class="stepper-number">
                           {{item.fromDate | date: 'MM/y'}}
                           -
                           {{item.toDate | date: 'MM/y'}}
                         </span>
                       </div>
+                      <div class="me-3 timeline-exper-node">
+                        <span class="icon-fiber_manual_record text-gray-600"></span>
+                      </div>
                       <div class="stepper-label">
-                        <h3 class="stepper-title line-clamp line-clamp-3">
+                        <div class="stepper-title fs-5-sm fw-bold line-clamp line-clamp-3 mb-1">
                           {{item?.companyName}}
-                        </h3>
-                        <div class="stepper-desc">
+                        </div>
+                        <div class="stepper-desc text-gray-500">
                           {{item?.position}}
                         </div>
 
@@ -2374,6 +2375,7 @@
 
 <!-- pane_2 Thông tin công việc-->
 <ng-template #jobInfo>
+ 
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
       <ng-container *ngFor="let item of lstFuncJobInfo; let i = index">
@@ -2388,7 +2390,7 @@
       </ng-container>
     </ul>
   </div>
-
+ 
   <div
     class="pw-content w-100 scroll-y"
     data-kt-scroll="true"

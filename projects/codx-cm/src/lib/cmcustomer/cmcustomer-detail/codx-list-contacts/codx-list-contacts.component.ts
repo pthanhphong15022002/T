@@ -68,15 +68,7 @@ export class CodxListContactsComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    if (changes['listContacts']) {
-      if (
-        changes['listContacts'].currentValue != null &&
-        changes['listContacts']?.currentValue?.length > 0
-      ) {
-        this.loadListContact(changes['listContacts'].currentValue);
-      }
-      this.loaded = true;
-    } else if (changes['objectID']) {
+    if (changes['objectID']) {
       if (changes['objectID'].currentValue != null) {
         this.getListContacts();
       } else {
