@@ -150,7 +150,7 @@
         imgCss="w-30px p-3 me-3 user-mini-icon"
         [imageWidth]="30"
             [title]="item?.name"
-            [subTitle]="item?.approver | vll : 'ES014' : 'text' | async"
+            [subTitle]="item?.roleType | vll : 'ES014' : 'text' | async"
             [imageObjType]="'AD_Users'"
             [imageWidth]="35"
             [titleLine]="3"

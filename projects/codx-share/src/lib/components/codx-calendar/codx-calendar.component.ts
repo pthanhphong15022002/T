@@ -360,14 +360,11 @@ export class CodxCalendarComponent
     this.FDdate = args.date;
   }
 
-  valueChangeSetting(e) {
-    if (e) {
-      let field = e.field;
-      this.updateSettingValue(field, e.data);
-    }
-  }
+  updateSettingValue(e) {
+    debugger;
+    let transType = e.field;
+    let value = e.data;
 
-  updateSettingValue(transType, value) {
     if (value == false) value = '0';
     else value = '1';
 
@@ -493,7 +490,6 @@ export class CodxCalendarComponent
             this.ejCalendar.refresh();
             this.ejCalendar.value = this.FDdate;
           }
-          debugger;
           this.calendarService.calendarData$.next(this.dataResourceModel);
         }
       });
