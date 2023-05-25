@@ -166,7 +166,7 @@ export class CashPaymentsComponent extends UIComponent {
         this.lsAccount = res;
       });
     this.detectorRef.detectChanges();
-  }
+}
 
   //#endregion
 

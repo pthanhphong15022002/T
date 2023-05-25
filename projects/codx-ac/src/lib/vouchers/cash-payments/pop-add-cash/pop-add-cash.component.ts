@@ -374,6 +374,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     if (this.docRef) hDoc = this.docRef.nativeElement.clientHeight;
 
     this.gridHeight = hBody - (hTab + hNote + hTotal + hDoc + 180);
+    console.log('this.gridHeight: ', this.gridHeight);
   }
 
   lineChanged(e: any) {
@@ -513,65 +514,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   addRow() {
-<<<<<<< HEAD
-   // Ko CAN CHCK VALIDATE -> GOI HAM SAVE CHUNG
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    } else {
-      //THAY DOI TEN FORMTYPE->actionType
-      switch (this.formType) {
-        case 'add':
-          if (this.hasSaved) {
-            this.dialog.dataService.updateDatas.set(
-              this.cashpayment['_uuid'],
-              this.cashpayment
-            );
-            this.dialog.dataService
-              .save(null, 0, '', '', false)
-              .subscribe((res) => {
-                if (res && res.update.data != null) {
-                  this.loadModegrid();
-                }
-              });
-          } else {
-            this.journalService.handleVoucherNoAndSave(
-              this.journal,
-              this.cashpayment,
-              'AC',
-              'AC_CashPayments',
-              this.form,
-              this.formType === 'edit',
-              () => {
-                this.dialog.dataService
-                  .save(null, 0, '', '', false)
-                  .subscribe((res) => {
-                    if (res && res.save.data != null) {
-                      this.hasSaved = true;
-                      this.loadModegrid();
-                    }
-                  });
-              }
-            );
-          }
-          break;
-        case 'edit':
-          this.dialog.dataService.updateDatas.set(
-            this.cashpayment['_uuid'],
-            this.cashpayment
-          );
-          this.dialog.dataService
-            .save(null, 0, '', '', false)
-            .subscribe((res) => {
-              if (res && res.update.data != null) {
-                this.loadModegrid();
-              }
-            });
-          break;
-      }
-    }
-=======
     this.loadModegrid();
     // this.checkValidate();
     // if (this.validate > 0) {
@@ -628,7 +570,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     //       break;
     //   }
     // }
->>>>>>> 9e4ac0857aa4a869f383ce4e7ec53cc8b5af23bb
   }
 
   deleteRow(data) {

@@ -47,7 +47,7 @@ import { Group067Component } from './journals/components/group067/group067.compo
 export const routes: Routes = [
   {
     path: '',
-    component: NosubAsideComponent,
+    component: LayoutComponent,
     children: [
       {
         path: 'periodic/:funcID',
