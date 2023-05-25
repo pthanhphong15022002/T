@@ -45,21 +45,21 @@
   </div>
 </ng-template>
 <ng-template #descTmp let-data>
-  <span placement="bottom" [ngbTooltip]="memo" class="line-clamp line-clamp-2 fs-6 mt-2">{{ data?.memo }}</span>
+  <span placement="bottom" [ngbTooltip]="memo" class="line-clamp fw-bold line-clamp-2 my-1">{{ data?.memo }}</span>
   <ng-template #memo>
-    <span class="fw-bold">{{data?.memo}}</span>
+    <span class="text-gray-600">{{data?.memo}}</span>
   </ng-template>
 </ng-template>
 <ng-template #desc2Tmp let-data>
   <div *ngIf="data?.objectName" class="d-flex align-items-center mb-2">
     <!-- <span class="icon-corporate_fare text-primary icon-20 me-1"></span> -->
-    <img src="../assets/themes/ac/default/img/Officebuilding.svg" class="w-16px h-16px me-1" />
-    <span *ngIf="data?.objectName" class="text-gray-500 line-clamp line-clamp-1 mt-2">{{data?.objectName}}</span>
+    <img src="../assets/themes/ac/default/img/Officebuilding.svg" class="w-15px h-15px me-2" />
+    <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1">{{data?.objectName}}</span>
   </div>
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex align-items-center ac-cashID mt-n8 mb-5">
+    <div class="d-flex align-items-center ac-cashID mt-n8 mb-2">
       <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
         <i class="text-white icon-16" [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
       </div>
@@ -77,10 +77,10 @@
         </span>
       </div>
     </div>
-    <div class="d-flex justify-content-between flex-grow-1 mb-5">
+    <div class="d-flex justify-content-between flex-grow-1 mb-2">
       <div class="d-flex align-items-center">
         <!-- <span class="me-2 icon-corporate_fare text-primary icon-20"></span> -->
-        <img style="height:18px" src="../assets/themes/ac/default/img/Officebuilding.svg" class="w-16px me-2" />
+        <img src="../assets/themes/ac/default/img/Officebuilding.svg" class="w-15px h-15px me-2" />
         <span class="fw-bold line-clamp line-clamp-1 fs-5 mt-2 text-uppercase me-5" #objectName [innerHTML]="
             itemSelected?.objectName
               | formatvalue : view.formModel : 'objectName' : objectName
@@ -101,12 +101,11 @@
 </ng-template>
 <ng-template #body>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex justify-content-between flex-grow-1 mb-4">
+    <div class="d-flex justify-content-between flex-grow-1 mb-2">
       <div class="d-flex align-items-center">
         <span class="icon-i-person-bounding-box icon-16 me-2"></span>
         <!-- <img src="../assets/themes/ac/default/img/Banknote.svg" class="w-16px h-16px me-2" /> -->
         <span class="fw-bold">Người nhận tiền:</span>
-        &nbsp;
         <span *ngIf="this.view.funcID == 'ACT0410'" #payee [innerHTML]="
             itemSelected?.payee
               | formatvalue : view.formModel : 'payee' : payee
@@ -121,30 +120,28 @@
       <div class="d-flex align-self-center">
         <span class="me-3">
           <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
-            [showText]="true" [showBgColor]="true" class="badge badge-light badge-lg">
+            [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
           </codx-vll>
         </span>
       </div>
     </div>
-    <div class="d-flex align-items-top me-5 mb-4">
+    <div class="d-flex align-items-top mb-2">
       <!-- <span class="icon-i-journal-album icon-16 me-2"></span> -->
-      <img style="height: 18px;" src="../assets/themes/ac/default/img/Ledger.svg" class="w-16px me-2" />
+      <img style="height: 18px;" src="../assets/themes/ac/default/img/Ledger.svg" class="w-15px h-15px me-2" />
       <span *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'"
         class="fw-bold label-colon text-nowrap">{{'1' | vll : 'AC091' : 'text' | async}}</span>
       <span *ngIf="itemSelected?.subType == '3'" class="fw-bold label-colon text-nowrap">{{'3' | vll : 'AC093' : 'text'
         | async}}</span>
-      :&nbsp;
       <span #cashBookID class="text-gray-600"
         [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
       <span class="text-gray-600"
         *ngIf="itemSelected?.cashBookID != '' && itemSelected?.cashBookID != null">&nbsp;-&nbsp;{{cashbookName}}</span>
     </div>
-    <div class="d-flex align-items-top me-5 mb-4">
+    <div class="d-flex align-items-top mb-2">
       <!-- <span class="icon-i-wallet2 icon-16 me-2"></span> -->
-      <img style="height: 18px;" src="../assets/themes/ac/default/img/Scroll.svg" class="w-16px me-2" />
+      <img style="height: 18px;" src="../assets/themes/ac/default/img/Scroll.svg" class="w-15px h-15px me-2" />
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="ReasonID" [formModel]="view.formModel">
       </codx-label>
-      &nbsp;
       <!-- <span #reasonID class="text-gray-600" [innerHTML]="
           itemSelected?.reasonID
             | formatvalue
@@ -156,12 +153,11 @@
       <span class="text-gray-600"
         *ngIf="itemSelected?.reasonID != '' && itemSelected?.reasonID != null">{{reasonName}}</span>
     </div>
-    <div class="d-flex align-items-top me-5 mb-4">
+    <div class="d-flex align-items-top mb-2">
       <!-- <span class="icon-brush icon-16 me-2"></span> -->
-      <img style="height: 18px;" src="../assets/themes/ac/default/img/Memo.svg" class="w-16px me-2" />
+      <img style="height: 18px;" src="../assets/themes/ac/default/img/Memo.svg" class="w-15px h-15px me-2" />
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="view.formModel">
       </codx-label>
-      &nbsp;
       <span #memo class="text-gray-600" [innerHTML]="
           itemSelected?.memo
             | formatvalue : view.formModel : 'memo' : memo
