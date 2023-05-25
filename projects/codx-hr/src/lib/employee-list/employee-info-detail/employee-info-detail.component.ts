@@ -634,15 +634,16 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       });
     }
     this.routeActive.queryParams.subscribe((params) => {
+      debugger
       this.employeeID = params["employeeID"];
       this.pageNum = params["page"];
-      
       if (this.employeeID || this.user.userID) 
       {
         debugger
         if(history.state)
         {
           if (history.state.empInfo){
+            debugger
             this.infoPersonal = JSON.parse(history.state.empInfo);
             this.getManagerEmployeeInfoById();
           }
@@ -752,6 +753,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       },
     ];
     this.formModel = this.view.formModel;
+    console.log('thong tin ban than nv', this.infoPersonal);
+    
   }
 
   // init formModel
@@ -4716,13 +4719,14 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       opt
     )
     popup.closed.subscribe((res) => {
-      if(res?.event){
-        this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
-          if (res) {
-            this.listCrrBenefit = res;
-            this.df.detectChanges();
-          }
-        }); 
+      debugger
+      if (res?.event) {
+        if (res?.event == 'none') {
+          this.listCrrBenefit = null;
+        } else {
+          this.listCrrBenefit = res.event;
+        }
+        this.df.detectChanges();
       }
     }) 
     // this.headerTextBenefit =
@@ -4826,12 +4830,14 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       opt
     )
     popup.closed.subscribe((res) => {
+      debugger
       if(res?.event){
-        this.hrService
-        .GetCurrentEBasicSalariesByEmployeeID(this.employeeID)
-        .subscribe((dataEBaSlary) => {
-          this.crrEBSalary = dataEBaSlary;
-        }); 
+        if (res?.event == 'none') {
+          this.crrEBSalary = null;
+        } else {
+          this.crrEBSalary = res.event;
+        }
+        this.df.detectChanges();
       }
     }) 
     // this.headerTextSalary =

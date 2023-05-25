@@ -31,6 +31,17 @@ export class JournalService {
       .subscribe((res) => console.log(res));
   }
 
+  getJournal(journalNo: string) {
+    const journalOptions = new DataRequest();
+    journalOptions.entityName = 'AC_Journals';
+    journalOptions.predicates = 'JournalNo=@0';
+    journalOptions.dataValues = journalNo;
+    journalOptions.pageLoading = false;
+    return this.acService
+      .loadDataAsync('AC', journalOptions)
+      .pipe(map((res) => res[0]));
+  }
+
   /**
    * If this model.voucherNo already exists, the system will automatically suggest another voucherNo.
    * @param isEdit A boolean value that indicates whether you are in edit mode.*/

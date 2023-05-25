@@ -141,7 +141,7 @@
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button
+    <button [disabled]="loading"
       type="submit"
       class="btn btn-sm btn-primary"
       (click)="insertGroup()"

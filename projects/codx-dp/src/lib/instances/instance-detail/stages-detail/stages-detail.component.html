@@ -243,7 +243,8 @@
       [isUpdate]="
         instance.write &&
         !instance.closed &&
-        (instance.status == '1' || instance.status == '2')
+        (instance.status == '1' || instance.status == '2') &&
+        instance.approveStatus != '3'
       "
       [titleHeaderFormCF]="titleDefault"
       [viewsCurrent]="viewsCurrent"
@@ -339,7 +340,6 @@
       ></codx-step-task>
     </div>
   </div>
-
 </ng-template>
 
 <ng-template #reason>

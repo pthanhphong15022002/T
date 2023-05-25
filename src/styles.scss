@@ -1489,21 +1489,14 @@ a {
   padding-top: 5px !important;
 }
 
-.label-colon span{
-  //position: relative;
+codx-label.label-colon span{
   padding-right: 7px;
   min-height: 18px;
- // display: block;
   line-height: 18px;
-}
-
-.label-colon span::after {
+} 
+codx-label.label-colon span::after {
   content: ":";
   margin-left: -1px;
-  //position: absolute;
-  //right: 6px;
-  //top: 0;
-  //height: 18px;
 }
 
 .codx-label.required::after {
@@ -2989,4 +2982,13 @@ codx-toolbar-report{
 ///
 .e-grid .e-headercelldiv {
   margin-left: -5px;
+}
+//
+.aside-minimize-icon-title .aside .aside-primary .aside-menu .menu-link {
+  height: 77px;
+  max-height: 77px;
+  min-height: 77px;
+}
+.aside-menu .menu-item .menu-icon > img, .aside-menu .menu-item .menu-icon .svg-icon, .aside-footer .menu-item .menu-icon > img, .aside-footer .menu-item .menu-icon .svg-icon {
+  width: 22px;
 }
