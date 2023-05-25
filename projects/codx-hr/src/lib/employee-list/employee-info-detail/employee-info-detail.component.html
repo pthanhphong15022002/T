@@ -581,19 +581,21 @@
 
 <!-- pane_1 Sơ yếu lí lịch -->
 <ng-template #curriculumVitae>
-  <div class="tab-horizone bg-white h-od-tab mb-4">
-    <ul class="nav nav-tabs px-4">
-      <ng-container *ngFor="let item of lstFuncCurriculumVitae; let i = index">
-        <li class="nav-item" (click)="navChange(item.functionID, 0)">
-          <a
-            class="nav-link"
-            [ngClass]="item.functionID == active[0] ? 'active' : ''"
-          >
-            <div class="text-uppercase fw-bold">{{ item.customName }}</div>
-          </a>
-        </li>
-      </ng-container>
-    </ul>
+  <div class="tab-scroll mb-4">
+    <div class="tab-horizone bg-white h-od-tab">
+      <ul class="nav nav-tabs px-4">
+        <ng-container *ngFor="let item of lstFuncCurriculumVitae; let i = index">
+          <li class="nav-item" (click)="navChange(item.functionID, 0)">
+            <a
+              class="nav-link"
+              [ngClass]="item.functionID == active[0] ? 'active' : ''"
+            >
+              <div class="text-uppercase fw-bold">{{ item.customName }}</div>
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
   </div>
 
   <div
@@ -2263,7 +2265,7 @@
               </button>
             </div>
           </div>
-          <div class="mt-6">
+          <div class="mt-6 ms-9">
             <div class="timeline-exper">
               <div class="timeline-exper-items">
                 <ng-container *ngFor="let item of lstExperiences">
@@ -2373,6 +2375,7 @@
 
 <!-- pane_2 Thông tin công việc-->
 <ng-template #jobInfo>
+ 
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
       <ng-container *ngFor="let item of lstFuncJobInfo; let i = index">
@@ -2387,7 +2390,7 @@
       </ng-container>
     </ul>
   </div>
-
+ 
   <div
     class="pw-content w-100 scroll-y"
     data-kt-scroll="true"
@@ -2595,7 +2598,7 @@
                       *ngIf="lstOrg"
                     >
                       <span
-                        class="icon-connection-point icon-16 text-primary me-1"
+                        class="icon-connection-point icon-16 text-primary me-2"
                       ></span>
                       <ng-container *ngFor="let org of lstOrg; let i = index">
                         <span
@@ -3423,6 +3426,7 @@
                       <span class="icon-attach_money icon-16 me-2"></span>
                       <codx-label
                         fiedName="BSalary"
+                        [setRequire]="false"
                         [formModel]="eBasicSalaryFormmodel"
                       >
                       </codx-label>
@@ -3434,6 +3438,7 @@
                       ></span>
                       <codx-label
                         fiedName="SISalary"
+                        [setRequire]="false"
                         [formModel]="eBasicSalaryFormmodel"
                       >
                       </codx-label>
@@ -3735,7 +3740,7 @@
                         >
                         </span>
                       </div>
-                      <div class="col-4">
+                      <!-- <div class="col-4">
                         <span
                           class="icon-event text-gray-600 icon-14 pe-2"
                         ></span
@@ -3749,7 +3754,7 @@
                           "
                         >
                         </span>
-                      </div>
+                      </div> -->
                     </div>
                   </ng-template>
                 </div>
@@ -3760,7 +3765,7 @@
       </div>
     </div>
     <!-- Tài sản cấp phát -->
-    <div class="user-profile overview d-block" [id]="eAssetFuncID">
+    <!-- <div class="user-profile overview d-block" [id]="eAssetFuncID">
       <div class="rounded-2 p-5 bg-white mb-1">
         <div class="d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center text-primary">
@@ -3768,12 +3773,6 @@
               <span class="icon-handyman icon-20 me-2"></span>
             </div>
             <div class="fs-5-sm fw-bold text-uppercase mt-1">
-              <!-- <codx-label
-                    name="lblDistributedAssets"
-                    [formModel]="eInfoFormModel"
-                    [default]="getFormHeader(eAssetFuncID)"
-                  >
-                  </codx-label> -->
               {{ getFormHeader(eAssetFuncID) }}
             </div>
           </div>
@@ -3830,123 +3829,8 @@
           >
           </codx-gridview>
         </div>
-
-        <!-- <div class="profile-grid">
-
-            <codx-gridview *ngIf="eAssetColumnGrid" #eAssetGridView [sort]="[assetSortModel]"
-              [formModel]="eAssetFormModel" [columnsGrid]="eAssetColumnGrid" [service]="'HR'" [assemblyName]="'Core'"
-              [className]="'DataBusiness'" [method]="'LoadDataAsync'" [predicates]="'EmployeeID=@0'"
-              [dataValues]="employeeID" [pageSize]="numPageSizeGridView" [entityName]="'HR_EAssets'" [rowHeight]="30"
-              height="auto"></codx-gridview>
-          </div> -->
-
-        <!-- <div class="d-flex flex-wrap pt-5 ps-4">
-            <ng-container *ngFor="let asset of lstAsset">
-              <div class="me-3 mb-3 w-100" *ngIf="asset != null">
-                <codx-temp-full
-                  (clickMF)="clickMF($event, asset, 'Assets')"
-                  [dataItem]="asset"
-                  [formModel]="eAssetFormModel"
-                  [footer]="footerAssets"
-                  cardCss="pt-4 pb-2"
-                  [typeMF]="'hover'"
-                >
-                </codx-temp-full>
-                <ng-template #footerAssets let-data>
-                  <div class="row">
-                    <div class="col-4">
-                      <div class="d-flex">
-                        <codx-label
-                          fiedName="AssetCategory"
-                          [formModel]="eAssetFormModel"
-                        >
-                        </codx-label>
-                        <span class="me-2">|</span>
-                        <codx-label
-                          fiedName="AssetNo"
-                          [formModel]="eAssetFormModel"
-                        >
-                        </codx-label>
-                      </div>
-
-                      <div
-                        class="badge border-0 mb-1 badge-primary"
-                        [style.background]="
-                          getAssetBackgroundColor(data.assetCategory)
-                        "
-                        [style.color]="getAssetFontColor(data.assetCategory)"
-                        [innerHTML]="
-                          data?.assetCategory
-                            | formatvalue : eAssetFormModel : 'assetCategory'
-                            | async
-                        "
-                      ></div>
-                      <div class="d-flex align-items-center">
-                        <i class="icon-class icon-16 me-1 text-primary"></i>
-                        <span>{{ data?.assetNo }}</span>
-                      </div>
-                    </div>
-                    <div class="col-4">
-                      <div class="d-flex">
-                        <codx-label
-                          fiedName="IssuedDate"
-                          [formModel]="eAssetFormModel"
-                        >
-                        </codx-label>
-                        <span class="me-2">|</span>
-                        <codx-label
-                          fiedName="IsAllowReturn"
-                          [formModel]="eAssetFormModel"
-                        >
-                        </codx-label>
-                      </div>
-                      <div class="mb-1">
-                       <span
-                        [innerHTML]="
-                          data?.issuedDate
-                            | formatvalue : eAssetFormModel : 'issuedDate'
-                            | async
-                        "
-                        ></span>
-                      </div>
-                      <div
-                        *ngIf="data?.isAllowReturn == true"
-                        class="badge border-0 me-2 badge-primary"
-                      >
-                        {{ eAssetHeaderText["IsAllowReturn"] }}
-                      </div>
-                    </div>
-                    <div class="col-4">
-                      <div class="d-flex">
-                        <codx-label
-                          fiedName="ReturnedDate"
-                          [formModel]="eAssetFormModel"
-                        >
-                        </codx-label>
-                      </div>
-
-                      <div class="has-action-menu min-h-40px">
-                        <div
-                          *ngIf="data?.isReturned == true"
-                          class="has-action-menu"
-                        >
-                          <div class="badge border-0 mb-1 badge-primary">
-                            {{ eAssetHeaderText["IsReturned"] }}
-                          </div>
-                          <div class="d-flex align-items-center">
-                            <i class="icon-calendar_today icon-16 me-1"></i>
-                            <span> {{ data?.returnedDate | fmDT }}</span>
-                          </div>
-                        </div> 
-                      </div>
-                    </div>
-                  </div>
-                </ng-template>
-              </div>
-            </ng-container>
-          </div> -->
       </div>
-    </div>
+    </div> -->
 
     <!-- </div> -->
   </div>
@@ -4430,24 +4314,22 @@
                 [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
-            <!-- <codx-gridview-v2
-                      idField="recID"
-                      [columnsGrid]="rewardColumnsGrid"
-                      [service]="'HR'"
-                      [gridViewName]="'grvEAwards'"
-                      [formName]="'EAwards'"
-                      [assemblyName]="'Core'"
-                      [className]="'DataBusiness'"
-                      [method]="'LoadDataAsync'"
-                      [predicates]="'EmployeeID=@0'"
-                      [autoLoad]="true"
-                      [height]="200"
-                      [dataValues]="data.employeeID"
-                      [entityName]="'HR_EAwards'"
-                      [contentEditable]="false"
-                      [allowResizing]="true"
-                      (clickMF)="clickMF($event, null, 'eAwards')"
-                    ></codx-gridview-v2> -->
+            <ng-container *ngIf="awardFormModel && awardColumnsGrid">
+              <codx-gridview-v2
+              #eAwardGridView2
+                        [formModel]="awardFormModel"
+                        [columnsGrid]="awardColumnsGrid"
+                        [service]="'HR'"
+                        [assemblyName]="'Core'"
+                        [className]="'DataBusiness'"
+                        [method]="'LoadDataAsync'"
+                        [predicates]="'EmployeeID=@0'"
+                        [dataValues]="employeeID"
+                        [emptyTemplate]="emptyDataTemplate"
+                        (clickMF)="clickMF($event, null, 'eAwards')"
+                      ></codx-gridview-v2>
+            </ng-container>  
+            
           </div>
         </div>
       </div>
@@ -6873,6 +6755,7 @@
     "
   ></div>
 </ng-template>
+
 <ng-template #templateDisciplineGridCol2 let-data>
   <div class="d-flex align-items-center mb-5px">
     <i class="icon-event icon-16 me-2 text-danger"></i>
@@ -6881,8 +6764,8 @@
     </div>
   </div>
   <div class="d-flex align-items-center">
-    <i class="icon-event icon-16 me-2 text-gray-500"></i>
-    <span class="text-dark me-4">{{ data?.fromDate | fmDT }}</span>
+    <!-- <i class="icon-event icon-16 me-2 text-gray-500"></i>
+    <span class="text-dark me-4">{{ data?.fromDate | fmDT }}</span> -->
 
     <i class="icon-library_books icon-16 text-gray-500 me-2"></i>
     <span
@@ -6895,6 +6778,7 @@
     </span>
   </div>
 </ng-template>
+
 <ng-template #templateDisciplineGridCol3 let-data>
   <div class="has-action-menu min-h-40px">
     {{ data?.reason }}
@@ -7562,6 +7446,66 @@
   </div> -->
 <!-- </div>
 </ng-template> -->
+
+<ng-template #headTempAwards1>
+  <codx-label
+  [formModel]="awardFormModel"
+  [name]="'lblAwardsGridCol1'"
+  default="Loại khen thưởng"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempAwards2>
+  <codx-label
+  [formModel]="awardFormModel"
+  [name]="'lblAwardsGridCol2'"
+  default="Ngày khen thưởng"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempAwards3>
+  <codx-label
+  [formModel]="awardFormModel"
+  [name]="'lblAwardsGridCol3'"
+  default="Lý do khen thưởng"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDisciplines1>
+  <codx-label
+  [formModel]="eDisciplineFormModel"
+  [name]="'lblDisciplineGridCol1'"
+  default="Loại kỷ luật"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDisciplines2>
+  <codx-label
+  [formModel]="eDisciplineFormModel"
+  [name]="'lblDisciplineGridCol2'"
+  default="Ngày vi phạm"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDisciplines3>
+  <codx-label
+  [formModel]="eDisciplineFormModel"
+  [name]="'lblDisciplineGridCol3'"
+  default="Nội dung vi phạm"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
 
 <ng-template #tmpViewAllContract let-dialog1>
   <div class="">

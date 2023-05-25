@@ -48,53 +48,79 @@
   >
   </codx-temp-full>
   <ng-template #descTmpCard>
-    <div class="flex-body d-flex justify-content-between mt-2">
-      Khanh Doremon + Bảo lương lẹo
-      <!-- <div>
-        <codx-vll
-          [name]="vllStatus"
-          [field]="'Status'"
-          [value]="data?.status"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-light badge-sm line-clamp-vll"
-        >
-        </codx-vll>
+    <div class="'d-flex flex-column w-100">
+      <div class="mb-1">
+        <i class="icon-business icon-16 me-2"></i>
+        <span
+          class="text-gray-700"
+          #customerID
+          [innerHTML]="
+            data?.customerID
+              | formatvalue : view.formModel : 'customerID'
+              | async
+          "
+        ></span>
       </div>
-      <div class="d-flex justify-content-end">
-        <div
-          class="d-flex align-items-center"
-          #pCr="ngbPopover"
-          [ngbPopover]="popperCreatedOn"
-          (mouseenter)="pCr.open()"
-          (mouseleave)="pCr.close()"
-          container="body"
-          placement="left right"
-        >
-          <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
+      <div class="d-flex justify-content-between mt-2">
+        <div class="">
+          <span class="icon-monetization_on icon-16 text-warning me-2"></span>
           <span
-            class="fs-7 text-gray-600"
-            #createdOn
             [innerHTML]="
-              data.createdOn
-                | formatvalue
-                  : view.formModel
-                  : 'createdOn'
-                  : createdOn
-                  : 'DPInstances'
-                  : 'grvDPInstances'
+              data?.dealValue
+                | formatvalue : view.formModel : 'dealValue'
                 | async
             "
           ></span>
         </div>
-      </div>-->
-    </div> 
+        <div class="d-flex justify-content-end">
+          <span class="icon-i-check-all icon-16 text-green me-2"></span>
+          <span
+            [innerHTML]="
+              data?.probability
+                | formatvalue : view.formModel : 'probability'
+                | async
+            "
+          ></span
+          ><span *ngIf="data?.probability">%</span>
+        </div>
+      </div>
+    </div>
   </ng-template>
 </ng-template>
 
 <ng-template #footerKanban let-data>
-  <div class="d-flex justify-content-between align-items-center mt-1">
-    <div class="d-flex align-items-end codx-badge">noi dung gi day</div>
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
+      <span
+        class="fs-7 text-gray-600"
+        #createdOn
+        [innerHTML]="
+          data.createdOn | formatvalue : view.formModel : 'createdOn' | async
+        "
+      ></span>
+    </div>
+
+    <div class="d-flex justify-content-end align-items-center">
+      <span class="me-1">
+        <span class="icon-16 icon-av_timer me-1"></span>
+        <span
+          class="text-gray-700"
+          #endDate
+          [innerHTML]="
+            data.endDate | formatvalue : view.formModel : 'endDate' | async
+          "
+        ></span>
+      </span>
+      <codx-imgs
+        [isToolTip]="true"
+        [width]="25"
+        [objectId]="data.owner"
+        objectType="AD_Users"
+        [numberImages]="1"
+      >
+      </codx-imgs>
+    </div>
   </div>
 </ng-template>
 
@@ -162,12 +188,7 @@
         #businessLineID
         [innerHTML]="
           data?.businessLineID
-            | formatvalue
-              : formModel
-              : 'businessLineID'
-              : businessLineID
-              : 'CMDeals'
-              : 'grvCMDeals'
+            | formatvalue : view.formModel : 'businessLineID' : businessLineID
             | async
         "
       ></span>
@@ -178,21 +199,28 @@
       <span
         class="text-gray-700"
         #memo
-        [innerHTML]="
-          data?.memo
-            | formatvalue : formModel : 'memo' : memo : 'CMDeals' : 'grvCMDeals'
-            | async
-        "
+        [innerHTML]="data?.memo | formatvalue : view.formModel : 'memo' | async"
       ></span>
     </div>
     <div class="d-flex justify-content-between py-1">
       <div class="d-flex align-items-start pe-4">
         <span class="icon-monetization_on icon-16 text-warning me-2"></span>
-        <div>{{ data?.dealValue }}</div>
+        <span
+          [innerHTML]="
+            data?.dealValue | formatvalue : view.formModel : 'dealValue' | async
+          "
+        ></span>
       </div>
       <div class="d-flex align-items-center">
         <span class="icon-i-check-all icon-16 text-green me-2"></span>
-        <div>{{ data?.probability }}%</div>
+        <span
+          [innerHTML]="
+            data?.probability
+              | formatvalue : view.formModel : 'probability'
+              | async
+          "
+        ></span
+        ><span *ngIf="data?.probability">%</span>
       </div>
       <div class="d-flex align-items-center">
         <span class="icon-16 icon-av_timer me-1"></span>
@@ -200,14 +228,7 @@
           class="text-gray-700"
           #createdOn
           [innerHTML]="
-            data.createdOn
-              | formatvalue
-                : formModel
-                : 'createdOn'
-                : createdOn
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
+            data.createdOn | formatvalue : view.formModel : 'createdOn' | async
           "
         ></span>
       </div>
@@ -228,14 +249,7 @@
           class="text-gray-700"
           #endDate
           [innerHTML]="
-            data.endDate
-              | formatvalue
-                : formModel
-                : 'endDate'
-                : endDate
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
+            data.endDate | formatvalue : view.formModel : 'endDate' | async
           "
         ></span>
       </div>
@@ -245,7 +259,7 @@
         [isToolTip]="true"
         [width]="25"
         [objectId]="data.owner"
-        ojectType="AD_Users"
+        objectType="AD_Users"
         [numberImages]="1"
       >
       </codx-imgs>

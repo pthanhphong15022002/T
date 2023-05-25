@@ -267,7 +267,7 @@ export class EmployeeDayOffComponent extends UIComponent {
       this.handlerEDayOffs(
         event.text + ' ' + this.view.function.description,
         'add',
-        null
+        this.itemDetail
       );
     }
   }

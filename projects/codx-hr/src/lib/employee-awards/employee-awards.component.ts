@@ -146,7 +146,7 @@ export class EmployeeAwardsComponent extends UIComponent {
       this.handlerEAwards(
         event.text + ' ' + this.view.function.description,
         'add',
-        null
+        this.itemDetail
       );
     }
   }
@@ -185,7 +185,9 @@ export class EmployeeAwardsComponent extends UIComponent {
         break;
       //Delete
       case 'SYS02':
-        if (data) {this.view.dataService.dataSelected = data;}
+        if (data) {
+          this.view.dataService.dataSelected = data;
+        }
         this.view.dataService
           .delete([data], true, (option: RequestOption) =>
             this.beforeDelete(option, data.recID)
@@ -370,15 +372,12 @@ export class EmployeeAwardsComponent extends UIComponent {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
-                this.hrService
-                  .UpdateEmployeeAwardInfo((res) => {
-                    if (res) {
-                      // console.log('after release', res);
-                      this.view?.dataService
-                        ?.update(this.itemDetail)
-                        .subscribe();
-                    }
-                  });
+                this.hrService.UpdateEmployeeAwardInfo((res) => {
+                  if (res) {
+                    // console.log('after release', res);
+                    this.view?.dataService?.update(this.itemDetail).subscribe();
+                  }
+                });
               } else this.notify.notifyCode(result?.msgCodeError);
             });
         }

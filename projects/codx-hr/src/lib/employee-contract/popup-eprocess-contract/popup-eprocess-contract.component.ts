@@ -12,7 +12,6 @@ import {
   CallFuncService,
   CodxFormComponent,
   CodxListviewComponent,
-  CRUDService,
   DataRequest,
   DialogData,
   DialogModel,
@@ -52,6 +51,7 @@ export class PopupEProcessContractComponent
   openFrom: string;
   genderGrvSetup: any;
   employeeObj: any;
+  contractNoDisable: boolean = false;
 
   //#region EBenefitInfo Declaration
   benefitFuncID = 'HRTEM0403';
@@ -123,6 +123,13 @@ export class PopupEProcessContractComponent
         this.tempBenefitArr = JSON.parse(JSON.stringify(this.data?.benefits));
       }
     }
+
+    if (this.dialog.dataService?.keyField === 'ContractNo') {
+      this.contractNoDisable = false;
+    } else {
+      this.contractNoDisable = true;
+    }
+
     this.fmSubContract = new FormModel();
     this.fmSubContract.entityName = 'HR_EContracts';
     this.fmSubContract.gridViewName = 'grvEContractsPL';
@@ -508,7 +515,7 @@ export class PopupEProcessContractComponent
     let optionSub = new SidebarModel();
     optionSub.Width = '550px';
     optionSub.zIndex = 1001;
-    let popupSubContract = this.callfc.openForm(
+    let popupSubContract = this.callfunc.openForm(
       PopupSubEContractComponent,
       '',
       550,

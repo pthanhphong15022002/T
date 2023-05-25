@@ -422,6 +422,7 @@ export class CodxCmService {
     );
   }
 
+
   getListCbxCampaigns() {
     return this.api.exec<any>(
       'CM',
@@ -435,6 +436,15 @@ export class CodxCmService {
       'CM',
       'CustomersBusiness',
       'GetListCustomersAsync'
+    );
+  }
+
+  openOrClosedDeal(data:any) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'OpenOrClosedDealAsync',
+      data
     );
   }
   getListChannels() {
