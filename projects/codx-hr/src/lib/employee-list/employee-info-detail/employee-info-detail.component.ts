@@ -636,7 +636,21 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     this.routeActive.queryParams.subscribe((params) => {
       this.employeeID = params["employeeID"];
       this.pageNum = params["page"];
-      
+
+      // if (!this.infoPersonal) {
+      //   let empRequest = new DataRequest();
+      //   empRequest.entityName = 'HR_Employees';
+      //   empRequest.dataValues = this.employeeID;
+      //   empRequest.predicates = 'EmployeeID=@0';
+      //   empRequest.pageLoading = false;
+      //   this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+      //     debugger
+      //     if (emp[1] > 0) {
+      //       this.infoPersonal = emp[0][0];
+      //     }
+      //   });
+      // } 
+
       if (this.employeeID || this.user.userID) 
       {
         debugger
@@ -752,6 +766,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       },
     ];
     this.formModel = this.view.formModel;
+    console.log('thong tin ban than nv', this.infoPersonal);
+    
   }
 
   // init formModel
@@ -4716,13 +4732,14 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       opt
     )
     popup.closed.subscribe((res) => {
-      if(res?.event){
-        this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
-          if (res) {
-            this.listCrrBenefit = res;
-            this.df.detectChanges();
-          }
-        }); 
+      debugger
+      if (res?.event) {
+        if (res?.event == 'none') {
+          this.listCrrBenefit = null;
+        } else {
+          this.listCrrBenefit = res.event;
+        }
+        this.df.detectChanges();
       }
     }) 
     // this.headerTextBenefit =
@@ -4826,12 +4843,14 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       opt
     )
     popup.closed.subscribe((res) => {
+      debugger
       if(res?.event){
-        this.hrService
-        .GetCurrentEBasicSalariesByEmployeeID(this.employeeID)
-        .subscribe((dataEBaSlary) => {
-          this.crrEBSalary = dataEBaSlary;
-        }); 
+        if (res?.event == 'none') {
+          this.crrEBSalary = null;
+        } else {
+          this.crrEBSalary = res.event;
+        }
+        this.df.detectChanges();
       }
     }) 
     // this.headerTextSalary =
