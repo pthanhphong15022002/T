@@ -133,9 +133,7 @@ export class DealsComponent
       this.dataObj = changes['dataObj'].currentValue;
       if (this.processID != this.dataObj?.processID) {
         this.processID = this.dataObj?.processID;
-        (this.view?.dataService as CRUDService)
-          .setPredicates(['ProcessID==@0'], [this.processID])
-          .subscribe();
+      
         if ((this.view?.currentView as any)?.kanban) {
           let kanban = (this.view?.currentView as any)?.kanban;
           let settingKanban = kanban.kanbanSetting;
@@ -159,6 +157,9 @@ export class DealsComponent
               kanban.refresh();
             });
         }
+        (this.view?.dataService as CRUDService)
+        .setPredicates(['ProcessID==@0'], [this.processID])
+        .subscribe();
       }
     }
   }
