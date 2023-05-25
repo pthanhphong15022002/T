@@ -11,6 +11,7 @@ import {
   AlertConfirmInputConfig,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from '../popup-quickadd-contact/popup-quickadd-contact.component';
+import { CM_Contacts } from 'projects/codx-cm/src/lib/models/cm_model';
 
 @Component({
   selector: 'lib-popup-list-contacts',
@@ -24,7 +25,7 @@ export class PopupListContactsComponent implements OnInit {
   lstContacts = [];
   currentContact = 0;
   moreFuncAdd = '';
-  contact: any;
+  contact: CM_Contacts = new CM_Contacts();
   lstSearch = [];
   type: any;
   contactType = '';
@@ -34,6 +35,9 @@ export class PopupListContactsComponent implements OnInit {
   gridViewSetup: any;
   lstContactCm = [];
   loaded: boolean;
+  fieldContact = { text: 'contactName', value: 'recID' };
+  contactID: any;
+  isDefault = false;
   constructor(
     private cache: CacheService,
     private callFc: CallFuncService,
@@ -54,23 +58,26 @@ export class PopupListContactsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.contactType = '0';
     this.cmSv.getContacts().subscribe((res) => {
       if (res != null && res.length > 0) {
         this.lstContacts = res;
-        this.lstSearch = this.lstContacts;
       }
     });
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'SYS01');
-        if (m) this.moreFuncAdd = m.defaultName;
+    this.contactType = '0';
+
+    if (this.lstContactCm != null && this.lstContactCm.length > 0) {
+      if (this.lstContactCm.some((x) => x.isDefault == true)) {
+        this.isDefault = false;
+      } else {
+        this.isDefault = true;
       }
-    });
+    } else {
+      this.isDefault = true;
+    }
   }
 
-  onSave() {
-    this.contact.isDefault = false;
+  onSave(type) {
+    this.contact.isDefault = this.isDefault;
     this.contact.contactType = this.contactType;
     this.contact.objectID = this.recIDCm;
     this.contact.objectType = this.objectType;
@@ -83,23 +90,121 @@ export class PopupListContactsComponent implements OnInit {
       );
       return;
     }
+    if (this.contactID == null || this.contactID.trim() == '') {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['RecID'].headerText + '"'
+      );
+      return;
+    }
+    if (this.lstContactCm != null) {
+      if (
+        this.lstContactCm.some(
+          (x) => x.isDefault && x.recID != this.contact.recID
+        )
+      ) {
+        if (this.isDefault) {
+          var config = new AlertConfirmInputConfig();
+          config.type = 'YesNo';
+          this.notiService.alertCode('CM001').subscribe((x) => {
+            if (x.event.status == 'Y') {
+              this.onAdd(type);
+            }
+          });
+        } else {
+          this.onAdd(type);
+        }
+      } else {
+        this.onAdd(type);
+      }
+    } else {
+      this.onAdd(type);
+    }
+  }
+
+  onAdd(type) {
     if (this.type == 'formDetail') {
       this.cmSv.updateContactByPopupListCt(this.contact).subscribe((res) => {
         if (res) {
-          this.dialog.close(res);
+          if (type == 'save') {
+            this.dialog.close(res);
+            this.notiService.notifyCode('SYS006');
+          } else {
+            this.deleteContact(res);
+            this.notiService.notifyCode('SYS006');
+          }
+        } else {
+          this.dialog.close();
+          this.notiService.notifyCode('SYS023');
         }
       });
     } else {
       if (this.contact != null) {
-        this.dialog.close(this.contact);
-      } else return;
+        if (type == 'save') {
+          this.dialog.close(this.contact);
+          this.notiService.notifyCode('SYS006');
+        } else {
+          this.notiService.notifyCode('SYS006');
+          this.deleteContact(this.contact);
+        }
+      } else {
+        this.dialog.close();
+        this.notiService.notifyCode('SYS023');
+      }
+    }
+  }
+
+  deleteContact(data) {
+    if (data != null) {
+      var index = this.lstContacts.findIndex((x) => x.recID == data?.recID);
+      if (index != -1) {
+        this.lstContacts.splice(index, 1);
+        this.lstContacts = JSON.parse(JSON.stringify(this.lstContacts));
+      }
+      if (data.isDefault) {
+        this.lstContactCm.forEach((element) => {
+          element.isDefault = false;
+        });
+      }
+      this.lstContactCm.push(data);
+      this.contactType = '0';
+      this.contactID = null;
+      if (this.lstContactCm != null && this.lstContactCm.length > 0) {
+        if (this.lstContactCm.some((x) => x.isDefault == true)) {
+          this.isDefault = false;
+        } else {
+          this.isDefault = true;
+        }
+      } else {
+        this.isDefault = true;
+      }
+      this.changeDet.detectChanges();
     }
   }
 
   valueChange(e) {
-    this.contactType = e.data;
+    if (e.field == 'contactType') {
+      this.contactType = e.data;
+    } else {
+      this.isDefault = e.data;
+    }
   }
-
+  cbxContact(e) {
+    if (e != null) {
+      if (this.contactID != e) {
+        this.contactID = e;
+        if (this.contactID != null && this.contactID.trim() != '') {
+          var find = this.lstContacts.findIndex(
+            (x) => x.recID == this.contactID
+          );
+          if (find != -1) {
+            this.contact = this.lstContacts[find];
+          }
+        }
+      }
+    }
+  }
   changeContacts(index, item) {
     this.currentContact = index;
     this.contact = item;
