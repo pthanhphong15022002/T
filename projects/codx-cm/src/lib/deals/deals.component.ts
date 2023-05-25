@@ -137,39 +137,44 @@ export class DealsComponent
   }
 
   reloadData() {
-    this.view.views.forEach((x) => {
-      if (x.type == 6) {
-        x.request.dataObj = this.dataObj;
-        x.request2.dataObj = this.dataObj;
+    if (this.view) {
+      this.view.views.forEach((x) => {
+        if (x.type == 6) {
+          x.request.dataObj = this.dataObj;
+          x.request2.dataObj = this.dataObj;
+        }
+      });
+      if ((this.view?.currentView as any)?.kanban) {
+        let kanban = (this.view?.currentView as any)?.kanban;
+        let settingKanban = kanban.kanbanSetting;
+        settingKanban.isChangeColumn = true;
+        settingKanban.formName = this.view?.formModel?.formName;
+        settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+        this.api
+          .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+            settingKanban,
+            this.dataObj,
+          ])
+          .subscribe((resource) => {
+            if (resource?.columns && resource?.columns.length)
+              kanban.columns = resource.columns;
+            kanban.kanbanSetting.isChangeColumn = false;
+            kanban.loadDataSource(
+              kanban.columns,
+              kanban.kanbanSetting?.swimlaneSettings,
+              false
+            );
+         
+            kanban.load();
+            kanban.refresh();
+          });
       }
-    });
-    if ((this.view?.currentView as any)?.kanban) {
-      let kanban = (this.view?.currentView as any)?.kanban;
-      let settingKanban = kanban.kanbanSetting;
-      settingKanban.isChangeColumn = true;
-      settingKanban.formName = this.view?.formModel?.formName;
-      settingKanban.gridViewName = this.view?.formModel?.gridViewName;
-      this.api
-        .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
-          settingKanban,
-          this.dataObj,
-        ])
-        .subscribe((resource) => {
-          if (resource?.columns && resource?.columns.length)
-            kanban.columns = resource.columns;
-          kanban.kanbanSetting.isChangeColumn = false;
-          kanban.loadDataSource(
-            kanban.columns,
-            kanban.kanbanSetting?.swimlaneSettings,
-            false
-          );
-          kanban.refresh();
-        });
+      this.view.dataObj = this.dataObj;
+      if(this.processID)
+      (this.view?.dataService as CRUDService)
+        .setPredicates(['ProcessID==@0'], [this.processID])
+        .subscribe();
     }
-    this.view.dataObj = this.dataObj;
-    (this.view?.dataService as CRUDService)
-      .setPredicates(['ProcessID==@0'], [this.processID])
-      .subscribe();
   }
 
   onInit(): void {
@@ -251,6 +256,7 @@ export class DealsComponent
         //   },
         // },
       ];
+    this.reloadData();
     this.changeDetectorRef.detectChanges();
   }
 
@@ -259,7 +265,6 @@ export class DealsComponent
     //   if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
     //   else this.kanban = (this.view.currentView as any).kanban;
     // }
-
     // this.reloadData();
   }
   changeColumns(settingKanban) {
