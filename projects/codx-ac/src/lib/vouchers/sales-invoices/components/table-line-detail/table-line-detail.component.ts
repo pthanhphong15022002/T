@@ -14,7 +14,6 @@ import {
   FormModel,
   UIComponent,
 } from 'codx-core';
-import { CodxAcService } from '../../../../codx-ac.service';
 import { ISalesInvoicesLine } from '../../interfaces/ISalesInvoicesLine.interface';
 import { PopupAddSalesInvoicesLineComponent } from '../../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoiceService } from '../../sales-invoices.service';
@@ -33,7 +32,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   @Input() dataService: CRUDService;
   @Input() hiddenFields: string[] = [];
 
-  @ViewChild('grid') grid: CodxGridviewV2Component;
+  @ViewChild('grid', { static: true }) grid: CodxGridviewV2Component;
   @ViewChild('columnItemID', { static: true }) columnItemID: TemplateRef<any>;
   @ViewChild('columnQuantity', { static: true })
   columnQuantity: TemplateRef<any>;
@@ -43,22 +42,15 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   vats: any[];
   fmSalesInvoicesLines: FormModel;
 
-  constructor(
-    injector: Injector,
-    private acService: CodxAcService,
-    salesInvoiceService: SalesInvoiceService
-  ) {
+  constructor(injector: Injector, salesInvoiceService: SalesInvoiceService) {
     super(injector);
     this.fmSalesInvoicesLines = salesInvoiceService.fmSalesInvoicesLines;
+    this.vats = salesInvoiceService.vats;
   }
   //#endregion
 
   //#region Init
   override onInit(): void {
-    this.acService
-      .loadComboboxData('VATCodesAC', 'BS')
-      .subscribe((res) => (this.vats = res));
-
     this.columns = [
       {
         field: 'itemID',
@@ -78,8 +70,8 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
         width: 90,
       },
       {
-        field: 'costAmt',
-        headerText: this.gvs?.CostAmt?.headerText ?? 'Thành tiền',
+        field: 'netAmt',
+        headerText: this.gvs?.NetAmt?.headerText ?? 'Thành tiền',
         width: 90,
       },
       {
@@ -98,7 +90,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.transID) {
-      this.grid.dataService.load().subscribe(() => {
+      this.grid?.dataService.load().subscribe(() => {
         this.grid.refresh();
       });
     }

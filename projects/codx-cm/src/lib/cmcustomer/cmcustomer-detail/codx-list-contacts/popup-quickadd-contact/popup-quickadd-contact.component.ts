@@ -186,7 +186,6 @@ export class PopupQuickaddContactComponent implements OnInit {
       if (!this.checkEmailOrPhone(this.data.personalEmail, 'E')) return;
     }
 
-    if (this.type == 'formDetail') {
       if (this.listContacts != null) {
         if (
           this.listContacts.some(
@@ -210,9 +209,7 @@ export class PopupQuickaddContactComponent implements OnInit {
       } else {
         this.onAdd();
       }
-    } else {
-      this.onAdd();
-    }
+
   }
 
   valueChange(e) {

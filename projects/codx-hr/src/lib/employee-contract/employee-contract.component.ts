@@ -86,7 +86,6 @@ export class EmployeeContractComponent extends UIComponent {
   //     text: 'Xóa',
   //   },
   // ];
-  formatValuePipe: FormatvaluePipe;
 
   constructor(
     inject: Injector,
@@ -98,7 +97,6 @@ export class EmployeeContractComponent extends UIComponent {
   ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.formatValuePipe = new FormatvaluePipe(this.cache, this.auth, this.api);
   }
 
   onInit(): void {

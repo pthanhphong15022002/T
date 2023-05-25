@@ -638,7 +638,7 @@ implements OnInit, AfterViewInit {
       PopupRescheduleMeetingComponent,
       '',
       700,
-      350,
+      500,
       '',
       obj
     );

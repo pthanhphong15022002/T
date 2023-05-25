@@ -11,18 +11,19 @@
 }
 .popup-body{
     width: 100%;
-    height: 100%;
     margin-top: 15px;
     display: flex;
     justify-content: space-between;
 }
 .panel-left{
     width: 100%;
-    height: 100%;
 }
 .panel-right{
     width: 100%;
     margin-left: 15px;
+    .card-body{
+        height: calc(100vh - 240px)!important;
+    }
 }
 .panel-left-header{
     width: 100%;
@@ -30,5 +31,7 @@
 }
 .panel-left-body{
     width: 100%;
+    height: calc(100vh - 270px)!important;
+    overflow: auto;
 }
 

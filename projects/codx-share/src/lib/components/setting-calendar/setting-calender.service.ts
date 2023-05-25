@@ -103,12 +103,12 @@ export class SettingCalendarService {
     });
   }
 
-  getParams(formName, fieldName) {
+  getParams(module: string) {
     return this.api.exec<any>(
       APICONSTANT.ASSEMBLY.SYS,
       'SettingValuesBusiness',
       'GetOneField',
-      [formName, null, fieldName]
+      [module]
     );
   }
 

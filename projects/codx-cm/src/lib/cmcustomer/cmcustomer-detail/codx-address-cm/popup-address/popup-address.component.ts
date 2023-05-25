@@ -37,6 +37,7 @@ export class PopupAddressComponent implements OnInit {
   objectID = '';
   objectType = '';
   lstAddress = [];
+
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -82,34 +83,32 @@ export class PopupAddressComponent implements OnInit {
   }
 
   setNameAdress() {
-    var lstText = this.data?.adressName.split(',');
-    if (this.data.countryID != null && this.data.countryID.trim() != '') {
-      this.nameCountry = lstText[lstText.length - 1].trim();
+    if(this.data.countryID != null && this.data.countryID.trim() != ''){
+      this.api.execSv<any>('BS','ERM.Business.BS','CountriesBusiness','GetAsync',this.data?.countryID).subscribe(res =>{
+        if(res){
+          this.nameCountry = res?.countryName;
+        }
+      })
     }
-    if (this.data.provinceID != null && this.data.provinceID.trim() != '') {
-      this.nameProvince = lstText[lstText.length - 2].trim() + ', ';
-      if (this.data.districtID != null && this.data.districtID.trim() != '') {
-        this.nameDistrict = lstText[lstText.length - 3].trim() + ', ';
-        if (this.data.wardID != null && this.data.wardID.trim() != '') {
-          this.nameWard = lstText[lstText.length - 4].trim() + ', ';
+    if(this.data.provinceID != null && this.data.provinceID.trim() != ''){
+      this.api.execSv<any>('BS','ERM.Business.BS','ProvincesBusiness','GetAsync',this.data?.provinceID).subscribe(res =>{
+        if(res){
+          this.nameProvince = res?.name;
         }
-      } else {
-        if (this.data.wardID != null && this.data.wardID.trim() != '') {
-          this.nameWard = lstText[lstText.length - 3].trim() + ', ';
-        }
-      }
-    } else {
-      if (this.data.districtID != null && this.data.districtID.trim() != '') {
-        this.nameDistrict = lstText[lstText.length - 2].trim() + ', ';
-        if (this.data.wardID != null && this.data.wardID.trim() != '') {
-          this.nameWard = lstText[lstText.length - 3].trim() + ', ';
-        }
-      } else {
-        if (this.data.wardID != null && this.data.wardID.trim() != '') {
-          this.nameWard = lstText[lstText.length - 2].trim() + ', ';
-        }
-      }
+      })
     }
+    if(this.data.districtID != null && this.data.districtID.trim() != ''){
+      this.api.execSv<any>('BS','ERM.Business.BS','DistrictsBusiness','GetAsync',this.data?.districtID).subscribe(res =>{
+        if(res){
+          this.nameDistrict = res?.districtName;
+        }
+      })
+    }
+    // if(this.data.countryID != null && this.data.countryID.trim() != ''){
+    //   this.api.execSv<any>('BS','ERM.Business.BS','CountriesBusiness','GetAsync',this.data.countryID).subscribe(res =>{
+    //     this.nameCountry = res;
+    //   })
+    // }
   }
 
   onSave() {

@@ -7,7 +7,7 @@
   className="ItemsBusiness"
   method="GetItemsAsync"
   [button]="btnAdd"
-  (buttonClick)="handleClickAdd($event)"
+  (buttonClick)="onClickAdd($event)"
 >
 </codx-views>
 
@@ -32,6 +32,7 @@
 
 <ng-template #itemTemplate let-data>
   <tr>
+    <td></td>
     <td>
       <div class="d-flex gap-3 align-items-center">
         <div>
@@ -86,10 +87,14 @@
         default="Phương pháp tính giá"
       ></codx-label
       >:&nbsp;
-      <b>{{
-        inventoryModels
-          | nameById : "InventModelID" : "InventModelName" : data?.inventModelID
-      }}</b>
+      <span
+        class="fw-bold"
+        [innerHTML]="
+          data?.inventModelID
+            | formatvalue : view.formModel : 'inventModelID'
+            | async
+        "
+      ></span>
     </td>
     <td class="fs-8">
       <codx-label
@@ -98,15 +103,18 @@
         default="Theo dõi"
       ></codx-label
       >:&nbsp;
-      <b>{{
-        dimGroups | nameById : "DimGroupID" : "DimGroupName" : data?.dimGroupID
-      }}</b>
+      <span
+        class="fw-bold"
+        [innerHTML]="
+          data?.dimGroupID | formatvalue : view.formModel : 'dimGroupID' | async
+        "
+      ></span>
     </td>
     <td>
       <codx-mfunc
         [dataItem]="data"
         [formModel]="view.formModel"
-        (clickMF)="handleClickMoreFuncs($event, data)"
+        (clickMF)="onClickMF($event, data)"
         [isBookMark]="true"
         type="view"
       ></codx-mfunc>
@@ -118,7 +126,7 @@
   <codx-mfunc
     [dataItem]="data"
     [formModel]="view.formModel"
-    (clickMF)="handleClickMoreFuncs($event, data)"
+    (clickMF)="onClickMF($event, data)"
     [isBookMark]="true"
     type="view"
   ></codx-mfunc>
