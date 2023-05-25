@@ -37,6 +37,25 @@
       <!-- <span class="ml-5"> <codx-label name="FullDate" [formModel]="form.formModel"  default="Cả ngày"> </codx-label></span> -->
     </div>
   </div>
+  <div *ngIf="meeting.location" class="form-group">
+    <div class="d-flex justify-content-between align-items-center">
+      <codx-label fiedName="Location" [formModel]="form.formModel">
+      </codx-label>
+      <!-- <span class="label-status text-primary">{{
+        data?.status | vll: "VL003":"text" | async
+        }}</span> -->
+    </div>
+    <!-- <ejs-combobox id='locationCBB' #locationCBB [dataSource]='listRoom' [fields]='fields'
+      [placeholder]="gridViewSetup['Location']?.description" (valueChange)="cbxChange($event)"></ejs-combobox> -->
+    <ejs-dropdownlist
+      id="locationCBB"
+      #locationCBB
+      [dataSource]="listRoom"
+      [fields]="fields"
+      [placeholder]="'Phòng họp'"
+      (valueChange)="cbxChange($event)"
+    ></ejs-dropdownlist>
+  </div>
   <div class="form-group">
     <codx-label default="Bình luận"></codx-label>
     <codx-input type="textarea" class="resize-none" (valueChange)="valueChange($event)" [crrValue]="comment"
