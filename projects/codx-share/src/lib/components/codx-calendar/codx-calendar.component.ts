@@ -271,6 +271,15 @@ export class CodxCalendarComponent
 
   changeNewMonth(args) {
     this.FDdate = args.date;
+    let ele = document.getElementsByTagName('codx-schedule')[0];
+    if (ele) {
+      let scheduleEle = ele.querySelector('ejs-schedule');
+      if ((scheduleEle as any).ej2_instances[0]) {
+        (scheduleEle as any).ej2_instances[0].selectedDate = new Date(
+          this.FDdate
+        );
+      }
+    }
   }
 
   updateSettingValue(e) {
