@@ -819,7 +819,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     });
     if(this.isSaveMaster)
     {
-      this.onSaveData();
+      this.onSaveMaster();
     }
   }
 
@@ -1157,7 +1157,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   //   }
   // }
 
-  onSaveData()
+  onSaveMaster()
   {
     this.checkValidate();
     if (this.validate > 0) {
