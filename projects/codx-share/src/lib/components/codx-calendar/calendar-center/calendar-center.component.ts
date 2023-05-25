@@ -78,7 +78,6 @@ export class CalendarCenterComponent
 
   //navigate scheduler
   onAction(event: any) {
-    debugger;
     if (
       event.data.fromDate === 'Invalid Date' &&
       event.data.toDate === 'Invalid Date'

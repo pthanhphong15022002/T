@@ -5,8 +5,6 @@ import {
   AfterViewInit,
   ViewChild,
   TemplateRef,
-  Input,
-  ChangeDetectorRef,
 } from '@angular/core';
 import {
   UIComponent,
@@ -18,8 +16,6 @@ import {
 } from 'codx-core';
 import { PopupAddCalendarComponent } from './popup-add-calendar/popup-add-calendar.component';
 import { PopupSettingCalendarComponent } from './popup-setting-calendar/popup-setting-calendar.component';
-import moment from 'moment';
-import { CodxShareService } from '../../codx-share.service';
 
 @Component({
   selector: 'setting-calendar',
@@ -39,57 +35,24 @@ export class SettingCalendarComponent
   formModel: FormModel;
   request?: ResourceModel;
   calendarID: string;
-  vllPriority = 'TM005';
-  startTime: any;
-  month: any;
-  day: any;
-  resourceID: any;
-  tempCarName = '';
-  listCar = [];
-  driverName = '';
-  selectBookingAttendeesCar = '';
-  selectBookingAttendeesRoom = '';
-  listDriver: any[];
-  tempDriverName = '';
-  selectBookingItems = [];
-  tempRoomName = '';
-  listRoom = [];
   funcID: string;
 
   constructor(
     private injector: Injector,
-    private settingCalendar: SettingCalendarService,
-    private codxShareSV: CodxShareService,
-    private change: ChangeDetectorRef
+    private settingCalendar: SettingCalendarService
   ) {
     super(injector);
+  }
+
+  onInit() {
     this.router.params.subscribe((params) => {
       if (params) {
         this.funcID = params['funcID'];
         this.cache.functionList(this.funcID).subscribe((res) => {
-          if (res) this.getParams(res.module + 'Parameters', 'CalendarID');
+          if (res) {
+            this.getParams(res.module);
+          }
         });
-      }
-    });
-  }
-
-  onInit(): void {
-    this.codxShareSV.getListResource('1').subscribe((res: any) => {
-      if (res) {
-        this.listRoom = [];
-        this.listRoom = res;
-      }
-    });
-    this.codxShareSV.getListResource('2').subscribe((res: any) => {
-      if (res) {
-        this.listCar = [];
-        this.listCar = res;
-      }
-    });
-    this.codxShareSV.getListResource('3').subscribe((res: any) => {
-      if (res) {
-        this.listDriver = [];
-        this.listDriver = res;
       }
     });
   }
@@ -108,35 +71,27 @@ export class SettingCalendarComponent
     this.detectorRef.detectChanges();
   }
 
-  //region EP
-  showHour(date: any) {
-    let temp = new Date(date);
-    let time =
-      ('0' + temp.getHours()).toString().slice(-2) +
-      ':' +
-      ('0' + temp.getMinutes()).toString().slice(-2);
-    return time;
-  }
-
-  sameDayCheck(sDate: any, eDate: any) {
-    return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
-  }
-
-  getParams(formName: string, fieldName: string) {
-    this.settingCalendar.getParams(formName, fieldName).subscribe((res) => {
-      if (res) {
-        let dataValue = res[0].dataValue;
-        let json = JSON.parse(dataValue);
-        if (json.CalendarID && json.CalendarID == '') {
-          this.calendarID = 'STD';
-        } else {
-          this.calendarID = json.CalendarID;
+  getParams(module: string) {
+    this.api
+      .execSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetDataValueOfSettingAsync',
+        [`${module}Parameters`, null, '1']
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          let json = JSON.parse(res);
+          if (json.CalendarID && json.CalendarID == '') {
+            this.calendarID = 'STD';
+          } else {
+            this.calendarID = json.CalendarID;
+          }
+          this.getDayWeek(this.calendarID);
+          this.getDaysOff(this.calendarID);
         }
-        this.getDayWeek(this.calendarID);
-        this.getDaysOff(this.calendarID);
-        // this.detectorRef.detectChanges();
-      }
-    });
+      });
   }
 
   getDayWeek(calendarID: string) {
@@ -194,7 +149,7 @@ export class SettingCalendarComponent
     return ``;
   }
 
-  changeCombobox(event) {
+  changeCalendar(event) {
     event.data == ''
       ? (this.calendarID = 'STD')
       : (this.calendarID = event.data);
@@ -221,7 +176,6 @@ export class SettingCalendarComponent
   }
 
   reloadCalendar() {
-    alert('trigger');
     (this.viewOrg.currentView as any).schedule?.scheduleObj?.first?.refresh();
   }
 }
