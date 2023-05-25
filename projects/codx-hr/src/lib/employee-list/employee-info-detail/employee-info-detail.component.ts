@@ -634,12 +634,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       });
     }
     this.routeActive.queryParams.subscribe((params) => {
+      debugger
       this.employeeID = params["employeeID"];
       this.pageNum = params["page"];
-      
       if (this.employeeID || this.user.userID) 
       {
-        debugger
         if(history.state)
         {
           if (history.state.empInfo){
