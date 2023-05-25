@@ -20,7 +20,10 @@
         <div>
           <codx-label [formModel]="formModel" fiedName="EmployeeID">
           </codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="formModel" field="employeeID" [disabled]="employeeIDDisable"
+          <!-- <codx-input [Group]="form.formGroup" [formModel]="formModel" field="employeeID" [disabled]="employeeIDDisable"
+            (valueChange)="valueChange($event)">
+          </codx-input> -->
+          <codx-input [Group]="form.formGroup" [formModel]="formModel" field="employeeID"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
