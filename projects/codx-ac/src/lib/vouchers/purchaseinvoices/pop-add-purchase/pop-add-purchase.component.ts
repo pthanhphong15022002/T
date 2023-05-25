@@ -259,6 +259,10 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       e.data.umid = item.umid;
       this.loadItemID(e.value);
     }
+    if (e.field == 'idiM4')
+    {
+      this.loadWarehouseID(e.value);
+    }
   }
   cellChangedInvoice(e: any) {
     if (e.data?.isAddNew == null) {
@@ -532,6 +536,23 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
         input.value = "";
         input.predicate = 'ItemID="' + value + '"';
+        input.loadSetting();
+      }
+    });
+  }
+
+  loadWarehouseID(value) {
+    let sArray = [
+      'warehouselocations',
+    ];
+    var element = document
+      .querySelector('.tabLine')
+      .querySelectorAll('codx-inplace');
+    element.forEach((e) => {
+      var input = window.ng.getComponent(e) as CodxInplaceComponent;
+      if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
+        input.value = "";
+        input.predicate = 'WarehouseID="' + value + '"';
         input.loadSetting();
       }
     });
