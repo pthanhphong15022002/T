@@ -694,12 +694,12 @@ export class CodxCmService {
   }
 
   // load Tỉ giá
-  getExchangeRate(CurrencyID) {
+  getExchangeRate(CurrencyID,day ) {
     return this.api.exec<any>(
       'BS',
       'CurrenciesBusiness',
       'GetExchangeRateAsync',
-      [CurrencyID, new Date()]
+      [CurrencyID, day]
     );
   }
 

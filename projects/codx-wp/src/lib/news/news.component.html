@@ -23,170 +23,171 @@
 </div>
 
 <ng-template #panelLeftRef>
-  <ng-container *ngIf="loaded">
-    <div class="fix-container rounded-4 position-relative">
-      <div class="row">
-        <div class="fw-bold text-dark fs-2 mt-5 mb-5 border-bottom border-gray">
-          <codx-label [formModel]="view.formModel" name="lblHotNews" default="Tin mới nhất"></codx-label>
+  <div class="fix-container rounded-4 position-relative">
+    <ng-container *ngIf="posts.length > 0">
+      <div>
+        <div class="row">
+          <div class="fw-bold text-dark fs-2 mt-5 mb-5 border-bottom border-gray">
+            <codx-label [formModel]="view.formModel" name="lblHotNews" default="Tin mới nhất"></codx-label>
+          </div>
         </div>
-      </div>
-      <div class="row ">
-        <div class="col-6 hot-left">
-          <ng-container *ngIf="posts[0];">
-            <div class="post" (click)="clickViewDetail(posts[0])">
-              <div class="w-100 position-relative cursor-pointer">
-                <codx-img 
-                  imageType="square" 
-                  [isDefaulImg]="true" 
-                  [cssClass]="'image-300 w-100 pic-newshot'" 
-                  [width]="480"
-                  [objectId]="posts[0].recID" 
-                  [objectType]="'WP_News'"
-                  [referType]="'image'">
-                </codx-img>
-                <div *ngIf="posts[0].category" class="position-absolute bottom-0 end-0">
-                  <codx-vll 
-                      [name]="'WP002'" 
-                      [classList]="'badge badge-danger p-2 px-4 text-center'"
-                      [value]="posts[0].category" 
-                      [showText]="true">
-                  </codx-vll>
-                </div>
-              </div>
-              <div class="fs-4 fw-bolder mt-2 news-title cursor-pointer">
-                {{ posts[0].subject | maxlenght:150}}
-              </div>
-            </div>
-            <div class="text-gray-700 mt-1">
-              {{posts[0].subContent | maxlenght:500}}
-            </div>
-            <div class="d-flex justify-content-between fs-7 mt-3">
-              <span *ngIf="posts[0].approveStatus == '1'">
-                <codx-vll 
-                    [name]="'CO003'" 
-                    [classList]="'rounded-pill p-2 px-4 text-center'"
-                    [value]="posts[0].approveStatus" 
-                    [showText]="true" 
-                    [showBgColor]="true">
-                </codx-vll>
-              </span>
-              <span class="text-gray-400" [innerHTML]="posts[0].createdOn | formatvalue:view.formModel:'CreatedOn' | async">
-              </span>
-            </div>
-          </ng-container>
-        </div>
-        <div class="col-6 hot-right">
-          <ng-container [ngTemplateOutlet]="tmpPost" [ngTemplateOutletContext]="{data:posts[1]}"></ng-container>
-          <ng-container [ngTemplateOutlet]="tmpPost" [ngTemplateOutletContext]="{data:posts[2]}"></ng-container>
-          <ng-container [ngTemplateOutlet]="tmpPost" [ngTemplateOutletContext]="{data:posts[3]}"></ng-container>
-        </div>
-      </div>
-      <!-- slider -->
-      <ng-container *ngIf="videos.length > 0">
-        <div class="row my-8" style="height: 300px;">
-          <ng-container *ngIf="slides.length > 0">
-            <ngb-carousel #carousel 
-              (slide)="slideChange($event)"  
-              [pauseOnFocus]="true"
-              [pauseOnHover]="true"
-              [wrap]="false" 
-              [keyboard]="false" 
-              [showNavigationIndicators]="false" 
-              [showNavigationArrows]="showNavigation">
-              <ng-template ngbSlide *ngFor="let slide of slides">
-                <div class="slide-item">
-                  <div class="silde-item-block">
-                    <ng-container *ngFor="let item of slide">
-                      <ng-container *ngIf="item;emptyVideo"> 
-                        <div (click)="clickViewDetail(item)" class="video">
-                          <div class="video-block">
-                            <codx-img 
-                              [isDefaulImg]="true" 
-                              [width]="250" 
-                              imageType="square" 
-                              [objectId]="item.recID"
-                              objectType="WP_News" 
-                              [referType]="'image'">
-                            </codx-img>
-                            <span class="video-title">{{item.subject | maxlenght:200 }}</span>
-                          </div>
-                        </div>
-                      </ng-container>
-                    </ng-container>
+        <div class="row" >
+          <div class="col-6 hot-left">
+            <ng-container *ngIf="posts[0]">
+              <div class="post" (click)="clickViewDetail(posts[0])">
+                <div class="w-100 position-relative cursor-pointer">
+                  <codx-img 
+                    imageType="square" 
+                    [isDefaulImg]="true" 
+                    [cssClass]="'image-300 w-100 pic-newshot'" 
+                    [width]="480"
+                    [objectId]="posts[0].recID" 
+                    [objectType]="'WP_News'"
+                    [referType]="'image'">
+                  </codx-img>
+                  <div *ngIf="posts[0].category" class="position-absolute bottom-0 end-0">
+                    <codx-vll 
+                        [name]="'WP002'" 
+                        [classList]="'badge badge-danger p-2 px-4 text-center'"
+                        [value]="posts[0].category" 
+                        [showText]="true">
+                    </codx-vll>
                   </div>
                 </div>
-              </ng-template>
-            </ngb-carousel>
-          </ng-container>
-        </div>
-      </ng-container>
-      
-      <!-- list group -->
-      <div class="news-group">
-        <codx-listview #listview 
-          [service]="'WP'"
-          [assemblyName]="'ERM.Business.WP'" 
-          [className]="'NewsBusiness'" 
-          [method]="'GetPostByCategoryAsync'"
-          entityName="WP_News" 
-          [selectFirst]="false"
-          [dataValue]="category"
-          [emptyTemplate]="null"
-          [itemTemplate]="itemTemplate" 
-          [formModel]="view.formModel">
-      </codx-listview>
-      </div>
-    </div>
-  </ng-container>
-  
-</ng-template>
-<ng-template #tmpPost let-data="data">
-  <ng-container *ngIf="data">
-    <div class="row mb-5 post" (click)="clickViewDetail(data)">
-      <div class="col-4">
-        <div class="w-100 position-relative cursor-pointer">
-          <codx-img 
-            imageType="square" 
-            [isDefaulImg]="true" 
-            [width]="180" 
-            [cssClass]="'image w-100'" 
-            [objectId]="data.recID"
-            [objectType]="'WP_News'" 
-            [referType]="'image'">
-          </codx-img>
-          <div *ngIf="data.category" class="position-absolute bottom-0 end-0">
-            <codx-vll 
-                [name]="'WP002'" 
-                [classList]="'badge badge-danger p-2 px-4 text-center'"
-                [value]="data.category" 
-                [showText]="true">
-            </codx-vll>
+                <div class="fs-4 fw-bolder mt-2 news-title cursor-pointer">
+                  {{ posts[0].subject | maxlenght:150}}
+                </div>
+              </div>
+              <div class="text-gray-700 mt-1">
+                {{posts[0].subContent | maxlenght:500}}
+              </div>
+              <div class="d-flex justify-content-between fs-7 mt-3">
+                <span *ngIf="posts[0].approveStatus == '1'">
+                  <codx-vll 
+                      [name]="'CO003'" 
+                      [classList]="'rounded-pill p-2 px-4 text-center'"
+                      [value]="posts[0].approveStatus" 
+                      [showText]="true" 
+                      [showBgColor]="true">
+                  </codx-vll>
+                </span>
+                <span class="text-gray-400" [innerHTML]="posts[0].createdOn | formatvalue:view.formModel:'CreatedOn' | async">
+                </span>
+              </div>
+            </ng-container>
+          </div>
+          <div class="col-6 hot-right">
+            <ng-container [ngTemplateOutlet]="tmpPost" [ngTemplateOutletContext]="{data:posts[1]}"></ng-container>
+            <ng-container [ngTemplateOutlet]="tmpPost" [ngTemplateOutletContext]="{data:posts[2]}"></ng-container>
+            <ng-container [ngTemplateOutlet]="tmpPost" [ngTemplateOutletContext]="{data:posts[3]}"></ng-container>
           </div>
         </div>
       </div>
-      <div class="col-8">
-        <div class="fs-5 fw-bold news-title cursor-pointer">
-          {{ data.subject | maxlenght:100}}
-        </div>
-        <div class="text-gray-700 news-des line-clamp line-clamp-3">
-          {{data.subContent | maxlenght:300}}
-        </div>
-        <div class="d-flex justify-content-between fs-7 mt-3">
-          <span *ngIf="data.approveStatus == '1'">
-            <codx-vll 
-                [name]="'CO003'" 
-                [classList]="'rounded-pill p-2 px-4 text-center'"
-                [value]="data.approveStatus" 
-                [showText]="true" 
-                [showBgColor]="true">
-            </codx-vll>
-          </span>
-          <span class="text-gray-400" [innerHTML]="data.createdOn | formatvalue:view.formModel:'CreatedOn' | async">
-          </span>  
+    </ng-container>
+    
+    <!-- slider -->
+    <ng-container *ngIf="videos.length > 0">
+      <div class="row my-8" style="height: 300px;">
+        <ng-container *ngIf="slides.length > 0">
+          <ngb-carousel #carousel 
+            (slide)="slideChange($event)"  
+            [pauseOnFocus]="true"
+            [pauseOnHover]="true"
+            [wrap]="false" 
+            [keyboard]="false" 
+            [showNavigationIndicators]="false" 
+            [showNavigationArrows]="showNavigation">
+            <ng-template ngbSlide *ngFor="let slide of slides">
+              <div class="slide-item">
+                <div class="silde-item-block">
+                  <ng-container *ngFor="let item of slide">
+                    <ng-container *ngIf="item;emptyVideo"> 
+                      <div (click)="clickViewDetail(item)" class="video">
+                        <div class="video-block">
+                          <codx-img 
+                            [isDefaulImg]="true" 
+                            [width]="250" 
+                            imageType="square" 
+                            [objectId]="item.recID"
+                            objectType="WP_News" 
+                            [referType]="'image'">
+                          </codx-img>
+                          <span class="video-title">{{item.subject | maxlenght:200 }}</span>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-carousel>
+        </ng-container>
+      </div>
+    </ng-container>
+    
+    <!-- list group -->
+    <div class="news-group">
+      <codx-listview #listview 
+        [service]="'WP'"
+        [assemblyName]="'ERM.Business.WP'" 
+        [className]="'NewsBusiness'" 
+        [method]="'GetPostByCategoryAsync'"
+        entityName="WP_News" 
+        [selectFirst]="false"
+        [dataValue]="category"
+        [emptyTemplate]="null"
+        [itemTemplate]="itemTemplate" 
+        [formModel]="view.formModel">
+      </codx-listview>
+    </div>
+  </div>
+  
+</ng-template>
+<ng-template #tmpPost let-data="data">
+  <div class="row mb-5 post" (click)="clickViewDetail(data)">
+    <div class="col-4">
+      <div class="w-100 position-relative cursor-pointer">
+        <codx-img 
+          imageType="square" 
+          [isDefaulImg]="true" 
+          [width]="180" 
+          [cssClass]="'image w-100'" 
+          [objectId]="data.recID"
+          [objectType]="'WP_News'" 
+          [referType]="'image'">
+        </codx-img>
+        <div *ngIf="data.category" class="position-absolute bottom-0 end-0">
+          <codx-vll 
+              [name]="'WP002'" 
+              [classList]="'badge badge-danger p-2 px-4 text-center'"
+              [value]="data.category" 
+              [showText]="true">
+          </codx-vll>
         </div>
       </div>
     </div>
-  </ng-container>
+    <div class="col-8">
+      <div class="fs-5 fw-bold news-title cursor-pointer">
+        {{ data.subject | maxlenght:100}}
+      </div>
+      <div class="text-gray-700 news-des line-clamp line-clamp-3">
+        {{data.subContent | maxlenght:300}}
+      </div>
+      <div class="d-flex justify-content-between fs-7 mt-3">
+        <span *ngIf="data.approveStatus == '1'">
+          <codx-vll 
+              [name]="'CO003'" 
+              [classList]="'rounded-pill p-2 px-4 text-center'"
+              [value]="data.approveStatus" 
+              [showText]="true" 
+              [showBgColor]="true">
+          </codx-vll>
+        </span>
+        <span class="text-gray-400" [innerHTML]="data.createdOn | formatvalue:view.formModel:'CreatedOn' | async">
+        </span>  
+      </div>
+    </div>
+  </div>
 </ng-template>
 <ng-template #itemTemplate let-item>
   <ng-container *ngIf="item.type == 'text';else tmpData">

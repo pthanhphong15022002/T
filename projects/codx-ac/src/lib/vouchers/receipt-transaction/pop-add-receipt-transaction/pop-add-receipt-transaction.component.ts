@@ -55,7 +55,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   page: any = 1;
   pageSize = 5;
   hasSaved: any = false;
-  isClose: any = false;
+  isSaveMaster: any = false;
   journal: IJournal;
   voucherNoPlaceholderText$: Observable<string>;
   fmInventoryJournalLines: FormModel = {
@@ -281,6 +281,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   .save(null, 0, '', '', false)
                   .subscribe((res) => {
                     if (res && res.save.data != null) {
+                      this.hasSaved = true;
                       this.loadModegrid();
                     }
                   });
@@ -347,6 +348,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   var dataline = res.event['data'];
                   this.inventoryJournalLines[index] = dataline;
                   this.hasSaved = true;
+                  this.isSaveMaster = true;
                   this.loadTotal();
                 }
               });
@@ -420,6 +422,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           .subscribe((res) => {
             if (res) {
               this.hasSaved = true;
+              this.isSaveMaster = true;
               this.api
                 .exec(
                   'IV',
@@ -475,6 +478,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               }
               this.loadPageCount();
               this.hasSaved = true;
+              this.isSaveMaster = true;
               this.loadTotal();
             }
           });
@@ -489,12 +493,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   close() {
-    if (this.hasSaved) {
-      this.isClose = true;
-      this.onSaveData(false);
-    } else {
-      this.dialog.close();
-    }
+    this.dialog.close();
   }
   onDiscard(){
     this.dialog.dataService
@@ -520,6 +519,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           if (save) {
             this.notification.notifyCode('SYS007', 0, '');
             this.hasSaved = true;
+            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -539,6 +539,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           if (save) {
             this.notification.notifyCode('SYS006', 0, '');
             this.hasSaved = true;
+            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -571,6 +572,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                 this.inventoryJournal = res;
                 this.form.formGroup.patchValue(this.inventoryJournal);
                 this.hasSaved = false;
+                this.isSaveMaster = false;
               });
           }
         });
@@ -604,7 +606,100 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   onSave() {
-    this.onSaveData(true);
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      switch (this.formType) {
+        case 'add':
+        case 'copy':
+          this.inventoryJournal.status = '1';
+          if (this.hasSaved) {
+            this.dialog.dataService.updateDatas.set(
+              this.inventoryJournal['_uuid'],
+              this.inventoryJournal
+            );
+            this.dialog.dataService
+              .save(null, 0, '', 'SYS006', true)
+              .subscribe((res) => {
+                if (res && res.update.data != null) {
+                  this.dialog.close({
+                    update: true,
+                    data: res.update,
+                  });
+                  this.dt.detectChanges();
+                }
+              });
+          } else {
+            // nếu voucherNo đã tồn tại,
+            // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
+            this.journalService.handleVoucherNoAndSave(
+              this.journal,
+              this.inventoryJournal,
+              'IV',
+              'IV_InventoryJournals',
+              this.form,
+              this.formType === 'edit',
+              () => {
+                this.dialog.dataService.save().subscribe((res) => {
+                  if (res && res.save.data != null) {
+                    this.dialog.close();
+                    this.dt.detectChanges();
+                  }
+                });
+              }
+            );
+          }
+          break;
+        case 'edit':
+          this.journalService.handleVoucherNoAndSave(
+            this.journal,
+            this.inventoryJournal,
+            'IV',
+            'IV_InventoryJournals',
+            this.form,
+            this.formType === 'edit',
+            () => {
+              if (this.inventoryJournal.status == '0') {
+                this.inventoryJournal.status = '1';
+              }
+              this.dialog.dataService.updateDatas.set(
+                this.inventoryJournal['_uuid'],
+                this.inventoryJournal
+              );
+              this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
+                if (res && res.update.data != null) {
+                  this.dialog.close({
+                    update: true,
+                    data: res.update,
+                  });
+                  this.dt.detectChanges();
+                }
+              });
+            }
+          );
+          break;
+      }
+    }
+  }
+
+  onSaveMaster(){
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      this.dialog.dataService.updateDatas.set(
+        this.inventoryJournal['_uuid'],
+        this.inventoryJournal
+      );
+      this.dialog.dataService.save(null, 0, '', '', false).subscribe((res) => {
+        if (res && res.update.data != null) {
+          this.dt.detectChanges();
+        }
+      });
+    }
   }
 
   //#endregion
@@ -618,6 +713,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     });
     this.inventoryJournal.totalAmt = totals;
     this.total = totals.toLocaleString('it-IT')
+    if (this.isSaveMaster ) {
+      this.onSaveMaster();
+    }
   }
 
   clearInventoryJournal() {
@@ -828,87 +926,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   loadPageCount() {
     this.pageCount = '(' + this.inventoryJournalLines.length + ')';
-  }
-
-  onSaveData(notification: boolean){
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    } else {
-      switch (this.formType) {
-        case 'add':
-        case 'copy':
-          this.inventoryJournal.status = '1';
-          if(this.isClose)
-            this.inventoryJournal.status = '0';
-          if (this.hasSaved) {
-            this.dialog.dataService.updateDatas.set(
-              this.inventoryJournal['_uuid'],
-              this.inventoryJournal
-            );
-            this.dialog.dataService
-              .save(null, 0, '', 'SYS006', notification)
-              .subscribe((res) => {
-                if (res && res.update.data != null) {
-                  this.dialog.close({
-                    update: true,
-                    data: res.update,
-                  });
-                  this.dt.detectChanges();
-                }
-              });
-          } else {
-            // nếu voucherNo đã tồn tại,
-            // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
-            this.journalService.handleVoucherNoAndSave(
-              this.journal,
-              this.inventoryJournal,
-              'IV',
-              'IV_InventoryJournals',
-              this.form,
-              this.formType === 'edit',
-              () => {
-                this.dialog.dataService.save().subscribe((res) => {
-                  if (res && res.save.data != null) {
-                    this.dialog.close();
-                    this.dt.detectChanges();
-                  }
-                });
-              }
-            );
-          }
-          break;
-        case 'edit':
-          this.journalService.handleVoucherNoAndSave(
-            this.journal,
-            this.inventoryJournal,
-            'IV',
-            'IV_InventoryJournals',
-            this.form,
-            this.formType === 'edit',
-            () => {
-              if (this.inventoryJournal.status == '0' && this.isClose != true) {
-                this.inventoryJournal.status = '1';
-              }
-              this.dialog.dataService.updateDatas.set(
-                this.inventoryJournal['_uuid'],
-                this.inventoryJournal
-              );
-              this.dialog.dataService.save(null, 0, '', '', notification).subscribe((res) => {
-                if (res && res.update.data != null) {
-                  this.dialog.close({
-                    update: true,
-                    data: res.update,
-                  });
-                  this.dt.detectChanges();
-                }
-              });
-            }
-          );
-          break;
-      }
-    }
   }
 
   loadItems(){

@@ -88,19 +88,35 @@
           </codx-img>
         </div>
         <div class="d-flex flex-column">
-          <div class="fw-bold text-dark line-clamp line-clamp-1 mb-1">
-            {{ data?.contactName }}
+          <div clas="mb-1 d-flex align-items-center line-clamp line-clamp-1">
+            <span
+              class="icon-16 me-2 text-hover-primary cursor-pointer"
+              [class]="data?.contactType | vll : 'CRM025' : 'icon' | async"
+              [style.color]="
+                data?.contactType | vll : 'CRM025' : 'textColor' | async
+              "
+              [ngbPopover]="popupContactType"
+              #p="ngbPopover"
+              (mouseenter)="data?.contactType ? p.open() : ''"
+              (mouseleave)="p.close()"
+              placement="right bottom left"
+              container="body"
+            ></span>
+            <span class="fw-bold text-dark">
+              {{ data?.contactName }}
+            </span>
           </div>
+
           <div class="" *ngIf="data.jobTitle">
             <span class="text-gray-900">{{ data.jobTitle }}</span>
           </div>
-          <div class="" *ngIf="data.isDefault">
+          <!-- <div class="" *ngIf="data.isDefault">
             <codx-label
               class="text-gray-900 text-primary"
               fiedName="IsDefault"
               [formModel]="formModelContact"
             ></codx-label>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -134,23 +150,12 @@
         >
       </div>
     </div>
-    <div class="w-150px min-w-150px">
+    <div class="w-50px min-w-50px">
       <div
-        class="mb-1 text-gray-500"
-        *ngIf="
-          data?.contactType != null && data?.contactType.split(';').length > 0
-        "
+        class="d-flex justify-content-start align-items-center"
+        *ngIf="data.isDefault"
       >
-        <ng-container *ngFor="let item of data?.contactType.split(';')">
-          <div
-            class="d-flex justify-content-start mb-1"
-            [innerHTML]="
-              item | formatvalue : formModelContact : 'ContactType' | async
-            "
-          >
-            <!-- {{ item | vll : vllContactType : "text" | async }} -->
-          </div>
-        </ng-container>
+        <span class="icon-vpn_key icon-16"></span>
       </div>
     </div>
     <div class="action-menu-od w-50px">
@@ -166,4 +171,14 @@
       </codx-mfunc>
     </div>
   </div>
+  <ng-template #popupContactType>
+    <div
+      class="d-flex justify-content-start mb-1"
+      [innerHTML]="
+        data?.contactType
+          | formatvalue : formModelContact : 'ContactType'
+          | async
+      "
+    ></div>
+  </ng-template>
 </ng-template>

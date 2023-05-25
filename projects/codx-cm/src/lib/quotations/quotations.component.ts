@@ -24,7 +24,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-quotations.component';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 
 @Component({
@@ -91,22 +91,7 @@ export class QuotationsComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    this.cache
-      .gridViewSetup('CMQuotations', 'grvCMQuotations')
-      .subscribe((res) => {
-        if (res) {
-          this.grvSetup = res;
-          this.vllStatus = res['Status'].referedValue;
-          //lay grid view
-          let arrField = Object.values(res).filter((x: any) => x.isVisible);
-          if (Array.isArray(arrField)) {
-            this.arrFieldIsVisible = arrField
-              .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-              .map((x: any) => x.fieldName);
-            this.getColumsGrid(res);
-          }
-        }
-      });
+
   }
 
   onInit(): void {
@@ -116,6 +101,7 @@ export class QuotationsComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
+    this.loadSetting();
     // this.views = [
     //   {
     //     type: ViewType.listdetail,
@@ -136,6 +122,21 @@ export class QuotationsComponent extends UIComponent {
     //     },
     //   },
     // ];
+  }
+
+  async loadSetting() {
+    this.grvSetup = await firstValueFrom(
+      this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
+    );
+    this.vllStatus = this.grvSetup['Status'].referedValue;
+    //lay grid view
+    let arrField = Object.values(this.grvSetup).filter((x: any) => x.isVisible);
+    if (Array.isArray(arrField)) {
+      this.arrFieldIsVisible = arrField
+        .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+        .map((x: any) => x.fieldName);
+      this.getColumsGrid(this.grvSetup);
+    }
   }
 
   getColumsGrid(grvSetup) {
@@ -202,7 +203,7 @@ export class QuotationsComponent extends UIComponent {
         model: {
           resources: this.columnGrids,
           template2: this.templateMore,
-          frozenColumns: 1,
+          // frozenColumns: 1,
         },
       },
     ];
@@ -312,7 +313,6 @@ export class QuotationsComponent extends UIComponent {
     res.exchangeRate = res.exchangeRate ?? 1;
     res.totalAmt = res.totalAmt ?? 0;
     res.currencyID = res.currencyID ?? 'VND';
- 
 
     var obj = {
       data: res,
@@ -511,7 +511,7 @@ export class QuotationsComponent extends UIComponent {
   }
 
   //cance ki so
-  cancelAproval(item) {}
+
   //end trình ký
 
   // tạo hợp đồng

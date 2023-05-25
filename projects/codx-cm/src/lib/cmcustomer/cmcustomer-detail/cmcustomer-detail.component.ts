@@ -247,13 +247,7 @@ export class CmcustomerDetailComponent implements OnInit {
           textDefault: 'Liên hệ',
           icon: 'icon-contact_phone',
           isActive: false,
-        },
-        {
-          name: 'Address',
-          textDefault: 'Địa chỉ',
-          icon: 'icon-location_on',
-          isActive: false,
-        },
+        }
       ];
     } else {
       this.tabDetail = [
@@ -262,12 +256,6 @@ export class CmcustomerDetailComponent implements OnInit {
           textDefault: 'Thông tin chung',
           icon: 'icon-info',
           isActive: true,
-        },
-        {
-          name: 'Address',
-          textDefault: 'Địa chỉ',
-          icon: 'icon-location_on',
-          isActive: false,
         },
         {
           name: 'DealCompetitors',
