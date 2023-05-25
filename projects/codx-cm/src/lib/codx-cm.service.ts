@@ -18,6 +18,7 @@ import { BehaviorSubject, Observable, Subject, firstValueFrom, map, tap } from '
 export class CodxCmService {
   titleAction: any;
   childMenuClick = new BehaviorSubject<any>(null);
+  childMenuDefault = new BehaviorSubject<any>(null);
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,

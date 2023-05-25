@@ -18,6 +18,7 @@ export class ProcessReleaseComponent {
     this.activedRouter.params.subscribe((param) => {
       this.funcID = param['funcID'];
       let recID = param['recID'];
+      this.coxdCM.childMenuDefault.next(recID)
       this.dataObj = { processID: recID };
     });
   }

@@ -41,6 +41,7 @@ import {
 } from 'codx-core';
 
 import { finalize, map, Observable, of, Subscription } from 'rxjs';
+import { CodxCmService } from '../../codx-cm.service';
 
 @Component({
   selector: 'codx-aside-custom',
@@ -115,6 +116,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   componentsDefault: any;
   idSubCrr = '';
   loadedCus = false;
+  //theem ngat 25 052023
   dataMenuChildCustom = [];
   activeDefault = '';
 
@@ -125,6 +127,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     private cache: CacheService,
     private changDefector: ChangeDetectorRef,
     private router: Router,
+    private codxCM: CodxCmService,
     private elRef: ElementRef,
     private api: ApiHttpService,
     private tenantStore: TenantStore,
@@ -132,9 +135,8 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   ) {
     this.tenant = this.tenantStore.get()?.tenant;
     if (!this.tenant) this.tenant = UrlUtil.getTenant();
-    this.activedRouter.params.subscribe((param) => {
-      let recID = param['recID'];
-      if (recID) this.activeDefault = recID;
+    this.codxCM.childMenuDefault.subscribe((res) => {
+      this.activeDefault = res;
     });
     this.loadMenuChild();
   }
@@ -191,13 +193,17 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
         this.resetActiveMenu();
         this.changDefector.detectChanges();
         if (d.funcId) {
-          this.codxService.activeMenu.id = d.funcId;
-          this.codxService.funcID = this.codxService.activeMenu.id;
+          if (this.activeDefault) {
+            this.codxService.activeMenu.id = this.activeDefault;
+          } else this.codxService.activeMenu.id = d.funcId;
+
+          this.codxService.funcID = d.funcId;
           var func = this.getFunc(d.funcId);
           if (func) func.expanded = false;
           this.openSecondFunc(d.funcId);
         }
-        if (d.favId) this.codxService.activeMenu.fav = d.favId;
+        if (this.activeDefault) this.codxService.activeMenu.fav = null;
+        else if (d.favId) this.codxService.activeMenu.fav = d.favId;
         //this.checkActive();
         setTimeout(() => {
           this.codxService.activeMenu = JSON.parse(
@@ -229,7 +235,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
 
     if (funcId) {
       this.codxService.activeMenu.func0 = funcId;
-
+      //xoas
       if (!this.hasSecond) {
         this.codxService.activeMenu.func1 = null;
         return;
@@ -242,7 +248,10 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
         if (!this.activeDefault) this.codxService.activeMenu.func1 = funcId;
         else this.codxService.activeMenu.func1 = this.activeDefault;
 
-        if (func.favs || func.formFavs || func.shareFavs) {
+        if (
+          !this.activeDefault &&
+          (func.favs || func.formFavs || func.shareFavs)
+        ) {
           this.codxService.activeMenu.fav = func.favDefault.id;
           this.codxService.activeMenu.favType = func.favDefault.type;
           this.codxService.activeFav = this.codxService.activeMenu.fav;
@@ -270,16 +279,19 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
           else this.toggleSecond(func);
         }
       }
+      if (this.isClickMenuCus) this.activeDefault = '';
     }
+
     ScrollComponent.update('#kt_aside_menu');
   }
 
   getFavs(func: any, defaultFav?: any) {
     this.codxService.getFavs(func, '1', defaultFav).subscribe((x) => {
-      this.codxService.activeMenu.fav = x.defaultId;
-      this.codxService.activeMenu.favType = x.defaultType;
-      this.codxService.activeFav = this.codxService.activeMenu.fav;
-
+      if (!this.activeDefault) {
+        this.codxService.activeMenu.fav = x.defaultId;
+        this.codxService.activeMenu.favType = x.defaultType;
+        this.codxService.activeFav = this.codxService.activeMenu.fav;
+      }
       if (func.favs && func.favs.length > 0) {
         var favIDs: any[] = [];
         func.favs.forEach((x: any) => {
@@ -348,6 +360,12 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     //   this.idSubCrr = '';
     //   this.isClickMenuCus = false;
     // }
+
+    if (this.isClickMenuCus) {
+      this.isClickMenuCus = false;
+      this.activeDefault = '';
+    } else this.isClickMenuCus = true;
+
     let titleEle = document.querySelector('codx-page-title');
     if (titleEle) {
       let oldBrc = titleEle.querySelector('#breadCrumb');
@@ -527,7 +545,10 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
           // });
         }
       }
-
+      if (!this.isClickMenuCus) {
+        this.isClickMenuCus = true;
+        this.activeDefault = '';
+      }
       this.codxService.navigate(func.functionID);
     }
     return true;
@@ -790,6 +811,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     this.childMenuClick.emit({ recID: data.recID });
     this.codxService.activeMenu.func1 = data.recID;
     this.codxService.activeMenu.fav = null;
+    this.isClickMenuCus = true;
 
     let url = 'cm/processrelease/CM0201';
 
