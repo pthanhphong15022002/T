@@ -384,6 +384,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                   .save(null, 0, '', '', false)
                   .subscribe((res) => {
                     if (res && res.save.data != null) {
+                      this.hasSaved = true;
                       this.loadModegrid();
                     }
                   });
@@ -1148,17 +1149,23 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onSaveData()
   {
-    this.dialog.dataService.updateDatas.set(
-      this.purchaseinvoices['_uuid'],
-      this.purchaseinvoices
-    );
-    this.dialog.dataService
-      .save(null, 0, '', 'SYS006', false)
-      .subscribe((res) => {
-        if (res && res.update.data != null) {
-          this.dt.detectChanges();
-        }
-      });
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      this.dialog.dataService.updateDatas.set(
+        this.purchaseinvoices['_uuid'],
+        this.purchaseinvoices
+      );
+      this.dialog.dataService
+        .save(null, 0, '', 'SYS006', false)
+        .subscribe((res) => {
+          if (res && res.update.data != null) {
+            this.dt.detectChanges();
+          }
+        });
+    }
   }
 
   onSave() {

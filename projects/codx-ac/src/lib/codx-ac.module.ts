@@ -109,6 +109,11 @@ export const routes: Routes = [
         component: ReceiptTransactionComponent,
         data: { noReuse: true },
       },
+      {
+        path: 'issuetransaction/:funcID',
+        component: ReceiptTransactionComponent,
+        data: { noReuse: true },
+      },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
