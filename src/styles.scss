@@ -2792,12 +2792,21 @@ codx-vll.badge.badge-md span::before{
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .aside-menu .menu-link .menu-title{
   flex-grow: inherit;
 }
-
+[data-kt-aside-minimize=on].aside-minimize-icon-title .aside:not(:hover) .menu-link.active, 
+[data-kt-aside-minimize=on].aside-minimize-icon-title .aside:not(:hover) .menu-link:hover {
+  border-radius: 0px !important;
+}
+.aside-minimize-icon-title .aside-primary .svg-icon svg [fill]:not(.permanent):not(g) {
+  fill: var(--primary-lightest);
+}
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link.active{
-  background-color: #ffffff25!important;
-  //background-color: var(--primary-lightest);
+ // background-color: #ffffff25!important;
+  background-color: var(--primary-lightest)!important;
   .menu-title {
-   // color: var(--primary-dark)!important;
+    color: var(--primary-dark)!important;
+  }
+  .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--primary-dark);
   }
 }
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link:hover {
@@ -2806,13 +2815,34 @@ codx-vll.badge.badge-md span::before{
   .menu-title {
     color: var(--text-body)!important;
   }
+  .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--primary-light)!important;
+  }
 }
+.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-item:hover .menu-link.active{
+   background-color: var(--primary-lightest)!important;
+   .menu-title {
+     color: var(--primary-dark)!important;
+   }
+   .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+     fill: var(--primary-dark)!important;
+   }
+ }
 .aside-minimize-icon-title .aside .menu-link {
   padding-left: 7px!important;
   padding-right: 7px!important;
 }
 .aside-minimize-icon-title .aside-extended .aside-primary .menu-link.active{
   border-radius: 0!important;
+}
+
+.menu-state-icon-primary .menu-item {
+  .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--primary-lightest);
+  }
+  .menu-link.active .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--primary-light);
+  }
 }
 .toolbar{
   .e-control.e-inplaceeditor .e-editable-value-wrapper {
@@ -2845,7 +2875,7 @@ codx-tmmeetings{
 
 .badge.badge-md{
   .fa, .fas{
-  font-size: 16px;
+  font-size: 12px;
   }
 
 }

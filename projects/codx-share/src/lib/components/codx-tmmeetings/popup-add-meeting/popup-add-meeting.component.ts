@@ -6,7 +6,6 @@ import {
   OnInit,
   Optional,
   ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -16,12 +15,10 @@ import {
   NotificationsService,
   CallFuncService,
   CacheService,
-  AlertConfirmInputConfig,
   DialogModel,
 } from 'codx-core';
 import moment from 'moment';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { CheckBox, CheckBoxComponent } from '@syncfusion/ej2-angular-buttons';
 import {
   CO_Meetings,
   CO_Permissions,
@@ -98,6 +95,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   disabledProject = false;
   listPermissions: string = '';
   isClickSave = false;
+  calendarData;
+
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -112,13 +111,18 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.data = dialog.dataService?.dataSelected
       ? JSON.parse(JSON.stringify(dialog.dataService?.dataSelected))
       : new CO_Meetings();
-    this.meeting = this.data;
+
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.action = dt.data[0];
     this.titleAction = dt.data[1];
     this.disabledProject = dt.data[2];
     this.listPermissions = dt?.data[3];
+    //Data truyền từ module thiết lập lịch
+    this.calendarData = dt?.data[4];
+    this.meeting = dialog.dataService?.dataSelected
+      ? this.data
+      : this.calendarData;
     this.functionID = this.dialog.formModel.funcID;
 
     this.cache
@@ -319,24 +323,38 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   onAdd() {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option), 0)
-      .subscribe((res) => {
-        this.attachment?.clearData();
-        if (res) {
-          this.dialog.close(res.save);
-          //Đặt cuộc họp sau khi thêm mới cuộc họp cần ktra lại xem có tích hợp module EP hay ko
-          if (this.isRoom && this.meeting.location != null) {
-            this.bookingRoomEP(res.save);
+    if (this.dialog.dataSerivce) {
+      this.dialog.dataService
+        .save((option: any) => this.beforeSave(option), 0)
+        .subscribe((res) => {
+          this.attachment?.clearData();
+          if (res) {
+            this.dialog.close(res.save);
+            //Đặt cuộc họp sau khi thêm mới cuộc họp cần ktra lại xem có tích hợp module EP hay ko
+            if (this.isRoom && this.meeting.location != null) {
+              this.bookingRoomEP(res.save);
+            }
+            this.tmSv
+              .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
+              .subscribe();
+            // this.tmSv
+            //   .RPASendMailAlert('TM_0024', this.functionID)
+            //   .subscribe();
+          } else this.dialog.close();
+        });
+    } else {
+      //Gọi từ module thiết lập lịch
+      this.api
+        .exec('CO', 'MeetingsBusiness', 'AddMeetingsAsync', [
+          this.meeting,
+          'TMT0501',
+        ])
+        .subscribe((res: any) => {
+          if (res) {
+            this.dialog && this.dialog.close(res);
           }
-          this.tmSv
-            .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
-            .subscribe();
-          // this.tmSv
-          //   .RPASendMailAlert('TM_0024', this.functionID)
-          //   .subscribe();
-        } else this.dialog.close();
-      });
+        });
+    }
   }
 
   onUpdate() {

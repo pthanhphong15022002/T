@@ -45,6 +45,17 @@
   >
 </div>
 
+<div *ngIf="viewType == '4'" (click)="openViewPopup ? openPopup() : ''">
+  <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center me-1">
+      <i
+        class="text-hover-primary icon-i-paperclip icon-18 cursor-pointer text-gray-400"
+      ></i>
+    </div>
+    <div>{{ countData }}</div>
+  </div>
+</div>
+
 <ng-template #tmpListItem let-dialog>
   <codx-form
     [body]="body"
