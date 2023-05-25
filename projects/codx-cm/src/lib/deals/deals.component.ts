@@ -240,17 +240,17 @@ export class DealsComponent
         for (let more of $event) {
           switch (more.functionID) {
             case 'CM0201_1':
-              if(this.checkMoreReason(data.tmpPermission) || data.closed) {
+              if(this.checkMoreReason(data.permission) || data.closed) {
                 more.disabled = true;
               }
               break;
             case 'CM0201_3':
-              if(this.checkMoreReason(data.tmpPermission) || data.closed) {
+              if(this.checkMoreReason(data.permission) || data.closed) {
                 more.disabled = true;
               }
               break;
             case 'CM0201_4':
-              if(this.checkMoreReason(data.tmpPermission) || data.closed) {
+              if(this.checkMoreReason(data.permission) || data.closed) {
                 more.disabled = true;
               }
               break;
@@ -281,7 +281,7 @@ export class DealsComponent
             case 'SYS102':
             case 'SYS103':
             case 'SYS104':
-              if(this.checkMoreReason(data.tmpPermission) || data.closed  ) {
+              if(this.checkMoreReason(data.permission) || data.closed  ) {
                 more.disabled = true;
               }
               break;
