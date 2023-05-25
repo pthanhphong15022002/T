@@ -15,13 +15,12 @@
 	predicates="TransID=@0"
 	></codx-gridview-v2>
 </div>
-	<!-- [dataValues]="'f2c04250-f56d-11ed-a428-c025a5a4cd5d'" -->
-	<ng-template #more let-data>
-		<codx-mfunc
-		[formModel]="fmContractsPayments"
-		[isBookMark]="true"
-		[dataItem]="moreDefaut"
-		[type]="'view'"
-		(clickMF)="onClickMF($event, dataSource)"
-		></codx-mfunc>
-	 </ng-template>
+<ng-template #more let-data>
+	<codx-mfunc
+	[formModel]="fmContractsPayments"
+	[isBookMark]="true"
+	[dataItem]="moreDefaut"
+	[type]="'view'"
+	(clickMF)="onClickMF($event, data)"
+	></codx-mfunc>
+</ng-template>
