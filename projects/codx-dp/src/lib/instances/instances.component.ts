@@ -810,16 +810,6 @@ export class InstancesComponent
                 )
                   res.disabled = true;
                 break;
-              // case 'SYS004':
-              // case 'SYS001':
-              // case 'SYS002':
-              // //more core - thay doi nhieu dong, bo chon, chon tat ca..
-              // case 'SYS005':
-              // case 'SYS007':
-              // case 'SYS006':
-              //   res.disabled = true;
-              //   break;
-              //Chỉnh sửa, chuyển tiếp, thất bại, thành công
               case 'SYS103':
               case 'SYS03':
                 let isUpdate = data.write;
