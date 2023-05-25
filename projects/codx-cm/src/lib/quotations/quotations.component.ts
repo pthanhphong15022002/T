@@ -103,7 +103,7 @@ export class QuotationsComponent extends UIComponent {
             this.arrFieldIsVisible = arrField
               .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
               .map((x: any) => x.fieldName);
-            this.getColumsGrid(res);
+            //this.getColumsGrid(res);
           }
         }
       });
@@ -202,7 +202,7 @@ export class QuotationsComponent extends UIComponent {
         model: {
           resources: this.columnGrids,
           template2: this.templateMore,
-          frozenColumns: 1,
+          // frozenColumns: 1,
         },
       },
     ];
@@ -511,7 +511,7 @@ export class QuotationsComponent extends UIComponent {
   }
 
   //cance ki so
-  cancelAproval(item) {}
+
   //end trình ký
 
   // tạo hợp đồng
