@@ -2272,7 +2272,7 @@
                   <div class="timeline-exper-item" [ngClass]="lstExperiences? 'has-action-menu':''">
                     <div class="timeline-exper-nav w-100 d-flex pb-4">
                       <div class="timeline-media w-125px min-w-125px">
-                        <span class="stepper-number">
+                        <span class="stepper-number fw-bold">
                           {{item.fromDate | date: 'MM/y'}}
                           -
                           {{item.toDate | date: 'MM/y'}}
@@ -2283,6 +2283,7 @@
                       </div>
                       <div class="stepper-label">
                         <div class="stepper-title fs-5-sm fw-bold line-clamp line-clamp-3 mb-1">
+                          <i class="icon-business"></i>
                           {{item?.companyName}}
                         </div>
                         <div class="stepper-desc text-gray-500">
@@ -2347,7 +2348,7 @@
               </div>
             </div>
           </div>
-          <div class="mb-1 mt-5">
+          <!-- <div class="mb-1 mt-5">
             <codx-gridview
               *ngIf="eExperienceColumnGrid"
               #eExperienceGridView
@@ -2365,7 +2366,7 @@
               [emptyTemplate]="emptyDataTemplate"
               height="auto"
             ></codx-gridview>
-          </div>
+          </div> -->
         </div>
       </div>
     </ng-container>
@@ -4314,7 +4315,7 @@
                 [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
-            <ng-container *ngIf="awardFormModel && awardColumnsGrid">
+            <!-- <ng-container *ngIf="awardFormModel && awardColumnsGrid">
               <codx-gridview-v2
               #eAwardGridView2
                         [formModel]="awardFormModel"
@@ -4328,7 +4329,7 @@
                         [emptyTemplate]="emptyDataTemplate"
                         (clickMF)="clickMF($event, null, 'eAwards')"
                       ></codx-gridview-v2>
-            </ng-container>  
+            </ng-container>   -->
             
           </div>
         </div>

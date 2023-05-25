@@ -423,6 +423,7 @@
               [crrValue]="process.applyFor"
               [refValue]="gridViewSetup?.ApplyFor?.referedValue"
               (valueChange)="valueChange($event)"
+              [disabled]="action == 'edit'"
               [placeholder]="gridViewSetup['ApplyFor']?.description"
             >
             </codx-input>

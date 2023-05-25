@@ -105,6 +105,8 @@ export class DealsComponent
   resourceKanban?: ResourceModel;
   hideMoreFC = false;
   listHeader: any;
+  colorReasonSuccess:any;
+  colorReasonFail:any;
 
   constructor(
     private inject: Injector,
@@ -117,6 +119,10 @@ export class DealsComponent
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+
+    this.executeApiCalls();
+
+
   }
   ngOnChanges(changes: SimpleChanges): void {}
 
@@ -234,17 +240,17 @@ export class DealsComponent
         for (let more of $event) {
           switch (more.functionID) {
             case 'CM0201_1':
-              if(this.checkMoreReason(data.tmpPermission) || data.closed) {
+              if(this.checkMoreReason(data.permission) || data.closed) {
                 more.disabled = true;
               }
               break;
             case 'CM0201_3':
-              if(this.checkMoreReason(data.tmpPermission) || data.closed) {
+              if(this.checkMoreReason(data.permission) || data.closed) {
                 more.disabled = true;
               }
               break;
             case 'CM0201_4':
-              if(this.checkMoreReason(data.tmpPermission) || data.closed) {
+              if(this.checkMoreReason(data.permission) || data.closed) {
                 more.disabled = true;
               }
               break;
@@ -275,7 +281,7 @@ export class DealsComponent
             case 'SYS102':
             case 'SYS103':
             case 'SYS104':
-              if(this.checkMoreReason(data.tmpPermission) || data.closed  ) {
+              if(this.checkMoreReason(data.permission) || data.closed  ) {
                 more.disabled = true;
               }
               break;
@@ -284,6 +290,28 @@ export class DealsComponent
       }
     }
   }
+  async executeApiCalls() {
+    try {
+      await this.getColorReason();
+      // await this.getListCampaigns();
+      // await this.getListChannels();
+    } catch (error) {}
+  }
+
+ async getColorReason() {
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.colorReasonSuccess = item;
+          } else if (item.value === 'F') {
+            this.colorReasonFail = item;
+          }
+        }
+      }
+    });
+  }
+
   checkMoreReason(tmpPermission) {
     if(tmpPermission.isReasonSuccess && tmpPermission.isReasonFail && tmpPermission.isMoveStage ) {
       return true;

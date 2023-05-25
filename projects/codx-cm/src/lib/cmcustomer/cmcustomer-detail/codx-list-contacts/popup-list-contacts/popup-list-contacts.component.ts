@@ -54,14 +54,13 @@ export class PopupListContactsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loaded = false;
+    this.contactType = '0';
     this.cmSv.getContacts().subscribe((res) => {
       if (res != null && res.length > 0) {
         this.lstContacts = res;
         this.lstSearch = this.lstContacts;
         this.changeContacts(0, this.lstSearch[0]);
       }
-      this.loaded = true;
     });
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
