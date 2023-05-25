@@ -59,7 +59,6 @@ export class PopupListContactsComponent implements OnInit {
       if (res != null && res.length > 0) {
         this.lstContacts = res;
         this.lstSearch = this.lstContacts;
-        this.changeContacts(0, this.lstSearch[0]);
       }
     });
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {

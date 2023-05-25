@@ -38,7 +38,7 @@ import { TemplateComponent } from '../template/template.component';
 export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   @Input() meeting = new CO_Meetings();
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('locationCBB') locationCBB;
+  @ViewChild('locationCBB') locationCBB: any;
 
   crrEstimated: any;
   startTime: any = null;
@@ -96,7 +96,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   listPermissions: string = '';
   isClickSave = false;
   calendarData;
-
+  dayStart: Date;
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -576,7 +576,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     //this.changDetec.detectChanges();
   }
   cbxChange(e) {
-    this.meeting.location = e;
+    if (this.meeting.location != e) this.meeting.location = e;
   }
 
   valueCbx(id, e) {
@@ -624,79 +624,44 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   valueDateChange(event: any) {
-    this.meeting[event.field] = event.data.fromDate;
-    if (event.field == 'startDate') {
-      this.selectedDate = moment(new Date(this.meeting.startDate))
-        .set({ hour: 0, minute: 0, second: 0 })
-        .toDate();
-      // this.getTimeWork(this.selectedDate);
-      this.setDate();
+    if (this.meeting[event.field] != event?.data?.fromDate) {
+      this.meeting[event.field] = event?.data?.fromDate;
+      if (event.field == 'startDate') {
+        if (
+          moment(new Date(this.meeting.startDate))
+            .set({ hour: 0, minute: 0, second: 0 })
+            .toDate() != this.dayStart
+        ) {
+          this.dayStart = moment(new Date(this.meeting.startDate))
+            .set({ hour: 0, minute: 0, second: 0 })
+            .toDate();
+          this.selectedDate = moment(new Date(this.meeting.startDate))
+            .set({ hour: 0, minute: 0, second: 0 })
+            .toDate();
+          this.setDate();
+        }
+      }
     }
-    // var now = Date.now();
-    // if (event.field == 'startDate' || event.field == 'endDate') {
-    //   this.selectedDate = event.data.fromDate;
-    //   this.meeting[event.field] = this.selectedDate;
-    //   // var startDate = this.selectedDate.getTime();
-    //   // if (startDate - now < 0) {
-    //   //   this.notiService.notifyCode(
-    //   //     'Vui lòng chọn "Ngày" lớn hơn hoặc bằng ngày hiện tại'
-    //   //   );
-    //   // } else {
-    //   //   if (this.selectedDate) this.meeting[event.field] = this.selectedDate;
-    //   // }
-    // } else {
-    //   var date = event.data.fromDate;
-
-    //   if (event.field == 'fromDate') {
-
-    //     var fromSeconds = date.getTime();
-    //     this.fromDateSeconds = fromSeconds;
-    //     if (now - this.fromDateSeconds < 0) {
-    //       this.notiService.notifyCode(
-    //         'Vui lòng chọn "Ngày bắt đầu" nhỏ hơn ngày hiện tại'
-    //       );
-    //     } else if (this.toDateSeconds - this.fromDateSeconds < 0) {
-    //       this.notiService.notifyCode(
-    //         'Vui lòng chọn "Ngày kết thúc" lớn hơn ngày bắt đầu'
-    //       );
-    //     } else {
-    //       this.meeting.fromDate = event.data.fromDate;
-    //     }
-    //   }
-    //   if (event.field == 'toDate') {
-    //     var toSeconds = date.getTime();
-    //     this.toDateSeconds = toSeconds;
-    //     if (now - this.toDateSeconds < 0) {
-    //       this.notiService.notifyCode(
-    //         'Vui lòng chọn "Ngày kết thúc" nhỏ hơn ngày hiện tại'
-    //       );
-    //     } else {
-    //       if (this.toDateSeconds - this.fromDateSeconds < 0) {
-    //         this.notiService.notifyCode(
-    //           'Vui lòng chọn "Ngày kết thúc" lớn hơn ngày bắt đầu'
-    //         );
-    //       } else {
-    //         this.meeting.toDate = event.data.fromDate;
-    //       }
-    //     }
-    //   }
-    // }
   }
 
   valueStartTimeChange(event: any) {
-    this.startTime = event.data.fromDate;
-    this.fullDayChangeWithTime();
-    // this.isFullDay = false;
-    this.setDate();
-    this.changDetec.detectChanges();
+    if (this.startTime != event.data.fromDate) {
+      this.startTime = event.data.fromDate;
+      this.fullDayChangeWithTime();
+      // this.isFullDay = false;
+      this.setDate();
+      this.changDetec.detectChanges();
+    }
   }
 
   valueEndTimeChange(event: any) {
-    this.endTime = event.data.toDate;
-    this.fullDayChangeWithTime();
-    // this.isFullDay = false;
-    this.setDate();
-    this.changDetec.detectChanges();
+    if (this.endTime != event.data.fromDate) {
+      this.endTime = event.data.toDate;
+      this.fullDayChangeWithTime();
+      // this.isFullDay = false;
+      this.setDate();
+      this.changDetec.detectChanges();
+    }
   }
 
   setDate() {
@@ -715,25 +680,26 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           }
         }
       }
-      if (this.endTime) {
-        this.endHour = parseInt(this.endTime.split(':')[0]);
-        this.endMinute = parseInt(this.endTime.split(':')[1]);
-        if (this.selectedDate) {
-          if (!isNaN(this.endHour) && !isNaN(this.endMinute)) {
-            this.endDate = new Date(
-              this.selectedDate.setHours(this.endHour, this.endMinute, 0)
-            );
-            if (this.endDate) {
-              this.meeting.endDate = this.endDate;
-            }
+    }
+    if (this.endTime) {
+      this.endHour = parseInt(this.endTime.split(':')[0]);
+      this.endMinute = parseInt(this.endTime.split(':')[1]);
+      if (this.selectedDate) {
+        if (!isNaN(this.endHour) && !isNaN(this.endMinute)) {
+          this.endDate = new Date(
+            this.selectedDate.setHours(this.endHour, this.endMinute, 0)
+          );
+          if (this.endDate) {
+            this.meeting.endDate = this.endDate;
           }
         }
       }
-      if (this.isRoom) {
-        this.loadRoomAvailable();
-      }
-      this.changDetec.detectChanges();
     }
+    if (this.isRoom) {
+      this.loadRoomAvailable();
+    }
+
+    this.changDetec.detectChanges();
   }
 
   openPopupLink(addLink) {
