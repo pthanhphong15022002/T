@@ -229,6 +229,7 @@ export class AddContractsComponent implements OnInit{
     let payMent = new CM_ContractsPayments();
     let countPayMent =  this.listPayMent.length;
     payMent.rowNo = countPayMent + 1;
+    payMent.refNo = this.contracts?.recID;
     this.openPopupPay('add', 'pay', payMent);
   }
 
