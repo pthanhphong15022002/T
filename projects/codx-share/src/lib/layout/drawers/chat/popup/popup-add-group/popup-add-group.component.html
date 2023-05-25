@@ -16,6 +16,7 @@
           [width]="40"
           isDefaulImg="true"
           isAllowEdit="true"
+          (handleInput)="selectedFile($event)"
           [funcId]="dialogRef.formModel.funcID">
         </codx-img>
       </div>
