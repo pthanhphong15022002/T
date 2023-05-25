@@ -127,22 +127,30 @@ export class CmcustomerDetailComponent implements OnInit {
     this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
     // this.getListContactByObjectID(this.dataSelected?.recID);
     this.getAdressNameByIsDefault(this.dataSelected?.recID, this.entityName);
+    setTimeout(() => {
+      this.viewTag = this.dataSelected?.tags
+    }, 100);
     this.listTab(this.funcID);
     this.loaded = true;
   }
 
   getAdressNameByIsDefault(objectID, entityName) {
-    this.cmSv
+    if(this.funcID == 'CM0101' || this.funcID == 'CM0102'){
+      this.cmSv
       .getAdressNameByIsDefault(objectID, entityName)
       .subscribe((res) => {
         if (res) {
           this.addressNameCM = res?.adressName;
-        }else{
+        } else {
           this.addressNameCM = null;
         }
-        this.viewTag = this.dataSelected?.tags;
       });
+    }else{
+      this.addressNameCM = this.dataSelected?.address;
+
+    }
   }
+
 
   getGridviewSetup() {
     this.cache
@@ -247,7 +255,7 @@ export class CmcustomerDetailComponent implements OnInit {
           textDefault: 'Liên hệ',
           icon: 'icon-contact_phone',
           isActive: false,
-        }
+        },
       ];
     } else {
       this.tabDetail = [
