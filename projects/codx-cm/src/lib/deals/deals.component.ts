@@ -105,6 +105,8 @@ export class DealsComponent
   resourceKanban?: ResourceModel;
   hideMoreFC = false;
   listHeader: any;
+  colorReasonSuccess:any;
+  colorReasonFail:any;
 
   constructor(
     private inject: Injector,
@@ -117,6 +119,10 @@ export class DealsComponent
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+
+    this.executeApiCalls();
+
+
   }
   ngOnChanges(changes: SimpleChanges): void {}
 
@@ -284,6 +290,28 @@ export class DealsComponent
       }
     }
   }
+  async executeApiCalls() {
+    try {
+      await this.getColorReason();
+      // await this.getListCampaigns();
+      // await this.getListChannels();
+    } catch (error) {}
+  }
+
+ async getColorReason() {
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.colorReasonSuccess = item;
+          } else if (item.value === 'F') {
+            this.colorReasonFail = item;
+          }
+        }
+      }
+    });
+  }
+
   checkMoreReason(tmpPermission) {
     if(tmpPermission.isReasonSuccess && tmpPermission.isReasonFail && tmpPermission.isMoveStage ) {
       return true;
