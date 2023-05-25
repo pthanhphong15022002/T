@@ -237,7 +237,8 @@
       [isUpdate]="
         instance.write &&
         !instance.closed &&
-        (instance.status == '1' || instance.status == '2')
+        (instance.status == '1' || instance.status == '2') &&
+        instance.approveStatus != '3'
       "
       [titleHeaderFormCF]="titleDefault"
       [viewsCurrent]="viewsCurrent"
@@ -316,7 +317,7 @@
         </button>
       </div>
     </div>
-    <div id="step-task" class="main p-5" [ngClass]="'show-main'">   
+    <div id="step-task" class="main p-5" [ngClass]="'show-main'">
       <codx-step-task
         [dataSources]="step"
         [isShowButton]="true"
@@ -333,7 +334,6 @@
       ></codx-step-task>
     </div>
   </div>
-
 </ng-template>
 
 <ng-template #reason>

@@ -335,7 +335,6 @@ export class EmployeeListComponent extends UIComponent {
   funcIDEmpInfor:string = "HRT03b";
   // view imployee infor
   clickViewEmpInfo(data:any){
-    debugger
     this.cache.functionList(this.funcIDEmpInfor)
     .subscribe(func => {
       let queryParams =  {
@@ -343,6 +342,7 @@ export class EmployeeListComponent extends UIComponent {
         page: this.view.dataService.page,
       };
       let state = {
+        empInfo : JSON.stringify(data),
         data: this.view.dataService.data,
         request: this.view.dataService.request
       }

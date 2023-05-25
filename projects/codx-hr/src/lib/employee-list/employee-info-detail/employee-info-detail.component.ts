@@ -634,26 +634,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       });
     }
     this.routeActive.queryParams.subscribe((params) => {
+      debugger
       this.employeeID = params["employeeID"];
       this.pageNum = params["page"];
-
-      // if (!this.infoPersonal) {
-      //   let empRequest = new DataRequest();
-      //   empRequest.entityName = 'HR_Employees';
-      //   empRequest.dataValues = this.employeeID;
-      //   empRequest.predicates = 'EmployeeID=@0';
-      //   empRequest.pageLoading = false;
-      //   this.hrService.loadData('HR', empRequest).subscribe((emp) => {
-      //     debugger
-      //     if (emp[1] > 0) {
-      //       this.infoPersonal = emp[0][0];
-      //     }
-      //   });
-      // } 
-
       if (this.employeeID || this.user.userID) 
       {
-        debugger
         if(history.state)
         {
           if (history.state.empInfo){
