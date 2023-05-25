@@ -23,6 +23,7 @@ import {
   RequestOption,
   NotificationsService,
   DialogModel,
+  CRUDService,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
@@ -132,8 +133,32 @@ export class DealsComponent
       this.dataObj = changes['dataObj'].currentValue;
       if (this.processID != this.dataObj?.processID) {
         this.processID = this.dataObj?.processID;
-     
-        this.view.load();
+        (this.view?.dataService as CRUDService)
+          .setPredicates(['ProcessID==@0'], [this.processID])
+          .subscribe();
+        if ((this.view?.currentView as any)?.kanban) {
+          let kanban = (this.view?.currentView as any)?.kanban;
+          let settingKanban = kanban.kanbanSetting;
+          settingKanban.isChangeColumn = true;
+          settingKanban.formName = this.view?.formModel?.formName;
+          settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+          this.api
+            .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+              settingKanban,
+              this.dataObj,
+            ])
+            .subscribe((resource) => {
+              if (resource?.columns && resource?.columns.length)
+                kanban.columns = resource.columns;
+              kanban.kanbanSetting.isChangeColumn = false;
+              kanban.loadDataSource(
+                kanban.columns,
+                kanban.kanbanSetting?.swimlaneSettings,
+                false
+              );
+              kanban.refresh();
+            });
+        }
       }
     }
   }
@@ -144,12 +169,6 @@ export class DealsComponent
     this.button = {
       id: this.btnAdd,
     };
-
-    // this.router.params.subscribe((param: any) => {
-    //   if (param.funcID) {
-    //     this.funcID = param.funcID;
-    //   }
-    // });
 
     this.detectorRef.detectChanges();
   }
