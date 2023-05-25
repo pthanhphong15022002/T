@@ -56,17 +56,17 @@ export class CashPaymentsComponent extends UIComponent {
   dataCategory: any;
   journal: IJournal;
   approval: any;
-  total: any = 0;
+  totalacct:any;
+  totaloff:any;
   className: any;
   classNameLine: any;
   entityName: any;
-  cashpaymentline: any;
   settledInvoices: any;
-  acctTrans: any;
+  acctTrans: any = [];
   baseCurr: any;
   cashbookName: any;
   reasonName: any;
-  lsAccount = [];
+  arrEntryID = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
@@ -379,21 +379,6 @@ export class CashPaymentsComponent extends UIComponent {
 
   loadDatadetail(data) {
     switch (data.subType) {
-      case '1':
-      case '3':
-        // this.api
-        //   .exec('AC', this.classNameLine, 'LoadDataAsync', [data.recID])
-        //   .subscribe((res: any) => {
-        //     this.cashpaymentline = res;
-        //     this.loadTotal();
-        //     this.loadAccountName(res);
-        //   });
-        this.api
-          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
-          .subscribe((res: any) => {
-            this.acctTrans = res;
-          });
-        break;
       case '2':
         this.api
           .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [data.recID])
@@ -405,6 +390,22 @@ export class CashPaymentsComponent extends UIComponent {
           .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
             this.acctTrans = res;
+          });
+        break;
+      default:
+        this.api
+          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
+          .subscribe((res: any) => {
+            if (res.data.length > 0) {
+              this.arrEntryID = res.arrEntry;
+              for (let index = 0; index < this.arrEntryID.length; index++) {
+                  var data = res.data.filter((i) => i.entryID == this.arrEntryID[index]);
+                  this.acctTrans.push(data);
+              }
+              this.loadTotal(); 
+            }else{
+              this.acctTrans = [];
+            }
           });
         break;
     }
@@ -463,11 +464,16 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   loadTotal() {
-    var totals = 0;
-    this.cashpaymentline.forEach((element) => {
-      totals = totals + element.dr;
-    });
-    this.total = totals.toLocaleString('it-IT');
+    var totalacct = 0;
+    var totaloff = 0;
+    for (let index = 0; index < this.acctTrans.length; index++) {
+      let j = this.acctTrans[index].findIndex(x => x.crediting == true);
+      let k = this.acctTrans[index].findIndex(x => x.crediting == false);
+      totalacct = totalacct + this.acctTrans[index][j].transAmt;
+      totaloff = totaloff + this.acctTrans[index][k].transAmt;
+    }
+    this.totalacct = totalacct.toLocaleString('it-IT');
+    this.totaloff = totaloff.toLocaleString('it-IT');
   }
 
   loadCashbookName(data) {
@@ -498,5 +504,12 @@ export class CashPaymentsComponent extends UIComponent {
     return styles;
   }
 
+  checkCrediting(data){
+    if (data.filter((i) => i.crediting == false).length > 1) {
+      return true;
+    }else{
+      return false;
+    }
+  }
   //#endregion
 }

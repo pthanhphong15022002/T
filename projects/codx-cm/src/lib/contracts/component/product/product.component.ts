@@ -38,6 +38,12 @@ export class ProductComponent implements OnInit,OnChanges{
     delete: true,
   };
   grvMoreFunction: FormModel;
+  fmContractsPayments: FormModel = {
+    formName: 'CMContractsPayments',
+    gridViewName: 'grvCMContractsPayments',
+    entityName: 'CM_ContractsPayments',
+    funcID: 'CM02041 ',
+  };
 
   constructor(
     private codxCM: CodxCmService,

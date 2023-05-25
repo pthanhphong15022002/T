@@ -27,9 +27,17 @@ export class StepService {
     return check;
   }
 
-  checkUpdateProgress(dataUpdate, type, step, isRoleAll, isOnlyView, isUpdateProgressGroup, user) {
+  checkUpdateProgress(dataUpdate, type, step, isRoleAll, isOnlyView, isUpdateProgressGroup,isUpdateProgressStep ,user) {
     if(isOnlyView){
-      if (type != "G" && type != "P") { //task
+      if(type == "P"){
+        return isUpdateProgressStep && isRoleAll ? true : false;
+      }else if(type == "G"){
+        let isGroup = false;
+        if (!isRoleAll) {
+          isGroup = this.checRoleTask(dataUpdate, 'O', user);
+        }
+        return isUpdateProgressGroup && (isRoleAll || isGroup) ? true : false;
+      }else{
         let isGroup = false;
         let isTask = false;
         if (!isRoleAll) {
@@ -40,12 +48,6 @@ export class StepService {
           }
         }
         return isRoleAll || isGroup || isTask ? true : false;
-      } else {//group
-        let isGroup = false;
-        if (!isRoleAll) {
-          isGroup = this.checRoleTask(dataUpdate, 'O', user);
-        }
-        return isUpdateProgressGroup && (isRoleAll || isGroup) ? true : false;
       }
     }
     return false;

@@ -4,12 +4,12 @@ import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: LayoutNoAsideComponent,
+    component: LayoutOnlyHeaderComponent,
     children: [
       {
         path: 'calendar/:funcID',

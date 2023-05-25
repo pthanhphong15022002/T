@@ -126,7 +126,6 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
     var formGroup = this.form.formGroup.controls;
     if (
       formGroup.giftName.status == 'VALID' &&
-      formGroup.giftID.status == 'VALID' &&
       formGroup.memo.status == 'VALID' &&
       formGroup.price.status == 'VALID'
     ) {
