@@ -2822,7 +2822,6 @@ codx-vll.badge.badge-md span::before{
    }
    
  }
-
 .aside-minimize-icon-title .aside .menu-link {
   padding-left: 7px!important;
   padding-right: 7px!important;
@@ -2836,19 +2835,15 @@ codx-vll.badge.badge-md span::before{
   max-height: 77px;
   min-height: 77px;
 }
+.aside-menu .menu-item .menu-icon > img, .aside-menu .menu-item .menu-icon .svg-icon, .aside-footer .menu-item .menu-icon > img, .aside-footer .menu-item .menu-icon .svg-icon {
+  width: 26px!important;
+  height: 26px!important;
 
-.aside-primary{ 
-  .aside-menu .menu-item .menu-icon > img, 
-  .aside-menu .menu-item .menu-icon .svg-icon, 
-  .aside-footer .menu-item .menu-icon > img, 
-  .aside-footer .menu-item .menu-icon .svg-icon {
-    width: 26px!important;
-    height: 26px!important;
-
-  }
 }
 
-.aside-primary .menu-state-icon-primary .menu-item {
+
+lib-nosubaside{
+.menu-state-icon-primary .menu-item {
   .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
     fill: var(--primary-lightest);
   }
@@ -2856,7 +2851,19 @@ codx-vll.badge.badge-md span::before{
     fill: var(--primary-light);
   }
 }
-.aside-primary .menu-state-icon-primary .menu-item:hover {
+}
+codx-layout{
+  .menu-state-icon-primary .menu-item {
+    .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+      fill: var(--primary-lightest);
+    }
+    .menu-link.active .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+      fill: var(--primary-light);
+    }
+  }
+  }
+
+.menu-state-icon-primary .menu-item:hover {
   .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
     fill: var(--primary)!important;
   }
