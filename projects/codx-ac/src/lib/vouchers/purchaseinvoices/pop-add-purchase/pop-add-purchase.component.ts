@@ -252,16 +252,15 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       case "vatid":
         e.data.vatAmt = this.calculateVatAmt(e.data.netAmt, e.data.vatid);
         break;
-    }
-    if (e.field == 'itemID') {
-      var item = this.getItem(e.data.itemID);
-      e.data.itemName = item.itemName;
-      e.data.umid = item.umid;
-      this.loadItemID(e.value);
-    }
-    if (e.field == 'idiM4')
-    {
-      this.loadWarehouseID(e.value);
+      case 'itemID':
+        var item = this.getItem(e.data.itemID);
+        e.data.itemName = item.itemName;
+        e.data.umid = item.umid;
+        this.loadItemID(e.value);
+        break;
+      case 'idiM4':
+        this.loadWarehouseID(e.value);
+        break;
     }
   }
   cellChangedInvoice(e: any) {
