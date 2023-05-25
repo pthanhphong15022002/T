@@ -141,6 +141,7 @@ export class CodxCalendarComponent
         if (res) {
           this.getDataAfterAddEvent(res);
           this.getCalendarNotes();
+          this.navigate();
         }
       });
   }
