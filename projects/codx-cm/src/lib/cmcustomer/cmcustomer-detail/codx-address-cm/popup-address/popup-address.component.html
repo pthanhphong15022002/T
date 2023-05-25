@@ -20,11 +20,29 @@
     >
     </codx-input>
   </div>
+  <div class="form-group mt-4">
+    <div class="d-flex justify-content-between">
+      <codx-label
+        fiedName="AdressName"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <span class="icon-refresh icon-18 text-dark fw-bold text-hover-primary cursor-pointer" (click)="clickRefesh()">
+      </span>
+    </div>
+    <codx-input
+      [formModel]="form.formModel"
+      (valueChange)="valueChange($event)"
+      [crrValue]="data?.adressName"
+      field="adressName"
+    >
+    </codx-input>
+  </div>
   <div class="form-group">
     <codx-label fiedName="Street" [formModel]="form.formModel"></codx-label>
     <codx-input
       [formModel]="form.formModel"
-      [Group]="form.formGroup"
+      (valueChange)="valueChange($event)"
+      [crrValue]="data?.street"
       field="street"
     >
     </codx-input>
@@ -32,7 +50,10 @@
   <div class="row">
     <div class="col-6">
       <div class="form-group">
-        <codx-label fiedName="CountryID" [formModel]="form.formModel"></codx-label>
+        <codx-label
+          fiedName="CountryID"
+          [formModel]="form.formModel"
+        ></codx-label>
         <codx-input
           [formModel]="form.formModel"
           (valueChange)="valueChange($event)"
@@ -44,7 +65,10 @@
     </div>
     <div class="col-6">
       <div class="form-group">
-        <codx-label fiedName="ProvinceID" [formModel]="form.formModel"></codx-label>
+        <codx-label
+          fiedName="ProvinceID"
+          [formModel]="form.formModel"
+        ></codx-label>
         <codx-input
           [formModel]="form.formModel"
           (valueChange)="valueChange($event)"
@@ -59,7 +83,10 @@
   <div class="row">
     <div class="col-6">
       <div class="form-group">
-        <codx-label fiedName="DistrictID" [formModel]="form.formModel"></codx-label>
+        <codx-label
+          fiedName="DistrictID"
+          [formModel]="form.formModel"
+        ></codx-label>
         <codx-input
           [formModel]="form.formModel"
           (valueChange)="valueChange($event)"
@@ -84,25 +111,29 @@
       </div>
     </div>
   </div>
-
-  <div class="form-group">
-    <codx-label fiedName="PostalCode" [formModel]="form.formModel"></codx-label>
-    <codx-input
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      field="postalCode"
-    >
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label fiedName="RegionID" [formModel]="form.formModel"></codx-label>
-    <codx-input
-      [formModel]="form.formModel"
-      (valueChange)="valueChange($event)"
-      [crrValue]="data?.regionID"
-      field="regionID"
-    >
-    </codx-input>
+  <div class="row">
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="PostalCode"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="postalCode"
+      >
+      </codx-input>
+    </div>
+    <div class="col-6 form-group">
+      <codx-label fiedName="RegionID" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        [formModel]="form.formModel"
+        (valueChange)="valueChange($event)"
+        [crrValue]="data?.regionID"
+        field="regionID"
+      >
+      </codx-input>
+    </div>
   </div>
   <div class="d-flex justify-content-between">
     <div>

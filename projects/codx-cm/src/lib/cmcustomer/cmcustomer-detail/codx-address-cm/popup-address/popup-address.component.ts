@@ -10,6 +10,7 @@ import {
 } from 'codx-core';
 import { BS_AddressBook } from '../../../../models/cm_model';
 import { CodxCmService } from '../../../../codx-cm.service';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-address',
@@ -21,10 +22,10 @@ export class PopupAddressComponent implements OnInit {
   data = new BS_AddressBook();
   gridViewSetup: any;
   title = '';
-  nameCountry = '';
-  nameProvince = '';
-  nameDistrict = '';
-  nameWard = '';
+  nameCountry: any;
+  nameProvince: any;
+  nameDistrict: any;
+  nameWard: any;
   action = '';
   model: any;
   modelDistrictID: any;
@@ -51,6 +52,12 @@ export class PopupAddressComponent implements OnInit {
     if (this.action == 'edit') {
       this.data = JSON.parse(JSON.stringify(dt?.data?.data));
       this.isDefault = this.data?.isDefault;
+    } else {
+      if (this.dialog.formModel?.funcID == 'CM0101') {
+        this.data.adressType = '6';
+      } else {
+        this.data.adressType = '5';
+      }
     }
     this.type = dt?.data?.type;
     this.objectID = dt?.data?.objectID;
@@ -106,7 +113,6 @@ export class PopupAddressComponent implements OnInit {
   }
 
   onSave() {
-    this.setAdressName();
     this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
     if (this.count > 0) return;
 
@@ -159,10 +165,9 @@ export class PopupAddressComponent implements OnInit {
           if (res) {
             this.dialog.close(res);
             this.notiService.notifyCode('SYS006');
-          }else{
+          } else {
             this.dialog.close();
             this.notiService.notifyCode('SYS023');
-
           }
         });
       } else {
@@ -170,37 +175,63 @@ export class PopupAddressComponent implements OnInit {
           if (res) {
             this.dialog.close(res);
             this.notiService.notifyCode('SYS007');
-          }else{
+          } else {
             this.dialog.close();
             this.notiService.notifyCode('SYS021');
-
           }
         });
       }
     }
   }
-
+  clickRefesh() {
+    this.setAdressName();
+  }
   setAdressName() {
-    this.data.adressName =
-      this.data?.street != null && this.data?.street?.trim() != ''
-        ? this.data.street +
-          ', ' +
-          this.nameWard +
-          this.nameDistrict +
-          this.nameProvince +
-          this.nameCountry
-        : this.nameWard +
-          this.nameDistrict +
-          this.nameProvince +
-          this.nameCountry;
+    if (
+      this.data?.street == null &&
+      this.nameWard == null &&
+      this.nameDistrict == null &&
+      this.nameProvince == null &&
+      this.nameCountry == null
+    ) {
+      this.data.adressName = null;
+    } else {
+      var street =
+        this.data?.street != null && this.data?.street?.trim()
+          ? this.data?.street + ','
+          : '';
+      var ward =
+        this.nameWard != null && this.nameWard.trim()
+          ? ' ' + this.nameWard + ','
+          : '';
+      var district =
+        this.nameDistrict != null && this.nameDistrict.trim()
+          ? ' ' + this.nameDistrict + ','
+          : '';
+      var province =
+        this.nameProvince != null && this.nameProvince.trim()
+          ? ' ' + this.nameProvince + ','
+          : '';
+      var country =
+        this.nameCountry != null && this.nameCountry.trim()
+          ? ' ' + this.nameCountry
+          : '';
+      var adressName = street + ward + district + province + country;
+      if (adressName != null && adressName.trim() != '') {
+        if (adressName.endsWith(',')) {
+          adressName = adressName.slice(0, -1);
+        }
+        this.data.adressName = adressName;
+      }
+    }
   }
 
   valueIsDefault(e) {
     this.isDefault = e.data;
   }
   valueChange(e) {
+    this.data[e.field] = e?.data;
     if (e.data) {
-      this.data[e.field] = e?.data;
       switch (e.field) {
         case 'countryID':
           this.model = { CountryID: JSON.parse(JSON.stringify(e?.data)) };
@@ -211,28 +242,38 @@ export class PopupAddressComponent implements OnInit {
               : null;
           break;
         case 'provinceID':
-          this.modelDistrictID = { ProvinceID: JSON.parse(JSON.stringify(e?.data)) };
+          this.modelDistrictID = {
+            ProvinceID: JSON.parse(JSON.stringify(e?.data)),
+          };
           this.nameProvince =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
-              ? e?.component?.itemsSelected[0]?.ProvinceName + ', '
+              ? e?.component?.itemsSelected[0]?.ProvinceName
               : null;
           break;
         case 'districtID':
-          this.modelWardID = { DistrictID: JSON.parse(JSON.stringify(e?.data)) };
+          this.modelWardID = {
+            DistrictID: JSON.parse(JSON.stringify(e?.data)),
+          };
           this.nameDistrict =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
-              ? e?.component?.itemsSelected[0]?.DistrictName + ', '
+              ? e?.component?.itemsSelected[0]?.DistrictName
               : null;
           break;
         case 'wardID':
           this.nameWard =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
-              ? e?.component?.itemsSelected[0]?.WardName + ', '
+              ? e?.component?.itemsSelected[0]?.WardName
               : null;
           break;
+      }
+      if (
+        this.data?.adressName == null ||
+        this.data?.adressName?.trim() == ''
+      ) {
+        this.setAdressName();
       }
     }
   }

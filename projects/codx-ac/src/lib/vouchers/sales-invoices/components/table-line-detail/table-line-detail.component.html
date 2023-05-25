@@ -7,6 +7,7 @@
   service="SM"
   [height]="height"
   [autoLoad]="false"
+  [hideMoreFunc]="!hasMF"
   [columnsGrid]="columns"
   [showRowNumber]="true"
   predicates="TransID=@0"
@@ -74,7 +75,7 @@
 </ng-template>
 
 <ng-template #columnVatid let-data>
-  {{ vats$ | async | nameById : "VATID" : "TaxRate" : data.vatid }}
+  {{ vats | nameById : "VATID" : "TaxRate" : data.vatid }}
 </ng-template>
 
 <ng-template #more let-data>
