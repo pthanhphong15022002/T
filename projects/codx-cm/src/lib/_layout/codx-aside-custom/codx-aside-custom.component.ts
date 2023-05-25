@@ -304,9 +304,6 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   itemClick(funcId: string, data: any, type?: string) {
-    this.dataMenuCustom = [];
-    this.loadedCus = false;
-    this.changDefector.detectChanges();
     //trả lại predicate mặc định khi click vào menu cus
     if (this.isClickMenuCus) {
       this.codxService.activeViews.dataService.predicates =

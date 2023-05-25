@@ -14,7 +14,7 @@
         <codx-label
           name="lblContacts"
           [formModel]="dialog.formModel"
-          default="Chọn liên hệ"
+          default="Chọn liên hệ từ hệ thống"
         ></codx-label>
       </div>
       <div class="ms-3 input-sm w-350px min-w-350px">
@@ -57,7 +57,7 @@
     </div>
   </div>
 
-  <ng-container *ngIf="loaded">
+  <ng-container>
     <div
       class="list-contacts"
       *ngIf="lstSearch != null && lstSearch.length > 0; else noData"
