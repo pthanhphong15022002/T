@@ -260,6 +260,14 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
       case 'SYS04':
         this.copy(item);
         break;
+      case 'ADS0401':
+        if (item.administrator) return;
+        this.tempService.roleName.next(item.roleName);
+        this.tempService.isSystem = item.isSystem;
+        this.codxService.navigate('', this.urlDetailRoles, {
+          recID: item.recID,
+        });
+        break;
     }
   }
 }

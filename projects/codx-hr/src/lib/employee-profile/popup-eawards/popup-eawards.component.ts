@@ -169,8 +169,8 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
             this.awardObj.employeeID = this.employId;
             this.formModel.currentData = this.awardObj;
             this.formGroup.patchValue(this.awardObj);
-            this.cr.detectChanges();
             this.isAfterRender = true;
+            this.cr.detectChanges();
           }
         });
     } else {
@@ -181,8 +181,8 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         this.awardObj.awardDate = null;
       this.formGroup.patchValue(this.awardObj);
       this.formModel.currentData = this.awardObj;
-      this.cr.detectChanges();
       this.isAfterRender = true;
+      this.cr.detectChanges();
     }
   }
 
@@ -194,7 +194,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
           this.formGroup = fg;
           this.initForm();
         }
-      }); 
+      });
 
     // this.cache
     //   .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
@@ -316,5 +316,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
       this.cr.detectChanges();
     }
   }
-
+  clickOpenPopup(codxInput) {
+    codxInput.elRef.nativeElement.querySelector('button').click();
+  }
 }
