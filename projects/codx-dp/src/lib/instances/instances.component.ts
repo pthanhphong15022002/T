@@ -136,7 +136,7 @@ export class InstancesComponent
   viewMode: any;
   viewModeDetail = 'S';
   totalInstance: number = 0;
-  itemSelected: any;
+
   stepSuccess: any;
   stepFail: any;
   viewType = 'd';
@@ -980,7 +980,7 @@ export class InstancesComponent
         this.popupOwnerRoles(data);
         break;
       case 'DP23':
-        this.cancelApprover();
+        this.cancelApprover(data);
         break;
       //xuat khau du lieu
       case 'SYS002':
@@ -2240,7 +2240,41 @@ export class InstancesComponent
   }
 
   //Huy duyet
-  cancelApprover() {}
+  cancelApprover(dt) {
+    this.notificationsService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        //check truoc ben quy trình có thiết lập chưa ?? cos la lam tiep
+        this.codxDpService
+          .getESCategoryByCategoryID(this.process.processNo)
+          .subscribe((res2: any) => {
+            if (res2) {
+              if (res2?.eSign == true) {
+                //trình ký
+              } else if (res2?.eSign == false) {
+                //kí duyet
+                this.codxDpService
+                  .cancelSubmit(dt?.recID, this.view.formModel.entityName)
+                  .subscribe((res3) => {
+                    if (res3) {
+                      this.dataSelected.approveStatus = '0';
+                      this.codxDpService
+                        .updateApproverStatus([dt.recID, '0'])
+                        .subscribe((res4) => {
+                          if (res4) {
+                            this.view.dataService
+                              .update(this.dataSelected)
+                              .subscribe();
+                            this.notificationsService.notifyCode('SYS007');
+                          } else this.notificationsService.notifyCode('SYS021');
+                        });
+                    } else this.notificationsService.notifyCode('SYS021');
+                  });
+              }
+            }
+          });
+      }
+    });
+  }
   //end duyet
 
   getUserArray(arr1, arr2) {
