@@ -33,7 +33,7 @@ import { DealDetailComponent } from './deal-detail/deal-detail.component';
 import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 import { AnyNsRecord } from 'dns';
-import { async } from '@angular/core/testing';
+import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 
 @Component({
   selector: 'lib-deals',
@@ -382,8 +382,6 @@ export class DealsComponent
   async executeApiCalls() {
     try {
       await this.getColorReason();
-      // await this.getListCampaigns();
-      // await this.getListChannels();
     } catch (error) {}
   }
 
@@ -449,6 +447,9 @@ export class DealsComponent
       // Open deal
       case 'CM0201_8':
         this.openOrCloseDeal(data, true);
+        break;
+      case  'CM0201_7':
+        this.popupOwnerRoles(data);
         break;
       // Close deal
       case 'CM0201_9':
@@ -581,32 +582,6 @@ export class DealsComponent
     var functionID = isMoveSuccess ? 'DPT0403' : 'DPT0404';
     this.cache.functionList(functionID).subscribe((fun) => {
       this.openFormReason(data, fun, isMoveSuccess);
-      // var newProccessIdReason = isMoveSuccess
-      //   ? this.stepSuccess.newProcessID
-      //   : this.stepFail.newProcessID;
-      // var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
-      // if (isCheckExist) {
-      //   this.codxDpService
-      //     .getProcess(newProccessIdReason)
-      //     .subscribe((res) => {
-      //       if (res) {
-      //         if (res.permissions != null && res.permissions.length > 0) {
-      //           this.listParticipantReason = res.permissions.filter(
-      //             (x) => x.roleType === 'P'
-      //           );
-      //           this.openFormReason(
-      //             data,
-      //             fun,
-      //             isMoveSuccess,
-      //             dataMore,
-      //             this.listParticipantReason
-      //           );
-      //         }
-      //       }
-      //     });
-      // } else {
-      //   this.openFormReason(data, fun, isMoveSuccess, dataMore, null);
-      // }
     });
   }
 
@@ -727,6 +702,7 @@ export class DealsComponent
     deal.stepID = instance.stepID;
     deal.status = instance.status;
     deal.nextStep = nextStep;
+    deal.startDate = null;
     return deal;
   }
   updateReasonDeal(instance: any, deal: any) {
@@ -746,6 +722,41 @@ export class DealsComponent
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
       }
       this.detectorRef.detectChanges();
+    });
+  }
+
+  popupOwnerRoles(data) {
+    this.dataSelected = data;
+    this.cache.functionList('DPT0402').subscribe((fun) => {
+      var formMD = new FormModel();
+      let dialogModel = new DialogModel();
+      formMD.funcID = fun.functionID;
+      formMD.entityName = fun.entityName;
+      formMD.formName = fun.formName;
+      formMD.gridViewName = fun.gridViewName;
+      dialogModel.zIndex = 999;
+      dialogModel.FormModel = formMD;
+      var dataCM = {
+        refID: data?.refID,
+        processID: data?.processID,
+        stepID: data?.stepID,
+      };
+      var dialog = this.callfc.openForm(
+        PopupEditOwnerstepComponent,
+        '',
+        500,
+        280,
+        '',
+        [null, this.titleAction, data,'1',dataCM],
+        '',
+        dialogModel
+      );
+      dialog.closed.subscribe((e) => {
+        if (e && e?.event != null) {
+          this.notificationsService.notifyCode('SYS007');
+          this.detectorRef.detectChanges();
+        }
+      });
     });
   }
 

@@ -142,7 +142,7 @@ export class CodxCmService {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
-      'GetStepsInstanceByInstanceIDAsync',
+      'GetStepsByInstanceIDAsync',
       data
     );
   }

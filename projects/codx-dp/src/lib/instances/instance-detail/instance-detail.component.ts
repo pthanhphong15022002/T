@@ -523,7 +523,6 @@ export class InstanceDetailComponent implements OnInit {
               end: i.endDate,
             };
           });
-          console.log('thuan', test);
 
           this.changeDetec.detectChanges();
         }
@@ -585,11 +584,11 @@ export class InstanceDetailComponent implements OnInit {
                 }
               }
             }
-  
+
           }
         }
         console.log(dataProgress?.event);
-        
+
       })
     }
   }
@@ -635,7 +634,7 @@ export class InstanceDetailComponent implements OnInit {
     let listTask = isDefault ? step?.tasks?.filter(task => task?.requireCompleted) : step?.tasks;
     if(listTask?.length <= 0){
       return isDefault ? true : false;
-    } 
+    }
     for(let task of listTask){
       if(task.progress != 100){
         check = false;
@@ -643,7 +642,7 @@ export class InstanceDetailComponent implements OnInit {
       }
     }
     return check;
-   
+
   }
 
   changeViewTimeGant(e) {
