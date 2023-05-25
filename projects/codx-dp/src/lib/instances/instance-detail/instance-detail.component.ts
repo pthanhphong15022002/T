@@ -522,7 +522,6 @@ export class InstanceDetailComponent implements OnInit {
               end: i.endDate,
             };
           });
-          console.log('thuan', test);
 
           this.changeDetec.detectChanges();
         }
@@ -568,7 +567,7 @@ export class InstanceDetailComponent implements OnInit {
     //         this.handelProgress(data,dataOuput?.event)
     //       }
     //     })
-  
+
     //   }
     // }
     let data = this.ganttDsClone?.find((item) => item.recID === recID);
