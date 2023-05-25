@@ -378,7 +378,7 @@
               <td>
                 <div class="has-action-menu">
                   <codx-mfunc [dataItem]="item" [formModel]="form.formModel" (clickMF)="clickMF($event, item)"
-                    isBookMark="false" type="hover"></codx-mfunc>
+                    isBookMark="false" type="view"></codx-mfunc>
                 </div>
               </td>
             </tr>
@@ -417,16 +417,13 @@
 
 <!-- Start: More function -->
 <ng-template #morefunction let-data>
-  <span *ngIf="modeGrid == '2'" ngbTooltip="Sửa" placement="top" type="button" class="btn btn-icon btn-light-primary ms-1" (click)="editRow(data)">
-    <i class="icon-edit icon-16"></i>
-  </span>
-  <span ngbTooltip="copy" placement="top" type="button" class="btn btn-icon btn-light-primary ms-1" (click)="copyRow(data)">
-    <i class="icon-content_copy icon-16"></i>
-  </span>
-  <span ngbTooltip="Xóa" placement="bottom" type="button" class="btn btn-icon btn-light-danger ms-1"
-    (click)="deleteRow(data)">
-    <i class="icon-delete icon-16"></i>
-  </span>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="form.formModel"
+    (clickMF)="clickMF($event, data)"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
 </ng-template>
 <!-- End: More function -->
 

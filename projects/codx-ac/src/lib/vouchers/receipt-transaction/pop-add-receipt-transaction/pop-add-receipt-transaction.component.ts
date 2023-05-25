@@ -308,7 +308,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   editRow(data) {
     switch (this.modeGrid) {
       case '1':
-        this.gridInventoryJournalLine.updateRow(data.rowNo, data);
+        this.gridInventoryJournalLine.gridRef.selectRow(Number(data.index));
+        this.gridInventoryJournalLine.gridRef.startEdit();
         break;
       case '2':
         let index = this.inventoryJournalLines.findIndex(
