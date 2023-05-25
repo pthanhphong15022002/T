@@ -30,6 +30,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
   objectIdim: any;
   lockFields: any;
   itemName: any;
+  entityLine: any;
   inventoryJournalLine: InventoryJournalLines;
   inventoryJournal: InventoryJournals;
   objectInventoryJournalLines: Array<InventoryJournalLines> = [];
@@ -45,6 +46,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     this.inventoryJournalLine = dialogData.data?.data;
     this.inventoryJournal = dialogData.data?.dataInventoryJournal;
     this.objectInventoryJournalLines = dialogData.data?.dataline;
+    this.entityLine = dialogData.data?.entityLine;
     this.lockFields = dialogData.data?.lockFields;
     if (this.lockFields == null) {
       this.lockFields = [];
@@ -87,7 +89,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
         case 'add':
           this.api
             .execAction<any>(
-              'IV_InventoryJournalLines',
+              this.entityLine,
               [this.inventoryJournalLine],
               'SaveAsync'
             )
@@ -100,7 +102,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
         case 'edit':
           this.api
             .execAction<any>(
-              'IV_InventoryJournalLines',
+              this.entityLine,
               [this.inventoryJournalLine],
               'UpdateAsync'
             )
@@ -122,7 +124,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     } else {
       this.api
         .execAction<any>(
-          'IV_InventoryJournalLines',
+          this.entityLine,
           [this.inventoryJournalLine],
           'SaveAsync'
         )
