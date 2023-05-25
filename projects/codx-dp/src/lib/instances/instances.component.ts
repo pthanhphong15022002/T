@@ -794,7 +794,7 @@ export class InstancesComponent
     if (e != null && data != null) {
       if (data?.approveStatus == '3') {
         e.forEach((res) => {
-          if (res.functionID != 'DP23') {
+          if (res.functionID != 'DP23' && res.functionID != 'DP16') {
             res.disabled = true;
           }
         });
