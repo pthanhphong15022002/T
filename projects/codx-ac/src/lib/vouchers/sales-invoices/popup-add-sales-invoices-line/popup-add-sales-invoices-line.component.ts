@@ -62,6 +62,7 @@ export class PopupAddSalesInvoicesLineComponent
     this.dataService = dialogRef.dataService;
     this.salesInvoicesLine = this.dataService.dataSelected;
     this.transID = this.salesInvoicesLine.transID;
+
     this.isEdit = dialogData.data.formType === 'edit';
     this.index = dialogData.data.index;
     this.action = dialogData.data.action;

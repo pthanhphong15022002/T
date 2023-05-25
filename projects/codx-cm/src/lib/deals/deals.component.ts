@@ -499,13 +499,11 @@ export class DealsComponent
           .openOrClosedDeal(datas)
           .subscribe((res) => {
             if (res) {
-              data = this.view.dataService.data;
               data.closed = check ? true : false;
               data.closedOn = check ? new Date() : data.ClosedOn;
               data.ModifiedOn = new Date();
               this.dataSelected = data;
               this.view.dataService.update(data).subscribe();
-              this.view.dataService.update(this.dataSelected)
               this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
               if (data.showInstanceControl === '1') {
                 this.view.dataService.update(this.dataSelected).subscribe();

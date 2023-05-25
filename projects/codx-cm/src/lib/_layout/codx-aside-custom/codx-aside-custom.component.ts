@@ -109,6 +109,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   viewsDefault: any;
   componentsDefault: any;
   idSubCrr = '';
+  loadedCus = false;
 
   constructor(
     private pageTitle: PageTitleService,
@@ -206,10 +207,13 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   // }
 
   openSecondFunc(funcId: string, func?: any) {
-    this.dataMenuCustom = [];
-    //load menuCus
+    // load menuCus
     if (funcId == 'CM0201' || funcId == 'CM0401' || funcId == 'CM0402')
       this.loadMenuCustom(funcId);
+    else {
+      this.dataMenuCustom = [];
+      this.loadedCus = false;
+    }
     if (funcId) {
       this.codxService.activeMenu.func0 = funcId;
 
@@ -300,6 +304,9 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   itemClick(funcId: string, data: any, type?: string) {
+    this.dataMenuCustom = [];
+    this.loadedCus = false;
+    this.changDefector.detectChanges();
     //trả lại predicate mặc định khi click vào menu cus
     if (this.isClickMenuCus) {
       this.codxService.activeViews.dataService.predicates =
@@ -328,7 +335,6 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
 
       this.idSubCrr = '';
       this.isClickMenuCus = false;
-      this.changDefector.detectChanges();
     }
 
     let titleEle = document.querySelector('codx-page-title');
@@ -469,6 +475,15 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   openChildMenu(func: any) {
+    this.dataMenuCustom = [];
+    this.loadedCus = false;
+    // if (
+    //   func.functionID == 'CM0201' ||
+    //   func.functionID == 'CM0401' ||
+    //   func.functionID == 'CM0402'
+    // )
+    //   this.loadMenuCustom(func.functionID);
+
     this.childMenuClick.emit({ func });
     let isNav = func.functionID != this.codxService.activeMenu.func1;
     if (isNav) {
@@ -642,7 +657,6 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
         }
       });
     }
-    this.dataMenuCustom = [];
     if (fun != this.funcOld) {
       this.funcOld = fun;
       this.requestMenuCustom.predicates = 'ApplyFor==@0 && !Deleted';
@@ -663,9 +677,12 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
       this.fetch().subscribe((item) => {
         this.dataMenuCustom = item;
         this.dataMenuCustom1 = item;
-        this.loaded = true;
+        this.loadedCus = true;
       });
-    } else this.dataMenuCustom = this.dataMenuCustom1;
+    } else {
+      this.dataMenuCustom = this.dataMenuCustom1;
+      this.loadedCus = true;
+    }
   }
 
   fetch(): Observable<any[]> {

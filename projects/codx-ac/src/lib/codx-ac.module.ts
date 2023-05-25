@@ -40,7 +40,7 @@ import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/rece
 import { PopupAddSalesInvoiceComponent } from './vouchers/sales-invoices/popup-add-sales-invoice/popup-add-sales-invoice.component';
 import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
-import { TableLineDetailComponent } from './vouchers/sales-invoices/table-line-detail/table-line-detail.component';
+import { TableLineDetailComponent } from './vouchers/sales-invoices/components/table-line-detail/table-line-detail.component';
 import { PopAddLineinventoryComponent } from './vouchers/receipt-transaction/pop-add-lineinventory/pop-add-lineinventory.component';
 import { Group067Component } from './journals/components/group067/group067.component';
 
@@ -106,6 +106,11 @@ export const routes: Routes = [
       },
       {
         path: 'receipttransaction/:funcID',
+        component: ReceiptTransactionComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'issuetransaction/:funcID',
         component: ReceiptTransactionComponent,
         data: { noReuse: true },
       },
