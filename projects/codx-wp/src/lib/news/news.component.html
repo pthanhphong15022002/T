@@ -77,9 +77,9 @@
             </ng-container>
           </div>
           <div class="col-6 hot-right">
-            <ng-container [ngTemplateOutlet]="tmpPost" [ngTemplateOutletContext]="{data:posts[1]}"></ng-container>
-            <ng-container [ngTemplateOutlet]="tmpPost" [ngTemplateOutletContext]="{data:posts[2]}"></ng-container>
-            <ng-container [ngTemplateOutlet]="tmpPost" [ngTemplateOutletContext]="{data:posts[3]}"></ng-container>
+            <ng-container *ngIf="posts[1]" [ngTemplateOutlet]="tmpPost" [ngTemplateOutletContext]="{data:posts[1]}"></ng-container>
+            <ng-container *ngIf="posts[2]" [ngTemplateOutlet]="tmpPost" [ngTemplateOutletContext]="{data:posts[2]}"></ng-container>
+            <ng-container *ngIf="posts[3]" [ngTemplateOutlet]="tmpPost" [ngTemplateOutletContext]="{data:posts[3]}"></ng-container>
           </div>
         </div>
       </div>
@@ -135,7 +135,7 @@
         entityName="WP_News" 
         [selectFirst]="false"
         [dataValue]="category"
-        [emptyTemplate]="null"
+        [emptyTemplate]="emtpTmplateList"
         [itemTemplate]="itemTemplate" 
         [formModel]="view.formModel">
       </codx-listview>
@@ -220,6 +220,9 @@
       </div>
     </div>
   </ng-template> 
+</ng-template>
+<ng-template #emtpTmplateList>
+
 </ng-template>
 
 

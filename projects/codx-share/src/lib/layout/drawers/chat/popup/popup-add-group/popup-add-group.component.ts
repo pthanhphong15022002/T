@@ -129,12 +129,18 @@ export class AddGroupChatComponent implements OnInit,AfterViewInit {
         });
     }
   }
+
+  selectedFile(file:any){
+    debugger
+    this.isUploadFile = true;
+  }
   loading:boolean = false;
+  isUploadFile:boolean = false;
   // insert group
   insertGroup(){
     debugger
     if(this.group){
-      if(!Array.isArray(this.group.members)){
+      if(!this.group.members || this.group.members.length == 0 ){
         this.notifiSV.notify("Vui lòng chọn thành viên");
         return;
       }
@@ -162,6 +168,5 @@ export class AddGroupChatComponent implements OnInit,AfterViewInit {
           });
       });
     }
-    
   }
 }
