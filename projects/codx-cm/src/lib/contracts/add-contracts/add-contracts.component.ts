@@ -6,6 +6,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { Observable, map, tap, firstValueFrom } from 'rxjs';
 import { ContractsService } from '../service-contracts.service';
 import { PaymentsComponent } from '../component/payments/payments.component';
+import { PaymentHistoryComponent } from '../component/payment-history/payment-history.component';
 
 @Component({
   selector: 'add-contracts',
@@ -46,7 +47,14 @@ export class AddContractsComponent implements OnInit{
     funcID: 'CM02042  ',
   };
 
-  listPayMent: CM_ContractsPayments[] = [];
+  moreDefaut = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
+  listPayment: CM_ContractsPayments[] = [];
 
   constructor(
     private cache: CacheService,
@@ -107,12 +115,14 @@ export class AddContractsComponent implements OnInit{
     if(this.action == 'edit'){
       this.contracts = data;
       this.getQuotationsLinesByTransID(this.contracts.quotationID);
+      this.getPayMentByContractID(this.contracts?.recID);
     }
     if(this.action == 'copy'){
       this.contracts = data;
       this.contracts.recID = Util.uid();
       delete this.contracts['id'];
       this.getQuotationsLinesByTransID(this.contracts.quotationID);
+      this.getPayMentByContractID(this.contracts?.recID);
     }
   }
 
@@ -200,6 +210,14 @@ export class AddContractsComponent implements OnInit{
     })
   }
 
+  getPayMentByContractID(contractID){
+    this.cmService.getPaymentsByContractID(contractID).subscribe(res => {
+      if(res){
+        this.listPayment = res;
+      }
+    })
+  }
+
   valueChangeAlert(event) {
     this.contracts[event?.field] = event?.data;
   }
@@ -227,10 +245,38 @@ export class AddContractsComponent implements OnInit{
 
   addPay(){
     let payMent = new CM_ContractsPayments();
-    let countPayMent =  this.listPayMent.length;
+    let countPayMent =  this.listPayment.length;
     payMent.rowNo = countPayMent + 1;
     payMent.refNo = this.contracts?.recID;
     this.openPopupPay('add', 'pay', payMent);
+  }
+
+  addPayHistory(){
+    let payMent = new CM_ContractsPayments();
+    let countPayMent =  this.listPayment.length;
+    payMent.rowNo = countPayMent + 1;
+    payMent.refNo = this.contracts?.recID;
+    this.openPopupPay('add', 'payHistory', payMent);
+  }
+
+  viewPayHistory(){
+    let dataInput = {
+     
+    };
+  
+    let option = new DialogModel();
+    option.IsFull = false;
+    option.zIndex = 1001;
+    option.FormModel = this.fmContractsPaymentsHistory;
+    let popupPayHistory = this.callfunc.openForm(
+      PaymentHistoryComponent,'',
+      600,
+      400,
+      '',
+      dataInput,
+      '',
+      option,
+      );
   }
 
   async openPopupPay(action,type,data) {
@@ -261,8 +307,8 @@ export class AddContractsComponent implements OnInit{
 
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
     if(dataPopupOutput?.event?.action == 'add'){
-      this.listPayMent.push(dataPopupOutput?.event?.payment);
-      this.listPayMent = JSON.parse(JSON.stringify(this.listPayMent));
+      this.listPayment.push(dataPopupOutput?.event?.payment);
+      this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
       this.test.refresh();
     }
     return dataPopupOutput;
@@ -337,5 +383,29 @@ export class AddContractsComponent implements OnInit{
   }
   addFile(evt: any) {
     this.attachment.uploadFile();
+  }
+  onClickMFPayment(e, data){
+    switch (e.functionID) {
+      case 'SYS02':
+        console.log(data);      
+        // this.deleteContract(data);
+        break;
+      case 'SYS03':
+        console.log(data);     
+        // this.editContract(data);
+        break;
+      case 'SYS04':
+        console.log(data);
+        // this.copyContract(data);
+        break;
+      case 'CM02041_1': //xem lịch sử
+      this.viewPayHistory();
+        // this.copyContract(data);
+        break;
+      case 'CM02041_2': // thêm lịch sử
+      this.addPayHistory();
+        // this.copyContract(data);
+        break;
+    }
   }
 }

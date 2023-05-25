@@ -656,11 +656,11 @@ export class CodxCmService {
       transID
     );
   }
-  getPaymentsByContract(contractID) {
+  getPaymentsByContractID(contractID) {
     return this.api.exec<any>(
       'CM',
       'ContractsPaymentsBusiness',
-      'GetPaymentsAsync',
+      'GetPaymentsByContractIDAsync',
       contractID
     );
   }

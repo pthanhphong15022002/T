@@ -66,6 +66,7 @@ import { CampaignsDetailComponent } from './campaigns/campaigns-detail/campaigns
 import { PopupConvertLeadComponent } from './leads/popup-convert-lead/popup-convert-lead.component';
 import { CodxAsideCustomComponent } from './_layout/codx-aside-custom/codx-aside-custom.component';
 import { ProcessReleaseComponent } from './process-release/process-release.component';
+import { PaymentHistoryComponent } from './contracts/component/payment-history/payment-history.component';
 
 const routes: Routes = [
   {
@@ -174,6 +175,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     //test
     CodxAsideCustomComponent,
     ProcessReleaseComponent,
+    PaymentHistoryComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
