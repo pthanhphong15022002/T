@@ -1203,10 +1203,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       case 'add':
         break;
       case 'edit':
-        if (
-          this.cashpayment?.subType == '1' ||
-          this.cashpayment?.subType == '3'
-        ) {
+        if (this.cashpayment?.subType != '2' ) {
           //#region  load cashpaymentline
           this.acService
             .loadData(
@@ -1266,9 +1263,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
       });
     this.cache.companySetting().subscribe((res) => {
-      this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
+      this.baseCurr = res[0].baseCurr;
     });
-    this.loadcolumnsGrid();
     this.loadTotal();
     this.loadReason();
     this.loadjounal();
@@ -1287,58 +1283,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.journal = res[0];
         this.modegrid = this.journal.inputMode;
       });
-  }
-
-  loadcolumnsGrid() {
-    this.columnsGrid = [
-      {
-        headerText: 'STT',
-        template: this.rowNo,
-        width: '30',
-      },
-      {
-        headerText: 'Tài khoản',
-        template: this.account,
-        width: '200',
-      },
-      {
-        headerText: 'Nợ',
-        template: this.dr,
-        width: '80',
-      },
-      {
-        headerText: 'Có',
-        template: this.cr,
-        width: '80',
-      },
-      {
-        headerText: 'Thông tin khác',
-        template: this.info,
-        width: '200',
-      },
-      {
-        headerText: 'Ghi chú',
-        template: this.note,
-        width: '100',
-      },
-      {
-        headerText: '',
-        template: this.morfun,
-        width: '50',
-      },
-    ];
-    this.cache.companySetting().subscribe((res) => {
-      this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
-      if (this.cashpayment.currencyID == this.baseCurr) {
-        let index = this.columnsGrid.findIndex(
-          (x) => x.headerText == 'Số tiền,NT'
-        );
-        this.columnsGrid.splice(index, 1);
-        if (this.gridCashPaymentLine) {
-          this.gridCashPaymentLine.refresh();
-        }
-      }
-    });
   }
 
   loadControl(value) {

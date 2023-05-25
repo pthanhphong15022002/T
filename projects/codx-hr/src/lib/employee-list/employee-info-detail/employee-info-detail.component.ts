@@ -336,6 +336,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   templateAppointionGridCol2: TemplateRef<any>;
   @ViewChild('templateAppointionGridCol3', { static: true })
   templateAppointionGridCol3: TemplateRef<any>;
+  @ViewChild('headTempAppointion1', { static: true }) headTempAppointion1: TemplateRef<any>;
+  @ViewChild('headTempAppointion2', { static: true }) headTempAppointion2: TemplateRef<any>;
+  @ViewChild('headTempAppointion3', { static: true }) headTempAppointion3: TemplateRef<any>;
 
   //#endregion
 
@@ -346,6 +349,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   templateDayOffGridCol2: TemplateRef<any>;
   @ViewChild('templateDayOffGridCol3', { static: true })
   templateDayOffGridCol3: TemplateRef<any>;
+  @ViewChild('headTempDayOff1', { static: true }) headTempDayOff1: TemplateRef<any>;
+  @ViewChild('headTempDayOff2', { static: true }) headTempDayOff2: TemplateRef<any>;
+  @ViewChild('headTempDayOff3', { static: true }) headTempDayOff3: TemplateRef<any>;
 
   // Lương chức danh
   @ViewChild('jobSalaryCol1', { static: true })
@@ -1055,23 +1061,26 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.eBusinessTravelHeaderTexts = res;
       this.businessTravelColumnGrid = [
         {
-          headerText:
-            this.eBusinessTravelHeaderTexts['BusinessPlace'] +
-            ' | ' +
-            this.eBusinessTravelHeaderTexts['KowID'],
+          // headerText:
+          //   this.eBusinessTravelHeaderTexts['BusinessPlace'] +
+          //   ' | ' +
+          //   this.eBusinessTravelHeaderTexts['KowID'],
+          headerTemplate: this.headTempBusinessTravel1,
           template: this.templateBusinessTravelGridCol1,
           width: '150',
         },
         {
-          headerText:
-            this.eBusinessTravelHeaderTexts['PeriodType'] +
-            ' | ' +
-            this.eBusinessTravelHeaderTexts['Days'],
+          // headerText:
+          //   this.eBusinessTravelHeaderTexts['PeriodType'] +
+          //   ' | ' +
+          //   this.eBusinessTravelHeaderTexts['Days'],
+          headerTemplate: this.headTempBusinessTravel2,
           template: this.templateBusinessTravelGridCol2,
           width: '150',
         },
         {
-          headerText: this.eBusinessTravelHeaderTexts['BusinessPurpose'],
+          // headerText: this.eBusinessTravelHeaderTexts['BusinessPurpose'],
+          headerTemplate: this.headTempBusinessTravel3,
           template: this.templateBusinessTravelGridCol3,
           width: '150',
         },
@@ -1084,25 +1093,28 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.dayoffHeaderTexts = res;
         this.dayoffColumnGrid = [
           {
-            headerText:
-              this.dayoffHeaderTexts['KowID'] +
-              ' | ' +
-              this.dayoffHeaderTexts['RegisteredDate'],
+            // headerText:
+            //   this.dayoffHeaderTexts['KowID'] +
+            //   ' | ' +
+            //   this.dayoffHeaderTexts['RegisteredDate'],
+              headerTemplate: this.headTempDayOff1,
             template: this.templateDayOffGridCol1,
             width: '150',
           },
           {
-            headerText:
-              this.dayoffHeaderTexts['BeginDate'] +
-              ' - ' +
-              this.dayoffHeaderTexts['EndDate'] +
-              ' | ' +
-              this.dayoffHeaderTexts['TotalDaysOff'],
+            // headerText:
+            //   this.dayoffHeaderTexts['BeginDate'] +
+            //   ' - ' +
+            //   this.dayoffHeaderTexts['EndDate'] +
+            //   ' | ' +
+            //   this.dayoffHeaderTexts['TotalDaysOff'],
+            headerTemplate: this.headTempDayOff2,
             template: this.templateDayOffGridCol2,
             width: '150',
           },
           {
-            headerText: this.dayoffHeaderTexts['Reason'],
+            // headerText: this.dayoffHeaderTexts['Reason'],
+            headerTemplate: this.headTempDayOff3,
             template: this.templateDayOffGridCol3,
             width: '150',
           },
@@ -1270,28 +1282,32 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.awardHeaderText = res;
         this.awardColumnsGrid = [
           {
-            headerText:
-              this.awardHeaderText['AwardID'] +
-              '|' +
-              this.awardHeaderText['AwardFormCategory'],
+            // headerText:
+            //   this.awardHeaderText['AwardID'] +
+            //   '|' +
+            //   this.awardHeaderText['AwardFormCategory'],
+          headerTemplate: this.headTempAwards1,
             template: this.templateAwardGridCol1,
             width: '150',
           },
           {
-            headerText:
-              this.awardHeaderText['AwardDate'] +
-              '-' +
-              this.awardHeaderText['InYear'] +
-              '|' +
-              // this.awardHeaderText['DecisionNo'] +
-              'Số QĐ' +
-              '-' +
-              this.awardHeaderText['SignedDate'],
+            // headerText:
+            //   this.awardHeaderText['AwardDate'] +
+            //   '-' +
+            //   this.awardHeaderText['InYear'] +
+            //   '|' +
+            //   // this.awardHeaderText['DecisionNo'] +
+            //   'Số QĐ' +
+            //   '-' +
+            //   this.awardHeaderText['SignedDate'],
+          headerTemplate: this.headTempAwards2,
+
             template: this.templateAwardGridCol2,
             width: '150',
           },
           {
-            headerText: this.awardHeaderText['Reason'],
+            // headerText: this.awardHeaderText['Reason'],
+          headerTemplate: this.headTempAwards3,
             template: this.templateAwardGridCol3,
             width: '150',
           },
@@ -1304,26 +1320,31 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.eDisciplineHeaderText = res;
         this.eDisciplineColumnsGrid = [
           {
-            headerText:
-              this.eDisciplineHeaderText['DisciplineID'] +
-              '|' +
-              this.eDisciplineHeaderText['DisciplineFormCategory'],
+            // headerText:
+            //   this.eDisciplineHeaderText['DisciplineID'] +
+            //   '|' +
+            //   this.eDisciplineHeaderText['DisciplineFormCategory'],
+          headerTemplate: this.headTempDisciplines1,
+
             template: this.templateDisciplineGridCol1,
             width: '150',
           },
           {
-            headerText:
-              this.eDisciplineHeaderText['DisciplineDate'] +
-              '|' +
-              this.eDisciplineHeaderText['FromDate'] +
-              '-' +
-              // this.awardHeaderText['DecisionNo'] +
-              'Số QĐ',
+            // headerText:
+            //   this.eDisciplineHeaderText['DisciplineDate'] +
+            //   '|' +
+            //   this.eDisciplineHeaderText['FromDate'] +
+            //   '-' +
+            //   // this.awardHeaderText['DecisionNo'] +
+            //   'Số QĐ',
+          headerTemplate: this.headTempDisciplines2,
+
             template: this.templateDisciplineGridCol2,
             width: '150',
           },
           {
-            headerText: this.eDisciplineHeaderText['Reason'],
+            // headerText: this.eDisciplineHeaderText['Reason'],
+          headerTemplate: this.headTempDisciplines3,
             template: this.templateDisciplineGridCol3,
             width: '150',
           },
@@ -1663,15 +1684,28 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         let rqBSalary = new DataRequest();
         rqBSalary.entityName = 'HR_EBasicSalaries';
         rqBSalary.dataValues = this.employeeID + ';' +`${date.toISOString()}`;
-        rqBSalary.predicates = 'EmployeeID=@0 and EffectedDate<=@1 and ExpiredDate>=@1';
+        rqBSalary.predicates = 'EmployeeID=@0 and EffectedDate<=@1';
         rqBSalary.page = 1;
         rqBSalary.pageSize = 1;
         this.loadedESalary = false;
 
         this.hrService.loadData('HR', rqBSalary).subscribe((res) => {
-          this.loadedESalary = true;
           if (res && res[0]) {
-            this.crrEBSalary = res[0][0];
+            let lstTemp = res[0]
+            let lstRes = []
+            for(let i = 0; i < lstTemp.length; i++){
+              if(lstTemp[i].expiredDate){
+                let dateExp = new Date(lstTemp[i].expiredDate).toISOString()
+                if(date.toISOString() < dateExp){
+                  lstRes.push(lstTemp[i]);
+                }
+              }
+              else{
+                lstRes.push(lstTemp[i])
+              }
+            }
+            this.crrEBSalary = lstRes[0];
+        this.loadedESalary = true;
             this.df.detectChanges();
           }
         });
@@ -1684,16 +1718,31 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         let rqBenefit = new DataRequest();
         rqBenefit.entityName = 'HR_EBenefits';
         rqBenefit.dataValues = this.employeeID + ';' +`${date.toISOString()}`;
-        rqBenefit.predicates = 'EmployeeID=@0 and EffectedDate<=@1 and ExpiredDate>=@1';
+        rqBenefit.predicates = 'EmployeeID=@0 and EffectedDate<=@1';
         rqBenefit.page = 1;
         rqBenefit.pageSize = 1;
 
         this.hrService.loadData('HR', rqBenefit).subscribe((res) => {
           console.log('ds benefit', res)
-        this.loadEBenefit = true;
+
           if (res && res[0]) {
-            this.listCrrBenefit = res[0];
+            let lstTemp = res[0]
+            let lstRes = []
+            for(let i = 0; i < lstTemp.length; i++){
+              if(lstTemp[i].expiredDate){
+                let dateExp = new Date(lstTemp[i].expiredDate).toISOString()
+                if(date.toISOString() < dateExp){
+                  lstRes.push(lstTemp[i]);
+                }
+              }
+              else{
+                lstRes.push(lstTemp[i])
+              }
+            }
+            this.listCrrBenefit = lstRes;
+            debugger
           console.log('ds benefit', this.listCrrBenefit)
+        this.loadEBenefit = true;
             this.df.detectChanges();
           }
         });
@@ -2041,23 +2090,35 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   getECurrentContract() {
     if (!this.crrEContract) {
+      let date = new Date();
       //HR_EContracts
       let rqContract = new DataRequest();
       rqContract.entityName = 'HR_EContracts';
-      rqContract.dataValues = this.employeeID + ';false;true';
+      rqContract.dataValues = this.employeeID + ';false;' +`${date.toISOString()}`;
       rqContract.predicates =
-        'EmployeeID=@0 and IsAppendix=@1 and IsCurrent=@2';
+        'EmployeeID=@0 and IsAppendix=@1 and EffectedDate<=@2 and ExpiredDate>=@2';
       rqContract.page = 1;
       rqContract.pageSize = 1;
 
-      this.hrService.getCrrEContract(rqContract).subscribe((res) => {
+      this.hrService.loadData('HR', rqContract).subscribe((res) => {
+        debugger
         if (res && res[0]) {
           this.crrEContract = res[0][0];
-        } else {
+        }
+        else{
           this.crrEContract = null;
         }
         this.df.detectChanges();
       });
+
+      // this.hrService.getCrrEContract(rqContract).subscribe((res) => {
+      //   if (res && res[0]) {
+      //     this.crrEContract = res[0][0];
+      //   } else {
+      //     this.crrEContract = null;
+      //   }
+      //   this.df.detectChanges();
+      // });
     }
   }
 
@@ -2140,18 +2201,21 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.appointionHeaderTexts = res;
         this.appointionColumnGrid = [
           {
-            headerText:
-              this.appointionHeaderTexts['Appoint'] ?? '' + '| Hiệu lực',
+            // headerText:
+            //   this.appointionHeaderTexts['Appoint'] ?? '' + '| Hiệu lực',
+            headerTemplate: this.headTempAppointion1,
             template: this.templateAppointionGridCol1,
             width: '150',
           },
           {
-            headerText: this.appointionHeaderTexts['PositionID'],
+            // headerText: this.appointionHeaderTexts['PositionID'],
+            headerTemplate: this.headTempAppointion2,
             template: this.templateAppointionGridCol2,
             width: '150',
           },
           {
-            headerText: this.appointionHeaderTexts['OrgUnitID'] + '/ Phòng ban',
+            // headerText: this.appointionHeaderTexts['OrgUnitID'] + '/ Phòng ban',
+            headerTemplate: this.headTempAppointion3,
             template: this.templateAppointionGridCol3,
             width: '150',
           },
@@ -4581,7 +4645,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   templateBusinessTravelGridCol2: TemplateRef<any>;
   @ViewChild('templateBusinessTravelGridCol3', { static: true })
   templateBusinessTravelGridCol3: TemplateRef<any>;
-
+  @ViewChild('headTempBusinessTravel1', { static: true }) headTempBusinessTravel1: TemplateRef<any>;
+  @ViewChild('headTempBusinessTravel2', { static: true }) headTempBusinessTravel2: TemplateRef<any>;
+  @ViewChild('headTempBusinessTravel3', { static: true }) headTempBusinessTravel3: TemplateRef<any>;
+ 
   @ViewChild('templateAwardGridCol1', { static: true })
   templateAwardGridCol1: TemplateRef<any>;
   @ViewChild('templateAwardGridCol2', { static: true })

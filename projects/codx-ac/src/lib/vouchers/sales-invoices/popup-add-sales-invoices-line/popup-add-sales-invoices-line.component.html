@@ -154,6 +154,7 @@
         field="quantity"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (valueChange)="onInputChange($event)"
       ></codx-input>
     </div>
     <div class="col-4 form-group">
@@ -165,6 +166,7 @@
         field="costPrice"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (valueChange)="onInputChange($event)"
       ></codx-input>
     </div>
     <div class="col-4 form-group">
@@ -190,6 +192,7 @@
         field="vatid"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (valueChange)="onInputChange($event)"
       ></codx-input>
     </div>
     <div class="col-4 form-group">
