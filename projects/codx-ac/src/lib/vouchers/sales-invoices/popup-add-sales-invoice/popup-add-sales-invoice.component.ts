@@ -12,7 +12,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
@@ -20,6 +20,7 @@ import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { PopupAddSalesInvoicesLineComponent } from '../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoiceService } from '../sales-invoices.service';
+import { TableLineDetailComponent } from '../components/table-line-detail/table-line-detail.component';
 
 @Component({
   selector: 'lib-popup-add-sales-invoice',
@@ -30,6 +31,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('grid') grid: CodxGridviewV2Component;
+  @ViewChild('tableLineDetail') tableLineDetail: TableLineDetailComponent;
 
   salesInvoice: ISalesInvoice = {} as ISalesInvoice;
   salesInvoicesLines: ISalesInvoicesLine[] = [];
@@ -89,25 +91,22 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
 
-    const journalOptions = new DataRequest();
-    journalOptions.entityName = 'AC_Journals';
-    journalOptions.predicates = 'JournalNo=@0';
-    journalOptions.dataValues = this.salesInvoice.journalNo;
-    journalOptions.pageLoading = false;
-    this.acService.loadDataAsync('AC', journalOptions).subscribe((res) => {
-      this.journal = res[0]?.dataValue
-        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
-        : res[0];
+    this.journalService
+      .getJournal(this.salesInvoice.journalNo)
+      .subscribe((res) => {
+        this.journal = res?.dataValue
+          ? { ...res, ...JSON.parse(res.dataValue) }
+          : res;
 
-      this.editSettings.mode =
-        this.journal.inputMode == '2' ? 'Dialog' : 'Normal';
+        this.editSettings.mode =
+          this.journal.inputMode == '2' ? 'Dialog' : 'Normal';
 
-      if (this.journal.voucherNoRule === '2') {
-        this.ignoredFields.push('VoucherNo');
-      }
+        if (this.journal.voucherNoRule === '2') {
+          this.ignoredFields.push('VoucherNo');
+        }
 
-      this.hiddenFields = this.journalService.getHiddenFields(this.journal);
-    });
+        this.hiddenFields = this.journalService.getHiddenFields(this.journal);
+      });
 
     if (this.isEdit) {
       const salesInvoicesLinesOptions = new DataRequest();
@@ -326,12 +325,10 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
                   '',
                   dialogModel
                 )
-                .closed.pipe(tap((t) => console.log(t)))
-                .subscribe(({ event }) => {
-                  this.salesInvoicesLines = [
-                    ...this.salesInvoicesLines,
-                    ...event,
-                  ];
+                .closed.subscribe(({ event }) => {
+                  if (event?.length > 0) {
+                    this.tableLineDetail.grid.refresh();
+                  }
                 });
             }
           });

@@ -242,7 +242,7 @@ export class StagesDetailComponent implements OnInit {
     this.instance.write &&
       !this.instance.closed &&
       (this.instance.status == '1' || this.instance.status == '2') &&
-      this.dataStep.stepStatus < '2'
+      this.dataStep.stepStatus < '2' && this.instance.approveStatus != '3'
     this.isCreate=this.instance.create
     this.isClosed=this.instance.closed
     this.isStart = this.instance?.status == 2 ? true : false;

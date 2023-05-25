@@ -24,7 +24,6 @@
         [dataValues]="employeeId"
         [formModel]="formModel"
         [columnsGrid]="columnGrid"
-        height="auto"
         [emptyTemplate]="emptyDataTemplate"
       ></codx-gridview>
     </div>
@@ -281,20 +280,39 @@
 
 <!-- #region Lương cơ bản columnGrid templates-->
 <ng-template #basicSalaryCol1 let-data>
+
+
   <div class="d-flex align-items-center">
-    <span
+    <!-- <span
       class="bullet bullet-vertical d-flex align-items-center min-h-30px mh-100 me-3"
       [class]="data.isCurrent ? 'bg-primary' : 'bg-transparent'"
-    ></span>
+    ></span> -->
     <div class="d-flex flex-column">
       <div
-        class="d-flex align-items-center"
-        [ngClass]="
-          data.isCurrent
-            ? 'text-primary fs-6 fw-bold'
-            : 'text-dark fs-6 fw-bold'
-        "
+        class="d-flex align-items-center text-dark fs-6 fw-bold"
       >
+      <ng-template #popNewest>
+        <span>
+          <codx-label
+            name="lblIsNewest"
+            [formModel]="formModel"
+            default="Đang hiệu lực"
+          ></codx-label>
+        </span>
+      </ng-template>
+      <div
+        *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
+        #popOver="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="popOver.open()"
+        (mouseleave)="popOver.close()"
+        placement="right"
+        [ngbPopover]="popNewest"
+        [style.color]="'#0078FF'"
+        class="icon-bookmark icon-18 ms-auto"
+      >
+
+      </div>
         <span class="icon-attach_money icon-16 me-1"></span>
         <span class="">
           <span
@@ -314,12 +332,7 @@
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center">
       <span
-        class="icon-monetization_on icon-16 me-2"
-        [ngClass]="
-          data.isCurrent
-            ? 'text-primary fs-6 fw-bold'
-            : 'text-dark fs-6 fw-bold'
-        "
+        class="icon-monetization_on icon-16 me-2 text-dark fs-6 fw-bold"
       ></span>
       <span
         [ngClass]="
@@ -341,10 +354,7 @@
 <ng-template #basicSalaryCol3 let-data>
   <div class="d-flex flex-column">
     <div
-      class="d-flex align-items-center mb-5px"
-      [ngClass]="
-        data.isCurrent ? 'text-primary fs-6 fw-bold' : 'text-dark fs-6 fw-bold'
-      "
+      class="d-flex align-items-center mb-5px text-dark fs-6 fw-bold"
     >
       <span class="icon-attach_money icon-16 me-2"></span>
       <span
@@ -362,12 +372,7 @@
   <div class="has-action-menu">
     <div class="d-flex flex-column">
       <div
-        class="d-flex align-items-center"
-        [ngClass]="
-          data.isCurrent
-            ? 'text-primary fs-6 fw-bold'
-            : 'text-dark fs-6 fw-bold'
-        "
+        class="d-flex align-items-center text-dark fs-6 fw-bold"
       >
         <span class="icon-event icon-16 text-gray-500 me-2"></span>
         <span
@@ -401,26 +406,41 @@
 
 <!-- #region template Phụ cấp  -->
 <ng-template #templateBenefitID let-data>
-  <div
-    [class]="data.isCurrent ? 'text-primary' : ''"
+  <ng-template #popNewest>
+    <span>
+      <codx-label
+        name="lblIsNewest"
+        [formModel]="formModel"
+        default="Đang hiệu lực"
+      ></codx-label>
+    </span>
+  </ng-template>
+  <span
+    *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
+    #popOver="ngbPopover"
+    [openDelay]="500"
+    (mouseenter)="popOver.open()"
+    (mouseleave)="popOver.close()"
+    placement="right"
+    [ngbPopover]="popNewest"
+    [style.color]="'#0078FF'"
+    class="icon-bookmark icon-18 ms-auto"
+  >
+</span>
+
+  <span
     [innerHTML]="
       data?.benefitID | formatvalue : formModel : 'benefitID' | async
     "
   >
-    <span
-      *ngIf="data.isCurrent == true"
-      class="bullet bullet-vertical d-flex align-items-center min-h-30px mh-100 me-3 bg-primary"
-    >
-    </span>
-
-    <span
+    <!-- <span
       class="icon-i-plus-circle icon-12 pe-2"
-    ></span>
-  </div>
+    ></span> -->
+  </span>
 </ng-template>
 
 <ng-template #templateBenefitAmt let-data>
-  <div #benefitNorm [class]="data.isCurrent ? 'text-primary' : ''">
+  <div #benefitNorm>
     <span
       [innerHTML]="
         data?.benefitAmt | formatvalue : formModel : 'benefitAmt' | async
@@ -440,9 +460,7 @@
 
 <ng-template #templateBenefitEffected let-data>
   <div
-    [class]="
-      data.isCurrent ? 'text-primary has-action-menu' : 'has-action-menu'
-    "
+  class="has-action-menu"
   >
     <span
       [innerHTML]="

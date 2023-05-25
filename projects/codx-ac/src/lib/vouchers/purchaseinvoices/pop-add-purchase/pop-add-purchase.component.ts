@@ -66,7 +66,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   pageCount: any;
   journal: IJournal;
   hasSaved: any = false;
-  isClose: any = false;
+  isSaveMaster: any = false;
   items: any;
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
@@ -311,6 +311,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               }
               this.loadPageCount();
               this.hasSaved = true;
+              this.isSaveMaster = true;
               this.loadTotal();
             }
           });
@@ -384,6 +385,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                   .save(null, 0, '', '', false)
                   .subscribe((res) => {
                     if (res && res.save.data != null) {
+                      this.hasSaved = true;
                       this.loadModegrid();
                     }
                   });
@@ -476,6 +478,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             this.updateVAT();
             this.notification.notifyCode('SYS007', 0, '');
             this.hasSaved = true;
+            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -495,6 +498,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           if (save) {
             this.notification.notifyCode('SYS006', 0, '');
             this.hasSaved = true;
+            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -608,6 +612,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               var dataline = res.event['data'];
               this.purchaseInvoicesLines[index] = dataline;
               this.hasSaved = true;
+              this.isSaveMaster = true;
               if (dataline.vatid != null) {
                 this.loadPurchaseInfo();
               }
@@ -714,6 +719,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           .subscribe((res) => {
             if (res) {
               this.hasSaved = true;
+              this.isSaveMaster = true;
               this.api
                 .exec(
                   'PS',
@@ -811,9 +817,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       style: 'currency',
       currency: 'VND',
     });
-    if(this.hasSaved)
+    if(this.isSaveMaster)
     {
-      this.onSaveData();
+      this.onSaveMaster();
     }
   }
 
@@ -924,6 +930,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           }
         });
     }
+
+    if (this.purchaseinvoices.status == '0' && this.formType == 'edit') {
+      this.hasSaved = true;
+    }
+
     this.api
       .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
       .subscribe((res: any) => {
@@ -1146,19 +1157,25 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   //   }
   // }
 
-  onSaveData()
+  onSaveMaster()
   {
-    this.dialog.dataService.updateDatas.set(
-      this.purchaseinvoices['_uuid'],
-      this.purchaseinvoices
-    );
-    this.dialog.dataService
-      .save(null, 0, '', 'SYS006', false)
-      .subscribe((res) => {
-        if (res && res.update.data != null) {
-          this.dt.detectChanges();
-        }
-      });
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      this.dialog.dataService.updateDatas.set(
+        this.purchaseinvoices['_uuid'],
+        this.purchaseinvoices
+      );
+      this.dialog.dataService
+        .save(null, 0, '', 'SYS006', false)
+        .subscribe((res) => {
+          if (res && res.update.data != null) {
+            this.dt.detectChanges();
+          }
+        });
+    }
   }
 
   onSave() {
@@ -1270,6 +1287,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                 this.purchaseinvoices = res;
                 this.form.formGroup.patchValue(this.purchaseinvoices);
                 this.hasSaved = false;
+                this.isSaveMaster = false;
               });
           }
         });

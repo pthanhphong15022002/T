@@ -89,6 +89,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   columnsGrid = [];
   arrFieldIsVisible: any[];
   formModel: FormModel;
+  currencyIDOld = 'VND';
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -107,7 +108,10 @@ export class PopupAddQuotationsComponent implements OnInit {
     if (!this.quotations.recID) {
       this.quotations.recID = Util.uid();
     }
-    if (this.quotations.currencyID) this.loadExchangeRate();
+    if (this.quotations.currencyID) {
+      this.currencyIDOld = this.quotations.currencyID;
+      this.loadExchangeRate();
+    }
     this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
     this.disableRefID = dt?.data?.disableRefID;
@@ -248,13 +252,12 @@ export class PopupAddQuotationsComponent implements OnInit {
     switch (e?.field) {
       case 'refID':
         this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-        this.modelCustomerIDDeals = { CustomerID: this.quotations.customerID };
+        this.modelCustomerIDDeals = { customerID: this.quotations.customerID };
         this.modelObjectIDContacs = { objectID: this.quotations.customerID };
-        // (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data =
-        // [];
+
         break;
       case 'customerID':
-        this.quotations.refID = null;
+        // this.quotations.refID = null;
         this.modelObjectIDContacs = { objectID: this.quotations.customerID };
         break;
     }
@@ -264,7 +267,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   valueChange(e) {
     if (!e?.data || !e?.field) return;
 
-    if (e.field == 'currencyID' && this.quotations.contactID != e.data) {
+    if (e.field == 'currencyID') {
       this.loadExchangeRate();
     }
     this.quotations[e.field] = e.data;
@@ -386,7 +389,7 @@ export class PopupAddQuotationsComponent implements OnInit {
           data.vatBase = data.vatBase ?? 0;
           data.vatAmt = data.vatAmt ?? 0;
           data.vatRate = data.vatRate ?? 0;
-          data.exchangeRate =this.quotations?.exchangeRate
+          data.exchangeRate = this.quotations?.exchangeRate;
           data.currencyID = this.quotations?.currencyID;
           data.transID = this.quotations?.recID;
 
@@ -438,16 +441,25 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.notiService.alertCode('SYS030').subscribe((res) => {
       if (res.event.status === 'Y') {
         //=> delete fe
-        this.quotationLinesDeleted.push(data);
         this.gridQuationsLines.deleteRow(data);
+        if (this.action == 'edit') {
+          this.quotationLinesDeleted.push(data);
+          let indexAdd = this.quotationLinesAddNew.findIndex(
+            (x) => x.recID == data.recID
+          );
+          if (indexAdd != -1) this.quotationLinesAddNew.splice(indexAdd, 1); //xóa 1 pt trong mang
+          let indexEdit = this.quotationLinesEdit.findIndex(
+            (x) => x.recID == data.recID
+          );
+          if (indexEdit != -1) this.quotationLinesEdit.splice(indexAdd, 1);
+        }
         if (this.gridQuationsLines.dataSource.length > 0) {
           for (let i = 0; i < this.gridQuationsLines.dataSource.length; i++) {
             if (
               this.gridQuationsLines.dataSource[i].rowNo != i + 1 &&
               this.action == 'edit'
             ) {
-              if (!this.quotationLinesEdit.some((x) => x.recID == data.recID))
-                this.quotationLinesEdit.push(data);
+              this.linesUpdate(this.gridQuationsLines.dataSource[i]);
             }
             this.gridQuationsLines.dataSource[i].rowNo = i + 1;
           }
@@ -494,10 +506,9 @@ export class PopupAddQuotationsComponent implements OnInit {
               );
               if (idxUp != -1) {
                 this.listQuotationLines[idxUp] = data;
-                let check = this.quotationLinesEdit.some(
-                  (x) => x.recID == data.recID
-                );
-                if (!check) this.quotationLinesEdit.push(data);
+                if (this.action == 'edit') {
+                  this.linesUpdate(data);
+                }
 
                 this.gridQuationsLines.refresh();
                 // this.dialog.dataService.updateDatas.set(
@@ -514,6 +525,21 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   copyLine(dt) {}
+
+  linesUpdate(data) {
+    let indexAdd = this.quotationLinesAddNew.findIndex(
+      (x) => x.recID == data.recID
+    );
+    if (indexAdd != -1) {
+      this.quotationLinesAddNew[indexAdd] = data;
+    } else {
+      let indexEdit = this.quotationLinesEdit.findIndex(
+        (x) => x.recID == data.recID
+      );
+      if (indexEdit == -1) this.quotationLinesEdit.push(data);
+      else this.quotationLinesEdit[indexEdit] = data;
+    }
+  }
 
   // endregion QuotationLines
 
@@ -559,11 +585,58 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.quotations['discAmt'] = totalDis;
   }
 
+  //// change RATE
   loadExchangeRate() {
-    this.codxCM.getExchangeRate(this.quotations.currencyID).subscribe((res) => {
-      this.quotations.exchangeRate = res?.exchRate ?? 0;
-      this.form.formGroup.patchValue(this.quotations);
-    });
+    let day = this.quotations.createdOn ?? new Date();
+    this.codxCM
+      .getExchangeRate(this.quotations.currencyID, day)
+      .subscribe((res) => {
+        let exchangeRateNew = res?.exchRate ?? 0;
+        if (exchangeRateNew == 0) {
+          this.notiService.notify(
+            'Tỷ giá tiền tệ "'+this.quotations.currencyID+'" chưa thiết lập xin hay chọn lại !',
+            '3'
+          );
+          this.quotations.currencyID = this.currencyIDOld;
+          this.form.formGroup.patchValue(this.quotations);
+          return;
+        }
+        this.currencyIDOld = this.quotations.currencyID;
+        let exchangeRateOld = this.quotations.exchangeRate;
+        if (exchangeRateOld != exchangeRateNew) {
+          this.quotations.exchangeRate = exchangeRateNew;
+          this.quotations['totalSalesAmt'] =
+            (this.quotations['totalSalesAmt'] * exchangeRateOld) /
+            exchangeRateNew;
+          this.quotations['totalAmt'] =
+            (this.quotations['totalAmt'] * exchangeRateOld) / exchangeRateNew;
+          this.quotations['totalTaxAmt'] =
+            (this.quotations['totalTaxAmt'] * exchangeRateOld) /
+            exchangeRateNew;
+          this.quotations['discAmt'] =
+            (this.quotations['discAmt'] * exchangeRateOld) / exchangeRateNew;
+        }
+
+        this.form.formGroup.patchValue(this.quotations);
+        if (this.listQuotationLines?.length > 0) {
+          this.listQuotationLines.forEach((ql) => {
+            ql['currencyID'] = this.quotations.currencyID;
+            ql['exchangeRate'] = this.quotations.exchangeRate;
+
+            ql['costPrice'] = (ql['costPrice'] * exchangeRateOld) / exchangeRateNew;
+            ql['discAmt'] = (ql['discAmt'] * exchangeRateOld) / exchangeRateNew;
+            ql['salesAmt'] =
+              (ql['salesAmt'] * exchangeRateOld) / exchangeRateNew;
+            ql['vatBase'] = (ql['vatBase'] * exchangeRateOld) / exchangeRateNew;
+            ql['vatAmt'] = (ql['vatAmt'] * exchangeRateOld) / exchangeRateNew;
+            ql['netAmt'] = (ql['netAmt'] * exchangeRateOld) / exchangeRateNew;
+            if (this.action == 'edit') {
+              this.linesUpdate(ql);
+            }
+          });
+          this.gridQuationsLines.refresh();
+        }
+      });
   }
 
   clearQuotationsLines() {

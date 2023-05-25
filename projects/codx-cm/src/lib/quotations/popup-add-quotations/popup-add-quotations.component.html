@@ -189,7 +189,7 @@
                 field="createdOn"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
-                (valueChange)="valueChange($event)"
+                [disabled]="true"
               ></codx-input>
             </div>
             <div class="form-group col-6">
@@ -218,7 +218,7 @@
               #customerIDCbx
               field="customerID"
               [formModel]="form.formModel"
-              [model]="modelCustomerIDDeals"
+              [Group]="form.formGroup"
               [disabled]="disableCusID"
               (valueChange)="changeCombox($event)"
             ></codx-input>
@@ -273,7 +273,7 @@
 
   <!-- Start: Chi tiết sản phẩm -->
   <ng-template #tabDetaildQuotationLines>
-    <div class="h-100">
+    <div class="h-100 p-3">
       <codx-gridview-v2
         #gridQuationsLines
         service="CM"
@@ -294,7 +294,7 @@
     </div>
     <!-- //  [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
     <ng-template #morefunction let-data>
-      <div class="has-action-menu" style="height: 30px">
+      <div class="" style="height: 30px">
         <codx-mfunc
           [dataItem]="data"
           [formModel]="fmQuotationLines"
@@ -479,7 +479,7 @@
         </div>
         <div
           class="col-4 fw-bolder fs-5"
-          style="padding-left: 100px; padding-right: 50px"
+          style="padding-left: 100px; padding-right: 20px"
         >
           <div class="d-flex justify-content-between">
             <div class="">
@@ -489,22 +489,24 @@
                 [formModel]="form.formModel"
               ></codx-label>
             </div>
-            <div
-              class="me-1"
-              [innerHTML]="
-                quotations.totalSalesAmt
-                  | formatvalue : form.formModel : 'totalSalesAmt'
-                  | async
-              "
-            ></div>
-            <span
-              class="codx-label"
-              [innerHTML]="
-                quotations.currencyID
-                  | formatvalue : form.formModel : 'currencyID'
-                  | async
-              "
-            ></span>
+            <div class="d-flex justify-content-end">
+              <span
+                class="me-3"
+                [innerHTML]="
+                  quotations.totalSalesAmt
+                    | formatvalue : form.formModel : 'totalSalesAmt'
+                    | async
+                "
+              ></span>
+              <span
+                class="codx-label"
+                [innerHTML]="
+                  quotations.currencyID
+                    | formatvalue : form.formModel : 'currencyID'
+                    | async
+                "
+              ></span>
+            </div>
           </div>
           <div class="d-flex justify-content-between">
             <div>
@@ -514,22 +516,24 @@
                 [formModel]="form.formModel"
               ></codx-label>
             </div>
-            <div
-              class="me-1"
-              [innerHTML]="
-                quotations.discAmt
-                  | formatvalue : form.formModel : 'DiscAmt'
-                  | async
-              "
-            ></div>
-            <span
-              class="codx-label"
-              [innerHTML]="
-                quotations.currencyID
-                  | formatvalue : form.formModel : 'currencyID'
-                  | async
-              "
-            ></span>
+            <div class="d-flex justify-content-end">
+              <span
+                class="me-3"
+                [innerHTML]="
+                  quotations.discAmt
+                    | formatvalue : form.formModel : 'DiscAmt'
+                    | async
+                "
+              ></span>
+              <span
+                class="codx-label"
+                [innerHTML]="
+                  quotations.currencyID
+                    | formatvalue : form.formModel : 'currencyID'
+                    | async
+                "
+              ></span>
+            </div>
           </div>
           <div class="d-flex justify-content-between">
             <div>
@@ -539,22 +543,24 @@
                 [formModel]="form.formModel"
               ></codx-label>
             </div>
-            <div
-              class="me-1"
-              [innerHTML]="
-                quotations?.totalTaxAmt
-                  | formatvalue : form.formModel : 'totalTaxAmt'
-                  | async
-              "
-            ></div>
-            <span
-              class="codx-label"
-              [innerHTML]="
-                quotations.currencyID
-                  | formatvalue : form.formModel : 'currencyID'
-                  | async
-              "
-            ></span>
+            <div class="d-flex justify-content-end">
+              <span
+                class="me-3"
+                [innerHTML]="
+                  quotations?.totalTaxAmt
+                    | formatvalue : form.formModel : 'totalTaxAmt'
+                    | async
+                "
+              ></span>
+              <span
+                class="codx-label"
+                [innerHTML]="
+                  quotations.currencyID
+                    | formatvalue : form.formModel : 'currencyID'
+                    | async
+                "
+              ></span>
+            </div>
           </div>
           <div class="d-flex justify-content-between">
             <div class="">
@@ -564,22 +570,24 @@
                 [formModel]="form.formModel"
               ></codx-label>
             </div>
-            <div
-              class="me-1"
-              [innerHTML]="
-                quotations.totalAmt
-                  | formatvalue : form.formModel : 'TotalAmt'
-                  | async
-              "
-            ></div>
-            <span
-              class="codx-label"
-              [innerHTML]="
-                quotations.currencyID
-                  | formatvalue : form.formModel : 'currencyID'
-                  | async
-              "
-            ></span>
+            <div class="d-flex justify-content-end">
+              <span
+                class="me-3"
+                [innerHTML]="
+                  quotations.totalAmt
+                    | formatvalue : form.formModel : 'TotalAmt'
+                    | async
+                "
+              ></span>
+              <span
+                class="codx-label"
+                [innerHTML]="
+                  quotations.currencyID
+                    | formatvalue : form.formModel : 'currencyID'
+                    | async
+                "
+              ></span>
+            </div>
           </div>
         </div>
       </div>

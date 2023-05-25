@@ -336,7 +336,7 @@ export class EmployeeBenefitComponent extends UIComponent {
       PopupEmployeeBenefitComponent,
       {
         actionType: actionType,
-        empObj: actionType == 'add' ? null : this.currentEmpObj,
+        empObj: this.currentEmpObj,
         headerText: actionHeaderText,
         employeeId: data?.employeeID,
         funcID: this.view.funcID,
@@ -363,6 +363,7 @@ export class EmployeeBenefitComponent extends UIComponent {
   }
 
   addBenefit(event): void {
+    this.currentEmpObj = this.itemDetail.emp;
     if (event.id == 'btnAdd') {
       this.HandleEBenefit(
         event.text + ' ' + this.view.function.description,
