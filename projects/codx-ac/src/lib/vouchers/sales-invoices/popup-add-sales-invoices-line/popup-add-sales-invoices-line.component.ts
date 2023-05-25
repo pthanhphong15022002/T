@@ -17,6 +17,7 @@ import {
 import { combineLatestWith, map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
+import { SalesInvoiceService } from '../sales-invoices.service';
 
 @Component({
   selector: 'lib-popup-add-sales-invoices-line',
@@ -51,17 +52,19 @@ export class PopupAddSalesInvoicesLineComponent
   constructor(
     private injector: Injector,
     private acService: CodxAcService,
+    private salesInvoiceService: SalesInvoiceService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
   ) {
     super(injector);
+    this.gvs = this.salesInvoiceService.gvsSalesInvoicesLines;
 
     this.dataService = dialogRef.dataService;
     this.salesInvoicesLine = this.dataService.dataSelected;
     this.transID = this.salesInvoicesLine.transID;
+
     this.isEdit = dialogData.data.formType === 'edit';
     this.index = dialogData.data.index;
-    this.gvs = dialogData.data.gvs;
     this.action = dialogData.data.action;
     this.hiddenFields = dialogData.data.hiddenFields;
   }

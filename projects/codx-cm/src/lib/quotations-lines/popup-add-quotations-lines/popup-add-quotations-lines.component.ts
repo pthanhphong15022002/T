@@ -27,6 +27,7 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
   quotationsLine: any;
   listQuotationLines = [];
   action: string = 'add';
+
   constructor(
     private codxCM: CodxCmService,
     private cache: CacheService,
@@ -52,7 +53,7 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
   valueChange(e) {
     if (!e.field || !e.data) return;
     this.quotationsLine[e.field] = e.data;
-    switch (e.field) {
+    switch (e.field) { 
       case 'itemID':
         this.loadItem(e.data);
         break;
@@ -95,7 +96,7 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
       if (items) {
         this.quotationsLine['onhand'] = items.quantity;
         this.quotationsLine['idiM4'] = items.warehouseID; // kho
-        this.quotationsLine['costPrice'] = items.costPrice; // gia von
+        this.quotationsLine['costPrice'] = items.costPrice / ( this.quotationsLine.exchangeRate!=0? this.quotationsLine.exchangeRate:1); // gia von chai ti giá
         this.quotationsLine['umid'] = items.umid; // don vi tinh
         this.quotationsLine['quantity'] = items.minSettledQty; //so luong mua nhieu nhat
         this.quotationsLine['idiM0'] = items.minSettledQty;

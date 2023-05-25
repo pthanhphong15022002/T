@@ -160,11 +160,6 @@ export class CashPaymentsComponent extends UIComponent {
         this.className = 'CashReceiptsBusiness';
         break;
     }
-    this.api
-      .exec('AC', 'CommonBusiness', 'GetAccountName')
-      .subscribe((res: any) => {
-        this.lsAccount = res;
-      });
     this.detectorRef.detectChanges();
 }
 
@@ -387,13 +382,13 @@ export class CashPaymentsComponent extends UIComponent {
     switch (data.subType) {
       case '1':
       case '3':
-        this.api
-          .exec('AC', this.classNameLine, 'LoadDataAsync', [data.recID])
-          .subscribe((res: any) => {
-            this.cashpaymentline = res;
-            this.loadTotal();
-            this.loadAccountName(res);
-          });
+        // this.api
+        //   .exec('AC', this.classNameLine, 'LoadDataAsync', [data.recID])
+        //   .subscribe((res: any) => {
+        //     this.cashpaymentline = res;
+        //     this.loadTotal();
+        //     this.loadAccountName(res);
+        //   });
         this.api
           .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
@@ -496,12 +491,12 @@ export class CashPaymentsComponent extends UIComponent {
       });
   }
 
-  loadAccountName(accountID) {
-    for (let index = 0; index < this.lsAccount.length; index++) {
-      if (this.lsAccount[index].accountID == accountID) {
-        return this.lsAccount[index].accountName.toLocaleString();
-      }
-    }
+  setStyles(color): any {
+    let styles = {
+      backgroundColor: color,
+      color: 'white',
+    };
+    return styles;
   }
 
   //#endregion

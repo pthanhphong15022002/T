@@ -1970,16 +1970,18 @@ export class CodxHrService {
 
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
-      this.cache.functionList(functionID).subscribe((funcList) => {
+      this.cache.functionList(functionID)
+      .subscribe((funcList) => {
         var formModel = new FormModel();
         if (funcList) {
-          formModel.entityName = funcList?.entityName;
-          formModel.formName = funcList?.formName;
-          formModel.gridViewName = funcList?.gridViewName;
-          formModel.funcID = funcList?.functionID;
-          formModel.entityPer = funcList?.entityPer;
+          formModel.entityName = funcList.entityName;
+          formModel.formName = funcList.formName;
+          formModel.gridViewName = funcList.gridViewName;
+          formModel.funcID = funcList.functionID;
+          formModel.entityPer = funcList.entityPer;
 
-          this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
+          this.cache.gridView(formModel.gridViewName)
+          .subscribe((gridView) => {
             this.cache.setGridView(formModel.gridViewName, gridView);
             this.cache
               .gridViewSetup(formModel.formName, formModel.gridViewName)

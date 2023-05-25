@@ -12,7 +12,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
@@ -20,6 +20,7 @@ import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { PopupAddSalesInvoicesLineComponent } from '../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoiceService } from '../sales-invoices.service';
+import { TableLineDetailComponent } from '../components/table-line-detail/table-line-detail.component';
 
 @Component({
   selector: 'lib-popup-add-sales-invoice',
@@ -30,6 +31,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('grid') grid: CodxGridviewV2Component;
+  @ViewChild('tableLineDetail') tableLineDetail: TableLineDetailComponent;
 
   salesInvoice: ISalesInvoice = {} as ISalesInvoice;
   salesInvoicesLines: ISalesInvoicesLine[] = [];
@@ -43,7 +45,6 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   gvsSalesInvoicesLines: any;
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
-  columns: any[] = [];
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -56,12 +57,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     allowDeleting: true,
     mode: 'Normal',
   };
-  fmSalesInvoicesLines: FormModel = {
-    entityName: 'SM_SalesInvoicesLines',
-    formName: 'SalesInvoicesLines',
-    gridViewName: 'grvSalesInvoicesLines',
-    entityPer: 'SM_SalesInvoicesLines',
-  };
+  fmSalesInvoicesLines: FormModel;
 
   constructor(
     private injector: Injector,
@@ -72,8 +68,8 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     @Optional() public dialogData: DialogData
   ) {
     super(injector);
-
-    console.log(this.dialogRef);
+    this.fmSalesInvoicesLines = salesInvoiceService.fmSalesInvoicesLines;
+    this.gvsSalesInvoicesLines = salesInvoiceService.gvsSalesInvoicesLines;
 
     this.masterService = dialogRef.dataService;
     this.formTitle = dialogData.data.formTitle;
@@ -92,41 +88,25 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
 
   //#region Init
   override onInit(): void {
-    // this.cache
-    //   .gridViewSetup('SalesInvoicesLines', 'grvSalesInvoicesLines')
-    //   .pipe(
-    //     map((g) =>
-    //       Object.entries(g)
-    //         .map(([k, v]) => v)
-    //         .filter((c: any) => c.isVisible === true)
-    //         .sort((a: any, b: any) => a.columnOrder - b.columnOrder)
-    //     ),
-    //     tap((t) => console.log(t))
-    //   )
-    //   .subscribe((res) => (this.columns = res));
-
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
 
-    const journalOptions = new DataRequest();
-    journalOptions.entityName = 'AC_Journals';
-    journalOptions.predicates = 'JournalNo=@0';
-    journalOptions.dataValues = this.salesInvoice.journalNo;
-    journalOptions.pageLoading = false;
-    this.acService.loadDataAsync('AC', journalOptions).subscribe((res) => {
-      this.journal = res[0]?.dataValue
-        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
-        : res[0];
+    this.journalService
+      .getJournal(this.salesInvoice.journalNo)
+      .subscribe((res) => {
+        this.journal = res?.dataValue
+          ? { ...res, ...JSON.parse(res.dataValue) }
+          : res;
 
-      this.editSettings.mode =
-        this.journal.inputMode == '2' ? 'Dialog' : 'Normal';
+        this.editSettings.mode =
+          this.journal.inputMode == '2' ? 'Dialog' : 'Normal';
 
-      if (this.journal.voucherNoRule === '2') {
-        this.ignoredFields.push('VoucherNo');
-      }
+        if (this.journal.voucherNoRule === '2') {
+          this.ignoredFields.push('VoucherNo');
+        }
 
-      this.hiddenFields = this.journalService.getHiddenFields(this.journal);
-    });
+        this.hiddenFields = this.journalService.getHiddenFields(this.journal);
+      });
 
     if (this.isEdit) {
       const salesInvoicesLinesOptions = new DataRequest();
@@ -149,16 +129,6 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
       )
       .subscribe((res) => {
         this.gvsSalesInvoices = res;
-      });
-
-    this.cache
-      .gridViewSetup(
-        this.fmSalesInvoicesLines.formName,
-        this.fmSalesInvoicesLines.gridViewName
-      )
-      .subscribe((res) => {
-        console.log('gvsSalesInvoicesLines', res);
-        this.gvsSalesInvoicesLines = res;
       });
   }
   //#endregion
@@ -350,18 +320,15 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
                   {
                     formType: 'add',
                     index: index,
-                    gvs: this.gvsSalesInvoicesLines,
                     hiddenFields: this.hiddenFields,
                   },
                   '',
                   dialogModel
                 )
-                .closed.pipe(tap((t) => console.log(t)))
-                .subscribe(({ event }) => {
-                  this.salesInvoicesLines = [
-                    ...this.salesInvoicesLines,
-                    ...event,
-                  ];
+                .closed.subscribe(({ event }) => {
+                  if (event?.length > 0) {
+                    this.tableLineDetail.grid.refresh();
+                  }
                 });
             }
           });

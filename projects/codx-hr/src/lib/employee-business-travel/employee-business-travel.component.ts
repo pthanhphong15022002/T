@@ -142,7 +142,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
         funcID: this.view.funcID,
         employeeId: data?.employeeID,
         headerText: actionHeaderText,
-        empObj: actionType == 'add' ? null : this.currentEmpObj,
+        empObj: this.currentEmpObj,
         actionType: actionType,
         dataObj: data,
       },
@@ -166,6 +166,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   }
 
   addJobSalaries(event): void {
+    this.currentEmpObj = this.itemDetail.emp;
     if (event.id == 'btnAdd') {
       this.HandleEJobSalary(
         event.text + ' ' + this.view.function.description,

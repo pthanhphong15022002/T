@@ -90,7 +90,7 @@
     </div>
   </div>
   <ng-container
-    *ngIf="isShowButton"
+    *ngIf="isShowButton && isStart && !isClose"
     [ngTemplateOutlet]="buttonTemplate"
     [ngTemplateOutletContext]="{ value: '' }"
   ></ng-container>
@@ -129,7 +129,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="isShowMore"
+      *ngIf="isShowMore && isStart && !isClose"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -170,7 +170,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="isShowMore"
+      *ngIf="isShowMore && isStart && !isClose"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -256,6 +256,7 @@
       <codx-attachment-temp
         [objectID]="data?.value.refID"
         [hideMoreF]="0"
+        [viewType]="'4'"
         [hideDelete]="1"></codx-attachment-temp>
     </div>
     <div class="notify" style="min-width: 40px" *ngIf="isShowComment">
