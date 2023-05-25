@@ -523,8 +523,12 @@
             ></codx-gridview-v2>
             <ng-template #dialogMode>
               <lib-table-line-detail
+                #tableLineDetail
                 [gvs]="gvsSalesInvoicesLines"
                 [transID]="salesInvoice.recID"
+                [hiddenFields]="hiddenFields"
+                [hasMF]="true"
+                [dataService]="detailService"
               ></lib-table-line-detail>
             </ng-template>
           </ng-template>

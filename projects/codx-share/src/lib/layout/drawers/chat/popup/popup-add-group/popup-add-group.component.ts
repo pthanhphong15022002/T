@@ -129,43 +129,44 @@ export class AddGroupChatComponent implements OnInit,AfterViewInit {
         });
     }
   }
+
+  selectedFile(file:any){
+    debugger
+    this.isUploadFile = true;
+  }
+  loading:boolean = false;
+  isUploadFile:boolean = false;
   // insert group
   insertGroup(){
     debugger
     if(this.group){
-      if(!Array.isArray(this.group.members)){
+      if(!this.group.members || this.group.members.length == 0 ){
         this.notifiSV.notify("Vui lòng chọn thành viên");
         return;
       }
+      this.loading = true;
       this.group.groupID = Util.uid();
       this.group.groupType = "2";
       this.codxImg.updateFileDirectReload(this.group.groupID)
       .subscribe((res:any) => {
-        if(res){
-          this.api.execSv(
+        this.api.execSv(
           "WP", 
           "ERM.Business.WP", 
           "GroupBusiness", 
           "InsertGroupAsync",
           [this.group])
           .subscribe((res:boolean) => {
-            if(res){
+            if(res)
+            {
               this.signalRSV.sendData("AddNewGroup",this.group.groupID);
-              this.dialogRef.close(res);
               this.notifiSV.notify("CHAT001");
+              this.dialogRef.close(res);
             }
             else
-            {
-              this.notifiSV.notify("Tạo nhóm chat không thành công");
-            }
+              this.notifiSV.notify("Tạo nhóm chat không thành công!");
+            this.loading = true;
           });
-        }
-        else
-        {
-          this.notifiSV.notify("Tạo nhóm chat không thành công");
-        }
       });
     }
-    
   }
 }

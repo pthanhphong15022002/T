@@ -180,10 +180,11 @@
 <!-- //---end-temp-list ---// -->
 
 <ng-template #templateMore let-data>
-  <div class="has-action-menu" style="height: 30px">
+  <div class="" style="height: 30px">
     <codx-mfunc
       [dataItem]="data"
       [formModel]="view.formModel"
+      (changeDataMF)="changeDataMF($event, data)"
       (clickMF)="clickMF($event, data)"
       [isBookMark]="false"
       type="view"

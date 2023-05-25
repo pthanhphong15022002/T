@@ -1,11 +1,11 @@
-<codx-views #view idField="recID" [views]="views" [button]="button" entityName="IV_InventoryJournals"
+<codx-views #view idField="recID" [views]="views" [button]="button" [entityName]="entityName"
   (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo"
   (selectedChange)="changeItemDetail($event)">
 </codx-views>
 <ng-template #templateMore let-data>
-  <div class="has-action-menu" style="height: 30px">
+  <div>
     <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
-      type="hover"></codx-mfunc>
+      type="view"></codx-mfunc>
   </div>
 </ng-template>
 <ng-template #itemTemplate let-data>
@@ -61,26 +61,21 @@
           {{formatDate(itemSelected?.voucherDate)}}
         </span>
       </div>
-      <span class="me-3">
-        <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
-          [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
-        </codx-vll>
-      </span>
-      
     </div>
     <div class="d-flex justify-content-between flex-grow-1 mb-1 mt-2">
       <div class="d-flex align-items-center">
-        <span class="me-2 icon-store icon-16"></span>
-        <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5" #warehouseName [innerHTML]="
-            itemSelected?.warehouseName
-              | formatvalue : view.formModel : 'warehouseName' : warehouseName
+        <span class="icon-apartment icon-16 me-2"></span>
+        <span #objectID [innerHTML]="
+            itemSelected?.objectID
+              | formatvalue : view.formModel : 'objectID' : objectID
               | async
-          "></span>
+          " class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5"></span>
       </div>
-      <div class="d-flex align-self-center">
-        <span class="badge badge-pill badge-primary me-3">
-          <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{itemSelected?.totalAmt?.toLocaleString('it-IT') +'
-            '+itemSelected?.currencyID }}</span>
+      <div class="d-flex align-items-center">
+        <span class="me-3">
+          <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
+            [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+          </codx-vll>
         </span>
       </div>
     </div>
@@ -88,16 +83,22 @@
 </ng-template>
 <ng-template #body>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex flex-wrap mb-1">
+    <div class="d-flex justify-content-between flex-wrap mb-1">
       <div class="d-flex align-items-center me-5">
-        <span class="icon-apartment icon-16 me-2"></span>
-        <codx-label class="fw-bold label-colon" default="Đối tượng" [formModel]="view.formModel">
+        <span class="me-2 icon-store icon-16"></span>
+        <codx-label class="fw-bold label-colon" [setRequire]="false" fiedName="warehouseID" [formModel]="view.formModel">
         </codx-label>
-        <span #objectID [innerHTML]="
-            itemSelected?.objectID
-              | formatvalue : view.formModel : 'objectID' : objectID
+        <span class="text-gray-600" #warehouseName [innerHTML]="
+            itemSelected?.warehouseName
+              | formatvalue : view.formModel : 'warehouseName' : warehouseName
               | async
-          " class="text-gray-600"></span>
+          "></span>
+      </div>
+      <div class="d-flex align-items-center me-5">
+        <span class="badge badge-pill badge-primary me-2">
+          <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{itemSelected?.totalAmt?.toLocaleString('it-IT') +'
+            '+itemSelected?.currencyID }}</span>
+        </span>
       </div>
     </div>
     <div class="d-flex flex-wrap mb-1">

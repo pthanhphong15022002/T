@@ -18,6 +18,8 @@ import { combineLatestWith, map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { SalesInvoiceService } from '../sales-invoices.service';
+import { NameByIdPipe } from '../../../pipes/nameById.pipe';
+import { Item } from '../../../settings/items/interfaces/Item.interface';
 
 @Component({
   selector: 'lib-popup-add-sales-invoices-line',
@@ -48,6 +50,8 @@ export class PopupAddSalesInvoicesLineComponent
   hiddenFields: string[] = [];
   dataService: CRUDService;
   transID: string;
+  vats: any[];
+  nameByIdPipe = new NameByIdPipe();
 
   constructor(
     private injector: Injector,
@@ -58,10 +62,12 @@ export class PopupAddSalesInvoicesLineComponent
   ) {
     super(injector);
     this.gvs = this.salesInvoiceService.gvsSalesInvoicesLines;
+    this.vats = this.salesInvoiceService.vats;
 
     this.dataService = dialogRef.dataService;
     this.salesInvoicesLine = this.dataService.dataSelected;
     this.transID = this.salesInvoicesLine.transID;
+
     this.isEdit = dialogData.data.formType === 'edit';
     this.index = dialogData.data.index;
     this.action = dialogData.data.action;
@@ -135,6 +141,14 @@ export class PopupAddSalesInvoicesLineComponent
       (
         this.idiM7.ComponentCurrent as CodxComboboxComponent
       ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+
+      this.form.formGroup.controls.umid.reset();
+      const item: Item = this.salesInvoiceService.items.find(
+        (i) => i.itemID === this.salesInvoicesLine.itemID
+      );
+      this.form.formGroup.patchValue({
+        umid: item.umid,
+      });
     }
 
     if (e.field === 'idiM4') {
@@ -142,6 +156,25 @@ export class PopupAddSalesInvoicesLineComponent
       (
         this.idiM5.ComponentCurrent as CodxComboboxComponent
       ).dataService.setPredicates(['WarehouseID=@0'], [e.data]);
+    }
+
+    if (['costPrice', 'quantity'].includes(e.field)) {
+      this.form.formGroup.patchValue({
+        netAmt:
+          this.salesInvoicesLine.costPrice * this.salesInvoicesLine.quantity,
+      });
+    }
+
+    if (e.field === 'vatid') {
+      const taxRate: number = this.nameByIdPipe.transform(
+        this.vats,
+        'VATID',
+        'TaxRate',
+        this.salesInvoicesLine.vatid
+      );
+      this.form.formGroup.patchValue({
+        vatAmt: taxRate * this.salesInvoicesLine.netAmt,
+      });
     }
   }
 

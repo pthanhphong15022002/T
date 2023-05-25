@@ -131,8 +131,7 @@
               <div class="text-gray-500">
                 {{
                   (item?.positionName ? item?.positionName + " | " : "") +
-                    item?.orgUnitName ??
-                    ""
+                    (item?.orgUnitName ? item?.orgUnitName : "")
                 }}
               </div>
             </div>

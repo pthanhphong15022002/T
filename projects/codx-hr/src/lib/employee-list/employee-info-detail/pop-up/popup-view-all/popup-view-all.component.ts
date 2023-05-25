@@ -50,7 +50,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   hasFilter: any;
   formModel: any;
   formGroup: any;
-
+  date: any;
   //#region declare empInfo
   infoPersonal: any;
   //#endregion
@@ -121,6 +121,10 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   basicSalaryCol3: TemplateRef<any>;
   @ViewChild('basicSalaryCol4', { static: true })
   basicSalaryCol4: TemplateRef<any>;
+  @ViewChild('headTempBasicSal1', { static: true }) headTempBasicSal1: TemplateRef<any>;
+  @ViewChild('headTempBasicSal2', { static: true }) headTempBasicSal2: TemplateRef<any>;
+  @ViewChild('headTempBasicSal3', { static: true }) headTempBasicSal3: TemplateRef<any>;
+  @ViewChild('headTempBasicSal4', { static: true }) headTempBasicSal4: TemplateRef<any>;
 
   //Column grid ebenefit viewChild
   @ViewChild('templateBenefitID', { static: true })
@@ -129,6 +133,9 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   templateBenefitAmt: TemplateRef<any>;
   @ViewChild('templateBenefitEffected', { static: true })
   templateBenefitEffected: TemplateRef<any>;
+  @ViewChild('headTempBenefit1', { static: true }) headTempBenefit1: TemplateRef<any>;
+  @ViewChild('headTempBenefit2', { static: true }) headTempBenefit2: TemplateRef<any>;
+  @ViewChild('headTempBenefit3', { static: true }) headTempBenefit3: TemplateRef<any>;
 
   //Filter benefit
   @ViewChild('filterBenefit', { static: true })
@@ -140,6 +147,9 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   @ViewChild('eContractCol1', { static: true }) eContractCol1: TemplateRef<any>;
   @ViewChild('eContractCol2', { static: true }) eContractCol2: TemplateRef<any>;
   @ViewChild('eContractCol3', { static: true }) eContractCol3: TemplateRef<any>;
+  @ViewChild('headTempContracts1', { static: true }) headTempContracts1: TemplateRef<any>;
+  @ViewChild('headTempContracts2', { static: true }) headTempContracts2: TemplateRef<any>;
+  @ViewChild('headTempContracts3', { static: true }) headTempContracts3: TemplateRef<any>;
 
   constructor(
     private injector: Injector,
@@ -180,6 +190,27 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
           // });
         });
     });
+  }
+
+  checkIsNewestDate(effectedDate, expiredDate){
+    if(effectedDate){
+      let eff = new Date(effectedDate).toISOString();
+      let date = new Date().toISOString();
+      if(expiredDate){
+        let expire = new Date(expiredDate).toISOString();
+        if(date >= eff && date <= expire){
+          return true;
+        }
+        return false;
+      }
+      else{
+        if(date >= eff){
+          return true;
+        }
+        return false;
+      }
+    }
+    return true;
   }
 
   onInit(): void {
@@ -278,22 +309,26 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         let basicSalaryHeaderText = res;
         this.basicSalaryColumnGrid = [
           {
-            headerText: basicSalaryHeaderText['BSalary'],
+            // headerText: basicSalaryHeaderText['BSalary'],
+            headerTemplate: this.headTempBasicSal1,
             template: this.basicSalaryCol1,
             width: '100',
           },
           {
-            headerText: basicSalaryHeaderText['SISalary'],
+            // headerText: basicSalaryHeaderText['SISalary'],
+            headerTemplate: this.headTempBasicSal2,
             template: this.basicSalaryCol2,
             width: '100',
           },
           {
-            headerText: basicSalaryHeaderText['JSalary'],
+            // headerText: basicSalaryHeaderText['JSalary'],
+            headerTemplate: this.headTempBasicSal3,
             template: this.basicSalaryCol3,
             width: '150',
           },
           {
-            headerText: basicSalaryHeaderText['EffectedDate'],
+            // headerText: basicSalaryHeaderText['EffectedDate'],
+            headerTemplate: this.headTempBasicSal4,
             template: this.basicSalaryCol4,
             width: '150',
           },
@@ -312,11 +347,11 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         this.eContractHeaderText = res;
         this.eContractColumnGrid = [
           {
-            headerText:
-              this.eContractHeaderText['ContractTypeID'] +
-              ' | ' +
-              this.eContractHeaderText['EffectedDate'],
-
+            // headerText:
+            //   this.eContractHeaderText['ContractTypeID'] +
+            //   ' | ' +
+            //   this.eContractHeaderText['EffectedDate'],
+            headerTemplate: this.headTempContracts1,
             template: this.eContractCol1,
             width: '250',
           },
@@ -324,12 +359,14 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
             // headerText: this.eContractHeaderText['ContractNo'] +
             // ' - ' +
             // this.eContractHeaderText['SignedDate'],
-            headerText: 'Hợp đồng',
+            // headerText: 'Hợp đồng',
+            headerTemplate: this.headTempContracts2,
             template: this.eContractCol2,
             width: '150',
           },
           {
-            headerText: this.eContractHeaderText['Note'],
+            // headerText: this.eContractHeaderText['Note'],
+            headerTemplate: this.headTempContracts3,
             template: this.eContractCol3,
             width: '150',
           },
@@ -385,11 +422,11 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         this.eContractHeaderText = res;
         this.eContractColumnGrid = [
           {
-            headerText:
-              this.eContractHeaderText['ContractTypeID'] +
-              ' | ' +
-              this.eContractHeaderText['EffectedDate'],
-
+            // headerText:
+            //   this.eContractHeaderText['ContractTypeID'] +
+            //   ' | ' +
+            //   this.eContractHeaderText['EffectedDate'],
+            headerTemplate: this.headTempContracts1,
             template: this.eContractCol1,
             width: '250',
           },
@@ -397,12 +434,14 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
             // headerText: this.eContractHeaderText['ContractNo'] +
             // ' - ' +
             // this.eContractHeaderText['SignedDate'],
-            headerText: 'Hợp đồng',
+            // headerText: 'Hợp đồng',
+            headerTemplate: this.headTempContracts2,
             template: this.eContractCol2,
             width: '150',
           },
           {
-            headerText: this.eContractHeaderText['Note'],
+            // headerText: this.eContractHeaderText['Note'],
+            headerTemplate: this.headTempContracts3,
             template: this.eContractCol3,
             width: '150',
           },
@@ -424,17 +463,20 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         this.benefitHeaderText = res;
         this.benefitColumnGrid = [
           {
-            headerText: this.benefitHeaderText['BenefitID'],
+            // headerText: this.benefitHeaderText['BenefitID'],
+            headerTemplate: this.headTempBenefit1,
             template: this.templateBenefitID,
             width: '150',
           },
           {
-            headerText: this.benefitHeaderText['BenefitAmt'],
+            // headerText: this.benefitHeaderText['BenefitAmt'],
+            headerTemplate: this.headTempBenefit2,
             template: this.templateBenefitAmt,
             width: '150',
           },
           {
-            headerText: 'Hiệu lực',
+            // headerText: 'Hiệu lực',
+            headerTemplate: this.headTempBenefit3,
             template: this.templateBenefitEffected,
             width: '150',
           },
@@ -473,9 +515,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     if (
       this.funcID == this.ePassportFuncID ||
       this.funcID == this.eVisaFuncID ||
-      this.funcID == this.eWorkPermitFuncID ||
-      this.funcID == this.eBasicSalaryFuncID ||
-      this.funcID == this.ebenefitFuncID 
+      this.funcID == this.eWorkPermitFuncID
     ) {
       // this.dialogRef.close(this.gridView.dataService.data[0]);
       let lstData = this.gridView.dataService.data;
@@ -494,20 +534,39 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         this.dialogRef.close('none');
       }
     }
-    if(this.funcID == this.eContractFuncID){
-      debugger
+    // else if(this.funcID == this.eContractFuncID){
+    //   let lstData = this.gridView.dataService.data;
+    //   let found = lstData.find(
+    //     (val) => val.isCurrent == true
+    //   )
+    //     if(found){
+    //       debugger
+    //       this.dialogRef.close(found)
+    //     }
+    //     else{
+    //       this.dialogRef.close('none');
+    //     }
+    // } 
+    else if(this.funcID == this.eContractFuncID || this.funcID == this.ebenefitFuncID || this.funcID == this.eBasicSalaryFuncID){
       let lstData = this.gridView.dataService.data;
-      let found = lstData.find(
-        (val) => val.isCurrent == true
-      )
-        if(found){
-          debugger
-          this.dialogRef.close(found)
+      let lstResult = []
+      for(let i = 0; i < lstData.length; i++){
+        if(this.checkIsNewestDate(lstData[i].effectedDate, lstData[i].expiredDate) == true){
+          lstResult.push(lstData[i]);
         }
-        else{
-          this.dialogRef.close('none');
+      }
+      if(lstResult.length > 0){
+        console.log('ds kq ne', lstResult);
+        
+        if(this.funcID == this.eBasicSalaryFuncID || this.funcID == this.eContractFuncID){
+          this.dialogRef.close(lstResult[0])
         }
-    } 
+        this.dialogRef.close(lstResult)
+      }
+      else{
+        this.dialogRef.close('none')
+      }
+    }
     else {
       this.dialogRef.close();
     }

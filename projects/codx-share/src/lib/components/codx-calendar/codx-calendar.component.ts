@@ -141,6 +141,7 @@ export class CodxCalendarComponent
         if (res) {
           this.getDataAfterAddEvent(res);
           this.getCalendarNotes();
+          this.navigate();
         }
       });
   }
@@ -240,6 +241,7 @@ export class CodxCalendarComponent
   }
 
   changeDayOfMonth(args) {
+    this.FDdate = args.value;
     args['date'] = args.value;
     let crrDate = moment(this.FDdate)
       .startOf('month')
@@ -250,26 +252,30 @@ export class CodxCalendarComponent
       .add(1, 'day')
       .toISOString();
     this.FDdate = args.value;
-    if (crrDate != newDate) this.changeNewMonth(args);
-    else {
-      let day = moment(args.value).date();
-      let changeWeek = true;
-      this.lstDOWeek.forEach((x) => {
-        if (x === day) {
-          changeWeek = false;
-          return;
-        }
-      });
-      if (this.typeNavigate === 'Week' || this.typeNavigate === 'WorkWeek') {
-        if (changeWeek && this.ejCalendar) {
-          let eleCalendar = this.ejCalendar.element as HTMLElement;
-        }
+    if (crrDate !== newDate) {
+      this.changeNewMonth(args);
+    } else {
+      if (
+        this.typeNavigate === 'Day' ||
+        this.typeNavigate === 'Week' ||
+        this.typeNavigate === 'WorkWeek'
+      ) {
+        this.changeNewMonth(args);
       }
     }
   }
 
   changeNewMonth(args) {
     this.FDdate = args.date;
+    let ele = document.getElementsByTagName('codx-schedule')[0];
+    if (ele) {
+      let scheduleEle = ele.querySelector('ejs-schedule');
+      if ((scheduleEle as any).ej2_instances[0]) {
+        (scheduleEle as any).ej2_instances[0].selectedDate = new Date(
+          this.FDdate
+        );
+      }
+    }
   }
 
   updateSettingValue(e) {

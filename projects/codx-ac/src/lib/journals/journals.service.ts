@@ -31,6 +31,17 @@ export class JournalService {
       .subscribe((res) => console.log(res));
   }
 
+  getJournal(journalNo: string) {
+    const journalOptions = new DataRequest();
+    journalOptions.entityName = 'AC_Journals';
+    journalOptions.predicates = 'JournalNo=@0';
+    journalOptions.dataValues = journalNo;
+    journalOptions.pageLoading = false;
+    return this.acService
+      .loadDataAsync('AC', journalOptions)
+      .pipe(map((res) => res[0]));
+  }
+
   /**
    * If this model.voucherNo already exists, the system will automatically suggest another voucherNo.
    * @param isEdit A boolean value that indicates whether you are in edit mode.*/
@@ -123,44 +134,36 @@ export class JournalService {
     }
 
     const idimControls: string[] = journal?.idimControl?.split(',');
-    for (let i = 0; i < idimControls.length; i++) {
+    for (let i = 0; i < idimControls?.length; i++) {
       hiddenFields.push('IDIM' + idimControls[i]);
     }
 
     return hiddenFields;
   }
 
-  setAccountCbxDataSourceByJournal(
+  /** Handle 12th point */
+  loadComboboxBy067(
     journal: IJournal,
-    drAccountCbx: CodxInputComponent,
-    crAccountCbx: CodxInputComponent
+    vll067Prop: string,
+    valueProp: string,
+    cbx: CodxInputComponent,
+    filterKey: string,
+    form: CodxFormComponent,
+    patchKey: string
   ): void {
-    // gia tri co dinh, danh sach
-    if (['1', '2'].includes(journal?.drAcctControl)) {
-      (
-        drAccountCbx.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(
-        ['@0.Contains(AccountID)'],
-        [`[${journal?.drAcctID}]`]
+    // co dinh, danh sach
+    if (['1', '2'].includes(journal[vll067Prop])) {
+      (cbx.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+        [`@0.Contains(${filterKey})`],
+        [`[${journal[valueProp]}]`]
       );
     }
 
-    if (['1', '2'].includes(journal?.crAcctControl)) {
-      (
-        crAccountCbx.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(
-        ['@0.Contains(AccountID)'],
-        [`[${journal?.crAcctID}]`]
-      );
-    }
-
-    // mac dinh
-    if (journal?.drAcctControl === '0') {
-      drAccountCbx.crrValue = journal?.drAcctID;
-    }
-
-    if (journal?.crAcctControl === '0') {
-      crAccountCbx.crrValue = journal?.crAcctID;
+    // mac dinh, co dinh
+    if (['0', '1'].includes(journal[vll067Prop])) {
+      form?.formGroup?.patchValue({
+        [patchKey]: journal[valueProp],
+      });
     }
   }
 

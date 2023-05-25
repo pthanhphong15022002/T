@@ -248,27 +248,114 @@
 
 <!-- list & detail view -->
 <ng-template #templateListDetail let-data>
-  <div class="border-bottom position-relative avatar-vllbadge">
-    <codx-temp-full
-      cardCss="codx_cardcenter p-3"
-      (clickMF)="clickMF($event, data)"
-      [imageId]="data?.emp?.employeeID"
-      [imageObjType]="'HR_Employees'"
-      [imageWidth]="40"
-      [formModel]="view.formModel"
-      [titleTmp]="titleTmp"
-      [dataItem]="data"
-      [imgOn]="data?.modifiedOn"
-      [typeMF]="'hover'"
-      (changeDataMF)="changeDataMF($event, data)"
-    >
-    </codx-temp-full>
-    <!-- <div class="d-flex flex-center vll-badge">
-            <codx-vll class="badge badge-sm me-0 badge-light" [name]="genderGrvSetup?.referedValue"
-                [value]="data?.emp?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
-            </codx-vll>
-        </div> -->
-  </div>
+  <codx-temp-full
+    [imgCss]="'h-125px me-2'"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (clickMF)="clickMF($event, data)"
+    [moreFuncCss]="'me-10'"
+    [imageId]="data.emp?.employeeID"
+    [imageObjType]="'HR_Employees'"
+    [imageWidth]="40"
+    [formModel]="view.formModel"
+    [dataItem]="data"
+    [imgOn]="data?.modifiedOn"
+    [typeMF]="'hover'"
+    [title]="data.emp?.employeeName"
+    [subTitle]="
+      data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
+    "
+    [descTmp]="descTmp"
+    [desc2Tmp]="desc2Tmp"
+    (changeDataMF)="changeDataMF($event, data)"
+  >
+  </codx-temp-full>
+
+  <ng-template #descTmp>
+    <span
+      class="mt-1"
+      [ngbTooltip]="grvSetup?.KowID?.headerText"
+      [innerHTML]="data?.kowID | formatvalue : view.formModel : 'kowID' | async"
+    ></span>
+  </ng-template>
+
+  <ng-template #desc2Tmp>
+    <!-- reason -->
+    <div>
+      <div class="justify-content-between text-gray-700">
+        <div class="d-flex mb-2" #reasonFieldDetail>
+          <span
+            [ngbTooltip]="reasonDetailTooltip"
+            class="line-clamp line-clamp-1 text-dark"
+            #titleContentDetail
+            >{{ data?.reason }}</span
+          >
+        </div>
+        <ng-template #reasonDetailTooltip>
+          <div class="d-flex flex-column">
+            <span>{{ grvSetup?.Reason?.headerText }}</span>
+            <span
+              [style.display]="
+                titleContentDetail.offsetWidth < reasonFieldDetail.scrollWidth
+                  ? 'none'
+                  : ''
+              "
+            >
+              {{ data?.reason }}
+            </span>
+          </div>
+        </ng-template>
+      </div>
+      <!-- end reason -->
+      <!-- from to -->
+      <div class="d-flex align-items-center">
+        <span class="icon-calendar_today icon-15 me-1"></span>
+        <span
+          [innerHTML]="
+            data?.beginDate | formatvalue : view.formModel : 'beginDate' | async
+          "
+          [ngbTooltip]="grvSetup?.BeginDate?.headerText"
+        ></span>
+        <span *ngIf="data.endDate" class="mx-1"> - </span>
+        <span
+          *ngIf="data.endDate"
+          [innerHTML]="
+            data?.endDate | formatvalue : view.formModel : 'endDate' | async
+          "
+          [ngbTooltip]="grvSetup?.EndDate?.headerText"
+        ></span>
+        <span
+          *ngIf="data.totalDaysOff"
+          class="icon-i-info-circle-fill fs-9 icon-6 px-2 text-gray-400"
+        ></span>
+        <span
+          *ngIf="data.totalDaysOff"
+          [ngbTooltip]="grvSetup?.TotalDaysOff?.headerText"
+          [innerHTML]="
+            data?.totalDaysOff
+              | formatvalue : view.formModel : 'totalDaysOff'
+              | async
+          "
+        ></span>
+        <span *ngIf="data.totalDaysOff" class="px-1"> ngày </span>
+      </div>
+      <!-- end from to -->
+
+      <!-- status  -->
+      <div class="d-flex justify-content-between text-dark">
+        <span class="mt-2">
+          <codx-vll
+            class="badge fw-bold"
+            [name]="'HRS102'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+          >
+          </codx-vll>
+        </span>
+      </div>
+    </div>
+    <!-- end status  -->
+  </ng-template>
 </ng-template>
 <!-- info view -->
 <ng-template #titleTmp let-data>
@@ -331,7 +418,6 @@
         </div>
       </ng-template>
     </div>
-
     <!-- end reason -->
     <!-- from to -->
     <div class="justify-content-between">

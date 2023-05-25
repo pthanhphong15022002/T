@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Optional, ChangeDetectorRef, ViewChild } from '@angular/core';
 import {
   DialogData,
   DialogRef,
@@ -7,7 +7,7 @@ import {
 } from 'codx-core';
 import moment from 'moment';
 import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
-import { CO_Meetings } from '../models/CO_Meetings.model';
+import { CO_Meetings, TmpRoom } from '../models/CO_Meetings.model';
 
 @Component({
   selector: 'lib-popup-reschedule-meeting',
@@ -15,6 +15,8 @@ import { CO_Meetings } from '../models/CO_Meetings.model';
   styleUrls: ['./popup-reschedule-meeting.component.css'],
 })
 export class PopupRescheduleMeetingComponent implements OnInit {
+  @ViewChild('locationCBB') locationCBB;
+
   meeting = new CO_Meetings();
   dialog: any;
   title = '';
@@ -35,6 +37,10 @@ export class PopupRescheduleMeetingComponent implements OnInit {
   endDate: any;
   funcID: any;
   comment = '';
+  listRoom: TmpRoom[] = [];
+  fields: Object = { text: 'resourceName', value: 'resourceID' };
+  isLoadRom = false;
+  dayStart: Date;
   constructor(
     private api: ApiHttpService,
     private changDetec: ChangeDetectorRef,
@@ -55,7 +61,47 @@ export class PopupRescheduleMeetingComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-
+  loadRoomAvailable() {
+    this.api
+      .execSv<any>(
+        'EP',
+        'EP',
+        'ResourcesBusiness',
+        'GetListAvailableResourceAsync',
+        [
+          '1',
+          this.meeting.startDate,
+          this.meeting.endDate,
+          this.meeting.recID,
+          false,
+        ]
+      )
+      .subscribe((res) => {
+        if (res) {
+          var list = res;
+          this.listRoom = [];
+          Array.from(res).forEach((item: any) => {
+            let tmpRes = new TmpRoom();
+            tmpRes.resourceID = item.resourceID;
+            tmpRes.resourceName = item.resourceName;
+            this.listRoom.push(tmpRes);
+          });
+          if (this.meeting.location != null) {
+            var check = this.listRoom.some(
+              (x) => x.resourceID == this.meeting.location
+            );
+            if (!check) {
+              this.meeting.location = null;
+              this.locationCBB.value = null;
+            } else {
+              this.cbxChange(this.meeting.location);
+              this.locationCBB.value = this.meeting.location;
+            }
+          }
+          this.changDetec.detectChanges();
+        }
+      });
+  }
   //#region save
   onSave(){
     if (this.isCheckStartEndTime(this.meeting.startDate)) {
@@ -109,12 +155,11 @@ export class PopupRescheduleMeetingComponent implements OnInit {
   }
 
   onUpdate(){
-    this.tmSv.UpdateDateMeeting(this.meeting.meetingID, this.meeting.startDate, this.meeting.endDate, this.funcID, this.comment).subscribe(res=>{
+    this.tmSv.UpdateDateMeeting(this.meeting.meetingID, this.meeting.startDate, this.meeting.endDate, this.funcID, this.comment, this.meeting.location).subscribe(res=>{
       if(res){
         this.dialog.close(res);
         //chưa có mssgcode dời lịch
         this.notiService.notifyCode('SYS034');
-        this.tmSv.changeBookingDateTime(this.meeting.recID, this.meeting.startDate.toUTCString(), this.meeting.endDate.toUTCString())
         this.tmSv.sendMailAlert(this.meeting.recID, 'TM_0025', this.funcID).subscribe();
         //dời phòng bên EP
         this.api.execSv(
@@ -122,7 +167,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
           'ERM.Business.EP',
           'BookingsBusiness',
           'ChangeBookingDateTimeAsync',
-          [this.meeting.recID, this.meeting.startDate, this.meeting.endDate]
+          [this.meeting.recID, this.meeting.startDate, this.meeting.endDate, this.meeting?.location]
         ).subscribe(res=>{});
       }else
         this.dialog.close();
@@ -235,17 +280,6 @@ export class PopupRescheduleMeetingComponent implements OnInit {
   //#endregion
 
   //#region event
-  valueDateChange(event: any) {
-    this.meeting[event.field] = event.data.fromDate;
-    if (event.field == 'startDate') {
-      this.selectedDate = moment(new Date(this.meeting.startDate))
-        .set({ hour: 0, minute: 0, second: 0 })
-        .toDate();
-      this.getTimeWork(this.selectedDate);
-      this.setDate();
-    }
-  }
-
   fullDayChangeWithTime() {
     if (
       this.startTime == this.startTimeWork &&
@@ -258,23 +292,46 @@ export class PopupRescheduleMeetingComponent implements OnInit {
     this.changDetec.detectChanges();
   }
 
+  valueDateChange(event: any) {
+    if (this.meeting[event.field] != event?.data?.fromDate) {
+      this.meeting[event.field] = event?.data?.fromDate;
+      if (event.field == 'startDate') {
+        if (
+          moment(new Date(this.meeting.startDate))
+            .set({ hour: 0, minute: 0, second: 0 })
+            .toDate() != this.dayStart
+        ) {
+          this.dayStart = moment(new Date(this.meeting.startDate))
+            .set({ hour: 0, minute: 0, second: 0 })
+            .toDate();
+          this.selectedDate = moment(new Date(this.meeting.startDate))
+            .set({ hour: 0, minute: 0, second: 0 })
+            .toDate();
+          this.setDate();
+        }
+      }
+    }
+  }
+
   valueStartTimeChange(event: any) {
-    this.startTime = event.data.fromDate;
-    this.fullDayChangeWithTime();
-    // this.isFullDay = false;
-    this.setDate();
-    this.changDetec.detectChanges();
+    if (this.startTime != event.data.fromDate) {
+      this.startTime = event.data.fromDate;
+      this.fullDayChangeWithTime();
+      // this.isFullDay = false;
+      this.setDate();
+      this.changDetec.detectChanges();
+    }
   }
 
   valueEndTimeChange(event: any) {
-    this.endTime = event.data.toDate;
-    this.fullDayChangeWithTime();
-
-    // this.isFullDay = false;
-    this.setDate();
-    this.changDetec.detectChanges();
+    if (this.endTime != event.data.fromDate) {
+      this.endTime = event.data.toDate;
+      this.fullDayChangeWithTime();
+      // this.isFullDay = false;
+      this.setDate();
+      this.changDetec.detectChanges();
+    }
   }
-
   valueChangeCheckFullDay(e) {
     if (e?.data) {
       this.startTime = this.startTimeWork;
@@ -290,42 +347,51 @@ export class PopupRescheduleMeetingComponent implements OnInit {
     }
     this.changDetec.detectChanges;
   }
+
+  cbxChange(e) {
+    this.meeting.location = e;
+  }
   //#endregion
 
   //region time work
   setDate() {
-    if (this.startTime) {
-      this.beginHour = parseInt(this.startTime.split(':')[0]);
-      this.beginMinute = parseInt(this.startTime.split(':')[1]);
-      if (this.selectedDate) {
-        if (!isNaN(this.beginHour) && !isNaN(this.beginMinute)) {
-          this.startDate = new Date(
-            this.selectedDate.setHours(this.beginHour, this.beginMinute, 0)
-          );
-          if (this.startDate) {
-            this.meeting.startDate = this.startDate;
+    if(this.startTime != null && this.endTime != null){
+      if (this.startTime) {
+        this.beginHour = parseInt(this.startTime.split(':')[0]);
+        this.beginMinute = parseInt(this.startTime.split(':')[1]);
+        if (this.selectedDate) {
+          if (!isNaN(this.beginHour) && !isNaN(this.beginMinute)) {
+            this.startDate = new Date(
+              this.selectedDate.setHours(this.beginHour, this.beginMinute, 0)
+            );
+            if (this.startDate) {
+              this.meeting.startDate = this.startDate;
+            }
           }
         }
       }
-    }
-    if (this.endTime) {
-      this.endHour = parseInt(this.endTime.split(':')[0]);
-      this.endMinute = parseInt(this.endTime.split(':')[1]);
-      if (this.selectedDate) {
-        if (!isNaN(this.endHour) && !isNaN(this.endMinute)) {
-          this.endDate = new Date(
-            this.selectedDate.setHours(this.endHour, this.endMinute, 0)
-          );
-          if (this.endDate) {
-            this.meeting.endDate = this.endDate;
+      if (this.endTime) {
+        this.endHour = parseInt(this.endTime.split(':')[0]);
+        this.endMinute = parseInt(this.endTime.split(':')[1]);
+        if (this.selectedDate) {
+          if (!isNaN(this.endHour) && !isNaN(this.endMinute)) {
+            this.endDate = new Date(
+              this.selectedDate.setHours(this.endHour, this.endMinute, 0)
+            );
+            if (this.endDate) {
+              this.meeting.endDate = this.endDate;
+            }
           }
         }
+        if (this.beginHour >= this.endHour) {
+          if (this.beginMinute >= this.endMinute)
+            this.notiService.notifyCode('TM036');
+        }
       }
-      if (this.beginHour >= this.endHour) {
-        if (this.beginMinute >= this.endMinute)
-          this.notiService.notifyCode('TM036');
-      }
+      this.loadRoomAvailable();
+      this.changDetec.detectChanges();
     }
+
   }
 
   getTimeParameter() {
@@ -347,6 +413,8 @@ export class PopupRescheduleMeetingComponent implements OnInit {
               .set({ hour: 0, minute: 0, second: 0 })
               .toDate()
           );
+          this.loadRoomAvailable();
+
         }
       });
   }
