@@ -941,6 +941,7 @@ export class DynamicProcessComponent
       .getESCategoryByCategoryID(categoryID)
       .subscribe((item: any) => {
         if (item) {
+          //gọi ko ra
           this.cache.functionList('ESS22').subscribe((f) => {
             if (f) {
               if (!f || !f.gridViewName || !f.formName) return;

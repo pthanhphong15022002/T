@@ -71,8 +71,8 @@ export class AddBehaviorComponent extends UIComponent implements OnInit {
 
   onSave() {
     var formGroup = this.form.formGroup.controls;
-    if (formGroup.competenceID.status == 'VALID' &&
-      formGroup.competenceName.status == 'VALID') {
+    console.log(formGroup)
+    if (formGroup.competenceName.status == 'VALID') {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option), 0)
         .subscribe((res) => {

@@ -55,7 +55,6 @@ export class SignalRService {
           case 'onConnected':
             break;
           case 'onDisconnected':
-            debugger
             this.disConnected.emit(data);
           break;
           case 'activeNewGroup':
