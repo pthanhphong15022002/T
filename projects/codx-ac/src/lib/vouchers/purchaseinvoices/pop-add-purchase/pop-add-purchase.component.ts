@@ -149,7 +149,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         this.deleteRow(data);
         break;
       case 'SYS03':
-        this.editPopupLine(data);
+        this.editRow(data);
         break;
       case 'SYS04':
         this.copyRow(data);
@@ -575,52 +575,60 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
   }
 
-  editPopupLine(data) {
-    let index = this.purchaseInvoicesLines.findIndex(
-      (x) => x.recID == data.recID
-    );
-    var obj = {
-      headerText: this.headerText,
-      dataPurchaseinvoices: this.purchaseinvoices,
-      data: { ...data },
-      lockFields: this.lockFields,
-      type: 'edit',
-    };
-    let opt = new DialogModel();
-    let dataModel = new FormModel();
-    dataModel.formName = 'PurchaseInvoicesLines';
-    dataModel.gridViewName = 'grvPurchaseInvoicesLines';
-    dataModel.entityName = 'PS_PurchaseInvoicesLines';
-    opt.FormModel = dataModel;
-    opt.Resizeable = false;
-    this.cache
-      .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
-      .subscribe((res) => {
-        if (res) {
-          var dialogs = this.callfc.openForm(
-            PopAddLineComponent,
-            '',
-            650,
-            850,
-            '',
-            obj,
-            '',
-            opt
-          );
-          dialogs.closed.subscribe((res) => {
-            if (res.event != null) {
-              var dataline = res.event['data'];
-              this.purchaseInvoicesLines[index] = dataline;
-              this.hasSaved = true;
-              this.isSaveMaster = true;
-              if (dataline.vatid != null) {
-                this.loadPurchaseInfo();
-              }
-              this.loadTotal();
+  editRow(data) {
+    switch (this.modegrid) {
+      case '1':
+        this.gridPurchaseInvoicesLine.gridRef.selectRow(Number(data.index));
+        this.gridPurchaseInvoicesLine.gridRef.startEdit();
+        break;
+      case '2':
+        let index = this.purchaseInvoicesLines.findIndex(
+          (x) => x.recID == data.recID
+        );
+        var obj = {
+          headerText: this.headerText,
+          dataPurchaseinvoices: this.purchaseinvoices,
+          data: { ...data },
+          lockFields: this.lockFields,
+          type: 'edit',
+        };
+        let opt = new DialogModel();
+        let dataModel = new FormModel();
+        dataModel.formName = 'PurchaseInvoicesLines';
+        dataModel.gridViewName = 'grvPurchaseInvoicesLines';
+        dataModel.entityName = 'PS_PurchaseInvoicesLines';
+        opt.FormModel = dataModel;
+        opt.Resizeable = false;
+        this.cache
+          .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
+          .subscribe((res) => {
+            if (res) {
+              var dialogs = this.callfc.openForm(
+                PopAddLineComponent,
+                '',
+                650,
+                850,
+                '',
+                obj,
+                '',
+                opt
+              );
+              dialogs.closed.subscribe((res) => {
+                if (res.event != null) {
+                  var dataline = res.event['data'];
+                  this.purchaseInvoicesLines[index] = dataline;
+                  this.hasSaved = true;
+                  this.isSaveMaster = true;
+                  if (dataline.vatid != null) {
+                    this.loadPurchaseInfo();
+                  }
+                  this.loadTotal();
+                }
+              });
             }
           });
-        }
-      });
+        break;
+    }
   }
 
   loadPageCount() {
