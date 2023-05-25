@@ -105,7 +105,7 @@
       <div class="d-flex align-items-center">
         <span class="icon-i-person-bounding-box icon-16 me-2"></span>
         <!-- <img src="../assets/themes/ac/default/img/Banknote.svg" class="w-16px h-16px me-2" /> -->
-        <span class="fw-bold">Người nhận tiền:</span>
+        <span class="fw-bold me-2">Người nhận tiền: </span>
         <span *ngIf="this.view.funcID == 'ACT0410'" #payee [innerHTML]="
             itemSelected?.payee
               | formatvalue : view.formModel : 'payee' : payee
@@ -118,20 +118,18 @@
           " class="text-gray-600"></span>
       </div>
       <div class="d-flex align-self-center">
-        <span class="me-3">
-          <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
+        <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
             [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
           </codx-vll>
-        </span>
       </div>
     </div>
     <div class="d-flex align-items-top mb-2">
       <!-- <span class="icon-i-journal-album icon-16 me-2"></span> -->
-      <img style="height: 18px;" src="../assets/themes/ac/default/img/Ledger.svg" class="w-15px h-15px me-2" />
+      <img src="../assets/themes/ac/default/img/Ledger.svg" class="w-15px h-15px me-2" />
       <span *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'"
-        class="fw-bold label-colon text-nowrap">{{'1' | vll : 'AC091' : 'text' | async}}</span>
-      <span *ngIf="itemSelected?.subType == '3'" class="fw-bold label-colon text-nowrap">{{'3' | vll : 'AC093' : 'text'
-        | async}}</span>
+        class="fw-bold text-nowrap me-2">{{'1' | vll : 'AC091' : 'text' | async}}: </span>
+      <span *ngIf="itemSelected?.subType == '3'" class="fw-bold text-nowrap me-2">{{'3' | vll : 'AC093' : 'text'
+        | async}}: </span>
       <span #cashBookID class="text-gray-600"
         [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
       <span class="text-gray-600"
@@ -139,7 +137,7 @@
     </div>
     <div class="d-flex align-items-top mb-2">
       <!-- <span class="icon-i-wallet2 icon-16 me-2"></span> -->
-      <img style="height: 18px;" src="../assets/themes/ac/default/img/Scroll.svg" class="w-15px h-15px me-2" />
+      <img src="../assets/themes/ac/default/img/Scroll.svg" class="w-15px h-15px me-2" />
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="ReasonID" [formModel]="view.formModel">
       </codx-label>
       <!-- <span #reasonID class="text-gray-600" [innerHTML]="
@@ -155,7 +153,7 @@
     </div>
     <div class="d-flex align-items-top mb-2">
       <!-- <span class="icon-brush icon-16 me-2"></span> -->
-      <img style="height: 18px;" src="../assets/themes/ac/default/img/Memo.svg" class="w-15px h-15px me-2" />
+      <img src="../assets/themes/ac/default/img/Memo.svg" class="w-15px h-15px me-2" />
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="view.formModel">
       </codx-label>
       <span #memo class="text-gray-600" [innerHTML]="
@@ -236,56 +234,56 @@
       <table style="table-layout: fixed;" class="table table-row-bordered">
         <thead style="position: sticky;top: 0;background-color: white;z-index: 15;">
           <tr class="border-bottom">
-            <th style="width: 3%;">
+            <th class="w-10">
               <div class="d-flex">
                 <span class="fw-bold line-clamp line-clamp-1 fs-6">
                   {{'1' | vll : 'ACL0001' : 'text' | async}}
                 </span>
               </div>
             </th>
-            <th style="width: 40%;">
+            <th class="w-10">
               <div class="d-flex">
                 <span class="fw-bold line-clamp line-clamp-1 fs-6">
                   {{'2' | vll : 'ACL0001' : 'text' | async}}
                 </span>
               </div>
             </th>
-            <th *ngIf="itemSelected?.currencyID == baseCurr" style="width: 10%;">
+            <th *ngIf="itemSelected?.currencyID == baseCurr" class="w-10">
               <div class="d-flex justify-content-end">
                 <span class="fw-bold line-clamp line-clamp-1 fs-6">
                   {{'3' | vll : 'ACL0001' : 'text' | async}}
                 </span>
               </div>
             </th>
-            <th *ngIf="itemSelected?.currencyID != baseCurr" style="width: 10%;">
+            <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-10">
               <div class="d-flex justify-content-end">
                 <span class="fw-bold line-clamp line-clamp-1 fs-6">
                   {{'7' | vll : 'ACL0001' : 'text' | async}}
                 </span>
               </div>
             </th>
-            <th *ngIf="itemSelected?.currencyID == baseCurr" style="width: 10%;">
+            <th *ngIf="itemSelected?.currencyID == baseCurr" class="w-10">
               <div class="d-flex justify-content-end">
                 <span class="fw-bold line-clamp line-clamp-1 fs-6">
                   {{'4' | vll : 'ACL0001' : 'text' | async}}
                 </span>
               </div>
             </th>
-            <th *ngIf="itemSelected?.currencyID != baseCurr" style="width: 10%;">
+            <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-10">
               <div class="d-flex justify-content-end">
                 <span class="fw-bold line-clamp line-clamp-1 fs-6">
                   {{'8' | vll : 'ACL0001' : 'text' | async}}
                 </span>
               </div>
             </th>
-            <th *ngIf="itemSelected?.currencyID != baseCurr" style="width: 10%;">
+            <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-10">
               <div class="d-flex justify-content-end">
                 <span class="fw-bold line-clamp line-clamp-1 fs-6">
                   {{'9' | vll : 'ACL0001' : 'text' | async}}
                 </span>
               </div>
             </th>
-            <th style="width: 30%;">
+            <th class="w-30">
               <div class="d-flex">
                 <span class="fw-bold line-clamp line-clamp-1 fs-6">
                   {{'6' | vll : 'ACL0001' : 'text' | async}}
