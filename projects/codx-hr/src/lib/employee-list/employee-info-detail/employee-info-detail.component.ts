@@ -639,9 +639,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.pageNum = params["page"];
       if (this.employeeID || this.user.userID) 
       {
+        debugger
         if(history.state)
         {
           if (history.state.empInfo){
+            debugger
             this.infoPersonal = JSON.parse(history.state.empInfo);
             this.getManagerEmployeeInfoById();
           }
