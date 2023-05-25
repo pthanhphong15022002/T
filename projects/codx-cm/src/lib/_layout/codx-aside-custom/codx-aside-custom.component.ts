@@ -245,8 +245,9 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
       if (func) {
         this.codxService.activeMenu.func0 = func.parentID;
 
-        if (!this.activeDefault) this.codxService.activeMenu.func1 = funcId;
-        else this.codxService.activeMenu.func1 = this.activeDefault;
+        if (!this.activeDefault) {
+          this.codxService.activeMenu.func1 = funcId;
+        } else this.codxService.activeMenu.func1 = this.activeDefault;
 
         if (
           !this.activeDefault &&
@@ -255,7 +256,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
           this.codxService.activeMenu.fav = func.favDefault.id;
           this.codxService.activeMenu.favType = func.favDefault.type;
           this.codxService.activeFav = this.codxService.activeMenu.fav;
-
+          this.activeDefault = '';
           this.toggleSecond(this.getFunc(func.parentID));
         } else {
           if (!func.expanded && func.parentID != func.module) {
@@ -279,7 +280,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
           else this.toggleSecond(func);
         }
       }
-      if (this.isClickMenuCus) this.activeDefault = '';
+      // if (this.isClickMenuCus) this.activeDefault = '';
     }
 
     ScrollComponent.update('#kt_aside_menu');
@@ -517,14 +518,18 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     this.childMenuClick.emit({ func });
     let isNav = func.functionID != this.codxService.activeMenu.func1;
     if (isNav) {
-      this.codxService.activeMenu.func1 = func.functionID;
+      if (this.activeDefault) {
+        this.codxService.activeMenu.func1 = this.activeDefault;
+      } else this.codxService.activeMenu.func1 = func.functionID;
       if (func.expanded) {
         if (func.functionType == 'R') {
           this.codxService.activeMenu.reportId = func.reports[0];
         } else {
-          this.codxService.activeMenu.fav = func.favDefault.id;
-          this.codxService.activeMenu.favType = func.favDefault.type;
-          this.codxService.activeFav = this.codxService.activeMenu.fav;
+          if (!this.activeDefault) {
+            this.codxService.activeMenu.fav = func.favDefault.id;
+            this.codxService.activeMenu.favType = func.favDefault.type;
+            this.codxService.activeFav = this.codxService.activeMenu.fav;
+          }
         }
       } else {
         if (func.functionType == 'R') {
@@ -545,10 +550,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
           // });
         }
       }
-      if (!this.isClickMenuCus) {
-        this.isClickMenuCus = true;
-        this.activeDefault = '';
-      }
+      this.activeDefault=''
       this.codxService.navigate(func.functionID);
     }
     return true;

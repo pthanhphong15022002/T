@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CodxCmService } from '../codx-cm.service';
 
@@ -7,7 +7,7 @@ import { CodxCmService } from '../codx-cm.service';
   templateUrl: './process-release.component.html',
   styleUrls: ['./process-release.component.css'],
 })
-export class ProcessReleaseComponent {
+export class ProcessReleaseComponent  {
   funcID: any;
   dataObj: any;
 
@@ -24,13 +24,13 @@ export class ProcessReleaseComponent {
   }
 
   ngOnInit(): void {
-    this.changeFunction();
+   // this.changeFunction();
   }
-  changeFunction() {
-    this.coxdCM.childMenuClick.subscribe((res) => {
-      if (res) {
-        if (this.dataObj.procesID != res) this.dataObj = { processID: res };
-      }
-    });
-  }
+  // changeFunction() {
+  //   this.coxdCM.childMenuClick.subscribe((res) => {
+  //     if (res) {
+  //       if (this.dataObj.procesID != res) this.dataObj = { processID: res };
+  //     }
+  //   });
+  // }
 }
