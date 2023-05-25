@@ -10,13 +10,14 @@ import {
   ResourceModel,
 } from 'codx-core';
 import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
-import { Observable, Subject, firstValueFrom, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, firstValueFrom, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxCmService {
   titleAction: any;
+  childMenuClick = new BehaviorSubject<any>(null);
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,

@@ -4,6 +4,7 @@ import {
   Component,
   Injector,
   Input,
+  OnChanges,
   OnInit,
   SimpleChanges,
   TemplateRef,
@@ -40,7 +41,7 @@ import { async } from '@angular/core/testing';
 })
 export class DealsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
+  implements OnInit, AfterViewInit, OnChanges
 {
   @ViewChild('templateDetail', { static: true })
   templateDetail: TemplateRef<any>;
@@ -67,8 +68,8 @@ export class DealsComponent
   formModel: FormModel;
 
   // type any for view detail
-  funcID: any;
-  dataObj?: any;
+  @Input() funcID: any;
+  @Input() dataObj?: any;
   kanban: any;
 
   // config api get data
@@ -105,8 +106,9 @@ export class DealsComponent
   resourceKanban?: ResourceModel;
   hideMoreFC = false;
   listHeader: any;
-  colorReasonSuccess:any;
-  colorReasonFail:any;
+  colorReasonSuccess: any;
+  colorReasonFail: any;
+  processID: any;
 
   constructor(
     private inject: Injector,
@@ -117,14 +119,24 @@ export class DealsComponent
     private notificationsService: NotificationsService
   ) {
     super(inject);
-    if (!this.funcID)
+
+    if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    }
 
     this.executeApiCalls();
-
-
   }
-  ngOnChanges(changes: SimpleChanges): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['dataObj']) {
+      this.dataObj = changes['dataObj'].currentValue;
+      if (this.processID != this.dataObj?.processID) {
+        this.processID = this.dataObj?.processID;
+     
+        this.view.load();
+      }
+    }
+  }
 
   onInit(): void {
     this.afterLoad();
@@ -133,11 +145,11 @@ export class DealsComponent
       id: this.btnAdd,
     };
 
-    this.router.params.subscribe((param: any) => {
-      if (param.funcID) {
-        this.funcID = param.funcID;
-      }
-    });
+    // this.router.params.subscribe((param: any) => {
+    //   if (param.funcID) {
+    //     this.funcID = param.funcID;
+    //   }
+    // });
 
     this.detectorRef.detectChanges();
   }
@@ -161,45 +173,105 @@ export class DealsComponent
 
   ngAfterViewInit(): void {
     this.crrFuncID = this.funcID;
-
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.templateDetail,
+    if (this.dataObj) {
+      this.views = [
+        {
+          type: ViewType.listdetail,
+          sameData: true,
+          model: {
+            template: this.itemTemplate,
+            panelRightRef: this.templateDetail,
+          },
         },
-      },
-      {
-        type: ViewType.kanban,
-        active: false,
-        sameData: false,
-        request: this.request,
-        hide: true,
-        request2: this.resourceKanban,
-        toolbarTemplate: this.footerButton,
-        model: {
-          template: this.cardKanban,
-          template2: this.viewColumKaban,
-          setColorHeader: true,
+        {
+          type: ViewType.kanban,
+          active: false,
+          sameData: false,
+          request: this.request,
+          request2: this.resourceKanban,
+          toolbarTemplate: this.footerButton,
+          model: {
+            template: this.cardKanban,
+            template2: this.viewColumKaban,
+            setColorHeader: true,
+          },
         },
-      },
-    ];
+      ];
+    } else
+      this.views = [
+        {
+          type: ViewType.listdetail,
+          sameData: true,
+          model: {
+            template: this.itemTemplate,
+            panelRightRef: this.templateDetail,
+          },
+        },
+        // {
+        //   type: ViewType.kanban,
+        //   active: false,
+        //   sameData: false,
+        //   request: this.request,
+        //   hide: true,
+        //   request2: this.resourceKanban,
+        //   toolbarTemplate: this.footerButton,
+        //   model: {
+        //     template: this.cardKanban,
+        //     template2: this.viewColumKaban,
+        //     setColorHeader: true,
+        //   },
+        // },
+      ];
     this.changeDetectorRef.detectChanges();
   }
 
   changeView(e) {
-    this.afterLoad();
+    // this.afterLoad();
     if (e?.view.type == 6) {
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
-      // this.kanban.refresh();
+      // if (this.dataObj && this.dataObj.processID != this.processID) {
+      //   this.processID = this.dataObj.processID;
+      //   if (!this.kanban.kanbanSetting) {
+      //     this.cache.viewSettings(this.funcID).subscribe((res) => {
+      //       if (res) {
+      //         let viewKanban = res.filter((x) => x.view == 6);
+      //         if (viewKanban) {
+      //           let settingKanban = JSON.parse(viewKanban.setting);
+      //           this.changeColumns(settingKanban);
+      //         }
+      //       }
+      //     });
+      //   } else this.changeColumns(this.kanban.kanbanSetting);
+      // }
     }
     // this.funcID = this.activedRouter.snapshot.params['funcID'];
     // if (this.crrFuncID != this.funcID) {
     //   this.crrFuncID = this.funcID;
     // }
+  }
+  changeColumns(settingKanban) {
+    settingKanban.isChangeColumn = true;
+    settingKanban.formName = this.view?.formModel?.formName;
+    settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+
+    this.api
+      .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+        settingKanban,
+        this.dataObj,
+      ])
+      .subscribe((resource) => {
+        if (resource?.columns && resource?.columns.length)
+          this.kanban.columns = resource.columns;
+        this.kanban.kanbanSetting.isChangeColumn = false;
+        this.kanban.loadDataSource(
+          this.kanban.columns,
+          this.kanban.kanbanSetting?.swimlaneSettings,
+          false
+        );
+
+        this.kanban.refresh();
+      });
   }
 
   click(evt: ButtonModel) {
@@ -216,7 +288,7 @@ export class DealsComponent
   }
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-      if (data.status == '1' ) {
+      if (data.status == '1') {
         for (let more of $event) {
           switch (more.functionID) {
             case 'SYS01':
@@ -240,17 +312,17 @@ export class DealsComponent
         for (let more of $event) {
           switch (more.functionID) {
             case 'CM0201_1':
-              if(this.checkMoreReason(data.permission) || data.closed) {
+              if (this.checkMoreReason(data.permission) || data.closed) {
                 more.disabled = true;
               }
               break;
             case 'CM0201_3':
-              if(this.checkMoreReason(data.permission) || data.closed) {
+              if (this.checkMoreReason(data.permission) || data.closed) {
                 more.disabled = true;
               }
               break;
             case 'CM0201_4':
-              if(this.checkMoreReason(data.permission) || data.closed) {
+              if (this.checkMoreReason(data.permission) || data.closed) {
                 more.disabled = true;
               }
               break;
@@ -258,18 +330,16 @@ export class DealsComponent
               more.disabled = true;
               break;
             case 'CM0201_8':
-              if(data.closed) {
+              if (data.closed) {
                 more.isblur = true;
-              }
-              else {
+              } else {
                 more.isblur = false;
               }
               break;
             case 'CM0201_9':
-              if(!data.closed) {
+              if (!data.closed) {
                 more.isblur = true;
-              }
-              else {
+              } else {
                 more.isblur = false;
               }
               break;
@@ -281,7 +351,7 @@ export class DealsComponent
             case 'SYS102':
             case 'SYS103':
             case 'SYS104':
-              if(this.checkMoreReason(data.permission) || data.closed  ) {
+              if (this.checkMoreReason(data.permission) || data.closed) {
                 more.disabled = true;
               }
               break;
@@ -298,7 +368,7 @@ export class DealsComponent
     } catch (error) {}
   }
 
- async getColorReason() {
+  async getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
         for (let item of res.datas) {
@@ -313,16 +383,20 @@ export class DealsComponent
   }
 
   checkMoreReason(tmpPermission) {
-    if(tmpPermission.isReasonSuccess && tmpPermission.isReasonFail && tmpPermission.isMoveStage ) {
+    if (
+      tmpPermission.isReasonSuccess &&
+      tmpPermission.isReasonFail &&
+      tmpPermission.isMoveStage
+    ) {
       return true;
     }
-    if(tmpPermission.isReasonSuccess) {
-        return true;
-    }
-    if(tmpPermission.IsReasonFail) {
+    if (tmpPermission.isReasonSuccess) {
       return true;
     }
-    if(tmpPermission.isMoveStage) {
+    if (tmpPermission.IsReasonFail) {
+      return true;
+    }
+    if (tmpPermission.isMoveStage) {
       return true;
     }
     return false;
@@ -517,15 +591,13 @@ export class DealsComponent
     });
   }
 
-  openOrCloseDeal(data,check){
-    var datas = [data.recID, data.processID,check];
+  openOrCloseDeal(data, check) {
+    var datas = [data.recID, data.processID, check];
     this.notificationsService
-    .alertCode('DP018', null, "'" + this.titleAction + "'")
-    .subscribe((info) => {
-      if (info.event.status == 'Y') {
-        this.codxCmService
-          .openOrClosedDeal(datas)
-          .subscribe((res) => {
+      .alertCode('DP018', null, "'" + this.titleAction + "'")
+      .subscribe((info) => {
+        if (info.event.status == 'Y') {
+          this.codxCmService.openOrClosedDeal(datas).subscribe((res) => {
             if (res) {
               data.closed = check ? true : false;
               data.closedOn = check ? new Date() : data.ClosedOn;
@@ -549,9 +621,9 @@ export class DealsComponent
               }
               this.detectorRef.detectChanges();
             }
-        });
-      }
-    });
+          });
+        }
+      });
   }
 
   openFormReason(data, fun, isMoveSuccess) {

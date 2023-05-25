@@ -65,6 +65,7 @@ import { PopupStatusCompetitorComponent } from './deals/deal-detail/codx-tab-dea
 import { CampaignsDetailComponent } from './campaigns/campaigns-detail/campaigns-detail.component';
 import { PopupConvertLeadComponent } from './leads/popup-convert-lead/popup-convert-lead.component';
 import { CodxAsideCustomComponent } from './_layout/codx-aside-custom/codx-aside-custom.component';
+import { ProcessReleaseComponent } from './process-release/process-release.component';
 
 const routes: Routes = [
   {
@@ -79,6 +80,17 @@ const routes: Routes = [
         path: 'deals/:funcID',
         component: DealsComponent,
       },
+      
+      // {
+      //   path: 'processrelease/:funcID',
+      //   component: ProcessReleaseComponent,
+      // },
+        
+      {
+        path: 'processrelease/:funcID/:recID',
+        component: ProcessReleaseComponent,
+        data: { noReuse: true },
+      },
       {
         path: 'marketings/:funcID',
         component: CampaignsComponent,
@@ -89,7 +101,7 @@ const routes: Routes = [
         // data: { noReuse: true },
       },
       {
-          // gán tạm để làm UI
+        // gán tạm để làm UI
         path: 'contracts/:funcID',
         component: ViewsContractsComponent,
       },
@@ -160,7 +172,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CampaignsDetailComponent,
     PopupConvertLeadComponent,
     //test
-    CodxAsideCustomComponent
+    CodxAsideCustomComponent,
+    ProcessReleaseComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -178,7 +191,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     DragDropModule,
     CodxDpModule,
   ],
-  exports: [RouterModule,ListContractsComponent],
+  exports: [RouterModule, ListContractsComponent],
   providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
