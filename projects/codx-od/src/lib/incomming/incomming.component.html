@@ -1,31 +1,31 @@
 <ng-template #itemTemplate let-data>
   <ng-container *ngIf="gridViewSetup">
     <codx-temp-full
-    (clickMF)="openFormFuncID($event, data)"
-    (click)="click(data)"
-    [typeMF]="'hover'"
-    [title]="data?.title"
-    [desc]="
-      convertHtmlAgency(
-        data.agencyName,
-        this.gridViewSetup?.AgencyName?.headerText
-      )
-    "
-    cardCss="card-template border-bottom pt-3 pb-1 px-4"
-    [formModel]="view.formModel"
-    [icoStatus]="data?.urgency"
-    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']"
-    [icoStatus2]="data?.security"
-    [icoStatusVll2]="gridViewSetup['Security']['referedValue']"
-    [modeImgs]="false"
-    [bookmark]="data.isBookmark"
-    [titleLine]="2"
-    [dataItem]="data"
-    (changeDataMF)="changeDataMF($event, data)"
-    [footer]="footerTmp"
-    [moreFuncCss]="(gridViewSetup['Urgency'].allowPopup == '1' && gridViewSetup['Security'].allowPopup == '1') ? 'me-12' : ''"
-    [hideMF]="view.formModel.funcID.includes('ODT8')"
-  >
+      (clickMF)="openFormFuncID($event, data)"
+      (click)="click(data)"
+      [typeMF]="'hover'"
+      [title]="data?.title"
+      [desc]="
+        convertHtmlAgency(
+          data.agencyName,
+          this.gridViewSetup?.AgencyName?.headerText
+        )
+      "
+      cardCss="card-template border-bottom pt-3 pb-1 px-4"
+      [formModel]="view.formModel"
+      [icoStatus]="data?.urgency"
+      [icoStatusVll]="gridViewSetup['Urgency']['referedValue']"
+      [icoStatus2]="data?.security"
+      [icoStatusVll2]="gridViewSetup['Security']['referedValue']"
+      [modeImgs]="false"
+      [bookmark]="data.isBookmark"
+      [titleLine]="2"
+      [dataItem]="data"
+      (changeDataMF)="changeDataMF($event, data)"
+      [footer]="footerTmp"
+      [moreFuncCss]="(gridViewSetup['Urgency'].allowPopup == '1' && gridViewSetup['Security'].allowPopup == '1') ? 'me-12' : ''"
+      [hideMF]="view.formModel.funcID.includes('ODT8')"
+    >
   </codx-temp-full>
   </ng-container>
 

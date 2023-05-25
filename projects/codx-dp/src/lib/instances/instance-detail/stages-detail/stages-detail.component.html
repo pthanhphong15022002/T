@@ -14,7 +14,13 @@
         }}</span>
         <i
           *ngIf="dataStep?.memo"
-          class="icon-event_notes text-gray-500 icon-20"
+          class="icon-event_notes text-hover-primary cursor-pointer text-gray-500 icon-20"
+          [ngbPopover]="popperMemo"
+            #p="ngbPopover"
+            (mouseenter)="dataStep?.memo ? p.open() : ''"
+            (mouseleave)="p.close()"
+            placement="right bottom left"
+            container="body"
           (click)="openPopupSup(popupSup, dataStep)"
         ></i>
       </div>
@@ -450,7 +456,9 @@
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
 </ng-template>
-
+<ng-template #popperMemo>
+  <div [innerHTML]="dataStep?.memo"></div>
+</ng-template>
 <ng-template #dataIsEmpty>
   <div class="empty-data">
     <div class="container h-100">

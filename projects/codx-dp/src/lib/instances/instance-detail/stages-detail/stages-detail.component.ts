@@ -459,7 +459,7 @@ export class StagesDetailComponent implements OnInit {
 
   continueStep(isTaskEnd){
     let isShowFromTaskAll = false;
-    let isShowFromTaskEnd = this.checkContinueStep(true);
+    let isShowFromTaskEnd = !this.checkContinueStep(true);
     let isContinueTaskEnd = isTaskEnd;
     let isContinueTaskAll = this.checkContinueStep(false);
     let dataInstance = {
@@ -477,16 +477,18 @@ export class StagesDetailComponent implements OnInit {
   }
 
   checkContinueStep(isDefault) {
+    let check = true;
     let listTask = isDefault ? this.step?.tasks?.filter(task => task?.requireCompleted) : this.step?.tasks;
     if(listTask?.length <= 0){
       return isDefault ? true : false;
     } 
     for(let task of listTask){
       if(task.progress != 100){
-        return false;
+        check = false;
+        break;
       }
     }
-    return true;
+    return check;
    
   }
 

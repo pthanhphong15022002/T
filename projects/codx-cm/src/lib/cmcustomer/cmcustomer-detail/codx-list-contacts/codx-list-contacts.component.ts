@@ -279,6 +279,14 @@ export class CodxListContactsComponent implements OnInit {
           this.isButton = true;
           if (e && e.event != null) {
             if (e.event?.recID) {
+              var index = this.listContacts.findIndex(
+                (x) => x.recID != e.event?.recID && x.isDefault
+              );
+              if (index != -1) {
+                if (e?.event?.isDefault) {
+                  this.listContacts[index].isDefault = false;
+                }
+              }
               this.listContacts = this.cmSv.bringDefaultContactToFront(
                 this.cmSv.loadList(e.event, this.listContacts, 'update')
               );

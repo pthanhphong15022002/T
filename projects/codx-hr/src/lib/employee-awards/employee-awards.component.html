@@ -4,15 +4,14 @@
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
-  [views]="views"
-  [button]="buttonAdd"
-  (buttonClick)="addAward($event)"
-  idField="recID"
   [className]="className"
   [method]="method"
-  (selectedChange)="changeItemDetail($event)"
-  [selectedFirst]="true"
+  [views]="views"
   [autoLoad]="true"
+  idField="recID"
+  [button]="buttonAdd"
+  (buttonClick)="addAward($event)"
+  (selectedChange)="changeItemDetail($event)"
   (onActions)="handleAction($event)"
   (oneMoreMulti)="onMoreMulti($event)"
 >
@@ -240,27 +239,111 @@
 
 <!-- list & detail view -->
 <ng-template #templateListDetail let-data>
-  <div class="border-bottom position-relative avatar-vllbadge">
-    <codx-temp-full
-      cardCss="codx_cardcenter p-3"
-      (clickMF)="clickMF($event, data)"
-      [imageId]="data?.emp?.employeeID"
-      [imageObjType]="'HR_Employees'"
-      [imageWidth]="40"
-      [formModel]="view.formModel"
-      [titleTmp]="titleTmp"
-      [dataItem]="data"
-      [imgOn]="data?.modifiedOn"
-      [typeMF]="'hover'"
-      (changeDataMF)="changeDataMF($event, data)"
-    >
-    </codx-temp-full>
-    <!-- <div class="d-flex flex-center vll-badge">
-            <codx-vll class="badge badge-sm me-0 badge-light" [name]="genderGrvSetup?.referedValue"
-                [value]="data?.emp?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
-            </codx-vll>
-        </div> -->
-  </div>
+  <codx-temp-full
+    [imgCss]="'h-100px me-2'"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (clickMF)="clickMF($event, data)"
+    [moreFuncCss]="'me-10'"
+    [imageId]="data.emp?.employeeID"
+    [imageObjType]="'HR_Employees'"
+    [imageWidth]="40"
+    [formModel]="view.formModel"
+    [dataItem]="data"
+    [imgOn]="data?.modifiedOn"
+    [typeMF]="'hover'"
+    [title]="data.emp?.employeeName"
+    [subTitle]="
+      data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
+    "
+    [descTmp]="descTmp"
+    [desc2Tmp]="desc2Tmp"
+    (changeDataMF)="changeDataMF($event, data)"
+  >
+  </codx-temp-full>
+
+  <ng-template #descTmp>
+    <div class="d-flex flex-column align-items-start">
+      <span
+        class="fw-bold"
+        [ngbTooltip]="grvSetup?.AwardID?.headerText"
+        [innerHTML]="
+          data?.awardID | formatvalue : view.formModel : 'awardID' | async
+        "
+      >
+      </span>
+      <span
+        class="text-primary"
+        [ngbTooltip]="grvSetup?.AwardFormCategory?.headerText"
+        [innerHTML]="
+          data?.awardFormCategory
+            | formatvalue : view.formModel : 'awardFormCategory'
+            | async
+        "
+      >
+      </span>
+    </div>
+  </ng-template>
+
+  <ng-template #desc2Tmp>
+    <div>
+      <div class="d-flex align-items-center">
+        <span class="icon-book icon-14 me-1"></span>
+        <span
+          [ngbTooltip]="grvSetup?.DecisionNo?.headerText"
+          [innerHTML]="
+            data?.decisionNo
+              | formatvalue : view.formModel : 'decisionNo'
+              | async
+          "
+        >
+        </span>
+        <span class="icon-calendar_today icon-14 mx-1"></span>
+        <span
+          [ngbTooltip]="grvSetup?.AwardDate?.headerText"
+          class="align-self-center"
+          [innerHTML]="
+            data?.awardDate | formatvalue : view.formModel : 'awardDate' | async
+          "
+        >
+        </span>
+        <span
+          class="icon-i-info-circle-fill fs-9 icon-6 mx-2 text-gray-400"
+        ></span>
+        <div
+          class="d-flex align-items-center me-1"
+          [ngbTooltip]="grvSetup?.InYear?.headerText"
+        >
+          <span class="icon-event_notes icon-14 me-1"></span>
+          <span class="fw-bold">
+            {{ data?.inYear }}
+          </span>
+        </div>
+      </div>
+      <!-- end decisionNo awardDate & year -->
+      <!-- status & owner -->
+      <div class="d-flex align-items-end text-dark">
+        <span class="mt-2" *ngIf="data.status">
+          <codx-vll
+            class="badge fw-bold"
+            [name]="'HRS102'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+          >
+          </codx-vll>
+        </span>
+        <span
+          *ngIf="data.signedDate"
+          [ngbTooltip]="grvSetup?.SignedDate?.headerText"
+          [innerHTML]="
+            data.signedDate
+              | formatvalue : view.formModel : 'signedDate'
+              | async
+          "
+        ></span>
+      </div>
+    </div>
+  </ng-template>
 </ng-template>
 <!-- info view -->
 <ng-template #titleTmp let-data>

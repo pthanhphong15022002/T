@@ -36,10 +36,13 @@
 #kt_aside_menu_header+div {
   margin-bottom: 0 !important;
   height: calc(100vh - 220px)!important;
-  padding-left: 10px;
   //border: 1px aqua solid;
 }
-
+codx-layout:not([data-kt-aside-minimize="on"]){
+  #kt_aside_menu_header+div {
+    padding-left: 12px;
+  }
+}
 .progress {
   background-color: #ffffff26;
   height: 6px;

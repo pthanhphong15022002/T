@@ -692,6 +692,78 @@ export class CodxShareService {
     this.authService.logout('');
     // document.location.reload();
   }
+  changeMFApproval(data: any, value: object | any = null) {
+    var datas = value;
+    if (datas) {
+      var list = data.filter(
+        (x) => x.data != null && x.data.formName == 'Approvals'
+      );
+      for (var i = 0; i < list.length; i++) {
+        list[i].isbookmark = true;
+        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
+          list[i].disabled = true;
+          if (value.status == '5' || value.status == '2' || value.status == '4')
+            list[i].disabled = true;
+          else if (
+            ((datas?.stepType == 'S1' ||
+              datas?.stepType == 'S2' ||
+              datas?.stepType == 'S3' ||
+              datas?.stepType == 'S') &&
+              list[i].functionID == 'SYS202') ||
+            ((datas?.stepType == 'A1' ||
+              datas?.stepType == 'R' ||
+              datas?.stepType == 'C') &&
+              list[i].functionID == 'SYS203') ||
+            (datas?.stepType == 'S3' && list[i].functionID == 'SYS204') ||
+            (datas?.stepType == 'A2' && list[i].functionID == 'SYS201')
+          ) {
+            list[i].disabled = false;
+          }
+        } else if (
+          value.status == '5' ||
+          value.status == '2' ||
+          value.status == '4'
+        )
+          list[i].disabled = true;
+      }
+      // this.listApproveMF = list.filter(
+      //   (p) => p.data.functionID == 'SYS208' || p.disabled == false
+      // );
+
+      //Ẩn thêm xóa sửa
+      var list2 = data.filter(
+        (x) =>
+          x.functionID == 'SYS02' ||
+          x.functionID == 'SYS01' ||
+          x.functionID == 'SYS03' ||
+          x.functionID == 'SYS04'
+      );
+      for (var i = 0; i < list2.length; i++) {
+        list2[i].disabled = true;
+      }
+    }
+    var bm = data.filter(
+      (x: { functionID: string }) => x.functionID == 'SYS207'
+    );
+    bm[0].disabled = true;
+    if (datas.status != '3') {
+      this.api
+        .execSv<any>(
+          'ES',
+          'ERM.Business.ES',
+          'ApprovalTransBusiness',
+          'CheckRestoreAsync',
+          datas.recID
+        )
+        .subscribe((item) => {
+          var bm = data.filter(
+            (x: { functionID: string }) => x.functionID == 'SYS207'
+          );
+          bm[0].disabled = !item;
+          //this.detectorRef.detectChanges();
+        });
+    }
+  }
 }
 
 //#region Model
