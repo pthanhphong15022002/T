@@ -2983,3 +2983,12 @@ codx-toolbar-report{
 .e-grid .e-headercelldiv {
   margin-left: -5px;
 }
+//
+.aside-minimize-icon-title .aside .aside-primary .aside-menu .menu-link {
+  height: 77px;
+  max-height: 77px;
+  min-height: 77px;
+}
+.aside-menu .menu-item .menu-icon > img, .aside-menu .menu-item .menu-icon .svg-icon, .aside-footer .menu-item .menu-icon > img, .aside-footer .menu-item .menu-icon .svg-icon {
+  width: 22px;
+}
