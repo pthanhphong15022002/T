@@ -9,18 +9,18 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
-  UIComponent,
+  UIComponent
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Observable } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
+import { TableLineDetailComponent } from '../components/table-line-detail/table-line-detail.component';
 import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { PopupAddSalesInvoicesLineComponent } from '../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoiceService } from '../sales-invoices.service';
-import { TableLineDetailComponent } from '../components/table-line-detail/table-line-detail.component';
 
 @Component({
   selector: 'lib-popup-add-sales-invoice',

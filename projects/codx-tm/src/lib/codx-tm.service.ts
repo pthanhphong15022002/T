@@ -357,7 +357,7 @@ export class CodxTMService {
       'GroupMembersBusiness',
       'GetListUserIDByListGroupIDAsync',
       listGroupID
-    );  
+    );
   }
 
   getResourcesTrackEvent(meetingID, data, startDate, endDate) {
@@ -452,14 +452,15 @@ export class CodxTMService {
     startDate,
     endDate,
     funcID: string,
-    comment: string
+    comment: string,
+    location: string
   ) {
     return this.api.execSv(
       'CO',
       'CO',
       'MeetingsBusiness',
       'UpdateDateMeetingAsync',
-      [meetingID, startDate, endDate, funcID, comment]
+      [meetingID, startDate, endDate, funcID, comment, location]
     );
   }
 
@@ -488,13 +489,13 @@ export class CodxTMService {
     );
   }
 
-  changeBookingDateTime(recID, startDate, endDate) {
+  changeBookingDateTime(recID, startDate, endDate, resourceID) {
     return this.api.execSv(
       'CO',
       'CO',
       'MeetingsBusiness',
       'ChangeBookingDateTimeAsync',
-      [recID, startDate, endDate]
+      [recID, startDate, endDate, resourceID]
     );
   }
 
