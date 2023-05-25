@@ -241,6 +241,7 @@ export class CodxCalendarComponent
   }
 
   changeDayOfMonth(args) {
+    this.FDdate = args.value;
     args['date'] = args.value;
     let crrDate = moment(this.FDdate)
       .startOf('month')
@@ -251,20 +252,15 @@ export class CodxCalendarComponent
       .add(1, 'day')
       .toISOString();
     this.FDdate = args.value;
-    if (crrDate != newDate) this.changeNewMonth(args);
-    else {
-      let day = moment(args.value).date();
-      let changeWeek = true;
-      this.lstDOWeek.forEach((x) => {
-        if (x === day) {
-          changeWeek = false;
-          return;
-        }
-      });
-      if (this.typeNavigate === 'Week' || this.typeNavigate === 'WorkWeek') {
-        if (changeWeek && this.ejCalendar) {
-          let eleCalendar = this.ejCalendar.element as HTMLElement;
-        }
+    if (crrDate !== newDate) {
+      this.changeNewMonth(args);
+    } else {
+      if (
+        this.typeNavigate === 'Day' ||
+        this.typeNavigate === 'Week' ||
+        this.typeNavigate === 'WorkWeek'
+      ) {
+        this.changeNewMonth(args);
       }
     }
   }

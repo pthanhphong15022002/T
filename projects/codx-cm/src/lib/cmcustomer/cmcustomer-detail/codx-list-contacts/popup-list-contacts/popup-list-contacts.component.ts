@@ -54,6 +54,7 @@ export class PopupListContactsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.contactType = '0';
     this.cmSv.getContacts().subscribe((res) => {
       if (res != null && res.length > 0) {
         this.lstContacts = res;

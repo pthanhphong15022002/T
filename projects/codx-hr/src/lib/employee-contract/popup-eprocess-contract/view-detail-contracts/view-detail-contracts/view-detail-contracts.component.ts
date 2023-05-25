@@ -166,7 +166,7 @@ export class ViewDetailContractsComponent implements OnInit {
           pObjectID
         )
         .subscribe((res: any) => {
-          if (res.length > 0) {
+          if (res?.length > 0) {
             let files = res;
             files.map((e: any) => {
               if (e && e.referType == this.REFERTYPE.VIDEO) {

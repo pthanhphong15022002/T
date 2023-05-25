@@ -1,32 +1,44 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, ViewChild, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  OnInit,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, DataRequest, FormModel, NotificationsService, ViewsComponent } from 'codx-core';
+import {
+  AuthStore,
+  DataRequest,
+  FormModel,
+  NotificationsService,
+  ViewsComponent,
+} from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-
 
 @Component({
   selector: 'lib-view-detail-employee-business',
   templateUrl: './view-detail-employee-business.component.html',
-  styleUrls: ['./view-detail-employee-business.component.css']
+  styleUrls: ['./view-detail-employee-business.component.css'],
 })
-export class ViewDetailEmployeeBusinessComponent implements OnInit{
+export class ViewDetailEmployeeBusinessComponent implements OnInit {
   constructor(
     private authStore: AuthStore,
     private hrService: CodxHrService,
     private router: ActivatedRoute,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService,
+    private notify: NotificationsService
   ) {
     this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.authStore.get();
   }
 
-
   @ViewChild('attachment') attachment;
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
-
 
   @Input() funcID;
   @Input() formModel;
@@ -41,19 +53,21 @@ export class ViewDetailEmployeeBusinessComponent implements OnInit{
   renderFooter = false;
   isAfterRender = true;
   benefitFuncID = 'HRTApp10';
-  benefitFormModel : FormModel;
-  benefitFormGroup : FormGroup;
+  benefitFormModel: FormModel;
+  benefitFormGroup: FormGroup;
   active = 1;
   dataOldSalary;
   console = console;
 
-  ngOnInit(): void { 
-    console.log(this.itemDetail);
+  ngOnInit(): void {
     this.hrService.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;
         this.hrService
-          .getFormGroup(this.benefitFormModel.formName, this.benefitFormModel.gridViewName)
+          .getFormGroup(
+            this.benefitFormModel.formName,
+            this.benefitFormModel.gridViewName
+          )
           .then((fg) => {
             if (fg) {
               this.benefitFormGroup = fg;
@@ -76,8 +90,6 @@ export class ViewDetailEmployeeBusinessComponent implements OnInit{
       //   }
       // });
     }
- 
- 
   }
 
   ngAfterViewInit(): void {
@@ -87,16 +99,13 @@ export class ViewDetailEmployeeBusinessComponent implements OnInit{
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
-    
   }
 
   changeDataMF(e: any, data: any) {
     // this.hrService.handleShowHideMF(e, data, this.view);
-  } 
- 
-  
+  }
 
-  clickMF(evt: any, data: any = null){
-    this.clickMFunction.emit({event: evt, data: data});
+  clickMF(evt: any, data: any = null) {
+    this.clickMFunction.emit({ event: evt, data: data });
   }
 }
