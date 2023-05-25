@@ -50,7 +50,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   hasFilter: any;
   formModel: any;
   formGroup: any;
-
+  date: any;
   //#region declare empInfo
   infoPersonal: any;
   //#endregion
@@ -180,6 +180,27 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
           // });
         });
     });
+  }
+
+  checkIsNewestDate(effectedDate, expiredDate){
+    if(effectedDate){
+      let eff = new Date(effectedDate).toISOString();
+      let date = new Date().toISOString();
+      if(expiredDate){
+        let expire = new Date(expiredDate).toISOString();
+        if(date >= eff && date <= expire){
+          return true;
+        }
+        return false;
+      }
+      else{
+        if(date >= eff){
+          return true;
+        }
+        return false;
+      }
+    }
+    return true;
   }
 
   onInit(): void {
@@ -473,9 +494,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     if (
       this.funcID == this.ePassportFuncID ||
       this.funcID == this.eVisaFuncID ||
-      this.funcID == this.eWorkPermitFuncID ||
-      this.funcID == this.eBasicSalaryFuncID ||
-      this.funcID == this.ebenefitFuncID 
+      this.funcID == this.eWorkPermitFuncID
     ) {
       // this.dialogRef.close(this.gridView.dataService.data[0]);
       let lstData = this.gridView.dataService.data;
@@ -494,8 +513,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         this.dialogRef.close('none');
       }
     }
-    if(this.funcID == this.eContractFuncID){
-      debugger
+    else if(this.funcID == this.eContractFuncID){
       let lstData = this.gridView.dataService.data;
       let found = lstData.find(
         (val) => val.isCurrent == true
@@ -508,6 +526,26 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
           this.dialogRef.close('none');
         }
     } 
+    else if(this.funcID == this.ebenefitFuncID || this.funcID == this.eBasicSalaryFuncID){
+      let lstData = this.gridView.dataService.data;
+      let lstResult = []
+      for(let i = 0; i < lstData.length; i++){
+        if(this.checkIsNewestDate(lstData[i].effectedDate, lstData[i].expiredDate) == true){
+          lstResult.push(lstData[i]);
+        }
+      }
+      if(lstResult.length > 0){
+        console.log('ds kq ne', lstResult);
+        
+        if(this.funcID == this.eBasicSalaryFuncID){
+          this.dialogRef.close(lstResult[0])
+        }
+        this.dialogRef.close(lstResult)
+      }
+      else{
+        this.dialogRef.close('none')
+      }
+    }
     else {
       this.dialogRef.close();
     }
@@ -808,6 +846,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
 
   //#region filter
   UpdateEBenefitPredicate() {
+    debugger
     this.filterEBenefitPredicates = '';
     if (
       this.filterByBenefitIDArr.length > 0 &&

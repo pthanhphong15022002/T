@@ -157,7 +157,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   getTab() {
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0103') {
+    if (this.funcID == 'CM0101') {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
@@ -174,10 +174,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
           icon: 'icon-contact_phone',
           text: 'Người liên hệ',
           name: 'Contacts',
-        }
-
+        },
       ];
-    } else {
+    } else if(this.funcID == 'CM0102'){
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
@@ -190,7 +189,30 @@ export class PopupAddCmCustomerComponent implements OnInit {
           text: 'Danh sách địa chỉ',
           name: 'Address',
         },
+      ];
+    }else if(this.funcID == 'CM0103'){
+      this.tabInfo = [
+        { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
+        {
+          icon: 'icon-info',
+          text: 'Thông tin khác',
+          name: 'InformationDefault',
+        },
 
+        {
+          icon: 'icon-contact_phone',
+          text: 'Người liên hệ',
+          name: 'Contacts',
+        },
+      ];
+    }else{
+      this.tabInfo = [
+        { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
+        {
+          icon: 'icon-info',
+          text: 'Thông tin khác',
+          name: 'InformationDefault',
+        },
       ];
     }
   }
@@ -213,8 +235,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
-    if(this.action == 'edit'){
-      this.getListAddress(this.dialog.formModel.entityName, this.data.recID);
+    if (this.action == 'edit') {
+      if (this.funcID == 'CM0101' || this.funcID == 'CM0102')
+        this.getListAddress(this.dialog.formModel.entityName, this.data.recID);
     }
   }
 
@@ -355,9 +378,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async onSave() {
-    if(this.funcID == 'CM0101'){
+    if (this.funcID == 'CM0101') {
       this.data.customerName = this.data?.customerName;
-    }else if(this.funcID == 'CM0103'){
+    } else if (this.funcID == 'CM0103') {
       this.data.partnerName = this.data?.partnerName;
     }
     if (this.funcID == 'CM0102') {
@@ -496,13 +519,13 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
-  lstAddressEmit(e){
+  lstAddressEmit(e) {
     if (e != null && e.length > 0) {
       this.listAddress = e;
     }
   }
 
-  lstAddressDeleteEmit(e){
+  lstAddressDeleteEmit(e) {
     if (e != null && e.length > 0) {
       this.listAddressDelete = e;
     }
@@ -551,9 +574,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
       return data.opponentName;
     }
   }
-
-
-
 
   //#region Contact
   //Open list contacts

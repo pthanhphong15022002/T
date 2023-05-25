@@ -47,7 +47,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   @Output() close = new EventEmitter();
   @Input() transId = '';
   @Input() stepNo = 1;
-  @Input() vllShare = 'ES014';
+  @Input() vllShare = null;
   @Input() hideTabQuery = false;
   dataEdit: any;
 
@@ -142,7 +142,9 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
 
     this.eSign = data?.data?.eSign ?? false;
     this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
-    this.vllShare = data?.data.vllShare ?? 'ES014';
+    if(this.vllShare==null){
+      this.vllShare = data?.data?.vllShare !=null ? data?.data?.vllShare : 'ES014';
+    }
 
     this.hideTabQuery = data?.data.hideTabQuery ?? false;
 
@@ -583,7 +585,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                 if(res){
                   let listUser= res[0].split(';');
                   if(listUser!=null && listUser.length>2){
-                    this.notifySvr.alertCode('EP017').subscribe((x) => {
+                    this.notifySvr.alertCode('ES033').subscribe((x) => {
                       if (x.event?.status == 'Y') {
                         let appr = new Approvers();
                         appr.roleType = element?.objectType;

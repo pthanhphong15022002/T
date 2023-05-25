@@ -14,7 +14,13 @@
         }}</span>
         <i
           *ngIf="dataStep?.memo"
-          class="icon-event_notes text-gray-500 icon-20"
+          class="icon-event_notes text-hover-primary cursor-pointer text-gray-500 icon-20"
+          [ngbPopover]="popperMemo"
+            #p="ngbPopover"
+            (mouseenter)="dataStep?.memo ? p.open() : ''"
+            (mouseleave)="p.close()"
+            placement="right bottom left"
+            container="body"
           (click)="openPopupSup(popupSup, dataStep)"
         ></i>
       </div>
@@ -237,7 +243,8 @@
       [isUpdate]="
         instance.write &&
         !instance.closed &&
-        (instance.status == '1' || instance.status == '2')
+        (instance.status == '1' || instance.status == '2') &&
+        instance.approveStatus != '3'
       "
       [titleHeaderFormCF]="titleDefault"
       [viewsCurrent]="viewsCurrent"
@@ -316,13 +323,15 @@
         </button>
       </div>
     </div>
-    <div id="step-task" class="main p-5" [ngClass]="'show-main'">   
+    <div id="step-task" class="main p-5" [ngClass]="'show-main'">
       <codx-step-task
         [dataSources]="step"
         [isShowButton]="true"
         [isShowMore]="true"
         [typeProgress]="2"
         [isDeepCopy]="false"
+        [isStart]="isStart"
+        [isClose]="isClosed"
         [isEditTimeDefault]="leadtimeControl"
         [isUpdateProgressGroup]="progressTaskGroupControl"
         [isOnlyView]="isOnlyView"
@@ -331,7 +340,6 @@
       ></codx-step-task>
     </div>
   </div>
-
 </ng-template>
 
 <ng-template #reason>
@@ -448,7 +456,9 @@
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
 </ng-template>
-
+<ng-template #popperMemo>
+  <div [innerHTML]="dataStep?.memo"></div>
+</ng-template>
 <ng-template #dataIsEmpty>
   <div class="empty-data">
     <div class="container h-100">

@@ -235,6 +235,13 @@
         </codx-thumbnail>
       </ng-container>
     </div> -->
+
+    <div class="mt-4">
+      <ng-container *ngIf="lstFile.length > 0">
+        <codx-thumbnail [files]="lstFile" displayThumb="simple">
+        </codx-thumbnail>
+      </ng-container>
+    </div>
   </ng-template>
 
   <ng-template #body>

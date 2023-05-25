@@ -48,17 +48,16 @@
         <div class="form-group">
           <codx-label
             [formModel]="formModelDeals"
-            fiedName="BusinesslineID"
+            fiedName="BusinessLineID"
             default="Dòng sản phẩm"
           >
           </codx-label>
           <codx-input
-            [formModel]="formModelDeals"
             type="combobox"
             [crrValue]="deal?.businessLineID"
-            [refValue]="gridViewSetupDeal?.BusinesslineID?.referedValue"
-            [placeholder]="gridViewSetupDeal?.BusinesslineID?.description"
-            field="businesslineID"
+            [refValue]="gridViewSetupDeal?.BusinessLineID?.referedValue"
+            [placeholder]="gridViewSetupDeal?.BusinessLineID?.description"
+            field="businessLineID"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -182,11 +181,11 @@
           </codx-label>
           <codx-input
             type="datetime"
-            [formModel]="formModelDeals"
             field="endDate"
+            format="d"
             [placeholder]="gridViewSetupDeal?.EndDate?.description"
             [crrValue]="deal?.endDate"
-            (valueChange)="valueChange($event)"
+            (valueChange)="valueDateChange($event, 'deal')"
           >
           </codx-input>
         </div>
@@ -220,16 +219,13 @@
             [formModel]="formModelDeals"
           >
           </codx-label>
-          <codx-input
-            field="salespersonID"
-            type="combobox"
-            [formModel]="formModelDeals"
-            [refValue]="gridViewSetupDeal?.SalespersonID?.referedValue"
+          <ejs-combobox
+            [dataSource]="listParticipants"
+            [fields]="fieldCbxParticipants"
+            [value]="deal?.salespersonID"
             [placeholder]="gridViewSetupDeal?.SalespersonID?.description"
-            [crrValue]="deal?.salespersonID"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
+            (valueChange)="valueChangeOwner($event)"
+          ></ejs-combobox>
         </div>
       </div>
     </div>
@@ -244,11 +240,11 @@
           </codx-label>
           <codx-input
             type="datetime"
-            [formModel]="formModelDeals"
+            format="d"
             field="expectedClosed"
             [placeholder]="gridViewSetupDeal?.ExpectedClosed?.description"
             [crrValue]="deal?.expectedClosed"
-            (valueChange)="valueChange($event)"
+            (valueChange)="valueDateChange($event, 'deal')"
           >
           </codx-input>
         </div>
@@ -450,7 +446,7 @@
       </div>
     </div>
     <codx-address-cm
-    #codxLoadAdress
+      #codxLoadAdress
       [type]="'formAdd'"
       [funcID]="'CM0205'"
       [entityName]="form.formModel.entityName"
@@ -479,8 +475,44 @@
     ></codx-address-cm>
   </ng-container>
 </ng-template>
-<ng-template #tabInput></ng-template>
-<ng-template #footer></ng-template>
+<ng-template #tabInput>
+  <ng-container [ngTemplateOutlet]="tabCustomFieldDetail"></ng-container>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" (click)="onSave()">
+      <codx-label
+        name="lblSave"
+        [formModel]="dialog.formModel"
+        default="Lưu"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+<ng-template #tabCustomFieldDetail>
+  <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty">
+    <ng-container *ngFor="let step of listInstanceSteps">
+      <ng-container *ngIf="step?.fields?.length > 0">
+        <ng-container *ngFor="let item of step.fields">
+          <div class="form-group">
+            <codx-input-custom-field
+              [customField]="item"
+              [checkValid]="false"
+              [objectId]="item.recID"
+              [objectType]="'DP_Instances'"
+              [formModel]="dialog.formModel"
+              (valueChangeCustom)="valueChangeCustom($event)"
+            >
+            </codx-input-custom-field>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #dataIsEmpty>
+  <codx-no-data> </codx-no-data>
+</ng-template>
 
 <ng-template #systemCustomer>
   <div class="form-group mt-5">
@@ -612,12 +644,12 @@
             >
             </codx-label>
             <codx-input
+              type="datetime"
               [crrValue]="customer?.establishDate"
               format="d"
-              [formModel]="formModelCustomer"
               [placeholder]="gridViewSetupCustomer?.EstablishDate?.description"
               field="establishDate"
-              (valueChange)="valueChangeCustomer($event)"
+              (valueChange)="valueDateChange($event, 'customer')"
             >
             </codx-input>
           </div>
@@ -721,26 +753,12 @@
         </codx-input>
       </div>
       <div class="form-group">
-        <codx-label [formModel]="formModelCustomer" fiedName="address">
-        </codx-label>
-        <codx-input
-          type="textarea"
-          [crrValue]="customer?.address"
-          [formModel]="formModelCustomer"
-          [placeholder]="gridViewSetupCustomer?.Address?.description"
-          field="address"
-          (valueChange)="valueChangeCustomer($event)"
-        >
-        </codx-input>
-      </div>
-      <div class="form-group">
         <codx-label [formModel]="formModelCustomer" fiedName="Memo">
         </codx-label>
         <codx-input
           type="textarea"
           [crrValue]="customer?.memo"
           [formModel]="formModelCustomer"
-          [placeholder]="gridViewSetupCustomer?.Headcounts?.description ?? ''"
           field="memo"
           (valueChange)="valueChangeCustomer($event)"
         >
@@ -902,14 +920,14 @@
             <codx-label [formModel]="formModelCustomer" fiedName="CustomerFrom">
             </codx-label>
             <codx-input
+              type="datetime"
               [crrValue]="customer?.customerFrom"
-              [formModel]="formModelCustomer"
               format="d"
               [placeholder]="
                 gridViewSetupCustomer?.CustomerFrom?.description ?? ''
               "
               field="customerFrom"
-              (valueChange)="valueChangeCustomer($event)"
+              (valueChange)="valueDateChange($event, 'customer')"
             >
             </codx-input>
           </div>

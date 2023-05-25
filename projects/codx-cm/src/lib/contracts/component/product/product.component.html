@@ -1,11 +1,11 @@
-<codx-gridview-v2
-	#gridQuationsLines
+<div>
+	<codx-gridview-v2
+	#productTable
 	service="CM"
-	[formName]="fmQuotationLines.formName"
-	[gridViewName]="fmQuotationLines.gridViewName"
-	[entityName]="fmQuotationLines.entityName"
-	[hideMoreFunc]="'1'"
-
+	[formName]="formModel.formName"
+	[gridViewName]="formModel.gridViewName"
+	[entityName]="formModel.entityName"
+	[templateMore]="more"
 	[contentEditable]="false"
 	[allowFiltering]="true"
 	[allowSorting]="true"
@@ -13,5 +13,15 @@
 	[autoLoad]="false"
 	rowHeight="40"
 	predicates="TransID=@0"
-	[dataValues]="'f2c04250-f56d-11ed-a428-c025a5a4cd5d'"
-></codx-gridview-v2>
+	></codx-gridview-v2>
+</div>
+	<!-- [dataValues]="'f2c04250-f56d-11ed-a428-c025a5a4cd5d'" -->
+	<ng-template #more let-data>
+		<codx-mfunc
+		[formModel]="grvMoreFunction"
+		[isBookMark]="true"
+		[dataItem]="moreDefaut"
+		[type]="'hover'"
+		(clickMF)="onClickMF($event, dataSource)"
+		></codx-mfunc>
+	 </ng-template>

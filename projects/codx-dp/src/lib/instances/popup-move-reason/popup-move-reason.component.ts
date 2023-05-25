@@ -46,6 +46,7 @@ export class PopupMoveReasonComponent implements OnInit {
 
   dataCM:any;
   recID:string = '';
+  nextStep: string ='';
 
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
   readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
@@ -111,7 +112,8 @@ export class PopupMoveReasonComponent implements OnInit {
           var objApplyFor ={
             listStep: this.listStep,
             instance: this.instances,
-            instanceMove:  res[2]
+            instanceMove:  res[2],
+            nextStep:this.nextStep
           };
           this.dialog.close(objApplyFor);
 
@@ -149,6 +151,7 @@ export class PopupMoveReasonComponent implements OnInit {
             recID: res[0].recID,
             processName: res[0].processName,
           };
+        this.nextStep = res[4];
         this.listCbxProccess.push(obj);
         this.listParticipantReason = await this.codxDpService.getListUserByOrg( res[2]) ;
         }

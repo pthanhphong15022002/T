@@ -294,7 +294,6 @@ export class DP_Instances {
   permissions: DP_Instances_Permissions[] = [];
   approveStatus :string
 }
-
 export class DP_Instances_Permissions {
   recID: string;
   instanceID: string;
@@ -322,7 +321,6 @@ export class DP_Instances_Permissions {
   // endDate:	; chưa có type
   isActive: boolean = true;
 }
-
 export class DP_Instances_Steps {
   recID: string;
   instanceID: string;

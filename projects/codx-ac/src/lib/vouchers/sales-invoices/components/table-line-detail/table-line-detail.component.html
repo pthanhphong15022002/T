@@ -1,0 +1,89 @@
+<codx-gridview-v2
+  #grid
+  [formName]="fmSalesInvoicesLines.formName"
+  [gridViewName]="fmSalesInvoicesLines.gridViewName"
+  [entityName]="fmSalesInvoicesLines.entityName"
+  [templateMore]="more"
+  service="SM"
+  [height]="height"
+  [autoLoad]="false"
+  [hideMoreFunc]="!hasMF"
+  [columnsGrid]="columns"
+  [showRowNumber]="true"
+  predicates="TransID=@0"
+  [dataValues]="transID"
+></codx-gridview-v2>
+
+<ng-template #columnItemID let-data>
+  <div class="py-2">
+    <div
+      class="fw-bold"
+      [innerHTML]="
+        data.itemID | formatvalue : fmSalesInvoicesLines : 'ItemID' | async
+      "
+    ></div>
+    <div>
+      <ng-container *ngFor="let i of [0, 1, 2, 3]; last as isLast">
+        <codx-label
+          [fiedName]="'idiM' + i"
+          [formModel]="fmSalesInvoicesLines"
+        ></codx-label
+        >:&nbsp;
+        <span
+          [innerHTML]="
+            data['idiM' + i]
+              | formatvalue : fmSalesInvoicesLines : 'idiM' + i
+              | async
+          "
+        ></span>
+        <ng-container *ngIf="!isLast"> &nbsp;|&nbsp; </ng-container>
+      </ng-container>
+    </div>
+
+    <codx-vll
+      [formModel]="fmSalesInvoicesLines"
+      field="LineType"
+      [value]="data.lineType"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-primary mt-2"
+    >
+    </codx-vll>
+    <ng-container
+      *ngFor="let i of [5, 6, 7, 8, 9]; last as isLast; first as isFirst"
+    >
+      <ng-container *ngIf="isFirst"> &nbsp;|&nbsp; </ng-container>
+      <codx-label
+        [fiedName]="'idiM' + i"
+        [formModel]="fmSalesInvoicesLines"
+      ></codx-label
+      >:&nbsp;
+      <span
+        [innerHTML]="
+          data['idiM' + i]
+            | formatvalue : fmSalesInvoicesLines : 'idiM' + i
+            | async
+        "
+      ></span>
+      <ng-container *ngIf="!isLast"> &nbsp;|&nbsp; </ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #columnQuantity let-data>
+  {{ data.quantity }} {{ data.umid }}
+</ng-template>
+
+<ng-template #columnVatid let-data>
+  {{ vats | nameById : "VATID" : "TaxRate" : data.vatid }}
+</ng-template>
+
+<ng-template #more let-data>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="fmSalesInvoicesLines"
+    (clickMF)="onClickMF($event, data)"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
+</ng-template>

@@ -85,7 +85,7 @@ export class EmployeeListComponent extends UIComponent {
         controlName: 'LblEmail',
         fieldName: 'email',
         headerText: 'Liên hệ',
-        width: 250,
+        width: 200,
         template: this.colContact,
       },
       {
@@ -181,11 +181,9 @@ export class EmployeeListComponent extends UIComponent {
         option
       );
       popup.closed.subscribe((e) => {
-        
         if(e.event)
         {
           (this.view.dataService as CRUDService).add(e.event).subscribe();
-          this.detectorRef.detectChanges();
         }
       });
     });
@@ -219,7 +217,6 @@ export class EmployeeListComponent extends UIComponent {
             if(e.event)
             {
               (this.view.dataService as CRUDService).update(e.event).subscribe();
-              this.detectorRef.detectChanges();
             }
           });
         });
@@ -255,7 +252,6 @@ export class EmployeeListComponent extends UIComponent {
             
             if(e.event){
               (this.view.dataService as CRUDService).add(e.event).subscribe();
-              this.detectorRef.detectChanges();
             }
           });
         });
@@ -336,19 +332,21 @@ export class EmployeeListComponent extends UIComponent {
     this.itemSelected = val.data;
     this.detectorRef.detectChanges();
   }
-  funIDEmpInfor:string = "HRT03b";
+  funcIDEmpInfor:string = "HRT03b";
   // view imployee infor
   clickViewEmpInfo(data:any){
-    debugger
-    this.cache.functionList(this.funIDEmpInfor)
+    this.cache.functionList(this.funcIDEmpInfor)
     .subscribe(func => {
       let queryParams =  {
         employeeID: data.employeeID,
         page: this.view.dataService.page,
-        filter: JSON.stringify(this.view.dataService?.request.filter),
       };
-      debugger
-      this.codxService.navigate("",func.url,queryParams);
+      let state = {
+        empInfo : JSON.stringify(data),
+        data: this.view.dataService.data,
+        request: this.view.dataService.request
+      }
+      this.codxService.navigate("",func?.url,queryParams,state);
     });
   }
 }

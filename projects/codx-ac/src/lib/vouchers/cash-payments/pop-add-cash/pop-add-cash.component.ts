@@ -139,7 +139,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Link', textDefault: 'Liên kết', isActive: false },
+    { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
   columnChange: string = '';
   vllCashbook: any;
@@ -152,21 +152,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   dataLine: any;
   columnsGrid: any;
   columnsGridM1: any = [];
-  lsAccount = [];
-  filterSettings: FilterSettingsModel = { type: 'CheckBox' };
-  contextMenuItems: ContextMenuItem[] = [
-    'AutoFit',
-    'AutoFitAll',
-    'SortAscending',
-    'SortDescending',
-    'Edit',
-    'Delete',
-    'Save',
-    'Cancel',
-    'ExcelExport',
-    'CsvExport',
-  ];
-  PdfData: object[];
   authStore: AuthStore;
   constructor(
     inject: Injector,
@@ -275,12 +260,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         ele.hideTab(0, false);
         ele.hideTab(1, true);
         this.cashpaymentline = [];
-
+        this.loadSubType1(true);
+        this.loadSubType2(false);
         break;
       default:
         ele.hideTab(0, true);
         ele.hideTab(1, false);
         this.settledInvoices = [];
+        this.loadSubType1(false);
+        this.loadSubType2(true);
         break;
     }
   }
@@ -516,61 +504,62 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   addRow() {
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    } else {
-      switch (this.formType) {
-        case 'add':
-          if (this.hasSaved) {
-            this.dialog.dataService.updateDatas.set(
-              this.cashpayment['_uuid'],
-              this.cashpayment
-            );
-            this.dialog.dataService
-              .save(null, 0, '', '', false)
-              .subscribe((res) => {
-                if (res && res.update.data != null) {
-                  this.loadModegrid();
-                }
-              });
-          } else {
-            this.journalService.handleVoucherNoAndSave(
-              this.journal,
-              this.cashpayment,
-              'AC',
-              'AC_CashPayments',
-              this.form,
-              this.formType === 'edit',
-              () => {
-                this.dialog.dataService
-                  .save(null, 0, '', '', false)
-                  .subscribe((res) => {
-                    if (res && res.save.data != null) {
-                      this.hasSaved = true;
-                      this.loadModegrid();
-                    }
-                  });
-              }
-            );
-          }
-          break;
-        case 'edit':
-          this.dialog.dataService.updateDatas.set(
-            this.cashpayment['_uuid'],
-            this.cashpayment
-          );
-          this.dialog.dataService
-            .save(null, 0, '', '', false)
-            .subscribe((res) => {
-              if (res && res.update.data != null) {
-                this.loadModegrid();
-              }
-            });
-          break;
-      }
-    }
+    this.loadModegrid();
+    // this.checkValidate();
+    // if (this.validate > 0) {
+    //   this.validate = 0;
+    //   return;
+    // } else {
+    //   switch (this.formType) {
+    //     case 'add':
+    //       if (this.hasSaved) {
+    //         this.dialog.dataService.updateDatas.set(
+    //           this.cashpayment['_uuid'],
+    //           this.cashpayment
+    //         );
+    //         this.dialog.dataService
+    //           .save(null, 0, '', '', false)
+    //           .subscribe((res) => {
+    //             if (res && res.update.data != null) {
+    //               this.loadModegrid();
+    //             }
+    //           });
+    //       } else {
+    //         this.journalService.handleVoucherNoAndSave(
+    //           this.journal,
+    //           this.cashpayment,
+    //           'AC',
+    //           'AC_CashPayments',
+    //           this.form,
+    //           this.formType === 'edit',
+    //           () => {
+    //             this.dialog.dataService
+    //               .save(null, 0, '', '', false)
+    //               .subscribe((res) => {
+    //                 if (res && res.save.data != null) {
+    //                   this.hasSaved = true;
+    //                   this.loadModegrid();
+    //                 }
+    //               });
+    //           }
+    //         );
+    //       }
+    //       break;
+    //     case 'edit':
+    //       this.dialog.dataService.updateDatas.set(
+    //         this.cashpayment['_uuid'],
+    //         this.cashpayment
+    //       );
+    //       this.dialog.dataService
+    //         .save(null, 0, '', '', false)
+    //         .subscribe((res) => {
+    //           if (res && res.update.data != null) {
+    //             this.loadModegrid();
+    //           }
+    //         });
+    //       break;
+    //   }
+    // }
   }
 
   deleteRow(data) {
@@ -661,7 +650,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 opt
               );
               dialogs.closed.subscribe((res) => {
-                if (res.event != null) {
+                if (res.event != null && res.event.action != 'escape') {
                   var dataline = res.event['data'];
                   this.cashpaymentline[index] = dataline;
                   this.hasSaved = true;
@@ -776,7 +765,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             opt
           );
           dialogs.closed.subscribe((res) => {
-            if (res.event != null) {
+            if (res.event != null && res.event.action != 'escape') {
               var dataline = res.event['data'];
               this.cashpaymentline.push(dataline);
               this.loadTotal();
@@ -800,24 +789,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
       });
   }
-
-  setDefaultDataLine() {
-    let idx;
-    this.api
-      .exec<any>('AC', this.classNameLine, 'SetDefaultAsync', [
-        this.cashpayment,
-        this.dataLine,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          idx = this.cashpaymentline.length;
-          res.rowNo = idx + 1;
-          this.fgLine.patchValue(res);
-          this.loadAccountControl(this.journal);
-        }
-      });
-  }
-
   //#endregion
 
   //#region Method
@@ -1292,17 +1263,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.gridViewSetupLine = res;
-          this.setGridviewSetupLine(this.gridViewSetupLine);
         }
       });
     this.cache.companySetting().subscribe((res) => {
       this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
     });
-    this.api
-      .exec('AC', 'CommonBusiness', 'GetAccountName')
-      .subscribe((res: any) => {
-        this.lsAccount = res;
-      });
     this.loadcolumnsGrid();
     this.loadTotal();
     this.loadReason();
@@ -1385,51 +1350,26 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  loadAccountControl(journal) {
-    if (this.journal?.drAcctControl === '1') {
-      (
-        this.cbxAccountID.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(['AccountID=@0'], [this.journal?.drAcctID]);
-    }
-    if (this.journal?.drAcctControl === '2') {
-      (
-        this.cbxAccountID.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(
-        ['@0.Contains(AccountID)'],
-        [`[${this.journal?.drAcctID}]`]
-      );
-    }
-    if (this.journal?.crAcctControl === '1') {
-      (
-        this.cbxOffsetAcctID.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(['AccountID=@0'], [this.journal?.crAcctID]);
-    }
-    if (this.journal?.crAcctControl === '2') {
-      (
-        this.cbxOffsetAcctID.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(
-        ['@0.Contains(AccountID)'],
-        [`[${this.journal?.crAcctID}]`]
-      );
+  loadAccountName(accountID) {}
+
+  loadSubType1(enable) {
+    var element = document.getElementById('ac-type-1');
+    if (enable) {
+      element.style.display = 'inline';
+    } else {
+      element.style.display = 'none';
     }
   }
-
-  loadAccountName(accountID) {
-    for (let index = 0; index < this.lsAccount.length; index++) {
-      if (this.lsAccount[index].accountID == accountID) {
-        return this.lsAccount[index].accountName.toLocaleString();
+  loadSubType2(enable) {
+    var element = document.querySelectorAll('.ac-type-2');
+    if (enable) {
+      for (let index = 0; index < element.length; index++) {
+        (element[index] as HTMLElement).style.display = 'inline';
       }
-    }
-  }
-
-  setGridviewSetupLine(gridViewSetupLine) {
-    this.gridViewSetupLine['DIM1'].isVisible = true;
-    this.gridViewSetupLine['DIM2'].isVisible = true;
-    this.gridViewSetupLine['DIM3'].isVisible = true;
-    this.gridViewSetupLine['ProjectID'].isVisible = true;
-    this.gridViewSetupLine['AssetGroupID'].isVisible = true;
-    for (let index = 0; index < this.lockFields.length; index++) {
-      this.gridViewSetupLine[this.lockFields[index]].isVisible = false;
+    }else{
+      for (let index = 0; index < element.length; index++) {
+        (element[index] as HTMLElement).style.display = 'none';
+      }
     }
   }
   //#endregion

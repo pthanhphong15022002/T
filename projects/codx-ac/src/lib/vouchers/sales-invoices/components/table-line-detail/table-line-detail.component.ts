@@ -1,23 +1,23 @@
 import {
   Component,
-  EventEmitter,
   Injector,
   Input,
   OnChanges,
-  Output,
   SimpleChanges,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import {
   CRUDService,
+  CodxGridviewV2Component,
   DialogModel,
   FormModel,
   UIComponent,
-  Util,
 } from 'codx-core';
-import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
-import { PopupAddSalesInvoicesLineComponent } from '../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
-import { tap } from 'rxjs/operators';
-import { CodxAcService } from '../../../codx-ac.service';
+import { CodxAcService } from '../../../../codx-ac.service';
+import { ISalesInvoicesLine } from '../../interfaces/ISalesInvoicesLine.interface';
+import { PopupAddSalesInvoicesLineComponent } from '../../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
+import { SalesInvoiceService } from '../../sales-invoices.service';
 
 @Component({
   selector: 'lib-table-line-detail',
@@ -26,60 +26,30 @@ import { CodxAcService } from '../../../codx-ac.service';
 })
 export class TableLineDetailComponent extends UIComponent implements OnChanges {
   //#region Constructor
-  @Input() salesInvoicesLines: ISalesInvoicesLine[] = [];
-  @Input() maxHeight: string = '400px';
+  @Input() height: number = 400;
   @Input() hasMF: boolean = false;
   @Input() gvs: any;
-  @Input() hiddenFields: string[] = [];
+  @Input() transID: string;
   @Input() dataService: CRUDService;
+  @Input() hiddenFields: string[] = [];
 
-  totalRow: { totalQuantity: number; totalPrice: number; totalVat: number } = {
-    totalQuantity: 0,
-    totalPrice: 0,
-    totalVat: 0,
-  };
+  @ViewChild('grid') grid: CodxGridviewV2Component;
+  @ViewChild('columnItemID', { static: true }) columnItemID: TemplateRef<any>;
+  @ViewChild('columnQuantity', { static: true })
+  columnQuantity: TemplateRef<any>;
+  @ViewChild('columnVatid', { static: true }) columnVatid: TemplateRef<any>;
 
-  vats: any[] = [];
-  fmSalesInvoicesLines: FormModel = {
-    funcID: 'ACT0605', // này là funcID của thằng cha, lấy tạm
-    entityName: 'SM_SalesInvoicesLines',
-    formName: 'SalesInvoicesLines',
-    gridViewName: 'grvSalesInvoicesLines',
-    entityPer: 'SM_SalesInvoicesLines',
-  };
-  ths: { field: string; label: string }[] = [
-    {
-      field: 'lblNum',
-      label: 'STT',
-    },
-    {
-      field: 'lblProduct',
-      label: 'Mặt hàng',
-    },
-    {
-      field: 'lblQty',
-      label: 'Số lượng',
-    },
-    {
-      field: 'lblPrice',
-      label: 'Đơn giá',
-    },
-    {
-      field: 'lblCost',
-      label: 'Thành tiền',
-    },
-    {
-      field: 'lblTaxRate',
-      label: 'Thuế suất',
-    },
-    {
-      field: 'lblTax',
-      label: 'Tiền thuế',
-    },
-  ];
+  columns: any[] = [];
+  vats: any[];
+  fmSalesInvoicesLines: FormModel;
 
-  constructor(private injector: Injector, private acService: CodxAcService) {
+  constructor(
+    injector: Injector,
+    private acService: CodxAcService,
+    salesInvoiceService: SalesInvoiceService
+  ) {
     super(injector);
+    this.fmSalesInvoicesLines = salesInvoiceService.fmSalesInvoicesLines;
   }
   //#endregion
 
@@ -88,19 +58,49 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
     this.acService
       .loadComboboxData('VATCodesAC', 'BS')
       .subscribe((res) => (this.vats = res));
+
+    this.columns = [
+      {
+        field: 'itemID',
+        headerText: this.gvs?.ItemID?.headerText ?? 'Mặt hàng',
+        template: this.columnItemID,
+        width: 500,
+      },
+      {
+        field: 'quantity',
+        headerText: this.gvs?.Quantity?.headerText ?? 'Số lượng',
+        template: this.columnQuantity,
+        width: 90,
+      },
+      {
+        field: 'costPrice',
+        headerText: this.gvs?.CostPrice?.headerText ?? 'Đơn giá',
+        width: 90,
+      },
+      {
+        field: 'costAmt',
+        headerText: this.gvs?.CostAmt?.headerText ?? 'Thành tiền',
+        width: 90,
+      },
+      {
+        field: 'vatid',
+        headerText: this.gvs?.VATID?.headerText ?? 'Thuế suất',
+        template: this.columnVatid,
+        width: 100,
+      },
+      {
+        field: 'vatAmt',
+        headerText: this.gvs?.VATAmt?.headerText ?? 'Tiền thuế',
+        width: 90,
+      },
+    ];
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // calculate totalRow
-    this.totalRow = {
-      totalQuantity: 0,
-      totalPrice: 0,
-      totalVat: 0,
-    };
-    for (const l of this.salesInvoicesLines) {
-      this.totalRow.totalQuantity += l.quantity;
-      this.totalRow.totalPrice += l.costAmt;
-      this.totalRow.totalVat += l.vatAmt;
+    if (changes.transID) {
+      this.grid.dataService.load().subscribe(() => {
+        this.grid.refresh();
+      });
     }
   }
   //#endregion
@@ -129,7 +129,6 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
     console.log('editRow', data);
 
     const copiedData: ISalesInvoicesLine = { ...data };
-
     this.dataService.dataSelected = copiedData;
     this.dataService.edit(copiedData).subscribe(() => {
       const dialogModel = new DialogModel();
@@ -145,19 +144,14 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
           '',
           {
             formType: 'edit',
-            gvs: this.gvs,
             action: e.text,
             hiddenFields: this.hiddenFields,
           },
           '',
           dialogModel
         )
-        .closed.pipe(tap((t) => console.log(t)))
-        .subscribe(({ event }) => {
-          const index = this.salesInvoicesLines.findIndex(
-            (l) => l.recID === event.recID
-          );
-          this.salesInvoicesLines[index] = event;
+        .closed.subscribe(() => {
+          this.grid.refresh();
         });
     });
   }
@@ -167,7 +161,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
 
     const copiedData: ISalesInvoicesLine = { ...data };
 
-    copiedData.rowNo = this.salesInvoicesLines.length + 1;
+    // copiedData.rowNo = this.salesInvoicesLines.length + 1;
     this.dataService.dataSelected = copiedData;
     this.dataService.copy().subscribe(() => {
       const dialogModel = new DialogModel();
@@ -183,29 +177,23 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
           '',
           {
             formType: 'add',
-            index: this.salesInvoicesLines.length,
-            gvs: this.gvs,
+            // index: this.salesInvoicesLines.length,
             action: e.text,
             hiddenFields: this.hiddenFields,
           },
           '',
           dialogModel
         )
-        .closed.pipe(tap((t) => console.log(t)))
-        .subscribe(({ event }) => {
-          this.salesInvoicesLines = [...this.salesInvoicesLines, ...event];
+        .closed.subscribe(({ event }) => {
+          if (event?.length > 0) {
+            this.grid.refresh();
+          }
         });
     });
   }
 
   delete(data): void {
-    console.log('delete', data);
-
-    this.dataService.delete([data]).subscribe(() => {
-      this.salesInvoicesLines = this.salesInvoicesLines.filter(
-        (l) => l.recID !== data.recID
-      );
-    });
+    this.grid.deleteRow(data);
   }
 
   export(data): void {}

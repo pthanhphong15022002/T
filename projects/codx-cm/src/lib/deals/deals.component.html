@@ -1,5 +1,6 @@
 <codx-views
   #view
+  [idField]="idField"
   [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
@@ -9,15 +10,14 @@
   [views]="views"
   [button]="button"
   (buttonClick)="click($event)"
-  [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
   [autoLoad]="true"
-  [idField]="idField"
   [autoSearch]="true"
+  [selectedFirst]="true"
+  (onActions)="onActions($event)"
+  (viewChanged)="changeView($event)"
   (selectedChange)="selectedChange($event)"
-  (onLoading)="onLoading($event)"
   (searchChanged)="searchChanged($event)"
-  [viewActiveType]="viewMode"
 ></codx-views>
 
 <!-- KANBAN -->
@@ -33,16 +33,94 @@
     [setting]="setting"
     [footer]="footerKanban"
     [rootData]="data"
+    [dataItem]="data"
     (changeDataMF)="changeDataMF($event, data)"
   >
   </codx-card-img>
 </ng-template>
 
-<ng-template #cardTitleTmp let-data> bao ga </ng-template>
+<ng-template #cardTitleTmp let-data>
+  <codx-temp-full
+    style="width: 100%"
+    [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
+    [title]="data.dealName"
+    [descTmp]="descTmpCard"
+  >
+  </codx-temp-full>
+  <ng-template #descTmpCard>
+    <div class="'d-flex flex-column w-100">
+      <div class="mb-1">
+        <i class="icon-business icon-16 me-2"></i>
+        <span
+          class="text-gray-700"
+          #customerID
+          [innerHTML]="
+            data?.customerID
+              | formatvalue : view.formModel : 'customerID'
+              | async
+          "
+        ></span>
+      </div>
+      <div class="d-flex justify-content-between mt-2">
+        <div class="">
+          <span class="icon-monetization_on icon-16 text-warning me-2"></span>
+          <span
+            [innerHTML]="
+              data?.dealValue
+                | formatvalue : view.formModel : 'dealValue'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="d-flex justify-content-end">
+          <span class="icon-i-check-all icon-16 text-green me-2"></span>
+          <span
+            [innerHTML]="
+              data?.probability
+                | formatvalue : view.formModel : 'probability'
+                | async
+            "
+          ></span
+          ><span *ngIf="data?.probability">%</span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
 
 <ng-template #footerKanban let-data>
-  <div class="d-flex justify-content-between align-items-center mt-1">
-    <div class="d-flex align-items-end codx-badge">noi dung gi day</div>
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
+      <span
+        class="fs-7 text-gray-600"
+        #createdOn
+        [innerHTML]="
+          data.createdOn | formatvalue : view.formModel : 'createdOn' | async
+        "
+      ></span>
+    </div>
+
+    <div class="d-flex justify-content-end align-items-center">
+      <span class="me-1">
+        <span class="icon-16 icon-av_timer me-1"></span>
+        <span
+          class="text-gray-700"
+          #endDate
+          [innerHTML]="
+            data.endDate | formatvalue : view.formModel : 'endDate' | async
+          "
+        ></span>
+      </span>
+      <codx-imgs
+        [isToolTip]="true"
+        [width]="25"
+        [objectId]="data.owner"
+        objectType="AD_Users"
+        [numberImages]="1"
+      >
+      </codx-imgs>
+    </div>
   </div>
 </ng-template>
 
@@ -69,6 +147,14 @@
 <!-- end kanban -->
 <ng-template #itemTemplate let-data>
   <codx-temp-full
+    [typeMF]="'hover'"
+    [imageId]="data?.customerID"
+    [imgOn]="data?.modifiedOn"
+    [imageReferType]="'avt'"
+    [imageWidth]="35"
+    imgCss="me-4"
+    [imageObjType]="'CM_Customers'"
+
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-15'"
@@ -110,25 +196,7 @@
         #businessLineID
         [innerHTML]="
           data?.businessLineID
-            | formatvalue
-              : formModel
-              : 'businessLineID'
-              : businessLineID
-              : 'CMDeals'
-              : 'grvCMDeals'
-            | async
-        "
-      ></span>
-    </div>
-
-    <div class="d-flex align-items-center justify-content-start mb-1">
-      <i class="icon-earth pe-1"></i>
-      <span
-        class="text-gray-700"
-        #memo
-        [innerHTML]="
-          data?.memo
-            | formatvalue : formModel : 'memo' : memo : 'CMDeals' : 'grvCMDeals'
+            | formatvalue : view.formModel : 'businessLineID' : businessLineID
             | async
         "
       ></span>
@@ -136,11 +204,22 @@
     <div class="d-flex justify-content-between py-1">
       <div class="d-flex align-items-start pe-4">
         <span class="icon-monetization_on icon-16 text-warning me-2"></span>
-        <div>{{ data?.dealValue }}</div>
+        <span
+          [innerHTML]="
+            data?.dealValue | formatvalue : view.formModel : 'dealValue' | async
+          "
+        ></span>
       </div>
       <div class="d-flex align-items-center">
-        <span class="icon-i-check-all icon-16 text-green me-2"></span>
-        <div>{{ data?.probability }}%</div>
+        <span class="icon-check_circle icon-16 text-green me-2"></span>
+        <span
+          [innerHTML]="
+            data?.probability
+              | formatvalue : view.formModel : 'probability'
+              | async
+          "
+        ></span
+        ><span *ngIf="data?.probability">%</span>
       </div>
       <div class="d-flex align-items-center">
         <span class="icon-16 icon-av_timer me-1"></span>
@@ -148,14 +227,7 @@
           class="text-gray-700"
           #createdOn
           [innerHTML]="
-            data.createdOn
-              | formatvalue
-                : formModel
-                : 'createdOn'
-                : createdOn
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
+            data.createdOn | formatvalue : view.formModel : 'createdOn' | async
           "
         ></span>
       </div>
@@ -166,24 +238,47 @@
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-end codx-badge">
       <div class="me-2 badge badge-light-primary">
-        <span>
-          {{ data?.currentStepName }}
-        </span>
       </div>
+          <div
+          *ngIf="data.status != '1'"
+          [ngStyle]="{
+            'background-color':
+              data.status == '3' || data.status == '4'
+                ? colorReasonSuccess?.color
+                : data.status == '5' || data.status == '6'
+                ? colorReasonFail?.color
+                : data?.steps['backgroundColor']
+          }"
+          class="me-2 badge badge-sm d-flex align-items-center"
+        >
+          <span
+            [ngClass]="data?.steps['icon']"
+            [ngStyle]="{ color: data?.steps['iconColor'] }"
+            class="me-1"
+          ></span>
+          <span [ngStyle]="{ color: data?.steps['textColor'] }">{{  data?.currentStepName }}</span>
+        </div>
+          <div   *ngIf="data.status == '1'">
+
+            <codx-vll
+            [name]="'DP028'"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-sm"
+          >
+          </codx-vll>
+
+          </div>
+
       <div class="d-flex align-items-center text-gray-600">
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
           class="text-gray-700"
           #endDate
           [innerHTML]="
-            data.endDate
-              | formatvalue
-                : formModel
-                : 'endDate'
-                : endDate
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
+            data.endDate | formatvalue : view.formModel : 'endDate' | async
           "
         ></span>
       </div>
@@ -193,7 +288,7 @@
         [isToolTip]="true"
         [width]="25"
         [objectId]="data.owner"
-        ojectType="AD_Users"
+        objectType="AD_Users"
         [numberImages]="1"
       >
       </codx-imgs>

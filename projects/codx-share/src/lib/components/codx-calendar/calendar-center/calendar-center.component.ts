@@ -78,20 +78,36 @@ export class CalendarCenterComponent
 
   //navigate scheduler
   onAction(event: any) {
+    debugger;
     if (
-      event.data.fromDate == 'Invalid Date' &&
-      event.data.toDate == 'Invalid Date'
-    )
-      return;
-    if (
-      (event?.type == 'navigate' && event.data.fromDate && event.data.toDate) ||
-      event?.data?.type == undefined
+      event.data.fromDate === 'Invalid Date' &&
+      event.data.toDate === 'Invalid Date'
     ) {
-      let obj = {
-        fromDate: event.data.fromDate,
-        toDate: event.data.toDate,
-        type: event?.data.type,
-      };
+      return;
+    }
+    if (
+      (event?.type === 'navigate' &&
+        event.data.fromDate &&
+        event.data.toDate) ||
+      event?.data?.type === undefined
+    ) {
+      let obj;
+      if (event?.data.type === 'Week') {
+        let fromDate = new Date(event.data.fromDate.setDate(event.data.fromDate.getDate() + 1));
+        let toDate = new Date(event.data.toDate.setDate(event.data.toDate.getDate() + 1));
+        obj = {
+          fromDate: fromDate,
+          toDate: toDate,
+          type: event?.data.type,
+        };
+      } else {
+        obj = {
+          fromDate: event.data.fromDate,
+          toDate: event.data.toDate,
+          type: event?.data.type,
+        };
+      }
+
       this.calendarService.dateChange$.next(obj);
     }
   }

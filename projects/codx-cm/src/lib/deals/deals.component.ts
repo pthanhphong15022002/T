@@ -30,6 +30,8 @@ import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popu
 import { DealDetailComponent } from './deal-detail/deal-detail.component';
 import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
+import { AnyNsRecord } from 'dns';
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'lib-deals',
@@ -103,6 +105,8 @@ export class DealsComponent
   resourceKanban?: ResourceModel;
   hideMoreFC = false;
   listHeader: any;
+  colorReasonSuccess:any;
+  colorReasonFail:any;
 
   constructor(
     private inject: Injector,
@@ -115,18 +119,48 @@ export class DealsComponent
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+
+    this.executeApiCalls();
+
+
   }
   ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
-    // this.dataObj = {
-    //   processID: '327eb334-5695-468c-a2b6-98c0284d0620',
-    // };
     this.afterLoad();
 
     this.button = {
       id: this.btnAdd,
     };
+
+    this.router.params.subscribe((param: any) => {
+      if (param.funcID) {
+        this.funcID = param.funcID;
+      }
+    });
+
+    this.detectorRef.detectChanges();
+  }
+
+  afterLoad() {
+    this.request = new ResourceModel();
+    this.request.service = 'CM';
+    this.request.assemblyName = 'CM';
+    this.request.className = 'DealsBusiness';
+    this.request.method = 'GetListDealsAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj;
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'DP';
+    this.resourceKanban.assemblyName = 'DP';
+    this.resourceKanban.className = 'ProcessesBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = this.dataObj;
+  }
+
+  ngAfterViewInit(): void {
+    this.crrFuncID = this.funcID;
 
     this.views = [
       {
@@ -152,43 +186,20 @@ export class DealsComponent
         },
       },
     ];
-
-    this.router.params.subscribe((param: any) => {
-      if (param.funcID) {
-        this.funcID = param.funcID;
-      }
-    });
-  }
-  afterLoad() {
-    this.request = new ResourceModel();
-    this.request.service = 'CM';
-    this.request.assemblyName = 'CM';
-    this.request.className = 'DealsBusiness';
-    this.request.method = 'GetListDealsAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj;
-
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'DP';
-    this.resourceKanban.assemblyName = 'DP';
-    this.resourceKanban.className = 'ProcessesBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
-  }
-
-  ngAfterViewInit(): void {
-    this.crrFuncID = this.funcID;
     this.changeDetectorRef.detectChanges();
   }
 
-  onLoading(e) {}
-
   changeView(e) {
     this.afterLoad();
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.crrFuncID != this.funcID) {
-      this.crrFuncID = this.funcID;
+    if (e?.view.type == 6) {
+      if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
+      else this.kanban = (this.view.currentView as any).kanban;
+      // this.kanban.refresh();
     }
+    // this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // if (this.crrFuncID != this.funcID) {
+    //   this.crrFuncID = this.funcID;
+    // }
   }
 
   click(evt: ButtonModel) {
@@ -205,15 +216,13 @@ export class DealsComponent
   }
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-      if (data.status == '1') {
+      if (data.status == '1' ) {
         for (let more of $event) {
           switch (more.functionID) {
+            case 'SYS01':
+            case 'SYS101':
             case 'CM0201_1':
-              more.disabled = true;
-              break;
             case 'CM0201_3':
-              more.disabled = true;
-              break;
             case 'CM0201_4':
               more.disabled = true;
               break;
@@ -230,27 +239,90 @@ export class DealsComponent
       } else {
         for (let more of $event) {
           switch (more.functionID) {
+            case 'CM0201_1':
+              if(this.checkMoreReason(data.permission) || data.closed) {
+                more.disabled = true;
+              }
+              break;
+            case 'CM0201_3':
+              if(this.checkMoreReason(data.permission) || data.closed) {
+                more.disabled = true;
+              }
+              break;
+            case 'CM0201_4':
+              if(this.checkMoreReason(data.permission) || data.closed) {
+                more.disabled = true;
+              }
+              break;
             case 'CM0201_2':
               more.disabled = true;
               break;
+            case 'CM0201_8':
+              if(data.closed) {
+                more.isblur = true;
+              }
+              else {
+                more.isblur = false;
+              }
+              break;
+            case 'CM0201_9':
+              if(!data.closed) {
+                more.isblur = true;
+              }
+              else {
+                more.isblur = false;
+              }
+              break;
+            case 'SYS01':
             case 'SYS03':
             case 'SYS04':
             case 'SYS02':
-            default:
-              more.isblur = false;
+            case 'SYS101':
+            case 'SYS102':
+            case 'SYS103':
+            case 'SYS104':
+              if(this.checkMoreReason(data.permission) || data.closed  ) {
+                more.disabled = true;
+              }
+              break;
           }
         }
       }
     }
   }
-  checkMoreReason(data, isUseReason) {
-    if (data.status != '2' || isUseReason) {
+  async executeApiCalls() {
+    try {
+      await this.getColorReason();
+      // await this.getListCampaigns();
+      // await this.getListChannels();
+    } catch (error) {}
+  }
+
+ async getColorReason() {
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.colorReasonSuccess = item;
+          } else if (item.value === 'F') {
+            this.colorReasonFail = item;
+          }
+        }
+      }
+    });
+  }
+
+  checkMoreReason(tmpPermission) {
+    if(tmpPermission.isReasonSuccess && tmpPermission.isReasonFail && tmpPermission.isMoveStage ) {
       return true;
     }
-    if (data.closed) {
+    if(tmpPermission.isReasonSuccess) {
+        return true;
+    }
+    if(tmpPermission.IsReasonFail) {
       return true;
     }
-    if (!data.permissionMoveInstances) {
+    if(tmpPermission.isMoveStage) {
       return true;
     }
     return false;
@@ -276,10 +348,18 @@ export class DealsComponent
         this.handelStartDay(data);
         break;
       case 'CM0201_3':
-        this.moveReason(data,true);
+        this.moveReason(data, true);
         break;
       case 'CM0201_4':
-        this.moveReason(data,false);
+        this.moveReason(data, false);
+        break;
+      // Open deal
+      case 'CM0201_8':
+        this.openOrCloseDeal(data, true);
+        break;
+      // Close deal
+      case 'CM0201_9':
+        this.openOrCloseDeal(data, false);
         break;
       //xuât file
       case 'CM0201_5':
@@ -355,8 +435,14 @@ export class DealsComponent
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
-              var instance =  e.event.instance;
-              var index = e.event.listStep.findIndex(x=> x.stepID === instance.stepID && !x.isSuccessStep && !x.isFailStep)+1;
+              var instance = e.event.instance;
+              var index =
+                e.event.listStep.findIndex(
+                  (x) =>
+                    x.stepID === instance.stepID &&
+                    !x.isSuccessStep &&
+                    !x.isFailStep
+                ) + 1;
               var nextStep = '';
               if (index != -1) {
                 if (index != e.event.listStep.length) {
@@ -395,39 +481,76 @@ export class DealsComponent
     });
   }
 
-  moveReason(data:any,isMoveSuccess: boolean){
+  moveReason(data: any, isMoveSuccess: boolean) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     var functionID = isMoveSuccess ? 'DPT0403' : 'DPT0404';
     this.cache.functionList(functionID).subscribe((fun) => {
-          this.openFormReason(data, fun, isMoveSuccess);
-          // var newProccessIdReason = isMoveSuccess
-          //   ? this.stepSuccess.newProcessID
-          //   : this.stepFail.newProcessID;
-          // var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
-          // if (isCheckExist) {
-          //   this.codxDpService
-          //     .getProcess(newProccessIdReason)
-          //     .subscribe((res) => {
-          //       if (res) {
-          //         if (res.permissions != null && res.permissions.length > 0) {
-          //           this.listParticipantReason = res.permissions.filter(
-          //             (x) => x.roleType === 'P'
-          //           );
-          //           this.openFormReason(
-          //             data,
-          //             fun,
-          //             isMoveSuccess,
-          //             dataMore,
-          //             this.listParticipantReason
-          //           );
-          //         }
-          //       }
-          //     });
-          // } else {
-          //   this.openFormReason(data, fun, isMoveSuccess, dataMore, null);
-          // }
+      this.openFormReason(data, fun, isMoveSuccess);
+      // var newProccessIdReason = isMoveSuccess
+      //   ? this.stepSuccess.newProcessID
+      //   : this.stepFail.newProcessID;
+      // var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
+      // if (isCheckExist) {
+      //   this.codxDpService
+      //     .getProcess(newProccessIdReason)
+      //     .subscribe((res) => {
+      //       if (res) {
+      //         if (res.permissions != null && res.permissions.length > 0) {
+      //           this.listParticipantReason = res.permissions.filter(
+      //             (x) => x.roleType === 'P'
+      //           );
+      //           this.openFormReason(
+      //             data,
+      //             fun,
+      //             isMoveSuccess,
+      //             dataMore,
+      //             this.listParticipantReason
+      //           );
+      //         }
+      //       }
+      //     });
+      // } else {
+      //   this.openFormReason(data, fun, isMoveSuccess, dataMore, null);
+      // }
+    });
+  }
+
+  openOrCloseDeal(data,check){
+    var datas = [data.recID, data.processID,check];
+    this.notificationsService
+    .alertCode('DP018', null, "'" + this.titleAction + "'")
+    .subscribe((info) => {
+      if (info.event.status == 'Y') {
+        this.codxCmService
+          .openOrClosedDeal(datas)
+          .subscribe((res) => {
+            if (res) {
+              data.closed = check ? true : false;
+              data.closedOn = check ? new Date() : data.ClosedOn;
+              data.ModifiedOn = new Date();
+              this.dataSelected = data;
+              this.view.dataService.update(data).subscribe();
+              this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
+              if (data.showInstanceControl === '1') {
+                this.view.dataService.update(this.dataSelected).subscribe();
+              }
+              if (
+                data.showInstanceControl === '0' ||
+                data.showInstanceControl === '2'
+              ) {
+                this.view.dataService.remove(this.dataSelected).subscribe();
+                this.dataSelected = this.view.dataService.data[0];
+                this.view.dataService.onAction.next({
+                  type: 'delete',
+                  data: data,
+                });
+              }
+              this.detectorRef.detectChanges();
+            }
+        });
+      }
     });
   }
 
@@ -438,18 +561,18 @@ export class DealsComponent
     formMD.formName = fun.formName;
     formMD.gridViewName = fun.gridViewName;
     var dataCM = {
-      refID:data?.refID,
+      refID: data?.refID,
       processID: data?.processID,
       stepID: data?.stepID,
-      nextStep: data?.nextStep
-    }
+      nextStep: data?.nextStep,
+    };
     var obj = {
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
-      applyFor:'1',
-      dataCM:dataCM,
-      stepName:data.currentStepName
+      applyFor: '1',
+      dataCM: dataCM,
+      stepName: data.currentStepName,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -461,49 +584,66 @@ export class DealsComponent
       obj
     );
     dialogRevision.closed.subscribe((e) => {
-
       if (e && e.event != null) {
-        var instance =  e.event?.instance;
-        var instanceMove =  e.event?.instanceMove;
-        if(instanceMove) {
-
-        }
-        else {
-          data = this.updateReasonDeal(instance,data);
-          var datas = [data,data.customerID];
+        var instance = e.event?.instance;
+        var instanceMove = e.event?.instanceMove;
+        if (instanceMove) {
+          var dealOld = JSON.parse(JSON.stringify(data));
+          var dealNew = JSON.parse(JSON.stringify(data));
+          dealOld = this.updateReasonDeal(e.event?.instance, dealOld);
+          dealNew = this.convertDataInstance(
+            dealNew,
+            instanceMove,
+            e.event?.nextStep
+          );
+          var datas = [dealOld, dealNew];
+          this.codxCmService.moveDealReason(datas).subscribe((res) => {
+            if (res) {
+              data = res[0];
+              this.view.dataService.dataSelected = data;
+              this.view.dataService
+                .update(this.view.dataService.dataSelected)
+                .subscribe();
+              this.view.dataService.add(res[1], 0).subscribe((res) => {});
+              this.detectorRef.detectChanges();
+            }
+          });
+        } else {
+          data = this.updateReasonDeal(e.event?.instance, data);
+          var datas = [data, data.customerID];
           this.codxCmService.updateDeal(datas).subscribe((res) => {
-            if(res){
-              data = res;
+            if (res) {
+              data = res[0];
               this.view.dataService.update(data).subscribe();
               this.detectorRef.detectChanges();
             }
-          })
+          });
         }
       }
     });
   }
 
-  updateMoveReasonDeal(instance:any, deal:any) {
-    // if (this.action !== this.actionEdit) {
-    //   deal.stepID = this.listInstanceSteps[0].stepID;
-    //   deal.nextStep = this.listInstanceSteps[1].stepID;
-    //   deal.status = '1';
-    //   deal.refID = instance.recID;
-    // }
-    // deal.owner = this.owner;
-    // deal.salespersonID = this.owner;
-    // deal.expectedClosed = deal.endDate;
+  convertDataInstance(deal: any, instance: any, nextStep: any) {
+    deal.dealName = instance.title;
+    deal.memo = instance.memo;
+    deal.endDate = instance.endDate;
+    deal.dealID = instance.instanceNo;
+    deal.owner = instance.owner;
+    deal.salespersonID = instance.owner;
+    deal.processID = instance.processID;
+    deal.stepID = instance.stepID;
+    deal.refID = instance.recID;
+    deal.stepID = instance.stepID;
+    deal.status = instance.status;
+    deal.nextStep = nextStep;
+    return deal;
   }
-
-  updateReasonDeal(instance:any, lead:any) {
-    lead.status = instance.status;
-    lead.stepID = instance.stepID
-    return lead;
+  updateReasonDeal(instance: any, deal: any) {
+    deal.status = instance.status;
+    deal.stepID = instance.stepID;
+    deal.nextStep = '';
+    return deal;
   }
-
-
-
-
 
   startDeal(recId) {
     var data = [recId];
@@ -559,6 +699,8 @@ export class DealsComponent
       }
     }
   }
+
+  onActions(e) {}
 
   addDeal() {
     this.view.dataService.addNew().subscribe((res) => {

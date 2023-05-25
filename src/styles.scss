@@ -1133,7 +1133,7 @@ codx-layout-add .card-header {
 }
 .badge.badge-md{
   font-size: 12px!important;
-  padding: 0.2em 0.75em 0.5em 0.9em;
+  //padding: 0.2em 0.75em 0.5em 0.9em;
 }
 /*** list view srcoll ngang ***/
 .e-listview .e-content {
@@ -1489,21 +1489,14 @@ a {
   padding-top: 5px !important;
 }
 
-.label-colon span{
-  //position: relative;
+codx-label.label-colon span{
   padding-right: 7px;
   min-height: 18px;
- // display: block;
   line-height: 18px;
-}
-
-.label-colon span::after {
+} 
+codx-label.label-colon span::after {
   content: ":";
   margin-left: -1px;
-  //position: absolute;
-  //right: 6px;
-  //top: 0;
-  //height: 18px;
 }
 
 .codx-label.required::after {
@@ -1846,10 +1839,10 @@ codx-dropdown-calendar {
 // }
 
 /*** codx-tabs ***/
-codx-view-list-detail .nav-link {
-  padding: 6px 0px;
-  margin: 0 7px;
-}
+// codx-view-list-detail .nav-link {
+//   padding: 6px 0px;
+//   margin: 0 7px;
+// }
 codx-tabs {
   .nav-link {
     padding: 6px 8px;
@@ -2792,12 +2785,21 @@ codx-vll.badge.badge-md span::before{
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .aside-menu .menu-link .menu-title{
   flex-grow: inherit;
 }
-
+[data-kt-aside-minimize=on].aside-minimize-icon-title .aside:not(:hover) .menu-link.active, 
+[data-kt-aside-minimize=on].aside-minimize-icon-title .aside:not(:hover) .menu-link:hover {
+  border-radius: 0px !important;
+}
+.aside-minimize-icon-title .aside-primary .svg-icon svg [fill]:not(.permanent):not(g) {
+  fill: var(--primary-lightest);
+}
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link.active{
-  background-color: #ffffff25!important;
-  //background-color: var(--primary-lightest);
+ // background-color: #ffffff25!important;
+  background-color: var(--primary-lightest)!important;
   .menu-title {
-   // color: var(--primary-dark)!important;
+    color: var(--primary-dark)!important;
+  }
+  .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--primary-dark);
   }
 }
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link:hover {
@@ -2806,13 +2808,52 @@ codx-vll.badge.badge-md span::before{
   .menu-title {
     color: var(--text-body)!important;
   }
+  .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--primary-light)!important;
+  }
 }
+.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-item:hover .menu-link.active{
+   background-color: var(--primary-lightest)!important;
+   .menu-title {
+     color: var(--primary-dark)!important;
+   }
+   .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+     fill: var(--primary-dark)!important;
+   }
+   
+ }
 .aside-minimize-icon-title .aside .menu-link {
   padding-left: 7px!important;
   padding-right: 7px!important;
 }
 .aside-minimize-icon-title .aside-extended .aside-primary .menu-link.active{
   border-radius: 0!important;
+}
+//
+.aside-minimize-icon-title .aside .aside-primary .aside-menu .menu-link {
+  height: 77px;
+  max-height: 77px;
+  min-height: 77px;
+}
+.aside-menu .menu-item .menu-icon > img, .aside-menu .menu-item .menu-icon .svg-icon, .aside-footer .menu-item .menu-icon > img, .aside-footer .menu-item .menu-icon .svg-icon {
+  width: 26px!important;
+  height: 26px!important;
+
+}
+
+
+.menu-state-icon-primary .menu-item {
+  .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--primary-lightest);
+  }
+  .menu-link.active .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--primary-light);
+  }
+}
+.menu-state-icon-primary .menu-item:hover {
+  .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--primary)!important;
+  }
 }
 .toolbar{
   .e-control.e-inplaceeditor .e-editable-value-wrapper {
@@ -2845,13 +2886,13 @@ codx-tmmeetings{
 
 .badge.badge-md{
   .fa, .fas{
-  font-size: 16px;
+  font-size: 12px;
   }
 
 }
 codx-vll.vll-post{
   display: flex;
-  align-items: baseline;
+  align-items:center;
   img{
     margin-right: 4px;
   }
@@ -2960,3 +3001,5 @@ codx-toolbar-report{
 .e-grid .e-headercelldiv {
   margin-left: -5px;
 }
+
+

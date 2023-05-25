@@ -3,6 +3,7 @@ import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { ApiHttpService, CacheService, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
 import { CM_Quotations } from '../../../models/cm_model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'product',
@@ -10,21 +11,16 @@ import { CM_Quotations } from '../../../models/cm_model';
   styleUrls: ['./product.component.css']
 })
 export class ProductComponent implements OnInit,OnChanges{
-  @ViewChild('gridQuationsLines') gridQuationsLines: CodxGridviewV2Component;
+  @ViewChild('productTable') productTable: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
 
   @Input() dataSource: any;
+  @Input() formModel: FormModel;
 
   dialog;
   quotations: CM_Quotations;
-  fmQuotationLines: FormModel = {
-    formName: 'CMQuotationsLines',
-    gridViewName: 'grvCMQuotationsLines',
-    entityName: 'CM_QuotationsLines',
-    funcID: 'CM02021',
-  };
   gridHeight: number = 300;
   editSettings: EditSettingsModel = {
     allowEditing: true,
@@ -34,6 +30,14 @@ export class ProductComponent implements OnInit,OnChanges{
   };
   product = [];
   listQuotationLines: Array<any> = [];
+  moreDefaut = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
+  grvMoreFunction: FormModel;
 
   constructor(
     private codxCM: CodxCmService,
@@ -42,9 +46,12 @@ export class ProductComponent implements OnInit,OnChanges{
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-
+    console.log(this.formModel);
+    console.log(this.dataSource);
+    
   }
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.grvMoreFunction = await this.getFormModel('DPT040102');
     // console.log('thuan');
     // this.codxCM
     // .getQuotationsLinesByTransID('f2c04250-f56d-11ed-a428-c025a5a4cd5d')
@@ -55,10 +62,19 @@ export class ProductComponent implements OnInit,OnChanges{
     // });
     
   }
+  async getFormModel(functionID) {
+    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let formModel = {}
+    formModel['formName'] = f?.formName;
+    formModel['gridViewName'] = f?.gridViewName;
+    formModel['entityName'] = f?.entityName;
+    formModel['funcID'] = functionID;
+    return formModel;
+  }
 
   async ngOnChanges(changes: SimpleChanges){
     if(changes.dataSource && this.dataSource){
-
+      // this.productTable.refresh();
     }
   }
   // quotationsLineChanged(e) {
@@ -172,4 +188,7 @@ export class ProductComponent implements OnInit,OnChanges{
   //   this.quotations['discAmt'] = totalDis;
   // }
 
+  onClickMF(event, data) {
+
+  }
 }

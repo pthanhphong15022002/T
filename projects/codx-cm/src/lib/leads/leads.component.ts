@@ -446,6 +446,7 @@ export class LeadsComponent
 
   //#region convertLead
   convertLead(data){
+    this.dataSelected = data;
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -473,10 +474,10 @@ export class LeadsComponent
           );
           dialog.closed.subscribe((e) => {
             if (!e?.event) this.view.dataService.clear();
-            if (e && e.event != null) {
-              e.event.modifiedOn = new Date();
-              this.view.dataService.update(e.event).subscribe();
-              this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+            if (e && e.event) {
+              this.dataSelected.status = "5";
+              this.view.dataService.update(this.dataSelected).subscribe();
+              this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
               this.detectorRef.detectChanges();
             }
           });

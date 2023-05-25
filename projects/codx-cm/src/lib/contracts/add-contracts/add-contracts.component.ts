@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { CM_Contacts, CM_Contracts, CM_Customers } from '../../models/cm_model';
-import { ApiHttpService, AuthStore, CRUDService, CacheService, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService, RequestOption, Util } from 'codx-core';
+import { CM_Contacts, CM_Contracts, CM_ContractsPayments, CM_Customers } from '../../models/cm_model';
+import { ApiHttpService, AuthStore, CRUDService, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, Util } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, map, tap, firstValueFrom } from 'rxjs';
 import { ContractsService } from '../service-contracts.service';
+import { PaymentsComponent } from '../component/payments/payments.component';
 
 @Component({
   selector: 'add-contracts',
@@ -13,6 +14,7 @@ import { ContractsService } from '../service-contracts.service';
 })
 export class AddContractsComponent implements OnInit{
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('test') test: any;
   contracts: CM_Contracts;
   contractsInput: CM_Contracts;
   dialog!: DialogRef;
@@ -25,6 +27,26 @@ export class AddContractsComponent implements OnInit{
   type: 'view' | 'list';
   customer: CM_Customers;
   listQuotationsLine = [];
+  fmQuotationLines: FormModel = {
+    formName: 'CMQuotationsLines',
+    gridViewName: 'grvCMQuotationsLines',
+    entityName: 'CM_QuotationsLines',
+    funcID: 'CM02021',
+  };
+  fmContractsPayments: FormModel = {
+    formName: 'CMContractsPayments',
+    gridViewName: 'grvCMContractsPayments',
+    entityName: 'CM_ContractsPayments',
+    funcID: 'CM02041 ',
+  };
+  fmContractsPaymentsHistory: FormModel = {
+    formName: 'CMContractsPaymentsHistory',
+    gridViewName: 'grvCMContractsPaymentsHistory',
+    entityName: 'CM_ContractsPayments',
+    funcID: 'CM02042  ',
+  };
+
+  listPayMent: CM_ContractsPayments[] = [];
 
   constructor(
     private cache: CacheService,
@@ -84,11 +106,13 @@ export class AddContractsComponent implements OnInit{
     }
     if(this.action == 'edit'){
       this.contracts = data;
+      this.getQuotationsLinesByTransID(this.contracts.quotationID);
     }
     if(this.action == 'copy'){
       this.contracts = data;
       this.contracts.recID = Util.uid();
       delete this.contracts['id'];
+      this.getQuotationsLinesByTransID(this.contracts.quotationID);
     }
   }
 
@@ -110,7 +134,7 @@ export class AddContractsComponent implements OnInit{
       this.getCustomerByrecID(event?.data);
     }
     if(event?.field == 'quotationID' && event?.data){
-      this.getQuotationsLinesByTransID(event?.data);
+      this.getDataByTransID(event?.data);
     }
   }
 
@@ -146,9 +170,32 @@ export class AddContractsComponent implements OnInit{
   }
   getQuotationsLinesByTransID(recID){
     this.contractService.getQuotationsLinesByTransID(recID).subscribe(res => {
+      if(res){      
+        this.listQuotationsLine = res;       
+      }
+    })
+  }
+
+  getDataByTransID(recID){
+    this.contractService.getDataByTransID(recID).subscribe(res => {
       if(res){
         console.log(res);
-        this.listQuotationsLine = res;
+        let quotation = res[0];
+        let quotationsLine = res[1];
+        let customer = res[2] ;
+
+        this.listQuotationsLine = quotationsLine;
+        this.contracts.customerID = customer?.recID;
+        this.contracts.taxCode = customer?.taxCode;
+        this.contracts.address = customer?.address;
+        this.contracts.phone = customer?.phone;
+        this.contracts.faxNo = customer?.faxNo;
+        this.contracts.representative = null;
+        this.contracts.jobTitle = null;
+        this.contracts.bankAccount = customer?.bankAccount;
+        this.contracts.bankID = customer?.bankID;
+
+        this.contracts.dealID = quotation?.refID;
       }
     })
   }
@@ -177,6 +224,49 @@ export class AddContractsComponent implements OnInit{
 
     this.isLoadDate = !this.isLoadDate;
   }
+
+  addPay(){
+    let payMent = new CM_ContractsPayments();
+    let countPayMent =  this.listPayMent.length;
+    payMent.rowNo = countPayMent + 1;
+    this.openPopupPay('add', 'pay', payMent);
+  }
+
+  async openPopupPay(action,type,data) {
+    let dataInput = {
+      action,
+      data,
+      type,
+      contractID: this.contracts?.recID,
+    };
+    let formModel = new FormModel();
+    formModel.entityName = 'CM_ContractsPayments';
+    formModel.formName = 'CMContractsPayments';
+    formModel.gridViewName = 'grvCMContractsPayments';
+    
+    let option = new DialogModel();
+    option.IsFull = false;
+    option.zIndex = 1001;
+    option.FormModel = formModel;
+    let popupTask = this.callfunc.openForm(
+      PaymentsComponent,'',
+      600,
+      400,
+      '',
+      dataInput,
+      '',
+      option,
+      );
+
+    let dataPopupOutput = await firstValueFrom(popupTask.closed);
+    if(dataPopupOutput?.event?.action == 'add'){
+      this.listPayMent.push(dataPopupOutput?.event?.payment);
+      this.listPayMent = JSON.parse(JSON.stringify(this.listPayMent));
+      this.test.refresh();
+    }
+    return dataPopupOutput;
+  }
+
   handleSaveContract(){
     switch (this.action){
       case 'add':

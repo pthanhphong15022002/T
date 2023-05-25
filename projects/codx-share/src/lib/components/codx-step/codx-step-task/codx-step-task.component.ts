@@ -33,6 +33,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isLockSuccess = false;
   @Input() isSaveProgress = true;
 
+  @Input() isClose = false;
+  @Input() isStart = true;
   @Input() isOnlyView = true;
   @Input() isEditTimeDefault = true;
   @Input() isUpdateProgressGroup = true;
@@ -60,6 +62,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   isOpenPopupProgress = false;
   dataPopupProgress:any;
+  idStepOld = '';
 
   moreDefaut = {
     share: true,
@@ -103,17 +106,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    this.grvMoreFunction = await this.getFormModel('DPT040102');
-    await this.getStepById(this.stepId);
-    if(this.isLockSuccess){
-      await this.removeSuccess();
-    }
-    if(this.isOnlyView){
-      this.getTaskEnd();
-    }
-    let isTaskEnd = this.progressTaskEnd == 100 ? true : false;
-    if(this.isOnlyView){
-      this.continueStep.emit(isTaskEnd);
+    if(changes.dataSources || changes.stepId){
+      this.grvMoreFunction = await this.getFormModel('DPT040102');
+      await this.getStepById(this.stepId);
+      if(this.isLockSuccess){
+        await this.removeTaskSuccess();
+      }
+      if(this.isOnlyView){
+        this.getTaskEnd();
+      }
+      // if(this.idStepOld != this.currentStep?.recID){
+      //   let isTaskEnd = this.progressTaskEnd == 100 ? true : false;
+      //   if(this.isOnlyView){
+      //     this.continueStep.emit(isTaskEnd);
+      //   }
+      // }
+      // this.idStepOld = this.currentStep?.recID;
     }
   }
 
@@ -127,7 +135,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return formModel;
   }
 
-  removeSuccess() {
+  removeTaskSuccess() {
     if (this.listGroupTask?.length > 0) {
       for (let i = 0; i < this.listGroupTask.length;) {
         if (this.listGroupTask[i]?.task?.length > 0) {
@@ -426,8 +434,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       let group = this.listGroupTask.find(group => group.refID == data.task.taskGroupID);
       
       if(group){
+        if(!group?.task){
+          group['task'] = [];
+        }
         group?.task?.push(data.task)
-        group['progress'] = JSON.parse(JSON.stringify(data.progressGroup)) ;
+        group['progress'] = data.progressGroup ;
       }       
       if(groupData){
         groupData['progress'] = data.progressGroup;
@@ -714,7 +725,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return dataPopupOutput;
   }
   async openPopupUpdateProgress(data, type){
-    if(this.isViewStep) return;
+    if(!this.isOnlyView || !this.isStart || this.isClose) return;
     let checkUpdate =this.stepService.checkUpdateProgress(data, type,this.currentStep, this.isRoleAll,this.isOnlyView,this.isUpdateProgressGroup, this.user);
     if(!checkUpdate) return;
     if(type != 'P' && type != 'G'){
@@ -840,7 +851,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   checkUpdateProgress(dataUpdate, type) {
-    if(this.isOnlyView){
+    if(this.isOnlyView && this.isStart && !this.isClose){
       if (type != "G" && type != "P") { //task
         let isGroup = false;
         let isTask = false;
