@@ -2088,6 +2088,13 @@ export class InstancesComponent
                   '',
                   option
                 );
+                this.dialogTemplate.closed.subscribe((e) => {
+                  if (e?.event) {
+                    this.dataSelected = e?.event;
+                    this.view.dataService.update(this.dataSelected).subscribe();
+                    if (this.kanban) this.kanban.updateCard(this.dataSelected);
+                  }
+                });
               } else this.notificationsService.notifyCode('DP036');
             });
         }
@@ -2228,11 +2235,11 @@ export class InstancesComponent
         if (res2?.msgCodeError)
           this.notificationsService.notify(res2?.msgCodeError);
         else {
-          this.dataSelected.approveStatus = '1';
+          this.dataSelected.approveStatus = '3';
           this.view.dataService.update(this.dataSelected).subscribe();
           if (this.kanban) this.kanban.updateCard(this.dataSelected);
           this.codxDpService
-            .updateApproverStatusInstance([data?.recID, '1'])
+            .updateApproverStatusInstance([data?.recID, '3'])
             .subscribe();
           this.notificationsService.notifyCode('ES007');
         }
