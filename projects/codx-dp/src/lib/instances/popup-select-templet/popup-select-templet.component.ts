@@ -53,14 +53,14 @@ export class PopupSelectTempletComponent implements OnInit {
     this.dialog = dialog;
     this.data = dt?.data?.data;
     this.formModel = dt?.data?.formModel;
-    this.isFormExport = dt?.data?.isFormExport
+    this.isFormExport = dt?.data?.isFormExport;
     this.refID = dt?.data?.refID;
     this.refType = dt?.data?.refType ?? this.refType;
     this.esCategory = dt?.data?.esCategory;
     this.titleAction = dt?.data?.titleAction;
     this.loaded = dt?.data?.loaded;
     this.dataEx = dt?.data?.dataEx;
-    this.dataWord =dt?.data?.dataWord;
+    this.dataWord = dt?.data?.dataWord;
     if (!this.loaded) {
       this.loadEx();
       this.loadWord();
@@ -76,7 +76,7 @@ export class PopupSelectTempletComponent implements OnInit {
     this.classNameTemp = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataEx = item;
-      this.loaded =true ;
+      this.loaded = true;
     });
   }
   loadWord() {
@@ -172,14 +172,14 @@ export class PopupSelectTempletComponent implements OnInit {
     //     this.esCategory?.processID
     //   )
     //   .subscribe((res2: any) => {
-        let dialogModel = new DialogModel();
-        dialogModel.IsFull = true;
-        //trình ký
-        if (this.esCategory?.eSign == true) {
-        } else if (this.esCategory?.eSign == false)
-          //xét duyệt
-          this.release(this.data, this.esCategory?.processID);
-     // });
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    //trình ký
+    if (this.esCategory?.eSign == true) {
+    } else if (this.esCategory?.eSign == false)
+      //xét duyệt
+      this.release(this.data, this.esCategory?.processID);
+    // });
   }
   //Gửi duyệt
   release(data: any, processID: any) {
@@ -195,13 +195,14 @@ export class PopupSelectTempletComponent implements OnInit {
         if (res2?.msgCodeError)
           this.notificationsService.notify(res2?.msgCodeError);
         else {
-          this.data.approveStatus = '1';
+          this.data.approveStatus = '3';
           //xu ly tra data về - --- xử lý sau
           // this.view.dataService.update(this.dataSelected).subscribe();
           // if (this.kanban) this.kanban.updateCard(this.dataSelected);
           this.codxDpService
-            .updateApproverStatusInstance([data?.recID, '1'])
+            .updateApproverStatusInstance([data?.recID, '3'])
             .subscribe();
+          this.dialog.close(this.data);
           this.notificationsService.notifyCode('ES007');
         }
       });

@@ -135,10 +135,8 @@ export class PopupSettingCalendarComponent extends UIComponent {
     this.ndShift.data = [];
     this.days.forEach((e, i) => {
       let y = i.toString();
-      let stCheck = weekday.stShift.data.some({ weekday: y });
-      let ndCheck = weekday.ndShift.data.some({ weekday: y });
-      // let stCheck = _.some(weekday.stShift.data, { weekday: y });
-      // let ndCheck = _.some(weekday.ndShift.data, { weekday: y });
+      let stCheck = weekday.stShift.data.some((x) => x.weekday === y);
+      let ndCheck = weekday.ndShift.data.some((x) => x.weekday === y);
       this.stShift.data.push({
         weekday: y,
         checked: stCheck,
@@ -186,7 +184,7 @@ export class PopupSettingCalendarComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
-          this.dayOff = this.dayOff.filter(x=>x.recID != item.recID);
+          this.dayOff = this.dayOff.filter((x) => x.recID != item.recID);
         }
       });
   }
@@ -219,7 +217,9 @@ export class PopupSettingCalendarComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
-          this.calendarDate = this.calendarDate.filter(x=>x.recID != item.recID);
+          this.calendarDate = this.calendarDate.filter(
+            (x) => x.recID != item.recID
+          );
         }
       });
   }

@@ -176,7 +176,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           name: 'Contacts',
         },
       ];
-    } else if(this.funcID == 'CM0102'){
+    } else if (this.funcID == 'CM0102') {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
@@ -190,7 +190,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           name: 'Address',
         },
       ];
-    }else if(this.funcID == 'CM0103'){
+    } else if (this.funcID == 'CM0103') {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
@@ -205,7 +205,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           name: 'Contacts',
         },
       ];
-    }else{
+    } else {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
@@ -384,6 +384,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.partnerName = this.data?.partnerName;
     }
     if (this.funcID == 'CM0102') {
+      if (this.data.objectType == null || this.data.objectType.trim() == '') {
+        this.gridViewSetup['ContactType'].isRequire = false;
+        this.gridViewSetup['ObjectID'].isRequire = false;
+      }
       if (this.data.firstName != null && this.data.firstName.trim() != '') {
         if (this.data.lastName != null && this.data.lastName.trim() != '') {
           this.data.contactName =
