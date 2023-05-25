@@ -55,7 +55,8 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
   selector: 'codx-instances',
   templateUrl: './instances.component.html',
   styleUrls: ['./instances.component.css'],
-})export class InstancesComponent
+})
+export class InstancesComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -781,141 +782,161 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
   }
 
   //#Event
+  clickMoreFunc(e) {
+    this.lstStepInstances = e.lstStepCbx;
+    this.clickMF(e.e, e.data);
+  }
+  changeMF(e) {
+    this.changeDataMF(e.e, e.data);
+  }
+
   changeDataMF(e, data) {
     if (e != null && data != null) {
-      if (data.status != '1') {
+      if (data?.approveStatus == '3') {
         e.forEach((res) => {
-          switch (res.functionID) {
-            case 'SYS003':
-              if (
-                data.status != '2' ||
-                data.closed ||
-                !data.permissionCloseInstances
-              )
-                res.disabled = true;
-              break;
-            // case 'SYS004':
-            // case 'SYS001':
-            // case 'SYS002':
-            // //more core - thay doi nhieu dong, bo chon, chon tat ca..
-            // case 'SYS005':
-            // case 'SYS007':
-            // case 'SYS006':
-            //   res.disabled = true;
-            //   break;
-            //Chỉnh sửa, chuyển tiếp, thất bại, thành công
-            case 'SYS103':
-            case 'SYS03':
-              let isUpdate = data.write;
-              if (
-                !isUpdate ||
-                data.status != '2' ||
-                data.closed ||
-                !data.permissionCloseInstances
-              )
-                res.disabled = true;
-              break;
-            case 'DP09':
-              if (this.checkMoreReason(data, null)) {
-                res.disabled = true;
-              }
-              break;
-            //Copy
-            case 'SYS104':
-            case 'SYS04':
-              if (!this.isCreate) res.disabled = true;
-              break;
-            //xóa
-            case 'SYS102':
-            case 'SYS02':
-              let isDelete = data.delete;
-              if (
-                !isDelete ||
-                data.closed ||
-                data.status != '2' ||
-                !data.permissionCloseInstances
-              )
-                res.disabled = true;
-              break;
-            //Đóng nhiệm vụ = true
-            case 'DP14':
-              if (data.closed || !data.permissionCloseInstances)
-                res.isblur = true;
-              break;
-            //Mở nhiệm vụ = false
-            case 'DP15':
-              if (!data.closed || !data.permissionCloseInstances) {
-                res.isblur = true;
-              }
-              break;
-            case 'DP02':
-              if (this.checkMoreReason(data, !this.isUseFail)) {
-                res.disabled = true;
-              }
-              break;
-            case 'DP10':
-              if (this.checkMoreReason(data, !this.isUseSuccess)) {
-                res.disabled = true;
-              }
-              break;
-            //an khi aprover rule
-            case 'DP17':
-              if (!data.write || data.closed) {
-                res.disabled = true;
-              } else if (!this.process?.approveRule) {
-                res.isblur = true;
-              }
-              break;
-            case 'SYS004':
-            case 'SYS002':
-            case 'DP21':
-              res.disabled = true;
-              break;
-            case 'DP22':
-              if (
-                data.status != '2' ||
-                data.closed ||
-                !data.permissionCloseInstances
-              )
-                res.disabled = true;
-              break;
+          if (res.functionID != 'DP23') {
+            res.disabled = true;
           }
         });
       } else {
-        e.forEach((mf) => {
-          switch (mf.functionID) {
-            case 'DP21':
-              if (!data.permissionCloseInstances) {
+        if (data.status != '1') {
+          e.forEach((res) => {
+            switch (res.functionID) {
+              case 'SYS003':
+                if (
+                  data.status != '2' ||
+                  data.closed ||
+                  !data.permissionCloseInstances
+                )
+                  res.disabled = true;
+                break;
+              // case 'SYS004':
+              // case 'SYS001':
+              // case 'SYS002':
+              // //more core - thay doi nhieu dong, bo chon, chon tat ca..
+              // case 'SYS005':
+              // case 'SYS007':
+              // case 'SYS006':
+              //   res.disabled = true;
+              //   break;
+              //Chỉnh sửa, chuyển tiếp, thất bại, thành công
+              case 'SYS103':
+              case 'SYS03':
+                let isUpdate = data.write;
+                if (
+                  !isUpdate ||
+                  data.status != '2' ||
+                  data.closed ||
+                  !data.permissionCloseInstances
+                )
+                  res.disabled = true;
+                break;
+              case 'DP09':
+                if (this.checkMoreReason(data, null)) {
+                  res.disabled = true;
+                }
+                break;
+              //Copy
+              case 'SYS104':
+              case 'SYS04':
+                if (!this.isCreate) res.disabled = true;
+                break;
+              //xóa
+              case 'SYS102':
+              case 'SYS02':
+                let isDelete = data.delete;
+                if (
+                  !isDelete ||
+                  data.closed ||
+                  data.status != '2' ||
+                  !data.permissionCloseInstances
+                )
+                  res.disabled = true;
+                break;
+              //Đóng nhiệm vụ = true
+              case 'DP14':
+                if (data.closed || !data.permissionCloseInstances)
+                  res.isblur = true;
+                break;
+              //Mở nhiệm vụ = false
+              case 'DP15':
+                if (!data.closed || !data.permissionCloseInstances) {
+                  res.isblur = true;
+                }
+                break;
+              case 'DP02':
+                if (this.checkMoreReason(data, !this.isUseFail)) {
+                  res.disabled = true;
+                }
+                break;
+              case 'DP10':
+                if (this.checkMoreReason(data, !this.isUseSuccess)) {
+                  res.disabled = true;
+                }
+                break;
+              //an khi aprover rule
+              case 'DP17':
+                if (!data.write || data.closed) {
+                  res.disabled = true;
+                } else if (!this.process?.approveRule) {
+                  res.isblur = true;
+                }
+                break;
+              case 'SYS004':
+              case 'SYS002':
+              case 'DP21':
+                res.disabled = true;
+                break;
+              case 'DP22':
+                if (
+                  data.status != '2' ||
+                  data.closed ||
+                  !data.permissionCloseInstances
+                )
+                  res.disabled = true;
+                break;
+              case 'DP23':
+                if (data.approveStatus != '3') res.disabled = true;
+                break;
+            }
+          });
+        } else {
+          e.forEach((mf) => {
+            switch (mf.functionID) {
+              case 'DP21':
+                if (!data.permissionCloseInstances) {
+                  mf.disabled = true;
+                }
+                break;
+              //edit
+              case 'SYS03':
+                let isUpdate = data.write;
+                if (!isUpdate || data.closed || !data.permissionCloseInstances)
+                  mf.disabled = true;
+                break;
+              //Copy
+              case 'SYS04':
+                if (!this.isCreate) mf.disabled = true;
+                break;
+              //xóa
+              case 'SYS02':
+                let isDelete = data.delete;
+                if (!isDelete || data.closed || !data.permissionCloseInstances)
+                  mf.disabled = true;
+                break;
+              case 'DP09':
+              case 'DP10':
+              case 'SYS004':
+              case 'SYS002':
+              case 'DP02':
+              case 'DP23':
                 mf.disabled = true;
-              }
-              break;
-            //edit
-            case 'SYS03':
-              let isUpdate = data.write;
-              if (!isUpdate || data.closed || !data.permissionCloseInstances)
-                mf.disabled = true;
-              break;
-            //Copy
-            case 'SYS04':
-              if (!this.isCreate) mf.disabled = true;
-              break;
-            //xóa
-            case 'SYS02':
-              let isDelete = data.delete;
-              if (!isDelete || data.closed || !data.permissionCloseInstances)
-                mf.disabled = true;
-              break;
-            case 'DP09':
-            case 'DP10':
-            case 'SYS004':
-            case 'SYS002':
-            case 'DP02':
-              mf.disabled = true;
-              break;
-            default:
-              mf.isblur = true;
-          }
-        });
+                break;
+              default:
+                mf.isblur = true;
+            }
+          });
+        }
       }
     }
   }
@@ -967,6 +988,9 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
         break;
       case 'DP22':
         this.popupOwnerRoles(data);
+        break;
+      case 'DP23':
+        this.cancelApprover();
         break;
       //xuat khau du lieu
       case 'SYS002':
@@ -1233,7 +1257,7 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
             listStepProccess: this.process.steps,
             lstParticipants: this.lstOrg,
             isDurationControl: this.checkDurationControl(data.stepID),
-            applyFor: this.process.applyFor
+            applyFor: this.process.applyFor,
           };
           var dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
@@ -1477,7 +1501,13 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
     return { ischeck: ischeck, transferControl: transferControl };
   }
 
-  async openFormReason(data, fun, isMoveSuccess, dataMore, listParticipantReason) {
+  async openFormReason(
+    data,
+    fun,
+    isMoveSuccess,
+    dataMore,
+    listParticipantReason
+  ) {
     var formMD = new FormModel();
     formMD.funcID = fun.functionID;
     formMD.entityName = fun.entityName;
@@ -1493,8 +1523,10 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
       instance: data,
       objReason: JSON.parse(JSON.stringify(reason)),
       listProccessCbx: this.listProccessCbx,
-      listParticipantReason:  await this.codxDpService.getListUserByOrg( listParticipantReason),
-      applyFor:'0'
+      listParticipantReason: await this.codxDpService.getListUserByOrg(
+        listParticipantReason
+      ),
+      applyFor: '0',
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -1559,13 +1591,7 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
       .filter((x) => x.stepID === stepId)
       .map((x) => x.stepName)[0];
   }
-  clickMoreFunc(e) {
-    this.lstStepInstances = e.lstStepCbx;
-    this.clickMF(e.e, e.data);
-  }
-  changeMF(e) {
-    this.changeDataMF(e.e, e.data);
-  }
+
   getListCbxProccess(applyFor: any) {
     this.cache.valueList('DP031').subscribe((data) => {
       this.codxDpService.getlistCbxProccess(applyFor).subscribe((res) => {
@@ -1766,7 +1792,7 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
     this.isUseSuccess = this.stepSuccess?.isUsed;
     this.isUseFail = this.stepFail?.isUsed;
     this.showButtonAdd = this.isCreate;
-    this.viewMode = this.process?.viewMode??6;
+    this.viewMode = this.process?.viewMode ?? 6;
     this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
     //f5 hoặc copy link dán
     if (reload) {
@@ -2143,54 +2169,54 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
     //     processID
     //   )
     //   .subscribe((res2: any) => {
-        let dialogModel = new DialogModel();
-        dialogModel.IsFull = true;
-        //trình ký
-        if (this.esCategory?.eSign == true) {
-          //   let signFile = new ES_SignFile();
-          //   signFile.recID = datas.recID;
-          //   signFile.title = datas.title;
-          //   signFile.categoryID = res2?.categoryID;
-          //   signFile.refId = datas.recID;
-          //   // signFile.refDate = datas.refDate;
-          //   signFile.refNo = datas.refNo;
-          //   signFile.priority = '1';
-          //   signFile.refType = this.formModel?.entityName; // OD_Dispatches';
-          //   signFile.files = [];
-          //   // if (this.data?.files) {
-          //   //   for (var i = 0; i < this.data?.files.length; i++) {
-          //   //     var file = new File();
-          //   //     file.fileID = this.data?.files[i].recID;
-          //   //     file.fileName = this.data?.files[i].fileName;
-          //   //     file.eSign = true;
-          //   //     signFile.files.push(file);
-          //   //   }
-          //   // }
-          //   let dialogApprove = this.callfc.openForm(
-          //     PopupAddSignFileComponent,
-          //     'Chỉnh sửa',
-          //     700,
-          //     650,
-          //     '',
-          //     {
-          //       oSignFile: signFile,
-          //       ///files: this.data?.files,  //file  cân xét duyet
-          //       cbxCategory: 'ODCategories', //this.gridViewSetup['CategoryID']?.referedValue,
-          //       disableCateID: true,
-          //       //formModel: this.view?.currentView?.formModel,
-          //     },
-          //     '',
-          //     dialogModel
-          //   );
-          //   dialogApprove.closed.subscribe((res) => {
-          //     if (res.event && res.event?.approved == true) {
-          //       //update lại data
-          //     }
-          //   });
-        } else if (this.esCategory?.eSign == false)
-          //xét duyệt
-          this.release(datas, processID);
-     // });
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    //trình ký
+    if (this.esCategory?.eSign == true) {
+      //   let signFile = new ES_SignFile();
+      //   signFile.recID = datas.recID;
+      //   signFile.title = datas.title;
+      //   signFile.categoryID = res2?.categoryID;
+      //   signFile.refId = datas.recID;
+      //   // signFile.refDate = datas.refDate;
+      //   signFile.refNo = datas.refNo;
+      //   signFile.priority = '1';
+      //   signFile.refType = this.formModel?.entityName; // OD_Dispatches';
+      //   signFile.files = [];
+      //   // if (this.data?.files) {
+      //   //   for (var i = 0; i < this.data?.files.length; i++) {
+      //   //     var file = new File();
+      //   //     file.fileID = this.data?.files[i].recID;
+      //   //     file.fileName = this.data?.files[i].fileName;
+      //   //     file.eSign = true;
+      //   //     signFile.files.push(file);
+      //   //   }
+      //   // }
+      //   let dialogApprove = this.callfc.openForm(
+      //     PopupAddSignFileComponent,
+      //     'Chỉnh sửa',
+      //     700,
+      //     650,
+      //     '',
+      //     {
+      //       oSignFile: signFile,
+      //       ///files: this.data?.files,  //file  cân xét duyet
+      //       cbxCategory: 'ODCategories', //this.gridViewSetup['CategoryID']?.referedValue,
+      //       disableCateID: true,
+      //       //formModel: this.view?.currentView?.formModel,
+      //     },
+      //     '',
+      //     dialogModel
+      //   );
+      //   dialogApprove.closed.subscribe((res) => {
+      //     if (res.event && res.event?.approved == true) {
+      //       //update lại data
+      //     }
+      //   });
+    } else if (this.esCategory?.eSign == false)
+      //xét duyệt
+      this.release(datas, processID);
+    // });
   }
   //Gửi duyệt
   release(data: any, processID: any) {
@@ -2222,6 +2248,9 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
         }
       });
   }
+
+  //Huy duyet
+  cancelApprover() {}
   //end duyet
 
   getUserArray(arr1, arr2) {
