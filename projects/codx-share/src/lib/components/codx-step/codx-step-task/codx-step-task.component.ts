@@ -62,6 +62,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   isOpenPopupProgress = false;
   dataPopupProgress:any;
+  idStepOld = '';
 
   moreDefaut = {
     share: true,
@@ -105,17 +106,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    this.grvMoreFunction = await this.getFormModel('DPT040102');
-    await this.getStepById(this.stepId);
-    if(this.isLockSuccess){
-      await this.removeSuccess();
-    }
-    if(this.isOnlyView){
-      this.getTaskEnd();
-    }
-    let isTaskEnd = this.progressTaskEnd == 100 ? true : false;
-    if(this.isOnlyView){
-      this.continueStep.emit(isTaskEnd);
+    if(changes.dataSources || changes.stepId){
+      this.grvMoreFunction = await this.getFormModel('DPT040102');
+      await this.getStepById(this.stepId);
+      if(this.isLockSuccess){
+        await this.removeTaskSuccess();
+      }
+      if(this.isOnlyView){
+        this.getTaskEnd();
+      }
+      // if(this.idStepOld != this.currentStep?.recID){
+      //   let isTaskEnd = this.progressTaskEnd == 100 ? true : false;
+      //   if(this.isOnlyView){
+      //     this.continueStep.emit(isTaskEnd);
+      //   }
+      // }
+      // this.idStepOld = this.currentStep?.recID;
     }
   }
 
@@ -129,7 +135,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return formModel;
   }
 
-  removeSuccess() {
+  removeTaskSuccess() {
     if (this.listGroupTask?.length > 0) {
       for (let i = 0; i < this.listGroupTask.length;) {
         if (this.listGroupTask[i]?.task?.length > 0) {
@@ -719,7 +725,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return dataPopupOutput;
   }
   async openPopupUpdateProgress(data, type){
-    if(this.isViewStep || this.isStart || !this.isClose) return;
+    if(!this.isOnlyView || !this.isStart || this.isClose) return;
     let checkUpdate =this.stepService.checkUpdateProgress(data, type,this.currentStep, this.isRoleAll,this.isOnlyView,this.isUpdateProgressGroup, this.user);
     if(!checkUpdate) return;
     if(type != 'P' && type != 'G'){
