@@ -1489,21 +1489,14 @@ a {
   padding-top: 5px !important;
 }
 
-.label-colon span{
-  //position: relative;
+codx-label.label-colon span{
   padding-right: 7px;
   min-height: 18px;
- // display: block;
   line-height: 18px;
-}
-
-.label-colon span::after {
+} 
+codx-label.label-colon span::after {
   content: ":";
   margin-left: -1px;
-  //position: absolute;
-  //right: 6px;
-  //top: 0;
-  //height: 18px;
 }
 
 .codx-label.required::after {
