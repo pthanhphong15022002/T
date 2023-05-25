@@ -52,7 +52,13 @@
         class="me-1"
       >
       </span>
-      <span class="fs-6" [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
+      <span
+        class="fs-6"
+        [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }"
+        [ngbTooltip]="data.headerText"
+        container="body"
+        placement="bottom"
+      >
         {{ data.headerText }}
       </span>
     </div>
@@ -146,7 +152,9 @@
       </span>
     </div>
     <div class="d-flex justify-content-end">
-      <span *ngIf="data.ownerStepInstances && data.ownerStepInstances != data.owner">
+      <span
+        *ngIf="data.ownerStepInstances && data.ownerStepInstances != data.owner"
+      >
         <codx-imgs
           [isToolTip]="true"
           [width]="25"
@@ -168,9 +176,8 @@
   </div>
 </ng-template>
 
-<ng-template #popDetail >
-  <codx-form [body]="detailPopupClick" [dialog]="popup">
-  </codx-form>
+<ng-template #popDetail>
+  <codx-form [body]="detailPopupClick" [dialog]="popup"> </codx-form>
 </ng-template>
 <ng-template #detailPopupClick>
   <codx-instance-detail

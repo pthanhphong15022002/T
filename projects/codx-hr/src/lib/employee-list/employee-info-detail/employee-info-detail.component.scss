@@ -72,7 +72,7 @@
     .h-od-tab .nav-item {
       .nav-link {
         padding: 7px 2px;
-        margin-right: 16px;
+        margin-right: 10px;
         display: inline-block;
         border: 0;
         border-bottom: 2px transparent solid;
@@ -109,3 +109,23 @@
   .user-family .bg-white{
     min-height: calc(100vh - 130px);
   }
+  .timeline-exper-nav::after{
+    content: "";
+    background-color: var(--gray-300);
+    width: 1px;
+    position: absolute;
+    top: 15px;
+    left: 133.2px;
+    bottom: -3px;
+    z-index: 9;
+}
+// .tab-scroll{
+//   max-width: 900px;
+//   overflow-x: auto;
+//   .tab-horizone{
+//     width: 1000px;
+//   }
+//   ::-webkit-scrollbar {
+//     height: 0.2rem !important;
+// }
+// }
