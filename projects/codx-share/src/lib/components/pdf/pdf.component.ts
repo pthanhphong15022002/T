@@ -2829,6 +2829,12 @@ export class PdfComponent
   addComment() {}
 
   ngOnDestroy() {}
+  change(event, type) {
+    console.log(type + ' input change', event);
+    if (event?.keyCode == 32) {
+      event.stopPropagation();
+    }
+  }
   //#endregion
 }
 //create new guid
