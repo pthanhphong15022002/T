@@ -25,7 +25,8 @@
 </ng-container>
 
 <ng-template #template let-data>
-  <div class="w-250px position-relative p-4">
+  <div class="w-250px position-relative p-4 rounded-2"
+    [ngStyle]="{ background: data?.positionID == positionID? 'aliceblue': null }">
     <div class="position-relative">
       <ng-container *ngIf="data.employees?.length > 0;else tmpNoEmployee">
         <!-- <ng-container *ngIf="data.employees.length == 1;else tmpMoreEmploye">
@@ -78,7 +79,7 @@
       type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
       style="padding: 0 !important ; margin-left: 0 !important; border:none">
       <div class="d-flex align-items-center">
-        <codx-img [objectId]="employees[0].employeeID" [objectName]="employees[0].employeeName"
+        <codx-img [funcId]="funcID" [objectId]="employees[0].employeeID" [objectName]="employees[0].employeeName"
           [objectType]="'HR_Employees'" [width]="50" [referType]="'avt'">
         </codx-img>
         <span *ngIf="employees.length > 1" class="multiple-employee rounded-circle">

@@ -44,6 +44,7 @@ import { TableLineDetailComponent } from './vouchers/sales-invoices/components/t
 import { PopAddLineinventoryComponent } from './vouchers/receipt-transaction/pop-add-lineinventory/pop-add-lineinventory.component';
 import { Group067Component } from './journals/components/group067/group067.component';
 import { CoreModule } from "../../../../src/core/core.module";
+import { PopUpCashComponent } from './vouchers/cash-payments/pop-up-cash/pop-up-cash.component';
 
 export const routes: Routes = [
   {
@@ -159,6 +160,7 @@ export const routes: Routes = [
         ApprovalsComponent,
         PopAddLineinventoryComponent,
         Group067Component,
+        PopUpCashComponent,
     ],
     exports: [RouterModule],
     providers: [AccumulationTooltipService],

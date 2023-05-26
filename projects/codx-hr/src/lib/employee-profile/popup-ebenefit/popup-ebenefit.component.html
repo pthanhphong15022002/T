@@ -24,26 +24,29 @@
   <ng-template #body>
     <div class="form-group row mt-5">
       <div class="col-6">
-        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
+        <span
+          [innerHTML]="benefitObj?.status | formatvalue : formModel : 'status' | async"
+        >
+        </span>
+      </div>
+      <div class="col-6">
         <codx-input
-          field="decisionNo"
+          [disabled]="'true'"
+          field="isCurrent"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
+        <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
       </div>
-      <div class="col-6">
-        <div>
-          <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
-        </div>
-        <div>
-          <codx-input
-            field="IsCurrent"
-            [formModel]="formModel"
-            [Group]="formGroup"
-            disabled="true">
-          </codx-input>
-        </div>
-      </div>
+    </div>
+
+    <div class="form-group row">
+      <codx-label fiedName="BenefitID" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="BenefitID"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
     </div>
 
     <div class="form-group row">
@@ -71,14 +74,7 @@
       </div>
     </div>
 
-    <div class="form-group row">
-      <codx-label fiedName="BenefitID" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="BenefitID"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
+
 
     <div class="form-group row">
       <div class="col-6">
@@ -123,18 +119,28 @@
       </div>
     </div>
 
+    <div class="form-group row">
+      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="note"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+
     <hr>
 
     <div class="form-group row">
       <div class="col-6">
         <div class="d-flex flex-column">
           <codx-label
-            fiedName="SignedDate"
+            fiedName="DecisionNo"
             [formModel]="formModel"
           ></codx-label>
 
           <codx-input
-            field="SignedDate"
+            [disabled]="true"
+            field="DecisionNo"
             [formModel]="formModel"
             [Group]="formGroup"
           ></codx-input>
@@ -142,9 +148,9 @@
       </div>
       <div class="col-6">
         <div class="d-flex flex-column">
-          <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
+          <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
           <codx-input
-            field="SignerID"
+            field="SignedDate"
             [formModel]="formModel"
             [Group]="formGroup"
             (valueChange)="valueChange($event)"
@@ -154,21 +160,21 @@
     </div>
 
     <div class="form-group row">
-      <codx-label
-        fiedName="SignerPosition"
-        [formModel]="formModel"
-      ></codx-label>
+      <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
       <codx-input
-        field="signerPosition"
+        field="signerID"
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-label
+        fiedName="SignerPosition"
+        [formModel]="formModel"
+      ></codx-label>
       <codx-input
-        field="note"
+        field="signerPosition"
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
