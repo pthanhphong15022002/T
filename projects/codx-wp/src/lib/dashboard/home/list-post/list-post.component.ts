@@ -174,7 +174,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    option.zIndex = 10;
+    option.zIndex = 100;
     let popup = this.callFC.openForm(
       PopupAddPostComponent,
       '',
