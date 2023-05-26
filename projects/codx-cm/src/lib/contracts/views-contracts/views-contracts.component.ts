@@ -33,8 +33,8 @@ import { PopupAddQuotationsComponent } from '../../quotations/popup-add-quotatio
 import { ListContractsComponent } from '../list-contracts/list-contracts.component';
 import { AddContractsComponent } from '../add-contracts/add-contracts.component';
 import { CM_Contracts } from '../../models/cm_model';
-import { PaymentsComponent } from '../component/payments/payments.component';
 import { CodxCmService } from '../../codx-cm.service';
+import { PopupAddPaymentComponent } from '../payment/popup-add-payment/popup-add-payment.component';
 
 @Component({
   selector: 'lib-views-contracts',
@@ -322,7 +322,7 @@ export class ViewsContractsComponent extends UIComponent{
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     let popupTask = this.callfc.openForm(
-      PaymentsComponent,'',
+      PopupAddPaymentComponent,'',
       600,
       400,
       '',

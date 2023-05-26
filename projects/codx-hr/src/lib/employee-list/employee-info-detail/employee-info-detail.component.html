@@ -46,11 +46,11 @@
                     >
                       <i class="icon-keyboard_arrow_down"></i>
                     </span>
-                    <div ngbDropdownMenu class="" style="min-width: 350px">
+                    <div ngbDropdownMenu class="" style="min-width: 400px">
                       <div class="card card-flush" *ngIf="eInfoFormModel">
-                        <div class="card-body py-3 px-4">
+                        <div class="card-body py-2 px-3">
                           <div class="d-flex flex-column">
-                            <div class="d-flex flex-wrap mb-2">
+                            <div class="d-flex flex-wrap align-items-center mb-2">
                               <div class="d-flex align-items-bottom me-2">
                                 <span
                                   class="icon-cake icon-16 text-gray-800 me-1"
@@ -79,9 +79,7 @@
                                 </span>
                               </div>
                               <div class="d-flex align-items-center">
-                                <span
-                                  class="icon-i-info-circle-fill fs-9 icon-6 me-2 text-gray-400"
-                                ></span>
+                                <span class="icon-i-info-circle-fill icon-6 me-2 text-gray-400"></span>
                                 <span
                                   class="fw-bold"
                                   [innerHTML]="
@@ -95,7 +93,7 @@
                                 </span>
                               </div>
                             </div>
-                            <div class="d-flex align-items-center mb-3">
+                            <div class="d-flex align-items-center mb-2">
                               <span
                                 class="icon-portrait icon-16 text-gray-800 me-1"
                               ></span>
@@ -112,9 +110,9 @@
                               </span>
                             </div>
 
-                            <div class="d-flex justify-content-between mb-3">
+                            <div class="d-flex justify-content-between mb-2">
                               <codx-label
-                                class="text-gray-600"
+                                class="text-gray-700"
                                 fiedName="PITNumber"
                                 [formModel]="eInfoFormModel"
                               >
@@ -129,10 +127,10 @@
                             </div>
 
                             <div
-                              class="d-flex d-flex justify-content-between mb-3"
+                              class="d-flex d-flex justify-content-between mb-2"
                             >
                               <codx-label
-                                class="text-gray-600"
+                                class="text-gray-700"
                                 fiedName="SIRegisterNo"
                                 [formModel]="eInfoFormModel"
                               >
@@ -148,11 +146,11 @@
                                 "
                               ></span>
                             </div>
-                     
-                            <div class="info-dropdownlist">
+                     <hr class="m-0" />
+                            <div class="info-dropdownlist pt-2">
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="joinedOn"
                                 >
@@ -171,7 +169,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="hiredOn"
                                 >
@@ -190,7 +188,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eContractFormModel"
                                   fiedName="ContractTypeID"
                                   [default]="'Hợp đồng hiện tại'"
@@ -210,7 +208,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="EmployeeTypeID"
                                 >
@@ -229,7 +227,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="userID"
                                 >
@@ -249,7 +247,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="lineManager"
                                 >
@@ -269,7 +267,7 @@
                              
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="timeCardNo"
                                 >
@@ -281,7 +279,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="shiftCalendarID"
                                 >
@@ -294,7 +292,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="ALObjectID"
                                 >
@@ -314,7 +312,7 @@
                               </div>
                               <div class="d-flex justify-content-between">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="payrollGroupID"
                                 >
@@ -350,9 +348,9 @@
             </div>
             <div class="d-flex flex-center">
               <div class="fs-5-sm mb-1 d-flex align-items-center">
-                <span class="icon-qr_code_scanner icon-14 me-1"></span>
-                <span #id>{{employeeID }}</span>
-                <span class="icon-i-dot text-gray-500"></span>
+                <span class="icon-qr_code_scanner icon-16 me-2"></span>
+                <span style="margin-top: 2px;" #id>{{employeeID }}</span>
+                <span class="icon-i-info-circle-fill icon-4 mx-3 text-gray-600"></span>
                 <span class="fw-bold">{{ infoPersonal?.employeeName }}</span>
               </div>
             </div>
@@ -375,7 +373,7 @@
                       class="icon-connection-point icon-16 me-1"
                       *ngIf="i == 0"
                     ></span> -->
-                  <span class="icon-i-dot text-gray-500" *ngIf="i > 0"></span>
+                  <span class="icon-i-info-circle-fill icon-4 mx-2 text-gray-500" *ngIf="i > 0"></span>
                   <span>{{ org.orgUnitName }}</span>
                 </div>
               </div>
@@ -562,7 +560,7 @@
                     class="icon-18 me-2"
                     [ngClass]="item?.largeIcon ? item.largeIcon : 'icon-person'"
                   ></span>
-                  <div class="fw-bold">{{ item.customName }}</div>
+                  <div class="fw-bold text-left">{{ item.customName }}</div>
                 </div>
               </a>
             </ng-container>
@@ -2208,7 +2206,7 @@
                           placement="left"
                           [ngbPopover]="popIsDependent"
                           [style.color]="'#FFA800'"
-                          class="icon-bookmark icon-18 ms-auto"
+                          class="icon-bookmark icon-16 ms-auto"
                         ></div>
 
                         <ng-template #popIsDependent>

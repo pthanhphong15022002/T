@@ -1019,7 +1019,7 @@
       style="height: 28px"
       type="button"
       class="btn btn-outline-primary btn-sm"
-      (click)="addPay()"
+      (click)="addPayment()"
     >
       <codx-label
         [formModel]="dialog.formModel"
@@ -1043,6 +1043,7 @@
     [allowFiltering]="true"
     [allowSorting]="true"
     [dataSource]="listPayment"
+   
     [autoLoad]="false"
     rowHeight="40"
     predicates="TransID=@0"
@@ -1059,38 +1060,6 @@
   </ng-template>
 </ng-template>
 
-<ng-template #historyPayTemplate let-data="value">
-  <div>
-    <codx-taskbar
-      [listTab]="[
-        {
-          icon: 'icon-error_outline',
-          name: 'contract',
-          textDefault: 'Lịch sử thanh toán'
-        }
-      ]"
-      size="22"
-      class="mb-3"
-    ></codx-taskbar>
-  </div>
-  <div class="d-flex align-items-center my-5">
-    <div class="content-icon">
-      <span class="icon-add text-primary"></span>
-    </div>
-    <button
-      style="height: 28px"
-      type="button"
-      class="btn btn-outline-primary btn-sm"
-      (click)="handleSaveContract()"
-    >
-      <codx-label
-        [formModel]="dialog.formModel"
-        fiedName=""
-        default="Thêm lịch sử thanh toán"
-      ></codx-label>
-    </button>
-  </div>
-</ng-template>
 <!-- thông tin giao hàng -->
 <ng-template #shipTemplate let-data="value">
   <div>

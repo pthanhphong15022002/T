@@ -1,17 +1,17 @@
 <ng-template #subHeader let-form>
   <div class="d-flex flex-column">
-    <div class="pb-2" *ngIf="case?.caseNo">
+    <div class="pb-2" *ngIf="cases?.caseNo">
       <span class="me-2">
         {{gridViewSetup['CaseNo']?.headerText}} |
       </span>
       <span class="me-2">
-       {{case?.caseNo}} |
+       {{cases?.caseNo}} |
       </span>
       <span
       class="fs-7"
       #createdOn
       [innerHTML]="
-      case?.createdOn
+      cases?.createdOn
           | formatvalue
             : formModel
             : 'createdOn'
@@ -47,7 +47,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="caseName"
-          [crrValue]="case?.caseName"
+          [crrValue]="cases?.caseName"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -67,7 +67,7 @@
         [dataSource]="listCbxProcess"
         [fields]="fieldCbxProcess"
         [enabled]=" actionEdit !== action "
-        [value]="case?.processID"
+        [value]="cases?.processID"
         (valueChange)="cbxProcessChange($event,'processID')"
       ></ejs-combobox>
       </div>
@@ -219,7 +219,7 @@
         [Group]="form.formGroup"
         field="state"
         crrValue="2"
-        [crrValue]="case?.state"
+        [crrValue]="cases?.state"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
@@ -240,7 +240,7 @@
         type="datetime"
         field="endDate"
         format="d"
-        [crrValue]="case?.endDate"
+        [crrValue]="cases?.endDate"
         (valueChange)="valueChangeDate($event)"
       >
       </codx-input>
@@ -259,7 +259,7 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         field="severity"
-        [crrValue]="case?.severity"
+        [crrValue]="cases?.severity"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
@@ -284,7 +284,7 @@
         field="priority"
         type="valuelist"
         refValue="CRM028"
-        [crrValue]="case?.priority"
+        [crrValue]="cases?.priority"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
@@ -306,7 +306,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="reality"
-          [crrValue]="case?.reality"
+          [crrValue]="cases?.reality"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -327,7 +327,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="memo"
-          [crrValue]="case?.memo"
+          [crrValue]="cases?.memo"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -349,7 +349,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="solution"
-          [crrValue]="case?.solution"
+          [crrValue]="cases?.solution"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -415,7 +415,7 @@
     [dialog]="dialog"
     [formModel]="formModel"
     [footer]="footer"
-    [data]="case"
+    [data]="cases"
   ></codx-layout-add>
 
   <ng-template #tabGeneralInfoDetail>
