@@ -72,7 +72,8 @@ export class ViewListCmComponent implements OnInit {
   }
 
   getAdressNameByIsDefault(objectID, entityName) {
-    this.cmSv
+    if(this.funcID == 'CM0101' || this.funcID == 'CM0102'){
+      this.cmSv
       .getAdressNameByIsDefault(objectID, entityName)
       .subscribe((res) => {
         if (res) {
@@ -81,6 +82,10 @@ export class ViewListCmComponent implements OnInit {
           this.addressNameCM = null;
         }
       });
+    }else{
+      this.addressNameCM = this.dataSelected?.address;
+    }
+
   }
 
   countDealsByCustomerID(customerID) {

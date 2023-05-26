@@ -136,7 +136,7 @@ export class InstancesComponent
   viewMode: any;
   viewModeDetail = 'S';
   totalInstance: number = 0;
-  itemSelected: any;
+
   stepSuccess: any;
   stepFail: any;
   viewType = 'd';
@@ -794,7 +794,7 @@ export class InstancesComponent
     if (e != null && data != null) {
       if (data?.approveStatus == '3') {
         e.forEach((res) => {
-          if (res.functionID != 'DP23') {
+          if (res.functionID != 'DP23' && res.functionID != 'DP16') {
             res.disabled = true;
           }
         });
@@ -980,7 +980,7 @@ export class InstancesComponent
         this.popupOwnerRoles(data);
         break;
       case 'DP23':
-        this.cancelApprover();
+        this.cancelApprover(data);
         break;
       //xuat khau du lieu
       case 'SYS002':
@@ -1057,7 +1057,7 @@ export class InstancesComponent
         500,
         280,
         '',
-        [this.lstOrg, this.titleAction, data],
+        [this.lstOrg, this.titleAction, data,'0'],
         '',
         dialogModel
       );
@@ -2088,6 +2088,13 @@ export class InstancesComponent
                   '',
                   option
                 );
+                this.dialogTemplate.closed.subscribe((e) => {
+                  if (e?.event) {
+                    this.dataSelected = e?.event;
+                    this.view.dataService.update(this.dataSelected).subscribe();
+                    if (this.kanban) this.kanban.updateCard(this.dataSelected);
+                  }
+                });
               } else this.notificationsService.notifyCode('DP036');
             });
         }
@@ -2228,11 +2235,11 @@ export class InstancesComponent
         if (res2?.msgCodeError)
           this.notificationsService.notify(res2?.msgCodeError);
         else {
-          this.dataSelected.approveStatus = '1';
+          this.dataSelected.approveStatus = '3';
           this.view.dataService.update(this.dataSelected).subscribe();
           if (this.kanban) this.kanban.updateCard(this.dataSelected);
           this.codxDpService
-            .updateApproverStatusInstance([data?.recID, '1'])
+            .updateApproverStatusInstance([data?.recID, '3'])
             .subscribe();
           this.notificationsService.notifyCode('ES007');
         }
@@ -2240,7 +2247,41 @@ export class InstancesComponent
   }
 
   //Huy duyet
-  cancelApprover() {}
+  cancelApprover(dt) {
+    this.notificationsService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        //check truoc ben quy trình có thiết lập chưa ?? cos la lam tiep
+        this.codxDpService
+          .getESCategoryByCategoryID(this.process.processNo)
+          .subscribe((res2: any) => {
+            if (res2) {
+              if (res2?.eSign == true) {
+                //trình ký
+              } else if (res2?.eSign == false) {
+                //kí duyet
+                this.codxDpService
+                  .cancelSubmit(dt?.recID, this.view.formModel.entityName)
+                  .subscribe((res3) => {
+                    if (res3) {
+                      this.dataSelected.approveStatus = '0';
+                      this.codxDpService
+                        .updateApproverStatus([dt.recID, '0'])
+                        .subscribe((res4) => {
+                          if (res4) {
+                            this.view.dataService
+                              .update(this.dataSelected)
+                              .subscribe();
+                            this.notificationsService.notifyCode('SYS007');
+                          } else this.notificationsService.notifyCode('SYS021');
+                        });
+                    } else this.notificationsService.notifyCode('SYS021');
+                  });
+              }
+            }
+          });
+      }
+    });
+  }
   //end duyet
 
   getUserArray(arr1, arr2) {

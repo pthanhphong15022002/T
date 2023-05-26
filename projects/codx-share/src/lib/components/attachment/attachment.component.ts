@@ -146,6 +146,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() isSaveSelected = '0'; // Lưu khi chọn select file 0: false , 1 : true
   @Input() isReWrite = false;
   @Input() pageSize = 5;
+  @Input() pageLoading = true;
   @Input() heightScroll = 100;
   @Input() isTab = false;
   @Input() referType: string ="";
@@ -471,6 +472,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (this.objectId) {
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;
+      this.dataRequest.pageLoading = this.pageLoading;
       if(!this.isReferType)
       {
         this.dataRequest.predicate = 'ObjectID=@0 && ObjectType=@2 && IsDelete = false && (ReferType=@1'

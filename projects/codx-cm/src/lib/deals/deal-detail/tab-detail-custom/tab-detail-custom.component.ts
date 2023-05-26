@@ -35,6 +35,8 @@ export class TabDetailCustomComponent
   readonly tabOpponent: string = 'Opponent';
   readonly tabTask: string = 'Task';
   readonly tabProduct: string = 'Product';
+  readonly tabGanttChart: string = 'GanttChart';
+
 
   fmProcductsLines: FormModel = {
     formName: 'CMProducts',
@@ -74,12 +76,11 @@ export class TabDetailCustomComponent
   }
   //nvthuan
   getListInstanceStep() {
-    let instanceID = this.dataSelected?.refID;
-    if (instanceID) {
-      this.codxCmService.getStepInstance([instanceID]).subscribe((res) => {
+    var data = [this.dataSelected?.refID,this.dataSelected?.processID,this.dataSelected?.status];
+      this.codxCmService.getStepInstance(data).subscribe((res) => {
         this.listStep = res;
+        this.checkCompletedInstance(this.dataSelected?.status);
       });
-    }
   }
 
   // getListContactByObjectID(objectID) {
@@ -90,6 +91,17 @@ export class TabDetailCustomComponent
   //     }
   //   });
   // }
+
+  deleteListReason(listStep: any): void {
+    listStep.pop();
+    listStep.pop();
+  }
+
+  checkCompletedInstance(dealStatus: any) {
+    if (dealStatus == '1' || dealStatus == '2') {
+      this.deleteListReason(this.listStep);
+    }
+  }
 
   async getValueList() {
     this.cache.valueList('CRM010').subscribe((res) => {

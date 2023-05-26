@@ -242,7 +242,7 @@ export class StagesDetailComponent implements OnInit {
     this.instance.write &&
       !this.instance.closed &&
       (this.instance.status == '1' || this.instance.status == '2') &&
-      this.dataStep.stepStatus < '2'
+      this.dataStep.stepStatus < '2' && this.instance.approveStatus != '3'
     this.isCreate=this.instance.create
     this.isClosed=this.instance.closed
     this.isStart = this.instance?.status == 2 ? true : false;
@@ -459,7 +459,7 @@ export class StagesDetailComponent implements OnInit {
 
   continueStep(isTaskEnd){
     let isShowFromTaskAll = false;
-    let isShowFromTaskEnd = this.checkContinueStep(true);
+    let isShowFromTaskEnd = !this.checkContinueStep(true);
     let isContinueTaskEnd = isTaskEnd;
     let isContinueTaskAll = this.checkContinueStep(false);
     let dataInstance = {
@@ -477,16 +477,18 @@ export class StagesDetailComponent implements OnInit {
   }
 
   checkContinueStep(isDefault) {
+    let check = true;
     let listTask = isDefault ? this.step?.tasks?.filter(task => task?.requireCompleted) : this.step?.tasks;
     if(listTask?.length <= 0){
       return isDefault ? true : false;
     } 
     for(let task of listTask){
       if(task.progress != 100){
-        return false;
+        check = false;
+        break;
       }
     }
-    return true;
+    return check;
    
   }
 
@@ -709,12 +711,9 @@ export class StagesDetailComponent implements OnInit {
   }
 
   checkRole(listRoleStep) {
-    if (
-      this.permissionCloseInstances ||
+    if (this.permissionCloseInstances ||
       this.listUserIdRole?.some((id) => id == this.user.userID) ||
-      listRoleStep?.some(
-        (role) => role.objectID == this.user.userID && role.roleType == 'S'
-      )
+      listRoleStep?.some((role) => role.objectID == this.user.userID && role.roleType == 'S')
     ) {
       this.isRoleAll = true;
     } else if (this.dataStep?.roles?.length > 0) {
