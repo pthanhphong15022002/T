@@ -379,6 +379,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   templateEAccidentCol2: TemplateRef<any>;
   @ViewChild('templateEAccidentCol3', { static: true })
   templateEAccidentCol3: TemplateRef<any>;
+  @ViewChild('headTempAccident1', { static: true }) headTempAccident1: TemplateRef<any>;
+  @ViewChild('headTempAccident2', { static: true }) headTempAccident2: TemplateRef<any>;
+  @ViewChild('headTempAccident3', { static: true }) headTempAccident3: TemplateRef<any>;
 
   //#endregion
 
@@ -528,7 +531,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   eInfoFormModel: FormModel; // Thông tin bản thân/ Bảo hiểm
   eFamilyFormModel: FormModel; //Quan hệ gia đình
   ePassportFormModel: FormModel; //Hộ chiếu
-  eQuitJobFormModel: FormModel; //Hộ chiếu
+  eQuitJobFormModel: FormModel; //Nghỉ việc
   eVisaFormModel: FormModel;
   eWorkPermitFormModel: FormModel; //Giay phep lao dong
   eCertificateFormModel: FormModel; // Chứng chỉ
@@ -776,6 +779,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
     this.hrService.getFormModel(this.ePassportFuncID).then((res) => {
       this.ePassportFormModel = res;
+      console.log('passport form model', this.ePassportFormModel);
+      
     });
 
     this.hrService.getFormModel(this.eVisaFuncID).then((res) => {
@@ -1156,27 +1161,30 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.eHealthHeaderText = res;
         this.eHealthColumnGrid = [
           {
-            headerText:
-              this.eHealthHeaderText['HealthDate'] +
-              ' | ' +
-              this.eHealthHeaderText['HealthPeriodID'] +
-              ' | ' +
-              this.eHealthHeaderText['HospitalID'],
+            // headerText:
+            //   this.eHealthHeaderText['HealthDate'] +
+            //   ' | ' +
+            //   this.eHealthHeaderText['HealthPeriodID'] +
+            //   ' | ' +
+            //   this.eHealthHeaderText['HospitalID'],
+            headerTemplate: this.headTempHealth1,
             template: this.tempCol1EHealthGrid,
             width: '150',
           },
 
           {
-            headerText:
-              this.eHealthHeaderText['HealthType'] +
-              ' | ' +
-              this.eHealthHeaderText['FinalConclusion'],
+            // headerText:
+            //   this.eHealthHeaderText['HealthType'] +
+            //   ' | ' +
+            //   this.eHealthHeaderText['FinalConclusion'],
+            headerTemplate: this.headTempHealth2,
             template: this.tempCol2EHealthGrid,
             width: '150',
           },
 
           {
-            headerText: this.eHealthHeaderText['Suggestion'],
+            // headerText: this.eHealthHeaderText['Suggestion'],
+            headerTemplate: this.headTempHealth3,
             template: this.tempCol3EHealthGrid,
             width: '150',
           },
@@ -1189,25 +1197,28 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.eVaccineHeaderText = res;
         this.eVaccineColumnGrid = [
           {
-            headerText:
-              this.eVaccineHeaderText['VaccineTypeID'] +
-              ' | ' +
-              this.eVaccineHeaderText['HopitalID'],
+            // headerText:
+            //   this.eVaccineHeaderText['VaccineTypeID'] +
+            //   ' | ' +
+            //   this.eVaccineHeaderText['HopitalID'],
+            headerTemplate: this.headTempVaccine1,
             template: this.tempEVaccineGridCol1,
             width: '150',
           },
 
           {
-            headerText:
-              this.eVaccineHeaderText['InjectDate'] +
-              ' | ' +
-              this.eVaccineHeaderText['NextInjectDate'],
+            // headerText:
+            //   this.eVaccineHeaderText['InjectDate'] +
+            //   ' | ' +
+            //   this.eVaccineHeaderText['NextInjectDate'],
+            headerTemplate: this.headTempVaccine2,
             template: this.tempEVaccineGridCol2,
             width: '150',
           },
 
           {
-            headerText: this.eVaccineHeaderText['Note'],
+            // headerText: this.eVaccineHeaderText['Note'],
+            headerTemplate: this.headTempVaccine3,
             template: this.tempEVaccineGridCol3,
             width: '150',
           },
@@ -1357,20 +1368,23 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.eDiseasesHeaderText = res;
         this.eDiseasesColumnsGrid = [
           {
-            headerText: this.eDiseasesHeaderText['DiseaseID'],
+            // headerText: this.eDiseasesHeaderText['DiseaseID'],
+            headerTemplate: this.headTempDiseases1,
             template: this.templateDiseasesGridCol1,
             width: '150',
           },
           {
-            headerText:
-              'Thời gian điều trị' +
-              ' | ' +
-              this.eDiseasesHeaderText['TreatHopitalID'],
+            // headerText:
+            //   'Thời gian điều trị' +
+            //   ' | ' +
+            //   this.eDiseasesHeaderText['TreatHopitalID'],
+            headerTemplate: this.headTempDiseases2,
             template: this.templateDiseasesGridCol2,
             width: '150',
           },
           {
-            headerText: this.eDiseasesHeaderText['Conclusion'],
+            // headerText: this.eDiseasesHeaderText['Conclusion'],
+            headerTemplate: this.headTempDiseases3,
             template: this.templateDiseasesGridCol3,
             width: '150',
           },
@@ -1383,23 +1397,26 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.eAccidentHeaderText = res;
         this.eAccidentsColumnsGrid = [
           {
-            headerText:
-              this.eAccidentHeaderText['AccidentID'] +
-              ' | ' +
-              this.eAccidentHeaderText['AccidentDate'],
+            // headerText:
+            //   this.eAccidentHeaderText['AccidentID'] +
+            //   ' | ' +
+            //   this.eAccidentHeaderText['AccidentDate'],
+              headerTemplate: this.headTempAccident1,
             template: this.templateEAccidentCol1,
             width: '150',
           },
           {
-            headerText:
-              this.eAccidentHeaderText['AccidentPlace'] +
-              ' | ' +
-              this.eAccidentHeaderText['AccidentReasonID'],
+            // headerText:
+            //   this.eAccidentHeaderText['AccidentPlace'] +
+            //   ' | ' +
+            //   this.eAccidentHeaderText['AccidentReasonID'],
+              headerTemplate: this.headTempAccident2,
             template: this.templateEAccidentCol2,
             width: '150',
           },
           {
-            headerText: this.eAccidentHeaderText['AccidentLevel'],
+            // headerText: this.eAccidentHeaderText['AccidentLevel'],
+            headerTemplate: this.headTempAccident3,
             template: this.templateEAccidentCol3,
             width: '150',
           },
@@ -1604,6 +1621,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
+
+  init
 
   initPersonalInfo() {
     if (this.employeeID) {
@@ -1886,26 +1905,29 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.eDegreeHeaderText = res;
         this.eDegreeColumnsGrid = [
           {
-            headerText:
-              this.eDegreeHeaderText['DegreeName'] +
-              '|' +
-              this.eDegreeHeaderText['TrainFieldID'],
+            // headerText:
+            //   this.eDegreeHeaderText['DegreeName'] +
+            //   '|' +
+            //   this.eDegreeHeaderText['TrainFieldID'],
+            headerTemplate: this.headTempDegree1,
             template: this.templateEDegreeGridCol1,
             width: '150',
           },
           {
-            headerText:
-              this.eDegreeHeaderText['TrainSupplierID'] +
-              '|' +
-              this.eDegreeHeaderText['Ranking'],
+            // headerText:
+            //   this.eDegreeHeaderText['TrainSupplierID'] +
+            //   '|' +
+            //   this.eDegreeHeaderText['Ranking'],
+            headerTemplate: this.headTempDegree2,
             template: this.templateEDegreeGridCol2,
             width: '150',
           },
           {
-            headerText:
-              this.eDegreeHeaderText['YearGraduated'] +
-              '|' +
-              this.eDegreeHeaderText['IssuedDate'],
+            // headerText:
+            //   this.eDegreeHeaderText['YearGraduated'] +
+            //   '|' +
+            //   this.eDegreeHeaderText['IssuedDate'],
+            headerTemplate: this.headTempDegree3,
             template: this.templateEDegreeGridCol3,
             width: '150',
           },
@@ -1938,23 +1960,26 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.eCertificateHeaderText = res;
         this.eCertificateColumnGrid = [
           {
-            headerText: this.eCertificateHeaderText['CertificateID'],
+            // headerText: this.eCertificateHeaderText['CertificateID'],
+            headerTemplate: this.headTempCertificate1,
             template: this.templateECertificateGridCol1,
             width: '150',
           },
           {
-            headerText:
-              this.eCertificateHeaderText['TrainSupplierID'] +
-              '|' +
-              this.eCertificateHeaderText['Ranking'],
+            // headerText:
+            //   this.eCertificateHeaderText['TrainSupplierID'] +
+            //   '|' +
+            //   this.eCertificateHeaderText['Ranking'],
+            headerTemplate: this.headTempCertificate2,
             template: this.templateECertificateGridCol2,
             width: '150',
           },
           {
-            headerText:
-              this.eCertificateHeaderText['IssuedDate'] +
-              '|' +
-              this.eCertificateHeaderText['EffectedDate'],
+            // headerText:
+            //   this.eCertificateHeaderText['IssuedDate'] +
+            //   '|' +
+            //   this.eCertificateHeaderText['EffectedDate'],
+              headerTemplate: this.headTempCertificate3,
             template: this.templateECertificateGridCol3,
             width: '150',
           },
@@ -1988,28 +2013,31 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.eSkillHeaderText = res;
         this.eSkillColumnGrid = [
           {
-            headerText:
-              this.eSkillHeaderText['SkillID'] +
-              '|' +
-              this.eSkillHeaderText['SkillGradeID'],
+            // headerText:
+            //   this.eSkillHeaderText['SkillID'] +
+            //   '|' +
+            //   this.eSkillHeaderText['SkillGradeID'],
+            headerTemplate: this.headTempSkill1,
             template: this.templateESkillGridCol1,
             width: '150',
           },
           {
-            headerText:
-              this.eSkillHeaderText['TrainSupplierID'] +
-              '|' +
-              this.eSkillHeaderText['Ranking'] +
-              ' - ' +
-              this.eSkillHeaderText['TotalScore'],
+            // headerText:
+            //   this.eSkillHeaderText['TrainSupplierID'] +
+            //   '|' +
+            //   this.eSkillHeaderText['Ranking'] +
+            //   ' - ' +
+            //   this.eSkillHeaderText['TotalScore'],
+            headerTemplate: this.headTempSkill2,
             template: this.templateESkillGridCol2,
             width: '150',
           },
           {
-            headerText:
-              this.eSkillHeaderText['TrainFrom'] +
-              '|' +
-              this.eSkillHeaderText['TrainForm'],
+            // headerText:
+            //   this.eSkillHeaderText['TrainFrom'] +
+            //   '|' +
+            //   this.eSkillHeaderText['TrainForm'],
+            headerTemplate: this.headTempSkill3,
             template: this.templateESkillGridCol3,
             width: '150',
           },
@@ -2041,26 +2069,29 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.eTrainCourseHeaderText = res;
         this.eTrainCourseColumnGrid = [
           {
-            headerText:
-              this.eTrainCourseHeaderText['TrainCourseID'] +
-              '|' +
-              this.eTrainCourseHeaderText['TrainForm'],
+            // headerText:
+            //   this.eTrainCourseHeaderText['TrainCourseID'] +
+            //   '|' +
+            //   this.eTrainCourseHeaderText['TrainForm'],
+            headerTemplate: this.headTempTrainCourse1,
             template: this.templateTrainCourseGridCol1,
             width: '150',
           },
           {
-            headerText:
-              this.eTrainCourseHeaderText['TrainFrom'] +
-              '|' +
-              this.eTrainCourseHeaderText['InYear'],
+            // headerText:
+            //   this.eTrainCourseHeaderText['TrainFrom'] +
+            //   '|' +
+            //   this.eTrainCourseHeaderText['InYear'],
+            headerTemplate: this.headTempTrainCourse2,
             template: this.templateTrainCourseGridCol2,
             width: '150',
           },
           {
-            headerText:
-              this.eTrainCourseHeaderText['TrainSupplierID'] +
-              '|' +
-              this.eTrainCourseHeaderText['Result'],
+            // headerText:
+            //   this.eTrainCourseHeaderText['TrainSupplierID'] +
+            //   '|' +
+            //   this.eTrainCourseHeaderText['Result'],
+            headerTemplate: this.headTempTrainCourse3,
             template: this.templateTrainCourseGridCol3,
             width: '150',
           },
@@ -4489,7 +4520,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         (p) => p.employeeID == this.employeeID
       );
       if (index > -1 && this.listEmp[index + 1]?.employeeID) {
-        let urlView = '/hr/employeedetail/HRT03a1';
+        let urlView = '/hr/employeedetail/HRT03b';
         // this.codxService.navigate(
         //   '',
         //   urlView,
@@ -4533,7 +4564,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         (p) => p.employeeID == this.employeeID
       );
       if (index > -1 && this.listEmp[index - 1]?.employeeID) {
-        let urlView = '/hr/employeedetail/HRT03a1';
+        let urlView = '/hr/employeedetail/HRT03b';
         this.codxService.replaceNavigate(
           urlView,
           {
@@ -4593,6 +4624,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   templateEDegreeGridCol3: TemplateRef<any>;
   @ViewChild('templateEDegreeGridMoreFunc', { static: true })
   templateEDegreeGridMoreFunc: TemplateRef<any>;
+  @ViewChild('headTempDegree1', { static: true }) headTempDegree1: TemplateRef<any>;
+  @ViewChild('headTempDegree2', { static: true }) headTempDegree2: TemplateRef<any>;
+  @ViewChild('headTempDegree3', { static: true }) headTempDegree3: TemplateRef<any>;
 
   @ViewChild('tempCol1EHealthGrid', { static: true })
   tempCol1EHealthGrid: TemplateRef<any>;
@@ -4600,6 +4634,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   tempCol2EHealthGrid: TemplateRef<any>;
   @ViewChild('tempCol3EHealthGrid', { static: true })
   tempCol3EHealthGrid: TemplateRef<any>;
+  @ViewChild('headTempHealth1', { static: true }) headTempHealth1: TemplateRef<any>;
+  @ViewChild('headTempHealth2', { static: true }) headTempHealth2: TemplateRef<any>;
+  @ViewChild('headTempHealth3', { static: true }) headTempHealth3: TemplateRef<any>;
 
   @ViewChild('tempEVaccineGridCol1', { static: true })
   tempEVaccineGridCol1: TemplateRef<any>;
@@ -4607,6 +4644,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   tempEVaccineGridCol2: TemplateRef<any>;
   @ViewChild('tempEVaccineGridCol3', { static: true })
   tempEVaccineGridCol3: TemplateRef<any>;
+  @ViewChild('headTempVaccine1', { static: true }) headTempVaccine1: TemplateRef<any>;
+  @ViewChild('headTempVaccine2', { static: true }) headTempVaccine2: TemplateRef<any>;
+  @ViewChild('headTempVaccine3', { static: true }) headTempVaccine3: TemplateRef<any>;
 
   @ViewChild('templateECertificateGridCol1', { static: true })
   templateECertificateGridCol1: TemplateRef<any>;
@@ -4614,6 +4654,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   templateECertificateGridCol2: TemplateRef<any>;
   @ViewChild('templateECertificateGridCol3', { static: true })
   templateECertificateGridCol3: TemplateRef<any>;
+  @ViewChild('headTempCertificate1', { static: true }) headTempCertificate1: TemplateRef<any>;
+  @ViewChild('headTempCertificate2', { static: true }) headTempCertificate2: TemplateRef<any>;
+  @ViewChild('headTempCertificate3', { static: true }) headTempCertificate3: TemplateRef<any>;
 
   @ViewChild('templateESkillGridCol1', { static: true })
   templateESkillGridCol1: TemplateRef<any>;
@@ -4621,6 +4664,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   templateESkillGridCol2: TemplateRef<any>;
   @ViewChild('templateESkillGridCol3', { static: true })
   templateESkillGridCol3: TemplateRef<any>;
+  @ViewChild('headTempSkill1', { static: true }) headTempSkill1: TemplateRef<any>;
+  @ViewChild('headTempSkill2', { static: true }) headTempSkill2: TemplateRef<any>;
+  @ViewChild('headTempSkill3', { static: true }) headTempSkill3: TemplateRef<any>;
 
   @ViewChild('templateEAssetCol1', { static: true })
   templateEAssetCol1: TemplateRef<any>;
@@ -4638,6 +4684,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   templateTrainCourseGridCol2: TemplateRef<any>;
   @ViewChild('templateTrainCourseGridCol3', { static: true })
   templateTrainCourseGridCol3: TemplateRef<any>;
+  @ViewChild('headTempTrainCourse1', { static: true }) headTempTrainCourse1: TemplateRef<any>;
+  @ViewChild('headTempTrainCourse2', { static: true }) headTempTrainCourse2: TemplateRef<any>;
+  @ViewChild('headTempTrainCourse3', { static: true }) headTempTrainCourse3: TemplateRef<any>;
 
   @ViewChild('templateBusinessTravelGridCol1', { static: true })
   templateBusinessTravelGridCol1: TemplateRef<any>;
@@ -4677,6 +4726,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   templateDiseasesGridCol2: TemplateRef<any>;
   @ViewChild('templateDiseasesGridCol3', { static: true })
   templateDiseasesGridCol3: TemplateRef<any>;
+  @ViewChild('headTempDiseases1', { static: true }) headTempDiseases1: TemplateRef<any>;
+  @ViewChild('headTempDiseases2', { static: true }) headTempDiseases2: TemplateRef<any>;
+  @ViewChild('headTempDiseases3', { static: true }) headTempDiseases3: TemplateRef<any>;
 
   valueChangeFilterBenefit(evt) {
     this.filterByBenefitIDArr = evt.data;
