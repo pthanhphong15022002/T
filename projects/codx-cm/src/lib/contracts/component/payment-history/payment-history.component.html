@@ -22,94 +22,98 @@
 </ng-template>
 
 <ng-template #body>
-	<div>
-		<codx-label
-		class="text-dark text-primary fw-bold"
-		fiedName="scheduleDate"
-		[formModel]="dialog.formModel"
-	  >
-	  </codx-label>
-		<span class="fs-7"
-		[innerHTML]="
-		payment?.scheduleDate
-			| formatvalue : dialog.formModel : 'ScheduleDate'
-			| async
-		"
-	  ></span>
-	  <span>|</span>
-	  <codx-label
-		class="text-dark text-primary fw-bold"
-		fiedName="scheduleDate"
-		[formModel]="dialog.formModel"
-		default="Tiền hẹn"
-	  >
-	  </codx-label>
-	  <span class="fs-7"
-		[innerHTML]="
-		payment?.scheduleDate
-			| formatvalue : dialog.formModel : 'ScheduleDate'
-			| async
-		"
-	  ></span>
-	</div>
-	<div>
-		<codx-label
-		class="text-dark text-primary fw-bold"
-		fiedName="scheduleDate"
-		[formModel]="dialog.formModel"
-	  >
-	  </codx-label>
-		<span class="fs-7"
-		[innerHTML]="
-		payment?.scheduleDate
-			| formatvalue : dialog.formModel : 'ScheduleDate'
-			| async
-		"
-	  ></span>
-	  <span>|</span>
-	  <codx-label
-		class="text-dark text-primary fw-bold"
-		fiedName="scheduleDate"
-		[formModel]="dialog.formModel"
-		default="Tiền hẹn"
-	  >
-	  </codx-label>
-	  <span class="fs-7"
-		[innerHTML]="
-		payment?.scheduleDate
-			| formatvalue : dialog.formModel : 'ScheduleDate'
-			| async
-		"
-	  ></span>
-	</div>
-	<ng-container [ngTemplateOutlet]="PayTableTemplate"></ng-container>
+  <div>
+    <!-- ngày hẹn -->
+    <codx-label
+      class="text-gray-600"
+      fiedName="scheduleDate"
+      [formModel]="dialog.formModel"
+    >
+    </codx-label>
+    <span class="fs-7">: </span>
+    <span
+      class="fs-7"
+      [innerHTML]="
+        payment?.scheduleDate
+          | formatvalue : dialog.formModel : 'ScheduleDate'
+          | async
+      "
+    ></span>
+    <span> | </span>
+    <codx-label
+      class="text-gray-600"
+      fiedName="scheduleAmt"
+      [formModel]="dialog.formModel"
+    >
+    </codx-label>
+    <span class="fs-7">: </span>
+    <span
+      class="fs-7"
+      [innerHTML]="
+        payment?.scheduleAmt
+          | formatvalue : dialog.formModel : 'scheduleAmt'
+          | async
+      "
+    ></span>
+  </div>
+
+  <div>
+    <codx-label
+      class="text-gray-600"
+      fiedName="scheduleDate"
+      [formModel]="dialog.formModel"
+      default="Đã thanh toán"
+    >
+    </codx-label>
+    <span class="fs-7">: </span>
+    <span>0</span>
+    <span> | </span>
+    <codx-label
+      class="text-gray-600"
+      fiedName="remainAmt"
+      [formModel]="dialog.formModel"
+      default="Còn lại"
+    >
+    </codx-label>
+    <span class="fs-7">: </span>
+    <span
+      class="fs-7"
+      [innerHTML]="
+        payment?.scheduleAmt
+          | formatvalue : dialog.formModel : 'scheduleAmt'
+          | async
+      "
+    ></span>
+  </div>
+
+  <ng-container [ngTemplateOutlet]="PayTableTemplate"></ng-container>
 </ng-template>
 
 <ng-template #PayTableTemplate let-data="value">
-	<div>
-	  <codx-gridview-v2
-	  #productTable
-	  service="CM"
-	  [formName]="dialog.formModel.formName"
-	  [gridViewName]="dialog.formModel.gridViewName"
-	  [entityName]="dialog.formModel.entityName"
-	  [templateMore]="more"
-	  [contentEditable]="false"
-	  [allowFiltering]="true"
-	  [allowSorting]="true"
-	  [dataSource]="listPaymentHistory"
-	  [autoLoad]="false"
-	  rowHeight="40"
-	  predicates="TransID=@0"
-	  ></codx-gridview-v2>
-	</div>
-	<ng-template #more let-data>
-	  <codx-mfunc
-	  [formModel]="dialog.formModel"
-	  [isBookMark]="true"
-	  [dataItem]="moreDefaut"
-	  [type]="'view'"
-	  (clickMF)="onClickMFPayment($event, data)"
-	  ></codx-mfunc>
-	</ng-template>
+  <div>
+    <codx-gridview-v2
+      #productTable
+      service="CM"
+      [formName]="dialog.formModel.formName"
+      [gridViewName]="dialog.formModel.gridViewName"
+      [entityName]="dialog.formModel.entityName"
+      [templateMore]="more"
+      [contentEditable]="false"
+      [allowFiltering]="true"
+      [allowSorting]="true"
+      [dataSource]="listPaymentHistory"
+      [autoLoad]="false"
+      rowHeight="40"
+      predicates="TransID=@0"
+    ></codx-gridview-v2>
+  </div>
+  <ng-template #more let-data>
+    <codx-mfunc
+      [formModel]="dialog.formModel"
+      [isBookMark]="true"
+      [dataItem]="moreDefaut"
+      [type]="'view'"
+      (clickMF)="onClickMFPayment($event, data)"
+    ></codx-mfunc>
   </ng-template>
+</ng-template>
