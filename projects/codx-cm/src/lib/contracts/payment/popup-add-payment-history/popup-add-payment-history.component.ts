@@ -4,17 +4,17 @@ import { CM_ContractsPayments } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
 
 @Component({
-  selector: 'lib-payments',
-  templateUrl: './payments.component.html',
-  styleUrls: ['./payments.component.scss']
+  selector: 'lib-popup-add-payment-history',
+  templateUrl: './popup-add-payment-history.component.html',
+  styleUrls: ['./popup-add-payment-history.component.scss']
 })
-export class PaymentsComponent  implements OnInit {
-  type: 'pay' | 'payHistory';
+export class PopupAddPaymentHistoryComponent {
   action = '';
   payment: CM_ContractsPayments;
+  paymentHistory: CM_ContractsPayments;
   contractID = null;
 
-  title: string;
+  title = "Lịch sử thanh toán";
   dialog: DialogRef;
   constructor(
     private cmService: CodxCmService,
@@ -22,14 +22,12 @@ export class PaymentsComponent  implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.type = dt?.data?.type;
     this.action = dt?.data?.action;
     this.contractID = dt?.data?.contractID;
     this.payment = dt?.data?.data;
   }
 
   ngOnInit(): void {
-    this.title = this.type === 'pay' ? "Lịch thanh toán" : "Lịch sử thanh toán"
     this.setDataInput();
   }
 
@@ -90,4 +88,4 @@ export class PaymentsComponent  implements OnInit {
         }
       })
   }
- }
+}

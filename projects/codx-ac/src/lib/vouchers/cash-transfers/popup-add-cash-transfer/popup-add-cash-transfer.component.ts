@@ -142,7 +142,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
           'offsetAcctID'
         );
 
-        if (this.journal.voucherNoRule === '2') {
+        if (this.journal.assignRule === '2') {
           this.ignoredFields.push('VoucherNo');
         }
 

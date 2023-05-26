@@ -356,9 +356,9 @@
           <div class="d-flex flex-column" *ngIf="lstBtnAdd">
             <ng-container *ngFor="let item of lstBtnAdd">
               <a class="w-100 btn btn-flex btn-active-light-primary" (click)="add(item.functionID)">
-                <div class="d-flex align-items-bottom">
+                <div class="d-flex align-items-top">
                   <span class="icon-18 me-2" [ngClass]="item?.largeIcon ? item.largeIcon : 'icon-person'"></span>
-                  <div class="fw-bold">{{ item.customName }}</div>
+                  <div class="fw-bold d-flex justify-content-start">{{ item.customName }}</div>
                 </div>
               </a>
             </ng-container>

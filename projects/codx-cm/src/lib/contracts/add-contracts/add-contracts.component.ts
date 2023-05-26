@@ -1,12 +1,13 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { CM_Contacts, CM_Contracts, CM_ContractsPayments, CM_Customers } from '../../models/cm_model';
 import { ApiHttpService, AuthStore, CRUDService, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, Util } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { Observable, map, tap, firstValueFrom } from 'rxjs';
 import { ContractsService } from '../service-contracts.service';
-import { PaymentsComponent } from '../component/payments/payments.component';
-import { PaymentHistoryComponent } from '../component/payment-history/payment-history.component';
+import { PopupViewPaymentHistoryComponent } from '../payment/popup-view-payment-history/popup-view-payment-history.component';
+import { PopupAddPaymentComponent } from '../payment/popup-add-payment/popup-add-payment.component';
+import { PopupAddPaymentHistoryComponent } from '../payment/popup-add-payment-history/popup-add-payment-history.component';
 
 @Component({
   selector: 'add-contracts',
@@ -15,6 +16,7 @@ import { PaymentHistoryComponent } from '../component/payment-history/payment-hi
 })
 export class AddContractsComponent implements OnInit{
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('more') more: TemplateRef<any>;
   @ViewChild('test') test: any;
   contracts: CM_Contracts;
   contractsInput: CM_Contracts;
@@ -28,6 +30,7 @@ export class AddContractsComponent implements OnInit{
   type: 'view' | 'list';
   customer: CM_Customers;
   listQuotationsLine = [];
+
   fmQuotationLines: FormModel = {
     formName: 'CMQuotationsLines',
     gridViewName: 'grvCMQuotationsLines',
@@ -55,6 +58,8 @@ export class AddContractsComponent implements OnInit{
     delete: true,
   };
   listPayment: CM_ContractsPayments[] = [];
+  columns:any;
+  grvPayments:any;
 
   constructor(
     private cache: CacheService,
@@ -74,9 +79,10 @@ export class AddContractsComponent implements OnInit{
     this.contractsInput = dt?.data?.contract;
     this.account = dt?.data?.account;
     this.type = dt?.data?.type;
+    this.getFormModel();
   }
   ngOnInit() {
-    this.setData(this.contractsInput);
+    this.setDataContract(this.contractsInput);
     this.listClicked = [
       { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
       { name: 'detailItem', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
@@ -84,7 +90,69 @@ export class AddContractsComponent implements OnInit{
       { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-tune', isActive: false },
     ]
     // this.loadComboboxData('CMCustomers','CM').subscribe(data => console.log(data));
-    
+      this.columns = [
+        {       
+          width: 50,
+          textAlign: 'center',
+          template: this.more,
+        },
+        {
+          field: 'rowNo',
+          headerText: this.grvPayments?.ItemID?.RowNo ?? 'STT',
+          width: 50,
+          textAlign: 'center',
+        },
+        {
+          field: 'scheduleDate',
+          headerText: this.grvPayments?.ScheduleDate?.headerText ?? 'Ngày hẹn thanh toán',
+          width: 150,
+          textAlign: 'center',
+        },
+        {
+          field: 'scheduleAmt',
+          headerText: this.grvPayments?.ScheduleAmt?.headerText ?? 'Số tiền hẹn thanh toán',
+          width: 150,
+          textAlign: 'center',
+        },
+        {
+          field: 'paidAmt',
+          headerText: this.grvPayments?.PaidAmt?.headerText ?? 'Đã thanh toán',
+          width: 150,
+          textAlign: 'center',
+        },
+        {
+          field: 'remainAmt',
+          headerText: this.grvPayments?.RemainAmt?.headerText ?? 'Dư nợ còn lại',
+          width: 150,
+          textAlign: 'center',
+        },
+        {
+          field: 'status',
+          headerText: this.grvPayments?.Status?.headerText ?? 'Trạng thái',
+          width: 90,
+          textAlign: 'center',
+        },
+        {
+          field: 'note',
+          headerText: this.grvPayments?.Note?.headerText ?? 'Ghi chú',
+          width: 90,
+          textAlign: 'left',
+        },
+        // /template: this.columnVatid,
+      ];  
+  }
+
+  getFormModel() {
+    this.cache
+      .gridViewSetup(
+        this.fmContractsPayments?.formName,
+        this.fmContractsPayments?.gridViewName
+      )
+      .subscribe((res) => {
+        if(res){
+          this.grvPayments = res;
+        }        
+      });
   }
 
   loadComboboxData(comboboxName: string, service: string): Observable<any> {
@@ -106,7 +174,7 @@ export class AddContractsComponent implements OnInit{
       );
   }
 
-  setData(data){
+  setDataContract(data){
     if(this.action == 'add'){
       this.contracts = data;
       this.contracts.recID = Util.uid();
@@ -127,12 +195,7 @@ export class AddContractsComponent implements OnInit{
   }
 
   valueChangeText(event) {
-    try {
-      this.contracts[event?.field] = event?.data;
-    } catch (error) {
-      console.log(error);
-       
-    }
+    this.contracts[event?.field] = event?.data;
   }
 
   valueChangeCombobox(event) {
@@ -148,36 +211,30 @@ export class AddContractsComponent implements OnInit{
     }
   }
 
+  valueChangeAlert(event) {
+    this.contracts[event?.field] = event?.data;
+  }
+
+  changeValueDate(event) {
+    this.contracts[event?.field] = new Date(event?.data?.fromDate);
+  }
+
   getCustomerByDealID(dealID){
     this.contractService.getCustomerBydealID(dealID).subscribe(res => {
       if(res){
-        this.contracts.customerID = res?.recID;
-        this.contracts.taxCode = res?.taxCode;
-        this.contracts.address = res?.address;
-        this.contracts.phone = res?.phone;
-        this.contracts.faxNo = res?.faxNo;
-        this.contracts.representative = null;
-        this.contracts.jobTitle = null;
-        this.contracts.bankAccount = res?.bankAccount;
-        this.contracts.bankID = res?.bankID;
+        this.setDataContractCombobox(res);
       }
     })
   }
+
   getCustomerByrecID(recID){
     this.contractService.getCustomerByRecID(recID).subscribe(res => {
       if(res){
-        this.contracts.customerID = res?.recID;
-        this.contracts.taxCode = res?.taxCode;
-        this.contracts.address = res?.address;
-        this.contracts.phone = res?.phone;
-        this.contracts.faxNo = res?.faxNo;
-        this.contracts.representative = null;
-        this.contracts.jobTitle = null;
-        this.contracts.bankAccount = res?.bankAccount;
-        this.contracts.bankID = res?.bankID;
+        this.setDataContractCombobox(res);
       }
     })
   }
+
   getQuotationsLinesByTransID(recID){
     this.contractService.getQuotationsLinesByTransID(recID).subscribe(res => {
       if(res){      
@@ -193,18 +250,8 @@ export class AddContractsComponent implements OnInit{
         let quotation = res[0];
         let quotationsLine = res[1];
         let customer = res[2] ;
-
         this.listQuotationsLine = quotationsLine;
-        this.contracts.customerID = customer?.recID;
-        this.contracts.taxCode = customer?.taxCode;
-        this.contracts.address = customer?.address;
-        this.contracts.phone = customer?.phone;
-        this.contracts.faxNo = customer?.faxNo;
-        this.contracts.representative = null;
-        this.contracts.jobTitle = null;
-        this.contracts.bankAccount = customer?.bankAccount;
-        this.contracts.bankID = customer?.bankID;
-
+        this.setDataContractCombobox(customer);
         this.contracts.dealID = quotation?.refID;
       }
     })
@@ -218,100 +265,16 @@ export class AddContractsComponent implements OnInit{
     })
   }
 
-  valueChangeAlert(event) {
-    this.contracts[event?.field] = event?.data;
-  }
-
-  changeValueDate(event) {
-    this.contracts[event?.field] = new Date(event?.data?.fromDate);
-    
-    // if(this.isLoadDate){
-    //   this.isLoadDate = !this.isLoadDate;
-    //   return;
-    // }
-    // const startDate =  new Date(this.contracts['startDate']);
-    // const endDate = new Date(this.contracts['endDate']);
-   
-    // if (endDate && startDate > endDate){
-    //   this.isLoadDate = !this.isLoadDate;
-    //   this.notiService.notifyCode('DP019');
-    //   return;
-    // } 
-    // if (new Date(startDate.toLocaleString()).getTime() < new Date(this.startDateParent.toLocaleString()).getTime()) {
-    // }
-
-    this.isLoadDate = !this.isLoadDate;
-  }
-
-  addPay(){
-    let payMent = new CM_ContractsPayments();
-    let countPayMent =  this.listPayment.length;
-    payMent.rowNo = countPayMent + 1;
-    payMent.refNo = this.contracts?.recID;
-    this.openPopupPay('add', 'pay', payMent);
-  }
-
-  addPayHistory(){
-    let payMent = new CM_ContractsPayments();
-    let countPayMent =  this.listPayment.length;
-    payMent.rowNo = countPayMent + 1;
-    payMent.refNo = this.contracts?.recID;
-    this.openPopupPay('add', 'payHistory', payMent);
-  }
-
-  viewPayHistory(){
-    let dataInput = {
-     
-    };
-  
-    let option = new DialogModel();
-    option.IsFull = false;
-    option.zIndex = 1001;
-    option.FormModel = this.fmContractsPaymentsHistory;
-    let popupPayHistory = this.callfunc.openForm(
-      PaymentHistoryComponent,'',
-      600,
-      400,
-      '',
-      dataInput,
-      '',
-      option,
-      );
-  }
-
-  async openPopupPay(action,type,data) {
-    let dataInput = {
-      action,
-      data,
-      type,
-      contractID: this.contracts?.recID,
-    };
-    let formModel = new FormModel();
-    formModel.entityName = 'CM_ContractsPayments';
-    formModel.formName = 'CMContractsPayments';
-    formModel.gridViewName = 'grvCMContractsPayments';
-    
-    let option = new DialogModel();
-    option.IsFull = false;
-    option.zIndex = 1001;
-    option.FormModel = formModel;
-    let popupTask = this.callfunc.openForm(
-      PaymentsComponent,'',
-      600,
-      400,
-      '',
-      dataInput,
-      '',
-      option,
-      );
-
-    let dataPopupOutput = await firstValueFrom(popupTask.closed);
-    if(dataPopupOutput?.event?.action == 'add'){
-      this.listPayment.push(dataPopupOutput?.event?.payment);
-      this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
-      this.test.refresh();
-    }
-    return dataPopupOutput;
+  setDataContractCombobox(dataContract){
+    this.contracts.customerID = dataContract?.recID;
+    this.contracts.taxCode = dataContract?.taxCode;
+    this.contracts.address = dataContract?.address;
+    this.contracts.phone = dataContract?.phone;
+    this.contracts.faxNo = dataContract?.faxNo;
+    this.contracts.representative = null;
+    this.contracts.jobTitle = null;
+    this.contracts.bankAccount = dataContract?.bankAccount;
+    this.contracts.bankID = dataContract?.bankID;
   }
 
   handleSaveContract(){
@@ -378,12 +341,15 @@ export class AddContractsComponent implements OnInit{
     })
     }
   }
+  // chuyển tab
   changeTab(e){
     this.tabClicked = e;
   }
+
   addFile(evt: any) {
     this.attachment.uploadFile();
   }
+
   onClickMFPayment(e, data){
     switch (e.functionID) {
       case 'SYS02':
@@ -399,13 +365,116 @@ export class AddContractsComponent implements OnInit{
         // this.copyContract(data);
         break;
       case 'CM02041_1': //xem lịch sử
-      this.viewPayHistory();
+      this.viewPayHistory(data,1200,500);
         // this.copyContract(data);
         break;
       case 'CM02041_2': // thêm lịch sử
-      this.addPayHistory();
+      this.addPayHistory(data);
         // this.copyContract(data);
         break;
     }
   }
+  
+  addPayment(){
+    let payment = new CM_ContractsPayments();
+    let countPayMent =  this.listPayment.length;
+    payment.rowNo = countPayMent + 1;
+    payment.refNo = this.contracts?.recID;
+    this.openPopupPayment('add', payment);
+  }
+
+  async openPopupPayment(action,payment) {
+    let dataInput = {
+      action,
+      payment,
+    };
+   
+    let option = new DialogModel();
+    option.IsFull = false;
+    option.zIndex = 1001;
+    option.FormModel = this.fmContractsPayments;
+    let popupPayment = this.callfunc.openForm(
+      PopupAddPaymentComponent,'',
+      600,
+      400,
+      '',
+      dataInput,
+      '',
+      option,
+      );
+
+    let dataPopupOutput = await firstValueFrom(popupPayment.closed);
+    if(dataPopupOutput?.event?.action == 'add'){
+      this.listPayment.push(dataPopupOutput?.event?.payment);
+      this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+      this.test.refresh();
+    }
+    return dataPopupOutput;
+  }
+
+  addPayHistory(payment){
+    let payMentHistory = new CM_ContractsPayments();
+    let countPayMent =  this.listPayment.length;
+    payMentHistory.rowNo = countPayMent + 1;
+    payMentHistory.refNo = this.contracts?.recID;
+    this.openPopupPaymentHistory('add', payment, payMentHistory,);
+  }
+
+  viewPayHistory(payment ,width: number, height: number){
+    let dataInput = {
+      payment,
+    };
+  
+    let option = new DialogModel();
+    option.IsFull = false;
+    option.zIndex = 1001;
+    option.FormModel = this.fmContractsPaymentsHistory;
+    let popupPayHistory = this.callfunc.openForm(
+      PopupViewPaymentHistoryComponent,'',
+      width,
+      height,
+      '',
+      dataInput,
+      '',
+      option,
+      );
+  }
+
+  async openPopupPaymentHistory(action,payment,paymentHistory) {
+    let dataInput = {
+      action,
+      payment,
+      contractID: this.contracts?.recID,
+      paymentHistory,
+    };
+
+    let formModel = new FormModel();
+    formModel.entityName = 'CM_ContractsPayments';
+    formModel.formName = 'CMContractsPayments';
+    formModel.gridViewName = 'grvCMContractsPayments';
+    
+    let option = new DialogModel();
+    option.IsFull = false;
+    option.zIndex = 1001;
+    option.FormModel = formModel;
+
+    let popupTask = this.callfunc.openForm(
+      PopupAddPaymentHistoryComponent,'',
+      600,
+      400,
+      '',
+      dataInput,
+      '',
+      option,
+      );
+
+    let dataPopupOutput = await firstValueFrom(popupTask.closed);
+    if(dataPopupOutput?.event?.action == 'add'){
+      this.listPayment.push(dataPopupOutput?.event?.payment);
+      this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+      this.test.refresh();
+    }
+    return dataPopupOutput;
+  }
+
 }
