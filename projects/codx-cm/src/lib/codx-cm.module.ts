@@ -67,6 +67,7 @@ import { PopupConvertLeadComponent } from './leads/popup-convert-lead/popup-conv
 import { CodxAsideCustomComponent } from './_layout/codx-aside-custom/codx-aside-custom.component';
 import { ProcessReleaseComponent } from './process-release/process-release.component';
 import { PaymentHistoryComponent } from './contracts/component/payment-history/payment-history.component';
+import { PopupMergeLeadsComponent } from './leads/popup-merge-leads/popup-merge-leads.component';
 
 const routes: Routes = [
   {
@@ -176,6 +177,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxAsideCustomComponent,
     ProcessReleaseComponent,
     PaymentHistoryComponent,
+    PopupMergeLeadsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
