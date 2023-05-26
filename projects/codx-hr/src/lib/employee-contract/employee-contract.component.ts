@@ -2,7 +2,6 @@ import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-det
 import { FormGroup } from '@angular/forms';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { CodxHrService } from './../codx-hr.service';
-import { filter, map } from 'rxjs';
 import {
   UIComponent,
   ViewModel,
@@ -10,11 +9,8 @@ import {
   ViewType,
   NotificationsService,
   SidebarModel,
-  DialogModel,
   DialogRef,
   FormModel,
-  AuthService,
-  FormatvaluePipe,
   AuthStore,
 } from 'codx-core';
 import {
@@ -25,9 +21,8 @@ import {
   Injector,
   ChangeDetectorRef,
 } from '@angular/core';
-import { DataRequest } from '@shared/models/data.request';
 import { ActivatedRoute } from '@angular/router';
-import { PopupEContractComponent } from '../employee-profile/popup-econtract/popup-econtract.component';
+// import { PopupEContractComponent } from '../employee-profile/popup-econtract/popup-econtract.component';
 
 @Component({
   selector: 'lib-employee-contract',

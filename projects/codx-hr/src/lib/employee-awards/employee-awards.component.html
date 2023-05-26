@@ -20,14 +20,14 @@
 <!-- header -->
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 ps-2 pe-4">
-    <div class="w-30 text-primary fw-bold p-3">
+    <div class="w-30 fw-bold p-3">
       <codx-label
         fiedName="lblEmployeeID"
         [formModel]="view.formModel"
         [default]="grvSetup?.EmployeeID?.headerText"
       ></codx-label>
     </div>
-    <div class="w-30 text-primary fw-bold p-3">
+    <div class="w-30 fw-bold p-3">
       <codx-label
         fiedName="lblAwardID"
         [formModel]="view.formModel"
@@ -40,7 +40,7 @@
         [default]="grvSetup?.AwardFormCategory?.headerText"
       ></codx-label>
     </div>
-    <div class="w-40 text-primary fw-bold p-3">
+    <div class="w-40 fw-bold p-3">
       <codx-label
         name="lblStatus"
         [formModel]="view.formModel"
@@ -287,7 +287,7 @@
   <ng-template #desc2Tmp>
     <div>
       <div class="d-flex align-items-center">
-        <span class="icon-book icon-14 me-1"></span>
+        <span class="icon-description icon-15 me-1"></span>
         <span
           [ngbTooltip]="grvSetup?.DecisionNo?.headerText"
           [innerHTML]="
@@ -297,7 +297,7 @@
           "
         >
         </span>
-        <span class="icon-calendar_today icon-14 mx-1"></span>
+        <span class="icon-calendar_today icon-14 mx-2"></span>
         <span
           [ngbTooltip]="grvSetup?.AwardDate?.headerText"
           class="align-self-center"
