@@ -81,6 +81,7 @@ export class CashPaymentsComponent extends UIComponent {
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
   ];
+  //Bo
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -160,7 +161,7 @@ export class CashPaymentsComponent extends UIComponent {
         break;
     }
     this.detectorRef.detectChanges();
-  }
+}
 
   //#endregion
 

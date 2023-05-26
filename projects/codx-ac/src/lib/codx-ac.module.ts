@@ -48,7 +48,7 @@ import { CoreModule } from "../../../../src/core/core.module";
 export const routes: Routes = [
   {
     path: '',
-    component: NosubAsideComponent,
+    component: LayoutComponent,
     children: [
       {
         path: 'periodic/:funcID',

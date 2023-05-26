@@ -16,10 +16,8 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class LayoutComponent extends LayoutBaseComponent {
   dialog!: DialogRef;
-  @ViewChild('aside') asideRef: AsideComponent;
   constructor(
     inject: Injector,
-    private codxShareService: CodxShareService,
     private callfc: CallFuncService
   ) {
     super(inject);
