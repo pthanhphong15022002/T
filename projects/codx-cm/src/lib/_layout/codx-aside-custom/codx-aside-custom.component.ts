@@ -826,7 +826,6 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
 
     this.codxService.activeMenu.fav = null;
     this.isClickMenuCus = true;
-
     let url = 'cm/processrelease/';
 
     let funcParent = '';

@@ -204,8 +204,9 @@ export class DealsComponent
 
   reloadData() {
     if (this.view) {
-      this.view.dataService.predicates= null
-      this.view.dataService.dataValues= null
+      this.dataSelected = null;
+      this.view.dataService.predicates = null;
+      this.view.dataService.dataValues = null;
       this.view.dataObj = this.dataObj;
 
       this.view?.views?.forEach((x) => {
@@ -229,7 +230,7 @@ export class DealsComponent
             if (resource?.columns && resource?.columns.length)
               kanban.columns = resource.columns;
             kanban.kanbanSetting.isChangeColumn = false;
-            kanban.dataObj = this.dataObj
+            kanban.dataObj = this.dataObj;
             kanban.loadDataSource(
               kanban.columns,
               kanban.kanbanSetting?.swimlaneSettings,
@@ -238,15 +239,13 @@ export class DealsComponent
             kanban.refresh();
           });
       }
-     
-      if(this.processID)
-      (this.view?.dataService as CRUDService)
-        .setPredicates(['ProcessID==@0'], [this.processID])
-        .subscribe();
+
+      if (this.processID)
+        (this.view?.dataService as CRUDService)
+          .setPredicates(['ProcessID==@0'], [this.processID])
+          .subscribe();
     }
   }
-
- 
 
   afterLoad() {
     this.request = new ResourceModel();
@@ -265,11 +264,7 @@ export class DealsComponent
     this.resourceKanban.dataObj = this.dataObj;
   }
 
- 
-
-  changeView(e) {
-  
-  }
+  changeView(e) {}
   changeColumns(settingKanban) {
     settingKanban.isChangeColumn = true;
     settingKanban.formName = this.view?.formModel?.formName;

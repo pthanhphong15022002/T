@@ -203,6 +203,7 @@ export class CasesComponent
 
   reloadData() {
     if (this.view) {
+      this.dataSelected = null;
       this.view.dataService.predicates = null;
       this.view.dataService.dataValues = null;
       this.view.dataObj = this.dataObj;
