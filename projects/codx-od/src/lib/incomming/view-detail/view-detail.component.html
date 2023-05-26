@@ -107,9 +107,16 @@
           <ng-container *ngIf="data?.percentage && data?.percentage != '0' && data?.percentage != '100'">
             <span class="badge badge-square badge-od me-2">{{data?.percentage}}%</span>
           </ng-container>
-          <codx-vll [showText]="true" [showBgColor]="true" [formModel]="formModel" [field]="'Status'"
-            [value]="data?.status" class="badge badge-light badge-square badge-md fs-7 p-2">
+          <ng-container *ngIf="formModel.funcID != 'ODT42' else tmpApprovalStatus">
+            <codx-vll [showText]="true" [showBgColor]="true" [formModel]="formModel" [field]="'Status'"
+              [value]="data?.status" class="badge badge-light badge-square badge-md fs-7 p-2">
+            </codx-vll>
+          </ng-container>
+          <ng-template #tmpApprovalStatus>
+            <codx-vll [showText]="true" [showBgColor]="true" [name]="'ES030'" [value]="(data?.statusApproval + data?.stepType)"
+             class="badge badge-light badge-square badge-md fs-7 p-2">
           </codx-vll>
+          </ng-template>
         </div>
         <div class="d-flex justify-content-end mt-2">
           <codx-imgs [objectId]="data?.lstUserID" [numberImages]="3" [width]="30" [mode]="false"></codx-imgs>

@@ -34,7 +34,7 @@
       <div class="panel-left">
         <div class="panel-left-header">
           <codx-label
-            class="fw-bolder"
+            class="fw-bold mb-1 ms-2"
             [formModel]="dialogRef.formModel"
             name="lblListUser"
             default="Danh sách người dùng"
@@ -45,7 +45,7 @@
             (searchEvent)="searchEvent($event)"
           ></codx-searchbar>
         </div>
-        <div class="panel-left-body">
+        <div class="panel-left-body mt-2">
           <codx-listview
             #listview
             (onSelectionChanged)="selectedChange($event)"
@@ -93,7 +93,7 @@
         >
         </codx-img>
         <div class="text-left ms-2">
-          <p class="m-0 fw-bolder" *ngIf="item.UserName">{{ item.UserName }}</p>
+          <p class="m-0 fw-bold" *ngIf="item.UserName">{{ item.UserName }}</p>
         </div>
       </div>
       <div>
@@ -120,7 +120,7 @@
         >
         </codx-img>
         <div class="text-left ms-2">
-          <p class="m-0 fw-bolder" *ngIf="item.UserName">{{ item.UserName }}</p>
+          <p class="m-0 fw-bold" *ngIf="item.UserName">{{ item.UserName }}</p>
         </div>
       </div>
       <div (click)="removeMember(item)">
@@ -129,9 +129,9 @@
     </div>
   </ng-template>
   <ng-template #headerTemplate>
-    <div class="d-flex fw-bolder ms-2 w-100 ">
+    <div class="d-flex align-items-center ms-2 w-100 ">
       <codx-label
-          class="fw-bolder"
+          class="fw-bold mb-1 me-1"
           [formModel]="dialogRef.formModel"
           name="lblListUser"
           default="Đã chọn">

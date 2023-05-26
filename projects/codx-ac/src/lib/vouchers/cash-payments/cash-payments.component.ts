@@ -29,7 +29,6 @@ import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { SettledInvoices } from '../../models/SettledInvoices.model';
 import { map } from 'rxjs';
-
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -56,17 +55,17 @@ export class CashPaymentsComponent extends UIComponent {
   dataCategory: any;
   journal: IJournal;
   approval: any;
-  total: any = 0;
+  totalacct:any;
+  totaloff:any;
   className: any;
   classNameLine: any;
   entityName: any;
-  cashpaymentline: any;
   settledInvoices: any;
   acctTrans: any;
   baseCurr: any;
   cashbookName: any;
   reasonName: any;
-  lsAccount = [];
+  arrEntryID = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
@@ -81,6 +80,7 @@ export class CashPaymentsComponent extends UIComponent {
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
   ];
+  //Bo
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -160,7 +160,7 @@ export class CashPaymentsComponent extends UIComponent {
         break;
     }
     this.detectorRef.detectChanges();
-  }
+}
 
   //#endregion
 
@@ -379,21 +379,6 @@ export class CashPaymentsComponent extends UIComponent {
 
   loadDatadetail(data) {
     switch (data.subType) {
-      case '1':
-      case '3':
-        // this.api
-        //   .exec('AC', this.classNameLine, 'LoadDataAsync', [data.recID])
-        //   .subscribe((res: any) => {
-        //     this.cashpaymentline = res;
-        //     this.loadTotal();
-        //     this.loadAccountName(res);
-        //   });
-        this.api
-          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
-          .subscribe((res: any) => {
-            this.acctTrans = res;
-          });
-        break;
       case '2':
         this.api
           .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [data.recID])
@@ -405,6 +390,14 @@ export class CashPaymentsComponent extends UIComponent {
           .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
             this.acctTrans = res;
+          });
+        break;
+      default:
+        this.api
+          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
+          .subscribe((res: any) => {
+            this.acctTrans = res;
+            this.loadTotal();
           });
         break;
     }
@@ -463,11 +456,17 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   loadTotal() {
-    var totals = 0;
-    this.cashpaymentline.forEach((element) => {
-      totals = totals + element.dr;
-    });
-    this.total = totals.toLocaleString('it-IT');
+    var totalacct = 0;
+    var totaloff = 0;
+    for (let index = 0; index < this.acctTrans.length; index++) {
+      if (!this.acctTrans[index].crediting) {
+        totalacct = totalacct + this.acctTrans[index].transAmt;
+      }else{
+        totaloff = totaloff + this.acctTrans[index].transAmt;
+      }
+    }
+    this.totalacct = totalacct.toLocaleString('it-IT');
+    this.totaloff = totaloff.toLocaleString('it-IT');
   }
 
   loadCashbookName(data) {
@@ -498,5 +497,24 @@ export class CashPaymentsComponent extends UIComponent {
     return styles;
   }
 
+  checkCrediting(item){
+    var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
+    let index = data.filter((x) => x.crediting == item.crediting).findIndex(x => x.recID == item.recID);
+    if (index > 0) {
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  createLine(item){
+    var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
+    let index = data.filter((x) => x.crediting == item.crediting).findIndex(x => x.recID == item.recID);
+    if (index == ((data.filter((x) => x.crediting == item.crediting)).length) - 1) {
+      return true;
+    }else{
+      return false;
+    }
+  }
   //#endregion
 }

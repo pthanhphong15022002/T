@@ -529,6 +529,16 @@
         !data.isAppendix && data.isCurrent ? 'bg-primary' : 'bg-transparent'
       "
     ></span> -->
+    <ng-template #popNewest>
+      <span>
+        <codx-label
+          name="lblIsNewest"
+          [formModel]="formModel"
+          default="Đang hiệu lực"
+        ></codx-label>
+      </span>
+    </ng-template>
+
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center" *ngIf="data.isAppendix">
         <div class="d-flex flex-wrap mb-1">
@@ -544,6 +554,18 @@
         </div>
       </div>
       <div class="d-flex align-items-center mb-2" *ngIf="!data.isAppendix">
+        <span
+        *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
+        #popOver="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="popOver.open()"
+        (mouseleave)="popOver.close()"
+        placement="right"
+        [ngbPopover]="popNewest"
+        [style.color]="'#0078FF'"
+        class="icon-bookmark icon-18"
+      >
+    </span>
         <span class="fw-bolder">
           <span
             [innerHTML]="
@@ -705,7 +727,7 @@
       </span>
       <span class="me-2">
         <codx-dropdown-calendar
-          [cssPopup]="'w-500px h-300px aqua'"
+          [cssPopup]="'w-500px h-300px'"
           emptyText="Chọn năm"
           [firstChange]="false"
           [displayOption]="ops"
@@ -723,4 +745,104 @@
       {{ "SYS011" | mssg | async }}
     </span>
   </div>
+</ng-template>
+
+<ng-template #headTempContracts1>
+  <codx-label
+  [formModel]="formModel"
+  [name]="'lblContractsGridCol1'"
+  default="Loại hợp đồng | Thời hạn"
+  class="fw-bold fs-6 text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempContracts2>
+  <codx-label
+  [formModel]="formModel"
+  [name]="'lblContractsGridCol2'"
+  default="Hợp đồng"
+  class="fw-bold fs-6 text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempContracts3>
+  <codx-label
+  [formModel]="formModel"
+  [name]="'lblContractsGridCol3'"
+  default="Ghi chú"
+  class="fw-bold fs-6 text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempBasicSal1>
+  <codx-label
+  [formModel]="formModel"
+  [name]="'lblBasicSalGridCol1'"
+  default="Lương cơ bản"
+  class="fw-bold fs-6 text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempBasicSal2>
+  <codx-label
+  [formModel]="formModel"
+  [name]="'lblBasicSalGridCol2'"
+  default="Lương đóng BH"
+  class="fw-bold fs-6 text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempBasicSal3>
+  <codx-label
+  [formModel]="formModel"
+  [name]="'lblBasicSalGridCol3'"
+  default="Lương chức danh"
+  class="fw-bold fs-6 text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempBasicSal4>
+  <codx-label
+  [formModel]="formModel"
+  [name]="'lblBasicSalGridCol4'"
+  default="Hiệu lực"
+  class="fw-bold fs-6 text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempBenefit1>
+  <codx-label
+  [formModel]="formModel"
+  [name]="'lblBenefitGridCol1'"
+  default="Loại phụ cấp"
+  class="fw-bold fs-6 text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempBenefit2>
+  <codx-label
+  [formModel]="formModel"
+  [name]="'lblBenefitGridCol2'"
+  default="Số tiền"
+  class="fw-bold fs-6 text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempBenefit3>
+  <codx-label
+  [formModel]="formModel"
+  [name]="'lblBenefitGridCol3'"
+  default="Hiệu lực"
+  class="fw-bold fs-6 text-gray-600"
+>
+</codx-label>
 </ng-template>

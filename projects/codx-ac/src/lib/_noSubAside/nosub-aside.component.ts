@@ -17,7 +17,7 @@ export class NosubAsideComponent extends LayoutBaseComponent {
   ) { 
     super(inject);
     this.module = 'AC';
-    this.layoutModel.toolbarFixed = true;
+    this.layoutModel.toolbarFixed = false;
   }
 
   onInit(): void { }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, ViewEncapsulation } from '@angular/core';
 import {
   CallFuncService,
   DialogRef,
@@ -10,6 +10,7 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
+  encapsulation:ViewEncapsulation.None,
 })
 export class LayoutComponent extends LayoutBaseComponent {
   dialog: DialogRef;

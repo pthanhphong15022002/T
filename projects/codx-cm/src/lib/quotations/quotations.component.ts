@@ -235,7 +235,7 @@ export class QuotationsComponent extends UIComponent {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'CM0202_1':
-            if (data.status != 0) {
+            if (data.status != 0 && data.status != 4) {
               res.disabled = true;
             }
             break;
@@ -338,7 +338,7 @@ export class QuotationsComponent extends UIComponent {
 
   edit(data) {
     if (data) {
-      this.view.dataService.dataSelected = data;
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
     }
     this.view.dataService.edit(data).subscribe((res) => {
       var obj = {
@@ -368,12 +368,12 @@ export class QuotationsComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-      .copy(this.view.dataService.dataSelected)
+      .copy()
       .subscribe((res) => {
         if (this.isNewVersion) {
           res.revision = data.revision;
-          res.revisionNo = data.revisionNo;
-          res.revisionName = data.revisionName;
+          res.versionNo = data.versionNo;
+          res.versionName = data.versionName;
         }
         var obj = {
           data: res,
@@ -443,8 +443,9 @@ export class QuotationsComponent extends UIComponent {
   }
 
   // tạo phiên bản mới
-  createNewVersion(dt) {
+  createNewVersion(data) {
     this.isNewVersion = true;
+    let dt = JSON.parse(JSON.stringify(data));
     switch (dt.status) {
       case '4':
       case '2':

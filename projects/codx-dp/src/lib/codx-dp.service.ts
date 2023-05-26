@@ -787,4 +787,12 @@ export class CodxDpService {
       data
     );
   }
+  getListPermission(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetListPermissionInCMAsync',
+      data
+    );
+  }
 }

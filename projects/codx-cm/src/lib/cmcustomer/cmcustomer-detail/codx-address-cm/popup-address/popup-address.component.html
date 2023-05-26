@@ -26,10 +26,14 @@
         fiedName="AdressName"
         [formModel]="form.formModel"
       ></codx-label>
-      <span class="icon-refresh icon-18 text-dark fw-bold text-hover-primary cursor-pointer" (click)="clickRefesh()">
+      <span
+        class="icon-refresh icon-18 text-dark fw-bold text-hover-primary cursor-pointer"
+        (click)="clickRefesh()"
+      >
       </span>
     </div>
     <codx-input
+      id="inputAddress"
       [formModel]="form.formModel"
       (valueChange)="valueChange($event)"
       [crrValue]="data?.adressName"
