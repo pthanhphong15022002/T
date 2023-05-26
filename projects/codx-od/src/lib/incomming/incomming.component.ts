@@ -151,6 +151,7 @@ export class IncommingComponent
     
     // this.codxService = inject.get(CodxService);
     this.fileService = inject.get(FileService);
+    
   }
   ngOnChanges(changes: SimpleChanges): void {}
 
@@ -543,7 +544,7 @@ export class IncommingComponent
   }
 
   //Hàm lấy thông tin chi tiết của công văn
-  getDtDis(id: any) {
+  getDtDis(id: any,data:any = null) {
     this.lstDtDis = null;
     if (id) {
       this.lstUserID = '';
@@ -553,6 +554,14 @@ export class IncommingComponent
           //this.getChildTask(id);
           if (item) {
             this.lstDtDis = formatDtDis(item);
+            if(this.funcList.runMode == "1" && data)
+            {
+              this.lstDtDis.processType = data.processType;
+              this.lstDtDis.stepType = data.stepType;
+              this.lstDtDis.stepNo = data.stepNo;
+              this.lstDtDis.statusApproval = data.statusApproval;
+              this.lstDtDis.approvalRecID = data.approvalRecID;
+            }
             //this.view.dataService.setDataSelected(this.lstDtDis);
           }
         });
@@ -587,7 +596,7 @@ export class IncommingComponent
       recID = dt.recID;
       this.dataItem = dt;
     }
-    this.getDtDis(recID);
+    this.getDtDis(recID,this.dataItem);
   }
   fileAdded(event: any) {
     this.fileAdd = event.data;

@@ -76,7 +76,6 @@ export class PopupAddQuotationsComponent implements OnInit {
   listQuotationLines: Array<any> = [];
   lockFields = [];
   dataParent: any;
-  gridViewSetupQL: any;
   quotationLinesAddNew = [];
   quotationLinesEdit = [];
   quotationLinesDeleted = [];
@@ -90,6 +89,8 @@ export class PopupAddQuotationsComponent implements OnInit {
   arrFieldIsVisible: any[];
   formModel: FormModel;
   currencyIDOld = 'VND';
+  grvSetupQuotations: any;
+  grvSetupQuotationsLines: any;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -131,13 +132,20 @@ export class PopupAddQuotationsComponent implements OnInit {
           }
         });
     }
+    this.loadDefault();
+  }
+
+  ngOnInit(): void {}
+
+  //load Default
+  loadDefault() {
     this.cache
       .gridViewSetup(
         this.fmQuotationLines.formName,
         this.fmQuotationLines.gridViewName
       )
       .subscribe((res) => {
-        this.gridViewSetupQL = res;
+        this.grvSetupQuotationsLines = res;
         //lay grid view
         let arrField = Object.values(res).filter((x: any) => x.isVisible);
         if (Array.isArray(arrField)) {
@@ -147,9 +155,24 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.getColumsGrid(res);
         }
       });
-  }
 
-  ngOnInit(): void {}
+    this.cache
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        this.grvSetupQuotations = res;
+        //lay grid view
+        // let arrField = Object.values(res).filter((x: any) => x.isVisible);
+        // if (Array.isArray(arrField)) {
+        //   this.arrFieldIsVisible = arrField
+        //     .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+        //     .map((x: any) => x.fieldName);
+        //   this.getColumsGrid(res);
+        // }
+      });
+  }
 
   beforeSave(op: RequestOption) {
     let data = [];
@@ -169,6 +192,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     op.data = data;
     return true;
   }
+
   onAdd() {
     if (this.dialog.dataService) {
       this.dialog.dataService
@@ -237,7 +261,14 @@ export class PopupAddQuotationsComponent implements OnInit {
         });
     }
   }
+
   onSave() {
+    let count = this.codxCM.checkValidateForm(
+      this.grvSetupQuotations,
+      this.quotations,
+      0
+    );
+    if (count > 0) return;
     if (this.action == 'add' || this.action == 'copy') {
       this.onAdd();
     } else if (this.action == 'edit') {
@@ -594,7 +625,9 @@ export class PopupAddQuotationsComponent implements OnInit {
         let exchangeRateNew = res?.exchRate ?? 0;
         if (exchangeRateNew == 0) {
           this.notiService.notify(
-            'Tỷ giá tiền tệ "'+this.quotations.currencyID+'" chưa thiết lập xin hay chọn lại !',
+            'Tỷ giá tiền tệ "' +
+              this.quotations.currencyID +
+              '" chưa thiết lập xin hay chọn lại !',
             '3'
           );
           this.quotations.currencyID = this.currencyIDOld;
@@ -623,7 +656,8 @@ export class PopupAddQuotationsComponent implements OnInit {
             ql['currencyID'] = this.quotations.currencyID;
             ql['exchangeRate'] = this.quotations.exchangeRate;
 
-            ql['costPrice'] = (ql['costPrice'] * exchangeRateOld) / exchangeRateNew;
+            ql['costPrice'] =
+              (ql['costPrice'] * exchangeRateOld) / exchangeRateNew;
             ql['discAmt'] = (ql['discAmt'] * exchangeRateOld) / exchangeRateNew;
             ql['salesAmt'] =
               (ql['salesAmt'] * exchangeRateOld) / exchangeRateNew;
@@ -760,36 +794,4 @@ export class PopupAddQuotationsComponent implements OnInit {
   //end
 
   //setDefault
-
-  //check Validate
-  // checkValidate(ignoredFields: string[] = []) {
-  //   ignoredFields = ignoredFields.map((i) => i.toLowerCase());
-  //   var keygrid = Object.keys(this.gridViewSetup);
-  //   var keymodel = Object.keys(this.purchaseinvoices);
-  //   for (let index = 0; index < keygrid.length; index++) {
-  //     if (this.gridViewSetup[keygrid[index]].isRequire == true) {
-  //       if (ignoredFields.includes(keygrid[index].toLowerCase())) {
-  //         continue;
-  //       }
-
-  //       for (let i = 0; i < keymodel.length; i++) {
-  //         if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-  //           if (
-  //             this.purchaseinvoices[keymodel[i]] === null ||
-  //             String(this.purchaseinvoices[keymodel[i]]).match(/^ *$/) !==
-  //               null ||
-  //             this.purchaseinvoices[keymodel[i]] == 0
-  //           ) {
-  //             this.notification.notifyCode(
-  //               'SYS009',
-  //               0,
-  //               '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
-  //             );
-  //             this.validate++;
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  //}
 }

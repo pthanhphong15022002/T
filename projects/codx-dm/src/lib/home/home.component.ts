@@ -230,6 +230,10 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.disableMark();
         this.loaded = false;
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
+        this.dmSV.isSearchView = false;
+        this.setHideModeView();
+        this.view.viewChange(this.viewActive);
+        this.codxview.currentView.viewModel.model.panelLeftHide = false;
         if (tree) {
           tree.textField = 'folderName';
           if (res.recID) {
@@ -1279,63 +1283,37 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       } 
     });
   }
-  filterChange($event) {
-    if (!$event) {
-      this.dmSV.page = 1;
-    } else {
-      try {
-        this.data = [];
-        this.isSearch = true;
-        this.view.orgView = this.orgViews;
-        this.dmSV.page = 1;
-        this.dmSV.listFiles = [];
-        this.dmSV.listFolder = [];
-        if ($event != undefined) {
-          var predicates = $event.predicates;
-          var values = $event.values;
-          //$event.paras;
-          var list = [];
-          var item = new Filters();
-          $event?.filter.forEach((ele) => {
-            item = ele as Filters;
-            list.push(Object.assign({}, item));
-          });
-          var text = JSON.stringify(list);
-          this.textSearchAll = text;
-          this.predicates = predicates;
-          this.values = values;
-          this.searchAdvance = true;
-          //this.search();
-          this.fileService
-            .searchFileAdv(
-              text,
-              predicates,
-              values,
-              this.dmSV.page,
-              this.dmSV.pageSize,
-              this.searchAdvance,
-              this.view.formModel.funcID
-            )
-            .subscribe((item) => {
-              if (item != null) {
-                this.dmSV.listFiles = item.data;
-                this.totalSearch = item.total;
-                this.data = [...this.data, ...this.dmSV.listFiles];
-                if(this.data && this.data.length == 0) this.loaded = true;
-                this.changeDetectorRef.detectChanges();
-              } else {
-                this.totalSearch = 0;
-                this.dmSV.totalPage = 0;
-                this.changeDetectorRef.detectChanges();
-              }
-            });
-        }
-      } catch (ex) {
-        this.totalSearch = 0;
-        this.changeDetectorRef.detectChanges();
-        console.log(ex);
+  filterChange(e:any) {
+    if(!e) return ;
+
+    this.dmSV.page = 1;
+    this.dmSV.listFiles = [];
+    this.dmSV.listFolder = [];
+    this.data = [];
+    this.dmSV.isSearchView = true;
+    this.currView = this.templateSearch;
+    this.setHideModeView(true);
+    this.modelSearch.funcID = this.view.formModel.funcID;
+    this.modelSearch.page = 1;
+    this.modelSearch.entityName = this.view.formModel.entityPer;
+    this.isScrollSearch = true;
+    if (this.codxview.currentView.viewModel.model != null) this.codxview.currentView.viewModel.model.panelLeftHide = true;
+    this.fileService
+    .filterFile(
+      this.funcID,
+      e?.filter,
+      this.dmSV.page,
+      this.dmSV.pageSize,
+    )
+    .subscribe((item) => {
+      if(item)
+      {
+        this.dmSV.listFiles = item[0];
+        this.totalSearch = item[1];
+        this.data = [...this.data, ...this.dmSV.listFiles];
+        if(this.data && this.data.length == 0) this.loaded = true;
       }
-    }
+    });
   }
 
   searchChange($event) {
