@@ -2,6 +2,7 @@ import {
   async,
   BehaviorSubject,
   finalize,
+  isObservable,
   map,
   Observable,
   of,
@@ -65,6 +66,40 @@ export class CodxShareService {
   ) {
     this.user = this.auth.get();
   }
+  loadFunctionList(funcID:any): Observable<any>
+  {
+    let paras = ["FuncID",funcID];
+    let keyRoot = "FuncID" + funcID;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.cache.functionList(funcID)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
   loadFuncID(functionID: any): Observable<any> {
     let paras = [functionID];
     let keyRoot = 'MFunc' + functionID;
@@ -80,6 +115,37 @@ export class CodxShareService {
     }
     let observable = this.api
       .execSv('SYS', 'SYS', 'MoreFunctionsBusiness', 'GetAsync', functionID)
+      .pipe(
+        map((res) => {
+          if (res) {
+            let c = this.caches.get(keyRoot);
+            c?.set(key, res);
+            return res;
+          }
+          return null;
+        }),
+        share(),
+        finalize(() => this.cachedObservables.delete(key))
+      );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
+  checkStatusApproval(recID: any, status): Observable<any> {
+    let paras = [recID];
+    let keyRoot = recID + status;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key);
+    }
+   
+    let observable = this.api
+      .execSv('ES', 'ERM.Business.ES', 'ApprovalTransBusiness', 'CheckRestoreAsync', recID)
       .pipe(
         map((res) => {
           if (res) {
@@ -693,6 +759,7 @@ export class CodxShareService {
     // document.location.reload();
   }
   changeMFApproval(data: any, value: object | any = null) {
+    debugger
     var datas = value;
     if (datas) {
       var list = data.filter(
@@ -702,7 +769,7 @@ export class CodxShareService {
         list[i].isbookmark = true;
         if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
           list[i].disabled = true;
-          if (value.status == '5' || value.status == '2' || value.status == '4')
+          if (value.statusApproval == '5' || value.statusApproval == '2' || value.statusApproval == '4')
             list[i].disabled = true;
           else if (
             ((datas?.stepType == 'S1' ||
@@ -720,9 +787,9 @@ export class CodxShareService {
             list[i].disabled = false;
           }
         } else if (
-          value.status == '5' ||
-          value.status == '2' ||
-          value.status == '4'
+          value.statusApproval == '5' ||
+          value.statusApproval == '2' ||
+          value.statusApproval == '4'
         )
           list[i].disabled = true;
       }
@@ -746,22 +813,24 @@ export class CodxShareService {
       (x: { functionID: string }) => x.functionID == 'SYS207'
     );
     bm[0].disabled = true;
-    if (datas.status != '3') {
-      this.api
-        .execSv<any>(
-          'ES',
-          'ERM.Business.ES',
-          'ApprovalTransBusiness',
-          'CheckRestoreAsync',
-          datas.recID
-        )
-        .subscribe((item) => {
+    if (datas.statusApproval != '3') {
+      var check = this.checkStatusApproval(datas.approvalRecID,datas.statusApproval);
+      if(isObservable(check))
+      {
+        check.subscribe(item=>{
           var bm = data.filter(
             (x: { functionID: string }) => x.functionID == 'SYS207'
           );
           bm[0].disabled = !item;
-          //this.detectorRef.detectChanges();
-        });
+        })
+      }
+      else
+      {
+        var bm = data.filter(
+          (x: { functionID: string }) => x.functionID == 'SYS207'
+        );
+        bm[0].disabled = !check;
+      }
     }
   }
 }

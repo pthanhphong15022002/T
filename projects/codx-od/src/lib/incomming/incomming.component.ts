@@ -251,130 +251,139 @@ export class IncommingComponent
   }
   
   changeDataMF(e: any, data: any) {
-    this.cache.functionList(this.view.formModel.funcID).subscribe(fc=>{
-      if(fc.runMode == "1")
-      {
-        this.shareService.changeMFApproval(e,data);
+    var funcList = this.codxODService.loadFunctionList(this.view.formModel.funcID);
+    if(isObservable(funcList))
+    {
+      funcList.subscribe(fc=>{
+        this.changeDataMFBefore(e,data,fc);
+      })
+    }
+    else this.changeDataMFBefore(e,data,funcList);
+  }
+
+  changeDataMFBefore(e: any, data: any , fc:any)
+  {
+    if(fc.runMode == "1")
+    {
+      this.shareService.changeMFApproval(e,data);
+    }
+    else
+    {
+      //Bookmark
+      var bm = e.filter(
+        (x: { functionID: string }) =>
+          x.functionID == 'ODT110' || x.functionID == 'ODT209' || x.functionID == "ODT3009" || x.functionID == "ODT5109"  || x.functionID == "ODT5210"
+      );
+      //Unbookmark
+      var unbm = e.filter(
+        (x: { functionID: string }) =>
+          x.functionID == 'ODT111' || x.functionID == 'ODT210' || x.functionID == "ODT3010" || x.functionID == "ODT5110" || x.functionID == "ODT5211" 
+      );
+      if (data?.isBookmark) {
+        if(bm[0]) bm[0].disabled = true;
+        if(unbm[0]) unbm[0].disabled = false;
+      } else  {
+        if(unbm[0]) unbm[0].disabled = true;
+        if(bm[0]) bm[0].disabled = false;
       }
-      else
+
+      if(this.view.formModel.funcID == 'ODT41' || this.view.formModel.funcID == 'ODT51')
       {
-        //Bookmark
-        var bm = e.filter(
-          (x: { functionID: string }) =>
-            x.functionID == 'ODT110' || x.functionID == 'ODT209' || x.functionID == "ODT3009" || x.functionID == "ODT5109"  || x.functionID == "ODT5210"
-        );
-        //Unbookmark
-        var unbm = e.filter(
-          (x: { functionID: string }) =>
-            x.functionID == 'ODT111' || x.functionID == 'ODT210' || x.functionID == "ODT3010" || x.functionID == "ODT5110" || x.functionID == "ODT5211" 
-        );
-        if (data?.isBookmark) {
-          if(bm[0]) bm[0].disabled = true;
-          if(unbm[0]) unbm[0].disabled = false;
-        } else  {
-          if(unbm[0]) unbm[0].disabled = true;
-          if(bm[0]) bm[0].disabled = false;
+        if(data?.status != '1' && data?.status != '2' && data?.approveStatus != '2')
+        {
+          var approvel = e.filter(
+            (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
+          );
+          if(approvel[0]) approvel[0].disabled = true;
         }
 
-        if(this.view.formModel.funcID == 'ODT41' || this.view.formModel.funcID == 'ODT51')
+        //Hủy yêu cầu duyệt
+        var approvel = e.filter(
+          (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012" || x.functionID == 'ODT5112'
+        );
+        for(var i = 0 ; i< approvel.length ; i++)
         {
-          if(data?.status != '1' && data?.status != '2' && data?.approveStatus != '2')
-          {
-            var approvel = e.filter(
-              (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
-            );
-            if(approvel[0]) approvel[0].disabled = true;
-          }
+          approvel[i].disabled = true;
+        }
 
-          //Hủy yêu cầu duyệt
+        if(data?.approveStatus == '3' && data?.createdBy == this.userID)
+        {
           var approvel = e.filter(
             (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012" || x.functionID == 'ODT5112'
           );
           for(var i = 0 ; i< approvel.length ; i++)
           {
-            approvel[i].disabled = true;
-          }
-
-          if(data?.approveStatus == '3' && data?.createdBy == this.userID)
-          {
-            var approvel = e.filter(
-              (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012" || x.functionID == 'ODT5112'
-            );
-            for(var i = 0 ; i< approvel.length ; i++)
-            {
-              approvel[i].disabled = false;
-            }
-          }
-
-          //Hiện thị chức năng gửi duyệt khi xét duyệt
-          if(data?.approveStatus == '1' && data?.status == '3' )
-          {
-              //Chức năng Gửi duyệt
-              var approvel = e.filter(
-                (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
-              );
-              if (approvel[0]) approvel[0].disabled = false;
+            approvel[i].disabled = false;
           }
         }
 
-        //Từ chối , Bị đóng 
-        if(data?.status == "9" || data?.approveStatus == "4")
+        //Hiện thị chức năng gửi duyệt khi xét duyệt
+        if(data?.approveStatus == '1' && data?.status == '3' )
         {
-          var approvel = e.filter(
-            (x: { functionID: string }) => 
-              x.functionID == 'ODT112' || 
-              x.functionID == 'ODT211' || 
-              x.functionID == 'ODT103' || 
-              x.functionID == 'ODT202' ||
-              x.functionID == 'SYS03'  ||
-              x.functionID == 'ODT103' ||
-              x.functionID == 'ODT202'
-          );
-          if(approvel && approvel.length > 0)
-            for (var i = 0; i < approvel.length; i++) {
-              approvel[i].disabled = true;
-            }
-        }
-        //Hoàn tất
-        if (data?.status == '7') {
-          var completed = e.filter(
-            (x: { functionID: string }) =>
-              x.functionID == 'ODT211' ||
-              x.functionID == 'ODT112' ||
-              x.functionID == 'SYS02' ||
-              x.functionID == 'SYS03' ||
-              x.functionID == 'ODT103' ||
-              x.functionID == 'ODT202' ||
-              x.functionID == 'ODT101' ||
-              x.functionID == 'ODT113'
-          );
-          for (var i = 0; i < completed.length; i++) {
-            completed[i].disabled = true;
-          }
-        }
-        if (data?.status == '3') {
-          var completed = e.filter(
-            (x: { functionID: string }) => x.functionID == 'SYS02'
-          );
-          completed.forEach((elm) => {
-            elm.disabled = true;
-          });
-        }
-        var approvelCL = e.filter(
-          (x: { functionID: string }) => x.functionID == 'ODT114' || x.functionID == "ODT5214"
-        );
-        if (approvelCL[0]) approvelCL[0].disabled = true;
-        //Trả lại
-        if (data?.status == '4') {
-          var approvel = e.filter(
-            (x: { functionID: string }) => x.functionID == 'ODT113' || x.functionID == "ODT5213"
-          );
-          if (approvel[0]) approvel[0].disabled = true;
-          if (approvelCL[0]) approvelCL[0].disabled = false;
+            //Chức năng Gửi duyệt
+            var approvel = e.filter(
+              (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
+            );
+            if (approvel[0]) approvel[0].disabled = false;
         }
       }
-    })
-   
+
+      //Từ chối , Bị đóng 
+      if(data?.status == "9" || data?.approveStatus == "4")
+      {
+        var approvel = e.filter(
+          (x: { functionID: string }) => 
+            x.functionID == 'ODT112' || 
+            x.functionID == 'ODT211' || 
+            x.functionID == 'ODT103' || 
+            x.functionID == 'ODT202' ||
+            x.functionID == 'SYS03'  ||
+            x.functionID == 'ODT103' ||
+            x.functionID == 'ODT202'
+        );
+        if(approvel && approvel.length > 0)
+          for (var i = 0; i < approvel.length; i++) {
+            approvel[i].disabled = true;
+          }
+      }
+      //Hoàn tất
+      if (data?.status == '7') {
+        var completed = e.filter(
+          (x: { functionID: string }) =>
+            x.functionID == 'ODT211' ||
+            x.functionID == 'ODT112' ||
+            x.functionID == 'SYS02' ||
+            x.functionID == 'SYS03' ||
+            x.functionID == 'ODT103' ||
+            x.functionID == 'ODT202' ||
+            x.functionID == 'ODT101' ||
+            x.functionID == 'ODT113'
+        );
+        for (var i = 0; i < completed.length; i++) {
+          completed[i].disabled = true;
+        }
+      }
+      if (data?.status == '3') {
+        var completed = e.filter(
+          (x: { functionID: string }) => x.functionID == 'SYS02'
+        );
+        completed.forEach((elm) => {
+          elm.disabled = true;
+        });
+      }
+      var approvelCL = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT114' || x.functionID == "ODT5214"
+      );
+      if (approvelCL[0]) approvelCL[0].disabled = true;
+      //Trả lại
+      if (data?.status == '4') {
+        var approvel = e.filter(
+          (x: { functionID: string }) => x.functionID == 'ODT113' || x.functionID == "ODT5213"
+        );
+        if (approvel[0]) approvel[0].disabled = true;
+        if (approvelCL[0]) approvelCL[0].disabled = false;
+      }
+    }
   }
   aaaa(e: any) {
     if (e) {
@@ -570,7 +579,6 @@ export class IncommingComponent
   }
 
   valueChange(dt: any) {
-    debugger
     var recID = null;
     if (dt?.data) {
       recID = dt.data.recID;
