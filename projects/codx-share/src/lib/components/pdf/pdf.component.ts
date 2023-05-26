@@ -707,39 +707,41 @@ export class PdfComponent
         //   )
         //   .subscribe((status) => {
         //     resolve(status);
-        //   });    
-        this.api.execSv(
-          'ES',
-          'ERM.Business.ES',
-          'ApprovalTransBusiness',
-          'ApproveAsync',
-          [this.transRecID, mode, "", comment, '']
-        ).subscribe((res :any)=>{
-          if(res?.msgCodeError == null){
-            resolve(true);
-          }
-          else{
-            resolve(false);
-          }
-        })    
+        //   });
+        this.api
+          .execSv(
+            'ES',
+            'ERM.Business.ES',
+            'ApprovalTransBusiness',
+            'ApproveAsync',
+            [this.transRecID, mode, '', comment, '']
+          )
+          .subscribe((res: any) => {
+            if (res?.msgCodeError == null) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          });
       });
-      
     }
   }
 
   //loaded pdf
   loadedPdf(e: any) {
-    this.pageMax = e.pagesCount;
+    if (this.pageMax > 0) {
+      this.pageMax = e.pagesCount;
 
-    let ngxService: NgxExtendedPdfViewerService =
-      new NgxExtendedPdfViewerService();
+      let ngxService: NgxExtendedPdfViewerService =
+        new NgxExtendedPdfViewerService();
 
-    if (this.isSignMode) {
-      if (this.curPage == 1) {
-        this.curPage = this.pageMax;
+      if (this.isSignMode) {
+        if (this.curPage == 1) {
+          this.curPage = this.pageMax;
+        }
       }
+      ngxService.addPageToRenderQueue(this.curPage);
     }
-    ngxService.addPageToRenderQueue(this.curPage);
   }
 
   saveToDB(tmpArea: tmpSignArea) {
