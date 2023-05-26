@@ -120,7 +120,10 @@ export class PopupMergeLeadsComponent implements OnInit {
       case 'annualRevenue':
         if (e.field === 'annualRevenue1' && e.component.checked === true) {
           this.leadNew.annualRevenue = this.leadOne?.annualRevenue;
-        } else if (e.field === 'annualRevenue2' && e.component.checked === true) {
+        } else if (
+          e.field === 'annualRevenue2' &&
+          e.component.checked === true
+        ) {
           this.leadNew.annualRevenue = this.leadTwo?.annualRevenue;
         } else {
           this.leadNew.annualRevenue = this.leadThree?.annualRevenue;
@@ -142,6 +145,69 @@ export class PopupMergeLeadsComponent implements OnInit {
           this.leadNew.note = this.leadTwo?.note;
         } else {
           this.leadNew.note = this.leadThree?.note;
+        }
+        break;
+      case 'headcounts':
+        if (e.field === 'headcounts1' && e.component.checked === true) {
+          this.leadNew.headcounts = this.leadOne?.headcounts;
+        } else if (e.field === 'headcounts2' && e.component.checked === true) {
+          this.leadNew.headcounts = this.leadTwo?.headcounts;
+        } else {
+          this.leadNew.headcounts = this.leadThree?.headcounts;
+        }
+        break;
+      case 'campaignID':
+        if (e.field === 'campaignID1' && e.component.checked === true) {
+          this.leadNew.campaignID = this.leadOne?.campaignID;
+        } else if (e.field === 'campaignID2' && e.component.checked === true) {
+          this.leadNew.campaignID = this.leadTwo?.campaignID;
+        } else {
+          this.leadNew.campaignID = this.leadThree?.campaignID;
+        }
+        break;
+      case 'channelID':
+        if (e.field === 'channelID1' && e.component.checked === true) {
+          this.leadNew.channelID = this.leadOne?.channelID;
+        } else if (e.field === 'channelID2' && e.component.checked === true) {
+          this.leadNew.channelID = this.leadTwo?.channelID;
+        } else {
+          this.leadNew.channelID = this.leadThree?.channelID;
+        }
+        break;
+      case 'customerResource':
+        if (e.field === 'customerResource1' && e.component.checked === true) {
+          this.leadNew.customerResource = this.leadOne?.customerResource;
+        } else if (
+          e.field === 'customerResource2' &&
+          e.component.checked === true
+        ) {
+          this.leadNew.customerResource = this.leadTwo?.customerResource;
+        } else {
+          this.leadNew.customerResource = this.leadThree?.customerResource;
+        }
+        break;
+      case 'salespersonID':
+        if (e.field === 'salespersonID1' && e.component.checked === true) {
+          this.leadNew.salespersonID = this.leadOne?.salespersonID;
+        } else if (
+          e.field === 'salespersonID2' &&
+          e.component.checked === true
+        ) {
+          this.leadNew.salespersonID = this.leadTwo?.salespersonID;
+        } else {
+          this.leadNew.salespersonID = this.leadThree?.salespersonID;
+        }
+        break;
+      case 'consultantID':
+        if (e.field === 'consultantID1' && e.component.checked === true) {
+          this.leadNew.consultantID = this.leadOne?.consultantID;
+        } else if (
+          e.field === 'consultantID2' &&
+          e.component.checked === true
+        ) {
+          this.leadNew.consultantID = this.leadTwo?.consultantID;
+        } else {
+          this.leadNew.consultantID = this.leadThree?.consultantID;
         }
         break;
     }

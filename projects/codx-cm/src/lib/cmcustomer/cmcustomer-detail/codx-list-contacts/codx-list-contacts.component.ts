@@ -78,6 +78,11 @@ export class CodxListContactsComponent implements OnInit {
   }
 
   async ngOnInit() {
+    if(this.isConvertLeadToCus){
+      for (var i = 0; i < this.lstConvertContact.length; i++) {
+        this.lstConvertContact[i].isCheck = false;
+      }
+    }
     // this.getListContacts();
     this.formModelContact = await this.cmSv.getFormModel('CM0102');
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
