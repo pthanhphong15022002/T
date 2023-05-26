@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { CRUDService } from 'codx-core';
+import { CRUDService, FormModel } from 'codx-core';
 import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.component';
 
 @Component({
@@ -34,6 +34,8 @@ export class DealDetailComponent  implements OnInit {
     { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
     { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: null},
   ];
+
+  formModelCustomer:  FormModel;
 
   treeTask = [];
 
