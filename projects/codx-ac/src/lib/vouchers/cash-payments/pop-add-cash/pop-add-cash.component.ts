@@ -266,7 +266,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.loadSubType2(false);
         if (this.gridCashPaymentLine) {
           this.gridCreated(this.gridCashPaymentLine);
-        }    
+        }
         break;
     }
   }
@@ -790,7 +790,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   popupCash(){
     var obj = {
-      
+
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -809,7 +809,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       opt
     );
   }
-  
+
   //#endregion
 
   //#region Method
@@ -1172,7 +1172,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         if (res) {
           switch (this.modegrid) {
             case '1':
-<<<<<<< HEAD
+              idx = this.gridCashPaymentLine.dataSource.length;
               this.gridCashPaymentLine.endEdit();
                 this.gridCashPaymentLine.addRow(res, idx);
               // if (this.hasAddrow) {
@@ -1182,12 +1182,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               //   this.gridCashPaymentLine.addRow(res, idx);
               //   this.hasAddrow = false;
               // }
-=======
-              idx = this.gridCashPaymentLine.dataSource.length;
-                res.rowNo = idx + 1;
-                this.gridCashPaymentLine.addRow(res, idx);
-                this.hasAddrow = false;
->>>>>>> 3250ac3b3638355fdaf665c87060df16c65d67da
               break;
             case '2':
               idx = this.cashpaymentline.length;
@@ -1336,7 +1330,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       } else {
         element.style.display = 'none';
       }
-    } 
+    }
   }
   loadSubType2(enable) {
     var element = document.querySelectorAll('.ac-type-2');
@@ -1350,7 +1344,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           (element[index] as HTMLElement).style.display = 'none';
         }
       }
-    } 
+    }
   }
   //#endregion
 }
