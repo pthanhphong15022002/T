@@ -62,8 +62,6 @@ readonly fieldCbxChannels = { text: 'channelName', value: 'recID' };
 readonly fieldCbxContacts = { text: 'contactName', value: 'recID' };
 readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
-readonly fieldCbxCases = { text: 'c', value: 'recID' };
-
 // Tab control
 menuGeneralInfo = {
   icon: 'icon-info',
@@ -322,8 +320,6 @@ async executeApiCalls() {
   try {
     await this.getGridView(this.formModel);
     await this.getListProcess(this.typeForCases);
-    // await this.getListCampaigns();
-    // await this.getListChannels();
   } catch (error) {
     console.error('Error executing API calls:', error);
   }
@@ -347,28 +343,11 @@ async getListProcess(applyFor) {
     }
   });
 }
-// Đợi chị khanh thiết lập xong
-// async getListCampaigns() {
-//   this.codxCmService.getListCbxCampaigns().subscribe((res) => {
-//     if (res && res.length > 0) {
-//       this.listCbxCampaigns = res[0];
-//       this.changeDetectorRef.detectChanges();
-//     }
-//   });
-// }
-// async getListChannels() {
-//   this.codxCmService.getListChannels().subscribe((res) => {
-//     if (res && res.length > 0) {
-//       this.listCbxChannels = res[0];
-//       this.changeDetectorRef.detectChanges();
-//     }
-//   });
-// }
 
 async getListInstanceSteps(processId: any) {
   processId =
     this.action === this.actionCopy ? this.case.processID : processId;
-  var data = [processId, this.case.refID, this.action];
+  var data = [processId, this.case.refID, this.action,'2'];
   this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
     if (res && res.length > 0) {
       var obj = {
