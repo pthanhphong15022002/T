@@ -66,7 +66,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   pageCount: any;
   journal: IJournal;
   hasSaved: any = false;
-  isClose: any = false;
+  isSaveMaster: any = false;
   items: any;
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
@@ -149,7 +149,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         this.deleteRow(data);
         break;
       case 'SYS03':
-        this.editPopupLine(data);
+        this.editRow(data);
         break;
       case 'SYS04':
         this.copyRow(data);
@@ -252,12 +252,15 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       case "vatid":
         e.data.vatAmt = this.calculateVatAmt(e.data.netAmt, e.data.vatid);
         break;
-    }
-    if (e.field == 'itemID') {
-      var item = this.getItem(e.data.itemID);
-      e.data.itemName = item.itemName;
-      e.data.umid = item.umid;
-      this.loadItemID(e.value);
+      case 'itemID':
+        var item = this.getItem(e.data.itemID);
+        e.data.itemName = item.itemName;
+        e.data.umid = item.umid;
+        this.loadItemID(e.value);
+        break;
+      case 'idiM4':
+        this.loadWarehouseID(e.value);
+        break;
     }
   }
   cellChangedInvoice(e: any) {
@@ -311,6 +314,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               }
               this.loadPageCount();
               this.hasSaved = true;
+              this.isSaveMaster = true;
               this.loadTotal();
             }
           });
@@ -477,6 +481,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             this.updateVAT();
             this.notification.notifyCode('SYS007', 0, '');
             this.hasSaved = true;
+            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -496,6 +501,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           if (save) {
             this.notification.notifyCode('SYS006', 0, '');
             this.hasSaved = true;
+            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -529,6 +535,23 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
         input.value = "";
         input.predicate = 'ItemID="' + value + '"';
+        input.loadSetting();
+      }
+    });
+  }
+
+  loadWarehouseID(value) {
+    let sArray = [
+      'warehouselocations',
+    ];
+    var element = document
+      .querySelector('.tabLine')
+      .querySelectorAll('codx-inplace');
+    element.forEach((e) => {
+      var input = window.ng.getComponent(e) as CodxInplaceComponent;
+      if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
+        input.value = "";
+        input.predicate = 'WarehouseID="' + value + '"';
         input.loadSetting();
       }
     });
@@ -572,51 +595,60 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
   }
 
-  editPopupLine(data) {
-    let index = this.purchaseInvoicesLines.findIndex(
-      (x) => x.recID == data.recID
-    );
-    var obj = {
-      headerText: this.headerText,
-      dataPurchaseinvoices: this.purchaseinvoices,
-      data: { ...data },
-      lockFields: this.lockFields,
-      type: 'edit',
-    };
-    let opt = new DialogModel();
-    let dataModel = new FormModel();
-    dataModel.formName = 'PurchaseInvoicesLines';
-    dataModel.gridViewName = 'grvPurchaseInvoicesLines';
-    dataModel.entityName = 'PS_PurchaseInvoicesLines';
-    opt.FormModel = dataModel;
-    opt.Resizeable = false;
-    this.cache
-      .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
-      .subscribe((res) => {
-        if (res) {
-          var dialogs = this.callfc.openForm(
-            PopAddLineComponent,
-            '',
-            650,
-            850,
-            '',
-            obj,
-            '',
-            opt
-          );
-          dialogs.closed.subscribe((res) => {
-            if (res.event != null) {
-              var dataline = res.event['data'];
-              this.purchaseInvoicesLines[index] = dataline;
-              this.hasSaved = true;
-              if (dataline.vatid != null) {
-                this.loadPurchaseInfo();
-              }
-              this.loadTotal();
+  editRow(data) {
+    switch (this.modegrid) {
+      case '1':
+        this.gridPurchaseInvoicesLine.gridRef.selectRow(Number(data.index));
+        this.gridPurchaseInvoicesLine.gridRef.startEdit();
+        break;
+      case '2':
+        let index = this.purchaseInvoicesLines.findIndex(
+          (x) => x.recID == data.recID
+        );
+        var obj = {
+          headerText: this.headerText,
+          dataPurchaseinvoices: this.purchaseinvoices,
+          data: { ...data },
+          lockFields: this.lockFields,
+          type: 'edit',
+        };
+        let opt = new DialogModel();
+        let dataModel = new FormModel();
+        dataModel.formName = 'PurchaseInvoicesLines';
+        dataModel.gridViewName = 'grvPurchaseInvoicesLines';
+        dataModel.entityName = 'PS_PurchaseInvoicesLines';
+        opt.FormModel = dataModel;
+        opt.Resizeable = false;
+        this.cache
+          .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
+          .subscribe((res) => {
+            if (res) {
+              var dialogs = this.callfc.openForm(
+                PopAddLineComponent,
+                '',
+                650,
+                850,
+                '',
+                obj,
+                '',
+                opt
+              );
+              dialogs.closed.subscribe((res) => {
+                if (res.event != null) {
+                  var dataline = res.event['data'];
+                  this.purchaseInvoicesLines[index] = dataline;
+                  this.hasSaved = true;
+                  this.isSaveMaster = true;
+                  if (dataline.vatid != null) {
+                    this.loadPurchaseInfo();
+                  }
+                  this.loadTotal();
+                }
+              });
             }
           });
-        }
-      });
+        break;
+    }
   }
 
   loadPageCount() {
@@ -715,6 +747,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           .subscribe((res) => {
             if (res) {
               this.hasSaved = true;
+              this.isSaveMaster = true;
               this.api
                 .exec(
                   'PS',
@@ -812,9 +845,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       style: 'currency',
       currency: 'VND',
     });
-    if(this.hasSaved)
+    if(this.isSaveMaster)
     {
-      this.onSaveData();
+      this.onSaveMaster();
     }
   }
 
@@ -925,6 +958,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           }
         });
     }
+
+    if (this.purchaseinvoices.status == '0' && this.formType == 'edit') {
+      this.hasSaved = true;
+    }
+
     this.api
       .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
       .subscribe((res: any) => {
@@ -1147,7 +1185,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   //   }
   // }
 
-  onSaveData()
+  onSaveMaster()
   {
     this.checkValidate();
     if (this.validate > 0) {
@@ -1171,7 +1209,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   onSave() {
     // tu dong khi luu, khong check voucherNo
     let ignoredFields = [];
-    if (this.journal.voucherNoRule === '2') {
+    if (this.journal.assignRule === '2') {
       ignoredFields.push('VoucherNo');
     }
 
@@ -1277,6 +1315,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                 this.purchaseinvoices = res;
                 this.form.formGroup.patchValue(this.purchaseinvoices);
                 this.hasSaved = false;
+                this.isSaveMaster = false;
               });
           }
         });

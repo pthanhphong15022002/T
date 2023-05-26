@@ -1,7 +1,24 @@
 <div *ngIf="dataSelected != null">
   <div class="d-flex flex-column pe-3">
     <div class="mb-5">
-      <ng-container [ngTemplateOutlet]="customers"> </ng-container>
+      <div class="mb-3">
+        <codx-label
+          class="text-dark text-primary fw-bold"
+          name="lblInformation"
+          [formModel]="formModel"
+          default="Thông tin chung"
+        >
+        </codx-label>
+      </div>
+      <ng-container *ngIf="funcID == 'CM0101'">
+        <ng-container [ngTemplateOutlet]="customers"></ng-container>
+      </ng-container>
+      <ng-container *ngIf="funcID == 'CM0102'">
+        <ng-container [ngTemplateOutlet]="contacts"></ng-container>
+      </ng-container>
+      <ng-container *ngIf="funcID == 'CM0103' || funcID == 'CM0104'">
+        <ng-container [ngTemplateOutlet]="partners"></ng-container>
+      </ng-container>
     </div>
     <div class="mb-5" *ngIf="dataSelected?.memo">
       <div class="mb-3">
@@ -15,20 +32,6 @@
       </div>
       <div class="text-dark fw-bold">
         {{ dataSelected?.memo }}
-      </div>
-    </div>
-    <div class="mb-5" *ngIf="dataSelected?.note">
-      <div class="mb-3">
-        <codx-label
-          class="text-dark text-primary fw-bold"
-          fiedName="Note"
-          [formModel]="formModel"
-          default="Mô tả"
-        >
-        </codx-label>
-      </div>
-      <div class="text-dark fw-bold">
-        {{ dataSelected?.note }}
       </div>
     </div>
     <div
@@ -57,6 +60,7 @@
             <div class="w-150px min-w-150px">
               <codx-label
                 class="label-colon text-gray-600 codx-textlabel"
+                [setRequire]="false"
                 fiedName="ObjectType"
                 [formModel]="formModel"
               >
@@ -96,6 +100,7 @@
             <div class="w-150px min-w-150px text-gray-600">
               <codx-label
                 class="label-colon text-gray-600 codx-textlabel"
+                [setRequire]="false"
                 fiedName="ContactType"
                 [formModel]="formModel"
               >
@@ -148,897 +153,367 @@
   </div>
 </div>
 <ng-template #customers>
-  <div class="mb-3">
-    <div class="mb-3">
-      <codx-label
-        class="text-dark text-primary fw-bold"
-        name="lblInformation"
-        [formModel]="formModel"
-        default="Thông tin chung"
-      >
-      </codx-label>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="d-flex flex-column">
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="
-              dataSelected?.customerID ||
-              dataSelected?.contactID ||
-              dataSelected?.partnerID ||
-              dataSelected?.competitorID
-            "
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                [fiedName]="
-                  funcID == 'CM0101'
-                    ? 'CustomerID'
-                    : funcID == 'CM0102'
-                    ? 'ContactID'
-                    : funcID == 'CM0103'
-                    ? 'PartnerID'
-                    : 'CompetitorID'
-                "
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                funcID == 'CM0101'
-                  ? dataSelected?.customerID
-                  : funcID == 'CM0102'
-                  ? dataSelected?.contactID
-                  : funcID == 'CM0103'
-                  ? dataSelected?.partnerID
-                  : (dataSelected?.competitorID
-                    | formatvalue
-                      : formModel
-                      : (funcID == 'CM0101'
-                          ? 'CustomerID'
-                          : funcID == 'CM0102'
-                          ? 'ContactID'
-                          : funcID == 'CM0103'
-                          ? 'PartnerID'
-                          : 'CompetitorID')
-                    | async)
-              "
+  <div class="row">
+    <div class="col-6">
+      <div class="d-flex flex-column">
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.customerID"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              [fiedName]="'CustomerID'"
+              [formModel]="formModel"
             >
-              <!-- {{ dataSelected?.customerID }} -->
-            </div>
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.shortName"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="ShortName"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.shortName
-                  | formatvalue : formModel : 'ShortName'
-                  | async
-              "
-            >
-              <!-- {{ dataSelected?.shortName }} -->
-            </div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.salutation"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Salutation"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.salutation
-                  | formatvalue : formModel : 'Salutation'
-                  | async
-              "
-            >
-              <!-- {{
-              dataSelected?.salutation
-                | vll : gridViewSetup?.Salutation?.referedValue : "text"
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.customerID
+                | formatvalue : formModel : 'CustomerID'
                 | async
-            }} -->
-            </div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.gender"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Gender"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.gender
-                  | formatvalue : formModel : 'Gender'
-                  | async
-              "
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.shortName"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="ShortName"
+              [formModel]="formModel"
             >
-              <!-- {{ dataSelected?.gender | vll : gridViewSetup?.Gender?.referedValue : "text" | async }} -->
-            </div>
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.birthday"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Birthday"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.birthday
-                  | formatvalue : formModel : 'Birthday'
-                  | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="funcID != 'CM0102' && dataSelected?.phone"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Phone"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.phone | formatvalue : formModel : 'Phone' | async
-              "
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.shortName
+                | formatvalue : formModel : 'ShortName'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.establishDate"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="EstablishDate"
+              [formModel]="formModel"
             >
-              <!-- {{ dataSelected?.phone }} -->
-            </div>
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="funcID != 'CM0102' && dataSelected?.email"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Email"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.email | formatvalue : formModel : 'Email' | async
-              "
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected.establishDate
+                | formatvalue : formModel : 'EstablishDate'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.taxCode"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="TaxCode"
+              [formModel]="formModel"
             >
-              <!-- {{ dataSelected?.email }} -->
-            </div>
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.ceo"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="CEO"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.ceo | formatvalue : formModel : 'ceo' | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.taxCode"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="TaxCode"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.taxCode
-                  | formatvalue : formModel : 'TaxCode'
-                  | async
-              "
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.taxCode
+                | formatvalue : formModel : 'TaxCode'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.phone"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Phone"
+              [formModel]="formModel"
             >
-              <!-- {{ dataSelected?.taxCode }} -->
-            </div>
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.establishDate"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="EstablishDate"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected.establishDate
-                  | formatvalue : formModel : 'EstablishDate'
-                  | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.faxNo"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="FaxNo"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.faxNo | formatvalue : formModel : 'FaxNo' | async
-              "
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.phone | formatvalue : formModel : 'Phone' | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.faxNo"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="FaxNo"
+              [formModel]="formModel"
             >
-              <!-- {{ dataSelected?.faxNo }} -->
-            </div>
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.webPage"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                [fiedName]="'WebPage'"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.webPage
-                  | formatvalue : formModel : 'WebPage'
-                  | async
-              "
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.faxNo | formatvalue : formModel : 'FaxNo' | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.email"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Email"
+              [formModel]="formModel"
             >
-              <!-- {{ dataSelected?.webPage }} -->
-            </div>
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.occupation"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Occupation"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.occupation
-                  | formatvalue : formModel : 'Occupation'
-                  | async
-              "
-            ></div>
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.email | formatvalue : formModel : 'Email' | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.webPage"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              [fiedName]="'WebPage'"
+              [formModel]="formModel"
+            >
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.jobTitle"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="JobTitle"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.jobTitle
-                  | formatvalue : formModel : 'JobTitle'
-                  | async
-              "
-            ></div>
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.webPage
+                | formatvalue : formModel : 'WebPage'
+                | async
+            "
+          ></div>
+        </div>
+
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.annualRevenue"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="AnnualRevenue"
+              [formModel]="formModel"
+            >
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.department"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Department"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.department
-                  | formatvalue : formModel : 'Department'
-                  | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.idCardNo"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="IDCardNo"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.idCardNo
-                  | formatvalue : formModel : 'IDCardNo'
-                  | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.issuedOn"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="IssuedOn"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.issuedOn
-                  | formatvalue : formModel : 'IssuedOn'
-                  | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.issuedBy"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="IssuedBy"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.issuedBy
-                  | formatvalue : formModel : 'IssuedBy'
-                  | async
-              "
-            ></div>
-          </div>
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.annualRevenue
+                | formatvalue : formModel : 'AnnualRevenue'
+                | async
+            "
+          ></div>
         </div>
       </div>
-      <div class="col-6">
-        <div class="d-flex flex-column">
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.nationality"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Nationality"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.nationality
-                  | formatvalue : formModel : 'Nationality'
-                  | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.ethnicGroup"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="EthnicGroup"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.ethnicGroup
-                  | formatvalue : formModel : 'EthnicGroup'
-                  | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.religion"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Religion"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.religion
-                  | formatvalue : formModel : 'Religion'
-                  | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.education"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Education"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.education
-                  | formatvalue : formModel : 'Education'
-                  | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.maritalStatus"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="MaritalStatus"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.maritalStatus
-                  | formatvalue : formModel : 'MaritalStatus'
-                  | async
-              "
-            ></div>
-          </div>
-
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.annualRevenue"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="AnnualRevenue"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.annualRevenue
-                  | formatvalue : formModel : 'AnnualRevenue'
-                  | async
-              "
+    </div>
+    <div class="col-6">
+      <div class="d-flex flex-column">
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.headcounts"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Headcounts"
+              [formModel]="formModel"
             >
-              <!-- {{ dataSelected?.annualRevenue }} -->
-            </div>
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.headcounts"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Headcounts"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.headcounts
-                  | formatvalue : formModel : 'Headcounts'
-                  | async
-              "
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.headcounts
+                | formatvalue : formModel : 'Headcounts'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.workingDays"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="WorkingDays"
+              [formModel]="formModel"
             >
-              <!-- {{ dataSelected?.sizing }} -->
-            </div>
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.income"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Income"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.income
-                  | formatvalue : formModel : 'Income'
-                  | async
-              "
-            ></div>
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.workingDays
+                | formatvalue : formModel : 'WorkingDays'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="funcID == 'CM0101'"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="OfficialHour"
+              [formModel]="formModel"
+            ></codx-label>
           </div>
-
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="funcID == 'CM0102' && dataSelected?.phone"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Phone"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex">
-              <span
-                class="text-dark fw-bold codx-textcontent"
-                [innerHTML]="
-                  dataSelected?.phone
-                    | formatvalue : formModel : 'Phone'
-                    | async
-                "
-              ></span>
-              <span
-                *ngIf="dataSelected?.phone && dataSelected?.phoneExt"
-                class="me-1 ms-1"
-              >
-                /
-              </span>
-              <span
-                class="text-dark fw-bold codx-textcontent"
-                [innerHTML]="
-                  dataSelected?.phoneExt
-                    | formatvalue : formModel : 'PhoneExt'
-                    | async
-                "
-              ></span>
-            </div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="funcID == 'CM0102' && dataSelected?.email"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Email"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.email | formatvalue : formModel : 'Email' | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="funcID == 'CM0102' && dataSelected?.bankAccount"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="BankAccount"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.bankAccount
-                  | formatvalue : formModel : 'BankAccount'
-                  | async
-              "
+          <div class="text-dark fw-bold codx-textcontent">
+            <codx-input
+              class="test-check"
+              type="switch"
+              style="width: 100%"
+              [checked]="dataSelected?.officialHour"
+              field="OfficialHour"
+              [disabled]="true"
             >
-              <!-- {{ dataSelected?.bankAccount }} -->
-            </div>
+            </codx-input>
           </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="funcID != 'CM0102' && dataSelected?.bankAccount"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="BankAccount"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.bankAccount
-                  | formatvalue : formModel : 'BankAccount'
-                  | async
-              "
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.bankAccount"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="BankAccount"
+              [formModel]="formModel"
             >
-              <!-- {{ dataSelected?.bankAccount }} -->
-            </div>
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.bankID"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="BankID"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.bankID
-                  | formatvalue : formModel : 'BankID'
-                  | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.workingDays"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="WorkingDays"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.workingDays
-                  | formatvalue : formModel : 'WorkingDays'
-                  | async
-              "
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.bankAccount
+                | formatvalue : formModel : 'BankAccount'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.bankID"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="BankID"
+              [formModel]="formModel"
             >
-              <!-- {{ dataSelected?.workingDays }} -->
-            </div>
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="funcID == 'CM0101'"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="OfficialHour"
-                [formModel]="formModel"
-              ></codx-label>
-            </div>
-            <div class="text-dark fw-bold codx-textcontent">
-              <codx-input
-                class="test-check"
-                type="switch"
-                style="width: 100%"
-                [checked]="dataSelected?.officialHour"
-                field="OfficialHour"
-                [disabled]="true"
-              >
-              </codx-input>
-            </div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.capital"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="Capital"
-                [formModel]="formModel"
-              ></codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.capital
-                  | formatvalue : formModel : 'Capital'
-                  | async
-              "
-            ></div>
-          </div>
-          <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="funcID == 'CM0101' && dataSelected?.customerResource"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="CustomerResource"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.customerResource
-                  | formatvalue : formModel : 'CustomerResource'
-                  | async
-              "
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.bankID | formatvalue : formModel : 'BankID' | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.customerResource"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="CustomerResource"
+              [formModel]="formModel"
             >
-              <!-- {{ dataSelected?.source }} -->
-            </div>
+            </codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="funcID == 'CM0101' && dataSelected?.customerFrom"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="CustomerFrom"
-                [formModel]="formModel"
-              ></codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected.customerFrom
-                  | formatvalue : formModel : 'CustomerFrom'
-                  | async
-              "
-            ></div>
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.customerResource
+                | formatvalue : formModel : 'CustomerResource'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.segmentID"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="SegmentID"
+              [formModel]="formModel"
+            ></codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="funcID == 'CM0103' && dataSelected?.partnerFrom"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="PartnerFrom"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.partnerFrom
-                  | formatvalue : formModel : 'PartnerFrom'
-                  | async
-              "
-            >
-              <!-- {{ dataSelected?.partnerFrom }} -->
-            </div>
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.segmentID
+                | formatvalue : formModel : 'SegmentID'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.customerFrom"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="CustomerFrom"
+              [formModel]="formModel"
+            ></codx-label>
           </div>
           <div
-            class="mb-3 d-flex flex-wrap align-items-top"
-            *ngIf="dataSelected?.segmentID"
-          >
-            <div class="w-150px min-w-150px">
-              <codx-label
-                class="label-colon text-gray-600 codx-textlabel"
-                fiedName="SegmentID"
-                [formModel]="formModel"
-              ></codx-label>
-            </div>
-            <div
-              class="text-dark fw-bold codx-textcontent"
-              [innerHTML]="
-                dataSelected?.segmentID
-                  | formatvalue : formModel : 'SegmentID'
-                  | async
-              "
-            >
-              <!-- {{ dataSelected?.segmentID }} -->
-            </div>
-          </div>
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected.customerFrom
+                | formatvalue : formModel : 'CustomerFrom'
+                | async
+            "
+          ></div>
         </div>
       </div>
     </div>
   </div>
+
 </ng-template>
 
 <ng-template #contacts>
@@ -1052,7 +527,7 @@
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
-              fiedName="ContactID"
+              [fiedName]="'ContactID'"
               [formModel]="formModel"
             >
             </codx-label>
@@ -1064,11 +539,132 @@
                 | formatvalue : formModel : 'ContactID'
                 | async
             "
-          >
-            <!-- {{ dataSelected?.contactID }} -->
-          </div>
+          ></div>
         </div>
-
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.salutation"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Salutation"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.salutation
+                | formatvalue : formModel : 'Salutation'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.gender"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Gender"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.gender | formatvalue : formModel : 'Gender' | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.birthday"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Birthday"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.birthday
+                | formatvalue : formModel : 'Birthday'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.occupation"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Occupation"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.occupation
+                | formatvalue : formModel : 'Occupation'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.jobTitle"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="JobTitle"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.jobTitle
+                | formatvalue : formModel : 'JobTitle'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.department"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Department"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.department
+                | formatvalue : formModel : 'Department'
+                | async
+            "
+          ></div>
+        </div>
         <div
           class="mb-3 d-flex flex-wrap align-items-top"
           *ngIf="dataSelected?.webPage"
@@ -1076,7 +672,7 @@
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
-              fiedName="WebPage"
+              [fiedName]="'WebPage'"
               [formModel]="formModel"
             >
             </codx-label>
@@ -1088,11 +684,66 @@
                 | formatvalue : formModel : 'WebPage'
                 | async
             "
-          >
-            <!-- {{ dataSelected?.webPage }} -->
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.phone"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Phone"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="d-flex">
+            <span
+              class="text-dark fw-bold codx-textcontent"
+              [innerHTML]="
+                dataSelected?.phone | formatvalue : formModel : 'Phone' | async
+              "
+            ></span>
+            <span
+              *ngIf="dataSelected?.phone && dataSelected?.phoneExt"
+              class="me-1 ms-1"
+            >
+              /
+            </span>
+            <span
+              class="text-dark fw-bold codx-textcontent"
+              [innerHTML]="
+                dataSelected?.phoneExt
+                  | formatvalue : formModel : 'PhoneExt'
+                  | async
+              "
+            ></span>
           </div>
         </div>
-
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.email"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Email"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.email | formatvalue : formModel : 'Email' | async
+            "
+          ></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="d-flex flex-column">
         <div
           class="mb-3 d-flex flex-wrap align-items-top"
           *ngIf="dataSelected?.birthPlace"
@@ -1114,18 +765,14 @@
             "
           ></div>
         </div>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="d-flex flex-column">
         <div
           class="mb-3 d-flex flex-wrap align-items-top"
-          *ngIf="dataSelected?.bankAcctNo"
+          *ngIf="dataSelected?.idCardNo"
         >
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
-              fiedName="BankAcctNo"
+              fiedName="IDCardNo"
               [formModel]="formModel"
             >
             </codx-label>
@@ -1133,8 +780,517 @@
           <div
             class="text-dark fw-bold codx-textcontent"
             [innerHTML]="
-              dataSelected?.bankAcctNo
-                | formatvalue : formModel : 'BankAcctNo'
+              dataSelected?.idCardNo
+                | formatvalue : formModel : 'IDCardNo'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.issuedOn"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="IssuedOn"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.issuedOn
+                | formatvalue : formModel : 'IssuedOn'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.issuedBy"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="IssuedBy"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.issuedBy
+                | formatvalue : formModel : 'IssuedBy'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.nationality"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Nationality"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.nationality
+                | formatvalue : formModel : 'Nationality'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.ethnicGroup"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="EthnicGroup"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.ethnicGroup
+                | formatvalue : formModel : 'EthnicGroup'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.religion"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Religion"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.religion
+                | formatvalue : formModel : 'Religion'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.education"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Education"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.education
+                | formatvalue : formModel : 'Education'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.maritalStatus"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="MaritalStatus"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.maritalStatus
+                | formatvalue : formModel : 'MaritalStatus'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.bankAccount"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="BankAccount"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.bankAccount
+                | formatvalue : formModel : 'BankAccount'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.bankID"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="BankID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.bankID | formatvalue : formModel : 'BankID' | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.income"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Income"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.income | formatvalue : formModel : 'Income' | async
+            "
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #partners>
+  <div class="row">
+    <div class="col-6">
+      <div class="d-flex flex-column">
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.partnerID || dataSelected?.competitorID"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              [fiedName]="funcID == 'CM0103' ? 'PartnerID' : 'CompetitorID'"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              funcID == 'CM0103'
+                ? dataSelected?.partnerID
+                : (dataSelected?.competitorID
+                  | formatvalue
+                    : formModel
+                    : (funcID == 'CM0103' ? 'PartnerID' : 'CompetitorID')
+                  | async)
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.shortName"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="ShortName"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.shortName
+                | formatvalue : formModel : 'ShortName'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.establishDate"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="EstablishDate"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected.establishDate
+                | formatvalue : formModel : 'EstablishDate'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.taxCode"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="TaxCode"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.taxCode
+                | formatvalue : formModel : 'TaxCode'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.phone"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Phone"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.phone | formatvalue : formModel : 'Phone' | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.faxNo"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="FaxNo"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.faxNo | formatvalue : formModel : 'FaxNo' | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.email"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Email"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.email | formatvalue : formModel : 'Email' | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.webPage"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              [fiedName]="'WebPage'"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.webPage
+                | formatvalue : formModel : 'WebPage'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.ceo"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              [fiedName]="'CEO'"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.ceo | formatvalue : formModel : 'ceo' | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.annualRevenue"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="AnnualRevenue"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.annualRevenue
+                | formatvalue : formModel : 'AnnualRevenue'
+                | async
+            "
+          ></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="d-flex flex-column">
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.headcounts"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Headcounts"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.headcounts
+                | formatvalue : formModel : 'Headcounts'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.capital"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Capital"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.capital
+                | formatvalue : formModel : 'Capital'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.segmentID"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="SegmentID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.segmentID
+                | formatvalue : formModel : 'SegmentID'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="mb-3 d-flex flex-wrap align-items-top"
+          *ngIf="dataSelected?.partnerFrom"
+        >
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="PartnerFrom"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.partnerFrom
+                | formatvalue : formModel : 'PartnerFrom'
                 | async
             "
           ></div>

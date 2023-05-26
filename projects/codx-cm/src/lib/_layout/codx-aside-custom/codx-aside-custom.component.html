@@ -285,7 +285,7 @@
                             </div>
                           </div>
                           <!-- menuCustom -->
-                          <ng-container
+                          <!-- <ng-container
                             *ngIf="
                             loadedCus &&
                               (c?.functionID == 'CM0201' ||
@@ -300,7 +300,7 @@
                               <a
                                 class="menu-link without-sub"
                                 [attr.data-funcid]="menuCus.recID"
-                                (click)="clickMenuCustom(c.functionID, menuCus)"
+                                (click)="clickMenuFavCustom(c.functionID, menuCus)"
                                 [attr.data-funcid]="menuCus.recID"
                                 [ngClass]="
                                   codxService.activeMenu.fav === menuCus.recID
@@ -318,9 +318,100 @@
                                 >
                               </a>
                             </div>
-                          </ng-container>
+                          </ng-container> -->
                         </div>
                       </div>
+                      <!-- đưa ra ngoài -->
+                      <ng-container
+                        *ngIf="
+                          f?.functionID == 'CM02' || f?.functionID == 'CM04'
+                        "
+                      >
+                        <ng-container
+                          *ngFor="let menuCus of dataMenuChildCustom"
+                        >
+                          <ng-container
+                            *ngIf="
+                              f?.functionID == 'CM02' && menuCus.applyFor == 1
+                            "
+                          >
+                            <div
+                              class="menu-item menu-accordion"
+                              [attr.data-funcid]="menuCus.recID"
+                              [ngClass]="
+                                codxService.activeMenu.func1 ===
+                                menuCus.recID
+                                  ? 'here show'
+                                  : ''
+                              "
+                            >
+                              <span
+                                class="menu-link"
+                                (click)="
+                                  clickMenuChildCustom(f.functionID, menuCus)
+                                "
+                              >
+                                <span class="menu-icon">
+                                  <span
+                                    class="svg-icon svg-icon-2"
+                                    [class]="
+                                      menuCus.applyFor
+                                        | vll : 'DP002' : 'icon'
+                                        | async
+                                    "
+                                  ></span>
+                                  <!-- [inlineSVG]="c.smallIcon" -->
+                                </span>
+                                <span
+                                  class="menu-title fw-bold line-clamp-menu"
+                                  [ngbTooltip]="menuCus.processName"
+                                  >{{ menuCus.processName }}</span
+                                >
+                              </span>
+                            </div>
+                          </ng-container>
+                          <ng-container
+                            *ngIf="
+                              f?.functionID == 'CM04' && menuCus.applyFor != 1
+                            "
+                          >
+                            <div
+                              class="menu-item menu-accordion"
+                              [attr.data-funcid]="menuCus.recID"
+                              [ngClass]="
+                                codxService.activeMenu.func1 ===
+                                menuCus.recID
+                                  ? 'here show'
+                                  : ''
+                              "
+                            >
+                              <span
+                                class="menu-link"
+                                (click)="
+                                  clickMenuChildCustom(f.functionID, menuCus)
+                                "
+                              >
+                                <span class="menu-icon">
+                                  <span
+                                    class="svg-icon svg-icon-2"
+                                    [class]="
+                                      menuCus.applyFor
+                                        | vll : 'DP002' : 'icon'
+                                        | async
+                                    "
+                                  ></span>
+                                  <!-- [inlineSVG]="c.smallIcon" -->
+                                </span>
+                                <span
+                                  class="menu-title fw-bold line-clamp-menu"
+                                  [ngbTooltip]="menuCus.processName"
+                                  >{{ menuCus.processName }}</span
+                                >
+                              </span>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
                     </div>
                   </div>
                 </div>

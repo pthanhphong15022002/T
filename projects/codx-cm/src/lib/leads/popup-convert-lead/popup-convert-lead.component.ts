@@ -337,19 +337,22 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   convertDataInstanceAndDeal() {
-    this.deal.stepID = this.listInstanceSteps[0]?.stepID;
-    this.deal.nextStep = this.listInstanceSteps[1]?.stepID;
-    this.deal.status = '1';
     this.instance.recID = Util.uid();
     this.instance.title = this.deal?.dealName;
     this.instance.memo = this.deal?.memo;
     this.instance.endDate = this.deal?.endDate;
     this.instance.instanceNo = this.deal?.dealID;
     this.instance.owner = this.deal?.salespersonID;
+    this.instance.status = '1';
+    this.instance.startDate = null;
     this.instance.processID = this.deal?.processID;
     this.instance.stepID = this.deal?.stepID;
-
+    this.deal.stepID = this.listInstanceSteps[0]?.stepID;
+    this.deal.nextStep = this.listInstanceSteps[1]?.stepID;
+    this.deal.status = '1';
     this.deal.refID = this.instance.recID;
+    this.deal.startDate = null;
+
   }
 
   //#endregion

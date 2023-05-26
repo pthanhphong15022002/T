@@ -1,10 +1,11 @@
-<codx-gridview-v2
+<div>
+	<codx-gridview-v2
 	#productTable
 	service="CM"
 	[formName]="formModel.formName"
 	[gridViewName]="formModel.gridViewName"
 	[entityName]="formModel.entityName"
-	[hideMoreFunc]="'1'"
+	[templateMore]="more"
 	[contentEditable]="false"
 	[allowFiltering]="true"
 	[allowSorting]="true"
@@ -13,4 +14,13 @@
 	rowHeight="40"
 	predicates="TransID=@0"
 	></codx-gridview-v2>
-	<!-- [dataValues]="'f2c04250-f56d-11ed-a428-c025a5a4cd5d'" -->
+</div>
+<ng-template #more let-data>
+	<codx-mfunc
+	[formModel]="fmContractsPayments"
+	[isBookMark]="true"
+	[dataItem]="moreDefaut"
+	[type]="'view'"
+	(clickMF)="onClickMF($event, data)"
+	></codx-mfunc>
+</ng-template>

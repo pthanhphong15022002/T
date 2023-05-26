@@ -12,6 +12,8 @@ export class DealDetailComponent  implements OnInit {
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
+  @Input() colorReasonSuccess: any;
+  @Input() colorReasonFail: any;
   @Input() funcID = 'CM0201'; //
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
@@ -67,10 +69,12 @@ export class DealDetailComponent  implements OnInit {
   listTab(funcID){
     this.tabDetail = [
       { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+      { name: 'Field', textDefault: 'Thông tin mở rộng', icon: 'icon-add_to_photos', isActive: false },
       { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-contact_phone', isActive: false },
       { name: 'Opponent', textDefault: 'Đối thủ', icon: 'icon-people_alt', isActive: false },
       { name: 'Task', textDefault: 'Quy trình', icon: 'icon-more', isActive: false },
-      { name: 'Field', textDefault: 'Thông tin mở rộng', icon: 'icon-add_to_photos', isActive: false },
+      { name: 'GanttChart', textDefault: 'Biểu đồ Gantt', icon: 'icon-insert_chart_outlined', isActive: false },
+
     ]
   }
 

@@ -2,9 +2,6 @@
   [views]="views" 
   idField="recID" 
   [service]="'WP'"
-  [assemblyName]="'ERM.Business.WP'"
-  [className]="'NewsBusiness'"
-  [method]="'GetDataApproAsync'"
   [selectedFirst]="true" 
   (selectedChange)="selectedChange($event)">
 </codx-views>
@@ -21,24 +18,13 @@
     </ng-container>
   </ul>
 </ng-template>
-<ng-template #panelRightRef>
-  <wp-appropval-news-detail 
-    [objectID]="selectedID" 
-    [dataService]="view.dataService"
-    [funcID]="view.funcID" 
-    (evtUpdateApproval)="realoadData($event)" 
-    [formModel]="view.formModel">
-  </wp-appropval-news-detail>
-</ng-template>
-
 <ng-template #itemTemplate let-data>
   <div>
     <codx-temp-full 
         [dataItem]="data" 
         (clickMF)="clickMF($event,data)" 
         [formModel]="view.formModel"
-        [resourceObjType]="'AD_Users'" 
-        [icoCss]="'w-40px symbol h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' +(data.category | vll:'WP004':'icon' | async)"
+        [icoCss]="'w-40px symbol h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3' + vllWP004[data.category].icon "
         [icoStyle]="setStyles(data.category)" 
         imgCss="me-3"
         cardCss="card-template border-bottom px-4 py-3"
@@ -54,3 +40,13 @@
       </codx-temp-full>
   </div>
 </ng-template>
+<ng-template #panelRightRef>
+  <wp-appropval-news-detail 
+    [objectID]="selectedID" 
+    [dataService]="view.dataService"
+    [funcID]="view.funcID" 
+    (evtUpdateApproval)="realoadData($event)" 
+    [formModel]="view.formModel">
+  </wp-appropval-news-detail>
+</ng-template>
+

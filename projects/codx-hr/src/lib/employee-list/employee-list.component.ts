@@ -62,17 +62,17 @@ export class EmployeeListComponent extends UIComponent {
       if(mFuc) this.sysMoreFunc = mFuc;
     });
 
-    this.cache.gridViewSetup('employees', 'grvEmployees')
-    .subscribe(grv => {
-      if(grv) this.grvSetup = grv;
-    })
-  }
+    // this.cache.gridViewSetup('employees', 'grvEmployeeInfomation')
+    // .subscribe(grv => {
+    //   if(grv) this.grvSetup = grv;
+    // })
+   }
 
   ngAfterViewInit(): void {
     this.columnsGrid = [
       {
         formName: 'employees',
-        gridViewName:'grvEmployees',
+        gridViewName:'grvEmployee',
         fieldName: 'employeeID',
         controlName: 'lblEmployeeID',
         headerText: 'Nhân viên',
@@ -81,7 +81,7 @@ export class EmployeeListComponent extends UIComponent {
       },
       {
         formName: 'employees',
-        gridViewName:'grvEmployees',
+        gridViewName:'grvEmployee',
         controlName: 'LblEmail',
         fieldName: 'email',
         headerText: 'Liên hệ',
@@ -90,7 +90,7 @@ export class EmployeeListComponent extends UIComponent {
       },
       {
         formName: 'employees',
-        gridViewName:'grvEmployees',
+        gridViewName:'grvEmployee',
         controlName: 'lblBirthday',
         fieldName: 'birthday',
         headerText: 'Thông tin cá nhân',
@@ -99,7 +99,7 @@ export class EmployeeListComponent extends UIComponent {
       },
       {
         formName: 'employees',
-        gridViewName:'grvEmployees',
+        gridViewName:'grvEmployee',
         controlName: 'lblStatus',
         fieldName: 'status',
         headerText: 'Tình trạng',
@@ -155,6 +155,14 @@ export class EmployeeListComponent extends UIComponent {
       this.cache.functionList(funcID)
       .subscribe((func:any) =>{
         if(func) this.function = func;
+        if(func?.formName && func?.gridViewName){
+          this.cache.gridViewSetup(func.formName,func.gridViewName)
+          .subscribe((grd:any) => {
+            if(grd){
+              this.grvSetup = grd;
+            }
+          });
+        }
       });
     }
   }
@@ -335,7 +343,6 @@ export class EmployeeListComponent extends UIComponent {
   funcIDEmpInfor:string = "HRT03b";
   // view imployee infor
   clickViewEmpInfo(data:any){
-    debugger
     this.cache.functionList(this.funcIDEmpInfor)
     .subscribe(func => {
       let queryParams =  {
@@ -343,6 +350,7 @@ export class EmployeeListComponent extends UIComponent {
         page: this.view.dataService.page,
       };
       let state = {
+        empInfo : JSON.stringify(data),
         data: this.view.dataService.data,
         request: this.view.dataService.request
       }

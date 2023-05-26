@@ -48,6 +48,7 @@ import { AttachmentService } from 'projects/codx-share/src/lib/components/attach
 import { ActivatedRoute } from '@angular/router';
 import { CodxOdService } from '../codx-od.service';
 import { isObservable } from 'rxjs';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'app-incomming',
@@ -137,7 +138,8 @@ export class IncommingComponent
   constructor(
     inject: Injector,
     private route: ActivatedRoute,
-    private codxODService: CodxOdService
+    private codxODService: CodxOdService,
+    private shareService: CodxShareService
   ) {
     super(inject);
     this.odService = inject.get(DispatchService);
@@ -149,6 +151,7 @@ export class IncommingComponent
     
     // this.codxService = inject.get(CodxService);
     this.fileService = inject.get(FileService);
+    
   }
   ngOnChanges(changes: SimpleChanges): void {}
 
@@ -249,119 +252,138 @@ export class IncommingComponent
   }
   
   changeDataMF(e: any, data: any) {
-    //Bookmark
-    var bm = e.filter(
-      (x: { functionID: string }) =>
-        x.functionID == 'ODT110' || x.functionID == 'ODT209' || x.functionID == "ODT3009" || x.functionID == "ODT5109"  || x.functionID == "ODT5210"
-    );
-    //Unbookmark
-    var unbm = e.filter(
-      (x: { functionID: string }) =>
-        x.functionID == 'ODT111' || x.functionID == 'ODT210' || x.functionID == "ODT3010" || x.functionID == "ODT5110" || x.functionID == "ODT5211" 
-    );
-    if (data?.isBookmark) {
-      if(bm[0]) bm[0].disabled = true;
-      if(unbm[0]) unbm[0].disabled = false;
-    } else  {
-      if(unbm[0]) unbm[0].disabled = true;
-      if(bm[0]) bm[0].disabled = false;
-    }
-
-    if(this.view.formModel.funcID == 'ODT41' || this.view.formModel.funcID == 'ODT51')
+    var funcList = this.codxODService.loadFunctionList(this.view.formModel.funcID);
+    if(isObservable(funcList))
     {
-      if(data?.status != '1' && data?.status != '2' && data?.approveStatus != '2')
-      {
-        var approvel = e.filter(
-          (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
-        );
-        if(approvel[0]) approvel[0].disabled = true;
-      }
+      funcList.subscribe(fc=>{
+        this.changeDataMFBefore(e,data,fc);
+      })
+    }
+    else this.changeDataMFBefore(e,data,funcList);
+  }
 
-      //Hủy yêu cầu duyệt
-      var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012" || x.functionID == 'ODT5112'
+  changeDataMFBefore(e: any, data: any , fc:any)
+  {
+    if(fc.runMode == "1")
+    {
+      this.shareService.changeMFApproval(e,data);
+    }
+    else
+    {
+      //Bookmark
+      var bm = e.filter(
+        (x: { functionID: string }) =>
+          x.functionID == 'ODT110' || x.functionID == 'ODT209' || x.functionID == "ODT3009" || x.functionID == "ODT5109"  || x.functionID == "ODT5210"
       );
-      for(var i = 0 ; i< approvel.length ; i++)
-      {
-        approvel[i].disabled = true;
+      //Unbookmark
+      var unbm = e.filter(
+        (x: { functionID: string }) =>
+          x.functionID == 'ODT111' || x.functionID == 'ODT210' || x.functionID == "ODT3010" || x.functionID == "ODT5110" || x.functionID == "ODT5211" 
+      );
+      if (data?.isBookmark) {
+        if(bm[0]) bm[0].disabled = true;
+        if(unbm[0]) unbm[0].disabled = false;
+      } else  {
+        if(unbm[0]) unbm[0].disabled = true;
+        if(bm[0]) bm[0].disabled = false;
       }
 
-      if(data?.approveStatus == '3' && data?.createdBy == this.userID)
+      if(this.view.formModel.funcID == 'ODT41' || this.view.formModel.funcID == 'ODT51')
       {
+        if(data?.status != '1' && data?.status != '2' && data?.approveStatus != '2')
+        {
+          var approvel = e.filter(
+            (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
+          );
+          if(approvel[0]) approvel[0].disabled = true;
+        }
+
+        //Hủy yêu cầu duyệt
         var approvel = e.filter(
           (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012" || x.functionID == 'ODT5112'
         );
         for(var i = 0 ; i< approvel.length ; i++)
         {
-          approvel[i].disabled = false;
-        }
-      }
-
-      //Hiện thị chức năng gửi duyệt khi xét duyệt
-      if(data?.approveStatus == '1' && data?.status == '3' )
-      {
-          //Chức năng Gửi duyệt
-          var approvel = e.filter(
-            (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
-          );
-          if (approvel[0]) approvel[0].disabled = false;
-      }
-    }
-
-    //Từ chối , Bị đóng 
-    if(data?.status == "9" || data?.approveStatus == "4")
-    {
-      var approvel = e.filter(
-        (x: { functionID: string }) => 
-          x.functionID == 'ODT112' || 
-          x.functionID == 'ODT211' || 
-          x.functionID == 'ODT103' || 
-          x.functionID == 'ODT202' ||
-          x.functionID == 'SYS03'  ||
-          x.functionID == 'ODT103' ||
-          x.functionID == 'ODT202'
-      );
-      if(approvel && approvel.length > 0)
-        for (var i = 0; i < approvel.length; i++) {
           approvel[i].disabled = true;
         }
-    }
-    //Hoàn tất
-    if (data?.status == '7') {
-      var completed = e.filter(
-        (x: { functionID: string }) =>
-          x.functionID == 'ODT211' ||
-          x.functionID == 'ODT112' ||
-          x.functionID == 'SYS02' ||
-          x.functionID == 'SYS03' ||
-          x.functionID == 'ODT103' ||
-          x.functionID == 'ODT202' ||
-          x.functionID == 'ODT101' ||
-          x.functionID == 'ODT113'
-      );
-      for (var i = 0; i < completed.length; i++) {
-        completed[i].disabled = true;
+
+        if(data?.approveStatus == '3' && data?.createdBy == this.userID)
+        {
+          var approvel = e.filter(
+            (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012" || x.functionID == 'ODT5112'
+          );
+          for(var i = 0 ; i< approvel.length ; i++)
+          {
+            approvel[i].disabled = false;
+          }
+        }
+
+        //Hiện thị chức năng gửi duyệt khi xét duyệt
+        if(data?.approveStatus == '1' && data?.status == '3' )
+        {
+            //Chức năng Gửi duyệt
+            var approvel = e.filter(
+              (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
+            );
+            if (approvel[0]) approvel[0].disabled = false;
+        }
       }
-    }
-    if (data?.status == '3') {
-      var completed = e.filter(
-        (x: { functionID: string }) => x.functionID == 'SYS02'
+
+      //Từ chối , Bị đóng 
+      if(data?.status == "9" || data?.approveStatus == "4")
+      {
+        var approvel = e.filter(
+          (x: { functionID: string }) => 
+            x.functionID == 'ODT112' || 
+            x.functionID == 'ODT211' || 
+            x.functionID == 'ODT103' || 
+            x.functionID == 'ODT202' ||
+            x.functionID == 'SYS03'  ||
+            x.functionID == 'ODT103' ||
+            x.functionID == 'ODT202'
+        );
+        if(approvel && approvel.length > 0)
+          for (var i = 0; i < approvel.length; i++) {
+            approvel[i].disabled = true;
+          }
+      }
+      //Hoàn tất
+      if (data?.status == '7') {
+        var completed = e.filter(
+          (x: { functionID: string }) =>
+            x.functionID == 'ODT211' ||
+            x.functionID == 'ODT112' ||
+            x.functionID == 'SYS02' ||
+            x.functionID == 'SYS03' ||
+            x.functionID == 'ODT103' ||
+            x.functionID == 'ODT202' ||
+            x.functionID == 'ODT101' ||
+            x.functionID == 'ODT113'
+        );
+        for (var i = 0; i < completed.length; i++) {
+          completed[i].disabled = true;
+        }
+      }
+      if (data?.status == '3') {
+        var completed = e.filter(
+          (x: { functionID: string }) => x.functionID == 'SYS02'
+        );
+        completed.forEach((elm) => {
+          elm.disabled = true;
+        });
+      }
+      var approvelCL = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT114' || x.functionID == "ODT5214"
       );
-      completed.forEach((elm) => {
-        elm.disabled = true;
-      });
-    }
-    var approvelCL = e.filter(
-      (x: { functionID: string }) => x.functionID == 'ODT114' || x.functionID == "ODT5214"
-    );
-    if (approvelCL[0]) approvelCL[0].disabled = true;
-    //Trả lại
-    if (data?.status == '4') {
-      var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT113' || x.functionID == "ODT5213"
-      );
-      if (approvel[0]) approvel[0].disabled = true;
-      if (approvelCL[0]) approvelCL[0].disabled = false;
+      if (approvelCL[0]) approvelCL[0].disabled = true;
+      //Trả lại
+      if (data?.status == '4') {
+        var approvel = e.filter(
+          (x: { functionID: string }) => x.functionID == 'ODT113' || x.functionID == "ODT5213"
+        );
+        if (approvel[0]) approvel[0].disabled = true;
+        if (approvelCL[0]) approvelCL[0].disabled = false;
+      }
     }
   }
   aaaa(e: any) {
@@ -522,7 +544,7 @@ export class IncommingComponent
   }
 
   //Hàm lấy thông tin chi tiết của công văn
-  getDtDis(id: any) {
+  getDtDis(id: any,data:any = null) {
     this.lstDtDis = null;
     if (id) {
       this.lstUserID = '';
@@ -532,6 +554,14 @@ export class IncommingComponent
           //this.getChildTask(id);
           if (item) {
             this.lstDtDis = formatDtDis(item);
+            if(this.funcList.runMode == "1" && data)
+            {
+              this.lstDtDis.processType = data.processType;
+              this.lstDtDis.stepType = data.stepType;
+              this.lstDtDis.stepNo = data.stepNo;
+              this.lstDtDis.statusApproval = data.statusApproval;
+              this.lstDtDis.approvalRecID = data.approvalRecID;
+            }
             //this.view.dataService.setDataSelected(this.lstDtDis);
           }
         });
@@ -566,7 +596,7 @@ export class IncommingComponent
       recID = dt.recID;
       this.dataItem = dt;
     }
-    this.getDtDis(recID);
+    this.getDtDis(recID,this.dataItem);
   }
   fileAdded(event: any) {
     this.fileAdd = event.data;

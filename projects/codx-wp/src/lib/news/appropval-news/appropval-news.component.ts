@@ -4,6 +4,7 @@ import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/
 import { PopupEditComponent } from '../popup/popup-edit/popup-edit.component';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { Z } from '@angular/cdk/keycodes';
+import { tab } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'wp-appropval-news',
@@ -121,11 +122,15 @@ export class AppropvalNewsComponent extends UIComponent {
           'NewsBusiness',
           'GetDataTabApproAsync',
           [funcID])
-        .subscribe((res: any) => {
-          if (res) 
+        .subscribe((res: any[]) => {
+          debugger;
+          if(res) 
           {
             this.tabAsside.map((tab: any) => {
-              tab.total = res[tab.value];
+              if(tab.value == "")
+                res.forEach(x => tab.total += x.Count);
+              else
+                tab.total = res.find(x => x.Status == tab.value)?.Count ?? 0;
             });
           }
           this.detectorRef.detectChanges();

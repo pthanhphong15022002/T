@@ -3,8 +3,8 @@
 </codx-form>
 <!-- Start: Body -->
 <ng-template #body>
-  <div class="card-add" #cardbodyRef>
-    <ejs-tab #cashRef>
+  <div class="card-add">
+    <ejs-tab>
       <e-tabitems>
         <!-- Tab thông tin chứng từ -->
         <e-tabitem>
@@ -26,7 +26,7 @@
         <!-- Tab chi tiết bút toán -->
         <e-tabitem>
           <ng-template #headerText>
-            <div class="d-flex align-items-top me-2">
+            <div #cashRef class="d-flex align-items-top me-2">
               <i class="icon-format_list_numbered icon-20 me-2"></i>
               <span [innerHTML]="'1' | vll : 'AC070' : 'text' | async" class="fw-bold fs-5-sm text-uppercase">
               </span>
@@ -64,7 +64,7 @@
 <!-- Start: Tab Basic -->
 <ng-template #tabBasic>
   <ng-container *ngIf="form?.formGroup">
-    <div class="row mt-5">
+    <div #itemRef class="row mt-5">
       <div class="col-7 ac-left">
         <div class="mw-750px">
           <div class="row">
@@ -222,7 +222,7 @@
                 <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)" [disabled]="journal?.voucherNoRule != '0'">
+                  (valueChange)="valueChange($event)" [disabled]="journal?.assignRule != '0'">
                 </codx-input>
               </div>
             </div>
@@ -243,7 +243,7 @@
         [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
-        [height]="200" [autoLoad]="false" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
+        [height]="gridHeight" [autoLoad]="false" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
         (cellChanged)="lineChanged($event)" (created)="gridCreated($event, gridCashPaymentLine)"></codx-gridview-v2>
     </div>
   </ng-container>
@@ -784,7 +784,7 @@
       [columnsGrid]="columnsGrid"></codx-gridview-v2> -->
   </ng-container>
   <ng-container *ngIf="(cashpayment?.subType != '2')">
-    <div class="d-flex justify-content-start mt-2">
+    <div #btnRef class="d-flex justify-content-start mt-2">
       <button type="button" class="btn btn-lg btn-light-primary" (click)="addRow()">
         <div class="d-flex align-items-center">
           <i class="icon-playlist_add icon-20"></i>
@@ -810,14 +810,14 @@
       <div class="d-flex flex-center justify-content-center mt-2">
         <div class="d-flex align-items-center me-3">
           <div *ngIf="formType != 'edit'" class="ms-2">
-            <button class="btn btn-sm btn-success mr-2" (click)="openVoucher(0)">
+            <button class="btn btn-sm btn-success mr-2" (click)="settlement(0)">
               <i class="icon-i-clipboard-plus icon-18"></i>
               <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice1"
                 default="Đề xuất thanh toán"></codx-label>
             </button>
           </div>
           <div class="ms-2">
-            <button class="btn btn-sm btn-danger" (click)="openVoucher(1)">
+            <button class="btn btn-sm btn-danger" (click)="settlement(1)">
               <i class="icon-i-clipboard-plus icon-18"></i>
               <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice"
                 default="Thanh toán tự động"></codx-label>

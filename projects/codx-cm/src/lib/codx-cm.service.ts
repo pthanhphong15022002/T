@@ -10,13 +10,15 @@ import {
   ResourceModel,
 } from 'codx-core';
 import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
-import { Observable, Subject, firstValueFrom, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, firstValueFrom, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxCmService {
   titleAction: any;
+  childMenuClick = new BehaviorSubject<any>(null);
+  childMenuDefault = new BehaviorSubject<any>(null);
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
@@ -141,7 +143,7 @@ export class CodxCmService {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
-      'GetStepsInstanceByInstanceIDAsync',
+      'GetStepsByInstanceIDAsync',
       data
     );
   }
@@ -654,11 +656,11 @@ export class CodxCmService {
       transID
     );
   }
-  getPaymentsByContract(contractID) {
+  getPaymentsByContractID(contractID) {
     return this.api.exec<any>(
       'CM',
       'ContractsPaymentsBusiness',
-      'GetPaymentsAsync',
+      'GetPaymentsByContractIDAsync',
       contractID
     );
   }
@@ -694,12 +696,12 @@ export class CodxCmService {
   }
 
   // load Tỉ giá
-  getExchangeRate(CurrencyID) {
+  getExchangeRate(CurrencyID,day ) {
     return this.api.exec<any>(
       'BS',
       'CurrenciesBusiness',
       'GetExchangeRateAsync',
-      [CurrencyID, new Date()]
+      [CurrencyID, day]
     );
   }
 

@@ -79,7 +79,7 @@ export class ViewsContractsComponent extends UIComponent{
   };
   grvSetup: any;
   vllStatus = '';
-  
+
   customerIDCrr = '';
   requestData = new DataRequest();
   listQuotations = [];
@@ -173,7 +173,7 @@ export class ViewsContractsComponent extends UIComponent{
 
   selectedChange(val: any) {
     this.itemSelected = val?.data;
-    this.getPayMentByContract(this.itemSelected?.recID)
+    this.getPayMentByContractID(this.itemSelected?.recID)
     this.detectorRef.detectChanges();
   }
 
@@ -284,12 +284,12 @@ export class ViewsContractsComponent extends UIComponent{
     })
   }
 
-  getPayMentByContract(contractID){
-    this.cmService.getPaymentsByContract(contractID).subscribe(res => {
-      if(res){
-        this.listPayment = res;
-      }
-    })
+  getPayMentByContractID(contractID){
+    // this.cmService.getPaymentsByContractID(contractID).subscribe(res => {
+    //   if(res){
+    //     this.listPayment = res;
+    //   }
+    // })
   }
 
   async getForModel  (functionID) {

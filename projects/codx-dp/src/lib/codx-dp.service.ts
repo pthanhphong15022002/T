@@ -646,7 +646,7 @@ export class CodxDpService {
     return arr3;
   }
 
-  updateOwnerStepAsync(step){
+  updateOwnerStepAsync(step) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -663,6 +663,25 @@ export class CodxDpService {
       'CheckApprovalStepByTranIDAsync',
       recID
     );
+  }
+
+  /// cance trifnh ki
+  cancelSubmit(recID, entityName) {
+    return this.api.execSv(
+      'CM',
+      'ERM.Business.Core',
+      'DataBusiness',
+      'CancelAsync',
+      [recID, '', entityName]
+    );
+  }
+
+  updateApproverStatus(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'UpdateApproverStatusByRecIDAsync',
+      data)
   }
   //delete ApproverStep DeleteByTransIDAsync
   removeApprovalStep(tranID) {
@@ -724,7 +743,7 @@ export class CodxDpService {
         .subscribe();
     }
   }
-  updateApproverStatusInstance(data){
+  updateApproverStatusInstance(data) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
@@ -742,7 +761,7 @@ export class CodxDpService {
       data
     );
   }
-  getInstanceStepsCopy(data){
+  getInstanceStepsCopy(data) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
@@ -751,7 +770,7 @@ export class CodxDpService {
     );
   }
 
-  getInstanceStepsMoveStage(data){
+  getInstanceStepsMoveStage(data) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
@@ -760,7 +779,7 @@ export class CodxDpService {
     );
   }
 
-  getInstanceStepsMoveReason(data){
+  getInstanceStepsMoveReason(data) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
@@ -768,5 +787,12 @@ export class CodxDpService {
       data
     );
   }
-
+  getListPermission(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetListPermissionInCMAsync',
+      data
+    );
+  }
 }

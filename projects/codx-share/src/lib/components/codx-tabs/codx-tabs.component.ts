@@ -12,6 +12,8 @@ import {
 import { Permission } from '@shared/models/file.model';
 import { ApiHttpService } from 'codx-core';
 import { TabModel } from './model/tabControl.model';
+import { CodxShareService } from '../../codx-share.service';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'codx-tabs',
@@ -76,6 +78,7 @@ export class CodxTabsComponent implements OnInit {
   constructor(
     injector: Injector,
     private api: ApiHttpService,
+    private shareService : CodxShareService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -100,15 +103,15 @@ export class CodxTabsComponent implements OnInit {
       // });
     } else 
     {
-      this.TabControl.map(x => x.icon = this.all.find(e => e.name.toLowerCase() == x.name.toLowerCase())?.icon ?? "");
-      this.active = this.TabControl.findIndex(
-        (x: TabModel) => x.isActive == true
-      );
+      this.activeTabControl();
     }
+
+    this.CheckTabControlApproval();
     this.changeDetectorRef.detectChanges();
   }
-
+  
   ngOnChanges() {
+    
     if (this.objectID) {
       this.api
         .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
@@ -120,7 +123,41 @@ export class CodxTabsComponent implements OnInit {
           if (res) this.oCountFooter = res;
         });
     }
+    this.CheckTabControlApproval();
+    this.changeDetectorRef.detectChanges();
   }
+
+  CheckTabControlApproval()
+  {
+    var funcList = this.shareService.loadFunctionList(this.funcID) as any;
+    if(isObservable(funcList))
+    {
+      funcList.subscribe((fc : any) => {
+        if(fc.runMode == "1") this.tabcontrolApproval()
+      })
+    }
+    else if(funcList.runMode == "1") this.tabcontrolApproval()
+    this.changeDetectorRef.detectChanges();
+  }
+  tabcontrolApproval()
+  {
+    this.TabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+    ];
+    this.activeTabControl();
+  }
+  activeTabControl()
+  {
+    this.TabControl.map(x => x.icon = this.all.find(e => e.name.toLowerCase() == x.name.toLowerCase())?.icon ?? "");
+      this.active = this.TabControl.findIndex(
+        (x: TabModel) => x.isActive == true
+      );
+  }
+  
 
   fileAdded(e: any) {
     console.log(e);
