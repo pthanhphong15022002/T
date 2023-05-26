@@ -1043,7 +1043,7 @@
     [allowFiltering]="true"
     [allowSorting]="true"
     [dataSource]="listPayment"
-   
+    [columnsGrid]="columns"
     [autoLoad]="false"
     rowHeight="40"
     predicates="TransID=@0"
@@ -1275,4 +1275,14 @@
       </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #payTemplate let-data>
+  <span
+  [innerHTML]="
+      data?.status
+          | formatvalue : dialog.formModel : 'Status'
+          | async
+      "
+  ></span>
 </ng-template>
