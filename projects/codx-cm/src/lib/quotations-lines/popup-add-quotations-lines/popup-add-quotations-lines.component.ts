@@ -27,6 +27,7 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
   quotationsLine: any;
   listQuotationLines = [];
   action: string = 'add';
+  grvSetup: any;
 
   constructor(
     private codxCM: CodxCmService,
@@ -39,21 +40,39 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
     this.listQuotationLines = dt?.data?.listQuotationLines ?? [];
     this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
+    this.grvSetup = dt?.data?.grvSetup;
+    if (!this.grvSetup) {
+      this.cache
+        .gridViewSetup(
+          this.dialog.formModel.formName,
+          this.dialog.formModel.gridViewName
+        )
+        .subscribe((res) => {
+          this.grvSetup = res;
+        });
+    }
   }
 
   ngOnInit(): void {}
   onSave() {
+    let count = this.codxCM.checkValidateForm(
+      this.grvSetup,
+      this.quotationsLine,
+      0
+    );
+    if (count > 0) return;
     this.quotationsLine['netAmt'] =
       (this.quotationsLine['salesAmt'] ?? 0) -
       (this.quotationsLine['discAmt'] ?? 0) +
       (this.quotationsLine['vatAmt'] ?? 0);
+
     this.dialog.close(this.quotationsLine);
   }
 
   valueChange(e) {
     if (!e.field || !e.data) return;
     this.quotationsLine[e.field] = e.data;
-    switch (e.field) { 
+    switch (e.field) {
       case 'itemID':
         this.loadItem(e.data);
         break;
@@ -96,7 +115,11 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
       if (items) {
         this.quotationsLine['onhand'] = items.quantity;
         this.quotationsLine['idiM4'] = items.warehouseID; // kho
-        this.quotationsLine['costPrice'] = items.costPrice / ( this.quotationsLine.exchangeRate!=0? this.quotationsLine.exchangeRate:1); // gia von chai ti giá
+        this.quotationsLine['costPrice'] =
+          items.costPrice /
+          (this.quotationsLine.exchangeRate != 0
+            ? this.quotationsLine.exchangeRate
+            : 1); // gia von chai ti giá
         this.quotationsLine['umid'] = items.umid; // don vi tinh
         this.quotationsLine['quantity'] = items.minSettledQty; //so luong mua nhieu nhat
         this.quotationsLine['idiM0'] = items.minSettledQty;
