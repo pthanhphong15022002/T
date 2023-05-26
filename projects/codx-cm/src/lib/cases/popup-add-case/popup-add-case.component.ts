@@ -11,7 +11,7 @@ import { tmpInstances } from '../../models/tmpModel';
   templateUrl: './popup-add-case.component.html',
   styleUrls: ['./popup-add-case.component.scss']
 })
-export class PopupAddCaseComponent   extends UIComponent
+export class PopupAddCaseComponent  extends UIComponent
 implements OnInit, AfterViewInit
 {
 // view child
@@ -31,7 +31,9 @@ title: string = '';
 typeCase: string = '';
 
 // Data struct cases
-case: CM_Cases = new CM_Cases();
+cases: CM_Cases = new CM_Cases();
+
+test: CM_Cases = new CM_Cases();
 
 // array is null
 tabInfo: any[] = [];
@@ -108,29 +110,31 @@ constructor(
   this.action = dt?.data?.action;
 
   this.executeApiCalls();
-  this.case.status = '1';
+  this.cases.status = '1';
   if (this.action != this.actionAdd) {
-    this.case = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-    this.getListContacts(this.case?.customerID);
+    this.cases = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    this.getListContacts(this.cases?.customerID);
   }
-
-  this.typeCase = this.case?.caseType;
+  console.log(this.cases);
+  console.log(this.test);
+  this.typeCase = this.cases?.caseType;
 }
 
-onInit(): void {}
+onInit(): void {
+}
 
 valueChange($event) {
   if ($event) {
-    this.case[$event.field] = $event.data;
+    this.cases[$event.field] = $event.data;
   }
 }
 valueChangeDate($event) {
   if ($event) {
-    this.case[$event.field] = $event.data.fromDate;
+    this.cases[$event.field] = $event.data.fromDate;
   }
 }
 saveCases() {
-  if (!this.case?.processID) {
+  if (!this.cases?.processID) {
     this.notificationsService.notifyCode(
       'SYS009',
       0,
@@ -138,7 +142,7 @@ saveCases() {
     );
     return;
   }
-  if (!this.case?.caseName?.trim()) {
+  if (!this.cases?.caseName?.trim()) {
     this.notificationsService.notifyCode(
       'SYS009',
       0,
@@ -146,7 +150,7 @@ saveCases() {
     );
     return;
   }
-  if (!this.case?.customerID) {
+  if (!this.cases?.customerID) {
     this.notificationsService.notifyCode(
       'SYS009',
       0,
@@ -154,7 +158,7 @@ saveCases() {
     );
     return;
   }
-  if(!this.case?.owner){
+  if(!this.cases?.owner){
     this.notificationsService.notifyCode(
       'SYS009',
       0,
@@ -162,7 +166,7 @@ saveCases() {
     );
     return;
   }
-  if (this.checkEndDayInstance(this.case?.endDate, this.dateMax)) {
+  if (this.checkEndDayInstance(this.cases?.endDate, this.dateMax)) {
     this.notificationsService.notifyCode(
       'DP032',
       0,
@@ -197,8 +201,8 @@ saveCases() {
     this.notificationsService.notifyCode(messageCheckFormat);
     return;
   }
-  this.updateDataCases(this.instance, this.case);
-  this.convertDataInstance(this.case, this.instance);
+  this.updateDataCases(this.instance, this.cases);
+  this.convertDataInstance(this.cases, this.instance);
   if (this.action !== this.actionEdit) {
     this.insertInstance();
   } else {
@@ -207,19 +211,19 @@ saveCases() {
 }
 cbxChange($event, field) {
   if ($event) {
-    this.case[field] = $event;
+    this.cases[field] = $event;
   }
 }
 cbxProcessChange($event, field) {
   if ($event) {
-    this.case[field] = $event;
+    this.cases[field] = $event;
     if ($event) {
       var result = this.checkProcessInList($event);
       if (result) {
         this.listInstanceSteps = result?.steps;
         this.listParticipants = result?.permissions;
-        this.case.caseNo = result?.caseId;
-        this.case.endDate =this.HandleEndDate(this.listInstanceSteps, this.action, null);
+        this.cases.caseNo = result?.caseId;
+        this.cases.endDate =this.HandleEndDate(this.listInstanceSteps, this.action, null);
         this.changeDetectorRef.detectChanges();
       } else {
         this.getListInstanceSteps($event);
@@ -270,7 +274,7 @@ valueChangeCustom(event) {
 valueChangeOwner($event) {
   if ($event) {
     this.owner = $event;
-    this.case.owner = this.owner;
+    this.cases.owner = this.owner;
   }
 }
 valueChangeCustomer($event){
@@ -304,7 +308,7 @@ onEdit() {
     });
 }
 beforeSave(option: RequestOption) {
-  var data = this.case;
+  var data = this.cases;
   option.methodName =
     this.action !== this.actionEdit ? 'AddCasesAsync' : 'EditCasesAsync';
   option.className = 'CasesBusiness';
@@ -334,7 +338,7 @@ async getGridView(formModel) {
     });
 }
 async getListProcess(applyFor) {
-  var processID = this.action !== this.actionEdit ? '' : this.case.processID;
+  var processID = this.action !== this.actionEdit ? '' : this.cases.processID;
   var data = [applyFor, processID];
   this.codxCmService.getListCbxProcess(data).subscribe((res) => {
     if (res && res.length > 0) {
@@ -346,15 +350,15 @@ async getListProcess(applyFor) {
 
 async getListInstanceSteps(processId: any) {
   processId =
-    this.action === this.actionCopy ? this.case.processID : processId;
-  var data = [processId, this.case.refID, this.action,'2'];
+    this.action === this.actionCopy ? this.cases.processID : processId;
+  var data = [processId, this.cases.refID, this.action,'2'];
   this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
     if (res && res.length > 0) {
       var obj = {
         id: processId,
         steps: res[0],
          permissions: await this.getListPermission(res[1]),
-        caseNO: this.action !== this.actionEdit ? this.case.caseNo : res[2],
+        caseNO: this.action !== this.actionEdit ? this.cases.caseNo : res[2],
       };
       var isExist = this.listMemorySteps.some((x) => x.id === processId);
       if (!isExist) {
@@ -363,22 +367,22 @@ async getListInstanceSteps(processId: any) {
       this.listInstanceSteps = res[0];
       this.listParticipants = obj.permissions;
       if (this.action === this.actionEdit) {
-        this.owner = this.case.owner;
+        this.owner = this.cases.owner;
       } else {
-        this.case.endDate = this.HandleEndDate(
+        this.cases.endDate = this.HandleEndDate(
           this.listInstanceSteps,
           this.action,
           null
         );
-        this.case.caseNo = res[2];
+        this.cases.caseNo = res[2];
       }
-      this.dateMax = this.HandleEndDate(this.listInstanceSteps, this.action, this.action != this.actionEdit ? null: this.case.createdOn );
+      this.dateMax = this.HandleEndDate(this.listInstanceSteps, this.action, this.action != this.actionEdit ? null: this.cases.createdOn );
       this.changeDetectorRef.detectChanges();
     }
   });
 }
 async getListContacts(customerID: any) {
-  customerID = this.action === this.actionCopy ? this.case.customerID : customerID;
+  customerID = this.action === this.actionCopy ? this.cases.customerID : customerID;
   var data = [customerID];
   this.codxCmService.getListContactByCustomerID(data).subscribe((res) => {
     if (res && res.length > 0) {
@@ -392,7 +396,7 @@ async getListContacts(customerID: any) {
       }
       this.listCbxContacts = res[0];
       if(this.action != this.actionAdd) {
-        this.contactID = this.case.contactID;
+        this.contactID = this.cases.contactID;
       }
       this.changeDetectorRef.detectChanges();
     }
