@@ -46,7 +46,7 @@
             default="Ảnh đại diện"
           ></codx-label>
           <div>
-            <codx-img
+            <!-- <codx-img
               #imageUpload
               class="image-inpt-wrapper fullImage"
               [referType]="'avt'"
@@ -58,7 +58,25 @@
               [imgOn]="lead?.modifiedOn"
               (handleInput)="changeAvatar()"
             >
-            </codx-img>
+            </codx-img> -->
+
+            <codx-img
+            #imageUpload
+            class="image-inpt-wrapper fullImage"
+            [referType]="'avt'"
+            [width]="90"
+            [funcId]="funcID"
+            [objectId]="lead?.recID"
+            [objectType]="form.formModel.entityName"
+            [objectName]="lead?.leadName"
+            [isAllowEdit]="true"
+            [isDefaulImg]="true"
+            [imgOn]="lead?.modifiedOn"
+            (handleInput)="changeAvatar()"
+          >
+          </codx-img>
+
+
           </div>
         </div>
       </div>
