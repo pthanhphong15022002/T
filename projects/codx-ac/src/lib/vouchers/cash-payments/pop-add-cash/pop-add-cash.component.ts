@@ -55,11 +55,6 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
 import { VoucherComponent } from '../../../popup/voucher/voucher.component';
 import { SettledInvoices } from '../../../models/SettledInvoices.model';
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
 import { Double } from '@syncfusion/ej2-angular-charts';
 import { CashReceiptsLines } from '../../../models/CashReceiptsLines.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -426,7 +421,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }
   }
-
+//Tach thanh component settledinvoice
   voucherLineRefsChanged(e: any) {
     if (e.data) {
       const field = ['balanceamt', 'currencyid', 'exchangerate', 'settledamt'];
@@ -446,7 +441,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  openVoucher(type: number) {
+
+  //rename _> settlement
+  settlement(type: number) {
     if (!this.cashpayment.objectID) {
       this.notification.notifyCode(
         'SYS009',
@@ -735,7 +732,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     ]);
   }
 
-  openPopupLine(data) {
+  popupLine(data) {
     var obj = {
       headerText: this.headerText,
       data: { ...data },
@@ -990,7 +987,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   checkValidate() {
     // tu dong khi luu, khong check voucherNo
     let ignoredFields: string[] = [];
-    if (this.journal.voucherNoRule === '2') {
+    if (this.journal.assignRule === '2') {
       ignoredFields.push('VoucherNo');
     }
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
@@ -1163,13 +1160,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             case '2':
               idx = this.cashpaymentline.length;
               res.rowNo = idx + 1;
-              this.openPopupLine(res);
+
+              //rename -> popupLine
+              this.popupLine(res);
               break;
           }
         }
       });
   }
-
+//Viet tăt ten ctrl 3 ky tu vd: gridview -> grv;label ->lbl, 
   loadformSettledInvoices(type: number) {
     var obj = {
       cashpayment: this.cashpayment,

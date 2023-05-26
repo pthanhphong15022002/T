@@ -25,6 +25,7 @@ export class PaymentHistoryComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
+    this.payment = dt?.data?.payment;
   }
   ngOnInit(): void {
     
