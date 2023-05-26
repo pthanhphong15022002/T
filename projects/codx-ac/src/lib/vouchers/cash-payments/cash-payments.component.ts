@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  HostListener,
   Injector,
   Optional,
   TemplateRef,

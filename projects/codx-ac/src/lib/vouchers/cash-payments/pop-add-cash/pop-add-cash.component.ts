@@ -109,7 +109,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   total: any = 0;
   totaldr2: any = 0;
   hasSaved: any = false;
-  hasAddrow: any = true;
   journal: IJournal;
   reason: Array<Reason> = [];
   fmCashPaymentsLines: FormModel = {
@@ -680,7 +679,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .execAction<any>(this.entityNameLine, [e], 'SaveAsync')
       .subscribe((res) => {
         if (res) {
-          this.hasAddrow = true;
           this.hasSaved = true;
           //this.loadTotal();
           if (
@@ -705,7 +703,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .execAction<any>(this.entityNameLine, [e], 'UpdateAsync')
       .subscribe((res) => {
         if (res) {
-          this.hasAddrow = true;
           this.hasSaved = true;
           //this.loadTotal();
           if (
@@ -1172,10 +1169,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         if (res) {
           switch (this.modegrid) {
             case '1':
-              idx = this.gridCashPaymentLine.dataSource.length;
+                idx = this.gridCashPaymentLine.dataSource.length;
                 res.rowNo = idx + 1;
+                this.gridCashPaymentLine.endEdit();
                 this.gridCashPaymentLine.addRow(res, idx);
-                this.hasAddrow = false;
               break;
             case '2':
               idx = this.cashpaymentline.length;
