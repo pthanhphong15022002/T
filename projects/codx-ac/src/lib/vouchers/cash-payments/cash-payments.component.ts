@@ -62,7 +62,7 @@ export class CashPaymentsComponent extends UIComponent {
   classNameLine: any;
   entityName: any;
   settledInvoices: any;
-  acctTrans: any = [];
+  acctTrans: any;
   baseCurr: any;
   cashbookName: any;
   reasonName: any;
@@ -81,6 +81,7 @@ export class CashPaymentsComponent extends UIComponent {
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
   ];
+  //Bo
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -160,7 +161,7 @@ export class CashPaymentsComponent extends UIComponent {
         break;
     }
     this.detectorRef.detectChanges();
-  }
+}
 
   //#endregion
 
@@ -396,16 +397,8 @@ export class CashPaymentsComponent extends UIComponent {
         this.api
           .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
-            if (res.data.length > 0) {
-              this.arrEntryID = res.arrEntry;
-              for (let index = 0; index < this.arrEntryID.length; index++) {
-                  var data = res.data.filter((i) => i.entryID == this.arrEntryID[index]);
-                  this.acctTrans.push(data);
-              }
-              this.loadTotal(); 
-            }else{
-              this.acctTrans = [];
-            }
+            this.acctTrans = res;
+            this.loadTotal();
           });
         break;
     }
@@ -467,10 +460,11 @@ export class CashPaymentsComponent extends UIComponent {
     var totalacct = 0;
     var totaloff = 0;
     for (let index = 0; index < this.acctTrans.length; index++) {
-      let j = this.acctTrans[index].findIndex(x => x.crediting == true);
-      let k = this.acctTrans[index].findIndex(x => x.crediting == false);
-      totalacct = totalacct + this.acctTrans[index][j].transAmt;
-      totaloff = totaloff + this.acctTrans[index][k].transAmt;
+      if (!this.acctTrans[index].crediting) {
+        totalacct = totalacct + this.acctTrans[index].transAmt;
+      }else{
+        totaloff = totaloff + this.acctTrans[index].transAmt;
+      }
     }
     this.totalacct = totalacct.toLocaleString('it-IT');
     this.totaloff = totaloff.toLocaleString('it-IT');
@@ -504,8 +498,20 @@ export class CashPaymentsComponent extends UIComponent {
     return styles;
   }
 
-  checkCrediting(data){
-    if (data.filter((i) => i.crediting == false).length > 1) {
+  checkCrediting(item){
+    var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
+    let index = data.filter((x) => x.crediting == item.crediting).findIndex(x => x.recID == item.recID);
+    if (index > 0) {
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  createLine(item){
+    var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
+    let index = data.filter((x) => x.crediting == item.crediting).findIndex(x => x.recID == item.recID);
+    if (index == ((data.filter((x) => x.crediting == item.crediting)).length) - 1) {
       return true;
     }else{
       return false;

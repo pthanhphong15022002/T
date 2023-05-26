@@ -16,14 +16,14 @@ import {
   UIComponent,
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
+import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
+import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
 import { CustomizedMultiSelectPopupComponent } from '../customized-multi-select-popup/customized-multi-select-popup.component';
 import { IJournal } from '../interfaces/IJournal.interface';
 import { JournalService } from '../journals.service';
 import { PopupSetupInvoiceComponent } from '../popup-setup-invoice/popup-setup-invoice.component';
-import { Observable } from 'rxjs';
-import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 
 const irrPropNames: string[] = [
   'drAcctControl',
@@ -123,21 +123,21 @@ export class PopupAddJournalComponent
     if (dialogData.data.formType === 'edit') {
       this.isEdit = true;
 
-      this.journal.creater = this.journal.creater
-        ? JSON.parse(this.journal.creater)
-        : '';
-      this.journal.approver = this.journal.approver
-        ? JSON.parse(this.journal.approver)
-        : '';
-      this.journal.poster = this.journal.poster
-        ? JSON.parse(this.journal.poster)
-        : '';
-      this.journal.unposter = this.journal.unposter
-        ? JSON.parse(this.journal.unposter)
-        : '';
-      this.journal.sharer = this.journal.sharer
-        ? JSON.parse(this.journal.sharer)
-        : '';
+      // this.journal.creater = this.journal.creater
+      //   ? JSON.parse(this.journal.creater)
+      //   : '';
+      // this.journal.approver = this.journal.approver
+      //   ? JSON.parse(this.journal.approver)
+      //   : '';
+      // this.journal.poster = this.journal.poster
+      //   ? JSON.parse(this.journal.poster)
+      //   : '';
+      // this.journal.unposter = this.journal.unposter
+      //   ? JSON.parse(this.journal.unposter)
+      //   : '';
+      // this.journal.sharer = this.journal.sharer
+      //   ? JSON.parse(this.journal.sharer)
+      //   : '';
     }
   }
   //#endregion
@@ -346,7 +346,6 @@ export class PopupAddJournalComponent
 
     if (!this.journalTypes105.includes(this.journal.journalType)) {
       this.journal.invoiceForm = null;
-      this.journal.invoiceSeriNo = null;
     }
 
     let tempJournal: IJournal = { ...this.journal };
@@ -359,21 +358,21 @@ export class PopupAddJournalComponent
       tempJournal.autoPost = this.journal.autoPost ? '1' : '0';
     }
     tempJournal.multiCurrency = tempJournal.multiCurrency ? '1' : '0';
-    tempJournal.creater = this.journal.creater
-      ? JSON.stringify(this.journal.creater)
-      : this.journal.creater;
-    tempJournal.approver = this.journal.approver
-      ? JSON.stringify(this.journal.approver)
-      : this.journal.approver;
-    tempJournal.poster = this.journal.poster
-      ? JSON.stringify(this.journal.poster)
-      : this.journal.poster;
-    tempJournal.unposter = this.journal.unposter
-      ? JSON.stringify(this.journal.unposter)
-      : this.journal.unposter;
-    tempJournal.sharer = this.journal.sharer
-      ? JSON.stringify(this.journal.sharer)
-      : this.journal.sharer;
+    // tempJournal.creater = this.journal.creater
+    //   ? JSON.stringify(this.journal.creater)
+    //   : this.journal.creater;
+    // tempJournal.approver = this.journal.approver
+    //   ? JSON.stringify(this.journal.approver)
+    //   : this.journal.approver;
+    // tempJournal.poster = this.journal.poster
+    //   ? JSON.stringify(this.journal.poster)
+    //   : this.journal.poster;
+    // tempJournal.unposter = this.journal.unposter
+    //   ? JSON.stringify(this.journal.unposter)
+    //   : this.journal.unposter;
+    // tempJournal.sharer = this.journal.sharer
+    //   ? JSON.stringify(this.journal.sharer)
+    //   : this.journal.sharer;
 
     const dataValueObj = {};
     for (const prop of this.dataValueProps088) {
@@ -444,7 +443,7 @@ export class PopupAddJournalComponent
         console.log(event);
 
         this.journal.invoiceForm = event.invoiceForm;
-        this.journal.invoiceSeriNo = event.invoiceSeriNo;
+        // this.journal.invoiceSeriNo = event.invoiceSeriNo;
       });
   }
 
