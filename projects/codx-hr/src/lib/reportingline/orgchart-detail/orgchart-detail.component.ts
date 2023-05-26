@@ -1,16 +1,33 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { ConnectorModel, Diagram, DiagramTools, NodeModel, SnapConstraints, SnapSettingsModel } from '@syncfusion/ej2-angular-diagrams';
+import {
+  ConnectorModel,
+  Diagram,
+  DiagramTools,
+  NodeModel,
+  SnapConstraints,
+  SnapSettingsModel,
+} from '@syncfusion/ej2-angular-diagrams';
 import { ApiHttpService } from 'codx-core';
 
 @Component({
   selector: 'lib-orgchart-detail',
   templateUrl: './orgchart-detail.component.html',
-  styleUrls: ['./orgchart-detail.component.css']
+  styleUrls: ['./orgchart-detail.component.css'],
 })
-export class OrgchartDetailComponent implements OnInit,AfterViewInit {
+export class OrgchartDetailComponent implements OnInit, AfterViewInit {
   @Input() onlyDepartment?: boolean;
-  @Output() evtAfterViewInit = new EventEmitter;
+  @Output() evtAfterViewInit = new EventEmitter();
   datasetting: any = null;
   tool: DiagramTools = DiagramTools.ZoomPan;
   layout: Object = {
@@ -27,14 +44,12 @@ export class OrgchartDetailComponent implements OnInit,AfterViewInit {
   count = 0;
   @ViewChild('p') public popover: NgbPopover;
 
-
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.evtAfterViewInit.emit(this);
@@ -81,7 +96,7 @@ export class OrgchartDetailComponent implements OnInit,AfterViewInit {
   ): ConnectorModel {
     connector.targetDecorator!.shape = 'None';
     connector.type = 'Orthogonal';
-    connector.constraints = 0;
+    // connector.constraints = 0;
     connector.cornerRadius = 5;
     connector.style!.strokeColor = '#6d6d6d';
     return connector;
@@ -90,5 +105,4 @@ export class OrgchartDetailComponent implements OnInit,AfterViewInit {
   public nodeDefaults(obj: NodeModel): NodeModel {
     return obj;
   }
-
 }
