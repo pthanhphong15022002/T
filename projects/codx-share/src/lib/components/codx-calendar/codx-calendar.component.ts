@@ -52,7 +52,6 @@ export class CodxCalendarComponent
   FDdate = new Date();
   lstDOWeek = [];
   typeNavigate = 'Month';
-  isCollapsed = false;
   defaultCalendar;
   calendarData = [];
   calendarTempData = [];
@@ -61,7 +60,6 @@ export class CodxCalendarComponent
   calendarType: string;
   calendarTypes = [];
   resources = [];
-  fDayOfWeek: any;
 
   carFM: FormModel;
   carFG: FormGroup;
@@ -115,6 +113,7 @@ export class CodxCalendarComponent
               this.calendarParams[prop] = JSON.parse(res[prop]);
             }
           }
+          console.log('Calendar Parameters', this.calendarParams);
         }
       });
 
@@ -312,9 +311,31 @@ export class CodxCalendarComponent
             this.ejCalendar.value = this.FDdate;
           }
           this.calendarService.calendarData$.next(this.calendarTempData);
+
+          this.api
+            .execSv(
+              'SYS',
+              'ERM.Business.SYS',
+              'SettingValuesBusiness',
+              'GetParamMyCalendarAsync',
+              'WPCalendars'
+            )
+            .subscribe((res: any) => {
+              if (res) {
+                for (const prop in res) {
+                  if (res.hasOwnProperty(prop)) {
+                    this.calendarParams[prop] = JSON.parse(res[prop]);
+                  }
+                }
+              }
+            });
         }
       });
   }
+
+  filterCalendar() {}
+
+  settingCalendar() {}
 
   convertStrToDate(eleDate) {
     if (eleDate) {
@@ -358,6 +379,8 @@ export class CodxCalendarComponent
 
   getCalendarData(event): void {
     let calendarType = event.value;
+    //reset data
+    this.calendarService.calendarData$.next([]);
     this.api
       .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [calendarType])
       .subscribe((res: any) => {
@@ -377,6 +400,37 @@ export class CodxCalendarComponent
         : query;
     //pass the filter data source, filter query to updateData method.
     e.updateData(this.calendarTypes, query);
+  }
+
+  //#region Save & reset parameters setting
+  saveParams() {}
+
+  resetParams() {}
+  //#endregion
+
+  //#region Add event from module on calendar
+  addEvent(transType: string) {
+    switch (transType) {
+      case 'EP_BookingCars':
+        this.addBookingCar();
+        break;
+
+      case 'WP_Notes':
+        this.addNote();
+        break;
+
+      case 'CO_Meetings':
+        this.addMeeting();
+        break;
+
+      case 'TM_MyTasks':
+        this.addMyTask();
+        break;
+
+      case 'TM_AssignTasks':
+        this.addAssignTask();
+        break;
+    }
   }
 
   addBookingCar() {
@@ -606,4 +660,5 @@ export class CodxCalendarComponent
         }
       });
   }
+  //#endregion
 }

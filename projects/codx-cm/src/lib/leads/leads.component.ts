@@ -21,12 +21,14 @@ import {
   ViewType,
   SidebarModel,
   RequestOption,
+  DialogModel,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
 import { CM_Customers } from '../models/cm_model';
 import { PopupAddLeadComponent } from './popup-add-lead/popup-add-lead.component';
 import { PopupConvertLeadComponent } from './popup-convert-lead/popup-convert-lead.component';
+import { PopupMergeLeadsComponent } from './popup-merge-leads/popup-merge-leads.component';
 
 @Component({
   selector: 'lib-leads',
@@ -243,6 +245,9 @@ export class LeadsComponent
       case 'CM0205_1':
         this.convertLead(data);
         break;
+      case 'CM0205_2':
+        this.mergeLead(data);
+        break;
     }
   }
   changeMF(e) {
@@ -425,7 +430,7 @@ export class LeadsComponent
     this.cache.functionList(this.funcID).subscribe((fun) => {
       this.view.dataService
         .delete([this.view.dataService.dataSelected], true, (opt) =>
-          this.beforeDel(opt,fun.entityName)
+          this.beforeDel(opt, fun.entityName)
         )
         .subscribe((res) => {
           if (res) {
@@ -443,9 +448,8 @@ export class LeadsComponent
   }
   //#endregion
 
-
   //#region convertLead
-  convertLead(data){
+  convertLead(data) {
     this.dataSelected = data;
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -475,7 +479,7 @@ export class LeadsComponent
           dialog.closed.subscribe((e) => {
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event) {
-              this.dataSelected.status = "5";
+              this.dataSelected.status = '5';
               this.view.dataService.update(this.dataSelected).subscribe();
               this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
               this.detectorRef.detectChanges();
@@ -483,6 +487,30 @@ export class LeadsComponent
           });
         });
       });
+  }
+  //#endregion
+
+  //#region mergeLead
+  mergeLead(data){
+    let obj = {
+      data,
+      title: this.titleAction
+    }
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1001;
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    let popupContract = this.callfc.openForm(
+      PopupMergeLeadsComponent,
+      '',
+      null,
+      null,
+      '',
+      obj,
+      '',
+      option
+    );
   }
   //#endregion
 
