@@ -207,7 +207,7 @@
               <div class="form-group">
                 <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
+                <codx-input [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
                   (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
@@ -216,7 +216,7 @@
               <div class="form-group">
                 <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel"
+                <codx-input [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel"
                   (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
@@ -652,7 +652,7 @@
             <td>
               <div class="has-action-menu">
                 <codx-mfunc [dataItem]="item" [formModel]="form.formModel" (clickMF)="clickMF($event, item)"
-                  isBookMark="false" type="hover"></codx-mfunc>
+                  isBookMark="false" type="view"></codx-mfunc>
               </div>
             </td>
           </tr>
@@ -760,13 +760,13 @@
   </ng-container>
 </ng-template>
 <ng-template #morefunction let-data>
-  <span ngbTooltip="copy" placement="top" type="button" class="btn btn-icon btn-light-primary ms-1" (click)="copyRow(data)">
-    <i class="icon-content_copy icon-16"></i>
-  </span>
-  <span ngbTooltip="Xóa" placement="bottom" type="button" class="btn btn-icon btn-light-danger ms-1"
-    (click)="deleteRow(data)">
-    <i class="icon-delete icon-16"></i>
-  </span>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="form.formModel"
+    (clickMF)="clickMF($event, data)"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
 </ng-template>
 <ng-template #footer>
   <div class="codx-detail-footer dialog-footer" *ngIf="purchaseinvoices">

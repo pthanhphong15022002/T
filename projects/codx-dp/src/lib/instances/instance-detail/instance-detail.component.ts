@@ -263,7 +263,8 @@ export class InstanceDetailComponent implements OnInit {
     private callFC: CallFuncService,
     private popupInstances: InstancesComponent,
     public sanitizer: DomSanitizer,
-    private authStore: AuthStore
+    private authStore: AuthStore,
+    private serviceInstance: InstancesComponent,
   ) {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefault = fun.customName || fun.description;
@@ -522,7 +523,6 @@ export class InstanceDetailComponent implements OnInit {
               end: i.endDate,
             };
           });
-          console.log('thuan', test);
 
           this.changeDetec.detectChanges();
         }
@@ -533,44 +533,6 @@ export class InstanceDetailComponent implements OnInit {
     return this.ganttDs[idx]?.color;
   }
   clickDetailGanchart(recID) {
-    // let data = this.ganttDsClone?.find((item) => item.recID === recID);
-    // viewTask(data,type){
-    //   let listTaskConvert = this.currentStep?.tasks?.map((item) => {
-    //     return {
-    //       ...item,
-    //       name: item?.taskName,
-    //       type: item?.taskType,
-    //     };
-    //   });
-    //   let value = JSON.parse(JSON.stringify(data));
-    //   value['name'] = value['taskName'] || value['taskGroupName'];
-    //   value['type'] = value['taskType'] || type;
-    //   if (data) {
-    //     let frmModel: FormModel = {
-    //       entityName: 'DP_Instances_Steps_Tasks',
-    //       formName: 'DPInstancesStepsTasks',
-    //       gridViewName: 'grvDPInstancesStepsTasks',
-    //     };
-    //     let listData = {
-    //       value: value,
-    //       listValue: listTaskConvert,
-    //       step: this.currentStep,
-    //       isRoleAll: this.isRoleAll,
-    //       isUpdate: this.isUpdate,
-    //     };
-    //     let option = new SidebarModel();
-    //     option.Width = '550px';
-    //     option.zIndex = 1011;
-    //     option.FormModel = frmModel;
-    //     let dialog = this.callfc.openSide(CodxViewTaskComponent, listData, option);
-    //     dialog.closed.subscribe((dataOuput) => {
-    //       if(dataOuput?.event){
-    //         this.handelProgress(data,dataOuput?.event)
-    //       }
-    //     })
-  
-    //   }
-    // }
     let data = this.ganttDsClone?.find((item) => item.recID === recID);
     if (data) {
       let frmModel: FormModel = {
@@ -580,20 +542,109 @@ export class InstanceDetailComponent implements OnInit {
       };
       let listData = {
         value: data,
-        listValue: this.ganttDsClone,
-        // step: this.step,
+        listIdRoleInstance: this.ownerInstance,
+        type: data?.type,
       };
       let option = new SidebarModel();
       option.Width = '550px';
       option.zIndex = 1011;
       option.FormModel = frmModel;
       let dialog = this.callfc.openSide(CodxViewTaskComponent, listData, option);
-      // this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
-      //   value: data,
-      //   listValue: this.ganttDsClone,
-      // });
+      dialog.closed.subscribe((data) => {
+        let dataProgress = data?.event
+        if(dataProgress){
+          let stepFind = this.listSteps.find((step) => step.recID == dataProgress?.stepID);
+          if(stepFind){
+            if(dataProgress?.type == "P"){
+              stepFind.progress = dataProgress?.progressStep;
+              stepFind.note = dataProgress?.note;
+              stepFind.actualEnd = dataProgress?.actualEnd;
+            }else if(dataProgress?.type == "G"){
+              let groupFind = stepFind?.taskGroups?.find(group => group?.recID == dataProgress?.groupTaskID);
+              if(groupFind){
+                groupFind.progress = dataProgress?.progressGroupTask;
+                groupFind.note = dataProgress?.note;
+                groupFind.actualEnd = dataProgress?.actualEnd;
+                if(dataProgress?.isUpdate){
+                  stepFind.progress = dataProgress?.progressStep;
+                }
+              }
+            }else{
+              let taskFind = stepFind?.tasks?.find(task => task?.recID == dataProgress?.taskID);
+              if(taskFind){
+                taskFind.progress = dataProgress?.progressTask;
+                taskFind.note = dataProgress?.note;
+                taskFind.actualEnd = dataProgress?.actualEnd;
+                if(dataProgress?.isUpdate){
+                  let groupFind = stepFind?.taskGroups?.find(group => group?.recID == dataProgress?.groupTaskID);
+                  if(groupFind){
+                    groupFind.progress = dataProgress?.progressGroupTask;
+                  }
+                  stepFind.progress = dataProgress?.progressStep;
+                }
+              }
+            }
+
+          }
+        }
+        console.log(dataProgress?.event);
+
+      })
     }
   }
+  // getTaskEnd(step) {
+  //   let countGroup = this.listGroupTask?.length;
+  //   if (countGroup > 0) {
+  //     for (let i = countGroup - 1; i >= 0; i--) {
+  //       const groupTask = this.listGroupTask[i];
+  //       const task = groupTask?.task
+  //         ?.slice()
+  //         .reverse()
+  //         .find((t) => t?.isTaskDefault);
+  //       if (task) {
+  //         this.idTaskEnd = task.recID;
+  //         this.progressTaskEnd = task?.progress || 0;
+  //         return;
+  //       }
+  //     }
+  //   }
+  // }
+
+  continueStep(isTaskEnd, step){
+    let isShowFromTaskAll = false;
+    let isShowFromTaskEnd = !this.checkContinueStep(true,step);
+    let isContinueTaskEnd = isTaskEnd;
+    let isContinueTaskAll = this.checkContinueStep(false,step);
+    let dataInstance = {
+      instance: this.dataSelect,
+      listStep: this.listSteps,
+      step: step,
+      isAuto: {
+        isShowFromTaskAll,
+        isShowFromTaskEnd,
+        isContinueTaskEnd,
+        isContinueTaskAll,
+      },
+    };
+    this.serviceInstance.autoMoveStage(dataInstance);
+  }
+
+  checkContinueStep(isDefault,step) {
+    let check = true;
+    let listTask = isDefault ? step?.tasks?.filter(task => task?.requireCompleted) : step?.tasks;
+    if(listTask?.length <= 0){
+      return isDefault ? true : false;
+    }
+    for(let task of listTask){
+      if(task.progress != 100){
+        check = false;
+        break;
+      }
+    }
+    return check;
+
+  }
+
   changeViewTimeGant(e) {
     this.crrViewGant = e.data;
     switch (this.crrViewGant) {

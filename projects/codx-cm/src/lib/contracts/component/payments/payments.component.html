@@ -89,7 +89,7 @@
         </div>
         <div class="">
           <codx-input
-          
+            field="scheduleDate"
             type="datetime"
             [crrValue]="payment?.scheduleDate"
             (valueChange)="changeValueDate($event)"
@@ -176,7 +176,7 @@
 			<codx-input
             field="scheduleDate"
             type="datetime"
-            [crrValue]="payment?.paidDate"
+            [crrValue]="payment?.scheduleDate"
             (valueChange)="changeValueDate($event)"
           >
           </codx-input>

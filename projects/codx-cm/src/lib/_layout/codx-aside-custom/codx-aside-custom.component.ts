@@ -17,7 +17,12 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { NavigationCancel, NavigationEnd, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationCancel,
+  NavigationEnd,
+  Router,
+} from '@angular/router';
 import {
   ApiHttpService,
   ButtonModel,
@@ -36,6 +41,7 @@ import {
 } from 'codx-core';
 
 import { finalize, map, Observable, of, Subscription } from 'rxjs';
+import { CodxCmService } from '../../codx-cm.service';
 
 @Component({
   selector: 'codx-aside-custom',
@@ -110,6 +116,9 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   componentsDefault: any;
   idSubCrr = '';
   loadedCus = false;
+  //theem ngat 25 052023
+  dataMenuChildCustom = [];
+  activeDefault = '';
 
   constructor(
     private pageTitle: PageTitleService,
@@ -118,12 +127,18 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     private cache: CacheService,
     private changDefector: ChangeDetectorRef,
     private router: Router,
+    private codxCM: CodxCmService,
     private elRef: ElementRef,
     private api: ApiHttpService,
-    private tenantStore: TenantStore
+    private tenantStore: TenantStore,
+    private activedRouter: ActivatedRoute
   ) {
     this.tenant = this.tenantStore.get()?.tenant;
     if (!this.tenant) this.tenant = UrlUtil.getTenant();
+    this.codxCM.childMenuDefault.subscribe((res) => {
+      this.activeDefault = res;
+    });
+    this.loadMenuChild();
   }
 
   ngOnInit(): void {
@@ -171,7 +186,6 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
             .shift();
 
           this.changDefector.detectChanges();
-          // this.codxService.activeMenu.func0 = 'CM0101';
           this.openSecondFunc(this.codxService.activeMenu.func0);
         });
 
@@ -179,13 +193,17 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
         this.resetActiveMenu();
         this.changDefector.detectChanges();
         if (d.funcId) {
-          this.codxService.activeMenu.id = d.funcId;
-          this.codxService.funcID = this.codxService.activeMenu.id;
+          if (this.activeDefault) {
+            this.codxService.activeMenu.id = this.activeDefault;
+          } else this.codxService.activeMenu.id = d.funcId;
+
+          this.codxService.funcID = d.funcId;
           var func = this.getFunc(d.funcId);
           if (func) func.expanded = false;
           this.openSecondFunc(d.funcId);
         }
-        if (d.favId) this.codxService.activeMenu.fav = d.favId;
+        if (this.activeDefault) this.codxService.activeMenu.fav = null;
+        else if (d.favId) this.codxService.activeMenu.fav = d.favId;
         //this.checkActive();
         setTimeout(() => {
           this.codxService.activeMenu = JSON.parse(
@@ -208,15 +226,16 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
 
   openSecondFunc(funcId: string, func?: any) {
     // load menuCus
-    if (funcId == 'CM0201' || funcId == 'CM0401' || funcId == 'CM0402')
-      this.loadMenuCustom(funcId);
-    else {
-      this.dataMenuCustom = [];
-      this.loadedCus = false;
-    }
+    // if (funcId == 'CM0201' || funcId == 'CM0401' || funcId == 'CM0402')
+    //   this.loadMenuCustom(funcId);
+    // else {
+    //   this.dataMenuCustom = [];
+    //   this.loadedCus = false;
+    // }
+
     if (funcId) {
       this.codxService.activeMenu.func0 = funcId;
-
+      //xoas
       if (!this.hasSecond) {
         this.codxService.activeMenu.func1 = null;
         return;
@@ -225,13 +244,19 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
 
       if (func) {
         this.codxService.activeMenu.func0 = func.parentID;
-        this.codxService.activeMenu.func1 = funcId;
 
-        if (func.favs || func.formFavs || func.shareFavs) {
+        if (!this.activeDefault) {
+          this.codxService.activeMenu.func1 = funcId;
+        } else this.codxService.activeMenu.func1 = this.activeDefault;
+
+        if (
+          !this.activeDefault &&
+          (func.favs || func.formFavs || func.shareFavs)
+        ) {
           this.codxService.activeMenu.fav = func.favDefault.id;
           this.codxService.activeMenu.favType = func.favDefault.type;
           this.codxService.activeFav = this.codxService.activeMenu.fav;
-
+          this.activeDefault = '';
           this.toggleSecond(this.getFunc(func.parentID));
         } else {
           if (!func.expanded && func.parentID != func.module) {
@@ -255,16 +280,19 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
           else this.toggleSecond(func);
         }
       }
+      // if (this.isClickMenuCus) this.activeDefault = '';
     }
+
     ScrollComponent.update('#kt_aside_menu');
   }
 
   getFavs(func: any, defaultFav?: any) {
     this.codxService.getFavs(func, '1', defaultFav).subscribe((x) => {
-      this.codxService.activeMenu.fav = x.defaultId;
-      this.codxService.activeMenu.favType = x.defaultType;
-      this.codxService.activeFav = this.codxService.activeMenu.fav;
-
+      if (!this.activeDefault) {
+        this.codxService.activeMenu.fav = x.defaultId;
+        this.codxService.activeMenu.favType = x.defaultType;
+        this.codxService.activeFav = this.codxService.activeMenu.fav;
+      }
       if (func.favs && func.favs.length > 0) {
         var favIDs: any[] = [];
         func.favs.forEach((x: any) => {
@@ -305,34 +333,39 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
 
   itemClick(funcId: string, data: any, type?: string) {
     //trả lại predicate mặc định khi click vào menu cus
+    // if (this.isClickMenuCus) {
+    //   this.codxService.activeViews.dataService.predicates =
+    //     this.predicatesDefault;
+    //   this.codxService.activeViews.dataService.dataValues =
+    //     this.dataValuesDefault;
+
+    //   let viewModel;
+    //   let viewModelDelete;
+    //   this.codxService.activeViews?.views.forEach((x) => {
+    //     if (x.type == 6) {
+    //       x.hide = true;
+    //       x.active = false;
+    //       viewModelDelete = x;
+    //     }
+    //     if (x.type == 2) {
+    //       x.active = true;
+    //       viewModel = x;
+    //     }
+    //   });
+
+    //   // this.codxService.activeViews?.components.delete(viewModel.id);
+    //   this.codxService.activeViews.viewActiveType = viewModel.type;
+    //   //  this.codxService.activeViews?.change(viewModel);
+    //   this.codxService.activeViews?.viewChange(viewModel);
+
+    //   this.idSubCrr = '';
+    //   this.isClickMenuCus = false;
+    // }
+
     if (this.isClickMenuCus) {
-      this.codxService.activeViews.dataService.predicates =
-        this.predicatesDefault;
-      this.codxService.activeViews.dataService.dataValues =
-        this.dataValuesDefault;
-
-      let viewModel;
-      let viewModelDelete;
-      this.codxService.activeViews?.views.forEach((x) => {
-        if (x.type == 6) {
-          x.hide = true;
-          x.active = false;
-          viewModelDelete = x;
-        }
-        if (x.type == 2) {
-          x.active = true;
-          viewModel = x;
-        }
-      });
-
-      // this.codxService.activeViews?.components.delete(viewModel.id);
-      this.codxService.activeViews.viewActiveType = viewModel.type;
-      //  this.codxService.activeViews?.change(viewModel);
-      this.codxService.activeViews?.viewChange(viewModel);
-
-      this.idSubCrr = '';
       this.isClickMenuCus = false;
-    }
+      this.activeDefault = '';
+    } else this.isClickMenuCus = true;
 
     let titleEle = document.querySelector('codx-page-title');
     if (titleEle) {
@@ -472,26 +505,31 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   openChildMenu(func: any) {
-    this.dataMenuCustom = [];
-    this.loadedCus = false;
-    // if (
-    //   func.functionID == 'CM0201' ||
-    //   func.functionID == 'CM0401' ||
-    //   func.functionID == 'CM0402'
-    // )
-    //   this.loadMenuCustom(func.functionID);
+    // đã chuyển ra ngoia
+    // this.dataMenuCustom = [];
+    // this.loadedCus = false;
+    // // if (
+    // //   func.functionID == 'CM0201' ||
+    // //   func.functionID == 'CM0401' ||
+    // //   func.functionID == 'CM0402'
+    // // )
+    // //   this.loadMenuCustom(func.functionID);
 
     this.childMenuClick.emit({ func });
     let isNav = func.functionID != this.codxService.activeMenu.func1;
     if (isNav) {
-      this.codxService.activeMenu.func1 = func.functionID;
+      if (this.activeDefault) {
+        this.codxService.activeMenu.func1 = this.activeDefault;
+      } else this.codxService.activeMenu.func1 = func.functionID;
       if (func.expanded) {
         if (func.functionType == 'R') {
           this.codxService.activeMenu.reportId = func.reports[0];
         } else {
-          this.codxService.activeMenu.fav = func.favDefault.id;
-          this.codxService.activeMenu.favType = func.favDefault.type;
-          this.codxService.activeFav = this.codxService.activeMenu.fav;
+          if (!this.activeDefault) {
+            this.codxService.activeMenu.fav = func.favDefault.id;
+            this.codxService.activeMenu.favType = func.favDefault.type;
+            this.codxService.activeFav = this.codxService.activeMenu.fav;
+          }
         }
       } else {
         if (func.functionType == 'R') {
@@ -512,7 +550,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
           // });
         }
       }
-
+      this.activeDefault=''
       this.codxService.navigate(func.functionID);
     }
     return true;
@@ -636,7 +674,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     this.codxService.activeMenu.reportID = '';
   }
 
-  //load menu
+  //load menu fav
   loadMenuCustom(fun) {
     this.predicatesDefault =
       this.codxService.activeViews?.dataService.predicates;
@@ -699,7 +737,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
       );
   }
 
-  clickMenuCustom(funcID, data) {
+  clickMenuFavCustom(funcID, data) {
     let titleEle = document.querySelector('codx-page-title');
     if (titleEle) {
       let oldBrc = titleEle.querySelector('#breadCrumb');
@@ -759,5 +797,46 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     }
     this.idSubCrr = data.recID;
     // this.codxService.navigate('', url +`/${data.recID}`);
+  }
+
+  //load menu Child
+  loadMenuChild() {
+    this.requestMenuCustom.predicates = 'ApplyFor!=@0 && !Deleted';
+    this.requestMenuCustom.dataValues = '0';
+    this.requestMenuCustom.entityName = 'DP_Processes';
+    this.fetch().subscribe((item) => {
+      this.dataMenuChildCustom = item;
+    });
+  }
+
+  clickMenuChildCustom(funcID, data) {
+    this.childMenuClick.emit({ recID: data.recID });
+    this.codxService.activeMenu.func1 = data.recID;
+    this.codxService.activeMenu.fav = null;
+    this.isClickMenuCus = true;
+
+    let url = 'cm/processrelease/CM0201';
+
+    // let funcParent = '';
+    // switch (funcID) {
+    //   case 'CM02':
+    //     url = 'cm/processrelease/' + data.recID;
+    //     funcParent = 'CM0201';
+    //     break;
+    //   case 'CM04':
+    //     url = 'cm/processrelease/CM041';
+    //     if (data.applyFor == '2') funcParent = 'CM0401';
+    //     else if (data.applyFor == '3') funcParent = 'CM0402';
+    //     // if (data.applyFor == '2') url = 'cm/processrelease/CM0401';
+    //     // else if (data.applyFor == '3') url = 'cm/processrelease/CM0402';
+    //     break;
+    // }
+    // let urlRedirect = '/' + UrlUtil.getTenant();
+    // if (url && url.charAt(0) != '/') urlRedirect += '/';
+    // urlRedirect += url;
+    // this.router.navigate([urlRedirect], {
+    //   queryParams: { funcParent : funcParent ,recID: data.recID },
+    // });
+    this.codxService.navigate('', url + `/${data.recID}`);
   }
 }

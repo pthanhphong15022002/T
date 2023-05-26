@@ -27,6 +27,7 @@
                   <codx-img
                     [funcId]="funcID"
                     [objectId]="employeeID"
+                    [objectName]="infoPersonal?.employeeName"
                     [objectType]="'HR_Employees'"
                     [referType]="'avt'"
                     [imageType]="'circle'"
@@ -1059,15 +1060,16 @@
                   </div>
                 </div>
                 <div class="col-4">
-                  <span
-                    class=""
-                  ></span>
-                  <codx-label fiedName="Phone" [formModel]="eInfoFormModel">
-                  </codx-label>
-                  </div>
-                  <div class="fw-bold text-dark ms-7">
+                  <div class="text-gray-600 pb-1 d-flex">
                     <span
-                      #phone
+                      class=""
+                    ></span>
+                    <codx-label fiedName="Phone" [formModel]="eInfoFormModel">
+                    </codx-label>
+                  </div>
+                  <div>
+                    <span
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         infoPersonal?.phone
                           | formatvalue : eInfoFormModel : 'phone'
@@ -1075,6 +1077,7 @@
                       "
                     ></span>
                   </div>
+                </div>
                 </div>
               </div>
               <!-- Email cá nhân/ Điện thoại cá nhân -->
@@ -1106,7 +1109,7 @@
                     <codx-label fiedName="Mobile" [formModel]="eInfoFormModel">
                     </codx-label>
                   </div>
-                  <div class="ms-7">
+                  <div>
                     <span
                       class="fw-bold text-dark"
                       [innerHTML]="
@@ -3632,7 +3635,7 @@
                 <span class="text-gray-500">({{ eJobSalaryRowCount }})</span>
               </div>
             </div>
-            <div class="profile-grid">
+            <div>
               <codx-gridview
                 *ngIf="jobSalaryColumnGrid && eJobSalaryFormModel"
                 #jobSalaryGridview
@@ -3645,7 +3648,6 @@
                 [predicates]="'EmployeeID=@0'"
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
-                [rowHeight]="40"
                 height="auto"
               ></codx-gridview>
             </div>
@@ -4069,7 +4071,7 @@
             </div>
           </div>
           <div class="mb-1 mt-5">
-            <div class="profile-grid" *ngIf="reRenderGrid == true">
+            <div *ngIf="reRenderGrid == true">
               <codx-gridview
                 *ngIf="appointionColumnGrid"
                 #appointionGridView
@@ -4083,7 +4085,6 @@
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_EAppointions'"
-                height="auto"
                 [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
@@ -4230,7 +4231,7 @@
             </div>
           </div>
           <div class="mb-1 mt-5">
-            <div class="profile-grid">
+            <div>
               <codx-gridview
                 *ngIf="businessTravelColumnGrid"
                 #businessTravelGrid
@@ -4245,7 +4246,6 @@
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_EBusinessTravels'"
-                height="auto"
                 [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
@@ -4372,7 +4372,7 @@
           </div>
 
           <div class="mb-1 mt-5">
-            <div class="profile-grid">
+            <div>
               <codx-gridview
                 *ngIf="eDisciplineColumnsGrid && eDisciplineFormModel"
                 #eDisciplineGridView
@@ -4387,7 +4387,6 @@
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_EDisciplines'"
-                height="auto"
                 [emptyTemplate]="emptyDataTemplate"
               >
               </codx-gridview>
@@ -4522,7 +4521,7 @@
                   </ng-container>
                 </div>
               </div> -->
-            <div class="profile-grid">
+            <div>
               <codx-gridview
                 *ngIf="eDegreeColumnsGrid && eDegreeFormModel"
                 #eDegreeGridView
@@ -4635,7 +4634,7 @@
                 </div>
               </div> -->
 
-            <div class="profile-grid">
+            <div>
               <codx-gridview
                 *ngIf="eCertificateColumnGrid"
                 #eCertificateGridView
@@ -4650,7 +4649,6 @@
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_ECertificates'"
-                height="auto"
                 [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
@@ -4904,7 +4902,7 @@
           </div>
 
           <div class="mb-1 mt-5">
-            <div class="profile-grid">
+            <div>
               <codx-gridview
                 *ngIf="eTrainCourseColumnGrid && eTrainCourseFormModel"
                 #eTrainCourseGridView
@@ -4919,7 +4917,6 @@
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_ETrainCourses'"
-                height="auto"
                 [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
             </div>
@@ -5179,7 +5176,7 @@
             </div>
           </div>
           <div class="mb-1 mt-6">
-            <div class="profile-grid">
+            <div>
               <codx-gridview
                 *ngIf="eHealthColumnGrid"
                 #eHealthsGridView
@@ -5193,7 +5190,6 @@
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_EHealths'"
-                height="auto"
                 [sort]="[healthDateSortModel]"
                 [emptyTemplate]="emptyDataTemplate"
               ></codx-gridview>
@@ -6682,29 +6678,28 @@
       <span class="text-dark">
         {{ data?.awardDate | fmDT }}
       </span>
-      <i
+      <!-- <i
         class="icon-i-circle-fill icon-circle-group icon-10 text-gray-400 mx-2"
       ></i>
-      <!-- <i class="icon-year icon-16 me-2"></i> -->
       <span
         class="text-dark"
         [innerHTML]="
           data?.inYear | formatvalue : awardFormModel : 'inYear' | async
         "
-      ></span>
+      ></span> -->
     </div>
     <div class="d-flex align-items-center">
       <i class="icon-library_books icon-16 me-2"></i>
       <span class="text-dark">
         {{ data?.decisionNo }}
       </span>
-      <i
+      <!-- <i
         class="icon-i-circle-fill icon-circle-group icon-10 text-gray-400 mx-2"
       ></i>
 
       <span class="text-dark">
         {{ data?.signedDate | fmDT }}
-      </span>
+      </span> -->
     </div>
   </div>
   <!-- <div>
@@ -7584,3 +7579,93 @@
   </lib-popup-viewall-benefit>
 </ng-template>
  -->
+
+ <ng-template #headTempDayOff1>
+  <codx-label
+  [formModel]="dayoffFormModel"
+  [name]="'lblDayOffGridCol1'"
+  default="Loại nghỉ"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDayOff2>
+  <codx-label
+  [formModel]="dayoffFormModel"
+  [name]="'lblDayOffGridCol2'"
+  default="Thời gian nghỉ"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDayOff3>
+  <codx-label
+  [formModel]="dayoffFormModel"
+  [name]="'lblDayOffGridCol3'"
+  default="Lý do nghỉ"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempBusinessTravel1>
+  <codx-label
+  [formModel]="EBusinessTravelFormodel"
+  [name]="'lblBusinessTravelGridCol1'"
+  default="Nơi đến công tác"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempBusinessTravel2>
+  <codx-label
+  [formModel]="EBusinessTravelFormodel"
+  [name]="'lblBusinessTravelGridCol2'"
+  default="Thời gian công tác"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempBusinessTravel3>
+  <codx-label
+  [formModel]="EBusinessTravelFormodel"
+  [name]="'lblBusinessTravelGridCol3'"
+  default="Mục đích công tác"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempAppointion1>
+  <codx-label
+  [formModel]="EBusinessTravelFormodel"
+  [name]="'lblAppointionGridCol1'"
+  default="Loại quyết định"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempAppointion2>
+  <codx-label
+  [formModel]="EBusinessTravelFormodel"
+  [name]="'lblAppointionGridCol2'"
+  default="Chức danh"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempAppointion3>
+  <codx-label
+  [formModel]="EBusinessTravelFormodel"
+  [name]="'lblAppointionGridCol3'"
+  default="Phòng ban"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>

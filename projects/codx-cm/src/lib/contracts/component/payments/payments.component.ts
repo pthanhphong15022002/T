@@ -43,6 +43,8 @@ export class PaymentsComponent  implements OnInit {
 
     }
   }
+
+  getPaymentBy
   valueChangeText(event) {
     try {
       this.payment[event?.field] = event?.data;

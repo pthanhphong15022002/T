@@ -154,13 +154,12 @@
     [imageWidth]="35"
     imgCss="me-4"
     [imageObjType]="'CM_Customers'"
-
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
-    [title]="data.dealName"
+    [title]="data?.customerName"
     [descTmp]="descTmp"
     [body]="footer"
     [formModel]="view.formModel"
@@ -173,16 +172,16 @@
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column w-100">
     <div class="d-flex align-items-center justify-content-start mb-1">
-      <i class="icon-business icon-16 me-2"></i>
+      <i class="icon-subtitles icon-16 me-2"></i>
       <span
         class="text-gray-700"
-        #customerID
+        #dealName
         [innerHTML]="
-          data?.customerID
+          data?.dealName
             | formatvalue
               : formModel
-              : 'customerID'
-              : customerID
+              : 'dealName'
+              : dealName
               : 'CMDeals'
               : 'grvCMDeals'
             | async
@@ -315,6 +314,8 @@
     [formModel]="view.formModel"
     [dataSelected]="dataSelected"
     [funcID]="funcID"
+    [colorReasonSuccess]="colorReasonSuccess"
+    [colorReasonFail]="colorReasonFail"
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
   >

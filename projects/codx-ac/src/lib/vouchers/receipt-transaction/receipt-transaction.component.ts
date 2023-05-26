@@ -38,6 +38,10 @@ export class ReceiptTransactionComponent extends UIComponent{
   pageSize = 5;
   lsVatCode: any;
   gridViewLines: any;
+  entityName: any;
+  funcID: any ;
+  vllReceipt: any = 'AC116';
+  vllIssue: any = 'AC117';
   fmInventoryJournalLines: FormModel = {
     formName: 'InventoryJournalLines',
     gridViewName: 'grvInventoryJournalLines',
@@ -66,6 +70,20 @@ export class ReceiptTransactionComponent extends UIComponent{
     this.routerActive.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
     });
+    this.funcID = this.routerActive.snapshot.params['funcID'];
+    switch(this.funcID)
+    {
+      case 'ACT0708':
+        this.cache.valueList(this.vllReceipt).subscribe((res) => {
+          this.entityName = res?.datas[0].value;
+        })
+        break;
+      case 'ACT0714':
+        this.cache.valueList(this.vllIssue).subscribe((res) => {
+          this.entityName = res?.datas[0].value;
+        })
+        break;
+    }
     this.cache
       .gridViewSetup('InventoryJournalLines', 'grvInventoryJournalLines')
       .subscribe((res) => {
@@ -150,6 +168,7 @@ export class ReceiptTransactionComponent extends UIComponent{
         var obj = {
           formType: 'add',
           headerText: this.headerText,
+          entityMaster: this.entityName,
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -173,6 +192,7 @@ export class ReceiptTransactionComponent extends UIComponent{
         var obj = {
           formType: 'edit',
           headerText: this.funcName,
+          entityMaster: this.entityName,
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -204,6 +224,7 @@ export class ReceiptTransactionComponent extends UIComponent{
         var obj = {
           formType: 'copy',
           headerText: this.funcName,
+          entityMaster: this.entityName,
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;

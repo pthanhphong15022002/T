@@ -1057,7 +1057,7 @@ export class InstancesComponent
         500,
         280,
         '',
-        [this.lstOrg, this.titleAction, data],
+        [this.lstOrg, this.titleAction, data,'0'],
         '',
         dialogModel
       );

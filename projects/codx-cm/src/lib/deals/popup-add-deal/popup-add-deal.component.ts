@@ -36,6 +36,8 @@ export class PopupAddDealComponent
   // view child
   @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
   @ViewChild('tabCustomFieldDetail') tabCustomFieldDetail: TemplateRef<any>;
+  @ViewChild('tabGeneralContactDetail') tabGeneralContactDetail: TemplateRef<any>;
+
 
   // setting values in system
   dialog: DialogRef;
@@ -85,10 +87,18 @@ export class PopupAddDealComponent
 
   menuInputInfo = {
     icon: 'icon-reorder',
-    text: 'Thông tin nhập liệu',
+    text: 'Thông tin mở rộng',
     name: 'InputInfo',
     subName: 'Input information',
     subText: 'Input information',
+  };
+
+  menuGeneralContact = {
+    icon: 'icon-reorder',
+    text: 'Người liên hệ',
+    name: 'GeneralContact',
+    subName: 'General contact',
+    subText: 'General contact',
   };
 
   //type any
@@ -243,6 +253,7 @@ export class PopupAddDealComponent
             this.action,
             null
           );
+          this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
           this.changeDetectorRef.detectChanges();
         } else {
           this.getListInstanceSteps($event);
@@ -296,6 +307,11 @@ export class PopupAddDealComponent
       this.deal.owner = this.owner;
     }
   }
+  valueChangeBusinessLine($event){
+    if ($event != null) {
+      this.deal.businessLineID = $event.data;
+    }
+  }
   onAdd() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
@@ -325,8 +341,8 @@ export class PopupAddDealComponent
   }
 
   ngAfterViewInit(): void {
-    this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo];
-    this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];
+    this.tabInfo = [this.menuGeneralInfo,this.menuGeneralContact];
+    this.tabContent = [this.tabGeneralInfoDetail,this.tabGeneralContactDetail, this.tabCustomFieldDetail];
   }
   async executeApiCalls() {
     try {
@@ -390,6 +406,7 @@ export class PopupAddDealComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
+        this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = obj.permissions;
         if (this.action === this.actionEdit) {
           this.owner = this.deal.owner;
@@ -559,6 +576,29 @@ export class PopupAddDealComponent
     return this.gridViewSetup[field]?.h;
   }
 
+  ischeckFields(steps:any): boolean{
+   if(steps?.length > 0 && steps != null) {
+     for(let i = 0; i < steps.length;i++) {
+      if(steps[i]?.fields.length > 0 && steps[i].fields != null) {
+        return true;
+      }
+     }
+   }
+   return false;
+  }
+
+  removeItemInTab(isRemove:boolean):void {
+    if(isRemove){
+      if(this.tabInfo.findIndex(x=> x == this.menuInputInfo) == -1) {
+        this.tabInfo.push(this.menuInputInfo);
+      }
+    }
+    else {
+      if(this.tabInfo.findIndex(x=> x == this.menuInputInfo) != -1) {
+        this.tabInfo.pop();
+      }
+    }
+  }
   setTitle(e: any) {
     // if (this.autoName) {
     //   this.title = this.titleAction + ' ' + this.autoName;
