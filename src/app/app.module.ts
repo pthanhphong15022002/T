@@ -28,7 +28,6 @@ import { CoreModule } from 'src/core/core.module';
 import { TMModule } from 'projects/codx-tm/src/public-api';
 import { CodxEsModule } from 'projects/codx-es/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { FileComponent } from './file/file.component';
 import { AppConfigService } from '@core/services/config/app-config.service';
 import { AppConfig } from '@core/services/config/app-config';
@@ -108,9 +107,9 @@ function appInitializer(authService: AuthService, appConfig: AppConfigService) {
   return () => {
     return new Promise((resolve) => {
       appConfig.load().subscribe((res) => {
-        // authService.getUserByToken().subscribe((v) => {
-           resolve(true);
-        // });
+        authService.checkTenant().subscribe((v) => {
+      resolve(true);
+      });
       });
     });
   };
