@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  HostListener,
   Injector,
   Optional,
   TemplateRef,
@@ -29,7 +30,6 @@ import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { SettledInvoices } from '../../models/SettledInvoices.model';
 import { map } from 'rxjs';
-
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',

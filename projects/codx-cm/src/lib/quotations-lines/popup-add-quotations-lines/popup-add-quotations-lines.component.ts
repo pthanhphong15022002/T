@@ -149,15 +149,12 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
       this.quotationsLine.idiM3 = null;
       this.quotationsLine.idiM4 = null;
 
-      //       8	ItemNote	String	500	1						1					Ghi chú mặt hàng	Riêng của mặt hàng (từ products)	Ghi chú mặt hàng		No UI
-      // 9	IDIM0	String	30	1						1					Quy cách đóng gói		Quy cách đóng gói		No UI
-      // 10	IDIM1	String	30	1						1					Thuộc tính		Thuộc tính		No UI
-      // 11	IDIM2	String	30	1						1					Màu sắc		Màu sắc		x
-      // 12	IDIM3	String	30	1						1					Quy cách		Quy cách		x
-      // 13	IDIM4	String	30	1						1					Kho		Kho		No UI
-      // 14	CostPrice	decimal	50	0						1					Giá vốn		Giá vốn		No UI
-      // 15	UMID	String	20	0						1					Đơn vị tính		Đơn vị tính		x
-
+      this.quotationsLine['salesAmt'] = 0;
+      this.quotationsLine['salesPrice'] = 0;
+      this.quotationsLine['vatAmt'] = 0;
+      this.quotationsLine['discPct'] = 0;
+      this.quotationsLine['discAmt'] = 0;
+      this.quotationsLine['vatBase'] = 0;
       this.form.formGroup.patchValue(this.quotationsLine);
     });
   }

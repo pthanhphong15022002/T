@@ -273,7 +273,7 @@ export class AppropvalNewsComponent extends UIComponent {
     if(data.category == "1" || data.category == "3" || data.category == "4" )
       return data.content;
     else if(data.category == "companyinfo")
-      return data.contents;
+      return data.contents.replace(/<[^>]*>/g, "");
     else
       return data.subject;
   }

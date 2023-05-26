@@ -24,12 +24,6 @@
 
 <ng-template #body>
   <ng-container
-    *ngIf="type == 'pay'"
-    [ngTemplateOutlet]="payTemplate"
-    [ngTemplateOutletContext]="{}"
-  ></ng-container>
-  <ng-container
-    *ngIf="type == 'payHistory'"
     [ngTemplateOutlet]="payHistoryTemplate"
     [ngTemplateOutletContext]="{}"
   ></ng-container>
@@ -54,92 +48,6 @@
   </div>
 </ng-template>
 
-<ng-template #payTemplate>
-  <div>
-    <div class="row form-group">
-      <div class="" style="width: 10%">
-        <div>
-          <codx-label
-            [formModel]="dialog.formModel"
-            fiedName="rowNo"
-            default="STT"
-          ></codx-label>
-        </div>
-        <div class="">
-          <codx-input
-            [formModel]="dialog.formModel"
-            field="rowNo"
-            type="number"
-            [format]=""
-            [min]="0"
-            [crrValue]="payment?.rowNo"
-            (valueChange)="valueChangeText($event)"
-            [disabled]="true"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="" style="width: 45%">
-        <div>
-          <codx-label
-            [formModel]="dialog.formModel"
-            fiedName="scheduleDate"
-            default="Ngày hẹn thanh toán"
-          ></codx-label>
-        </div>
-        <div class="">
-          <codx-input
-            field="scheduleDate"
-            type="datetime"
-            [crrValue]="payment?.scheduleDate"
-            (valueChange)="changeValueDate($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="" style="width: 45%">
-        <div>
-          <codx-label
-            [formModel]="dialog.formModel"
-            fiedName="scheduleAmt"
-            default="Số tiền thanh toán"
-          ></codx-label>
-        </div>
-        <div class="">
-          <codx-input
-            [formModel]="dialog.formModel"
-            field="scheduleAmt"
-            type="number"
-            [min]="0"
-            [crrValue]="payment?.scheduleAmt"
-            (valueChange)="valueChangeText($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row form-group">
-      <div>
-        <codx-label
-          [formModel]="dialog.formModel"
-          fiedName="memo"
-          default="Ghi chú"
-        ></codx-label>
-      </div>
-      <div class="">
-        <codx-input
-          [formModel]="dialog.formModel"
-          field="memo"
-          type="text"
-          [min]="0"
-          [crrValue]="payment?.memo"
-          (valueChange)="valueChangeText($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
-  </div>
-</ng-template>
 <ng-template #payHistoryTemplate>
   <div>
     <div class="row form-group">

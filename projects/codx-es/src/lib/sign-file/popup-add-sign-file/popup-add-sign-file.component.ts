@@ -98,6 +98,8 @@ export class PopupAddSignFileComponent implements OnInit {
 
   cbxCategory: string;
   cbbProcess=[];
+  listCategory=[];
+  curCategory: any;
 
   constructor(
     private auth: AuthStore,
@@ -118,7 +120,7 @@ export class PopupAddSignFileComponent implements OnInit {
     1: view
     */
     this.formModelCustom = data?.data?.formModel;
-    this.data = data?.data?.option?.DataService.dataSelected || {};
+    this.data = data?.data?.option?.DataService?.dataSelected ?? data?.data?.data ?? {};
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
     this.oSignFile = data?.data?.oSignFile;
@@ -139,7 +141,7 @@ export class PopupAddSignFileComponent implements OnInit {
     if (this.type == 'copy') {
       // copy -> upload lại file
 
-      this.data = data?.data.dataSelected;
+      this.data = data?.data?.dataSelected;
     } else if (this.oSignFile) {
       this.currentTab = 0;
       this.processTab = 0;
@@ -160,6 +162,11 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.esService.getAllCategory().subscribe((res:any)=>{
+      if(res){
+        this.listCategory=res;
+      }
+    })
     //Lấy quy trình mẫu cũ
     if(this.data?.processID && this.data?.approveControl=='2'){
       this.esService.getTemplateByProcess(this.data?.processID).subscribe((res:any)=>{
@@ -183,7 +190,7 @@ export class PopupAddSignFileComponent implements OnInit {
           });
 
         let sf = this.esService
-          .getSFByID(this.oSignFile.recID)
+          .getSFByID(this.oSignFile?.recID)
           .subscribe((signFile) => {
             if (
               signFile &&
@@ -191,15 +198,15 @@ export class PopupAddSignFileComponent implements OnInit {
                 signFile?.signFile?.approveStatus == '2')
             ) {
               this.data = signFile?.signFile;
-              this.data.recID = this.oSignFile.recID;
-              this.data.title = this.oSignFile.title;
-              this.data.categoryID = this.oSignFile.categoryID;
-              this.data.files = this.oSignFile.files;
-              this.data.refId = this.oSignFile.refId;
-              this.data.refType = this.oSignFile.refType;
-              this.data.refDate = this.oSignFile.refDate;
-              this.data.refNo = this.oSignFile.refNo;
-              this.data.priority = this.oSignFile.priority;
+              this.data.recID = this.oSignFile?.recID;
+              this.data.title = this.oSignFile?.title;
+              this.data.categoryID = this.oSignFile?.categoryID;
+              this.data.files = this.oSignFile?.files;
+              this.data.refId = this.oSignFile?.refId;
+              this.data.refType = this.oSignFile?.refType;
+              this.data.refDate = this.oSignFile?.refDate;
+              this.data.refNo = this.oSignFile?.refNo;
+              this.data.priority = this.oSignFile?.priority;
 
               this.isSaved = true;
               this.isAddNew = false;
@@ -395,7 +402,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.isAfterRender = true;
               this.cr.detectChanges();
               if (this.oSignFile) {
-                if (this.data.files.length == 1) {
+                if (this.data?.files && this.data?.files.length == 1) {
                   let title = JSON.parse(
                     JSON.stringify(this.data.files[0].fileName)
                   );
@@ -534,6 +541,7 @@ export class PopupAddSignFileComponent implements OnInit {
                 //open popup confirm
                 let oldValue = JSON.parse(JSON.stringify(this.data.categoryID));
                 let category = event.component?.itemsSelected[0];
+                this.getCurrentCate(event?.data);
                 if (x.event?.status == 'Y') {
                   this.esService
                     .getAutoNumberByCategory(category?.AutoNumber)
@@ -542,7 +550,7 @@ export class PopupAddSignFileComponent implements OnInit {
                       this.dialogSignFile.patchValue({
                         categoryID: this.data.categoryID,
                       });
-                      if (autoNum != null) {
+                      if (autoNum != null && this.curCategory?.autoNumberControl=='1') {
                         this.data.refNo = autoNum;
                       } else if (this.autoNo) {
                         this.data.refNo = this.autoNo;
@@ -594,15 +602,15 @@ export class PopupAddSignFileComponent implements OnInit {
               });
               //get info of category
               let category = event.component?.itemsSelected[0];
+              this.getCurrentCate(event?.data);
               this.esService
                 .getAutoNumberByCategory(category?.AutoNumber)
                 .subscribe((autoNum) => {
-                  if (autoNum != null) {
+                  if (autoNum != null && this.curCategory?.autoNumberControl=='1') {
                     this.data.refNo = autoNum;
                   } else if (this.autoNo) {
                     this.data.refNo = this.autoNo;
                   }
-
                   this.dialogSignFile.patchValue({
                     approveControl: '3',
                   });
@@ -685,6 +693,23 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
+  getCurrentCate(cateID:string){
+    if(cateID!=null && cateID!=''){
+      let cate = this.listCategory.filter((item) => item.categoryID == cateID);
+      if(cate?.length>0){
+        this.curCategory = cate[0];
+      }
+      else{
+        this.esService
+        .getCategoryByCateID(this.data?.categoryID)
+        .subscribe((cate) => {
+          if (cate) {
+            this.curCategory = cate?.signatureType;
+          }
+        });
+      }
+    }
+  }
   getCurrentStepWhenEdit(oSignFile) {
     if ((oSignFile || oSignFile != null) && this.isAddNew == false) {
       if (oSignFile.files?.length > 0) {
@@ -968,14 +993,7 @@ export class PopupAddSignFileComponent implements OnInit {
                   this.updateNodeStatus(oldNode, newNode);
                   this.currentTab++;
                   this.processTab == 0 && this.processTab++;
-                  //Save signFile
-                  if (this.isAddNew) {
-        
-                  } else {
-                    this.updateNodeStatus(oldNode, newNode);
-                    this.processTab == 1 && this.processTab++;
-                    this.currentTab++;
-                  }
+                  
                 }
               }
             );

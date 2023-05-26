@@ -8,6 +8,7 @@
           *ngIf="codxService.asideDisplay"
           (menuClick)="menuClick($event)"
           (childMenuClick)="childMenuClick($event)"
+          [hasSecond]="true"
         ></codx-aside>
 
         <div class="wrapper d-flex flex-column flex-row-fluid">
