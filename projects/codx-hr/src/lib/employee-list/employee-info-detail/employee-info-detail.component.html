@@ -2282,18 +2282,18 @@
                       <div class="me-3 timeline-exper-node">
                         <span class="icon-fiber_manual_record text-gray-600"></span>
                       </div>
-                      <div class="stepper-label">
+                      <div class="stepper-label has-action-menu ">
                         <div class="stepper-title fs-5-sm fw-bold line-clamp line-clamp-3 mb-1">
                           <i class="icon-business"></i>
                           {{item?.companyName}}
                         </div>
-                        <div class="stepper-desc text-gray-500">
+                        <div class="stepper-desc text-gray-500 ">
                           {{item?.position}}
                         </div>
 
-                        <codx-mfunc *ngIf="!lstExperiences" [formModel]="eExperienceFormModel" (clickMF)="clickMF($event, item, 'eExperiences')"
-                          type="hover" [dataItem]="item">
-                        </codx-mfunc>
+                        <codx-mfunc [formModel]="eExperienceFormModel" (clickMF)="clickMF($event, item, 'eExperiences')"
+                        type="hover" [dataItem]="item">
+                      </codx-mfunc>
                       </div>
                     </div>
                     <!-- <div class="timeline-content mx-auto">
@@ -7663,6 +7663,284 @@
   [formModel]="EBusinessTravelFormodel"
   [name]="'lblAppointionGridCol3'"
   default="Phòng ban"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDegree1>
+  <codx-label
+  [formModel]="eDegreeFormModel"
+  [name]="'lblDegreeGridCol1'"
+  [default]="eDegreeHeaderText['DegreeName'] +' | ' +
+              eDegreeHeaderText['TrainFieldID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDegree2>
+  <codx-label
+  [formModel]="eDegreeFormModel"
+  [name]="'lblDegreeGridCol2'"
+  [default]="eDegreeHeaderText['TrainSupplierID'] + ' | ' +
+              eDegreeHeaderText['Ranking']"
+  default="Nơi đào tạo | Xếp loại tốt nghiệp"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDegree3>
+  <codx-label
+  [formModel]="eDegreeFormModel"
+  [default] ="eDegreeHeaderText['YearGraduated'] + ' | ' +
+              eDegreeHeaderText['IssuedDate']"
+  [name]="'lblDegreeGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempCertificate1>
+  <codx-label
+  [formModel]="eCertificateFormModel"
+  [name]="'lblCertificateGridCol1'"
+  [default]="eCertificateHeaderText['CertificateID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempCertificate2>
+  <codx-label
+  [formModel]="eCertificateFormModel"
+  [name]="'lblCertificateGridCol2'"
+  [default]="eCertificateHeaderText['TrainSupplierID'] +
+              ' | ' +
+              eCertificateHeaderText['Ranking']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempCertificate3>
+  <codx-label
+  [formModel]="eCertificateFormModel"
+  [default] ="eCertificateHeaderText['IssuedDate'] +
+              ' | ' +
+              eCertificateHeaderText['EffectedDate']"
+  [name]="'lblCertificateGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempSkill1>
+  <codx-label
+  [formModel]="eSkillFormmodel"
+  [name]="'lblSkillGridCol1'"
+  [default]="eSkillHeaderText['SkillID'] +
+  ' | ' +
+  eSkillHeaderText['SkillGradeID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempSkill2>
+  <codx-label
+  [formModel]="eSkillFormmodel"
+  [name]="'lblSkillGridCol2'"
+  [default]="eSkillHeaderText['TrainSupplierID'] +
+  ' | ' +
+  eSkillHeaderText['Ranking'] +
+  ' - ' +
+  eSkillHeaderText['TotalScore']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempSkill3>
+  <codx-label
+  [formModel]="eSkillFormmodel"
+  [default] ="eSkillHeaderText['TrainFrom'] +
+  ' | ' +
+  eSkillHeaderText['TrainForm']"
+  [name]="'lblSkillGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempTrainCourse1>
+  <codx-label
+  [formModel]="eTrainCourseFormModel"
+  [name]="'lblTrainCourseGridCol1'"
+  [default]="eTrainCourseHeaderText['TrainCourseID'] +
+  ' | ' +
+  eTrainCourseHeaderText['TrainForm']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempTrainCourse2>
+  <codx-label
+  [formModel]="eTrainCourseFormModel"
+  [name]="'lblTrainCourseGridCol2'"
+  [default]="eTrainCourseHeaderText['TrainFrom'] +
+  ' | ' +
+  eTrainCourseHeaderText['InYear']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempTrainCourse3>
+  <codx-label
+  [formModel]="eTrainCourseFormModel"
+  [default] ="eTrainCourseHeaderText['TrainSupplierID'] +
+  ' | ' +
+  eTrainCourseHeaderText['Result']"
+  [name]="'lblTrainCourseGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempAccident1>
+  <codx-label
+  [formModel]="eAccidentsFormModel"
+  [name]="'lblAccidentGridCol1'"
+  [default]="eAccidentHeaderText['AccidentID'] +
+  ' | ' +
+  eAccidentHeaderText['AccidentDate']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempAccident2>
+  <codx-label
+  [formModel]="eAccidentsFormModel"
+  [name]="'lblAccidentGridCol2'"
+  [default]="eAccidentHeaderText['AccidentPlace'] +
+  ' | ' +
+  eAccidentHeaderText['AccidentReasonID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempAccident3>
+  <codx-label
+  [formModel]="eAccidentsFormModel"
+  [default] ="eAccidentHeaderText['AccidentLevel']"
+  [name]="'lblAccidentGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDiseases1>
+  <codx-label
+  [formModel]="eDiseasesFormModel"
+  [name]="'lblAccidentGridCol1'"
+  [default]="eDiseasesHeaderText['DiseaseID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDiseases2>
+  <codx-label
+  [formModel]="eDiseasesFormModel"
+  [name]="'lblAccidentGridCol2'"
+  [default]="'Thời gian điều trị' +
+  ' | ' +
+  eDiseasesHeaderText['TreatHopitalID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDiseases3>
+  <codx-label
+  [formModel]="eDiseasesFormModel"
+  [default] ="eDiseasesHeaderText['Conclusion']"
+  [name]="'lblAccidentGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempHealth1>
+  <codx-label
+  [formModel]="eHealthFormModel"
+  [name]="'lblHealthGridCol1'"
+  [default]="eHealthHeaderText['HealthDate'] +
+  ' | ' +
+  eHealthHeaderText['HealthPeriodID'] +
+  ' | ' +
+  eHealthHeaderText['HospitalID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempHealth2>
+  <codx-label
+  [formModel]="eHealthFormModel"
+  [name]="'lblHealthGridCol2'"
+  [default]="eHealthHeaderText['HealthType'] +
+  ' | ' +
+  eHealthHeaderText['FinalConclusion']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempHealth3>
+  <codx-label
+  [formModel]="eHealthFormModel"
+  [default] ="eHealthHeaderText['Suggestion']"
+  [name]="'lblHealthGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempVaccine1>
+  <codx-label
+  [formModel]="eVaccineFormModel"
+  [name]="'lblVaccineGridCol1'"
+  [default]="eVaccineHeaderText['VaccineTypeID'] +
+  ' | ' +
+  eVaccineHeaderText['HopitalID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempVaccine2>
+  <codx-label
+  [formModel]="eVaccineFormModel"
+  [name]="'lblVaccineGridCol2'"
+  [default]="eVaccineHeaderText['InjectDate'] +
+  ' | ' +
+  eVaccineHeaderText['NextInjectDate']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempVaccine3>
+  <codx-label
+  [formModel]="eVaccineFormModel"
+  [default] ="eVaccineHeaderText['Note']"
+  [name]="'lblVaccineGridCol3'"
   class="fw-bold fs-5-sm text-gray-600"
 >
 </codx-label>

@@ -221,6 +221,7 @@
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               [disabled]="disableCusID"
+              [crrValue]="quotations.customerID"
               (valueChange)="changeCombox($event)"
             ></codx-input>
           </div>
@@ -233,7 +234,8 @@
               field="contactID"
               [formModel]="form.formModel"
               [model]="modelObjectIDContacs"
-              (valueChange)="valueChange($event)"
+              [crrValue]="quotations.contactID"
+              (valueChange)="changeCombox($event)"
             ></codx-input>
           </div>
           <!-- xoa  [Group]="form.formGroup" de cbx nhan model de -->

@@ -265,7 +265,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.loadSubType2(false);
         if (this.gridCashPaymentLine) {
           this.gridCreated(this.gridCashPaymentLine);
-        }    
+        }
         break;
     }
   }
@@ -787,7 +787,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   popupCash(){
     var obj = {
-      
+
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -806,7 +806,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       opt
     );
   }
-  
+
   //#endregion
 
   //#region Method
@@ -1185,7 +1185,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
       });
   }
-//Viet tăt ten ctrl 3 ky tu vd: gridview -> grv;label ->lbl, 
+//Viet tăt ten ctrl 3 ky tu vd: gridview -> grv;label ->lbl,
   loadformSettledInvoices(type: number) {
     var obj = {
       cashpayment: this.cashpayment,
@@ -1321,7 +1321,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       } else {
         element.style.display = 'none';
       }
-    } 
+    }
   }
   loadSubType2(enable) {
     var element = document.querySelectorAll('.ac-type-2');
@@ -1335,7 +1335,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           (element[index] as HTMLElement).style.display = 'none';
         }
       }
-    } 
+    }
   }
   //#endregion
 }
