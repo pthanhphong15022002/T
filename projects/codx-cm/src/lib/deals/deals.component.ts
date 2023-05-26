@@ -164,8 +164,6 @@ export class DealsComponent
               kanban.kanbanSetting?.swimlaneSettings,
               false
             );
-         
-            kanban.load();
             kanban.refresh();
           });
       }
