@@ -130,7 +130,7 @@ export class CodxBookingViewDetailComponent
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.itemDetail) {
       this.loadedData=false;
-      if (this.viewMode == '1') {
+      if (this.viewMode == '1' && changes.itemDetail?.currentValue?.recID!=null) {
         this.codxEpService
           .getBookingByRecID(changes.itemDetail?.currentValue?.recID)
           .subscribe((res) => {
@@ -141,8 +141,7 @@ export class CodxBookingViewDetailComponent
               this.detectorRef.detectChanges();
             }
           });
-        this.detectorRef.detectChanges();
-      } else if (this.viewMode == '2') {
+      } else if (this.viewMode == '2' && changes.itemDetail?.currentValue?.approvalTransRecID!=null) {
         this.codxEpService
           .getApproveByRecID(
             changes.itemDetail?.currentValue?.approvalTransRecID
@@ -155,7 +154,6 @@ export class CodxBookingViewDetailComponent
               this.detectorRef.detectChanges();
             }
           });
-        this.detectorRef.detectChanges();
       }
     }
     this.setHeight();

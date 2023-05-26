@@ -62,16 +62,16 @@
   <div class="body body-addpost">
     
     <!-- addpost-scroll -->
-    <div class="">
+    <div class="w-100 h-100">
       <!-- contents -->
       <div class="wp-contents">
         <codx-input
-          [class]="'border-none border-toolbar'"
-          [copyStyle]="copyFormat"
-          [height]="heightInput"
           type="textarea"
           [crrValue]="data.contents"
           [placeholder]="mssgPlacehHolder"
+          [copyStyle]="copyFormat"
+          [class]="'border-none border-toolbar'"
+          className="min-h-100px"
           (valueChange)="valueChange($event)"
         >
         </codx-input>

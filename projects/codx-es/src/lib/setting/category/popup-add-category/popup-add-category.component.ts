@@ -16,6 +16,7 @@ import { DataItem } from '@shared/models/folder.model';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
+  AuthService,
   CacheService,
   CallFuncService,
   CodxFormComponent,
@@ -27,6 +28,7 @@ import {
   FormModel,
   NotificationsService,
   RequestOption,
+  SidebarModel,
 } from 'codx-core';
 import { CodxViewApprovalStepComponent } from 'projects/codx-share/src/lib/components/codx-view-approval-step/codx-view-approval-step.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
@@ -34,6 +36,8 @@ import { SettingAlertDrawerComponent } from 'projects/codx-share/src/lib/layout/
 import { CodxEsService, GridModels } from '../../../codx-es.service';
 //import { ApprovalStepComponent } from '../../approval-step/approval-step.component';
 import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-auto-number.component';
+import { PopupAddSignFileComponent } from '../../../sign-file/popup-add-sign-file/popup-add-sign-file.component';
+import { ES_SignFile } from '../../../codx-es.model';
 @Component({
   selector: 'popup-add-category',
   templateUrl: './popup-add-category.component.html',
@@ -79,6 +83,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   hasModuleES: boolean = false;
   dataType = ''; //Anh Thao thêm để lấy data khi không có dataService --sau nay nếu sửa thì báo anh Thảo với!! Thank - Huế ngày 14/04/2023
+  signFileFM: FormModel;
 
   constructor(
     private esService: CodxEsService,
@@ -86,6 +91,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     private cfService: CallFuncService,
     private cr: ChangeDetectorRef,
     private notify: NotificationsService,
+    private callfunc: CallFuncService,
+    private authService:AuthService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -136,6 +143,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.esService.getFormModel('EST011').then(res=>{
+      if(res){
+        this.signFileFM=res;
+      }
+    })
     let predicate = 'RefModule=@0 and FormName=@1';
     let dataValue = 'SYS;System';
     this.esService
@@ -239,7 +251,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       });
 
       //get Autonumber
-      this.esService.getAutoNumber(this.data.autoNumber).subscribe((res) => {
+      this.esService.getAutoNumber(this.data?.autoNumber).subscribe((res) => {
         if (res != null) {
           this.autoNumber = res;
           if (res.autoNoCode != null) {
@@ -256,9 +268,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     if (event?.field && event?.component) {
       let fieldName =
         event.field.charAt(0).toUpperCase() + event.field.slice(1);
-      switch (event?.field) {
-        case 'areaControl': {
-          this.data[event['field']] = event.data == true ? '1' : '0';
+      switch (event?.field) {        
+        case 'autoNumberControl': 
+        case 'areaControl': 
+        {
+          this.data[event['field']] = event?.data == true ? '1' : '0';
           this.form?.formGroup?.patchValue({
             [event['field']]: this.data[event['field']],
           });
@@ -426,7 +440,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         '',
         {
           formModel: this.dialog.formModel,
-          autoNoCode: this.data.autoNumber,
+          autoNoCode: this.data?.autoNumber,
           description: this.formModel?.entityName,
           newAutoNoCode: this.data.categoryID ?? this.data.recID,
           isSaveNew: '1',
@@ -450,7 +464,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         '',
         {
           formModel: this.dialog.formModel,
-          autoNoCode: this.data.categoryID,
+          autoNoCode: this.data?.autoNumber,
 
           description: this.formModel?.entityName,
         }
@@ -574,6 +588,36 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   closePopup() {
     this.dialog && this.dialog.close();
+  }
+
+  openPopupSignFile(){
+    let option = new SidebarModel();
+      option.Width = '800px';
+      //option.DataService = this.view?.dataService;
+      option.FormModel = this.signFileFM;
+      let signFile = new ES_SignFile();
+      signFile.title = this.data?.categoryName;
+      signFile.categoryID = this.data?.categoryID;
+      signFile.refType = this.formModel?.entityName;
+      signFile.owner = this.authService?.userValue?.userID;
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+      let dialogAdd = this.callfunc.openForm(
+        PopupAddSignFileComponent,
+        'Thêm mới',
+        700,
+        650,
+        this.signFileFM.funcID,
+        {
+          data:signFile,
+          isAddNew: true,
+          formModel: this.signFileFM,
+          option: option,
+          disableCateID:true,
+        },
+        '',
+        dialogModel
+      );
   }
 
   setViewAutoNumber(modelAutoNumber) {

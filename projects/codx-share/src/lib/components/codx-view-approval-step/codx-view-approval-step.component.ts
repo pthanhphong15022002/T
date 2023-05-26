@@ -44,9 +44,10 @@ export class CodxViewApprovalStepComponent
   gridViewSetup: any = {};
 
   positionDefault: string;
-
-  lstSttApproveStep = ['0', '1', '2', '6'];
+  showCanceled=false;
+  lstSttApproveStep = ['1'];
   process: any = [];
+  canceledProcess= [];
   // lstStep: any = [];
   constructor(
     private esService: CodxEsService,
@@ -99,17 +100,24 @@ export class CodxViewApprovalStepComponent
         }
         this.esService
           .getApprovalTransByTransID(this.transID)
-          .subscribe((res) => {
+          .subscribe((res :any) => {
             if (res) {
-              this.process = res;
+              this.process = res?.activedTran[0];
+              this.canceledProcess = res?.canceledTran;
               console.log(this.process)
+              console.log('canceled',this.canceledProcess)
               this.cr.detectChanges();
             }
           });
       }
     }
+  }  
+  showCanceledTrans(show:boolean){
+    if(show!=null){
+      this.showCanceled =!show;
+      this.cr.detectChanges();
+    }
   }
-
   ngOnInit(): void {
     this.fmApprovalTrans = new FormModel();
     this.esService.getFormModel('EST021').then((fm) => {
