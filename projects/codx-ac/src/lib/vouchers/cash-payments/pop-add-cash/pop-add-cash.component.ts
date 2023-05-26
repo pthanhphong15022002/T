@@ -257,7 +257,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         if (this.gridCashPaymentLine) {
           this.gridCreated(this.gridCashPaymentLine);
         }
-        
         break;
       default:
         ele.hideTab(0, true);
@@ -265,7 +264,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.settledInvoices = [];
         this.loadSubType1(true);
         this.loadSubType2(false);
-        this.gridCreated(this.gridCashPaymentLine);
+        if (this.gridCashPaymentLine) {
+          this.gridCreated(this.gridCashPaymentLine);
+        }    
         break;
     }
   }
