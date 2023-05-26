@@ -82,9 +82,9 @@ body.tailwind #selected {
   content: "\e190";
   vertical-align: middle;
   margin-right: 3px;
-  font-size: 4px;
+  font-size: 5px;
   position: relative;
-  top: -1px;
+  top: -2px;
   font-weight: normal;
 }
 
@@ -109,7 +109,7 @@ body.tailwind #selected {
 
 .e-customStyle span.e-icons.highlight,
 .e-customStyle span.e-icons.highlight:before {
-  color: rgb(0, 0, 255);
+  color: var(--primary);
 }
 
 /* custom generated icons styles */
@@ -143,12 +143,10 @@ body.tailwind #selected {
   position: fixed;
   width: 100px;
   height: 200px;
-  bottom: 0;
-  right: 0;
-  margin: 35px 25px;
+  bottom: 20px;
+  right: 20px;
 
   &:hover {
-    height: 300px;
 
     .floating-button {
       box-shadow: 0 10px 25px rgba(44, 179, 240, 0.6);
@@ -202,4 +200,8 @@ body.tailwind #selected {
       box-shadow: 0 20px 20px -10px rgba(66, 165, 245, 0.5);
     }
   }
+}
+
+.e-calendar .e-content.e-month td.e-today span.e-day {
+  box-shadow: inset 1px 0 var(--primary), inset 0 1px var(--primary), inset -1px 0 var(--primary-dark), inset 0 -1px var(--primary-dark);
 }

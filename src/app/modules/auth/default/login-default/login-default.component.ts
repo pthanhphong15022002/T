@@ -48,6 +48,8 @@ export class LoginDefaultComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() f: any;
   @Input() c: any;
   @Input() fl: any;
+  @Input() isNotADMode: boolean;
+
   @Output() submitEvent = new EventEmitter<string>();
   @Output() submitChangePassEvent = new EventEmitter();
   @Output() submitFirstLoginEvent = new EventEmitter();
@@ -69,6 +71,8 @@ export class LoginDefaultComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    console.log('isnot ad', this.isNotADMode);
+
     if (this.enableCaptcha == 0) {
       this.captChaValid = true;
     } else {

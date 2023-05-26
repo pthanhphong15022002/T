@@ -23,6 +23,7 @@ import {
   AuthService,
   AuthStore,
   CacheRouteReuseStrategy,
+  CacheService,
   ExtendUser,
   NotificationsService,
   TenantStore,
@@ -60,7 +61,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   mode: string = 'login'; // 'login' | 'firstLogin' | 'activeTenant' | 'changePass';
   user: any;
   layoutCZ: any;
-
+  sysSetting;
   // private fields
   unsubscribe: Subscription[] = [];
 
@@ -74,6 +75,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private routeActive: ActivatedRoute,
     private dt: ChangeDetectorRef,
     private auth: AuthStore,
+    private cache: CacheService,
     private readonly authService: AuthService,
     private readonly extendAuthService: SocialAuthService
   ) {
@@ -81,6 +83,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     const tenant = this.tenantStore.getName();
     CacheRouteReuseStrategy.clear();
 
+    this.cache.systemSetting().subscribe((res) => {
+      console.log('systemSet', res);
+      this.sysSetting = res;
+    });
     // redirect to home if already logged in
     this.routeActive.queryParams.subscribe((params) => {
       if (params.sk) {

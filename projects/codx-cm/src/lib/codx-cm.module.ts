@@ -53,7 +53,6 @@ import { CasesComponent } from './cases/cases.component';
 import { CaseDetailComponent } from './cases/case-detail/case-detail.component';
 import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.component';
 import { TabCaseDetailComponent } from './cases/case-detail/tab-case-detail/tab-case-detail.component';
-import { PaymentsComponent } from './contracts/component/payments/payments.component';
 import { CodxAddressCmComponent } from './cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
 import { LeadsComponent } from './leads/leads.component';
 import { PopupAddLeadComponent } from './leads/popup-add-lead/popup-add-lead.component';
@@ -66,7 +65,9 @@ import { CampaignsDetailComponent } from './campaigns/campaigns-detail/campaigns
 import { PopupConvertLeadComponent } from './leads/popup-convert-lead/popup-convert-lead.component';
 import { CodxAsideCustomComponent } from './_layout/codx-aside-custom/codx-aside-custom.component';
 import { ProcessReleaseComponent } from './process-release/process-release.component';
-import { PaymentHistoryComponent } from './contracts/component/payment-history/payment-history.component';
+import { PopupAddPaymentComponent } from './contracts/payment/popup-add-payment/popup-add-payment.component';
+import { PopupAddPaymentHistoryComponent } from './contracts/payment/popup-add-payment-history/popup-add-payment-history.component';
+import { PopupViewPaymentHistoryComponent } from './contracts/payment/popup-view-payment-history/popup-view-payment-history.component';
 import { PopupMergeLeadsComponent } from './leads/popup-merge-leads/popup-merge-leads.component';
 
 const routes: Routes = [
@@ -162,7 +163,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CaseDetailComponent,
     PopupAddCaseComponent,
     TabCaseDetailComponent,
-    PaymentsComponent,
     CodxAddressCmComponent,
     LeadsComponent,
     PopupAddLeadComponent,
@@ -176,7 +176,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     //test
     CodxAsideCustomComponent,
     ProcessReleaseComponent,
-    PaymentHistoryComponent,
+    PopupAddPaymentComponent,
+    PopupAddPaymentHistoryComponent,
+    PopupViewPaymentHistoryComponent,
     PopupMergeLeadsComponent,
   ],
   imports: [

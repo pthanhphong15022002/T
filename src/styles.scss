@@ -1818,6 +1818,17 @@ codx-dropdown-calendar {
   }
 }
 
+codx-calendar .e-tab{
+  .e-tab-header.e-vertical {
+    width: 130px !important;
+    max-width: 130px !important;
+  }
+  .e-tab-header.e-vertical:before {
+    border-color: var(--gray-200);
+    left: 135px;
+  }
+}
+
 
 // .codx-dropdown-sm {
 //   button.dropdown-toggle.btn {
@@ -2874,15 +2885,15 @@ codx-layout{
 }
 .toolbar{
   .e-control.e-inplaceeditor .e-editable-value-wrapper {
-    min-height: 26px;
+    min-height: 28px;
     padding: 3px 8px 3px 8px;
   }
   input.e-input {
-    height: 26px !important;
+    height: 28px !important;
    // line-height: 26px;
   }
   codx-dropdown-calendar .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
-    height: 26px !important;
+    height: 28px !important;
   }
 }
 a.layout-add-menuleft{
@@ -2939,7 +2950,7 @@ codx-vll.vll-post{
     border-radius: 4px 4px 0 0;
   }
   .card-body{
-    min-height: 50px!important;
+    min-height: 30px!important;
     font-weight: 500;
     padding-top: 10px!important;
   }
