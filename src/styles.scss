@@ -132,7 +132,11 @@ codx-view-list-detail {
   height: 6px;
   line-height: 6px;
 }
-
+.icon-4 {
+  font-size: 4px !important;
+  height: 4px;
+  line-height: 4px;
+}
 .e-multi-select-wrapper input[type="text"] {
   font-size: 13px;
 }
@@ -3014,5 +3018,6 @@ codx-toolbar-report{
 .e-grid .e-headercelldiv {
   margin-left: -5px;
 }
-
-
+.emp-check-add .btn.btn-flex{
+  text-align: left!important;
+}

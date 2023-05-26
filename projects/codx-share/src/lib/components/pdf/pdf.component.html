@@ -580,6 +580,7 @@
                                 'text-decoration-underline': isUnd
                               }"
                               [defaultValue]="area.labelValue"
+                              (keydown)="change($event, 'keydown')"
                             />
                           </div>
 

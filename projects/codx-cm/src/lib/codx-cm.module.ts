@@ -68,6 +68,7 @@ import { ProcessReleaseComponent } from './process-release/process-release.compo
 import { PopupAddPaymentComponent } from './contracts/payment/popup-add-payment/popup-add-payment.component';
 import { PopupAddPaymentHistoryComponent } from './contracts/payment/popup-add-payment-history/popup-add-payment-history.component';
 import { PopupViewPaymentHistoryComponent } from './contracts/payment/popup-view-payment-history/popup-view-payment-history.component';
+import { PopupMergeLeadsComponent } from './leads/popup-merge-leads/popup-merge-leads.component';
 
 const routes: Routes = [
   {
@@ -178,6 +179,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddPaymentComponent,
     PopupAddPaymentHistoryComponent,
     PopupViewPaymentHistoryComponent,
+    PopupMergeLeadsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

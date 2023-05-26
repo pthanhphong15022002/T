@@ -150,7 +150,8 @@ export class RoleEditComponent
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
-          this.dialog.close(res.msgBodyData[0]);
+          this.notificationsService.notifyCode('SYS006');
+          this.dialog.close(res.msgBodyData[0]); //SYS006
         } else {
           this.notificationsService.notifyCode('SYS020');
         }

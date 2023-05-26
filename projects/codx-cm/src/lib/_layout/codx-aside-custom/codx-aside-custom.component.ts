@@ -119,6 +119,8 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   //theem ngat 25 052023
   dataMenuChildCustom = [];
   activeDefault = '';
+  func0Default = '';
+  funcIDDefault = '';
 
   constructor(
     private pageTitle: PageTitleService,
@@ -136,7 +138,9 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     this.tenant = this.tenantStore.get()?.tenant;
     if (!this.tenant) this.tenant = UrlUtil.getTenant();
     this.codxCM.childMenuDefault.subscribe((res) => {
-      this.activeDefault = res;
+      this.activeDefault = res.activeDefault;
+      this.func0Default = res.func0Default;
+      this.funcIDDefault = res.funcIDDefault;
     });
     this.loadMenuChild();
   }
@@ -186,6 +190,8 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
             .shift();
 
           this.changDefector.detectChanges();
+          if (this.activeDefault)
+            this.codxService.activeMenu.func0 = this.func0Default;
           this.openSecondFunc(this.codxService.activeMenu.func0);
         });
 
@@ -195,12 +201,15 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
         if (d.funcId) {
           if (this.activeDefault) {
             this.codxService.activeMenu.id = this.activeDefault;
-          } else this.codxService.activeMenu.id = d.funcId;
+            this.openSecondFunc(this.funcIDDefault);
+          } else {
+            this.codxService.activeMenu.id = d.funcId;
+            this.codxService.funcID = d.funcId;
+            var func = this.getFunc(d.funcId);
+            if (func) func.expanded = false;
 
-          this.codxService.funcID = d.funcId;
-          var func = this.getFunc(d.funcId);
-          if (func) func.expanded = false;
-          this.openSecondFunc(d.funcId);
+            this.openSecondFunc(d.funcId);
+          }
         }
         if (this.activeDefault) this.codxService.activeMenu.fav = null;
         else if (d.favId) this.codxService.activeMenu.fav = d.favId;
@@ -470,7 +479,9 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
         if (this.codxService.asideKeepActive) {
           this.codxService.activeMenu.id = data.functionID;
           this.codxService.funcID = this.codxService.activeMenu.id;
-          this.codxService.activeMenu.func0 = data.functionID;
+          if (this.activeDefault) {
+            this.codxService.activeMenu.func0 = this.func0Default;
+          } else this.codxService.activeMenu.func0 = data.functionID;
         } else {
           this.resetActiveMenu();
         }
@@ -550,7 +561,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
           // });
         }
       }
-      this.activeDefault=''
+      this.activeDefault = '';
       this.codxService.navigate(func.functionID);
     }
     return true;
@@ -812,31 +823,34 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   clickMenuChildCustom(funcID, data) {
     this.childMenuClick.emit({ recID: data.recID });
     this.codxService.activeMenu.func1 = data.recID;
+
     this.codxService.activeMenu.fav = null;
     this.isClickMenuCus = true;
+    let url = 'cm/processrelease/';
 
-    let url = 'cm/processrelease/CM0201';
-
-    // let funcParent = '';
-    // switch (funcID) {
-    //   case 'CM02':
-    //     url = 'cm/processrelease/' + data.recID;
-    //     funcParent = 'CM0201';
-    //     break;
-    //   case 'CM04':
-    //     url = 'cm/processrelease/CM041';
-    //     if (data.applyFor == '2') funcParent = 'CM0401';
-    //     else if (data.applyFor == '3') funcParent = 'CM0402';
+    let funcParent = '';
+    switch (funcID) {
+      case 'CM02':
+        funcParent = 'CM0201';
+        this.codxService.activeMenu.func0 = 'CM02';
+        break;
+      case 'CM04':
+        this.codxService.activeMenu.func0 = 'CM04';
+        if (data.applyFor == '2') funcParent = 'CM0401';
+        else if (data.applyFor == '3') funcParent = 'CM0402';
+        break;
+    }
     //     // if (data.applyFor == '2') url = 'cm/processrelease/CM0401';
     //     // else if (data.applyFor == '3') url = 'cm/processrelease/CM0402';
     //     break;
     // }
+
     // let urlRedirect = '/' + UrlUtil.getTenant();
     // if (url && url.charAt(0) != '/') urlRedirect += '/';
     // urlRedirect += url;
     // this.router.navigate([urlRedirect], {
     //   queryParams: { funcParent : funcParent ,recID: data.recID },
     // });
-    this.codxService.navigate('', url + `/${data.recID}`);
+    this.codxService.navigate('', url + funcParent + `/${data.recID}`);
   }
 }
