@@ -259,9 +259,9 @@ export class AddContractsComponent implements OnInit{
     this.openPopupPay('add', 'payHistory', payMent);
   }
 
-  viewPayHistory(){
+  viewPayHistory(payment ,width: number, height: number){
     let dataInput = {
-     
+      payment,
     };
   
     let option = new DialogModel();
@@ -270,8 +270,8 @@ export class AddContractsComponent implements OnInit{
     option.FormModel = this.fmContractsPaymentsHistory;
     let popupPayHistory = this.callfunc.openForm(
       PaymentHistoryComponent,'',
-      600,
-      400,
+      width,
+      height,
       '',
       dataInput,
       '',
@@ -399,7 +399,7 @@ export class AddContractsComponent implements OnInit{
         // this.copyContract(data);
         break;
       case 'CM02041_1': //xem lịch sử
-      this.viewPayHistory();
+      this.viewPayHistory(data,1000,500);
         // this.copyContract(data);
         break;
       case 'CM02041_2': // thêm lịch sử
