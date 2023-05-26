@@ -15,6 +15,7 @@ import {
 } from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
 import { PopupExtendModuleComponent } from '../popup-extend-module/popup-extend-module.component';
+import { TN_OrderModule } from '../../models/tmpModule.model';
 
 @Component({
   selector: 'lib-popup-order-detail',
@@ -106,9 +107,52 @@ export class PopupOrderDetailComponent extends UIComponent {
   }
 
   extendOrder() {
+    let lstPModule: TN_OrderModule[] = [];
+    this.lstModule.forEach((md: any) => {
+      md.quantity = md.qty;
+      if (md.refID == null) {
+        if (!lstPModule.find((x) => x.boughtModule.moduleID == md.moduleID)) {
+          let tmpMD: TN_OrderModule = {
+            bought: true,
+            boughtModule: md,
+            expiredOn: md.expiredOn,
+          };
+          lstPModule.push(tmpMD);
+        }
+      } else {
+        let parentMD = lstPModule.find(
+          (x) => x.boughtModule.moduleID == md.refID
+        );
+        if (parentMD) {
+          let childMD: TN_OrderModule = {
+            bought: true,
+            boughtModule: md,
+            expiredOn: md.expiredOn,
+          };
+          parentMD.childModule = childMD;
+        } else {
+          let childMD: TN_OrderModule = {
+            bought: true,
+            boughtModule: md,
+            expiredOn: md.expiredOn,
+          };
+
+          let pMD = this.lstModule.find((x) => x.moduleID == md.moduleID);
+          parentMD = {
+            bought: true,
+            boughtModule: pMD,
+            expiredOn: pMD.expiredOn,
+            childModule: childMD,
+          };
+          lstPModule.push(parentMD);
+        }
+      }
+    });
+    console.log('pMds', lstPModule);
+
     let data = {
       grvView: this.grvTNOrders,
-      lstModule: this.lstOrderModule,
+      lstModule: lstPModule,
       extendMode: 'order',
     };
     let orderDialog = this.callfc.openForm(

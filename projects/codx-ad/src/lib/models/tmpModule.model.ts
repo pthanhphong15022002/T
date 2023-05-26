@@ -16,4 +16,5 @@ export class TN_OrderModule {
     uMID: string;
   };
   bought: boolean;
+  childModule?: TN_OrderModule;
 }
