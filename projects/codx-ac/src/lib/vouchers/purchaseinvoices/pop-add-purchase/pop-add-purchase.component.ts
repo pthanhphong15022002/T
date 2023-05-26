@@ -1209,7 +1209,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   onSave() {
     // tu dong khi luu, khong check voucherNo
     let ignoredFields = [];
-    if (this.journal.voucherNoRule === '2') {
+    if (this.journal.assignRule === '2') {
       ignoredFields.push('VoucherNo');
     }
 

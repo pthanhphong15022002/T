@@ -10,13 +10,22 @@ import {
   ResourceModel,
 } from 'codx-core';
 import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
-import { Observable, Subject, firstValueFrom, map, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  firstValueFrom,
+  map,
+  tap,
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxCmService {
   titleAction: any;
+  childMenuClick = new BehaviorSubject<any>(null);
+  childMenuDefault = new BehaviorSubject<any>(null);
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
@@ -141,7 +150,7 @@ export class CodxCmService {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
-      'GetStepsInstanceByInstanceIDAsync',
+      'GetStepsByInstanceIDAsync',
       data
     );
   }
@@ -422,7 +431,6 @@ export class CodxCmService {
     );
   }
 
-
   getListCbxCampaigns() {
     return this.api.exec<any>(
       'CM',
@@ -439,7 +447,7 @@ export class CodxCmService {
     );
   }
 
-  openOrClosedDeal(data:any) {
+  openOrClosedDeal(data: any) {
     return this.api.exec<any>(
       'CM',
       'DealsBusiness',
@@ -654,11 +662,11 @@ export class CodxCmService {
       transID
     );
   }
-  getPaymentsByContract(contractID) {
+  getPaymentsByContractID(contractID) {
     return this.api.exec<any>(
       'CM',
       'ContractsPaymentsBusiness',
-      'GetPaymentsAsync',
+      'GetPaymentsByContractIDAsync',
       contractID
     );
   }
@@ -694,7 +702,7 @@ export class CodxCmService {
   }
 
   // load Tỉ giá
-  getExchangeRate(CurrencyID,day ) {
+  getExchangeRate(CurrencyID, day) {
     return this.api.exec<any>(
       'BS',
       'CurrenciesBusiness',
@@ -805,5 +813,43 @@ export class CodxCmService {
         );
       }
     });
+  }
+
+  //check Validate- Không hiểu thì hỏi ?
+  checkValidateForm(
+    grvSetup,
+    model,
+    noValidCout,
+    ignoredFields: string[] = []
+  ) {
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    var keygrid = Object.keys(grvSetup);
+    var keymodel = Object.keys(model);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (grvSetup[keygrid[index]].isRequire == true) {
+        if (ignoredFields.includes(keygrid[index].toLowerCase())) {
+          continue;
+        }
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              model[keymodel[i]] === null ||
+              String(model[keymodel[i]]).match(/^ *$/) !== null ||
+              model[keymodel[i]] == 0 ||
+              model[keymodel[i]].trim() == ''
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + grvSetup[keygrid[index]].headerText + '"'
+              );
+              noValidCout++;
+              return  noValidCout;
+            }
+          }
+        }
+      }
+    }
+    return noValidCout
   }
 }

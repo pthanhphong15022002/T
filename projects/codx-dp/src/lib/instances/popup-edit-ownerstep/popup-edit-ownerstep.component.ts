@@ -17,6 +17,8 @@ export class PopupEditOwnerstepComponent {
   data: any;
   step: any;
   gridViewInstanceStep: any;
+  applyFor: string = '';
+  dataCM: any;
   constructor(
     private codxDpService: CodxDpService,
     private cache: CacheService,
@@ -28,7 +30,16 @@ export class PopupEditOwnerstepComponent {
     this.lstParticipants = dt?.data[0];
     this.titleAction = dt?.data[1];
     this.data = dt?.data[2];
-    this.getStepByStepIDAndInID(this.data?.recID, this.data?.stepID);
+
+    this.applyFor = dt?.data[3];
+    if(this.applyFor != '0') {
+      this.dataCM = dt?.data[4];
+      this.getListPermission(this.dataCM.processID,this.applyFor);
+    }
+
+    var recID=  this.dataCM  ? this.dataCM.refID : this.data?.recID;
+    var stepID =  this.dataCM  ? this.dataCM.stepID : this.data?.stepID;
+    this.getStepByStepIDAndInID(recID, stepID);
   }
 
   ngOnInit(): void {
@@ -46,6 +57,14 @@ export class PopupEditOwnerstepComponent {
           this.gridViewInstanceStep = res;
         }
       });
+  }
+ async getListPermission(processId, applyFor) {
+  var data = [processId,applyFor]
+    this.codxDpService.getListPermission(data).subscribe(async res =>{
+      if(res){
+       this.lstParticipants =  await this.codxDpService.getListUserByOrg(res[0]);
+      }
+    })
   }
 
   onSaveOwnerStep() {

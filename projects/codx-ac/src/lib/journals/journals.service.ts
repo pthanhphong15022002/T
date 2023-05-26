@@ -16,12 +16,25 @@ import { IJournal } from './interfaces/IJournal.interface';
   providedIn: 'root',
 })
 export class JournalService {
+  duplicateVoucherNo: string;
+
   constructor(
     private api: ApiHttpService,
     private acService: CodxAcService,
     private notiService: NotificationsService,
     private cacheService: CacheService
-  ) {}
+  ) {
+    this.cacheService
+      .viewSettingValues('ACParameters')
+      .pipe(
+        tap((o) => console.log(o)),
+        map((arr) => arr.filter((f) => f.category === '1')[0]),
+        map((data) => JSON.parse(data.dataValue)?.DuplicateVoucherNo)
+      )
+      .subscribe((res) => {
+        this.duplicateVoucherNo = res;
+      });
+  }
 
   deleteAutoNumber(autoNoCode: string): void {
     this.api
@@ -55,8 +68,8 @@ export class JournalService {
     saveFunction: () => void
   ): void {
     if (
-      journal.voucherNoRule !== '0' &&
-      journal.duplicateVoucherNo === '0' &&
+      journal.assignRule !== '0' &&
+      this.duplicateVoucherNo === '0' &&
       model.voucherNo
     ) {
       const options = new DataRequest();
@@ -125,7 +138,7 @@ export class JournalService {
       hiddenFields.push('DIM3');
     }
 
-    if (journal?.projectControl == '9') {
+    if (journal?.projectControl == '0') {
       hiddenFields.push('ProjectID');
     }
 
@@ -134,44 +147,36 @@ export class JournalService {
     }
 
     const idimControls: string[] = journal?.idimControl?.split(',');
-    for (let i = 0; i < idimControls.length; i++) {
+    for (let i = 0; i < idimControls?.length; i++) {
       hiddenFields.push('IDIM' + idimControls[i]);
     }
 
     return hiddenFields;
   }
 
-  setAccountCbxDataSourceByJournal(
+  /** Handle 12th point */
+  loadComboboxBy067(
     journal: IJournal,
-    drAccountCbx: CodxInputComponent,
-    crAccountCbx: CodxInputComponent
+    vll067Prop: string,
+    valueProp: string,
+    cbx: CodxInputComponent,
+    filterKey: string,
+    form: CodxFormComponent,
+    patchKey: string
   ): void {
-    // gia tri co dinh, danh sach
-    if (['1', '2'].includes(journal?.drAcctControl)) {
-      (
-        drAccountCbx.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(
-        ['@0.Contains(AccountID)'],
-        [`[${journal?.drAcctID}]`]
+    // co dinh, danh sach
+    if (['1', '2'].includes(journal[vll067Prop])) {
+      (cbx.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+        [`@0.Contains(${filterKey})`],
+        [`[${journal[valueProp]}]`]
       );
     }
 
-    if (['1', '2'].includes(journal?.crAcctControl)) {
-      (
-        crAccountCbx.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(
-        ['@0.Contains(AccountID)'],
-        [`[${journal?.crAcctID}]`]
-      );
-    }
-
-    // mac dinh
-    if (journal?.drAcctControl === '0') {
-      drAccountCbx.crrValue = journal?.drAcctID;
-    }
-
-    if (journal?.crAcctControl === '0') {
-      crAccountCbx.crrValue = journal?.crAcctID;
+    // mac dinh, co dinh
+    if (['0', '1'].includes(journal[vll067Prop])) {
+      form?.formGroup?.patchValue({
+        [patchKey]: journal[valueProp],
+      });
     }
   }
 

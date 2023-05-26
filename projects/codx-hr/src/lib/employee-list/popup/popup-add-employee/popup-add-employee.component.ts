@@ -183,7 +183,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       this.notifySV.notifyCode('HR012');
       return false;
     }
-    if (!this.validateBirthday(this.data.birthday)) {
+    if (!this.validateBirthday(this.data.birthday) && this.data.birthday) {
       this.notifySV.notifyCode('HR001');
       return false;
     }

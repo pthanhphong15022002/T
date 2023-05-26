@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Injector, View
 import { CallFuncService, DialogRef, LayoutBaseComponent, SidebarModel } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { Observable, of } from 'rxjs';
+import { CodxCmService } from '../codx-cm.service';
 
 @Component({
   selector: 'lib-layout',
@@ -15,6 +16,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   constructor(
     inject: Injector,
     private callfc: CallFuncService,
+    private codxCM: CodxCmService,
   ) {
     super(inject);
     this.module = 'CM';
@@ -31,5 +33,10 @@ export class LayoutComponent extends LayoutBaseComponent {
     option.Width = '550px';
     this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
     this.dialog.closed.subscribe()
+  }
+  childMenuClick(e){
+    if(e &&e?.recID){
+      this.codxCM.childMenuClick.next(e.recID);
+    }
   }
 }

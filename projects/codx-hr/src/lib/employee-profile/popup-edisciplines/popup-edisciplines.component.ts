@@ -213,7 +213,51 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     console.log(this.listView);
   }
 
+  getEmployeeInfoById(empId: string, fieldName: string) {
+    let empRequest = new DataRequest();
+    empRequest.entityName = 'HR_Employees';
+    empRequest.dataValues = empId;
+    empRequest.predicates = 'EmployeeID=@0';
+    empRequest.pageLoading = false;
+    this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+      if (emp[1] > 0) {
+        if (fieldName === 'SignerID') {
+          this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+            if (emp[1] > 0) {
+              let positionID = emp[0][0].positionID;
+
+              if (positionID) {
+                this.hrService.getPositionByID(positionID).subscribe((res) => {
+                  if (res) {
+                    this.disciplineObj.signerPosition = res.positionName;
+                    this.formGroup.patchValue({
+                      signerPosition: this.disciplineObj.signerPosition,
+                    });
+                    this.cr.detectChanges();
+                  }
+                });
+              } else {
+                this.disciplineObj.signerPosition = null;
+                this.formGroup.patchValue({
+                  signerPosition: this.disciplineObj.signerPosition,
+                });
+              }
+            }
+          });
+        }
+      }
+      this.cr.detectChanges();
+    });
+  }
+
   valueChange(event) {
+    if (!event.data) {
+      this.disciplineObj.signerPosition = '';
+      this.formGroup.patchValue({
+        signerPosition: '',
+      });
+    }
+
     if (event?.field && event?.component && event?.data != '') {
       switch (event.field) {
         case 'disciplineID': {
@@ -230,28 +274,34 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
           break;
         }
         case 'signerID': {
-          let employee = event?.component?.itemsSelected[0];
+          let employee = event.data;
+
           if (employee) {
-            if (employee?.PositionID) {
-              this.hrService
-                .getPositionByID(employee.PositionID)
-                .subscribe((res) => {
-                  if (res) {
-                    this.disciplineObj.signerPosition = res.positionName;
-                    this.formGroup.patchValue({
-                      signerPosition: this.disciplineObj.signerPosition,
-                    });
-                    this.cr.detectChanges();
-                  }
-                });
-            } else {
-              this.disciplineObj.signerPosition = null;
-              this.formGroup.patchValue({
-                signerPosition: this.disciplineObj.signerPosition,
-              });
-            }
+            this.getEmployeeInfoById(employee, 'SignerID');
           }
           break;
+          // let employee = event?.component?.itemsSelected[0];
+          // if (employee) {
+          //   if (employee?.PositionID) {
+          //     this.hrService
+          //       .getPositionByID(employee.PositionID)
+          //       .subscribe((res) => {
+          //         if (res) {
+          //           this.disciplineObj.signerPosition = res.positionName;
+          //           this.formGroup.patchValue({
+          //             signerPosition: this.disciplineObj.signerPosition,
+          //           });
+          //           this.cr.detectChanges();
+          //         }
+          //       });
+          //   } else {
+          //     this.disciplineObj.signerPosition = null;
+          //     this.formGroup.patchValue({
+          //       signerPosition: this.disciplineObj.signerPosition,
+          //     });
+          //   }
+          // }
+          // break;
         }
       }
       this.cr.detectChanges();

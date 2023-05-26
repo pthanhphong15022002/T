@@ -483,8 +483,10 @@ export class CM_Contracts {
   modifiedBy: string; //Người chỉnh sửa
 
   contactName: string; //Người đại diện -- thiếu
-  // Hạn thanh toán
-  // Hạn giao hàng
+  pmtDeadline:Date;// Hạn thanh toán
+  delDeadline: Date;// Hạn giao hàng
+
+  delActualDate: Date;// Ngày giao hàng
   // Điều khoản hồ sơ liên quan -- memo
 }
 

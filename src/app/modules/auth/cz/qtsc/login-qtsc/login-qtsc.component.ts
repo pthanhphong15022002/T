@@ -44,15 +44,17 @@ export class LoginQTSCComponent implements OnInit, OnDestroy {
   @Input() f: any;
   @Input() c: any;
   @Input() fl: any;
+  @Input() isNotADMode: boolean;
+
   @Output() submitEvent = new EventEmitter<string>();
   @Output() submitChangePassEvent = new EventEmitter();
   @Output() submitFirstLoginEvent = new EventEmitter();
   @Output() destroyEven = new EventEmitter();
   @Output() forgotPassEven = new EventEmitter();
   // private fields
-  constructor(private dt: ChangeDetectorRef) { }
+  constructor(private dt: ChangeDetectorRef) {}
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   ngOnDestroy() {
     this.destroyEven.emit();

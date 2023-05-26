@@ -1,9 +1,4 @@
-import {
-  Component,
-  Injector,
-  TemplateRef,
-  ViewChild
-} from '@angular/core';
+import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
   RequestOption,
@@ -13,7 +8,6 @@ import {
   ViewType,
 } from 'codx-core';
 import { map } from 'rxjs';
-import { CodxAcService } from '../../codx-ac.service';
 import { ItemsService } from './items.service';
 import { PopupAddItemComponent } from './popup-add-item/popup-add-item.component';
 
@@ -34,14 +28,9 @@ export class ItemsComponent extends UIComponent {
   btnAdd: ButtonModel = { id: 'btnAdd' };
   functionName: string;
 
-  // combobox data
-  inventoryModels: any[] = [];
-  dimGroups: any[] = [];
-
   constructor(
     private inject: Injector,
     private itemsService: ItemsService,
-    private acService: CodxAcService
   ) {
     super(inject);
   }
@@ -59,18 +48,6 @@ export class ItemsComponent extends UIComponent {
         )
       )
       .subscribe((res) => (this.functionName = res));
-
-    this.acService
-      .loadComboboxData('InventoryModels', 'IV')
-      .subscribe((res) => {
-        this.inventoryModels = res;
-      });
-
-    this.acService
-      .loadComboboxData('DimensionGroups', 'IV')
-      .subscribe((res) => {
-        this.dimGroups = res;
-      });
   }
 
   ngAfterViewInit() {
@@ -119,7 +96,7 @@ export class ItemsComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  handleClickAdd(e) {
+  onClickAdd(e) {
     // debug
     console.log({ e });
     console.log(this.view);
@@ -144,7 +121,7 @@ export class ItemsComponent extends UIComponent {
     });
   }
 
-  handleClickMoreFuncs(e, data) {
+  onClickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -158,12 +135,16 @@ export class ItemsComponent extends UIComponent {
     }
   }
 
+  //#endregion
+
+  //#region Method
   edit(e, data): void {
     // debug
     console.log('edit', { data });
 
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.edit(data).subscribe((selectedItem) => {
+    const copiedData = { ...data };
+    this.view.dataService.dataSelected = copiedData;
+    this.view.dataService.edit(copiedData).subscribe((selectedItem) => {
       console.log({ selectedItem });
 
       const options = new SidebarModel();
@@ -228,9 +209,7 @@ export class ItemsComponent extends UIComponent {
         .closed.subscribe((res) => console.log(res));
     });
   }
-  //#endregion
 
-  //#region Method
   delete(data): void {
     // debug
     console.log('delete', { data });

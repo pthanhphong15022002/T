@@ -21,6 +21,7 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
 
   @Input() postion:any = null;
   @Input() positionID:string = "";
+  @Input() funcID: string = "";
 
   width:number = 250;
   height:number = 150;
@@ -41,7 +42,6 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
     constraints: SnapConstraints.None,
   };
   @ViewChild('diagram') diagram: any;
-
   datasetting: any = null;
   data:any = null;
   onDoneLoading : boolean = false;
@@ -130,6 +130,7 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
         if(res)
         {
           this.data = res;
+          //this.renewData();
           this.setDataOrg(this.data);
         }
         this.onDoneLoading = true;
@@ -197,7 +198,13 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
                   }
                 });
                 this.data = JSON.parse(JSON.stringify(result))
+                // this.data.filter((e , index) => {
+                //   this.data.indexOf(e) === index
+
+                //   return this.data;
+                // })
               }
+              //this.renewData();
               this.setDataOrg(this.data);
             }
           });
@@ -222,4 +229,16 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
     }
     return result;
   }
+
+  
+  // renewData(){
+  //   this.data.forEach(element => {
+  //     var childCount = this.data.filter(e => e.reportTo === element.positionID 
+  //       || e.reportTo2 === element.positionID).length;
+  //     if(childCount < element?.childrenCount) element.loadChildrent = false;
+  //     else element.loadChildrent = true;
+  //   });
+  // }
+
+
 }

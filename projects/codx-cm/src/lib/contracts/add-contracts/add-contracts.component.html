@@ -265,10 +265,8 @@
           </div>
           <div class="">
             <codx-input
-              [formModel]=""
+              [formModel]="dialog.formModel"
               field="contractType"
-              type="valuelist"
-              refValue="CRM012"
               [crrValue]="contracts?.contractType"
               (valueChange)="valueChangeCombobox($event)"
             >
@@ -879,9 +877,7 @@
             <div class="">
               <codx-input
                 [formModel]="dialog.formModel"
-                field="delTermID"
-                type="valuelist"
-                refValue="CRM025"
+                field="pmtTermID"
                 (valueChange)="valueChangeCombobox($event)"
                 [crrValue]="contracts?.pmtTermID"
               >
@@ -958,7 +954,7 @@
             <div>
               <codx-label
                 [formModel]="dialog.formModel"
-                fiedName="paymentStatus"
+                fiedName="pmtStatus"
                 default="Tình trạng thanh toán"
               >
               </codx-label>
@@ -966,8 +962,7 @@
             <div class="">
               <codx-input
                 [formModel]="dialog.formModel"
-                field="paymentStatus"
-                type="valuelist"
+                field="pmtStatus"
                 (valueChange)="valueChangeCombobox($event)"
                 [crrValue]="contracts?.paymentStatus"
               >
@@ -979,14 +974,14 @@
               <!-- TODO -->
               <codx-label
                 [formModel]="dialog.formModel"
-                fiedName=""
+                fiedName="pmtDeadline"
                 default="Hạn thanh toán"
               ></codx-label>
             </div>
             <div class="">
+              <!-- [formModel]="dialog.formModel" -->
               <codx-input
-                [formModel]=""
-                field="taskName"
+                field="pmtDeadline"
                 type="datetime"
                 (valueChange)="changeValueDate($event)"
                 [crrValue]="contracts?.paymentStatus"
@@ -1014,7 +1009,8 @@
       class="mb-3"
     ></codx-taskbar>
   </div>
-  <product #test [dataSource]="listPayMent" [formModel]="fmContractsPayments"></product>
+  <ng-container [ngTemplateOutlet]="PayTableTemplate"></ng-container>
+  <!-- <product #test [dataSource]="listPayment" [formModel]="fmContractsPayments"></product> -->
   <div class="d-flex align-items-center my-5">
     <div class="content-icon">
       <span class="icon-add text-primary"></span>
@@ -1023,7 +1019,7 @@
       style="height: 28px"
       type="button"
       class="btn btn-outline-primary btn-sm"
-      (click)="addPay()"
+      (click)="addPayment()"
     >
       <codx-label
         [formModel]="dialog.formModel"
@@ -1034,38 +1030,36 @@
   </div>
 </ng-template>
 <!-- lịch sử thanh toán -->
-<ng-template #historyPayTemplate let-data="value">
+<ng-template #PayTableTemplate let-data="value">
   <div>
-    <codx-taskbar
-      [listTab]="[
-        {
-          icon: 'icon-error_outline',
-          name: 'contract',
-          textDefault: 'Lịch sử thanh toán'
-        }
-      ]"
-      size="22"
-      class="mb-3"
-    ></codx-taskbar>
+    <codx-gridview-v2
+    #productTable
+    service="CM"
+    [formName]="fmContractsPayments.formName"
+    [gridViewName]="fmContractsPayments.gridViewName"
+    [entityName]="fmContractsPayments.entityName"
+    [templateMore]="more"
+    [contentEditable]="false"
+    [allowFiltering]="true"
+    [allowSorting]="true"
+    [dataSource]="listPayment"
+   
+    [autoLoad]="false"
+    rowHeight="40"
+    predicates="TransID=@0"
+    ></codx-gridview-v2>
   </div>
-  <div class="d-flex align-items-center my-5">
-    <div class="content-icon">
-      <span class="icon-add text-primary"></span>
-    </div>
-    <button
-      style="height: 28px"
-      type="button"
-      class="btn btn-outline-primary btn-sm"
-      (click)="handleSaveContract()"
-    >
-      <codx-label
-        [formModel]="dialog.formModel"
-        fiedName=""
-        default="Thêm lịch sử thanh toán"
-      ></codx-label>
-    </button>
-  </div>
+  <ng-template #more let-data>
+    <codx-mfunc
+    [formModel]="fmContractsPayments"
+    [isBookMark]="true"
+    [dataItem]="moreDefaut"
+    [type]="'view'"
+    (clickMF)="onClickMFPayment($event, data)"
+    ></codx-mfunc>
+  </ng-template>
 </ng-template>
+
 <!-- thông tin giao hàng -->
 <ng-template #shipTemplate let-data="value">
   <div>
@@ -1096,7 +1090,6 @@
               <codx-input
                 [formModel]="dialog.formModel"
                 field="delTermID"
-                type="valuelist"
                 [crrValue]="contracts?.delTermID"
                 (valueChange)="valueChangeCombobox($event)"
               >
@@ -1116,7 +1109,6 @@
               <codx-input
                 [formModel]="dialog.formModel"
                 field="delModeID"
-                type="combobox"
                 (valueChange)="valueChangeCombobox($event)"
                 [crrValue]="contracts?.delModeID"
               >
@@ -1197,15 +1189,15 @@
             <div>
               <codx-label
                 [formModel]="dialog.formModel"
-                fiedName=""
+                fiedName="delDeadline"
                 default="Hạn giao hàng"
               >
               </codx-label>
             </div>
             <div class="">
+              <!-- [formModel]="dialog.formModel" -->
               <codx-input
-                [formModel]=""
-                field="taskName"
+                field="delDeadline"
                 type="datetime"
                 (valueChange)="changeValueDate($event)"
                 [crrValue]="contracts?.delStatus"
@@ -1239,15 +1231,15 @@
             <div>
               <codx-label
                 [formModel]="dialog.formModel"
-                fiedName=""
+                fiedName="delActualDate"
                 default="Ngày giao hàng thành công"
               >
               </codx-label>
             </div>
             <div class="">
+              <!-- [formModel]="dialog.formModel" -->
               <codx-input
-                [formModel]=""
-                field="taskName"
+                field="delActualDate"
                 type="datetime"
                 (valueChange)="changeValueDate($event)"
                 [crrValue]="contracts?.delStatus"

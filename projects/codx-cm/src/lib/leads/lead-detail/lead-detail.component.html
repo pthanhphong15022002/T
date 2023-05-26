@@ -61,7 +61,21 @@
           <div></div>
           <div>
             <div class="me-2 badge badge-light-primary">
-              <span> Mới </span>
+              <span
+              class="fs-7"
+              #businesslineID
+              [innerHTML]="
+              dataSelected?.businesslineID
+                  | formatvalue
+                    : formModel
+                    : 'businesslineID'
+                    : businesslineID
+                    : 'CMLeads'
+                    : 'grvCMLeads'
+                  | async
+              "
+            ></span>
+
             </div>
           </div>
         </div>

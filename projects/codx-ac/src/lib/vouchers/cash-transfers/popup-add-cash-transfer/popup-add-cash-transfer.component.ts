@@ -116,30 +116,40 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
 
-    const options = new DataRequest();
-    options.entityName = 'AC_Journals';
-    options.predicates = 'JournalNo=@0';
-    options.dataValues = this.cashTransfer.journalNo;
-    options.pageLoading = false;
-    this.acService.loadDataAsync('AC', options).subscribe((res) => {
-      this.journal = res[0]?.dataValue
-        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
-        : res[0];
+    this.journalService
+      .getJournal(this.cashTransfer.journalNo)
+      .subscribe((res) => {
+        this.journal = res?.dataValue
+          ? { ...res, ...JSON.parse(res.dataValue) }
+          : res;
 
-      this.journalService.setAccountCbxDataSourceByJournal(
-        this.journal,
-        this.cbxCashAcctID,
-        this.cbxOffsetAcctID
-      );
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'drAcctControl',
+          'drAcctID',
+          this.cbxCashAcctID,
+          'AccountID',
+          this.form,
+          'cashAcctID'
+        );
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'crAcctControl',
+          'crAcctID',
+          this.cbxOffsetAcctID,
+          'AccountID',
+          this.form,
+          'offsetAcctID'
+        );
 
-      if (this.journal.voucherNoRule === '2') {
-        this.ignoredFields.push('VoucherNo');
-      }
+        if (this.journal.assignRule === '2') {
+          this.ignoredFields.push('VoucherNo');
+        }
 
-      if (this.isEdit) {
-        this.hiddenFields = this.journalService.getHiddenFields(this.journal);
-      }
-    });
+        if (this.isEdit) {
+          this.hiddenFields = this.journalService.getHiddenFields(this.journal);
+        }
+      });
 
     this.cache
       .gridViewSetup(

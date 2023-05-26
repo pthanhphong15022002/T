@@ -31,12 +31,15 @@ export class CodxViewTaskComponent implements OnInit {
   listDataLink = [];
   dataInput: any; //format về như vậy {recID,name,startDate,type, roles, durationHour, durationDay,parentID }
   dataProgress: any = null;
+
   isOnlyView = false;
   isUpdateProgressGroup = false;
+  isUpdateProgressStep = false;
+
   isRoleAll = false;
+  listIdRoleInstance = [];
 
   connection = '';
-  listDataInput = [];
   listTypeTask = [];
   tabInstances = [
     { type: 'history', title: 'History' },
@@ -65,12 +68,12 @@ export class CodxViewTaskComponent implements OnInit {
   ) {
     this.user = this.authStore.get();
     this.dialog = dialog;
-    this.type = dt?.data?.value?.type;
+    this.type = dt?.data?.type;
     this.dataInput = dt?.data?.value;
     this.isRoleAll = dt?.data?.isRoleAll;
-    this.listDataInput = dt?.data?.listValue;
     this.isOnlyView = dt?.data?.isOnlyView;
     this.isUpdateProgressGroup = dt?.data?.isUpdateProgressGroup;
+    this.listIdRoleInstance = dt?.data?.listIdRoleInstance;
     this.getModeFunction();
   }
 
@@ -95,8 +98,24 @@ export class CodxViewTaskComponent implements OnInit {
           this.instanceStep = res;
           await this.setDataView();
           this.settingData();
+          this.isOnlyView = this.instanceStep?.stepStatus == '1' ? true : false;
+          this.checkRole();
         }
       });
+  }
+
+  checkRole(){
+    if (this.listIdRoleInstance?.some((id) => id == this.user.userID)) {
+      this.isRoleAll = true;
+    } else if (this.instanceStep?.roles?.length > 0) {
+      this.isRoleAll =
+        this.instanceStep?.roles?.some(
+          (element) =>
+            element?.objectID == this.user.userID && element.roleType == 'S'
+        ) || false;
+    }
+    this.isUpdateProgressGroup = this.instanceStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
+    this.isUpdateProgressStep = this.instanceStep?.progressStepControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
   }
 
   async setDataView() {
@@ -223,6 +242,7 @@ export class CodxViewTaskComponent implements OnInit {
       this.isRoleAll,
       this.isOnlyView,
       this.isUpdateProgressGroup,
+      this.isUpdateProgressStep,
       this.user
     );
     if (!checkUpdate) return;
@@ -270,6 +290,7 @@ export class CodxViewTaskComponent implements OnInit {
       this.isRoleAll,
       this.isOnlyView,
       this.isUpdateProgressGroup,
+      this.isUpdateProgressStep,
       this.user
     );
     return check;

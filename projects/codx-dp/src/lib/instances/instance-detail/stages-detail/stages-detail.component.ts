@@ -711,12 +711,9 @@ export class StagesDetailComponent implements OnInit {
   }
 
   checkRole(listRoleStep) {
-    if (
-      this.permissionCloseInstances ||
+    if (this.permissionCloseInstances ||
       this.listUserIdRole?.some((id) => id == this.user.userID) ||
-      listRoleStep?.some(
-        (role) => role.objectID == this.user.userID && role.roleType == 'S'
-      )
+      listRoleStep?.some((role) => role.objectID == this.user.userID && role.roleType == 'S')
     ) {
       this.isRoleAll = true;
     } else if (this.dataStep?.roles?.length > 0) {

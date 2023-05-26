@@ -53,7 +53,6 @@ import { CasesComponent } from './cases/cases.component';
 import { CaseDetailComponent } from './cases/case-detail/case-detail.component';
 import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.component';
 import { TabCaseDetailComponent } from './cases/case-detail/tab-case-detail/tab-case-detail.component';
-import { PaymentsComponent } from './contracts/component/payments/payments.component';
 import { CodxAddressCmComponent } from './cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
 import { LeadsComponent } from './leads/leads.component';
 import { PopupAddLeadComponent } from './leads/popup-add-lead/popup-add-lead.component';
@@ -65,6 +64,11 @@ import { PopupStatusCompetitorComponent } from './deals/deal-detail/codx-tab-dea
 import { CampaignsDetailComponent } from './campaigns/campaigns-detail/campaigns-detail.component';
 import { PopupConvertLeadComponent } from './leads/popup-convert-lead/popup-convert-lead.component';
 import { CodxAsideCustomComponent } from './_layout/codx-aside-custom/codx-aside-custom.component';
+import { ProcessReleaseComponent } from './process-release/process-release.component';
+import { PopupAddPaymentComponent } from './contracts/payment/popup-add-payment/popup-add-payment.component';
+import { PopupAddPaymentHistoryComponent } from './contracts/payment/popup-add-payment-history/popup-add-payment-history.component';
+import { PopupViewPaymentHistoryComponent } from './contracts/payment/popup-view-payment-history/popup-view-payment-history.component';
+import { PopupMergeLeadsComponent } from './leads/popup-merge-leads/popup-merge-leads.component';
 
 const routes: Routes = [
   {
@@ -79,6 +83,17 @@ const routes: Routes = [
         path: 'deals/:funcID',
         component: DealsComponent,
       },
+      
+      // {
+      //   path: 'processrelease/:funcID',
+      //   component: ProcessReleaseComponent,
+      // },
+        
+      {
+        path: 'processrelease/:funcID/:recID',
+        component: ProcessReleaseComponent,
+        data: { noReuse: true },
+      },
       {
         path: 'marketings/:funcID',
         component: CampaignsComponent,
@@ -89,7 +104,7 @@ const routes: Routes = [
         // data: { noReuse: true },
       },
       {
-          // gán tạm để làm UI
+        // gán tạm để làm UI
         path: 'contracts/:funcID',
         component: ViewsContractsComponent,
       },
@@ -148,7 +163,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CaseDetailComponent,
     PopupAddCaseComponent,
     TabCaseDetailComponent,
-    PaymentsComponent,
     CodxAddressCmComponent,
     LeadsComponent,
     PopupAddLeadComponent,
@@ -160,7 +174,12 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CampaignsDetailComponent,
     PopupConvertLeadComponent,
     //test
-    CodxAsideCustomComponent
+    CodxAsideCustomComponent,
+    ProcessReleaseComponent,
+    PopupAddPaymentComponent,
+    PopupAddPaymentHistoryComponent,
+    PopupViewPaymentHistoryComponent,
+    PopupMergeLeadsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -178,7 +197,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     DragDropModule,
     CodxDpModule,
   ],
-  exports: [RouterModule,ListContractsComponent],
+  exports: [RouterModule, ListContractsComponent],
   providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

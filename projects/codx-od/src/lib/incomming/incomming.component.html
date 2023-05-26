@@ -113,6 +113,7 @@
   <div class="d-flex flex-wrap justify-content-between">
     <div class="d-flex align-items-center">
       <codx-vll
+        *ngIf="view?.formModel?.funcID != 'ODT42'"
         [value]="data.status"
         [name]="gridViewSetup['Status']['referedValue']"
         [showIcon]="true"
@@ -121,7 +122,16 @@
         class="badge"
       >
       </codx-vll>
-
+      <codx-vll
+        *ngIf="view?.formModel?.funcID == 'ODT42'"
+        [value]="data.statusApproval + data?.stepType"
+        [name]="'ES030'"
+        [showIcon]="true"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge"
+      >
+      </codx-vll>
       <codx-vll
         *ngIf="
           view?.formModel?.funcID == 'ODT41' ||

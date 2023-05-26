@@ -126,6 +126,14 @@
   <div class="row fs-6">
     <div class="col-6">
       <span>Cơ hội: </span>
+      <span
+      class="fs-7"
+      [innerHTML]="
+      itemSelected?.dealID
+          | formatvalue : view.formModel : 'DealID'
+          | async
+      "
+    ></span>
     </div>
     <div class="col-6 d-flex align-items-center">
       <div class="me-5"><span>Tiền tệ: </span></div>
@@ -135,6 +143,14 @@
   <div class="row fs-6">
     <div class="col-6">
       <span> Báo giá:</span>
+      <span
+      class="fs-7"
+      [innerHTML]="
+      itemSelected?.quotationID
+          | formatvalue : view.formModel : 'QuotationID'
+          | async
+      "
+    ></span>
     </div>
     <div class="col-6">
       <span>Hợp đồng sử dụng:</span>
@@ -143,6 +159,14 @@
   <div class="row fs-6">
     <div class="col-6">
       <span>Đơn hàng:</span>
+      <span
+      class="fs-7"
+      [innerHTML]="
+      itemSelected?.orderID
+          | formatvalue : view.formModel : 'OrderID'
+          | async
+      "
+    ></span>
     </div>
     <div class="col-6">
       <span>Loại hợp đồng:</span>

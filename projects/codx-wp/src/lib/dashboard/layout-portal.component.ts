@@ -1,6 +1,11 @@
-
 import { Component, OnInit, Injector } from '@angular/core';
-import { CacheService, CallFuncService, DialogRef, LayoutBaseComponent, SidebarModel } from 'codx-core';
+import {
+  CacheService,
+  CallFuncService,
+  DialogRef,
+  LayoutBaseComponent,
+  SidebarModel,
+} from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { ActivatedRoute } from '@angular/router';
 
@@ -16,9 +21,8 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     inject: Injector,
     private route: ActivatedRoute,
     private callfc: CallFuncService,
-    private cache:CacheService
-  ) 
-  {
+    private cache: CacheService
+  ) {
     super(inject);
     this.module = 'WP';
     this.layoutModel.asideFixed = false;
@@ -27,7 +31,9 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     this.layoutModel.toolbarDisplay = false;
   }
 
-  onInit() {
+  onInit() {}
+  asideClick(evt: any) {
+    console.log(evt);
   }
   onAfterViewInit(): void {}
   openFormNoteDrawer() {
