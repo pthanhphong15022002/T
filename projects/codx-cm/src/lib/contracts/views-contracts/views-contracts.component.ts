@@ -79,7 +79,7 @@ export class ViewsContractsComponent extends UIComponent{
   };
   grvSetup: any;
   vllStatus = '';
-  
+
   customerIDCrr = '';
   requestData = new DataRequest();
   listQuotations = [];
@@ -285,11 +285,11 @@ export class ViewsContractsComponent extends UIComponent{
   }
 
   getPayMentByContractID(contractID){
-    this.cmService.getPaymentsByContractID(contractID).subscribe(res => {
-      if(res){
-        this.listPayment = res;
-      }
-    })
+    // this.cmService.getPaymentsByContractID(contractID).subscribe(res => {
+    //   if(res){
+    //     this.listPayment = res;
+    //   }
+    // })
   }
 
   async getForModel  (functionID) {

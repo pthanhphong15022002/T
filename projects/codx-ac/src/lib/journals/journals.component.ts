@@ -39,8 +39,12 @@ export class JournalsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    // let data = {"bankID":"1","sourceAccountNumber":"0001100012473007","payeeType":"ACCOUNT","tranferAmount":100000,"transferDescription":"TRANSFER AMOUNT TO","payeeAccountNumber":"0129837294","payeeCardNumber":"","bankCode":"970406"}
-    // this.api.execSv("AC","Core","CMBusiness","SendRequestBankHubAsync",[JSON.stringify(data),"FastTransferOrder"]).subscribe(res=>{
+    
+    //Test bankhub dung xoa cua a huhu :((
+    // let data = {"bankID":"1","sourceAccountNumber":"0001100012473007","payeeType":"ACCOUNT","amount":100000,"description":"TRANSFER AMOUNT TO","payeeAccountNumber":"0129837294","payeeCardNumber":"","bankCode":"970406"}
+    // let internal = {"bankID":"1","sourceAccountNumber":"0001100012473007","amount":25000,"description":"chuyen tien","payeeAccountNumber":"0001100012475002"};
+    // let account = {"bankID":"1"};
+    // this.api.execSv("AC","Core","CMBusiness","SendRequestBankHubAsync",[internal,"InternalTransfer"]).subscribe(res=>{
     //   console.log(res);
     // })
     this.cache.valueList('AC077').subscribe((func) => {
