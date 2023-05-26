@@ -35,6 +35,35 @@
       ></codx-input>
     </div>
 
+    <div class="row">
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="fiscalYear"
+          [formModel]="form.formModel"
+          default="Năm tài chính"
+        ></codx-label>
+        <ejs-combobox
+          [dataSource]="fiscalYears"
+          [value]="journal.fiscalYear"
+          (select)="onSelect($event)"
+        >
+        </ejs-combobox>
+      </div>
+      <div class="col-9 form-group">
+        <codx-label
+          fiedName="periodID"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          #periodID
+          field="periodID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="onInputChange2($event)"
+        ></codx-input>
+      </div>
+    </div>
+
     <div
       class="form-group"
       *ngIf="journalTypes106.includes(journal.journalType)"
@@ -106,35 +135,6 @@
         >
           <span class="icon-edit-one icon-18"></span>
         </button>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-3 form-group">
-        <codx-label
-          fiedName="fiscalYear"
-          [formModel]="form.formModel"
-          default="Năm tài chính"
-        ></codx-label>
-        <ejs-combobox
-          [dataSource]="fiscalYears"
-          [value]="journal.fiscalYear"
-          (select)="onSelect($event)"
-        >
-        </ejs-combobox>
-      </div>
-      <div class="col-9 form-group">
-        <codx-label
-          fiedName="periodID"
-          [formModel]="form.formModel"
-        ></codx-label>
-        <codx-input
-          #periodID
-          field="periodID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="onInputChange2($event)"
-        ></codx-input>
       </div>
     </div>
 
@@ -416,7 +416,7 @@
       "
     ></lib-group067>
 
-    <lib-group067
+    <!-- <lib-group067
       [formModel]="form.formModel"
       [formGroup]="form.formGroup"
       fieldName="projectControl"
@@ -433,7 +433,7 @@
           journal.projectControl
         )
       "
-    ></lib-group067>
+    ></lib-group067> -->
 
     <div class="form-group mt-5">
       <div class="row align-items-center">
@@ -659,10 +659,10 @@
         </div>
       </div>
       <div class="my-2">
-        <lib-dropdown-detail
+        <!-- <lib-dropdown-detail
           [modelShares]="journal.creater"
           [formModel]="form.formModel"
-        ></lib-dropdown-detail>
+        ></lib-dropdown-detail> -->
       </div>
     </div>
 
@@ -765,10 +765,10 @@
         </div>
 
         <div class="col-5">
-          <lib-dropdown-detail
+          <!-- <lib-dropdown-detail
             [modelShares]="journal.poster"
             [formModel]="form.formModel"
-          ></lib-dropdown-detail>
+          ></lib-dropdown-detail> -->
         </div>
 
         <div class="col-1">
@@ -825,10 +825,10 @@
           </div>
         </div>
         <div class="mb-5 mt-2">
-          <lib-dropdown-detail
+          <!-- <lib-dropdown-detail
             [modelShares]="journal.unposter"
             [formModel]="form.formModel"
-          ></lib-dropdown-detail>
+          ></lib-dropdown-detail> -->
         </div>
       </div>
 
@@ -874,10 +874,10 @@
         </div>
 
         <div class="col-5">
-          <lib-dropdown-detail
+          <!-- <lib-dropdown-detail
             [modelShares]="journal.sharer"
             [formModel]="form.formModel"
-          ></lib-dropdown-detail>
+          ></lib-dropdown-detail> -->
         </div>
 
         <div class="col-1">

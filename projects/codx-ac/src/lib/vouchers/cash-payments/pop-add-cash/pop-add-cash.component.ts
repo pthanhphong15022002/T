@@ -73,8 +73,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
   @ViewChild('cashRef') cashRef: ElementRef;
-  @ViewChild('noteRef') noteRef: ElementRef;
-  @ViewChild('totalRef') totalRef: ElementRef;
+  @ViewChild('itemRef') itemRef: ElementRef;
+  @ViewChild('btnRef') btnRef: ElementRef;
   @ViewChild('docRef') docRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
   @ViewChild('cashBook') cashBook: CodxInputComponent;
@@ -353,16 +353,24 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   gridCreated(e, grid) {
-    let hBody, hTab, hNote, hTotal, hDoc;
-    if (this.cardbodyRef)
-      hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
-    if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
-    if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
-    if (this.totalRef) hTotal = this.totalRef.nativeElement.clientHeight;
-    if (this.docRef) hDoc = this.docRef.nativeElement.clientHeight;
+    let hBody, hHeader, hTab, hItem, hDoc, hBtn;
+    // if (this.cardbodyRef)
+    //   hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
 
-    this.gridHeight = hBody - (hTab + hNote + hTotal + hDoc + 180);
-    console.log('this.gridHeight: ', this.gridHeight);
+    // if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
+    let es = document.getElementsByClassName('card-body scroll-y h-100');
+    let ess = document.getElementsByClassName(
+      'e-gridheader e-lib e-draggable e-droppable'
+    );
+    let ez = document.getElementsByClassName('e-text-wrap');
+    hBody = (es[0] as HTMLElement).offsetHeight;
+    hHeader = (ess[0] as HTMLElement).offsetHeight;
+    hTab = (ez[0] as HTMLElement).offsetHeight * 2;
+    if (this.itemRef)
+      hItem = this.itemRef.nativeElement.parentElement.offsetHeight;
+    if (this.docRef) hDoc = this.docRef.nativeElement.offsetHeight;
+    if (this.btnRef) hBtn = this.btnRef.nativeElement.offsetHeight;
+    this.gridHeight = hBody - (hHeader + hTab + hItem + hDoc + hBtn + 90); //90 là header & footer
   }
 
   lineChanged(e: any) {
@@ -502,62 +510,55 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   addRow() {
-    this.loadModegrid();
-    // this.checkValidate();
-    // if (this.validate > 0) {
-    //   this.validate = 0;
-    //   return;
-    // } else {
-    //   switch (this.formType) {
-    //     case 'add':
-    //       if (this.hasSaved) {
-    //         this.dialog.dataService.updateDatas.set(
-    //           this.cashpayment['_uuid'],
-    //           this.cashpayment
-    //         );
-    //         this.dialog.dataService
-    //           .save(null, 0, '', '', false)
-    //           .subscribe((res) => {
-    //             if (res && res.update.data != null) {
-    //               this.loadModegrid();
-    //             }
-    //           });
-    //       } else {
-    //         this.journalService.handleVoucherNoAndSave(
-    //           this.journal,
-    //           this.cashpayment,
-    //           'AC',
-    //           'AC_CashPayments',
-    //           this.form,
-    //           this.formType === 'edit',
-    //           () => {
-    //             this.dialog.dataService
-    //               .save(null, 0, '', '', false)
-    //               .subscribe((res) => {
-    //                 if (res && res.save.data != null) {
-    //                   this.hasSaved = true;
-    //                   this.loadModegrid();
-    //                 }
-    //               });
-    //           }
-    //         );
-    //       }
-    //       break;
-    //     case 'edit':
-    //       this.dialog.dataService.updateDatas.set(
-    //         this.cashpayment['_uuid'],
-    //         this.cashpayment
-    //       );
-    //       this.dialog.dataService
-    //         .save(null, 0, '', '', false)
-    //         .subscribe((res) => {
-    //           if (res && res.update.data != null) {
-    //             this.loadModegrid();
-    //           }
-    //         });
-    //       break;
-    //   }
-    // }
+    switch (this.formType) {
+      case 'add':
+        if (this.hasSaved) {
+          this.dialog.dataService.updateDatas.set(
+            this.cashpayment['_uuid'],
+            this.cashpayment
+          );
+          this.dialog.dataService
+            .save(null, 0, '', '', false)
+            .subscribe((res) => {
+              if (res && res.update.data != null) {
+                this.loadModegrid();
+              }
+            });
+        } else {
+          this.journalService.handleVoucherNoAndSave(
+            this.journal,
+            this.cashpayment,
+            'AC',
+            'AC_CashPayments',
+            this.form,
+            this.formType === 'edit',
+            () => {
+              this.dialog.dataService
+                .save(null, 0, '', '', false)
+                .subscribe((res) => {
+                  if (res && res.save.data != null) {
+                    this.hasSaved = true;
+                    this.loadModegrid();
+                  }
+                });
+            }
+          );
+        }
+        break;
+      case 'edit':
+        this.dialog.dataService.updateDatas.set(
+          this.cashpayment['_uuid'],
+          this.cashpayment
+        );
+        this.dialog.dataService
+          .save(null, 0, '', '', false)
+          .subscribe((res) => {
+            if (res && res.update.data != null) {
+              this.loadModegrid();
+            }
+          });
+        break;
+    }
   }
 
   deleteRow(data) {
@@ -986,7 +987,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   checkValidate() {
     // tu dong khi luu, khong check voucherNo
     let ignoredFields: string[] = [];
-    if (this.journal.voucherNoRule === '2') {
+    if (this.journal.assignRule === '2') {
       ignoredFields.push('VoucherNo');
     }
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
@@ -1206,7 +1207,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       case 'add':
         break;
       case 'edit':
-        if (this.cashpayment?.subType != '2' ) {
+        if (this.cashpayment?.subType != '2') {
           //#region  load cashpaymentline
           this.acService
             .loadData(
@@ -1301,23 +1302,27 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   loadSubType1(enable) {
     var element = document.getElementById('ac-type-1');
-    if (enable) {
-      element.style.display = 'inline';
-    } else {
-      element.style.display = 'none';
-    }
+    if (element) {
+      if (enable) {
+        element.style.display = 'inline';
+      } else {
+        element.style.display = 'none';
+      }
+    } 
   }
   loadSubType2(enable) {
     var element = document.querySelectorAll('.ac-type-2');
-    if (enable) {
-      for (let index = 0; index < element.length; index++) {
-        (element[index] as HTMLElement).style.display = 'inline';
+    if (element) {
+      if (enable) {
+        for (let index = 0; index < element.length; index++) {
+          (element[index] as HTMLElement).style.display = 'inline';
+        }
+      } else {
+        for (let index = 0; index < element.length; index++) {
+          (element[index] as HTMLElement).style.display = 'none';
+        }
       }
-    }else{
-      for (let index = 0; index < element.length; index++) {
-        (element[index] as HTMLElement).style.display = 'none';
-      }
-    }
+    } 
   }
   //#endregion
 }
