@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { AuthService } from 'codx-core';
 import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
 import { ɵglobal as global } from '@angular/core';
+import { CodxChatBoxComponent } from '../chat-box/chat-box.component';
 declare var window: any;
 
 @Component({
@@ -38,6 +39,7 @@ export class CodxChatContainerComponent implements OnInit,OnDestroy {
   
   @ViewChild("boxChats",{static:true}) boxChats:TemplateRef<any>;
   @ViewChild("boxChatItem",{static:true}) boxChatItem:TemplateRef<any>;
+  @ViewChildren("codxChatBox") codxChatBoxes:QueryList<CodxChatBoxComponent>;
   windowNg:any=global;
   ngOnInit(): void {
   }
@@ -53,7 +55,7 @@ export class CodxChatContainerComponent implements OnInit,OnDestroy {
     this.signalRSV.activeGroup.subscribe((res:any) => {
       if(res?.group)
       {
-        this.handleBoxChat(res?.group);
+        this.handleBoxChat(res.group);
       }
     });
     //receiver message
@@ -63,39 +65,32 @@ export class CodxChatContainerComponent implements OnInit,OnDestroy {
       }
     });
 
-    this.signalRSV.disConnected.subscribe((res) => {
+    // this.signalRSV.disConnected.subscribe((res) => {
       
-    })
+    // });
   }
-
   ngOnDestroy(): void {
   }
   // handle box chat
   handleBoxChat(data:any){
     let isOpen = this.lstGroupActive.some(x => x.groupID == data.groupID);
-    let index = this.lstGroupCollapse.findIndex(x => x.groupID === data.groupID);
     if(isOpen) return ;
     // check collaspe
+    let index = this.lstGroupCollapse.findIndex(x => x.groupID === data.groupID);
     if(index > -1)
-    {
       this.lstGroupCollapse.splice(index,1);
-    }
     if(this.lstGroupActive.length == 2){
       let group = this.lstGroupActive.shift();
-      let ele = document.getElementById(group.groupID);
-      // get current instance của element trên DOM
-      let codxBoxChat = this.windowNg.ng.getComponent(ele);
-      if(codxBoxChat){
+      let codxBoxChat = Array.from(this.codxChatBoxes).find(x => x.groupID == group.groupID);
+      if(codxBoxChat)
         this.lstGroupCollapse.push(codxBoxChat.group);
-      }
     }
     this.lstGroupActive.push(data);
     this.dt.detectChanges();
-    
   }
   //close box chat
-  closeBoxChat(group:any){
-    let index = this.lstGroupActive.findIndex(x => x.groupID == group.groupID); 
+  closeBoxChat(data:any){
+    let index = this.lstGroupActive.findIndex(x => x.groupID == data.groupID); 
     if(index > -1 ){
       this.lstGroupActive.splice(index, 1);
       if(this.lstGroupCollapse.length > 0){
@@ -103,29 +98,25 @@ export class CodxChatContainerComponent implements OnInit,OnDestroy {
         this.lstGroupActive.push(group);
       }
       // lấy element hiện tại của component trên DOM
-      let ele = document.getElementById(group.groupID);
-      ele?.remove();
+      let ele = document.getElementById(data.groupID);
+      if(ele)
+        ele.remove();
       this.dt.detectChanges();
     }
   }
   // collapse box chat
-  collapseBoxChat(group:any){
+  collapseBoxChat(data:any){
     debugger
-    let ele = document.getElementById(group.groupID);
-    if(ele){
-      let codxBoxChat =  this.windowNg.ng.getComponent(ele);
-      let index = this.lstGroupActive.findIndex(x => x.groupID == group.groupID); 
-      if(index > -1 && codxBoxChat){
-        this.lstGroupActive.splice(index, 1);
-        this.lstGroupCollapse.unshift(codxBoxChat.group);
-        ele.remove();
-        this.dt.detectChanges();
-      }
+    let index = this.lstGroupActive.findIndex(x => x.groupID == data.groupID); 
+    if(index > -1 ){
+      this.lstGroupActive.splice(index, 1);
+      this.lstGroupCollapse.unshift(data);
+      this.dt.detectChanges();
     }
   }
   // expanse box chat
   expanseBoxChat(data:any){
-    this.signalRSV.sendData("OpenGroupAsync",data.groupID);
+    this.signalRSV.sendData("OpenGroupAsync",data);
   }
 
 }

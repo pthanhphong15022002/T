@@ -73,9 +73,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
     private notifiSV:NotificationsService,
     private cache:CacheService,
     private callFC:CallFuncService,
-    private sanitizer: DomSanitizer,
-    private codxShareSV:CodxShareService,
-    private applicationRef:ApplicationRef,
     private dt:ChangeDetectorRef,
   ) 
   {
@@ -290,10 +287,8 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
       [this.groupID,this.pageIndex])
       .subscribe((res:any[]) => {
         let data = Array.from<any>(res[0]);
-        if(data.length > 0){
+        if(data.length > 0)
           this.arrMessages = data.reverse();
-          console.log( this.arrMessages)
-        }
         this.page = Math.ceil(res[1]/20);
         this.pageIndex++;
         this.loading = false;
