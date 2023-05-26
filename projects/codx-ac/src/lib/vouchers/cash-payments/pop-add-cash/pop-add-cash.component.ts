@@ -1149,12 +1149,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         if (res) {
           switch (this.modegrid) {
             case '1':
-              if (this.hasAddrow) {
-                idx = this.gridCashPaymentLine.dataSource.length;
-                res.rowNo = idx + 1;
+              this.gridCashPaymentLine.endEdit();
                 this.gridCashPaymentLine.addRow(res, idx);
-                this.hasAddrow = false;
-              }
+              // if (this.hasAddrow) {
+              //   idx = this.gridCashPaymentLine.dataSource.length;
+              //   res.rowNo = idx + 1;
+              //   this.gridCashPaymentLine.endEdit();
+              //   this.gridCashPaymentLine.addRow(res, idx);
+              //   this.hasAddrow = false;
+              // }
               break;
             case '2':
               idx = this.cashpaymentline.length;
@@ -1167,7 +1170,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
       });
   }
-//Viet tăt ten ctrl 3 ky tu vd: gridview -> grv;label ->lbl, 
+//Viet tăt ten ctrl 3 ky tu vd: gridview -> grv;label ->lbl,
   loadformSettledInvoices(type: number) {
     var obj = {
       cashpayment: this.cashpayment,
