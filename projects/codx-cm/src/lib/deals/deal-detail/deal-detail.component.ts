@@ -10,7 +10,6 @@ import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.
 export class DealDetailComponent  implements OnInit {
 
   @Input() dataSelected: any;
-  @Input() dataService: CRUDService;
   @Input() formModel: any;
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
@@ -22,6 +21,7 @@ export class DealDetailComponent  implements OnInit {
   @ViewChild('tabDetailViewDetail') tabDetailViewDetail: TabDetailCustomComponent;
   @ViewChild('quotations')quotations: TemplateRef<any>;
   @ViewChild('contract')contract: TemplateRef<any>;
+  @ViewChild('popDetail') popDetail: TemplateRef<any>;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },

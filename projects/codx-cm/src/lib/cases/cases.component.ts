@@ -21,6 +21,8 @@ import {
   SidebarModel,
   RequestOption,
   CRUDService,
+  DialogModel,
+  Util,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
@@ -50,6 +52,7 @@ export class CasesComponent
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+  @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -93,7 +96,7 @@ export class CasesComponent
   readonly btnAdd: string = 'btnAdd';
   request: ResourceModel;
   resourceKanban?: ResourceModel;
-  hideMoreFC = true;
+  hideMoreFC = false;
   listHeader: any;
   processID: any;
 
@@ -247,9 +250,7 @@ export class CasesComponent
   }
 
   
-  onLoading(e) {
-    // this.afterLoad();
-  }
+  
 
   //#region  get data
   // getListCustomer() {
@@ -324,6 +325,28 @@ export class CasesComponent
       }) || [];
 
     return dataColumns;
+  }
+
+  onActions(e) {
+    switch (e.type) {
+      // case 'drop':
+      //   this.dataDrop = e.data;
+      //   this.stepIdClick = JSON.parse(JSON.stringify(this.dataDrop.stepID));
+      //   // xử lý data chuyển công đoạn
+      //   if (this.crrStepID != this.dataDrop.stepID)
+      //     this.dropDeals(this.dataDrop);
+
+      //   break;
+      // case 'drag':
+      //   ///bắt data khi kéo
+      //   this.crrStepID = e?.data?.stepID;
+
+      //   break;
+      case 'dbClick':
+        //xư lý dbClick
+        this.viewDetail(e.data);
+        break;
+    }
   }
 
   //#region Search
@@ -468,5 +491,24 @@ export class CasesComponent
 
   getCustomerName(customerID: any) {
     return this.listCustomer.find((x) => x.recID === customerID);
+  }
+
+  viewDetail(data) {
+    this.dataSelected = data;
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 999;
+ 
+    let popup = this.callfc.openForm(
+      this.popDetail,
+      '',
+      Util.getViewPort().width,
+      Util.getViewPort().height,
+      '',
+      null,
+      '',
+      option
+    );
+   popup.closed.subscribe((e) => {});
   }
 }
