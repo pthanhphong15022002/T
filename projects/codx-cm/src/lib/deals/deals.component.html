@@ -311,7 +311,6 @@
 <ng-template #templateDetail>
   <codx-deal-detail
     #detailViewDeal
-    [dataService]="view.dataService"
     [formModel]="view.formModel"
     [dataSelected]="dataSelected"
     [funcID]="funcID"
@@ -321,4 +320,9 @@
     (clickMoreFunc)="clickMoreFunc($event)"
   >
   </codx-deal-detail>
+</ng-template>
+
+<!-- View chi tiet kanban -->
+<ng-template #popDetail let-popup>
+  <codx-form [body]="templateDetail" [dialog]="popup"> </codx-form>
 </ng-template>
