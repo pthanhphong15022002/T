@@ -109,7 +109,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = dialog.dataService?.dataSelected?JSON.parse(JSON.stringify(dialog.dataService?.dataSelected)): null
+    this.data = dialog?.dataService?.dataSelected?JSON.parse(JSON.stringify(dialog.dataService?.dataSelected)): null
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.action = dt?.data?.action;
@@ -120,7 +120,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.dataMeeting = dt?.data?.data
     // this.preside = dt?.data?.preside ; nguoi chủ trì truyền qua ko dc xóa
 
-    this.meeting = dialog.dataService?.dataSelected
+    this.meeting = dialog?.dataService?.dataSelected
       ? this.data
       : this.dataMeeting;
     this.functionID = this.dialog.formModel.funcID;
