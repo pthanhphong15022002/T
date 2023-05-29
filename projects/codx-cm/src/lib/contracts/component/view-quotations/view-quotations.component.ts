@@ -6,21 +6,22 @@ import { CM_Quotations } from '../../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'product',
-  templateUrl: './product.component.html',
-  styleUrls: ['./product.component.css']
+  selector: 'view-quotations',
+  templateUrl: './view-quotations.component.html',
+  styleUrls: ['./view-quotations.component.scss']
 })
-export class ProductComponent implements OnInit,OnChanges{
+export class ViewQuotationsComponent implements OnInit,OnChanges{
   @ViewChild('productTable') productTable: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
 
-  @Input() dataSource: any;
-  @Input() formModel: FormModel;
+  @Input() quotationLines: any;
+  @Input() fmQuotationLines: FormModel;
+  @Input() fmQuotations: FormModel;
+  @Input() quotations: CM_Quotations;
 
   dialog;
-  quotations: CM_Quotations;
   gridHeight: number = 300;
   editSettings: EditSettingsModel = {
     allowEditing: true,
@@ -52,8 +53,6 @@ export class ProductComponent implements OnInit,OnChanges{
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    console.log(this.formModel);
-    console.log(this.dataSource);
     
   }
   async ngOnInit(): Promise<void> {
@@ -79,7 +78,7 @@ export class ProductComponent implements OnInit,OnChanges{
   }
 
   async ngOnChanges(changes: SimpleChanges){
-    if(changes.dataSource && this.dataSource){
+    if(changes.dataSource && this.quotationLines){
       // this.productTable.refresh();
     }
   }

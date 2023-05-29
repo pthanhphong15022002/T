@@ -31,7 +31,7 @@ export class PopupAddPaymentHistoryComponent {
     this.dialog = dialog;
     this.action = dt?.data?.action;
     this.contractID = dt?.data?.contractID;
-    this.payment = dt?.data?.data;
+    this.payment = dt?.data?.payment;
     this.paymentHistory = dt?.data?.paymentHistory;
     this.listPaymentAdd = dt?.data?.listPaymentAdd;
     this.listPaymentEdit = dt?.data?.listPaymentEdit;
@@ -40,12 +40,13 @@ export class PopupAddPaymentHistoryComponent {
   }
 
   ngOnInit(): void {
-    this.setDataInput();
     this.listPaymentHistoryOfPayment = this.listPaymentHistory.filter(paymentHistory => paymentHistory.refLineID == this.payment?.recID)
+    this.setDataInput();
   }
 
   setDataInput(){
     if(this.action == 'add'){
+      this.setPaymentHistory();
     }
     if(this.action == 'edit'){
 
@@ -55,7 +56,7 @@ export class PopupAddPaymentHistoryComponent {
     }
   }
 
-  setPayment(){
+  setPaymentHistory(){
     let rowNo = this.listPaymentHistoryOfPayment?.length || 0;
     this.paymentHistory = new CM_ContractsPayments();
     this.paymentHistory.rowNo = rowNo + 1;
@@ -67,48 +68,85 @@ export class PopupAddPaymentHistoryComponent {
   }
 
   valueChangeText(event) {
-    try {
-      this.payment[event?.field] = event?.data;
-    } catch (error) {
-      console.log(error);
-       
-    }
+    this.paymentHistory[event?.field] = event?.data;
   }
 
   valueChangeCombobox(event) {
-    this.payment[event?.field] = event?.data;
+    this.paymentHistory[event?.field] = event?.data;
   }
 
   valueChangeAlert(event) {
-    this.payment[event?.field] = event?.data;
+    this.paymentHistory[event?.field] = event?.data;
   }
 
 
   changeValueDate(event) {
-    this.payment[event?.field] = new Date(event?.data?.fromDate);
+    this.paymentHistory[event?.field] = new Date(event?.data?.fromDate);
   }
 
   save(){
     if(this.action == 'add' || this.action == 'copy'){
-      this.addPayment();
+      this.addPaymentHistory(false);
     }
     if(this.action == 'edit'){
-      this.editPayment();
+      this.editPayment(false);
     }
   }
 
-  addPayment() {
-    this.cmService.addPayments(this.payment).subscribe( res => {
-      if(res){
-          this.dialog.close({ payment: res, action: this.action });
-        }
-      })
+  saveAndClose(){
+    if(this.action == 'add' || this.action == 'copy'){
+      this.addPaymentHistory(true);
+    }
+    if(this.action == 'edit'){
+      this.editPayment(true);
+    }
   }
-  editPayment() {
-    this.cmService.editPayments(this.payment).subscribe( res => {
-      if(res){
-          this.dialog.close({ payment: res, action: this.action });
-        }
-      })
+
+  addPaymentHistory(isClose) {
+    this.listPaymentHistory.push(this.paymentHistory);
+    this.listPaymentAdd.push(this.paymentHistory);
+    this.listPaymentHistoryOfPayment.push(this.paymentHistory);
+    this.payment.remainAmt = this.payment?.remainAmt - this.paymentHistory?.paidAmt || this.payment.remainAmt;
+    if(isClose){
+      this.dialog.close()
+    }else{
+      this.action = 'add';
+      this.setPaymentHistory();
+    }
+    // this.cmService.addPayments(this.payment).subscribe( res => {
+    //   if(res){
+    //       this.dialog.close({ payment: res, action: this.action });
+    //     }
+    //   })
+  }
+  editPayment(isClose) {
+    let payHistoryIndex = this.listPaymentHistory.findIndex(payment => payment.recID == this.paymentHistory?.recID);
+    if(payHistoryIndex >= 0){
+      this.listPaymentHistory.splice(payHistoryIndex,1,this.paymentHistory);
+    }
+
+    let paymentIndexAdd = this.listPaymentAdd.findIndex(payment => payment.recID == this.paymentHistory?.recID);
+    if(paymentIndexAdd >= 0){ 
+      this.listPaymentAdd.splice(paymentIndexAdd,1,this.paymentHistory);
+    }else{
+      let paymentIndexEdit = this.listPaymentEdit.findIndex(payment => payment.recID == this.paymentHistory?.recID);
+      if(paymentIndexEdit >=0){
+        this.listPaymentEdit.splice(paymentIndexAdd,1,this.paymentHistory);
+      }else{
+        this.listPaymentEdit.push(this.paymentHistory);
+      }
+    }
+
+    if(isClose){
+      this.dialog.close(true);
+    }else{
+      this.action = "add";
+      this.setPaymentHistory();
+    }
+    // this.cmService.editPayments(this.payment).subscribe( res => {
+    //   if(res){
+    //       this.dialog.close({ payment: res, action: this.action });
+    //     }
+    //   })
   }
 }
