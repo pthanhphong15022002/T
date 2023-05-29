@@ -42,42 +42,13 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="businessLineID"
+          [disabled]="actionEdit === action"
           (valueChange)="valueChangeBusinessLine($event)"
         >
         </codx-input>
       </div>
     </div>
 
-
-    <!-- <div class="col-6" *ngIf="listCbxProcess.length > 0 && listCbxProcess != null">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          fiedName="ProcessID"
-          [Group]="form.formGroup"
-          default="Quy trình"
-        >
-        </codx-label>
-        <ejs-combobox
-        id="recID"
-        [dataSource]="listCbxProcess"
-        [fields]="fieldCbxProcess"
-        [enabled]=" actionEdit !== action "
-        [value]="deal?.processID"
-        (valueChange)="cbxProcessChange($event,'processID')"
-      ></ejs-combobox>
-
-      <codx-input
-      [formModel]="form.formModel"
-      field="processID"
-      [disabled]="true"
-      [model]="{ApplyFor: '1'}"
-      (valueChange)="valueChange($event)"
-    >
-    </codx-input>
-
-      </div>
-    </div> -->
   </div>
   <div class="row">
     <div class="col-6">
@@ -109,23 +80,18 @@
           default="Quy trình"
         >
         </codx-label>
-        <ejs-combobox
-        id="recID"
-        [dataSource]="listCbxProcess"
-        [fields]="fieldCbxProcess"
-        [enabled]=" actionEdit !== action "
-        [value]="deal?.processID"
-        (valueChange)="cbxProcessChange($event,'processID')"
-      ></ejs-combobox>
+      <div *ngIf="deal?.processID">
+        <codx-input
+        [formModel]="form.formModel"
+        field="processID"
+        [disabled]="true"
+        [model]="{ApplyFor: '1'}"
+        [crrValue]="deal?.processID"
+      >
+      </codx-input>
 
-      <!-- <codx-input
-      [formModel]="form.formModel"
-      field="processID"
-      [model]="{ApplyFor: '1'}"
-      [crrValue]="deal?.processID"
-      (valueChange)="valueChange($event)"
-    >
-    </codx-input> -->
+      </div>
+
       </div>
     </div>
 
@@ -442,6 +408,58 @@
 </ng-template>
 
 <ng-template #contact>
+  <ng-container>
+    <div class="d-flex flex-column mb-1">
+      <div class="title text-primary fs-4 fw-bold">
+        <codx-label
+          [formModel]="formModel"
+          name="lblListContactCustomer"
+          default="Danh sách người liên hệ từ khách hàng"
+        ></codx-label>
+      </div>
+      <div class="text-gray-600">
+        <codx-label
+          name="lblCheckContactToDeal"
+          [formModel]="formModel"
+          default="Chọn liên hệ muốn thêm vào cơ hội"
+        >
+        </codx-label>
+      </div>
+    </div>
+
+    <codx-list-contacts
+      #codxListContact
+      [funcID]="'CM0101'"
+      [objectID]="customerID"
+      [listContacts]="lstContactCustomer"
+      [objectType]="'1'"
+      [objectName]="customerName"
+      [isConvertLeadToCus]="true"
+      (contactEvent)="contactEvent($event)"
+      (lstContactEmit)="lstContactEmit($event)"
+      (objectConvert)="objectConvertDeal($event)"
+      [hidenMF]="true"
+      [type]="'formAdd'"
+    ></codx-list-contacts>
+  </ng-container>
+  <ng-container>
+    <div class="title text-primary fs-4 fw-bold">
+      <codx-label
+        [formModel]="formModel"
+        name="lblListContactDeal"
+        default="Danh sách người liên hệ sử dụng cho cơ hội"
+      ></codx-label>
+    </div>
+    <codx-list-contacts
+      [funcID]="'CM0201'"
+      [objectID]="deal?.recID"
+      [listContacts]="lstContactDeal"
+      [objectType]="'4'"
+      [objectName]="deal?.dealName"
+      [hidenMF]="true"
+      [type]="'formAdd'"
+    ></codx-list-contacts>
+  </ng-container>
 
 </ng-template>
 

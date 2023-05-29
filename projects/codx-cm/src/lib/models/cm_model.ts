@@ -298,6 +298,7 @@ export class CM_Contacts {
   birthAddress: string;
   address: string;
   countryID: string;
+  refID: string;
   provinceID: string;
   districtID: string;
   wardID: string;
