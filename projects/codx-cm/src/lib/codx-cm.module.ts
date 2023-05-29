@@ -45,10 +45,8 @@ import { PopupAddDealcompetitorComponent } from './deals/deal-detail/codx-tab-de
 import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/view-dealcompetitors/view-dealcompetitors.component';
 import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
 import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
-import { CodxTableComponent } from './contracts/component/codx-table/codx-table.component';
 import { NoDataComponent } from './contracts/component/no-data/no-data.component';
 import { ViewsContractsComponent } from './contracts/views-contracts/views-contracts.component';
-import { ProductComponent } from './contracts/component/product/product.component';
 import { CasesComponent } from './cases/cases.component';
 import { CaseDetailComponent } from './cases/case-detail/case-detail.component';
 import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.component';
@@ -69,6 +67,7 @@ import { PopupAddPaymentComponent } from './contracts/payment/popup-add-payment/
 import { PopupAddPaymentHistoryComponent } from './contracts/payment/popup-add-payment-history/popup-add-payment-history.component';
 import { PopupViewPaymentHistoryComponent } from './contracts/payment/popup-view-payment-history/popup-view-payment-history.component';
 import { PopupMergeLeadsComponent } from './leads/popup-merge-leads/popup-merge-leads.component';
+import { ViewQuotationsComponent } from './contracts/component/view-quotations/view-quotations.component';
 
 const routes: Routes = [
   {
@@ -150,12 +149,10 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddQuotationsLinesComponent,
     CodxListContactsComponent,
     CodxListDealsComponent,
-    ProductComponent,
     CodxTabDealcompetitorsComponent,
     PopupAddDealcompetitorComponent,
     ViewDealcompetitorsComponent,
     CodxComboboxComponent,
-    CodxTableComponent,
     QuotationsViewDetailComponent,
     NoDataComponent,
     ViewsContractsComponent,
@@ -173,6 +170,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupStatusCompetitorComponent,
     CampaignsDetailComponent,
     PopupConvertLeadComponent,
+    ViewQuotationsComponent,
     //test
     CodxAsideCustomComponent,
     ProcessReleaseComponent,

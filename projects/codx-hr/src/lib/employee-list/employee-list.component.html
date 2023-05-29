@@ -140,7 +140,7 @@
 </ng-template>
 <!-- columns Tình trạng -->
 <ng-template #colStatus let-data>
-  <div (dblclick)="clickViewEmpInfo(data)" class="w-100 has-action-menu">
+  <div (dblclick)="clickViewEmpInfo(data)" class="d-flex has-action-menu justify-content-between w-100">
     <div class="d-flex flex-column py-3">
       <div class="d-flex mb-1">
         <codx-vll [name]="'HR003'" [value]="data.status" [showBgColor]="true" [showText]="true"
@@ -170,7 +170,12 @@
         </ng-container>
       </div>
     </div>
-    <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data" type="hover">
-    </codx-mfunc>
+    <div class="align-self-center">
+      <div style="height: 35px" class="has-action-menu">
+        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
+          (changeDataMF)="clickMF($event, data)" [dataItem]="data" type="hover">
+        </codx-mfunc>
+      </div>
+    </div>
   </div>
 </ng-template>

@@ -8,6 +8,7 @@ import {
   SimpleChanges,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -64,6 +65,7 @@ declare var window: any;
   selector: 'lib-pop-add-cash',
   templateUrl: './pop-add-cash.component.html',
   styleUrls: ['./pop-add-cash.component.css'],
+  encapsulation:ViewEncapsulation.None,
 })
 export class PopAddCashComponent extends UIComponent implements OnInit {
   //#region Contructor
