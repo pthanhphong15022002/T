@@ -814,6 +814,7 @@
                 [min]="0"
                 [crrValue]="contracts?.contractAmt"
                 (valueChange)="valueChangeText($event)"
+                [disabled]="true"
               >
               </codx-input>
             </div>
@@ -835,6 +836,7 @@
                 [min]="0"
                 (valueChange)="valueChangeText($event)"
                 [crrValue]="contracts?.paidAmt"
+                [disabled]="true"
               >
               </codx-input>
             </div>
@@ -856,6 +858,7 @@
                 [min]="0"
                 (valueChange)="valueChangeText($event)"
                 [crrValue]="contracts?.remainAmt"
+                [disabled]="true"
               >
               </codx-input>
             </div>
@@ -919,6 +922,7 @@
                 type="valuelist"
                 [crrValue]="contracts?.currencyID"
                 (valueChange)="valueChangeText($event)"
+                [disabled]="true"
               >
               </codx-input>
             </div>
@@ -939,6 +943,7 @@
                 type="number"
                 [crrValue]="contracts?.exchangeRate"
                 (valueChange)="valueChangeText($event)"
+                [disabled]="true"
               >
               </codx-input>
             </div>
