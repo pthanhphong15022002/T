@@ -72,7 +72,7 @@
               <div class="form-group">
                 <codx-label fiedName="CashBookID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input #cashBook [Group]="form.formGroup" field="cashBookID" [formModel]="form.formModel"
+                <codx-input [Group]="form.formGroup" field="cashBookID" [formModel]="form.formModel"
                   (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
@@ -88,10 +88,10 @@
                 </codx-label>
                 <codx-input *ngIf="form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'"
                   [Group]="form.formGroup" [formModel]="form.formModel" field="totalAmt" [min]="0"
-                  (controlBlur)="controlBlur($event)"></codx-input>
+                  (controlBlur)="valueFocusOut($event)"></codx-input>
                 <codx-input *ngIf="form.formModel.funcID == 'ACT0401' || form.formModel.funcID == 'ACT0428'"
                   [Group]="form.formGroup" [formModel]="form.formModel" field="receiptAmt" [min]="0"
-                  (controlBlur)="controlBlur($event)"></codx-input>
+                  (controlBlur)="valueFocusOut($event)"></codx-input>
               </div>
             </div>
             <div class="col-4">
@@ -100,7 +100,7 @@
                 <div class="form-group">
                   <codx-label fiedName="ReasonID" [formModel]="form.formModel">
                   </codx-label>
-                  <codx-input [Group]="form.formGroup" field="reasonID" [formModel]="form.formModel"
+                  <codx-input #cbxReason [Group]="form.formGroup" field="reasonID" [formModel]="form.formModel"
                     (valueChange)="valueChange($event)">
                   </codx-input>
                 </div>
@@ -170,13 +170,13 @@
                   <codx-label fiedName="Payee" [formModel]="form.formModel">
                   </codx-label>
                   <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="payee"
-                    (controlBlur)="controlBlur($event)"></codx-input>
+                    (controlBlur)="valueFocusOut($event)"></codx-input>
                 </div>
                 <div *ngIf="form.formModel.funcID == 'ACT0401'" class="form-group">
                   <codx-label fiedName="Payor" [formModel]="form.formModel">
                   </codx-label>
                   <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="payor"
-                    (controlBlur)="controlBlur($event)"></codx-input>
+                    (controlBlur)="valueFocusOut($event)"></codx-input>
                 </div>
               </div>
             </div>
@@ -247,12 +247,12 @@
 <ng-template #tabLine>
   <ng-container *ngIf="(cashpayment?.subType != '2') && modegrid == '1'">
     <div class="h-100">
-      <codx-gridview-v2 class="tabLine" #gridCashPaymentLine [formName]="fmCashPaymentsLines.formName"
+      <codx-gridview-v2 class="tabLine" #gridCash [formName]="fmCashPaymentsLines.formName"
         [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
         [height]="gridHeight" [autoLoad]="false" rowHeight="40" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
-        (cellChanged)="lineChanged($event)" (created)="gridCreated(gridCashPaymentLine)"></codx-gridview-v2>
+        (cellChanged)="lineChanged($event)" (created)="gridCreated(gridCash)"></codx-gridview-v2>
     </div>
   </ng-container>
   <ng-container
@@ -807,11 +807,11 @@
 <!-- Start: VoucherLineRefs -->
 <ng-template #tabsettledInvoices>
   <div class="h-100" *ngIf="cashpayment?.subType === '2'">
-    <codx-gridview-v2 #gridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices"
+    <codx-gridview-v2 #gridCash formName="SettledInvoices" gridViewName="grvSettledInvoices"
       entityName="AC_SettledInvoices" [templateMore]="morefunction" [editSettings]="editSettings"
       [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" service="AC" [height]="gridHeight"
       [autoLoad]="false" [dataSource]="settledInvoices" rowHeight="40" (cellChanged)="voucherLineRefsChanged($event)"
-      (created)="gridCreated(gridSettledInvoices)"></codx-gridview-v2>
+      (created)="gridCreated(gridCash)"></codx-gridview-v2>
   </div>
   <div #btnRef class="container w-90 h-90">
     <div style="background: none" class="list-empty card card-flush h-100">
@@ -892,12 +892,12 @@
           {{ headerText }}
         </div>
         <ng-container *ngIf="form.formGroup">
-          <div *ngIf="formType == 'add' && !hasSaved" class="me-3 input-circle input-border-0 w-350px">
+          <div *ngIf="formType == 'add'" class="me-3 input-circle input-border-0 w-350px">
             <codx-input [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
               (valueChange)="changeType($event)">
             </codx-input>
           </div>
-          <span *ngIf="(formType == 'edit' && cashpayment?.subType) || hasSaved" class="me-3">
+          <span *ngIf="(formType == 'edit' && cashpayment?.subType)" class="me-3">
             <codx-vll [name]="'AC063'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
               [showText]="true" [showBgColor]="true" class="badge badge-light-primary badge-lg">
             </codx-vll>
@@ -954,7 +954,7 @@
       <codx-label class="fs-6 fw-bold me-2" fiedName="RefDocs" [formModel]="form.formModel">
       </codx-label>
       <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="refDocs" [min]="0"
-        (controlBlur)="controlBlur($event)"></codx-input>
+        (controlBlur)="valueFocusOut($event)"></codx-input>
     </div>
   </ng-container>
 </ng-template>
