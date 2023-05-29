@@ -1,9 +1,10 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { UIComponent, DialogRef, FormModel, NotificationsService, AuthStore, DialogData, RequestOption, ImageViewerComponent, Util } from 'codx-core';
+import { UIComponent, DialogRef, FormModel, NotificationsService, AuthStore, DialogData, RequestOption, ImageViewerComponent, Util, CRUDService } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Deals, CM_Leads } from '../../models/cm_model';
 import { tmpInstances } from '../../models/tmpModel';
 import { recordEdited } from '@syncfusion/ej2-pivotview';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-popup-add-lead',
@@ -88,6 +89,7 @@ owner: any;
 dateMessage:any;
 dateMax:any;
 customerIDOld: any;
+funcID:any;
 // model of DP
 instance: tmpInstances = new tmpInstances();
 instanceSteps: any;
@@ -97,6 +99,7 @@ lstContact:  any[] = [];
 lstContactDeletes:  any[] = [];
 listAddress:  any[] = [];
 listAddressDelete: any[] = [];
+  linkAvatar: string;
 
 constructor(
   private inject: Injector,
@@ -110,6 +113,7 @@ constructor(
   super(inject);
   this.dialog = dialog;
   this.formModel = dialog.formModel;
+  this.funcID = this.formModel?.funcID;
   this.titleAction = dt?.data?.titleAction;
   this.action = dt?.data?.action;
   this.executeApiCalls();
@@ -175,7 +179,14 @@ saveLead() {
   //   this.notificationsService.notifyCode(messageCheckFormat);
   //   return;
   // }
-  this.onAdd();
+  if(this.action !== this.actionEdit) {
+    this.onAdd();
+  }
+  else {
+    this.onEdit();
+  }
+
+
 }
 cbxChange($event, field) {
   if ($event) {
@@ -189,33 +200,48 @@ valueChangeOwner($event) {
   }
 }
 onAdd() {
-//  var data = this.lead;
-  this.dialog.dataService
-    .save((option: any) => this.beforeSave(option), 0)
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option), 0)
+      .subscribe((res) => {
+        if (res) {
+          var recID = res?.save[0].recID;
+          if (this.avatarChange) {
+            this.imageUpload
+              .updateFileDirectReload(recID)
+              .subscribe((result) => {
+                if (result) {
+                  this.dialog.close([res.save[0]]);
+                } else {
+                  this.dialog.close([res.save[0]]);
+                }
+              });
+          } else {
+            this.dialog.close([res.save[0]]);
+          }
+        }
+      });
+
+}
+onEdit() {
+    this.dialog.dataService
+    .save((option: any) => this.beforeSave(option))
     .subscribe((res) => {
-      if (res) {
-        debugger;
-        var recID = res?.save[0]?.recID;
+      if (res && res.update[0]) {
+        var recID = res.update[0].recID;
+        (this.dialog.dataService as CRUDService)
+          .update(res.update[0])
+          .subscribe();
         if (this.avatarChange) {
           this.imageUpload
             .updateFileDirectReload(recID)
             .subscribe((result) => {
               if (result) {
-                this.dialog.close([res.save[0]]);
-                return;
+                this.dialog.close(res.update[0]);
               }
             });
-          }
-      this.dialog.close([res.save[0]]);
-      } else this.dialog.close();
-    });
-}
-onEdit() {
-  this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe((res) => {
-      if (res.update[0]) {
-        this.dialog.close(res.update[0]);
+        } else {
+          this.dialog.close(res.update[0]);
+        }
       }
     });
 }

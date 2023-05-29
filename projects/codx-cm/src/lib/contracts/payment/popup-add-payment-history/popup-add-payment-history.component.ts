@@ -4,17 +4,24 @@ import { CM_ContractsPayments } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
 
 @Component({
-  selector: 'lib-payments',
-  templateUrl: './payments.component.html',
-  styleUrls: ['./payments.component.scss']
+  selector: 'lib-popup-add-payment-history',
+  templateUrl: './popup-add-payment-history.component.html',
+  styleUrls: ['./popup-add-payment-history.component.scss']
 })
-export class PaymentsComponent  implements OnInit {
-  type: 'pay' | 'payHistory';
+export class PopupAddPaymentHistoryComponent {
   action = '';
   payment: CM_ContractsPayments;
+  paymentHistory: CM_ContractsPayments;
+  listPaymentHistory: CM_ContractsPayments[];
+
+  listPaymentAdd: CM_ContractsPayments[];
+  listPaymentEdit: CM_ContractsPayments[];
+  listPaymentDelete: CM_ContractsPayments[];
   contractID = null;
 
-  title: string;
+  listPaymentHistoryOfPayment: CM_ContractsPayments[]; //
+
+  title = "Lịch sử thanh toán";
   dialog: DialogRef;
   constructor(
     private cmService: CodxCmService,
@@ -22,15 +29,19 @@ export class PaymentsComponent  implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.type = dt?.data?.type;
     this.action = dt?.data?.action;
     this.contractID = dt?.data?.contractID;
     this.payment = dt?.data?.data;
+    this.paymentHistory = dt?.data?.paymentHistory;
+    this.listPaymentAdd = dt?.data?.listPaymentAdd;
+    this.listPaymentEdit = dt?.data?.listPaymentEdit;
+    this.listPaymentDelete = dt?.data?.listPaymentDelete;
+    this.listPaymentHistory = dt?.data?.listPaymentHistory;
   }
 
   ngOnInit(): void {
-    this.title = this.type === 'pay' ? "Lịch thanh toán" : "Lịch sử thanh toán"
     this.setDataInput();
+    this.listPaymentHistoryOfPayment = this.listPaymentHistory.filter(paymentHistory => paymentHistory.refLineID == this.payment?.recID)
   }
 
   setDataInput(){
@@ -44,7 +55,17 @@ export class PaymentsComponent  implements OnInit {
     }
   }
 
-  getPaymentBy
+  setPayment(){
+    let rowNo = this.listPaymentHistoryOfPayment?.length || 0;
+    this.paymentHistory = new CM_ContractsPayments();
+    this.paymentHistory.rowNo = rowNo + 1;
+    this.paymentHistory.refNo = this.contractID;
+    this.paymentHistory.refLineID = this.payment?.recID;
+    this.paymentHistory.scheduleDate = this.payment?.scheduleDate;
+    this.paymentHistory.scheduleAmt = this.payment?.scheduleAmt;
+    this.paymentHistory.remainAmt = this.payment?.remainAmt;
+  }
+
   valueChangeText(event) {
     try {
       this.payment[event?.field] = event?.data;
@@ -90,4 +111,4 @@ export class PaymentsComponent  implements OnInit {
         }
       })
   }
- }
+}

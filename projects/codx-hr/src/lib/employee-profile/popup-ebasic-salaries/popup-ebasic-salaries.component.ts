@@ -192,8 +192,8 @@ export class PopupEBasicSalariesComponent
 
             this.formModel.currentData = this.EBasicSalaryObj;
             this.formGroup.patchValue(this.EBasicSalaryObj);
-            this.cr.detectChanges();
             this.isAfterRender = true;
+            this.cr.detectChanges();
           }
         });
     } else {
@@ -205,8 +205,8 @@ export class PopupEBasicSalariesComponent
         }
         this.formGroup.patchValue(this.EBasicSalaryObj);
         this.formModel.currentData = this.EBasicSalaryObj;
-        this.cr.detectChanges();
         this.isAfterRender = true;
+        this.cr.detectChanges();
       }
     }
   }

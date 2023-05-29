@@ -37,7 +37,8 @@ export class PopupAddressComponent implements OnInit {
   objectID = '';
   objectType = '';
   lstAddress = [];
-
+  checkAddressName = false;
+  checkSetName = false;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -83,26 +84,50 @@ export class PopupAddressComponent implements OnInit {
   }
 
   setNameAdress() {
-    if(this.data.countryID != null && this.data.countryID.trim() != ''){
-      this.api.execSv<any>('BS','ERM.Business.BS','CountriesBusiness','GetAsync',this.data?.countryID).subscribe(res =>{
-        if(res){
-          this.nameCountry = res?.countryName;
-        }
-      })
+    if (this.data.countryID != null && this.data.countryID.trim() != '') {
+      this.api
+        .execSv<any>(
+          'BS',
+          'ERM.Business.BS',
+          'CountriesBusiness',
+          'GetAsync',
+          this.data?.countryID
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.nameCountry = res?.countryName;
+          }
+        });
     }
-    if(this.data.provinceID != null && this.data.provinceID.trim() != ''){
-      this.api.execSv<any>('BS','ERM.Business.BS','ProvincesBusiness','GetAsync',this.data?.provinceID).subscribe(res =>{
-        if(res){
-          this.nameProvince = res?.name;
-        }
-      })
+    if (this.data.provinceID != null && this.data.provinceID.trim() != '') {
+      this.api
+        .execSv<any>(
+          'BS',
+          'ERM.Business.BS',
+          'ProvincesBusiness',
+          'GetAsync',
+          this.data?.provinceID
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.nameProvince = res?.name;
+          }
+        });
     }
-    if(this.data.districtID != null && this.data.districtID.trim() != ''){
-      this.api.execSv<any>('BS','ERM.Business.BS','DistrictsBusiness','GetAsync',this.data?.districtID).subscribe(res =>{
-        if(res){
-          this.nameDistrict = res?.districtName;
-        }
-      })
+    if (this.data.districtID != null && this.data.districtID.trim() != '') {
+      this.api
+        .execSv<any>(
+          'BS',
+          'ERM.Business.BS',
+          'DistrictsBusiness',
+          'GetAsync',
+          this.data?.districtID
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.nameDistrict = res?.districtName;
+          }
+        });
     }
     // if(this.data.countryID != null && this.data.countryID.trim() != ''){
     //   this.api.execSv<any>('BS','ERM.Business.BS','CountriesBusiness','GetAsync',this.data.countryID).subscribe(res =>{
@@ -220,6 +245,7 @@ export class PopupAddressComponent implements OnInit {
         if (adressName.endsWith(',')) {
           adressName = adressName.slice(0, -1);
         }
+        this.checkSetName = true;
         this.data.adressName = adressName;
       }
     }
@@ -232,6 +258,9 @@ export class PopupAddressComponent implements OnInit {
     this.data[e.field] = e?.data;
     if (e.data) {
       switch (e.field) {
+        case 'adressName':
+          this.checkAddressName = true;
+          break;
         case 'countryID':
           this.model = { CountryID: JSON.parse(JSON.stringify(e?.data)) };
           this.nameCountry =
@@ -268,13 +297,22 @@ export class PopupAddressComponent implements OnInit {
               : null;
           break;
       }
-      if (
-        this.data?.adressName == null ||
-        this.data?.adressName?.trim() == ''
-      ) {
+      if (!this.checkAddressName) {
         this.setAdressName();
       }
     }
+  }
+
+  checkEventListen() {
+    var inputField = document.getElementById('inputAddress');
+
+    // Bắt sự kiện gõ phím
+    inputField.addEventListener('keyup', (event) => {
+      var keyCode = event.keyCode || event.which;
+
+      // Xử lý logic tại đây
+      console.log('Phím đã được gõ: ' + String.fromCharCode(keyCode));
+    });
   }
 }
 class Guid {

@@ -16,12 +16,25 @@ import { IJournal } from './interfaces/IJournal.interface';
   providedIn: 'root',
 })
 export class JournalService {
+  duplicateVoucherNo: string;
+
   constructor(
     private api: ApiHttpService,
     private acService: CodxAcService,
     private notiService: NotificationsService,
     private cacheService: CacheService
-  ) {}
+  ) {
+    this.cacheService
+      .viewSettingValues('ACParameters')
+      .pipe(
+        tap((o) => console.log(o)),
+        map((arr) => arr.filter((f) => f.category === '1')[0]),
+        map((data) => JSON.parse(data.dataValue)?.DuplicateVoucherNo)
+      )
+      .subscribe((res) => {
+        this.duplicateVoucherNo = res;
+      });
+  }
 
   deleteAutoNumber(autoNoCode: string): void {
     this.api
@@ -55,8 +68,8 @@ export class JournalService {
     saveFunction: () => void
   ): void {
     if (
-      journal.voucherNoRule !== '0' &&
-      journal.duplicateVoucherNo === '0' &&
+      journal.assignRule !== '0' &&
+      this.duplicateVoucherNo === '0' &&
       model.voucherNo
     ) {
       const options = new DataRequest();
@@ -125,7 +138,7 @@ export class JournalService {
       hiddenFields.push('DIM3');
     }
 
-    if (journal?.projectControl == '9') {
+    if (journal?.projectControl == '0') {
       hiddenFields.push('ProjectID');
     }
 

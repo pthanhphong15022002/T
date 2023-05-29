@@ -1,5 +1,6 @@
 <codx-views
   #view
+  [idField]="idField"
   [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
@@ -12,10 +13,10 @@
   [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
   [autoLoad]="true"
-  [idField]="idField"
   [autoSearch]="true"
+  [selectedFirst]="true"
   (selectedChange)="selectedChange($event)"
-  (onLoading)="onLoading($event)"
+  (onActions)="onActions($event)"
   (searchChanged)="searchChanged($event)"
   [viewActiveType]="viewMode"
 ></codx-views>
@@ -31,9 +32,9 @@
     [titleTmp]="cardTitleTmp"
     [formModel]="view.formModel"
     [setting]="setting"
-    [footer]="footerKanban"
-    [dataItem]="data"
+    [footer]="footer"
     [rootData]="data"
+    [dataItem]="data"
     (dblclick)="dblClick($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
   >
@@ -63,52 +64,16 @@
 <ng-template #cardTitleTmp let-data>
   <codx-temp-full
     style="width: 100%"
-    [title]="data.title"
+    [title]="data.caseName"
     [descTmp]="descTmp"
+    [baseHeaderRightTmp]="baseHeaderRightTmp"
   >
   </codx-temp-full>
-  <ng-template #descTmp>
-    noi dung gi day
-  </ng-template>
 </ng-template>
 
-<ng-template #footerKanban let-data>
+<!-- <ng-template #footerKanban let-data>
   <div class="d-flex justify-content-between align-items-center mt-1">
-    <div class="d-flex align-items-end codx-badge">
-      noi dung gi day
-      <!-- <ng-container>
-        <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data.status" [showText]="true" [showBgColor]="true"
-          class="badge badge-light badge-md fs-7">
-        </codx-vll>
-      </ng-container> -->
-      <!-- <span
-        #pEd="ngbPopover"
-        [ngbPopover]="popperEndDate"
-        (mouseenter)="pEd.open()"
-        (mouseleave)="pEd.close()"
-        placement="right top botom left"
-      >
-        <span class="text-gray-600 icon-16 icon-av_timer me-1"></span>
-        <span
-          class="fs-7 text-gray-600"
-          #endDate
-          [innerHTML]="
-            data.endDate
-              | formatvalue
-                : view.formModel
-                : 'endDate'
-                : endDate
-                : 'DPInstances'
-                : 'grvDPInstances'
-              | async
-          "
-        ></span>
-      </span> -->
-    </div>
-    <!-- <div class="d-flex justify-content-center">
-      <codx-imgs [isToolTip]="true" [width]="25" [objectId]="data.owner" ojectType="AD_Users" [numberImages]="1">
-      </codx-imgs>
-    </div> -->
+    <div class="d-flex align-items-end codx-badge">noi dung gi day</div>
     <codx-imgs
       [isToolTip]="true"
       [width]="25"
@@ -118,8 +83,7 @@
     >
     </codx-imgs>
   </div>
-</ng-template>
-
+</ng-template> -->
 
 <!-- end kanban -->
 <ng-template #itemTemplate let-data>
@@ -137,13 +101,10 @@
     [titleCss]="'fw-bold fs-6 mb-1'"
     [dataItem]="data"
     [baseHeaderRightTmp]="baseHeaderRightTmp"
-
   >
   </codx-temp-full>
-
 </ng-template>
 <ng-template #descTmp let-data>
-
   <div class="d-flex flex-column">
     <div class="d-flex justify-content-start mb-1">
       <i class="icon-view_comfy me-2"></i>
@@ -151,7 +112,7 @@
         class="text-gray-800"
         #customerID
         [innerHTML]="
-        data?.customerID
+          data?.customerID
             | formatvalue
               : formModel
               : 'customerID'
@@ -164,30 +125,31 @@
     </div>
   </div>
 </ng-template>
+
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-end codx-badge">
       <div class="me-2 badge badge-light-primary">
         <span>
-        {{data?.currentStepName}}
+          {{ data?.currentStepName }}
         </span>
       </div>
       <div class="d-flex align-items-center text-gray-600">
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
-        class="text-gray-700"
-        #endDate
-        [innerHTML]="
-        data.endDate
-            | formatvalue
-              : formModel
-              : 'endDate'
-              : endDate
-              : 'CMDeals'
-              : 'grvCMDeals'
-            | async
-        "
-      ></span>
+          class="text-gray-700"
+          #endDate
+          [innerHTML]="
+            data.endDate
+              | formatvalue
+                : formModel
+                : 'endDate'
+                : endDate
+                : 'CMDeals'
+                : 'grvCMDeals'
+              | async
+          "
+        ></span>
       </div>
     </div>
     <div class="d-flex justify-content-center">
@@ -204,20 +166,19 @@
 </ng-template>
 <ng-template #baseHeaderRightTmp let-data>
   <span
-  class="icon-18 me-1"
-  [class]="data?.priority | vll : vllPriority : 'icon' | async"
-  [style.color]="data?.priority | vll : vllPriority : 'textColor' | async"
-  [ngbPopover]="popDetailPriority"
-  #p="ngbPopover"
-  [openDelay]="500"
-  (mouseenter)="p.open()"
-  (mouseleave)="p.close()"
-  placement="left"
->
-</span>
+    class="icon-18 me-1"
+    [class]="data?.priority | vll : vllPriority : 'icon' | async"
+    [style.color]="data?.priority | vll : vllPriority : 'textColor' | async"
+    [ngbPopover]="popDetailPriority"
+    #p="ngbPopover"
+    [openDelay]="500"
+    (mouseenter)="p.open()"
+    (mouseleave)="p.close()"
+    placement="left"
+  >
+  </span>
 </ng-template>
 <ng-template #popDetailPriority let-data>
-
   <!-- <span>
     <codx-label
       fiedName="lblPriority"
@@ -234,11 +195,15 @@
 <ng-template #templateDetail>
   <codx-case-detail
     #casesComponent
-    [dataService]="view.dataService"
     [formModel]="view.formModel"
     [dataSelected]="dataSelected"
     [funcID]="funcID"
     (clickMoreFunc)="clickMoreFunc($event)"
   >
   </codx-case-detail>
+</ng-template>
+
+<!-- View chi tiet kanban -->
+<ng-template #popDetail let-popup>
+  <codx-form [body]="templateDetail" [dialog]="popup"> </codx-form>
 </ng-template>

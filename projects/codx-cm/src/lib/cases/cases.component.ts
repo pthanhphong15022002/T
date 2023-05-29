@@ -20,6 +20,9 @@ import {
   ViewType,
   SidebarModel,
   RequestOption,
+  CRUDService,
+  DialogModel,
+  Util,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
@@ -49,6 +52,7 @@ export class CasesComponent
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+  @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -56,8 +60,8 @@ export class CasesComponent
   formModel: FormModel;
 
   // type any for view detail
-  funcID: any;
-  dataObj?: any;
+  @Input() funcID: any;
+  @Input() dataObj?: any;
   kanban: any;
 
   // config api get data
@@ -92,8 +96,9 @@ export class CasesComponent
   readonly btnAdd: string = 'btnAdd';
   request: ResourceModel;
   resourceKanban?: ResourceModel;
-  hideMoreFC = true;
+  hideMoreFC = false;
   listHeader: any;
+  processID: any;
 
   constructor(
     private inject: Injector,
@@ -110,15 +115,26 @@ export class CasesComponent
     // this.getListCustomer();
   }
   ngOnChanges(changes: SimpleChanges): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
+    if (!this.funcID) {
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    }
+    if (changes['dataObj']) {
+      this.dataObj = changes['dataObj'].currentValue;
+      if (this.processID != this.dataObj?.processID) {
+        this.processID = this.dataObj?.processID;
+        this.reloadData();
+      }
+    }
   }
 
   onInit(): void {
     //test no chosse
-    this.dataObj = {
-      processID: '327eb334-5695-468c-a2b6-98c0284d0620',
+    this.button = {
+      id: this.btnAdd,
     };
+    if (!this.funcID) {
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    }
     this.request = new ResourceModel();
     this.request.service = 'CM';
     this.request.assemblyName = 'CM';
@@ -133,50 +149,108 @@ export class CasesComponent
     this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
-
-    this.button = {
-      id: this.btnAdd,
-    };
-
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.templateDetail,
-        },
-      },
-      {
-        type: ViewType.kanban,
-        active: false,
-        sameData: false,
-        request: this.request,
-        request2: this.resourceKanban,
-        toolbarTemplate: this.footerButton,
-        model: {
-          template: this.cardKanban,
-          template2: this.viewColumKaban,
-          setColorHeader: true,
-        },
-      },
-    ];
-
-    this.router.params.subscribe((param: any) => {
-      if (param.funcID) {
-        this.funcID = param.funcID;
-      }
-    });
   }
-
   ngAfterViewInit(): void {
-    this.crrFuncID = this.funcID;
+    if (this.dataObj) {
+      this.views = [
+        {
+          type: ViewType.listdetail,
+          sameData: true,
+          model: {
+            template: this.itemTemplate,
+            panelRightRef: this.templateDetail,
+          },
+        },
+        {
+          type: ViewType.kanban,
+          active: false,
+          sameData: false,
+          request: this.request,
+          request2: this.resourceKanban,
+          toolbarTemplate: this.footerButton,
+          model: {
+            template: this.cardKanban,
+            template2: this.viewColumKaban,
+            setColorHeader: true,
+          },
+        },
+      ];
+    } else
+      this.views = [
+        {
+          type: ViewType.listdetail,
+          sameData: true,
+          model: {
+            template: this.itemTemplate,
+            panelRightRef: this.templateDetail,
+          },
+        },
+        // {
+        //   type: ViewType.kanban,
+        //   active: false,
+        //   sameData: false,
+        //   request: this.request,
+        //   hide: true,
+        //   request2: this.resourceKanban,
+        //   toolbarTemplate: this.footerButton,
+        //   model: {
+        //     template: this.cardKanban,
+        //     template2: this.viewColumKaban,
+        //     setColorHeader: true,
+        //   },
+        // },
+      ];
+    this.reloadData();
     this.changeDetectorRef.detectChanges();
   }
 
-  onLoading(e) {
-    // this.afterLoad();
+  reloadData() {
+    if (this.view) {
+      this.dataSelected = null;
+      this.view.dataService.predicates = null;
+      this.view.dataService.dataValues = null;
+      this.view.dataObj = this.dataObj;
+
+      this.view?.views?.forEach((x) => {
+        if (x.type == 6) {
+          x.request.dataObj = this.dataObj;
+          x.request2.dataObj = this.dataObj;
+        }
+      });
+      if ((this.view?.currentView as any)?.kanban) {
+        let kanban = (this.view?.currentView as any)?.kanban;
+        let settingKanban = kanban.kanbanSetting;
+        settingKanban.isChangeColumn = true;
+        settingKanban.formName = this.view?.formModel?.formName;
+        settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+        this.api
+          .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+            settingKanban,
+            this.dataObj,
+          ])
+          .subscribe((resource) => {
+            if (resource?.columns && resource?.columns.length)
+              kanban.columns = resource.columns;
+            kanban.kanbanSetting.isChangeColumn = false;
+            kanban.dataObj = this.dataObj;
+            kanban.loadDataSource(
+              kanban.columns,
+              kanban.kanbanSetting?.swimlaneSettings,
+              false
+            );
+            kanban.refresh();
+          });
+      }
+
+      if (this.processID)
+        (this.view?.dataService as CRUDService)
+          .setPredicates(['ProcessID==@0'], [this.processID])
+          .subscribe();
+    }
   }
+
+  
+  
 
   //#region  get data
   // getListCustomer() {
@@ -189,10 +263,7 @@ export class CasesComponent
   //#endregion
 
   changeView(e) {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.crrFuncID != this.funcID) {
-      this.crrFuncID = this.funcID;
-    }
+  
   }
 
   click(evt: ButtonModel) {
@@ -254,6 +325,28 @@ export class CasesComponent
       }) || [];
 
     return dataColumns;
+  }
+
+  onActions(e) {
+    switch (e.type) {
+      // case 'drop':
+      //   this.dataDrop = e.data;
+      //   this.stepIdClick = JSON.parse(JSON.stringify(this.dataDrop.stepID));
+      //   // xử lý data chuyển công đoạn
+      //   if (this.crrStepID != this.dataDrop.stepID)
+      //     this.dropDeals(this.dataDrop);
+
+      //   break;
+      // case 'drag':
+      //   ///bắt data khi kéo
+      //   this.crrStepID = e?.data?.stepID;
+
+      //   break;
+      case 'dbClick':
+        //xư lý dbClick
+        this.viewDetail(e.data);
+        break;
+    }
   }
 
   //#region Search
@@ -398,5 +491,24 @@ export class CasesComponent
 
   getCustomerName(customerID: any) {
     return this.listCustomer.find((x) => x.recID === customerID);
+  }
+
+  viewDetail(data) {
+    this.dataSelected = data;
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 999;
+ 
+    let popup = this.callfc.openForm(
+      this.popDetail,
+      '',
+      Util.getViewPort().width,
+      Util.getViewPort().height,
+      '',
+      null,
+      '',
+      option
+    );
+   popup.closed.subscribe((e) => {});
   }
 }

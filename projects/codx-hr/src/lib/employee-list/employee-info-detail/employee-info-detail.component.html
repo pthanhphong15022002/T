@@ -46,11 +46,11 @@
                     >
                       <i class="icon-keyboard_arrow_down"></i>
                     </span>
-                    <div ngbDropdownMenu class="" style="min-width: 350px">
+                    <div ngbDropdownMenu class="" style="min-width: 400px">
                       <div class="card card-flush" *ngIf="eInfoFormModel">
-                        <div class="card-body py-3 px-4">
+                        <div class="card-body py-2 px-3">
                           <div class="d-flex flex-column">
-                            <div class="d-flex flex-wrap mb-2">
+                            <div class="d-flex flex-wrap align-items-center mb-2">
                               <div class="d-flex align-items-bottom me-2">
                                 <span
                                   class="icon-cake icon-16 text-gray-800 me-1"
@@ -79,9 +79,7 @@
                                 </span>
                               </div>
                               <div class="d-flex align-items-center">
-                                <span
-                                  class="icon-i-info-circle-fill fs-9 icon-6 me-2 text-gray-400"
-                                ></span>
+                                <span class="icon-i-info-circle-fill icon-6 me-2 text-gray-400"></span>
                                 <span
                                   class="fw-bold"
                                   [innerHTML]="
@@ -95,7 +93,7 @@
                                 </span>
                               </div>
                             </div>
-                            <div class="d-flex align-items-center mb-3">
+                            <div class="d-flex align-items-center mb-2">
                               <span
                                 class="icon-portrait icon-16 text-gray-800 me-1"
                               ></span>
@@ -112,9 +110,9 @@
                               </span>
                             </div>
 
-                            <div class="d-flex justify-content-between mb-3">
+                            <div class="d-flex justify-content-between mb-2">
                               <codx-label
-                                class="text-gray-600"
+                                class="text-gray-700"
                                 fiedName="PITNumber"
                                 [formModel]="eInfoFormModel"
                               >
@@ -129,10 +127,10 @@
                             </div>
 
                             <div
-                              class="d-flex d-flex justify-content-between mb-3"
+                              class="d-flex d-flex justify-content-between mb-2"
                             >
                               <codx-label
-                                class="text-gray-600"
+                                class="text-gray-700"
                                 fiedName="SIRegisterNo"
                                 [formModel]="eInfoFormModel"
                               >
@@ -148,11 +146,11 @@
                                 "
                               ></span>
                             </div>
-                     
-                            <div class="info-dropdownlist">
+                     <hr class="m-0" />
+                            <div class="info-dropdownlist pt-2">
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="joinedOn"
                                 >
@@ -171,7 +169,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="hiredOn"
                                 >
@@ -190,7 +188,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eContractFormModel"
                                   fiedName="ContractTypeID"
                                   [default]="'Hợp đồng hiện tại'"
@@ -210,7 +208,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="EmployeeTypeID"
                                 >
@@ -229,7 +227,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="userID"
                                 >
@@ -249,7 +247,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="lineManager"
                                 >
@@ -269,7 +267,7 @@
                              
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="timeCardNo"
                                 >
@@ -281,7 +279,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="shiftCalendarID"
                                 >
@@ -294,7 +292,7 @@
                               </div>
                               <div class="d-flex justify-content-between mb-3">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="ALObjectID"
                                 >
@@ -314,7 +312,7 @@
                               </div>
                               <div class="d-flex justify-content-between">
                                 <codx-label
-                                  class="text-gray-600"
+                                  class="text-gray-700"
                                   [formModel]="eInfoFormModel"
                                   fiedName="payrollGroupID"
                                 >
@@ -350,9 +348,9 @@
             </div>
             <div class="d-flex flex-center">
               <div class="fs-5-sm mb-1 d-flex align-items-center">
-                <span class="icon-qr_code_scanner icon-14 me-1"></span>
-                <span #id>{{employeeID }}</span>
-                <span class="icon-i-dot text-gray-500"></span>
+                <span class="icon-qr_code_scanner icon-16 me-2"></span>
+                <span style="margin-top: 2px;" #id>{{employeeID }}</span>
+                <span class="icon-i-info-circle-fill icon-4 mx-3 text-gray-600"></span>
                 <span class="fw-bold">{{ infoPersonal?.employeeName }}</span>
               </div>
             </div>
@@ -375,7 +373,7 @@
                       class="icon-connection-point icon-16 me-1"
                       *ngIf="i == 0"
                     ></span> -->
-                  <span class="icon-i-dot text-gray-500" *ngIf="i > 0"></span>
+                  <span class="icon-i-info-circle-fill icon-4 mx-2 text-gray-500" *ngIf="i > 0"></span>
                   <span>{{ org.orgUnitName }}</span>
                 </div>
               </div>
@@ -562,7 +560,7 @@
                     class="icon-18 me-2"
                     [ngClass]="item?.largeIcon ? item.largeIcon : 'icon-person'"
                   ></span>
-                  <div class="fw-bold">{{ item.customName }}</div>
+                  <div class="fw-bold text-left">{{ item.customName }}</div>
                 </div>
               </a>
             </ng-container>
@@ -2208,7 +2206,7 @@
                           placement="left"
                           [ngbPopover]="popIsDependent"
                           [style.color]="'#FFA800'"
-                          class="icon-bookmark icon-18 ms-auto"
+                          class="icon-bookmark icon-16 ms-auto"
                         ></div>
 
                         <ng-template #popIsDependent>
@@ -2284,18 +2282,18 @@
                       <div class="me-3 timeline-exper-node">
                         <span class="icon-fiber_manual_record text-gray-600"></span>
                       </div>
-                      <div class="stepper-label">
+                      <div class="stepper-label has-action-menu ">
                         <div class="stepper-title fs-5-sm fw-bold line-clamp line-clamp-3 mb-1">
                           <i class="icon-business"></i>
                           {{item?.companyName}}
                         </div>
-                        <div class="stepper-desc text-gray-500">
+                        <div class="stepper-desc text-gray-500 ">
                           {{item?.position}}
                         </div>
 
-                        <codx-mfunc *ngIf="!lstExperiences" [formModel]="eExperienceFormModel" (clickMF)="clickMF($event, item, 'eExperiences')"
-                          type="hover" [dataItem]="item">
-                        </codx-mfunc>
+                        <codx-mfunc [formModel]="eExperienceFormModel" (clickMF)="clickMF($event, item, 'eExperiences')"
+                        type="hover" [dataItem]="item">
+                      </codx-mfunc>
                       </div>
                     </div>
                     <!-- <div class="timeline-content mx-auto">
@@ -7665,6 +7663,284 @@
   [formModel]="EBusinessTravelFormodel"
   [name]="'lblAppointionGridCol3'"
   default="Phòng ban"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDegree1>
+  <codx-label
+  [formModel]="eDegreeFormModel"
+  [name]="'lblDegreeGridCol1'"
+  [default]="eDegreeHeaderText['DegreeName'] +' | ' +
+              eDegreeHeaderText['TrainFieldID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDegree2>
+  <codx-label
+  [formModel]="eDegreeFormModel"
+  [name]="'lblDegreeGridCol2'"
+  [default]="eDegreeHeaderText['TrainSupplierID'] + ' | ' +
+              eDegreeHeaderText['Ranking']"
+  default="Nơi đào tạo | Xếp loại tốt nghiệp"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDegree3>
+  <codx-label
+  [formModel]="eDegreeFormModel"
+  [default] ="eDegreeHeaderText['YearGraduated'] + ' | ' +
+              eDegreeHeaderText['IssuedDate']"
+  [name]="'lblDegreeGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempCertificate1>
+  <codx-label
+  [formModel]="eCertificateFormModel"
+  [name]="'lblCertificateGridCol1'"
+  [default]="eCertificateHeaderText['CertificateID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempCertificate2>
+  <codx-label
+  [formModel]="eCertificateFormModel"
+  [name]="'lblCertificateGridCol2'"
+  [default]="eCertificateHeaderText['TrainSupplierID'] +
+              ' | ' +
+              eCertificateHeaderText['Ranking']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempCertificate3>
+  <codx-label
+  [formModel]="eCertificateFormModel"
+  [default] ="eCertificateHeaderText['IssuedDate'] +
+              ' | ' +
+              eCertificateHeaderText['EffectedDate']"
+  [name]="'lblCertificateGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempSkill1>
+  <codx-label
+  [formModel]="eSkillFormmodel"
+  [name]="'lblSkillGridCol1'"
+  [default]="eSkillHeaderText['SkillID'] +
+  ' | ' +
+  eSkillHeaderText['SkillGradeID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempSkill2>
+  <codx-label
+  [formModel]="eSkillFormmodel"
+  [name]="'lblSkillGridCol2'"
+  [default]="eSkillHeaderText['TrainSupplierID'] +
+  ' | ' +
+  eSkillHeaderText['Ranking'] +
+  ' - ' +
+  eSkillHeaderText['TotalScore']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempSkill3>
+  <codx-label
+  [formModel]="eSkillFormmodel"
+  [default] ="eSkillHeaderText['TrainFrom'] +
+  ' | ' +
+  eSkillHeaderText['TrainForm']"
+  [name]="'lblSkillGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempTrainCourse1>
+  <codx-label
+  [formModel]="eTrainCourseFormModel"
+  [name]="'lblTrainCourseGridCol1'"
+  [default]="eTrainCourseHeaderText['TrainCourseID'] +
+  ' | ' +
+  eTrainCourseHeaderText['TrainForm']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempTrainCourse2>
+  <codx-label
+  [formModel]="eTrainCourseFormModel"
+  [name]="'lblTrainCourseGridCol2'"
+  [default]="eTrainCourseHeaderText['TrainFrom'] +
+  ' | ' +
+  eTrainCourseHeaderText['InYear']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempTrainCourse3>
+  <codx-label
+  [formModel]="eTrainCourseFormModel"
+  [default] ="eTrainCourseHeaderText['TrainSupplierID'] +
+  ' | ' +
+  eTrainCourseHeaderText['Result']"
+  [name]="'lblTrainCourseGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempAccident1>
+  <codx-label
+  [formModel]="eAccidentsFormModel"
+  [name]="'lblAccidentGridCol1'"
+  [default]="eAccidentHeaderText['AccidentID'] +
+  ' | ' +
+  eAccidentHeaderText['AccidentDate']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempAccident2>
+  <codx-label
+  [formModel]="eAccidentsFormModel"
+  [name]="'lblAccidentGridCol2'"
+  [default]="eAccidentHeaderText['AccidentPlace'] +
+  ' | ' +
+  eAccidentHeaderText['AccidentReasonID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempAccident3>
+  <codx-label
+  [formModel]="eAccidentsFormModel"
+  [default] ="eAccidentHeaderText['AccidentLevel']"
+  [name]="'lblAccidentGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDiseases1>
+  <codx-label
+  [formModel]="eDiseasesFormModel"
+  [name]="'lblAccidentGridCol1'"
+  [default]="eDiseasesHeaderText['DiseaseID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDiseases2>
+  <codx-label
+  [formModel]="eDiseasesFormModel"
+  [name]="'lblAccidentGridCol2'"
+  [default]="'Thời gian điều trị' +
+  ' | ' +
+  eDiseasesHeaderText['TreatHopitalID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempDiseases3>
+  <codx-label
+  [formModel]="eDiseasesFormModel"
+  [default] ="eDiseasesHeaderText['Conclusion']"
+  [name]="'lblAccidentGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempHealth1>
+  <codx-label
+  [formModel]="eHealthFormModel"
+  [name]="'lblHealthGridCol1'"
+  [default]="eHealthHeaderText['HealthDate'] +
+  ' | ' +
+  eHealthHeaderText['HealthPeriodID'] +
+  ' | ' +
+  eHealthHeaderText['HospitalID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempHealth2>
+  <codx-label
+  [formModel]="eHealthFormModel"
+  [name]="'lblHealthGridCol2'"
+  [default]="eHealthHeaderText['HealthType'] +
+  ' | ' +
+  eHealthHeaderText['FinalConclusion']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempHealth3>
+  <codx-label
+  [formModel]="eHealthFormModel"
+  [default] ="eHealthHeaderText['Suggestion']"
+  [name]="'lblHealthGridCol3'"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempVaccine1>
+  <codx-label
+  [formModel]="eVaccineFormModel"
+  [name]="'lblVaccineGridCol1'"
+  [default]="eVaccineHeaderText['VaccineTypeID'] +
+  ' | ' +
+  eVaccineHeaderText['HopitalID']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempVaccine2>
+  <codx-label
+  [formModel]="eVaccineFormModel"
+  [name]="'lblVaccineGridCol2'"
+  [default]="eVaccineHeaderText['InjectDate'] +
+  ' | ' +
+  eVaccineHeaderText['NextInjectDate']"
+  class="fw-bold fs-5-sm text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempVaccine3>
+  <codx-label
+  [formModel]="eVaccineFormModel"
+  [default] ="eVaccineHeaderText['Note']"
+  [name]="'lblVaccineGridCol3'"
   class="fw-bold fs-5-sm text-gray-600"
 >
 </codx-label>

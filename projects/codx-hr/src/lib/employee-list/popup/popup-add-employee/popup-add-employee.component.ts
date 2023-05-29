@@ -183,7 +183,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       this.notifySV.notifyCode('HR012');
       return false;
     }
-    if (!this.validateBirthday(this.data.birthday)) {
+    if (!this.validateBirthday(this.data.birthday) && this.data.birthday) {
       this.notifySV.notifyCode('HR001');
       return false;
     }
@@ -207,6 +207,8 @@ export class PopupAddEmployeeComponent implements OnInit {
                 this.notifySV.notifyCode('SYS006');
                 this.dialogRef.close(res);
               });
+              this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
+
           } else {
             this.notifySV.notifyCode('SYS023');
             this.dialogRef.close(null);
@@ -222,6 +224,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           data,
         ])
         .subscribe((res: any) => {
+          this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
           this.notifySV.notifyCode(res ? 'SYS007' : 'SYS021');
           this.dialogRef.close(res ? data : null);
         });
@@ -231,6 +234,6 @@ export class PopupAddEmployeeComponent implements OnInit {
   //
   changeAvatar(event: any) {
     this.codxModifiedOn = new Date();
-    this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
+    //this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
   }
 }

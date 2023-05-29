@@ -352,10 +352,13 @@ export class UserComponent extends UIComponent {
     }
     if (data.stop) {
       //disabled mf user.stop = true
-      let stopMF = e.find((x) => x.functionID == 'ADS0501');
-      if (stopMF) {
-        stopMF.disabled = true;
-      }
+      let lstDisableMF = ['SYS03', 'ADS0501', 'ADS0501', 'ADS0502'];
+
+      e.forEach((mf) => {
+        if (lstDisableMF.includes(mf.functionID)) {
+          mf.disabled = true;
+        }
+      });
     }
   }
 }

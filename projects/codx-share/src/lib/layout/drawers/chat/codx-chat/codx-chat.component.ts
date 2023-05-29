@@ -169,9 +169,11 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   //select goup chat
   selectItem(group: any){
     group.isRead = true;
-    this.totalMessage -= group.messageMissed;
-    group.messageMissed = 0;
-    this.signalRSV.sendData("OpenGroupAsync",group.groupID);
+    if(group.messageMissed > 0){
+      group.messageMissed = 0;
+      this.totalMessage -= group.messageMissed;
+    }
+    this.signalRSV.sendData("OpenGroupAsync",group);
     this.dt.detectChanges();
   }
   // select item search
