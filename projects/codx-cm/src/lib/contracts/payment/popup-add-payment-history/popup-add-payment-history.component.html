@@ -35,14 +35,14 @@
       <codx-label
         name="heardTypeTask"
         class="text-gray-600 fs-6 text-primary"
-        default="Lưu và thêm"
+        default="Lưu"
       ></codx-label>
     </button>
-    <button class="btn btn-primary">
+    <button class="btn btn-primary" (click)="saveAndClose()">
       <codx-label
         name="heardTypeTask"
         class="text-gray-600 fs-6"
-        default="Lưu"
+        default="Lưu và đóng"
       ></codx-label>
     </button>
   </div>
@@ -86,6 +86,7 @@
             type="datetime"
             [crrValue]="paymentHistory?.scheduleDate"
             (valueChange)="changeValueDate($event)"
+            [disabled]="true"
           >
           </codx-input>
         </div>
@@ -106,6 +107,7 @@
             [min]="0"
             [crrValue]="paymentHistory?.scheduleAmt"
             (valueChange)="valueChangeText($event)"
+            [disabled]="true"
           >
           </codx-input>
         </div>
@@ -126,6 +128,7 @@
             [min]="0"
             [crrValue]="paymentHistory?.remainAmt"
             (valueChange)="valueChangeText($event)"
+            [disabled]="true"
           >
           </codx-input>
         </div>

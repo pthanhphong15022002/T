@@ -8,6 +8,7 @@ import {
 } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { ActivatedRoute } from '@angular/router';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-layout-portal',
@@ -21,7 +22,8 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     inject: Injector,
     private route: ActivatedRoute,
     private callfc: CallFuncService,
-    private cache: CacheService
+    private cache: CacheService,
+    private shareService: CodxShareService
   ) {
     super(inject);
     this.module = 'WP';
@@ -33,7 +35,17 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
 
   onInit() {}
   asideClick(evt: any) {
-    console.log(evt);
+    if (evt.funcId == 'HCS_001') {
+      evt.cancel = true;
+      this.shareService.loginHCS().subscribe((token) => {
+        let returnUrl = 'https://surehcs.lacviet.vn/UI2017';
+        let url = `http://surehcs.lacviet.vn/UI2017/verifytoken.aspx?tklid=${token}&returnUrl=${returnUrl}`;
+        if (url != '') {
+          window.open(url, '_blank');
+        }
+      });
+      console.log('evt click', evt);
+    }
   }
   onAfterViewInit(): void {}
   openFormNoteDrawer() {

@@ -90,7 +90,7 @@ export class FileService implements OnDestroy {
     // dung 1 lan   
 
     getFile(id: string, isHistory: boolean = true , viewFile : boolean = false): Observable<any> {
-        return this.api.exec<FileInfo>("DM", "FileBussiness", "GetFileAsync", [id, isHistory , viewFile]);
+        return this.api.exec<FileInfo>("DM", "FileBussiness", "GetFileAsync", [id, isHistory , viewFile ]);
     }
 
     getFileNyObjectID(objectID: string): Observable<any> {

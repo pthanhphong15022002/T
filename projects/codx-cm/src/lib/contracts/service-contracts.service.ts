@@ -7,7 +7,7 @@ import { firstValueFrom } from 'rxjs';
   providedIn: 'root'
 })
 export class ContractsService {
-
+  
   constructor(
     private cache: CacheService,
     private callFunc: CallFuncService,

@@ -17,6 +17,7 @@
           <codx-aside
             *ngIf="codxService.asideDisplay"
             [hasSecond]="false"
+            (asideClick)="asideClick($event)"
             class="wp-portal"
           >
           </codx-aside>
