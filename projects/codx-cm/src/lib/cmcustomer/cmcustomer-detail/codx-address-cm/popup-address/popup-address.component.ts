@@ -245,7 +245,6 @@ export class PopupAddressComponent implements OnInit {
         if (adressName.endsWith(',')) {
           adressName = adressName.slice(0, -1);
         }
-        this.checkSetName = true;
         this.data.adressName = adressName;
       }
     }
@@ -259,7 +258,8 @@ export class PopupAddressComponent implements OnInit {
     if (e.data) {
       switch (e.field) {
         case 'adressName':
-          this.checkAddressName = true;
+          // this.checkEventListen();
+          this.checkAddressName = !!this.data.adressName;
           break;
         case 'countryID':
           this.model = { CountryID: JSON.parse(JSON.stringify(e?.data)) };
@@ -303,12 +303,17 @@ export class PopupAddressComponent implements OnInit {
     }
   }
 
+  checkAdressName() {
+    this.checkAddressName = !!this.data.adressName;
+
+  }
+
   checkEventListen() {
     var inputField = document.getElementById('inputAddress');
 
     // Bắt sự kiện gõ phím
-    inputField.addEventListener('keyup', (event) => {
-      var keyCode = event.keyCode || event.which;
+    inputField.addEventListener('keypress', (event) => {
+      var keyCode = event.keyCode;
 
       // Xử lý logic tại đây
       console.log('Phím đã được gõ: ' + String.fromCharCode(keyCode));

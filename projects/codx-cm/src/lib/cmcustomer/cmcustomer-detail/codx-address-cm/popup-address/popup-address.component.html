@@ -32,14 +32,16 @@
       >
       </span>
     </div>
-    <codx-input
+    <!-- <codx-input
       id="inputAddress"
+      (ngModelChange)="checkAdressName()"
       [formModel]="form.formModel"
       (valueChange)="valueChange($event)"
       [crrValue]="data?.adressName"
       field="adressName"
     >
-    </codx-input>
+    </codx-input> -->
+    <input class="input w-100" type="text" [placeholder]="gridViewSetup?.AdressName?.description" [(ngModel)]="data.adressName" (change)="checkAdressName()" />
   </div>
   <div class="form-group">
     <codx-label fiedName="Street" [formModel]="form.formModel"></codx-label>

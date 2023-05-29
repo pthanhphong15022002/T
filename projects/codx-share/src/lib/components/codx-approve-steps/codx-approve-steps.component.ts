@@ -46,7 +46,8 @@ export class CodxApproveStepsComponent
   @Input() mssgDelete = '';
   @Input() eSign: boolean = false; //Quy trình ký số
   @Input() signatureType; //Quy trình ký số
-  @Input() approveControl = '3';
+  @Input() approveControl = '3';//Áp dụng quy trình duyệt theo: 1;Theo file trình ký; 2;ProcessID;  3;Category
+  @Input() isTemplate = false; //signFile của template mẫu
   @Output() addEditItem = new EventEmitter();
 
   headerText = '';
@@ -220,7 +221,9 @@ export class CodxApproveStepsComponent
       allowEditAreas: this.data?.allowEditAreas,
       hideTabQuery: true,
     };
-
+    if(this.isTemplate){
+      data.transID=this.transId;
+    }
     this.openPopupAddAppStep(data);
   }
 
@@ -236,6 +239,10 @@ export class CodxApproveStepsComponent
       vllShare:this.data?.approverList,
       hideTabQuery: true,
     };
+    
+    if(this.isTemplate){
+      data.transID=this.transId;
+    }
     this.openPopupAddAppStep(data);
   }
 
@@ -315,17 +322,22 @@ export class CodxApproveStepsComponent
             if (this.type == '1') {
               if (this.lstStep?.length > 0) {
                 for (let i = 0; i < this.lstStep.length; i++) {
-                  if (this.lstStep[i].transID != this.recID) {
-                    delete this.lstStep[i].recID;
-                    delete this.lstStep[i].id;
-                    this.lstStep[i].transID = this.recID;
+                  if(this.isTemplate){
+                    if (this.lstStep[i].transID != this.transId) {
+                      delete this.lstStep[i].recID;
+                      delete this.lstStep[i].id;
+                      this.lstStep[i].transID = this.transId;
+                    }
+                    
                   }
-
-                  // if (this.lstStep[i].transID != this.transId) {
-                  //   delete this.lstStep[i].recID;
-                  //   delete this.lstStep[i].id;
-                  //   this.lstStep[i].transID = this.transId;
-                  // }
+                  else{
+                    //ko phải template
+                    if (this.lstStep[i].transID != this.recID) {
+                      delete this.lstStep[i].recID;
+                      delete this.lstStep[i].id;
+                      this.lstStep[i].transID = this.recID;
+                    }
+                  }
                 }
               }
               this.updateApprovalStep();
