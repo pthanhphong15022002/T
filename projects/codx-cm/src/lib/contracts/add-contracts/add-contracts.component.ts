@@ -58,6 +58,11 @@ export class AddContractsComponent implements OnInit{
     delete: true,
   };
   listPayment: CM_ContractsPayments[] = [];
+  listPaymentHistory: CM_ContractsPayments[] = [];
+
+  listPaymentAdd: CM_ContractsPayments[] = [];
+  listPaymentEdit: CM_ContractsPayments[] = [];
+  listPaymentDelete: CM_ContractsPayments[] = [];
   columns:any;
   grvPayments:any;
 
@@ -90,57 +95,110 @@ export class AddContractsComponent implements OnInit{
       { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-tune', isActive: false },
     ]
     // this.loadComboboxData('CMCustomers','CM').subscribe(data => console.log(data));
-      this.columns = [
-        {       
-          width: 50,
-          textAlign: 'center',
-          template: this.more,
-        },
+      this.columns = [  
         {
           field: 'rowNo',
           headerText: this.grvPayments?.ItemID?.RowNo ?? 'STT',
           width: 50,
-          textAlign: 'center',
         },
         {
           field: 'scheduleDate',
           headerText: this.grvPayments?.ScheduleDate?.headerText ?? 'Ngày hẹn thanh toán',
           width: 150,
-          textAlign: 'center',
         },
         {
           field: 'scheduleAmt',
           headerText: this.grvPayments?.ScheduleAmt?.headerText ?? 'Số tiền hẹn thanh toán',
           width: 150,
-          textAlign: 'center',
         },
         {
           field: 'paidAmt',
           headerText: this.grvPayments?.PaidAmt?.headerText ?? 'Đã thanh toán',
           width: 150,
-          textAlign: 'center',
         },
         {
           field: 'remainAmt',
           headerText: this.grvPayments?.RemainAmt?.headerText ?? 'Dư nợ còn lại',
           width: 150,
-          textAlign: 'center',
+         
         },
         {
           field: 'status',
           headerText: this.grvPayments?.Status?.headerText ?? 'Trạng thái',
           width: 90,
-          textAlign: 'center',
+
         },
         {
           field: 'note',
           headerText: this.grvPayments?.Note?.headerText ?? 'Ghi chú',
           width: 90,
-          textAlign: 'left',
         },
+        // textAlign: 'left',
         // /template: this.columnVatid,
       ];  
   }
+
+  // async loadSetting() {
+  //   this.grvSetup = await firstValueFrom(
+  //     this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
+  //   );
+  //   this.vllStatus = this.grvSetup['Status'].referedValue;
+  //   //lay grid view
+  //   let arrField = Object.values(this.grvSetup).filter((x: any) => x.isVisible);
+  //   if (Array.isArray(arrField)) {
+  //     this.arrFieldIsVisible = arrField
+  //       .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+  //       .map((x: any) => x.fieldName);
+  //     this.getColumsGrid(this.grvSetup);
+  //   }
+  // }
+
+  // getColumsGrid(grvSetup) {
+  //   this.columnGrids = [];
+  //   this.arrFieldIsVisible.forEach((key) => {
+  //     let field = Util.camelize(key);
+  //     let template: any;
+  //     let colums: any;
+  //     switch (key) {
+  //       case 'Status':
+  //         template = this.templateStatus;
+  //         break;
+  //       case 'CustomerID':
+  //         template = this.templateCustomer;
+  //         break;
+  //       case 'CreatedBy':
+  //         template = this.templateCreatedBy;
+  //         break;
+  //       case 'TotalTaxAmt':
+  //         template = this.templateTotalTaxAmt;
+  //         break;
+  //       case 'TotalAmt':
+  //         template = this.templateTotalAmt;
+  //         break;
+  //       case 'TotalSalesAmt':
+  //         template = this.templateTotalSalesAmt;
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //     if (template) {
+  //       colums = {
+  //         field: field,
+  //         headerText: grvSetup[key].headerText,
+  //         width: grvSetup[key].width,
+  //         template: template,
+  //         // textAlign: 'center',
+  //       };
+  //     } else {
+  //       colums = {
+  //         field: field,
+  //         headerText: grvSetup[key].headerText,
+  //         width: grvSetup[key].width,
+  //       };
+  //     }
+
+  //     this.columnGrids.push(colums);
+  //   });
 
   getFormModel() {
     this.cache
@@ -297,7 +355,11 @@ export class AddContractsComponent implements OnInit{
     }
     if (this.action == 'edit') {
       op.methodName = 'UpdateContractAsync';
-      data = [this.contracts];
+      data = [
+        this.contracts, 
+        this.listPaymentAdd, 
+        this.listPaymentEdit, 
+        this.listPaymentDelete];
     }
     op.data = data;
     return true;
@@ -353,12 +415,10 @@ export class AddContractsComponent implements OnInit{
   onClickMFPayment(e, data){
     switch (e.functionID) {
       case 'SYS02':
-        console.log(data);      
-        // this.deleteContract(data);
+        this.deletePayment(data)
         break;
       case 'SYS03':
-        console.log(data);     
-        // this.editContract(data);
+        this.editPayment(data);
         break;
       case 'SYS04':
         console.log(data);
@@ -377,16 +437,24 @@ export class AddContractsComponent implements OnInit{
   
   addPayment(){
     let payment = new CM_ContractsPayments();
-    let countPayMent =  this.listPayment.length;
-    payment.rowNo = countPayMent + 1;
-    payment.refNo = this.contracts?.recID;
     this.openPopupPayment('add', payment);
   }
+  editPayment(payment){
+    this.openPopupPayment('edit', payment);
+  }
 
+  deletePayment(payment){
+
+  }
   async openPopupPayment(action,payment) {
     let dataInput = {
       action,
       payment,
+      listPayment: this.listPayment,
+      listPaymentAdd: this.listPaymentAdd,
+      listPaymentEdit: this.listPaymentEdit,
+      listPaymentDelet: this.listPaymentDelete,
+      contractID: this.contracts?.recID,
     };
    
     let option = new DialogModel();
@@ -403,13 +471,9 @@ export class AddContractsComponent implements OnInit{
       option,
       );
 
-    let dataPopupOutput = await firstValueFrom(popupPayment.closed);
-    if(dataPopupOutput?.event?.action == 'add'){
-      this.listPayment.push(dataPopupOutput?.event?.payment);
+    popupPayment.closed.subscribe(res => {
       this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
-      this.test.refresh();
-    }
-    return dataPopupOutput;
+    })
   }
 
   addPayHistory(payment){
@@ -423,6 +487,9 @@ export class AddContractsComponent implements OnInit{
   viewPayHistory(payment ,width: number, height: number){
     let dataInput = {
       payment,
+      listPaymentAdd: this.listPaymentAdd,
+      listPaymentEdit: this.listPaymentEdit,
+      listPaymentDelet: this.listPaymentDelete,
     };
   
     let option = new DialogModel();
@@ -444,8 +511,12 @@ export class AddContractsComponent implements OnInit{
     let dataInput = {
       action,
       payment,
-      contractID: this.contracts?.recID,
       paymentHistory,
+      contractID: this.contracts?.recID,
+      listPaymentHistory : this.listPaymentHistory,
+      listPaymentAdd: this.listPaymentAdd,
+      listPaymentEdit: this.listPaymentEdit,
+      listPaymentDelet: this.listPaymentDelete,
     };
 
     let formModel = new FormModel();

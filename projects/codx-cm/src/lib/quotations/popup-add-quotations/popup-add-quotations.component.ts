@@ -163,14 +163,6 @@ export class PopupAddQuotationsComponent implements OnInit {
       )
       .subscribe((res) => {
         this.grvSetupQuotations = res;
-        //lay grid view
-        // let arrField = Object.values(res).filter((x: any) => x.isVisible);
-        // if (Array.isArray(arrField)) {
-        //   this.arrFieldIsVisible = arrField
-        //     .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-        //     .map((x: any) => x.fieldName);
-        //   this.getColumsGrid(res);
-        // }
       });
   }
 
@@ -269,6 +261,10 @@ export class PopupAddQuotationsComponent implements OnInit {
       0
     );
     if (count > 0) return;
+    if (!(this.listQuotationLines?.length > 0)) {
+      this.notiService.notify("Thêm danh sách sản phẩm để hoàn thành báo giá - Chờ Khanh thêm messeger !" ,'3')  
+      return;
+    }
     if (this.action == 'add' || this.action == 'copy') {
       this.onAdd();
     } else if (this.action == 'edit') {
@@ -285,10 +281,13 @@ export class PopupAddQuotationsComponent implements OnInit {
         this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
         this.modelCustomerIDDeals = { customerID: this.quotations.customerID };
         this.modelObjectIDContacs = { objectID: this.quotations.customerID };
-
         break;
       case 'customerID':
-        // this.quotations.refID = null;
+        this.quotations.refID = null;
+        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+        break;
+        case 'contactID':
+          // this.quotations.refID = null;
         this.modelObjectIDContacs = { objectID: this.quotations.customerID };
         break;
     }
@@ -312,6 +311,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   select(e) {}
+
   created(e) {}
 
   gridCreated(e, grid) {
@@ -437,6 +437,7 @@ export class PopupAddQuotationsComponent implements OnInit {
                     headerText: 'Thêm sản phẩm báo giá',
                     quotationsLine: data,
                     listQuotationLines: this.listQuotationLines,
+                    grvSetup: this.grvSetupQuotationsLines,
                   };
                   let opt = new DialogModel();
                   opt.zIndex = 1000;
@@ -514,6 +515,7 @@ export class PopupAddQuotationsComponent implements OnInit {
             headerText: this.titleActionLine + f?.customName || f?.description,
             quotationsLine: dt,
             listQuotationLines: this.listQuotationLines,
+            grvSetup: this.grvSetupQuotationsLines,
           };
           let opt = new DialogModel();
           opt.zIndex = 1000;

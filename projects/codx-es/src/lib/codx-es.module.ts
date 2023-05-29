@@ -57,6 +57,7 @@ import { WarningMissImgComponent } from './sign-file/popup-sign-for-approval/war
 import { PopupConfirmSaveLabelComponent } from './sign-file/popup-select-label/popup-confirm-save-label/popup-confirm-save-label.component';
 import { PopupCommentComponent } from './sign-file/popup-comment/popup-comment.component';
 import { PopupAddSegmentComponent } from './setting/category/popup-add-segment/popup-add-segment.component';
+import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 
 const routes: Routes = [
   {
@@ -90,6 +91,10 @@ const routes: Routes = [
           import('projects/codx-es/src/lib/codx-approvel.module').then(
             (m) => m.ApprovelModule
           ),
+      },
+      {
+        path: 'share/dynamic/:funcID',
+        component: DynamicFormComponent,
       },
       {
         path: 'set',

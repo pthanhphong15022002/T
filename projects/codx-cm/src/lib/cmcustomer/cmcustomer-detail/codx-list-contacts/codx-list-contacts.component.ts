@@ -78,6 +78,11 @@ export class CodxListContactsComponent implements OnInit {
   }
 
   async ngOnInit() {
+    if(this.isConvertLeadToCus){
+      for (var i = 0; i < this.lstConvertContact.length; i++) {
+        this.lstConvertContact[i].isCheck = false;
+      }
+    }
     // this.getListContacts();
     this.formModelContact = await this.cmSv.getFormModel('CM0102');
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
@@ -140,7 +145,7 @@ export class CodxListContactsComponent implements OnInit {
     this.moreFuncEdit = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        if ((this.isButton = true))
+        if (this.isButton = true)
           this.clickAddContact('edit', data, this.moreFuncEdit);
         break;
       case 'CM0102_2':
@@ -151,7 +156,7 @@ export class CodxListContactsComponent implements OnInit {
         // this.copy(data);
         break;
       case 'CM0102_1':
-        if ((this.isButton = true))
+        if (this.isButton == true)
           this.clickAddContact('editType', data, this.moreFuncEdit);
         break;
     }

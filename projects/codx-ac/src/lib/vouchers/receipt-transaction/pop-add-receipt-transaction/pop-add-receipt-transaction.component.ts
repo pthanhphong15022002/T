@@ -58,6 +58,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   isSaveMaster: any = false;
   vllReceipt: any = 'AC116';
   vllIssue: any = 'AC117';
+  funcID: any;
   entityMaster: any;
   journal: IJournal;
   voucherNoPlaceholderText$: Observable<string>;
@@ -104,6 +105,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.formType = dialogData.data?.formType;
     this.inventoryJournal = dialog.dataService.dataSelected;
     this.entityMaster = dialogData.data?.entityMaster;
+    this.funcID = dialog.formModel.funcID;
     this.cache
       .gridViewSetup('InventoryJournals', 'grvInventoryJournals')
       .subscribe((res) => {
@@ -121,7 +123,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         });
       }
     });
-    switch(dialog.formModel.funcID)
+    switch(this.funcID)
     {
       case 'ACT0708':
         this.cache.valueList(this.vllReceipt).subscribe((res) => {
@@ -343,6 +345,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           lockFields: this.lockFields,
           journal: this.journal,
           entityLine: this.fmInventoryJournalLines.entityName,
+          funcID: this.funcID,
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -471,6 +474,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       lockFields: this.lockFields,
       type: type,
       entityLine: this.fmInventoryJournalLines.entityName,
+      funcID: this.funcID,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();

@@ -455,6 +455,15 @@ export class CodxEsService {
       [data, isAdd]
     );
   }
+  getAllCategory(): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetAllCategoryAsync',
+      []
+    );
+  }
 
   deleteAutoNumber(autoNoCode: string): Observable<any> {
     return this.api.execSv(

@@ -1,38 +1,16 @@
-<codx-form
-  #form
-  [headerText]="headerText"
-  [subHeaderText]="subHeaderText"
-  [subHeader]="subHeader"
-  [body]="body"
-  [footer]="footer"
-  [data]="data"
-  [formModel]="dialog.formModel"
-  [dialog]="dialog"
->
+<codx-form #form [headerText]="headerText" [subHeaderText]="subHeaderText" [subHeader]="subHeader" [body]="body"
+  [footer]="footer" [data]="data" [formModel]="dialog.formModel" [dialog]="dialog">
   <ng-template #subHeader>
     <div class="d-flex">
       <div class="symbol symbol-circle symbol-30px symbol-vllicon">
-        <codx-input
-          class=""
-          type="vllicon"
-          refValue="L1470"
-          field="icon"
-          [crrValue]="data?.icon"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input class="" type="vllicon" refValue="L1470" field="icon" [crrValue]="data?.icon"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
 
       <div class="ms-4">
-        <codx-input
-          class="ms-4"
-          type="colorpicker"
-          [showText]="false"
-          [modeSwitcher]="false"
-          [crrValue]="data?.color"
-          field="color"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input class="ms-4" type="colorpicker" [showText]="false" [modeSwitcher]="false" [crrValue]="data?.color"
+          field="color" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
     </div>
@@ -44,11 +22,7 @@
           <div class="form-group">
             <codx-label fiedName="CategoryName" [formModel]="formModel">
             </codx-label>
-            <codx-input
-              field="categoryName"
-              [formModel]="formModel"
-              [Group]="form.formGroup"
-            >
+            <codx-input field="categoryName" [formModel]="formModel" [Group]="form.formGroup">
             </codx-input>
           </div>
         </div>
@@ -56,13 +30,8 @@
           <div class="form-group">
             <codx-label fiedName="CategoryID" [formModel]="formModel">
             </codx-label>
-            <codx-input
-              type="text"
-              field="categoryID"
-              [formModel]="formModel"
-              [Group]="form.formGroup"
-              [disabled]="disableCategoryID == '1' || dialog.dataService!.keyField === 'CategoryID'"
-            >
+            <codx-input type="text" field="categoryID" [formModel]="formModel" [Group]="form.formGroup"
+              [disabled]="disableCategoryID == '1' || dialog.dataService!.keyField === 'CategoryID'">
             </codx-input>
           </div>
         </div>
@@ -70,16 +39,8 @@
       <div class="row">
         <div class="col-md-3">
           <div class="d-flex align-items-center mb-4" *ngIf="hasModuleES == true">
-            <codx-input
-              #checkbox
-              type="switch"
-              id="switch"
-              [checked]="data?.eSign"
-              labelPosition="After"
-              field="eSign"
-              class="test-switch"
-              (valueChange)="valueChange($event)"
-            >
+            <codx-input #checkbox type="switch" id="switch" [checked]="data?.eSign" labelPosition="After" field="eSign"
+              class="test-switch" (valueChange)="valueChange($event)">
             </codx-input>
             <label class="ms-2">
               <codx-label fiedName="ESign" [formModel]="formModel"></codx-label>
@@ -87,67 +48,35 @@
           </div>
         </div>
         <div class="col-md-4">
-          <div
-            class="d-flex align-items-center mb-4"
-            *ngIf="hasModuleES == true && data?.eSign"
-          >
-            <codx-input
-              #checkbox
-              type="switch"
-              [checked]="data?.confirmControl == '0' ? false : true"
-              labelPosition="After"
-              field="confirmControl"
-              class="test-switch"
-              (valueChange)="valueChange($event)"
-            >
+          <div class="d-flex align-items-center mb-4" *ngIf="hasModuleES == true && data?.eSign">
+            <codx-input #checkbox type="switch" [checked]="data?.confirmControl == '0' ? false : true"
+              labelPosition="After" field="confirmControl" class="test-switch" (valueChange)="valueChange($event)">
             </codx-input>
             <label class="ms-2">
-              <codx-label
-                fiedName="ConfirmControl"
-                [formModel]="formModel"
-              ></codx-label>
+              <codx-label fiedName="ConfirmControl" [formModel]="formModel"></codx-label>
             </label>
           </div>
         </div>
         <div class="col-md-5">
-          <div
-            class="d-flex align-items-center mb-4"
-            *ngIf="hasModuleES == true && data?.eSign"
-          >
-            <codx-input
-              #checkbox
-              type="switch"
-              id="switch"
-              [checked]="data?.areaControl == '1' ? true : false"
-              labelPosition="After"
-              field="areaControl"
-              class="test-switch"
-              (valueChange)="valueChange($event)"
-            >
+          <div class="d-flex align-items-center mb-4" *ngIf="hasModuleES == true && data?.eSign">
+            <codx-input #checkbox type="switch" id="switch" [checked]="data?.areaControl == '1' ? true : false"
+              labelPosition="After" field="areaControl" class="test-switch" (valueChange)="valueChange($event)">
             </codx-input>
             <label class="ms-2">
-              <codx-label
-                fiedName="AreaControl"
-                [formModel]="formModel"
-              ></codx-label>
+              <codx-label fiedName="AreaControl" [formModel]="formModel"></codx-label>
             </label>
           </div>
         </div>
       </div>
-  
+
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">
             <codx-label fiedName="SignatureType" [formModel]="formModel">
             </codx-label>
-            <codx-input
-              *ngIf="grvSetup && grvSetup['SignatureType']"
-              field="signatureType"
-              [crrValue]="data?.signatureType"
-              type="valuelist"
-              [refValue]="grvSetup['SignatureType']['referedValue']"
-              (valueChange)="valueChange($event)"
-            >
+            <codx-input *ngIf="grvSetup && grvSetup['SignatureType']" field="signatureType"
+              [crrValue]="data?.signatureType" type="valuelist" [refValue]="grvSetup['SignatureType']['referedValue']"
+              (valueChange)="valueChange($event)">
             </codx-input>
           </div>
         </div>
@@ -157,67 +86,53 @@
       </div>
       <div class="form-group">
         <codx-label fiedName="Memo" [formModel]="formModel"> </codx-label>
-        <codx-input
-          type="textarea"
-          format="ed2"
-          rows="3"
-          class="form-control"
-          field="memo"
-          [formModel]="formModel"
-          [Group]="form.formGroup"
-        >
+        <codx-input type="textarea" format="ed2" rows="3" class="form-control" field="memo" [formModel]="formModel"
+          [Group]="form.formGroup">
         </codx-input>
       </div>
-      <div class="row">
-        <div class="d-flex flex-stack mb-4">
-          <codx-label
-            class="text-primary fw-bold fs-5-sm"
-            fiedName="AutoNumber"
-            [formModel]="formModel"
-          >
-          </codx-label>
-          <button
-            type="button"
-            class="btn btn-light-primary btn-icon"
-            data-dismiss="modal"
-            (click)="openAutoNumPopup()"
-          >
-            <i class="icon-edit-one icon-18"></i>
-          </button>
+      <div class="row mh-50px">
+        <div class="d-flex flex-stack flex-column justify-content-start">
+          <div class="d-flex w-100 flex-row justify-content-between">
+            <codx-label class="text-primary fw-bold fs-5-sm pt-2" fiedName="AutoNumber" [formModel]="formModel">
+            </codx-label>
+            <div class="d-flex flex-row">
+              <div class="pt-2 pe-5">
+                <codx-input #checkbox type="switch" id="switch" [checked]="data?.autoNumberControl == '1' ? true : false"
+                  labelPosition="After" field="autoNumberControl" class="test-switch" (valueChange)="valueChange($event)">
+                </codx-input>
+              </div>
+              <button type="button" class="btn btn-light-primary btn-icon" data-dismiss="modal" [disabled]="data?.autoNumberControl != '1'"
+                (click)="openAutoNumPopup()">
+                <i class="icon-edit-one icon-18"></i>
+              </button>
+            </div>            
+            
+          </div>
+          <div class="w-100 d-flex flex-row">
+            <span *ngIf="data?.autoNumberControl == '1'" class="text-gray-600 text-italic">
+              {{viewAutoNumber}}
+            </span>
+          </div>
+
         </div>
-        <div class="col-md-6">
+        <!-- <div class="col-md-6">
           <div class="form-group">
             <codx-label fiedName="AutoNumber" [formModel]="formModel">
             </codx-label>
-            <codx-input
-              type="text"
-              name="text"
-              [crrValue]="viewAutoNumber"
-              [formModel]="formModel"
-              disabled="true"
-            >
+            <codx-input type="text" name="text" [crrValue]="viewAutoNumber" [formModel]="formModel" disabled="true">
             </codx-input>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="d-flex flex-stack mb-4">
-        <codx-label
-          class="text-primary fw-bold fs-5-sm"
-          fiedName="ProcessID"
-          [formModel]="formModel"
-        >
+        <codx-label class="text-primary fw-bold fs-5-sm" fiedName="ProcessID" [formModel]="formModel">
         </codx-label>
-        <button
-          type="button"
-          class="btn btn-light-primary btn-icon"
-          data-dismiss="modal"
-          (click)="openPopupApproval()"
-        >
+        <button type="button" class="btn btn-light-primary btn-icon" data-dismiss="modal" (click)="openPopupApproval()">
           <i class="icon-settings icon-18"></i>
         </button>
       </div>
     </ng-container>
-   
+
 
     <!-- <div class="codx-approval" *ngIf="lstStep?.length > 0">
       <ng-container *ngFor="let item of lstStep; let index = index">
@@ -274,24 +189,19 @@
         ></div>
       </ng-container>
     </div> -->
-    <codx-view-approval-step
-      #approvalStep
-      [transID]="data?.recID"
-      [approveStatus]="'1'"
-      [eSign]="data?.eSign"
-    >
+    <codx-view-approval-step #approvalStep [transID]="data?.recID" [approveStatus]="'1'" [eSign]="data?.eSign">
     </codx-view-approval-step>
   </ng-template>
   <ng-template #footer>
-    <button
-      class="btn btn-primary justify-content-end"
-      (click)="onSaveForm(true)"
-    >
-      <codx-label
-        default="Lưu"
-        name="lblSave"
-        [formModel]="formModel"
-      ></codx-label>
-    </button>
+    <div class="d-flex justify-content-end">
+      <!-- <button type="button" class="btn btn-light-primary me-3" (click)="openPopupSignFile()">
+        <codx-label name="lblBtnTemplate" [formModel]="formModel" default="Dùng quy trình mẫu">
+        </codx-label>
+      </button> -->
+      <button class="btn btn-primary justify-content-end" (click)="onSaveForm(true)">
+        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+      </button>
+    </div>
+
   </ng-template>
 </codx-form>

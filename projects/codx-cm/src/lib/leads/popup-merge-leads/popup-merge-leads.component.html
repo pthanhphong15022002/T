@@ -71,13 +71,13 @@
     </div>
     <hr />
     <div class="mt-2">
-      <div class="h3 text-dark fw-bold">
-        <codx-label
-          name="lblInfoUpdate"
-          [formModel]="dialog.formModel"
-          default="Thông tin bổ sung"
-        ></codx-label>
-      </div>
+      <codx-label
+        name="lblInformation"
+        class="h4 text-dark text-primary fw-bold"
+        [formModel]="dialog.formModel"
+        default="Thông tin chung"
+      >
+      </codx-label>
       <div class="mt-1 row form-group">
         <div class="w-20">
           <codx-label
@@ -630,7 +630,7 @@
             field="industries"
             [formModel]="dialog.formModel"
             [crrValue]="leadNew?.industries"
-            (valueChange)="valueDateChange($event)"
+            (valueChange)="valueChange($event)"
           ></codx-input>
         </div>
         <div class="w-20 d-flex" *ngIf="leadOne?.recID">
@@ -706,7 +706,7 @@
             field="annualRevenue"
             [formModel]="dialog.formModel"
             [crrValue]="leadNew?.annualRevenue"
-            (valueChange)="valueDateChange($event)"
+            (valueChange)="valueChange($event)"
           ></codx-input>
         </div>
         <div class="w-20 d-flex" *ngIf="leadOne?.recID">
@@ -912,12 +912,478 @@
       </div>
     </div>
     <div class="mt-2">
-      <div class="h3 text-dark fw-bold">
-        <codx-label
-          name="lblInfoUpdate"
-          [formModel]="dialog.formModel"
-          default="Thông tin bổ sung"
-        ></codx-label>
+      <codx-label
+        name="lblUpdateInfo"
+        class="h4 text-dark text-primary fw-bold"
+        default="Thông tin bổ sung"
+        [formModel]="dialog.formModel"
+      >
+      </codx-label>
+      <div class="mt-1 row form-group">
+        <div class="w-20">
+          <codx-label
+            [formModel]="dialog.formModel"
+            fiedName="Headcounts"
+          ></codx-label>
+        </div>
+        <div class="w-20">
+          <codx-input
+            field="headcounts"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.headcounts"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="w-20 d-flex" *ngIf="leadOne?.recID">
+          <div class="w-10">
+            <codx-input
+              id="headcounts1"
+              name="headcounts"
+              class="test-check"
+              type="radio"
+              field="headcounts1"
+              [checked]="true"
+              (valueChange)="changeRadio($event, 'headcounts')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadOne?.headcounts
+                | formatvalue : dialog.formModel : 'Headcounts'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10">
+            <codx-input
+              id="headcounts2"
+              name="headcounts"
+              class="test-check"
+              type="radio"
+              field="headcounts2"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'headcounts')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadTwo?.headcounts
+                | formatvalue : dialog.formModel : 'Headcounts'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10">
+            <codx-input
+              id="headcounts3"
+              name="headcounts"
+              class="test-check"
+              type="radio"
+              field="headcounts3"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'headcounts')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadThree?.headcounts
+                | formatvalue : dialog.formModel : 'Headcounts'
+                | async
+            "
+          ></div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-2">
+      <codx-label
+        name="lblSystemInfo"
+        class="h4 text-dark text-primary fw-bold"
+        default="Thông tin hệ thống"
+        [formModel]="dialog.formModel"
+      >
+      </codx-label>
+      <div class="mt-1 row form-group">
+        <div class="w-20">
+          <codx-label
+            [formModel]="dialog.formModel"
+            fiedName="CampaignID"
+          ></codx-label>
+        </div>
+        <div class="w-20">
+          <codx-input
+            field="campaignID"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.campaignID"
+            [disabled]="true"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="w-20 d-flex" *ngIf="leadOne?.recID">
+          <div class="w-10">
+            <codx-input
+              id="campaignID1"
+              name="campaignID"
+              class="test-check"
+              type="radio"
+              field="campaignID1"
+              [checked]="true"
+              (valueChange)="changeRadio($event, 'campaignID')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadOne?.campaignID
+                | formatvalue : dialog.formModel : 'CampaignID'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10">
+            <codx-input
+              id="campaignID2"
+              name="campaignID"
+              class="test-check"
+              type="radio"
+              field="campaignID2"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'campaignID')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadTwo?.campaignID
+                | formatvalue : dialog.formModel : 'CampaignID'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10">
+            <codx-input
+              id="campaignID3"
+              name="campaignID"
+              class="test-check"
+              type="radio"
+              field="campaignID3"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'campaignID')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadThree?.campaignID
+                | formatvalue : dialog.formModel : 'CampaignID'
+                | async
+            "
+          ></div>
+        </div>
+      </div>
+      <div class="mt-1 row form-group">
+        <div class="w-20">
+          <codx-label
+            [formModel]="dialog.formModel"
+            fiedName="ChannelID"
+          ></codx-label>
+        </div>
+        <div class="w-20">
+          <codx-input
+            field="channelID"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.channelID"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="w-20 d-flex" *ngIf="leadOne?.recID">
+          <div class="w-10">
+            <codx-input
+              id="channelID1"
+              name="channelID"
+              class="test-check"
+              type="radio"
+              field="channelID1"
+              [checked]="true"
+              (valueChange)="changeRadio($event, 'channelID')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadOne?.channelID
+                | formatvalue : dialog.formModel : 'ChannelID'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10">
+            <codx-input
+              id="channelID2"
+              name="channelID"
+              class="test-check"
+              type="radio"
+              field="channelID2"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'channelID')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadTwo?.channelID
+                | formatvalue : dialog.formModel : 'ChannelID'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10">
+            <codx-input
+              id="channelID3"
+              name="channelID"
+              class="test-check"
+              type="radio"
+              field="channelID3"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'channelID')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadThree?.channelID
+                | formatvalue : dialog.formModel : 'ChannelID'
+                | async
+            "
+          ></div>
+        </div>
+      </div>
+      <div class="mt-1 row form-group">
+        <div class="w-20">
+          <codx-label
+            [formModel]="dialog.formModel"
+            fiedName="CustomerResource"
+          ></codx-label>
+        </div>
+        <div class="w-20">
+          <codx-input
+            field="customerResource"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.customerResource"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="w-20 d-flex" *ngIf="leadOne?.recID">
+          <div class="w-10">
+            <codx-input
+              id="customerResource1"
+              name="customerResource"
+              class="test-check"
+              type="radio"
+              field="customerResource1"
+              [checked]="true"
+              (valueChange)="changeRadio($event, 'customerResource')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadOne?.customerResource
+                | formatvalue : dialog.formModel : 'CustomerResource'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10">
+            <codx-input
+              id="customerResource2"
+              name="customerResource"
+              class="test-check"
+              type="radio"
+              field="customerResource2"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'customerResource')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadTwo?.customerResource
+                | formatvalue : dialog.formModel : 'CustomerResource'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10">
+            <codx-input
+              id="customerResource3"
+              name="customerResource"
+              class="test-check"
+              type="radio"
+              field="customerResource3"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'customerResource')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadThree?.customerResource
+                | formatvalue : dialog.formModel : 'CustomerResource'
+                | async
+            "
+          ></div>
+        </div>
+      </div>
+      <div class="mt-1 row form-group">
+        <div class="w-20">
+          <codx-label
+            [formModel]="dialog.formModel"
+            fiedName="SalespersonID"
+          ></codx-label>
+        </div>
+        <div class="w-20">
+          <codx-input
+            field="salespersonID"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.salespersonID"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="w-20 d-flex" *ngIf="leadOne?.recID">
+          <div class="w-10">
+            <codx-input
+              id="salespersonID1"
+              name="salespersonID"
+              class="test-check"
+              type="radio"
+              field="salespersonID1"
+              [checked]="true"
+              (valueChange)="changeRadio($event, 'salespersonID')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadOne?.salespersonID
+                | formatvalue : dialog.formModel : 'SalespersonID'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10">
+            <codx-input
+              id="salespersonID2"
+              name="salespersonID"
+              class="test-check"
+              type="radio"
+              field="salespersonID2"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'salespersonID')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadTwo?.salespersonID
+                | formatvalue : dialog.formModel : 'SalespersonID'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10">
+            <codx-input
+              id="salespersonID3"
+              name="salespersonID"
+              class="test-check"
+              type="radio"
+              field="salespersonID3"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'salespersonID')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadThree?.salespersonID
+                | formatvalue : dialog.formModel : 'SalespersonID'
+                | async
+            "
+          ></div>
+        </div>
+      </div>
+      <div class="mt-1 row form-group">
+        <div class="w-20">
+          <codx-label
+            [formModel]="dialog.formModel"
+            fiedName="ConsultantID"
+          ></codx-label>
+        </div>
+        <div class="w-20">
+          <codx-input
+            field="consultantID"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.consultantID"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="w-20 d-flex" *ngIf="leadOne?.recID">
+          <div class="w-10">
+            <codx-input
+              id="consultantID1"
+              name="consultantID"
+              class="test-check"
+              type="radio"
+              field="consultantID1"
+              [checked]="true"
+              (valueChange)="changeRadio($event, 'consultantID')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadOne?.consultantID
+                | formatvalue : dialog.formModel : 'ConsultantID'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10">
+            <codx-input
+              id="consultantID2"
+              name="consultantID"
+              class="test-check"
+              type="radio"
+              field="consultantID2"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'consultantID')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadTwo?.consultantID
+                | formatvalue : dialog.formModel : 'ConsultantID'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10">
+            <codx-input
+              id="consultantID3"
+              name="consultantID"
+              class="test-check"
+              type="radio"
+              field="consultantID3"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'consultantID')"
+            ></codx-input>
+          </div>
+          <div
+            [innerHTML]="
+              leadThree?.consultantID
+                | formatvalue : dialog.formModel : 'ConsultantID'
+                | async
+            "
+          ></div>
+        </div>
       </div>
     </div>
   </div>
