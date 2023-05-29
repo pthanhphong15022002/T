@@ -72,7 +72,7 @@ export class CodxListContactsComponent implements OnInit {
     //Add '${implements OnChanges}' to the class.
 
     if (changes['objectID']) {
-      if (changes['objectID'].currentValue != null) {
+      if (changes['objectID']?.currentValue != null && changes['objectID']?.currentValue?.trim() != '') {
         this.getListContacts();
       } else {
         this.loaded = true;
