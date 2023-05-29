@@ -68,6 +68,8 @@ import { PopupAddPaymentHistoryComponent } from './contracts/payment/popup-add-p
 import { PopupViewPaymentHistoryComponent } from './contracts/payment/popup-view-payment-history/popup-view-payment-history.component';
 import { PopupMergeLeadsComponent } from './leads/popup-merge-leads/popup-merge-leads.component';
 import { ViewQuotationsComponent } from './contracts/component/view-quotations/view-quotations.component';
+import { ViewImgContactComponent } from './leads/popup-merge-leads/view-img-contact/view-img-contact.component';
+import { PopupRemoveAddContactComponent } from './leads/popup-merge-leads/popup-remove-add-contact/popup-remove-add-contact.component';
 
 const routes: Routes = [
   {
@@ -82,12 +84,12 @@ const routes: Routes = [
         path: 'deals/:funcID',
         component: DealsComponent,
       },
-      
+
       // {
       //   path: 'processrelease/:funcID',
       //   component: ProcessReleaseComponent,
       // },
-        
+
       {
         path: 'processrelease/:funcID/:recID',
         component: ProcessReleaseComponent,
@@ -178,6 +180,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddPaymentHistoryComponent,
     PopupViewPaymentHistoryComponent,
     PopupMergeLeadsComponent,
+    ViewImgContactComponent,
+    PopupRemoveAddContactComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
