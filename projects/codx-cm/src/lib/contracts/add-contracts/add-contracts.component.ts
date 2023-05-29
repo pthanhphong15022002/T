@@ -150,7 +150,7 @@ export class AddContractsComponent implements OnInit {
         isActive: false,
       },
     ];
-    // this.loadComboboxData('CMCustomers','CM').subscribe(data => console.log(data));
+
     this.columns = [
       {
         field: 'rowNo',
@@ -192,6 +192,31 @@ export class AddContractsComponent implements OnInit {
       // textAlign: 'left',
       // /template: this.columnVatid,
     ];
+  }
+
+  valueChangeText(event) {
+    this.contracts[event?.field] = event?.data;
+  }
+
+  valueChangeCombobox(event) {
+    this.contracts[event?.field] = event?.data;
+    if (event?.field == 'dealID' && event?.data) {
+      this.getCustomerByDealID(event?.data);
+    }
+    if (event?.field == 'customerID' && event?.data) {
+      this.getCustomerByrecID(event?.data);
+    }
+    if (event?.field == 'quotationID' && event?.data) {
+      this.getDataByQuotationID(event?.data);
+    }
+  }
+
+  valueChangeAlert(event) {
+    this.contracts[event?.field] = event?.data;
+  }
+
+  changeValueDate(event) {
+    this.contracts[event?.field] = new Date(event?.data?.fromDate);
   }
 
   // async loadSetting() {
@@ -296,41 +321,16 @@ export class AddContractsComponent implements OnInit {
     }
     if (this.action == 'edit') {
       this.contracts = data;
-      this.getQuotationsLinesByTransID(this.contracts.quotationID);
+      this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);
     }
     if (this.action == 'copy') {
       this.contracts = data;
       this.contracts.recID = Util.uid();
       delete this.contracts['id'];
-      this.getQuotationsLinesByTransID(this.contracts.quotationID);
+      this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);
     }
-  }
-
-  valueChangeText(event) {
-    this.contracts[event?.field] = event?.data;
-  }
-
-  valueChangeCombobox(event) {
-    this.contracts[event?.field] = event?.data;
-    if (event?.field == 'dealID' && event?.data) {
-      this.getCustomerByDealID(event?.data);
-    }
-    if (event?.field == 'customerID' && event?.data) {
-      this.getCustomerByrecID(event?.data);
-    }
-    if (event?.field == 'quotationID' && event?.data) {
-      this.getDataByTransID(event?.data);
-    }
-  }
-
-  valueChangeAlert(event) {
-    this.contracts[event?.field] = event?.data;
-  }
-
-  changeValueDate(event) {
-    this.contracts[event?.field] = new Date(event?.data?.fromDate);
   }
 
   getCustomerByDealID(dealID) {
@@ -349,7 +349,7 @@ export class AddContractsComponent implements OnInit {
     });
   }
 
-  getQuotationsLinesByTransID(recID) {
+  getQuotationsAndQuotationsLinesByTransID(recID) {
     this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
       if (res) {
         this.quotations = res[0];
@@ -358,16 +358,21 @@ export class AddContractsComponent implements OnInit {
     });
   }
 
-  getDataByTransID(recID) {
+  getDataByQuotationID(recID) {
     this.contractService.getDataByTransID(recID).subscribe((res) => {
       if (res) {
-        console.log(res);
         let quotation = res[0];
         let quotationsLine = res[1];
         let customer = res[2];
         this.listQuotationsLine = quotationsLine;
+        this.quotations = quotation;
         this.setDataContractCombobox(customer);
         this.contracts.dealID = quotation?.refID;
+        this.contracts.contractAmt = quotation.totalAmt; // giá trị hợp đồng
+        this.contracts.paidAmt = this.contracts.paidAmt || 0; // số tiền đã thanh toán
+        this.contracts.remainAmt = Number(this.contracts.contractAmt) - Number(this.contracts.paidAmt); // số tiền còn lại 
+        this.contracts.currencyID = quotation.currencyID; // tiền tệ
+        this.contracts.exchangeRate = quotation.exchangeRate; // tỷ giá
       }
     });
   }
@@ -408,7 +413,7 @@ export class AddContractsComponent implements OnInit {
     let data = [];
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddContractsAsync';
-      data = [this.contracts];
+      data = [this.contracts,this.listPaymentAdd,];
     }
     if (this.action == 'edit') {
       op.methodName = 'UpdateContractAsync';
@@ -561,6 +566,7 @@ export class AddContractsComponent implements OnInit {
   viewPayHistory(payment, width: number, height: number) {
     let dataInput = {
       payment,
+      listPaymentHistory: this.listPaymentHistory,
       listPaymentAdd: this.listPaymentAdd,
       listPaymentEdit: this.listPaymentEdit,
       listPaymentDelet: this.listPaymentDelete,
@@ -587,7 +593,8 @@ export class AddContractsComponent implements OnInit {
       action,
       payment,
       paymentHistory,
-      contractID: this.contracts?.recID,
+      contract: this.contracts,
+      listPayment: this.listPayment,
       listPaymentHistory: this.listPaymentHistory,
       listPaymentAdd: this.listPaymentAdd,
       listPaymentEdit: this.listPaymentEdit,
@@ -604,7 +611,7 @@ export class AddContractsComponent implements OnInit {
     option.zIndex = 1001;
     option.FormModel = formModel;
 
-    let popupTask = this.callfunc.openForm(
+    let popupPaymentHistory = this.callfunc.openForm(
       PopupAddPaymentHistoryComponent,
       '',
       600,
@@ -615,12 +622,8 @@ export class AddContractsComponent implements OnInit {
       option
     );
 
-    let dataPopupOutput = await firstValueFrom(popupTask.closed);
-    if (dataPopupOutput?.event?.action == 'add') {
-      this.listPayment.push(dataPopupOutput?.event?.payment);
+    popupPaymentHistory.closed.subscribe((res) => {
       this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
-      this.test.refresh();
-    }
-    return dataPopupOutput;
+    });
   }
 }

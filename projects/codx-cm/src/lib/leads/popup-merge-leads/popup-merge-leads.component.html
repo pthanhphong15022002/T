@@ -1386,5 +1386,282 @@
         </div>
       </div>
     </div>
+    <div class="mt-2">
+      <codx-label
+        name="lblContacts"
+        class="h4 text-dark text-primary fw-bold"
+        default="Người liên hệ"
+        [formModel]="dialog.formModel"
+      >
+      </codx-label>
+      <div class="mt-1 row form-group">
+        <div class="w-20">
+          <codx-label
+            [formModel]="dialog.formModel"
+            name="lblListContacts"
+            [default]="'Danh sách liên hệ'"
+          ></codx-label>
+        </div>
+        <div class="w-20">
+          <div
+            class="d-flex flex-column"
+            *ngIf="lstContactNew != null && lstContactNew.length > 0"
+          >
+            <div class="mb-2">
+              <codx-view-img-contact
+                [lstContact]="lstContactNew"
+                [numberIms]="3"
+                [formModel]="dialog.formModel"
+                [sizeImg]="25"
+              ></codx-view-img-contact>
+            </div>
+
+            <div class="d-flex">
+              <div
+                class="d-flex justify-content-start align-items-center"
+                style="min-width: 130px"
+              >
+                <button
+                  type="button"
+                  class="btn btn-outline-primary min-w-120px me-2"
+                  (click)="clickPopupContacts('remove', lstContactNew, leadNew)"
+                >
+                  <i class="icon-check-correct icon-16 me-1"></i>
+                  <codx-label
+                    name="lblCheckOutContacts"
+                    [formModel]="dialog.formModel"
+                    default="Loại bỏ liên hệ"
+                  ></codx-label>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-20 d-flex" *ngIf="leadOne?.recID">
+          <div
+            class="d-flex flex-column"
+            *ngIf="lstContactOne != null && lstContactOne.length > 0"
+          >
+            <div class="mb-2">
+              <codx-view-img-contact
+                [lstContact]="lstContactOne"
+                [numberIms]="3"
+                [formModel]="dialog.formModel"
+                [sizeImg]="25"
+              ></codx-view-img-contact>
+            </div>
+
+            <div class="d-flex">
+              <div
+                class="d-flex justify-content-start align-items-center"
+                style="min-width: 130px"
+              >
+                <button
+                  type="button"
+                  class="btn btn-outline-primary min-w-120px me-2"
+                  (click)="clickPopupContacts('add', lstContactOne, leadOne)"
+                >
+                  <i class="icon-check-correct icon-16 me-1"></i>
+                  <codx-label
+                    name="lblSelectContacts"
+                    [formModel]="dialog.formModel"
+                    default="Chọn liên hệ"
+                  ></codx-label>
+                </button>
+              </div>
+
+              <div class="d-flex justify-content-end align-items-center">
+                <codx-label
+                  class="label-colon"
+                  name="lblSelect"
+                  [formModel]="dialog.formModel"
+                  default="Đã chọn"
+                ></codx-label>
+                <span class="me-1" [innerHTML]="countContact(lstContactNew, lstContactOne)"></span>
+                <span class="me-1">
+                  <codx-label
+                    class=""
+                    name="lblOf"
+                    [formModel]="dialog.formModel"
+                    default="của"
+                  ></codx-label
+                ></span>
+                <span class="me-1">
+                  {{ lstContactOne.length }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-20 d-flex">
+          <div
+            class="d-flex flex-column"
+            *ngIf="lstContactTwo != null && lstContactTwo.length > 0"
+          >
+            <div class="mb-2">
+              <codx-view-img-contact
+                [lstContact]="lstContactTwo"
+                [numberIms]="3"
+                [formModel]="dialog.formModel"
+                [sizeImg]="25"
+              ></codx-view-img-contact>
+            </div>
+
+            <div class="d-flex">
+              <div
+                class="d-flex justify-content-start align-items-center"
+                style="min-width: 130px"
+              >
+                <button
+                  type="button"
+                  class="btn btn-outline-primary min-w-120px me-2"
+                  (click)="clickPopupContacts('add', lstContactTwo, leadTwo)"
+                >
+                  <i class="icon-check-correct icon-16 me-1"></i>
+                  <codx-label
+                    name="lblSelectContacts"
+                    [formModel]="dialog.formModel"
+                    default="Chọn liên hệ"
+                  ></codx-label>
+                </button>
+              </div>
+
+              <div class="d-flex justify-content-end align-items-center">
+                <codx-label
+                  class="label-colon"
+                  name="lblSelect"
+                  [formModel]="dialog.formModel"
+                  default="Đã chọn"
+                ></codx-label>
+                <span class="me-1">{{ lstContactTwo.length }}</span>
+                <span class="me-1">
+                  <codx-label
+                    class=""
+                    name="lblOf"
+                    [formModel]="dialog.formModel"
+                    default="của"
+                  ></codx-label
+                ></span>
+                <span class="me-1">
+                  {{ lstContactTwo.length }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-20 d-flex">
+          <div
+            class="d-flex flex-column"
+            *ngIf="lstContactThree != null && lstContactThree.length > 0"
+          >
+            <div class="mb-2">
+              <codx-view-img-contact
+                [lstContact]="lstContactThree"
+                [numberIms]="3"
+                [formModel]="dialog.formModel"
+                [sizeImg]="25"
+              ></codx-view-img-contact>
+            </div>
+
+            <div class="d-flex">
+              <div
+                class="d-flex justify-content-start align-items-center"
+                style="min-width: 130px"
+              >
+                <button
+                  type="button"
+                  class="btn btn-outline-primary min-w-120px me-2"
+                  (click)="clickPopupContacts('add', lstContactThree, leadThree)"
+                >
+                  <i class="icon-check-correct icon-16 me-1"></i>
+                  <codx-label
+                    name="lblSelectContacts"
+                    [formModel]="dialog.formModel"
+                    default="Chọn liên hệ"
+                  ></codx-label>
+                </button>
+              </div>
+
+              <div class="d-flex justify-content-end align-items-center">
+                <codx-label
+                  class="label-colon"
+                  name="lblSelect"
+                  [formModel]="dialog.formModel"
+                  default="Đã chọn"
+                ></codx-label>
+                <span class="me-1">{{ lstContactThree.length }}</span>
+                <span class="me-1">
+                  <codx-label
+                    class=""
+                    name="lblOf"
+                    [formModel]="dialog.formModel"
+                    default="của"
+                  ></codx-label
+                ></span>
+                <span class="me-1">
+                  {{ lstContactThree.length }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-1 row form-group">
+        <div class="w-20">
+          <codx-label
+            [formModel]="dialog.formModel"
+            name="lblDefaultContacts"
+            [default]="'Liên hệ mặc định'"
+          ></codx-label>
+        </div>
+        <div class="w-20">
+          <ejs-combobox
+            [dataSource]="lstContactNew"
+            [fields]="fieldContacts"
+            [value]="contactDefault"
+            (valueChange)="cbxContactChange($event)"
+          ></ejs-combobox>
+        </div>
+        <div class="w-20 d-flex" *ngIf="leadOne?.recID">
+          <div
+            class="mb-1"
+            *ngIf="lstContactOne != null && lstContactOne.length > 0"
+          >
+            <codx-view-img-contact
+              [lstContact]="getContactDefault(lstContactOne)"
+              [numberIms]="1"
+              [formModel]="dialog.formModel"
+              [sizeImg]="25"
+            ></codx-view-img-contact>
+          </div>
+        </div>
+        <div class="w-20 d-flex">
+          <div
+            class="mb-1"
+            *ngIf="lstContactTwo != null && lstContactTwo.length > 0"
+          >
+            <codx-view-img-contact
+              [lstContact]="getContactDefault(lstContactTwo)"
+              [numberIms]="1"
+              [formModel]="dialog.formModel"
+              [sizeImg]="25"
+            ></codx-view-img-contact>
+          </div>
+        </div>
+        <div class="w-20 d-flex">
+          <div
+            class="mb-1"
+            *ngIf="lstContactThree != null && lstContactThree.length > 0"
+          >
+            <codx-view-img-contact
+              [lstContact]="getContactDefault(lstContactThree)"
+              [numberIms]="1"
+              [formModel]="dialog.formModel"
+              [sizeImg]="25"
+            ></codx-view-img-contact>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

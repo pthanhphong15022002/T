@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Optional } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
-import { CM_ContractsPayments } from '../../../models/cm_model';
+import { CM_Contracts, CM_ContractsPayments } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
 
 @Component({
@@ -11,13 +11,14 @@ import { CodxCmService } from '../../../codx-cm.service';
 export class PopupAddPaymentHistoryComponent {
   action = '';
   payment: CM_ContractsPayments;
+  listPayment: CM_ContractsPayments[];
   paymentHistory: CM_ContractsPayments;
   listPaymentHistory: CM_ContractsPayments[];
 
   listPaymentAdd: CM_ContractsPayments[];
   listPaymentEdit: CM_ContractsPayments[];
   listPaymentDelete: CM_ContractsPayments[];
-  contractID = null;
+  contract: CM_Contracts;
 
   listPaymentHistoryOfPayment: CM_ContractsPayments[]; //
 
@@ -30,8 +31,9 @@ export class PopupAddPaymentHistoryComponent {
   ) {
     this.dialog = dialog;
     this.action = dt?.data?.action;
-    this.contractID = dt?.data?.contractID;
+    this.contract = dt?.data?.contract;
     this.payment = dt?.data?.payment;
+    this.listPayment = dt?.data?.listPayment;
     this.paymentHistory = dt?.data?.paymentHistory;
     this.listPaymentAdd = dt?.data?.listPaymentAdd;
     this.listPaymentEdit = dt?.data?.listPaymentEdit;
@@ -60,7 +62,7 @@ export class PopupAddPaymentHistoryComponent {
     let rowNo = this.listPaymentHistoryOfPayment?.length || 0;
     this.paymentHistory = new CM_ContractsPayments();
     this.paymentHistory.rowNo = rowNo + 1;
-    this.paymentHistory.refNo = this.contractID;
+    this.paymentHistory.refNo = this.contract?.recID;
     this.paymentHistory.refLineID = this.payment?.recID;
     this.paymentHistory.scheduleDate = this.payment?.scheduleDate;
     this.paymentHistory.scheduleAmt = this.payment?.scheduleAmt;
@@ -78,7 +80,6 @@ export class PopupAddPaymentHistoryComponent {
   valueChangeAlert(event) {
     this.paymentHistory[event?.field] = event?.data;
   }
-
 
   changeValueDate(event) {
     this.paymentHistory[event?.field] = new Date(event?.data?.fromDate);
@@ -102,15 +103,28 @@ export class PopupAddPaymentHistoryComponent {
     }
   }
 
+  //Số tiền còn lại: remainAmt remainAmt
+  // số tiền đã thanh toán: paidAmt
+
   addPaymentHistory(isClose) {
     this.listPaymentHistory.push(this.paymentHistory);
     this.listPaymentAdd.push(this.paymentHistory);
     this.listPaymentHistoryOfPayment.push(this.paymentHistory);
-    this.payment.remainAmt = this.payment?.remainAmt - this.paymentHistory?.paidAmt || this.payment.remainAmt;
+    
+    this.payment.paidAmt += Number(this.paymentHistory.paidAmt || 0);
+    this.payment.remainAmt = this.payment?.scheduleAmt - this.payment?.paidAmt || this.payment.scheduleAmt;
+    let paymentFind = this.listPayment.find(payment => payment.recID == this.payment?.recID);
+    if(paymentFind){
+      paymentFind.paidAmt += Number(this.paymentHistory.paidAmt || 0);
+      paymentFind.remainAmt = this.payment?.scheduleAmt - this.paymentHistory?.paidAmt || this.payment.scheduleAmt;
+    }
+
+    this.contract.paidAmt += Number(this.paymentHistory.paidAmt);
+    this.contract.remainAmt = Number(this.contract.contractAmt) - Number(this.contract.paidAmt);
     if(isClose){
       this.dialog.close()
     }else{
-      this.action = 'add';
+      this.action = 'add'; 
       this.setPaymentHistory();
     }
     // this.cmService.addPayments(this.payment).subscribe( res => {
@@ -119,6 +133,7 @@ export class PopupAddPaymentHistoryComponent {
     //     }
     //   })
   }
+
   editPayment(isClose) {
     let payHistoryIndex = this.listPaymentHistory.findIndex(payment => payment.recID == this.paymentHistory?.recID);
     if(payHistoryIndex >= 0){
