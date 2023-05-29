@@ -9,7 +9,7 @@ import { CodxDMService } from '../../codx-dm.service';
   selector: 'card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardComponent implements OnInit , OnChanges {  
 
