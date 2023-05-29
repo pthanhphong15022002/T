@@ -1,6 +1,15 @@
-import { Component, OnInit, Optional } from '@angular/core';
-import { CacheService, DialogData, DialogRef } from 'codx-core';
+import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
+import {
+  CacheService,
+  CallFuncService,
+  DialogData,
+  DialogModel,
+  DialogRef,
+} from 'codx-core';
 import { CM_Leads } from '../../models/cm_model';
+import { CodxCmService } from '../../codx-cm.service';
+import { firstValueFrom } from 'rxjs';
+import { PopupRemoveAddContactComponent } from './popup-remove-add-contact/popup-remove-add-contact.component';
 
 @Component({
   selector: 'lib-popup-merge-leads',
@@ -17,8 +26,20 @@ export class PopupMergeLeadsComponent implements OnInit {
   title = '';
   gridViewSetup: any;
   checkAvata = true;
+  lstContactNew = [];
+  lstContactOne = [];
+  lstContactTwo = [];
+  lstContactThree = [];
+
+  fieldContacts = { text: 'contactName', value: 'recID' };
+  contactDefault: any;
+  popoverCrr: any;
+  contactDefaultOne = '';
   constructor(
+    private callFc: CallFuncService,
     private cache: CacheService,
+    private cmSv: CodxCmService,
+    private changeDetector: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -31,7 +52,24 @@ export class PopupMergeLeadsComponent implements OnInit {
       }
     });
   }
-  ngOnInit(): void {}
+  async ngOnInit() {
+    if (this.leadOne) {
+      this.lstContactOne = await this.getContacts(this.leadOne?.recID);
+    }
+    this.changeDetector.detectChanges();
+  }
+
+  async ngAfterViewInit() {}
+
+  getContactDefault(lstContact) {
+    return lstContact.filter((x) => x.isDefault);
+  }
+
+  async getContacts(objectID) {
+    var lst = [];
+    lst = await firstValueFrom(this.cmSv.getListContactByObjectID(objectID));
+    return lst;
+  }
 
   onMerge() {}
 
@@ -212,4 +250,70 @@ export class PopupMergeLeadsComponent implements OnInit {
         break;
     }
   }
+
+  clickPopupContacts(type, lstContact, data) {
+    let obj = {
+      lstContact,
+      type: type,
+      lead: data,
+    };
+    let option = new DialogModel();
+    option.zIndex = 1001;
+    option.FormModel = this.dialog.formModel;
+    let popupContract = this.callFc.openForm(
+      PopupRemoveAddContactComponent,
+      '',
+      700,
+      650,
+      '',
+      obj,
+      '',
+      option
+    );
+    popupContract.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        var lstDeal = [];
+        if (e.event.length > 0) {
+          lstDeal = e?.event;
+          lstDeal.forEach((item) => (item.checked = false));
+
+          if (type == 'add') {
+            if (this.lstContactNew != null && this.lstContactNew.length > 0) {
+              const filteredContacts = lstDeal.filter(
+                (item) =>
+                  !this.lstContactNew.some(
+                    (contact) => contact.recID === item.recID
+                  )
+              );
+
+              this.lstContactNew.push(...filteredContacts);
+            } else {
+              this.lstContactNew = lstDeal;
+            }
+          } else {
+            this.lstContactNew = this.lstContactNew.filter(
+              (item1) => !lstDeal.some((item2) => item1.recID === item2.recID)
+            );
+          }
+        }
+        this.changeDetector.detectChanges();
+      }
+    });
+  }
+
+  countContact(lstContactNew, lstContactOld) {
+    let count = 0;
+
+    for (const item1 of lstContactNew) {
+      for (const item2 of lstContactOld) {
+        if (item1.recID === item2.recID) {
+          count++;
+          break; // Nếu tìm thấy đối tượng giống nhau, thoát khỏi vòng lặp trong contact2
+        }
+      }
+    }
+    return count;
+  }
+
+  cbxContactChange(e) {}
 }

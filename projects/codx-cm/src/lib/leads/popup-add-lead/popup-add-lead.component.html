@@ -443,6 +443,7 @@
 
 <ng-template #contact>
   <codx-list-contacts
+  [selectAll]="false"
   (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
   (lstContactEmit)="lstContactEmit($event)"
   [funcID]="formModel.funcID"

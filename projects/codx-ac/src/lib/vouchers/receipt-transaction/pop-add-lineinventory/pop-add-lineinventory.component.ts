@@ -15,6 +15,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
   @ViewChild('idiM1') idiM1: CodxInputComponent;
   @ViewChild('idiM2') idiM2: CodxInputComponent;
   @ViewChild('idiM3') idiM3: CodxInputComponent;
+  @ViewChild('idiM5') idiM5: CodxInputComponent;
   @ViewChild('idiM6') idiM6: CodxInputComponent;
   @ViewChild('idiM7') idiM7: CodxInputComponent;
   dialog!: DialogRef;
@@ -31,6 +32,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
   lockFields: any;
   itemName: any;
   entityLine: any;
+  funcID: any;
   inventoryJournalLine: InventoryJournalLines;
   inventoryJournal: InventoryJournals;
   objectInventoryJournalLines: Array<InventoryJournalLines> = [];
@@ -48,6 +50,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     this.objectInventoryJournalLines = dialogData.data?.dataline;
     this.entityLine = dialogData.data?.entityLine;
     this.lockFields = dialogData.data?.lockFields;
+    this.funcID = dialogData.data?.funcID;
     if (this.lockFields == null) {
       this.lockFields = [];
     }
@@ -187,6 +190,12 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
           this.inventoryJournalLine.idiM3 = null;
           this.inventoryJournalLine.idiM6 = null;
           this.inventoryJournalLine.idiM7 = null;
+          this.form.formGroup.patchValue(this.inventoryJournalLine);
+        break;
+        case 'idiM4':
+          (this.idiM5.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+          this.idiM5.crrValue = null;
+          this.inventoryJournalLine.idiM5 = null;
           this.form.formGroup.patchValue(this.inventoryJournalLine);
         break;
     }

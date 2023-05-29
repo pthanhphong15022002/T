@@ -1,6 +1,34 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { CM_Contacts, CM_Contracts, CM_ContractsPayments, CM_Customers } from '../../models/cm_model';
-import { ApiHttpService, AuthStore, CRUDService, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, Util } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  CM_Contacts,
+  CM_Contracts,
+  CM_ContractsPayments,
+  CM_Customers,
+  CM_Quotations,
+  CM_QuotationsLines,
+} from '../../models/cm_model';
+import {
+  ApiHttpService,
+  AuthStore,
+  CRUDService,
+  CacheService,
+  CallFuncService,
+  DataRequest,
+  DialogData,
+  DialogModel,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  RequestOption,
+  Util,
+} from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { Observable, map, tap, firstValueFrom } from 'rxjs';
@@ -12,9 +40,9 @@ import { PopupAddPaymentHistoryComponent } from '../payment/popup-add-payment-hi
 @Component({
   selector: 'add-contracts',
   templateUrl: './add-contracts.component.html',
-  styleUrls: ['./add-contracts.component.scss']
+  styleUrls: ['./add-contracts.component.scss'],
 })
-export class AddContractsComponent implements OnInit{
+export class AddContractsComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('more') more: TemplateRef<any>;
   @ViewChild('test') test: any;
@@ -24,12 +52,20 @@ export class AddContractsComponent implements OnInit{
   isLoadDate: any;
   action = 'add';
   projectID: string;
-  tabClicked  = '';
+  tabClicked = '';
   listClicked = [];
   account: any;
   type: 'view' | 'list';
   customer: CM_Customers;
-  listQuotationsLine = [];
+  listQuotationsLine: CM_QuotationsLines[];
+  quotations: CM_Quotations;
+
+  fmQuotations: FormModel = {
+    formName: 'CMQuotations',
+    gridViewName: 'grvCMQuotations',
+    entityName: 'CM_Quotations',
+    funcID: 'CM02021',
+  };
 
   fmQuotationLines: FormModel = {
     formName: 'CMQuotationsLines',
@@ -59,8 +95,12 @@ export class AddContractsComponent implements OnInit{
   };
   listPayment: CM_ContractsPayments[] = [];
   listPaymentHistory: CM_ContractsPayments[] = [];
-  columns:any;
-  grvPayments:any;
+
+  listPaymentAdd: CM_ContractsPayments[] = [];
+  listPaymentEdit: CM_ContractsPayments[] = [];
+  listPaymentDelete: CM_ContractsPayments[] = [];
+  columns: any;
+  grvPayments: any;
 
   constructor(
     private cache: CacheService,
@@ -85,53 +125,98 @@ export class AddContractsComponent implements OnInit{
   ngOnInit() {
     this.setDataContract(this.contractsInput);
     this.listClicked = [
-      { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-      { name: 'detailItem', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
-      { name: 'pay', textDefault: 'Phương thức và tiến độ thanh toán', icon: 'icon-tune', isActive: false },
-      { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-tune', isActive: false },
-    ]
-    // this.loadComboboxData('CMCustomers','CM').subscribe(data => console.log(data));
-      this.columns = [  
-        {
-          field: 'rowNo',
-          headerText: this.grvPayments?.ItemID?.RowNo ?? 'STT',
-          width: 50,
-        },
-        {
-          field: 'scheduleDate',
-          headerText: this.grvPayments?.ScheduleDate?.headerText ?? 'Ngày hẹn thanh toán',
-          width: 150,
-        },
-        {
-          field: 'scheduleAmt',
-          headerText: this.grvPayments?.ScheduleAmt?.headerText ?? 'Số tiền hẹn thanh toán',
-          width: 150,
-        },
-        {
-          field: 'paidAmt',
-          headerText: this.grvPayments?.PaidAmt?.headerText ?? 'Đã thanh toán',
-          width: 150,
-        },
-        {
-          field: 'remainAmt',
-          headerText: this.grvPayments?.RemainAmt?.headerText ?? 'Dư nợ còn lại',
-          width: 150,
-         
-        },
-        {
-          field: 'status',
-          headerText: this.grvPayments?.Status?.headerText ?? 'Trạng thái',
-          width: 90,
+      {
+        name: 'general',
+        textDefault: 'Thông tin chung',
+        icon: 'icon-info',
+        isActive: true,
+      },
+      {
+        name: 'detailItem',
+        textDefault: 'Chi tiết mặt hàng',
+        icon: 'icon-link',
+        isActive: false,
+      },
+      {
+        name: 'pay',
+        textDefault: 'Phương thức và tiến độ thanh toán',
+        icon: 'icon-tune',
+        isActive: false,
+      },
+      {
+        name: 'termsAndRelated',
+        textDefault: 'Điều khoản và hồ sơ liên quan',
+        icon: 'icon-tune',
+        isActive: false,
+      },
+    ];
 
-        },
-        {
-          field: 'note',
-          headerText: this.grvPayments?.Note?.headerText ?? 'Ghi chú',
-          width: 90,
-        },
-        // textAlign: 'left',
-        // /template: this.columnVatid,
-      ];  
+    this.columns = [
+      {
+        field: 'rowNo',
+        headerText: this.grvPayments?.ItemID?.RowNo ?? 'STT',
+        width: 50,
+      },
+      {
+        field: 'scheduleDate',
+        headerText:
+          this.grvPayments?.ScheduleDate?.headerText ?? 'Ngày hẹn thanh toán',
+        width: 150,
+      },
+      {
+        field: 'scheduleAmt',
+        headerText:
+          this.grvPayments?.ScheduleAmt?.headerText ?? 'Số tiền hẹn thanh toán',
+        width: 150,
+      },
+      {
+        field: 'paidAmt',
+        headerText: this.grvPayments?.PaidAmt?.headerText ?? 'Đã thanh toán',
+        width: 150,
+      },
+      {
+        field: 'remainAmt',
+        headerText: this.grvPayments?.RemainAmt?.headerText ?? 'Dư nợ còn lại',
+        width: 150,
+      },
+      {
+        field: 'status',
+        headerText: this.grvPayments?.Status?.headerText ?? 'Trạng thái',
+        width: 90,
+      },
+      {
+        field: 'note',
+        headerText: this.grvPayments?.Note?.headerText ?? 'Ghi chú',
+        width: 90,
+      },
+      // textAlign: 'left',
+      // /template: this.columnVatid,
+    ];
+  }
+
+  valueChangeText(event) {
+    this.contracts[event?.field] = event?.data;
+  }
+
+  valueChangeCombobox(event) {
+    this.contracts[event?.field] = event?.data;
+    if (event?.field == 'dealID' && event?.data) {
+      this.getCustomerByDealID(event?.data);
+    }
+    if (event?.field == 'customerID' && event?.data) {
+      this.getCustomerByrecID(event?.data);
+    }
+    if (event?.field == 'quotationID' && event?.data) {
+      this.getDataByQuotationID(event?.data);
+    }
+  }
+
+  valueChangeAlert(event) {
+    this.contracts[event?.field] = event?.data;
+  }
+
+  changeValueDate(event) {
+    this.contracts[event?.field] = new Date(event?.data?.fromDate);
   }
 
   // async loadSetting() {
@@ -203,9 +288,9 @@ export class AddContractsComponent implements OnInit{
         this.fmContractsPayments?.gridViewName
       )
       .subscribe((res) => {
-        if(res){
+        if (res) {
           this.grvPayments = res;
-        }        
+        }
       });
   }
 
@@ -228,98 +313,79 @@ export class AddContractsComponent implements OnInit{
       );
   }
 
-  setDataContract(data){
-    if(this.action == 'add'){
+  setDataContract(data) {
+    if (this.action == 'add') {
       this.contracts = data;
       this.contracts.recID = Util.uid();
       this.contracts.projectID = this.projectID;
     }
-    if(this.action == 'edit'){
+    if (this.action == 'edit') {
       this.contracts = data;
-      this.getQuotationsLinesByTransID(this.contracts.quotationID);
+      this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);
     }
-    if(this.action == 'copy'){
+    if (this.action == 'copy') {
       this.contracts = data;
       this.contracts.recID = Util.uid();
       delete this.contracts['id'];
-      this.getQuotationsLinesByTransID(this.contracts.quotationID);
+      this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);
     }
   }
 
-  valueChangeText(event) {
-    this.contracts[event?.field] = event?.data;
-  }
-
-  valueChangeCombobox(event) {
-    this.contracts[event?.field] = event?.data;
-    if(event?.field == 'dealID' && event?.data){
-      this.getCustomerByDealID(event?.data);
-    }
-    if(event?.field == 'customerID' && event?.data){
-      this.getCustomerByrecID(event?.data);
-    }
-    if(event?.field == 'quotationID' && event?.data){
-      this.getDataByTransID(event?.data);
-    }
-  }
-
-  valueChangeAlert(event) {
-    this.contracts[event?.field] = event?.data;
-  }
-
-  changeValueDate(event) {
-    this.contracts[event?.field] = new Date(event?.data?.fromDate);
-  }
-
-  getCustomerByDealID(dealID){
-    this.contractService.getCustomerBydealID(dealID).subscribe(res => {
-      if(res){
+  getCustomerByDealID(dealID) {
+    this.contractService.getCustomerBydealID(dealID).subscribe((res) => {
+      if (res) {
         this.setDataContractCombobox(res);
       }
-    })
+    });
   }
 
-  getCustomerByrecID(recID){
-    this.contractService.getCustomerByRecID(recID).subscribe(res => {
-      if(res){
+  getCustomerByrecID(recID) {
+    this.contractService.getCustomerByRecID(recID).subscribe((res) => {
+      if (res) {
         this.setDataContractCombobox(res);
       }
-    })
+    });
   }
 
-  getQuotationsLinesByTransID(recID){
-    this.contractService.getQuotationsLinesByTransID(recID).subscribe(res => {
-      if(res){      
-        this.listQuotationsLine = res;       
+  getQuotationsAndQuotationsLinesByTransID(recID) {
+    this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
+      if (res) {
+        this.quotations = res[0];
+        this.listQuotationsLine = res[1];
       }
-    })
+    });
   }
 
-  getDataByTransID(recID){
-    this.contractService.getDataByTransID(recID).subscribe(res => {
-      if(res){
-        console.log(res);
+  getDataByQuotationID(recID) {
+    this.contractService.getDataByTransID(recID).subscribe((res) => {
+      if (res) {
         let quotation = res[0];
         let quotationsLine = res[1];
-        let customer = res[2] ;
+        let customer = res[2];
         this.listQuotationsLine = quotationsLine;
+        this.quotations = quotation;
         this.setDataContractCombobox(customer);
         this.contracts.dealID = quotation?.refID;
+        this.contracts.contractAmt = quotation.totalAmt; // giá trị hợp đồng
+        this.contracts.paidAmt = this.contracts.paidAmt || 0; // số tiền đã thanh toán
+        this.contracts.remainAmt = Number(this.contracts.contractAmt) - Number(this.contracts.paidAmt); // số tiền còn lại 
+        this.contracts.currencyID = quotation.currencyID; // tiền tệ
+        this.contracts.exchangeRate = quotation.exchangeRate; // tỷ giá
       }
-    })
+    });
   }
 
-  getPayMentByContractID(contractID){
-    this.cmService.getPaymentsByContractID(contractID).subscribe(res => {
-      if(res){
+  getPayMentByContractID(contractID) {
+    this.cmService.getPaymentsByContractID(contractID).subscribe((res) => {
+      if (res) {
         this.listPayment = res;
       }
-    })
+    });
   }
 
-  setDataContractCombobox(dataContract){
+  setDataContractCombobox(dataContract) {
     this.contracts.customerID = dataContract?.recID;
     this.contracts.taxCode = dataContract?.taxCode;
     this.contracts.address = dataContract?.address;
@@ -331,8 +397,8 @@ export class AddContractsComponent implements OnInit{
     this.contracts.bankID = dataContract?.bankID;
   }
 
-  handleSaveContract(){
-    switch (this.action){
+  handleSaveContract() {
+    switch (this.action) {
       case 'add':
       case 'copy':
         this.addContracts();
@@ -351,52 +417,59 @@ export class AddContractsComponent implements OnInit{
     }
     if (this.action == 'edit') {
       op.methodName = 'UpdateContractAsync';
-      data = [this.contracts];
+      data = [
+        this.contracts,
+        this.listPaymentAdd,
+        this.listPaymentEdit,
+        this.listPaymentDelete,
+      ];
     }
     op.data = data;
     return true;
   }
 
-  addContracts(){
-    if(this.type == 'view'){
+  addContracts() {
+    if (this.type == 'view') {
       this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt), 0)
-      .subscribe((res) => {
-        if (res.save) {
-          (this.dialog.dataService as CRUDService).update(res.save).subscribe();
-          this.dialog.close(res.save);
-        } else {
-          this.dialog.close();
-        }
-        // this.changeDetector.detectChanges();
-      });
-    }else{
-       this.cmService.addContracts(this.contracts).subscribe( res => {
-      if(res){
+        .save((opt: any) => this.beforeSave(opt), 0)
+        .subscribe((res) => {
+          if (res.save) {
+            (this.dialog.dataService as CRUDService)
+              .update(res.save)
+              .subscribe();
+            this.dialog.close(res.save);
+          } else {
+            this.dialog.close();
+          }
+          // this.changeDetector.detectChanges();
+        });
+    } else {
+      this.cmService.addContracts(this.contracts).subscribe((res) => {
+        if (res) {
           this.dialog.close({ contract: res, action: this.action });
         }
-      })
+      });
     }
     // console.log(this.contracts);
   }
 
-  editContract(){
-    if(this.type == 'view'){
+  editContract() {
+    if (this.type == 'view') {
       this.dialog.dataService
-    .save((opt: any) => this.beforeSave(opt))
-    .subscribe((res) => {
-      this.dialog.close({ contract: res, action: this.action }); 
-    })
-    }else{
-      this.cmService.editContracts(this.contracts).subscribe( res => {
-      if(res){
-        this.dialog.close({ contract: res, action: this.action });
-      }
-    })
+        .save((opt: any) => this.beforeSave(opt))
+        .subscribe((res) => {
+          this.dialog.close({ contract: res, action: this.action });
+        });
+    } else {
+      this.cmService.editContracts(this.contracts).subscribe((res) => {
+        if (res) {
+          this.dialog.close({ contract: res, action: this.action });
+        }
+      });
     }
   }
   // chuyển tab
-  changeTab(e){
+  changeTab(e) {
     this.tabClicked = e;
   }
 
@@ -404,10 +477,10 @@ export class AddContractsComponent implements OnInit{
     this.attachment.uploadFile();
   }
 
-  onClickMFPayment(e, data){
+  onClickMFPayment(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        this.deletePayment(data)
+        this.deletePayment(data);
         break;
       case 'SYS03':
         this.editPayment(data);
@@ -417,117 +490,140 @@ export class AddContractsComponent implements OnInit{
         // this.copyContract(data);
         break;
       case 'CM02041_1': //xem lịch sử
-      this.viewPayHistory(data,1200,500);
-        // this.copyContract(data);
+        this.viewPayHistory(data, 1200, 500);
         break;
       case 'CM02041_2': // thêm lịch sử
-      this.addPayHistory(data);
-        // this.copyContract(data);
+        this.addPayHistory(data);
         break;
     }
   }
-  
-  addPayment(){
+
+  addPayment() {
     let payment = new CM_ContractsPayments();
     this.openPopupPayment('add', payment);
   }
-  editPayment(payment){
+  editPayment(payment) {
     this.openPopupPayment('edit', payment);
   }
 
-  deletePayment(payment){
-
+  deletePayment(payment) {
+    this.notiService.alertCode('SYS030').subscribe((res) => {
+      if (res.event.status === 'Y') {
+        let indexPayDelete = this.listPayment.findIndex(
+          (payFind) => payFind.recID == payment.recID
+        );
+        if (indexPayDelete >= 0) {
+          this.listPayment.splice(indexPayDelete, 1);
+          this.listPaymentDelete.push(payment);
+          for (let index = indexPayDelete; index < this.listPayment.length; index++){
+            this.listPayment[index].rowNo = index + 1;
+          }
+          this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+        }
+      }
+    });
   }
-  async openPopupPayment(action,payment) {
+
+  async openPopupPayment(action, payment) {
     let dataInput = {
       action,
       payment,
       listPayment: this.listPayment,
+      listPaymentAdd: this.listPaymentAdd,
+      listPaymentEdit: this.listPaymentEdit,
+      listPaymentDelet: this.listPaymentDelete,
       contractID: this.contracts?.recID,
     };
-   
+
     let option = new DialogModel();
     option.IsFull = false;
     option.zIndex = 1001;
     option.FormModel = this.fmContractsPayments;
     let popupPayment = this.callfunc.openForm(
-      PopupAddPaymentComponent,'',
+      PopupAddPaymentComponent,
+      '',
       600,
       400,
       '',
       dataInput,
       '',
-      option,
-      );
+      option
+    );
 
-    popupPayment.closed.subscribe(res => {
+    popupPayment.closed.subscribe((res) => {
       this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
-    })
+    });
   }
 
-  addPayHistory(payment){
+  addPayHistory(payment) {
     let payMentHistory = new CM_ContractsPayments();
-    let countPayMent =  this.listPayment.length;
+    let countPayMent = this.listPayment.length;
     payMentHistory.rowNo = countPayMent + 1;
     payMentHistory.refNo = this.contracts?.recID;
-    this.openPopupPaymentHistory('add', payment, payMentHistory,);
+    this.openPopupPaymentHistory('add', payment, payMentHistory);
   }
 
-  viewPayHistory(payment ,width: number, height: number){
+  viewPayHistory(payment, width: number, height: number) {
     let dataInput = {
       payment,
+      listPaymentHistory: this.listPaymentHistory,
+      listPaymentAdd: this.listPaymentAdd,
+      listPaymentEdit: this.listPaymentEdit,
+      listPaymentDelet: this.listPaymentDelete,
     };
-  
+
     let option = new DialogModel();
     option.IsFull = false;
     option.zIndex = 1001;
     option.FormModel = this.fmContractsPaymentsHistory;
     let popupPayHistory = this.callfunc.openForm(
-      PopupViewPaymentHistoryComponent,'',
+      PopupViewPaymentHistoryComponent,
+      '',
       width,
       height,
       '',
       dataInput,
       '',
-      option,
-      );
+      option
+    );
   }
 
-  async openPopupPaymentHistory(action,payment,paymentHistory) {
+  async openPopupPaymentHistory(action, payment, paymentHistory) {
     let dataInput = {
       action,
       payment,
-      contractID: this.contracts?.recID,
       paymentHistory,
+      contract: this.contracts,
+      listPayment: this.listPayment,
+      listPaymentHistory: this.listPaymentHistory,
+      listPaymentAdd: this.listPaymentAdd,
+      listPaymentEdit: this.listPaymentEdit,
+      listPaymentDelet: this.listPaymentDelete,
     };
 
     let formModel = new FormModel();
     formModel.entityName = 'CM_ContractsPayments';
     formModel.formName = 'CMContractsPayments';
     formModel.gridViewName = 'grvCMContractsPayments';
-    
+
     let option = new DialogModel();
     option.IsFull = false;
     option.zIndex = 1001;
     option.FormModel = formModel;
 
-    let popupTask = this.callfunc.openForm(
-      PopupAddPaymentHistoryComponent,'',
+    let popupPaymentHistory = this.callfunc.openForm(
+      PopupAddPaymentHistoryComponent,
+      '',
       600,
       400,
       '',
       dataInput,
       '',
-      option,
-      );
+      option
+    );
 
-    let dataPopupOutput = await firstValueFrom(popupTask.closed);
-    if(dataPopupOutput?.event?.action == 'add'){
-      this.listPayment.push(dataPopupOutput?.event?.payment);
+    popupPaymentHistory.closed.subscribe((res) => {
       this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
-      this.test.refresh();
-    }
-    return dataPopupOutput;
+    });
   }
-
 }

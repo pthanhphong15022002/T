@@ -1,5 +1,4 @@
 import { Contact } from './../../../../../codx-sm/src/lib/models/Contact.model';
-import { data } from './../../contracts/component/codx-table/data';
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { UIComponent, DialogRef, FormModel, NotificationsService, AuthStore, DialogData, RequestOption } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
