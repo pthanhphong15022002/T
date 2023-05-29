@@ -380,7 +380,9 @@ export class AddContractsComponent implements OnInit {
   getPayMentByContractID(contractID) {
     this.cmService.getPaymentsByContractID(contractID).subscribe((res) => {
       if (res) {
-        this.listPayment = res;
+        let listPayAll =  res as CM_ContractsPayments[];
+        this.listPayment = listPayAll.filter(pay => pay.lineType == '0');
+        this.listPaymentHistory = listPayAll.filter(pay => pay.lineType == '1');
       }
     });
   }
@@ -500,6 +502,7 @@ export class AddContractsComponent implements OnInit {
 
   addPayment() {
     let payment = new CM_ContractsPayments();
+    payment.lineType = '0';
     this.openPopupPayment('add', payment);
   }
   editPayment(payment) {
@@ -560,6 +563,7 @@ export class AddContractsComponent implements OnInit {
     let countPayMent = this.listPayment.length;
     payMentHistory.rowNo = countPayMent + 1;
     payMentHistory.refNo = this.contracts?.recID;
+    payMentHistory.lineType = '1';
     this.openPopupPaymentHistory('add', payment, payMentHistory);
   }
 

@@ -63,6 +63,7 @@ export class PopupAddPaymentHistoryComponent {
     this.paymentHistory = new CM_ContractsPayments();
     this.paymentHistory.rowNo = rowNo + 1;
     this.paymentHistory.refNo = this.contract?.recID;
+    this.paymentHistory.lineType = '1';
     this.paymentHistory.refLineID = this.payment?.recID;
     this.paymentHistory.scheduleDate = this.payment?.scheduleDate;
     this.paymentHistory.scheduleAmt = this.payment?.scheduleAmt;
@@ -113,7 +114,7 @@ export class PopupAddPaymentHistoryComponent {
     
     this.payment.paidAmt += Number(this.paymentHistory.paidAmt || 0);
     this.payment.remainAmt = this.payment?.scheduleAmt - this.payment?.paidAmt || this.payment.scheduleAmt;
-    let paymentFind = this.listPayment.find(payment => payment.recID == this.payment?.recID);
+     let paymentFind = this.listPayment.find(payment => payment.recID == this.payment?.recID);
     if(paymentFind){
       paymentFind.paidAmt += Number(this.paymentHistory.paidAmt || 0);
       paymentFind.remainAmt = this.payment?.scheduleAmt - this.paymentHistory?.paidAmt || this.payment.scheduleAmt;

@@ -321,18 +321,6 @@
 </ng-template>
 <!-- điều khoản hợp đồng -->
 <ng-template #termsAndRelatedTemplate let-data="value">
-  <!-- <div>
-    <codx-input
-      [formModel]="dialog.formModel"
-      field="note"
-      type="textarea"
-      format="ed"
-      height="150"
-      (valueChange)="valueChangeText($event)"
-      [crrValue]="contracts?.note"
-    >
-    </codx-input>
-  </div> -->
   <div class="d-flex justify-content-between mt-5">
     <div
       class="d-inline-flex align-items-center text-primary mb-3"
@@ -368,7 +356,7 @@
   <div>
     <codx-attachment
       #attachment
-      [objectType]=""
+      [objectType]="dialog.formModel.entityName"
       [objectId]="contracts?.recID"
       hideFolder="1"
       hideImageUpload="0"
@@ -995,6 +983,7 @@
     </div>
   </div>
 </ng-template>
+
 <!-- lịch thanh toán -->
 <ng-template #calendarPayTemplate let-data="value">
   <div>
@@ -1011,7 +1000,6 @@
     ></codx-taskbar>
   </div>
   <ng-container [ngTemplateOutlet]="PayTableTemplate"></ng-container>
-  <!-- <product #test [dataSource]="listPayment" [formModel]="fmContractsPayments"></product> -->
   <div class="d-flex align-items-center my-5">
     <div class="content-icon">
       <span class="icon-add text-primary"></span>
@@ -1030,7 +1018,7 @@
     </button>
   </div>
 </ng-template>
-<!-- lịch sử thanh toán -->
+
 <ng-template #PayTableTemplate let-data="value">
   <div>
     <codx-gridview-v2
