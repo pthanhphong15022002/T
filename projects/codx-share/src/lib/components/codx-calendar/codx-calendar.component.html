@@ -3,11 +3,11 @@
 <ng-template #templateLeft>
   <div class="bg-white rounded-3 p-3">
     <div class="d-flex justify-content-center">
-      <div class="w-250px me-5">
+      <div class="w-30 min-w-225px mw-450px me-5">
         <ejs-calendar
           #ejCalendar
           cssClass="width-calendar"
-          class="e-customStyle"
+          class="e-customStyle w-100 mw-100"
           [locale]="locale"
           [firstDayOfWeek]="1"
           [value]="dateChange"
@@ -36,83 +36,60 @@
           </ejs-dropdownlist>
         </div>
         <ng-container #listParam>
-          <div class="d-flex align-items-center mt-3 title-calendar">
-            <div class="w-100">
-              <codx-label
-                fiedName="Calendar"
-                default="Calendar"
-                class="fw-bold"
-              ></codx-label>
-            </div>
-            <div class="me-2">
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <codx-label
+              fiedName="Calendar"
+              default="Calendar"
+              class="fw-bold"
+            ></codx-label>
+            <button class="btn btn-icon btn-primary me-1">
               <span
-                [ngClass]="
-                  !isCollapsed
-                    ? 'icon-keyboard_arrow_up icon-20 icon-gray col-md-1 pt-1 ps-7'
-                    : 'icon-keyboard_arrow_down icon-20 icon-gray col-md-1 pt-1 ps-7'
-                "
-                (click)="collapse.toggle()"
-                [attr.aria-expanded]="!isCollapsed"
-                aria-controls="collapseExample"
+                class="icon-settings text-white icon-18"
+                (click)="settingCalendar()"
               ></span>
+            </button>
+          </div>
+
+          <div *ngFor="let param of calendarParams | keyvalue">
+            <div class="d-flex mt-3 align-items-center">
+              <div class="w-5px me-2">
+                <li
+                  [style.background-color]="param?.value.ShowColor"
+                  [style.color]="param?.value.ShowColor"
+                ></li>
+              </div>
+              <div class="show-list-event w-100">
+                <codx-vll
+                  [showText]="true"
+                  [showBgColor]="false"
+                  name="WP006"
+                  [value]="param?.key"
+                />
+              </div>
+              <div
+                class="show-event-check me-2 w-50px d-flex justify-content-end"
+              >
+                <codx-input
+                  type="checkbox"
+                  [field]="param?.key"
+                  [checked]="param?.value.ShowEvent === '1'"
+                  labelPosition="Before"
+                  [disabled]="false"
+                  class="test-check"
+                  (valueChange)="updateSettingValue($event)"
+                >
+                </codx-input>
+              </div>
             </div>
           </div>
 
-          <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
-            <div *ngFor="let param of calendarParams | keyvalue">
-              <div class="d-flex mt-3 align-items-center">
-                <div class="w-5px me-2">
-                  <li
-                    [style.background-color]="param.value?.ShowColor"
-                    [style.color]="param.value?.ShowColor"
-                  ></li>
-                </div>
-                <div class="show-list-event w-100">
-                  <codx-vll
-                    [showText]="true"
-                    [showBgColor]="false"
-                    name="WP006"
-                    [value]="param.key"
-                  />
-                </div>
-                <div
-                  class="show-event-check me-2 w-50px d-flex justify-content-end"
-                >
-                  <codx-input
-                    type="checkbox"
-                    [field]="param.key"
-                    [checked]="param.value?.ShowEvent == '1'"
-                    labelPosition="Before"
-                    [disabled]="false"
-                    class="test-check"
-                    (valueChange)="updateSettingValue($event)"
-                  >
-                  </codx-input>
-                </div>
-              </div>
-            </div>
-
-            <!-- <div
-              *ngIf="
-                EP_BookingCarsParam ||
-                EP_BookingRoomsParam ||
-                WP_NotesParam ||
-                TM_TasksParam ||
-                CO_MeetingsParam
-              "
-              class="d-flex justify-content-center"
-            >
-              <button
-                type="button"
-                class="btn btn-sm btn-primary"
-                (click)="updateSettingValue2()"
-              >
-                <codx-label
-                  name="lblSaveSettingValue"
-                  default="Lưu"
-                ></codx-label>
-              </button>
-            </div> -->
+          <div class="d-flex justify-content-around align-items-center mt-3">
+            <button class="btn btn-outline-primary btn-md" (click)="resetParams()">
+              <span>Reset</span>
+            </button>
+            <button class="btn btn-primary btn-md" (click)="saveParams()">
+              <span>Save</span>
+            </button>
           </div>
         </ng-container>
       </div>
@@ -122,48 +99,31 @@
           [resources]="resources"
           [resourceModel]="dataResourceModel"
         ></lib-calendar-center>
-        <!-- Floating Action Button -->
-        <div class="floating-container">
-          <div class="floating-button">+</div>
-          <div class="element-container">
-            <div class="float-element" (click)="addMeeting()">
-              <codx-label
-                fiedName="CO_Meetings"
-                default="Lịch họp"
-                class="fw-bold"
-              ></codx-label>
-            </div>
-            <div class="float-element" (click)="addBookingCar()">
-              <codx-label
-                fiedName="EP_BookingCars"
-                default="Đặt xe"
-                class="fw-bold"
-              ></codx-label>
-            </div>
-            <div class="float-element" (click)="addMyTask()">
-              <codx-label
-                fiedName="TM_MyTasks"
-                default="Công việc"
-                class="fw-bold"
-              ></codx-label>
-            </div>
-            <div class="float-element" (click)="addAssignTask()">
-              <codx-label
-                fiedName="TM_AssignTasks"
-                default="Giao việc"
-                class="fw-bold"
-              ></codx-label>
-            </div>
-            <div class="float-element" (click)="addNote()">
-              <codx-label
-                fiedName="WP_Notes"
-                default="Ghi chú"
-                class="fw-bold"
-              ></codx-label>
-            </div>
-          </div>
+        
+      </div>
+    </div>
+  </div>
+  <!-- Floating Action Button -->
+  <div class="floating-container">
+    <div class="element-container">
+      <div *ngFor="let param of calendarParams | keyvalue">
+        <div
+          *ngIf="param?.value.ShowEvent === '1'"
+          class="float-element"
+          (click)="addEvent(param?.key)"
+        >
+          <codx-vll
+            [showText]="true"
+            [showBgColor]="false"
+            name="WP006"
+            [value]="param?.key"
+          />
         </div>
       </div>
     </div>
+    <button type="button" class="btn btn-icon btn-lg rounded-3 btn-primary">
+      <span class="icon-add icon-24"></span>
+    </button>
+    
   </div>
 </ng-template>

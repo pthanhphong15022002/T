@@ -300,7 +300,7 @@ export class CodxApprovalComponent
     }
   }
   clickMF(e: any, data: any) {
-    //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
+    //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SY207
     var funcID = e?.functionID;
     if (data.eSign == true) {
       //Kys

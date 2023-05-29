@@ -1,6 +1,5 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import {
-  ApiHttpService,
   CacheService,
   CallFuncService,
   DialogRef,
@@ -22,8 +21,7 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     inject: Injector,
     private route: ActivatedRoute,
     private callfc: CallFuncService,
-    private cache: CacheService,
-    private api: ApiHttpService
+    private cache: CacheService
   ) {
     super(inject);
     this.module = 'WP';
@@ -33,19 +31,9 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     this.layoutModel.toolbarDisplay = false;
   }
 
-  onInit() {
-    // let data = { bankID: '2' };
-    // this.api
-    //   .execSv<any>('AC', 'Core', 'CMBusiness', 'SendRequestBankHubAsync', [
-    //     data,
-    //     'Test',
-    //   ])
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       var url = JSON.parse(res);
-    //       if (url) window.open(url['Link'], '_blank');
-    //     }
-    //   });
+  onInit() {}
+  asideClick(evt: any) {
+    console.log(evt);
   }
   onAfterViewInit(): void {}
   openFormNoteDrawer() {

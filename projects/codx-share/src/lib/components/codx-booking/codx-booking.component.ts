@@ -255,7 +255,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.view.dataService.methodDelete = 'DeleteBookingAsync';
+    this.view.dataService.methodDelete = 'DeleteAsync';
 
   }
 

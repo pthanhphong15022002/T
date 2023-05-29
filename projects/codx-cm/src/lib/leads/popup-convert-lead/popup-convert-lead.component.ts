@@ -307,7 +307,7 @@ export class PopupConvertLeadComponent implements OnInit {
   setRecIDConvert() {
     if (!this.radioChecked) {
       this.customer.recID = this.customerNewOld;
-    }else{
+    } else {
       this.customer.recID = this.customerID;
     }
     this.deal.customerID = this.customer?.recID;
@@ -337,19 +337,21 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   convertDataInstanceAndDeal() {
-    this.deal.stepID = this.listInstanceSteps[0]?.stepID;
-    this.deal.nextStep = this.listInstanceSteps[1]?.stepID;
-    this.deal.status = '1';
     this.instance.recID = Util.uid();
     this.instance.title = this.deal?.dealName;
     this.instance.memo = this.deal?.memo;
     this.instance.endDate = this.deal?.endDate;
     this.instance.instanceNo = this.deal?.dealID;
     this.instance.owner = this.deal?.salespersonID;
+    this.instance.status = '1';
+    this.instance.startDate = null;
     this.instance.processID = this.deal?.processID;
     this.instance.stepID = this.deal?.stepID;
-
+    this.deal.stepID = this.listInstanceSteps[0]?.stepID;
+    this.deal.nextStep = this.listInstanceSteps[1]?.stepID;
+    this.deal.status = '1';
     this.deal.refID = this.instance.recID;
+    this.deal.startDate = null;
   }
 
   //#endregion
@@ -602,33 +604,35 @@ export class PopupConvertLeadComponent implements OnInit {
   //#region Contact
 
   objectConvert(e) {
-    if (e.e.data == true) {
+    if (e.e == true) {
       if (e?.data != null) {
-        var check = this.lstContactCustomer.findIndex(
-          (x) => x.isDefault == true
-        );
-        if (e.data.isDefault == true) {
-          if (check != -1) {
-            var config = new AlertConfirmInputConfig();
-            config.type = 'YesNo';
-            this.notiService.alertCode('CM001').subscribe((x) => {
-              if (x.event.status == 'Y') {
-                this.lstContactCustomer[check].isDefault = false;
-              } else {
-                e.data.isDefault = false;
-              }
+        if (!this.lstContactCustomer.some((x) => x.recID == e?.data?.recID)) {
+          var check = this.lstContactCustomer.findIndex(
+            (x) => x.isDefault == true
+          );
+          if (e.data.isDefault == true) {
+            if (check != -1) {
+              var config = new AlertConfirmInputConfig();
+              config.type = 'YesNo';
+              this.notiService.alertCode('CM001').subscribe((x) => {
+                if (x.event.status == 'Y') {
+                  this.lstContactCustomer[check].isDefault = false;
+                } else {
+                  e.data.isDefault = false;
+                }
+                this.lstContactCustomer.push(Object.assign({}, e?.data));
+                this.codxListContact.loadListContact(this.lstContactCustomer);
+
+                this.changeDetectorRef.detectChanges();
+              });
+            } else {
               this.lstContactCustomer.push(Object.assign({}, e?.data));
               this.codxListContact.loadListContact(this.lstContactCustomer);
-
-              this.changeDetectorRef.detectChanges();
-            });
+            }
           } else {
             this.lstContactCustomer.push(Object.assign({}, e?.data));
             this.codxListContact.loadListContact(this.lstContactCustomer);
           }
-        } else {
-          this.lstContactCustomer.push(Object.assign({}, e?.data));
-          this.codxListContact.loadListContact(this.lstContactCustomer);
         }
       }
     } else {
@@ -652,9 +656,11 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   objectConvertDeal(e) {
-    if (e.e.data == true) {
+    if (e.e == true) {
       if (e.data) {
-        this.lstContactDeal.push(e?.data);
+        if (!this.lstContactDeal.some((x) => x.recID == e?.data?.recID)) {
+          this.lstContactDeal.push(e?.data);
+        }
       }
     } else {
       var index = this.lstContactDeal.findIndex(

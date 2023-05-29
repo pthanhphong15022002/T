@@ -12,7 +12,6 @@ import { CM_Contacts } from '../../models/cm_model';
 export class CaseDetailComponent  implements OnInit {
 
   @Input() dataSelected: any;
-  @Input() dataService: CRUDService;
   @Input() formModel: any;
   @Input() funcID = 'CM0201'; //True - Khách hàng; False - Liên hệ
   @Output() clickMoreFunc = new EventEmitter<any>();

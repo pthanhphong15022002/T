@@ -85,7 +85,13 @@ export class ViewDetailComponent implements OnInit {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;
 
-  tabControl: TabModel[] = [];
+  tabControl = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+    // { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+    { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+  ];
 
   ngOnInit(): void {
     this.itemDetailStt = 3;
@@ -113,13 +119,7 @@ export class ViewDetailComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.tabControl = [
-      { name: 'History', textDefault: 'Lịch sử', isActive: true },
-      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-      // { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
-      { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
-    ];
+    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -309,13 +309,13 @@ export class ViewDetailComponent implements OnInit {
       if (bm?.length) bm[0].disabled = false;
     }
 
-    if (data.approveStatus != 3) {
+    if (data?.approveStatus != 3) {
       var cancel = e.filter(
         (x: { functionID: string }) => x.functionID == 'EST01101'
       );
       if (cancel?.length) cancel[0].disabled = true;
     }
-    if (data.approveStatus != 1 && data.approveStatus != 2) {
+    if (data?.approveStatus != 1 && data?.approveStatus != 2) {
       if (edit?.length) edit[0].disabled = true;
       if (release?.length) release[0].disabled = true;
       if (del?.length) del[0].disabled = true;

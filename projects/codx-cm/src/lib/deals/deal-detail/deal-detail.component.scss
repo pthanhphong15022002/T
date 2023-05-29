@@ -2,7 +2,16 @@
   place-self: center !important;
 }
 
-
 .nowrap {
   white-space: nowrap !important;
+}
+
+.line-clamp-menu {
+  display: inline-block!important;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 150px;
 }
