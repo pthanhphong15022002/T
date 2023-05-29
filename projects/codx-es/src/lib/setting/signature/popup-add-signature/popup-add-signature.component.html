@@ -346,11 +346,19 @@
         <codx-input
           type="password"
           field="password"
+          [crrValue]="data?.password"
+          [disabled]="data.signatureType == '1' ? false : true"
+          (valueChange)="passwordChange($event)"
+        >
+        </codx-input>
+        <!-- <codx-input
+          type="password"
+          field="password"
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
           [disabled]="data.signatureType == '1' ? false : true"
         >
-        </codx-input>
+        </codx-input> -->
       </div>
     </div>
   </ng-template>
