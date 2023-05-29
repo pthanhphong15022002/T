@@ -1,0 +1,153 @@
+<div>
+  <div>
+    <codx-gridview-v2
+      #productTable
+      service="CM"
+      [formName]="fmQuotationLines.formName"
+      [gridViewName]="fmQuotationLines.gridViewName"
+      [entityName]="fmQuotationLines.entityName"
+      [templateMore]="more"
+      [contentEditable]="false"
+      [allowFiltering]="true"
+      [allowSorting]="true"
+      [dataSource]="quotationLines"
+      [autoLoad]="false"
+      rowHeight="40"
+      predicates="TransID=@0"
+    ></codx-gridview-v2>
+  </div>
+  <div>
+    <div #tabsNote class="row">
+      <div class="form-group col-8">
+        <codx-label fiedName="memo" [formModel]="fmQuotations"></codx-label>
+        <codx-input
+          field="memo"
+          [formModel]="fmQuotations"
+          [crrValue]="quotations.memo"
+        ></codx-input>
+      </div>
+      <div
+        class="col-4 fw-bolder fs-5"
+        style="padding-left: 100px; padding-right: 20px"
+      >
+        <div class="d-flex justify-content-between">
+          <div class="">
+            <codx-label
+              class="label-colon"
+              fiedName="TotalAmt"
+              [formModel]="fmQuotations"
+            ></codx-label>
+          </div>
+          <div class="d-flex justify-content-end">
+            <span
+              class="me-3"
+              [innerHTML]="
+                quotations.totalSalesAmt
+                  | formatvalue : fmQuotations : 'totalSalesAmt'
+                  | async
+              "
+            ></span>
+            <span
+              class="codx-label"
+              [innerHTML]="
+                quotations.currencyID
+                  | formatvalue : fmQuotations : 'currencyID'
+                  | async
+              "
+            ></span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div>
+            <codx-label
+              class="label-colon"
+              fiedName="DiscAmt"
+              [formModel]="fmQuotations"
+            ></codx-label>
+          </div>
+          <div class="d-flex justify-content-end">
+            <span
+              class="me-3"
+              [innerHTML]="
+                quotations.discAmt
+                  | formatvalue : fmQuotations : 'DiscAmt'
+                  | async
+              "
+            ></span>
+            <span
+              class="codx-label"
+              [innerHTML]="
+                quotations.currencyID
+                  | formatvalue : fmQuotations : 'currencyID'
+                  | async
+              "
+            ></span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div>
+            <codx-label
+              class="label-colon"
+              fiedName="totalTaxAmt"
+              [formModel]="fmQuotations"
+            ></codx-label>
+          </div>
+          <div class="d-flex justify-content-end">
+            <span
+              class="me-3"
+              [innerHTML]="
+                quotations?.totalTaxAmt
+                  | formatvalue : fmQuotations : 'totalTaxAmt'
+                  | async
+              "
+            ></span>
+            <span
+              class="codx-label"
+              [innerHTML]="
+                quotations.currencyID
+                  | formatvalue : fmQuotations : 'currencyID'
+                  | async
+              "
+            ></span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div class="">
+            <codx-label
+              class="label-colon text-danger"
+              fiedName="TotalAmt"
+              [formModel]="fmQuotations"
+            ></codx-label>
+          </div>
+          <div class="d-flex justify-content-end">
+            <span
+              class="me-3"
+              [innerHTML]="
+                quotations.totalAmt
+                  | formatvalue : fmQuotations : 'TotalAmt'
+                  | async
+              "
+            ></span>
+            <span
+              class="codx-label"
+              [innerHTML]="
+                quotations.currencyID
+                  | formatvalue : fmQuotations : 'currencyID'
+                  | async
+              "
+            ></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #more let-data>
+  <codx-mfunc
+    [formModel]="fmContractsPayments"
+    [isBookMark]="true"
+    [dataItem]="moreDefaut"
+    [type]="'view'"
+    (clickMF)="onClickMF($event, data)"
+  ></codx-mfunc>
+</ng-template>

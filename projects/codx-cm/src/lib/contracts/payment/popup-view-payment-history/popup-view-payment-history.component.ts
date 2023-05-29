@@ -11,6 +11,7 @@ import { CodxCmService } from '../../../codx-cm.service';
 export class PopupViewPaymentHistoryComponent {
   dialog: DialogRef;
   listPaymentHistory:CM_ContractsPayments[];
+  listPaymentHistoryOfPayment:CM_ContractsPayments[];
   payment:CM_ContractsPayments;
   moreDefaut = {
     share: true,
@@ -31,6 +32,7 @@ export class PopupViewPaymentHistoryComponent {
     this.payment = dt?.data?.payment;
   }
   ngOnInit(): void {
+    this.listPaymentHistoryOfPayment = this.listPaymentHistory.filter(paymentHistory => paymentHistory.refLineID == this.payment?.recID)
     this.columns = [
       {
         field: 'rowNo',

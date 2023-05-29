@@ -17,6 +17,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
   AuthService,
+  AuthStore,
   CacheService,
   CallFuncService,
   CodxFormComponent,
@@ -84,6 +85,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   hasModuleES: boolean = false;
   dataType = ''; //Anh Thao thêm để lấy data khi không có dataService --sau nay nếu sửa thì báo anh Thảo với!! Thank - Huế ngày 14/04/2023
   signFileFM: FormModel;
+  curUser:any;
 
   constructor(
     private esService: CodxEsService,
@@ -93,9 +95,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     private notify: NotificationsService,
     private callfunc: CallFuncService,
     private authService:AuthService,
+    private authStore:AuthStore,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
+    this.curUser = authStore.get();
     this.dialog = dialog;
     this.dataType = data?.data?.dataType;
     if (this.dataType != 'auto') {
@@ -600,6 +604,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       signFile.categoryID = this.data?.categoryID;
       signFile.refType = this.formModel?.entityName;
       signFile.owner = this.authService?.userValue?.userID;
+      signFile.isTemplate = true;
+      signFile.processID = this.data?.recID;
+      signFile.approveControl = '3';
+      signFile.buid=this.curUser?.bUID;
+
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
       let dialogAdd = this.callfunc.openForm(

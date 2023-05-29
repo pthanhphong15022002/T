@@ -21,7 +21,7 @@
       <codx-input
         type="text"
         field="reasonID"
-        [crrValue]="result.reasonID"
+        [crrValue]="result?.reasonID"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
@@ -30,10 +30,13 @@
     <div class="note form-group">
       <codx-label fiedName="Comment" [formModel]="formModel"> </codx-label>
       <codx-input
-        type="text"
+        type="textarea"
+        format="ed2"
+        [placeholder]="grvSetup?.Comment?.description"
         field="comment"
-        [crrValue]="result.comment"
+        [crrValue]="result?.comment"
         (valueChange)="valueChange($event)"
+
       >
       </codx-input>
     </div>
