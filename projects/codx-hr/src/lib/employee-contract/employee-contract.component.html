@@ -237,7 +237,7 @@
 
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'h-100px me-2'"
+    [imgCss]="'me-4 h-100'"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-10'"
@@ -306,7 +306,7 @@
 
   <ng-template #descTmp>
     <span
-      class="mt-1"
+      class="mt-1 text-gray-500"
       [ngbTooltip]="grvSetup?.ContractTypeID?.headerText"
       [innerHTML]="
         data?.contractTypeID
@@ -319,18 +319,18 @@
   <ng-template #desc2Tmp>
     <div>
       <div class="d-flex align-items-center mt-1">
-        <span class="icon-description icon-15 me-1"></span>
-        <span class="me-3" [ngbTooltip]="grvSetup?.ContractNo?.headerText">
+        <span class="icon-description icon-18 me-1"></span>
+        <span class="me-3 fs-7" [ngbTooltip]="grvSetup?.ContractNo?.headerText">
           {{ data.contractNo }}
         </span>
-        <span class="icon-calendar_today icon-15 me-1"></span>
-        <span [ngbTooltip]="grvSetup?.EffectedDate?.headerText">
+        <span class="icon-calendar_today icon-14 me-1"></span>
+        <span class="fs-7" [ngbTooltip]="grvSetup?.EffectedDate?.headerText">
           {{ data.effectedDate | fmDT }}
         </span>
         <span *ngIf="data.expiredDate">
-          <span class="mx-1">-</span>
+          <span class="mx-1 fs-7">-</span>
         </span>
-        <span
+        <span class="fs-7"
           *ngIf="data.expiredDate"
           [ngbTooltip]="grvSetup?.ExpiredDate?.headerText"
         >
@@ -450,7 +450,7 @@
         <div class="card-toolbar">
           <button
             type="button"
-            class="btn btn-flex text-dark-75 text-hover-primary px-0"
+            class="btn btn-flex text-dark-75 px-0"
             (click)="close2(dialog1)"
           >
             <span class="icon-close icon-18"></span>

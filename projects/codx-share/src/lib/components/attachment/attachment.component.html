@@ -265,5 +265,8 @@
             </div>
         </div>
     </div>
-
+    <div class="progress" *ngIf="barWidth != '0%'">
+        <span [innerHTML]="barWidth"></span>
+        <div class="bar" [style.width]="barWidth"></div>
+    </div>
 </ng-template>
