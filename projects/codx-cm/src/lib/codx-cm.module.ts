@@ -69,6 +69,8 @@ import { PopupAddPaymentComponent } from './contracts/payment/popup-add-payment/
 import { PopupAddPaymentHistoryComponent } from './contracts/payment/popup-add-payment-history/popup-add-payment-history.component';
 import { PopupViewPaymentHistoryComponent } from './contracts/payment/popup-view-payment-history/popup-view-payment-history.component';
 import { PopupMergeLeadsComponent } from './leads/popup-merge-leads/popup-merge-leads.component';
+import { ViewImgContactComponent } from './leads/popup-merge-leads/view-img-contact/view-img-contact.component';
+import { PopupRemoveAddContactComponent } from './leads/popup-merge-leads/popup-remove-add-contact/popup-remove-add-contact.component';
 
 const routes: Routes = [
   {
@@ -180,6 +182,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddPaymentHistoryComponent,
     PopupViewPaymentHistoryComponent,
     PopupMergeLeadsComponent,
+    ViewImgContactComponent,
+    PopupRemoveAddContactComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

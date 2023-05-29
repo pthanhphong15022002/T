@@ -320,6 +320,8 @@
 
 <ng-template #contact>
   <codx-list-contacts
+  [selectAll]="false"
+
     [funcID]="'CM0205'"
     [objectID]="dataSelected?.recID"
     [objectName]="dataSelected?.leadName"
