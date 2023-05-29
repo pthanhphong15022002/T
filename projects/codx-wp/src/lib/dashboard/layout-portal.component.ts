@@ -38,13 +38,13 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     if (evt.funcId == 'HCS_001') {
       evt.cancel = true;
       this.shareService.loginHCS().subscribe((token) => {
-        let returnUrl = 'https://surehcs.lacviet.vn/UI2017';
-        let url = `http://surehcs.lacviet.vn/UI2017/verifytoken.aspx?tklid=${token}&returnUrl=${returnUrl}`;
-        if (url != '') {
-          window.open(url, '_blank');
-        }
+        this.cache.functionList(evt.funcId).subscribe((res) => {
+          let url = `${res?.url}/verifytoken.aspx?tklid=${token}&returnUrl=${res?.url}`;
+          if (url != '') {
+            window.open(url, '_blank');
+          }
+        });
       });
-      console.log('evt click', evt);
     }
   }
   onAfterViewInit(): void {}
