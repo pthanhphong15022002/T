@@ -315,7 +315,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   openConfirm() {
-    debugger;
     if (this.otpControl == '1' || this.otpControl == '2') {
       this.esService
         .createOTPPin(this.oApprovalTrans.recID, this.otpControl)
