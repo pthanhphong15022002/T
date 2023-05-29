@@ -413,7 +413,7 @@ export class AddContractsComponent implements OnInit {
     let data = [];
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddContractsAsync';
-      data = [this.contracts];
+      data = [this.contracts,this.listPaymentAdd,];
     }
     if (this.action == 'edit') {
       op.methodName = 'UpdateContractAsync';

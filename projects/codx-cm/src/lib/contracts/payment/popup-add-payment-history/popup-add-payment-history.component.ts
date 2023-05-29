@@ -81,7 +81,6 @@ export class PopupAddPaymentHistoryComponent {
     this.paymentHistory[event?.field] = event?.data;
   }
 
-
   changeValueDate(event) {
     this.paymentHistory[event?.field] = new Date(event?.data?.fromDate);
   }
@@ -112,12 +111,12 @@ export class PopupAddPaymentHistoryComponent {
     this.listPaymentAdd.push(this.paymentHistory);
     this.listPaymentHistoryOfPayment.push(this.paymentHistory);
     
-    this.payment.remainAmt = this.payment?.remainAmt - this.paymentHistory?.paidAmt || this.payment.remainAmt;
     this.payment.paidAmt += Number(this.paymentHistory.paidAmt || 0);
+    this.payment.remainAmt = this.payment?.scheduleAmt - this.payment?.paidAmt || this.payment.scheduleAmt;
     let paymentFind = this.listPayment.find(payment => payment.recID == this.payment?.recID);
     if(paymentFind){
-      paymentFind.remainAmt = this.payment?.remainAmt - this.paymentHistory?.paidAmt || this.payment.remainAmt;
       paymentFind.paidAmt += Number(this.paymentHistory.paidAmt || 0);
+      paymentFind.remainAmt = this.payment?.scheduleAmt - this.paymentHistory?.paidAmt || this.payment.scheduleAmt;
     }
 
     this.contract.paidAmt += Number(this.paymentHistory.paidAmt);
