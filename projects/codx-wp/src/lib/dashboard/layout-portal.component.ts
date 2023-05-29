@@ -1,6 +1,12 @@
-
 import { Component, OnInit, Injector } from '@angular/core';
-import { CacheService, CallFuncService, DialogRef, LayoutBaseComponent, SidebarModel } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  CallFuncService,
+  DialogRef,
+  LayoutBaseComponent,
+  SidebarModel,
+} from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { ActivatedRoute } from '@angular/router';
 
@@ -16,9 +22,9 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     inject: Injector,
     private route: ActivatedRoute,
     private callfc: CallFuncService,
-    private cache:CacheService
-  ) 
-  {
+    private cache: CacheService,
+    private api: ApiHttpService
+  ) {
     super(inject);
     this.module = 'WP';
     this.layoutModel.asideFixed = false;
@@ -28,6 +34,18 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
   }
 
   onInit() {
+    // let data = { bankID: '2' };
+    // this.api
+    //   .execSv<any>('AC', 'Core', 'CMBusiness', 'SendRequestBankHubAsync', [
+    //     data,
+    //     'Test',
+    //   ])
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       var url = JSON.parse(res);
+    //       if (url) window.open(url['Link'], '_blank');
+    //     }
+    //   });
   }
   onAfterViewInit(): void {}
   openFormNoteDrawer() {
