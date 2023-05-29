@@ -1071,33 +1071,36 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         meeting['_uuid'] = meeting['meetingID'] ?? Util.uid();
         meeting['idField'] = 'meetingID';
         meeting.meetingName = data?.taskName;
+        meeting.meetingType = '1';
         let option = new SidebarModel();
         option.zIndex = 1011;
         let formModel = new FormModel();
-        formModel.funcID = 'TMT0501';
-        formModel.entityName = 'CO_Meetings';
-        formModel.formName = 'TMMeetings';
-        formModel.gridViewName = 'grvTMMeetings';
-        option.FormModel = formModel;
-        option.Width = '800px';
-        let obj = {
-          action: 'add',
-          titleAction: this.titleAction,
-          disabledProject: false,
-          // preside:  ,
-          data: meeting,
-        };
-        var dialog = this.callfc.openSide(
-          PopupAddMeetingComponent,
-          obj,
-          option
-        );
-        dialog.closed.subscribe((e) => {
-          if (e?.event) {
-            this.notiService.notify(
-              'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
-            );
-          }
+        this.cache.functionList('TMT0501').subscribe((f) => {
+          formModel.funcID = 'TMT0501';
+          formModel.entityName = f?.entityName;
+          formModel.formName = f?.formName;
+          formModel.gridViewName = f?.gridViewName;
+          option.FormModel = formModel;
+          option.Width = '850px';
+          let obj = {
+            action: 'add',
+            titleAction: this.titleAction,
+            disabledProject: false,
+            // preside:  ,
+            data: meeting,
+          };
+          var dialog = this.callfc.openSide(
+            PopupAddMeetingComponent,
+            obj,
+            option
+          );
+          dialog.closed.subscribe((e) => {
+            if (e?.event) {
+              this.notiService.notify(
+                'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
+              );
+            }
+          });
         });
       }
     });
