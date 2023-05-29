@@ -5401,23 +5401,19 @@
                 </codx-label>
               </div>
             </div>
-
-            <div class="d-flex flex-wrap mb-2">
-              <codx-input
-                [formModel]="formModel"
-                [type]="'checkbox'"
-                [checked]="infoPersonal?.isHandOverWork"
-                [disabled]="true"
-                field="isHandOverWork"
-              ></codx-input>
-              <codx-label
-                class="ms-3"
-                fiedName="IsHandOverWork"
-                [formModel]="formModel"
-              ></codx-label>
-            </div>
-            <div class="d-flex flex-wrap mb-2">
-              <codx-input
+            <div class="ms-8">
+              <div class="d-flex flex-wrap mb-2">
+                <codx-input
+                  [formModel]="formModel"
+                  [type]="'checkbox'"
+                  [checked]="infoPersonal?.isHandOverWork"
+                  [disabled]="true"
+                  field="isHandOverWork"
+                ></codx-input>
+                <codx-label class="ms-3" fiedName="IsHandOverWork" [formModel]="formModel"></codx-label>
+              </div>
+              <div class="d-flex flex-wrap mb-2">
+                <codx-input
                 [formModel]="formModel"
                 [type]="'checkbox'"
                 [checked]="infoPersonal?.isHandOverProperty"
@@ -5425,25 +5421,18 @@
                 field="isHandOverProperty"
               ></codx-input>
 
-              <codx-label
-                class="ms-3"
-                fiedName="IsHandOverProperty"
-                [formModel]="formModel"
-              ></codx-label>
-            </div>
-            <div class="d-flex flex-wrap mb-2">
-              <codx-input
+              <codx-label class="ms-3" fiedName="IsHandOverProperty" [formModel]="formModel"></codx-label>
+              </div>
+              <div class="d-flex flex-wrap mb-2">
+                <codx-input
                 [formModel]="formModel"
                 [type]="'checkbox'"
                 [checked]="infoPersonal?.isPaidDebt"
                 [disabled]="true"
                 field="isPaidDebt"
-              ></codx-input>
-              <codx-label
-                class="ms-3"
-                fiedName="IsPaidDebt"
-                [formModel]="formModel"
-              ></codx-label>
+                ></codx-input>
+                <codx-label class="ms-3" fiedName="IsPaidDebt" [formModel]="formModel"></codx-label>
+              </div>
             </div>
             <hr />
             <div class="d-flex align-items-center mt-6 mb-4">
@@ -5457,7 +5446,7 @@
                 </codx-label>
               </div>
             </div>
-
+            <div class="ms-8">
             <div class="d-flex flex-wrap mb-2">
               <codx-input
                 [formModel]="formModel"
@@ -5534,65 +5523,33 @@
               ></codx-label>
             </div>
 
-            <div
-              class="d-flex flex-wrap mb-2"
-              *ngIf="infoPersonal?.returnSIBook"
-            >
-              <codx-input
-                [type]="'checkbox'"
-                [disabled]="true"
-                class="me-3"
-                [checked]="'true'"
-              ></codx-input>
-              <codx-vll
-                [showText]="true"
-                [showBgColor]="false"
-                [showIcon]="false"
-                [formModel]="formModel"
-                [field]="'ReturnSIBook'"
-                [value]="infoPersonal?.returnSIBook"
-              >
-              </codx-vll>
-              <!-- <codx-label class="ms-3" fiedName="ReturnSIBook" [formModel]="formModel"></codx-label> -->
-            </div>
-
-            <div
-              class="d-flex flex-wrap mb-2"
-              *ngIf="!infoPersonal?.returnTermination"
-            >
-              <codx-input
-                [type]="'checkbox'"
-                [disabled]="true"
-                [checked]="'false'"
-              ></codx-input>
-              <codx-label
-                class="ms-3"
-                fiedName="ReturnTermination"
-                [formModel]="formModel"
-              ></codx-label>
-            </div>
-
-            <div
-              class="d-flex flex-wrap mb-2"
-              *ngIf="infoPersonal?.returnTermination"
-            >
-              <codx-input
-                [disabled]="true"
-                [type]="'checkbox'"
-                class="me-3"
-                [checked]="'true'"
-              ></codx-input>
-              <codx-vll
-                [showText]="true"
-                [showBgColor]="false"
-                [showIcon]="false"
-                [formModel]="formModel"
-                [field]="'ReturnTermination'"
-                [value]="infoPersonal?.returnTermination"
-              >
-              </codx-vll>
-              <!-- <codx-label class="ms-3" fiedName="ReturnTermination" [formModel]="formModel"></codx-label> -->
-            </div>
+<div class="d-flex flex-wrap mb-2" *ngIf="!infoPersonal?.returnTermination">
+  <codx-input
+  [type]="'checkbox'"
+  [disabled]="true"
+  [checked]="'false'"
+  ></codx-input>
+<codx-label class="ms-3" fiedName="ReturnTermination" [formModel]="formModel"></codx-label>
+</div>
+</div>
+<div class="d-flex flex-wrap mb-2" *ngIf="infoPersonal?.returnTermination">
+  <codx-input
+  [disabled]="true"
+  [type]="'checkbox'"
+  class="me-3" 
+  [checked]="'true'"
+  ></codx-input>
+  <codx-vll
+  [showText]="true"
+  [showBgColor]="false"
+  [showIcon]="false"
+  [formModel]="formModel"
+  [field]="'ReturnTermination'"
+  [value]="infoPersonal?.returnTermination"
+>
+</codx-vll>
+<!-- <codx-label class="ms-3" fiedName="ReturnTermination" [formModel]="formModel"></codx-label> -->
+</div>
           </div>
         </div>
       </div>
