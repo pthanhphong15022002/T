@@ -315,5 +315,14 @@ export class PopupMergeLeadsComponent implements OnInit {
     return count;
   }
 
-  cbxContactChange(e) {}
+  cbxContactChange(e) {
+    if(e != this.contactDefault){
+      this.contactDefault = e;
+      var index = this.lstContactNew.findIndex(x => x.recID == e);
+      if(index != -1){
+        this.lstContactNew[index].isDefault = true;
+      }
+    }
+
+  }
 }
