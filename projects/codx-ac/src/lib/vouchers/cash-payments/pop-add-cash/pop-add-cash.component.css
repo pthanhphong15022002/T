@@ -1,3 +1,4 @@
-.e-tab .e-content.e-lib {
-    padding-left: 0px;
+
+.tabline-content .e-content{
+    height: calc(100vh - 544px)!important;
 }

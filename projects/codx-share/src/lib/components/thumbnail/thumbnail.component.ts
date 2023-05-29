@@ -262,7 +262,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   openFile(file: any) {
-    this.fileService.getFile(file.recID,true,true).subscribe((item) => {
+    this.fileService.getFile(file.recID,true,true ).subscribe((item) => {
       if (item && item.read) {
         this.cache
           .moreFunction('FileInfo', 'grvFileInfo')
