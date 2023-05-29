@@ -180,6 +180,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     
   }
   onInit(): void {
+    this.refeshData();
     //View mặc định 
     var check = document.getElementById("dm-home-mark-id");
     
