@@ -12,7 +12,14 @@ export class PopupAddPaymentHistoryComponent {
   action = '';
   payment: CM_ContractsPayments;
   paymentHistory: CM_ContractsPayments;
+  listPaymentHistory: CM_ContractsPayments[];
+
+  listPaymentAdd: CM_ContractsPayments[];
+  listPaymentEdit: CM_ContractsPayments[];
+  listPaymentDelete: CM_ContractsPayments[];
   contractID = null;
+
+  listPaymentHistoryOfPayment: CM_ContractsPayments[]; //
 
   title = "Lịch sử thanh toán";
   dialog: DialogRef;
@@ -25,10 +32,16 @@ export class PopupAddPaymentHistoryComponent {
     this.action = dt?.data?.action;
     this.contractID = dt?.data?.contractID;
     this.payment = dt?.data?.data;
+    this.paymentHistory = dt?.data?.paymentHistory;
+    this.listPaymentAdd = dt?.data?.listPaymentAdd;
+    this.listPaymentEdit = dt?.data?.listPaymentEdit;
+    this.listPaymentDelete = dt?.data?.listPaymentDelete;
+    this.listPaymentHistory = dt?.data?.listPaymentHistory;
   }
 
   ngOnInit(): void {
     this.setDataInput();
+    this.listPaymentHistoryOfPayment = this.listPaymentHistory.filter(paymentHistory => paymentHistory.refLineID == this.payment?.recID)
   }
 
   setDataInput(){
@@ -42,7 +55,17 @@ export class PopupAddPaymentHistoryComponent {
     }
   }
 
-  getPaymentBy
+  setPayment(){
+    let rowNo = this.listPaymentHistoryOfPayment?.length || 0;
+    this.paymentHistory = new CM_ContractsPayments();
+    this.paymentHistory.rowNo = rowNo + 1;
+    this.paymentHistory.refNo = this.contractID;
+    this.paymentHistory.refLineID = this.payment?.recID;
+    this.paymentHistory.scheduleDate = this.payment?.scheduleDate;
+    this.paymentHistory.scheduleAmt = this.payment?.scheduleAmt;
+    this.paymentHistory.remainAmt = this.payment?.remainAmt;
+  }
+
   valueChangeText(event) {
     try {
       this.payment[event?.field] = event?.data;

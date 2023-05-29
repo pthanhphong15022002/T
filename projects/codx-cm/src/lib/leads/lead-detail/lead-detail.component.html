@@ -10,20 +10,27 @@
     (clickMF)="clickMF($event, dataSelected)"
   >
     <ng-template #header let-data>
-      <span
-      class="fs-7"
-      #businesslineID
-      [innerHTML]="
-      data?.businesslineID
-          | formatvalue
-            : formModel
-            : 'businesslineID'
-            : businesslineID
-            : 'CMLeads'
-            : 'grvCMLeads'
-          | async
-      "
-    ></span>
+      <div class="d-flex justify-content-start text-info">
+        <div>
+          <i class="icon-add_shopping_cart icon-16 me-2 "></i>
+        </div>
+        <div>
+          <span
+          class="text-gray-700"
+          #businesslineID
+          [innerHTML]="
+          dataSelected?.businesslineID
+              | formatvalue
+                : formModel
+                : 'businesslineID'
+                : businesslineID
+                : 'CMLeads'
+                : 'grvCMLeads'
+              | async
+          "
+        ></span>
+        </div>
+      </div>
       <div class="container_detail mt-3">
         <div class="d-flex justify-content-between pb-3">
           <div>
@@ -63,13 +70,13 @@
             <div class="me-2 badge badge-light-primary">
               <span
               class="fs-7"
-              #businesslineID
+              #status
               [innerHTML]="
-              dataSelected?.businesslineID
+              dataSelected?.status
                   | formatvalue
                     : formModel
-                    : 'businesslineID'
-                    : businesslineID
+                    : 'status'
+                    : status
                     : 'CMLeads'
                     : 'grvCMLeads'
                   | async
@@ -79,8 +86,7 @@
             </div>
           </div>
         </div>
-
-        <div class="d-flex justify-content-between pb-3">
+        <div class="d-flex justify-content-between pb-1">
           <div class="d-flex flex-row">
             <div class="d-flex justify-content-start">
               <codx-label default="Lĩnh vực hoạt động:" class="fs-6 me-1"></codx-label>
@@ -112,11 +118,31 @@
                 <codx-imgs
                 [isToolTip]="true"
                 [width]="25"
-                [objectId]="dataSelected.owner"
+                [objectId]="dataSelected.salespersonID"
                 ojectType="AD_Users"
                 [numberImages]="1"
               >
               </codx-imgs>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between pb-3">
+          <div class="d-flex flex-row">
+            <div class="d-flex justify-content-start">
+              <codx-label default="Nhu cầu:" class="fs-6 me-1"></codx-label>
+              <div class="fs-6">
+                <span
+                  class="fs-7"
+                  #note
+                  [innerHTML]="
+                    dataSelected?.note
+                      | formatvalue
+                        : formModel
+                        : 'note'
+                      | async
+                  "
+                ></span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="d-flex justify-content-start">
@@ -128,6 +154,65 @@
           >
           </codx-tag>
         </div>
+
+        <div class="d-flex justify-content-between">
+          <div>
+            <div class="d-flex justify-content-start py-2" *ngIf="contactPerson != null">
+              <codx-label
+                default="Liên hệ chính:"
+                class="fs-6 me-1"
+              ></codx-label>
+              <div class="fs-6">
+                <div class="d-flex align-items-stretch">
+                  <div class="pe-2 avatar-center">
+                    <codx-img
+                      [objectId]="contactPerson?.recID"
+                      [objectName]="contactPerson?.contactName"
+                      [imgOn]="contactPerson?.modifiedOn"
+                      [objectType]="'CM_Contacts'"
+                      [width]="30"
+                    >
+                    </codx-img>
+                  </div>
+                  <div>
+                    <div
+                      class="fw-bold fs-6 text-dark codx-text-overflow-1line pb-2"
+                    >
+                      {{ contactPerson?.contactName }}
+                    </div>
+                    <div
+                    class="fw-bold fs-6 text-dark codx-text-overflow-1line pb-2"
+                  >
+                    {{ contactPerson?.jobTitle }}
+                  </div>
+                    <div class="d-flex align-items-start me-4 mb-1">
+                      <div class="me-3 pe-5">
+                        <span
+                          class="icon-phone_android text-primary icon-16 me-1"
+                        ></span>
+                        <span class="text-gray-900">
+                          {{ contactPerson?.mobile }}</span
+                        >
+                      </div>
+                      <div>
+                        <span
+                          class="icon-print_disabled icon-16 me-1 text-gray-500"
+                        ></span>
+                        <span class="text-gray-900">
+                          {{ contactPerson?.personalEmail }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div></div>
+          <div>Justify content between</div>
+        </div>
+
+
 
         <div class="view-details-header bg-body scroll-y me-3 h-100">
           <div class="d-flex align-items-center justify-content-between">

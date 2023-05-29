@@ -100,8 +100,8 @@
           ></codx-label>
         </div>
         <div class="">
+          <!-- [formModel]="dialog.formModel" -->
           <codx-input
-            [formModel]="dialog.formModel"
             field="scheduleAmt"
             type="number"
             [min]="0"
@@ -125,7 +125,7 @@
           [formModel]="dialog.formModel"
           field="memo"
           type="text"
-          [crrValue]="payment?.memo"
+          [crrValue]="payment?.memo || ''"
           (valueChange)="valueChangeText($event)"
         >
         </codx-input>

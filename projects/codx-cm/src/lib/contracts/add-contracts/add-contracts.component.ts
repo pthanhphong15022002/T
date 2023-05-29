@@ -59,6 +59,10 @@ export class AddContractsComponent implements OnInit{
   };
   listPayment: CM_ContractsPayments[] = [];
   listPaymentHistory: CM_ContractsPayments[] = [];
+
+  listPaymentAdd: CM_ContractsPayments[] = [];
+  listPaymentEdit: CM_ContractsPayments[] = [];
+  listPaymentDelete: CM_ContractsPayments[] = [];
   columns:any;
   grvPayments:any;
 
@@ -351,7 +355,11 @@ export class AddContractsComponent implements OnInit{
     }
     if (this.action == 'edit') {
       op.methodName = 'UpdateContractAsync';
-      data = [this.contracts];
+      data = [
+        this.contracts, 
+        this.listPaymentAdd, 
+        this.listPaymentEdit, 
+        this.listPaymentDelete];
     }
     op.data = data;
     return true;
@@ -443,6 +451,9 @@ export class AddContractsComponent implements OnInit{
       action,
       payment,
       listPayment: this.listPayment,
+      listPaymentAdd: this.listPaymentAdd,
+      listPaymentEdit: this.listPaymentEdit,
+      listPaymentDelet: this.listPaymentDelete,
       contractID: this.contracts?.recID,
     };
    
@@ -476,6 +487,9 @@ export class AddContractsComponent implements OnInit{
   viewPayHistory(payment ,width: number, height: number){
     let dataInput = {
       payment,
+      listPaymentAdd: this.listPaymentAdd,
+      listPaymentEdit: this.listPaymentEdit,
+      listPaymentDelet: this.listPaymentDelete,
     };
   
     let option = new DialogModel();
@@ -497,8 +511,12 @@ export class AddContractsComponent implements OnInit{
     let dataInput = {
       action,
       payment,
-      contractID: this.contracts?.recID,
       paymentHistory,
+      contractID: this.contracts?.recID,
+      listPaymentHistory : this.listPaymentHistory,
+      listPaymentAdd: this.listPaymentAdd,
+      listPaymentEdit: this.listPaymentEdit,
+      listPaymentDelet: this.listPaymentDelete,
     };
 
     let formModel = new FormModel();

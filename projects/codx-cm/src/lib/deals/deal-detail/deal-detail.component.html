@@ -81,30 +81,20 @@
                 default="Lĩnh vực hoạt động:"
                 class="text-dark fw-bold me-2"
               ></codx-label>
-
-              <span
-              class="text-gray-700"
-              [innerHTML]="
-              dataSelected?.industries | formatvalue : formModel : 'Industries' | async
-              "
-            ></span>
-
             <span
             class="text-gray-600"
             #industries
             [innerHTML]="
               dataSelected?.industries
                 | formatvalue
-                  : formModel
+                  : formModelCustomer
                   : 'industries'
                   : industries
-                  : 'CM_Customers'
+                  : 'CMCustomers'
                   : 'grvCMCustomers'
                 | async
             "
           ></span>
-
-
 
             </div>
             <div class="d-flex align-items-top justify-content-start mb-2">
@@ -226,9 +216,9 @@
                   [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
                   class="me-1"
                 ></span>
-                <span [ngStyle]="{ color: dataSelected?.steps['textColor'] }">{{  dataSelected?.currentStepName }}</span>
+                <span  class="menu-title fw-bold line-clamp-menu"  [ngbTooltip]="dataSelected?.currentStepName" [ngStyle]="{ color: data?.steps['textColor'] }">{{  dataSelected?.currentStepName }}</span>
               </div>
-                <div   *ngIf="dataSelected.status == '1'">
+                <div   *ngIf="dataSelected.status == '1'" >
 
                   <codx-vll
                   [name]="'DP028'"

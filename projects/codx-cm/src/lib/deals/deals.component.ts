@@ -24,6 +24,7 @@ import {
   NotificationsService,
   DialogModel,
   CRUDService,
+  Util,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
@@ -574,7 +575,25 @@ export class DealsComponent
       // }
     }
   }
-  viewDetail(data) {}
+  
+  viewDetail(data) {
+    this.dataSelected = data;
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 999;
+ 
+    let popup = this.callfc.openForm(
+      this.popDetail,
+      '',
+      Util.getViewPort().width,
+      Util.getViewPort().height,
+      '',
+      null,
+      '',
+      option
+    );
+   popup.closed.subscribe((e) => {});
+  }
 
   //end Kanaban
 

@@ -12,6 +12,9 @@ export class PopupAddPaymentComponent {
   action = '';
   payment: CM_ContractsPayments;
   listPayment: CM_ContractsPayments[];
+  listPaymentAdd: CM_ContractsPayments[];
+  listPaymentEdit: CM_ContractsPayments[];
+  listPaymentDelete: CM_ContractsPayments[];
   contractID = null;
 
   title = "Lịch thanh toán";
@@ -26,6 +29,9 @@ export class PopupAddPaymentComponent {
     this.contractID = dt?.data?.contractID;
     this.payment = dt?.data?.payment;
     this.listPayment = dt?.data?.listPayment;
+    this.listPaymentAdd = dt?.data?.listPaymentAdd;
+    this.listPaymentEdit = dt?.data?.listPaymentEdit;
+    this.listPaymentDelete = dt?.data?.listPaymentDelete;
   }
 
   ngOnInit(): void {
@@ -94,7 +100,9 @@ export class PopupAddPaymentComponent {
   }
 
   addPayment(isClose) {
+    this.payment.remainAmt = this.payment?.scheduleAmt || 0;
     this.listPayment.push(this.payment);
+    this.listPaymentAdd.push(this.payment);
     if(isClose){
       this.dialog.close(true);
     }else{
@@ -112,6 +120,19 @@ export class PopupAddPaymentComponent {
     if(paymentIndex >= 0){
       this.listPayment.splice(paymentIndex,1,this.payment);
     }
+
+    let paymentIndexAdd = this.listPaymentAdd.findIndex(payment => payment.recID == this.payment?.recID);
+    if(paymentIndexAdd >= 0){ 
+      this.listPaymentAdd.splice(paymentIndexAdd,1,this.payment);
+    }else{
+      let paymentIndexEdit = this.listPaymentEdit.findIndex(payment => payment.recID == this.payment?.recID);
+      if(paymentIndexEdit >=0){
+        this.listPaymentEdit.splice(paymentIndexAdd,1,this.payment);
+      }else{
+        this.listPaymentEdit.push(this.payment);
+      }
+    }
+
     if(isClose){
       this.dialog.close(true);
     }else{
