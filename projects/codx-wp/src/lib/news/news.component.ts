@@ -226,7 +226,7 @@ export class NewsComponent extends UIComponent {
       'WP',
       'ERM.Business.WP',
       'NewsBusiness',
-      'UpdateViewNewsAsync',
+      'UpdateViewAsync',
       [data.recID]).subscribe();
       this.codxService.navigate('', `wp2/news/${this.funcID}/${data.category}/${data.recID}`);
     }
@@ -259,7 +259,7 @@ export class NewsComponent extends UIComponent {
             this.posts.pop();
         }
         //video
-        else
+        else if(data.newsType == this.NEWSTYPE.VIDEO)
         {
           if(this.videos.length > 0)
             this.videos.unshift(data);

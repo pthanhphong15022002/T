@@ -7,10 +7,8 @@
         <div class="d-flex justify-content-end">
             <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
         </div>
-        <span class="postnews mt-3" *ngIf="userPermission && userPermission.create">
-            
+        <span class="postnews mt-3" *ngIf="userPermission?.create">
             <div class="d-flex btn-postnews">
-
                 <a (click)="openPopupAdd(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
                         class="icon-video_call fs-1"></i></a>
                 <a (click)="openPopupAdd(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i
@@ -76,15 +74,15 @@
                                     </div>
                                     <div class="d-flex flex-center me-4">
                                         <span class="icon-account_circle me-1 fs-6 "></span>
-                                        <span class="fs-7 ">{{data.createdName}}</span>
+                                        <span *ngIf="data.createdName" class="fs-7 ">{{data.createdName}}</span>
                                     </div>
                                     <div class="d-flex flex-center me-4">
                                         <span class="icon-calendar_customize me-1 fs-6 "></span>
-                                        <span class="fs-7 ">{{data.createdOn | fmDT}}</span>
+                                        <span *ngIf="data.createdOn" class="fs-7 ">{{data.createdOn | fmDT}}</span>
                                     </div>
                                     <div class="d-flex flex-center me-4">
                                         <span class="icon-visibility me-1 fs-6 "></span>
-                                        <span class="fs-7 ">{{data.views}}</span>
+                                        <span *ngIf="data.views" class="fs-7 ">{{data.views}}</span>
                                     </div>
                                 </div>
                                 <ng-container *ngIf="data.allowShare">
@@ -101,24 +99,29 @@
                                 </wp-view-video>
                             </ng-contianer>
                             <ng-template #news>
-                                <div class="py-3" [innerHTML]="data.subContent"></div>
-                                <div class="py-3 news-detail-content" [innerHTML]="data.contents | safe:'html'"></div>
+                                <ng-container *ngIf="data.subContent">
+                                    <div class="py-3" [innerHTML]="data.subContent"></div>
+                                </ng-container>
+                                <ng-container>
+                                    <div *ngIf="data.contents" class="py-3 news-detail-content" [innerHTML]="data.contents | safe:'html'"></div>
+                                </ng-container>
                             </ng-template>
-
                         </div>
                         <div class="fw-bolder fs-3 erer text-primary mt-6">
-                            <codx-label [formModel]="view.formModel" name="lblViewmore" default="Xem thêm"></codx-label>
+                            <codx-label [formModel]="view.formModel" name="lblViewMore" default="Xem thêm"></codx-label>
                         </div>
                         <div class="w-100">
-                            <ul>
-                                <li (click)="clickViewDeital(item)" *ngFor="let item of listNews"
-                                    class="fs-5 er mt-2 news-title ">
-                                    <a href="javascript:void(0)">
-                                        <span class="fs-5 text-dark fw-bold">{{item.subject}}</span>
-                                        <span class="fs-7 ms-4 text-muted">({{item.createdOn | fmDT}})</span>
-                                    </a>
-                                </li>
-                            </ul>
+                            <ng-container *ngIf="listNews">
+                                <ul>
+                                    <li (click)="clickViewDeital(item)" *ngFor="let item of listNews"
+                                        class="fs-5 er mt-2 cursor-pointer">
+                                        <a href="javascript:void(0)" >
+                                            <span class="fs-5 text-dark fw-bold news-title">{{item.subject}}</span>
+                                            <span class="fs-7 ms-4 text-muted">({{item.createdOn | fmDT}})</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </ng-container>    
                         </div>
                     </div>
                 </div>
@@ -137,7 +140,6 @@
                                             [width]="70" 
                                             imageType="square" 
                                             [cssClass]="'img'"
-                                            [isDefaulImg]="true" 
                                             [objectId]="item.recID" 
                                             [objectType]="'WP_News'" 
                                             [referType]="'image'">
@@ -155,15 +157,14 @@
                                                 <span *ngIf="item.views"
                                                     class="text-gray-500 ms-1">{{item.views}}</span>
                                             </div>
-                                            <div *ngIf="item.createdOn" class="fs-7 text-gray-500">{{item.createdOn |
-                                                fmDT}}</div>
+                                            <div *ngIf="item.createdOn" class="fs-7 text-gray-500">{{item.createdOn | fmDT}}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </ng-container>
                         <div class="fw-bolder text-primary fs-3 mt-9 mb-5 border-bottom border-gray">
-                            <codx-label [formModel]="view.formModel" name="lblListTag" default="Tag #"></codx-label>
+                            <codx-label [formModel]="view.formModel" name="lblTags" default="Tag #"></codx-label>
                             <div class="badge-group">
                                 <span *ngFor="let tag of listTag" class="badge badge-danger"
                                     [style.background]="tag.color" (click)="clickTag(tag)">
@@ -174,7 +175,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </ng-container>
 </ng-template>

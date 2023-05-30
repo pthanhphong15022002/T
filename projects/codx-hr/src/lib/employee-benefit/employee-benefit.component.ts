@@ -39,7 +39,6 @@ export class EmployeeBenefitComponent extends UIComponent {
   views: Array<ViewModel> = [];
   funcID: string;
   method = 'GetEBenefitListAsync';
-  eContractHeaderText;
   grvSetup: any;
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
@@ -79,7 +78,7 @@ export class EmployeeBenefitComponent extends UIComponent {
     private notify: NotificationsService
   ) {
     super(inject);
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
   onInit(): void {
