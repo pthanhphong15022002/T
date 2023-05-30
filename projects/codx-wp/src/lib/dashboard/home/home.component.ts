@@ -46,9 +46,8 @@ export class HomeComponent extends UIComponent {
         }
       });
     });
-    this.predicatePortal =
-      '(Category = @0 || Category = @1 || Category = @2) && (CreatedBy = @6 or ApproveControl=@3 or (ApproveControl=@4 && ApproveStatus = @5) )';
-    this.dataValuePortal = `1;3;4;0;1;5;${this.user.userID}`;
+    this.predicatePortal = 'Category = @0 || Category = @1 || Category = @2';
+    this.dataValuePortal = `1;3;4`;
   }
 
   ngAfterViewInit(): void {

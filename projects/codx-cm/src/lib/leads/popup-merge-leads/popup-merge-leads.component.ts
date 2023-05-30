@@ -161,6 +161,9 @@ export class PopupMergeLeadsComponent implements OnInit {
         this.leadThree = null;
         this.lstContactThree = [];
       }
+      if(!this.changeAvata){
+
+      }
     }
 
     this.changeDetector.detectChanges();

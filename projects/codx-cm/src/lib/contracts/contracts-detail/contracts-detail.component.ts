@@ -113,7 +113,13 @@ export class ContractsDetailComponent extends UIComponent{
     super(inject);
   }
 
-  onInit(): void {
+  async onInit(): Promise<void> {
+    this.grvSetup = await firstValueFrom(
+      this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
+    );
+    this.vllStatus = this.grvSetup['Status'].referedValue;
+    console.log(this.vllStatus);
+    
     this.button = {
       id: 'btnAdd',
     };

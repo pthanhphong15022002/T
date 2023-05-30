@@ -1259,6 +1259,12 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         break;
       }
       default: {
+        this.shareService.clickMFApproval(
+          val,
+          datas,
+          this.view.dataService,
+          this.formModel
+        )
         // this.shareService.defaultMoreFunc(
         //   val,
         //   datas,
