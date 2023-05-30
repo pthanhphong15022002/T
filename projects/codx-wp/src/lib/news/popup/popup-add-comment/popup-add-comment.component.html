@@ -89,16 +89,31 @@
         </codx-view-files>
       </div>
       <ng-container
-        *ngIf="
-          data.category == CATEGORY.SHARE || data.category == CATEGORY.FEEDBACK
-        "
-      >
-        <div class="wp-template-share">
-          <wp-post-share
-            [objectID]="data.refID"
-            [refType]="data.refType"
-            [formModel]="formModel"
-          ></wp-post-share>
+        *ngIf="data.category == CATEGORY.SHARE">
+        <div class="template-share">
+          <div class="WP_News">
+            <div class="WP_News-images">
+              <ng-container *ngIf="fileRef">
+                <div class="w-100 h-100" [defaultImage]="defaultImage" [lazyLoad]="fileRef.source"></div>
+              </ng-container>
+            </div>
+            <div class="WP_News-contents mb-2">
+              <ng-container *ngIf="data.shares.subject">
+                <div class="fw-bold text-dark fs-5 mt-2">
+                  {{data.shares.subject}}
+                </div>
+              </ng-container>
+              <ng-container *ngIf="data.shares.subContent">
+                <div class="text-gray-600 mt-1">
+                  {{data.shares.subContent}}
+                </div>
+              </ng-container>
+              <ng-container *ngIf="data.shares.createdOn">
+                <div class="text-gray-400 mt-1" [innerHTML]="data.shares.createdOn | formatvalue:formModel:'CreatedOn' | async">
+                </div>
+              </ng-container>
+            </div>
+          </div>
         </div>
       </ng-container>
     </div>

@@ -32,9 +32,10 @@ import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { PopupAddQuotationsComponent } from '../../quotations/popup-add-quotations/popup-add-quotations.component';
 import { ListContractsComponent } from '../list-contracts/list-contracts.component';
 import { AddContractsComponent } from '../add-contracts/add-contracts.component';
-import { CM_Contracts } from '../../models/cm_model';
+import { CM_Contracts, CM_ContractsPayments, CM_Quotations, CM_QuotationsLines } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
 import { PopupAddPaymentComponent } from '../payment/popup-add-payment/popup-add-payment.component';
+import { ContractsService } from '../service-contracts.service';
 
 @Component({
   selector: 'contracts-detail',
@@ -55,12 +56,15 @@ export class ContractsDetailComponent extends UIComponent{
   @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
   @ViewChild('templateCustomer') templateCustomer: TemplateRef<any>;
 
+  listPayment: CM_ContractsPayments[] = [];
+  listPaymentHistory: CM_ContractsPayments[] = [];
+  listQuotationsLine: CM_QuotationsLines[];
+  quotations: CM_Quotations;
+
   listClicked =[]
   tabClicked = '';
   fomatDate = 'dd/MM/yyyy';
   account:any;
-  listPayment = [];
-  listPaymentHistory = [];
 
   views: Array<ViewModel> = [];
   service = 'CM';
@@ -68,6 +72,33 @@ export class ContractsDetailComponent extends UIComponent{
   entityName = 'CM_Contracts';
   className = 'ContractsBusiness';
   methodLoadData = 'GetListContractsAsync';
+
+  fmQuotations: FormModel = {
+    formName: 'CMQuotations',
+    gridViewName: 'grvCMQuotations',
+    entityName: 'CM_Quotations',
+    funcID: 'CM02021',
+  };
+
+  fmQuotationLines: FormModel = {
+    formName: 'CMQuotationsLines',
+    gridViewName: 'grvCMQuotationsLines',
+    entityName: 'CM_QuotationsLines',
+    funcID: 'CM02021',
+  };
+  fmContractsPayments: FormModel = {
+    formName: 'CMContractsPayments',
+    gridViewName: 'grvCMContractsPayments',
+    entityName: 'CM_ContractsPayments',
+    funcID: 'CM02041 ',
+  };
+  fmContractsPaymentsHistory: FormModel = {
+    formName: 'CMContractsPaymentsHistory',
+    gridViewName: 'grvCMContractsPaymentsHistory',
+    entityName: 'CM_ContractsPayments',
+    funcID: 'CM02042  ',
+  };
+
 
   //test
   moreDefaut = {
@@ -108,12 +139,17 @@ export class ContractsDetailComponent extends UIComponent{
     private notiService: NotificationsService,
     private changeDetector: ChangeDetectorRef,
     private cmService: CodxCmService,
+    private contractService: ContractsService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
   }
 
-  onInit(): void {
+  async onInit(): Promise<void> {
+    this.grvSetup = await firstValueFrom(
+      this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
+    );
+    this.vllStatus = this.grvSetup['Status'].referedValue;    
     this.button = {
       id: 'btnAdd',
     };
@@ -173,8 +209,28 @@ export class ContractsDetailComponent extends UIComponent{
 
   selectedChange(val: any) {
     this.itemSelected = val?.data;
-    this.getPayMentByContractID(this.itemSelected?.recID)
+    this.getQuotationsAndQuotationsLinesByTransID(this.itemSelected.quotationID);
+    this.getPayMentByContractID(this.itemSelected?.recID);
     this.detectorRef.detectChanges();
+  }
+
+  getQuotationsAndQuotationsLinesByTransID(recID) {
+    this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
+      if (res) {
+        this.quotations = res[0];
+        this.listQuotationsLine = res[1];
+      }
+    });
+  }
+
+  getPayMentByContractID(contractID) {
+    this.contractService.getPaymentsByContractID(contractID).subscribe((res) => {
+      if (res) {
+        let listPayAll =  res as CM_ContractsPayments[];
+        this.listPayment = listPayAll.filter(pay => pay.lineType == '0');
+        this.listPaymentHistory = listPayAll.filter(pay => pay.lineType == '1');
+      }
+    });
   }
 
   // moreFunc
@@ -282,14 +338,6 @@ export class ContractsDetailComponent extends UIComponent{
         this.account = res;
       }
     })
-  }
-
-  getPayMentByContractID(contractID){
-    // this.cmService.getPaymentsByContractID(contractID).subscribe(res => {
-    //   if(res){
-    //     this.listPayment = res;
-    //   }
-    // })
   }
 
   async getForModel  (functionID) {

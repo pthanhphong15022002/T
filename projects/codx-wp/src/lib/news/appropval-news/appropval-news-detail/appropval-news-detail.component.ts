@@ -3,7 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { CRUDService, DataRequest, ApiHttpService, CallFuncService, CacheService, NotificationsService, DialogModel, RequestOption } from 'codx-core';
 import { Observable } from 'rxjs';
 import { PopupAddPostComponent } from '../../../dashboard/home/list-post/popup-add/popup-add-post.component';
-import { PopupEditComponent } from '../../popup/popup-edit/popup-edit.component';
+import { PopupAddComponent } from '../../popup/popup-add/popup-add.component';
 
 @Component({
   selector: 'wp-appropval-news-detail',
@@ -90,9 +90,10 @@ export class AppropvalNewsDetailComponent implements OnInit {
               option.IsFull = true;
               let object = {
                 headerText: headerText,
-                data: this.data
+                data: this.data,
+                isAdd:false
               }
-              this.callFuc.openForm(PopupEditComponent,"",0,0,this.funcID,object,'',option);
+              this.callFuc.openForm(PopupAddComponent,"",0,0,this.funcID,object,'',option);
             }
             else 
             {

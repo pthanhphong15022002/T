@@ -1,10 +1,7 @@
 import { Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ViewModel, AuthService, CallFuncService, ViewType, DataRequest, RequestOption, UIComponent, DialogModel, AuthStore, CacheService } from 'codx-core';
 import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add-post.component';
-import { PopupEditComponent } from '../popup/popup-edit/popup-edit.component';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
-import { Z } from '@angular/cdk/keycodes';
-import { tab } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'wp-appropval-news',
