@@ -212,7 +212,13 @@ export class PopupAddDealComponent
     });
   }
 
-
+  getListContactByDealID(objectID) {
+    this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.lstContactDeal = res;
+      }
+    });
+  }
 
   valueChangeDate($event) {
     if ($event) {
@@ -461,7 +467,7 @@ export class PopupAddDealComponent
       await this.getListProcess(this.typeForDeal);
       if(this.action === this.actionEdit) {
         await this.getListInstanceSteps(this.deal.processID);
-      //  await this.getListContactByObjectID(this.deal.recID);
+        await this.getListContactByDealID(this.deal.recID);
       }
     } catch (error) {}
   }

@@ -55,7 +55,6 @@ export class DealDetailComponent  implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getContactByDeaID();
   }
 
   ngAfterViewInit(): void {
@@ -69,6 +68,7 @@ export class DealDetailComponent  implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.dataSelected){
       this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+      this.getContractByDeaID();
     }
 
   }
@@ -107,12 +107,14 @@ export class DealDetailComponent  implements OnInit {
     console.log(e);
   }
 
-  getContactByDeaID() {
+  getContractByDeaID() {
     if(this.dataSelected?.recID){
       var data = [this.dataSelected?.recID];
       this.codxCmService.getListContractByDealID(data).subscribe((res) => {
         if (res) {
           this.listContract = res;
+        }else{
+          this.listContract = [];
         }
       });
     }

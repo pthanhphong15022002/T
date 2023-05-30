@@ -2521,6 +2521,7 @@
               [fields]="fieldCbxProccess"
               (valueChange)="cbxChange($event, viewStepReasonSuccess)"
               [value]="moveProccessIsNull(stepSuccess?.newProcessID)"
+              [enabled]="process.applyFor != '1' "
               [readonly]="stepSuccess.isUsed ? false : true"
             >
             </ejs-combobox>
@@ -2736,6 +2737,7 @@
               [placeholder]="'Chọn quy trình kìa'"
               (valueChange)="cbxChange($event, viewStepReasonFail)"
               [readonly]="stepFail?.isUsed ? false : true"
+              [enabled]="process.applyFor != '1' "
               [value]="moveProccessIsNull(stepFail?.newProcessID)"
             ></ejs-combobox>
             <codx-label

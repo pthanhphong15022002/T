@@ -27,6 +27,7 @@ export class AppropvalNewsComponent extends UIComponent {
   itemSelected: any = null;
   selectedID: string = '';
   vllWP004:any[] = [];
+  hideMF:boolean = false;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
@@ -74,6 +75,7 @@ export class AppropvalNewsComponent extends UIComponent {
     this.router.params.subscribe((param) => {
       if (param['funcID']) {
         this.funcID = param['funcID'];
+        this.hideMF = this.funcID !== "WPT0211";
         this.cache.functionList(this.funcID)
         .subscribe((func: any) => {
           if (func) {
@@ -90,11 +92,8 @@ export class AppropvalNewsComponent extends UIComponent {
     });
     this.cache.valueList("WP004")
     .subscribe((vll:any)=> {
-      debugger
       if(Array.isArray(vll?.datas))
-      {
         vll.datas.forEach(e => this.vllWP004[e.value] = e);
-      }
     })
   }
   ngAfterViewInit(): void {
@@ -127,10 +126,14 @@ export class AppropvalNewsComponent extends UIComponent {
           if(res) 
           {
             this.tabAsside.map((tab: any) => {
+              tab.total = 0;
               if(tab.value == "")
                 res.forEach(x => tab.total += x.Count);
-              else
-                tab.total = res.find(x => x.Status == tab.value)?.Count ?? 0;
+              else 
+              {
+                let ele = res.find(x => x.Status == tab.value);
+                tab.total = ele ? ele.Count : 0;
+              }
             });
           }
           this.detectorRef.detectChanges();
@@ -147,7 +150,6 @@ export class AppropvalNewsComponent extends UIComponent {
   }
   
   realoadData(event: any) {
-    debugger
     this.loadDataTab(this.view.funcID);
   }
   // click tab approval
@@ -271,7 +273,7 @@ export class AppropvalNewsComponent extends UIComponent {
   //set des
   setDescription(data:any):string
   {
-    if(data.category == "1" || data.category == "3" || data.category == "4" )
+    if(data.category == "1" || data.category == "3" || data.category == "4")
       return data.content;
     else if(data.category == "companyinfo")
       return data.contents.replace(/<[^>]*>/g, "");
@@ -279,4 +281,23 @@ export class AppropvalNewsComponent extends UIComponent {
       return data.subject;
   }
 
+  //
+  hideMFc(moreFC:any,data:any){
+    // debugger
+    // if(moreFC && data.createdBy === this.user.userID)
+    // {
+    //   Array.from(moreFC).map((x:any) => {
+    //     if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03"){
+    //       x.disabled = true;
+    //     }
+    //     else
+    //     {
+    //       x.disabled = false;
+    //     }
+    //   });
+    // }
+    Array.from(moreFC).map((x:any) => {
+        x.disabled = true;
+    });
+  }
 }

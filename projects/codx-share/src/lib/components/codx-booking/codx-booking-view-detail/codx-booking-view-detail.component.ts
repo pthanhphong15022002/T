@@ -263,7 +263,11 @@ export class CodxBookingViewDetailComponent
   }
   changeDataMF(event, data: any) {
     if (this.viewMode == '1') {
-      if (event != null && data != null && this.funcID!=EPCONST.FUNCID.S_Allocate) {
+      if (
+        event != null &&
+        data != null &&
+        this.funcID != EPCONST.FUNCID.S_Allocate
+      ) {
         if (data.approveStatus == EPCONST.A_STATUS.New) {
           //Mới tạo
           event.forEach((func) => {
@@ -305,7 +309,7 @@ export class CodxBookingViewDetailComponent
             }
             if (
               //Ẩn: sửa - xóa - gửi duyệt
-
+  
               func.functionID == EPCONST.MFUNCID.Delete ||
               func.functionID == EPCONST.MFUNCID.Edit ||
               func.functionID == EPCONST.MFUNCID.R_Release ||
@@ -340,14 +344,17 @@ export class CodxBookingViewDetailComponent
               func.disabled = true;
             }
           });
-        } else if (data.approveStatus == EPCONST.A_STATUS.Approved) {
+        } else if (data?.approveStatus == EPCONST.A_STATUS.Approved) {
           //Đã duyệt
           event.forEach((func) => {
             if (
               // Hiện: Mời - dời - Chép
               func.functionID == EPCONST.MFUNCID.Copy ||
               func.functionID == EPCONST.MFUNCID.R_Invite ||
-              func.functionID == EPCONST.MFUNCID.R_Reschedule
+              func.functionID == EPCONST.MFUNCID.R_Reschedule||
+              func.functionID == EPCONST.MFUNCID.R_Cancel ||
+              func.functionID == EPCONST.MFUNCID.C_Cancel ||
+              func.functionID == EPCONST.MFUNCID.S_Cancel
             ) {
               func.disabled = false;
             }
@@ -357,10 +364,7 @@ export class CodxBookingViewDetailComponent
               func.functionID == EPCONST.MFUNCID.Edit ||
               func.functionID == EPCONST.MFUNCID.R_Release ||
               func.functionID == EPCONST.MFUNCID.C_Release ||
-              func.functionID == EPCONST.MFUNCID.S_Release ||
-              func.functionID == EPCONST.MFUNCID.R_Cancel ||
-              func.functionID == EPCONST.MFUNCID.C_Cancel ||
-              func.functionID == EPCONST.MFUNCID.S_Cancel
+              func.functionID == EPCONST.MFUNCID.S_Release 
             ) {
               func.disabled = true;
             }
@@ -390,25 +394,35 @@ export class CodxBookingViewDetailComponent
             }
           });
         }
-      }
-      else if(event != null && data != null && this.funcID==EPCONST.FUNCID.S_Allocate){
+      } else if (
+        event != null &&
+        data != null &&
+        this.funcID == EPCONST.FUNCID.S_Allocate
+      ) {
         event.forEach((func) => {
           if (
             func.functionID == EPCONST.MFUNCID.Delete ||
             func.functionID == EPCONST.MFUNCID.Edit ||
-            func.functionID == EPCONST.MFUNCID.Copy 
+            func.functionID == EPCONST.MFUNCID.Copy
           ) {
             func.disabled = true;
           }
-          if(data?.issueStatus=='1' && data?.approveStatus =='5' && (func.functionID == EPCONST.MFUNCID.S_Allocate || func.functionID == EPCONST.MFUNCID.S_UnAllocate)){
+          if (
+            data?.issueStatus == '1' &&
+            data?.approveStatus == '5' &&
+            (func.functionID == EPCONST.MFUNCID.S_Allocate ||
+              func.functionID == EPCONST.MFUNCID.S_UnAllocate)
+          ) {
             func.disabled = false;
-          }
-          else if((data?.issueStatus!='1' || data?.approveStatus !='5') && (func.functionID == EPCONST.MFUNCID.S_Allocate || func.functionID == EPCONST.MFUNCID.S_UnAllocate)){
+          } else if (
+            (data?.issueStatus != '1' || data?.approveStatus != '5') &&
+            (func.functionID == EPCONST.MFUNCID.S_Allocate ||
+              func.functionID == EPCONST.MFUNCID.S_UnAllocate)
+          ) {
             func.disabled = true;
           }
-        });      
-      
-    }
+        });
+      }
     } else if (this.viewMode == '2') {
       event.forEach((func) => {
         if (

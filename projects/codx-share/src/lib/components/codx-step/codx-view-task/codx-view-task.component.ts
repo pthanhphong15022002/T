@@ -99,7 +99,7 @@ export class CodxViewTaskComponent implements OnInit {
           await this.setDataView();
           this.settingData();
           this.isOnlyView = this.instanceStep?.stepStatus == '1' ? true : false;
-          this.checkRole();
+          // this.checkRole();
         }
       });
   }
@@ -205,14 +205,6 @@ export class CodxViewTaskComponent implements OnInit {
     this.viewModelDetail = e;
   }
 
-  checRoleTask(data, type) {
-    return (
-      data.roles?.some(
-        (element) =>
-          element?.objectID == this.user.userID && element.roleType == type
-      ) || false
-    );
-  }
 
   extendShow(): void {
     this.hideExtend = !this.hideExtend;
@@ -235,17 +227,17 @@ export class CodxViewTaskComponent implements OnInit {
     }
   }
   async openPopupUpdateProgress(data, type) {
-    let checkUpdate = this.stepService.checkUpdateProgress(
-      data,
-      type,
-      this.instanceStep,
-      this.isRoleAll,
-      this.isOnlyView,
-      this.isUpdateProgressGroup,
-      this.isUpdateProgressStep,
-      this.user
-    );
-    if (!checkUpdate) return;
+    // let checkUpdate = this.stepService.checkUpdateProgress(
+    //   data,
+    //   type,
+    //   this.instanceStep,
+    //   this.isRoleAll,
+    //   this.isOnlyView,
+    //   this.isUpdateProgressGroup,
+    //   this.isUpdateProgressStep,
+    //   this.user
+    // );
+    // if (!checkUpdate) return;
     if (type != 'P' && type != 'G') {
       let checkTaskLink = this.stepService.checkTaskLink(
         data,
