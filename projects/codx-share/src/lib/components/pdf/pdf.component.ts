@@ -486,8 +486,8 @@ export class PdfComponent
     );
     this.rightToolbar.hideTab(2, !this.isApprover);
     this.rightToolbar.hideTab(3, !this.isApprover);
-    if (this.lstKey) this.rightToolbar.hideTab(4, false);
-    else this.rightToolbar.hideTab(4, true);
+    // if (this.lstKey) this.rightToolbar.hideTab(4, false);
+    // else this.rightToolbar.hideTab(4, true);
   }
 
   //remove area
@@ -2460,7 +2460,7 @@ export class PdfComponent
     });
     this.detectorRef.detectChanges();
 
-    //this.hideShowTab();
+    // this.hideShowTab();
 
     // if (!this.isInteractPDF) {
     //   this.rightToolbar && this.rightToolbar.select(0);
@@ -2539,7 +2539,8 @@ export class PdfComponent
         ngxService.currentlyRenderedPages()
       )
       .subscribe((lst: Map<string, Array<location>>) => {
-        if (lst == null) return;
+        if (lst == null || Object.entries(lst).length == 0) return;
+
         this.lstKey = [];
         this.lstHighlightTextArea = [];
         let lstTextLayer = document.getElementsByClassName('textLayer');
