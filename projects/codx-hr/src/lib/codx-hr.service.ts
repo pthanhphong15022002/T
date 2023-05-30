@@ -1887,7 +1887,7 @@ export class CodxHrService {
     );
   }
 
-  EditEmployeeContactMoreFunc(data: any) {
+  EditEBusinessTravelMoreFunc(data: any) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
