@@ -411,10 +411,6 @@ export class CodxShareService {
     title: string,
     formModel: FormModel
   ) {
-<<<<<<< HEAD
-=======
-    debugger;
->>>>>>> 97f5fa0f11c589a41e09f128fd972541b7a7db65
     if (formModel) {
       this.cache.functionList('EST021').subscribe((fm) => {
         if (fm) {
