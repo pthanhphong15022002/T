@@ -23,17 +23,16 @@ import { PopupSearchPostComponent } from './list-post/popup-search/popup-search.
 })
 export class HomeComponent extends UIComponent {
   views: Array<ViewModel> | any = [];
-  dataService:CRUDService = null;
-  predicatePortal:string = "";
-  dataValuePortal:String ="";
-  user:any = null;
-  @ViewChild("content") content : TemplateRef<any>;
+  dataService: CRUDService = null;
+  predicatePortal: string = '';
+  dataValuePortal: String = '';
+  user: any = null;
+  @ViewChild('content') content: TemplateRef<any>;
   constructor(
     private injector: Injector,
-    private auth:AuthStore,
-    private page: PageTitleService,
-  ) 
-  {
+    private auth: AuthStore,
+    private page: PageTitleService
+  ) {
     super(injector);
     this.user = this.auth.get();
   }
@@ -47,7 +46,8 @@ export class HomeComponent extends UIComponent {
         }
       });
     });
-    this.predicatePortal = '(Category = @0 || Category = @1 || Category = @2) && (CreatedBy = @6 or ApproveControl=@3 or (ApproveControl=@4 && ApproveStatus = @5) )';
+    this.predicatePortal =
+      '(Category = @0 || Category = @1 || Category = @2) && (CreatedBy = @6 or ApproveControl=@3 or (ApproveControl=@4 && ApproveStatus = @5) )';
     this.dataValuePortal = `1;3;4;0;1;5;${this.user.userID}`;
   }
 
@@ -56,10 +56,10 @@ export class HomeComponent extends UIComponent {
       {
         type: ViewType.content,
         active: true,
-        sameData:false,
+        sameData: false,
         model: {
-          panelLeftRef: this.content
-        }
+          panelLeftRef: this.content,
+        },
       },
     ];
     this.detectorRef.detectChanges();
