@@ -79,7 +79,7 @@ export class PostShareComponent implements OnInit {
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
-        'UpdateViewNewsAsync',
+        'UpdateViewAsync',
         [data.recID])
         .subscribe();
         // naviagte qua WP_News

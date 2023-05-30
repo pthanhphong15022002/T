@@ -497,17 +497,7 @@ export class CashPaymentsComponent extends UIComponent {
     };
     return styles;
   }
-
-  checkCrediting(item){
-    var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
-    let index = data.filter((x) => x.crediting == item.crediting).findIndex(x => x.recID == item.recID);
-    if (index > 0) {
-      return false;
-    }else{
-      return true;
-    }
-  }
-
+  
   createLine(item){
     var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
     let index = data.filter((x) => x.crediting == item.crediting).findIndex(x => x.recID == item.recID);

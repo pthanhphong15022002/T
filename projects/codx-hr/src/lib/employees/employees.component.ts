@@ -68,7 +68,8 @@ export class EmployeesComponent extends UIComponent {
 
   constructor(
     private injector: Injector,
-    private notifiSV: NotificationsService
+    private notifiSV: NotificationsService,
+    private df: ChangeDetectorRef,
   ) {
     super(injector);
   }
@@ -192,7 +193,6 @@ export class EmployeesComponent extends UIComponent {
             option
           );
           popup.closed.subscribe((res: any) => {
-            debugger;
             if (res?.event) {
               let data = res.event;
               this.view.dataService.add(data, 0).subscribe();
@@ -254,6 +254,7 @@ export class EmployeesComponent extends UIComponent {
           this.view.dataService.update(dataUpdate).subscribe();
         }
       });
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -277,6 +278,12 @@ export class EmployeesComponent extends UIComponent {
           object,
           option
         );
+        popup.closed.subscribe((res: any) => {
+          if (res?.event) {
+            let data = res.event;
+            this.view.dataService.add(data, 0).subscribe();
+          }
+        });
       });
       this.detectorRef.detectChanges();
     }
@@ -351,7 +358,7 @@ export class EmployeesComponent extends UIComponent {
     opt.assemblyName = 'ERM.Business.HR';
     opt.className = 'EmployeesBusiness';
     opt.methodName = 'DeleteAsync';
-    opt.data = this.view.dataService.dataSelected.employeeID;
+    opt.data = this.view.dataService.dataSelected;
     return true;
   }
 
