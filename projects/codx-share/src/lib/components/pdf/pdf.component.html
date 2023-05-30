@@ -931,7 +931,7 @@
             </ng-template>
             <ng-template #content></ng-template>
           </e-tabitem>
-          <e-tabitem *ngIf="lstKey">
+          <e-tabitem>
             <ng-template #headerText>
               <codx-label
                 name="lblHeaderRight4"
@@ -946,66 +946,72 @@
                  // <e-item [prefixIcon]="'e-circle-remove'" (click)="confirmRemoveHLA()"></e-item> 
                 </e-items>
               </ejs-toolbar> -->
-
-              <div class="highlightAreas px-3">
-                <div
-                  class="highlightedList rounded-2 p-3 mb-2"
-                  [style]="'background-color: ' + defaultColor"
-                  (click)="goToSelectedHighlightText(key)"
-                  *ngFor="let key of lstKey"
-                  [attr.data-id]="key"
-                >
-                  <codx-temp-full
-                    [title]="
-                      getHLText(key)?.author + ' ' + getHLText(key)?.createdDate
-                    "
-                    [resourceObjType]="'AD_Users'"
-                    [icoCss]="
-                      'icon-edit_fill btn btn-icon btn-white btn-sm border-0 btn-tool-custom me-2'
-                    "
-                    [subTitle]="
-                      'Trang ' + getHLText(key)?.locations[0]?.pageNumber
-                    "
-                    [subTitleCss]="'page-end'"
-                    [desc]="getHLText(key)?.comment?.content"
-                  >
-                  </codx-temp-full>
-                  <codx-input
+              <div class="" *ngIf="lstKey.length">
+                <div class="highlightAreas px-3">
+                  <div
+                    class="highlightedList rounded-2 p-3 mb-2"
+                    [style]="'background-color: ' + defaultColor"
+                    (click)="goToSelectedHighlightText(key)"
+                    *ngFor="let key of lstKey"
                     [attr.data-id]="key"
-                    *ngIf="deleteHLAMode"
-                    type="checkbox"
-                    class="hla-check-delete me-2"
-                    name="select"
                   >
-                  </codx-input>
+                    <codx-temp-full
+                      [title]="
+                        getHLText(key)?.author +
+                        ' ' +
+                        getHLText(key)?.createdDate
+                      "
+                      [resourceObjType]="'AD_Users'"
+                      [icoCss]="
+                        'icon-edit_fill btn btn-icon btn-white btn-sm border-0 btn-tool-custom me-2'
+                      "
+                      [subTitle]="
+                        'Trang ' + getHLText(key)?.locations[0]?.pageNumber
+                      "
+                      [subTitleCss]="'page-end'"
+                      [desc]="getHLText(key)?.comment?.content"
+                    >
+                    </codx-temp-full>
+                    <codx-input
+                      [attr.data-id]="key"
+                      *ngIf="deleteHLAMode"
+                      type="checkbox"
+                      class="hla-check-delete me-2"
+                      name="select"
+                    >
+                    </codx-input>
+                  </div>
                 </div>
-              </div>
-              <div class="p-3 pt-1 d-flex justify-content-between">
-                <div>
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-light-primary"
-                    (click)="removeUnsaveHLA()"
-                  >
-                    <codx-label name="lblHLACancle" default="Hủy"></codx-label>
-                  </button>
-                </div>
-                <div class="d-flex">
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-light-primary"
-                    (click)="confirmRemoveHLA()"
-                  >
-                    <codx-label name="lblHLADel" default="Xóa"></codx-label>
-                  </button>
+                <div class="p-3 pt-1 d-flex justify-content-between">
+                  <div>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-light-primary"
+                      (click)="removeUnsaveHLA()"
+                    >
+                      <codx-label
+                        name="lblHLACancle"
+                        default="Hủy"
+                      ></codx-label>
+                    </button>
+                  </div>
+                  <div class="d-flex">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-light-primary"
+                      (click)="confirmRemoveHLA()"
+                    >
+                      <codx-label name="lblHLADel" default="Xóa"></codx-label>
+                    </button>
 
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-primary ms-2"
-                    (click)="confirmHighlightText(false)"
-                  >
-                    <codx-label name="lblHLASave" default="Lưu"></codx-label>
-                  </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-primary ms-2"
+                      (click)="confirmHighlightText(false)"
+                    >
+                      <codx-label name="lblHLASave" default="Lưu"></codx-label>
+                    </button>
+                  </div>
                 </div>
               </div>
             </ng-template>
