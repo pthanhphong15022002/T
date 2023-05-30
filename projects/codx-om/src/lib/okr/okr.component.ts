@@ -27,7 +27,6 @@ import { PopupOKRWeightComponent } from '../popup/popup-okr-weight/popup-okr-wei
 import { PopupAddOKRPlanComponent } from '../popup/popup-add-okr-plan/popup-add-okr-plan.component';
 import { PopupShareOkrPlanComponent } from '../popup/popup-share-okr-plans/popup-share-okr-plans.component';
 import { PopupAddRoleComponent } from '../popup/popup-add-role/popup-add-role.component';
-import { loaded } from '@syncfusion/ej2-angular-charts';
 @Component({
   selector: 'lib-okr',
   templateUrl: './okr.component.html',
@@ -131,7 +130,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.okrService = inject.get(CodxOmService);
 
     this.curUser = this.auth.get();
-    //this.curUser= this.authService.userValue;
     this.createCOObject();
   }
 
