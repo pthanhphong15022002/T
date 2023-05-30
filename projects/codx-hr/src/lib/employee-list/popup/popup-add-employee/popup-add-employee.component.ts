@@ -1,3 +1,4 @@
+import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import {
   ChangeDetectorRef,
   Component,
@@ -37,7 +38,7 @@ export class PopupAddEmployeeComponent implements OnInit {
     {
       icon: 'icon-assignment_ind',
       text: 'Thông tin nhân viên',
-      name: 'lblEmmployeeInfo',
+      name: 'lblEmployeeInfo',
     },
     {
       icon: 'icon-person',
@@ -50,7 +51,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       name: 'lblLegalInfo',
     },
   ];
-
+  onFirstLoad: boolean = true;
   @ViewChild('codxImg') codxImg: ImageViewerComponent;
   @ViewChild('form') form: LayoutAddComponent;
 
@@ -68,9 +69,10 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.action = dialogData?.data?.action;
     this.headerText = dialogData?.data?.text;
     this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
-    if(this.dialogRef.dataService.keyField === 'EmployeeID'){
+    if (this.dialogRef.dataService.keyField === 'EmployeeID') {
       this.employeeIDDisable = false;
-    }this.employeeIDDisable = true;
+    }
+    this.employeeIDDisable = true;
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
@@ -79,7 +81,9 @@ export class PopupAddEmployeeComponent implements OnInit {
   //get grvSetup
   getGrvSetup(fromName: string, grdViewName: string) {
     this.cache.gridViewSetup(fromName, grdViewName).subscribe((grv: any) => {
-      if (grv) this.grvSetUp = grv;
+      if (grv) {
+        this.grvSetUp = grv
+      };
     });
   }
   //set header text
@@ -93,22 +97,119 @@ export class PopupAddEmployeeComponent implements OnInit {
       let field = Util.camelize(event.field);
       let value = event.data;
       this.data[field] = value;
-      if (field === 'issuedOn') {
-        let today = new Date();
-        if (this.data.issuedOn >= today.toJSON()) {
-          this.notifySV.notifyCode('HR012');
-          //this.data[field] = null;
-          return;
-        }
+
+      switch (field) {
+        case 'positionID':
+          if (value && !this.onFirstLoad) {
+            this.api.execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetPosInfoAsync', [value])
+              .subscribe((posInfo: any) => {
+                if (posInfo) {
+                  this.data['jobLevel'] = posInfo.jobLevel ? posInfo.jobLevel : null;
+                  this.data['orgUnitID'] = posInfo.orgUnitID ? posInfo.orgUnitID : null;
+                  this.form.formGroup.patchValue({
+                    jobLevel: this.data?.jobLevel,
+                    orgUnitID: this.data?.orgUnitID
+                  })
+                }
+              });
+          }
+          this.onFirstLoad = false;
+          let itemSelected = event.component?.itemsSelected[0];
+          if (itemSelected) {
+            if (itemSelected['OrgUnitID']) {
+              let orgUnitID = itemSelected['OrgUnitID'];
+              if (orgUnitID != this.data['orgUnitID']) {
+                this.form.formGroup.patchValue({ orgUnitID: orgUnitID });
+                this.data['orgUnitID'] = orgUnitID;
+              }
+            }
+            if (itemSelected['DepartmentID']) {
+              let departmentID = itemSelected['DepartmentID'];
+              if (departmentID != this.data['departmentID']) {
+                this.form.formGroup.patchValue({ departmentID: departmentID });
+                this.data['departmentID'] = departmentID;
+              }
+            }
+            if (itemSelected['DivisionID']) {
+              let divisionID = itemSelected['DivisionID'];
+              if (divisionID != this.data['divisionID']) {
+                this.form.formGroup.patchValue({ divisionID: divisionID });
+                this.data['divisionID'] = divisionID;
+              }
+            }
+            if (itemSelected['CompanyID']) {
+              let companyID = itemSelected['CompanyID'];
+              if (companyID != this.data['companyID']) {
+                this.form.formGroup.patchValue({ companyID: companyID });
+                this.data['companyID'] = companyID;
+              }
+            }
+          }
+          break;
+        case 'issuedOn':
+          let today = new Date();
+          if (this.data.issuedOn >= today.toJSON()) {
+            this.notifySV.notifyCode('HR012');
+            //this.data[field] = null;
+            return;
+          }
+          if(this.data.idExpiredOn < this.data.issuedOn){
+            this.notifySV.notifyCode('HR002');
+            return;
+          }
+          break;
+        case 'idExpiredOn':
+          if(this.data.idExpiredOn < this.data.issuedOn){
+            this.notifySV.notifyCode('HR002');
+            return;
+          }
+          break;
+        case 'birthday':
+          if (value) {
+            if (!this.validateBirthday(value)) {
+              this.notifySV.notifyCode('HR001');
+              //this.data[field] = null;
+              // this.form.formGroup.controls[field].patchValue({field : null});
+              return;
+            }
+          }
+          break;
+        case 'provinceID':
+          this.data['districtID'] = null;
+          this.data['wardID'] = null;
+          this.form.formGroup.controls['districtID'].patchValue(null);
+          this.form.formGroup.controls['wardID'].patchValue(null);
+          break;
+        case 'tProvinceID':
+          this.data['tDistrictID'] = null;
+          this.data['tWardID'] = null;
+          this.form.formGroup.controls['tDistrictID'].patchValue(null);
+          this.form.formGroup.controls['tWardID'].patchValue(null);
+          break;
+        case 'trainFieldID':
+        case 'trainLevel':
+          if (this.data?.trainLevel && this.data?.trainFieldID) {
+
+          }
+          break;
       }
-      if (field === 'birthday' && value) {
-        if (!this.validateBirthday(value)) {
-          this.notifySV.notifyCode('HR001');
-          //this.data[field] = null;
-          // this.form.formGroup.controls[field].patchValue({field : null});
-          return;
-        }
-      }
+
+      // if (field === 'issuedOn') {
+      //   let today = new Date();
+      //   if (this.data.issuedOn >= today.toJSON()) {
+      //     this.notifySV.notifyCode('HR012');
+      //     //this.data[field] = null;
+      //     return;
+      //   }
+      // }
+      // if (field === 'birthday' && value) {
+      //   if (!this.validateBirthday(value)) {
+      //     this.notifySV.notifyCode('HR001');
+      //     //this.data[field] = null;
+      //     //this.form.formGroup.controls[field].patchValue({field : null});
+      //     return;
+      //   }
+      // }
       // if (field == 'positionID') {
       //   let itemSelected = event.component?.itemsSelected[0];
       //   if (itemSelected) {
@@ -183,6 +284,10 @@ export class PopupAddEmployeeComponent implements OnInit {
       this.notifySV.notifyCode('HR012');
       return false;
     }
+    if(this.data.idExpiredOn < this.data.issuedOn){
+      this.notifySV.notifyCode('HR002');
+      return false;
+    }
     if (!this.validateBirthday(this.data.birthday) && this.data.birthday) {
       this.notifySV.notifyCode('HR001');
       return false;
@@ -195,7 +300,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   save(data: any, funcID: string) {
     if (data) {
       this.api
-        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'SaveAsync', [
+        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'SaveWithOrgFieldAsync', [
           data,
           funcID,
         ])
@@ -207,8 +312,7 @@ export class PopupAddEmployeeComponent implements OnInit {
                 this.notifySV.notifyCode('SYS006');
                 this.dialogRef.close(res);
               });
-              this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
-
+            this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
           } else {
             this.notifySV.notifyCode('SYS023');
             this.dialogRef.close(null);
@@ -220,7 +324,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   update(data: any) {
     if (data) {
       this.api
-        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'UpdateAsync', [
+        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'UpdateWithOrgFieldAsync', [
           data,
         ])
         .subscribe((res: any) => {
