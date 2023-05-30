@@ -125,6 +125,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   ngOnInit(): void {
     this.getTab();
     if (this.action == 'add' || this.action == 'copy')
+      this.data.address = null;
       this.getAutoNumber(this.autoNumber);
     if (this.data?.objectID) {
       this.getListContactByObjectID(this.data?.objectID);

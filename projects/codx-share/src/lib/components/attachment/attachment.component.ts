@@ -185,7 +185,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   public dropElement: HTMLElement = document.getElementsByClassName(
     'control-fluid'
   )[0] as HTMLElement;
-
+  public typeProgress: string = 'Circular';
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -356,19 +356,19 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
   // upload file tai day
   public onFileSelect(args: SelectedEventArgs): void {
-    if (
-      isNullOrUndefined(
-        document.getElementById('dropArea').querySelector('.upload-list-root')
-      )
-    ) {
-      this.parentElement = createElement('div', {
-        className: 'upload-list-root',
-      });
-      this.parentElement.appendChild(
-        createElement('ul', { className: 'ul-element' })
-      );
-      document.getElementById('dropArea').appendChild(this.parentElement);
-    }
+    // if (
+    //   isNullOrUndefined(
+    //     document.getElementById('dropArea').querySelector('.upload-list-root')
+    //   )
+    // ) {
+    //   this.parentElement = createElement('div', {
+    //     className: 'upload-list-root',
+    //   });
+    //   this.parentElement.appendChild(
+    //     createElement('ul', { className: 'ul-element' })
+    //   );
+    //   document.getElementById('dropArea').appendChild(this.parentElement);
+    // }
 
     if(this.allowMultiFile == "0") this.fileUploadList = [];
     this.fileService.getAllowSizeUpload().subscribe((item) => {
@@ -1001,7 +1001,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         }
         this.atSV.fileListAdded = [];
         if (total > 1) {
-          var done = this.fileService
+          this.fileService
             .addMultiFile(
               data,
               this.actionType,
@@ -1247,7 +1247,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
             FilePart: fileChunk,
             UploadId: retUpload.Data?.UploadId,
             Index: i,
-          }
+          },
+          uploadFile.name
         );
         console.log(uploadChunk);
       } catch (ex) {}
@@ -1599,10 +1600,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
             //this.addFile(fileItem);
             this.createFileDiffrentName(this.titlemessage, item.message, fileItem);
           } else this.notificationsService.notify(item.message);
+          this.closePopup();
         })
        
     }
-    this.closePopup();
+    //this.closePopup();
   }
 
   rewriteFile(title: any, message: any, item: FileUpload) {
@@ -3170,6 +3172,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   public async handleFileInput(files: any[], drag = false) {
+    debugger
     var count = this.fileUploadList.length;
     //this.getFolderPath();
     var addedList = [];
@@ -3201,19 +3204,21 @@ export class AttachmentComponent implements OnInit, OnChanges {
         var type = files[i].type.toLowerCase();
         if (type == 'png' || type == 'jpg' || type == 'bmp') {
           fileUpload.avatar = data;
-        } else if (
-          type == 'mp4' ||
-          type == 'm4v' ||
-          type == 'avi' ||
-          type == 'mov' ||
-          type == 'mpg' ||
-          type == 'mpeg'
-        ) {
-          var url = this.sanitizer.bypassSecurityTrustUrl(
-            URL.createObjectURL(files[i].rawFile)
-          );
-          fileUpload.data = url;
-        } else
+        } 
+        // else if (
+        //   type == 'mp4' ||
+        //   type == 'm4v' ||
+        //   type == 'avi' ||
+        //   type == 'mov' ||
+        //   type == 'mpg' ||
+        //   type == 'mpeg'
+        // ) {
+        //   var url = this.sanitizer.bypassSecurityTrustUrl(
+        //     URL.createObjectURL(files[i].rawFile)
+        //   );
+        //   fileUpload.data = url;
+        // } 
+        else
           fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(
             fileUpload.fileName
           )}`;
@@ -3307,4 +3312,5 @@ export class AttachmentComponent implements OnInit, OnChanges {
       }
     });
   }
+ 
 }
