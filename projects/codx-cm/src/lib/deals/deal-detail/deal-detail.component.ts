@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { CRUDService, FormModel } from 'codx-core';
 import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.component';
+import { CodxCmService } from '../../codx-cm.service';
+import { CM_Contacts } from '../../models/cm_model';
 
 @Component({
   selector: 'codx-deal-detail',
@@ -23,6 +25,7 @@ export class DealDetailComponent  implements OnInit {
   @ViewChild('contract')contract: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
 
+  listContract: CM_Contacts[];
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false, template: null },
@@ -45,12 +48,14 @@ export class DealDetailComponent  implements OnInit {
   tabDetail = [
   ]
   constructor(
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private codxCmService: CodxCmService,
   ) {
     this.listTab(this.funcID);
   }
 
   ngOnInit(): void {
+    this.getContactByDeaID();
   }
 
   ngAfterViewInit(): void {
@@ -100,6 +105,17 @@ export class DealDetailComponent  implements OnInit {
 
   changeFooter(e){
     console.log(e);
+  }
+
+  getContactByDeaID() {
+    if(this.dataSelected?.recID){
+      var data = [this.dataSelected?.recID];
+      this.codxCmService.getListContractByDealID(data).subscribe((res) => {
+        if (res) {
+          this.listContract = res;
+        }
+      });
+    }
   }
 }
 

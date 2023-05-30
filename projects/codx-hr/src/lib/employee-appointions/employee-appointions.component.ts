@@ -48,8 +48,8 @@ export class EmployeeAppointionsComponent extends UIComponent {
     id: 'btnAdd',
     text: 'Thêm',
   };
-  eJobSalaryHeader;
-  eBasicSalariesFormModel: FormModel;
+  eAppointionsHeader;
+  eAppointionsFormModel: FormModel;
   currentEmpObj: any = null;
   grvSetup: any;
 
@@ -94,7 +94,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
     // });
     // this.hrService.getFormModel(this.funcID).then((res) => {
     //   if (res) {
-    //     this.eBasicSalariesFormModel = res;
+    //     this.eAppointionsFormModel = res;
     //   }
     // });
   }
@@ -135,7 +135,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
   //   });
   //   this.hrService.getFormModel(this.funcID).then((res) => {
   //     if (res) {
-  //       this.eBasicSalariesFormModel = res;
+  //       this.eAppointionsFormModel = res;
   //     }
   //   });
   // }
@@ -196,12 +196,12 @@ export class EmployeeAppointionsComponent extends UIComponent {
 
     //Get Header text when view detail
     this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) => {
-      this.eJobSalaryHeader = res;
+      this.eAppointionsHeader = res;
     });
   }
 
   //Open, push data to modal
-  HandleEJobSalary(actionHeaderText, actionType: string, data: any) {
+  HandleEAppoint(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.view.formModel;
@@ -235,10 +235,10 @@ export class EmployeeAppointionsComponent extends UIComponent {
     });
   }
 
-  addJobSalaries(event): void {
+  addAppoint(event): void {
     this.currentEmpObj = this.itemDetail.emp;
     if (event.id == 'btnAdd') {
-      this.HandleEJobSalary(
+      this.HandleEAppoint(
         event.text + ' ' + this.view.function.description,
         'add',
         null
@@ -308,7 +308,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
     dialog.close();
   }
 
-  popupUpdateEJobSalaryStatus(funcID, data) {
+  popupUpdateEAppointStatus(funcID, data) {
     this.hrService.handleUpdateRecordStatus(funcID, data);
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;
@@ -401,11 +401,11 @@ export class EmployeeAppointionsComponent extends UIComponent {
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
-        this.popupUpdateEJobSalaryStatus(event.functionID, oUpdate);
+        this.popupUpdateEAppointStatus(event.functionID, oUpdate);
         break;
       //Propose increase salaries
       case this.actionAddNew:
-        this.HandleEJobSalary(
+        this.HandleEAppoint(
           event.text + ' ' + this.view.function.description,
           'add',
           data
@@ -426,7 +426,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
       //Edit
       case 'SYS03':
         this.currentEmpObj = data;
-        this.HandleEJobSalary(
+        this.HandleEAppoint(
           event.text + ' ' + this.view.function.description,
           'edit',
           this.currentEmpObj
@@ -444,7 +444,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
 
   copyValue(actionHeaderText, data) {
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
-      this.HandleEJobSalary(
+      this.HandleEAppoint(
         actionHeaderText + ' ' + this.view.function.description,
         'copy',
         res

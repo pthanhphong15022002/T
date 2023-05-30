@@ -10,17 +10,13 @@
     font-weight: 400;
 }
 .popup-search{
-  display: flex;
-  flex-direction: column;
   width: 400px;
   height: 400px;
   background-color: white;
   border-radius: 10px;
   box-shadow:#e4e4e4 5px 5px 5px 5px;
   padding: 20px;
-  position: absolute;
   z-index: 100;
-  right: -15px;
   .heard{
     font-weight: 500;
   }

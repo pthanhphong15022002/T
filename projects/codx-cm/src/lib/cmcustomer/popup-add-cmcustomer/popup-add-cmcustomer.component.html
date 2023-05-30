@@ -57,6 +57,8 @@
   <ng-container *ngIf="form?.formGroup">
     <div>
       <codx-list-contacts
+      [selectAll]="false"
+
         (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
         (lstContactEmit)="lstContactEmit($event)"
         [funcID]="funcID"

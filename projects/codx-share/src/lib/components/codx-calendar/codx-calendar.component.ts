@@ -516,11 +516,20 @@ export class CodxCalendarComponent
         'CO_Meetings',
       ])
       .subscribe((res) => {
+        //VTHAO truyen lai cho tien
+        let obj = {
+          action :'add',
+          titleAction : 'Thêm', //Sỹ em ko dc gán cung cai này ? thay đổi ngôn ngữ lỗi á -a tạm copy lại của em để em chạy
+          disabledProject : true,
+          listPermissions : '',
+          data : res.data
+        }
         if (res) {
           this.callfc
             .openSide(
               PopupAddMeetingComponent,
-              ['add', 'Thêm', true, '', res.data],
+              obj,
+              // ['add', 'Thêm', true, '', res.data],
               option
             )
             .closed.subscribe((returnData) => {

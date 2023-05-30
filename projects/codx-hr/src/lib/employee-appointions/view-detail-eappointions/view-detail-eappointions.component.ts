@@ -39,7 +39,7 @@ export class ViewDetailEappointionsComponent implements OnInit {
   tabControl: TabModel[] = [];
   renderFooter = false;
   isAfterRender = true;
-  benefitFuncID = 'HRTApp02';
+  appointionsFuncID = 'HRTApp02';
   benefitFormModel: FormModel;
   benefitFormGroup: FormGroup;
   lstBenefit;
@@ -69,7 +69,7 @@ export class ViewDetailEappointionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.hrService.getFormModel(this.benefitFuncID).then((formModel) => {
+    this.hrService.getFormModel(this.appointionsFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;
         this.hrService
