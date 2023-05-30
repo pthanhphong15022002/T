@@ -2643,9 +2643,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p != null) {
                     this.notify.notifyCode('SYS008');
-                    (this.dayoffGrid.dataService as CRUDService)
-                      .remove(data)
-                      .subscribe();
+                    this.updateGridView(this.dayoffGrid, 'delete', null, data);
+                    // (this.dayoffGrid.dataService as CRUDService)
+                    //   .remove(data)
+                    //   .subscribe();
                     // this.dayoffRowCount = this.dayoffRowCount - 1;
                     this.df.detectChanges();
                   } else {
@@ -2807,10 +2808,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    (this.eDegreeGrid?.dataService as CRUDService)
-                      ?.remove(data)
-                      .subscribe();
-                    this.eDegreeRowCount--;
+                    this.updateGridView(this.eDegreeGrid, 'delete', null, data);
+                    // (this.eDegreeGrid?.dataService as CRUDService)
+                    //   ?.remove(data)
+                    //   .subscribe();
+                    // this.eDegreeRowCount--;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2820,9 +2822,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
               this.hrService.deleteESkill(data.recID).subscribe((res) => {
                 if (res == true) {
                   this.notify.notifyCode('SYS008');
-                  (this.skillGrid?.dataService as CRUDService)
-                    ?.remove(data)
-                    .subscribe();
+                  this.updateGridView(this.skillGrid, 'delete', null, data);
+                  // (this.skillGrid?.dataService as CRUDService)
+                  //   ?.remove(data)
+                  //   .subscribe();
                   this.df.detectChanges();
                 } else {
                   this.notify.notifyCode('SYS022');
@@ -2855,10 +2858,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                     // if (i != -1) {
                     //   this.lstCertificates.splice(i, 1);
                     // }
-                    this.eCertificateRowCount--;
-                    (this.eCertificateGrid.dataService as CRUDService)
-                      .remove(data)
-                      .subscribe();
+                    // this.eCertificateRowCount--;
+                    // (this.eCertificateGrid.dataService as CRUDService)
+                    //   .remove(data)
+                    //   .subscribe();
+                  this.updateGridView(this.eCertificateGrid, 'delete', null, data);
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2871,16 +2875,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    // let i = this.lstAppointions.indexOf(data);
-                    // if (i != -1) {
-                    //   this.lstAppointions.splice(i, 1);
-                    // }
-                    //this.appointionRowCount--;
-                    (this.appointionGridView.dataService as CRUDService)
-                      .remove(data)
-                      .subscribe();
-                    //this.df.detectChanges();
-                    //(this.appointionGridView as any).deleteData(data)
+                    this.updateGridView(this.appointionGridView, 'delete', null, data);
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -2924,10 +2919,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                     // if (i != -1) {
                     //   this.lstEdiseases.splice(i, 1);
                     // }
-                    (this.eTrainCourseGrid.dataService as CRUDService)
-                      .remove(data)
-                      .subscribe();
-                    this.eTrainCourseRowCount--;
+                    // (this.eTrainCourseGrid.dataService as CRUDService)
+                    //   .remove(data)
+                    //   .subscribe();
+                    // this.eTrainCourseRowCount--;
+                    this.updateGridView(this.eTrainCourseGrid, 'delete', null, data);
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2937,9 +2933,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
               this.hrService.deleteEBusinessTravels(data).subscribe((p) => {
                 if (p != null) {
                   this.notify.notifyCode('SYS008');
-                  (this.businessTravelGrid.dataService as CRUDService)
-                    .remove(data)
-                    .subscribe();
+                  this.updateGridView(this.businessTravelGrid, 'delete', null, data);
+                  // (this.businessTravelGrid.dataService as CRUDService)
+                  //   .remove(data)
+                  //   .subscribe();
                   // this.eBusinessTravelRowCount =
                   //   this.eBusinessTravelRowCount - 1;
                 }
@@ -2962,9 +2959,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    (this.eDisciplineGrid.dataService as CRUDService)
-                      .remove(data)
-                      .subscribe();
+                    this.updateGridView(this.eDisciplineGrid, 'delete', null, data);
+                    // (this.eDisciplineGrid.dataService as CRUDService)
+                    //   .remove(data)
+                    //   .subscribe();
                     //this.eDisciplineRowCount--;
                     this.df.detectChanges();
                   } else {
@@ -3027,7 +3025,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           this.copyValue(event.text, data, 'eDegrees');
           this.df.detectChanges();
         } else if (funcID == 'eCertificate') {
-          this.HandleEmployeeECertificateInfo(event.text, 'copy', data);
+          this.copyValue(event.text, data, 'eCertificate');
+          // this.HandleEmployeeECertificateInfo(event.text, 'copy', data);
           this.df.detectChanges();
         } else if (funcID == 'eAppointions') {
           this.copyValue(event.text, data, 'eAppointions');
@@ -3801,38 +3800,40 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        if (actionType == 'add' || actionType == 'copy') {
-          (this.dayoffGrid.dataService as CRUDService)
-            .add(res.event)
-            .subscribe((res) => {
-              if (this.dayoffGrid) {
-                //this.dayoffGrid.sort = [this.dayOffSortModel]
-                //this.dayoffGrid.gridRef.allowSorting =true;
-                this.dayoffGrid.gridRef.sortColumn(
-                  'BeginDate',
-                  'Descending',
-                  false
-                );
-              }
-            });
-          // this.dayoffRowCount += 1;
-        } else if (actionType == 'edit') {
-          (this.dayoffGrid.dataService as CRUDService)
-            .update(res.event)
-            .subscribe((res) => {
-              if (this.dayoffGrid) {
-                this.dayoffGrid.gridRef.allowSorting = true;
-                this.dayoffGrid.gridRef.sortColumn(
-                  'BeginDate',
-                  'Descending',
-                  false
-                );
-              }
-            });
-        }
-      }
+        this.updateGridView(this.dayoffGrid, actionType, res.event, null);
+
+      //   if (actionType == 'add' || actionType == 'copy') {
+      //     (this.dayoffGrid.dataService as CRUDService)
+      //       .add(res.event)
+      //       .subscribe((res) => {
+      //         if (this.dayoffGrid) {
+      //           //this.dayoffGrid.sort = [this.dayOffSortModel]
+      //           //this.dayoffGrid.gridRef.allowSorting =true;
+      //           this.dayoffGrid.gridRef.sortColumn(
+      //             'BeginDate',
+      //             'Descending',
+      //             false
+      //           );
+      //         }
+      //       });
+      //     // this.dayoffRowCount += 1;
+      //   } else if (actionType == 'edit') {
+      //     (this.dayoffGrid.dataService as CRUDService)
+      //       .update(res.event)
+      //       .subscribe((res) => {
+      //         if (this.dayoffGrid) {
+      //           this.dayoffGrid.gridRef.allowSorting = true;
+      //           this.dayoffGrid.gridRef.sortColumn(
+      //             'BeginDate',
+      //             'Descending',
+      //             false
+      //           );
+      //         }
+      //       });
+      //   }
+      // }
       this.df.detectChanges();
-    });
+    }});
   }
 
   handleEmployeeWorkingPermitInfo(
@@ -3970,7 +3971,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (!res?.event)
         (this.eDisciplineGrid?.dataService as CRUDService).clear();
       if (res.event)
-        this.updateGridView(this.eDisciplineGrid, actionType, res.event);
+      debugger
+        this.updateGridView(this.eDisciplineGrid, actionType, res.event, null);
       this.df.detectChanges();
     });
   }
@@ -4063,40 +4065,39 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
+        this.updateGridView(this.appointionGridView, actionType, res.event);
         this.reRenderGrid = false;
         this.df.detectChanges();
         this.reRenderGrid = true;
         this.df.detectChanges();
-        if (actionType == 'add') {
-          //this.appointionRowCount += 1;
-          // this.appointionRowCount+=1
-          // this.appointionGridView.dataSource = [];
-          // this.appointionGridView.gridRef!.dataSource = [];
-          // this.appointionGridView.dataService.loading = false;
-          // this.appointionGridView.dataService.loaded = false;
-          // this.appointionGridView.loadData();
-          //Khong duoc xoa comment nay
-          // this.appointionGridView.dataService.load().subscribe(res=>{
-          //     this.appointionGridView.dataSource = [];
-          // this.appointionGridView.gridRef!.dataSource = []
-          //   this.appointionGridView.dataSource = this.appointionGridView.dataService.oriData;
-          //   this.appointionGridView.gridRef!.dataSource = this.appointionGridView.dataSource;
-          //   this.appointionGridView.dataService.data =this.appointionGridView.dataService.oriData;
-          //   this.appointionGridView.gridRef?.refreshColumns();
-          //   this.appointionRowCount =this.appointionGridView.dataSource.length ;
-          // })
-        } else if (actionType == 'copy') {
-          //this.appointionRowCount += 1;
-          (this.appointionGridView?.dataService as CRUDService)
-            .add(res.event)
-            .subscribe();
-        } else if (actionType == 'edit') {
-          (this.appointionGridView?.dataService as CRUDService)
-            .update(res.event)
-            .subscribe();
-        }
+        // if (actionType == 'add') {
+        //   //this.appointionRowCount += 1;
+        //   // this.appointionRowCount+=1
+        //   // this.appointionGridView.dataSource = [];
+        //   // this.appointionGridView.gridRef!.dataSource = [];
+        //   // this.appointionGridView.dataService.loading = false;
+        //   // this.appointionGridView.dataService.loaded = false;
+        //   // this.appointionGridView.loadData();
+        //   //Khong duoc xoa comment nay
+        //   // this.appointionGridView.dataService.load().subscribe(res=>{
+        //   //     this.appointionGridView.dataSource = [];
+        //   // this.appointionGridView.gridRef!.dataSource = []
+        //   //   this.appointionGridView.dataSource = this.appointionGridView.dataService.oriData;
+        //   //   this.appointionGridView.gridRef!.dataSource = this.appointionGridView.dataSource;
+        //   //   this.appointionGridView.dataService.data =this.appointionGridView.dataService.oriData;
+        //   //   this.appointionGridView.gridRef?.refreshColumns();
+        //   //   this.appointionRowCount =this.appointionGridView.dataSource.length ;
+        //   // })
+        // } else if (actionType == 'copy') {
+        //   (this.appointionGridView?.dataService as CRUDService)
+        //     .add(res.event)
+        //     .subscribe();
+        // } else if (actionType == 'edit') {
+        //   (this.appointionGridView?.dataService as CRUDService)
+        //     .update(res.event)
+        //     .subscribe();
+        // }
       }
-      this.df.detectChanges();
     });
   }
 
@@ -4127,11 +4128,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
       else if (res.event)
-        this.eCertificateRowCount += this.updateGridView(
-          this.eCertificateGrid,
-          actionType,
-          res.event
-        );
+      debugger
+        // this.eCertificateRowCount += this.updateGridView(
+        //   this.eCertificateGrid,
+        //   actionType,
+        //   res.event
+        // );
+        this.updateGridView(this.eCertificateGrid, actionType, res.event, data);
       this.df.detectChanges();
     });
   }
@@ -4157,12 +4160,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if (res)
-        this.eDegreeRowCount += this.updateGridView(
-          this.eDegreeGrid,
-          actionType,
-          res.event
-        );
+      if (res.event)
+        // this.eDegreeRowCount += this.updateGridView(
+        //   this.eDegreeGrid,
+        //   actionType,
+        //   res.event
+        // );
+        this.updateGridView(this.eDegreeGrid, actionType, res.event, data);
       this.df.detectChanges();
     });
   }
@@ -4190,18 +4194,20 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) (this.skillGrid?.dataService as CRUDService)?.clear();
       else if (res.event != null) {
-        this.lstESkill = res?.event[1];
-        if (this.skillGrid) {
-          this.eSkillRowCount += this.updateGridView(
-            this.skillGrid,
-            actionType,
-            res.event[0]
-          );
-        } else {
-          if (actionType == 'add' || actionType == 'copy') {
-            this.eSkillRowCount++;
-          }
-        }
+        debugger
+        // this.lstESkill = res?.event[1];
+        // if (this.skillGrid) {
+        //   this.eSkillRowCount += this.updateGridView(
+        //     this.skillGrid,
+        //     actionType,
+        //     res.event[0]
+        //   );
+        // } else {
+        //   if (actionType == 'add' || actionType == 'copy') {
+        //     this.eSkillRowCount++;
+        //   }
+        // }
+        this.updateGridView(this.skillGrid, actionType, res.event, data);
       }
       this.df.detectChanges();
     });
@@ -4234,11 +4240,14 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (!res?.event)
         (this.eTrainCourseGrid?.dataService as CRUDService).clear();
       else if (res.event)
-        this.eTrainCourseRowCount += this.updateGridView(
-          this.eTrainCourseGrid,
-          actionType,
-          res.event
-        );
+        // this.eTrainCourseRowCount += this.updateGridView(
+        //   this.eTrainCourseGrid,
+        //   actionType,
+        //   res.event
+        // );
+
+        this.updateGridView(this.eTrainCourseGrid, actionType, res.event, data);
+
       this.df.detectChanges();
     });
   }
@@ -4481,16 +4490,17 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        if (actionType == 'add' || actionType == 'copy') {
-          // this.eBusinessTravelRowCount += 1;
-          (this.businessTravelGrid?.dataService as CRUDService)
-            ?.add(res.event)
-            .subscribe();
-        } else if (actionType == 'edit') {
-          (this.businessTravelGrid.dataService as CRUDService)
-            .update(res.event)
-            .subscribe();
-        }
+        this.updateGridView(this.businessTravelGrid, actionType, res.event, null);
+        // if (actionType == 'add' || actionType == 'copy') {
+        //   // this.eBusinessTravelRowCount += 1;
+        //   (this.businessTravelGrid?.dataService as CRUDService)
+        //     ?.add(res.event)
+        //     .subscribe();
+        // } else if (actionType == 'edit') {
+        //   (this.businessTravelGrid.dataService as CRUDService)
+        //     .update(res.event)
+        //     .subscribe();
+        // }
       }
       this.df.detectChanges();
     });
@@ -5146,7 +5156,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           this.HandlemployeeAssetInfo(actionHeaderText, 'copy', res);
         });
     } else if (flag == 'eTrainCourses') {
-      this.eTrainCourseGrid.dataService.dataSelected = data;
+      // this.eTrainCourseGrid.dataService.dataSelected = data;
       this.hrService
         .copy(data, this.eTrainCourseFormModel, 'RecID')
         .subscribe((res) => {
@@ -5172,7 +5182,14 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         .subscribe((res: any) => {
           this.HandleEmployeeEHealths(actionHeaderText, 'copy', res);
         });
-    } else if (flag == 'eDayoff') {
+    } else if (flag == 'eCertificate') {
+      this.hrService
+        .copy(data, this.eCertificateFormModel, 'RecID')
+        .subscribe((res) => {
+          this.HandleEmployeeECertificateInfo(actionHeaderText, 'copy', res);
+        });
+    }
+    else if (flag == 'eDayoff') {
       this.dayoffGrid.dataService.dataSelected = data;
       (this.dayoffGrid.dataService as CRUDService)
         .copy()
@@ -5246,9 +5263,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     oldData?: any
   ) {
     let returnVal = 0;
-    let index = gridView.dataService.data.findIndex(
-      (p) => p.recID == oldData.recID
-    );
+    let index = 0;
+    if(oldData){
+      index = gridView.dataService.data.findIndex(
+        (p) => p.recID == oldData.recID
+      );
+    }
     if (actionType == 'add' || actionType == 'copy') {
       (gridView?.dataService as CRUDService)?.add(newData, 0).subscribe();
       gridView.addRow(newData, 0, true);

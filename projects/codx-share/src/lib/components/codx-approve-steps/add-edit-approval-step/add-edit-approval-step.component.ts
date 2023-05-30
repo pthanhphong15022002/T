@@ -186,6 +186,17 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    if( this.isAdd ){
+      this.codxService.getDataValueOfSetting("ESParameters",null,'1').subscribe((res:any)=>{
+        if(res){
+          let esSetting = JSON.parse(res);
+            if (esSetting != null ) {
+              this.confirmControl=this.confirmControl ?? esSetting?.ConfirmControl;
+              this.allowEditAreas= this.allowEditAreas ?? esSetting?.AllowEditAreas;
+            }
+        }
+      })
+    }
     this.formModelCustom = new FormModel();
     this.formModelCustom.formName = 'ApprovalSteps_Approvers';
     this.formModelCustom.gridViewName = 'grvApprovalSteps_Approvers';
@@ -400,7 +411,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   onSaveForm() {
-    this.isSaved = true;
+    this.isSaved = true;    
     if (this.dialogApprovalStep.invalid == true) {
       this.codxService.notifyInvalid(this.dialogApprovalStep, this.formModel);
       return;

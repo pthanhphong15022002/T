@@ -255,11 +255,10 @@
             [ngStyle]="{ color: data?.steps['iconColor'] }"
             class="me-1"
           ></span>
-          <span  class="menu-title fw-bold line-clamp-menu"  [ngbTooltip]="data?.currentStepName" [ngStyle]="{ color: data?.steps['textColor'] }">{{  data?.currentStepName }}</span>
+          <span class="menu-title fw-bold line-clamp-menu"  [ngbTooltip]="data?.currentStepName" [ngStyle]="{ color: data?.steps['textColor'] }">{{  data?.currentStepName }}</span>
 
         </div>
-          <div   *ngIf="data.status == '1'">
-
+          <div *ngIf="data.status == '1'">
             <codx-vll
             [name]="'DP028'"
             [field]="'Status'"

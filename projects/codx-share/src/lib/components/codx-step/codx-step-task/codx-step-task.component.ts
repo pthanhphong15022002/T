@@ -1088,6 +1088,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             disabledProject: false,
             // preside:  ,
             data: meeting,
+            isOtherModule : true
           };
           var dialog = this.callfc.openSide(
             PopupAddMeetingComponent,

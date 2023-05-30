@@ -23,17 +23,16 @@ import { PopupSearchPostComponent } from './list-post/popup-search/popup-search.
 })
 export class HomeComponent extends UIComponent {
   views: Array<ViewModel> | any = [];
-  dataService:CRUDService = null;
-  predicatePortal:string = "";
-  dataValuePortal:String ="";
-  user:any = null;
-  @ViewChild("content") content : TemplateRef<any>;
+  dataService: CRUDService = null;
+  predicatePortal: string = '';
+  dataValuePortal: String = '';
+  user: any = null;
+  @ViewChild('content') content: TemplateRef<any>;
   constructor(
     private injector: Injector,
-    private auth:AuthStore,
-    private page: PageTitleService,
-  ) 
-  {
+    private auth: AuthStore,
+    private page: PageTitleService
+  ) {
     super(injector);
     this.user = this.auth.get();
   }
@@ -56,10 +55,10 @@ export class HomeComponent extends UIComponent {
       {
         type: ViewType.content,
         active: true,
-        sameData:false,
+        sameData: false,
         model: {
-          panelLeftRef: this.content
-        }
+          panelLeftRef: this.content,
+        },
       },
     ];
     this.detectorRef.detectChanges();
