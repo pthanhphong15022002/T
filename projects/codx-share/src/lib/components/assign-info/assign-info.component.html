@@ -147,6 +147,7 @@
       <div class="d-flex justify-content-end align-items-center mt-2">
         <ng-container *ngFor="let item of listRoles">
           <button
+            *ngIf="paramView?.AssignControl == '1' || item.value == 'R'"
             type="button"
             class="btn btn-sm ms-2 btn-light-primary d-flex align-items-center"
             (click)="
@@ -182,10 +183,16 @@
               style="position: relative"
               class="h-30px me-3"
               popoverClass="userPopoverClass"
-              [ngbPopover]="popoverSelectRoles"
+              [ngbPopover]="
+                paramView?.AssignControl == '1' ? popoverSelectRoles : ''
+              "
               placement="right"
               #p="ngbPopover"
-              (mouseenter)="showPopover(p, item.resourceID)"
+              (mouseenter)="
+                paramView?.AssignControl == '1'
+                  ? showPopover(p, item.resourceID)
+                  : ''
+              "
               autoClose="outside"
             >
               <codx-img
@@ -454,7 +461,10 @@
 </ng-template>
 
 <ng-template #popoverSelectRoles>
-  <div class="d-flex flex-column" *ngIf="!readOnly">
+  <div
+    class="d-flex flex-column"
+    *ngIf="!readOnly && paramView?.AssignControl == '1'"
+  >
     <ng-container *ngFor="let item of listRoles">
       <div
         class="d-flex align-items-center btn btn-sm btn-white me-4"
