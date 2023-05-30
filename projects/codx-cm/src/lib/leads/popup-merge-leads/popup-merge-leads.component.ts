@@ -45,7 +45,7 @@ export class PopupMergeLeadsComponent implements OnInit {
   lstContactOne = [];
   lstContactTwo = [];
   lstContactThree = [];
-
+  lstAddressNew = [];
   fieldContacts = { text: 'contactName', value: 'recID' };
   contactDefault: any;
   popoverCrr: any;
@@ -63,6 +63,7 @@ export class PopupMergeLeadsComponent implements OnInit {
   fieldCbx = { text: 'leadName', value: 'recID' };
   modifyOn: Date;
   countValidate = 0;
+
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -125,25 +126,62 @@ export class PopupMergeLeadsComponent implements OnInit {
 
   //#region  Save
   onMerge() {
-    this.countValidate = this.cmSv.checkValidate(this.gridViewSetup, this.leadNew);
-    if(this.countValidate > 0){
+    this.countValidate = this.cmSv.checkValidate(
+      this.gridViewSetup,
+      this.leadNew
+    );
+    if (this.countValidate > 0) {
       return;
     }
-    if(this.leadTwo == null && this.leadThree == null){
-      this.noti.alertCode('Gộp tối thiểu 2 tiềm năng và đối đa 3 tiềm năng');
+    if (this.leadTwo == null && this.leadThree == null) {
+      this.noti.notify('Gộp tối thiểu 2 tiềm năng và đối đa 3 tiềm năng');
       return;
     }
 
+    var data = [
+      this.leadNew,
+      this.leadOne.recID,
+      this.leadTwo.recID,
+      this.leadThree.recID,
+      this.lstContactNew,
+      this.lstAddressNew,
+    ];
 
+    this.api
+      .execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'LeadsBusiness',
+        'MergeLeadAsync',
+        data
+      )
+      .subscribe((res) => {
+        if (res) {
+          if (this.changeAvata) {
+            this.imageAvatar
+              .updateFileDirectReload(res?.recID)
+              .subscribe((result) => {
+                if (result) {
+                  this.dialog.close(res);
+                } else {
+                  this.dialog.close(res);
+                }
+              });
+          }else{
+            this.dialog.close(res);
+          }
+        }
+      });
   }
 
   onSupport() {}
-//#endregion
+  //#endregion
   async cbxLeadChange(e, type) {
     if (e) {
       if (type == 'two') {
         if (e == this.leadOne?.recID || e == this.leadThree?.recID) {
           this.noti.notify('Tiềm năng được chọn vui lòng chọn tiềm năng khác');
+          this.leadTwo.recID = null;
           this.leadTwo = null;
           return;
         } else {
@@ -155,9 +193,8 @@ export class PopupMergeLeadsComponent implements OnInit {
         }
       } else {
         if (e == this.leadTwo?.recID || e == this.leadOne?.recID) {
-          this.noti.notify(
-            'Tiềm năng được chọn vui lòng chọn tiềm năng khác'
-          );
+          this.noti.notify('Tiềm năng được chọn vui lòng chọn tiềm năng khác');
+          this.leadThree.recID = null;
           this.leadThree = null;
           return;
         } else {
@@ -178,14 +215,12 @@ export class PopupMergeLeadsComponent implements OnInit {
         this.leadThree = null;
         this.lstContactThree = [];
       }
-      if(!this.changeAvata){
-
+      if (!this.changeAvata) {
       }
     }
 
     this.changeDetector.detectChanges();
   }
-
 
   changeAvatarNew() {
     this.changeAvata = true;
