@@ -193,11 +193,11 @@
     </codx-view-approval-step>
   </ng-template>
   <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <!-- <button type="button" class="btn btn-light-primary me-3" (click)="openPopupSignFile()">
-        <codx-label name="lblBtnTemplate" [formModel]="formModel" default="Dùng quy trình mẫu">
+    <div class="d-flex justify-content-between">
+       <button type="button" class="btn btn-light-primary me-3" (click)="openPopupSignFile()">
+        <codx-label name="lblBtnCreateTemplate" [formModel]="formModel" default="Tạo quy trình mẫu">
         </codx-label>
-      </button> -->
+      </button> 
       <button class="btn btn-primary justify-content-end" (click)="onSaveForm(true)">
         <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
       </button>

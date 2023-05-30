@@ -46,7 +46,7 @@ import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/vie
 import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
 import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
 import { NoDataComponent } from './contracts/component/no-data/no-data.component';
-import { ViewsContractsComponent } from './contracts/views-contracts/views-contracts.component';
+import { ContractsDetailComponent} from './contracts/contracts-detail/contracts-detail.component';
 import { CasesComponent } from './cases/cases.component';
 import { CaseDetailComponent } from './cases/case-detail/case-detail.component';
 import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.component';
@@ -105,9 +105,8 @@ const routes: Routes = [
         // data: { noReuse: true },
       },
       {
-        // gán tạm để làm UI
         path: 'contracts/:funcID',
-        component: ViewsContractsComponent,
+        component: ContractsDetailComponent,
       },
       {
         path: 'cases/:funcID',
@@ -157,7 +156,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxComboboxComponent,
     QuotationsViewDetailComponent,
     NoDataComponent,
-    ViewsContractsComponent,
+    ContractsDetailComponent,
     CasesComponent,
     CaseDetailComponent,
     PopupAddCaseComponent,

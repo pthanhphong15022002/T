@@ -66,14 +66,12 @@
         ></codx-label>
       </div>
       <div class="w-20">
-        <div *ngIf="lstLeadCbxOne != null && lstLeadCbxOne.length > 0">
-          <ejs-combobox
-            [dataSource]="lstLeadCbxOne"
-            [fields]="fieldCbx"
-            [disabled]="true"
-            [value]="leadOne?.recID"
-          ></ejs-combobox>
-        </div>
+        <ejs-combobox
+          [dataSource]="lstLeadCbxOne"
+          [fields]="fieldCbx"
+          [disabled]="true"
+          [value]="leadOne?.recID"
+        ></ejs-combobox>
       </div>
       <div class="w-20">
         <ejs-combobox
@@ -113,7 +111,7 @@
         </div>
         <div class="w-20" *ngIf="recIDLead">
           <codx-img
-            #imageUpload
+            #imageAvatar
             class="image-inpt-wrapper fullImage"
             [referType]="'avt'"
             [width]="90"
@@ -123,7 +121,7 @@
             [objectName]="nameLead"
             [isAllowEdit]="true"
             [isDefaulImg]="true"
-            [imgOn]="leadNew?.modifiedOn"
+            [imgOn]="modifyOn"
             (handleInput)="changeAvatarNew()"
           >
           </codx-img>
@@ -199,7 +197,7 @@
         </div>
       </div>
       <div class="w-20 d-flex">
-        <div class="w-10" *ngIf="leadThree?.recID">
+        <div class="w-5" *ngIf="leadThree?.recID">
           <codx-input
             id="avata3"
             name="avata"
