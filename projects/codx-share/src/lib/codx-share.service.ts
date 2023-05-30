@@ -411,7 +411,6 @@ export class CodxShareService {
     title: string,
     formModel: FormModel
   ) {
-    debugger;
     if (formModel) {
       this.cache.functionList('EST021').subscribe((fm) => {
         if (fm) {
@@ -861,66 +860,68 @@ export class CodxShareService {
       }
     }
   }
-  clickMFApproval(e: any, data: any, dataService: any, formModel: any) {
-    //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
-    var funcID = e?.functionID;
-    if (data.eSign == true) {
-      //Kys
-      if (
-        funcID == 'SYS201' ||
-        funcID == 'SYS205' ||
-        funcID == 'SYS206' ||
-        funcID == 'SYS204' ||
-        funcID == 'SYS203' ||
-        funcID == 'SYS202'
-      ) {
-        let option = new SidebarModel();
-        option.Width = '800px';
-        option.DataService = dataService;
-        option.FormModel = formModel;
-
-        console.log('oTrans', data);
-
-        let dialogModel = new DialogModel();
-        dialogModel.IsFull = true;
-        let dialogApprove = this.callfunc.openForm(
-          PopupSignForApprovalComponent,
-          'Thêm mới',
-          700,
-          650,
-          formModel.funcID,
-          {
-            funcID: 'EST021',
-            sfRecID: data.transID,
-            title: data.htmlView,
-            status: data.status,
-            stepType: data.stepType,
-            stepNo: data.stepNo,
-            transRecID: data.recID,
-            oTrans: data,
-            //lstMF: this.listApproveMF,
-          },
-          '',
-          dialogModel
-        );
-        dialogApprove.closed.subscribe((x) => {
-          if (x.event?.result) {
-            data.status = x.event?.mode;
-            dataService.update(data).subscribe();
-            //  this.esService.setupChange.next(true);
-            //  this.esService.isStatusChange.subscribe((res) => {
-            //    if (res != null) {
-            //      if (res.toString() == '2') {
-            //        this.view.dataService.remove(data).subscribe();
-            //      } else {
-            //        data.status = res;
-            //        this.view.dataService.update(data).subscribe();
-            //      }
-            //    }
-            //  });
-          }
-
-          /*return {
+  clickMFApproval(e:any,data:any,dataService:any,formModel:any)
+  {
+       //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
+       debugger
+       var funcID = e?.functionID;
+       if (data.eSign == true) {
+         //Kys
+         if (
+           funcID == 'SYS201' ||
+           funcID == 'SYS205' ||
+           funcID == 'SYS206' ||
+           funcID == 'SYS204' ||
+           funcID == 'SYS203' ||
+           funcID == 'SYS202'
+         ) {
+           let option = new SidebarModel();
+           option.Width = '800px';
+           option.DataService = dataService;
+           option.FormModel = formModel;
+   
+           console.log('oTrans', data);
+   
+           let dialogModel = new DialogModel();
+           dialogModel.IsFull = true;
+           let dialogApprove = this.callfunc.openForm(
+             PopupSignForApprovalComponent,
+             'Thêm mới',
+             700,
+             650,
+             formModel.funcID,
+             {
+               funcID: 'EST021',
+               sfRecID: data.transID,
+               title: data.htmlView,
+               status: data.status,
+               stepType: data.stepType,
+               stepNo: data.stepNo,
+               transRecID: data.recID,
+               oTrans: data,
+               //lstMF: this.listApproveMF,
+             },
+             '',
+             dialogModel
+           );
+           dialogApprove.closed.subscribe((x) => {
+             if (x.event?.result) {
+               data.status = x.event?.mode;
+               dataService.update(data).subscribe();
+              //  this.esService.setupChange.next(true);
+              //  this.esService.isStatusChange.subscribe((res) => {
+              //    if (res != null) {
+              //      if (res.toString() == '2') {
+              //        this.view.dataService.remove(data).subscribe();
+              //      } else {
+              //        data.status = res;
+              //        this.view.dataService.update(data).subscribe();
+              //      }
+              //    }
+              //  });
+             }
+   
+             /*return {
                result: true,
                mode: 1
              }
