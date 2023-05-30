@@ -140,6 +140,12 @@ codx-view-list-detail {
 .e-multi-select-wrapper input[type="text"] {
   font-size: 13px;
 }
+.w-10 {
+  width: 10%;
+}
+.w-15 {
+  width: 15%;
+}
 .w-20 {
   width: 20%;
 }
@@ -151,9 +157,6 @@ codx-view-list-detail {
 }
 .w-60 {
   width: 60%;
-}
-.w-10 {
-  width: 10%;
 }
 
 input.e-input,
@@ -602,6 +605,7 @@ a:link {
 }
 codx-view-list-detail .codx-detail-footer {
   overflow: hidden;
+  bottom: 0;
 }
 
 .menu-item.menu-item-active .text-dark,
@@ -2793,7 +2797,7 @@ codx-vll.badge.badge-md span::before{
   // margin: 2px 5px!important;
 //}
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link .menu-title{
-  font-size: 12px!important;
+  //font-size: 12px!important;
   padding-top: 2px!important;
   line-height: 16px!important;
 }

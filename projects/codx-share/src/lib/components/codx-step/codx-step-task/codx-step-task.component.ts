@@ -37,6 +37,7 @@ import { UpdateProgressComponent } from '../codx-progress/codx-progress.componen
 import { group } from 'console';
 import { CodxViewTaskComponent } from '../codx-view-task/codx-view-task.component';
 import { StepService } from '../step.service';
+import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 
 @Component({
   selector: 'codx-step-task',
@@ -94,6 +95,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     download: true,
     delete: true,
   };
+  titleAction: any = '';
 
   constructor(
     private callfc: CallFuncService,
@@ -350,6 +352,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP08':
             res.disabled = true;
             break;
+          //tajo cuoc hop
+          case 'DP24':
+            if (task.taskType != 'M') res.disabled = true;
+            break;
         }
       });
     }
@@ -417,12 +423,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               res.isblur = true;
             }
             break;
+          case 'DP24':
+            res.disabled = true;
+            break;
         }
       });
     }
   }
 
   clickMFTask(e: any, groupTask: any, task?: any) {
+    this.titleAction = e.text;
     switch (e.functionID) {
       case 'SYS02':
         this.deleteTask(task);
@@ -442,6 +452,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         break;
       case 'DP20': // tien do
         this.openPopupUpdateProgress(task, 'T');
+        break;
+      case 'DP24': // tạo lịch họp
+        this.createMeeting(task);
         break;
     }
   }
@@ -829,7 +842,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return dataPopupOutput;
   }
   async openPopupUpdateProgress(data, type) {
-    if (!this.isOnlyView || !this.isStart || this.isClose || this.isViewStep) return;
+    if (!this.isOnlyView || !this.isStart || this.isClose || this.isViewStep)
+      return;
     let checkUpdate = this.stepService.checkUpdateProgress(
       data,
       type,
@@ -1047,5 +1061,49 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     }
     return check;
+  }
+
+  //tao lich hop
+  createMeeting(data) {
+    this.stepService.getDefault('TMT0501', 'CO_Meetings').subscribe((res) => {
+      if (res && res?.data) {
+        let meeting = res.data;
+        meeting['_uuid'] = meeting['meetingID'] ?? Util.uid();
+        meeting['idField'] = 'meetingID';
+        meeting.meetingName = data?.taskName;
+        meeting.meetingType = '1';
+        let option = new SidebarModel();
+        option.zIndex = 1011;
+        let formModel = new FormModel();
+        this.cache.functionList('TMT0501').subscribe((f) => {
+          formModel.funcID = 'TMT0501';
+          formModel.entityName = f?.entityName;
+          formModel.formName = f?.formName;
+          formModel.gridViewName = f?.gridViewName;
+          option.FormModel = formModel;
+          option.Width = '850px';
+          let obj = {
+            action: 'add',
+            titleAction: this.titleAction,
+            disabledProject: false,
+            // preside:  ,
+            data: meeting,
+            isOtherModule : true
+          };
+          var dialog = this.callfc.openSide(
+            PopupAddMeetingComponent,
+            obj,
+            option
+          );
+          dialog.closed.subscribe((e) => {
+            if (e?.event) {
+              this.notiService.notify(
+                'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
+              );
+            }
+          });
+        });
+      }
+    });
   }
 }

@@ -45,6 +45,7 @@ export class PopupAddPaymentComponent {
     this.payment.refNo = this.contractID;
     this.payment.status = '1';
     this.payment.paidAmt = 0;
+    this.payment.lineType = "0";
   }
 
   setDataInput(){

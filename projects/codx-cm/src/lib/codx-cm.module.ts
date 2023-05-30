@@ -46,7 +46,7 @@ import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/vie
 import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
 import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
 import { NoDataComponent } from './contracts/component/no-data/no-data.component';
-import { ViewsContractsComponent } from './contracts/views-contracts/views-contracts.component';
+import { ContractsDetailComponent} from './contracts/contracts-detail/contracts-detail.component';
 import { CasesComponent } from './cases/cases.component';
 import { CaseDetailComponent } from './cases/case-detail/case-detail.component';
 import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.component';
@@ -68,6 +68,8 @@ import { PopupAddPaymentHistoryComponent } from './contracts/payment/popup-add-p
 import { PopupViewPaymentHistoryComponent } from './contracts/payment/popup-view-payment-history/popup-view-payment-history.component';
 import { PopupMergeLeadsComponent } from './leads/popup-merge-leads/popup-merge-leads.component';
 import { ViewQuotationsComponent } from './contracts/component/view-quotations/view-quotations.component';
+import { ViewImgContactComponent } from './leads/popup-merge-leads/view-img-contact/view-img-contact.component';
+import { PopupRemoveAddContactComponent } from './leads/popup-merge-leads/popup-remove-add-contact/popup-remove-add-contact.component';
 
 const routes: Routes = [
   {
@@ -82,12 +84,12 @@ const routes: Routes = [
         path: 'deals/:funcID',
         component: DealsComponent,
       },
-      
+
       // {
       //   path: 'processrelease/:funcID',
       //   component: ProcessReleaseComponent,
       // },
-        
+
       {
         path: 'processrelease/:funcID/:recID',
         component: ProcessReleaseComponent,
@@ -103,9 +105,8 @@ const routes: Routes = [
         // data: { noReuse: true },
       },
       {
-        // gán tạm để làm UI
         path: 'contracts/:funcID',
-        component: ViewsContractsComponent,
+        component: ContractsDetailComponent,
       },
       {
         path: 'cases/:funcID',
@@ -155,7 +156,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxComboboxComponent,
     QuotationsViewDetailComponent,
     NoDataComponent,
-    ViewsContractsComponent,
+    ContractsDetailComponent,
     CasesComponent,
     CaseDetailComponent,
     PopupAddCaseComponent,
@@ -178,6 +179,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddPaymentHistoryComponent,
     PopupViewPaymentHistoryComponent,
     PopupMergeLeadsComponent,
+    ViewImgContactComponent,
+    PopupRemoveAddContactComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -519,15 +519,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     ) {
       // this.dialogRef.close(this.gridView.dataService.data[0]);
       let lstData = this.gridView.dataService.data;
-      let sortedList = lstData.sort((a, b) => {
-        if (a.issuedDate < b.issuedDate) {
-          return 1;
-        }
-        if (a.issuedDate > b.issuedDate) {
-          return -1;
-        }
-        return 0;
-      });
+      let sortedList = this.hrService.sortDescByProperty(lstData, 'issuedDate');
       if (sortedList.length > 0) {
         this.dialogRef.close(sortedList[0]);
       } else {

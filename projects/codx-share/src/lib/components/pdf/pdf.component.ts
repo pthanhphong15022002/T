@@ -486,8 +486,8 @@ export class PdfComponent
     );
     this.rightToolbar.hideTab(2, !this.isApprover);
     this.rightToolbar.hideTab(3, !this.isApprover);
-    if (this.lstKey) this.rightToolbar.hideTab(4, false);
-    else this.rightToolbar.hideTab(4, true);
+    // if (this.lstKey) this.rightToolbar.hideTab(4, false);
+    // else this.rightToolbar.hideTab(4, true);
   }
 
   //remove area
@@ -584,43 +584,50 @@ export class PdfComponent
         }
       }
 
+      let isUrl = this.curSelectedArea.attrs?.image != null;
+
       if (this.curSelectedArea != null && !isCA) {
         this.tr?.remove();
         let layerChildren = this.lstLayer.get(area.location.pageNumber + 1);
-
-        this.tr?.resizeEnabled(
-          this.isEditable == false
-            ? false
-            : area.allowEditAreas == false
-            ? false
-            : area.isLock == true
-            ? false
-            : true
-        );
-        let isUrl = this.curSelectedArea.attrs?.image != null;
-
-        this.tr?.enabledAnchors(
-          this.isEditable == false
-            ? []
-            : area.allowEditAreas == false
-            ? []
-            : area.isLock == true
-            ? []
-            : this.imgConfig.includes(area.labelType)
-            ? isUrl //this.checkIsUrl(area.labelValue)
-              ? this.fullAnchor
+        if (this.isEditable && !this.isApprover) {
+          this.tr?.resizeEnabled(true);
+          this.tr?.draggable(true);
+          this.tr?.enabledAnchors(
+            this.imgConfig.includes(area.labelType)
+              ? isUrl
+                ? this.fullAnchor
+                : this.textAnchor
               : this.textAnchor
-            : this.textAnchor
-        );
-        this.tr?.draggable(
-          this.isEditable == false
-            ? false
-            : area.allowEditAreas == false
-            ? false
-            : area.isLock == true
-            ? false
-            : true
-        );
+          );
+        } else {
+          this.tr?.resizeEnabled(
+            area.allowEditAreas == false
+              ? false
+              : area.isLock == true
+              ? false
+              : true
+          );
+
+          this.tr?.enabledAnchors(
+            area.allowEditAreas == false
+              ? []
+              : area.isLock == true
+              ? []
+              : this.imgConfig.includes(area.labelType)
+              ? isUrl //this.checkIsUrl(area.labelValue)
+                ? this.fullAnchor
+                : this.textAnchor
+              : this.textAnchor
+          );
+          this.tr?.draggable(
+            area.allowEditAreas == false
+              ? false
+              : area.isLock == true
+              ? false
+              : true
+          );
+        }
+
         this.tr?.forceUpdate();
         this.curSelectedArea.draggable(this.tr.draggable());
         this.tr?.nodes([this.curSelectedArea]);
@@ -2453,7 +2460,7 @@ export class PdfComponent
     });
     this.detectorRef.detectChanges();
 
-    //this.hideShowTab();
+    // this.hideShowTab();
 
     // if (!this.isInteractPDF) {
     //   this.rightToolbar && this.rightToolbar.select(0);
@@ -2532,7 +2539,8 @@ export class PdfComponent
         ngxService.currentlyRenderedPages()
       )
       .subscribe((lst: Map<string, Array<location>>) => {
-        if (lst == null) return;
+        if (lst == null || Object.entries(lst).length == 0) return;
+
         this.lstKey = [];
         this.lstHighlightTextArea = [];
         let lstTextLayer = document.getElementsByClassName('textLayer');
@@ -2834,6 +2842,12 @@ export class PdfComponent
     if (event?.keyCode == 32) {
       event.stopPropagation();
     }
+  }
+
+  removeCA() {
+    this.esService.removeCA().subscribe((res) => {
+      console.log('remove', res);
+    });
   }
   //#endregion
 }

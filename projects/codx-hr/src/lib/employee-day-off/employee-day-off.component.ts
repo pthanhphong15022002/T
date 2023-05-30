@@ -1,4 +1,3 @@
-import { copy } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   ChangeDetectorRef,
   Component,
@@ -22,7 +21,6 @@ import {
   ViewType,
 } from 'codx-core';
 import { FormGroup } from '@angular/forms';
-import moment from 'moment';
 import { PopupEdayoffsComponent } from '../employee-profile/popup-edayoffs/popup-edayoffs.component';
 
 @Component({
@@ -52,7 +50,7 @@ export class EmployeeDayOffComponent extends UIComponent {
     private notify: NotificationsService
   ) {
     super(injector);
-    this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    // this.funcID = this.activatedRoute.snapshot.params['funcID'];
   }
 
   service = 'HR';
@@ -166,7 +164,7 @@ export class EmployeeDayOffComponent extends UIComponent {
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
-        this.popupUpdateEAwardStatus(event.functionID, oUpdate);
+        this.popupUpdateEDayOffStatus(event.functionID, oUpdate);
         break;
       case this.actionAddNew:
         let newData = {
@@ -290,7 +288,7 @@ export class EmployeeDayOffComponent extends UIComponent {
   }
 
   //change status
-  popupUpdateEAwardStatus(funcID, data) {
+  popupUpdateEDayOffStatus(funcID, data) {
     this.hrService.handleUpdateRecordStatus(funcID, data);
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;

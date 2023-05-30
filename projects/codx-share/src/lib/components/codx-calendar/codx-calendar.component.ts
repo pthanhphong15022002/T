@@ -516,11 +516,21 @@ export class CodxCalendarComponent
         'CO_Meetings',
       ])
       .subscribe((res) => {
+        //VTHAO truyen lai cho tien
+        let obj = {
+          action: 'add',
+          titleAction: 'Thêm', //Sỹ em ko dc gán cung cai này ? thay đổi ngôn ngữ lỗi á -a tạm copy lại của em để em chạy
+          disabledProject: true,
+          listPermissions: '',
+          data: res.data,
+          isOtherModule: true,
+        };
         if (res) {
           this.callfc
             .openSide(
               PopupAddMeetingComponent,
-              ['add', 'Thêm', true, '', res.data],
+              obj,
+              // ['add', 'Thêm', true, '', res.data],
               option
             )
             .closed.subscribe((returnData) => {
@@ -555,9 +565,19 @@ export class CodxCalendarComponent
       ])
       .pipe(
         switchMap((res) => {
+          let obj = {
+            data: res.data,
+            action: 'add',
+            isAssignTask: false,
+            titleAction: 'Thêm', ///cai nay em tu truyen theo more Fun text cua e
+            functionID: 'TMT0201',
+            disabledProject: false,
+            isOtherModule: true, //tu modele khac truyn qua
+          };
           return this.callfc.openSide(
             PopupAddComponent,
-            [res.data, 'add', false, 'Thêm', 'TMT0201', null, false],
+            obj,
+            // [res.data, 'add', false, 'Thêm', 'TMT0201', null, false],
             option
           ).closed;
         }),
@@ -594,9 +614,18 @@ export class CodxCalendarComponent
       ])
       .pipe(
         switchMap((res) => {
+          let obj = {
+            data: res.data,
+            action: 'add',
+            isAssignTask: true,
+            titleAction: 'Thêm', ///cai nay em tu truyen theo more Fun text cua e
+            functionID: 'TMT0203',
+            disabledProject: false,
+            isOtherModule: true, //tu modele khac truyn qua
+          };
           return this.callfc.openSide(
-            PopupAddComponent,
-            [res.data, 'add', true, 'Thêm', 'TMT0203', null, false],
+            PopupAddComponent,obj,
+           // [res.data, 'add', true, 'Thêm', 'TMT0203', null, false, true],
             option
           ).closed;
         }),

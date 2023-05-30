@@ -35,7 +35,9 @@ export class CodxListContactsComponent implements OnInit {
   @Input() hidenMF = true;
   @Input() type = '';
   @Input() isConvertLeadToCus = false;
+  @Input() selectAll: boolean = false;
   @Input() formModel: FormModel;
+  @Input() lstContactRef = [];
   @Output() lstContactEmit = new EventEmitter<any>();
   @Output() lstContactDeleteEmit = new EventEmitter<any>();
   @Output() objectConvert = new EventEmitter<any>();
@@ -56,6 +58,7 @@ export class CodxListContactsComponent implements OnInit {
   isButton = true;
   currentRecID = '';
   lstConvertContact = [];
+  isCheckedAll: boolean = false;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -68,8 +71,12 @@ export class CodxListContactsComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
+
     if (changes['objectID']) {
-      if (changes['objectID'].currentValue != null) {
+      if (
+        changes['objectID']?.currentValue != null &&
+        changes['objectID']?.currentValue?.trim() != ''
+      ) {
         this.getListContacts();
       } else {
         this.loaded = true;
@@ -78,11 +85,6 @@ export class CodxListContactsComponent implements OnInit {
   }
 
   async ngOnInit() {
-    if(this.isConvertLeadToCus){
-      for (var i = 0; i < this.lstConvertContact.length; i++) {
-        this.lstConvertContact[i].isCheck = false;
-      }
-    }
     // this.getListContacts();
     this.formModelContact = await this.cmSv.getFormModel('CM0102');
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
@@ -97,24 +99,30 @@ export class CodxListContactsComponent implements OnInit {
     this.listContacts = this.cmSv.bringDefaultContactToFront(lstContact);
     if (this.listContacts != null && this.listContacts.length > 0) {
       this.changeContacts(this.listContacts[0]);
+      if (this.isConvertLeadToCus) this.insertFieldCheckbox();
     }
   }
 
   getListContacts() {
     this.loaded = false;
-
-    this.request.predicates = 'ObjectID=@0';
-    this.request.dataValues = this.objectID;
-    this.request.entityName = 'CM_Contacts';
-    this.request.funcID = 'CM0102';
-    this.className = 'ContactsBusiness';
-    this.fetch().subscribe((item) => {
-      this.listContacts = this.cmSv.bringDefaultContactToFront(item);
-      if (this.listContacts != null && this.listContacts.length > 0) {
-        this.changeContacts(this.listContacts[0]);
-      }
+    if (!this.selectAll) {
+      this.request.predicates = 'ObjectID=@0';
+      this.request.dataValues = this.objectID;
+      this.request.entityName = 'CM_Contacts';
+      this.request.funcID = 'CM0102';
+      this.className = 'ContactsBusiness';
+      this.fetch().subscribe((item) => {
+        this.listContacts = this.cmSv.bringDefaultContactToFront(item);
+        if (this.listContacts != null && this.listContacts.length > 0) {
+          this.changeContacts(this.listContacts[0]);
+          if (this.isConvertLeadToCus) this.insertFieldCheckbox();
+        }
+        this.loaded = true;
+      });
+    } else {
+      this.loadListContact(this.listContacts);
       this.loaded = true;
-    });
+    }
   }
   private fetch(): Observable<any[]> {
     return this.api
@@ -136,6 +144,22 @@ export class CodxListContactsComponent implements OnInit {
       );
   }
 
+  insertFieldCheckbox() {
+    if (this.isConvertLeadToCus) {
+      for (var i = 0; i < this.listContacts.length; i++) {
+        if (!this.listContacts[i].checked && this.listContacts[i].objectType != this.objectType) this.listContacts[i].checked = false;
+      }
+      if (this.lstContactRef != null && this.lstContactRef.length > 0) {
+        for(var i = 0; i < this.listContacts.length; i++){
+          let contact = this.listContacts[i];
+          if(this.lstContactRef.map(x => x.contactName).includes(contact.contactName) && this.lstContactRef.map(x => x.firstName).includes(contact.firstName)){
+            this.listContacts[i].checked = true;
+          }
+        }
+      }
+    }
+  }
+
   changeContacts(item) {
     this.currentRecID = item.recID;
     this.changeDetectorRef.detectChanges();
@@ -145,7 +169,7 @@ export class CodxListContactsComponent implements OnInit {
     this.moreFuncEdit = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        if (this.isButton = true)
+        if ((this.isButton = true))
           this.clickAddContact('edit', data, this.moreFuncEdit);
         break;
       case 'CM0102_2':
@@ -343,8 +367,21 @@ export class CodxListContactsComponent implements OnInit {
   }
 
   //#endregion
-
+  toggleAll(e) {
+    if (e?.target) {
+      this.isCheckedAll = e?.target?.checked;
+      this.listContacts.forEach((item) => (item.checked = this.isCheckedAll));
+    }
+    this.objectConvert.emit({
+      e: e?.target?.checked,
+      data: null,
+      type: 'selectAll',
+    });
+  }
   valueChange(e, data) {
-    this.objectConvert.emit({ e: e, data: data });
+    this.objectConvert.emit({ e: e?.target?.checked, data: data });
+    if (this.selectAll) {
+      this.isCheckedAll = this.listContacts.every((item) => item.checked);
+    }
   }
 }
