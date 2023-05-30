@@ -1,43 +1,38 @@
-<ng-container *ngIf="modelShares?.length > 0">
-  <ng-container *ngIf="modelShares[0].objectType === 'U'; else elseBlock">
-    <codx-imgs
-      [width]="30"
-      [objectId]="ids"
-      objectType="AD_Users"
-      [numberImages]="4"
-    >
-    </codx-imgs>
-  </ng-container>
-  <ng-template #elseBlock>
-    <div ngbDropdown>
-      <div
-        class="text-truncate hover-effect"
-        role="button"
-        ngbDropdownToggle
+<ng-container *ngIf="objectType === 'U'; else elseBlock">
+  <codx-imgs
+    *ngIf="objectId"
+    [width]="30"
+    [objectId]="objectId"
+    objectType="AD_Users"
+    [numberImages]="4"
+    class="d-flex align-items-center justify-content-end"
+  >
+  </codx-imgs>
+</ng-container>
+<ng-template #elseBlock>
+  <div ngbDropdown>
+    <div class="text-truncate hover-effect" role="button" ngbDropdownToggle>
+      <span
+        *ngFor="let c of shareModels"
+        class="badge badge-pill badge-secondary me-2"
       >
-        <span
-          *ngFor="let c of modelShares"
-          class="badge badge-pill badge-secondary me-2"
-        >
-          {{ c.text }}
-        </span>
-      </div>
+        {{ c.text }}
+      </span>
+    </div>
 
-      <div ngbDropdownMenu class="p-3">
-        <div class="mb-2">
-          <codx-label
-            field="lblUserGroups"
-            [formModel]="formModel"
-            default="Danh sách nhóm người dùng"
-          ></codx-label>
-          <span class="fw-bold"> ({{ modelShares.length }})</span>
-        </div>
-        <codx-searchbar class="mb-2"></codx-searchbar>
-        <div class="list-view">
-          <ejs-listview id="listview" [dataSource]="modelShares">
-          </ejs-listview>
-        </div>
+    <div ngbDropdownMenu class="p-3">
+      <div class="mb-2">
+        <codx-label
+          field="lblUserGroups"
+          [formModel]="formModel"
+          default="Danh sách nhóm người dùng"
+        ></codx-label>
+        <span class="fw-bold"> ({{ shareModels?.length }})</span>
+      </div>
+      <codx-searchbar class="mb-2"></codx-searchbar>
+      <div class="list-view">
+        <ejs-listview id="listview" [dataSource]="shareModels"> </ejs-listview>
       </div>
     </div>
-  </ng-template>
-</ng-container>
+  </div>
+</ng-template>

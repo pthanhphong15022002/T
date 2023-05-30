@@ -1,15 +1,27 @@
-import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
 import {
+  Component,
+  OnInit,
+  Optional,
+  ChangeDetectorRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  ApiHttpService,
   CacheService,
   CallFuncService,
+  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
+  NotificationsService,
+  Util,
 } from 'codx-core';
 import { CM_Leads } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
 import { PopupRemoveAddContactComponent } from './popup-remove-add-contact/popup-remove-add-contact.component';
+import { environment } from 'src/environments/environment';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-merge-leads',
@@ -17,6 +29,7 @@ import { PopupRemoveAddContactComponent } from './popup-remove-add-contact/popup
   styleUrls: ['./popup-merge-leads.component.css'],
 })
 export class PopupMergeLeadsComponent implements OnInit {
+  @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
   dialog: any;
   leadNew: CM_Leads = new CM_Leads();
   leadOne: CM_Leads = new CM_Leads();
@@ -35,17 +48,33 @@ export class PopupMergeLeadsComponent implements OnInit {
   contactDefault: any;
   popoverCrr: any;
   contactDefaultOne = '';
+  linkAvatarNew: any;
+  linkAvatarOne: any;
+  linkAvatarTwo: any;
+  linkAvatarThree: any;
+  changeAvata: boolean = false;
+  recIDLead: any;
+  nameLead: any;
+  lstLeadCbxOne = [];
+  lstLeadCbxTwo = [];
+  lstLeadCbxThree = [];
+  fieldCbx = { text: 'leadName', value: 'recID' };
+
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
     private cmSv: CodxCmService,
     private changeDetector: ChangeDetectorRef,
+    private api: ApiHttpService,
+    private noti: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.title = dt?.data?.title;
     this.leadOne = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.recIDLead = this.leadOne?.recID;
+    this.nameLead = this.leadOne?.leadName;
     this.cache.gridViewSetup('CMLeads', 'grvCMLeads').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -53,13 +82,22 @@ export class PopupMergeLeadsComponent implements OnInit {
     });
   }
   async ngOnInit() {
-    if (this.leadOne) {
-      this.lstContactOne = await this.getContacts(this.leadOne?.recID);
-    }
-    this.changeDetector.detectChanges();
+    this.changeAvata = false;
+
+    this.leadNew = JSON.parse(JSON.stringify(this.leadOne));
+    this.leadNew.recID = Util.uid();
   }
 
-  async ngAfterViewInit() {}
+  async ngAfterViewInit() {
+    if (this.leadOne) {
+      this.lstContactOne = await this.getContacts(this.leadOne?.recID);
+      this.lstLeadCbxOne = await this.getCbxLead(Util.uid());
+      this.lstLeadCbxTwo = await this.getCbxLead(this.leadOne?.recID);
+      this.lstLeadCbxThree = await this.getCbxLead(this.leadTwo?.recID);
+    }
+
+    this.changeDetector.detectChanges();
+  }
 
   getContactDefault(lstContact) {
     return lstContact.filter((x) => x.isDefault);
@@ -71,11 +109,55 @@ export class PopupMergeLeadsComponent implements OnInit {
     return lst;
   }
 
+  async getCbxLead(id) {
+    var options = new DataRequest();
+    options.entityName = 'CM_Leads';
+    options.predicates = 'Status!=@0';
+    options.dataValues = '5';
+    options.pageLoading = false;
+    var lst = await firstValueFrom(this.cmSv.loadDataAsync('CM', options));
+    return lst;
+  }
+
+  cbxLeadChange(e, type) {
+    if (e) {
+      if (type == 'two') {
+        if (e == this.leadOne?.recID || e == this.leadThree?.recID) {
+          this.noti.notify(
+            'Tiềm năng được chọn vui lòng chọn tiềm năng khác'
+          );
+          this.leadTwo = null;
+          return;
+        } else {
+          var index = this.lstLeadCbxTwo.findIndex((x) => x.recID == e);
+          if (index != -1) {
+            this.leadTwo = this.lstLeadCbxTwo[index];
+          }
+        }
+      } else {
+        if (e == this.leadTwo?.recID || e == this.leadOne?.recID) {
+          this.noti.alertCode(
+            'Tiềm năng được chọn vui lòng chọn tiềm năng khác'
+          );
+          return;
+        } else {
+          var index = this.lstLeadCbxThree.findIndex((x) => x.recID == e);
+          if (index != -1) {
+            this.leadThree = this.lstLeadCbxThree[index];
+          }
+        }
+      }
+      this.changeDetector.detectChanges();
+    }
+  }
+
   onMerge() {}
 
   onSupport() {}
 
-  changeAvatarNew() {}
+  changeAvatarNew() {
+    this.changeAvata = true;
+  }
 
   valueChange(e) {}
   valueDateChange(e) {
@@ -294,6 +376,12 @@ export class PopupMergeLeadsComponent implements OnInit {
             this.lstContactNew = this.lstContactNew.filter(
               (item1) => !lstDeal.some((item2) => item1.recID === item2.recID)
             );
+            if (
+              this.contactDefault &&
+              !this.lstContactNew.some((x) => x.recID == this.contactDefault)
+            ) {
+              this.contactDefault = null;
+            }
           }
         }
         this.changeDetector.detectChanges();
@@ -316,13 +404,49 @@ export class PopupMergeLeadsComponent implements OnInit {
   }
 
   cbxContactChange(e) {
-    if(e != this.contactDefault){
+    if (e != this.contactDefault) {
       this.contactDefault = e;
-      var index = this.lstContactNew.findIndex(x => x.recID == e);
-      if(index != -1){
+      var index = this.lstContactNew.findIndex((x) => x.recID == e);
+      if (index != -1) {
         this.lstContactNew[index].isDefault = true;
       }
     }
+  }
 
+  addAvatar() {
+    this.imageAvatar.referType = 'avt';
+    this.imageAvatar.uploadFile();
+  }
+
+  fileImgAdded(e) {
+    if (e?.data && e?.data?.length > 0) {
+      var countListFile = e.data.length;
+      this.linkAvatarNew = e?.data[countListFile - 1].avatar;
+
+      this.changeDetector.detectChanges();
+    }
+  }
+  async getAvatar(data) {
+    let avatar = [
+      '',
+      this.dialog?.formModel?.funcID,
+      data.recID,
+      this.dialog?.formModel?.entityName,
+      'inline',
+      1000,
+      data.leadName,
+      'avt',
+      false,
+    ];
+    var linkAvt = '';
+    var avata = await firstValueFrom(this.cmSv.getAvatar(avatar));
+    if (avata && avata?.url) {
+      linkAvt = environment.urlUpload + '/' + avata?.url;
+    } else {
+      linkAvt = null;
+    }
+
+    this.changeDetector.detectChanges();
+    return linkAvt;
   }
 }

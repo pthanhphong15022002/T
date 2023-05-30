@@ -79,14 +79,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('docRef') docRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
   @ViewChild('cbxReason') cbxReason: CodxInputComponent;
-  @ViewChild('rowNo', { static: true }) rowNo: TemplateRef<any>;
-  @ViewChild('account', { static: true }) account: TemplateRef<any>;
-  @ViewChild('dr', { static: true }) dr: TemplateRef<any>;
-  @ViewChild('cr', { static: true }) cr: TemplateRef<any>;
-  @ViewChild('ocr', { static: true }) ocr: TemplateRef<any>;
-  @ViewChild('info', { static: true }) info: TemplateRef<any>;
-  @ViewChild('note', { static: true }) note: TemplateRef<any>;
-  @ViewChild('morfun', { static: true }) morfun: TemplateRef<any>;
   @ViewChild('editTemplate', { static: true }) editTemplate: TemplateRef<any>;
   @ViewChild('grid') public grid: GridComponent;
   @ViewChild('cbxAccountID') cbxAccountID: CodxInputComponent;
@@ -116,7 +108,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     gridViewName: 'grvCashPaymentsLines',
     entityName: 'AC_CashPaymentsLines',
   };
-  fgLine: FormGroup;
   gridHeight: number;
   editSettings: EditSettingsModel = {
     allowEditing: true,
@@ -137,7 +128,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
   columnChange: string = '';
-  vllCashbook: any;
   baseCurr: any;
   formNameLine: any;
   gridViewNameLine: any;
@@ -145,8 +135,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   classNameLine: any;
   className: any;
   dataLine: any;
-  columnsGrid: any;
-  columnsGridM1: any = [];
   oldReasonID: any = '';
   authStore: AuthStore;
   constructor(
@@ -636,7 +624,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   deleteRow(data) {
     this.notification.alertCode('SYS030', null).subscribe((res) => {
       if (res.event.status === 'Y') {
-        if (this.cashpayment.subType == '1') {
+        if (this.cashpayment.subType != '2') {
           switch (this.modegrid) {
             case '1':
               this.gridCash.deleteRow(data);
@@ -1372,9 +1360,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       return false;
     }
   }
-
-  loadAccountName(accountID) {}
-
   loadSubType1(enable) {
     var element = document.getElementById('ac-type-1');
     if (element) {

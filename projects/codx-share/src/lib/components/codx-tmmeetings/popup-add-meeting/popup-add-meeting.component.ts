@@ -98,6 +98,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   dataMeeting;
   dayStart: Date;
   preside: any;
+  isOtherModule = false; //neu tu modele khac truyen vao
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -109,17 +110,20 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = dialog?.dataService?.dataSelected?JSON.parse(JSON.stringify(dialog.dataService?.dataSelected)): null
+    this.data = dialog?.dataService?.dataSelected
+      ? JSON.parse(JSON.stringify(dialog.dataService?.dataSelected))
+      : null;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.action = dt?.data?.action;
     this.titleAction = dt?.data?.titleAction;
     this.disabledProject = dt?.data?.disabledProject;
     this.listPermissions = dt?.data?.listPermissions;
-    //Data truyền từ module thiết lập lịch  (data tu truyền ngoai module)
-    this.dataMeeting = dt?.data?.data
-    // this.preside = dt?.data?.preside ; nguoi chủ trì truyền qua ko dc xóa
 
+    //Data truyền từ module thiết lập lịch  (data tu truyền ngoai module)
+    this.dataMeeting = dt?.data?.data;
+    // this.preside = dt?.data?.preside ; nguoi chủ trì truyền qua ko dc xóa
+    this.isOtherModule = dt?.data?.isOtherModule;
     this.meeting = dialog?.dataService?.dataSelected
       ? this.data
       : this.dataMeeting;
@@ -153,7 +157,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       });
     if (this.action == 'add' || this.action == 'copy') {
       let listUser = this.user?.userID;
-      if(this.preside)listUser = ";" + this.preside
+      if (this.preside) listUser = ';' + this.preside;
       if (this.listPermissions) {
         if (!this.listPermissions.split(';').includes(listUser))
           listUser += ';' + this.listPermissions;
@@ -323,7 +327,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   onAdd() {
-    if (this.dialog.dataSerivce) {
+    if (!this.isOtherModule) {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option), 0)
         .subscribe((res) => {
@@ -350,9 +354,16 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           'TMT0501',
         ])
         .subscribe((res: any) => {
-          if (res) {
-            this.dialog && this.dialog.close(res);
-          }
+          this.attachment?.clearData();
+          if (res) {    
+            if (this.isRoom && this.meeting.location != null) {
+              this.bookingRoomEP(res);
+            }
+            this.tmSv
+              .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
+              .subscribe();
+            this.dialog.close(res);
+          } else this.dialog.close();
         });
     }
   }
@@ -881,7 +892,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (res && res.length > 0) {
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
-            var tmpResource = new CO_Permissions()           
+            var tmpResource = new CO_Permissions();
             if (emp.userID == this.user.userID) {
               tmpResource.objectID = emp?.userID;
               tmpResource.objectName = emp?.userName;

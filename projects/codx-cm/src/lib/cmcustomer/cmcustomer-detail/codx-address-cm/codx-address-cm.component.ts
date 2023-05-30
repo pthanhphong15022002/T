@@ -61,21 +61,18 @@ export class CodxAddressCmComponent implements OnInit {
     private api: ApiHttpService
   ) {}
 
-    ngOnChanges(changes: SimpleChanges): void {
-      if (changes['listAddress']) {
-        if (
-          changes['listAddress'].currentValue != null &&
-          changes['listAddress']?.currentValue?.length > 0
-        ) {
-          this.loadListAdress(changes['listAddress'].currentValue);
-        }
-        this.loaded = true;
-      }else{
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['id']) {
+      if (
+        changes['id'].currentValue != null &&
+        changes['id']?.currentValue?.trim() != ''
+      ) {
         this.getListAddress();
-
       }
-
+    }else{
+      this.loaded = true;
     }
+  }
 
   ngOnInit(): void {
     this.getFormModelAddress();
@@ -86,10 +83,8 @@ export class CodxAddressCmComponent implements OnInit {
       }
     });
   }
-  loadListAdress(lstAddress){
-    this.listAddress = this.cmSv.bringDefaultContactToFront(
-      lstAddress
-    );
+  loadListAdress(lstAddress) {
+    this.listAddress = this.cmSv.bringDefaultContactToFront(lstAddress);
     if (this.listAddress != null && this.listAddress.length > 0) {
       this.changeAddress(this.listAddress[0]);
     }
@@ -270,8 +265,7 @@ export class CodxAddressCmComponent implements OnInit {
     });
   }
 
-  valueChange(e, data){
+  valueChange(e, data) {
     this.convertAddress.emit({ e: e, data: data });
-
   }
 }

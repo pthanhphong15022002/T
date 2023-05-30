@@ -114,7 +114,7 @@ export class NewsTagComponent extends UIComponent {
     "WP",
     "ERM.Business.WP",
     "NewsBusiness",
-    "UpdateViewNewsAsync",
+    "UpdateViewAsync",
     [data.recID])
     .subscribe(
       (res) => {

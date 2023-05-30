@@ -62,7 +62,7 @@ export class PopupSearchComponent implements OnInit {
       'WP',
       'ERM.Business.WP',
       'NewsBusiness',
-      'UpdateViewNewsAsync',
+      'UpdateViewAsync',
       data.recID
     )
     .subscribe((res:any) => {

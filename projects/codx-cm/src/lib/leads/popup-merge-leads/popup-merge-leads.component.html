@@ -65,9 +65,34 @@
           default="Dữ liệu mới"
         ></codx-label>
       </div>
-      <div class="w-20">combobox1</div>
-      <div class="w-20">Combobox 2</div>
-      <div class="w-20">Combobox 3</div>
+      <div class="w-20">
+        <div *ngIf="lstLeadCbxOne != null && lstLeadCbxOne.length > 0">
+          <ejs-combobox
+            [dataSource]="lstLeadCbxOne"
+            [fields]="fieldCbx"
+            [disabled]="true"
+            [value]="leadOne?.recID"
+          ></ejs-combobox>
+        </div>
+      </div>
+      <div class="w-20">
+        <ejs-combobox
+          [dataSource]="lstLeadCbxTwo"
+          [fields]="fieldCbx"
+          [disabled]="true"
+          [value]="leadTwo?.recID"
+          (valueChange)="cbxLeadChange($event, 'two')"
+        ></ejs-combobox>
+      </div>
+      <div class="w-20">
+        <ejs-combobox
+          [dataSource]="lstLeadCbxThree"
+          [fields]="fieldCbx"
+          [disabled]="true"
+          [value]="leadThree?.recID"
+          (valueChange)="cbxLeadChange($event, 'three')"
+        ></ejs-combobox>
+      </div>
     </div>
     <hr />
     <div class="mt-2">
@@ -86,16 +111,16 @@
             default="Ảnh đại diện"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-20" *ngIf="recIDLead">
           <codx-img
             #imageUpload
             class="image-inpt-wrapper fullImage"
             [referType]="'avt'"
             [width]="90"
             [funcId]="dialog?.formModel?.funcID"
-            [objectId]="leadNew?.recID"
+            [objectId]="recIDLead"
             [objectType]="dialog?.formModel?.entityName"
-            [objectName]="leadNew?.leadName"
+            [objectName]="nameLead"
             [isAllowEdit]="true"
             [isDefaulImg]="true"
             [imgOn]="leadNew?.modifiedOn"
@@ -132,7 +157,7 @@
           </div>
         </div>
         <div class="w-20 d-flex">
-          <div class="w-10">
+          <div class="w-10" *ngIf="leadTwo?.recID">
             <codx-input
               id="avata2"
               name="avata"
@@ -143,7 +168,7 @@
               (valueChange)="changeRadio($event, 'avata')"
             ></codx-input>
           </div>
-          <div>
+          <div *ngIf="leadTwo?.recID">
             <codx-img
               #imageUpload
               class="image-inpt-wrapper fullImage"
@@ -158,21 +183,50 @@
             >
             </codx-img>
           </div>
+          <!-- <codx-img
+              #imageUpload
+              class="image-inpt-wrapper fullImage"
+              [referType]="'avt'"
+              [width]="90"
+              [funcId]="dialog?.formModel?.funcID"
+              [objectId]="leadTwo?.recID"
+              [objectType]="dialog?.formModel?.entityName"
+              [objectName]="leadTwo?.leadName"
+              [isDefaulImg]="true"
+              [imgOn]="leadTwo?.modifiedOn"
+            >
+            </codx-img> -->
         </div>
-        <div class="w-20 d-flex">
-          <div class="w-10">
-            <codx-input
-              id="avata3"
-              name="avata"
-              class="test-check"
-              type="radio"
-              field="avt3"
-              [checked]="false"
-              (valueChange)="changeRadio($event, 'avata')"
-            ></codx-input>
-          </div>
-          <div>
-            <codx-img
+      </div>
+      <div class="w-20 d-flex">
+        <div class="w-10" *ngIf="leadThree?.recID">
+          <codx-input
+            id="avata3"
+            name="avata"
+            class="test-check"
+            type="radio"
+            field="avt3"
+            [checked]="false"
+            (valueChange)="changeRadio($event, 'avata')"
+          ></codx-input>
+        </div>
+        <div *ngIf="leadThree?.recID">
+          <codx-img
+            #imageUpload
+            class="image-inpt-wrapper fullImage"
+            [referType]="'avt'"
+            [width]="90"
+            [funcId]="dialog?.formModel?.entityName"
+            [objectId]="leadThree?.recID"
+            [objectType]="dialog?.formModel?.entityName"
+            [objectName]="leadThree?.leadName"
+            [isDefaulImg]="true"
+            [imgOn]="leadThree?.modifiedOn"
+          >
+          </codx-img>
+        </div>
+
+        <!-- <codx-img
               #imageUpload
               class="image-inpt-wrapper fullImage"
               [referType]="'avt'"
@@ -184,10 +238,9 @@
               [isDefaulImg]="true"
               [imgOn]="leadThree?.modifiedOn"
             >
-            </codx-img>
-          </div>
-        </div>
+            </codx-img> -->
       </div>
+
       <div class="mt-1 row form-group">
         <div class="w-20">
           <codx-label
@@ -220,7 +273,7 @@
             {{ leadOne?.leadID }}
           </div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="leadID2"
@@ -236,7 +289,7 @@
             {{ leadTwo?.leadID }}
           </div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="leadID3"
@@ -285,7 +338,7 @@
             {{ leadOne?.leadName }}
           </div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="leadName2"
@@ -301,7 +354,7 @@
             {{ leadTwo?.leadName }}
           </div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="leadName3"
@@ -352,7 +405,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="phone2"
@@ -370,7 +423,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="phone3"
@@ -425,7 +478,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="faxNo2"
@@ -443,7 +496,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="faxNo3"
@@ -500,7 +553,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="webPage2"
@@ -520,7 +573,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="webPage3"
@@ -577,7 +630,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="establishDate2"
@@ -597,7 +650,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="establishDate3"
@@ -653,7 +706,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="industries2"
@@ -673,7 +726,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="industries3"
@@ -729,7 +782,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="annualRevenue2"
@@ -749,7 +802,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="annualRevenue3"
@@ -803,7 +856,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="memo2"
@@ -821,7 +874,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="memo3"
@@ -873,7 +926,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="note2"
@@ -891,7 +944,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="note3"
@@ -954,7 +1007,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="headcounts2"
@@ -974,7 +1027,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="headcounts3"
@@ -1040,7 +1093,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="campaignID2"
@@ -1060,7 +1113,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="campaignID3"
@@ -1116,7 +1169,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="channelID2"
@@ -1136,7 +1189,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="channelID3"
@@ -1192,7 +1245,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="customerResource2"
@@ -1212,7 +1265,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="customerResource3"
@@ -1268,7 +1321,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="salespersonID2"
@@ -1288,7 +1341,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="salespersonID3"
@@ -1344,7 +1397,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div class="w-10">
             <codx-input
               id="consultantID2"
@@ -1364,7 +1417,7 @@
             "
           ></div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div class="w-10">
             <codx-input
               id="consultantID3"
@@ -1477,7 +1530,10 @@
                   [formModel]="dialog.formModel"
                   default="Đã chọn"
                 ></codx-label>
-                <span class="me-1" [innerHTML]="countContact(lstContactNew, lstContactOne)"></span>
+                <span
+                  class="me-1"
+                  [innerHTML]="countContact(lstContactNew, lstContactOne)"
+                ></span>
                 <span class="me-1">
                   <codx-label
                     class=""
@@ -1493,7 +1549,7 @@
             </div>
           </div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div
             class="d-flex flex-column"
             *ngIf="lstContactTwo != null && lstContactTwo.length > 0"
@@ -1549,7 +1605,7 @@
             </div>
           </div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadThree?.recID">
           <div
             class="d-flex flex-column"
             *ngIf="lstContactThree != null && lstContactThree.length > 0"
@@ -1571,7 +1627,9 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary min-w-120px me-2"
-                  (click)="clickPopupContacts('add', lstContactThree, leadThree)"
+                  (click)="
+                    clickPopupContacts('add', lstContactThree, leadThree)
+                  "
                 >
                   <i class="icon-check-correct icon-16 me-1"></i>
                   <codx-label
@@ -1635,7 +1693,7 @@
             ></codx-view-img-contact>
           </div>
         </div>
-        <div class="w-20 d-flex">
+        <div class="w-20 d-flex" *ngIf="leadTwo?.recID">
           <div
             class="mb-1"
             *ngIf="lstContactTwo != null && lstContactTwo.length > 0"

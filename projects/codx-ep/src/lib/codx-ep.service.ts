@@ -564,7 +564,8 @@ export class CodxEpService {
     booking: any,
     processID: string,
     entityName: string,
-    funcID: string
+    funcID: string,    
+    userID: string,
   ): Observable<any> {
     return this.api.execSv(
       'EP',
@@ -576,7 +577,8 @@ export class CodxEpService {
         processID,
         entityName,
         funcID,
-        '<div>' + booking.title + '</div>',
+        '<div>' + booking?.title + '</div>',
+        userID
       ]
     );
   }
