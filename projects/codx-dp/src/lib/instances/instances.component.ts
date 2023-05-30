@@ -829,7 +829,7 @@ export class InstancesComponent
               //Copy
               case 'SYS104':
               case 'SYS04':
-                if (!this.isCreate) res.disabled = true;
+                if (!this.isCreate || this.checkMoreReason(data, null) ) res.disabled = true;
                 break;
               //xóa
               case 'SYS102':
