@@ -487,13 +487,13 @@ export class CompanySettingComponent
     );
   }
 
-  loginHCS(m) {
-    this.adService.loginHCS().subscribe((token: string) => {
-      let returnUrl = 'https://surehcs.lacviet.vn/UI2017';
-      let url = `http://surehcs.lacviet.vn/UI2017/verifytoken.aspx?tklid=${token}&returnUrl=${returnUrl}`;
-      if (url != '') {
-        window.open(url, '_blank');
-      }
-    });
-  }
+  // loginHCS(m) {
+  //   this.adService.loginHCS().subscribe((token: string) => {
+  //     let returnUrl = 'https://surehcs.lacviet.vn/UI2017';
+  //     let url = `http://surehcs.lacviet.vn/UI2017/verifytoken.aspx?tklid=${token}&returnUrl=${returnUrl}`;
+  //     if (url != '') {
+  //       window.open(url, '_blank');
+  //     }
+  //   });
+  // }
 }

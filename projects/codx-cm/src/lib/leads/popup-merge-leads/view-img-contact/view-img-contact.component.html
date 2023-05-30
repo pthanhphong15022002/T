@@ -1,0 +1,81 @@
+<div class="d-flex" *ngIf="lstContact != null && lstContact.length > 0">
+  <ng-container *ngFor="let item of lstContact; index as i">
+    <span *ngIf="i < numberIms">
+      <span *ngIf="item?.recID != null && item.recID != ''">
+        <codx-img
+          [ngbPopover]="popupName"
+          #p="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="item?.contactName ? p.open() : ''"
+          (mouseleave)="p.close()"
+          placement="right bottom left top"
+          container="body"
+          [width]="sizeImg"
+          [objectName]="item?.contactName"
+          [objectId]="item?.recID"
+          objectType="'CM_Contacts'"
+        ></codx-img>
+      </span>
+    </span>
+    <div
+      class="contain"
+      [style]="'width: ' + sizeImg + 'px;' + 'height: ' + sizeImg + 'px;'"
+      #search="ngbPopover"
+      (click)="seachUser($event, lstContact, search)"
+      [ngbPopover]="searchLst"
+      autoClose="outside"
+      placement="bottom top left right"
+      *ngIf="i == numberIms"
+    >
+      <div class="view-all symbol symbol-35px symbol-circle">
+        +{{ lstContact.length - numberIms }}
+      </div>
+    </div>
+    <ng-template #popupName>
+      <div class="d-flex justify-content-between align-items-center">
+        <codx-img
+          [width]="30"
+          [objectName]="item?.contactName"
+          [objectId]="item?.recID"
+          objectType="'CM_Contacts'"
+        ></codx-img>
+        <div class="text-dark fw-bold ms-1">{{ item.contactName }}</div>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>
+
+<ng-template #searchLst>
+  <div class="popup-search" *ngIf="listUserSearch != null">
+    <div class="fw-bold">
+      <codx-label
+        name="lblContacts"
+        [formModel]="formModel"
+        default="Danh sách liên hệ"
+      ></codx-label>
+      <span class="ms-1">{{ "(" + listUserSearch.length + ")" }}</span>
+    </div>
+    <div *ngIf="lstContact.length > 0">
+      <codx-searchbar (searchEvent)="searchName($event)"></codx-searchbar>
+    </div>
+    <ng-container *ngIf="listUserSearch != null && listUserSearch.length > 0">
+      <div
+        class="d-flex align-items-start user-card p-3"
+        *ngFor="let item of listUserSearch"
+      >
+        <div class="me-3">
+          <codx-img
+            [objectName]="item?.contactName"
+            [objectId]="item?.recID"
+            objectType="CM_Contacts"
+          >
+          </codx-img>
+        </div>
+        <div class="d-flex flex-column flex-grow-1">
+          <div class="text-dark fw-bold">{{ item?.contactName }}</div>
+          <div class="text-gray-600 fs-7">{{ item?.jobTitle }}</div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>

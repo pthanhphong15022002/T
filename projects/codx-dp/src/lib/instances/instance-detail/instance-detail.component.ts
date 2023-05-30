@@ -121,25 +121,25 @@ export class InstanceDetailComponent implements OnInit {
   ownerInstance: string[] = [];
   HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`;
   //gan chart
-   //gantchat
-   ganttDs = [];
-   ganttDsClone = [];
-   dataColors = [];
-   taskFields = {
-     id: 'recID',
-     name: 'name',
-     startDate: 'startDate',
-     endDate: 'endDate',
-     type: 'type',
-     color: 'color',
-   };
+  //gantchat
+  ganttDs = [];
+  ganttDsClone = [];
+  dataColors = [];
+  taskFields = {
+    id: 'recID',
+    name: 'name',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    type: 'type',
+    color: 'color',
+  };
   vllViewGannt = 'DP042';
   crrViewGant = 'W';
-  columns=[
+  columns = [
     { field: 'name', headerText: 'Tên', width: '250' },
     { field: 'startDate', headerText: 'Ngày bắt đầu' },
-    { field: 'endDate', headerText: 'Ngày kết thúc' }
-  ]
+    { field: 'endDate', headerText: 'Ngày kết thúc' },
+  ];
   timelineSettings: any;
   tags = '';
   timelineSettingsHour: any = {
@@ -264,7 +264,7 @@ export class InstanceDetailComponent implements OnInit {
     private popupInstances: InstancesComponent,
     public sanitizer: DomSanitizer,
     private authStore: AuthStore,
-    private serviceInstance: InstancesComponent,
+    private serviceInstance: InstancesComponent
   ) {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefault = fun.customName || fun.description;
@@ -306,25 +306,26 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.loaded = false;
     if (changes['dataSelect']) {
-      if (changes['dataSelect'].currentValue?.recID != null) {
-        this.id = changes['dataSelect'].currentValue.recID;
-        this.loadChangeData() ;
-        this.isChangeData = false;
-       // this.dataSelect = changes['dataSelect'].currentValue
-      }
+      if (
+        changes['dataSelect'].currentValue?.recID == null ||
+        changes['dataSelect'].currentValue?.recID === this.id
+      )
+        return;
+      this.loaded = false;  /// bien này không cần cũng được tại luôn có dataSelect -- bỏ loader vào  loadChangeData thì bị giật
+      this.id = changes['dataSelect'].currentValue.recID;
+      this.loadChangeData();
+      this.isChangeData = false; 
+      // this.dataSelect = changes['dataSelect'].currentValue
+
       this.loaded = true;
     }
   }
 
-  loadChangeData(){
+  loadChangeData() {
     this.instanceStatus = this.dataSelect.status;
     this.GetStepsByInstanceIDAsync();
-    this.getDataGanttChart(
-      this.dataSelect.recID,
-      this.dataSelect.processID
-    );
+    this.getDataGanttChart(this.dataSelect.recID, this.dataSelect.processID);
     this.listReasonBySteps(this.reasonStepsObject);
     this.maxSize = 4;
     this.isOnlyView = true;
@@ -349,6 +350,7 @@ export class InstanceDetailComponent implements OnInit {
         this.tmpTeps = null;
       }
       //  this.getListStepsStatus();
+      // this.loaded = true;
     });
   }
   saveDataStep(e) {
@@ -549,47 +551,57 @@ export class InstanceDetailComponent implements OnInit {
       option.Width = '550px';
       option.zIndex = 1011;
       option.FormModel = frmModel;
-      let dialog = this.callfc.openSide(CodxViewTaskComponent, listData, option);
+      let dialog = this.callfc.openSide(
+        CodxViewTaskComponent,
+        listData,
+        option
+      );
       dialog.closed.subscribe((data) => {
-        let dataProgress = data?.event
-        if(dataProgress){
-          let stepFind = this.listSteps.find((step) => step.recID == dataProgress?.stepID);
-          if(stepFind){
-            if(dataProgress?.type == "P"){
+        let dataProgress = data?.event;
+        if (dataProgress) {
+          let stepFind = this.listSteps.find(
+            (step) => step.recID == dataProgress?.stepID
+          );
+          if (stepFind) {
+            if (dataProgress?.type == 'P') {
               stepFind.progress = dataProgress?.progressStep;
               stepFind.note = dataProgress?.note;
               stepFind.actualEnd = dataProgress?.actualEnd;
-            }else if(dataProgress?.type == "G"){
-              let groupFind = stepFind?.taskGroups?.find(group => group?.recID == dataProgress?.groupTaskID);
-              if(groupFind){
+            } else if (dataProgress?.type == 'G') {
+              let groupFind = stepFind?.taskGroups?.find(
+                (group) => group?.recID == dataProgress?.groupTaskID
+              );
+              if (groupFind) {
                 groupFind.progress = dataProgress?.progressGroupTask;
                 groupFind.note = dataProgress?.note;
                 groupFind.actualEnd = dataProgress?.actualEnd;
-                if(dataProgress?.isUpdate){
+                if (dataProgress?.isUpdate) {
                   stepFind.progress = dataProgress?.progressStep;
                 }
               }
-            }else{
-              let taskFind = stepFind?.tasks?.find(task => task?.recID == dataProgress?.taskID);
-              if(taskFind){
+            } else {
+              let taskFind = stepFind?.tasks?.find(
+                (task) => task?.recID == dataProgress?.taskID
+              );
+              if (taskFind) {
                 taskFind.progress = dataProgress?.progressTask;
                 taskFind.note = dataProgress?.note;
                 taskFind.actualEnd = dataProgress?.actualEnd;
-                if(dataProgress?.isUpdate){
-                  let groupFind = stepFind?.taskGroups?.find(group => group?.recID == dataProgress?.groupTaskID);
-                  if(groupFind){
+                if (dataProgress?.isUpdate) {
+                  let groupFind = stepFind?.taskGroups?.find(
+                    (group) => group?.recID == dataProgress?.groupTaskID
+                  );
+                  if (groupFind) {
                     groupFind.progress = dataProgress?.progressGroupTask;
                   }
                   stepFind.progress = dataProgress?.progressStep;
                 }
               }
             }
-
           }
         }
         console.log(dataProgress?.event);
-
-      })
+      });
     }
   }
   // getTaskEnd(step) {
@@ -610,11 +622,11 @@ export class InstanceDetailComponent implements OnInit {
   //   }
   // }
 
-  continueStep(isTaskEnd, step){
+  continueStep(isTaskEnd, step) {
     let isShowFromTaskAll = false;
-    let isShowFromTaskEnd = !this.checkContinueStep(true,step);
+    let isShowFromTaskEnd = !this.checkContinueStep(true, step);
     let isContinueTaskEnd = isTaskEnd;
-    let isContinueTaskAll = this.checkContinueStep(false,step);
+    let isContinueTaskAll = this.checkContinueStep(false, step);
     let dataInstance = {
       instance: this.dataSelect,
       listStep: this.listSteps,
@@ -629,20 +641,21 @@ export class InstanceDetailComponent implements OnInit {
     this.serviceInstance.autoMoveStage(dataInstance);
   }
 
-  checkContinueStep(isDefault,step) {
+  checkContinueStep(isDefault, step) {
     let check = true;
-    let listTask = isDefault ? step?.tasks?.filter(task => task?.requireCompleted) : step?.tasks;
-    if(listTask?.length <= 0){
+    let listTask = isDefault
+      ? step?.tasks?.filter((task) => task?.requireCompleted)
+      : step?.tasks;
+    if (listTask?.length <= 0) {
       return isDefault ? true : false;
     }
-    for(let task of listTask){
-      if(task.progress != 100){
+    for (let task of listTask) {
+      if (task.progress != 100) {
         check = false;
         break;
       }
     }
     return check;
-
   }
 
   changeViewTimeGant(e) {
@@ -805,11 +818,8 @@ export class InstanceDetailComponent implements OnInit {
     this.viewModelDetail = e;
     this.isSaving = false;
     this.currentElmID = null;
-    if(this.viewModelDetail == 'G' && this.isChangeData){
-      this.getDataGanttChart(
-        this.dataSelect.recID,
-        this.dataSelect.processID
-      );
+    if (this.viewModelDetail == 'G' && this.isChangeData) {
+      this.getDataGanttChart(this.dataSelect.recID, this.dataSelect.processID);
     }
   }
 
@@ -827,21 +837,25 @@ export class InstanceDetailComponent implements OnInit {
     }
   }
 
-  handleProgressInstance(event?){
-    let listStepConvert = this.listSteps?.filter(step => !step.isSuccessStep && !step.isFailStep);
-    if(listStepConvert?.length <= 0){
+  handleProgressInstance(event?) {
+    let listStepConvert = this.listSteps?.filter(
+      (step) => !step.isSuccessStep && !step.isFailStep
+    );
+    if (listStepConvert?.length <= 0) {
       this.progress = '0';
       return;
     }
-    if(event){
-      let stepFind = listStepConvert?.find(step => step.recID === event.recID);
-      if(stepFind){
+    if (event) {
+      let stepFind = listStepConvert?.find(
+        (step) => step.recID === event.recID
+      );
+      if (stepFind) {
         stepFind.progress = event?.progress || 0;
       }
     }
     let sumProgress = listStepConvert.reduce((sum, step) => {
-      return sum +(Number(step.progress) || 0)
-    },0)
+      return sum + (Number(step.progress) || 0);
+    }, 0);
     this.progress = (sumProgress / listStepConvert?.length).toFixed(1);
   }
 }

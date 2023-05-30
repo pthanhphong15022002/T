@@ -209,10 +209,32 @@
             </div>
           </div>
           <div></div>
-          <div>Justify content between</div>
+          <div class="d-flex flex-column">
+                <div>              <codx-label
+                  default="Bán hàng/Tư vấn"
+                  class="fs-6 me-1"
+                ></codx-label></div>
+                <div class="d-flex flex-row">
+                  <codx-imgs
+                    [isToolTip]="true"
+                    [width]="30"
+                    [objectId]="dataSelected.owner"
+                    ojectType="AD_Users"
+                    [numberImages]="1"
+                  >
+                  </codx-imgs>
+
+                  <codx-imgs
+                  [isToolTip]="true"
+                  [width]="30"
+                  [objectId]="dataSelected.consultantID"
+                  ojectType="AD_Users"
+                  [numberImages]="1"
+                >
+                </codx-imgs>
+                </div>
+          </div>
         </div>
-
-
 
         <div class="view-details-header bg-body scroll-y me-3 h-100">
           <div class="d-flex align-items-center justify-content-between">

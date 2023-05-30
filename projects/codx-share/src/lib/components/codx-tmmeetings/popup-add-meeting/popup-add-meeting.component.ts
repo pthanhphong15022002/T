@@ -95,8 +95,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   disabledProject = false;
   listPermissions: string = '';
   isClickSave = false;
-  calendarData;
+  dataMeeting;
   dayStart: Date;
+  preside: any;
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -108,21 +109,20 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = dialog.dataService?.dataSelected
-      ? JSON.parse(JSON.stringify(dialog.dataService?.dataSelected))
-      : new CO_Meetings();
-
+    this.data = dialog?.dataService?.dataSelected?JSON.parse(JSON.stringify(dialog.dataService?.dataSelected)): null
     this.dialog = dialog;
     this.user = this.authStore.get();
-    this.action = dt.data[0];
-    this.titleAction = dt.data[1];
-    this.disabledProject = dt.data[2];
-    this.listPermissions = dt?.data[3];
-    //Data truyền từ module thiết lập lịch
-    this.calendarData = dt?.data[4];
-    this.meeting = dialog.dataService?.dataSelected
+    this.action = dt?.data?.action;
+    this.titleAction = dt?.data?.titleAction;
+    this.disabledProject = dt?.data?.disabledProject;
+    this.listPermissions = dt?.data?.listPermissions;
+    //Data truyền từ module thiết lập lịch  (data tu truyền ngoai module)
+    this.dataMeeting = dt?.data?.data
+    // this.preside = dt?.data?.preside ; nguoi chủ trì truyền qua ko dc xóa
+
+    this.meeting = dialog?.dataService?.dataSelected
       ? this.data
-      : this.calendarData;
+      : this.dataMeeting;
     this.functionID = this.dialog.formModel.funcID;
 
     this.cache
@@ -153,7 +153,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       });
     if (this.action == 'add' || this.action == 'copy') {
       let listUser = this.user?.userID;
-
+      if(this.preside)listUser = ";" + this.preside
       if (this.listPermissions) {
         if (!this.listPermissions.split(';').includes(listUser))
           listUser += ';' + this.listPermissions;
@@ -881,7 +881,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (res && res.length > 0) {
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
-            var tmpResource = new CO_Permissions();
+            var tmpResource = new CO_Permissions()           
             if (emp.userID == this.user.userID) {
               tmpResource.objectID = emp?.userID;
               tmpResource.objectName = emp?.userName;

@@ -107,18 +107,6 @@ export class PopupConvertLeadComponent implements OnInit {
     this.dialog = dialog;
     this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.titleAction = dt?.data?.title;
-    this.cache.gridViewSetup('CMDeals', 'grvCMDeals').subscribe((res) => {
-      if (res) {
-        this.gridViewSetupDeal = res;
-      }
-    });
-    this.cache
-      .gridViewSetup('CMCustomers', 'grvCMCustomers')
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetupCustomer = res;
-        }
-      });
   }
 
   async ngOnInit() {
@@ -133,6 +121,8 @@ export class PopupConvertLeadComponent implements OnInit {
       this.listCbxProcess =
         process != null && process.length > 0 ? process : [];
     });
+
+    this.changeDetectorRef.detectChanges();
   }
 
   async ngAfterViewInit() {
@@ -140,9 +130,21 @@ export class PopupConvertLeadComponent implements OnInit {
       this.countAddSys++;
     }
     this.setData();
-
+    this.cache.gridViewSetup('CMDeals', 'grvCMDeals').subscribe((res) => {
+      if (res) {
+        this.gridViewSetupDeal = res;
+      }
+    });
+    this.cache
+      .gridViewSetup('CMCustomers', 'grvCMCustomers')
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetupCustomer = res;
+        }
+      });
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
+    this.changeDetectorRef.detectChanges();
   }
 
   onSelect(e): void {

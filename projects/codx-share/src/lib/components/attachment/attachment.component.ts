@@ -50,10 +50,11 @@ import {
 } from '@syncfusion/ej2-angular-inputs';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { from, isObservable, map, mergeMap, Observable, Observer, of } from 'rxjs';
+import { catchError, from, isObservable, map, mergeMap, Observable, Observer, of } from 'rxjs';
 import { lvFileClientAPI } from '@shared/services/lv.component';
 import { environment } from 'src/environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -113,6 +114,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   folder : any;
   closeBtnUp = false;
+  barWidth = "0%";
   @Input() idField :any ; 
   @Input() permissions :any ; 
   //ChunkSizeInKB = 1024 * 2;
@@ -1557,10 +1559,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   addFile(fileItem: any) {
     var that = this;
-    var done = this.fileService.addFile(fileItem , this.actionType , this.formModel?.entityName, this.isDM , this.folder).toPromise();
+    var done = this.fileService.addFile(fileItem , this.actionType , this.formModel?.entityName, this.isDM , this.folder);
     if (done) {
       done
-        .then((item) => {
+        .subscribe((item: any) => {
           if (item.status == 0) {
             
             var files = this.dmSV.listFiles;
@@ -1598,9 +1600,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             this.createFileDiffrentName(this.titlemessage, item.message, fileItem);
           } else this.notificationsService.notify(item.message);
         })
-        .catch((error) => {
-          console.log('Promise rejected with ' + JSON.stringify(error));
-        });
+       
     }
     this.closePopup();
   }
