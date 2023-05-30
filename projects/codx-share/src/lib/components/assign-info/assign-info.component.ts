@@ -79,6 +79,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   isClickSave = false;
   crrRole: any;
   accountable: boolean = false;
+  paramView: any;   //param view 
 
   constructor(
     private authStore: AuthStore,
@@ -112,6 +113,17 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.user = this.authStore.get();
     this.formModel = this.dialog.formModel;
 
+    this.cache.functionList(this.dialog.formModel.funcID).subscribe((f) => {
+      if (f && f.module) {
+        this.cache.viewSettingValues(f.module +'Parameters').subscribe((res)=>{
+          if(res?.length > 0){
+            let dataParam = res.filter(x=>x.category=='1'&& !x.transType)[0];
+            if(dataParam)
+             this.paramView = JSON.parse(dataParam.dataValue);
+          }
+        })
+      }
+    });
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -136,8 +148,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   setDefault() {
     this.task.taskID = '';
     //gán sessionID ra biến riêng để gán lại sau khi lấy model chuẩn
-    let oldSessionID = this.task.sessionID !=null ? this.task.sessionID :null ;
-    
+    let oldSessionID = this.task.sessionID != null ? this.task.sessionID : null;
+
     this.api
       .execSv<any>('TM', 'Core', 'DataBusiness', 'GetDefaultAsync', [
         this.functionID,
@@ -151,7 +163,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           data['idField'] = 'taskID';
           this.task = data;
           //gán lại sessionID nếu có
-          if(oldSessionID !=null){
+          if (oldSessionID != null) {
             this.task.sessionID = oldSessionID;
           }
           this.loadingAll = true;

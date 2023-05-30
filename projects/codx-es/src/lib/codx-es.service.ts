@@ -1589,6 +1589,15 @@ export class CodxEsService {
       [recID]
     );
   }
+  getDataValueOfSetting(formName:string,transType:string,category:string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetDataValueOfSettingAsync',
+      [formName,transType,category]
+    );
+  }
 }
 export class LayoutModel {
   isChange: boolean = false;

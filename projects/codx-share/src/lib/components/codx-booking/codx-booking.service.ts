@@ -541,7 +541,8 @@ export class CodxBookingService {
     booking: any,
     processID: string,
     entityName: string,
-    funcID: string
+    funcID: string,    
+    userID: string,
   ): Observable<any> {
     return this.api.execSv(
       'EP',
@@ -553,7 +554,8 @@ export class CodxBookingService {
         processID,
         entityName,
         funcID,
-        '<div>' + booking.title + '</div>',
+        '<div>' + booking?.title + '</div>',
+        userID
       ]
     );
   }
@@ -620,19 +622,18 @@ export class CodxBookingService {
   }
 
 
-  checkRole(curUser: any, owner: string, isAdmin: boolean, host: string = '') {
+  checkCreatedRole(curUser: any, createdBy: string) {
     return (
-      curUser?.userID == owner ||
-      curUser?.systemAdmin ||
-      curUser?.functionAdmin ||
-      curUser?.administrator ||
-      isAdmin == true ||
-      curUser?.userID == host
+      curUser?.userID == createdBy
     );
   }
-  checkRoleHost(curUser: any, host: string, isAdmin: boolean) {
+  checkHostRole(curUser: any, host: string) {
     return (
-      curUser?.userID == host ||
+      curUser?.userID == host 
+    );
+  }
+  checkAdminRole(curUser: any, isAdmin: boolean) {
+    return (
       curUser?.systemAdmin ||
       curUser?.functionAdmin ||
       curUser?.administrator ||

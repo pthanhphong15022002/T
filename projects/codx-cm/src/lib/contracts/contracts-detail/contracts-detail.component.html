@@ -37,32 +37,61 @@
 <ng-template #descTmp let-data>
   <div class="d-flex align-items-top mb-1">
     <span class="icon-business icon-16 me-2"></span>
-    <span class="text-gray-700">{{ data?.companyName || "Cty cổ phần tin học lạc việt" }}</span>
+    <span class="text-gray-700">{{
+      data?.companyName || "Cty cổ phần tin học lạc việt"
+    }}</span>
   </div>
 </ng-template>
 
 <ng-template #footerTmp let-data>
   <div class="d-flex justify-content-between align-items-center mb-1">
-    <div>Loại hợp đồng: Mới</div>
+    <div>
+      <codx-label
+        class="label-colon"
+        fiedName="contractType"
+        [formModel]="view.formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          itemSelected?.contractType
+            | formatvalue : view.formModel : 'ContractType'
+            | async
+        "
+      ></span>
+    </div>
     <div class="d-flex justify-content-end align-items-center">
       <span class="icon-monetization_on icon-16 me-2 text-warning"></span>
       <span class="fs-6 fw-bold">25.000.000</span>
     </div>
   </div>
   <div class="d-flex justify-content-between align-items-center">
-    <div><span>Mới tạo</span></div>
+    <div>
+
+      <codx-vll
+        [name]="vllStatus"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-md fs-7"
+      >
+      </codx-vll>
+    </div>
     <div class="d-flex justify-content-end align-items-center">
       <span class="icon-16 icon-av_timer me-1"></span>
       <span>{{ data.createdOn | date : "dd/MM/yyyy" }}</span>
     </div>
     <div>
       <codx-imgs
-      [width]="25"
-      [objectId]="data.createdBy"
-      ojectType="AD_Users"
-      [numberImages]="1"
-    >
-    </codx-imgs>
+        [width]="25"
+        [objectId]="data.createdBy"
+        ojectType="AD_Users"
+        [numberImages]="1"
+      >
+      </codx-imgs>
     </div>
   </div>
 </ng-template>
@@ -88,30 +117,77 @@
       <span>{{ itemSelected?.contractID }}</span>
     </div>
     <div>
-      <button
-        class="btn btn-primary btn-sm"
-        style="border-radius: 20px !important"
+      <codx-vll
+        [name]="vllStatus"
+        [field]="'Status'"
+        [value]="itemSelected?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-md fs-7"
       >
-        Mới tạo
-      </button>
+      </codx-vll>
     </div>
   </div>
   <div class="d-flex align-items-center justify-content-between fs-6 mb-5">
     <div>
-      <span>Ngày lập hợp đồng: </span
-      ><span>{{ itemSelected?.contractDate | date : fomatDate }}</span>
+      <codx-label
+        class="label-colon"
+        fiedName="contractDate"
+        [formModel]="view.formModel"
+      ></codx-label>
+      <span
+        class="me-3"
+        [innerHTML]="
+          itemSelected?.contractDate
+            | formatvalue : view.formModel : 'ContractDate'
+            | async
+        "
+      ></span>
     </div>
     <div>
-      <span>Ngày hiệu lực: </span
-      ><span>{{ itemSelected?.effectiveFrom | date : fomatDate }}</span>
+      <codx-label
+        class="label-colon"
+        fiedName="effectiveFrom"
+        [formModel]="view.formModel"
+      ></codx-label>
+      <span
+        class="me-3"
+        [innerHTML]="
+          itemSelected?.effectiveFrom
+            | formatvalue : view.formModel : 'EffectiveFrom'
+            | async
+        "
+      ></span>
     </div>
     <div>
-      <span>Ngày hết hiệu lực: </span
-      ><span>{{ itemSelected?.effectiveTo | date : fomatDate }}</span>
+      <codx-label
+        class="label-colon"
+        fiedName="effectiveTo"
+        [formModel]="view.formModel"
+      ></codx-label>
+      <span
+        class="me-3"
+        [innerHTML]="
+          itemSelected?.effectiveTo
+            | formatvalue : view.formModel : 'EffectiveTo'
+            | async
+        "
+      ></span>
     </div>
     <div>
-      <span>Ngày gia hạn: </span
-      ><span>{{ itemSelected?.extendOn | date : fomatDate }}</span>
+      <codx-label
+        class="label-colon"
+        fiedName="extendOn"
+        [formModel]="view.formModel"
+      ></codx-label>
+      <span
+        class="me-3"
+        [innerHTML]="
+          itemSelected?.extendOn
+            | formatvalue : view.formModel : 'ExtendOn'
+            | async
+        "
+      ></span>
     </div>
     <div>
       <codx-imgs
@@ -125,51 +201,128 @@
   </div>
   <div class="row fs-6">
     <div class="col-6">
-      <span>Cơ hội: </span>
+      <codx-label
+        class="label-colon"
+        fiedName="dealID"
+        [formModel]="view.formModel"
+      ></codx-label>
       <span
-      class="fs-7"
-      [innerHTML]="
-      itemSelected?.dealID
-          | formatvalue : view.formModel : 'DealID'
-          | async
-      "
-    ></span>
+        class="fs-7"
+        [innerHTML]="
+          itemSelected?.dealID | formatvalue : view.formModel : 'DealID' | async
+        "
+      ></span>
     </div>
     <div class="col-6 d-flex align-items-center">
-      <div class="me-5"><span>Tiền tệ: </span></div>
-      <div><span>Tỷ giá: </span></div>
+      <div class="me-5">
+        <codx-label
+          class="label-colon"
+          fiedName="currencyID"
+          [formModel]="view.formModel"
+        >
+        </codx-label>
+        <span
+          class="fs-7"
+          [innerHTML]="
+            itemSelected?.currencyID
+              | formatvalue : view.formModel : 'CurrencyID'
+              | async
+          "
+        >
+        </span>
+      </div>
+      <div>
+        <codx-label
+          class="label-colon"
+          fiedName="exchangeRate"
+          [formModel]="view.formModel"
+        >
+        </codx-label>
+        <span
+          class="fs-7"
+          [innerHTML]="
+            itemSelected?.exchangeRate
+              | formatvalue : view.formModel : 'ExchangeRate'
+              | async
+          "
+        >
+        </span>
+      </div>
     </div>
   </div>
   <div class="row fs-6">
     <div class="col-6">
-      <span> Báo giá:</span>
+      <codx-label
+        class="label-colon"
+        fiedName="quotationID"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
       <span
-      class="fs-7"
-      [innerHTML]="
-      itemSelected?.quotationID
-          | formatvalue : view.formModel : 'QuotationID'
-          | async
-      "
-    ></span>
+        class="fs-7"
+        [innerHTML]="
+          itemSelected?.quotationID
+            | formatvalue : view.formModel : 'QuotationID'
+            | async
+        "
+      >
+      </span>
     </div>
+    <!-- Hợp đồng sử dụng -->
     <div class="col-6">
-      <span>Hợp đồng sử dụng:</span>
+      <codx-label
+        class="label-colon"
+        fiedName="useType"
+        [formModel]="view.formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          itemSelected?.useType
+            | formatvalue : view.formModel : 'UseType'
+            | async
+        "
+      >
+      </span>
     </div>
   </div>
   <div class="row fs-6">
     <div class="col-6">
-      <span>Đơn hàng:</span>
+      <codx-label
+        class="label-colon"
+        fiedName="orderID"
+        [formModel]="view.formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
       <span
-      class="fs-7"
-      [innerHTML]="
-      itemSelected?.orderID
-          | formatvalue : view.formModel : 'OrderID'
-          | async
-      "
-    ></span>
+        class="fs-7"
+        [innerHTML]="
+          itemSelected?.orderID
+            | formatvalue : view.formModel : 'OrderID'
+            | async
+        "
+      ></span>
     </div>
+    <!-- Loại hợp đồng -->
     <div class="col-6">
-      <span>Loại hợp đồng:</span>
+      <codx-label
+        class="label-colon"
+        fiedName="contractType"
+        [formModel]="view.formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          itemSelected?.contractType
+            | formatvalue : view.formModel : 'ContractType'
+            | async
+        "
+      ></span>
     </div>
   </div>
 </ng-template>
@@ -178,7 +331,6 @@
   <codx-taskbar
     [listTab]="listClicked"
     (tab)="changeTab($event)"
-
     size="20"
     class="mt-5"
   ></codx-taskbar>
@@ -227,7 +379,7 @@
     </div>
     <ng-container
       [ngTemplateOutlet]="general"
-      [ngTemplateOutletContext]="{ data: {value: account, type: 'A'} }"
+      [ngTemplateOutletContext]="{ data: { value: account, type: 'A' } }"
     ></ng-container>
   </div>
 
@@ -235,7 +387,7 @@
     <div><span class="fs-5 fw-bold">Bên B</span></div>
     <ng-container
       [ngTemplateOutlet]="general"
-      [ngTemplateOutletContext]="{ data:{value: itemSelected, type: 'B'} }"
+      [ngTemplateOutletContext]="{ data: { value: itemSelected, type: 'B' } }"
     ></ng-container>
   </div>
 </ng-template>
@@ -249,35 +401,35 @@
     <div class="row">
       <div class="col-4">
         <span>Giá trị hợp đồng: </span>
-        <span>{{itemSelected?.contractAmt}}</span>
+        <span>{{ itemSelected?.contractAmt }}</span>
       </div>
       <div class="col-4">
         <span>Số tiền thanh toán: </span>
-        <span>{{itemSelected?.paidAmt}}</span>
+        <span>{{ itemSelected?.paidAmt }}</span>
       </div>
       <div class="col-4">
         <span>Số tiền còn lại: </span>
-        <span>{{itemSelected?.remainAmt}}</span>
+        <span>{{ itemSelected?.remainAmt }}</span>
       </div>
     </div>
     <div class="row">
       <div class="col-4">
         <span>Giá trị hợp đồng: </span>
-        <span>{{itemSelected?.contractAmt}}</span>
+        <span>{{ itemSelected?.contractAmt }}</span>
       </div>
       <div class="col-8">
         <span>Tình trạng thanh toán: </span>
-        <span>{{itemSelected?.paymentStatus}}</span>
+        <span>{{ itemSelected?.paymentStatus }}</span>
       </div>
     </div>
     <div class="row">
       <div class="col-4">
         <span>Điều khoản thanh toán: </span>
-        <span>{{itemSelected?.pmtTermID}}</span>
+        <span>{{ itemSelected?.pmtTermID }}</span>
       </div>
       <div class="col-8">
         <span>Phương thức thanh toán: </span>
-        <span>{{itemSelected?.pmtMethodID}}</span>
+        <span>{{ itemSelected?.pmtMethodID }}</span>
       </div>
     </div>
   </div>
@@ -287,7 +439,7 @@
     <!-- <product></product> -->
     <table class="table table-striped">
       <thead>
-        <tr class="fw-bold" >
+        <tr class="fw-bold">
           <th>STT</th>
           <th>Ngày thanh toán</th>
           <th>Số tiền thanh toán</th>
@@ -298,14 +450,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let paymemnt of  listPayment">
-          <td>{{paymemnt?.rowNo}}</td>
-          <td>{{paymemnt?.scheduleDate | date:'dd/MM/yyyy'}}</td>
-          <td>{{paymemnt?.scheduleAmt}}</td>
-          <td>{{paymemnt?.status}}</td>
-          <td>{{paymemnt?.remainAmt}}</td>
-          <td>{{paymemnt?.remainAmt}}</td>
-          <td>{{paymemnt?.memo}}</td>
+        <tr *ngFor="let paymemnt of listPayment">
+          <td>{{ paymemnt?.rowNo }}</td>
+          <td>{{ paymemnt?.scheduleDate | date : "dd/MM/yyyy" }}</td>
+          <td>{{ paymemnt?.scheduleAmt }}</td>
+          <td>{{ paymemnt?.status }}</td>
+          <td>{{ paymemnt?.remainAmt }}</td>
+          <td>{{ paymemnt?.remainAmt }}</td>
+          <td>{{ paymemnt?.memo }}</td>
         </tr>
       </tbody>
     </table>
@@ -320,37 +472,12 @@
         (click)="addPay()"
       >
         <codx-label
-          [formModel]=""
-          fiedName=""
+          [formModel]
+          fiedName
           default="Thêm lịch thanh toán"
         ></codx-label>
       </button>
     </div>
-  </div>
-
-
-  <div>
-    <div class="fs-6 fw-bold"><span>Lịch sử thanh toán</span></div>
-    <!-- <product></product> -->
-    <div>
-      <div class="d-flex align-items-center">
-        <div class="content-icon">
-          <span class="icon-add text-primary"></span>
-        </div>
-        <button
-          style="height: 28px"
-          type="button"
-          class="btn btn-outline-primary btn-sm"
-          (click)="addPayHistory()"
-        >
-          <codx-label
-            [formModel]=""
-            fiedName=""
-            default="Thêm lịch sử thanh toán"
-          ></codx-label>
-        </button>
-      </div>
-      </div>
   </div>
 
   <div>
@@ -376,11 +503,10 @@
       <div class="col-4">
         <span>Ngày giao hàng thành công: </span>
       </div>
-
     </div>
     <div class="row">
       <div class="col-4">
-      <span>Liên hệ giao hàng: </span>
+        <span>Liên hệ giao hàng: </span>
       </div>
       <div class="col-8">
         <span>Số diện thoại: </span>
@@ -388,58 +514,81 @@
     </div>
     <div class="row">
       <div class="col-12">
-      <span>Địa chỉ giao hàng: </span>
+        <span>Địa chỉ giao hàng: </span>
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #termsAndRelatedTemplate let-data="data">
-  <div [innerHTML]="itemSelected?.note">
-  </div>
+  <div [innerHTML]="itemSelected?.note"></div>
 </ng-template>
 
 <ng-template #general let-data="data">
   <div class="row fs-6 my-2">
     <div class="col-6">
+      <codx-label
+      class="label-colon"
+      fiedName="exchangeRate"
+      [formModel]="view.formModel"
+    >
+    </codx-label>
       <span>Tên công ty: </span>
-      <span>{{data?.type == "A" ? data?.value?.legalName  : data?.value?.companyName}}</span>
+      <span>{{
+        data?.type == "A" ? data?.value?.legalName : data?.value?.companyName
+      }}</span>
     </div>
     <div class="col-5">
       <span>Mã số thuế: </span>
-       <span>{{data?.type == "A" ? data?.value?.taxCode : data?.value?.taxCode}}</span>
+      <span>{{
+        data?.type == "A" ? data?.value?.taxCode : data?.value?.taxCode
+      }}</span>
     </div>
   </div>
   <div class="row fs-6 my-2">
     <div class="col-12">
       <span>Địa chỉ: </span>
-       <span>{{data?.type == "A" ? data?.value?.street  : data?.value?.address}}</span>
+      <span>{{
+        data?.type == "A" ? data?.value?.street : data?.value?.address
+      }}</span>
     </div>
   </div>
   <div class="row fs-6 my-2">
     <div class="col-12">
       <span>Điện thoại: </span>
-       <span>{{data?.type == "A" ? data?.value?.phone : data?.value?.phone}}</span>
+      <span>{{
+        data?.type == "A" ? data?.value?.phone : data?.value?.phone
+      }}</span>
     </div>
   </div>
   <div class="row fs-6 my-2">
     <div class="col-6">
       <span>Người đại diện: </span>
-       <span>{{data?.type == "A" ? data?.value?.contactName : data?.value?.representative}}</span>
+      <span>{{
+        data?.type == "A"
+          ? data?.value?.contactName
+          : data?.value?.representative
+      }}</span>
     </div>
     <div class="col-6">
       <span>Chức vụ: </span>
-       <span>{{data?.type == "A" ? data?.value?.jobTitle : data?.value?.jobTitle}}</span>
+      <span>{{
+        data?.type == "A" ? data?.value?.jobTitle : data?.value?.jobTitle
+      }}</span>
     </div>
   </div>
   <div class="row fs-6 my-2">
     <div class="col-6">
       <span>Tài khoản ngân hàng: </span>
-       <span>{{data?.type == "A" ? data?.value?.bankAccount : data?.value?.bankAccount}}</span>
+      <span>{{
+        data?.type == "A" ? data?.value?.bankAccount : data?.value?.bankAccount
+      }}</span>
     </div>
     <div class="col-6">
       <span>Ngân hàng: </span>
-       <span>{{data?.type == "A" ? data?.value?.bankID : data?.value?.bankID}}</span>
+      <span>{{
+        data?.type == "A" ? data?.value?.bankID : data?.value?.bankID
+      }}</span>
     </div>
   </div>
 </ng-template>

@@ -19,6 +19,7 @@ export class PopupEditOwnerstepComponent {
   gridViewInstanceStep: any;
   applyFor: string = '';
   dataCM: any;
+  startControl:string = '';
   constructor(
     private codxDpService: CodxDpService,
     private cache: CacheService,
@@ -36,8 +37,11 @@ export class PopupEditOwnerstepComponent {
       this.dataCM = dt?.data[4];
       this.getListPermission(this.dataCM.processID,this.applyFor);
     }
+    else {
+      this.startControl = dt?.data[4];
+    }
 
-    var recID=  this.dataCM  ? this.dataCM.refID : this.data?.recID;
+    var recID =  this.dataCM  ? this.dataCM.refID : this.data?.recID;
     var stepID =  this.dataCM  ? this.dataCM.stepID : this.data?.stepID;
     this.getStepByStepIDAndInID(recID, stepID);
   }
@@ -63,6 +67,7 @@ export class PopupEditOwnerstepComponent {
     this.codxDpService.getListPermission(data).subscribe(async res =>{
       if(res){
        this.lstParticipants =  await this.codxDpService.getListUserByOrg(res[0]);
+       this.startControl = res[1];
       }
     })
   }
@@ -78,9 +83,10 @@ export class PopupEditOwnerstepComponent {
     }
     this.setRoles();
     this.step.owner = this.owner;
-    this.codxDpService.updateOwnerStepAsync(this.step).subscribe(res =>{
+    this.step.actualStart = new Date();
+    this.codxDpService.updateOwnerStepAsync(this.step,this.startControl).subscribe(res =>{
       if(res){
-        this.dialog.close(this.step.owner);
+        this.dialog.close(this.step);
       }
     })
   }

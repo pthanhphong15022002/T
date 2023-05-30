@@ -354,7 +354,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   passwordChange(evt:any){
     if(evt){
       this.data.password= evt?.data;
-      
+      this.cr.detectChanges();
     }
   }
   public lstDtDis: any;

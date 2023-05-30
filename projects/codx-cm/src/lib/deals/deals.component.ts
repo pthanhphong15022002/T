@@ -319,17 +319,17 @@ export class DealsComponent
         for (let more of $event) {
           switch (more.functionID) {
             case 'CM0201_1':
-              if (this.checkMoreReason(data.permission) || data.closed) {
+              if (this.checkMoreReason(data.roleMore) || data.closed) {
                 more.disabled = true;
               }
               break;
             case 'CM0201_3':
-              if (this.checkMoreReason(data.permission) || data.closed) {
+              if (this.checkMoreReason(data.roleMore) || data.closed) {
                 more.disabled = true;
               }
               break;
             case 'CM0201_4':
-              if (this.checkMoreReason(data.permission) || data.closed) {
+              if (this.checkMoreReason(data.roleMore) || data.closed) {
                 more.disabled = true;
               }
               break;
@@ -358,7 +358,7 @@ export class DealsComponent
             case 'SYS102':
             case 'SYS103':
             case 'SYS104':
-              if (this.checkMoreReason(data.permission) || data.closed) {
+              if (this.checkMoreReason(data.roleMore) || data.closed) {
                 more.disabled = true;
               }
               break;
@@ -405,6 +405,32 @@ export class DealsComponent
       return true;
     }
     return false;
+  }
+
+  checkRoleInSystem(tmpRole){
+    if(tmpRole.roles.read && tmpRole.roles.create && tmpRole.roles.write && tmpRole.roles.assign && tmpRole.roles.delete ) {
+      return true;
+    }
+    if (tmpRole.roles.read) {
+      return true;
+    }
+     //Copy
+    if (tmpRole.roles.create) {
+      return true;
+    }
+    //edit
+    if (tmpRole.roles.write) {
+      return true;
+    }
+    //delete
+    if (tmpRole.roles.delete) {
+      return true;
+    }
+    if (tmpRole.roles.assign) {
+      return true;
+    }
+    return false;
+
   }
 
   clickMF(e, data) {
@@ -575,13 +601,13 @@ export class DealsComponent
       // }
     }
   }
-  
+
   viewDetail(data) {
     this.dataSelected = data;
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
- 
+
     let popup = this.callfc.openForm(
       this.popDetail,
       '',
