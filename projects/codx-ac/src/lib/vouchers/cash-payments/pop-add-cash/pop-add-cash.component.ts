@@ -876,7 +876,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             this.cashpayment
           );
           this.dialog.dataService
-            .save(null, 0, '', 'SYS006', true)
+            .save((opt: RequestOption) => {
+              opt.data = [this.cashpayment];
+            })
             .subscribe((res) => {
               if (res && res.update.data != null) {
                 if (this.cashpayment.subType == '2') {
@@ -908,7 +910,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             this.formType === 'edit',
             () => {
               this.cashpayment.status = '1';
-              this.dialog.dataService.save().subscribe((res) => {
+              this.dialog.dataService.save((opt: RequestOption) => {
+                opt.data = [this.cashpayment];
+              }).subscribe((res) => {
                 if (res && res.save.data != null) {
                   if (this.cashpayment.subType == '2') {
                     this.api
@@ -944,7 +948,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.cashpayment['_uuid'],
               this.cashpayment
             );
-            this.dialog.dataService.save().subscribe((res) => {
+            this.dialog.dataService.save((opt: RequestOption) => {
+              opt.data = [this.cashpayment];
+            }).subscribe((res) => {
               if (res && res.update.data != null) {
                 this.dialog.close({
                   update: true,

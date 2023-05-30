@@ -121,7 +121,7 @@
                   <codx-label *ngIf="cashpayment.subType == '4' || cashpayment.subType == '9'" fiedName="ObjectID"
                     [formModel]="form.formModel" default="Đối tượng">
                   </codx-label>
-                  <codx-input type="combobox" refType="4"
+                  <codx-input [crrValue]="cashpayment.objectID" type="combobox" refType="4"
                     [refValue]="cashpayment?.subType | vll : 'AC115' : 'text' | async" field="objectID"
                     (valueChange)="valueChange($event)">
                   </codx-input>
