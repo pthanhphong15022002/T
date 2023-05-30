@@ -6,4 +6,5 @@ export class AssignTaskModel {
   taskParent?: any;
   referedData?: any;
   referedFunction?: any;
+  dataReferences?: any
 }

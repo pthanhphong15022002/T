@@ -110,24 +110,25 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = dialog?.dataService?.dataSelected
-      ? JSON.parse(JSON.stringify(dialog.dataService?.dataSelected))
-      : null;
     this.dialog = dialog;
     this.user = this.authStore.get();
+    this.functionID = this.dialog.formModel.funcID;
+    this.isOtherModule = dt?.data?.isOtherModule;
+    this.meeting = this.isOtherModule
+      ? dt?.data?.data
+      : JSON.parse(JSON.stringify(dialog.dataService?.dataSelected));
     this.action = dt?.data?.action;
     this.titleAction = dt?.data?.titleAction;
     this.disabledProject = dt?.data?.disabledProject;
     this.listPermissions = dt?.data?.listPermissions;
 
     //Data truyền từ module thiết lập lịch  (data tu truyền ngoai module)
-    this.dataMeeting = dt?.data?.data;
+    // this.dataMeeting = dt?.data?.data;
     // this.preside = dt?.data?.preside ; nguoi chủ trì truyền qua ko dc xóa
-    this.isOtherModule = dt?.data?.isOtherModule;
-    this.meeting = dialog?.dataService?.dataSelected
-      ? this.data
-      : this.dataMeeting;
-    this.functionID = this.dialog.formModel.funcID;
+
+    // this.meeting = dialog?.dataService?.dataSelected
+    //   ? this.data
+    //   : this.dataMeeting;
 
     this.cache
       .gridViewSetup(
@@ -355,7 +356,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         ])
         .subscribe((res: any) => {
           this.attachment?.clearData();
-          if (res) {    
+          if (res) {
             if (this.isRoom && this.meeting.location != null) {
               this.bookingRoomEP(res);
             }
