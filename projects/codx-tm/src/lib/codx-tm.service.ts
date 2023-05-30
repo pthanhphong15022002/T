@@ -612,6 +612,7 @@ export class CodxTMService {
 
   // convertParameterByTaskGroup(param: TM_Parameter, taskGroup: TM_TaskGroups) {
   //   param.ApproveBy = taskGroup.approveBy;
+  //   param.Approvers = taskGroup.approvers;
   //   param.ApproveControl = taskGroup.approveControl;
   //   param.AutoCompleted = taskGroup.autoCompleted;
   //   param.ConfirmControl = taskGroup.confirmControl;
@@ -626,9 +627,10 @@ export class CodxTMService {
   //   param.VerifyByType = taskGroup.verifyByType;
   //   param.VerifyControl = taskGroup.verifyControl;
   //   param.DueDateControl = taskGroup.dueDateControl;
-  //   param.ExtendControl = taskGroup.extendControl ;
-  //   param.ExtendBy = taskGroup.extendBy ;
+  //   param.ExtendControl = taskGroup.extendControl;
+  //   param.ExtendBy = taskGroup.extendBy;
   //   param.CompletedControl = taskGroup.completedControl;
+  //   return param
   // }
 }
 
