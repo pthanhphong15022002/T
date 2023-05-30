@@ -34,6 +34,12 @@
     ></codx-booking-car-schedule-content>
   </ng-container>
 
+  <ng-container #EP_BookingRooms *ngIf="data?.transType == 'EP_BookingRooms'">
+    <codx-booking-room-schedule-content
+      [recID]="data?.transID"
+    ></codx-booking-room-schedule-content>
+  </ng-container>
+
   <ng-container #tmpCO_Meetings *ngIf="data?.transType == 'CO_Meetings'">
     <codx-view-detail-little
       [recID]="data?.transID"
@@ -92,7 +98,7 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <ng-container *ngIf="data.transType == 'EP_BookingCars'">
+  <!-- <ng-container *ngIf="data.transType == 'EP_BookingCars'">
     <div class="d-flex flex-column w-100">
       <span class="d-flex flex-start"
         >{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span
@@ -103,9 +109,15 @@
         >{{ data.title }}</span
       >
     </div>
-  </ng-container>
+  </ng-container> -->
   <ng-container
-    *ngIf="data.transType == 'TM_MyTasks' || data.transType == 'TM_AssignTasks' || data.transType == 'CO_Meetings'"
+    *ngIf="
+      data.transType == 'TM_MyTasks' ||
+      data.transType == 'TM_AssignTasks' ||
+      data.transType == 'CO_Meetings' ||
+      data.transType === 'EP_BookingCars' ||
+      data.transType === 'EP_BookingRooms'
+    "
   >
     <div class="d-flex flex-column w-100">
       <span class="d-flex flex-start"
