@@ -23,6 +23,7 @@ import { CM_Deals } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstances } from '../../models/tmpModel';
 import { debug } from 'console';
+import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 
 @Component({
   selector: 'lib-popup-add-deal',
@@ -37,7 +38,7 @@ export class PopupAddDealComponent
   @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
   @ViewChild('tabCustomFieldDetail') tabCustomFieldDetail: TemplateRef<any>;
   @ViewChild('tabGeneralContactDetail') tabGeneralContactDetail: TemplateRef<any>;
-
+  @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent
 
   // setting values in system
   dialog: DialogRef;
@@ -140,6 +141,7 @@ export class PopupAddDealComponent
     if (this.action != this.actionAdd) {
       this.deal = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.customerIDOld = this.deal?.customerID;
+      this.customerID = this.deal?.customerID;
     }
   }
 
@@ -183,10 +185,11 @@ export class PopupAddDealComponent
     this.lstContactCustomer = e;
   }
   objectConvertDeal(e) {
-    if (e.e.data) {
+    if (e.e) {
       if (e.data) {
         if (!this.lstContactDeal.some((x) => x.recID == e?.data?.recID)) {
           this.lstContactDeal.push(e?.data);
+          this.loadContactDeal.loadListContact(this.codxCmService.bringDefaultContactToFront(this.lstContactDeal));
         }
       }
     } else {
@@ -195,6 +198,7 @@ export class PopupAddDealComponent
       );
       this.lstContactDeal.splice(index, 1);
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   getListContactByObjectID(objectID) {
@@ -457,6 +461,7 @@ export class PopupAddDealComponent
       await this.getListProcess(this.typeForDeal);
       if(this.action === this.actionEdit) {
         await this.getListInstanceSteps(this.deal.processID);
+      //  await this.getListContactByObjectID(this.deal.recID);
       }
     } catch (error) {}
   }
@@ -480,8 +485,7 @@ export class PopupAddDealComponent
     });
   }
   async getListInstanceSteps(processId: any) {
-    processId =
-      this.action === this.actionCopy ? this.deal.processID : processId;
+    processId = this.action === this.actionCopy ? this.deal.processID : processId;
     var data = [processId, this.deal?.refID, this.action, '1'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {

@@ -435,6 +435,7 @@
       [objectType]="'1'"
       [objectName]="customerName"
       [isConvertLeadToCus]="true"
+      [selectAll]="false"
       (contactEvent)="contactEvent($event)"
       (lstContactEmit)="lstContactEmit($event)"
       (objectConvert)="objectConvertDeal($event)"
@@ -451,10 +452,12 @@
       ></codx-label>
     </div>
     <codx-list-contacts
+    #loadContactDeal
       [funcID]="'CM0201'"
       [objectID]="deal?.recID"
       [listContacts]="lstContactDeal"
       [objectType]="'4'"
+      [selectAll]="false"
       [objectName]="deal?.dealName"
       [hidenMF]="true"
       [type]="'formAdd'"

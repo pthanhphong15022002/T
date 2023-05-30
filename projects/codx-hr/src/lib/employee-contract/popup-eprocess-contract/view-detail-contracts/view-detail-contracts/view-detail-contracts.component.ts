@@ -13,9 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
   AuthStore,
-  DataRequest,
   FormModel,
-  NotificationsService,
   ViewsComponent,
 } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
@@ -30,7 +28,7 @@ import { environment } from 'src/environments/environment';
 export class ViewDetailContractsComponent implements OnInit {
   //Using render file
   services: string = 'DM';
-  assamplyName: string = 'ERM.Business.DM';
+  assemblyName: string = 'ERM.Business.DM';
   className: string = 'FileBussiness';
   REFERTYPE = {
     IMAGE: 'image',
@@ -44,7 +42,6 @@ export class ViewDetailContractsComponent implements OnInit {
     private hrService: CodxHrService,
     private router: ActivatedRoute,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService,
     private api: ApiHttpService
   ) {
     this.funcID = this.router.snapshot.params['funcID'];
@@ -160,7 +157,7 @@ export class ViewDetailContractsComponent implements OnInit {
       this.api
         .execSv(
           this.services,
-          this.assamplyName,
+          this.assemblyName,
           this.className,
           'GetFilesByIbjectIDAsync',
           pObjectID
