@@ -62,6 +62,7 @@ export class PopupMergeLeadsComponent implements OnInit {
   lstLeadCbxThree = [];
   fieldCbx = { text: 'leadName', value: 'recID' };
   modifyOn: Date;
+  countValidate = 0;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -122,6 +123,22 @@ export class PopupMergeLeadsComponent implements OnInit {
     return lst;
   }
 
+  //#region  Save
+  onMerge() {
+    this.countValidate = this.cmSv.checkValidate(this.gridViewSetup, this.leadNew);
+    if(this.countValidate > 0){
+      return;
+    }
+    if(this.leadTwo == null && this.leadThree == null){
+      this.noti.alertCode('Gộp tối thiểu 2 tiềm năng và đối đa 3 tiềm năng');
+      return;
+    }
+
+
+  }
+
+  onSupport() {}
+//#endregion
   async cbxLeadChange(e, type) {
     if (e) {
       if (type == 'two') {
@@ -169,17 +186,14 @@ export class PopupMergeLeadsComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  onMerge() {}
-
-  onSupport() {}
 
   changeAvatarNew() {
     this.changeAvata = true;
-    // if (this.changeAvata) {
-    //   this.recIDLead = JSON.parse(JSON.stringify(this.leadNew?.recID));
-    //   this.nameLead = JSON.parse(JSON.stringify(this.leadNew?.leadName));
-    //   this.modifyOn = JSON.parse(JSON.stringify(this.leadNew?.modifiedOn));
-    // }
+    if (this.changeAvata) {
+      this.recIDLead = JSON.parse(JSON.stringify(this.leadNew?.recID));
+      this.nameLead = JSON.parse(JSON.stringify(this.leadNew?.leadName));
+      this.modifyOn = JSON.parse(JSON.stringify(this.leadNew?.modifiedOn));
+    }
     this.changeDetector.detectChanges();
   }
 
