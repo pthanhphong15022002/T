@@ -18,12 +18,12 @@ import {
   FormModel,
 } from 'codx-core';
 import {
-  tmpReferences,
   TM_Parameter,
   TM_TaskGroups,
 } from '../model/task.model';
 import { AuthStore, CRUDService } from 'codx-core/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
+import { tmpReferences } from '../../../models/assign-task.model';
 
 @Component({
   selector: 'share-view-detail',
