@@ -731,6 +731,12 @@ export class InstancesComponent
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.listInstanceStep = res;
 
+        if(this.detailViewInstance){
+          this.detailViewInstance.loadChangeData();
+        }
+        if(this.detailViewPopup){
+          this.detailViewPopup.loadChangeData();
+        }
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
