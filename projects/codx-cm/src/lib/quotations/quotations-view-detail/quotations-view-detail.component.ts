@@ -5,11 +5,14 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { ApiHttpService, FormModel } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
+import { CM_Contracts } from '../../models/cm_model';
 
 @Component({
   selector: 'lib-quotations-view-detail',
@@ -17,12 +20,14 @@ import { CodxCmService } from '../../codx-cm.service';
   styleUrls: ['./quotations-view-detail.component.css'],
 })
 export class QuotationsViewDetailComponent implements OnChanges {
+  @ViewChild('contract')contract: TemplateRef<any>;
   @Input() itemSelected: any;
   @Input() formModel: FormModel;
   @Input() vllStatus = 'CRM012';
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() eventChangeMF = new EventEmitter<any>();
   contact: any;
+  listContract: CM_Contracts[];
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -95,6 +100,14 @@ export class QuotationsViewDetailComponent implements OnChanges {
           this.dataSource = res;
         }
       });
+  }
+
+  ngAfterViewInit(): void {
+    let index = this.tabControl.findIndex(item => item.name == 'Contract');
+    if(index >= 0){
+      let contract = { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract};
+      this.tabControl.splice(index,1,contract)
+    }
   }
 
   loadDetailContactByID(contactID) {
