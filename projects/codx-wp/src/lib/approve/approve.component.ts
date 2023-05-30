@@ -261,7 +261,7 @@ export class ApproveComponent extends UIComponent {
     option.assemblyName = 'ERM.Business.WP';
     option.className = 'NewsBusiness';
     if (this.view.funcID == 'WPT0211' || this.view.funcID == 'WPT0212') {
-      option.methodName = 'DeleteNewsAsync';
+      option.methodName = 'DeleteAsync';
     } else {
       option.methodName = 'DeletePostAsync';
     }
