@@ -39,14 +39,14 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     // let data = {"bankID":"1","sourceAccountNumber":"0001100012473007","payeeType":"ACCOUNT","amount":100000,"description":"TRANSFER AMOUNT TO","payeeAccountNumber":"0129837294","payeeCardNumber":"","bankCode":"970406"}
     // let internal = {"bankID":"1","sourceAccountNumber":"0001100012473007","amount":25000,"description":"chuyen tien","payeeAccountNumber":"0001100012475002"};
     let account = { bankID: '1' };
-    this.api
-      .execSv('AC', 'Core', 'CMBusiness', 'SendRequestBankHubAsync', [
-        account,
-        'test',
-      ])
-      .subscribe((res) => {
-        console.log(res);
-      });
+    // this.api
+    //   .execSv('AC', 'Core', 'CMBusiness', 'SendRequestBankHubAsync', [
+    //     account,
+    //     'test',
+    //   ])
+    //   .subscribe((res) => {
+    //     console.log(res);
+    //   });
   }
   asideClick(evt: any) {
     if (evt.funcId == 'HCS_001') {
