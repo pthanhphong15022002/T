@@ -37,11 +37,11 @@ import { CodxCmService } from '../../codx-cm.service';
 import { PopupAddPaymentComponent } from '../payment/popup-add-payment/popup-add-payment.component';
 
 @Component({
-  selector: 'lib-views-contracts',
-  templateUrl: './views-contracts.component.html',
-  styleUrls: ['./views-contracts.component.scss']
+  selector: 'contracts-detail',
+  templateUrl: './contracts-detail.component.html',
+  styleUrls: ['./contracts-detail.component.scss']
 })
-export class ViewsContractsComponent extends UIComponent{
+export class ContractsDetailComponent extends UIComponent{
   @Input() funcID: string;
   @Input() customerID: string;
   @ViewChild('contract')contract: TemplateRef<any>;
