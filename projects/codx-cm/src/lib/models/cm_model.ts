@@ -329,6 +329,8 @@ export class CM_Contacts {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  checked: boolean;
+  recIDold: string;
 }
 export class BS_AddressBook {
   recID: string;
@@ -383,7 +385,7 @@ export class BS_AddressBook {
 }
 export class CM_ContractsPayments {
   recID: string = Util.uid(); //Mã thanh toán
-  transID: string; //Mã giao dịch
+  transID: string = Util.uid(); //Mã giao dịch
   lineType: string; //Loại: Lịch thanh toán, Lịch sử thanh toán
   rowNo: number; //Số thứ tự hàng
   scheduleDate: Date; //Ngày hẹn thanh toán

@@ -10,12 +10,10 @@ import {
   NotificationsService,
   SidebarModel,
   DialogRef,
-  FormModel,
   AuthStore,
 } from 'codx-core';
 import {
   Component,
-  OnInit,
   ViewChild,
   TemplateRef,
   Injector,
@@ -283,7 +281,6 @@ export class EmployeeContractComponent extends UIComponent {
     // if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
     //   isAppendix = true;
     // }
-    // console.log('nguyen cuc data ne', data);
     let dialogAdd = this.callfc.openSide(
       PopupEProcessContractComponent,
       // isAppendix ? PopupSubEContractComponent : PopupEContractComponent,
@@ -302,7 +299,6 @@ export class EmployeeContractComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          // console.log('moi add hop dong xong', res.event[0]);
           this.view.dataService.add(res.event, 0).subscribe((res) => {});
           this.df.detectChanges();
         } else if (actionType == 'copy') {
@@ -401,7 +397,6 @@ export class EmployeeContractComponent extends UIComponent {
                 '</div>'
             )
             .subscribe((result) => {
-              // console.log('ok', result);
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
@@ -410,7 +405,6 @@ export class EmployeeContractComponent extends UIComponent {
                   .editEContract(this.itemDetail)
                   .subscribe((res) => {
                     if (res) {
-                      // console.log('after release', res);
                       this.view?.dataService
                         ?.update(this.itemDetail)
                         .subscribe();

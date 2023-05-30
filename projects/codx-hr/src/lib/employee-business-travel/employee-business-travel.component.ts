@@ -45,8 +45,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     id: 'btnAdd',
     text: 'Thêm',
   };
-  eJobSalaryHeader;
-  eBasicSalariesFormModel: FormModel;
+  eBusinessTravelHeader;
   currentEmpObj: any = null;
   grvSetup: any;
 
@@ -60,7 +59,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   cmtStatus: string = '';
   genderGrvSetup: any;
 
-  //#region eJobSalaryFuncID
+  //#region eBusinessTravelFuncID
   actionAddNew = 'HRTPro10A01';
   actionSubmit = 'HRTPro10A03';
   actionUpdateCanceled = 'HRTPro10AU0';
@@ -126,12 +125,12 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
 
     //Get Header text when view detail
     this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) => {
-      this.eJobSalaryHeader = res;
+      this.eBusinessTravelHeader = res;
     });
   }
 
   //Open, push data to modal
-  HandleEJobSalary(actionHeaderText, actionType: string, data: any) {
+  HandleEBusinessTravel(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.view.formModel;
@@ -165,10 +164,10 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     });
   }
 
-  addJobSalaries(event): void {
+  addBusinessTravel(event): void {
     this.currentEmpObj = this.itemDetail.emp;
     if (event.id == 'btnAdd') {
-      this.HandleEJobSalary(
+      this.HandleEBusinessTravel(
         event.text + ' ' + this.view.function.description,
         'add',
         null
@@ -204,7 +203,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
 
   onSaveUpdateForm() {
     this.hrService
-      .EditEmployeeContactMoreFunc(this.editStatusObj)
+      .EditEBusinessTravelMoreFunc(this.editStatusObj)
       .subscribe((res) => {
         if (res != null) {
           this.notify.notifyCode('SYS007');
@@ -235,7 +234,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     dialog.close();
   }
 
-  popupUpdateEJobSalaryStatus(funcID, data) {
+  popupUpdateEBusinessTravelStatus(funcID, data) {
     this.hrService.handleUpdateRecordStatus(funcID, data);
 
     this.editStatusObj = data;
@@ -279,7 +278,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .EditEmployeeContactMoreFunc(this.itemDetail)
+                  .EditEBusinessTravelMoreFunc(this.itemDetail)
                   .subscribe((res) => {
                     console.log('Result after send edit' + res);
                     if (res) {
@@ -328,11 +327,11 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
-        this.popupUpdateEJobSalaryStatus(event.functionID, oUpdate);
+        this.popupUpdateEBusinessTravelStatus(event.functionID, oUpdate);
         break;
       //Propose increase business
       case this.actionAddNew:
-        this.HandleEJobSalary(event.text, 'add', data);
+        this.HandleEBusinessTravel(event.text, 'add', data);
         break;
       //Delete
       case 'SYS02':
@@ -349,7 +348,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       //Edit
       case 'SYS03':
         this.currentEmpObj = data;
-        this.HandleEJobSalary(
+        this.HandleEBusinessTravel(
           event.text + ' ' + this.view.function.description,
           'edit',
           this.currentEmpObj
@@ -367,7 +366,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
 
   copyValue(actionHeaderText, data) {
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
-      this.HandleEJobSalary(
+      this.HandleEBusinessTravel(
         actionHeaderText + ' ' + this.view.function.description,
         'copy',
         res

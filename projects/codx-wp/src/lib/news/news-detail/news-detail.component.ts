@@ -133,7 +133,7 @@ export class NewsDetailComponent extends UIComponent {
   }
   //click view detail post
   clickViewDeital(data: any) {
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "UpdateViewNewsAsync", data.recID)
+    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "UpdateViewAsync", data.recID)
     .subscribe(
       (res) => {
         if (res) {

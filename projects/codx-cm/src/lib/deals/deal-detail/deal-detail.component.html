@@ -311,7 +311,8 @@
 
 <ng-template #contract let-data>
   <list-contracts
-    [projectID]="dataSelected?.recID"
+    [dealID]="dataSelected?.recID"
+    [listContract]="listContract"
     [customers]=""
   ></list-contracts>
 </ng-template>

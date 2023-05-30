@@ -37,6 +37,7 @@ export class CodxListContactsComponent implements OnInit {
   @Input() isConvertLeadToCus = false;
   @Input() selectAll: boolean = false;
   @Input() formModel: FormModel;
+  @Input() lstContactRef = [];
   @Output() lstContactEmit = new EventEmitter<any>();
   @Output() lstContactDeleteEmit = new EventEmitter<any>();
   @Output() objectConvert = new EventEmitter<any>();
@@ -72,7 +73,10 @@ export class CodxListContactsComponent implements OnInit {
     //Add '${implements OnChanges}' to the class.
 
     if (changes['objectID']) {
-      if (changes['objectID'].currentValue != null) {
+      if (
+        changes['objectID']?.currentValue != null &&
+        changes['objectID']?.currentValue?.trim() != ''
+      ) {
         this.getListContacts();
       } else {
         this.loaded = true;
@@ -143,7 +147,14 @@ export class CodxListContactsComponent implements OnInit {
   insertFieldCheckbox() {
     if (this.isConvertLeadToCus) {
       for (var i = 0; i < this.listContacts.length; i++) {
-          this.listContacts[i].checked = false;
+        if (!this.listContacts[i].checked && this.listContacts[i].objectType != this.objectType) this.listContacts[i].checked = false;
+      }
+      if (this.lstContactRef != null && this.lstContactRef.length > 0) {
+        this.lstContactRef.forEach((e) => {
+          if (e?.refID == this.objectID) {
+            e.checked = true;
+          }
+        });
       }
     }
   }
@@ -360,8 +371,11 @@ export class CodxListContactsComponent implements OnInit {
       this.isCheckedAll = e?.target?.checked;
       this.listContacts.forEach((item) => (item.checked = this.isCheckedAll));
     }
-    this.objectConvert.emit({ e: e?.target?.checked, data: null, type: 'selectAll' });
-
+    this.objectConvert.emit({
+      e: e?.target?.checked,
+      data: null,
+      type: 'selectAll',
+    });
   }
   valueChange(e, data) {
     this.objectConvert.emit({ e: e?.target?.checked, data: data });

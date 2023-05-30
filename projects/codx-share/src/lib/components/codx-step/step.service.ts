@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { NotificationsService } from 'codx-core';
+import { ApiHttpService, NotificationsService } from 'codx-core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StepService {
-  constructor(private notiService: NotificationsService) {}
+  constructor(
+    private notiService: NotificationsService,
+    private api: ApiHttpService
+  ) {}
   checkTaskLink(task, step) {
     let check = true;
     let tasks = step?.tasks;
@@ -27,21 +30,32 @@ export class StepService {
     return check;
   }
 
-  checkUpdateProgress(dataUpdate, type, step, isRoleAll, isOnlyView, isUpdateProgressGroup,isUpdateProgressStep ,user) {
-    if(isOnlyView){
-      if(type == "P"){
+  checkUpdateProgress(
+    dataUpdate,
+    type,
+    step,
+    isRoleAll,
+    isOnlyView,
+    isUpdateProgressGroup,
+    isUpdateProgressStep,
+    user
+  ) {
+    if (isOnlyView) {
+      if (type == 'P') {
         return isUpdateProgressStep && isRoleAll ? true : false;
-      }else if(type == "G"){
+      } else if (type == 'G') {
         let isGroup = false;
         if (!isRoleAll) {
           isGroup = this.checRoleTask(dataUpdate, 'O', user);
         }
         return isUpdateProgressGroup && (isRoleAll || isGroup) ? true : false;
-      }else{
+      } else {
         let isGroup = false;
         let isTask = false;
         if (!isRoleAll) {
-          let group = step?.taskGroups?.find(g => g.refID == dataUpdate?.taskGroupID);
+          let group = step?.taskGroups?.find(
+            (g) => g.refID == dataUpdate?.taskGroupID
+          );
           isGroup = group ? this.checRoleTask(group, 'O', user) : false;
           if (!isGroup) {
             isTask = this.checRoleTask(dataUpdate, 'O', user);
@@ -59,6 +73,16 @@ export class StepService {
         (element) =>
           element?.objectID == user.userID && element.roleType == type
       ) || false
+    );
+  }
+  //setDeFault
+  getDefault(funcID, entityName) {
+    return this.api.execSv<any>(
+      'CO',
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName]
     );
   }
 }

@@ -16,15 +16,15 @@ export class PopupRemoveAddContactComponent implements OnInit {
   constructor(@Optional() dt?: DialogData, @Optional() dialog?: DialogRef) {
     this.dialog = dialog;
     this.type = dt?.data?.type;
-    this.lstContact = dt?.data?.lstContact;
+    this.lstContact = JSON.parse(JSON.stringify(dt?.data?.lstContact));
     this.lead = dt?.data?.lead;
   }
   ngOnInit(): void {
-    if(this.lstContact != null){
-      this.lstContact.forEach((item) => (item.isDefault = false))
+    if (this.lstContact != null) {
+      if (this.type == 'add')
+        this.lstContact.forEach((item) => (item.isDefault = false));
     }
   }
-
 
   onSave() {
     this.dialog.close(this.lstContactLead);
@@ -41,7 +41,9 @@ export class PopupRemoveAddContactComponent implements OnInit {
       if (e.e == true) {
         this.lstContactLead.push(Object.assign({}, e?.data));
       } else {
-        var index = this.lstContactLead.findIndex((x) => x.recID == e?.data?.recID);
+        var index = this.lstContactLead.findIndex(
+          (x) => x.recID == e?.data?.recID
+        );
         if (index != -1) {
           this.lstContactLead.splice(index, 1);
         }

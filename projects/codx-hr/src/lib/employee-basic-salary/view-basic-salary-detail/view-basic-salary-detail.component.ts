@@ -1,4 +1,3 @@
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import {
   ChangeDetectorRef,
   Component,
