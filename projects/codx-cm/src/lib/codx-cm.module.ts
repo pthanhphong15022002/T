@@ -70,6 +70,7 @@ import { PopupMergeLeadsComponent } from './leads/popup-merge-leads/popup-merge-
 import { ViewQuotationsComponent } from './contracts/component/view-quotations/view-quotations.component';
 import { ViewImgContactComponent } from './leads/popup-merge-leads/view-img-contact/view-img-contact.component';
 import { PopupRemoveAddContactComponent } from './leads/popup-merge-leads/popup-remove-add-contact/popup-remove-add-contact.component';
+import { ViewPaymentComponent } from './contracts/payment/view-payment/view-payment.component';
 
 const routes: Routes = [
   {
@@ -181,6 +182,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupMergeLeadsComponent,
     ViewImgContactComponent,
     PopupRemoveAddContactComponent,
+    ViewPaymentComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
