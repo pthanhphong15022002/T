@@ -22,14 +22,14 @@
   <div>
     <codx-temp-full 
         [dataItem]="data" 
-        (clickMF)="clickMF($event,data)" 
+        (clickMF)="clickMF($event,data)"
+        [hideMF]="hideMF"
         [formModel]="view.formModel"
         [icoFld]="data.category"
         [icoVll]="'WP004'"
-        [icoCss]="'w-40px symbol h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3'"
-        [icoStyle]="setStyles(data.category)" 
-        
-        cardCss="card-template border-bottom px-4 py-3"
+        [imgCss]="'d-flex justify-content-center align-items-center w-40px h-40px fs-4 symbol rounded-circle me-3'"
+        [showBgColor]="true"
+        [showText]="false"
         [title]="vllWP004[data.category].text"
         [desc]="setDescription(data)"
         [descLine]="2" 
@@ -38,6 +38,7 @@
         [statusVll]="'CO003'" 
         [bookmark]="false"
         [typeMF]="'hover'" 
+        cardCss="card-template border-bottom px-4 py-3"
         >
       </codx-temp-full>
   </div>

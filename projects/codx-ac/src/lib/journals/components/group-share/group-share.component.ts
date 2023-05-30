@@ -5,25 +5,22 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { FormModel, UIComponent } from 'codx-core';
 
 @Component({
-  selector: 'lib-group067',
-  templateUrl: './group067.component.html',
-  styleUrls: ['./group067.component.css'],
+  selector: 'lib-group-share',
+  templateUrl: './group-share.component.html',
+  styleUrls: ['./group-share.component.css'],
 })
-export class Group067Component extends UIComponent {
+export class GroupShareComponent extends UIComponent {
   //#region Constructor
   @Input() formModel: FormModel;
-  @Input() formGroup: FormGroup;
-  @Input() fieldName: string;
-  @Input() subFieldName: string;
-  @Input() subLabel: string;
-  @Input() vll067: string;
-  @Input() data: string;
+  @Input() field: string;
+  @Input() labelName: string;
+  @Input() label: string;
+  @Input() objectType: string;
+  @Input() objectId: string;
   @Output() change = new EventEmitter();
-  @Output() buttonClick = new EventEmitter();
 
   constructor(injector: Injector) {
     super(injector);
@@ -37,10 +34,6 @@ export class Group067Component extends UIComponent {
   //#region Event
   onChange(e): void {
     this.change.emit(e);
-  }
-
-  onClick(e): void {
-    this.buttonClick.emit(e);
   }
   //#endregion
 

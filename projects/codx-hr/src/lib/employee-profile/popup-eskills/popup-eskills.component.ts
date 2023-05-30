@@ -146,6 +146,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     this.skillObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.addESlkillInfo(this.skillObj).subscribe((p) => {
+        debugger
         if (p != null) {
           this.notify.notifyCode('SYS006');
           this.dialog && this.dialog.close(p);

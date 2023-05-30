@@ -62,6 +62,7 @@
     <div>
       <codx-label fiedName="owner" [formModel]="form.formModel" default="Người phụ trách ở quy trình chuyển đến">
       </codx-label>
+      <span *ngIf="this.gridViewSetup['Owner']?.isRequire" class="text-danger">*</span>
     </div>
     <div *ngIf="listParticipantReason.length > 0 && listParticipantReason !== null">
       <codx-popup-participants [lstParticipants]="listParticipantReason" [dialog]="dialog" [isType]="'I'"

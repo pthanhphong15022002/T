@@ -250,6 +250,7 @@ export class PopupAddComponent implements OnInit {
   }
   // value change
   valueChange(event: any) {
+    debugger
     if(event){
       let field = Util.camelize(event.field);
       let value = event.data;
@@ -407,7 +408,7 @@ export class PopupAddComponent implements OnInit {
 
   updatePost(post:any){
     return this.api
-    .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'UpdatePostAsync', [post])
+    .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'UpdateAsync', [post])
     .pipe(map((res:any) => res));
   }
   // get file by objectID

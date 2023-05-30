@@ -64,9 +64,10 @@ export class AppropvalNewsDetailComponent implements OnInit {
       "GetPostByApprovalAsync",
       [this.objectID,this.funcID])
       .subscribe((res:any) => {
+        debugger
         this.data = JSON.parse(JSON.stringify(res));
         if(this.data)
-          this.hideMFC = this.data.approveStatus === '5';            
+          this.hideMFC = this.data.approveStatus == "5";            
         this.dt.detectChanges();
       });
   }
