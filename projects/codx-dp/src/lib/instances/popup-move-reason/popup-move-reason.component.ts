@@ -50,6 +50,7 @@ export class PopupMoveReasonComponent implements OnInit {
 
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
   readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
+  gridViewSetup: any;
 
   constructor(
     private cache: CacheService,
@@ -68,10 +69,14 @@ export class PopupMoveReasonComponent implements OnInit {
     this.stepName = dt?.data?.stepName;
     this.isReason = dt?.data?.isReason;
     this.headerText = dt?.data?.headerTitle;
-    this.titleReasonClick = dt?.data?.isReason? 'Chọn lý do thành công': 'Chọn lý do thất bại';
+
     this.user = this.authStore.get();
     this.userId = this.user?.userID
-    if(this.applyFor == '0') {
+    if(this.applyFor != '0') {
+      this.executeApiCalls();
+
+    }
+    else {
       this.instances =  JSON.parse(JSON.stringify(dt?.data?.instance)); ;
       this.viewClick = this.viewKanban;
       this.reasonStep = dt?.data?.objReason
@@ -79,9 +84,8 @@ export class PopupMoveReasonComponent implements OnInit {
       this.listCbxProccess = dt?.data?.listProccessCbx;
       this.listParticipantReason = dt?.data?.listParticipantReason;
       this.moveProccess =  this?.listCbxProccess?.filter(x=>x.recID === this.reasonStep?.newProcessID )[0]?.recID ?? this.guidEmpty;
-    }
-    else {
-      this.executeApiCalls();
+      this.executeApiCallInstance();
+      this.titleReasonClick = dt?.data?.headerTitle;
     }
     this.dataCM = dt?.data?.dataCM;
     this.recID = this.dataCM ? this.dataCM?.refID: this.instances?.recID;
@@ -96,6 +100,14 @@ export class PopupMoveReasonComponent implements OnInit {
       this.notiService.notifyCode('DP006');
       return;
     }
+    if(!this.ownerMove && this.moveProccess && this.moveProccess !== this.guidEmpty) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Owner']?.headerText + '"'
+      );
+      return;
+    }
     // else {
       this.beforeSave();
     // }
@@ -103,7 +115,7 @@ export class PopupMoveReasonComponent implements OnInit {
   }
   beforeSave() {
     this.reasonStep.reasons = this.listReasonClick;
-    var data = [this.recID, this.moveProccess, this.reasonStep, this.isReason,this.ownerMove];
+    var data = [this.recID, this.moveProccess, this.reasonStep, this.isReason,this.ownerMove,this.applyFor];
     this.codxDpService.moveReasonByIdInstance(data).subscribe((res)=> {
       if(res){
         this.instances = res[0];
@@ -136,9 +148,31 @@ export class PopupMoveReasonComponent implements OnInit {
     try {
       await this.getValueListMoveProcess();
       await this.getListMoveReason(this.dataCM);
+      await this.getValueFormModel();
     } catch (error) {
 
     }
+  }
+
+
+  async executeApiCallInstance(){
+    try {
+      await this.getValueFormModel();
+    } catch (error) {
+
+    }
+  }
+  async getValueFormModel() {
+    this.cache
+    .gridViewSetup(
+      'DPInstances',
+      'grvDPInstances'
+    )
+    .subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
   }
 
 

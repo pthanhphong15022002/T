@@ -1,5 +1,5 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
-import { CodxService, CallFuncService, SidebarModel, ApiHttpService } from 'codx-core';
+import { CodxService, CallFuncService, SidebarModel, ApiHttpService, CacheService } from 'codx-core';
 import { ActiviesSliderComponent } from './activies-slider/activies-slider.component';
 
 @Component({
@@ -11,13 +11,26 @@ export class ActiviesApprovalListComponent implements OnInit {
   @HostBinding('class') get class() {
      return "d-flex align-items-center " + this.codxService.toolbarButtonMarginClass; 
   }
+  funcID:string = "WPT038";
+  function:any = null;
   constructor(
     private api:ApiHttpService,
     public codxService:CodxService,
     private callFc:CallFuncService,
+    private cache:CacheService,
+
   ) { }
 
   ngOnInit(): void {
+    // get function - gridViewsetup
+    if (this.funcID) {
+      this.cache.functionList(this.funcID)
+      .subscribe((func: any) => {
+        if (func){
+          this.function = JSON.parse(JSON.stringify(func));
+        }
+      });
+    }
     this.getNotiNumber();
   }
 

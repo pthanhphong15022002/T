@@ -267,7 +267,9 @@ export class PopupAddInstanceComponent implements OnInit {
         '"' + this.gridViewSetup['Owner']?.headerText + '"'
       );
       return;
-    } else if (this.checkEndDayInstance(this.instance?.endDate, this.endDate)) {
+    }
+
+    else if (this.checkEndDayInstance(this.instance?.endDate, this.endDate)) {
       this.notificationsService.notifyCode(
         'DP032',
         0,

@@ -68,12 +68,8 @@ export class StepService {
   }
 
   checRoleTask(data, type, user) {
-    return (
-      data.roles?.some(
-        (element) =>
-          element?.objectID == user.userID && element.roleType == type
-      ) || false
-    );
+    let check = data?.roles?.some((element) => element?.objectID == user.userID && element.roleType == type) || false;
+    return check;
   }
   //setDeFault
   getDefault(funcID, entityName) {

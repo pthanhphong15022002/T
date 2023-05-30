@@ -17,14 +17,14 @@
         [label]="d.text"
         [checked]="d.checked"
         field="dim"
-        (valueChange)="handleChange($event, d)"
+        (valueChange)="onChange($event, d)"
       ></codx-input>
     </div>
   </div>
 </ng-template>
 
 <ng-template #footer>
-  <button type="button" class="btn btn-primary" (click)="handleClickSave()">
+  <button type="button" class="btn btn-primary" (click)="onClickSave()">
     <codx-label
       fiedName="lblSave"
       [formModel]="dialogRef.formModel"

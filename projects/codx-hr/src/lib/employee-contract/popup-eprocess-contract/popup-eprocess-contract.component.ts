@@ -11,7 +11,6 @@ import { FormGroup } from '@angular/forms';
 import {
   CallFuncService,
   CodxFormComponent,
-  CodxListviewComponent,
   DataRequest,
   DialogData,
   DialogModel,
@@ -21,9 +20,7 @@ import {
   NotificationsService,
   SidebarModel,
   UIComponent,
-  Util,
 } from 'codx-core';
-import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxHrService } from '../../codx-hr.service';
 import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 
@@ -94,7 +91,6 @@ export class PopupEProcessContractComponent
     private notify: NotificationsService,
     private df: ChangeDetectorRef,
     private hrSevice: CodxHrService,
-    private codxShareService: CodxShareService,
     private callfunc: CallFuncService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData

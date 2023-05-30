@@ -49,7 +49,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     private notify: NotificationsService
   ) {
     super(injector);
-    this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    // this.funcID = this.activatedRoute.snapshot.params['funcID'];
   }
 
   service = 'HR';
