@@ -634,6 +634,15 @@ export class CodxCmService {
     );
   }
 
+  getListContactByLeadID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContactsBusiness',
+      'GetListContactByLeadIDAsync',
+      data
+    );
+  }
+
   //#endregion -- Bao
 
   //contracts -- nvthuan
@@ -650,6 +659,15 @@ export class CodxCmService {
       'CM',
       'ContractsBusiness',
       'UpdateContractAsync',
+      data
+    );
+  }
+
+  getListContractByDealID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetContractsByDealIDAsync',
       data
     );
   }

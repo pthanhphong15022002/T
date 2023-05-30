@@ -46,6 +46,7 @@ export class QuotationsComponent extends UIComponent {
   @ViewChild('templateTotalSalesAmt') templateTotalSalesAmt: TemplateRef<any>;
   @ViewChild('templateTotalAmt') templateTotalAmt: TemplateRef<any>;
   @ViewChild('templateTotalTaxAmt') templateTotalTaxAmt: TemplateRef<any>;
+  @ViewChild('templateCreatedOn') templateCreatedOn: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   service = 'CM';
@@ -91,7 +92,6 @@ export class QuotationsComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-
   }
 
   onInit(): void {
@@ -164,6 +164,9 @@ export class QuotationsComponent extends UIComponent {
         case 'TotalSalesAmt':
           template = this.templateTotalSalesAmt;
           break;
+        case 'CreatedOn':
+            template = this.templateCreatedOn;
+            break;
         default:
           break;
       }
@@ -245,6 +248,10 @@ export class QuotationsComponent extends UIComponent {
             }
             break;
           case 'CM0202_3':
+            if (data.status != 2) {
+              res.isblur = true;
+            }
+            break;
           case 'CM0202_4':
             if (data.status < 2) {
               res.isblur = true;
@@ -277,7 +284,7 @@ export class QuotationsComponent extends UIComponent {
         this.rejectApprove(data);
         break;
       case 'CM0202_3':
-        this.createNewVersion(data);
+        this.createContract(data);
         break;
       case 'CM0202_4':
         this.createNewVersion(data);
@@ -367,38 +374,36 @@ export class QuotationsComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .copy()
-      .subscribe((res) => {
-        if (this.isNewVersion) {
-          res.revision = data.revision;
-          res.versionNo = data.versionNo;
-          res.versionName = data.versionName;
-        }
-        var obj = {
-          data: res,
-          action: 'copy',
-          headerText: this.titleAction,
-        };
-        let option = new DialogModel();
-        option.IsFull = true;
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        let dialog = this.callfc.openForm(
-          PopupAddQuotationsComponent,
-          '',
-          null,
-          null,
-          '',
-          obj,
-          '',
-          option
-        );
+    this.view.dataService.copy().subscribe((res) => {
+      if (this.isNewVersion) {
+        res.revision = data.revision;
+        res.versionNo = data.versionNo;
+        res.versionName = data.versionName;
+      }
+      var obj = {
+        data: res,
+        action: 'copy',
+        headerText: this.titleAction,
+      };
+      let option = new DialogModel();
+      option.IsFull = true;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let dialog = this.callfc.openForm(
+        PopupAddQuotationsComponent,
+        '',
+        null,
+        null,
+        '',
+        obj,
+        '',
+        option
+      );
 
-        dialog.closed.subscribe((e) => {
-          if (this.isNewVersion) this.isNewVersion = false;
-        });
+      dialog.closed.subscribe((e) => {
+        if (this.isNewVersion) this.isNewVersion = false;
       });
+    });
   }
 
   delete(data) {
@@ -456,6 +461,7 @@ export class QuotationsComponent extends UIComponent {
         this.copy(dt);
         break;
       case '3':
+        dt.status = '0';
         dt.revision += 1;
         dt.versionName = dt.versionNo + '.' + dt.revision;
         this.edit(dt);

@@ -212,4 +212,15 @@
     </codx-imgs>
   </div>
 </ng-template>
+
+<ng-template #templateCreatedOn let-data>
+  <div class="">
+    <span
+      [innerHTML]="
+        data?.createdOn | formatvalue : view.formModel : 'createdOn' | async
+      "
+    ></span>
+  </div>
+</ng-template>
+
 <!--##### End  #####-->

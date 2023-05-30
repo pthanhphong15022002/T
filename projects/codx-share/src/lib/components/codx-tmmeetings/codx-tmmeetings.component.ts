@@ -1,7 +1,30 @@
-import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild, Input, ViewEncapsulation, Injector, ChangeDetectorRef } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  Input,
+  ViewEncapsulation,
+  Injector,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { APICONSTANT } from '@shared/constant/api-const';
-import { AuthStore, ButtonModel, DataRequest, DialogModel, DialogRef, RequestOption, ResourceModel, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
+import {
+  AuthStore,
+  ButtonModel,
+  DataRequest,
+  DialogModel,
+  DialogRef,
+  RequestOption,
+  ResourceModel,
+  SidebarModel,
+  UIComponent,
+  Util,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import moment from 'moment';
 import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
 import { PopupTabsViewsDetailsComponent } from 'projects/codx-tm/src/lib/popup-tabs-views-details/popup-tabs-views-details.component';
@@ -16,11 +39,11 @@ import { PopupStatusMeetingComponent } from './popup-status-meeting/popup-status
   templateUrl: './codx-tmmeetings.component.html',
   styleUrls: ['./codx-tmmeetings.component.scss'],
   encapsulation: ViewEncapsulation.None,
-
 })
-export class CodxTmmeetingsComponent extends UIComponent
-implements OnInit, AfterViewInit {
-
+export class CodxTmmeetingsComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
   meeting = new CO_Meetings();
   @Input() funcID: string;
   @Input() dataObj?: any;
@@ -463,9 +486,16 @@ implements OnInit, AfterViewInit {
         this.view.dataService.dataSelected.refID = this.projectID;
         this.disabledProject = true;
       } else this.disabledProject = false;
+      let obj = {
+        action: 'add',
+        titleAction: this.titleAction,
+        disabledProject: this.disabledProject,
+        listPermissions: this.listResources,
+      };
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
-        ['add', this.titleAction, this.disabledProject, this.listResources],
+        obj,
+        // ['add', this.titleAction, this.disabledProject, this.listResources],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -495,9 +525,15 @@ implements OnInit, AfterViewInit {
         if (this.projectID) {
           this.disabledProject = true;
         } else this.disabledProject = false;
+        let obj = {
+          action: 'edit',
+          titleAction: this.titleAction,
+          disabledProject: this.disabledProject,
+        };
         this.dialog = this.callfc.openSide(
           PopupAddMeetingComponent,
-          ['edit', this.titleAction, this.disabledProject],
+          obj,
+          // ['edit', this.titleAction, this.disabledProject],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -520,9 +556,16 @@ implements OnInit, AfterViewInit {
       if (this.projectID) {
         this.disabledProject = true;
       } else this.disabledProject = false;
+      let obj = {
+        action: 'copy',
+        titleAction: this.titleAction,
+        disabledProject: this.disabledProject,
+        listPermissions: this.listResources,
+      };
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
-        ['copy', this.titleAction, this.disabledProject, this.listResources],
+        obj,
+        // ['copy', this.titleAction, this.disabledProject, this.listResources],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -750,5 +793,3 @@ implements OnInit, AfterViewInit {
     window.open(data?.link);
   }
 }
-
-

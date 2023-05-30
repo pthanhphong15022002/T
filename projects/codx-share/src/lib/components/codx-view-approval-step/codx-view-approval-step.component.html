@@ -445,7 +445,7 @@
   *ngIf="canceledProcess?.length > 0 "
 >
 
-<button type="button" class="btn btn-link"  (click)="showCanceledTrans(showCanceled)" ><codx-label class="fw-bold fs-5" default="Quy trình đã duyệt bị hủy" name="lblCanceledTrans"></codx-label></button>
+<button type="button" class="btn btn-link"  (click)="showCanceledTrans(showCanceled)" ><codx-label class="fw-bold fs-5" default="Quy trình duyệt đã hủy" name="lblCanceledTrans"></codx-label></button>
 
 <ng-container *ngIf="showCanceled">
 <ng-container *ngFor="let gr of canceledProcess">

@@ -72,7 +72,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
     private auth: AuthService
   ) {
     super(inject);
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
   onInit(): void {

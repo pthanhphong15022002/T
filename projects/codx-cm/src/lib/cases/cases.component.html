@@ -16,7 +16,7 @@
   [autoSearch]="true"
   [selectedFirst]="true"
   (selectedChange)="selectedChange($event)"
-  (onLoading)="onLoading($event)"
+  (onActions)="onActions($event)"
   (searchChanged)="searchChanged($event)"
   [viewActiveType]="viewMode"
 ></codx-views>
@@ -32,9 +32,9 @@
     [titleTmp]="cardTitleTmp"
     [formModel]="view.formModel"
     [setting]="setting"
-    [footer]="footerKanban"
-    [dataItem]="data"
+    [footer]="footer"
     [rootData]="data"
+    [dataItem]="data"
     (dblclick)="dblClick($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
   >
@@ -62,48 +62,18 @@
 </ng-template>
 
 <ng-template #cardTitleTmp let-data>
-  <codx-temp-full style="width: 100%" [title]="data.title" [descTmp]="descTmp">
+  <codx-temp-full
+    style="width: 100%"
+    [title]="data.caseName"
+    [descTmp]="descTmp"
+    [baseHeaderRightTmp]="baseHeaderRightTmp"
+  >
   </codx-temp-full>
-  <ng-template #descTmp> noi dung gi day </ng-template>
 </ng-template>
 
-<ng-template #footerKanban let-data>
+<!-- <ng-template #footerKanban let-data>
   <div class="d-flex justify-content-between align-items-center mt-1">
-    <div class="d-flex align-items-end codx-badge">
-      noi dung gi day
-      <!-- <ng-container>
-        <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data.status" [showText]="true" [showBgColor]="true"
-          class="badge badge-light badge-md fs-7">
-        </codx-vll>
-      </ng-container> -->
-      <!-- <span
-        #pEd="ngbPopover"
-        [ngbPopover]="popperEndDate"
-        (mouseenter)="pEd.open()"
-        (mouseleave)="pEd.close()"
-        placement="right top botom left"
-      >
-        <span class="text-gray-600 icon-16 icon-av_timer me-1"></span>
-        <span
-          class="fs-7 text-gray-600"
-          #endDate
-          [innerHTML]="
-            data.endDate
-              | formatvalue
-                : view.formModel
-                : 'endDate'
-                : endDate
-                : 'DPInstances'
-                : 'grvDPInstances'
-              | async
-          "
-        ></span>
-      </span> -->
-    </div>
-    <!-- <div class="d-flex justify-content-center">
-      <codx-imgs [isToolTip]="true" [width]="25" [objectId]="data.owner" ojectType="AD_Users" [numberImages]="1">
-      </codx-imgs>
-    </div> -->
+    <div class="d-flex align-items-end codx-badge">noi dung gi day</div>
     <codx-imgs
       [isToolTip]="true"
       [width]="25"
@@ -113,7 +83,7 @@
     >
     </codx-imgs>
   </div>
-</ng-template>
+</ng-template> -->
 
 <!-- end kanban -->
 <ng-template #itemTemplate let-data>
@@ -155,6 +125,7 @@
     </div>
   </div>
 </ng-template>
+
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-end codx-badge">
@@ -224,11 +195,15 @@
 <ng-template #templateDetail>
   <codx-case-detail
     #casesComponent
-    [dataService]="view.dataService"
     [formModel]="view.formModel"
     [dataSelected]="dataSelected"
     [funcID]="funcID"
     (clickMoreFunc)="clickMoreFunc($event)"
   >
   </codx-case-detail>
+</ng-template>
+
+<!-- View chi tiet kanban -->
+<ng-template #popDetail let-popup>
+  <codx-form [body]="templateDetail" [dialog]="popup"> </codx-form>
 </ng-template>

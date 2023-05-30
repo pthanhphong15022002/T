@@ -758,7 +758,7 @@ export class CodxEsService {
       );
     }
   }
-  getTemplateByProcess(processID: string){
+  getTemplateByProcess(processID: string) {
     return this.api.execSv(
       'ES',
       'ES',
@@ -1254,7 +1254,7 @@ export class CodxEsService {
   //#endregion
 
   //#region confirm otp
-  createOTPPin(tranRecID: string, type:string) {
+  createOTPPin(tranRecID: string, type: string) {
     return this.api.execSv<any>(
       'ES',
       'ERM.Business.ES',
@@ -1486,6 +1486,16 @@ export class CodxEsService {
       'ApprovalTransBusiness',
       'GetSignContracts',
       data
+    );
+  }
+
+  removeCA() {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'RemoveCAAsync',
+      []
     );
   }
 

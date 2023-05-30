@@ -570,7 +570,6 @@ export class CodxDMService {
       this.currentNode = '';
       this.folderId.next(data.recID);
       this.folderID = data.recID;
-      debugger
       //this.nodeSelect.next(data);
       this.changeClickData.next(data);
       this.disableInput.next(false);
