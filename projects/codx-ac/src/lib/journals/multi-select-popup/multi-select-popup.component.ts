@@ -7,38 +7,40 @@ import {
 } from 'codx-core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { CodxAcService } from '../../codx-ac.service';
 
 @Component({
-  selector: 'lib-customized-multi-select-popup',
-  templateUrl: './customized-multi-select-popup.component.html',
-  styleUrls: ['./customized-multi-select-popup.component.css'],
+  selector: 'lib-multi-select-popup',
+  templateUrl: './multi-select-popup.component.html',
+  styleUrls: ['./multi-select-popup.component.css'],
 })
-export class CustomizedMultiSelectPopupComponent extends UIComponent {
+export class MultiSelectPopupComponent extends UIComponent {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
-  formTitle$: Observable<string>;
   selectedOptions: string[] = [];
+  formTitle$: Observable<string>;
   dimControls$: Observable<any[]>;
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
+    private acService: CodxAcService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
   ) {
     super(injector);
 
-    this.selectedOptions = dialogData.data.selectedOptions?.split(",") ?? [];
+    this.selectedOptions = dialogData.data.selectedOptions?.split(',') ?? [];
   }
 
   //#endregion
 
   //#region Init
   onInit(): void {
-    this.formTitle$ = this.cache
-      .moreFunction('DIM', 'grvDIM')
-      .pipe(
-        map((data) => data.find((m) => m.functionID === 'ACT03')?.defaultName)
-      );
+    this.formTitle$ = this.acService.getDefaultNameFromMoreFunctions(
+      'DIM',
+      'grvDIM',
+      'ACT03'
+    );
 
     this.cache
       .viewSettingValues('ACParameters')
@@ -66,12 +68,12 @@ export class CustomizedMultiSelectPopupComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  handleClickSave(): void {
+  onClickSave(): void {
     console.log(this.selectedOptions);
     this.dialogRef.close(this.selectedOptions.toString());
   }
 
-  handleChange(e, data): void {
+  onChange(e, data): void {
     console.log(e);
 
     if (e.data) {

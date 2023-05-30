@@ -1,0 +1,42 @@
+<div class="form-group">
+  <codx-label [fiedName]="field" [formModel]="formModel"></codx-label>
+
+  <div class="row align-items-center">
+    <div class="col-6">
+      <codx-label
+        [fiedName]="labelName"
+        [formModel]="formModel"
+        [default]="label"
+        class="text-gray-500 font-italic fw-normal"
+      ></codx-label>
+    </div>
+
+    <div class="col-5">
+      <lib-dropdown-detail
+        *ngIf="objectType === 'U' || !objectType"
+        [formModel]="formModel"
+        [objectId]="objectId"
+        [objectType]="objectType"
+      ></lib-dropdown-detail>
+    </div>
+
+    <div class="col-1">
+      <codx-input
+        type="share"
+        [field]="field"
+        refValue="AC068"
+        [showInput]="false"
+        (valueChange)="onChange($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+
+  <div class="pb-2" *ngIf="objectType && objectType !== 'U'">
+    <lib-dropdown-detail
+      [formModel]="formModel"
+      [objectId]="objectId"
+      [objectType]="objectType"
+    ></lib-dropdown-detail>
+  </div>
+</div>

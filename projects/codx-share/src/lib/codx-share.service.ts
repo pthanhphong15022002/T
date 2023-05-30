@@ -661,7 +661,15 @@ export class CodxShareService {
       [resourceType]
     );
   }
-
+  getDataValueOfSetting(formName:string,transType:string,category:string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetDataValueOfSettingAsync',
+      [formName,transType,category]
+    );
+  }
   getThumbByUrl(url: any, width = 30) {
     if (url) {
       var wt = width;

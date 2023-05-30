@@ -453,7 +453,8 @@ export class BookingService {
     booking: any,
     processID: string,
     entityName: string,
-    funcID: string
+    funcID: string,    
+    userID: string,
   ): Observable<any> {
     return this.api.execSv(
       'EP',
@@ -466,6 +467,7 @@ export class BookingService {
         entityName,
         funcID,
         '<div>' + booking.title + '</div>',
+        userID
       ]
     );
   }
