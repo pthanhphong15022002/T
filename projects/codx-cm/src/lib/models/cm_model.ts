@@ -490,6 +490,10 @@ export class CM_Contracts {
   delDeadline: Date;// Hạn giao hàng
 
   delActualDate: Date;// Ngày giao hàng
+  delAddress: string;
+  delPhone: string;
+  delContactID: string;
+
   // Điều khoản hồ sơ liên quan -- memo
 }
 

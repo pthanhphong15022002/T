@@ -219,6 +219,9 @@ export class ContractsDetailComponent extends UIComponent{
       if (res) {
         this.quotations = res[0];
         this.listQuotationsLine = res[1];
+      }else{
+        this.quotations = null;
+        this.listQuotationsLine = [];
       }
     });
   }
@@ -229,6 +232,9 @@ export class ContractsDetailComponent extends UIComponent{
         let listPayAll =  res as CM_ContractsPayments[];
         this.listPayment = listPayAll.filter(pay => pay.lineType == '0');
         this.listPaymentHistory = listPayAll.filter(pay => pay.lineType == '1');
+      }else{
+        this.listPayment = [];
+        this.listPaymentHistory = [];
       }
     });
   }
