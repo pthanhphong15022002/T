@@ -114,7 +114,12 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
         }
       }
     });
-    
+    //new group
+    this.signalRSV.activeNewGroup.subscribe((res:any) => {
+      if(res?.group){
+        (this.codxListView.dataService as CRUDService).add(res.group).subscribe();
+      }
+    });
   }
   // check read all
   readAllMessage(){

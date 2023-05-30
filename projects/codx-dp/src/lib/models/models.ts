@@ -112,7 +112,7 @@ export class DP_Steps {
   taskControl: string;
   leadtimeControl: boolean = true;
   durationControl: boolean = true;
-  startControl: string = '0'; // update bit to string
+  startControl: string = '1'; // update bit to string
   reScheduleTasks: boolean = true;
   options: string; // json
   roles: DP_Steps_Roles[] = []; // objects

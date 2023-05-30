@@ -260,7 +260,7 @@ export class AppropvalNewsComponent extends UIComponent {
     }
   }
 
-
+  // set style icon
   setStyles(value: string) {
     let styles = {
       backgroundColor: this.vllWP004[value].color,
@@ -268,6 +268,7 @@ export class AppropvalNewsComponent extends UIComponent {
     };
     return styles;
   }
+  //set des
   setDescription(data:any):string
   {
     if(data.category == "1" || data.category == "3" || data.category == "4" )
@@ -276,12 +277,6 @@ export class AppropvalNewsComponent extends UIComponent {
       return data.contents.replace(/<[^>]*>/g, "");
     else
       return data.subject;
-  }
-
-  deleteData() {
-    this.api
-      .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'DeleteAllDataAsync')
-      .subscribe();
   }
 
 }

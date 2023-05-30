@@ -1,3 +1,14 @@
 .e-tab .e-content.e-lib {
     padding-left: 0px;
 }
+.table-cashpayment{
+    height: calc(94vh - 394px)!important;
+}
+@media only screen and (max-width: 1280px) {
+    .ac-table-header{
+        width: 50% !important;
+    }
+    .ac-table-row{
+        width: 40% !important;
+    }
+  }
