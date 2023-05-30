@@ -614,9 +614,18 @@ export class CodxCalendarComponent
       ])
       .pipe(
         switchMap((res) => {
+          let obj = {
+            data: res.data,
+            action: 'add',
+            isAssignTask: true,
+            titleAction: 'Thêm', ///cai nay em tu truyen theo more Fun text cua e
+            functionID: 'TMT0203',
+            disabledProject: false,
+            isOtherModule: true, //tu modele khac truyn qua
+          };
           return this.callfc.openSide(
-            PopupAddComponent,
-            [res.data, 'add', true, 'Thêm', 'TMT0203', null, false, true],
+            PopupAddComponent,obj,
+           // [res.data, 'add', true, 'Thêm', 'TMT0203', null, false, true],
             option
           ).closed;
         }),
