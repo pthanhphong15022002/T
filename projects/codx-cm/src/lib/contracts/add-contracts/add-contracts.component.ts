@@ -319,6 +319,7 @@ export class AddContractsComponent implements OnInit {
       this.contracts.recID = Util.uid();
       this.contracts.projectID = this.projectID;
       this.contracts.contractDate = new Date();
+      this.contracts.status = '1';
     }
     if (this.action == 'edit') {
       this.contracts = data;
