@@ -662,6 +662,15 @@ export class CodxCmService {
       data
     );
   }
+
+  getListContractByDealID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetContractsByDealIDAsync',
+      data
+    );
+  }
   //quotation lines test
   getQuotationsLinesByTransID(transID) {
     return this.api.exec<any>(

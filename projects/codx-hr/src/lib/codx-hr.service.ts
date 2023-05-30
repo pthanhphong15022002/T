@@ -1887,7 +1887,7 @@ export class CodxHrService {
     );
   }
 
-  EditEmployeeContactMoreFunc(data: any) {
+  EditEBusinessTravelMoreFunc(data: any) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
@@ -2328,6 +2328,31 @@ export class CodxHrService {
   }
 
   //#endregion
+
+  sortAscByProperty(array, property) {
+    return array.sort((a, b) => {
+      if (a[property] < b[property]) {
+        return -1;
+      }
+      if (a[property] > b[property]) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+
+  sortDescByProperty(array, property) {
+    return array.sort((a, b) => {
+      if (a[property] < b[property]) {
+        return 1;
+      }
+      if (a[property] > b[property]) {
+        return -1;
+      }
+      return 0;
+    });
+  }
+  
 
   addNew(funcID: string, entityName: string, idField: string) {
     return this.api.execSv<any>(

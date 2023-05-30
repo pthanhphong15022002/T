@@ -23,7 +23,7 @@
 </ng-template>
 
 <ng-template #tabDeal>
-  <ng-container *ngIf="formModelDeals != null">
+  <ng-container *ngIf="formModelDeals != null && gridViewSetupDeal">
     <div class="row">
       <div class="col-6">
         <div class="form-group">
@@ -373,9 +373,9 @@
       </div>
     </div>
     <codx-list-contacts
-    [selectAll]="false"
-
       #codxConvert
+      [selectAll]="false"
+      [lstContactRef]="lstContactCustomer"
       [funcID]="form.formModel.funcID"
       [objectID]="lead?.recID"
       [objectType]="'2'"
@@ -397,7 +397,7 @@
     <codx-list-contacts
       #codxListContact
       [selectAll]="false"
-
+      [lstContactRef]="lstContactDeal"
       [funcID]="'CM0101'"
       [objectID]="customerID"
       [listContacts]="lstContactCustomer"
@@ -420,8 +420,7 @@
       ></codx-label>
     </div>
     <codx-list-contacts
-    [selectAll]="false"
-
+      [selectAll]="false"
       [funcID]="'CM0201'"
       [objectID]="deal?.recID"
       [listContacts]="lstContactDeal"

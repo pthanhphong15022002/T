@@ -11,11 +11,13 @@ import { CM_Contracts } from '../../models/cm_model';
 })
 export class ListContractsComponent implements OnInit, OnChanges {
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
-  @Input() projectID: any;
+  @Input() listContract: CM_Contracts[];
   @Input() customers: any;
   @Input() contactPerson: any;
   @Input() frmModelInstancesTask: FormModel;
-  listContract = [];
+  @Input() customersID: string;
+  @Input() dealID: string;
+  @Input() quotationID: string;
   dateFomat = 'dd/MM/yyyy';
   account: any;
   customersData:any;
@@ -38,9 +40,9 @@ export class ListContractsComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges) {
-    if(changes.projectID){
-      this.getContracts(this.projectID); 
-    }
+    // if(changes.projectID){
+    //   this.getContracts(this.projectID); 
+    // }
     if(changes.customers){
       this.customersData = this.customers;
     }
@@ -114,30 +116,30 @@ export class ListContractsComponent implements OnInit, OnChanges {
     if(this.customersData){
       contracts = this.setCustomer();
     }
-    let contractOutput = await this.openPopupContract(this.projectID, "add",contracts);
-    if(contractOutput?.event?.contract){
-      this.listContract.push(contractOutput?.event?.contract);
-    }
+    // let contractOutput = await this.openPopupContract(this.projectID, "add",contracts);
+    // if(contractOutput?.event?.contract){
+    //   this.listContract.push(contractOutput?.event?.contract);
+    // }
   }
 
   async editContract(contract){
     let dataEdit = JSON.parse(JSON.stringify(contract));
-    let dataOutput = await this.openPopupContract(this.projectID,"edit",dataEdit);
-    let contractOutput = dataOutput?.event?.contract;
-    if(contractOutput){
-      let index = this.listContract.findIndex(x => x.recID == contractOutput?.recID);
-      if(index >= 0){
-        this.listContract.splice(index, 1, contractOutput);
-      }
-    }
+    // let dataOutput = await this.openPopupContract(this.projectID,"edit",dataEdit);
+    // let contractOutput = dataOutput?.event?.contract;
+    // if(contractOutput){
+    //   let index = this.listContract.findIndex(x => x.recID == contractOutput?.recID);
+    //   if(index >= 0){
+    //     this.listContract.splice(index, 1, contractOutput);
+    //   }
+    // }
   }
 
   async copyContract(contract){
     let dataCopy = JSON.parse(JSON.stringify(contract));
-    let contractOutput = await this.openPopupContract(this.projectID,"copy",dataCopy);
-    if(contractOutput?.event?.contract){
-      this.listContract.push(contractOutput?.event?.contract);
-    }
+    // let contractOutput = await this.openPopupContract(this.projectID,"copy",dataCopy);
+    // if(contractOutput?.event?.contract){
+    //   this.listContract.push(contractOutput?.event?.contract);
+    // }
   }
 
   deleteContract(contract){
