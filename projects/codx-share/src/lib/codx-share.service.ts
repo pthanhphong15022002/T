@@ -408,7 +408,6 @@ export class CodxShareService {
     title: string,
     formModel: FormModel
   ) {
-    debugger
     if (formModel) {
       this.cache.functionList('EST021').subscribe((fm) => {
         if (fm) {
@@ -839,6 +838,7 @@ export class CodxShareService {
   clickMFApproval(e:any,data:any,dataService:any,formModel:any)
   {
        //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
+       debugger
        var funcID = e?.functionID;
        if (data.eSign == true) {
          //Kys
