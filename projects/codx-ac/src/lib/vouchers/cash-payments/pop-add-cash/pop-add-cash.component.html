@@ -29,11 +29,6 @@
               <i class="icon-format_list_numbered icon-18 me-2"></i>
               <codx-label class="fw-bold fs-5-sm" fiedName="lblDetail1" [formModel]="form.formModel" default="Chi tiết"></codx-label>
             </div>
-          </ng-template>
-          <ng-template #content>
-            <ng-container *ngTemplateOutlet="tabLine"></ng-container>
-          </ng-template>
-        </e-tabitem>
         <!-- Test tab -->
         <e-tabitem aria-hidden="true">
           <ng-template #headerText>
@@ -50,7 +45,7 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <div class="row mb-2">
+    <div class="mb-1">
       <ng-container *ngTemplateOutlet="addLine"></ng-container>
     </div>
   </div>
@@ -227,19 +222,7 @@
               (valueChange)="valueChange($event)" [disabled]="journal?.assignRule != '0'">
             </codx-input>
           </div>
-          <div class="row">
-            <div class="form-group mb-0">
-              <div #btnRef class="d-flex justify-content-end mt-2">
-                <button style="position: fixed;margin-top: 13px;z-index: 10;" type="button"
-                  class="btn btn-md btn-light-primary" (click)="addRow()">
-                  <div class="d-flex align-items-center">
-                    <i class="icon-playlist_add icon-18"></i>
-                    <codx-label class="fw-bold" fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
-                  </div>
-                </button>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
 
@@ -251,13 +234,19 @@
 <!-- Start:CashPaymentLine -->
 <ng-template #tabLine>
   <ng-container *ngIf="(cashpayment?.subType != '2') && modegrid == '1'">
-    <div class="h-100 tabline-content">
+    <div class="h-100 tabline-content position-relative">
       <codx-gridview-v2 class="tabLine" #gridCash [formName]="fmCashPaymentsLines.formName"
         [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
-        [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
-        [autoLoad]="false" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
-        (cellChanged)="lineChanged($event)"></codx-gridview-v2>
+        [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" 
+        [autoLoad]="false" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"></codx-gridview-v2>
+
+        <div #btnRef class="btn-addline">
+          <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow()">
+            <i class="icon-playlist_add icon-16"></i>
+              <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
+          </button>
+        </div>
     </div>
   </ng-container>
   <!-- <ng-container
@@ -942,10 +931,10 @@
 <!-- Start: addline -->
 <ng-template #addLine let-data>
   <ng-container *ngIf="form.formGroup">
-    <div #docRef class="d-flex align-items-center justify-content-start me-10 mt-1">
-      <codx-label class="fs-6 fw-bold me-2" fiedName="RefDocs" [formModel]="form.formModel">
+    <div #docRef class="d-flex align-items-center mt-3">
+      <codx-label class="fw-bold me-2" fiedName="RefDocs" [formModel]="form.formModel">
       </codx-label>
-      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="refDocs" [min]="0"
+      <codx-input class="w-200px" [Group]="form.formGroup" [formModel]="form.formModel" field="refDocs" [min]="0"
         (controlBlur)="valueFocusOut($event)"></codx-input>
     </div>
   </ng-container>
