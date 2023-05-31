@@ -47,6 +47,12 @@ export class DP_Processes {
   autoName: string;
   steps: DP_Steps[] = [];
   approveRule :boolean = false ;
+  
+  icon: String;
+  released: String;
+  releasedName: String;
+  module: String;
+  function: String;
 }
 
 export class DP_Processes_Permission {
