@@ -458,7 +458,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.createMeeting(task);
         break;
       case 'SYS004':
-        this.sendMail()
+        this.sendMail();
         break;
     }
   }
@@ -668,13 +668,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task.refID = data?.recID;
     task.refType = 'DP_Instance';
     task.dueDate = data?.endDate;
-    let dataReferences= [{
-      recIDReferences : data.recID,
-      refType : 'DP_Instances',
-      createdOn : data.createdOn,
-      memo : data.taskName,
-      createdBy : data.createdBy,
-    }]
+    let dataReferences = [
+      {
+        recIDReferences: data.recID,
+        refType: 'DP_Instances',
+        createdOn: data.createdOn,
+        memo: data.taskName,
+        createdBy: data.createdBy,
+      },
+    ];
     let assignModel: AssignTaskModel = {
       vllRole: 'TM001',
       title: moreFunc.customName,
@@ -1088,37 +1090,44 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         option.zIndex = 1011;
         let formModel = new FormModel();
         this.cache.functionList('TMT0501').subscribe((f) => {
-          // this.cache
-          //   .gridViewSetup(f?.formName, f?.gridViewSetup)
-          //   .subscribe((grv) => {
-          formModel.funcID = 'TMT0501';
-          formModel.entityName = f?.entityName;
-          formModel.formName = f?.formName;
-          formModel.gridViewName = f?.gridViewName;
-          option.FormModel = formModel;
-          option.Width = '800px';
-          let obj = {
-            action: 'add',
-            titleAction: this.titleAction,
-            disabledProject: false,
-            // preside:  ,
-            data: meeting,
-            isOtherModule: true,
-          };
-          let dialog = this.callfc.openSide(
-            PopupAddMeetingComponent,
-            obj,
-            option
-          );
-          dialog.closed.subscribe((e) => {
-            if (e?.event) {
-              this.notiService.notify(
-                'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
-              );
-            }
-          });
+          if (f) {
+            this.cache.gridView(f.gridViewName).subscribe((res) => {
+              this.cache
+                .gridViewSetup(f.formName, f.gridViewName)
+                .subscribe((grvSetup) => {
+                  if(grvSetup){
+                    formModel.funcID = 'TMT0501';
+                    formModel.entityName = f.entityName;
+                    formModel.formName = f.formName;
+                    formModel.gridViewName = f.gridViewName;
+                    option.FormModel = formModel;
+                    option.Width = '800px';
+                    let obj = {
+                      action: 'add',
+                      titleAction: this.titleAction,
+                      disabledProject: false,
+                      // preside:  ,
+                      data: meeting,
+                      isOtherModule: true,
+                    };
+                    let dialog = this.callfc.openSide(
+                      PopupAddMeetingComponent,
+                      obj,
+                      option
+                    );
+                    dialog.closed.subscribe((e) => {
+                      if (e?.event) {
+                        this.notiService.notify(
+                          'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
+                        );
+                      }
+                    });
+                  }
+                 
+                });
+            });
+          }
         });
-        // });
       }
     });
   }

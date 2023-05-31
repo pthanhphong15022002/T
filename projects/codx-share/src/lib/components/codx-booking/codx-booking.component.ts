@@ -402,7 +402,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   onActionClick(event?) {
     if (event.type == 'add' && event.data?.resourceId != null) {
-      this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
+      this.popupTitle = this.buttons?.text + ' ' + this.funcIDName;
       this.addNew(event.data);
     }
     if (event.type == 'doubleClick' || event.type == 'edit') {
@@ -807,7 +807,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   invite(data: any) {
     if (
-      this.curUser?.userID != data?.owner ||
+      this.curUser?.userID == data?.owner ||
       this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
     ) {
       let dialogInvite = this.callfc.openForm(
@@ -888,8 +888,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   edit(data?) {
     if (data) {
       if (
-        this.curUser?.userID != data?.createdBy ||
-        this.codxBookingService.checkAdminRole(this.curUser?.userID, this.isAdmin)
+        this.curUser?.userID == data?.createdBy ||
+        this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
       ) {
         this.codxBookingService
           .getBookingByRecID(data?.recID)
@@ -1033,19 +1033,21 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   allocate(data: any) {
-    if (data.approverID != this.authService?.userValue?.userID) {
+    let x=data?.approverID;
+    let xx=this.curUser.userID;
+    if (data.approverID != this.curUser.userID) {
       this.notificationsService.notifyCode('SYS032');
       return;
     }
-    if (data.approval == '1') {
+    if (data?.approval == '1') {
       this.api
         .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [data?.recID])
         .subscribe((trans: any) => {
           trans.map((item: any) => {
-            if (item.stepType === 'I') {
+            if (item?.stepType === 'I') {
               this.codxBookingService
                 .approve(
-                  item?.recID, //ApprovelTrans.RecID
+                  item?.recID, 
                   this.allocateStatus,
                   '',
                   ''
@@ -1053,7 +1055,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                 .subscribe((res: any) => {
                   if (res?.msgCodeError == null && res?.rowCount >= 0) {
                     this.notificationsService.notifyCode('SYS034'); //đã duyệt
-                    data.issueStatus = '3';
+                    
+                    data.issueStatus = this.allocateStatus =='5'? '3' :'4';
                     this.view.dataService.update(data).subscribe();
                   } else {
                     this.notificationsService.notifyCode(res?.msgCodeError);

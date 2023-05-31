@@ -117,7 +117,7 @@ export class PopupMergeLeadsComponent implements OnInit {
   async getCbxLead(id) {
     var options = new DataRequest();
     options.entityName = 'CM_Leads';
-    options.predicates = 'Status!=@0';
+    options.predicates = 'Status!=@0 and IsDuplicated==false';
     options.dataValues = '5';
     options.pageLoading = false;
     var lst = await firstValueFrom(this.cmSv.loadDataAsync('CM', options));
