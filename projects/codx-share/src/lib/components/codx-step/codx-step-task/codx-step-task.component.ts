@@ -1078,8 +1078,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //tao lich hop
   createMeeting(data) {
+    let preside ;
+    let participants;
+    let listPermissions=''
+    if(data?.roles>0){
+      preside = data?.roles.filter(x=>x.roleType=='O')[0]?.objectID ;
+      if(preside)
+      listPermissions +=preside
+      participants = data?.roles.filter(x=>x.roleType=='P').map(x=>x.objectID).join(";");
+      if(participants){
+        listPermissions += ";" + participants
+      }
+    }
     this.stepService.getDefault('TMT0501', 'CO_Meetings').subscribe((res) => {
       if (res && res?.data) {
+     
         let meeting = res.data;
         meeting['_uuid'] = meeting['meetingID'] ?? Util.uid();
         meeting['idField'] = 'meetingID';
@@ -1106,8 +1119,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                       action: 'add',
                       titleAction: this.titleAction,
                       disabledProject: false,
-                      // preside:  ,
+                      preside:  preside,
                       data: meeting,
+                      listPermissions: listPermissions,
                       isOtherModule: true,
                     };
                     let dialog = this.callfc.openSide(
