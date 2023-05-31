@@ -56,7 +56,7 @@ export class PopupAddEmployeeComponent implements OnInit {
 
   trainFieldID: string = '';
   trainLevel: string = '';
-
+  orgNote: string = '';
   constructor(
     private api: ApiHttpService,
     private notifySV: NotificationsService,
@@ -79,6 +79,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
+    this.getOrgNote();
   }
 
   //get grvSetup
@@ -92,6 +93,29 @@ export class PopupAddEmployeeComponent implements OnInit {
   //set header text
   setTitle(e) {
     this.headerText += ' ' + e;
+  }
+  getOrgNote() {
+    if (this.data['orgUnitID']) {
+      this.orgNote = '';
+      this.api.execSv<any>('HR', 'HR', 'OrganizationUnitsBusiness', 'GetOrgTreeByOrgIDAsync', [this.data['orgUnitID'], 9])
+        .subscribe(res => {
+          let resLength = res.length;
+          if (res) {
+            if(res[0].locationID){
+              this.data['locationID'] = res[0].locationID;
+              this.form.formGroup.controls['locationID'].patchValue(res[0].locationID);
+            }
+            if (resLength > 1) {
+              this.orgNote = res[1].orgUnitName;
+              if (resLength > 2) {
+                for (var i = 2; i < resLength; i++) {
+                  this.orgNote += ', ' + res[i].orgUnitName;
+                }
+              }
+            }
+          }
+        });
+    }
   }
 
   //value change
@@ -113,9 +137,13 @@ export class PopupAddEmployeeComponent implements OnInit {
                     jobLevel: this.data.jobLevel,
                     orgUnitID: this.data.orgUnitID
                   })
+                  this.getOrgNote();
                 }
               });
           }
+          break;
+        case 'orgUnitID':
+          this.getOrgNote();
           break;
         case 'issuedOn':
           if (this.data.issuedOn >= new Date().toJSON()) {

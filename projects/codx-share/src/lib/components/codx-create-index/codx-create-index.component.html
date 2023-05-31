@@ -1,0 +1,25 @@
+<codx-form 
+    [headerText]="'Create Index'"
+    [body]="body"
+    [dialog]="dialog"
+>
+</codx-form>
+
+<ng-template #body>
+    <div class="d-flex flex-column">
+        <div class="d-flex align-items-center pb-5">
+            <codx-input 
+                type="checkbox"
+                label="Tất cả (Module , File từ trước đến nay)"
+            >
+            </codx-input>
+        </div>
+        <div class="d-flex align-items-center pb-5">
+            <codx-input 
+                type="checkbox"
+                label="Module"
+            >
+            </codx-input>
+        </div>
+    </div>
+</ng-template>
