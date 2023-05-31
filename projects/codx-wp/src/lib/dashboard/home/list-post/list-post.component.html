@@ -64,7 +64,7 @@
               <span title="Bài viết chưa được xét duyệt" class="icon-security text-primary icon-16 me-2"></span>
             </ng-container>
             <ng-container *ngIf="item.shareControl">
-              <span class="badge badge-md badge-light rounded-1 px-2 fs-7 badge-listpost" (click)="openCBBShare(item)">
+              <span class="badge badge-md badge-light rounded-1 px-2 fs-7 badge-listpost">
                 <codx-vll [name]="'WP001'" [value]="item.shareControl" [showText]="true" [showIcon]="true"
                   [className]="'text-gray-600 vll-post'" [icoCss]="'w-13px h-13px'" [path]="'assets/themes/sys/default/img/'"
                   [showBgColor]="true">
@@ -124,8 +124,8 @@
     <!-- contents -->
     <div class="wp-contents mt-3">
       <div class="wp-contents-text">
-        <div [innerHTML]="item.shortContent ? item.shortContent : item.contents | safe: 'html'"></div>
-          <ng-container *ngIf="item.shortContent">
+        <div *ngIf="item.contents" [innerHTML]="item.contents | safe: 'html'"></div>
+          <ng-container *ngIf="item.isShortContent">
             <div>
               <a href="javascript:void(0)" (click)="clickReadMore(item)">
                 <codx-label [formModel]="formModel" name="lblViewMore" default="Xem thêm"></codx-label>
