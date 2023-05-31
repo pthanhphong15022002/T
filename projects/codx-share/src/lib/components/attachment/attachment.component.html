@@ -148,7 +148,7 @@
                     </div>
                     <div [style]="{'display': (hideUploadBtn == '1' ? 'none' : '')}" class="control-section mb-3">
                         <div class="col-lg-12">
-                            <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column "
+                            <div class="d-flex justify-content-between align-item-center dropzone dropzone-default dropzone-primary "
                                 id='dropArea'>
 
                                 <div class="d-none">
@@ -188,7 +188,7 @@
                                         hoặc</span>
                                 </div> -->
                                 <!--begin::Controls-->
-                                <div class="dropzone-panel mt-3">
+                                <div class="dropzone-panel">
                                     <ejs-uploader #templateupload id='templatefileupload'
                                         [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()'
                                         [asyncSettings]='path' [dropArea]='dropElement'
@@ -271,15 +271,5 @@
         </div>
     </div>
 
-     <ejs-progressbar 
-        #circular 
-        id='circular1' 
-        [type]='typeProgress' 
-        [maximum]='100' 
-        [minimum]='0'
-        [value]='75' 
-        [width]='150' 
-        [height]='150'
-    >
-    </ejs-progressbar>
+    
 </ng-template>
