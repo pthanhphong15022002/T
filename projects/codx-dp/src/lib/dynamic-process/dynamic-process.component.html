@@ -199,7 +199,7 @@
         [formModel]="view.formModel"
         type="text"
         [crrValue]="processName"
-        (valueChange)="changeValue($event, processName)"
+        (valueChange)="changeValueName($event, processName)"
       >
       </codx-input>
     </div>
@@ -381,126 +381,142 @@
     [body]="releaseProcessBody"
     [footer]="releaseProcessFooter"
     [dialog]="popupRelease"
-  >
-  </codx-form>
-  <ng-template #releaseProcessHeader>
-    <div class="pt-5 px-2 w-100">
-      <div class="d-flex justify-content-between align-items-center w-100">
-        <codx-label
-          name="heardPaymentHistory"
-          class="fs-3 fw-bold"
-          [default]="'Phát hành quy trình'"
-        ></codx-label>
-        <button
-          style="border: none; outline: none; background: none"
-          (click)="popupRelease.close()"
-        >
-          <i class="icon-close icon-18 text-hover-danger"></i>
-        </button>
-      </div>
-      <div>
-        <codx-label
-          fiedName="processName"
-          class="text-gray-600 fs-6 label-colon"
-          [formModel]="view.formModel"
-          [default]="'Quy trình'"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3"
-          [innerHTML]="
-            itemSelected?.processName
-              | formatvalue : view.formModel : 'ProcessName'
-              | async
-          "
-        ></span>
-      </div>
-      <div>
-        <codx-label
-          fiedName="applyFor"
-          class="text-gray-600 fs-6 label-colon"
-          [formModel]="view.formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3"
-          [innerHTML]="
-            itemSelected?.applyFor
-              | formatvalue : view.formModel : 'ApplyFor'
-              | async
-          "
-        ></span>
-      </div>
-      <!-- [default]="'Đối tượng quy trình'" -->
-      <div></div>
-    </div>
-  </ng-template>
-  <ng-template #releaseProcessBody>
-    <div class="px-2">
-      <div class="d-flex justify-content-between align-items-center">
-        <codx-label
-          class="fs-6 label-colon"
-          fiedName="icon"
-          [formModel]="view.formModel"
-        >
-        </codx-label>
-        <div class="d-flex">
-          <codx-input
-            class="me-4"
-            field="icon"
-            type="vllicon"
-            [refValue]="'L1470'"
-            [iconOnly]="true"
-           
-            [crrValue]="processRelease?.icon"
-          >
-          </codx-input>
-        </div>
-      </div>
+  ></codx-form>
+</ng-template>
 
-      <div>
-        <codx-label
-          fiedName="releasedName"
-          class="fs-6"
-          [formModel]="view.formModel"
-        ></codx-label>
-        <codx-input
-          [formModel]="view.formModel"
-          field="delTermID"
-          [crrValue]="processRelease?.releasedName"
-          (valueChange)="changeValue($event, processRelease)"
-        >
-        </codx-input>
-      </div>
-      <div>
-        <codx-label
-          fiedName="module"
-          class="text-gray-600 fs-6"
-          [formModel]="view.formModel"
-        ></codx-label>
-        <codx-input
-          [formModel]="view.formModel"
-          field="delTermID"
-          [crrValue]="processRelease?.module"
-          (valueChange)="changeValue($event, processRelease)"
-        >
-        </codx-input>
-      </div>
-      <div>
-        <codx-label
-          fiedName="function"
-          class="text-gray-600 fs-6"
-          [formModel]="view.formModel"
-        ></codx-label>
-        <codx-input
-          [formModel]="view.formModel"
-          field="delTermID"
-          [crrValue]="processRelease?.function"
-          (valueChange)="changeValue($event, processRelease)"
-        >
-        </codx-input>
-      </div>
+<ng-template #releaseProcessHeader>
+  <div class="pt-5 px-2 w-100">
+    <div class="d-flex justify-content-between align-items-center w-100">
+      <codx-label
+        name="heardPaymentHistory"
+        class="fw-bold"
+        [default]="'Phát hành quy trình'"
+      ></codx-label>
+      <button
+        style="border: none; outline: none; background: none"
+        (click)="popupRelease.close()"
+      >
+        <i class="icon-close icon-18 text-hover-danger"></i>
+      </button>
     </div>
-  </ng-template>
-  <ng-template #releaseProcessFooter> </ng-template>
+  </div>
+</ng-template>
+<ng-template #releaseProcessBody>
+  <div class="px-2 pb-3 fs-6">
+    <div>
+      <codx-label
+        class="label-colon text-gray-600"
+        fiedName="processName"
+        [formModel]="view.formModel"
+        [default]="'Quy trình'"
+        [setRequire]="false"
+      ></codx-label>
+      <span
+        class="me-3"
+        [innerHTML]="
+          itemSelected?.processName
+            | formatvalue : view.formModel : 'ProcessName'
+            | async
+        "
+      ></span>
+    </div>
+    <div>
+      <codx-label
+        fiedName="applyFor"
+        class=" text-gray-600 label-colon"
+        [formModel]="view.formModel"
+        [setRequire]="false"
+      ></codx-label>
+      <span
+        class="me-3"
+        [innerHTML]="
+          itemSelected?.applyFor
+            | formatvalue : view.formModel : 'ApplyFor'
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="px-2">
+    <div class="d-flex align-items-center form-group">
+      <codx-label
+        class="label-colon"
+        fiedName="icon"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <codx-input
+        class="me-4"
+        field="icon"
+        type="vllicon"
+        [refValue]="'L1470'"
+        [iconOnly]="true"
+        [crrValue]="processRelease?.icon"
+        (valueChange)="changeValue($event, processRelease)"
+      >
+      </codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="releasedName"
+        [formModel]="view.formModel"
+      ></codx-label>
+      <codx-input
+        [formModel]="view.formModel"
+        field="releasedName"
+        [crrValue]="processRelease?.releasedName"
+        (valueChange)="changeValue($event, processRelease)"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label
+        fiedName="module"
+        [formModel]="view.formModel"
+      ></codx-label>
+      <codx-input
+        [formModel]="view.formModel"
+        field="module"
+        [crrValue]="processRelease?.module"
+        (valueChange)="changeValue($event, processRelease)"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label
+        fiedName="function"
+        [formModel]="view.formModel"
+      ></codx-label>
+      <codx-input
+        [formModel]="view.formModel"
+        field="function"
+        [crrValue]="processRelease?.function"
+        (valueChange)="changeValue($event, processRelease)"
+      >
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
+<ng-template #releaseProcessFooter>
+  <div class="d-flex justify-content-end">
+    <button
+      type="button"
+      class="btn btn-outline-primary me-2"
+      (click)="popupRelease.close()"
+    >
+      <codx-label
+        fiedName="lblCancel"
+        [formModel]="view.formModel"
+        default="Hủy"
+      ></codx-label>
+    </button>
+    <button type="button" class="btn btn-primary" (click)="saveReleaseProcess()">
+      <codx-label
+        name=" lblSuscess"
+        [formModel]="view.formModel"
+        default="Đồng ý"
+      ></codx-label>
+    </button>
+  </div>
 </ng-template>

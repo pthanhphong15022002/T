@@ -113,6 +113,7 @@ export class DynamicProcessComponent
   popupRelease: DialogRef;
   processRename: DP_Processes;
   processRelease: DP_Processes;
+  processReleaseClone: DP_Processes;
   processName = '';
   processNameBefore = '';
   user;
@@ -836,8 +837,10 @@ export class DynamicProcessComponent
       280
     );
   }
+
   releaseProcess(process) {
-    this.processRelease = process;
+    this.processReleaseClone = process;
+    this.processRelease = JSON.parse(JSON.stringify(process));
     this.popupRelease = this.callfc.openForm(
       this.releaseProcessTemp,
       '',
@@ -846,12 +849,38 @@ export class DynamicProcessComponent
     );
   }
 
-  changeValue(event,data) {
+  saveReleaseProcess(){
+    this.dpService
+        .releaseProcess([this.processRelease])
+        .subscribe((res) => {
+          if (res) {
+            this.processReleaseClone.icon = this.processRelease.icon;
+            this.processReleaseClone.released = this.processRelease.released;
+            this.processReleaseClone.releasedName = this.processRelease.releasedName;
+            this.processReleaseClone.module =  this.processRelease.module;
+            this.processReleaseClone.function = this.processRelease.function;
+            this.processReleaseClone.modifiedOn = res;
+            this.processReleaseClone.modifiedBy = this.user?.userID;
+            this.notificationsService.notifyCode('SYS007');
+            this.popupRelease.close();
+          }
+        });
+  }
+
+  changeValueName(event,data) {
     let value = event?.data;
     if (typeof event?.data === 'string') {
       value = value.trim();
     }
     data = value;
+  }
+
+  changeValue(event,data) {
+    let value = event?.data;
+    if (typeof event?.data === 'string') {
+      value = value.trim();
+    }
+    data[event?.field] = value;
   }
 
   async editName() {
