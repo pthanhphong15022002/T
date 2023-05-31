@@ -287,7 +287,7 @@ export class CodxApproveStepsComponent
             this.lstStep = lstNewStep;
             console.log('new step', this.lstStep);
           }
-          if (this.lstDeleteStep.length > 0) {
+          if (this.lstDeleteStep.length > 0 ) {
             if (this.lstDeleteStep[0].transID != this.recID) {
               this.lstDeleteStep = [];
             }

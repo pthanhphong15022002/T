@@ -46,11 +46,13 @@ import { ɵglobal as global } from '@angular/core';
 export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @HostListener('window:resize', ['$event'])
   onWindowResize(event?: any) {
-    if(this.objDashboard){
-      setTimeout(()=>{
-      (this.objDashboard as any).panelCollection.forEach((elePanel:any)=>{
-
-          if (elePanel && elePanel.getElementsByTagName('codx-chart').length > 0) {
+    if (this.objDashboard) {
+      setTimeout(() => {
+        (this.objDashboard as any).panelCollection.forEach((elePanel: any) => {
+          if (
+            elePanel &&
+            elePanel.getElementsByTagName('codx-chart').length > 0
+          ) {
             // let oldItem = elePanel.getElementsByClassName('chart-item');
             // //oldItem.remove();
             // if (oldItem.length > 1) {
@@ -59,70 +61,76 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
             //       oldItem[i].classList.add('d-none');
             //   }
             // }
-          }
-          else if(elePanel.querySelector('ejs-chart') &&
-                  elePanel.querySelector('ejs-chart').ej2_instances[0]
-                  ){
-                    const chartObj = elePanel.querySelector('ejs-chart').ej2_instances[0];
-                    if(event.target.innerWidth < window.screen.width || event.target.innerHeight < window.screen.height){
-                      chartObj.height = '60%';
-                      chartObj.width = '80%';
-                    }
-                    else{
-                      chartObj.height = '80%';
-                    chartObj.width = '100%';
-                    }
-                    chartObj.chartResize();
-                  }
-          else if(elePanel.querySelector('ejs-accumulationchart') &&
-              elePanel.querySelector('ejs-accumulationchart').ej2_instances[0]){
-                const chartObj = elePanel.querySelector('ejs-accumulationchart').ej2_instances[0];
-                if(event.target.innerWidth < window.screen.width){
-                  chartObj.height = '60%';
-                  chartObj.width = '80%';
-                }
-                else{
-                  chartObj.height = '80%';
-                chartObj.width = '100%';
-                }
-                chartObj.refreshChart();
-          }
-          else if(elePanel.querySelector('ejs-circulargauge') &&
-          elePanel.querySelector('ejs-circulargauge').ej2_instances[0]){
-                const chartObj = elePanel.querySelector('ejs-circulargauge').ej2_instances[0];
-                //chartObj.height = elePanel.offsetHeight -50 +'px';
-                //chartObj.width = elePanel.offsetWidth -50 +'px';
-                if(event.target.innerWidth < window.screen.width ){
-                  chartObj.height = elePanel.querySelector('.card-body')?.offsetHeight -10+'px';
-                  chartObj.width = elePanel.querySelector('.card-body')?.offsetWidth -10+'px';
-                }
-                else{
-                  chartObj.height = '100%';
-                  chartObj.width = '100%';
-                }
-                //elePanel.querySelector('.card-body')?.classList.add('overflow-hidden');
-                chartObj.refresh();
-          }
-          else if(elePanel.querySelector('ejs-treemap') &&
-          elePanel.querySelector('ejs-treemap').ej2_instances[0]){
-            const chartObj = elePanel.querySelector('ejs-treemap').ej2_instances[0];
-            if(event.target.innerWidth < window.innerWidth ){
-              chartObj.height = elePanel.offsetHeight -20 +'px';
-             chartObj.width = elePanel.offsetWidth -20 +'px';
+          } else if (
+            elePanel.querySelector('ejs-chart') &&
+            elePanel.querySelector('ejs-chart').ej2_instances[0]
+          ) {
+            const chartObj =
+              elePanel.querySelector('ejs-chart').ej2_instances[0];
+            if (
+              event.target.innerWidth < window.screen.width ||
+              event.target.innerHeight < window.screen.height
+            ) {
+              chartObj.height = '60%';
+              chartObj.width = '80%';
+            } else {
+              chartObj.height = '80%';
+              chartObj.width = '100%';
             }
-            else{
-              chartObj.height = elePanel.offsetHeight -50 +'px';
-              chartObj.width = elePanel.offsetWidth -50 +'px';
+            chartObj.chartResize();
+          } else if (
+            elePanel.querySelector('ejs-accumulationchart') &&
+            elePanel.querySelector('ejs-accumulationchart').ej2_instances[0]
+          ) {
+            const chartObj = elePanel.querySelector('ejs-accumulationchart')
+              .ej2_instances[0];
+            if (event.target.innerWidth < window.screen.width) {
+              chartObj.height = '60%';
+              chartObj.width = '80%';
+            } else {
+              chartObj.height = '80%';
+              chartObj.width = '100%';
+            }
+            chartObj.refreshChart();
+          } else if (
+            elePanel.querySelector('ejs-circulargauge') &&
+            elePanel.querySelector('ejs-circulargauge').ej2_instances[0]
+          ) {
+            const chartObj =
+              elePanel.querySelector('ejs-circulargauge').ej2_instances[0];
+            //chartObj.height = elePanel.offsetHeight -50 +'px';
+            //chartObj.width = elePanel.offsetWidth -50 +'px';
+            if (event.target.innerWidth < window.screen.width) {
+              chartObj.height =
+                elePanel.querySelector('.card-body')?.offsetHeight - 10 + 'px';
+              chartObj.width =
+                elePanel.querySelector('.card-body')?.offsetWidth - 10 + 'px';
+            } else {
+              chartObj.height = '100%';
+              chartObj.width = '100%';
+            }
+            //elePanel.querySelector('.card-body')?.classList.add('overflow-hidden');
+            chartObj.refresh();
+          } else if (
+            elePanel.querySelector('ejs-treemap') &&
+            elePanel.querySelector('ejs-treemap').ej2_instances[0]
+          ) {
+            const chartObj =
+              elePanel.querySelector('ejs-treemap').ej2_instances[0];
+            if (event.target.innerWidth < window.innerWidth) {
+              chartObj.height = elePanel.offsetHeight - 20 + 'px';
+              chartObj.width = elePanel.offsetWidth - 20 + 'px';
+            } else {
+              chartObj.height = elePanel.offsetHeight - 50 + 'px';
+              chartObj.width = elePanel.offsetWidth - 50 + 'px';
             }
 
             (chartObj as TreeMapComponent).refresh();
           }
-
-      });
-    },100)
+        });
+      }, 100);
     }
   }
-
 
   @ViewChild('dashboard') objDashboard!: DashboardLayoutComponent;
   @ViewChild('panelLayout') panelLayout?: TemplateRef<any>;
@@ -173,10 +181,9 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @Input() dataValue!: string;
   @Input() panels: any = [];
   @Input() datas: any = [];
-  @Input() isEditMode: boolean = true;
+  @Input() isEditMode: boolean = false;
   ngCmp: any = global;
   dialog: any;
-
 
   annotations: ChartAnnotationSettingsModel[] = [];
 
@@ -626,9 +633,9 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (args.element.querySelector('ejs-treemap')) {
         let component = args.element.getElementsByTagName('ejs-treemap')[0];
         if (component) {
-          let instance =component.ej2_instances[0] as TreeMapComponent;
-          instance.width = args.element.offsetWidth -50 +'px';
-          instance.height = args.element.offsetHeight -50 +'px';
+          let instance = component.ej2_instances[0] as TreeMapComponent;
+          instance.width = args.element.offsetWidth - 50 + 'px';
+          instance.height = args.element.offsetHeight - 50 + 'px';
           instance.refresh();
         }
       }
@@ -637,8 +644,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
           args.element.getElementsByTagName('ejs-circulargauge')[0];
         if (component) {
           let instance = component.ej2_instances[0] as CircularGaugeComponent;
-          instance.width = '80%';
-          instance.height = '80%';
+          instance.width = '100%';
+          instance.height = '100%';
           instance.refresh();
         }
       }
@@ -657,7 +664,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (!this.objDashboard) {
         let component = document.getElementsByTagName('ejs-dashboardlayout')[0];
 
-        this.objDashboard = (component as any).ej2_instances[0]
+        this.objDashboard = (component as any).ej2_instances[0];
       }
       this.objDashboard.panels = this.panels;
       let iGenPanels = setInterval(() => {
@@ -804,7 +811,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (eleBody && eleBody.length > 0) {
         eleBody[0].innerHTML = '';
         elePanel
-          ?.getElementsByClassName('card-header')[0]?.classList.add('d-none');
+          ?.getElementsByClassName('card-header')[0]
+          ?.classList.add('d-none');
         this.showHideButton(elePanel);
         eleBody[0].appendChild(html);
         this.replaceChart(elePanel);
@@ -899,26 +907,27 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       }
     }, 100);
 
-    let inCirGauce = setInterval(()=>{
-      if((elePanel as any).querySelector('ejs-circulargauge') &&
-      (elePanel as any).querySelector('ejs-circulargauge').ej2_instances[0]
-      )
-      {
+    let inCirGauce = setInterval(() => {
+      if (
+        (elePanel as any).querySelector('ejs-circulargauge') &&
+        (elePanel as any).querySelector('ejs-circulargauge').ej2_instances[0]
+      ) {
         clearInterval(inCirGauce);
-        const gaugeObj = (elePanel as any).querySelector('ejs-circulargauge').ej2_instances[0];
-        gaugeObj.height = '80%';
-        gaugeObj.width = '80%';
+        const gaugeObj = (elePanel as any).querySelector('ejs-circulargauge')
+          .ej2_instances[0];
+        gaugeObj.height = '100%';
+        gaugeObj.width = '100%';
       }
-    },100)
-    setTimeout(()=> {
-      clearInterval( insAcc );
-      clearInterval( insChart );
+    }, 100);
+    setTimeout(() => {
+      clearInterval(insAcc);
+      clearInterval(insChart);
       clearInterval(inCirGauce);
-     }, 2000);
+    }, 2000);
   }
 
   private replaceChart(elePanel: any) {
-    setTimeout(()=>{
+    setTimeout(() => {
       if (elePanel && elePanel.getElementsByTagName('codx-chart').length > 0) {
         let oldItem = elePanel.getElementsByClassName('chart-item');
         //oldItem.remove();
@@ -928,41 +937,45 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
               oldItem[i].classList.add('d-none');
           }
         }
-      }
-      else if(elePanel.querySelector('ejs-chart') &&
-              elePanel.querySelector('ejs-chart').ej2_instances[0]
-              ){
-                const chartObj = elePanel.querySelector('ejs-chart').ej2_instances[0];
-                chartObj.height = '80%';
-                chartObj.width = '100%';
-                chartObj.chartResize();
-              }
-      else if(elePanel.querySelector('ejs-accumulationchart') &&
-          elePanel.querySelector('ejs-accumulationchart').ej2_instances[0]){
-            const chartObj = elePanel.querySelector('ejs-accumulationchart').ej2_instances[0];
-            chartObj.height = '80%';
-            chartObj.width = '100%';
-            chartObj.refreshChart();
-      }
-      else if(elePanel.querySelector('ejs-circulargauge') &&
-      elePanel.querySelector('ejs-circulargauge').ej2_instances[0]){
-            const chartObj = elePanel.querySelector('ejs-circulargauge').ej2_instances[0];
-            //chartObj.height = elePanel.offsetHeight -50 +'px';
-            //chartObj.width = elePanel.offsetWidth -50 +'px';
-            chartObj.height = '80%';
-            chartObj.width='80%';
-            elePanel.querySelector('.card-body')?.classList.add('overflow-hidden');
-            chartObj.refresh();
-      }
-      else if(elePanel.querySelector('ejs-treemap') &&
-      elePanel.querySelector('ejs-treemap').ej2_instances[0]){
+      } else if (
+        elePanel.querySelector('ejs-chart') &&
+        elePanel.querySelector('ejs-chart').ej2_instances[0]
+      ) {
+        const chartObj = elePanel.querySelector('ejs-chart').ej2_instances[0];
+        chartObj.height = '80%';
+        chartObj.width = '100%';
+        chartObj.chartResize();
+      } else if (
+        elePanel.querySelector('ejs-accumulationchart') &&
+        elePanel.querySelector('ejs-accumulationchart').ej2_instances[0]
+      ) {
+        const chartObj = elePanel.querySelector('ejs-accumulationchart')
+          .ej2_instances[0];
+        chartObj.height = '80%';
+        chartObj.width = '100%';
+        chartObj.refreshChart();
+      } else if (
+        elePanel.querySelector('ejs-circulargauge') &&
+        elePanel.querySelector('ejs-circulargauge').ej2_instances[0]
+      ) {
+        const chartObj =
+          elePanel.querySelector('ejs-circulargauge').ej2_instances[0];
+        //chartObj.height = elePanel.offsetHeight -50 +'px';
+        //chartObj.width = elePanel.offsetWidth -50 +'px';
+        chartObj.height = '100%';
+        chartObj.width = '100%';
+        elePanel.querySelector('.card-body')?.classList.add('overflow-hidden');
+        chartObj.refresh();
+      } else if (
+        elePanel.querySelector('ejs-treemap') &&
+        elePanel.querySelector('ejs-treemap').ej2_instances[0]
+      ) {
         const chartObj = elePanel.querySelector('ejs-treemap').ej2_instances[0];
-        chartObj.height = elePanel.offsetHeight -50 +'px';
-        chartObj.width = elePanel.offsetWidth -50 +'px';
+        chartObj.height = elePanel.offsetHeight - 50 + 'px';
+        chartObj.width = elePanel.offsetWidth - 50 + 'px';
         (chartObj as TreeMapComponent).refresh();
       }
-    },100)
-
+    }, 100);
   }
 
   private showHideButton(elePanel: any) {

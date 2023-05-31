@@ -115,12 +115,17 @@ export class CodxAddTaskComponent implements OnInit {
       this.litsParentID = this.stepsTasks['parentID'].split(';');
     }
     this.owner = this.roles?.filter((role) => role.roleType === 'O');
-    if(this.taskType == "M"){
-      this.participant = this.roles?.filter((role) => role.roleType === 'P');
-    }else{
+    this.participant = this.roles?.filter((role) => role.roleType === 'P');
+    // if(this.taskType == "M"){
+    // }else{
+    //   let role = new DP_Instances_Steps_Tasks_Roles();
+    //   this.setRole(role);
+    //   this.participant = [role]
+    // }
+    if(this.action == 'add'){
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
-      this.participant = [role]
+      this.owner = [role]
     }
   }
 
