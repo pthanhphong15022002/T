@@ -15,6 +15,7 @@ import {
 } from '@syncfusion/ej2-angular-progressbar';
 import { UIComponent, ViewModel, ViewType } from 'codx-core';
 import { ChartSettings } from './models/chart.model';
+
 export class GridModels {
   pageSize: number;
   entityName: string;
@@ -59,6 +60,8 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   assignDBData: any;
 
   isEditMode: boolean = false;
+
+  palletColor = ['#06ddb8', '#a6dff5'];
 
   chartSettings6: ChartSettings = {
     seriesSetting: [
@@ -369,6 +372,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   isLoaded: boolean = false;
+
   getMyDashboardData(predicates: string, dataValues: string) {
     let model = new GridModels();
     model.funcID = this.funcID;
@@ -396,7 +400,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.api
       .exec('TM', 'TaskBusiness', 'GetDataTeamDashboardAsync', [model])
       .subscribe((res) => {
-        this.myDBData = res;
+        this.teamDBData = res;
         setTimeout(() => {
           this.isLoaded = true;
         }, 500);

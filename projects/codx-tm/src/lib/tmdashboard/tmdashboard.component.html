@@ -129,14 +129,15 @@
   <div class="w-100 h-100" id="5" title="Tỷ lệ công việc được giao">
     <div class="assignchart-group w-100 h-100">
       <div
-        *ngFor="let tasks of myDBData?.tasksByCategory"
+        *ngFor="let tasks of myDBData?.tasksByCategory; let i = index"
         class="assignchart-item d-flex align-items-center justify-content-end"
         [title]=""
       >
         <div class="fw-bold me-2">{{ tasks.quantity }}</div>
         <div
           class="assignchart-task"
-          style="background-color: #1d1dcc; color: #fff"
+          style="color: #000000"
+          [style.background-color]="palletColor[i]"
           [style.width]="
             (tasks.quantity / myDBData?.tasksByCategory[0].quantity) * 100 + '%'
           "
@@ -163,20 +164,9 @@
       [dataSource]="myDBData?.tasksByRef?.tasksRef"
       weightValuePath="quantity"
       rangeColorValuePath="quantity"
+      [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
       [leafItemSettings]="{
         labelPath: 'refName',
-        colorMapping: [
-          {
-            from: 0,
-            to: 10,
-            color: 'orange'
-          },
-          {
-            from: 10,
-            to: 100,
-            color: 'green'
-          }
-        ]
       }"
       [tooltipSettings]="{
         visible: true,
@@ -239,7 +229,7 @@
               value: myDBData?.rateDoneTask,
               type: 'RangeBar',
               radius: '100%',
-              color: '#e5ce20',
+              color: '#0078ff',
               border: {
                 width: 0
               },
@@ -288,7 +278,7 @@
               value: 50,
               type: 'RangeBar',
               radius: '80%',
-              color: 'red',
+              color: '#2cd9c5',
               border: {
                 width: 0
               },
@@ -443,6 +433,7 @@
             #pie1
             style="display: block"
             [tooltip]="tooltip"
+            [centerLabel]="{ text: '963' }"
           >
             <e-accumulation-series-collection>
               <e-accumulation-series
@@ -453,6 +444,13 @@
                 innerRadius="80%"
                 radius="70%"
                 groupTo="10"
+                [palettes]="[
+                  '#005dc7',
+                  '#21b3d2',
+                  '#06ddb8',
+                  '#00f5e9',
+                  '#a6dff5'
+                ]"
               >
               </e-accumulation-series>
             </e-accumulation-series-collection>
@@ -687,6 +685,13 @@
               startAngle="0"
               innerRadius="80%"
               radius="70%"
+              [palettes]="[
+                '#005dc7',
+                '#21b3d2',
+                '#06ddb8',
+                '#00f5e9',
+                '#a6dff5'
+              ]"
             >
             </e-accumulation-series>
           </e-accumulation-series-collection>
@@ -924,48 +929,39 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div id="10" title="Tỷ lệ công việc được giao">
-    <div class="control-section">
-      <div align="center">
-        <ejs-chart
-          style="display: block"
-          align="center"
-          [title]="'Thống kê công việc hoàn thành và số giờ thực hiện'"
+  <div class="w-100 h-100" id="10" title="Tỷ lệ công việc được giao">
+    <ejs-chart
+      style="display: block"
+      align="center"
+      width="100%"
+      height="100%"
+      [id]="newGuid()"
+      [tooltip]="{ enable: true }"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="teamDBData?.dataBarChart?.lineChart"
+          type="Line"
+          xName="label"
+          yName="value"
+          name="WorkHours"
         >
-          <e-series-collection>
-            <e-series
-              [dataSource]="myDBData?.dataBarChart?.lineChart"
-              type="Line"
-              xName="label"
-              yName="value"
-              name="WorkHours"
-            >
-            </e-series>
-            <e-series
-              [dataSource]="myDBData?.dataBarChart?.barChart"
-              type="Column"
-              xName="label"
-              yName="value"
-              name="Tasks"
-            >
-            </e-series>
-          </e-series-collection>
-        </ejs-chart>
-      </div>
-    </div>
+        </e-series>
+        <e-series
+          [dataSource]="teamDBData?.dataBarChart?.barChart"
+          type="Column"
+          xName="label"
+          yName="value"
+          name="Tasks"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
   </div>
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div class="w-100 h-100" id="11" title="Tổng thời gian hoàn thành thực tế">
-    <!-- <div class="w-100 h-100 d-flex flex-column justify-content-center">
-      <div class="fw-bold text-center">Tổng thời gian hoàn thành thực tế</div>
-      <div class="d-flex justify-content-center align-items-center">
-        <div class="fw-bold fs-1">116</div>
-        <div class="ms-2">giờ</div>
-      </div>
-    </div> -->
-  </div>
+  <div id="11" title=""></div>
 </ng-template>
 
 <ng-template #team_dashboard>

@@ -105,26 +105,26 @@ export class EmployeeListComponent extends UIComponent {
       },
     ];
     this.views = [
-      {
-        id: '1',
-        type: ViewType.grid,
-        active: true,
-        sameData: true,
-        model: {
-          resources: this.columnsGrid,
-          hideMoreFunc: true,
-        },
-      },
       // {
       //   id: '1',
-      //   type: ViewType.list,
+      //   type: ViewType.grid,
       //   active: true,
       //   sameData: true,
       //   model: {
-      //     template: this.templateList,
-      //     headerTemplate: this.headerTemplate,
+      //     resources: this.columnsGrid,
+      //     hideMoreFunc: true,
       //   },
       // },
+      {
+        id: '1',
+        type: ViewType.list,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.templateList,
+          headerTemplate: this.headerTemplate,
+        },
+      },
     ];
     this.detectorRef.detectChanges();
   }
