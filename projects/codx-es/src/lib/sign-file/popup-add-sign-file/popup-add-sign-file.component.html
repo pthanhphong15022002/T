@@ -171,7 +171,7 @@
     </div>
     <div class="stepper-body pt-2 w-100" *ngIf="currentTab < 2">
       <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-800px h-100">
-        <div class="mb-10 mt-10 text-center tab-pane-header">
+        <div class="mb-6 mt-9 text-center tab-pane-header">
           <h2 class="h2-title">
             <!-- <codx-label *ngIf="currentTab == 0" name="lblUploadFile" [formModel]="formModelCustom"
               default="Upload file">
@@ -209,7 +209,7 @@
 
           <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
             <div class="w-100 form-content mw-500px mx-auto">
-              <div class="text-center">
+              <div class="text-center sign-attachment">
                 <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
                   hideBtnSave="1" hideFolder="1" [hideUploadBtn]="'0'" [functionID]="formModelCustom.funcID" type="inline"
                   (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="sign">

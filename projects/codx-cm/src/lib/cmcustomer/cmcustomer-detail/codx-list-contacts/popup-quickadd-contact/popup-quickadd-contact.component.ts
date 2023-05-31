@@ -178,12 +178,16 @@ export class PopupQuickaddContactComponent implements OnInit {
 
     if (this.data.mobile != null && this.data.mobile.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
+    }else{
+      this.data.mobile = null;
     }
     if (
       this.data.personalEmail != null &&
       this.data.personalEmail.trim() != ''
     ) {
       if (!this.checkEmailOrPhone(this.data.personalEmail, 'E')) return;
+    }else{
+      this.data.personalEmail = null;
     }
 
       if (this.listContacts != null) {

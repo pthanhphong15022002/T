@@ -318,21 +318,6 @@ export class PopupConvertLeadComponent implements OnInit {
       this.customer.recID = this.customerID;
     }
     this.deal.customerID = this.customer?.recID;
-    if (this.lstContactCustomer != null) {
-      this.lstContactCustomer.forEach((res) => {
-        if (res?.objectType == '2') {
-          res.recID = Util.uid();
-        }
-      });
-    }
-
-    if (this.lstContactDeal != null) {
-      this.lstContactDeal.forEach((res) => {
-        if (res?.objectType == '2' || res?.objectType == '1') {
-          res.recID = Util.uid();
-        }
-      });
-    }
 
     if (this.listAddressCustomer != null) {
       this.listAddressCustomer.forEach((res) => {
@@ -656,7 +641,7 @@ export class PopupConvertLeadComponent implements OnInit {
       );
       if (index != -1) {
         var indexDeal = this.lstContactDeal.findIndex(
-          (x) => this.lstContactCustomer[index].recID == x.recID
+          (x) => this.lstContactCustomer[index].recID == x.refID
         );
         this.lstContactCustomer[index].refID = null;
         this.lstContactCustomer.splice(index, 1);
@@ -675,12 +660,13 @@ export class PopupConvertLeadComponent implements OnInit {
       if (e.data) {
         var tmp = new CM_Contacts();
         tmp = JSON.parse(JSON.stringify(e.data));
+        tmp.recID = Util.uid();
         tmp.refID = e.data.recID;
         var indexCus = this.lstContactCustomer.findIndex(
           (x) => x.recID == e.data.recID
         );
 
-        if (!this.lstContactDeal.some((x) => x.recID == e?.data?.recID)) {
+        if (!this.lstContactDeal.some((x) => x.refID == e?.data?.recID)) {
           this.lstContactDeal.push(tmp);
         }
         if (indexCus != -1) {
@@ -689,7 +675,7 @@ export class PopupConvertLeadComponent implements OnInit {
       }
     } else {
       var index = this.lstContactDeal.findIndex(
-        (x) => x.recID == e?.data?.recID
+        (x) => x.refID == e?.data?.recID
       );
       this.lstContactDeal.splice(index, 1);
     }
@@ -699,7 +685,7 @@ export class PopupConvertLeadComponent implements OnInit {
   contactEvent(e) {
     if (e.data) {
       var findIndex = this.lstContactDeal.findIndex(
-        (x) => x.recID == e.data?.recID
+        (x) => x.refID == e.data?.recID
       );
       if (e.action == 'edit') {
         if (findIndex != -1) {
