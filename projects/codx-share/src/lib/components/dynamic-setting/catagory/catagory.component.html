@@ -362,7 +362,10 @@
                 [listCombobox]="data.reference"
                 [multiple]="data.displayMode === '5'"
                 [disabled]="
-                  !dataValue[data.fieldName] || dataValue[data.fieldName] == '0'
+                  dataValue[data.transType]
+                    ? !dataValue[data.transType][data.fieldName] ||
+                      dataValue[data.transType][data.fieldName] == '0'
+                    : false
                 "
                 (valueChange)="valueChange($event, data, null)"
               >
@@ -392,23 +395,29 @@
           [attr.data-recid]="data.recID"
         >
           {{
-            (
-              data.recID
-              | shareSetting : settingFull : dataValue[data.transType]
-            )?.objectName == "null" ||
-            !(
-              data.recID
-              | shareSetting : settingFull : dataValue[data.transType]
-            )?.objectName
-              ? ""
-              : (
+            dataValue && dataValue[data.transType]
+              ? (
                   data.recID
                   | shareSetting : settingFull : dataValue[data.transType]
-                )?.objectName ||
-                (
+                )?.objectName == "null" ||
+                !(
                   data.recID
                   | shareSetting : settingFull : dataValue[data.transType]
-                )?.objectID
+                )?.objectName
+                ? (
+                    data.recID
+                    | shareSetting : settingFull : dataValue[data.transType]
+                  )?.objectID || ""
+                : (
+                    data.recID
+                    | shareSetting : settingFull : dataValue[data.transType]
+                  )?.objectName ||
+                  (
+                    data.recID
+                    | shareSetting : settingFull : dataValue[data.transType]
+                  )?.objectID ||
+                  ""
+              : ""
           }}
         </span>
       </div>
