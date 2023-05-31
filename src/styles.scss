@@ -1350,9 +1350,9 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
 //   margin-left: 0 !important;
 // }
 
-.e-frozencontent.e-frozen-left-content > table {
-  width: auto;
-}
+// .e-frozencontent.e-frozen-left-content > table {
+//   width: auto;
+// }
 
 .e-frozencontent.e-frozen-left-content > table tr td {
   height: 47px !important;
@@ -2623,7 +2623,7 @@ codx-toolbar {
     bottom: 2px;
     //height: 42px;
     background-color: #fff;
-    padding: 0 0 10px 10px !important;
+    padding: 0 0 0 10px !important;
     border-top: 1px #e5e5e7 solid;
   }
 
