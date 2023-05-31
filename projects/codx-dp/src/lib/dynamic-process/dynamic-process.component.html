@@ -335,3 +335,15 @@
   </span>
 </ng-template>
 
+<ng-template #releaseProcess>
+  <codx-form
+    [subHeader]="releaseProcessHeader"
+    [body]="releaseProcessBody"
+    [footer]="releaseProcessFooter"
+    [dialog]="popupEditName"
+  >
+  </codx-form>
+  <ng-template #releaseProcessHeader></ng-template>
+  <ng-template #releaseProcessBody></ng-template>
+  <ng-template #releaseProcessFooter></ng-template>
+</ng-template>

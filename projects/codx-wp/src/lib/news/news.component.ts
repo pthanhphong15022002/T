@@ -28,9 +28,7 @@ export class NewsComponent extends UIComponent {
   videos: any[] = [];
   views: Array<ViewModel> = [];
   category: string = "";
-  mssgWP025:string = "";
-  mssgWP026:string = "";
-  mssgWP027:string = "";
+  mssgNodata:string = "";
   loaded:boolean = false;
   userPermission:any = null;
   scrolled:boolean = false;
@@ -108,14 +106,8 @@ export class NewsComponent extends UIComponent {
   }
   // get message default
   getMessageDefault() {
-    this.cache.message("WP025").subscribe((mssg: any) => {
-      if (mssg && mssg?.defaultName) this.mssgWP025 = mssg.defaultName;
-    });
-    this.cache.message("WP026").subscribe((mssg: any) => {
-      if (mssg && mssg?.defaultName) this.mssgWP026 = mssg.defaultName;
-    });
-    this.cache.message("WP027").subscribe((mssg: any) => {
-      if (mssg && mssg?.defaultName) this.mssgWP027 = mssg.defaultName;
+    this.cache.message("SYS011").subscribe((mssg: any) => {
+      if (mssg && mssg?.defaultName) this.mssgNodata = mssg.defaultName;
     });
     this.cache.moreFunction("CoDXSystem","")
     .subscribe((mFuc:any) => {
@@ -143,13 +135,9 @@ export class NewsComponent extends UIComponent {
         'NewsBusiness',
         'GetTop4PostAsync',
         [category]).subscribe((res:any) => {
-          if(res)
-          {
-            this.posts = JSON.parse(JSON.stringify(res));
-          }
+          this.posts = JSON.parse(JSON.stringify(res));
           this.loaded = true;
           this.detectorRef.detectChanges();
-
         });
   }
   

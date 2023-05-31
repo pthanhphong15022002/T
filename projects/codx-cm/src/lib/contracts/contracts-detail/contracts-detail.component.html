@@ -328,6 +328,7 @@
 
 <ng-template #mainRightTemp>
   <codx-taskbar
+    [change]="itemSelected"
     [listTab]="listClicked"
     (tab)="changeTab($event)"
     size="20"
@@ -404,36 +405,127 @@
     <div class="fs-6 fw-bold"><span>Tiến độ thanh toán</span></div>
     <div class="row">
       <div class="col-4">
-        <span>Giá trị hợp đồng: </span>
-        <span>{{ itemSelected?.contractAmt }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="contractAmt"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.contractAmt
+              | formatvalue : view.formModel : 'ContractAmt'
+              | async
+          "
+        ></span>
+        <!-- <span>Giá trị hợp đồng: </span> -->
       </div>
       <div class="col-4">
-        <span>Số tiền thanh toán: </span>
-        <span>{{ itemSelected?.paidAmt }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="paidAmt"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.paidAmt
+              | formatvalue : view.formModel : 'PaidAmt'
+              | async
+          "
+        ></span>
+        <!-- <span>Số tiền thanh toán: </span> -->
       </div>
       <div class="col-4">
-        <span>Số tiền còn lại: </span>
-        <span>{{ itemSelected?.remainAmt }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="remainAmt"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.remainAmt
+              | formatvalue : view.formModel : 'RemainAmt'
+              | async
+          "
+        ></span>
+        <!-- <span>Số tiền còn lại: </span> -->
       </div>
     </div>
     <div class="row">
       <div class="col-4">
-        <span>Giá trị hợp đồng: </span>
-        <span>{{ itemSelected?.contractAmt }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="contractAmt"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.contractAmt
+              | formatvalue : view.formModel : 'ContractAmt'
+              | async
+          "
+        ></span>
+        <!-- <span>Giá trị hợp đồng: </span> -->
       </div>
       <div class="col-8">
-        <span>Tình trạng thanh toán: </span>
-        <span>{{ itemSelected?.paymentStatus }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="paymentStatus"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.paymentStatus
+              | formatvalue : view.formModel : 'PaymentStatus'
+              | async
+          "
+        ></span>
+        <!-- <span>Tình trạng thanh toán: </span> -->
       </div>
     </div>
     <div class="row">
       <div class="col-4">
-        <span>Điều khoản thanh toán: </span>
-        <span>{{ itemSelected?.pmtTermID }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="pmtTermID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.pmtTermID
+              | formatvalue : view.formModel : 'PmtTermID'
+              | async
+          "
+        ></span>
+        <!-- <span>Điều khoản thanh toán: </span> -->
       </div>
       <div class="col-8">
-        <span>Phương thức thanh toán: </span>
-        <span>{{ itemSelected?.pmtMethodID }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="pmtMethodID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.pmtMethodID
+              | formatvalue : view.formModel : 'PmtMethodID'
+              | async
+          "
+        ></span>
+        <!-- <span>Phương thức thanh toán: </span> -->
       </div>
     </div>
   </div>
@@ -441,44 +533,174 @@
   <div>
     <div class="fs-6 fw-bold"><span>Lịch thanh toán</span></div>
     <view-payment
-    ></view-payment>    
+      [isSave]="true"
+      [contracts]="itemSelected"
+      [listPayment]="listPayment"
+      [listPaymentHistory]="listPaymentHistory"
+    ></view-payment>
   </div>
 
   <div>
     <div class="fs-6 fw-bold"><span>Tiến giao hàng</span></div>
     <div class="row">
       <div class="col-4">
-        <span>Điều khoản giao hàng: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delTermID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delTermID
+              | formatvalue : view.formModel : 'DelTermID'
+              | async
+          "
+        ></span>
+        <!-- <span>Điều khoản giao hàng: </span> -->
       </div>
       <div class="col-4">
-        <span>Hình thức giao hàng: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delModeID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delModeID
+              | formatvalue : view.formModel : 'DelModeID'
+              | async
+          "
+        ></span>
+        <!-- <span>Hình thức giao hàng: </span> -->
       </div>
       <div class="col-4">
-        <span>Phí vận chuyển: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delPrice"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delPrice
+              | formatvalue : view.formModel : 'DelPrice'
+              | async
+          "
+        ></span>
+        <!-- <span>Phí vận chuyển: </span> -->
       </div>
     </div>
     <div class="row">
       <div class="col-4">
-        <span>Hạn giao hàng: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delDeadline"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delDeadline
+              | formatvalue : view.formModel : 'DelDeadline'
+              | async
+          "
+        ></span>
+        <!-- <span>Hạn giao hàng: </span> -->
       </div>
       <div class="col-4">
-        <span>Tình trạng giao hàng: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delStatus"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delStatus
+              | formatvalue : view.formModel : 'DelStatus'
+              | async
+          "
+        ></span>
+        <!-- <span>Tình trạng giao hàng: </span> -->
       </div>
       <div class="col-4">
-        <span>Ngày giao hàng thành công: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delActualDate"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delActualDate
+              | formatvalue : view.formModel : 'DelActualDate'
+              | async
+          "
+        ></span>
+        <!-- <span>Ngày giao hàng thành công: </span> -->
       </div>
     </div>
     <div class="row">
       <div class="col-4">
-        <span>Liên hệ giao hàng: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delContactID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delContactID
+              | formatvalue : view.formModel : 'DelContactID'
+              | async
+          "
+        ></span>
+        <!-- <span>Liên hệ giao hàng: </span> -->
       </div>
       <div class="col-8">
-        <span>Số diện thoại: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delPhone"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delPhone
+              | formatvalue : view.formModel : 'DelPhone'
+              | async
+          "
+        ></span>
+        <!-- <span>Số diện thoại: </span> -->
       </div>
     </div>
     <div class="row">
       <div class="col-12">
-        <span>Địa chỉ giao hàng: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delAddress"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delAddress
+              | formatvalue : view.formModel : 'DelAddress'
+              | async
+          "
+        ></span>
+        <!-- <span>Địa chỉ giao hàng: </span> -->
       </div>
     </div>
   </div>
@@ -633,4 +855,3 @@
     </div>
   </div>
 </ng-template>
-
