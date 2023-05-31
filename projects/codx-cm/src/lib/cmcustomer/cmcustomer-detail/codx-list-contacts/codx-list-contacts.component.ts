@@ -152,7 +152,7 @@ export class CodxListContactsComponent implements OnInit {
       if (this.lstContactRef != null && this.lstContactRef.length > 0) {
         for(var i = 0; i < this.listContacts.length; i++){
           let contact = this.listContacts[i];
-          if(this.lstContactRef.map(x => x.contactName).includes(contact.contactName) && this.lstContactRef.map(x => x.firstName).includes(contact.firstName)){
+          if(this.lstContactRef.map(x => x.refID).includes(contact.recID)){
             this.listContacts[i].checked = true;
           }
         }
