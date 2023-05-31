@@ -11,7 +11,7 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-3">
               <i class="icon-info icon-18 me-2"></i>
-              <codx-label class="fw-bold fs-5-sm" fiedName="lblGeneral" [formModel]="form.formModel"
+              <codx-label class="fw-bold fs-6" fiedName="lblGeneral" [formModel]="form.formModel"
                 default="Thông tin chung"></codx-label>
             </div>
           </ng-template>
@@ -28,7 +28,7 @@
           <ng-template #headerText>
             <div #cashRef class="d-flex align-items-top me-2 mt-3">
               <i class="icon-format_list_numbered icon-18 me-2"></i>
-              <codx-label class="fw-bold fs-5-sm" fiedName="lblDetail1" [formModel]="form.formModel"
+              <codx-label class="fw-bold fs-6" fiedName="lblDetail1" [formModel]="form.formModel"
                 default="Chi tiết"></codx-label>
             </div>
           </ng-template>
@@ -43,9 +43,9 @@
             <div #cashRef class="d-flex align-items-top me-2 mt-3">
               <i *ngIf="cashpayment?.subType == '2'" class="icon-format_list_numbered icon-18 me-2"></i>
               <i *ngIf="cashpayment?.subType == '5'" class="icon-i-file-earmark-binary icon-18 me-2"></i>
-              <codx-label *ngIf="cashpayment?.subType == '2'" class="fw-bold fs-5-sm" fiedName="lblDetail2"
+              <codx-label *ngIf="cashpayment?.subType == '2'" class="fw-bold fs-6" fiedName="lblDetail2"
                 [formModel]="form.formModel" default="Chi tiết"></codx-label>
-              <codx-label *ngIf="cashpayment?.subType == '5'" class="fw-bold fs-5-sm" fiedName="lblDetail2"
+              <codx-label *ngIf="cashpayment?.subType == '5'" class="fw-bold fs-6" fiedName="lblDetail2"
                 [formModel]="form.formModel" default="Hóa đơn công nợ"></codx-label>
             </div>
           </ng-template>
