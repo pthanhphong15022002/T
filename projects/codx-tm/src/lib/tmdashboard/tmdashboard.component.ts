@@ -63,6 +63,8 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
 
   palletColor = ['#06ddb8', '#a6dff5'];
 
+  // palletColorTopChart = ['#005dc7', '#0078ff', ''];
+
   chartSettings6: ChartSettings = {
     seriesSetting: [
       {
