@@ -93,9 +93,12 @@
           </codx-img>
         </div>
         <div class="d-flex flex-column">
-          <div clas="mb-1 d-flex align-items-center line-clamp line-clamp-1">
+          <div clas="mb-1 d-flex align-items-top">
+            <span class="fw-bold text-dark me-1">
+              {{ data?.contactName }}
+            </span>
             <span
-              class="icon-16 me-2 text-hover-primary cursor-pointer"
+              class="icon-16 text-hover-primary cursor-pointer"
               [class]="data?.contactType | vll : 'CRM025' : 'icon' | async"
               [style.color]="
                 data?.contactType | vll : 'CRM025' : 'textColor' | async
@@ -107,13 +110,11 @@
               placement="right bottom left"
               container="body"
             ></span>
-            <span class="fw-bold text-dark">
-              {{ data?.contactName }}
-            </span>
+            
           </div>
 
           <div class="" *ngIf="data.jobTitle">
-            <span class="text-gray-900">{{ data.jobTitle }}</span>
+            <span class="text-gray-600">{{ data.jobTitle }}</span>
           </div>
           <!-- <div class="" *ngIf="data.isDefault">
             <codx-label
@@ -163,7 +164,7 @@
         <span class="icon-vpn_key icon-16"></span>
       </div>
     </div>
-    <div class="action-menu-od w-50px">
+    <div class="action-menu-od w-100px">
       <codx-mfunc
         [hidden]="hidenMF"
         [formModel]="formModelContact"

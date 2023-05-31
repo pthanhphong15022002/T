@@ -3,13 +3,15 @@
     <div class="card-body">
       <div class="d-flex align-items-center">
         <div class="me-3">
-          <codx-img 
-            [objectId]="user?.userID" 
-            [objectName]="user?.userName" 
-            objectType="AD_Users" 
-            [width]="40"
-            [imgOn]="user?.modifiedOn">
-          </codx-img>
+          <ng-container *ngIf="user">
+            <codx-img 
+              [objectId]="user.userID" 
+              [objectName]="user.userName" 
+              objectType="AD_Users" 
+              [width]="40"
+              [imgOn]="user.modifiedOn">
+            </codx-img>
+          </ng-container>
         </div>
         <div class="d-flex flex-column flex-grow-1 share">
           <span class="text-gray-500 feed-box box-new share-input" (click)="addPost()">
@@ -61,12 +63,14 @@
             <ng-container *ngIf="item.approveControl == '1' && item.approveStatus == '3'">
               <span title="Bài viết chưa được xét duyệt" class="icon-security text-primary icon-16 me-2"></span>
             </ng-container>
-            <span class="badge badge-md badge-light rounded-1 px-2 fs-7 badge-listpost">
-              <codx-vll [name]="'WP001'" [value]="item.shareControl" [showText]="true" [showIcon]="true"
-                [className]="'text-gray-600 vll-post'" [icoCss]="'w-13px h-13px'" [path]="'assets/themes/sys/default/img/'"
-                [showBgColor]="true">
-              </codx-vll>
-            </span>
+            <ng-container *ngIf="item.shareControl">
+              <span class="badge badge-md badge-light rounded-1 px-2 fs-7 badge-listpost">
+                <codx-vll [name]="'WP001'" [value]="item.shareControl" [showText]="true" [showIcon]="true"
+                  [className]="'text-gray-600 vll-post'" [icoCss]="'w-13px h-13px'" [path]="'assets/themes/sys/default/img/'"
+                  [showBgColor]="true">
+                </codx-vll>
+              </span>
+            </ng-container>
           </span>
           <span class="mt-1" *ngIf="item.shareName">
             <ng-container *ngTemplateOutlet="templateShares; context: { $implicit: item }">
@@ -120,16 +124,14 @@
     <!-- contents -->
     <div class="wp-contents mt-3">
       <div class="wp-contents-text">
-        <ng-container *ngIf="item.contents">
-          <div [innerHTML]="item.isShowShortContent ? item.shortContent : item.contents | safe: 'html'"></div>
-          <ng-container *ngIf="item.isShowShortContent">
+        <div *ngIf="item.contents" [innerHTML]="item.contents | safe: 'html'"></div>
+          <ng-container *ngIf="item.isShortContent">
             <div>
-              <a href="javascript:void(0)" (click)="viewMore(item)">
+              <a href="javascript:void(0)" (click)="clickReadMore(item)">
                 <codx-label [formModel]="formModel" name="lblViewMore" default="Xem thêm"></codx-label>
               </a>
             </div>
           </ng-container>
-        </ng-container>
       </div>
       <ng-container *ngIf="item.attachments > 0">
         <div class="wp-contents-files mt-3">
@@ -325,4 +327,13 @@
       </div>
     </div>
   </div>
+</ng-template>
+<!-- cbb share -->
+<ng-template #tmpCBBShare let-dialog>
+  <codx-share
+    [dialog]="dialog"
+    [multiple]="false"
+    listName="WP001"
+    (eventApply)="changePermission($event)">
+  </codx-share>
 </ng-template>

@@ -65,6 +65,7 @@ export class DynamicProcessComponent
   @ViewChild('templateViewCard', { static: true })
   templateViewCard: TemplateRef<any>;
   @ViewChild('editNameProcess') editNameProcess: TemplateRef<any>;
+  @ViewChild('releaseProcess') releaseProcessTemp: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('footerButton') footerButton: TemplateRef<any>;
 
@@ -109,7 +110,9 @@ export class DynamicProcessComponent
   linkAvt = '';
   TITLENAME = 'Thay đổi tên quy trình';
   popupEditName: DialogRef;
+  popupRelease: DialogRef;
   processRename: DP_Processes;
+  processRelease: DP_Processes;
   processName = '';
   processNameBefore = '';
   user;
@@ -559,6 +562,9 @@ export class DynamicProcessComponent
       case 'DP01015': // thiết lập quy trình duyệt
         this.settingSubmit(data.processNo);
         break;
+      case 'DP01016': // phát hành quy trình
+        this.releaseProcess(data);
+        break;
     }
     this.isButton = false;
   }
@@ -830,13 +836,22 @@ export class DynamicProcessComponent
       280
     );
   }
+  releaseProcess(process) {
+    this.processRelease = process;
+    this.popupRelease = this.callfc.openForm(
+      this.releaseProcessTemp,
+      '',
+      500,
+      600
+    );
+  }
 
-  changeValueInput(event) {
+  changeValue(event,data) {
     let value = event?.data;
     if (typeof event?.data === 'string') {
       value = value.trim();
     }
-    this.processName = value;
+    data = value;
   }
 
   async editName() {

@@ -52,6 +52,8 @@
           <codx-label fiedName="ResourceID" [formModel]="form.formModel">
           </codx-label>
         </div>
+        <codx-input *ngIf="viewOnly" [disabled]="viewOnly" ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"  [disabled]="viewOnly">
+        </codx-input>
         <ng-template #showAll>
           <div class="d-flex bg-light ps-5 py-2 justify-content-start align-items-center">
             <span role="button" class="me-2" [ngClass]="
@@ -63,7 +65,7 @@
             <codx-label default="Hiện tất cả" name="lblShowAll"></codx-label>
           </div>
         </ng-template>
-          <ejs-dropdownlist id="resource" #cusCBB [dataSource]="cbbResource" [fields]="fields" 
+          <ejs-dropdownlist *ngIf="!viewOnly" id="resource" #cusCBB [dataSource]="cbbResource" [fields]="fields" 
           [placeholder]="grView?.resourceID?.description" (valueChange)="cbxResourceChange($event)"
           [footerTemplate]="showAll"></ejs-dropdownlist>
         

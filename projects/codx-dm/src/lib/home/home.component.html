@@ -26,14 +26,12 @@
   </ng-template>
 </ng-template>
 
-
 <!-- view-list -->
 <ng-template #templateRight>
-
   <div *ngIf="isSearch">
   </div>
   <div #divHome  (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
-    class="w-100 scroll-y home rounded-2  bg-white containerScroll" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+    class="w-100 scroll-y home rounded-2 bg-white containerScroll" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
     data-kt-scroll-height="auto" data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
     data-kt-scroll-offset="0">
     <ng-container *ngTemplateOutlet="empty"></ng-container>
@@ -279,7 +277,7 @@
   </ng-container>
 </ng-template>
 <ng-template #empty>
-  <ng-container *ngIf="!textSearch && data && data[0] != null && data[0].isDelete">
+  <ng-container *ngIf="funcID == 'DMT08'">
     <div class="nondata-container w-100 mb-2">
       <div class="d-flex justify-content-between page-heading align-items-center p-2">
         <div class="fw-bold ms-2">{{ dmSV.titleEmptyTrash30 + " " + dmSV.paraSetting.OldDays + " ngày" }}</div>

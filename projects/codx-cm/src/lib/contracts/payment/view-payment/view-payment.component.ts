@@ -15,6 +15,7 @@ import { log } from 'console';
 })
 export class ViewPaymentComponent implements OnInit, OnChanges {
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
+  @ViewChild('scheduleDate') scheduleDateTem: ElementRef;
   @Input() contracts: CM_Contracts;
   @Input() listPayment: CM_ContractsPayments[];
   @Input() listPaymentHistory: CM_ContractsPayments[];
@@ -63,8 +64,8 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       },
       {
         field: 'scheduleDate',
-        headerText:
-          this.grvPayments?.ScheduleDate?.headerText ?? 'Ngày hẹn thanh toán',
+        headerText: this.grvPayments?.ScheduleDate?.headerText ?? 'Ngày hẹn thanh toán',
+        template: this.scheduleDateTem,
         width: 150,
       },
       {

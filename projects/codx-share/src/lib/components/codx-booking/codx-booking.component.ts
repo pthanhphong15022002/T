@@ -402,7 +402,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   onActionClick(event?) {
     if (event.type == 'add' && event.data?.resourceId != null) {
-      this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
+      this.popupTitle = this.buttons?.text + ' ' + this.funcIDName;
       this.addNew(event.data);
     }
     if (event.type == 'doubleClick' || event.type == 'edit') {
@@ -807,7 +807,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   invite(data: any) {
     if (
-      this.curUser?.userID != data?.owner ||
+      this.curUser?.userID == data?.owner ||
       this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
     ) {
       let dialogInvite = this.callfc.openForm(
@@ -888,8 +888,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   edit(data?) {
     if (data) {
       if (
-        this.curUser?.userID != data?.createdBy ||
-        this.codxBookingService.checkAdminRole(this.curUser?.userID, this.isAdmin)
+        this.curUser?.userID == data?.createdBy ||
+        this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
       ) {
         this.codxBookingService
           .getBookingByRecID(data?.recID)
@@ -1033,9 +1033,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   allocate(data: any) {
-    let x=data?.approverID;
-    let xx=this.curUser.userID;
-    if (data.approverID != this.curUser.userID) {
+    if (data?.approverID != this.curUser?.userID) {
       this.notificationsService.notifyCode('SYS032');
       return;
     }
