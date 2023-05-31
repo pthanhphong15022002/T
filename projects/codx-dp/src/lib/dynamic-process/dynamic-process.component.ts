@@ -112,6 +112,7 @@ export class DynamicProcessComponent
   popupEditName: DialogRef;
   popupRelease: DialogRef;
   processRename: DP_Processes;
+  processRelease: DP_Processes;
   processName = '';
   processNameBefore = '';
   user;
@@ -562,7 +563,7 @@ export class DynamicProcessComponent
         this.settingSubmit(data.processNo);
         break;
       case 'DP01016': // phát hành quy trình
-        this.releaseProcess(data.processNo);
+        this.releaseProcess(data);
         break;
     }
     this.isButton = false;
@@ -836,9 +837,7 @@ export class DynamicProcessComponent
     );
   }
   releaseProcess(process) {
-    this.processRename = process;
-    this.processName = process['processName'];
-    this.processNameBefore = process['processName'];
+    this.processRelease = process;
     this.popupRelease = this.callfc.openForm(
       this.releaseProcessTemp,
       '',
@@ -847,12 +846,12 @@ export class DynamicProcessComponent
     );
   }
 
-  changeValueInput(event) {
+  changeValue(event,data) {
     let value = event?.data;
     if (typeof event?.data === 'string') {
       value = value.trim();
     }
-    this.processName = value;
+    data = value;
   }
 
   async editName() {

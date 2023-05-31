@@ -64,7 +64,7 @@
                     {{posts[0].subContent | maxlenght:500}}
                   </div>
                   <div class="d-flex justify-content-between fs-7 mt-3">
-                    <span *ngIf="posts[0].approveStatus == '1'">
+                    <span *ngIf="posts[0].approveControl == '1' && posts[0].approveStatus">
                       <codx-vll 
                           [name]="'CO003'" 
                           [classList]="'rounded-pill p-2 px-4 text-center'"
@@ -176,7 +176,7 @@
         {{data.subContent | maxlenght:300}}
       </div>
       <div class="d-flex justify-content-between fs-7 mt-3">
-        <span *ngIf="data.approveStatus == '1'">
+        <span *ngIf="data.approveControl == '1' && data.approveStatus">
           <codx-vll 
               [name]="'CO003'" 
               [classList]="'rounded-pill p-2 px-4 text-center'"

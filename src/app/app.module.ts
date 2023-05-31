@@ -108,8 +108,8 @@ function appInitializer(authService: AuthService, appConfig: AppConfigService) {
     return new Promise((resolve) => {
       appConfig.load().subscribe((res) => {
         authService.checkTenant().subscribe((v) => {
-      resolve(true);
-      });
+          resolve(v);
+        });
       });
     });
   };
