@@ -43,13 +43,18 @@
   <codx-temp-full
     style="width: 100%"
     [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
-    [title]="data.dealName"
+    [imageId]="data?.customerID"
+    [imgOn]="data?.modifiedOn"
+    [imageReferType]="'avt'"
+    [imageWidth]="35"
+    imgCss="me-4"
+    [title]="data?.customerName"
     [descTmp]="descTmpCard"
   >
   </codx-temp-full>
   <ng-template #descTmpCard>
     <div class="'d-flex flex-column w-100">
-      <div class="mb-1">
+      <!-- <div class="mb-1">
         <i class="icon-business icon-16 me-2"></i>
         <span
           class="text-gray-700"
@@ -57,6 +62,35 @@
           [innerHTML]="
             data?.customerID
               | formatvalue : view.formModel : 'customerID'
+              | async
+          "
+        ></span>
+      </div> -->
+      <div class="d-flex align-items-center justify-content-start mb-1">
+        <i class="icon-subtitles icon-16 me-2"></i>
+        <span
+          class="text-gray-700"
+          #dealName
+          [innerHTML]="
+            data?.dealName
+              | formatvalue
+                : formModel
+                : 'dealName'
+                : dealName
+                : 'CMDeals'
+                : 'grvCMDeals'
+              | async
+          "
+        ></span>
+      </div>
+      <div class="d-flex align-items-center justify-content-start mb-1">
+        <i class="icon-add_shopping_cart icon-16 me-2"></i>
+        <span
+          class="text-gray-700"
+          #businessLineID
+          [innerHTML]="
+            data?.businessLineID
+              | formatvalue : view.formModel : 'businessLineID' : businessLineID
               | async
           "
         ></span>
@@ -236,40 +270,42 @@
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-end codx-badge">
-      <div class="me-2 badge badge-light-primary">
-      </div>
-          <div
-          *ngIf="data.status != '1'"
-          [ngStyle]="{
-            'background-color':
-              data.status == '3' || data.status == '4'
-                ? colorReasonSuccess?.color
-                : data.status == '5' || data.status == '6'
-                ? colorReasonFail?.color
-                : data?.steps['backgroundColor']
-          }"
-          class="me-2 badge badge-sm d-flex align-items-center"
+      <div class="me-2 badge badge-light-primary"></div>
+      <div
+        *ngIf="data.status != '1'"
+        [ngStyle]="{
+          'background-color':
+            data.status == '3' || data.status == '4'
+              ? colorReasonSuccess?.color
+              : data.status == '5' || data.status == '6'
+              ? colorReasonFail?.color
+              : data?.steps['backgroundColor']
+        }"
+        class="me-2 badge badge-sm d-flex align-items-center"
+      >
+        <span
+          [ngClass]="data?.steps['icon']"
+          [ngStyle]="{ color: data?.steps['iconColor'] }"
+          class="me-1"
+        ></span>
+        <span
+          class="menu-title fw-bold line-clamp-menu"
+          [ngbTooltip]="data?.currentStepName"
+          [ngStyle]="{ color: data?.steps['textColor'] }"
+          >{{ data?.currentStepName }}</span
         >
-          <span
-            [ngClass]="data?.steps['icon']"
-            [ngStyle]="{ color: data?.steps['iconColor'] }"
-            class="me-1"
-          ></span>
-          <span class="menu-title fw-bold line-clamp-menu"  [ngbTooltip]="data?.currentStepName" [ngStyle]="{ color: data?.steps['textColor'] }">{{  data?.currentStepName }}</span>
-
-        </div>
-          <div *ngIf="data.status == '1'">
-            <codx-vll
-            [name]="'DP028'"
-            [field]="'Status'"
-            [value]="data?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-sm"
-          >
-          </codx-vll>
-
-          </div>
+      </div>
+      <div *ngIf="data.status == '1'">
+        <codx-vll
+          [name]="'DP028'"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
+      </div>
 
       <div class="d-flex align-items-center text-gray-600">
         <span class="icon-16 icon-av_timer me-1"></span>

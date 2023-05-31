@@ -9,7 +9,6 @@ import {
 import { map } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ItemColor } from '../interfaces/ItemColor.Interface';
-import { ItemsService } from '../items.service';
 
 @Component({
   selector: 'lib-popup-add-item-color',

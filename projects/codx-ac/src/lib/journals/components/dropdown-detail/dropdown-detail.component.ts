@@ -40,13 +40,17 @@ export class DropdownDetailComponent extends UIComponent implements OnChanges {
       const objectId: string[] = this.objectId?.split(';');
 
       if (this.objectType === 'UG') {
-        this.shareModels = this.dropdownDetailService.userGroups
-          ?.filter((d) => objectId.includes(d.GroupID))
-          .map((d) => ({ id: d.GroupID, text: d.GroupName }));
+        this.dropdownDetailService.getUserGroups().subscribe((userGroups) => {
+          this.shareModels = userGroups
+            ?.filter((d) => objectId.includes(d.GroupID))
+            .map((d) => ({ id: d.GroupID, text: d.GroupName }));
+        });
       } else if (this.objectType === 'R') {
-        this.shareModels = this.dropdownDetailService.userRoles
-          ?.filter((d) => objectId.includes(d.RecID))
-          .map((d) => ({ id: d.RecID, text: d.RoleName })); // wtf core???
+        this.dropdownDetailService.getUserRoles().subscribe((userRoles) => {
+          this.shareModels = userRoles
+            ?.filter((d) => objectId.includes(d.RecID))
+            .map((d) => ({ id: d.RecID, text: d.RoleName })); // wtf core???
+        });
       }
     }
   }

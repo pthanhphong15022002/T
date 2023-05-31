@@ -65,6 +65,7 @@ export class DynamicProcessComponent
   @ViewChild('templateViewCard', { static: true })
   templateViewCard: TemplateRef<any>;
   @ViewChild('editNameProcess') editNameProcess: TemplateRef<any>;
+  @ViewChild('releaseProcess') releaseProcessTemp: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('footerButton') footerButton: TemplateRef<any>;
 
@@ -109,6 +110,7 @@ export class DynamicProcessComponent
   linkAvt = '';
   TITLENAME = 'Thay đổi tên quy trình';
   popupEditName: DialogRef;
+  popupRelease: DialogRef;
   processRename: DP_Processes;
   processName = '';
   processNameBefore = '';
@@ -559,6 +561,9 @@ export class DynamicProcessComponent
       case 'DP01015': // thiết lập quy trình duyệt
         this.settingSubmit(data.processNo);
         break;
+      case 'DP01016': // phát hành quy trình
+        this.releaseProcess(data.processNo);
+        break;
     }
     this.isButton = false;
   }
@@ -828,6 +833,17 @@ export class DynamicProcessComponent
       '',
       500,
       280
+    );
+  }
+  releaseProcess(process) {
+    this.processRename = process;
+    this.processName = process['processName'];
+    this.processNameBefore = process['processName'];
+    this.popupRelease = this.callfc.openForm(
+      this.releaseProcessTemp,
+      '',
+      500,
+      600
     );
   }
 
