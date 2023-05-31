@@ -1,45 +1,51 @@
 <div #cardbodyGeneral>
-   <codx-gridview-v2
-     #productTable
-     service="CM"
-     [formName]="fmContractsPayments.formName"
-     [gridViewName]="fmContractsPayments.gridViewName"
-     [entityName]="fmContractsPayments.entityName"
-     [templateMore]="more"
-     [contentEditable]="false"
-     [allowFiltering]="true"
-     [allowSorting]="true"
-     [dataSource]="listPayment"
-     [columnsGrid]="columns"
-     [autoLoad]="false"
-     rowHeight="40"
-     predicates="TransID=@0"
-     (created)="gridCreated($event, productTable)"
-   ></codx-gridview-v2>
-   <div class="d-flex align-items-center my-5">
-      <div class="content-icon">
-        <span class="icon-add text-primary"></span>
-      </div>
-      <button
-        style="height: 28px"
-        type="button"
-        class="btn btn-outline-primary btn-sm"
-        (click)="addPayment()"
-      >
-        <codx-label
-          [formModel]="fmContractsPayments"
-          fiedName=""
-          default="Thêm lịch thanh toán"
-        ></codx-label>
-      </button>
+  <codx-gridview-v2
+    #productTable
+    service="CM"
+    [formName]="fmContractsPayments.formName"
+    [gridViewName]="fmContractsPayments.gridViewName"
+    [entityName]="fmContractsPayments.entityName"
+    [templateMore]="more"
+    [contentEditable]="false"
+    [allowFiltering]="true"
+    [allowSorting]="true"
+    [dataSource]="listPayment"
+    [columnsGrid]="columns"
+    [autoLoad]="false"
+    rowHeight="40"
+    predicates="TransID=@0"
+    (created)="gridCreated($event, productTable)"></codx-gridview-v2>
+  <div class="d-flex align-items-center my-5">
+    <div class="content-icon">
+      <span class="icon-add text-primary"></span>
     </div>
- </div>
- <ng-template #more let-data>
-   <codx-mfunc
-     [formModel]="fmContractsPayments"
-     [isBookMark]="true"
-     [dataItem]="moreDefaut"
-     [type]="'view'"
-     (clickMF)="onClickMFPayment($event, data)"
-   ></codx-mfunc>
- </ng-template>
+    <button
+      style="height: 28px"
+      type="button"
+      class="btn btn-outline-primary btn-sm"
+      (click)="addPayment()">
+      <codx-label
+        [formModel]="fmContractsPayments"
+        fiedName
+        default="Thêm lịch thanh toán"></codx-label>
+    </button>
+  </div>
+</div>
+<ng-template #more let-data>
+  <codx-mfunc
+    [formModel]="fmContractsPayments"
+    [isBookMark]="true"
+    [dataItem]="moreDefaut"
+    [type]="'view'"
+    (clickMF)="onClickMFPayment($event, data)"></codx-mfunc>
+</ng-template>
+
+<ng-template #scheduleDate let-data>
+  <span
+    class="me-3"
+    [innerHTML]="
+    data
+      | formatvalue : fmContractsPayments : 'ScheduleDate'
+      | async
+  "></span>
+</ng-template>

@@ -136,6 +136,7 @@ export class CodxAddTaskComponent implements OnInit {
     role['createdOn'] = new Date();
     role['createdBy'] = this.user['userID'];
     role['roleType'] = 'O';
+    role['objectType'] = 'U';
     return role;
   }
 
