@@ -129,7 +129,6 @@ export class ContractsDetailComponent extends UIComponent{
     { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
     { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
     { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
-    { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: null},
   ];
   constructor(
     private inject: Injector,
@@ -167,12 +166,6 @@ export class ContractsDetailComponent extends UIComponent{
   }
 
   ngAfterViewInit() {
-    let index = this.tabControl.findIndex(item => item.name == 'Contract');
-    if(index >= 0){
-      let contract = { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract};
-      this.tabControl.splice(index,1,contract)
-    }
-
     this.views = [
       {
         type: ViewType.listdetail,
@@ -219,6 +212,9 @@ export class ContractsDetailComponent extends UIComponent{
       if (res) {
         this.quotations = res[0];
         this.listQuotationsLine = res[1];
+      }else{
+        this.quotations = null;
+        this.listQuotationsLine = [];
       }
     });
   }
@@ -229,6 +225,9 @@ export class ContractsDetailComponent extends UIComponent{
         let listPayAll =  res as CM_ContractsPayments[];
         this.listPayment = listPayAll.filter(pay => pay.lineType == '0');
         this.listPaymentHistory = listPayAll.filter(pay => pay.lineType == '1');
+      }else{
+        this.listPayment = [];
+        this.listPaymentHistory = [];
       }
     });
   }

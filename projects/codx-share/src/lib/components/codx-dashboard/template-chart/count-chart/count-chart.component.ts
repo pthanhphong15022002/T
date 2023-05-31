@@ -22,7 +22,7 @@ export class CountChartComponent extends UIComponent implements AfterViewInit {
   @Input() totalValue: number = 0;
   @Input() tooltip: string = '';
   @Input() hasIcon: boolean = false;
-  @Input() iconUrl: string = 'assets/themes/tm/default/img/DB_Chuathuchien.svg';
+  @Input() iconUrl: string = '';
 
   constructor(inject: Injector) {
     super(inject);

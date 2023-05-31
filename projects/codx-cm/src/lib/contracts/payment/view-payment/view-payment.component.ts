@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { CM_Contracts, CM_ContractsPayments } from '../../../models/cm_model';
 import { CacheService, CallFuncService, DialogModel, FormModel, NotificationsService } from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
@@ -6,22 +6,22 @@ import { ContractsService } from '../../service-contracts.service';
 import { PopupAddPaymentComponent } from '../popup-add-payment/popup-add-payment.component';
 import { PopupViewPaymentHistoryComponent } from '../popup-view-payment-history/popup-view-payment-history.component';
 import { PopupAddPaymentHistoryComponent } from '../popup-add-payment-history/popup-add-payment-history.component';
+import { log } from 'console';
 
 @Component({
   selector: 'view-payment',
   templateUrl: './view-payment.component.html',
   styleUrls: ['./view-payment.component.scss']
 })
-export class ViewPaymentComponent implements OnInit {
+export class ViewPaymentComponent implements OnInit, OnChanges {
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @Input() contracts: CM_Contracts;
-  @Input() payment: CM_Contracts;
   @Input() listPayment: CM_ContractsPayments[];
   @Input() listPaymentHistory: CM_ContractsPayments[];
   @Input() listPaymentAdd: CM_ContractsPayments[];
   @Input() listPaymentEdit: CM_ContractsPayments[];
   @Input() listPaymentDelete: CM_ContractsPayments[];
-  @Input() isSave = true;
+  @Input() isSave = false;
 
   fmContractsPayments: FormModel = {
     formName: 'CMContractsPayments',
@@ -53,6 +53,7 @@ export class ViewPaymentComponent implements OnInit {
     private contractService: ContractsService,
   ) {
   }
+  
   ngOnInit(): void {
     this.columns = [
       {
@@ -95,6 +96,13 @@ export class ViewPaymentComponent implements OnInit {
       // textAlign: 'left',
       // /template: this.columnVatid,
     ];
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+   if(changes?.contracts){
+    console.log(this.listPayment);
+    
+   }
   }
   gridCreated(e, grid) {
     let hBody
@@ -161,6 +169,7 @@ export class ViewPaymentComponent implements OnInit {
       listPaymentEdit: this.listPaymentEdit,
       listPaymentDelet: this.listPaymentDelete,
       contractID: this.contracts?.recID,
+      isSave: this.isSave,
     };
 
     let option = new DialogModel();
@@ -199,6 +208,7 @@ export class ViewPaymentComponent implements OnInit {
       listPaymentAdd: this.listPaymentAdd,
       listPaymentEdit: this.listPaymentEdit,
       listPaymentDelet: this.listPaymentDelete,
+      isSave: this.isSave,
     };
 
     let option = new DialogModel();
@@ -228,6 +238,7 @@ export class ViewPaymentComponent implements OnInit {
       listPaymentAdd: this.listPaymentAdd,
       listPaymentEdit: this.listPaymentEdit,
       listPaymentDelet: this.listPaymentDelete,
+      isSave: this.isSave,
     };
 
     let formModel = new FormModel();

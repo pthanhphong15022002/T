@@ -29,6 +29,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
     delete: true,
   };
   formModel = new FormModel;
+  projectID:'';
 
   constructor(
     private cache: CacheService,
@@ -116,22 +117,28 @@ export class ListContractsComponent implements OnInit, OnChanges {
     if(this.customersData){
       contracts = this.setCustomer();
     }
-    // let contractOutput = await this.openPopupContract(this.projectID, "add",contracts);
-    // if(contractOutput?.event?.contract){
-    //   this.listContract.push(contractOutput?.event?.contract);
-    // }
+    if(this.dealID){
+      contracts.dealID = this.dealID;
+    }
+    if(this.quotationID){
+      contracts.quotationID = this.quotationID;
+    }
+    let contractOutput = await this.openPopupContract(null, "add",contracts);
+    if(contractOutput?.event?.contract){
+      this.listContract.push(contractOutput?.event?.contract);
+    }
   }
 
   async editContract(contract){
     let dataEdit = JSON.parse(JSON.stringify(contract));
-    // let dataOutput = await this.openPopupContract(this.projectID,"edit",dataEdit);
-    // let contractOutput = dataOutput?.event?.contract;
-    // if(contractOutput){
-    //   let index = this.listContract.findIndex(x => x.recID == contractOutput?.recID);
-    //   if(index >= 0){
-    //     this.listContract.splice(index, 1, contractOutput);
-    //   }
-    // }
+    let dataOutput = await this.openPopupContract(this.projectID,"edit",dataEdit);
+    let contractOutput = dataOutput?.event?.contract;
+    if(contractOutput){
+      let index = this.listContract.findIndex(x => x.recID == contractOutput?.recID);
+      if(index >= 0){
+        this.listContract.splice(index, 1, contractOutput);
+      }
+    }
   }
 
   async copyContract(contract){

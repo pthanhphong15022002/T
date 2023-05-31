@@ -320,6 +320,7 @@ export class AddContractsComponent implements OnInit {
       this.contracts.projectID = this.projectID;
       this.contracts.contractDate = new Date();
       this.contracts.status = '1';
+      this.setCOntractByDataOutput();
     }
     if (this.action == 'edit') {
       this.contracts = data;
@@ -332,6 +333,18 @@ export class AddContractsComponent implements OnInit {
       delete this.contracts['id'];
       this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);
+    }
+  }
+
+  setCOntractByDataOutput(){
+    if (this.contracts.dealID) {
+      this.getCustomerByDealID(this.contracts.dealID);
+    }
+    if (this.contracts.customerID) {
+      this.getCustomerByrecID(this.contracts.customerID);
+    }
+    if (this.contracts.quotationID) {
+      this.getDataByQuotationID(this.contracts.quotationID);
     }
   }
 

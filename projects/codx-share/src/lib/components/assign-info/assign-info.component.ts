@@ -28,8 +28,8 @@ import { StatusTaskGoal } from 'projects/codx-tm/src/lib/models/enum/enum';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import * as moment from 'moment';
 import { TM_TaskGroups } from 'projects/codx-tm/src/lib/models/TM_TaskGroups.model';
-import { tmpReferences } from '../codx-tasks/model/task.model';
 import { CodxTasksService } from '../codx-tasks/codx-tasks.service';
+import { tmpReferences } from '../../models/assign-task.model';
 @Component({
   selector: 'app-assign-info',
   templateUrl: './assign-info.component.html',
