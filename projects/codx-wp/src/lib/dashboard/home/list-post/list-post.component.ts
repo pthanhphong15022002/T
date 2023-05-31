@@ -335,6 +335,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   //click xem thêm 
   clickReadMore(item){
     debugger
+    item.isShortContent = false;
     this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","GetContentAsync",[item.recID])
     .subscribe((res:string) => {
       item.shortContent = "";

@@ -124,8 +124,8 @@
     <!-- contents -->
     <div class="wp-contents mt-3">
       <div class="wp-contents-text">
-        <div [innerHTML]="item.shortContent ? item.shortContent : item.contents | safe: 'html'"></div>
-          <ng-container *ngIf="item.shortContent">
+        <div *ngIf="item.contents" [innerHTML]="item.contents | safe: 'html'"></div>
+          <ng-container *ngIf="item.isShortContent">
             <div>
               <a href="javascript:void(0)" (click)="clickReadMore(item)">
                 <codx-label [formModel]="formModel" name="lblViewMore" default="Xem thêm"></codx-label>
