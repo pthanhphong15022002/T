@@ -1038,7 +1038,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           var param = JSON.parse(res.dataValue);
-          if (this.action === 'add') {
+          if (this.action === 'add' && !this.reminder) {
             this.reminder = param.Reminder;
             this.meeting.reminder = this.reminder;
           }
