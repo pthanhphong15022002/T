@@ -216,10 +216,10 @@
       <codx-label name="lblUseCardHeader" default="Sử dụng thẻ" class="fw-bold"></codx-label>
       <span class="me-1 fw-bold">:</span>
 
-      <span *ngIf="!!itemDetail?.useCard">
+      <span *ngIf=" itemDetail && !!itemDetail?.useCard">
         <codx-label default="Dùng thẻ" class="badge badge-light-success" name="lblUseCard"></codx-label>
       </span>
-      <span *ngIf="!itemDetail?.useCard">
+      <span *ngIf=" itemDetail && !itemDetail?.useCard">
         <codx-label default="Không dùng thẻ" class="badge badge-light-danger" name="lblNotUseCard"></codx-label>
       </span>
     </div>

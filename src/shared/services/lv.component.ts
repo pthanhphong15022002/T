@@ -1,3 +1,5 @@
+import axios from "axios";
+
 var lvFileClientAPI = {
     serverApIHostUrl: "",
     _onBeforeCall: () => { },
@@ -140,7 +142,7 @@ var lvFileClientAPI = {
             throw (e)
         }
     },
-    formPostWithToken: async (apiPath, data) => {
+    formPostWithToken: async (apiPath, data,fileName="") => {
         var url = lvFileClientAPI.serverApIHostUrl + "/" + apiPath;
         var formData = new FormData()
         var keys = Object.keys(data)
@@ -158,20 +160,72 @@ var lvFileClientAPI = {
         };
         formData.append('Authorization', 'Bearer ' + lvFileClientAPI.getToken());
         try {
-            var fetcher = await fetch(url, {
-                method: 'POST',
-                headers:header,
-                credentials: 'include',
-                body: formData
-            });
-            if (fetcher.status >= 200 && fetcher.status < 300) {
-                return await fetcher.json();
+            let isPaused = false;
+            const response = await axios.request({
+                method: "post", 
+                url: url, 
+                data: formData, 
+                headers: header,
+                onUploadProgress: (p) => {
+                    //barWidth =  
+                    let percent = (p.loaded / p.total) * 100;
+                    let count = 0;
+                    //let id = setInterval(frame, 2000);
+                    let elem =  document.getElementById("circle"+fileName);
+                    // elem.style.setProperty("--percent",percent.toString());
+                    let id = setInterval(() => {
+                        if(!isPaused && percent <=100)
+                        {
+                            if(percent >= 100)
+                            {
+                              clearInterval(id);
+                            }
+                            else if(count >= percent)
+                            {
+                                isPaused = true;
+                            }
+                            else 
+                            {
+                              count += 1;
 
-            }
-            else {
-                var err = await fetcher.json()
-                throw (err)
-            }
+                            }
+                        }
+                        
+                      }, 2000)
+                    elem.style.strokeDashoffset = (503 - ( 503 * ( percent / 100 ))).toString();
+                    // function frame() {
+                    //     if(percent == 100)  clearInterval(id);
+                    //     elem.style.setProperty("--percent",percent.toString());
+                   
+                    // }
+                    // if(percent == 100)  {
+                    //     elem.style.setProperty("--percent",percent.toString());
+                    //     clearInterval(id)
+                    // }
+                  //this.setState({
+                      //fileprogress: p.loaded / p.total
+                  //})
+                }
+            });
+            //clearInterval(id)
+            let elem2 =  document.getElementById("id-tf-"+fileName);
+            elem2.classList.remove("opacity-50");
+            return response;
+
+            // var fetcher = await fetch(url, {
+            //     method: 'POST',
+            //     headers:header,
+            //     credentials: 'include',
+            //     body: formData
+            // });
+            // if (fetcher.status >= 200 && fetcher.status < 300) {
+            //     return await fetcher.json();
+
+            // }
+            // else {
+            //     var err = await fetcher.json()
+            //     throw (err)
+            // }
 
         }
         catch (e) {
@@ -180,6 +234,7 @@ var lvFileClientAPI = {
             throw (e)
         }
     },
+
     postAsync: async (apiPath, data) => {
         var sender = undefined;
        

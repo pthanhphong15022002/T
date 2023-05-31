@@ -88,28 +88,6 @@
         >
         </codx-view-files>
       </div>
-      <!-- template chia sẻ -->
-      <!-- <ng-container *ngIf="data.category == '4' && data.refType">
-                <div class="wp-template-share">
-                    <ng-container [ngSwitch]="data.refType">
-                        <ng-container *ngSwitchCase="'WP_Comments'">
-                            <ng-container
-                                *ngTemplateOutlet="templateSharePost; context: { $implicit: data.shares }">
-                            </ng-container>
-                        </ng-container>
-                        <ng-container *ngSwitchCase="'WP_News'">
-                            <ng-container
-                                *ngTemplateOutlet="templateShareNews; context: { $implicit: data.news }">
-                            </ng-container>
-                        </ng-container>
-                        <ng-container *ngSwitchCase="'FD_Cards'">
-                            <ng-container
-                                *ngTemplateOutlet="templateShareCard; context: { $implicit: data.card }">
-                            </ng-container>
-                        </ng-container>
-                    </ng-container>
-                </div>
-            </ng-container> -->
       <ng-container
         *ngIf="
           data.category == CATEGORY.SHARE || data.category == CATEGORY.FEEDBACK

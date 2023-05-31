@@ -1,0 +1,853 @@
+<codx-views
+  #view
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="methodLoadData"
+  idField="recID"
+  [funcID]="'CM0204'"
+  [views]="views"
+  [button]="button"
+  (buttonClick)="click($event)"
+  [toolbarDisplay]="true"
+  [selectedFirst]="true"
+  [autoLoad]="true"
+  [autoSearch]="true"
+  (selectedChange)="selectedChange($event)"
+></codx-views>
+<!-- temp left -->
+<ng-template #itemTemplate let-data>
+  <codx-temp-full
+    cardCss="card-template border-bottom p-3 list-task"
+    (clickMF)="clickMF($event, data)"
+    [moreFuncCss]="'me-15'"
+    (changeDataMF)="changeDataMF($event, data)"
+    [typeMF]="'hover'"
+    [title]="data.contractName"
+    [descTmp]="descTmp"
+    [formModel]="view.formModel"
+    [titleCss]="'fw-bold fs-6 mb-1'"
+    [dataItem]="data"
+    [footer]="footerTmp"
+  >
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #descTmp let-data>
+  <div class="d-flex align-items-top mb-1">
+    <span class="icon-business icon-16 me-2"></span>
+    <span class="text-gray-700">{{
+      data?.companyName || "Cty cổ phần tin học lạc việt"
+    }}</span>
+  </div>
+</ng-template>
+
+<ng-template #footerTmp let-data>
+  <div class="d-flex justify-content-between align-items-center mb-1">
+    <div>
+      <codx-label
+        class="label-colon"
+        fiedName="contractType"
+        [formModel]="view.formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          itemSelected?.contractType
+            | formatvalue : view.formModel : 'ContractType'
+            | async
+        "
+      ></span>
+    </div>
+    <div class="d-flex justify-content-end align-items-center">
+      <span class="icon-monetization_on icon-16 me-2 text-warning"></span>
+      <span class="fs-6 fw-bold">25.000.000</span>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <codx-vll
+        [name]="vllStatus"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-md fs-7"
+      >
+      </codx-vll>
+    </div>
+    <div class="d-flex justify-content-end align-items-center">
+      <span class="icon-16 icon-av_timer me-1"></span>
+      <span>{{ data.createdOn | date : "dd/MM/yyyy" }}</span>
+    </div>
+    <div>
+      <codx-imgs
+        [width]="25"
+        [objectId]="data.createdBy"
+        ojectType="AD_Users"
+        [numberImages]="1"
+      >
+      </codx-imgs>
+    </div>
+  </div>
+</ng-template>
+
+<!-- temp right -->
+<ng-template #templateDetail>
+  <codx-detail-tmp
+    [header]="headerRightTemp"
+    [formModel]="view.formModel"
+    [body]="mainRightTemp"
+    [footer]="footerRightTemp"
+    (clickMF)="clickMF($event, itemSelected)"
+    (changeDataMF)="changeDataMF($event, itemSelected)"
+    [dataItem]="itemSelected"
+  ></codx-detail-tmp>
+</ng-template>
+
+<ng-template #headerRightTemp>
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center fs-5 fw-bold">
+      <span>{{ itemSelected?.contractName }}</span>
+      <span> - </span>
+      <span>{{ itemSelected?.contractID }}</span>
+    </div>
+    <div>
+      <codx-vll
+        [name]="vllStatus"
+        [field]="'Status'"
+        [value]="itemSelected?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-md fs-7"
+      >
+      </codx-vll>
+    </div>
+  </div>
+  <div class="d-flex align-items-center justify-content-between fs-6 mb-5">
+    <div>
+      <codx-label
+        class="label-colon"
+        fiedName="contractDate"
+        [formModel]="view.formModel"
+      ></codx-label>
+      <span
+        class="me-3"
+        [innerHTML]="
+          itemSelected?.contractDate
+            | formatvalue : view.formModel : 'ContractDate'
+            | async
+        "
+      ></span>
+    </div>
+    <div>
+      <codx-label
+        class="label-colon"
+        fiedName="effectiveFrom"
+        [formModel]="view.formModel"
+      ></codx-label>
+      <span
+        class="me-3"
+        [innerHTML]="
+          itemSelected?.effectiveFrom
+            | formatvalue : view.formModel : 'EffectiveFrom'
+            | async
+        "
+      ></span>
+    </div>
+    <div>
+      <codx-label
+        class="label-colon"
+        fiedName="effectiveTo"
+        [formModel]="view.formModel"
+      ></codx-label>
+      <span
+        class="me-3"
+        [innerHTML]="
+          itemSelected?.effectiveTo
+            | formatvalue : view.formModel : 'EffectiveTo'
+            | async
+        "
+      ></span>
+    </div>
+    <div>
+      <codx-label
+        class="label-colon"
+        fiedName="extendOn"
+        [formModel]="view.formModel"
+      ></codx-label>
+      <span
+        class="me-3"
+        [innerHTML]="
+          itemSelected?.extendOn
+            | formatvalue : view.formModel : 'ExtendOn'
+            | async
+        "
+      ></span>
+    </div>
+    <div>
+      <codx-imgs
+        [width]="25"
+        [objectId]="itemSelected.createdBy"
+        ojectType="AD_Users"
+        [numberImages]="1"
+      >
+      </codx-imgs>
+    </div>
+  </div>
+  <div class="row fs-6">
+    <div class="col-6">
+      <codx-label
+        class="label-colon"
+        fiedName="dealID"
+        [formModel]="view.formModel"
+      ></codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          itemSelected?.dealID | formatvalue : view.formModel : 'DealID' | async
+        "
+      ></span>
+    </div>
+    <div class="col-6 d-flex align-items-center">
+      <div class="me-5">
+        <codx-label
+          class="label-colon"
+          fiedName="currencyID"
+          [formModel]="view.formModel"
+        >
+        </codx-label>
+        <span
+          class="fs-7"
+          [innerHTML]="
+            itemSelected?.currencyID
+              | formatvalue : view.formModel : 'CurrencyID'
+              | async
+          "
+        >
+        </span>
+      </div>
+      <div>
+        <codx-label
+          class="label-colon"
+          fiedName="exchangeRate"
+          [formModel]="view.formModel"
+        >
+        </codx-label>
+        <span
+          class="fs-7"
+          [innerHTML]="
+            itemSelected?.exchangeRate
+              | formatvalue : view.formModel : 'ExchangeRate'
+              | async
+          "
+        >
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row fs-6">
+    <div class="col-6">
+      <codx-label
+        class="label-colon"
+        fiedName="quotationID"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          itemSelected?.quotationID
+            | formatvalue : view.formModel : 'QuotationID'
+            | async
+        "
+      >
+      </span>
+    </div>
+    <!-- Hợp đồng sử dụng -->
+    <div class="col-6">
+      <codx-label
+        class="label-colon"
+        fiedName="useType"
+        [formModel]="view.formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          itemSelected?.useType
+            | formatvalue : view.formModel : 'UseType'
+            | async
+        "
+      >
+      </span>
+    </div>
+  </div>
+  <div class="row fs-6">
+    <div class="col-6">
+      <codx-label
+        class="label-colon"
+        fiedName="orderID"
+        [formModel]="view.formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          itemSelected?.orderID
+            | formatvalue : view.formModel : 'OrderID'
+            | async
+        "
+      ></span>
+    </div>
+    <!-- Loại hợp đồng -->
+    <div class="col-6">
+      <codx-label
+        class="label-colon"
+        fiedName="contractType"
+        [formModel]="view.formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          itemSelected?.contractType
+            | formatvalue : view.formModel : 'ContractType'
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #mainRightTemp>
+  <codx-taskbar
+    [change]="itemSelected"
+    [listTab]="listClicked"
+    (tab)="changeTab($event)"
+    size="20"
+    class="mt-5"
+  ></codx-taskbar>
+  <hr class="mt-0" />
+  <div>
+    <container-element [ngSwitch]="tabClicked">
+      <some-element
+        *ngSwitchCase="'general'"
+        [ngTemplateOutlet]="generalTemplate"
+      ></some-element>
+      <some-element
+        *ngSwitchCase="'detailItem'"
+        [ngTemplateOutlet]="itemsTemplate"
+      ></some-element>
+      <some-element
+        *ngSwitchCase="'pay'"
+        [ngTemplateOutlet]="payTemplate"
+      ></some-element>
+      <some-element
+        *ngSwitchCase="'termsAndRelated'"
+        [ngTemplateOutlet]="termsAndRelatedTemplate"
+      ></some-element>
+      <some-element *ngSwitchDefault></some-element>
+    </container-element>
+  </div>
+</ng-template>
+
+<ng-template #footerRightTemp>
+  <codx-tabs
+    [entityName]="view.formModel.entityName"
+    [formModel]="view.formModel"
+    [TabControl]="tabControl"
+    [objectID]="itemSelected.recID"
+    [funcID]="view.formModel.funcID"
+  ></codx-tabs>
+</ng-template>
+
+<ng-template #generalTemplate>
+  <div class="A mb-5">
+    <div>
+      <span class="fs-5 fw-bold">Bên A</span>
+    </div>
+    <ng-container
+      [ngTemplateOutlet]="general"
+      [ngTemplateOutletContext]="{ data: { value: account, type: 'A' } }"
+    ></ng-container>
+  </div>
+
+  <div class="B mb-5">
+    <div><span class="fs-5 fw-bold">Bên B</span></div>
+    <ng-container
+      [ngTemplateOutlet]="general"
+      [ngTemplateOutletContext]="{ data: { value: itemSelected, type: 'B' } }"
+    ></ng-container>
+  </div>
+</ng-template>
+<ng-template #itemsTemplate>
+  <view-quotations
+    [quotationLines]="listQuotationsLine"
+    [quotations]="quotations"
+    [fmQuotationLines]="fmQuotationLines"
+    [fmQuotations]="fmQuotations"
+  ></view-quotations>
+</ng-template>
+
+<ng-template #payTemplate>
+  <div>
+    <div class="fs-6 fw-bold"><span>Tiến độ thanh toán</span></div>
+    <div class="row">
+      <div class="col-4">
+        <codx-label
+          class="label-colon"
+          fiedName="contractAmt"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.contractAmt
+              | formatvalue : view.formModel : 'ContractAmt'
+              | async
+          "
+        ></span>
+        <!-- <span>Giá trị hợp đồng: </span> -->
+      </div>
+      <div class="col-4">
+        <codx-label
+          class="label-colon"
+          fiedName="paidAmt"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.paidAmt
+              | formatvalue : view.formModel : 'PaidAmt'
+              | async
+          "
+        ></span>
+        <!-- <span>Số tiền thanh toán: </span> -->
+      </div>
+      <div class="col-4">
+        <codx-label
+          class="label-colon"
+          fiedName="remainAmt"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.remainAmt
+              | formatvalue : view.formModel : 'RemainAmt'
+              | async
+          "
+        ></span>
+        <!-- <span>Số tiền còn lại: </span> -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <codx-label
+          class="label-colon"
+          fiedName="contractAmt"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.contractAmt
+              | formatvalue : view.formModel : 'ContractAmt'
+              | async
+          "
+        ></span>
+        <!-- <span>Giá trị hợp đồng: </span> -->
+      </div>
+      <div class="col-8">
+        <codx-label
+          class="label-colon"
+          fiedName="paymentStatus"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.paymentStatus
+              | formatvalue : view.formModel : 'PaymentStatus'
+              | async
+          "
+        ></span>
+        <!-- <span>Tình trạng thanh toán: </span> -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <codx-label
+          class="label-colon"
+          fiedName="pmtTermID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.pmtTermID
+              | formatvalue : view.formModel : 'PmtTermID'
+              | async
+          "
+        ></span>
+        <!-- <span>Điều khoản thanh toán: </span> -->
+      </div>
+      <div class="col-8">
+        <codx-label
+          class="label-colon"
+          fiedName="pmtMethodID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.pmtMethodID
+              | formatvalue : view.formModel : 'PmtMethodID'
+              | async
+          "
+        ></span>
+        <!-- <span>Phương thức thanh toán: </span> -->
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="fs-6 fw-bold"><span>Lịch thanh toán</span></div>
+    <view-payment
+      [isSave]="true"
+      [contracts]="itemSelected"
+      [listPayment]="listPayment"
+      [listPaymentHistory]="listPaymentHistory"
+    ></view-payment>
+  </div>
+
+  <div>
+    <div class="fs-6 fw-bold"><span>Tiến giao hàng</span></div>
+    <div class="row">
+      <div class="col-4">
+        <codx-label
+          class="label-colon"
+          fiedName="delTermID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delTermID
+              | formatvalue : view.formModel : 'DelTermID'
+              | async
+          "
+        ></span>
+        <!-- <span>Điều khoản giao hàng: </span> -->
+      </div>
+      <div class="col-4">
+        <codx-label
+          class="label-colon"
+          fiedName="delModeID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delModeID
+              | formatvalue : view.formModel : 'DelModeID'
+              | async
+          "
+        ></span>
+        <!-- <span>Hình thức giao hàng: </span> -->
+      </div>
+      <div class="col-4">
+        <codx-label
+          class="label-colon"
+          fiedName="delPrice"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delPrice
+              | formatvalue : view.formModel : 'DelPrice'
+              | async
+          "
+        ></span>
+        <!-- <span>Phí vận chuyển: </span> -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <codx-label
+          class="label-colon"
+          fiedName="delDeadline"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delDeadline
+              | formatvalue : view.formModel : 'DelDeadline'
+              | async
+          "
+        ></span>
+        <!-- <span>Hạn giao hàng: </span> -->
+      </div>
+      <div class="col-4">
+        <codx-label
+          class="label-colon"
+          fiedName="delStatus"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delStatus
+              | formatvalue : view.formModel : 'DelStatus'
+              | async
+          "
+        ></span>
+        <!-- <span>Tình trạng giao hàng: </span> -->
+      </div>
+      <div class="col-4">
+        <codx-label
+          class="label-colon"
+          fiedName="delActualDate"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delActualDate
+              | formatvalue : view.formModel : 'DelActualDate'
+              | async
+          "
+        ></span>
+        <!-- <span>Ngày giao hàng thành công: </span> -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <codx-label
+          class="label-colon"
+          fiedName="delContactID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delContactID
+              | formatvalue : view.formModel : 'DelContactID'
+              | async
+          "
+        ></span>
+        <!-- <span>Liên hệ giao hàng: </span> -->
+      </div>
+      <div class="col-8">
+        <codx-label
+          class="label-colon"
+          fiedName="delPhone"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delPhone
+              | formatvalue : view.formModel : 'DelPhone'
+              | async
+          "
+        ></span>
+        <!-- <span>Số diện thoại: </span> -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <codx-label
+          class="label-colon"
+          fiedName="delAddress"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delAddress
+              | formatvalue : view.formModel : 'DelAddress'
+              | async
+          "
+        ></span>
+        <!-- <span>Địa chỉ giao hàng: </span> -->
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #termsAndRelatedTemplate let-data="data">
+  <div [innerHTML]="itemSelected?.note"></div>
+</ng-template>
+
+<ng-template #general let-data="data">
+  <div class="row fs-6 my-2">
+    <div class="col-6">
+      <codx-label
+        class="label-colon"
+        fiedName="companyName"
+        [formModel]="view.formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
+      <span *ngIf="data?.type == 'A'">{{ data?.value?.legalName }}</span>
+      <span
+        *ngIf="data?.type == 'B'"
+        class="fs-7"
+        [innerHTML]="
+          data?.value?.customerID
+            | formatvalue : view.formModel : 'CustomerID'
+            | async
+        "
+      ></span>
+    </div>
+    <div class="col-5">
+      <codx-label
+        class="label-colon"
+        fiedName="taxCode"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.value?.taxCode
+            | formatvalue : view.formModel : 'TaxCode'
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="row fs-6 my-2">
+    <div class="col-12">
+      <codx-label
+        class="label-colon"
+        fiedName="address"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.type == 'A'
+            ? data?.value?.street
+            : (data?.value?.address
+              | formatvalue : view.formModel : 'Address'
+              | async)
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="row fs-6 my-2">
+    <div class="col-12">
+      <codx-label
+        class="label-colon"
+        fiedName="phone"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.value?.phone | formatvalue : view.formModel : 'Phone' | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="row fs-6 my-2">
+    <div class="col-6">
+      <codx-label
+        class="label-colon"
+        fiedName="representative"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.type == 'A'
+            ? data?.value?.contactName
+            : (data?.value?.representative
+              | formatvalue : view.formModel : 'Representative'
+              | async)
+        "
+      ></span>
+    </div>
+    <div class="col-6">
+      <codx-label
+        class="label-colon"
+        fiedName="jobTitle"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.type == 'A'
+            ? data?.value?.contactName
+            : (data?.value?.representative
+              | formatvalue : view.formModel : 'JobTitle'
+              | async)
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="row fs-6 my-2">
+    <div class="col-6">
+      <codx-label
+        class="label-colon"
+        fiedName="bankAccount"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.value?.bankAccount
+            | formatvalue : view.formModel : 'BankAccount'
+            | async
+        "
+      ></span>
+    </div>
+    <div class="col-6">
+      <codx-label
+        class="label-colon"
+        fiedName="bankID"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.value?.bankID | formatvalue : view.formModel : 'BankID' | async
+        "
+      ></span>
+    </div>
+  </div>
+</ng-template>

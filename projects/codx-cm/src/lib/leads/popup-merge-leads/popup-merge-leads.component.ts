@@ -13,6 +13,7 @@ import {
   DialogData,
   DialogModel,
   DialogRef,
+  ImageViewerComponent,
   NotificationsService,
   Util,
 } from 'codx-core';
@@ -29,7 +30,8 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
   styleUrls: ['./popup-merge-leads.component.css'],
 })
 export class PopupMergeLeadsComponent implements OnInit {
-  @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
+  @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
+
   dialog: any;
   leadNew: CM_Leads = new CM_Leads();
   leadOne: CM_Leads = new CM_Leads();
@@ -43,7 +45,7 @@ export class PopupMergeLeadsComponent implements OnInit {
   lstContactOne = [];
   lstContactTwo = [];
   lstContactThree = [];
-
+  lstAddressNew = [];
   fieldContacts = { text: 'contactName', value: 'recID' };
   contactDefault: any;
   popoverCrr: any;
@@ -59,6 +61,8 @@ export class PopupMergeLeadsComponent implements OnInit {
   lstLeadCbxTwo = [];
   lstLeadCbxThree = [];
   fieldCbx = { text: 'leadName', value: 'recID' };
+  modifyOn: Date;
+  countValidate = 0;
 
   constructor(
     private callFc: CallFuncService,
@@ -75,23 +79,24 @@ export class PopupMergeLeadsComponent implements OnInit {
     this.leadOne = JSON.parse(JSON.stringify(dt?.data?.data));
     this.recIDLead = this.leadOne?.recID;
     this.nameLead = this.leadOne?.leadName;
-    this.cache.gridViewSetup('CMLeads', 'grvCMLeads').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
+    this.modifyOn = this.leadOne?.modifiedOn;
   }
   async ngOnInit() {
     this.changeAvata = false;
+    this.lstLeadCbxOne = await this.getCbxLead(Util.uid());
 
     this.leadNew = JSON.parse(JSON.stringify(this.leadOne));
     this.leadNew.recID = Util.uid();
   }
 
   async ngAfterViewInit() {
+    this.cache.gridViewSetup('CMLeads', 'grvCMLeads').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
     if (this.leadOne) {
       this.lstContactOne = await this.getContacts(this.leadOne?.recID);
-      this.lstLeadCbxOne = await this.getCbxLead(Util.uid());
       this.lstLeadCbxTwo = await this.getCbxLead(this.leadOne?.recID);
       this.lstLeadCbxThree = await this.getCbxLead(this.leadTwo?.recID);
     }
@@ -112,51 +117,119 @@ export class PopupMergeLeadsComponent implements OnInit {
   async getCbxLead(id) {
     var options = new DataRequest();
     options.entityName = 'CM_Leads';
-    options.predicates = 'Status!=@0';
+    options.predicates = 'Status!=@0 and IsDuplicated==false';
     options.dataValues = '5';
     options.pageLoading = false;
     var lst = await firstValueFrom(this.cmSv.loadDataAsync('CM', options));
     return lst;
   }
 
-  cbxLeadChange(e, type) {
+  //#region  Save
+  onMerge() {
+    this.countValidate = this.cmSv.checkValidate(
+      this.gridViewSetup,
+      this.leadNew
+    );
+    if (this.countValidate > 0) {
+      return;
+    }
+    if (this.leadTwo == null && this.leadThree == null) {
+      this.noti.notify('Gộp tối thiểu 2 tiềm năng và đối đa 3 tiềm năng');
+      return;
+    }
+
+    var data = [
+      this.leadNew,
+      this.leadOne.recID,
+      this.leadTwo.recID,
+      this.leadThree.recID,
+      this.lstContactNew,
+      this.lstAddressNew,
+    ];
+
+    this.api
+      .execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'LeadsBusiness',
+        'MergeLeadAsync',
+        data
+      )
+      .subscribe((res) => {
+        if (res) {
+          if (this.changeAvata) {
+            this.imageAvatar
+              .updateFileDirectReload(res?.recID)
+              .subscribe((result) => {
+                if (result) {
+                  this.dialog.close(res);
+                } else {
+                  this.dialog.close(res);
+                }
+              });
+          }else{
+            this.dialog.close(res);
+          }
+        }
+      });
+  }
+
+  onSupport() {}
+  //#endregion
+  async cbxLeadChange(e, type) {
     if (e) {
       if (type == 'two') {
         if (e == this.leadOne?.recID || e == this.leadThree?.recID) {
-          this.noti.notify(
-            'Tiềm năng được chọn vui lòng chọn tiềm năng khác'
-          );
+          this.noti.notify('Tiềm năng được chọn vui lòng chọn tiềm năng khác');
+          this.leadTwo.recID = null;
           this.leadTwo = null;
           return;
         } else {
           var index = this.lstLeadCbxTwo.findIndex((x) => x.recID == e);
           if (index != -1) {
             this.leadTwo = this.lstLeadCbxTwo[index];
+            this.lstContactTwo = await this.getContacts(this.leadTwo?.recID);
           }
         }
       } else {
         if (e == this.leadTwo?.recID || e == this.leadOne?.recID) {
-          this.noti.alertCode(
-            'Tiềm năng được chọn vui lòng chọn tiềm năng khác'
-          );
+          this.noti.notify('Tiềm năng được chọn vui lòng chọn tiềm năng khác');
+          this.leadThree.recID = null;
+          this.leadThree = null;
           return;
         } else {
           var index = this.lstLeadCbxThree.findIndex((x) => x.recID == e);
           if (index != -1) {
             this.leadThree = this.lstLeadCbxThree[index];
+            this.lstContactThree = await this.getContacts(
+              this.leadThree?.recID
+            );
           }
         }
       }
-      this.changeDetector.detectChanges();
+    } else {
+      if (type == 'two') {
+        this.leadTwo = null;
+        this.lstContactTwo = [];
+      } else {
+        this.leadThree = null;
+        this.lstContactThree = [];
+      }
+      if (!this.changeAvata) {
+      }
     }
+
+    this.changeDetector.detectChanges();
   }
-
-  onMerge() {}
-
-  onSupport() {}
 
   changeAvatarNew() {
     this.changeAvata = true;
+    if (this.changeAvata) {
+      this.recIDLead = JSON.parse(JSON.stringify(this.leadNew?.recID));
+      this.nameLead = JSON.parse(JSON.stringify(this.leadNew?.leadName));
+      this.modifyOn = JSON.parse(JSON.stringify(this.leadNew?.modifiedOn));
+    }
+    this.changeDetector.detectChanges();
   }
 
   valueChange(e) {}
@@ -169,7 +242,24 @@ export class PopupMergeLeadsComponent implements OnInit {
     switch (type) {
       case 'avata':
         if (e.field === 'avt1' && e.component.checked === true) {
+          this.recIDLead = JSON.parse(JSON.stringify(this.leadOne?.recID));
+          this.nameLead = JSON.parse(JSON.stringify(this.leadOne?.leadName));
+          this.modifyOn = JSON.parse(JSON.stringify(this.leadOne?.modifiedOn));
+        } else if (e.field === 'avt2' && e.component.checked === true) {
+          this.recIDLead = JSON.parse(JSON.stringify(this.leadTwo?.recID));
+          this.nameLead = JSON.parse(JSON.stringify(this.leadTwo?.leadName));
+          this.modifyOn = JSON.parse(JSON.stringify(this.leadOne?.modifiedOn));
+        } else {
+          this.recIDLead = JSON.parse(JSON.stringify(this.leadThree?.recID));
+          this.nameLead = JSON.parse(JSON.stringify(this.leadThree?.leadName));
+          this.modifyOn = JSON.parse(JSON.stringify(this.leadOne?.modifiedOn));
         }
+        this.changeAvata = false;
+        this.imageAvatar.objectId = this.recIDLead;
+        this.imageAvatar.objectName = this.nameLead;
+        this.imageAvatar.imgOn = this.modifyOn;
+        this.imageAvatar.loadAvatar();
+        this.changeDetector.detectChanges();
         break;
       case 'leadID':
         if (e.field === 'leadID1' && e.component.checked === true) {
@@ -415,7 +505,6 @@ export class PopupMergeLeadsComponent implements OnInit {
 
   addAvatar() {
     this.imageAvatar.referType = 'avt';
-    this.imageAvatar.uploadFile();
   }
 
   fileImgAdded(e) {

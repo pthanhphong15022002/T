@@ -1,4 +1,4 @@
-
+import { OKRPlans } from './../model/okrPlan.model';
 declare var window: any;
 import { OMCONST } from './../codx-om.constant';
 import {
@@ -27,7 +27,6 @@ import { PopupOKRWeightComponent } from '../popup/popup-okr-weight/popup-okr-wei
 import { PopupAddOKRPlanComponent } from '../popup/popup-add-okr-plan/popup-add-okr-plan.component';
 import { PopupShareOkrPlanComponent } from '../popup/popup-share-okr-plans/popup-share-okr-plans.component';
 import { PopupAddRoleComponent } from '../popup/popup-add-role/popup-add-role.component';
-import { loaded } from '@syncfusion/ej2-angular-charts';
 @Component({
   selector: 'lib-okr',
   templateUrl: './okr.component.html',
@@ -62,7 +61,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   auth: AuthStore;
   okrService: CodxOmService;
   gridView: any;
-  showPlanMF=false;
+  showPlanMF = false;
   //Kỳ
   periodID: string;
   //Loại
@@ -131,7 +130,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.okrService = inject.get(CodxOmService);
 
     this.curUser = this.auth.get();
-    //this.curUser= this.authService.userValue;
     this.createCOObject();
   }
 
@@ -212,7 +210,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.codxOmService.getFormModel(this.skrFuncID).then((skrFM) => {
       if (skrFM) {
         this.formModelSKR = skrFM;
-        this.okrFM.skrFM = this.formModelSKR;        
+        this.okrFM.skrFM = this.formModelSKR;
         this.cache
           .gridViewSetup(
             this.formModelSKR?.formName,
@@ -228,7 +226,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.codxOmService.getFormModel(this.obFuncID).then((obFM) => {
       if (obFM) {
         this.formModelOB = obFM;
-        this.okrFM.obFM = this.formModelOB;        
+        this.okrFM.obFM = this.formModelOB;
         this.cache
           .gridViewSetup(
             this.formModelOB?.formName,
@@ -293,7 +291,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         if (omSetting) {
           let settingVal = JSON.parse(omSetting?.dataValue);
           if (settingVal?.UseSubKR == '1' || settingVal?.UseSubKR == true) {
-            this.useSKR = true;            
+            this.useSKR = true;
           }
         }
       });
@@ -333,8 +331,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
 
   getOKRPlans(periodID: any, interval: any, year: any) {
-    this.showPlanMF=false;
-    this.loadedData=false;
+    this.showPlanMF = false;
+    this.loadedData = false;
     if (
       this.periodID != null &&
       this.interval != null &&
@@ -343,7 +341,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.interval != '' &&
       this.year != 0
     ) {
-      
       this.okrService
         .getOKRPlans(periodID, interval, year)
         .subscribe((item: any) => {
@@ -361,8 +358,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                 if (okrs) {
                   this.dataOKR = okrs;
                   this.isAfterRender = true;
-                  this.showPlanMF=true;
-                  this.loadedData=true;
+                  this.showPlanMF = true;
+                  this.loadedData = true;
                   this.getOrgTreeOKR();
                   this.detectorRef.detectChanges();
                 }
@@ -373,14 +370,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             this.dataOKR = null;
             this.planNull = true;
             this.isAfterRender = true;
-            this.loadedData=true;
+            this.loadedData = true;
             this.detectorRef.detectChanges();
           }
         });
-    }
-    else{
-      
-      this.loadedData=true;
+    } else {
+      this.loadedData = true;
       this.orgUnitTree = [];
       this.dataOKRPlans = null;
       this.dataOKR = null;
@@ -388,6 +383,75 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.isAfterRender = true;
       this.detectorRef.detectChanges();
     }
+  }
+  updateOKRPlans(planRecID: string) {
+    this.okrService.getOKRPlansByID(planRecID).subscribe((res:any)=>{
+      if(res){
+        this.dataOKRPlans.status=res?.status;
+        this.dataOKRPlans.progress=res?.progress;
+      }
+    })
+    this.okrService
+    .getAllOKROfPlan(planRecID)
+    .subscribe((okrs: any) => {
+      if (okrs) {
+        let x = okrs;
+        this.getOrgTreeOKR();
+        for(let i=0;i<okrs.length;i++){
+          let filterOB = this.dataOKR.filter(x=> x.recID ==okrs[i]?.recID);
+          let newOB = okrs[i];
+          if(filterOB!=null && filterOB.length>0){
+            let oldOB =filterOB[0];
+            oldOB.actual = newOB?.actual;
+            oldOB.target = newOB?.target;
+            oldOB.current = newOB?.current;
+            oldOB.weight = newOB?.weight;
+            oldOB.progress = newOB?.progress;
+            if(newOB?.items!=null && newOB?.items?.length>0){
+              //update KR
+              for(let k=0;k<newOB?.items?.length;k++){
+                let filterKR = oldOB?.items.filter(x=> x.recID == newOB?.items[k]?.recID);
+                let newKR = newOB?.items[k];
+                if(filterKR!=null && filterKR.length>0){
+                  let oldKR =filterKR[0];
+                  oldKR.actual = newKR?.actual;
+                  oldKR.target = newKR?.target;
+                  oldKR.current = newKR?.current;
+                  oldKR.weight = newKR?.weight;
+                  oldKR.progress = newKR?.progress;
+
+                  if(newKR?.items!=null && newKR?.items?.length>0){
+                    //update SKR
+                    for(let s=0;s<newKR?.items?.length;s++){
+                      let filterSKR = oldKR?.items.filter(x=> x.recID == newKR?.items[s]?.recID);
+                      let newSKR = newKR?.items[s];
+                      if(filterSKR!=null && filterSKR.length>0){
+                        let oldSKR =filterSKR[0];
+                        oldSKR.actual = newSKR?.actual;
+                        oldSKR.target = newSKR?.target;
+                        oldSKR.current = newSKR?.current;
+                        oldSKR.weight = newSKR?.weight;
+                        oldSKR.progress = newSKR?.progress;      
+                      }
+                      else{
+                        oldKR?.items.push(newSKR);
+                      }            
+                    }
+                  }
+                }
+                else{
+                  oldOB?.items.push(newKR);
+                }            
+              }
+            }
+          }
+          else{
+            this.dataOKR.push(newOB);
+          }            
+        }
+        this.detectorRef.detectChanges();
+      }
+    });
   }
   getOrgTreeOKR() {
     if (this.curUser?.employee != null) {
@@ -416,11 +480,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         .subscribe((listOrg: any) => {
           if (listOrg) {
             this.orgUnitTree = [listOrg];
-            this.loadedDataTree=true;
-          }
-          else{
-            this.orgUnitTree=null;
-            this.loadedDataTree=true;
+            this.loadedDataTree = true;
+          } else {
+            this.orgUnitTree = null;
+            this.loadedDataTree = true;
           }
         });
     }
@@ -663,9 +726,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   changePlanStatus(status) {
-    this.showPlanMF=false;
+    this.showPlanMF = false;
     if (status == OMCONST.VLL.PlanStatus.NotStarted) {
-      
       this.codxOmService
         .beforeUnReleasePlan(this.dataOKRPlans?.recID)
         .subscribe((res) => {
@@ -682,11 +744,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
               .subscribe((res) => {
                 if (res) {
                   this.dataOKRPlans.status = status;
-                  this.getOKRPlans(this.periodID, this.interval, this.year);
+                  //this.getOKRPlans(this.periodID, this.interval, this.year);
                   this.notificationsService.notifyCode('SYS034'); //thành công
                 }
                 // else{
-                  
+
                 //   this.notificationsService.notifyCode('SYS034'); //thành công
                 // }
               });
@@ -698,7 +760,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         .subscribe((res) => {
           if (res) {
             this.dataOKRPlans.status = status;
-            this.getOKRPlans(this.periodID, this.interval, this.year);
+            //this.getOKRPlans(this.periodID, this.interval, this.year);
             this.notificationsService.notifyCode('SYS034'); //thành công
             if ((status = OMCONST.VLL.PlanStatus.Ontracking)) {
               this.codxOmService
@@ -859,9 +921,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       dModel
     );
     dialogEditWeight.closed.subscribe((item) => {
-      if (item.event) {
-        this.getOKRPlans(this.periodID, this.interval, this.year);
-      }
+      this.updateOKRPlans(this.dataOKRPlans?.recID);
     });
   }
   //Xem quyền

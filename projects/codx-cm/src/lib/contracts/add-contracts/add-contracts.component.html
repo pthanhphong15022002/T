@@ -134,6 +134,7 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="dealID"
+              [model]=""
               [crrValue]="contracts?.dealID"
               (valueChange)="valueChangeCombobox($event)"
             >
@@ -1129,7 +1130,7 @@
             <div class="d-flex justify-content-between align-items-center">
               <codx-label
                 [formModel]="dialog.formModel"
-                fiedName="contractAmt"
+                fiedName="delAddress"
                 default="Liên hệ giao hàng"
               ></codx-label>
               <span
@@ -1139,10 +1140,10 @@
             <div class="">
               <codx-input
                 [formModel]="dialog.formModel"
-                field="contractAmt"
+                field="delAddress"
                 type="valuelist"
                 [min]="0"
-                [crrValue]="contracts?.contractAmt"
+                [crrValue]="contracts?.delAddress"
                 (valueChange)="valueChangeText($event)"
               >
               </codx-input>
@@ -1152,7 +1153,7 @@
             <div>
               <codx-label
                 [formModel]="dialog.formModel"
-                fiedName="paidAmt"
+                fiedName="delPhone"
                 default="Số điện thoại"
               >
               </codx-label>
@@ -1160,11 +1161,11 @@
             <div class="">
               <codx-input
                 [formModel]="dialog.formModel"
-                field="paidAmt"
+                field="delPhone"
                 type="number"
                 [min]="0"
                 (valueChange)="valueChangeText($event)"
-                [crrValue]="contracts?.paidAmt"
+                [crrValue]="contracts?.delPhone"
               >
               </codx-input>
             </div>
@@ -1189,7 +1190,7 @@
                 field="delDeadline"
                 type="datetime"
                 (valueChange)="changeValueDate($event)"
-                [crrValue]="contracts?.delStatus"
+                [crrValue]="contracts?.delDeadline"
               >
               </codx-input>
             </div>
@@ -1231,7 +1232,7 @@
                 field="delActualDate"
                 type="datetime"
                 (valueChange)="changeValueDate($event)"
-                [crrValue]="contracts?.delStatus"
+                [crrValue]="contracts?.delActualDate"
               >
               </codx-input>
             </div>
@@ -1242,7 +1243,7 @@
             <div class="d-flex justify-content-between align-items-center">
               <codx-label
                 [formModel]="dialog.formModel"
-                fiedName="currencyID"
+                fiedName="delContactID"
                 default="Địa chỉ giao hàng"
               ></codx-label>
               <span
@@ -1252,9 +1253,9 @@
             <div class="">
               <codx-input
                 [formModel]="dialog.formModel"
-                field="currencyID"
+                field="delContactID"
                 type="valuelist"
-                [crrValue]="contracts?.currencyID"
+                [crrValue]="contracts?.delContactID"
                 (valueChange)="valueChangeText($event)"
               >
               </codx-input>

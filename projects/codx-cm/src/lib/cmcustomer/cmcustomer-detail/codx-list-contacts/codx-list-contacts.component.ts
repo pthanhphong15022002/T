@@ -150,11 +150,12 @@ export class CodxListContactsComponent implements OnInit {
         if (!this.listContacts[i].checked && this.listContacts[i].objectType != this.objectType) this.listContacts[i].checked = false;
       }
       if (this.lstContactRef != null && this.lstContactRef.length > 0) {
-        this.lstContactRef.forEach((e) => {
-          if (e?.refID == this.objectID) {
-            e.checked = true;
+        for(var i = 0; i < this.listContacts.length; i++){
+          let contact = this.listContacts[i];
+          if(this.lstContactRef.map(x => x.refID).includes(contact.recID)){
+            this.listContacts[i].checked = true;
           }
-        });
+        }
       }
     }
   }
