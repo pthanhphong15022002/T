@@ -34,7 +34,7 @@ import {
   ProgressBarModule,
 } from '@syncfusion/ej2-angular-progressbar';
 import { PopupAddRoleComponent } from './popup/popup-add-role/popup-add-role.component';
-import { AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
+import { AccumulationChartModule, AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
 
 const routes: Routes = [
   {
@@ -106,6 +106,7 @@ const routes: Routes = [
     CodxShareModule,
     CircularGaugeModule,
     ProgressBarModule,
+    AccumulationChartModule,
   ],
   exports: [RouterModule],
   providers: [ProgressAnnotationService, AccumulationTooltipService],
