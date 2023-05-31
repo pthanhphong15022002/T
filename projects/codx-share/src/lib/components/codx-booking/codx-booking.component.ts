@@ -1033,19 +1033,21 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   allocate(data: any) {
-    if (data.approverID != this.authService?.userValue?.userID) {
+    let x=data?.approverID;
+    let xx=this.curUser.userID;
+    if (data.approverID != this.curUser.userID) {
       this.notificationsService.notifyCode('SYS032');
       return;
     }
-    if (data.approval == '1') {
+    if (data?.approval == '1') {
       this.api
         .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [data?.recID])
         .subscribe((trans: any) => {
           trans.map((item: any) => {
-            if (item.stepType === 'I') {
+            if (item?.stepType === 'I') {
               this.codxBookingService
                 .approve(
-                  item?.recID, //ApprovelTrans.RecID
+                  item?.recID, 
                   this.allocateStatus,
                   '',
                   ''
@@ -1053,7 +1055,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                 .subscribe((res: any) => {
                   if (res?.msgCodeError == null && res?.rowCount >= 0) {
                     this.notificationsService.notifyCode('SYS034'); //đã duyệt
-                    data.issueStatus = '3';
+                    
+                    data.issueStatus = this.allocateStatus =='5'? '3' :'4';
                     this.view.dataService.update(data).subscribe();
                   } else {
                     this.notificationsService.notifyCode(res?.msgCodeError);
