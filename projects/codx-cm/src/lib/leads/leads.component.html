@@ -29,7 +29,7 @@
     [imgOn]="data?.modifiedOn"
     [imageReferType]="'avt'"
     [imageWidth]="35"
-    imgCss="me-4"
+    imgCss="me-3"
     [imageObjType]="'CM_Leads'"
 
     cardCss="card-template border-bottom p-3 list-task"
@@ -43,19 +43,19 @@
     [body]="footer"
     [formModel]="view.formModel"
     [footer]="footer"
-    [titleCss]="'fw-bold fs-4'"
+    [titleCss]="'fs-6 mb-1'"
     [dataItem]="data"
   >
   </codx-temp-full>
 
 </ng-template>
 <ng-template #descTmp let-data>
-  <div class="d-flex flex-column py-2">
-    <div class="d-flex justify-content-start py-1">
-      <i class="icon-location_on pe-1"></i>
+  <div class="d-flex flex-column">
+    <div class="d-flex justify-content-start mb-1">
+      <i class="icon-location_on icon-16 me-2 text-gray-700"></i>
       <div>
         <span
-        class="fs-7"
+        class="fs-7 text-gray-600"
         #addresses
         [innerHTML]="
         data?.addresses
@@ -71,11 +71,11 @@
 
       </div>
     </div>
-    <div class="d-flex justify-content-start py-1">
-      <i class="icon-add_shopping_cart pe-1"></i>
+    <div class="d-flex justify-content-start mb-1">
+      <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
       <div>
         <span
-        class="text-gray-700"
+        class="text-gray-600 fs-7"
         #businesslineID
         [innerHTML]="
         data?.businesslineID
@@ -90,7 +90,7 @@
       ></span>
       </div>
     </div>
-    <div class="d-flex justify-content-start py-1">
+    <div class="d-flex justify-content-start mb-1">
       <span
       class="text-gray-700"
       #note
@@ -111,10 +111,9 @@
 </ng-template>
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center">
-    <div class="d-flex align-items-end codx-badge">
-      <div class="me-2 badge badge-light-primary">
+    <div class="d-flex align-items-center">
+      <div class="me-2 badge badge-sm badge-light-primary">
         <span
-        class="fs-7"
         #status
         [innerHTML]="
         data.status
@@ -145,7 +144,7 @@
       ></span>
       </div>
     </div>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-end">
       <codx-imgs
         [isToolTip]="true"
         [width]="25"
