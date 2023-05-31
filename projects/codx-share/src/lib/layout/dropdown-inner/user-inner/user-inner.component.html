@@ -218,6 +218,15 @@
             ></codx-label>
           </span>
         </div>
+        <div class="menu-item" *ngIf="user && user.administrator">
+          <span (click)="createIndex()" class="menu-link px-5">
+            <codx-label
+              fiedName="lblCreateIndex"
+              [formModel]="formModel"
+              default="Tạo index"
+            ></codx-label>
+          </span>
+        </div>
       </ng-container>
       <div
         class="menu-item"
@@ -231,7 +240,6 @@
           ></codx-label>
         </span>
       </div>
-
       <!-- <div class="menu-item" *ngIf="user && user.tenant == 'default'">
         <span (click)="clearTenant()" class="menu-link px-5">
           <codx-label
