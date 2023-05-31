@@ -895,6 +895,10 @@ export class CatagoryComponent implements OnInit {
     }
   }
 
+  a(dataValue, data) {
+    return false;
+  }
+
   //hàm dùng để custom xử lý sau khi lưu setting value cho các trường hợp đặc thù.
   updateCustom(dataVale: any, setting: any) {
     if (!dataVale || !setting) return;

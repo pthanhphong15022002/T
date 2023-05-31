@@ -1033,9 +1033,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   allocate(data: any) {
-    let x=data?.approverID;
-    let xx=this.curUser.userID;
-    if (data.approverID != this.curUser.userID) {
+    if (data?.approverID != this.curUser?.userID) {
       this.notificationsService.notifyCode('SYS032');
       return;
     }
