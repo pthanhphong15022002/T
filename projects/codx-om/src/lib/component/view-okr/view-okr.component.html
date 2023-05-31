@@ -19,7 +19,7 @@
                 <span class="fs-10">%</span>
               </span>
             </span>
-            <ejs-progressbar [id]="item?.guidID" [type]="'Circular'" [maximum]="100"
+            <ejs-progressbar [id]="newGuid()" [type]="'Circular'" [maximum]="100"
               [minimum]="0" [value]="item?.progress !=null ? item?.progress:0" [width]="'60'" [height]="'60'" [trackThickness]="5"
               [progressThickness]="3" [progressColor]="'#FF0000'">
               <!-- <e-progressbar-annotations> <e-progressbar-annotation [content]="item?.progress +'%'" > </e-progressbar-annotation> </e-progressbar-annotations> [animation]="{enable: true, duration: 2000, delay: 0}" -->

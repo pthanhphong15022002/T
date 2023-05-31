@@ -236,54 +236,40 @@
                 {{'1' | vll : 'ACL0001' : 'text' | async}}
               </span>
             </th> -->
-            <th style="padding-left: 10px;" class="w-40 bg-gray-100 border-bottom ac-table-header">
-              <div class="d-flex">
-                <span class="fw-bold line-clamp line-clamp-1 fs-6">
-                  {{'2' | vll : 'ACL0001' : 'text' | async}}
-                </span>
-              </div>
+            <th class="w-40 bg-gray-100 border-bottom ac-table-header">
+              <span class="fw-bold ps-3">
+                {{'2' | vll : 'ACL0001' : 'text' | async}}
+              </span>
             </th>
             <th *ngIf="itemSelected?.currencyID == baseCurr" class="w-15 bg-gray-100 border-bottom">
-              <div class="d-flex justify-content-end">
-                <span class="fw-bold line-clamp line-clamp-1 fs-6">
-                  {{'3' | vll : 'ACL0001' : 'text' | async}}
-                </span>
-              </div>
+              <span class="fw-bold">
+                {{'3' | vll : 'ACL0001' : 'text' | async}}
+              </span>
             </th>
             <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-15 bg-gray-100 border-bottom">
-              <div class="d-flex justify-content-end">
-                <span class="fw-bold line-clamp line-clamp-1 fs-6">
-                  {{'7' | vll : 'ACL0001' : 'text' | async}}
-                </span>
-              </div>
+              <span class="fw-bold">
+                {{'7' | vll : 'ACL0001' : 'text' | async}}
+              </span>
             </th>
             <th *ngIf="itemSelected?.currencyID == baseCurr" class="w-15 bg-gray-100 border-bottom">
-              <div class="d-flex justify-content-end">
-                <span class="fw-bold line-clamp line-clamp-1 fs-6">
-                  {{'4' | vll : 'ACL0001' : 'text' | async}}
-                </span>
-              </div>
+              <span class="fw-bold">
+                {{'4' | vll : 'ACL0001' : 'text' | async}}
+              </span>
             </th>
             <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-15 bg-gray-100 border-bottom">
-              <div class="d-flex justify-content-end">
-                <span class="fw-bold line-clamp line-clamp-1 fs-6">
-                  {{'8' | vll : 'ACL0001' : 'text' | async}}
-                </span>
-              </div>
+              <span class="fw-bold">
+                {{'8' | vll : 'ACL0001' : 'text' | async}}
+              </span>
             </th>
             <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-15 bg-gray-100 border-bottom">
-              <div class="d-flex justify-content-end">
-                <span class="fw-bold line-clamp line-clamp-1 fs-6">
-                  {{'9' | vll : 'ACL0001' : 'text' | async}}
-                </span>
-              </div>
+              <span class="fw-bold">
+                {{'9' | vll : 'ACL0001' : 'text' | async}}
+              </span>
             </th>
             <th class="w-30 bg-gray-100 border-bottom">
-              <div class="d-flex">
-                <span class="fw-bold line-clamp line-clamp-1 fs-6">
-                  {{'6' | vll : 'ACL0001' : 'text' | async}}
-                </span>
-              </div>
+              <span class="fw-bold">
+                {{'6' | vll : 'ACL0001' : 'text' | async}}
+              </span>
             </th>
           </tr>
         </thead>
@@ -293,16 +279,19 @@
               <!-- <td class="text-center red">
                 <span *ngIf="(checkCrediting(item))" class="fw-bold">{{item.entryID}}</span>
               </td> -->
-              <td style="padding-left: 10px;">
-                <div class="d-flex justify-content-start mb-3">
-                  <div style="width: 23%;" class="align-items-center">
-                    <div class="d-flex align-items-center justify-content-start mb-2">
+              <td class="">
+                <div class="d-flex justify-content-start ps-3">
+                  <div class="w-100px min-w-100px">
+                    <div class="d-flex align-items-center justify-content-start">
                       <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
-                        <span class="fw-bold line-clamp line-clamp-1">N&nbsp;&nbsp;{{item.accountID}}</span>
+                        <span class="d-flex align-items-center mb-2">
+                          <span class="fs-6 fw-bold me-2">N</span>
+                          <span class="fw-bold">{{item.accountID}}</span>
+                        </span>
                       </ng-container>
                     </div>
                   </div>
-                  <div class="align-items-center">
+                  <div class="align-items-center w-100">
                     <div *ngIf="(item.accountID != null && item.accountID != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
@@ -381,8 +370,8 @@
                   </div>
                 </div>
               </td>
-              <td>
-                <div class="d-flex align-items-center justify-content-end">
+              <td class="text-center">
+                <div class="d-flex align-items-center">
                   <ng-container *ngIf="itemSelected?.currencyID == baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1">{{item.transAmt.toLocaleString("it-IT")
                       }}</span>
@@ -391,7 +380,7 @@
               </td>
               <td>
               </td>
-              <td *ngIf="itemSelected?.currencyID != baseCurr">
+              <td class="text-center" *ngIf="itemSelected?.currencyID != baseCurr">
                 <!-- <div class="d-flex align-items-center justify-content-start mb-2">
                   <ng-container>
                     <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{(item.dr +
@@ -405,24 +394,26 @@
               </td>
               <td>
                 <div *ngIf="item.memo != null && item.memo != ''" class="d-flex flex-wrap">
-                  <div class="d-flex align-items-center me-5 mb-1">
-                    <span class="line-clamp line-clamp-2">{{ item.memo }}</span>
+                  <div class="d-flex align-items-center mb-1">
+                    <span class="line-clamp line-clamp-2 text-gray-600 fs-7">{{ item.memo }}</span>
                   </div>
                 </div>
               </td>
             </tr>
             <tr *ngIf="item.crediting" [class]="createLine(item) ? 'border-bottom' : ''">
-              <td style="padding-left: 10px;">
-                <div class="d-flex justify-content-start">
-                  <div style="width: 28%;" class="align-items-center">
-                    <div class="d-flex align-items-center justify-content-start mb-2">
+              <td>
+                <div class="d-flex justify-content-start w-100 ps-3">
+                  <div class="w-100px min-w-100px">
+                    <div class="d-flex align-items-center justify-content-start">
                       <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <span class="fw-bold line-clamp line-clamp-1">C&nbsp;&nbsp;{{item.accountID}}</span>
+                        <span class="d-flex align-items-center mb-2">
+                          <span class="fw-bold fs-6 me-2">C</span>
+                          <span class="fw-bold">{{item.accountID}}</span>
+                        </span>
                       </ng-container>
                     </div>
                   </div>
-                  <div class="align-items-center">
+                  <div class="align-items-center w-100">
                     <div *ngIf="(item.accountID != null && item.accountID != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
@@ -504,7 +495,7 @@
               <td>
               </td>
               <td>
-                <div class="d-flex align-items-center justify-content-end">
+                <div class="d-flex align-items-center">
                   <ng-container *ngIf="itemSelected?.currencyID == baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1">{{item.transAmt.toLocaleString("it-IT")
                       }}</span>
@@ -516,8 +507,8 @@
               </td>
               <td>
                 <div *ngIf="item.memo != null && item.memo != ''" class="d-flex flex-wrap">
-                  <div class="d-flex align-items-center me-5 mb-1">
-                    <span class="line-clamp line-clamp-2">{{item.memo}}</span>
+                  <div class="d-flex align-items-center mb-1">
+                    <span class="line-clamp line-clamp-2 text-gray-600 fs-7">{{item.memo}}</span>
                   </div>
                 </div>
               </td>
@@ -528,12 +519,12 @@
           bottom: 0;">
           <td></td>
           <td>
-            <div class="d-flex align-items-center justify-content-end">
+            <div class="d-flex align-items-center">
               <span class="fw-bold line-clamp line-clamp-1">{{totalacct}}</span>
             </div>
           </td>
           <td>
-            <div class="d-flex align-items-center justify-content-end">
+            <div class="d-flex align-items-center">
               <span class="fw-bold line-clamp line-clamp-1">{{totaloff}}</span>
             </div>
           </td>
@@ -558,49 +549,49 @@
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
         <thead style="position: sticky; top: 0">
           <tr class="border-bottom">
-            <th style="width: 20%;">
+            <th class="ps-3 w-20">
               <div class="d-flex">
                 <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="InvoiceNo"
                   [formModel]="fmSettledInvoices">
                 </codx-label>
               </div>
             </th>
-            <th style="width: 30%;">
+            <th class="w-30">
               <div class="d-flex">
                 <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="InvoiceDate"
                   [formModel]="fmSettledInvoices">
                 </codx-label>
               </div>
             </th>
-            <th style="width: 30%;">
+            <th class="w-30">
               <div class="d-flex">
                 <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="DueDate"
                   [formModel]="fmSettledInvoices">
                 </codx-label>
               </div>
             </th>
-            <th style="width: 20%;">
+            <th class="w-20">
               <div class="d-flex">
                 <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="BalanceAmt"
                   [formModel]="fmSettledInvoices">
                 </codx-label>
               </div>
             </th>
-            <th style="width: 20%;">
+            <th class="w-20">
               <div class="d-flex">
                 <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="CurrencyID"
                   [formModel]="fmSettledInvoices">
                 </codx-label>
               </div>
             </th>
-            <th style="width: 30%;">
+            <th class="w-30">
               <div class="d-flex">
                 <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="SettledAmt"
                   [formModel]="fmSettledInvoices">
                 </codx-label>
               </div>
             </th>
-            <th style="width: 30%;">
+            <th class="w-30">
               <div class="d-flex">
                 <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="Note"
                   [formModel]="fmSettledInvoices">
@@ -611,7 +602,7 @@
         </thead>
         <tbody class="border-bottom">
           <tr *ngFor="let item of settledInvoices">
-            <td>
+            <td class="ps-3">
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.invoiceNo != null && item.invoiceNo != '')">
                   <span [ngbTooltip]="popno" class="fw-bold line-clamp line-clamp-1">{{item.invoiceNo}}</span>
@@ -927,12 +918,12 @@
               </div>
             </td>
             <td>
-              <div *ngIf="item.note != null && item.note != ''" class="d-flex flex-wrap">
-                <div class="d-flex align-items-center me-5 mb-1">
-                  <span [ngbTooltip]="popnote" class="fw-bold line-clamp line-clamp-2">{{ item.note }}</span>
+              <div *ngIf="item.note != null && item.note != ''" class="d-flex flex-wrap fs-7">
+                <div class="d-flex align-items-center mb-1">
+                  <span [ngbTooltip]="popnote" class="text-gray-600 line-clamp line-clamp-2">{{ item.note }}</span>
                 </div>
                 <ng-template #popnote>
-                  <span [ngbTooltip]="popnote" class="fw-bold">{{ item.note }}</span>
+                  <span [ngbTooltip]="popnote" class="text-gray-600">{{ item.note }}</span>
                 </ng-template>
               </div>
             </td>

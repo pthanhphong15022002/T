@@ -7,6 +7,7 @@ import {
   OnInit,
   Optional,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FileService } from '@shared/services/file.service';
@@ -36,6 +37,7 @@ import { ApprovalStepComponent } from '../../setting/approval-step/approval-step
   selector: 'popup-add-sign-file',
   templateUrl: './popup-add-sign-file.component.html',
   styleUrls: ['./popup-add-sign-file.component.scss'],
+  encapsulation:ViewEncapsulation.None,
 })
 export class PopupAddSignFileComponent implements OnInit {
   @ViewChild('view') view: ViewsComponent;
@@ -546,7 +548,7 @@ export class PopupAddSignFileComponent implements OnInit {
                 let oldValue = JSON.parse(JSON.stringify(this.data.categoryID));
                 let category = event.component?.itemsSelected[0];
                 this.getCurrentCate(event?.data);
-                if (x.event?.status == 'Y') {
+                if (x?.event?.status == 'Y') {
                   this.esService
                     .getAutoNumberByCategory(category?.AutoNumber)
                     .subscribe((autoNum) => {
@@ -779,7 +781,7 @@ export class PopupAddSignFileComponent implements OnInit {
               }
             );
           }
-          if (this.currentTab == 0 || this.currentTab == 1 ) {
+          if (this.currentTab == 0 ) {
             this.updateNodeStatus(this.oldNode, this.newNode);
             this.currentTab++;
             this.processTab++;
@@ -828,7 +830,7 @@ export class PopupAddSignFileComponent implements OnInit {
     if (this.processID != '') {
       if ((!this.isAddNew || this.isSaved) && this.eSign == true) {
         this.notify.alertCode('ES002').subscribe((x) => {
-          if (x.event.status == 'Y') {
+          if (x?.event?.status == 'Y') {
             this.esService.deleteStepByTransID(this.data.recID).subscribe();
             this.dialogSignFile.patchValue({
               processID: this.processID,
@@ -1000,7 +1002,7 @@ export class PopupAddSignFileComponent implements OnInit {
                 let fileAraray: any[] = Array.from(item2);
                 if (
                   fileAraray == null ||
-                  fileAraray.filter((x) => x.status != '0').length > 0
+                  fileAraray.filter((x) => x?.status != '0').length > 0
                 ) {
                   allSuccess = false;
                 }
@@ -1038,6 +1040,12 @@ export class PopupAddSignFileComponent implements OnInit {
       this.oldNode=oldNode;
       this.newNode=newNode;
       this.onSaveSignFile();
+      if(this.isAddNew && this.currentTab == 1){
+        this.updateNodeStatus(this.oldNode, this.newNode);
+        this.currentTab++;
+        this.processTab++;
+        this.cr.detectChanges();
+      }
         //this.viewApprovalStep.updateApprovalStep();
         // this.updateNodeStatus(oldNode, newNode);
         // this.currentTab++;
@@ -1165,7 +1173,7 @@ export class PopupAddSignFileComponent implements OnInit {
         }
       } else {
         this.notify.alertCode('ES004').subscribe((x) => {
-          if (x.event.status == 'Y') {
+          if (x?.event?.status == 'Y') {
             this.clickIsSave(true);
           } else {
             this.clickIsSave(false);

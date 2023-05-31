@@ -15,6 +15,7 @@ import {
 } from '@syncfusion/ej2-angular-progressbar';
 import { UIComponent, ViewModel, ViewType } from 'codx-core';
 import { ChartSettings } from './models/chart.model';
+
 export class GridModels {
   pageSize: number;
   entityName: string;
@@ -58,7 +59,9 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   teamDBData: any;
   assignDBData: any;
 
-  isEditMode: boolean = true;
+  isEditMode: boolean = false;
+
+  palletColor = ['#06ddb8', '#a6dff5'];
 
   chartSettings6: ChartSettings = {
     seriesSetting: [
@@ -336,10 +339,10 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       '[{"panelId":"0.1636284528927885_layout","data":"1"},{"panelId":"0.5801149283702021_layout","data":"2"},{"panelId":"0.6937258303982936_layout","data":"3"},{"panelId":"0.5667390469747078_layout","data":"4"},{"panelId":"0.4199281088325755_layout","data":"5"},{"panelId":"0.4592017601751599_layout","data":"6"},{"panelId":"0.21519762020962552_layout","data":"7"},{"panelId":"0.06496875406606994_layout","data":"8"},{"panelId":"0.14683256767762543_layout","data":"9"},{"panelId":"0.36639064171709834_layout","data":"10"},{"panelId":"0.36601875176456145_layout","data":"11"},{"panelId":"0.3516224838830073_layout","data":"12"}]'
     );
     this.panels2 = JSON.parse(
-      '[{"id":"0.7158772861178662_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.6630241925546723_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.2853680268255028_layout","row":0,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.007499361474228472_layout","row":0,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.023172028709681936_layout","row":0,"col":32,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.31080209919803936_layout","row":0,"col":40,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.8927326695370017_layout","row":4,"col":0,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.8302215091444525_layout","row":4,"col":16,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.7731673204748104_layout","row":4,"col":32,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.9527549374583961_layout","row":20,"col":0,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"0.7371661853933429_layout","row":20,"col":32,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"0.7158772861178662_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.6630241925546723_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.2853680268255028_layout","row":0,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.007499361474228472_layout","row":0,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.023172028709681936_layout","row":0,"col":32,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.31080209919803936_layout","row":0,"col":40,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.8927326695370017_layout","row":4,"col":0,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.8302215091444525_layout","row":4,"col":16,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.7731673204748104_layout","row":4,"col":32,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.9527549374583961_layout","row":20,"col":0,"sizeX":32,"sizeY":12,"minSizeX":32,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.7371661853933429_layout","row":20,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.47613541134786463_layout","row":28,"col":32,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.16302099401607562_layout","row":28,"col":40,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datas2 = JSON.parse(
-      '[{"panelId":"0.7158772861178662_layout","data":"1"},{"panelId":"0.6630241925546723_layout","data":"2"},{"panelId":"0.2853680268255028_layout","data":"3"},{"panelId":"0.007499361474228472_layout","data":"4"},{"panelId":"0.023172028709681936_layout","data":"5"},{"panelId":"0.31080209919803936_layout","data":"6"},{"panelId":"0.8927326695370017_layout","data":"7"},{"panelId":"0.8302215091444525_layout","data":"8"},{"panelId":"0.7731673204748104_layout","data":"9"},{"panelId":"0.9527549374583961_layout","data":"10"},{"panelId":"0.7371661853933429_layout","data":"11"}]'
+      '[{"panelId":"0.7158772861178662_layout","data":"1"},{"panelId":"0.6630241925546723_layout","data":"2"},{"panelId":"0.2853680268255028_layout","data":"3"},{"panelId":"0.007499361474228472_layout","data":"4"},{"panelId":"0.023172028709681936_layout","data":"5"},{"panelId":"0.31080209919803936_layout","data":"6"},{"panelId":"0.8927326695370017_layout","data":"7"},{"panelId":"0.8302215091444525_layout","data":"8"},{"panelId":"0.7731673204748104_layout","data":"9"},{"panelId":"0.9527549374583961_layout","data":"10"},{"panelId":"0.7371661853933429_layout","data":"11"},{"panelId":"0.47613541134786463_layout","data":"12"},{"panelId":"0.16302099401607562_layout","data":"13"}]'
     );
     this.panels3 = JSON.parse(
       '[{"id":"0.0014514686635016538_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.19694528981098758_layout","row":0,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.9240829789281733_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.3905464098807283_layout","row":0,"col":32,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.6324365355784578_layout","row":0,"col":40,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.7307926980008612_layout","row":4,"col":0,"sizeX":16,"sizeY":32,"minSizeX":16,"minSizeY":32,"maxSizeX":null,"maxSizeY":null},{"id":"0.7062776900074157_layout","row":0,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.09230805583161117_layout","row":4,"col":16,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.4142359240869473_layout","row":4,"col":32,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.13567559377635385_layout","row":20,"col":16,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.0919781174656844_layout","row":20,"col":32,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null}]'
@@ -369,6 +372,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   isLoaded: boolean = false;
+
   getMyDashboardData(predicates: string, dataValues: string) {
     let model = new GridModels();
     model.funcID = this.funcID;
@@ -396,7 +400,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.api
       .exec('TM', 'TaskBusiness', 'GetDataTeamDashboardAsync', [model])
       .subscribe((res) => {
-        this.myDBData = res;
+        this.teamDBData = res;
         setTimeout(() => {
           this.isLoaded = true;
         }, 500);
