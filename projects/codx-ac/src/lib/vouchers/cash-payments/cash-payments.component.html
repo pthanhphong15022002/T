@@ -171,9 +171,9 @@
               <div class="d-flex align-items-top me-2">
                 <i class="icon-format_list_numbered icon-18 me-2"></i>
                 <span *ngIf="itemSelected.subType == '2'" [innerHTML]="'0' | vll : 'AC071' : 'text' | async"
-                  class="fw-bold fs-6-sm text-uppercase">
+                  class="fw-bold fs-6-sm">
                 </span>
-                <span *ngIf="itemSelected.subType == '1'" class="fw-bold fs-6 text-uppercase">
+                <span *ngIf="itemSelected.subType == '1'" class="fw-bold fs-6">
                   Hạch toán
                 </span>
               </div>
@@ -186,7 +186,7 @@
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2">
                 <i class="icon-text_snippet icon-18 me-2"></i>
-                <span class="fw-bold fs-6 text-uppercase">Hạch toán</span>
+                <span class="fw-bold fs-6">Hạch toán</span>
               </div>
             </ng-template>
             <ng-template #content>
@@ -298,7 +298,7 @@
               </td> -->
               <td style="padding-left: 10px;">
                 <div class="d-flex justify-content-start mb-3">
-                  <div class="align-items-center ac-table-row w-25">
+                  <div style="width: 23%;" class="align-items-center">
                     <div class="d-flex align-items-center justify-content-start mb-2">
                       <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
                         <span class="fw-bold line-clamp line-clamp-1">N&nbsp;&nbsp;{{item.accountID}}</span>
@@ -417,7 +417,7 @@
             <tr *ngIf="item.crediting" [class]="createLine(item) ? 'border-bottom' : ''">
               <td style="padding-left: 10px;">
                 <div class="d-flex justify-content-start">
-                  <div class="align-items-center ac-table-row w-25">
+                  <div style="width: 28%;" class="align-items-center">
                     <div class="d-flex align-items-center justify-content-start mb-2">
                       <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

@@ -9,9 +9,9 @@
         <!-- Tab thông tin chứng từ -->
         <e-tabitem>
           <ng-template #headerText>
-            <div class="d-flex align-items-top me-2">
+            <div class="d-flex align-items-top me-2 mt-3">
               <i class="icon-info icon-18 me-2"></i>
-              <span [innerHTML]="'0' | vll : 'AC071' : 'text' | async" class="fw-bold fs-5-sm text-uppercase">
+              <span [innerHTML]="'0' | vll : 'AC071' : 'text' | async" class="fw-bold fs-5-sm">
               </span>
             </div>
           </ng-template>
@@ -26,9 +26,9 @@
         <!-- Tab chi tiết bút toán -->
         <e-tabitem>
           <ng-template #headerText>
-            <div #cashRef class="d-flex align-items-top me-2 mt-4">
+            <div #cashRef class="d-flex align-items-top me-2 mt-3">
               <i class="icon-format_list_numbered icon-18 me-2"></i>
-              <span [innerHTML]="'1' | vll : 'AC070' : 'text' | async" class="fw-bold fs-5-sm text-uppercase">
+              <span [innerHTML]="'1' | vll : 'AC070' : 'text' | async" class="fw-bold fs-5-sm">
               </span>
             </div>
           </ng-template>
@@ -43,7 +43,7 @@
               <div class="me-2">
                 <div class="icon-format_list_numbered icon-18"></div>
               </div>
-              <div class="fw-bold fs-6 text-uppercase">
+              <div class="fw-bold fs-6">
                 <codx-label fiedName="lblGeneral" [formModel]="form.formModel" default="Tổng hợp"></codx-label>
               </div>
             </div>
@@ -121,7 +121,7 @@
                   <codx-label *ngIf="cashpayment.subType == '4' || cashpayment.subType == '9'" fiedName="ObjectID"
                     [formModel]="form.formModel" default="Đối tượng">
                   </codx-label>
-                  <codx-input type="combobox" refType="4"
+                  <codx-input [crrValue]="cashpayment.objectID" type="combobox" refType="4"
                     [refValue]="cashpayment?.subType | vll : 'AC115' : 'text' | async" field="objectID"
                     (valueChange)="valueChange($event)">
                   </codx-input>
@@ -258,9 +258,8 @@
       <codx-gridview-v2 class="tabLine" #gridCash [formName]="fmCashPaymentsLines.formName"
         [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
-        [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
-        [autoLoad]="false" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
-        (cellChanged)="lineChanged($event)"></codx-gridview-v2>
+        [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" 
+        [autoLoad]="false" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"></codx-gridview-v2>
     </div>
   </ng-container>
   <!-- <ng-container
@@ -946,7 +945,7 @@
 <!-- Start: addline -->
 <ng-template #addLine let-data>
   <ng-container *ngIf="form.formGroup">
-    <div style="position: fixed;" #docRef class="d-flex align-items-center justify-content-start me-10 mt-8">
+    <div style="position: fixed;" #docRef class="d-flex align-items-center justify-content-start me-10 mt-1">
       <codx-label class="fs-6 fw-bold me-2" fiedName="RefDocs" [formModel]="form.formModel">
       </codx-label>
       <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="refDocs" [min]="0"

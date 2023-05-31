@@ -28,13 +28,13 @@ import * as moment from 'moment';
 import { StatusTaskGoal } from '../model/enum';
 import {
   TaskGoal,
-  tmpReferences,
   tmpTaskResource,
   TM_Parameter,
   TM_TaskGroups,
   TM_Tasks,
 } from '../model/task.model';
 import { CodxTasksService } from '../codx-tasks.service';
+import { tmpReferences } from '../../../models/assign-task.model';
 @Component({
   selector: 'app-popup-add',
   templateUrl: './popup-add.component.html',

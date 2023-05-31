@@ -388,7 +388,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   gridCreated(grid) {
-    let hBody, hHeader, hTab, hItem, hDoc, hBtn;
+    let hBody, hHeader, hTab, hItem, hDoc;
     let body = document.getElementsByClassName('card-body scroll-y h-100');
     let header = document.getElementsByClassName(
       'e-gridheader e-lib e-draggable e-droppable'
@@ -400,8 +400,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     if (this.itemRef)
       hItem = this.itemRef.nativeElement.parentElement.offsetHeight;
     if (this.docRef) hDoc = this.docRef.nativeElement.offsetHeight;
-    if (this.btnRef) hBtn = this.btnRef.nativeElement.offsetHeight;
-    this.gridHeight = hBody - (hHeader + hTab + hItem + hDoc + hBtn + 90 + 30); //90 là header & footer, //30 là tfoot grid
+    this.gridHeight = hBody - (hHeader + hTab + hItem + hDoc + 90 + 30); //90 là header & footer, //30 là tfoot grid
   }
 
   lineChanged(e: any) {
@@ -876,7 +875,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             this.cashpayment
           );
           this.dialog.dataService
-            .save(null, 0, '', 'SYS006', true)
+            .save((opt: RequestOption) => {
+              opt.data = [this.cashpayment];
+            })
             .subscribe((res) => {
               if (res && res.update.data != null) {
                 if (this.cashpayment.subType == '2') {
@@ -908,7 +909,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             this.formType === 'edit',
             () => {
               this.cashpayment.status = '1';
-              this.dialog.dataService.save().subscribe((res) => {
+              this.dialog.dataService.save((opt: RequestOption) => {
+                opt.data = [this.cashpayment];
+              }).subscribe((res) => {
                 if (res && res.save.data != null) {
                   if (this.cashpayment.subType == '2') {
                     this.api
@@ -944,7 +947,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.cashpayment['_uuid'],
               this.cashpayment
             );
-            this.dialog.dataService.save().subscribe((res) => {
+            this.dialog.dataService.save((opt: RequestOption) => {
+              opt.data = [this.cashpayment];
+            }).subscribe((res) => {
               if (res && res.update.data != null) {
                 this.dialog.close({
                   update: true,

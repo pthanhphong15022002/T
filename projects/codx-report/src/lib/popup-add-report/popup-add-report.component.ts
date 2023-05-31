@@ -401,6 +401,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     }
     if (this.attachment && this.attachment.fileUploadList.length > 0) {
       this.attachment.objectId = this.recID;
+      console.log(this.attachment.fileUploadList);
 
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
 
