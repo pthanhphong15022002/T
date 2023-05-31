@@ -99,7 +99,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   dayStart: Date;
   preside: any;
   isOtherModule = false; //neu tu modele khac truyen vao
-  defaultRoleA ='';
+  defaultRoleA = '';
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -113,7 +113,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   ) {
     this.dialog = dialog;
     this.user = this.authStore.get();
-    this.defaultRoleA = this.user.userID
+    this.defaultRoleA = this.user.userID;
     this.functionID = this.dialog.formModel.funcID;
     this.isOtherModule = dt?.data?.isOtherModule;
     this.meeting = this.isOtherModule
@@ -123,7 +123,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.titleAction = dt?.data?.titleAction;
     this.disabledProject = dt?.data?.disabledProject;
     this.listPermissions = dt?.data?.listPermissions;
-    this.preside = dt?.data?.preside;  // người chủ trì, không hiểu please not edit !
+    this.preside = dt?.data?.preside; // người chủ trì, không hiểu please not edit !
     if (this.preside) this.defaultRoleA = this.preside;
 
     this.cache
@@ -154,10 +154,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       });
     if (this.action == 'add' || this.action == 'copy') {
       let listUser = this.defaultRoleA;
-    
+
       if (this.listPermissions) {
         if (!this.listPermissions.split(';').includes(listUser))
           listUser += ';' + this.listPermissions;
+        else listUser = this.listPermissions;
       }
       this.getListUser(listUser);
     }

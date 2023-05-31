@@ -1081,7 +1081,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let preside ;
     let participants;
     let listPermissions=''
-    if(data?.roles>0){
+    if(data?.roles?.length>0){
       preside = data?.roles.filter(x=>x.roleType=='O')[0]?.objectID ;
       if(preside)
       listPermissions +=preside
