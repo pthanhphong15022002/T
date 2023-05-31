@@ -329,6 +329,8 @@ export class CM_Contacts {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  checked: boolean;
+  recIDold: string;
 }
 export class BS_AddressBook {
   recID: string;
@@ -488,6 +490,10 @@ export class CM_Contracts {
   delDeadline: Date;// Hạn giao hàng
 
   delActualDate: Date;// Ngày giao hàng
+  delAddress: string;
+  delPhone: string;
+  delContactID: string;
+
   // Điều khoản hồ sơ liên quan -- memo
 }
 

@@ -20,7 +20,12 @@ import {
 } from 'codx-core';
 import { firstValueFrom } from 'rxjs';
 import { CodxCmService } from '../../codx-cm.service';
-import { CM_Customers, CM_Deals, CM_Leads } from '../../models/cm_model';
+import {
+  CM_Contacts,
+  CM_Customers,
+  CM_Deals,
+  CM_Leads,
+} from '../../models/cm_model';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CodxAddressCmComponent } from '../../cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
 import { tmpInstances } from '../../models/tmpModel';
@@ -608,11 +613,21 @@ export class PopupConvertLeadComponent implements OnInit {
   objectConvert(e) {
     if (e.e == true) {
       if (e?.data != null) {
-        if (!this.lstContactCustomer.some((x) => x.recID == e?.data?.recID)) {
+        var tmpContact = new CM_Contacts();
+        tmpContact = JSON.parse(JSON.stringify(e.data));
+        tmpContact.recID = Util.uid();
+        tmpContact.recIDold = e.data.recID;
+        tmpContact.refID = this.lead?.recID;
+        tmpContact.checked = false;
+        if (
+          !this.lstContactCustomer.some(
+            (x) => x.recIDold == tmpContact.recIDold
+          )
+        ) {
           var check = this.lstContactCustomer.findIndex(
             (x) => x.isDefault == true
           );
-          if (e.data.isDefault == true) {
+          if (tmpContact.isDefault == true) {
             if (check != -1) {
               var config = new AlertConfirmInputConfig();
               config.type = 'YesNo';
@@ -620,33 +635,32 @@ export class PopupConvertLeadComponent implements OnInit {
                 if (x.event.status == 'Y') {
                   this.lstContactCustomer[check].isDefault = false;
                 } else {
-                  e.data.isDefault = false;
+                  tmpContact.isDefault = false;
                 }
-                this.lstContactCustomer.push(Object.assign({}, e?.data));
+                this.lstContactCustomer.push(Object.assign({}, tmpContact));
                 this.codxListContact.loadListContact(this.lstContactCustomer);
-
                 this.changeDetectorRef.detectChanges();
               });
             } else {
-              this.lstContactCustomer.push(Object.assign({}, e?.data));
+              this.lstContactCustomer.push(Object.assign({}, tmpContact));
               this.codxListContact.loadListContact(this.lstContactCustomer);
             }
           } else {
-            this.lstContactCustomer.push(Object.assign({}, e?.data));
+            this.lstContactCustomer.push(Object.assign({}, tmpContact));
             this.codxListContact.loadListContact(this.lstContactCustomer);
           }
         }
       }
     } else {
       var index = this.lstContactCustomer.findIndex(
-        (x) => x.recID == e?.data?.recID
+        (x) => x.recIDold == e?.data?.recID
       );
       if (index != -1) {
         var indexDeal = this.lstContactDeal.findIndex(
           (x) => this.lstContactCustomer[index].recID == x.recID
         );
+        this.lstContactCustomer[index].refID = null;
         this.lstContactCustomer.splice(index, 1);
-
         this.codxListContact.loadListContact(this.lstContactCustomer);
 
         if (indexDeal != -1) {
@@ -660,8 +674,18 @@ export class PopupConvertLeadComponent implements OnInit {
   objectConvertDeal(e) {
     if (e.e == true) {
       if (e.data) {
+        var tmp = new CM_Contacts();
+        tmp = JSON.parse(JSON.stringify(e.data));
+        tmp.refID = this.radioChecked ? this.customerID : this.customerNewOld;
+        var indexCus = this.lstContactCustomer.findIndex(
+          (x) => x.recID == e.data.recID
+        );
+
         if (!this.lstContactDeal.some((x) => x.recID == e?.data?.recID)) {
-          this.lstContactDeal.push(e?.data);
+          this.lstContactDeal.push(tmp);
+        }
+        if (indexCus != -1) {
+          this.lstContactCustomer[indexCus].checked = true;
         }
       }
     } else {
@@ -670,6 +694,7 @@ export class PopupConvertLeadComponent implements OnInit {
       );
       this.lstContactDeal.splice(index, 1);
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   contactEvent(e) {
@@ -687,6 +712,7 @@ export class PopupConvertLeadComponent implements OnInit {
           this.lstContactDeal.splice(findIndex, 1);
         }
       }
+      this.changeDetectorRef.detectChanges();
     }
   }
 

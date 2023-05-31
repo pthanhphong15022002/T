@@ -594,7 +594,8 @@ export class MWPPopupAddBookingCarComponent extends UIComponent {
                     this.returnData,
                     res.processID,
                     'EP_Bookings',
-                    this.formModel.funcID
+                    this.formModel.funcID,
+                    this.returnData?.createdBy
                   )
                   .subscribe((res) => {
                     if (res?.msgCodeError == null && res?.rowCount) {

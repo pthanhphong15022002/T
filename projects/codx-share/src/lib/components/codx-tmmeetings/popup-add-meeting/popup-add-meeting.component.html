@@ -1,4 +1,5 @@
 <codx-layout-add
+  #form
   [title]="title"
   [tabInfo]="tabInfo"
   [formModel]="dialog.formModel"
@@ -8,7 +9,6 @@
   [openMore]="true"
   [tabContent]="[tabDescip, tabResources, tabOpen, tabJob]"
   (setTitle)="setTitle($event)"
-  #form
   [data]="meeting"
 ></codx-layout-add>
 

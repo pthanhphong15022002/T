@@ -373,9 +373,8 @@
       </div>
     </div>
     <codx-list-contacts
-    [selectAll]="false"
-
       #codxConvert
+      [selectAll]="false"
       [funcID]="form.formModel.funcID"
       [objectID]="lead?.recID"
       [objectType]="'2'"
@@ -397,7 +396,6 @@
     <codx-list-contacts
       #codxListContact
       [selectAll]="false"
-
       [funcID]="'CM0101'"
       [objectID]="customerID"
       [listContacts]="lstContactCustomer"
@@ -420,8 +418,7 @@
       ></codx-label>
     </div>
     <codx-list-contacts
-    [selectAll]="false"
-
+      [selectAll]="false"
       [funcID]="'CM0201'"
       [objectID]="deal?.recID"
       [listContacts]="lstContactDeal"

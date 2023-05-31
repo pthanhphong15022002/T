@@ -13,11 +13,11 @@ import { LayoutNewsComponent } from './layout-news/layout-news.component';
 import { NewsDetailComponent } from './news-detail/news-detail.component';
 import { NewsComponent } from './news.component';
 import { PopupAddComponent } from './popup/popup-add/popup-add.component';
-import { PopupEditComponent } from './popup/popup-edit/popup-edit.component';
 import { PopupSearchComponent } from './popup/popup-search/popup-search.component';
 import { NewsTagComponent } from './news-tag/view-tag.component';
 import { ViewVideoComponent } from './view-video/view-video.component';
-
+import { PopupAddCommentComponent } from './popup/popup-add-comment/popup-add-comment.component';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 export const routes: Routes = [
   {
     path: 'news',
@@ -77,11 +77,12 @@ const Component: Type<any>[] = [
   NewsTagComponent,
   NewsDetailComponent,
   PopupAddComponent,
-  PopupEditComponent,
   PopupSearchComponent,
   ViewVideoComponent,
   AppropvalNewsComponent,
   AppropvalNewsDetailComponent,
+  PopupAddCommentComponent,
+  
 ];
 
 @NgModule({
@@ -91,6 +92,8 @@ const Component: Type<any>[] = [
     HttpClientModule,
     CodxCoreModule,
     CodxShareModule,
+    LazyLoadImageModule,
+
     NgbModule,
     CoreModule,
     RouterModule.forChild(routes),

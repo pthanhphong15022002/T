@@ -1,10 +1,10 @@
 import { Component, HostBinding, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ViewModel, ViewType, DialogModel, UIComponent } from 'codx-core';
-import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { WP_Comments } from '../../models/WP_Comments.model';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from '../popup/popup-search/popup-search.component';
+import { PopupAddCommentComponent } from '../popup/popup-add-comment/popup-add-comment.component';
 
 @Component({
   selector: 'wp-news-detail',
@@ -13,6 +13,7 @@ import { PopupSearchComponent } from '../popup/popup-search/popup-search.compone
   encapsulation: ViewEncapsulation.None
 })
 export class NewsDetailComponent extends UIComponent {
+
   @HostBinding('class') get class() {
     return "bg-body h-100 news-main card-body hover-scroll-overlay-y news-detail";
   }
@@ -30,12 +31,11 @@ export class NewsDetailComponent extends UIComponent {
   listNews = [];
   views: Array<ViewModel> = [];
   userPermission:any = null;
-  isShowTemplateShare = false;
+  sysMoreFunc:any = null;
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   constructor(
     private injector:Injector,
-    private sanitizer: DomSanitizer
   ) {
     super(injector);
   }
@@ -51,9 +51,7 @@ export class NewsDetailComponent extends UIComponent {
     this.cache.moreFunction("CoDXSystem","")
     .subscribe((mFuc:any) => {
       if(mFuc)
-      {
         this.moreFunction = mFuc;
-      }
     });
     
   }
@@ -133,7 +131,7 @@ export class NewsDetailComponent extends UIComponent {
   }
   //click view detail post
   clickViewDeital(data: any) {
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "UpdateViewNewsAsync", data.recID)
+    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "UpdateViewAsync", data.recID)
     .subscribe(
       (res) => {
         if (res) {
@@ -174,25 +172,22 @@ export class NewsDetailComponent extends UIComponent {
   // open popup share
   openPopupShare(data: any) {
     if (data){
+      let mfc = Array.from<any>(this.moreFunction).find((x:any) => x.functionID === "SYS01");
       let post = new WP_Comments();
-      post.news = JSON.parse(JSON.stringify(data));
+      post.shares = JSON.parse(JSON.stringify(data));
       post.refID = data.recID;
-      let _obj = {
+      let obj = {
         data: post,
         refType: "WP_News",
         status: 'share',
-        headerText: 'Chia sẻ bài viết',
+        headerText: mfc.defaultName,
       };
-      let _option = new DialogModel();
-      _option.FormModel = this.view.formModel;
-      this.callfc.openForm(PopupAddPostComponent, '', 650, 550, '', _obj, '', _option);
+      let option = new DialogModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.zIndex = 100;
+      this.callfc.openForm(PopupAddCommentComponent, '', 700, 650, '', obj, '', option);
     }
     
-  }
-  showListShare(){
-    this.isShowTemplateShare = !this.isShowTemplateShare;
-  }
-  closeListShare(){
-    this.isShowTemplateShare = false;
   }
 }

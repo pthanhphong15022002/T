@@ -5,7 +5,6 @@ import {
   Optional,
   ViewChild,
 } from '@angular/core';
-import { Permission } from '@shared/models/file.model';
 import {
   ApiHttpService,
   AuthService,
@@ -19,11 +18,7 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxViewFilesComponent } from 'projects/codx-share/src/lib/components/codx-view-files/codx-view-files.component';
-import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
-import { Observable, Observer, of } from 'rxjs';
-import { json } from 'stream/consumers';
 
 @Component({
   selector: 'wp-popup-add-post',
@@ -108,19 +103,8 @@ export class PopupAddPostComponent implements OnInit {
     this.getSetGridSetUp();
   }
 
-  heightInput = '';
   ngAfterViewInit() {
-    let body = document.querySelector('.body-addpost');
-    if (body) {
-      var h = body.clientHeight;
-      let title = body.querySelector('.title-addpost');
-      let bdfunction = body.querySelector('.body-function');
-      if (title) h -= title.clientHeight;
-      if (bdfunction) h -= bdfunction.clientHeight;
-      h = h - 20;
-      this.heightInput = h + 'px';
-      this.dt.detectChanges();
-    }
+  
   }
 
   // set data default
@@ -137,13 +121,6 @@ export class PopupAddPostComponent implements OnInit {
         this.data.refType = this.dialogData.refType ? this.dialogData.refType : 'WP_Comments';
         this.data.createdBy = this.user.userID;
         this.data.createdName = this.user.userName;
-        let permission = {
-          objectID: '',
-          objectName: '',
-          objectType: this.SHARECONTROLS.EVERYONE,
-          memberType: this.MEMBERTYPE.SHARE
-        };
-        this.data.permissions.push(permission);
       }
     }
     this.getSettingValue();
@@ -151,7 +128,8 @@ export class PopupAddPostComponent implements OnInit {
   }
   // get gridViewSetup
   getSetGridSetUp() {
-    this.cache.functionList('WP').subscribe((func: any) => {
+    this.cache.functionList('WP')
+    .subscribe((func: any) => {
       if (func) {
         this.formModel.funcID = 'WP';
         this.formModel.formName = func.formName;
@@ -256,7 +234,7 @@ export class PopupAddPostComponent implements OnInit {
     }
     this.loaded = true;
     this.data.category = this.CATEGORY.POST;
-    this.data.approveControl = '0'; // không bật xét duyệt
+    this.data.approveControl = "1"; // bật xét duyệt
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
@@ -321,6 +299,7 @@ export class PopupAddPostComponent implements OnInit {
     debugger;
     this.loaded = true;
     this.data.category = this.CATEGORY.SHARE;
+    this.data.approveControl = this.data.shares.isActive ? "0" : "1";
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
@@ -328,22 +307,17 @@ export class PopupAddPostComponent implements OnInit {
     this.data.medias = this.codxViewFiles.medias;
     this.codxViewFiles.save().subscribe((res1: boolean) => {
       if (res1) {
-        this.api
-          .execSv(
-            'WP',
-            'ERM.Business.WP',
-            'CommentsBusiness',
-            'PublishPostAsync',
-            [this.data]
-          )
-          .subscribe((res2: any) => {
-            if (res2) {
-              this.notifySvr.notifyCode('WP020');
-              this.dialogRef.close(res2);
-            } else this.notifySvr.notifyCode('WP013');
-            this.loaded = false;
-          });
-      } else this.loaded = false;
+        this.insertPost(this.data)
+        .subscribe((res2: any) => {
+          if (res2) 
+            this.notifySvr.notifyCode('WP020');
+          else 
+            this.notifySvr.notifyCode('WP013');
+          this.loaded = false;
+          this.dialogRef.close(res2);
+        });
+      } 
+      else this.loaded = false;
     });
   }
 

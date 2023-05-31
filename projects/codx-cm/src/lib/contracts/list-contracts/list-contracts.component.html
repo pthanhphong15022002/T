@@ -28,7 +28,16 @@
         >
       </div>
       <div class="col-2 d-flex justify-content-end align-items-center">
-        <span class="fw-bold">50.000.000 VND</span>
+        <i class="icon-money"></i>
+        <span class="fw-bold">{{contract?.contractAmt}}</span>
+        <span
+        class="fs-7 ms-2"
+        [innerHTML]="
+        contract?.currencyID
+            | formatvalue : formModel : 'CurrencyID'
+            | async
+        "
+      ></span>
       </div>
       <div class="col-2 d-flex justify-content-end align-items-center">
         <span class="text-gray-600">{{ contract?.effectiveTo | date : dateFomat }}</span>

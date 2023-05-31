@@ -740,6 +740,7 @@ export class DynamicProcessComponent
   getListAppyFor() {
     this.cache.valueList('DP002').subscribe((res) => {
       if (res) {
+        debugger;
         this.listAppyFor = res?.datas;
       }
     });

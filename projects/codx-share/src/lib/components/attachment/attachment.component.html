@@ -16,7 +16,7 @@
                             <div class="col-lg-12">
                                 <div class="control_wrapper">
                                     <div class="uploadtemplate">
-                                        <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
+                                        <div class="d-flex justify-content-between align-item-center dropzone dropzone-default dropzone-primary "
                                             id='dropArea'>
                                             <div class="d-none">
                                                 <span id='drop' class="droparea">
@@ -51,10 +51,13 @@
                                                 </span>
                                             </div>
                                             <!-- Select Folder directoryUpload='true' -->
-                                            <div class="dropzone-panel mt-6">
-                                                <ejs-uploader #templateupload id='templatefileupload'
-                                                    [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()'
-                                                    [asyncSettings]='path' [dropArea]='dropElement'
+                                            <div class="dropzone-panel">
+                                                <ejs-uploader #templateupload 
+                                                    id='templatefileupload'
+                                                    [allowedExtensions]='allowExtensions' 
+                                                    [multiple]='allowMultiple()'
+                                                    [asyncSettings]='path' 
+                                                    [dropArea]='dropElement'
                                                     (selected)='onFileSelect($event)'
                                                     >
                                                 </ejs-uploader>
@@ -71,21 +74,11 @@
         <ng-template #body>
             <form name="frm_file1">
                 <div class="offcanvas-wrapper">
-                    <div *ngFor="let file of sortBy();  index as i;"
-                        class="py-2 has-action-menu border-1 border-bottom">
-                        <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
-                        <ng-template #simple>
-                            <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-35px me-3"
-                                title="{{file.fileName}} ({{dmSV.formatBytes(file.fileSize)}})"
-                                [subTitleTmp]="cardImgFooter" [descLine]="1">
-                            </codx-temp-full>
-                        </ng-template>
-                        <ng-template #full>
-                            <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-35px me-3"
-                                title="{{file.fileName}} ({{dmSV.formatBytes(file.fileSize)}})"
-                                [subTitleTmp]="cardImgFooter" [descLine]="1">
-                            </codx-temp-full>
-                        </ng-template>
+                    <div *ngFor="let file of sortBy();  index as i;" class="py-2 has-action-menu border-1 border-bottom">
+                        <codx-temp-full [id]="'id-tf-'+file.fileName" ngClass="opacity-50" imageSrc="{{file.avatar}}" imgCss="w-35px me-3"
+                            title="{{file.fileName}} ({{dmSV.formatBytes(file.fileSize)}})"
+                            [subTitleTmp]="cardImgFooter" [descLine]="1">
+                        </codx-temp-full>
                         <ng-template #cardImgFooter let-data>
                             <div class="w-100 float-start">
                                 <div *ngIf="(displayThumb == 'full')"
@@ -103,6 +96,18 @@
                                 </div>
                             </div>
                         </ng-template>
+                        <div class="block">
+                            <div class="box"></div>
+                            <svg class="svg">
+                                <defs>
+                                    <linearGradient id="gradientStyle">
+                                        <stop offset="0%" stop-color="#565656" />
+                                        <stop offset="100%" stop-color="#b7b5b5" />
+                                    </linearGradient>
+                                </defs>
+                                <circle [id]="'circle' + file.fileName " class="circle" cx="10" cy="10" r="8" />
+                            </svg>
+                        </div>
                         <div class="action-menu d-flex align-items-center">
                             <a class="action-item d-flex align-items-center" (click)="editfile(file, true, i)">
                                 <i class="icon-edit text-primary icon-18"></i>
@@ -265,8 +270,16 @@
             </div>
         </div>
     </div>
-    <div class="progress" *ngIf="barWidth != '0%'">
-        <span [innerHTML]="barWidth"></span>
-        <div class="bar" [style.width]="barWidth"></div>
-    </div>
+
+     <ejs-progressbar 
+        #circular 
+        id='circular1' 
+        [type]='typeProgress' 
+        [maximum]='100' 
+        [minimum]='0'
+        [value]='75' 
+        [width]='150' 
+        [height]='150'
+    >
+    </ejs-progressbar>
 </ng-template>
