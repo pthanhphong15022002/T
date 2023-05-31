@@ -29,8 +29,12 @@ import { PopupAddOBComponent } from './popup/popup-add-ob/popup-add-ob.component
 import { PopupAddOKRPlanComponent } from './popup/popup-add-okr-plan/popup-add-okr-plan.component';
 import { PopupShareOkrPlanComponent } from './popup/popup-share-okr-plans/popup-share-okr-plans.component';
 import { ViewOKRComponent } from './component/view-okr/view-okr.component';
-import { ProgressAnnotationService, ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
+import {
+  ProgressAnnotationService,
+  ProgressBarModule,
+} from '@syncfusion/ej2-angular-progressbar';
 import { PopupAddRoleComponent } from './popup/popup-add-role/popup-add-role.component';
+import { AccumulationChartModule, AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
 
 const routes: Routes = [
   {
@@ -90,7 +94,7 @@ const routes: Routes = [
     OkrTreesComponent,
     PopupAddOKRPlanComponent,
     ViewOKRComponent,
-    PopupAddRoleComponent,   
+    PopupAddRoleComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -101,9 +105,10 @@ const routes: Routes = [
     SharedModule,
     CodxShareModule,
     CircularGaugeModule,
-    ProgressBarModule
+    ProgressBarModule,
+    AccumulationChartModule,
   ],
   exports: [RouterModule],
-  providers: [ProgressAnnotationService]
+  providers: [ProgressAnnotationService, AccumulationTooltipService],
 })
 export class CodxOmModule {}
