@@ -9,6 +9,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { CodxAcService } from '../codx-ac.service';
 import { JournalService } from './journals.service';
 import { PopupAddJournalComponent } from './popup-add-journal/popup-add-journal.component';
 
@@ -31,7 +32,8 @@ export class JournalsComponent extends UIComponent {
     inject: Injector,
     private route: Router,
     private notiService: NotificationsService,
-    private journalService: JournalService
+    private journalService: JournalService,
+    private acService: CodxAcService
   ) {
     super(inject);
   }
@@ -196,6 +198,17 @@ export class JournalsComponent extends UIComponent {
 
         if (res) {
           this.journalService.deleteAutoNumber(data.journalNo);
+          this.acService.deleteFile(data.recID, this.view.formModel.entityName);
+          this.api
+            .exec(
+              'AC',
+              'JournalsPermissionBusiness',
+              'DeleteByJournalNoAsync',
+              data.journalNo
+            )
+            .subscribe((res) => {
+              console.log('DeleteByJournalNoAsync', res);
+            });
         }
       });
     });
