@@ -80,6 +80,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   ) 
   {
+    this.dataService = new CRUDService(this.injector);
     this.user = this.authStore.get();
   }
   ngAfterViewInit() {}
@@ -87,14 +88,13 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // get queryParam từ URL set predicates
     this.route.queryParamMap.subscribe((res:any) => {
+      debugger
       if(res.params.predicate && res.params.dataValue)
       {
-        this.dataService.predicates = res.params.predicate;
-        this.dataService.dataValues = res.params.dataValue;
+        this.dataService.setPredicates([res.params.predicate],[res.params.dataValue])
       }
     });
     // set dataService
-    this.dataService = new CRUDService(this.injector);
     this.dataService.service = "WP";
     this.dataService.assemblyName = "ERM.Business.WP";
     this.dataService.className = "CommentsBusiness";
