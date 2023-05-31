@@ -617,7 +617,7 @@ export class PopupConvertLeadComponent implements OnInit {
         tmpContact = JSON.parse(JSON.stringify(e.data));
         tmpContact.recID = Util.uid();
         tmpContact.recIDold = e.data.recID;
-        tmpContact.refID = this.lead?.recID;
+        tmpContact.refID = e.data.recID;
         tmpContact.checked = false;
         if (
           !this.lstContactCustomer.some(
@@ -676,7 +676,7 @@ export class PopupConvertLeadComponent implements OnInit {
       if (e.data) {
         var tmp = new CM_Contacts();
         tmp = JSON.parse(JSON.stringify(e.data));
-        tmp.refID = this.radioChecked ? this.customerID : this.customerNewOld;
+        tmp.refID = e.data.recID;
         var indexCus = this.lstContactCustomer.findIndex(
           (x) => x.recID == e.data.recID
         );
