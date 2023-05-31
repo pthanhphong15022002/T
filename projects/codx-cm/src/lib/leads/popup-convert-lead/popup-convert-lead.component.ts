@@ -616,12 +616,11 @@ export class PopupConvertLeadComponent implements OnInit {
         var tmpContact = new CM_Contacts();
         tmpContact = JSON.parse(JSON.stringify(e.data));
         tmpContact.recID = Util.uid();
-        tmpContact.recIDold = e.data.recID;
         tmpContact.refID = e.data.recID;
         tmpContact.checked = false;
         if (
           !this.lstContactCustomer.some(
-            (x) => x.recIDold == tmpContact.recIDold
+            (x) => x.refID == tmpContact.refID
           )
         ) {
           var check = this.lstContactCustomer.findIndex(
@@ -653,7 +652,7 @@ export class PopupConvertLeadComponent implements OnInit {
       }
     } else {
       var index = this.lstContactCustomer.findIndex(
-        (x) => x.recIDold == e?.data?.recID
+        (x) => x.refID == e?.data?.recID
       );
       if (index != -1) {
         var indexDeal = this.lstContactDeal.findIndex(
