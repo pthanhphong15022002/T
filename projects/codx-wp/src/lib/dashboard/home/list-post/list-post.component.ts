@@ -88,8 +88,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // get queryParam từ URL set predicates
     this.route.queryParamMap.subscribe((res:any) => {
-      debugger
-      if(res.params.predicate && res.params.dataValue)
+      if(res?.params?.predicate && res?.params?.dataValue)
       {
         this.dataService.setPredicates([res.params.predicate],[res.params.dataValue])
       }
@@ -222,7 +221,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.formModel;
-    option.zIndex = 10;
+    option.zIndex = 100;
 
     let popup = this.callFC.openForm(
       PopupAddPostComponent,
@@ -256,8 +255,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.formModel;
-      option.zIndex = 10;
-
+      option.zIndex = 100;
       let popup = this.callFC.openForm(
         PopupAddPostComponent,
         '',
@@ -286,7 +284,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.formModel;
-      option.zIndex = 10;
+      option.zIndex = 100;
 
       this.callFC.openForm(PopupSavePostComponent, '', 500, 400, '', obj, '');
     }
@@ -321,7 +319,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.formModel;
       option.IsFull = true;
-      option.zIndex = 999;
+      option.zIndex = 100;
       this.callFC.openForm(
         PopupDetailComponent,
         '',
@@ -335,8 +333,14 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     }
   }
   //click xem thêm 
-  viewMore(item){
-    item.isShowShortContent = !item.isShowShortContent; 
+  clickReadMore(item){
+    debugger
+    this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","GetContentAsync",[item.recID])
+    .subscribe((res:string) => {
+      item.shortContent = "";
+      item.contents = res;
+      this.dt.detectChanges();
+    }); 
   }
   
 
@@ -344,4 +348,116 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   removePost(data:any){
     (this.listview.dataService as CRUDService).remove(data).subscribe();
   }
+
+  dataSelected:any = null;
+
+  @ViewChild("tmpCBBShare") CBBShare:TemplateRef<any>;
+  // open cbb share
+  openCBBShare(data){
+    debugger
+    if(data.write){
+      this.dataSelected = JSON.parse(JSON.stringify(data));
+      if (this.CBBShare){
+        this.callFC.openForm(this.CBBShare, '', 420, window.innerHeight);
+      }
+    }
+  }
+  //change mode share
+  changePermission(event:any){
+    debugger
+    if(event)
+    {
+      let arrPermisison = Array.from<any>(event);
+      let fisrtPermission = arrPermisison[0];
+      this.dataSelected.shareControl = fisrtPermission.objectType;
+      if (!Array.isArray(this.dataSelected.permissions)) this.dataSelected.permissions = [];
+      else
+        this.dataSelected.permissions = this.dataSelected.permissions.filter((e: any) => e.memberType != MEMBERTYPE.SHARE);
+      switch(this.dataSelected.shareControl) {
+        case SHARECONTROLS.OWNER:
+          break;
+        case SHARECONTROLS.EVERYONE:
+        case SHARECONTROLS.MYGROUP:
+        case SHARECONTROLS.MYTEAM:
+        case SHARECONTROLS.MYDEPARMENTS:
+        case SHARECONTROLS.MYDIVISION:
+        case SHARECONTROLS.MYCOMPANY:
+          let permission = {
+            memberType: MEMBERTYPE.SHARE,
+            objectID: '',
+            objectName: '',
+            objectType: this.dataSelected.shareControl,
+          };
+          this.dataSelected.permissions.push(permission);
+          this.dataSelected.shareName = '';
+          break;
+        case SHARECONTROLS.OGRHIERACHY:
+        case SHARECONTROLS.DEPARMENTS:
+        case SHARECONTROLS.POSITIONS:
+        case SHARECONTROLS.ROLES:
+        case SHARECONTROLS.GROUPS:
+        case SHARECONTROLS.USER:
+          arrPermisison.forEach((x) => {
+            let permission = {
+              memberType: MEMBERTYPE.SHARE,
+              objectID: x.id,
+              objectName: x.text,
+              objectType: x.objectType,
+            };
+            this.dataSelected.permissions.push(permission);
+          });
+          // WP001 chia sẻ 1 - WP002 chia sẻ nhiều người
+          let mssgCodeShare = arrPermisison.length == 1 ? 'WP001' : 'WP002';
+          this.cache.message(mssgCodeShare).subscribe((mssg: any) => {
+            if (mssg) {
+              if (arrPermisison.length == 1) {
+                // chia sẻ 1 người
+                this.dataSelected.shareName = Util.stringFormat(
+                  mssg.defaultName,
+                  `<b>${fisrtPermission.text}</b>`
+                );
+              } else {
+                // chia sẻ nhiều người
+                let count = arrPermisison.length - 1;
+                let type = fisrtPermission.objectName;
+                this.dataSelected.shareName = Util.stringFormat(
+                  mssg.defaultName,
+                  `<b>${fisrtPermission.text}</b>`,
+                  count,
+                  type
+                );
+              }
+            }
+          });
+          break;
+        default:
+          break;
+      }
+      (this.listview.dataService as CRUDService).update(this.dataSelected).subscribe();
+      this.dt.detectChanges();
+    }
+  }
+
 }
+
+
+const SHARECONTROLS = {
+  OWNER: '1',
+  MYGROUP: '2',
+  MYTEAM: '3',
+  MYDEPARMENTS: '4',
+  MYDIVISION: '5',
+  MYCOMPANY: '6',
+  EVERYONE: '9',
+  OGRHIERACHY: 'O',
+  DEPARMENTS: 'D',
+  POSITIONS: 'P',
+  ROLES: 'R',
+  GROUPS: 'G',
+  USER: 'U',
+};
+const MEMBERTYPE = {
+  CREATED: '1',
+  SHARE: '2',
+  TAGS: '3',
+};
