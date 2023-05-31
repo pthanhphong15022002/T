@@ -790,8 +790,9 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   onScroll(event) {
+    debugger
     const dcScroll = event.srcElement;
-    if ((dcScroll.scrollTop < (dcScroll.scrollHeight - dcScroll.clientHeight))|| dcScroll.scrollTop == 0) return;
+    if ((dcScroll.scrollTop < (dcScroll.scrollHeight - dcScroll.clientHeight)) || dcScroll.scrollTop == 0) return;
     // Nếu còn dữ liệu folder thì scroll folder
     if(this.dmSV.isSearchView)
     {

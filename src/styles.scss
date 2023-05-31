@@ -33,6 +33,11 @@
   text-decoration: inherit;
   color: inherit;
 }
+pre {
+  white-space: break-spaces;
+  font-size: var(--fs-body);
+  font-family:inherit ;
+}
 
 .e-dlg-header .fs-body * {
   font-size: var(--fs-body);

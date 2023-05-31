@@ -7,6 +7,7 @@ import {
   OnInit,
   Optional,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FileService } from '@shared/services/file.service';
@@ -36,6 +37,7 @@ import { ApprovalStepComponent } from '../../setting/approval-step/approval-step
   selector: 'popup-add-sign-file',
   templateUrl: './popup-add-sign-file.component.html',
   styleUrls: ['./popup-add-sign-file.component.scss'],
+  encapsulation:ViewEncapsulation.None,
 })
 export class PopupAddSignFileComponent implements OnInit {
   @ViewChild('view') view: ViewsComponent;

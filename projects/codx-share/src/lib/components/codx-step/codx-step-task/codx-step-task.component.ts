@@ -1078,18 +1078,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //tao lich hop
   createMeeting(data) {
-    let preside ;
-    let participants;
-    let listPermissions=''
-    if(data?.roles>0){
-      preside = data?.roles.filter(x=>x.roleType=='O')[0]?.objectID ;
-      if(preside)
-      listPermissions +=preside
-      participants = data?.roles.filter(x=>x.roleType=='P').map(x=>x.objectID).join(";");
-      if(participants){
-        listPermissions += ";" + participants
-      }
-    }
     this.stepService.getDefault('TMT0501', 'CO_Meetings').subscribe((res) => {
       if (res && res?.data) {
      
@@ -1098,10 +1086,24 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         meeting['idField'] = 'meetingID';
         meeting.meetingName = data?.taskName;
         meeting.meetingType = '1';
+        meeting.reminder = Number.isNaN(data.reminders)? Number.parseInt(data.reminders) : 0
         let option = new SidebarModel();
         option.Width = '800px';
         option.zIndex = 1011;
         let formModel = new FormModel();
+
+        let preside ;
+        let participants;
+        let listPermissions=''
+        if(data?.roles?.length>0){
+          preside = data?.roles.filter(x=>x.roleType=='O')[0]?.objectID ;
+          if(preside)
+          listPermissions +=preside
+          participants = data?.roles.filter(x=>x.roleType=='P').map(x=>x.objectID).join(";");
+          if(participants){
+            listPermissions += ";" + participants
+          }
+        }
         this.cache.functionList('TMT0501').subscribe((f) => {
           if (f) {
             this.cache.gridView(f.gridViewName).subscribe((res) => {
