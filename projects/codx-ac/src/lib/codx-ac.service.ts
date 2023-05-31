@@ -272,6 +272,19 @@ export class CodxAcService {
       );
   }
 
+  /** @param objectType entityName */
+  deleteFile(objectId: string, objectType: string) {
+    return this.api
+      .execSv(
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'DeleteByObjectIDAsync',
+        [objectId, objectType, true]
+      )
+      .subscribe((res) => console.log('deleteFile', res));
+  }
+
   getCategoryByEntityName(entityName: string) {
     return this.api.execSv(
       'ES',
