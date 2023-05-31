@@ -337,13 +337,63 @@
 
 <ng-template #releaseProcess>
   <codx-form
-    [subHeader]="releaseProcessHeader"
+    [customToolbar]="releaseProcessHeader"
     [body]="releaseProcessBody"
     [footer]="releaseProcessFooter"
-    [dialog]="popupEditName"
+    [dialog]="popupRelease"
   >
   </codx-form>
-  <ng-template #releaseProcessHeader></ng-template>
-  <ng-template #releaseProcessBody></ng-template>
-  <ng-template #releaseProcessFooter></ng-template>
+  <ng-template #releaseProcessHeader>
+    <div class="d-flex justify-content-between align-items-center w-100">
+      <codx-label
+      name="heardPaymentHistory"
+      class="text-gray-600 fs-6"
+      [default]="'Phát hành quy trình'"
+    ></codx-label>
+    <button
+      style="border: none; outline: none; background: none"
+      (click)="popupRelease.close()"
+    >
+      <i class="icon-close icon-18 text-hover-danger"></i>
+    </button>
+    </div>
+    <codx-label
+      name="heardPaymentHistory"
+      class="text-gray-600 fs-6"
+      [default]="'Quy trình'"
+    ></codx-label>
+    <codx-label
+      name="heardPaymentHistory"
+      class="text-gray-600 fs-6"
+      [default]="'Đối tượng quy trình'"
+    ></codx-label>
+    <div>
+    </div>
+  </ng-template>
+  <ng-template #releaseProcessBody>
+    <div>
+      <codx-label
+      name="heardPaymentHistory"
+      class="text-gray-600 fs-6"
+      [default]="'Đối tượng quy trình'"
+    ></codx-label>
+    </div>
+    <div>
+      <codx-label
+      name="heardPaymentHistory"
+      class="text-gray-600 fs-6"
+      [default]="'Đối tượng quy trình'"
+    ></codx-label>
+    </div>
+    <div>
+      <codx-label
+      name="heardPaymentHistory"
+      class="text-gray-600 fs-6"
+      [default]="'Đối tượng quy trình'"
+    ></codx-label>
+    </div>
+  </ng-template>
+  <ng-template #releaseProcessFooter>
+
+  </ng-template>
 </ng-template>

@@ -59,25 +59,24 @@
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex align-items-center ac-cashID mt-n8 mb-3">
-      <div [style]="'background-color:' + (itemSelected?.subType | vll : 'AC100' : 'color' | async)" class="w-35px symbol h-35px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3">
+    <div class="d-flex align-items-center ac-cashID mt-n8 mb-2">
+      <div [style]="'background-color:' + (itemSelected?.subType | vll : 'AC100' : 'color' | async)" class="w-35px symbol h-35px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
         <i class="text-white" [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
       </div>
-      <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase me-5">
+      <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">
         {{ itemSelected?.voucherNo }}
       </span>
       <div class="d-flex align-items-center me-3">
         <!-- <span class="icon-i-calendar-date icon-16 me-2"></span> -->
-        <img src="../assets/themes/ac/default/img/Alarmclock.svg" class="w-16px h-16px me-1" />
+        <img src="../assets/themes/ac/default/img/Alarmclock.svg" class="w-15px h-15px me-1" />
         <codx-label class="fw-bold label-colon mt-1" default="Ngày chứng từ" [formModel]="view.formModel">
         </codx-label>
-        &nbsp;
         <span class="text-gray-600 mt-1">
           {{formatDate(itemSelected?.voucherDate)}}
         </span>
       </div>
     </div>
-    <div class="d-flex justify-content-between flex-grow-1 mb-5">
+    <div class="d-flex justify-content-between flex-grow-1 mb-2">
       <div class="d-flex align-items-center">
         <!-- <span class="me-2 icon-corporate_fare text-primary icon-20"></span> -->
         <img src="../assets/themes/ac/default/img/Officebuilding.svg" class="w-15px h-15px me-2" />
@@ -90,9 +89,9 @@
       <div class="d-flex align-self-center">
         <span class="badge badge-pill badge-primary me-3">
           <span *ngIf="journal.multiCurrency == '0'"
-            class="fw-bold fs-6">{{itemSelected?.totalAmt?.toLocaleString('it-IT')}}</span>
+            class="fw-bold">{{itemSelected?.totalAmt?.toLocaleString('it-IT')}}</span>
           <span *ngIf="journal.multiCurrency == '1'"
-            class="fw-bold fs-6">{{itemSelected?.totalAmt?.toLocaleString('it-IT')+' '+itemSelected?.currencyID
+            class="fw-bold">{{itemSelected?.totalAmt?.toLocaleString('it-IT')+' '+itemSelected?.currencyID
             }}</span>
         </span>
       </div>
@@ -101,7 +100,7 @@
 </ng-template>
 <ng-template #body>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex justify-content-between flex-grow-1 mb-4">
+    <div class="d-flex justify-content-between flex-grow-1 mb-1">
       <div class="d-flex align-items-center">
         <span class="icon-i-person-bounding-box icon-16 me-2"></span>
         <!-- <img src="../assets/themes/ac/default/img/Banknote.svg" class="w-16px h-16px me-2" /> -->
@@ -123,7 +122,7 @@
           </codx-vll>
       </div>
     </div>
-    <div class="d-flex align-items-top mb-4">
+    <div class="d-flex align-items-top mb-1">
       <!-- <span class="icon-i-journal-album icon-16 me-2"></span> -->
       <img src="../assets/themes/ac/default/img/Ledger.svg" class="w-15px h-15px me-2" />
       <span *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'"
@@ -135,7 +134,7 @@
       <span class="text-gray-600"
         *ngIf="itemSelected?.cashBookID != '' && itemSelected?.cashBookID != null">&nbsp;-&nbsp;{{cashbookName}}</span>
     </div>
-    <div class="d-flex align-items-top mb-4">
+    <div class="d-flex align-items-top mb-1">
       <!-- <span class="icon-i-wallet2 icon-16 me-2"></span> -->
       <img src="../assets/themes/ac/default/img/Scroll.svg" class="w-15px h-15px me-2" />
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="ReasonID" [formModel]="view.formModel">
@@ -151,7 +150,7 @@
       <span class="text-gray-600"
         *ngIf="itemSelected?.reasonID != '' && itemSelected?.reasonID != null">{{reasonName}}</span>
     </div>
-    <div class="d-flex align-items-top mb-4">
+    <div class="d-flex align-items-top mb-1">
       <!-- <span class="icon-brush icon-16 me-2"></span> -->
       <img src="../assets/themes/ac/default/img/Memo.svg" class="w-15px h-15px me-2" />
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="view.formModel">
@@ -169,13 +168,11 @@
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2">
-                <i class="icon-format_list_numbered icon-18 me-2"></i>
+                <i class="icon-format_list_numbered icon-16 me-2"></i>
                 <span *ngIf="itemSelected.subType == '2'" [innerHTML]="'0' | vll : 'AC071' : 'text' | async"
-                  class="fw-bold fs-6-sm">
+                  class="fw-bold">
                 </span>
-                <span *ngIf="itemSelected.subType == '1'" class="fw-bold fs-6">
-                  Hạch toán
-                </span>
+                <span *ngIf="itemSelected.subType == '1'" class="fw-bold">Hạch toán</span>
               </div>
             </ng-template>
             <ng-template #content>
@@ -185,8 +182,8 @@
           <e-tabitem *ngIf="itemSelected.subType == '2'">
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2">
-                <i class="icon-text_snippet icon-18 me-2"></i>
-                <span class="fw-bold fs-6">Hạch toán</span>
+                <i class="icon-text_snippet icon-16 me-2"></i>
+                <span class="fw-bold">Hạch toán</span>
               </div>
             </ng-template>
             <ng-template #content>
