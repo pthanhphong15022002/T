@@ -461,7 +461,8 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                         item,
                         category.processID,
                         'EP_Bookings',
-                        this.formModel.funcID
+                        this.formModel.funcID,
+                        item?.createdBy
                       )
                       .subscribe((res) => {
                         if (res?.msgCodeError == null && res?.rowCount >= 0) {

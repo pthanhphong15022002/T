@@ -18,12 +18,12 @@ import {
   FormModel,
 } from 'codx-core';
 import {
-  tmpReferences,
   TM_Parameter,
   TM_TaskGroups,
 } from '../model/task.model';
 import { AuthStore, CRUDService } from 'codx-core/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
+import { tmpReferences } from '../../../models/assign-task.model';
 
 @Component({
   selector: 'share-view-detail',
@@ -68,7 +68,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   loadParam = false;
   param?: TM_Parameter = new TM_Parameter();
   isEdit = true;
-  timeoutId :any
+  timeoutId: any;
 
   constructor(
     private api: ApiHttpService,
@@ -130,7 +130,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
 
   popoverEmpList(p: any, task = null) {
     if (this.popoverCrr && this.popoverCrr.isOpen()) {
-       this.popoverCrr.close();
+      this.popoverCrr.close();
     }
     if (this.popoverDataSelected) {
       if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
@@ -140,24 +140,22 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     // this.popoverDataSelected = p;
     // this.hoverPopover.emit(p);
     //sua ngay 07/03/2023
-    if(p){
+    if (p) {
       var element = document.getElementById(task?.taskID);
       if (element) {
-        var t = this
+        var t = this;
         this.timeoutId = setTimeout(function () {
           p.open();
           if (t.popoverCrr && t.popoverCrr.isOpen()) {
             t.popoverCrr.close();
           }
-         //this.popoverDataSelected = p;
+          //this.popoverDataSelected = p;
         }, 2000);
       }
       this.hoverPopover.emit(p);
-    }else{
-      if(this.timeoutId)
-      clearTimeout( this.timeoutId);
+    } else {
+      if (this.timeoutId) clearTimeout(this.timeoutId);
     }
-   
 
     // this.listTaskResousceSearch = [];
     // this.countResource = 0;
@@ -304,13 +302,14 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
   //#endregion
 
-  //#region  tree
+  //#region  tree 
   loadTreeView() {
     this.dataTree = [];
     if (
       !this.itemSelected ||
       !this.itemSelected?.taskID ||
-      (this.itemSelected.category == '1' && !this.itemSelected.isAssign)
+      (this.itemSelected.category == '1' && !this.itemSelected.isAssign) 
+      // || (this.itemSelected?.category == '2' && !this.itemSelected.parentID)
     )
       return;
     this.api

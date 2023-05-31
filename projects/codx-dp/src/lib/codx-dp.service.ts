@@ -646,12 +646,12 @@ export class CodxDpService {
     return arr3;
   }
 
-  updateOwnerStepAsync(step) {
+  updateOwnerStepAsync(step,startControl) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
       'UpdateOwnerStepAsync',
-      step
+      [step,startControl]
     );
   }
 

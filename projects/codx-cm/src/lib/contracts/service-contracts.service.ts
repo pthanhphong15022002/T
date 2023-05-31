@@ -39,6 +39,15 @@ export class ContractsService {
     return dataPopupOutput;
   }
 
+  getPaymentsByContractID(contractID) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'GetPaymentsByContractIDAsync',
+      contractID
+    );
+  }
+
   getCustomerBydealID(data) {
     return this.api.exec<any>(
       'CM',

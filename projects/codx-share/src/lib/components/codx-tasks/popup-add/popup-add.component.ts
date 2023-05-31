@@ -28,13 +28,13 @@ import * as moment from 'moment';
 import { StatusTaskGoal } from '../model/enum';
 import {
   TaskGoal,
-  tmpReferences,
   tmpTaskResource,
   TM_Parameter,
   TM_TaskGroups,
   TM_Tasks,
 } from '../model/task.model';
 import { CodxTasksService } from '../codx-tasks.service';
+import { tmpReferences } from '../../../models/assign-task.model';
 @Component({
   selector: 'app-popup-add',
   templateUrl: './popup-add.component.html',
@@ -161,6 +161,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   disableDueDate = false;
   titleViewTask = 'Xem';
   crrRole: any;
+  isOtherModule = false;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -176,18 +177,28 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   ) {
     this.task = {
       ...this.task,
-      ...dt?.data[0],
+      ...dt?.data?.data,
     };
     this.getParam();
     if (this.task.taskGroupID) {
       this.logicTaskGroup(this.task.taskGroupID);
     }
-    this.action = dt?.data[1];
-    this.showAssignTo = dt?.data[2];
-    this.titleAction = dt?.data[3];
-    this.functionID = dt?.data[4];
-    this.taskCopy = dt?.data[5];
-    this.disabledProject = dt?.data[6];
+    this.action = dt?.data?.action;
+    this.showAssignTo = dt?.data?.showAssignTo;
+    this.titleAction = dt?.data?.titleAction;
+    this.functionID = dt?.data?.functionID;
+    this.taskCopy = dt?.data?.taskCopy;
+    this.disabledProject = dt?.data?.disabledProject;
+    this.isOtherModule = dt?.data?.isOtherModule
+
+    //da doi lai cho phu hop
+    // this.action = dt?.data[1];
+    // this.showAssignTo = dt?.data[2];
+    // this.titleAction = dt?.data[3];
+    // this.functionID = dt?.data[4];
+    // this.taskCopy = dt?.data[5];
+    // this.disabledProject = dt?.data[6];
+    // this.isOtherModule = dt?.data[7]
     this.dialog = dialog;
     this.user = this.authStore.get();
 
@@ -605,57 +616,56 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   addTask(isCloseFormTask: boolean = true) {
-    this.api
-      .exec('TM', 'TaskBusiness', 'AddTaskAsync', [
-        this.task,
-        this.functionID,
-        this.listTaskResources,
-        this.listTodo,
-      ])
-      .subscribe((res: any) => {
-        this.isClickSave = false;
-        this.dialog.close(res);
-        this.attachment?.clearData();
-        if (res && res.save) {
-          var task = res.save[0];
-        }
-      });
+    if (this.isOtherModule) {
+      this.api
+        .exec('TM', 'TaskBusiness', 'AddTaskAsync', [
+          this.task,
+          this.functionID,
+          this.listTaskResources,
+          this.listTodo,
+        ])
+        .subscribe((res: any) => {
+          this.isClickSave = false;
+          this.attachment?.clearData();
+          this.dialog.close(res);
+        });
+    } else {
+      this.dialog.dataService
+        .save((opt: RequestOption) => {
+          opt.methodName = 'AddTaskAsync';
+          opt.data = [
+            this.task,
+            this.functionID,
+            this.listTaskResources,
+            this.listTodo,
+          ];
+          return true;
+        })
+        .subscribe((res) => {
+          this.isClickSave = false;
+          this.attachment?.clearData();
+          if (res && res.save) {
+            this.dialog.close(res.save[0]);
+            //   var task = res.save[0];
+            //       //send mail FE
+            //       // if (task.category == '3') {
+            //       //   if (this.param?.ConfirmControl == '1')
+            //       //     this.tmSv
+            //       //       .sendAlertMail(task?.recID, 'TM_0008', this.functionID)
+            //       //       .subscribe();
+            //       //   else
+            //       //     this.tmSv
+            //       //       .sendAlertMail(task?.recID, 'TM_0001', this.functionID)
+            //       //       .subscribe();
+            //       // }
 
-    // this.dialog.dataService
-    //   .save((opt: RequestOption) => {
-    //     opt.methodName = 'AddTaskAsync';
-    //     opt.data = [
-    //       this.task,
-    //       this.functionID,
-    //       this.listTaskResources,
-    //       this.listTodo,
-    //     ];
-    //     return true;
-    //   })
-    //   .subscribe((res) => {
-    //     this.isClickSave = false;
-    //     this.dialog.close(res);
-    //     this.attachment?.clearData();
-    //     if (res && res.save) {
-    //       var task = res.save[0];
-    //       //send mail FE
-    //       // if (task.category == '3') {
-    //       //   if (this.param?.ConfirmControl == '1')
-    //       //     this.tmSv
-    //       //       .sendAlertMail(task?.recID, 'TM_0008', this.functionID)
-    //       //       .subscribe();
-    //       //   else
-    //       //     this.tmSv
-    //       //       .sendAlertMail(task?.recID, 'TM_0001', this.functionID)
-    //       //       .subscribe();
-    //       // }
-
-    //       // if (task?.category == '1' && task.verifyControl == '1')
-    //       //   this.tmSv
-    //       //     .sendAlertMail(task?.recID, 'TM_0018', this.functionID)
-    //       //     .subscribe();
-    //     }
-    //   });
+            //       // if (task?.category == '1' && task.verifyControl == '1')
+            //       //   this.tmSv
+            //       //     .sendAlertMail(task?.recID, 'TM_0018', this.functionID)
+            //       //     .subscribe();
+          }
+        });
+    }
   }
 
   updateTask() {

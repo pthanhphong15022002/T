@@ -462,17 +462,28 @@ export class CodxTasksComponent
       if (this.refID) this.view.dataService.dataSelected.refID = this.refID;
       if (this.refType)
         this.view.dataService.dataSelected.refType = this.refType;
+
+      let obj = {
+        data: this.view.dataService.dataSelected,
+        action: 'add',
+        isAssignTask: this.isAssignTask,
+        titleAction: this.titleAction,
+        functionID: this.funcID,
+        taskCopy: null,
+        disabledProject: this.disabledProject,
+      };
       var dialog = this.callfc.openSide(
         PopupAddComponent,
-        [
-          this.view.dataService.dataSelected,
-          'add',
-          this.isAssignTask,
-          this.titleAction,
-          this.funcID,
-          null,
-          this.disabledProject,
-        ],
+        obj,
+        // [
+        //   this.view.dataService.dataSelected,
+        //   'add',
+        //   this.isAssignTask,
+        //   this.titleAction,
+        //   this.funcID,
+        //   null,
+        //   this.disabledProject,
+        // ],
         option
       );
       dialog.closed.subscribe((e) => {
@@ -541,17 +552,27 @@ export class CodxTasksComponent
         this.view.dataService.dataSelected.projectID = this.projectID;
         this.disabledProject = true;
       } else this.disabledProject = false;
+      let obj = {
+        data: this.view.dataService.dataSelected,
+        action: 'copy',
+        isAssignTask: this.isAssignTask,
+        titleAction: this.titleAction,
+        functionID: this.funcID,
+        taskCopy: data,
+        disabledProject: this.disabledProject,
+      };
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [
-          this.view.dataService.dataSelected,
-          'copy',
-          this.isAssignTask,
-          this.titleAction,
-          this.funcID,
-          data,
-          this.disabledProject,
-        ],
+        obj,
+        // [
+        //   this.view.dataService.dataSelected,
+        //   'copy',
+        //   this.isAssignTask,
+        //   this.titleAction,
+        //   this.funcID,
+        //   data,
+        //   this.disabledProject,
+        // ],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -658,17 +679,27 @@ export class CodxTasksComponent
         if (this.projectID) {
           this.disabledProject = true;
         } else this.disabledProject = false;
+        let obj = {
+          data: this.view.dataService.dataSelected,
+          action: 'edit',
+          isAssignTask: this.isAssignTask,
+          titleAction: this.titleAction,
+          functionID: this.funcID,
+          taskCopy: null,
+          disabledProject: this.disabledProject,
+        };
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
-          [
-            this.view.dataService.dataSelected,
-            'edit',
-            this.isAssignTask,
-            this.titleAction,
-            this.funcID,
-            null,
-            this.disabledProject,
-          ],
+          obj,
+          // [
+          //   this.view.dataService.dataSelected,
+          //   'edit',
+          //   this.isAssignTask,
+          //   this.titleAction,
+          //   this.funcID,
+          //   null,
+          //   this.disabledProject,
+          // ],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -1789,9 +1820,17 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
+      let obj = {
+        data: data,
+        action: 'view',
+        isAssignTask: isAssignTask,
+        titleAction: '',
+        functionID: this.funcID,
+      };
       this.callfc.openSide(
         PopupAddComponent,
-        [data, 'view', isAssignTask, '', funcID],
+        obj,
+        // [data, 'view', isAssignTask, '', funcID],
         option
       );
     }

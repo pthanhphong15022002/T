@@ -38,6 +38,7 @@ import { group } from 'console';
 import { CodxViewTaskComponent } from '../codx-view-task/codx-view-task.component';
 import { StepService } from '../step.service';
 import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
+import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 
 @Component({
   selector: 'codx-step-task',
@@ -456,6 +457,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       case 'DP24': // tạo lịch họp
         this.createMeeting(task);
         break;
+      case 'SYS004':
+        this.sendMail()
+        break;
     }
   }
 
@@ -664,6 +668,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task.refID = data?.recID;
     task.refType = 'DP_Instance';
     task.dueDate = data?.endDate;
+    let dataReferences= [{
+      recIDReferences : data.recID,
+      refType : 'DP_Instances',
+      createdOn : data.createdOn,
+      memo : data.taskName,
+      createdBy : data.createdBy,
+    }]
     let assignModel: AssignTaskModel = {
       vllRole: 'TM001',
       title: moreFunc.customName,
@@ -1073,23 +1084,28 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         meeting.meetingName = data?.taskName;
         meeting.meetingType = '1';
         let option = new SidebarModel();
+        option.Width = '800px';
         option.zIndex = 1011;
         let formModel = new FormModel();
         this.cache.functionList('TMT0501').subscribe((f) => {
+          // this.cache
+          //   .gridViewSetup(f?.formName, f?.gridViewSetup)
+          //   .subscribe((grv) => {
           formModel.funcID = 'TMT0501';
           formModel.entityName = f?.entityName;
           formModel.formName = f?.formName;
           formModel.gridViewName = f?.gridViewName;
           option.FormModel = formModel;
-          option.Width = '850px';
+          option.Width = '800px';
           let obj = {
             action: 'add',
             titleAction: this.titleAction,
             disabledProject: false,
             // preside:  ,
             data: meeting,
+            isOtherModule: true,
           };
-          var dialog = this.callfc.openSide(
+          let dialog = this.callfc.openSide(
             PopupAddMeetingComponent,
             obj,
             option
@@ -1102,6 +1118,20 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
           });
         });
+        // });
+      }
+    });
+  }
+  //Gửi email
+  sendMail() {
+    // let option = new SidebarModel();
+    // option.DataService = this.view?.currentView?.dataService;
+    let dialogEmail = this.callfc.openForm(CodxEmailComponent, '', 900, 800);
+    dialogEmail.closed.subscribe((x) => {
+      if (x.event != null) {
+        // this.data = x.event[0];
+        // this.data.lstUserID = getListImg(x.event[0].relations);
+        // this.data.listInformationRel = x.event[1];
       }
     });
   }

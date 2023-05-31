@@ -4044,8 +4044,9 @@
             </div>
           </div>
           <div class="mb-1 mt-5">
-            <div *ngIf="reRenderGrid == true">
-              <codx-gridview
+            <!-- <div *ngIf="reRenderGrid == true && appointionFormModel && appointionColumnGrid"> -->
+            <div *ngIf="appointionFormModel && appointionColumnGrid">
+              <!-- <codx-gridview
                 *ngIf="appointionColumnGrid"
                 #appointionGridView
                 [formModel]="appointionFormModel"
@@ -4059,7 +4060,21 @@
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_EAppointions'"
                 [emptyTemplate]="emptyDataTemplate"
-              ></codx-gridview>
+              ></codx-gridview> -->
+
+              <codx-gridview-v2
+                #appointionGridView
+                [formModel]="appointionFormModel"
+                [columnsGrid]="appointionColumnGrid"
+                [service]="'HR'"
+                [assemblyName]="'Core'"
+                [className]="'DataBusiness'"
+                [hideMoreFunc]="true"
+                [method]="'LoadDataAsync'"
+                [predicates]="'EmployeeID=@0'"
+                [dataValues]="employeeID"
+                [emptyTemplate]="emptyDataTemplate"
+              ></codx-gridview-v2>
             </div>
           </div>
         </div>
@@ -4137,8 +4152,8 @@
             <!-- String này đang gán cứng chờ module phát triển -->
           </div>
 
-          <div class="mb-1 mt-5">
-            <codx-gridview
+          <div class="mb-1 mt-5" *ngIf="dayoffFormModel && dayoffColumnGrid; else emptyDataTemplate">
+            <!-- <codx-gridview
               *ngIf="dayoffColumnGrid"
               [sort]="[dayOffSortModel]"
               #dayoffGridView
@@ -4154,7 +4169,22 @@
               [entityName]="'HR_EDayOffs'"
               height="auto"
               [emptyTemplate]="emptyDataTemplate"
-            ></codx-gridview>
+            ></codx-gridview> -->
+
+            <codx-gridview-v2
+            #dayoffGridView
+            [formModel]="dayoffFormModel"
+            [columnsGrid]="dayoffColumnGrid"
+            [service]="'HR'"
+            [sort]="[dayOffSortModel]"
+            [assemblyName]="'Core'"
+            [className]="'DataBusiness'"
+            [hideMoreFunc]="true"
+            [method]="'LoadDataAsync'"
+            [predicates]="'EmployeeID=@0'"
+            [dataValues]="employeeID"
+            [emptyTemplate]="emptyDataTemplate"
+          ></codx-gridview-v2>
           </div>
         </div>
       </div>
@@ -4203,9 +4233,11 @@
               </button>
             </div>
           </div>
-          <div class="mb-1 mt-5">
+          <div class="mb-1 mt-5"
+          *ngIf="EBusinessTravelFormodel && businessTravelColumnGrid; else emptyDataTemplate"
+          >
             <div>
-              <codx-gridview
+              <!-- <codx-gridview
                 *ngIf="businessTravelColumnGrid"
                 #businessTravelGrid
                 [sort]="[businessTravelSortModel]"
@@ -4220,7 +4252,22 @@
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_EBusinessTravels'"
                 [emptyTemplate]="emptyDataTemplate"
-              ></codx-gridview>
+              ></codx-gridview> -->
+
+              <codx-gridview-v2
+                #businessTravelGrid
+                [formModel]="EBusinessTravelFormodel"
+                [columnsGrid]="businessTravelColumnGrid"
+                [sort]="[businessTravelSortModel]"
+                [service]="'HR'"
+                [assemblyName]="'Core'"
+                [className]="'DataBusiness'"
+                [hideMoreFunc]="true"
+                [method]="'LoadDataAsync'"
+                [predicates]="'EmployeeID=@0'"
+                [dataValues]="employeeID"
+                [emptyTemplate]="emptyDataTemplate"
+              ></codx-gridview-v2>
             </div>
           </div>
         </div>
@@ -4343,9 +4390,11 @@
             </div>
           </div>
 
-          <div class="mb-1 mt-5">
+          <div class="mb-1 mt-5"
+          *ngIf="eDisciplineFormModel && eDisciplineColumnsGrid; else emptyDataTemplate"
+          >
             <div>
-              <codx-gridview
+              <!-- <codx-gridview
                 *ngIf="eDisciplineColumnsGrid && eDisciplineFormModel"
                 #eDisciplineGridView
                 [formModel]="eDisciplineFormModel"
@@ -4361,7 +4410,22 @@
                 [entityName]="'HR_EDisciplines'"
                 [emptyTemplate]="emptyDataTemplate"
               >
-              </codx-gridview>
+              </codx-gridview> -->
+
+              <codx-gridview-v2
+              #eDisciplineGridView
+              [formModel]="eDisciplineFormModel"
+              [columnsGrid]="eDisciplineColumnsGrid"
+              [sort]="[disciplinesSortModel]"
+              [service]="'HR'"
+              [assemblyName]="'Core'"
+              [className]="'DataBusiness'"
+              [hideMoreFunc]="true"
+              [method]="'LoadDataAsync'"
+              [predicates]="'EmployeeID=@0'"
+              [dataValues]="employeeID"
+              [emptyTemplate]="emptyDataTemplate"
+            ></codx-gridview-v2>
             </div>
           </div>
         </div>
@@ -4493,8 +4557,10 @@
                   </ng-container>
                 </div>
               </div> -->
-            <div>
-              <codx-gridview
+            <div
+              *ngIf="eDegreeFormModel && eDegreeColumnsGrid; else emptyDataTemplate"
+            >
+              <!-- <codx-gridview
                 *ngIf="eDegreeColumnsGrid && eDegreeFormModel"
                 #eDegreeGridView
                 [formModel]="eDegreeFormModel"
@@ -4509,7 +4575,22 @@
                 [entityName]="'HR_EDegrees'"
                 [sort]="[issuedDateSortModel]"
                 [emptyTemplate]="emptyDataTemplate"
-              ></codx-gridview>
+              ></codx-gridview> -->
+
+              <codx-gridview-v2
+              #eDegreeGridView
+              [formModel]="eDegreeFormModel"
+              [columnsGrid]="eDegreeColumnsGrid"
+              [service]="'HR'"
+              [sort]="[issuedDateSortModel]"
+              [assemblyName]="'Core'"
+              [className]="'DataBusiness'"
+              [hideMoreFunc]="true"
+              [method]="'LoadDataAsync'"
+              [predicates]="'EmployeeID=@0'"
+              [dataValues]="employeeID"
+              [emptyTemplate]="emptyDataTemplate"
+            ></codx-gridview-v2>
             </div>
           </div>
         </div>
@@ -4606,8 +4687,10 @@
                 </div>
               </div> -->
 
-            <div>
-              <codx-gridview
+            <div
+            *ngIf="eCertificateFormModel && eCertificateColumnGrid; else emptyDataTemplate"
+            >
+              <!-- <codx-gridview
                 *ngIf="eCertificateColumnGrid"
                 #eCertificateGridView
                 [formModel]="eCertificateFormModel"
@@ -4622,7 +4705,22 @@
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_ECertificates'"
                 [emptyTemplate]="emptyDataTemplate"
-              ></codx-gridview>
+              ></codx-gridview> -->
+
+              <codx-gridview-v2
+              #eCertificateGridView
+              [formModel]="eCertificateFormModel"
+              [columnsGrid]="eCertificateColumnGrid"
+              [sort]="[issuedDateSortModel]"
+              [service]="'HR'"
+              [assemblyName]="'Core'"
+              [className]="'DataBusiness'"
+              [hideMoreFunc]="true"
+              [method]="'LoadDataAsync'"
+              [predicates]="'EmployeeID=@0'"
+              [dataValues]="employeeID"
+              [emptyTemplate]="emptyDataTemplate"
+            ></codx-gridview-v2>
             </div>
           </div>
         </div>
@@ -4677,8 +4775,10 @@
               ></span> -->
             </div>
           </div>
-          <div class="mb-1 mt-7">
-            <codx-gridview
+          <div class="mb-1 mt-7"
+          *ngIf="eSkillFormmodel && eSkillColumnGrid; else emptyDataTemplate"
+          >
+            <!-- <codx-gridview
               *ngIf="eSkillColumnGrid"
               #eSkillGridViewID
               [formModel]="eSkillFormmodel"
@@ -4694,7 +4794,22 @@
               [sort]="[skillIDSortModel, skillGradeSortModel]"
               height="auto"
               [emptyTemplate]="emptyDataTemplate"
-            ></codx-gridview>
+            ></codx-gridview> -->
+
+            <codx-gridview-v2
+            #eSkillGridViewID
+            [formModel]="eSkillFormmodel"
+            [columnsGrid]="eSkillColumnGrid"
+            [service]="'HR'"
+            [assemblyName]="'Core'"
+            [className]="'DataBusiness'"
+            [sort]="[skillIDSortModel, skillGradeSortModel]"
+            [hideMoreFunc]="true"
+            [method]="'LoadDataAsync'"
+            [predicates]="'EmployeeID=@0'"
+            [dataValues]="employeeID"
+            [emptyTemplate]="emptyDataTemplate"
+          ></codx-gridview-v2>
 
             <!-- <ng-container *ngFor="let eSkill of lstESkill">
               <div class="has-action-menu">
@@ -4870,10 +4985,11 @@
             </div>
           </div>
 
-          <div class="mb-1 mt-5">
+          <div class="mb-1 mt-5"
+          *ngIf="eTrainCourseFormModel && eTrainCourseColumnGrid; else emptyDataTemplate"
+          >
             <div>
-              <codx-gridview
-                *ngIf="eTrainCourseColumnGrid && eTrainCourseFormModel"
+              <!-- <codx-gridview
                 #eTrainCourseGridView
                 [formModel]="eTrainCourseFormModel"
                 [columnsGrid]="eTrainCourseColumnGrid"
@@ -4887,7 +5003,22 @@
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_ETrainCourses'"
                 [emptyTemplate]="emptyDataTemplate"
-              ></codx-gridview>
+              ></codx-gridview> -->
+
+              <codx-gridview-v2
+              #eTrainCourseGridView
+              [formModel]="eTrainCourseFormModel"
+              [columnsGrid]="eTrainCourseColumnGrid"
+              [sort]="[TrainFromDateSortModel]"
+              [service]="'HR'"
+              [assemblyName]="'Core'"
+              [className]="'DataBusiness'"
+              [hideMoreFunc]="true"
+              [method]="'LoadDataAsync'"
+              [predicates]="'EmployeeID=@0'"
+              [dataValues]="employeeID"
+              [emptyTemplate]="emptyDataTemplate"
+            ></codx-gridview-v2>
             </div>
             <!-- <codx-gridview-v2
                       idField="recID"

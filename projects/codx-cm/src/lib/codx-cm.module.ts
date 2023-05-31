@@ -46,7 +46,7 @@ import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/vie
 import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
 import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
 import { NoDataComponent } from './contracts/component/no-data/no-data.component';
-import { ViewsContractsComponent } from './contracts/views-contracts/views-contracts.component';
+import { ContractsDetailComponent} from './contracts/contracts-detail/contracts-detail.component';
 import { CasesComponent } from './cases/cases.component';
 import { CaseDetailComponent } from './cases/case-detail/case-detail.component';
 import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.component';
@@ -70,6 +70,7 @@ import { PopupMergeLeadsComponent } from './leads/popup-merge-leads/popup-merge-
 import { ViewQuotationsComponent } from './contracts/component/view-quotations/view-quotations.component';
 import { ViewImgContactComponent } from './leads/popup-merge-leads/view-img-contact/view-img-contact.component';
 import { PopupRemoveAddContactComponent } from './leads/popup-merge-leads/popup-remove-add-contact/popup-remove-add-contact.component';
+import { ViewPaymentComponent } from './contracts/payment/view-payment/view-payment.component';
 
 const routes: Routes = [
   {
@@ -105,9 +106,8 @@ const routes: Routes = [
         // data: { noReuse: true },
       },
       {
-        // gán tạm để làm UI
         path: 'contracts/:funcID',
-        component: ViewsContractsComponent,
+        component: ContractsDetailComponent,
       },
       {
         path: 'cases/:funcID',
@@ -157,7 +157,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxComboboxComponent,
     QuotationsViewDetailComponent,
     NoDataComponent,
-    ViewsContractsComponent,
+    ContractsDetailComponent,
     CasesComponent,
     CaseDetailComponent,
     PopupAddCaseComponent,
@@ -182,6 +182,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupMergeLeadsComponent,
     ViewImgContactComponent,
     PopupRemoveAddContactComponent,
+    ViewPaymentComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

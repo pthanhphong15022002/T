@@ -9,6 +9,7 @@ import { CodxCmService } from '../../../codx-cm.service';
   styleUrls: ['./popup-view-payment-history.component.scss'],
 })
 export class PopupViewPaymentHistoryComponent {
+  isSave = false;
   dialog: DialogRef;
   listPaymentHistory: CM_ContractsPayments[];
   listPaymentHistoryOfPayment: CM_ContractsPayments[];
@@ -31,12 +32,13 @@ export class PopupViewPaymentHistoryComponent {
     this.dialog = dialog;
     this.payment = dt?.data?.payment;
     this.listPaymentHistory = dt?.data?.listPaymentHistory;
+    this.isSave = dt?.data?.isSave || false;
   }
 
   ngOnInit(): void {
     this.listPaymentHistoryOfPayment = this.listPaymentHistory.filter(
       (paymentHistory) => paymentHistory.refLineID == this.payment?.recID
-    );
+    ) || [];
     this.columns = [
       {
         field: 'rowNo',

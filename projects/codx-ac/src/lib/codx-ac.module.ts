@@ -9,16 +9,17 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule } from 'codx-core';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { CoreModule } from '../../../../src/core/core.module';
 import { LayoutComponent } from './_layout/layout.component';
-import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { CodxAcComponent } from './codx-ac.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { CustomizedMultiSelectPopupComponent } from './journals/customized-multi-select-popup/customized-multi-select-popup.component';
 import { DropdownDetailComponent } from './journals/components/dropdown-detail/dropdown-detail.component';
+import { Group067Component } from './journals/components/group067/group067.component';
+import { MultiSelectPopupComponent } from './journals/multi-select-popup/multi-select-popup.component';
 import { JournalsComponent } from './journals/journals.component';
 import { PopupAddJournalComponent } from './journals/popup-add-journal/popup-add-journal.component';
-import { PopupSetupInvoiceComponent } from './journals/popup-setup-invoice/popup-setup-invoice.component';
+import { PopupSetupTransactionLimitComponent } from './journals/popup-setup-transaction-limit/popup-setup-transaction-limit.component';
 import { PeriodicComponent } from './periodic/periodic.component';
 import { NameByIdPipe } from './pipes/nameById.pipe';
 import { VoucherComponent } from './popup/voucher/voucher.component';
@@ -35,16 +36,14 @@ import { PopupAddCashTransferComponent } from './vouchers/cash-transfers/popup-a
 import { PopAddLineComponent } from './vouchers/purchaseinvoices/pop-add-line/pop-add-line.component';
 import { PopAddPurchaseComponent } from './vouchers/purchaseinvoices/pop-add-purchase/pop-add-purchase.component';
 import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
+import { PopAddLineinventoryComponent } from './vouchers/receipt-transaction/pop-add-lineinventory/pop-add-lineinventory.component';
 import { PopAddReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-receipt-transaction/pop-add-receipt-transaction.component';
 import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/receipt-transaction.component';
+import { TableLineDetailComponent } from './vouchers/sales-invoices/components/table-line-detail/table-line-detail.component';
 import { PopupAddSalesInvoiceComponent } from './vouchers/sales-invoices/popup-add-sales-invoice/popup-add-sales-invoice.component';
 import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
-import { TableLineDetailComponent } from './vouchers/sales-invoices/components/table-line-detail/table-line-detail.component';
-import { PopAddLineinventoryComponent } from './vouchers/receipt-transaction/pop-add-lineinventory/pop-add-lineinventory.component';
-import { Group067Component } from './journals/components/group067/group067.component';
-import { CoreModule } from "../../../../src/core/core.module";
-import { PopUpCashComponent } from './vouchers/cash-payments/pop-up-cash/pop-up-cash.component';
+import { GroupShareComponent } from './journals/components/group-share/group-share.component';
 
 export const routes: Routes = [
   {
@@ -127,57 +126,57 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-    declarations: [
-        CodxAcComponent,
-        LayoutComponent,
-        CashPaymentsComponent,
-        PopAddCashComponent,
-        JournalsComponent,
-        CashTransfersComponent,
-        PopupAddCashTransferComponent,
-        CashReceiptsComponent,
-        PopAddReceiptsComponent,
-        PurchaseinvoicesComponent,
-        PopAddPurchaseComponent,
-        PopupAddJournalComponent,
-        DropdownDetailComponent,
-        PopupSetupInvoiceComponent,
-        PopAddLineComponent,
-        CustomizedMultiSelectPopupComponent,
-        VoucherComponent,
-        PopAddLinecashComponent,
-        PopAddLinereceiptsComponent,
-        DashboardComponent,
-        PeriodicComponent,
-        SalesInvoicesComponent,
-        PopupAddSalesInvoiceComponent,
-        PopupAddSalesInvoicesLineComponent,
-        SearchingComponent,
-        TableLineDetailComponent,
-        ReceiptTransactionComponent,
-        PopAddReceiptTransactionComponent,
-        ReportsComponent,
-        ApprovalsComponent,
-        PopAddLineinventoryComponent,
-        Group067Component,
-        PopUpCashComponent,
-    ],
-    exports: [RouterModule],
-    providers: [AccumulationTooltipService],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [
-        RouterModule.forChild(routes),
-        CodxCoreModule,
-        CodxShareModule,
-        CommonModule,
-        FormsModule,
-        TabModule,
-        NgbModule,
-        CodxReportModule,
-        FormsModule,
-        NameByIdPipe,
-        DragDropModule,
-        CoreModule
-    ]
+  declarations: [
+    CodxAcComponent,
+    LayoutComponent,
+    CashPaymentsComponent,
+    PopAddCashComponent,
+    JournalsComponent,
+    CashTransfersComponent,
+    PopupAddCashTransferComponent,
+    CashReceiptsComponent,
+    PopAddReceiptsComponent,
+    PurchaseinvoicesComponent,
+    PopAddPurchaseComponent,
+    PopupAddJournalComponent,
+    DropdownDetailComponent,
+    PopupSetupTransactionLimitComponent,
+    PopAddLineComponent,
+    MultiSelectPopupComponent,
+    VoucherComponent,
+    PopAddLinecashComponent,
+    PopAddLinereceiptsComponent,
+    DashboardComponent,
+    PeriodicComponent,
+    SalesInvoicesComponent,
+    PopupAddSalesInvoiceComponent,
+    PopupAddSalesInvoicesLineComponent,
+    SearchingComponent,
+    TableLineDetailComponent,
+    ReceiptTransactionComponent,
+    PopAddReceiptTransactionComponent,
+    ReportsComponent,
+    ApprovalsComponent,
+    PopAddLineinventoryComponent,
+    Group067Component,
+    GroupShareComponent,
+  ],
+  exports: [RouterModule],
+  providers: [AccumulationTooltipService],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [
+    RouterModule.forChild(routes),
+    CodxCoreModule,
+    CodxShareModule,
+    CommonModule,
+    FormsModule,
+    TabModule,
+    NgbModule,
+    CodxReportModule,
+    FormsModule,
+    NameByIdPipe,
+    DragDropModule,
+    CoreModule,
+  ],
 })
 export class AcModule {}

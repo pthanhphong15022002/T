@@ -619,7 +619,6 @@ export class PopupConvertLeadComponent implements OnInit {
         tmpContact.recIDold = e.data.recID;
         tmpContact.refID = this.lead?.recID;
         tmpContact.checked = false;
-        tmpContact.objectType = '1';
         if (
           !this.lstContactCustomer.some(
             (x) => x.recIDold == tmpContact.recIDold
