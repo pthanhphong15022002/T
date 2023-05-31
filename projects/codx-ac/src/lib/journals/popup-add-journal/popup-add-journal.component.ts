@@ -13,12 +13,13 @@ import {
   DialogData,
   DialogModel,
   DialogRef,
+  ImageViewerComponent,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
-import { Observable } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
 import { IJournal } from '../interfaces/IJournal.interface';
@@ -54,6 +55,7 @@ export class PopupAddJournalComponent
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('periodID') periodID: CodxInputComponent;
+  @ViewChild('thumbnail') thumbnail: ImageViewerComponent;
 
   journal: IJournal = {
     unpostControl: false,
@@ -188,10 +190,10 @@ export class PopupAddJournalComponent
           }
 
           this.creater = creater.join(';');
-          this.approver = creater.join(';');
-          this.poster = creater.join(';');
-          this.unposter = creater.join(';');
-          this.sharer = creater.join(';');
+          this.approver = approver.join(';');
+          this.poster = poster.join(';');
+          this.unposter = unposter.join(';');
+          this.sharer = sharer.join(';');
         });
     }
 
@@ -239,6 +241,13 @@ export class PopupAddJournalComponent
 
       if (!res.event && !this.isEdit) {
         this.journalService.deleteAutoNumber(this.journal.journalNo);
+
+        if (this.journal.checkImage) {
+          this.acService.deleteFile(
+            this.journal.recID,
+            this.form.formModel.entityName
+          );
+        }
       }
     });
 
@@ -337,8 +346,9 @@ export class PopupAddJournalComponent
     );
   }
 
-  onClickSave(): void {
+  async onClickSave(): Promise<void> {
     console.log(this.journal);
+    console.log(this.thumbnail);
 
     if (
       !this.acService.validateFormData(
@@ -429,6 +439,16 @@ export class PopupAddJournalComponent
     }
 
     console.log(tempJournal);
+
+    if (this.thumbnail?.imageUpload?.item) {
+      const uploaded$ = this.thumbnail.updateFileDirectReload(
+        this.journal.recID
+      );
+      const uploaded = await lastValueFrom(uploaded$);
+      if (uploaded) {
+        this.journal.checkImage = tempJournal.checkImage = true;
+      }
+    }
 
     if (this.isEdit) {
       this.dataService.updateDatas.set(tempJournal.recID, tempJournal);
