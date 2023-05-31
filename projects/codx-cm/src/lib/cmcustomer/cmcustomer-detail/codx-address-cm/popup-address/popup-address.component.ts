@@ -144,6 +144,7 @@ export class PopupAddressComponent implements OnInit {
       var checkCoincide = this.lstAddress.some(
         (x) =>
           x.recID != this.data.recID &&
+          x.adressName == this.data.adressName &&
           x.adressType == this.data.adressType &&
           x.street == this.data.street &&
           x.countryID == this.data.countryID &&
