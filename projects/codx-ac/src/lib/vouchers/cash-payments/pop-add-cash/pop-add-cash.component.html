@@ -11,7 +11,8 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-3">
               <i class="icon-info icon-18 me-2"></i>
-              <codx-label class="fw-bold fs-5-sm" fiedName="lblGeneral" [formModel]="form.formModel" default="Thông tin chung"></codx-label>
+              <codx-label class="fw-bold fs-5-sm" fiedName="lblGeneral" [formModel]="form.formModel"
+                default="Thông tin chung"></codx-label>
             </div>
           </ng-template>
           <ng-template #content>
@@ -27,16 +28,24 @@
           <ng-template #headerText>
             <div #cashRef class="d-flex align-items-top me-2 mt-3">
               <i class="icon-format_list_numbered icon-18 me-2"></i>
-              <codx-label class="fw-bold fs-5-sm" fiedName="lblDetail1" [formModel]="form.formModel" default="Chi tiết"></codx-label>
+              <codx-label class="fw-bold fs-5-sm" fiedName="lblDetail1" [formModel]="form.formModel"
+                default="Chi tiết"></codx-label>
             </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="tabLine"></ng-container>
+          </ng-template>
+        </e-tabitem>
         <!-- Test tab -->
         <e-tabitem aria-hidden="true">
           <ng-template #headerText>
             <div #cashRef class="d-flex align-items-top me-2 mt-3">
               <i *ngIf="cashpayment?.subType == '2'" class="icon-format_list_numbered icon-18 me-2"></i>
               <i *ngIf="cashpayment?.subType == '5'" class="icon-i-file-earmark-binary icon-18 me-2"></i>
-              <codx-label *ngIf="cashpayment?.subType == '2'" class="fw-bold fs-5-sm" fiedName="lblDetail2" [formModel]="form.formModel" default="Chi tiết"></codx-label>
-              <codx-label *ngIf="cashpayment?.subType == '5'" class="fw-bold fs-5-sm" fiedName="lblDetail2" [formModel]="form.formModel" default="Hóa đơn công nợ"></codx-label>
+              <codx-label *ngIf="cashpayment?.subType == '2'" class="fw-bold fs-5-sm" fiedName="lblDetail2"
+                [formModel]="form.formModel" default="Chi tiết"></codx-label>
+              <codx-label *ngIf="cashpayment?.subType == '5'" class="fw-bold fs-5-sm" fiedName="lblDetail2"
+                [formModel]="form.formModel" default="Hóa đơn công nợ"></codx-label>
             </div>
           </ng-template>
           <ng-template #content>
@@ -222,7 +231,7 @@
               (valueChange)="valueChange($event)" [disabled]="journal?.assignRule != '0'">
             </codx-input>
           </div>
-          
+
         </div>
       </div>
 
@@ -238,15 +247,16 @@
       <codx-gridview-v2 class="tabLine" #gridCash [formName]="fmCashPaymentsLines.formName"
         [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
-        [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" 
-        [autoLoad]="false" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"></codx-gridview-v2>
+        [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
+        [autoLoad]="false" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
+        (cellChanged)="lineChanged($event)"></codx-gridview-v2>
 
-        <div #btnRef class="btn-addline">
-          <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow()">
-            <i class="icon-playlist_add icon-16"></i>
-              <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
-          </button>
-        </div>
+      <div #btnRef class="btn-addline">
+        <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow()">
+          <i class="icon-playlist_add icon-16"></i>
+          <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
+        </button>
+      </div>
     </div>
   </ng-container>
   <!-- <ng-container
