@@ -79,6 +79,7 @@
                     [currentUser]="curUser" [okrFM]="okrFM" [okrVll]="okrVll" [okrGrv]="okrGrv"
                     [isCollapsed]="isCollapsed" [groupModel]="groupModel" [curOrgUnitID]="curOrgID" [funcID]="funcID"
                     [isHiddenChart]="isHiddenChart" [listUM]="listUM"
+                    (updateOKRPlans)="updateOKRPlans($event)"
                     (getOKRPlanForComponent)="getOKRPlanForComponent($event)"></lib-okr-targets>
 
 

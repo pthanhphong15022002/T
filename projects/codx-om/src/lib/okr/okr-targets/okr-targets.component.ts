@@ -64,6 +64,7 @@ export class OkrTargetsComponent implements OnInit {
   @Input() currentUser;
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =
     new EventEmitter();
+    @Output('updateOKRPlans') updateOKRPlans: EventEmitter<any> =new EventEmitter();
   dtStatus = [];
   krTitle = '';
   obTitle = '';
@@ -869,6 +870,9 @@ export class OkrTargetsComponent implements OnInit {
       '',
       dModel
     );
+    dialogEditWeightKR.closed.subscribe(res=>{
+      this.updateOKRPlans.emit(this.dataOKRPlans?.recID);
+    })
   }
   editSKRWeight(kr: any, popupTitle: any) {
     if (kr.items == null || kr.items.length == 0) {
@@ -888,6 +892,9 @@ export class OkrTargetsComponent implements OnInit {
       '',
       dModel
     );
+    dialogEditWeightSKR.closed.subscribe(res=>{
+      this.updateOKRPlans.emit(this.dataOKRPlans?.recID);
+    })
   }
   checkIn(kr: any, popupTitle: any) {
     // if (this.dataOKRPlans.status!=OMCONST.VLL.PlanStatus.Ontracking ) {
@@ -925,7 +932,7 @@ export class OkrTargetsComponent implements OnInit {
     dialogCheckIn.closed.subscribe((res) => {
       if (res?.event && res?.event.length != null) {
         this.isCollapsed == false;
-        this.getOKRPlanForComponent.emit(this.dataOKRPlans);
+        this.updateOKRPlans.emit(this.dataOKRPlans?.recID);
         if (res?.event.length > 0) {
           this.caculatorPlanInBackground(res?.event);
         }
@@ -1196,7 +1203,7 @@ export class OkrTargetsComponent implements OnInit {
     dialogAssgOKR.closed.subscribe((res) => {
       if (res?.event) {
         this.isCollapsed == false;
-        this.getOKRPlanForComponent.emit(res?.event);
+        this.updateOKRPlans.emit(this.dataOKRPlans?.recID);
       }
     });
   }
