@@ -69,10 +69,10 @@
         #thumbnail
         class="col-4"
         [funcId]="form.formModel?.funcID"
-        [objectId]="this.journal.journalNo"
+        [objectId]="journal.recID"
         [objectType]="form.formModel?.entityName"
         [width]="125"
-        [imgOn]="this.journal.modifiedOn"
+        [imgOn]="journal.modifiedOn"
         [isAllowEdit]="true"
         [isDefaulImg]="true"
         imageType="square"

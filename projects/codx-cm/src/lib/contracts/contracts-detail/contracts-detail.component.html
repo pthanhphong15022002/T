@@ -368,10 +368,6 @@
   ></codx-tabs>
 </ng-template>
 
-<ng-template #contract let-data>
-  <list-contracts [projectID]="itemSelected?.recID"></list-contracts>
-</ng-template>
-
 <ng-template #generalTemplate>
   <div class="A mb-5">
     <div>
@@ -460,36 +456,36 @@
       <div class="col-4">
         <codx-label
           class="label-colon"
-          fiedName="contractAmt"
+          fiedName="pmtStatus"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
           class="me-3"
           [innerHTML]="
-            itemSelected?.contractAmt
-              | formatvalue : view.formModel : 'ContractAmt'
+            itemSelected?.pmtStatus
+              | formatvalue : view.formModel : 'PmtStatus'
               | async
           "
         ></span>
-        <!-- <span>Giá trị hợp đồng: </span> -->
+        <!-- Tình trạng thanh toán -->
       </div>
       <div class="col-8">
         <codx-label
           class="label-colon"
-          fiedName="paymentStatus"
+          fiedName="pmtDeadline"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
           class="me-3"
           [innerHTML]="
-            itemSelected?.paymentStatus
-              | formatvalue : view.formModel : 'PaymentStatus'
+            itemSelected?.pmtDeadline
+              | formatvalue : view.formModel : 'PmtDeadline'
               | async
           "
         ></span>
-        <!-- <span>Tình trạng thanh toán: </span> -->
+        <!--Hạn thanh toán-->
       </div>
     </div>
     <div class="row">
@@ -664,7 +660,7 @@
               | async
           "
         ></span>
-        <!-- <span>Liên hệ giao hàng: </span> -->
+        <!-- Liên hệ giao hàng-->
       </div>
       <div class="col-8">
         <codx-label

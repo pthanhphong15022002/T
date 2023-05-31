@@ -416,7 +416,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
     this.data.title = this.dialogAddBookingStationery.value.reasonID;
     this.data.approval = this.approvalRule;
     this.data.resourceType = this.dialogAddBookingStationery.value.resourceType;
-    this.data.issueStatus = this.dialogAddBookingStationery.value.issueStatus;
+    this.data.issueStatus = this.dialogAddBookingStationery.value.issueStatus?? '1';
     if (this.approvalRule == '0' && approval) {
       this.data.approveStatus = '5';
     }

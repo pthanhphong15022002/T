@@ -8,7 +8,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { map } from 'rxjs';
-import { ItemsService } from './items.service';
+import { CodxAcService } from '../../codx-ac.service';
 import { PopupAddItemComponent } from './popup-add-item/popup-add-item.component';
 
 @Component({
@@ -28,10 +28,7 @@ export class ItemsComponent extends UIComponent {
   btnAdd: ButtonModel = { id: 'btnAdd' };
   functionName: string;
 
-  constructor(
-    private inject: Injector,
-    private itemsService: ItemsService,
-  ) {
+  constructor(inject: Injector, private acService: CodxAcService) {
     super(inject);
   }
   //#endregion
@@ -227,7 +224,7 @@ export class ItemsComponent extends UIComponent {
       .subscribe((res: any) => {
         console.log(res);
         if (res) {
-          this.itemsService.deleteImage(
+          this.acService.deleteFile(
             data.itemID,
             this.view.formModel.entityName
           );
