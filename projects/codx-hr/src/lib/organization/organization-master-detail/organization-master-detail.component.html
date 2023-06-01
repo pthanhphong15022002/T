@@ -1,26 +1,30 @@
-<div class="contianer h-100" id="master-detail">
-  <div class="row" id="master">
-    <div class="col-2">
+<div class="container mt-4 h-100">
+  <div class="row mb-2" *ngIf="employeeManager">
+    <div class="col-2 col-xl-2 col-md-4 col-xs-12">
       <codx-img
+        [width]="90"
         [objectId]="employeeManager?.employeeID"
         [objectName]="employeeManager?.employeeName"
         [objectType]="'HR_Employees'"
-        [width]="90"
-        [imageType]="'circle'"
+        [referType]="'avt'"
       >
       </codx-img>
     </div>
-    <div class="col-10 d-flex align-items-center justify-content-between p-2">
+    <div
+      class="col-2 col-xl-10 col-md-8 col-xs-12 d-flex align-items-center justify-content-between p-2"
+    >
       <div>
         <div>
           <ng-container
             *ngIf="employeeManager?.employeeName; else lblEmployeeName"
           >
-            <span class="fw-bolder">{{ employeeManager.employeeName }}</span>
+            <span class="fw-bolder fs-4">{{
+              employeeManager.employeeName
+            }}</span>
           </ng-container>
           <ng-template #lblEmployeeName>
             <codx-label
-              [className]="'fw-bolder'"
+              [className]="'fw-bolder fs-4'"
               [formModel]="formModel"
               name="lblEmployeeName"
               default="Tên nhân viên"
@@ -84,9 +88,10 @@
           </ng-template>
         </div>
       </div>
-      <div>
-        <p>{{ grid.dataService.rowCount }}</p>
+      <div class="w-20 text-center">
+        <p class="h1 text-primary">{{ grid?.dataService?.rowCount }}</p>
         <codx-label
+          class="text-gray-700"
           [formModel]="formModel"
           name="lblTotalEmployee"
           default="Tổng số nhân viên"
@@ -94,21 +99,20 @@
       </div>
     </div>
   </div>
-  <div id="detail">
-    <!-- <codx-gridview-v2
+  <div id="detail" *ngIf="columnsGrid && columnsGrid.length">
+    <codx-gridview-v2
       #grid
       [formModel]="formModelEmp"
       [columnsGrid]="columnsGrid"
       [service]="'HR'"
       assemblyName="ERM.Business.HR"
-      [entityName]="'HR_Employees'"
       [className]="'OrganizationUnitsBusiness'"
       [hideMoreFunc]="true"
       [method]="'GetEmployeesMasterDetailAsync'"
       [dataValues]="orgUnitID"
       [emptyTemplate]="emptyDataTemplate"
-    ></codx-gridview-v2> -->
-    <codx-gridview
+    ></codx-gridview-v2>
+    <!-- <codx-gridview
       #grid
       [formModel]="formModelEmp"
       idField="EmployeeID"
@@ -121,13 +125,15 @@
       [dataValues]="orgUnitID"
       [columnsGrid]="columnsGrid"
     >
-    </codx-gridview>
+    </codx-gridview> -->
   </div>
 </div>
 
 <ng-template #templateName let-item>
   <div>
     <codx-temp-full
+      [imgCss]="'me-2'"
+      cardCss="card-template px-2 pt-4 pb-2"
       [imageId]="item.employeeID"
       imageObjType="HR_Employees"
       [title]="item.employeeName"
