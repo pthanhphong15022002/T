@@ -38,6 +38,19 @@
     class="mt-2"
     *ngIf="listAddress != null && listAddress.length > 0; else noData"
   >
+    <div class="d-flex mb-1" *ngIf="selectAll">
+      <input
+        type="checkbox"
+        [(ngModel)]="isCheckedAll"
+        (change)="toggleAll($event)"
+      />
+      <codx-label
+        class="ms-1"
+        name="lblSelectAll"
+        [formModel]="formModelAddress"
+        default="Chọn tất cả"
+      ></codx-label>
+    </div>
     <div *ngFor="let item of listAddress">
       <ng-container
         [ngTemplateOutlet]="address"
@@ -69,17 +82,14 @@
   <div
     (click)="changeAddress(data)"
     [ngClass]="data.recID == this.currentRecID ? 'user-nav-active' : null"
-    class="d-flex p-3 border-bottom border-gray-150 flex-column has-action-menu-od user-nav-item"
+    class="d-flex px-3 py-1 border-bottom border-gray-150 flex-column has-action-menu-od user-nav-item"
   >
-    <div class="row">
-      <div [ngClass]="data.isDefault ? 'col-8' : 'col-10'">
+    <div class="d-flex flex-stack">
+      <div [ngClass]="data.isDefault ? 'w-100' : 'w-100'">
         <div lass="d-flex align-items-center text-gray-600 codx-textlabel">
           <span class="me-1" *ngIf="isConvertLeadToCus">
-            <codx-input
-              type="checkbox"
-              [crrValue]="false"
-              (valueChange)="valueChange($event, data)"
-            ></codx-input>
+            <input type="checkbox" [(ngModel)]="data.checked" (change)="valueChange($event, data)">
+
           </span>
           <span
             class="icon-16 me-2 text-hover-primary cursor-pointer"
@@ -105,13 +115,15 @@
         </div>
       </div>
       <div
-        [ngClass]="data.isDefault ? 'col-2' : ''"
+        [ngClass]="data.isDefault ? 'w-50px' : ''"
         class="d-flex justify-content-end align-items-center"
         *ngIf="data.isDefault"
       >
         <span class="icon-vpn_key icon-16"></span>
       </div>
-      <div class="col-2 d-flex justify-content-end action-menu-od">
+      <div
+        class="w-100px min-w-100px d-flex justify-content-end action-menu-od"
+      >
         <codx-mfunc
           [formModel]="formModelAddress"
           [isBookMark]="true"

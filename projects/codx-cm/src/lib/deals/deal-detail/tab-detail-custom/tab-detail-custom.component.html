@@ -265,8 +265,7 @@
 <ng-template #contact>
   <div>
     <codx-list-contacts
-    [selectAll]="false"
-
+      [selectAll]="false"
       [funcID]="'CM0205'"
       [objectID]="dataSelected?.recID"
       [objectName]="dataSelected.dealName"
@@ -277,7 +276,33 @@
 </ng-template>
 
 <ng-template #ganttChart>
-
+  <div class="border border-gray-150">
+    <codx-gantt-chart
+      [dataSource]="ganttDs"
+      [taskFields]="taskFields"
+      [taskbarHeight]="60"
+      [rowHeight]="60"
+      [readOnly]="true"
+      [templateTaskbar]="ganttItems"
+      [timelineSettings]="timelineSettings"
+      [columns]="columns"
+      [toolbar]="[]"
+    ></codx-gantt-chart>
+    <ng-template #ganttItems let-data>
+      <div
+        class="d-flex justify-content-center align-items-center"
+        (click)="clickDetailGanchart(data.recID)"
+        [ngStyle]="{
+          'background-color': getColor(data.recID),
+          'border-radius': '3px',
+        }"
+      >
+        <span class="fw-bold text-dark line-clamp line-clamp-1 px-1">
+          {{ data.name }}
+        </span>
+      </div>
+    </ng-template>
+  </div>
 </ng-template>
 
 <ng-template #field>

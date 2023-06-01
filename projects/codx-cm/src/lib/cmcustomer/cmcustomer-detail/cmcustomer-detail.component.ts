@@ -39,6 +39,7 @@ export class CmcustomerDetailComponent implements OnInit {
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() addressNameCMEmit = new EventEmitter<any>();
 
+  listContract: CM_Contacts[];
   moreFuncAdd = '';
   moreFuncEdit = '';
   vllContactType = '';
@@ -104,6 +105,47 @@ export class CmcustomerDetailComponent implements OnInit {
     // this.getGridviewSetup();
     // this.getVllByGridViewSetupContact();
     this.getFormModelAddress();
+    if(this.funcID == 'CM0101' || this.funcID == 'CM0102'){
+      this.tabControl = [
+        { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+        {
+          name: 'Comment',
+          textDefault: 'Thảo luận',
+          isActive: false,
+          template: null,
+        },
+        {
+          name: 'Attachment',
+          textDefault: 'Đính kèm',
+          isActive: false,
+          template: null,
+        },
+        { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
+        {
+          name: 'References',
+          textDefault: 'Liên kết',
+          isActive: false,
+          template: null,
+        }
+      ];
+    }else{
+      this.tabControl = [
+        { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+        {
+          name: 'Comment',
+          textDefault: 'Thảo luận',
+          isActive: false,
+          template: null,
+        },
+        {
+          name: 'Attachment',
+          textDefault: 'Đính kèm',
+          isActive: false,
+          template: null,
+        }
+      ];
+    }
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -115,6 +157,7 @@ export class CmcustomerDetailComponent implements OnInit {
         if (changes['dataSelected'].currentValue?.recID == this.id) return;
         this.id = changes['dataSelected'].currentValue?.recID;
         this.getOneCustomerDetail();
+        this.getContractByCustomersID();
       }
     }
   }
@@ -126,7 +169,7 @@ export class CmcustomerDetailComponent implements OnInit {
     this.loaded = false;
     this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
     // this.getListContactByObjectID(this.dataSelected?.recID);
-    this.getAdressNameByIsDefault(this.dataSelected?.recID, this.entityName);
+    this.addressNameCM = this.dataSelected?.address;
     setTimeout(() => {
       this.viewTag = this.dataSelected?.tags
     }, 100);
@@ -309,6 +352,19 @@ export class CmcustomerDetailComponent implements OnInit {
       return data.partnerName;
     } else {
       return data.competitorName;
+    }
+  }
+
+  getContractByCustomersID() {
+    if(this.dataSelected?.recID){
+      var data = [this.dataSelected?.recID];
+      this.cmSv.getListContractByCustomersID(data).subscribe((res) => {
+        if (res) {
+          this.listContract = res;
+        }else{
+          this.listContract = [];
+        }
+      });
     }
   }
 }

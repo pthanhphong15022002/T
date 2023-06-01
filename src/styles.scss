@@ -2877,15 +2877,17 @@ lib-nosubaside{
 }
 }
 codx-layout{
-  .menu-state-icon-primary .menu-item {
-    .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
-      fill: var(--primary-lightest);
-    }
-    .menu-link.active .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
-      fill: var(--primary-light);
+  .aside-primary .menu-state-icon-primary{
+    .menu-item {
+      .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+        fill: var(--primary-lightest);
+      }
+      .menu-link.active .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+        fill: var(--primary-light);
+      }
     }
   }
-  }
+}
 
 .menu-state-icon-primary .menu-item:hover {
   .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
@@ -3035,9 +3037,24 @@ codx-toolbar-report{
 }
 
 ///
+/// 
+/// 
+.gridview-sum{
+  .sum-label{
+      color: var(--text-gray-500);
+      margin-bottom: 4px;
+  }
+  .sum-content{
+      color: var(--text-dark);
+  }
+}
 .e-grid .e-headercelldiv {
   margin-left: -5px;
 }
 .emp-check-add .btn.btn-flex{
   text-align: left!important;
+}
+
+codx-view-list-detail .instance-select .nav-link {
+  padding: 4px 7px;
 }

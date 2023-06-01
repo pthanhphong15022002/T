@@ -112,6 +112,8 @@ export class DynamicProcessComponent
   popupEditName: DialogRef;
   popupRelease: DialogRef;
   processRename: DP_Processes;
+  processRelease: DP_Processes;
+  processReleaseClone: DP_Processes;
   processName = '';
   processNameBefore = '';
   user;
@@ -562,7 +564,7 @@ export class DynamicProcessComponent
         this.settingSubmit(data.processNo);
         break;
       case 'DP01016': // phát hành quy trình
-        this.releaseProcess(data.processNo);
+        this.releaseProcess(data);
         break;
     }
     this.isButton = false;
@@ -835,10 +837,10 @@ export class DynamicProcessComponent
       280
     );
   }
+
   releaseProcess(process) {
-    this.processRename = process;
-    this.processName = process['processName'];
-    this.processNameBefore = process['processName'];
+    this.processReleaseClone = process;
+    this.processRelease = JSON.parse(JSON.stringify(process));
     this.popupRelease = this.callfc.openForm(
       this.releaseProcessTemp,
       '',
@@ -847,12 +849,38 @@ export class DynamicProcessComponent
     );
   }
 
-  changeValueInput(event) {
+  saveReleaseProcess(){
+    this.dpService
+        .releaseProcess([this.processRelease])
+        .subscribe((res) => {
+          if (res) {
+            this.processReleaseClone.icon = this.processRelease.icon;
+            this.processReleaseClone.released = this.processRelease.released;
+            this.processReleaseClone.releasedName = this.processRelease.releasedName;
+            this.processReleaseClone.module =  this.processRelease.module;
+            this.processReleaseClone.function = this.processRelease.function;
+            this.processReleaseClone.modifiedOn = res;
+            this.processReleaseClone.modifiedBy = this.user?.userID;
+            this.notificationsService.notifyCode('SYS007');
+            this.popupRelease.close();
+          }
+        });
+  }
+
+  changeValueName(event,data) {
     let value = event?.data;
     if (typeof event?.data === 'string') {
       value = value.trim();
     }
-    this.processName = value;
+    data = value;
+  }
+
+  changeValue(event,data) {
+    let value = event?.data;
+    if (typeof event?.data === 'string') {
+      value = value.trim();
+    }
+    data[event?.field] = value;
   }
 
   async editName() {

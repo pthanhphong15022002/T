@@ -10,6 +10,7 @@ import {
   Optional,
   OnChanges,
   SimpleChanges,
+  TemplateRef,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -156,6 +157,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() addPermissions: Permission[] = [];
   @Input() actionType :string = "" ; 
   @Input() isReferType: boolean = false;
+  @Input() tmpRight?: TemplateRef<any>;
 
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
@@ -169,6 +171,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Output() viewFile = new EventEmitter<any>();
   @Output() fileDelete = new EventEmitter<any>();
   @Output() fileSave = new EventEmitter<any>();
+
   /////////////////////////////////////////////
   @ViewChild('templateupload') public uploadObj: UploaderComponent;
 

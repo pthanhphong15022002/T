@@ -28,6 +28,7 @@ import { CodxShareService } from '../../../codx-share.service';
 import { environment } from 'src/environments/environment';
 import { CodxClearCacheComponent } from '../../../components/codx-clear-cache/codx-clear-cache.component';
 import { SignalRService } from '../../drawers/chat/services/signalr.service';
+import { CodxCreateIndexComponent } from '../../../components/codx-create-index/codx-create-index.component';
 
 @Component({
   selector: 'codx-user-inner',
@@ -253,6 +254,11 @@ export class UserInnerComponent implements OnInit, OnDestroy {
             });
         }
       });
+  }
+
+  createIndex()
+  {
+    this.callSV.openForm(CodxCreateIndexComponent, 'Create Index', 600, 700);
   }
 
   clearTenant() {

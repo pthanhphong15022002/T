@@ -1,5 +1,5 @@
 <ng-container *ngIf="dataSelected?.recID">
-  <codx-detail-tmp
+  <codx-detail-tmp class="leads-detail"
     [header]="header"
     [formModel]="formModel"
     [body]="body"
@@ -10,66 +10,47 @@
     (clickMF)="clickMF($event, dataSelected)"
   >
     <ng-template #header let-data>
-      <div class="d-flex justify-content-start text-info">
-        <div>
-          <i class="icon-add_shopping_cart icon-16 me-2 "></i>
-        </div>
-        <div>
-          <span
-          class="text-gray-700"
-          #businesslineID
-          [innerHTML]="
-          dataSelected?.businesslineID
-              | formatvalue
-                : formModel
-                : 'businesslineID'
-                : businesslineID
-                : 'CMLeads'
-                : 'grvCMLeads'
-              | async
-          "
-        ></span>
-        </div>
+      <div class="d-flex align-items-center justify-content-start text-info py-2">
+        <span class="icon-add_shopping_cart icon-18 me-2 text-gray-700"></span>
+          <span class="text-dark fs-6 fw-bold"
+            #businesslineID
+            [innerHTML]="
+            dataSelected?.businesslineID
+                | formatvalue
+                  : formModel
+                  : 'businesslineID'
+                  : businesslineID
+                  : 'CMLeads'
+                  : 'grvCMLeads'
+                | async
+            "
+          ></span>
       </div>
-      <div class="container_detail mt-3">
-        <div class="d-flex justify-content-between pb-3">
-          <div>
-            <div class="d-flex align-items-stretch">
-              <div>
-                <div
-                  class="fw-bold fs-6 text-dark codx-text-overflow-1line pb-2"
-                >
-                 {{dataSelected.leadName}}
-                </div>
-                <div class="d-flex align-items-start me-4 mb-1">
-                  <div class="me-3 pe-5">
-                    <span
-                      class="icon-location_on text-primary icon-16 me-1"
-                    ></span>
-                    <span
-                    class="fs-7"
-                    #addresses
-                    [innerHTML]="
-                    dataSelected?.addresses
-                        | formatvalue
-                          : formModel
-                          : 'addresses'
-                          : addresses
-                          : 'CMLeads'
-                          : 'grvCMLeads'
-                        | async
-                    "
-                  ></span>
-                  </div>
-                </div>
-              </div>
+      <div class="container_detail mt-1">
+        <div class="d-flex justify-content-between mb-3">
+          <div class="d-flex flex-column w-100">
+            <div class="fw-bold fs-5 text-dark mb-1 line-clamp line-clamp-1">
+              {{dataSelected.leadName}}
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="icon-location_on icon-16 text-gray-600 me-1"></span>
+              <span class="text-gray-600"
+                #addresses
+                [innerHTML]="
+                dataSelected?.addresses
+                    | formatvalue
+                      : formModel
+                      : 'addresses'
+                      : addresses
+                      : 'CMLeads'
+                      : 'grvCMLeads'
+                    | async
+                "
+              ></span>
             </div>
           </div>
-          <div></div>
-          <div>
-            <div class="me-2 badge badge-light-primary">
-              <span
-              class="fs-7"
+          <div class="ms-5">
+            <span class="badge badge-light-primary"
               #status
               [innerHTML]="
               dataSelected?.status
@@ -82,70 +63,41 @@
                   | async
               "
             ></span>
-
-            </div>
           </div>
         </div>
-        <div class="d-flex justify-content-between pb-1">
-          <div class="d-flex flex-row">
-            <div class="d-flex justify-content-start">
-              <codx-label default="Lĩnh vực hoạt động:" class="fs-6 me-1"></codx-label>
-              <div class="fs-6">
-                <span
-                  class="fs-7"
-                  #industries
-                  [innerHTML]="
-                    dataSelected?.industries
-                      | formatvalue
-                        : formModel
-                        : 'industries'
-                        : industries
-                        : 'CMLeads'
-                        : 'grvCMLeads'
-                      | async
-                  "
-                ></span>
-              </div>
-            </div>
-          </div>
-          <div class="d-flex justify-content-start">
-          </div>
-          <div class="d-flex align-items-stretch">
-              <codx-label
-                default="Nhân viên bán hàng:"
-                class="fs-6 me-2"
-              ></codx-label>
-                <codx-imgs
-                [isToolTip]="true"
-                [width]="25"
-                [objectId]="dataSelected.salespersonID"
-                ojectType="AD_Users"
-                [numberImages]="1"
-              >
-              </codx-imgs>
+        <div class="d-flex justify-content-between mb-2">
+          <div class="d-flex align-items-center">
+            <codx-label default="Lĩnh vực hoạt động:" class="fw-bold me-2"></codx-label>
+            <span
+                class="text-gray-700 line-clamp line-clamp-1"
+                #industries
+                [innerHTML]="
+                  dataSelected?.industries
+                    | formatvalue
+                      : formModel
+                      : 'industries'
+                      : industries
+                      : 'CMLeads'
+                      : 'grvCMLeads'
+                    | async
+                "
+              ></span>
           </div>
         </div>
-        <div class="d-flex justify-content-between pb-3">
-          <div class="d-flex flex-row">
-            <div class="d-flex justify-content-start">
-              <codx-label default="Nhu cầu:" class="fs-6 me-1"></codx-label>
-              <div class="fs-6">
-                <span
-                  class="fs-7"
-                  #note
-                  [innerHTML]="
-                    dataSelected?.note
-                      | formatvalue
-                        : formModel
-                        : 'note'
-                      | async
-                  "
-                ></span>
-              </div>
-            </div>
-          </div>
+        <div class="d-flex align-items-top mb-2">
+          <codx-label default="Nhu cầu:" class="fw-bold me-2 text-nowrap"></codx-label>
+          <span class="text-gray-600 line-clamp line-clamp-2"
+              #note
+              [innerHTML]="
+                dataSelected?.note
+                  | formatvalue
+                    : formModel
+                    : 'note'
+                  | async
+              "
+            ></span>
         </div>
-        <div class="d-flex justify-content-start">
+        <div class="mb-2">
           <codx-tag
             [entityName]="formModel.entityName"
             [disabled]="true"
@@ -155,84 +107,70 @@
           </codx-tag>
         </div>
 
-        <div class="d-flex justify-content-between">
-          <div>
-            <div class="d-flex justify-content-start py-2" *ngIf="contactPerson != null">
-              <codx-label
+        <div class="d-flex justify-content-between mb-3">
+          <div class="d-flex flex-column" *ngIf="contactPerson != null">
+            <div class="mb-2">
+              <codx-label class="text-dark fw-bold"
                 default="Liên hệ chính:"
-                class="fs-6 me-1"
-              ></codx-label>
-              <div class="fs-6">
-                <div class="d-flex align-items-stretch">
-                  <div class="pe-2 avatar-center">
-                    <codx-img
-                      [objectId]="contactPerson?.recID"
-                      [objectName]="contactPerson?.contactName"
-                      [imgOn]="contactPerson?.modifiedOn"
-                      [objectType]="'CM_Contacts'"
-                      [width]="30"
-                    >
-                    </codx-img>
+                ></codx-label>
+            </div>
+            <div class="d-flex align-items-start">
+              <div class="me-4">
+                <codx-img
+                  [objectId]="contactPerson?.recID"
+                  [objectName]="contactPerson?.contactName"
+                  [imgOn]="contactPerson?.modifiedOn"
+                  [objectType]="'CM_Contacts'"
+                  [width]="30"
+                >
+                </codx-img>
+              </div>
+              <div class="d-flex flex-column">
+                <div class="fw-bold text-dark fs-6">
+                  {{ contactPerson?.contactName }}
+                </div>
+                <div class="fs-7 text-gray-600 mb-1">
+                  {{ contactPerson?.jobTitle }}
+                </div>
+                <div class="d-flex align-items-start">
+                  <div class="d-flex align-items-center me-5">
+                    <span class="icon-phone_android text-primary icon-16 me-2"></span>
+                    <span class="text-gray-800">{{ contactPerson?.mobile }}</span>
                   </div>
-                  <div>
-                    <div
-                      class="fw-bold fs-6 text-dark codx-text-overflow-1line pb-2"
-                    >
-                      {{ contactPerson?.contactName }}
-                    </div>
-                    <div
-                    class="fw-bold fs-6 text-dark codx-text-overflow-1line pb-2"
-                  >
-                    {{ contactPerson?.jobTitle }}
-                  </div>
-                    <div class="d-flex align-items-start me-4 mb-1">
-                      <div class="me-3 pe-5">
-                        <span
-                          class="icon-phone_android text-primary icon-16 me-1"
-                        ></span>
-                        <span class="text-gray-900">
-                          {{ contactPerson?.mobile }}</span
-                        >
-                      </div>
-                      <div>
-                        <span
-                          class="icon-print_disabled icon-16 me-1 text-gray-500"
-                        ></span>
-                        <span class="text-gray-900">
-                          {{ contactPerson?.personalEmail }}</span
-                        >
-                      </div>
-                    </div>
+                  <div class="d-flex align-items-center">
+                    <span class="icon-print_disabled icon-16 me-2 text-gray-600"></span>
+                    <span class="text-gray-800">{{ contactPerson?.personalEmail }}</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div></div>
           <div class="d-flex flex-column">
-                <div>              <codx-label
+              <div class="mb-2">
+                <codx-label
                   default="Bán hàng/Tư vấn"
-                  class="fs-6 me-1"
-                ></codx-label></div>
-                <div class="d-flex flex-row">
-                  <codx-imgs
-                    [isToolTip]="true"
-                    [width]="30"
-                    [objectId]="dataSelected.owner"
-                    ojectType="AD_Users"
-                    [numberImages]="1"
-                  >
-                  </codx-imgs>
-
-                  <codx-imgs
+                  class="text-dark fw-bold"
+                ></codx-label>
+              </div>
+              <div class="h-30px d-flex align-items-center">
+                <codx-imgs
                   [isToolTip]="true"
                   [width]="30"
-                  [objectId]="dataSelected.consultantID"
+                  [objectId]="dataSelected.salespersonID"
                   ojectType="AD_Users"
                   [numberImages]="1"
                 >
                 </codx-imgs>
-                </div>
+
+                <codx-imgs
+                  [isToolTip]="true"
+                  [width]="30"
+                  [objectId]="dataSelected?.consultantID"
+                  ojectType="AD_Users"
+                  [numberImages]="1"
+                >
+                </codx-imgs>
+              </div>
           </div>
         </div>
 

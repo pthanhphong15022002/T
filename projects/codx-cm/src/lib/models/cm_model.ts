@@ -153,8 +153,8 @@ export class CM_Deals {
   businessLineID: string;
   memo: string;
   tags: string;
-  dealValue: number;
-  probability: number;
+  dealValue: number = 0;
+  probability: number = 0;
   expectedClosed: Date;
   status: string = "1";
   statusCodeID: string;
@@ -489,9 +489,9 @@ export class CM_Contracts {
   delDeadline: Date;// Hạn giao hàng
 
   delActualDate: Date;// Ngày giao hàng
-  delAddress: string;
+  delAddress: string; // Địa chỉ giao hàng
   delPhone: string;
-  delContactID: string;
+  delContactID: string; // Liên hệ giao hàng
 
   // Điều khoản hồ sơ liên quan -- memo
 }

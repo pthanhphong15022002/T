@@ -17,7 +17,6 @@ export class NosubAsideComponent extends LayoutBaseComponent {
   ) { 
     super(inject);
     this.module = 'AC';
-    this.layoutModel.toolbarFixed = false;
   }
 
   onInit(): void { }
@@ -25,7 +24,7 @@ export class NosubAsideComponent extends LayoutBaseComponent {
   onAfterViewInit(): void { }
 
   childMenuClick(e) {
-    this.childMenu.next(e);
+    this.childMenu.next(e.recID);
   }
   menuClick(e) {}
   openFormNoteDrawer() {

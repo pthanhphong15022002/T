@@ -234,17 +234,18 @@ export class StagesDetailComponent implements OnInit {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
 
-    this.stepID= this.instance.stepID
-    this.permissionCloseInstances=this.instance?.permissionCloseInstances
-    this.isDelete=this.instance.delete
-    this.isEdit=this.instance.edit
-    this.isUpdate=
-    this.instance.write &&
+    this.stepID = this.instance.stepID;
+    this.permissionCloseInstances = this.instance?.permissionCloseInstances;
+    this.isDelete = this.instance.delete;
+    this.isEdit = this.instance.edit;
+    this.isUpdate =
+      this.instance.write &&
       !this.instance.closed &&
       (this.instance.status == '1' || this.instance.status == '2') &&
-      this.dataStep.stepStatus < '2' && this.instance.approveStatus != '3'
-    this.isCreate=this.instance.create
-    this.isClosed=this.instance.closed
+      this.dataStep.stepStatus < '2' &&
+      this.instance.approveStatus != '3';
+    this.isCreate = this.instance.create;
+    this.isClosed = this.instance.closed;
     this.isStart = this.instance?.status == 2 ? true : false;
     if (changes['dataStep']) {
       if (changes['dataStep'].currentValue != null) {
@@ -295,10 +296,9 @@ export class StagesDetailComponent implements OnInit {
       } else {
         this.dataStep = null;
       }
-      if(!this.titleReason){
+      if (!this.titleReason) {
         this.getValueListReason(changes['dataStep']);
       }
-
     }
   }
 
@@ -404,35 +404,34 @@ export class StagesDetailComponent implements OnInit {
     });
   }
 
-
-
- 
-
-  async openPopupTaskGroup(data?: any, type = '') {
-   
-  }
+  async openPopupTaskGroup(data?: any, type = '') {}
   async openUpdateProgress(data?: any) {
     let dataInput = {
       data: this.step,
-      type: "P",
+      type: 'P',
       step: this.step,
     };
     let popupTask = this.callfc.openForm(
-      UpdateProgressComponent,'',
-      550, 400,
-      '', 
-      dataInput);
+      UpdateProgressComponent,
+      '',
+      550,
+      400,
+      '',
+      dataInput
+    );
 
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
     let dataProgress = dataPopupOutput?.event;
     console.log(dataProgress);
-    if(dataProgress){
+    if (dataProgress) {
       this.step.progress = dataProgress?.progressStep;
       this.step.note = dataProgress?.note;
-      this.step.actualEnd = dataProgress?.actualEnd;    
-      this.isChangeProgress.emit({recID: this.step?.recID, progress: this.step?.progress}); 
+      this.step.actualEnd = dataProgress?.actualEnd;
+      this.isChangeProgress.emit({
+        recID: this.step?.recID,
+        progress: this.step?.progress,
+      });
     }
-    
   }
 
   updateProgressStep() {
@@ -451,13 +450,14 @@ export class StagesDetailComponent implements OnInit {
           this.notiService.notifyCode('SYS006');
           this.popupUpdateProgress.close();
           this.progressEmit.emit({
-            stepID: this.step.recID, progress: progress
+            stepID: this.step.recID,
+            progress: progress,
           });
         }
       });
   }
 
-  continueStep(isTaskEnd){
+  continueStep(isTaskEnd) {
     let isShowFromTaskAll = false;
     let isShowFromTaskEnd = !this.checkContinueStep(true);
     let isContinueTaskEnd = isTaskEnd;
@@ -478,23 +478,27 @@ export class StagesDetailComponent implements OnInit {
 
   checkContinueStep(isDefault) {
     let check = true;
-    let listTask = isDefault ? this.step?.tasks?.filter(task => task?.requireCompleted) : this.step?.tasks;
-    if(listTask?.length <= 0){
+    let listTask = isDefault
+      ? this.step?.tasks?.filter((task) => task?.requireCompleted)
+      : this.step?.tasks;
+    if (listTask?.length <= 0) {
       return isDefault ? true : false;
-    } 
-    for(let task of listTask){
-      if(task.progress != 100){
+    }
+    for (let task of listTask) {
+      if (task.progress != 100) {
         check = false;
         break;
       }
     }
     return check;
-   
   }
 
-  changeProgressStep(event){
-    if(event){
-      this.isChangeProgress.emit({recID: this.step?.recID, progress: this.step?.progress});
+  changeProgressStep(event) {
+    if (event) {
+      this.isChangeProgress.emit({
+        recID: this.step?.recID,
+        progress: this.step?.progress,
+      });
     }
   }
 
@@ -711,9 +715,12 @@ export class StagesDetailComponent implements OnInit {
   }
 
   checkRole(listRoleStep) {
-    if (this.permissionCloseInstances ||
+    if (
+      this.permissionCloseInstances ||
       this.listUserIdRole?.some((id) => id == this.user.userID) ||
-      listRoleStep?.some((role) => role.objectID == this.user.userID && role.roleType == 'S')
+      listRoleStep?.some(
+        (role) => role.objectID == this.user.userID && role.roleType == 'S'
+      )
     ) {
       this.isRoleAll = true;
     } else if (this.dataStep?.roles?.length > 0) {
@@ -724,7 +731,8 @@ export class StagesDetailComponent implements OnInit {
         ) || false;
     }
     this.leadtimeControl = this.dataStep?.leadtimeControl || false; //sửa thời hạn công việc mặc định
-    this.progressTaskGroupControl = this.dataStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
+    this.progressTaskGroupControl =
+      this.dataStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
     this.progressStepControl = this.dataStep?.progressStepControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
   }
 
@@ -941,10 +949,10 @@ export class StagesDetailComponent implements OnInit {
           }
         }
         this.titleReason = dataChange.currentValue?.isSuccessStep
-        ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
-       : dataChange.currentValue?.isFailStep
-       ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
-       : '';
+          ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
+          : dataChange.currentValue?.isFailStep
+          ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
+          : '';
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -966,5 +974,8 @@ export class StagesDetailComponent implements OnInit {
     } else {
       return null;
     }
+  }
+  saveAssignStepTask(e) {
+    this.saveAssign.emit(e);
   }
 }

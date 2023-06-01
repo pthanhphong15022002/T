@@ -20,6 +20,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { ChartOfAccounts } from '../../../models/ChartOfAccounts.model';
+import { CodxAcService } from '../../../codx-ac.service';
 
 @Component({
   selector: 'lib-pop-add-accounts',
@@ -46,6 +47,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
     override cache: CacheService,
     override api: ApiHttpService,
     private dt: ChangeDetectorRef,
+    private acService: CodxAcService,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
@@ -59,7 +61,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       this.chartOfAccounts.detail = true;
     }
     this.cache
-      .gridViewSetup('ChartOfAccounts', 'grvChartOfAccounts')
+      .gridViewSetup('ChartOfAccounts', 'grvAccountsAC')
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
@@ -79,6 +81,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    this.form.formGroup.patchValue(this.chartOfAccounts);
   }
   //#endregion
 
@@ -134,53 +137,43 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
 
   //#region CRUD
   onSave() {
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
+    if (
+      !this.acService.validateFormData(this.form.formGroup, this.gridViewSetup)
+    ) {
       return;
-    } else {
-      if (this.formType == 'add' || this.formType == 'copy') {
-        this.checkLoancontrol();
-        this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'AddAsync';
-            opt.className = 'AccountsBusiness';
-            opt.assemblyName = 'AC';
-            opt.service = 'AC';
-            opt.data = [this.chartOfAccounts];
-            return true;
-          })
-          .subscribe((res) => {
-            if (res.save) {
-              this.dialog.close(res.save);
-            } else {
-              this.notification.notifyCode(
-                'SYS031',
-                0,
-                '"' + this.chartOfAccounts.accountID + '"'
-              );
-              return;
-            }
-          });
-      }
-      if (this.formType == 'edit') {
-        this.checkLoancontrol();
-        this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'UpdateAsync';
-            opt.className = 'AccountsBusiness';
-            opt.assemblyName = 'AC';
-            opt.service = 'AC';
-            opt.data = [this.chartOfAccounts];
-            return true;
-          })
-          .subscribe((res) => {
-            if (res.save || res.update) {
-              this.dialog.close();
-              this.dt.detectChanges();
-            }
-          });
-      }
+    }
+    if (this.formType == 'add' || this.formType == 'copy') {
+      this.checkLoancontrol();
+      this.dialog.dataService
+        .save((opt: RequestOption) => {
+          opt.data = [this.chartOfAccounts];
+        })
+        .subscribe((res) => {
+          if (res && !res.save.error) {
+            this.dialog.close(res.save);
+          } else {
+            this.notification.notifyCode(
+              'SYS031',
+              0,
+              '"' + this.chartOfAccounts.accountID + '"'
+            );
+            return;
+          }
+        });
+    }
+    if (this.formType == 'edit') {
+      this.checkLoancontrol();
+      this.dialog.dataService
+        .save((opt: RequestOption) => {
+          opt.methodName = 'UpdateAsync';
+          opt.data = [this.chartOfAccounts];
+        })
+        .subscribe((res) => {
+          if (res.save || res.update) {
+            this.dialog.close();
+            this.dt.detectChanges();
+          }
+        });
     }
   }
   //#endregion
