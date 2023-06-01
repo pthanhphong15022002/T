@@ -108,20 +108,6 @@
           </div>
           <div class="d-flex justify-content-start">
           </div>
-          <div class="d-flex align-items-stretch">
-              <codx-label
-                default="Nhân viên bán hàng:"
-                class="fs-6 me-2"
-              ></codx-label>
-                <codx-imgs
-                [isToolTip]="true"
-                [width]="25"
-                [objectId]="dataSelected.salespersonID"
-                ojectType="AD_Users"
-                [numberImages]="1"
-              >
-              </codx-imgs>
-          </div>
         </div>
         <div class="d-flex justify-content-between pb-3">
           <div class="d-flex flex-row">
@@ -214,18 +200,18 @@
                 ></codx-label></div>
                 <div class="d-flex flex-row">
                   <codx-imgs
-                    [isToolTip]="true"
-                    [width]="30"
-                    [objectId]="dataSelected.owner"
-                    ojectType="AD_Users"
-                    [numberImages]="1"
-                  >
-                  </codx-imgs>
+                  [isToolTip]="true"
+                  [width]="30"
+                  [objectId]="dataSelected?.salespersonID"
+                  ojectType="AD_Users"
+                  [numberImages]="1"
+                >
+                </codx-imgs>
 
                   <codx-imgs
                   [isToolTip]="true"
                   [width]="30"
-                  [objectId]="dataSelected.consultantID"
+                  [objectId]="dataSelected?.consultantID"
                   ojectType="AD_Users"
                   [numberImages]="1"
                 >
