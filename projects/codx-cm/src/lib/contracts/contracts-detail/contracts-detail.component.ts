@@ -129,7 +129,6 @@ export class ContractsDetailComponent extends UIComponent{
     { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
     { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
     { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
-    { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: null},
   ];
   constructor(
     private inject: Injector,
@@ -167,12 +166,6 @@ export class ContractsDetailComponent extends UIComponent{
   }
 
   ngAfterViewInit() {
-    let index = this.tabControl.findIndex(item => item.name == 'Contract');
-    if(index >= 0){
-      let contract = { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract};
-      this.tabControl.splice(index,1,contract)
-    }
-
     this.views = [
       {
         type: ViewType.listdetail,
@@ -260,12 +253,43 @@ export class ContractsDetailComponent extends UIComponent{
       case 'SYS04':
         this.copyContract(data);
         break;
+      case 'CM0204_3':
+        //tạo hợp đồng gia hạn
+        this.addContractAdjourn(data)
+        break;
+      case 'CM0204_5':
+        //Đã giao hàng
+        this.updateDelStatus(data);
+        break;
+      case 'CM0204_6':
+        //hoàn tất hợp đồng
+        this.completedContract(data);
+        break;
+      case 'CM0204_1':
+        //Gửi duyệt
+       
+        break;
+      case 'CM0204_2':
+        //Hủy yêu cầu duyệt
+       
+        break;
     }
   }
 
   async addContract(){
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = new CM_Contracts();
+      let contractOutput = await this.openPopupContract(null, "add",contracts);
+    })
+  }
+
+  async addContractAdjourn(data: CM_Contracts){
+    this.view.dataService.addNew().subscribe(async (res) => {
+      let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
+      contracts.contractType = '2';
+      contracts.quotationID = null;
+      contracts.refID = contracts.recID;
+      delete contracts['id'];
       let contractOutput = await this.openPopupContract(null, "add",contracts);
     })
   }
@@ -282,6 +306,33 @@ export class ContractsDetailComponent extends UIComponent{
       let dataCopy = JSON.parse(JSON.stringify(contract));
       let contractOutput = await this.openPopupContract(null,"copy",dataCopy);
     });
+  }
+
+  updateDelStatus(contract: CM_Contracts){
+    if(contract?.recID){
+      this.contractService.updateDelStatus(contract?.recID).subscribe((res) => {
+        if (res) {
+          contract.delStatus = "2";
+          this.notiService.notifyCode('SYS007');   
+        }
+      });
+    }
+    
+  }
+
+  completedContract(contract: CM_Contracts){
+    this.notiService
+      .alertCode('Bạn có muốn hoàn tất hợp đồng này', null, ['"' + contract?.contractName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.contractService.updateStatus(contract?.recID).subscribe((res) => {
+            if (res) {
+              contract.status = "4";
+              this.notiService.notifyCode('SYS007');   
+            }
+          });
+        }
+      });
   }
 
   beforeDelete(option: RequestOption, data) {

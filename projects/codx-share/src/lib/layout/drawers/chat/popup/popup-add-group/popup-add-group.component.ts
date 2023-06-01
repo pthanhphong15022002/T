@@ -160,11 +160,11 @@ export class AddGroupChatComponent implements OnInit,AfterViewInit {
               if(res)
               {
                 this.signalRSV.sendData("AddNewGroup",this.group.groupID);
-                this.notifiSV.notify("CHAT004");
+                this.notifiSV.notifyCode("CHAT004");
                 this.dialogRef.close(res);
               }
               else
-                this.notifiSV.notify("CHAT005");
+                this.notifiSV.notifyCode("CHAT005");
               this.loading = true;
             });
         });
@@ -181,11 +181,11 @@ export class AddGroupChatComponent implements OnInit,AfterViewInit {
             if(res)
             {
               this.signalRSV.sendData("AddNewGroup",this.group.groupID);
-              this.notifiSV.notify("CHAT004");
+              this.notifiSV.notifyCode("CHAT004");
               this.dialogRef.close(res);
             }
             else
-              this.notifiSV.notify("TCHAT005");
+              this.notifiSV.notifyCode("CHAT005");
             this.loading = true;
           });
       }

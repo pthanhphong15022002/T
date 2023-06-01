@@ -65,6 +65,7 @@ export class DynamicProcessComponent
   @ViewChild('templateViewCard', { static: true })
   templateViewCard: TemplateRef<any>;
   @ViewChild('editNameProcess') editNameProcess: TemplateRef<any>;
+  @ViewChild('releaseProcess') releaseProcessTemp: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('footerButton') footerButton: TemplateRef<any>;
 
@@ -109,7 +110,10 @@ export class DynamicProcessComponent
   linkAvt = '';
   TITLENAME = 'Thay đổi tên quy trình';
   popupEditName: DialogRef;
+  popupRelease: DialogRef;
   processRename: DP_Processes;
+  processRelease: DP_Processes;
+  processReleaseClone: DP_Processes;
   processName = '';
   processNameBefore = '';
   user;
@@ -559,6 +563,9 @@ export class DynamicProcessComponent
       case 'DP01015': // thiết lập quy trình duyệt
         this.settingSubmit(data.processNo);
         break;
+      case 'DP01016': // phát hành quy trình
+        this.releaseProcess(data);
+        break;
     }
     this.isButton = false;
   }
@@ -831,12 +838,49 @@ export class DynamicProcessComponent
     );
   }
 
-  changeValueInput(event) {
+  releaseProcess(process) {
+    this.processReleaseClone = process;
+    this.processRelease = JSON.parse(JSON.stringify(process));
+    this.popupRelease = this.callfc.openForm(
+      this.releaseProcessTemp,
+      '',
+      500,
+      600
+    );
+  }
+
+  saveReleaseProcess(){
+    this.dpService
+        .releaseProcess([this.processRelease])
+        .subscribe((res) => {
+          if (res) {
+            this.processReleaseClone.icon = this.processRelease.icon;
+            this.processReleaseClone.released = this.processRelease.released;
+            this.processReleaseClone.releasedName = this.processRelease.releasedName;
+            this.processReleaseClone.module =  this.processRelease.module;
+            this.processReleaseClone.function = this.processRelease.function;
+            this.processReleaseClone.modifiedOn = res;
+            this.processReleaseClone.modifiedBy = this.user?.userID;
+            this.notificationsService.notifyCode('SYS007');
+            this.popupRelease.close();
+          }
+        });
+  }
+
+  changeValueName(event,data) {
     let value = event?.data;
     if (typeof event?.data === 'string') {
       value = value.trim();
     }
-    this.processName = value;
+    data = value;
+  }
+
+  changeValue(event,data) {
+    let value = event?.data;
+    if (typeof event?.data === 'string') {
+      value = value.trim();
+    }
+    data[event?.field] = value;
   }
 
   async editName() {

@@ -79,6 +79,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    this.form.formGroup.patchValue(this.chartOfAccounts);
   }
   //#endregion
 

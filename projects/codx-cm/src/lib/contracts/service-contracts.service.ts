@@ -82,4 +82,22 @@ export class ContractsService {
     );
   }
 
+  updateDelStatus(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'UpdateDelStatusAsync',
+      data
+    );
+  }
+
+  updateStatus(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'UpdateStatusAsync',
+      data
+    );
+  }
+
 }
