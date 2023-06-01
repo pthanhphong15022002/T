@@ -105,6 +105,47 @@ export class CmcustomerDetailComponent implements OnInit {
     // this.getGridviewSetup();
     // this.getVllByGridViewSetupContact();
     this.getFormModelAddress();
+    if(this.funcID == 'CM0101' || this.funcID == 'CM0102'){
+      this.tabControl = [
+        { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+        {
+          name: 'Comment',
+          textDefault: 'Thảo luận',
+          isActive: false,
+          template: null,
+        },
+        {
+          name: 'Attachment',
+          textDefault: 'Đính kèm',
+          isActive: false,
+          template: null,
+        },
+        { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
+        {
+          name: 'References',
+          textDefault: 'Liên kết',
+          isActive: false,
+          template: null,
+        }
+      ];
+    }else{
+      this.tabControl = [
+        { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+        {
+          name: 'Comment',
+          textDefault: 'Thảo luận',
+          isActive: false,
+          template: null,
+        },
+        {
+          name: 'Attachment',
+          textDefault: 'Đính kèm',
+          isActive: false,
+          template: null,
+        }
+      ];
+    }
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -128,7 +169,7 @@ export class CmcustomerDetailComponent implements OnInit {
     this.loaded = false;
     this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
     // this.getListContactByObjectID(this.dataSelected?.recID);
-    this.getAdressNameByIsDefault(this.dataSelected?.recID, this.entityName);
+    this.addressNameCM = this.dataSelected?.address;
     setTimeout(() => {
       this.viewTag = this.dataSelected?.tags
     }, 100);

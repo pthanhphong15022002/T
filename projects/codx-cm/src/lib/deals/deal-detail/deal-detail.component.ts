@@ -44,6 +44,7 @@ export class DealDetailComponent  implements OnInit {
 
   nameDetail = '';
   tabClicked = '';
+  test:any;
 
   tabDetail = [
   ]
@@ -52,6 +53,7 @@ export class DealDetailComponent  implements OnInit {
     private codxCmService: CodxCmService,
   ) {
     this.listTab(this.funcID);
+    // this.test='Dịch vụ;VIP;Năm 2024';
   }
 
   ngOnInit(): void {

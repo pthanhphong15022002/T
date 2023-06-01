@@ -116,11 +116,14 @@ export class PopupAddDealComponent
   model: any;
   listInstanceSteps: any[] = [];
 
-  customerID:string = '';
-  customerOld: string = '';
+  customerID:string = '';customerOld: string;
+;
   lstContactCustomer:any[] = [];
   lstContactDeal:any[] = [];
   lstContactDelete:any[] = [];
+  lstContactAdd:any[] = [];
+  lstContactOld:any[] = [];
+  isLoad:boolean = true;
   customerName:any;
 
   constructor(
@@ -190,7 +193,6 @@ export class PopupAddDealComponent
       if (e.data) {
         var tmp = new CM_Contacts();
         tmp = JSON.parse(JSON.stringify(e.data));
-        tmp.recID = Util.uid();
         tmp.refID = e.data.recID;
         if (!this.lstContactDeal.some((x) => x.refID == e?.data?.recID)) {
           this.lstContactDeal.push(tmp);
@@ -213,7 +215,14 @@ export class PopupAddDealComponent
       } else {
         this.lstContactCustomer = [];
       }
-      this.lstContactDeal = [];
+
+      if(this.action === this.actionEdit && this.deal.customerID === this.customerIDOld) {
+        this.lstContactDeal = this.lstContactOld;
+      }
+      else {
+        this.lstContactDeal = [];
+      }
+
     });
   }
 
@@ -221,6 +230,11 @@ export class PopupAddDealComponent
     this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
       if (res && res.length > 0) {
         this.lstContactDeal = res;
+
+        if(this.action === this.actionEdit && this.isLoad) {
+          this.lstContactOld =  JSON.parse(JSON.stringify(res)); ;
+          this.isLoad = false;
+        }
       }
     });
   }
@@ -232,6 +246,14 @@ export class PopupAddDealComponent
   }
 
   saveOpportunity() {
+    if (!this.deal?.businessLineID) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['BusinessLineID']?.headerText + '"'
+      );
+      return;
+    }
     if (!this.deal?.processID) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -253,14 +275,6 @@ export class PopupAddDealComponent
         'SYS009',
         0,
         '"' + this.gridViewSetup['CustomerID']?.headerText + '"'
-      );
-      return;
-    }
-    if (!this.deal?.category) {
-      this.notificationsService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['Category']?.headerText + '"'
       );
       return;
     }
@@ -307,6 +321,11 @@ export class PopupAddDealComponent
     if (!ischeckFormat) {
       this.notificationsService.notifyCode(messageCheckFormat);
       return;
+    }
+    if(this.lstContactDeal != null && this.lstContactDeal.length > 0){
+      this.lstContactDeal.forEach((res) => {
+        res.recID = Util.uid();
+      });
     }
     this.convertDataInstance(this.deal, this.instance);
     this.updateDateDeal(this.instance, this.deal);
@@ -454,11 +473,19 @@ export class PopupAddDealComponent
       });
   }
   beforeSave(option: RequestOption) {
-    var datas = [this.deal, this.lstContactDeal, this.lstContactDeal];
+    var datas = [];
+    if(this.action !== this.actionEdit) {
+       datas = [this.deal, this.lstContactDeal];
+    }
+    else {
+      this.covnertListContact(this.lstContactOld,this.lstContactDeal)
+      datas = [this.deal, this.customerIDOld, this.lstContactDeal, this.lstContactAdd,this.lstContactDelete];
+    }
+
     option.methodName =
       this.action !== this.actionEdit ? 'AddDealAsync' : 'EditDealAsync';
     option.className = 'DealsBusiness';
-    option.data = this.action != this.actionEdit ? datas : [this.deal, this.customerIDOld];
+    option.data = datas;
     return true;
   }
 
@@ -707,5 +734,21 @@ export class PopupAddDealComponent
   setTitle(e: any) {
     this.title = this.titleAction;
     this.changeDetectorRef.detectChanges();
+  }
+
+  covnertListContact(listOld, listNew){
+  if(this.deal.customerID === this.customerIDOld ) {
+    const setOld = new Set(listOld.map(item => item.contactID));
+    const setNew = new Set(listNew.map(item => item.contactID));
+    const list1 = listOld.filter(item => !setNew.has(item.contactID));
+    const list2 = listNew.filter(item => !setOld.has(item.contactID));
+    const list3 = listOld.filter(item => setNew.has(item.contactID));
+    this.lstContactDelete = list1;
+    this.lstContactAdd = list2;
+    this.lstContactDeal = list3;
+  }
+  else {
+    this.lstContactDelete = this.lstContactOld;
+  }
   }
 }

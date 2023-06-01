@@ -189,7 +189,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.functionID = dt?.data?.functionID;
     this.taskCopy = dt?.data?.taskCopy;
     this.disabledProject = dt?.data?.disabledProject;
-    this.isOtherModule = dt?.data?.isOtherModule
+    this.isOtherModule = dt?.data?.isOtherModule;
 
     //da doi lai cho phu hop
     // this.action = dt?.data[1];
@@ -1200,6 +1200,21 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
                     this.dataReferences.unshift(ref);
                   }
                 });
+            }
+          });
+        break;
+      case 'DP_Instances_Steps_Tasks':
+        this.api
+          .execSv<any>(
+            'DP',
+            'DP',
+            'InstancesBusiness',
+            'GetTempReferenceByRefIDAsync',
+            task.refID
+          )
+          .subscribe((result) => {
+            if (result && result?.length > 0) {
+              this.dataReferences = result;
             }
           });
         break;

@@ -23,16 +23,16 @@
         default="Thông tin chung của báo cáo"
       ></codx-label>
     </h6>
-    <div class="container" *ngIf="data">
+    <div class="container" id="reportInfo" *ngIf="data">
       <div class="row mt-5">
-        <div class="col-10">
+        <div class="col-12">
           <div class="border border-secondary h-100">
             <!-- <div *ngIf="!checkFile" class="ms-3 mt-2">
               <span >{{data?.reportName}}</span>
             </div> -->
 
-            <div class="m-3" *ngIf="rootFunction">
-              <codx-attachment
+            <div class="m-3">
+              <!-- <codx-attachment
                 #attachment
                 [objectType]="'SYS_ReportList'"
                 hideBtnSave="1"
@@ -47,11 +47,25 @@
                 [idBrowse]="'add'"
                 [allowExtensions]="'.rdl, .rdlc'"
               >
-              </codx-attachment>
+              </codx-attachment> -->
+
+              <ejs-uploader
+                #uploader
+                id="preloadfileupload"
+                [autoUpload]="false"
+                [multiple]="false"
+                locale="vi"
+                [allowedExtensions]="'.rdl,.rdlc'"
+                (selected)="fileSelected($event)"
+                (removing)="onFileRemove($event)"
+                [files]="files"
+                (fileListRendering)="fileRendering($event)"
+              >
+              </ejs-uploader>
             </div>
           </div>
         </div>
-        <div class="col-2 d-flex justify-content-end">
+        <!-- <div class="col-2 d-flex justify-content-end">
           <button
             type="button"
             class="btn btn-light-primary float-right h-40px"
@@ -62,7 +76,7 @@
               <codx-label name="UploadFile" default="Upload File"></codx-label>
             </span>
           </button>
-        </div>
+        </div> -->
       </div>
       <div class="row mt-5">
         <div class="col-12">
@@ -169,19 +183,22 @@
       ></codx-label>
     </h6>
     <div class="mt-5 overflow-x-auto">
-      <ejs-grid
-        [dataSource]="parameters"
-        height="550"
-      >
+      <ejs-grid [dataSource]="parameters" height="550">
         <e-columns>
           <e-column width="80">
             <ng-template #template let-data>
-              <button class="btn btn-sm btn-light-primary onhover" (click)="editParam(data)">
+              <button
+                class="btn btn-sm btn-light-primary onhover"
+                (click)="editParam(data)"
+              >
                 <div class="w-100 d-flex justify-content-between">
                   <i class="bi bi-pen"></i>
                 </div>
               </button>
-              <button class="btn btn-sm btn-light-danger onhover" (click)="deleteParam(data)">
+              <button
+                class="btn btn-sm btn-light-danger onhover"
+                (click)="deleteParam(data)"
+              >
                 <div class="w-100 d-flex justify-content-between">
                   <i class="bi bi-trash"></i>
                 </div>
@@ -472,33 +489,54 @@
 
 <ng-template #tabTemplate>
   <div class="form-group w-100">
-    <h2><codx-label name="lblExcelTemplate" formName="sys" default="Excel Template"></codx-label></h2>
-    <h6 class="text-muted">
+    <h2>
       <codx-label
-        name="lblTemplates"
-        default="Mẫu Template Excel"
+        name="lblExcelTemplate"
+        formName="sys"
+        default="Excel Template"
       ></codx-label>
+    </h2>
+    <h6 class="text-muted">
+      <codx-label name="lblTemplates" default="Mẫu Template Excel"></codx-label>
     </h6>
   </div>
   <div class="containter mt-5">
-    <div class="row  w-100 ">
-      <div class="d-flex align-items-start justify-content-between bg-light-success py-5 border" *ngFor="let item of dataEx">
+    <div class="row w-100">
+      <div
+        class="d-flex align-items-start justify-content-between bg-light-success py-5 border"
+        *ngFor="let item of dataEx"
+      >
         <div class="d-flex align-items-top w-100">
-
           <div class="d-flex flex-column w-100">
             <div class="fw-bold text-dark">{{ item.templateName }}</div>
-            <div class="fs-7 text-gray-500 text-italic">{{ item.description }}</div>
+            <div class="fs-7 text-gray-500 text-italic">
+              {{ item.description }}
+            </div>
           </div>
         </div>
         <div class="d-flex align-items-start ms-6">
-          <button type="button" class="btn btn-icon btn-sm btn-outline-primary" triggers="click" [autoClose]="true" [ngbTooltip]="tool" ngClass="border-0">
+          <button
+            type="button"
+            class="btn btn-icon btn-sm btn-outline-primary"
+            triggers="click"
+            [autoClose]="true"
+            [ngbTooltip]="tool"
+            ngClass="border-0"
+          >
             <span class="icon-more_vert icon-16"></span>
           </button>
           <ng-template #tool>
             <ng-container *ngFor="let x of moreFunction">
-              <div class="d-flex p-2 cursor-pointer"  (click)="editTemplate(x.id,item)">
-                <span class="icon-16 me-2" [ngClass]="x?.icon" [style.color]="x?.textColor"></span>
-                <codx-label  [fiedName]="x?.text"></codx-label>
+              <div
+                class="d-flex p-2 cursor-pointer"
+                (click)="editTemplate(x.id, item)"
+              >
+                <span
+                  class="icon-16 me-2"
+                  [ngClass]="x?.icon"
+                  [style.color]="x?.textColor"
+                ></span>
+                <codx-label [fiedName]="x?.text"></codx-label>
               </div>
             </ng-container>
           </ng-template>
@@ -507,26 +545,40 @@
     </div>
     <div class="row h-25 w-100">
       <div class="d-flex justify-content-start">
-        <button type="button" class="btn btn-light-primary mt-3" (click)="excelTemplate()" >
-         <i class="icon-cloud_upload fs-5"></i><span>
-           <codx-label name="ExcelTemplate" formName="sys" default="Excel Template"></codx-label>
-         </span>
-       </button>
-     </div>
+        <button
+          type="button"
+          class="btn btn-light-primary mt-3"
+          (click)="excelTemplate()"
+        >
+          <i class="icon-cloud_upload fs-5"></i
+          ><span>
+            <codx-label
+              name="ExcelTemplate"
+              formName="sys"
+              default="Excel Template"
+            ></codx-label>
+          </span>
+        </button>
+      </div>
     </div>
-
   </div>
 </ng-template>
 <ng-template #footer>
+  <div class="w-100 d-flex">
+    <div class="d-flex justify-content-start w-50">
+      <button type="button" class="btn btn-light-info me-3" (click)="download()" *ngIf="data?.reportID">
+        <i class="icon-i-cloud-download fs-5"></i><span>
+          <codx-label name="DownloadRoot" formName="sys" default="Tải tệp gốc"></codx-label>
+        </span>
+      </button>
+    </div>
+    <div class="d-flex justify-content-end w-50">
 
-  <div class="d-flex justify-content-end">
-    <!-- <button type="button" class="btn btn-light-primary me-3" >
-      <i class="icon-cloud_upload fs-5"></i><span>
-        <codx-label name="UploadFile" formName="Tasks" default="Upload File"></codx-label>
-      </span>
-    </button> -->
-    <button type="button" class="btn btn-primary ms-1" (click)="saveForm()">
-      <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
-    </button>
+      <button type="button" class="btn btn-primary ms-1" (click)="saveForm()">
+        <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+      </button>
+    </div>
   </div>
+
+
 </ng-template>

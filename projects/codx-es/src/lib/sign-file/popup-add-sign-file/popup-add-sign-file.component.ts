@@ -56,7 +56,7 @@ export class PopupAddSignFileComponent implements OnInit {
     funcID: 'EST011',
     gridViewName: 'grvSignFiles',
   };
-
+  fileIndex=0;
   currentTab = 0; // buoc hiện tại: 0, 1, 2, 3
   processTab = 0; // tổng bước đã đi qua
   formModelCustom: FormModel;
@@ -106,6 +106,7 @@ export class PopupAddSignFileComponent implements OnInit {
   saveAsTemplate :boolean;
   confirmControl: any;
   allowEditAreas: any;
+  nextClick = false;
 
   constructor(
     private auth: AuthStore,
@@ -494,7 +495,6 @@ export class PopupAddSignFileComponent implements OnInit {
           file.createdBy = element.data.createdBy;
           file.comment = element.data.extension;
           file.eSign = this.eSign;
-
           // let index = lstESign.indexOf(file.comment);
           // if (index >= 0) {
           //   file.eSign = true;
@@ -787,6 +787,14 @@ export class PopupAddSignFileComponent implements OnInit {
             this.processTab++;
             this.cr.detectChanges();
           }
+
+          if(this.isAddNew && this.currentTab == 1 && this.nextClick){
+            this.updateNodeStatus(this.oldNode, this.newNode);
+            this.currentTab++;
+            this.processTab++;
+            this.cr.detectChanges();
+            this.nextClick=false;
+          }
         }
       });
     } else {
@@ -1040,12 +1048,7 @@ export class PopupAddSignFileComponent implements OnInit {
       this.oldNode=oldNode;
       this.newNode=newNode;
       this.onSaveSignFile();
-      if(this.isAddNew && this.currentTab == 1){
-        this.updateNodeStatus(this.oldNode, this.newNode);
-        this.currentTab++;
-        this.processTab++;
-        this.cr.detectChanges();
-      }
+      this.nextClick =true;
         //this.viewApprovalStep.updateApprovalStep();
         // this.updateNodeStatus(oldNode, newNode);
         // this.currentTab++;
@@ -1306,12 +1309,29 @@ export class PopupAddSignFileComponent implements OnInit {
           this.dialogSignFile.patchValue({ title: title });
           this.cr.detectChanges();
       }
+      // this.attachment?.fileUploadList.forEach((file :any) => {
+      //   file.esESign=this.eSign;
+      //   file.esIndex=this.fileIndex;
+      //   this.fileIndex++;
+      // });
     }
+    console.log('file upload',this.attachment?.fileUploadList);
     
-    console.log('count sf', event);
+    //console.log('count sf', event);
   }
   dowloadTemplate(){
     
-    console.log('download');
+    //console.log('download');
   }
+  // fileCheckChange(evt:any,file:any){
+  //   if(evt && this.eSign){
+  //     this.attachment?.fileUploadList.forEach((f :any) => {
+  //       if(f?.esIndex==file?.esIndex){
+  //         f.esESign = evt?.data;
+  //         f.referType = f.esESign? 'sign' : 'source'
+  //         this.cr.detectChanges();
+  //       }
+  //     });
+  //   }
+  // }
 }

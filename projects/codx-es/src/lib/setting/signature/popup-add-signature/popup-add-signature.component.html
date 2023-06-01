@@ -151,8 +151,8 @@
                 [imageType]="'square'"
                 [width]="80"
                 referType="S1"
-                [objectId]="data.recID"
-                [objectType]="formModel.entityName"
+                [objectId]="data?.recID"
+                [objectType]="formModel?.entityName"
                 data-kt-menu-trigger="click"
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
@@ -179,8 +179,8 @@
                 [imageType]="'square'"
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                 [width]="80"
-                [objectId]="data.recID"
-                [objectType]="formModel.entityName"
+                [objectId]="data?.recID"
+                [objectType]="formModel?.entityName"
                 data-kt-menu-trigger="click"
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
@@ -209,8 +209,8 @@
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                 [imageType]="'square'"
                 [width]="80"
-                [objectId]="data.recID"
-                [objectType]="formModel.entityName"
+                [objectId]="data?.recID"
+                [objectType]="formModel?.entityName"
                 data-kt-menu-trigger="click"
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
@@ -336,7 +336,6 @@
           format="d"
           [formModel]="dialog.formModel"
           [Group]="form.formGroup"
-          [disabled]="data?.signatureType != '1' || !isAdd ? true : false"
         >
         </codx-input>
       </div>
@@ -347,7 +346,6 @@
           type="password"
           field="password"
           [crrValue]="data?.password"
-          [disabled]="data?.signatureType != '1' || !isAdd ? true : false"
           (valueChange)="passwordChange($event)"
         >
         </codx-input>
