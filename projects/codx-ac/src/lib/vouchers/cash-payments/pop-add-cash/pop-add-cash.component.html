@@ -114,10 +114,10 @@
                   <codx-label *ngIf="cashpayment.subType == '1' || cashpayment.subType == '2'"
                     [formModel]="form.formModel" default="Nhà cung cấp">
                   </codx-label>
-                  <codx-label *ngIf="cashpayment.subType == '3' || cashpayment.subType == '5'"
+                  <codx-label *ngIf="cashpayment.subType == '3' || cashpayment.subType == '4'"
                     [formModel]="form.formModel" default="Nhân viên">
                   </codx-label>
-                  <codx-label *ngIf="cashpayment.subType == '4' || cashpayment.subType == '9'" fiedName="ObjectID"
+                  <codx-label *ngIf="cashpayment.subType == '5' || cashpayment.subType == '9'" fiedName="ObjectID"
                     [formModel]="form.formModel" default="Đối tượng">
                   </codx-label>
                   <codx-input [crrValue]="cashpayment.objectID" type="combobox" refType="4"
@@ -822,8 +822,8 @@
     <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="formType != 'edit'">
-            <button class="btn btn-sm btn-success" (click)="settlement(0)">
-              <i class="icon-i-clipboard-plus icon-16"></i>
+            <button class="btn btn-sm btn-light-primary" (click)="settlement(0)">
+              <i class="icon-i-wallet2 icon-16"></i>
               <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice1"
                 default="Đề xuất thanh toán"></codx-label>
             </button>

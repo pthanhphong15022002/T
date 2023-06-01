@@ -17,10 +17,7 @@ import {
   DialogRef,
   FormModel,
 } from 'codx-core';
-import {
-  TM_Parameter,
-  TM_TaskGroups,
-} from '../model/task.model';
+import { TM_Parameter, TM_TaskGroups } from '../model/task.model';
 import { AuthStore, CRUDService } from 'codx-core/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
 import { tmpReferences } from '../../../models/assign-task.model';
@@ -302,17 +299,17 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
   //#endregion
 
-  //#region  tree 
+  //#region  tree
   loadTreeView() {
     this.dataTree = [];
     if (
       !this.itemSelected ||
       !this.itemSelected?.taskID ||
-      (this.itemSelected.category == '1' && !this.itemSelected.isAssign) 
+      (this.itemSelected.category == '1' && !this.itemSelected.isAssign)
     )
       return;
-      if(this.itemSelected?.category == '2' && !this.itemSelected.parentID){
-        this.api
+    if (this.itemSelected?.category == '2' && !this.itemSelected.parentID) {
+      this.api
         .execSv<any>(
           'TM',
           'ERM.Business.TM',
@@ -324,8 +321,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           if (res) this.dataTree = res || [];
           this.changeDetectorRef.detectChanges();
         });
-      }else{
-        this.api
+    } else {
+      this.api
         .execSv<any>(
           'TM',
           'ERM.Business.TM',
@@ -337,8 +334,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           if (res) this.dataTree = res || [];
           this.changeDetectorRef.detectChanges();
         });
-      }
-  
+    }
   }
   //#endregion
 
@@ -432,6 +428,21 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
                     this.changeDetectorRef.detectChanges();
                   }
                 });
+            }
+          });
+        break;
+      case 'DP_Instances_Steps_Tasks':
+        this.api
+          .execSv<any>(
+            'DP',
+            'DP',
+            'InstancesBusiness',
+            'GetTempReferenceByRefIDAsync',
+            task.refID
+          )
+          .subscribe((result) => {
+            if (result && result?.length>0) {
+              this.dataReferences = result;
             }
           });
         break;
