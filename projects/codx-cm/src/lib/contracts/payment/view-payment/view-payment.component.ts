@@ -60,7 +60,7 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       {
         field: 'rowNo',
         headerText: this.grvPayments?.ItemID?.RowNo ?? 'STT',
-        width: 50,
+        width: 70,
       },
       {
         field: 'scheduleDate',

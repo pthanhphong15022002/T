@@ -5,7 +5,6 @@
         <codx-img
           [ngbPopover]="popupName"
           #p="ngbPopover"
-          [openDelay]="500"
           (mouseenter)="item?.contactName ? p.open() : ''"
           (mouseleave)="p.close()"
           placement="right bottom left top"
@@ -40,7 +39,7 @@
           objectType="'CM_Contacts'"
         ></codx-img>
         <div class="d-flex flex-column ms-1">
-          <div class="text-dark fw-bold ">{{ item.contactName }}</div>
+          <div class="text-dark fw-bold " >{{ item.contactName }}</div>
           <div class="text-dark text-gray-600">{{ item?.jobTitle }}</div>
           <div class="mb-1 d-flex align-items-center" *ngIf="item?.mobile">
             <span
