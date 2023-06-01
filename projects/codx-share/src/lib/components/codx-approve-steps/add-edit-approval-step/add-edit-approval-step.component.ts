@@ -124,7 +124,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     private notifySvr: NotificationsService,
     private cache: CacheService,
     private callfc: CallFuncService,
-    private api :ApiHttpService,
+    private api: ApiHttpService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -142,8 +142,9 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
 
     this.eSign = data?.data?.eSign ?? false;
     this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
-    if(this.vllShare==null){
-      this.vllShare = data?.data?.vllShare !=null ? data?.data?.vllShare : 'ES014';
+    if (this.vllShare == null) {
+      this.vllShare =
+        data?.data?.vllShare != null ? data?.data?.vllShare : 'ES014';
     }
 
     this.hideTabQuery = data?.data.hideTabQuery ?? false;
@@ -186,6 +187,32 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    if (this.isAdd) {
+      this.codxService
+        .getDataValueOfSetting('ESParameters', null, '1')
+        .subscribe((res: any) => {
+          if (res) {
+            let esSetting = JSON.parse(res);
+            if (esSetting != null) {
+              let esAllowEditAreas = false;
+              this.confirmControl =
+                this.confirmControl == null
+                  ? esSetting?.ConfirmControl
+                  : this.confirmControl;
+              if (
+                esSetting?.AllowEditAreas == '1' ||
+                esSetting?.AllowEditAreas == true
+              ) {
+                esAllowEditAreas = true;
+              }
+              this.allowEditAreas =
+                this.allowEditAreas == null
+                  ? esAllowEditAreas
+                  : this.allowEditAreas;
+            }
+          }
+        });
+    }
     this.formModelCustom = new FormModel();
     this.formModelCustom.formName = 'ApprovalSteps_Approvers';
     this.formModelCustom.gridViewName = 'grvApprovalSteps_Approvers';
@@ -518,7 +545,13 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   applyShare(event) {
     if (event) {
       event.forEach((element) => {
-        if (element?.objectType && element?.objectType.length==1 && element?.objectType != 'S' && element?.objectType != 'A' && element?.objectType != 'P') {
+        if (
+          element?.objectType &&
+          element?.objectType.length == 1 &&
+          element?.objectType != 'S' &&
+          element?.objectType != 'A' &&
+          element?.objectType != 'P'
+        ) {
           let lstID = element?.id.split(';');
           let lstUserName = element?.text.split(';');
           let dataSelected = element?.dataSelected;
@@ -572,44 +605,45 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                 this.lstApprover.push(res.event);
               }
             });
-          }
-          else if (element?.objectType == 'P'){
-            if (element?.id!=null) {
-              this.api.execSv<any>(
-                'HR',
-                'HR',
-                'EmployeesBusiness',
-                'GetListUserIDByListPositionsIDAsync',
-                [element?.id]
-              ).subscribe(res=>{
-                if(res){
-                  let listUser= res[0].split(';');
-                  if(listUser!=null && listUser.length>2){
-                    this.notifySvr.alertCode('ES033').subscribe((x) => {
-                      if (x.event?.status == 'Y') {
-                        let appr = new Approvers();
-                        appr.roleType = element?.objectType;
-                        appr.name = element?.text;
-                        appr.approver = element?.id;
-                        appr.icon = element?.icon != null ? element?.icon : null;
-                        this.lstApprover.push(appr);                        
-                      } else {
-                        return
-                      }
-                    });  
-                  }else{
-                    let appr = new Approvers();
-                    appr.roleType = element?.objectType;
-                    appr.name = element?.text;
-                    appr.approver = element?.id;
-                    appr.icon = element?.icon != null ? element?.icon : null;
-                    this.lstApprover.push(appr);
-                  }                                    
-                }
-              });                           
+          } else if (element?.objectType == 'P') {
+            if (element?.id != null) {
+              this.api
+                .execSv<any>(
+                  'HR',
+                  'HR',
+                  'EmployeesBusiness',
+                  'GetListUserIDByListPositionsIDAsync',
+                  [element?.id]
+                )
+                .subscribe((res) => {
+                  if (res) {
+                    let listUser = res[0].split(';');
+                    if (listUser != null && listUser.length > 2) {
+                      this.notifySvr.alertCode('ES033').subscribe((x) => {
+                        if (x.event?.status == 'Y') {
+                          let appr = new Approvers();
+                          appr.roleType = element?.objectType;
+                          appr.name = element?.text;
+                          appr.approver = element?.id;
+                          appr.icon =
+                            element?.icon != null ? element?.icon : null;
+                          this.lstApprover.push(appr);
+                        } else {
+                          return;
+                        }
+                      });
+                    } else {
+                      let appr = new Approvers();
+                      appr.roleType = element?.objectType;
+                      appr.name = element?.text;
+                      appr.approver = element?.id;
+                      appr.icon = element?.icon != null ? element?.icon : null;
+                      this.lstApprover.push(appr);
+                    }
+                  }
+                });
             }
-          }
-           else if (i == -1) {
+          } else if (i == -1) {
             let appr = new Approvers();
             appr.roleType = element?.objectType;
             appr.name = element?.objectName;

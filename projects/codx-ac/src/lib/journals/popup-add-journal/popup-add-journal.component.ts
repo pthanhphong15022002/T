@@ -9,21 +9,24 @@ import {
   CRUDService,
   CodxFormComponent,
   CodxInputComponent,
+  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
+  ImageViewerComponent,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
-import { Observable } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
-import { CustomizedMultiSelectPopupComponent } from '../customized-multi-select-popup/customized-multi-select-popup.component';
 import { IJournal } from '../interfaces/IJournal.interface';
+import { IJournalPermission } from '../interfaces/IJournalPermission.interface';
 import { JournalService } from '../journals.service';
-import { PopupSetupInvoiceComponent } from '../popup-setup-invoice/popup-setup-invoice.component';
+import { MultiSelectPopupComponent } from '../multi-select-popup/multi-select-popup.component';
+import { PopupSetupTransactionLimitComponent } from '../popup-setup-transaction-limit/popup-setup-transaction-limit.component';
 
 const irrPropNames: string[] = [
   'drAcctControl',
@@ -52,6 +55,7 @@ export class PopupAddJournalComponent
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('periodID') periodID: CodxInputComponent;
+  @ViewChild('thumbnail') thumbnail: ImageViewerComponent;
 
   journal: IJournal = {
     unpostControl: false,
@@ -93,6 +97,7 @@ export class PopupAddJournalComponent
   journalTypes106: string[] = [];
   journalTypes107: string[] = [];
   journalTypes108: string[] = [];
+  journalTypes109: string[] = [];
   journalTypes110: string[] = [];
   journalTypes111: string[] = [];
 
@@ -101,8 +106,19 @@ export class PopupAddJournalComponent
   vllDateFormat: any;
   vll067: any[] = [];
 
+  creater: string;
+  createrObjectType: string;
+  approver: string;
+  approverObjectType: string;
+  poster: string;
+  posterObjectType: string;
+  unposter: string;
+  unposterObjectType: string;
+  sharer: string;
+  sharerObjectType: string;
+
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private acService: CodxAcService,
     private journalService: JournalService,
     private notiService: NotificationsService,
@@ -112,38 +128,75 @@ export class PopupAddJournalComponent
     super(injector);
 
     this.dataService = dialogRef.dataService;
-    this.journal = { ...this.journal, ...dialogRef.dataService?.dataSelected };
+    this.journal = { ...this.journal, ...this.dataService?.dataSelected };
     this.oldJournal = { ...this.journal };
     this.journal.multiCurrency =
       this.journal.multiCurrency == '1' ? true : false;
     this.journal.autoPost = ['1', '2'].includes(this.journal.autoPost)
       ? true
       : false;
-
-    if (dialogData.data.formType === 'edit') {
-      this.isEdit = true;
-
-      // this.journal.creater = this.journal.creater
-      //   ? JSON.parse(this.journal.creater)
-      //   : '';
-      // this.journal.approver = this.journal.approver
-      //   ? JSON.parse(this.journal.approver)
-      //   : '';
-      // this.journal.poster = this.journal.poster
-      //   ? JSON.parse(this.journal.poster)
-      //   : '';
-      // this.journal.unposter = this.journal.unposter
-      //   ? JSON.parse(this.journal.unposter)
-      //   : '';
-      // this.journal.sharer = this.journal.sharer
-      //   ? JSON.parse(this.journal.sharer)
-      //   : '';
-    }
+    this.isEdit = dialogData.data.formType === 'edit';
   }
   //#endregion
 
   //#region Init
   onInit(): void {
+    if (this.isEdit) {
+      this.assignVllToProp2('AC087', 'notAllowEditingFields087');
+
+      this.journalService.hasVouchers(this.journal).subscribe((res) => {
+        this.hasVouchers = res;
+      });
+
+      const options = new DataRequest();
+      options.entityName = 'AC_JournalsPermission';
+      options.predicates = 'JournalNo=@0';
+      options.dataValues = this.journal.journalNo;
+      options.pageLoading = false;
+      this.acService
+        .loadDataAsync('AC', options)
+        .subscribe((journalPermissions: IJournalPermission[]) => {
+          let creater: string[] = [];
+          let approver: string[] = [];
+          let poster: string[] = [];
+          let unposter: string[] = [];
+          let sharer: string[] = [];
+
+          for (const permission of journalPermissions) {
+            if (permission.add === '1') {
+              this.createrObjectType = permission.objectType;
+              creater.push(permission.objectID);
+            }
+
+            if (permission.approval === '1') {
+              this.approverObjectType = permission.objectType;
+              approver.push(permission.objectID);
+            }
+
+            if (permission.post === '1') {
+              this.posterObjectType = permission.objectType;
+              poster.push(permission.objectID);
+            }
+
+            if (permission.unPost === '1') {
+              this.unposterObjectType = permission.objectType;
+              unposter.push(permission.objectID);
+            }
+
+            if (permission.share === '1') {
+              this.sharerObjectType = permission.objectType;
+              sharer.push(permission.objectID);
+            }
+          }
+
+          this.creater = creater.join(';');
+          this.approver = approver.join(';');
+          this.poster = poster.join(';');
+          this.unposter = unposter.join(';');
+          this.sharer = sharer.join(';');
+        });
+    }
+
     this.cache.valueList('AC069').subscribe((res) => {
       this.vllIDIMControls069 = res.datas;
 
@@ -177,14 +230,6 @@ export class PopupAddJournalComponent
       )
       .subscribe((res) => (this.dataValueProps088 = res));
 
-    if (this.isEdit) {
-      this.assignVllToProp2('AC087', 'notAllowEditingFields087');
-
-      this.journalService.hasVouchers(this.journal).subscribe((res) => {
-        this.hasVouchers = res;
-      });
-    }
-
     this.acService
       .loadComboboxData('FiscalPeriods', 'AC')
       .subscribe((periods) => {
@@ -196,6 +241,13 @@ export class PopupAddJournalComponent
 
       if (!res.event && !this.isEdit) {
         this.journalService.deleteAutoNumber(this.journal.journalNo);
+
+        if (this.journal.checkImage) {
+          this.acService.deleteFile(
+            this.journal.recID,
+            this.form.formModel.entityName
+          );
+        }
       }
     });
 
@@ -227,6 +279,7 @@ export class PopupAddJournalComponent
     this.assignVllToProp2('AC106', 'journalTypes106');
     this.assignVllToProp2('AC107', 'journalTypes107');
     this.assignVllToProp2('AC108', 'journalTypes108');
+    this.assignVllToProp2('AC109', 'journalTypes109');
     this.assignVllToProp2('AC110', 'journalTypes110');
     this.assignVllToProp2('AC111', 'journalTypes111');
   }
@@ -237,18 +290,17 @@ export class PopupAddJournalComponent
   //#endregion
 
   //#region Event
+  onShareInputChange(e): void {
+    console.log('onShareInputChange', e);
+
+    this[e.field + 'ObjectType'] = e.data[0]?.objectType;
+    this[e.field] = e.data?.map((d) => d.id).join(';');
+  }
+
   onInputChange(e): void {
     console.log('onInputChange', e);
 
-    const irrFields = ['creater', 'approver', 'poster', 'unposter', 'sharer'];
-    if (irrFields.includes(e.field)) {
-      this.journal[e.field] = e.data.map((d) => {
-        const { dataSelected, ...rest } = d;
-        return rest;
-      });
-    } else {
-      this.journal[e.field] = e.data;
-    }
+    this.journal[e.field] = e.data;
   }
 
   onInputChange2(e): void {
@@ -294,8 +346,9 @@ export class PopupAddJournalComponent
     );
   }
 
-  onClickSave(): void {
+  async onClickSave(): Promise<void> {
     console.log(this.journal);
+    console.log(this.thumbnail);
 
     if (
       !this.acService.validateFormData(
@@ -314,7 +367,6 @@ export class PopupAddJournalComponent
       'diM1Control',
       'diM2Control',
       'diM3Control',
-      'projectControl',
     ];
     const propNames2: string[] = [
       'drAcctID',
@@ -322,7 +374,6 @@ export class PopupAddJournalComponent
       'diM1',
       'diM2',
       'diM3',
-      'projectID',
     ];
     const gvsPropNames: string[] = [
       'DRAcctControl',
@@ -330,7 +381,6 @@ export class PopupAddJournalComponent
       'DIM1Control',
       'DIM2Control',
       'DIM3Control',
-      'ProjectControl',
     ];
     for (let i = 0; i < propNames1.length; i++) {
       if (
@@ -358,21 +408,6 @@ export class PopupAddJournalComponent
       tempJournal.autoPost = this.journal.autoPost ? '1' : '0';
     }
     tempJournal.multiCurrency = tempJournal.multiCurrency ? '1' : '0';
-    // tempJournal.creater = this.journal.creater
-    //   ? JSON.stringify(this.journal.creater)
-    //   : this.journal.creater;
-    // tempJournal.approver = this.journal.approver
-    //   ? JSON.stringify(this.journal.approver)
-    //   : this.journal.approver;
-    // tempJournal.poster = this.journal.poster
-    //   ? JSON.stringify(this.journal.poster)
-    //   : this.journal.poster;
-    // tempJournal.unposter = this.journal.unposter
-    //   ? JSON.stringify(this.journal.unposter)
-    //   : this.journal.unposter;
-    // tempJournal.sharer = this.journal.sharer
-    //   ? JSON.stringify(this.journal.sharer)
-    //   : this.journal.sharer;
 
     const dataValueObj = {};
     for (const prop of this.dataValueProps088) {
@@ -405,6 +440,16 @@ export class PopupAddJournalComponent
 
     console.log(tempJournal);
 
+    if (this.thumbnail?.imageUpload?.item) {
+      const uploaded$ = this.thumbnail.updateFileDirectReload(
+        this.journal.recID
+      );
+      const uploaded = await lastValueFrom(uploaded$);
+      if (uploaded) {
+        this.journal.checkImage = tempJournal.checkImage = true;
+      }
+    }
+
     if (this.isEdit) {
       this.dataService.updateDatas.set(tempJournal.recID, tempJournal);
     } else {
@@ -413,37 +458,54 @@ export class PopupAddJournalComponent
     this.dataService.save().subscribe((res: any) => {
       console.log(res);
       if (res.save.data || res.update.data) {
-        this.dialogRef.close(true);
+        this.api
+          .exec('AC', 'JournalsPermissionBusiness', 'AddOrUpdateAsync', [
+            this.journal.journalNo,
+            this.creater,
+            this.createrObjectType,
+            this.approver,
+            this.approverObjectType,
+            this.poster,
+            this.posterObjectType,
+            this.unposter,
+            this.unposterObjectType,
+            this.sharer,
+            this.sharerObjectType,
+            this.isEdit,
+          ])
+          .subscribe((res) => {
+            console.log(res);
+            this.dialogRef.close(true);
+          });
       }
     });
   }
 
-  onClickOpenInvoiceForm(): void {
+  onClickOpenTransactionLimitSetup(): void {
     const options = new DialogModel();
-    options.FormModel = {
-      entityName: 'AC_Journals',
-      formName: 'Journals',
-      gridViewName: 'grvJournals',
-    };
+    options.FormModel = this.form.formModel;
 
     this.callfc
       .openForm(
-        PopupSetupInvoiceComponent,
+        PopupSetupTransactionLimitComponent,
         'This param is not working',
-        400,
+        550,
         250,
         '',
         {
-          journal: this.journal,
+          journal: { ...this.journal },
+          gvs: this.gvs,
         },
         '',
         options
       )
       .closed.subscribe(({ event }) => {
         console.log(event);
-
-        this.journal.invoiceForm = event.invoiceForm;
-        // this.journal.invoiceSeriNo = event.invoiceSeriNo;
+        if (event) {
+          this.journal.transLimit = event.transLimit;
+          this.journal.transControl = event.transControl;
+          this.journal.transConfirmUser = event.transConfirmUser;
+        }
       });
   }
 
@@ -473,14 +535,13 @@ export class PopupAddJournalComponent
     if (e) {
       this.journal[this.propName] = e.id;
     }
-
     this.isHidden = true;
   }
 
   onClickOpenCustomizedMultiSelectPopup(): void {
     this.callfc
       .openForm(
-        CustomizedMultiSelectPopupComponent,
+        MultiSelectPopupComponent,
         'This param is not working',
         400,
         500,

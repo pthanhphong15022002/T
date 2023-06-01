@@ -2521,6 +2521,7 @@
               [fields]="fieldCbxProccess"
               (valueChange)="cbxChange($event, viewStepReasonSuccess)"
               [value]="moveProccessIsNull(stepSuccess?.newProcessID)"
+              [enabled]="process.applyFor != '1' "
               [readonly]="stepSuccess.isUsed ? false : true"
             >
             </ejs-combobox>
@@ -2545,6 +2546,7 @@
           <codx-label
             [default]="joinTwoString(stepNameReason, stepNameSuccess)"
           ></codx-label>
+          <span class="text-danger" *ngIf="stepSuccess?.reasonControl">*</span>
         </div>
         <div class="text-gray-600">
           <codx-label
@@ -2735,6 +2737,7 @@
               [placeholder]="'Chọn quy trình kìa'"
               (valueChange)="cbxChange($event, viewStepReasonFail)"
               [readonly]="stepFail?.isUsed ? false : true"
+              [enabled]="process.applyFor != '1' "
               [value]="moveProccessIsNull(stepFail?.newProcessID)"
             ></ejs-combobox>
             <codx-label
@@ -2758,6 +2761,7 @@
           <codx-label
             [default]="joinTwoString(stepNameReason, stepNameFail)"
           ></codx-label>
+          <span class="text-danger" *ngIf="stepFail?.reasonControl">*</span>
         </div>
         <div class="text-gray-600">
           <codx-label
@@ -3149,6 +3153,7 @@
                 default="Thời hạn hoàn tất nhiệm vụ trong giai đoạn"
               >
               </codx-label>
+               <span class="text-danger">*</span>
             </div>
             <div class="text-gray-600">
               <codx-label
@@ -3156,6 +3161,7 @@
                 theo"
               >
               </codx-label>
+
             </div>
           </div>
           <div class="col-6">

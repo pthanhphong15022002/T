@@ -38,6 +38,7 @@ import { group } from 'console';
 import { CodxViewTaskComponent } from '../codx-view-task/codx-view-task.component';
 import { StepService } from '../step.service';
 import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
+import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 
 @Component({
   selector: 'codx-step-task',
@@ -456,6 +457,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       case 'DP24': // tạo lịch họp
         this.createMeeting(task);
         break;
+      case 'SYS004':
+        this.sendMail();
+        break;
     }
   }
 
@@ -664,6 +668,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task.refID = data?.recID;
     task.refType = 'DP_Instance';
     task.dueDate = data?.endDate;
+    let dataReferences = [
+      {
+        recIDReferences: data.recID,
+        refType: 'DP_Instances',
+        createdOn: data.createdOn,
+        memo: data.taskName,
+        createdBy: data.createdBy,
+      },
+    ];
     let assignModel: AssignTaskModel = {
       vllRole: 'TM001',
       title: moreFunc.customName,
@@ -1067,41 +1080,83 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   createMeeting(data) {
     this.stepService.getDefault('TMT0501', 'CO_Meetings').subscribe((res) => {
       if (res && res?.data) {
+     
         let meeting = res.data;
         meeting['_uuid'] = meeting['meetingID'] ?? Util.uid();
         meeting['idField'] = 'meetingID';
         meeting.meetingName = data?.taskName;
         meeting.meetingType = '1';
+        meeting.reminder = Number.isNaN(data.reminders)? Number.parseInt(data.reminders) : 0
         let option = new SidebarModel();
+        option.Width = '800px';
         option.zIndex = 1011;
         let formModel = new FormModel();
+
+        let preside ;
+        let participants;
+        let listPermissions=''
+        if(data?.roles?.length>0){
+          preside = data?.roles.filter(x=>x.roleType=='O')[0]?.objectID ;
+          if(preside)
+          listPermissions +=preside
+          participants = data?.roles.filter(x=>x.roleType=='P').map(x=>x.objectID).join(";");
+          if(participants){
+            listPermissions += ";" + participants
+          }
+        }
         this.cache.functionList('TMT0501').subscribe((f) => {
-          formModel.funcID = 'TMT0501';
-          formModel.entityName = f?.entityName;
-          formModel.formName = f?.formName;
-          formModel.gridViewName = f?.gridViewName;
-          option.FormModel = formModel;
-          option.Width = '850px';
-          let obj = {
-            action: 'add',
-            titleAction: this.titleAction,
-            disabledProject: false,
-            // preside:  ,
-            data: meeting,
-          };
-          var dialog = this.callfc.openSide(
-            PopupAddMeetingComponent,
-            obj,
-            option
-          );
-          dialog.closed.subscribe((e) => {
-            if (e?.event) {
-              this.notiService.notify(
-                'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
-              );
-            }
-          });
+          if (f) {
+            this.cache.gridView(f.gridViewName).subscribe((res) => {
+              this.cache
+                .gridViewSetup(f.formName, f.gridViewName)
+                .subscribe((grvSetup) => {
+                  if(grvSetup){
+                    formModel.funcID = 'TMT0501';
+                    formModel.entityName = f.entityName;
+                    formModel.formName = f.formName;
+                    formModel.gridViewName = f.gridViewName;
+                    option.FormModel = formModel;
+                    option.Width = '800px';
+                    let obj = {
+                      action: 'add',
+                      titleAction: this.titleAction,
+                      disabledProject: false,
+                      preside:  preside,
+                      data: meeting,
+                      listPermissions: listPermissions,
+                      isOtherModule: true,
+                    };
+                    let dialog = this.callfc.openSide(
+                      PopupAddMeetingComponent,
+                      obj,
+                      option
+                    );
+                    dialog.closed.subscribe((e) => {
+                      if (e?.event) {
+                        this.notiService.notify(
+                          'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
+                        );
+                      }
+                    });
+                  }
+                 
+                });
+            });
+          }
         });
+      }
+    });
+  }
+  //Gửi email
+  sendMail() {
+    // let option = new SidebarModel();
+    // option.DataService = this.view?.currentView?.dataService;
+    let dialogEmail = this.callfc.openForm(CodxEmailComponent, '', 900, 800);
+    dialogEmail.closed.subscribe((x) => {
+      if (x.event != null) {
+        // this.data = x.event[0];
+        // this.data.lstUserID = getListImg(x.event[0].relations);
+        // this.data.listInformationRel = x.event[1];
       }
     });
   }

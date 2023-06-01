@@ -98,6 +98,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   dataMeeting;
   dayStart: Date;
   preside: any;
+  isOtherModule = false; //neu tu modele khac truyen vao
+  defaultRoleA = '';
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -109,21 +111,20 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = dialog?.dataService?.dataSelected?JSON.parse(JSON.stringify(dialog.dataService?.dataSelected)): null
     this.dialog = dialog;
     this.user = this.authStore.get();
+    this.defaultRoleA = this.user.userID;
+    this.functionID = this.dialog.formModel.funcID;
+    this.isOtherModule = dt?.data?.isOtherModule;
+    this.meeting = this.isOtherModule
+      ? dt?.data?.data
+      : JSON.parse(JSON.stringify(dialog.dataService?.dataSelected));
     this.action = dt?.data?.action;
     this.titleAction = dt?.data?.titleAction;
     this.disabledProject = dt?.data?.disabledProject;
     this.listPermissions = dt?.data?.listPermissions;
-    //Data truyền từ module thiết lập lịch  (data tu truyền ngoai module)
-    this.dataMeeting = dt?.data?.data
-    // this.preside = dt?.data?.preside ; nguoi chủ trì truyền qua ko dc xóa
-
-    this.meeting = dialog?.dataService?.dataSelected
-      ? this.data
-      : this.dataMeeting;
-    this.functionID = this.dialog.formModel.funcID;
+    this.preside = dt?.data?.preside; // người chủ trì, không hiểu please not edit !
+    if (this.preside) this.defaultRoleA = this.preside;
 
     this.cache
       .gridViewSetup(
@@ -152,11 +153,12 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         this.isRoom = res.msgBodyData[0];
       });
     if (this.action == 'add' || this.action == 'copy') {
-      let listUser = this.user?.userID;
-      if(this.preside)listUser = ";" + this.preside
+      let listUser = this.defaultRoleA;
+
       if (this.listPermissions) {
         if (!this.listPermissions.split(';').includes(listUser))
           listUser += ';' + this.listPermissions;
+        else listUser = this.listPermissions;
       }
       this.getListUser(listUser);
     }
@@ -323,7 +325,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   onAdd() {
-    if (this.dialog.dataSerivce) {
+    if (!this.isOtherModule) {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option), 0)
         .subscribe((res) => {
@@ -350,9 +352,16 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           'TMT0501',
         ])
         .subscribe((res: any) => {
+          this.attachment?.clearData();
           if (res) {
-            this.dialog && this.dialog.close(res);
-          }
+            if (this.isRoom && this.meeting.location != null) {
+              this.bookingRoomEP(res);
+            }
+            this.tmSv
+              .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
+              .subscribe();
+            this.dialog.close(res);
+          } else this.dialog.close();
         });
     }
   }
@@ -881,8 +890,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (res && res.length > 0) {
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
-            var tmpResource = new CO_Permissions()           
-            if (emp.userID == this.user.userID) {
+            var tmpResource = new CO_Permissions();
+            if (emp.userID == this.defaultRoleA) {
               tmpResource.objectID = emp?.userID;
               tmpResource.objectName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
@@ -1029,7 +1038,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           var param = JSON.parse(res.dataValue);
-          if (this.action === 'add') {
+          if (this.action === 'add' && !this.reminder) {
             this.reminder = param.Reminder;
             this.meeting.reminder = this.reminder;
           }

@@ -42,6 +42,15 @@ export class CodxCmService {
     );
   }
 
+  getAvatar(avata) {
+    return this.api.exec<any>(
+      'DM',
+      'FileBussiness',
+      'GetAvatarAsync',
+      [avata]
+    );
+  }
+
   getContacts() {
     return this.api.exec<any>('CM', 'ContactsBusiness', 'GetAsync');
   }
@@ -668,6 +677,14 @@ export class CodxCmService {
       'CM',
       'ContractsBusiness',
       'GetContractsByDealIDAsync',
+      data
+    );
+  }
+  getListContractByCustomersID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetContractsByCustomersIDAsync',
       data
     );
   }

@@ -3,11 +3,10 @@ import {
   Injector,
   Input,
   OnChanges,
-  OnInit,
   SimpleChanges,
 } from '@angular/core';
 import { FormModel, UIComponent } from 'codx-core';
-import { IModelShare } from '../../interfaces/IModelShare.interface';
+import { DropdownDetailService } from './dropdown-detail.service';
 
 @Component({
   selector: 'lib-dropdown-detail',
@@ -16,11 +15,19 @@ import { IModelShare } from '../../interfaces/IModelShare.interface';
 })
 export class DropdownDetailComponent extends UIComponent implements OnChanges {
   //#region Constructor
-  @Input() modelShares: IModelShare[];
+  /** A semicolon separated string
+   * @example 2332;2342;23223
+   */
+  @Input() objectId;
+  @Input() objectType: string;
   @Input() formModel: FormModel;
-  ids: string;
 
-  constructor(private injector: Injector) {
+  shareModels: { id: string; text: string }[];
+
+  constructor(
+    injector: Injector,
+    private dropdownDetailService: DropdownDetailService
+  ) {
     super(injector);
   }
   //#endregion
@@ -29,8 +36,22 @@ export class DropdownDetailComponent extends UIComponent implements OnChanges {
   onInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.modelShares && Array.isArray(this.modelShares)) {
-      this.ids = this.modelShares?.map((d) => d.id).join(';');
+    if (changes.objectId || changes.objectType) {
+      const objectId: string[] = this.objectId?.split(';');
+
+      if (this.objectType === 'UG') {
+        this.dropdownDetailService.getUserGroups().subscribe((userGroups) => {
+          this.shareModels = userGroups
+            ?.filter((d) => objectId.includes(d.GroupID))
+            .map((d) => ({ id: d.GroupID, text: d.GroupName }));
+        });
+      } else if (this.objectType === 'R') {
+        this.dropdownDetailService.getUserRoles().subscribe((userRoles) => {
+          this.shareModels = userRoles
+            ?.filter((d) => objectId.includes(d.RecID))
+            .map((d) => ({ id: d.RecID, text: d.RoleName })); // wtf core???
+        });
+      }
     }
   }
   //#endregion

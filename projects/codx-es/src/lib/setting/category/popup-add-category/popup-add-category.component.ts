@@ -607,8 +607,10 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       signFile.isTemplate = true;
       signFile.processID = this.data?.recID;
       signFile.approveControl = '3';
-      signFile.buid=this.curUser?.bUID;
-
+      signFile.buid=this.curUser?.buid;
+      signFile.createdBy=this.authService?.userValue?.userID;
+      signFile.createdOn=new Date();
+      delete signFile?.recID;
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
       let dialogAdd = this.callfunc.openForm(
@@ -623,6 +625,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           formModel: this.signFileFM,
           option: option,
           disableCateID:true,
+          saveAsTemplate:true,
         },
         '',
         dialogModel

@@ -50,6 +50,7 @@ import { LayoutComponent } from '../_layout/layout.component';
 import { Observable, finalize, map, filter, firstValueFrom } from 'rxjs';
 import { PopupEditOwnerstepComponent } from './popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { PopupSelectTempletComponent } from './popup-select-templet/popup-select-templet.component';
+import { X } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'codx-instances',
@@ -731,6 +732,12 @@ export class InstancesComponent
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.listInstanceStep = res;
 
+        if(this.detailViewInstance){
+          this.detailViewInstance.loadChangeData();
+        }
+        if(this.detailViewPopup){
+          this.detailViewPopup.loadChangeData();
+        }
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
@@ -1051,19 +1058,20 @@ export class InstancesComponent
       formMD.gridViewName = fun.gridViewName;
       dialogModel.zIndex = 999;
       dialogModel.FormModel = formMD;
+      var startControl = this.process.steps.filter(x=> x.recID === data.stepID)[0].startControl;
       var dialog = this.callfc.openForm(
         PopupEditOwnerstepComponent,
         '',
         500,
         280,
         '',
-        [this.lstOrg, this.titleAction, data,'0'],
+        [this.lstOrg, this.titleAction, data,'0',startControl],
         '',
         dialogModel
       );
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
-          this.dataSelected.ownerStepInstances = e.event;
+          this.dataSelected.ownerStepInstances = e.event.owner;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.update(this.dataSelected).subscribe();
           this.detectorRef.detectChanges();

@@ -1,0 +1,93 @@
+<codx-form
+  #form
+  [headerText]="formTitle$ | async"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="dialogRef.formModel"
+  [data]="journal"
+>
+</codx-form>
+
+<ng-template #body>
+  <div class="row">
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="transLimit"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="transLimit"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="transControl"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="transControl"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="transConfirmUser"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-7">
+          <codx-label
+            fiedName="lblTransConfirmUser"
+            [formModel]="form.formModel"
+            [default]="gvs.TransConfirmUser?.description"
+            class="text-gray-500 font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-4">
+          <lib-dropdown-detail
+            [formModel]="form.formModel"
+            [objectId]="journal.transConfirmUser"
+            objectType="U"
+          ></lib-dropdown-detail>
+        </div>
+
+        <div class="col-1">
+          <codx-combobox-popup
+            *ngIf="!isHidden"
+            comboboxName="Users"
+            [multiple]="false"
+            [width]="600"
+            [height]="500"
+            [value]="journal.transConfirmUser"
+            (clickSave)="onClickHidePopup($event)"
+          >
+          </codx-combobox-popup>
+
+          <button
+            class="btn btn-icon btn-light-primary"
+            (click)="isHidden = false"
+          >
+            <i class="icon-connection-point icon-16"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <button type="button" class="btn btn-primary" (click)="onClickSave()">
+    <codx-label
+      fiedName="lblSave"
+      [formModel]="dialogRef.formModel"
+      default="Lưu"
+    ></codx-label>
+  </button>
+</ng-template>

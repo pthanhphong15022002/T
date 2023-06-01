@@ -37,39 +37,8 @@
                                             </codx-vll>
                                         </div>
                                         <ng-container *ngIf="data.shareName">
-                                            <div class="ms-2 position-relative">
-                                                <div class="fs-6" [innerHTML]="data.shareName"
-                                                    (click)="showListShare()"></div>
-                                                <ng-container *ngIf="isShowTemplateShare">
-                                                    <div class="position-absolute tmpshare w-250px">
-                                                        <div class="d-flex justify-content-between">
-                                                            <codx-label class="fw-bold text-dark"
-                                                                [formModel]="view.formModel" name="lblListShare"
-                                                                default="Danh sách người được chia sẻ">
-                                                            </codx-label>
-                                                            <span class="ms-2" (click)="closeListShare()">
-                                                                <i class="icon-close"></i>
-                                                            </span>
-                                                        </div>
-                                                        <div class="tmpshare-body">
-                                                            <ng-container *ngFor="let item of data.permissions">
-                                                                <ng-container *ngIf="item.memberType == '2'">
-                                                                    <div class="d-flex align-items-center mb-3">
-                                                                        <codx-img class="me-3" [width]="30"
-                                                                            [imageType]="'circle'"
-                                                                            [objectId]="item.objectID"
-                                                                            objectType="AD_Users" 
-                                                                            [referType]="'avt'">
-                                                                        </codx-img>
-                                                                        <span class="fw-bolder">{{ item.objectName
-                                                                            }}</span>
-                                                                    </div>
-                                                                </ng-container>
-                                                            </ng-container>
-                                                        </div>
-                                                    </div>
-                                                </ng-container>
-                                            </div>
+                                            <ng-container *ngTemplateOutlet="templateShares; context: { $implicit: data }">
+                                            </ng-container>
                                         </ng-container>
                                     </div>
                                     <div class="d-flex flex-center me-4">
@@ -178,3 +147,33 @@
         </div>
     </ng-container>
 </ng-template>
+
+<!-- template list permissions share -->
+<ng-template #templateShares let-data>
+    <div ngbDropdown class="symbol-more" [container]="'body'">
+      <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span [innerHTML]="data.shareName"> </span>
+      </div>
+      <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+        <div class="py-2">
+          <codx-label [formModel]="view.formModel" name="lblShares" default="Danh sách người được chia sẻ" class="fw-bold"></codx-label>
+        </div>
+        <div class="hr-list-employee">
+          <ng-container *ngFor="let perrmisison of data.permissions">
+            <ng-container *ngIf="perrmisison.memberType == '2'">
+              <div class="d-flex align-items-center mt-3">
+                <codx-img 
+                  [objectId]="perrmisison.objectID" 
+                  [objectName]="perrmisison.objectName" 
+                  [objectType]="'AD_Users'" 
+                  [cssClass]="'me-3'"
+                  [width]="30">
+                </codx-img>
+                <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-template>

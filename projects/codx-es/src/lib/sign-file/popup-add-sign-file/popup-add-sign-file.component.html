@@ -152,7 +152,7 @@
               </li>
             </ul>
           </div>
-          <a class="btn btn-sm btn-success me-2 mb-2 min-w-60px rounded-4" (click)="release()"
+          <a class="btn btn-sm btn-success me-2 mb-2 min-w-60px rounded-4" (click)="release() " *ngIf="!saveAsTemplate"
             [ngClass]="user.userID == data.owner ? '' : 'disabled'" [style.visibility]="
               currentTab == 2 &&
               data.files?.length > 0 &&
@@ -171,7 +171,7 @@
     </div>
     <div class="stepper-body pt-2 w-100" *ngIf="currentTab < 2">
       <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-800px h-100">
-        <div class="mb-10 mt-10 text-center tab-pane-header">
+        <div class="mb-6 mt-9 text-center tab-pane-header">
           <h2 class="h2-title">
             <!-- <codx-label *ngIf="currentTab == 0" name="lblUploadFile" [formModel]="formModelCustom"
               default="Upload file">
@@ -209,7 +209,7 @@
 
           <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
             <div class="w-100 form-content mw-500px mx-auto">
-              <div class="text-center">
+              <div class="text-center sign-attachment">
                 <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
                   hideBtnSave="1" hideFolder="1" [hideUploadBtn]="'0'" [functionID]="formModelCustom.funcID" type="inline"
                   (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="sign">
@@ -311,11 +311,16 @@
 
         <div class="d-flex flex-stack justify-content-between card-footer border-0">
           <div class="left">
+            <!-- <button (click)="dowloadTemplate()"  *ngIf="currentTab == 0"
+              class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
+              <span class="icon-cloud_download btn-text-primary me-2"></span>
+              <codx-label fiedName="lblDownloadFile" default="Tải tài liệu mẫu" [formModel]="formModelCustom"  ></codx-label>
+            </button> -->
             <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0" (click)="previous(currentTab)">
               <codx-label name="lblBack" [formModel]="formModelCustom" default="Quay lại">
               </codx-label>
             </button>
-            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0"
+            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0 && !saveAsTemplate"
               [disabled]="modeView == '2' ? true : false" (click)="openPopup(processTemplate)">
               <codx-label name="lblBtnTemplate" [formModel]="formModelCustom" default="Dùng quy trình mẫu">
               </codx-label>
@@ -369,7 +374,7 @@
                   </li>
                 </ul>
               </div>
-              <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+              <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" *ngIf="!saveAsTemplate"
                 (click)="release()">
                 <codx-label Name="lblAprrove" [formModel]="dialog.formModel" default="Gửi duyệt"></codx-label>
               </a>

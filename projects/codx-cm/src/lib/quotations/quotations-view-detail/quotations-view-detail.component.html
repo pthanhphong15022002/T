@@ -447,3 +447,11 @@
     </ng-template>
   </codx-detail-tmp>
 </ng-container>
+
+<ng-template #contract let-data>
+  <list-contracts
+    [quotationID]="itemSelected?.recID"
+    [listContract]="listContract"
+    [customers]=""
+  ></list-contracts>
+</ng-template>

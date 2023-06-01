@@ -65,9 +65,9 @@ export class ChartOfAccountsComponent extends UIComponent {
         },
       },
     ];
-    this.view.dataService.methodSave = 'AddAsync';
-    this.view.dataService.methodUpdate = 'EditAsync';
-    this.view.dataService.methodDelete = 'DeleteAsync';
+    // this.view.dataService.methodSave = 'AddAsync';
+    // this.view.dataService.methodUpdate = 'EditAsync';
+    // this.view.dataService.methodDelete = 'DeleteAsync';
   }
 
   //#endregion

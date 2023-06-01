@@ -473,6 +473,9 @@ export class CodxAddBookingCarComponent
   }
 
   deleteAttender(attID: string) {
+    if (this.viewOnly) {
+      return;
+    }
     var tempDelete;
     this.resources.forEach((item) => {
       if (item.userID == attID) {
@@ -987,7 +990,8 @@ export class CodxAddBookingCarComponent
                       this.returnData,
                       res?.processID,
                       'EP_Bookings',
-                      this.formModel.funcID
+                      this.formModel.funcID,
+                      this.returnData?.createdBy
                     )
                     .subscribe((res) => {
                       if (res?.msgCodeError == null && res?.rowCount) {
@@ -1047,7 +1051,8 @@ export class CodxAddBookingCarComponent
                       this.returnData,
                       res?.processID,
                       'EP_Bookings',
-                      this.formModel.funcID
+                      this.formModel.funcID,
+                      this.returnData?.createdBy
                     )
                     .subscribe((res) => {
                       if (res?.msgCodeError == null && res?.rowCount) {

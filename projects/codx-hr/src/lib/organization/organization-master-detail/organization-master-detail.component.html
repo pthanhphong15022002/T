@@ -1,133 +1,201 @@
 <div class="contianer h-100" id="master-detail">
   <div class="row" id="master">
     <div class="col-2">
-        <codx-img 
-            [objectId]="employeeManager?.employeeID" 
-            [objectName]="employeeManager?.employeeName"
-            [objectType]="'HR_Employees'"
-            [width]="90"
-            [imageType]="'circle'">
-        </codx-img>
+      <codx-img
+        [objectId]="employeeManager?.employeeID"
+        [objectName]="employeeManager?.employeeName"
+        [objectType]="'HR_Employees'"
+        [width]="90"
+        [imageType]="'circle'"
+      >
+      </codx-img>
     </div>
     <div class="col-10 d-flex align-items-center justify-content-between p-2">
+      <div>
         <div>
-          <div>
-            <ng-container *ngIf="employeeManager?.employeeName ; else lblEmployeeName">
-              <span class="fw-bolder">{{employeeManager.employeeName}}</span>
-            </ng-container>  
-            <ng-template #lblEmployeeName>
-              <codx-label  [className]="'fw-bolder'" [formModel]="formModel" name="lblEmployeeName" default="Tên nhân viên"></codx-label>
-            </ng-template>
-          </div>
-          <div>
-            <ng-container *ngIf="employeeManager?.positionName ; else lblPositionName">
-              <span class="text-dark-400">{{employeeManager.positionName}}</span>
-            </ng-container>
-            <ng-template #lblPositionName>
-              <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblPositionName" default="Chức vụ"></codx-label>
-            </ng-template>
-            <span class="ms-2 me-2">|</span>
-            <ng-container *ngIf="employeeManager?.orgUnitName ; else lblOrgUnitName">
-                <span class="text-dark-400">{{employeeManager.orgUnitName}}</span>
-              </ng-container>
-              <ng-template #lblOrgUnitName>
-                <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblOrgUnitName" default="Phòng ban"></codx-label>
-              </ng-template>
-          </div>
-          <div>
-            <ng-container *ngIf="employeeManager?.phone ; else lblPhone">
-              <span class="text-dark-400">{{employeeManager?.phone}}</span>
-            </ng-container>
-            <ng-template #lblPhone>
-              <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblEmployeePhone" default="SĐT"></codx-label>
-            </ng-template>
-            <span class="mx-2">|</span>
-            <ng-container *ngIf="employeeManager?.email ; else lblEmail">
-              <span class="text-dark-400">{{employeeManager.email}}</span>
-            </ng-container>
-            <ng-template #lblEmail>
-              <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblEmail" default="Email"></codx-label>
-            </ng-template>
-          </div>
+          <ng-container
+            *ngIf="employeeManager?.employeeName; else lblEmployeeName"
+          >
+            <span class="fw-bolder">{{ employeeManager.employeeName }}</span>
+          </ng-container>
+          <ng-template #lblEmployeeName>
+            <codx-label
+              [className]="'fw-bolder'"
+              [formModel]="formModel"
+              name="lblEmployeeName"
+              default="Tên nhân viên"
+            ></codx-label>
+          </ng-template>
         </div>
         <div>
-          <p>{{grid.dataService.rowCount}}</p>
-          <codx-label [formModel]="formModel" name="lblTotalEmployee" default="Tổng số nhân viên"></codx-label>
+          <ng-container
+            *ngIf="employeeManager?.positionName; else lblPositionName"
+          >
+            <span class="text-dark-400">{{
+              employeeManager.positionName
+            }}</span>
+          </ng-container>
+          <ng-template #lblPositionName>
+            <codx-label
+              [className]="'text-dark-400'"
+              [formModel]="formModel"
+              name="lblPositionName"
+              default="Chức vụ"
+            ></codx-label>
+          </ng-template>
+          <span class="ms-2 me-2">|</span>
+          <ng-container
+            *ngIf="employeeManager?.orgUnitName; else lblOrgUnitName"
+          >
+            <span class="text-dark-400">{{ employeeManager.orgUnitName }}</span>
+          </ng-container>
+          <ng-template #lblOrgUnitName>
+            <codx-label
+              [className]="'text-dark-400'"
+              [formModel]="formModel"
+              name="lblOrgUnitName"
+              default="Phòng ban"
+            ></codx-label>
+          </ng-template>
         </div>
+        <div>
+          <ng-container *ngIf="employeeManager?.phone; else lblPhone">
+            <span class="text-dark-400">{{ employeeManager?.phone }}</span>
+          </ng-container>
+          <ng-template #lblPhone>
+            <codx-label
+              [className]="'text-dark-400'"
+              [formModel]="formModel"
+              name="lblEmployeePhone"
+              default="SĐT"
+            ></codx-label>
+          </ng-template>
+          <span class="mx-2">|</span>
+          <ng-container *ngIf="employeeManager?.email; else lblEmail">
+            <span class="text-dark-400">{{ employeeManager.email }}</span>
+          </ng-container>
+          <ng-template #lblEmail>
+            <codx-label
+              [className]="'text-dark-400'"
+              [formModel]="formModel"
+              name="lblEmail"
+              default="Email"
+            ></codx-label>
+          </ng-template>
+        </div>
+      </div>
+      <div>
+        <p>{{ grid.dataService.rowCount }}</p>
+        <codx-label
+          [formModel]="formModel"
+          name="lblTotalEmployee"
+          default="Tổng số nhân viên"
+        ></codx-label>
+      </div>
     </div>
   </div>
-  <div id="detail" > 
+  <div id="detail">
+    <!-- <codx-gridview-v2
+      #grid
+      [formModel]="formModelEmp"
+      [columnsGrid]="columnsGrid"
+      [service]="'HR'"
+      assemblyName="ERM.Business.HR"
+      [entityName]="'HR_Employees'"
+      [className]="'OrganizationUnitsBusiness'"
+      [hideMoreFunc]="true"
+      [method]="'GetEmployeesMasterDetailAsync'"
+      [dataValues]="orgUnitID"
+      [emptyTemplate]="emptyDataTemplate"
+    ></codx-gridview-v2> -->
     <codx-gridview
       #grid
       [formModel]="formModelEmp"
       idField="EmployeeID"
       [entityName]="'HR_Employees'"
-      service="HR" 
+      service="HR"
       assemblyName="ERM.Business.HR"
       className="OrganizationUnitsBusiness"
       method="GetEmployeesMasterDetailAsync"
       rowHeight="40"
       [dataValues]="orgUnitID"
-      [columnsGrid]="columnsGrid">
+      [columnsGrid]="columnsGrid"
+    >
     </codx-gridview>
   </div>
 </div>
-  
+
 <ng-template #templateName let-item>
   <div>
     <codx-temp-full
-        [imageId]="item.employeeID"
-        imageObjType="HR_Employees"
-        [title]="item.employeeName"
-        [subTitle]="item.positionName"
-        [formModel]="formModelEmp"
-        [dataItem]="item"
-        [hideMF]="true"
-        [imageObjName]="item.employeeName">
+      [imageId]="item.employeeID"
+      imageObjType="HR_Employees"
+      [title]="item.employeeName"
+      [subTitle]="item.positionName"
+      [formModel]="formModelEmp"
+      [dataItem]="item"
+      [hideMF]="true"
+      [imageObjName]="item.employeeName"
+    >
     </codx-temp-full>
   </div>
 </ng-template>
 <ng-template #templateBirthday let-item>
   <div>
-    <span *ngIf="item.birthday"
-      [innerHTML]="item.birthday | formatvalue:formModelEmp:'Birthday' | async"
+    <span
+      *ngIf="item.birthday"
+      [innerHTML]="
+        item.birthday | formatvalue : formModelEmp : 'Birthday' | async
+      "
     ></span>
   </div>
 </ng-template>
 <ng-template #templatePhone let-item>
   <div>
-    <span *ngIf="item.phone"
-      [innerHTML]="item.phone | formatvalue:formModelEmp:'Phone' | async"
+    <span
+      *ngIf="item.phone"
+      [innerHTML]="item.phone | formatvalue : formModelEmp : 'Phone' | async"
     ></span>
   </div>
 </ng-template>
 <ng-template #templateEmail let-item>
   <div>
-    <span *ngIf="item.email"
-      [innerHTML]="item.email | formatvalue:formModelEmp:'Email' | async"
+    <span
+      *ngIf="item.email"
+      [innerHTML]="item.email | formatvalue : formModelEmp : 'Email' | async"
     ></span>
   </div>
 </ng-template>
 <ng-template #templateJoinedOn let-item>
   <div>
-    <span *ngIf="item.joinedOn"
-      [innerHTML]="item.joinedOn | formatvalue:formModelEmp:'JoinedOn' | async"
+    <span
+      *ngIf="item.joinedOn"
+      [innerHTML]="
+        item.joinedOn | formatvalue : formModelEmp : 'JoinedOn' | async
+      "
     ></span>
   </div>
 </ng-template>
 <ng-template #templateStatus let-item>
   <div>
     <ng-container *ngIf="item.status">
-      <codx-vll 
-        [formModel]="formModelEmp" 
+      <codx-vll
+        [formModel]="formModelEmp"
         [classList]="'badge badge-sm badge-inline'"
-        [name]="'HR003'" 
-        [value]="item.status" 
-        [showText]="true" 
-        [showBgColor]="true">
+        [name]="'HR003'"
+        [value]="item.status"
+        [showText]="true"
+        [showBgColor]="true"
+      >
       </codx-vll>
     </ng-container>
   </div>
 </ng-template>
 
-
+<ng-template #emptyDataTemplate>
+  <div class="d-flex ms-1">
+    <span class="text-gray-500 fw-bold">
+      {{ "SYS011" | mssg | async }}
+    </span>
+  </div>
+</ng-template>

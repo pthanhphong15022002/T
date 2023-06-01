@@ -18,8 +18,9 @@ import {
   AuthStore,
   UIComponent,
   RequestOption,
+  Util,
 } from 'codx-core';
-import { CM_Deals } from '../../models/cm_model';
+import { CM_Contacts, CM_Deals } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstances } from '../../models/tmpModel';
 import { debug } from 'console';
@@ -187,14 +188,18 @@ export class PopupAddDealComponent
   objectConvertDeal(e) {
     if (e.e) {
       if (e.data) {
-        if (!this.lstContactDeal.some((x) => x.recID == e?.data?.recID)) {
-          this.lstContactDeal.push(e?.data);
+        var tmp = new CM_Contacts();
+        tmp = JSON.parse(JSON.stringify(e.data));
+        tmp.recID = Util.uid();
+        tmp.refID = e.data.recID;
+        if (!this.lstContactDeal.some((x) => x.refID == e?.data?.recID)) {
+          this.lstContactDeal.push(tmp);
           this.loadContactDeal.loadListContact(this.codxCmService.bringDefaultContactToFront(this.lstContactDeal));
         }
       }
     } else {
       var index = this.lstContactDeal.findIndex(
-        (x) => x.recID == e?.data?.recID
+        (x) => x.refID == e?.data?.recID
       );
       this.lstContactDeal.splice(index, 1);
     }
@@ -212,7 +217,13 @@ export class PopupAddDealComponent
     });
   }
 
-
+  getListContactByDealID(objectID) {
+    this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.lstContactDeal = res;
+      }
+    });
+  }
 
   valueChangeDate($event) {
     if ($event) {
@@ -461,7 +472,7 @@ export class PopupAddDealComponent
       await this.getListProcess(this.typeForDeal);
       if(this.action === this.actionEdit) {
         await this.getListInstanceSteps(this.deal.processID);
-      //  await this.getListContactByObjectID(this.deal.recID);
+        await this.getListContactByDealID(this.deal.recID);
       }
     } catch (error) {}
   }

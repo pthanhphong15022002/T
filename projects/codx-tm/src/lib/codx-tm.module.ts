@@ -25,6 +25,8 @@ import {
   AccumulationChartAllModule,
   AccumulationTooltipService,
   ChartAllModule,
+  LegendService,
+  TooltipService,
 } from '@syncfusion/ej2-angular-charts';
 import {
   ProgressAnnotationService,
@@ -51,6 +53,8 @@ import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-
 import {
   AnnotationsService,
   CircularGaugeModule,
+  GaugeTooltipService,
+  LegendService as LegendCircularGaugeService,
 } from '@syncfusion/ej2-angular-circulargauge';
 import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
 import { TaskExtendsComponent } from './taskextends/taskextends.component';
@@ -62,7 +66,10 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { CoreModule } from '@core/core.module';
 import { PopupTabsViewsDetailsComponent } from './popup-tabs-views-details/popup-tabs-views-details.component';
 
-import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
+import {
+  TreeMapModule,
+  TreeMapTooltipService,
+} from '@syncfusion/ej2-angular-treemap';
 import { TMDashboardComponent } from './tmdashboard/tmdashboard.component';
 import { LayoutNoToolbarComponent } from './tmdashboard/_noToolbar/_noToolbar.component';
 import { DashboardContentComponent } from './tmdashboard/dashboard-content/dashboard-content.component';
@@ -263,6 +270,11 @@ const T_Component: Type<any>[] = [
     AccumulationTooltipService,
     ProgressAnnotationService,
     AnnotationsService,
+    TreeMapTooltipService,
+    TooltipService,
+    GaugeTooltipService,
+    LegendService,
+    LegendCircularGaugeService,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

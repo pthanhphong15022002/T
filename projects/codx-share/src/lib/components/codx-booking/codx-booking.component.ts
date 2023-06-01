@@ -21,6 +21,7 @@ import {
   CodxScheduleComponent,
   Util,
   DialogModel,
+  AuthStore,
 } from 'codx-core';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { CodxAddBookingCarComponent } from './codx-add-booking-car/codx-add-booking-car.component';
@@ -102,22 +103,28 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   categoryIDProcess = '';
   categoryID = '';
   allocateStatus: string;
+  curUser: import("codx-core").UserModel;
   constructor(
     injector: Injector,
     private codxBookingService: CodxBookingService,
     private notificationsService: NotificationsService,
     private authService: AuthService,
+    private authStore: AuthStore,
     private activatedRoute: ActivatedRoute
   ) {
-    super(injector);
+    super(injector);    
+    this.curUser =this.authStore.get();
+    if(this.curUser==null){
+      this.curUser= this.authService?.userValue;
+    }
     
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   onInit(): void {
-    if(this.funcID==EPCONST.FUNCID.S_Allocate){
-      this.method="GetAllocateStationeryAsync";
+    if (this.funcID == EPCONST.FUNCID.S_Allocate) {
+      this.method = 'GetAllocateStationeryAsync';
     }
     this.getBaseVariable();
     this.roleCheck();
@@ -125,7 +132,6 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     this.buttons = {
       id: 'btnAdd',
     };
-    
   }
 
   onLoading(evt: any) {
@@ -256,7 +262,6 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.view.dataService.methodDelete = 'DeleteAsync';
-
   }
 
   //---------------------------------------------------------------------------------//
@@ -397,7 +402,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   onActionClick(event?) {
     if (event.type == 'add' && event.data?.resourceId != null) {
-      this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
+      this.popupTitle = this.buttons?.text + ' ' + this.funcIDName;
       this.addNew(event.data);
     }
     if (event.type == 'doubleClick' || event.type == 'edit') {
@@ -444,11 +449,11 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
       //Stationery
       case EPCONST.MFUNCID.S_Allocate:
-        this.allocateStatus='5';
+        this.allocateStatus = '5';
         this.allocate(data);
         break;
       case EPCONST.MFUNCID.S_UnAllocate:
-        this.allocateStatus='4';
+        this.allocateStatus = '4';
         this.allocate(data);
         break;
     }
@@ -543,7 +548,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
             // Hiện: Mời - dời - Chép
             func.functionID == EPCONST.MFUNCID.Copy ||
             func.functionID == EPCONST.MFUNCID.R_Invite ||
-            func.functionID == EPCONST.MFUNCID.R_Reschedule
+            func.functionID == EPCONST.MFUNCID.R_Reschedule||
+            func.functionID == EPCONST.MFUNCID.R_Cancel ||
+            func.functionID == EPCONST.MFUNCID.C_Cancel ||
+            func.functionID == EPCONST.MFUNCID.S_Cancel
           ) {
             func.disabled = false;
           }
@@ -553,10 +561,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
             func.functionID == EPCONST.MFUNCID.Edit ||
             func.functionID == EPCONST.MFUNCID.R_Release ||
             func.functionID == EPCONST.MFUNCID.C_Release ||
-            func.functionID == EPCONST.MFUNCID.S_Release ||
-            func.functionID == EPCONST.MFUNCID.R_Cancel ||
-            func.functionID == EPCONST.MFUNCID.C_Cancel ||
-            func.functionID == EPCONST.MFUNCID.S_Cancel
+            func.functionID == EPCONST.MFUNCID.S_Release 
           ) {
             func.disabled = true;
           }
@@ -599,14 +604,21 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         ) {
           func.disabled = true;
         }
-        if(data?.issueStatus=='1' && data?.approveStatus =='5' && (func.functionID == EPCONST.MFUNCID.S_Allocate || func.functionID == EPCONST.MFUNCID.S_UnAllocate)){
+        if (
+          data?.issueStatus == '1' &&
+          data?.approveStatus == '5' &&
+          (func.functionID == EPCONST.MFUNCID.S_Allocate ||
+            func.functionID == EPCONST.MFUNCID.S_UnAllocate)
+        ) {
           func.disabled = false;
-        }
-        else if((data?.issueStatus!='1' || data?.approveStatus !='5') && (func.functionID == EPCONST.MFUNCID.S_Allocate || func.functionID == EPCONST.MFUNCID.S_UnAllocate)){
+        } else if (
+          (data?.issueStatus != '1' || data?.approveStatus != '5') &&
+          (func.functionID == EPCONST.MFUNCID.S_Allocate ||
+            func.functionID == EPCONST.MFUNCID.S_UnAllocate)
+        ) {
           func.disabled = true;
         }
       });
-     
     }
   }
 
@@ -681,7 +693,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
-  setAllocateStatus(status:string) {
+  setAllocateStatus(status: string) {
     this.allocateStatus = status;
     this.detectorRef.detectChanges();
   }
@@ -691,138 +703,138 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
 
   release(data: any) {
-    if (this.authService?.userValue?.userID != data?.createdBy) {
+    if (
+      this.curUser?.userID == data?.createdBy ||
+      this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
+    ) {
+      if (data.approval != '0') {
+        this.codxBookingService
+          .getProcessByCategoryID(this.categoryIDProcess)
+          .subscribe((res: any) => {
+            this.codxBookingService
+              .release(
+                data,
+                res?.processID,
+                'EP_Bookings',
+                this.funcID,
+                data?.createdBy
+              )
+              .subscribe((res) => {
+                if (res?.msgCodeError == null && res?.rowCount) {
+                  this.notificationsService.notifyCode('ES007');
+                  data.approveStatus = EPCONST.A_STATUS.Released;
+                  data.write = false;
+                  data.delete = false;
+                  this.view.dataService.update(data).subscribe();
+                } else {
+                  this.notificationsService.notifyCode(res?.msgCodeError);
+                }
+              });
+          });
+      } else {
+        data.approveStatus = EPCONST.A_STATUS.Approved;
+        data.write = false;
+        data.delete = false;
+        this.view.dataService.update(data).subscribe();
+        this.notificationsService.notifyCode('ES007');
+        this.codxBookingService
+          .afterApprovedManual(
+            this.formModel.entityName,
+            data.recID,
+            EPCONST.A_STATUS.Approved
+          )
+          .subscribe();
+      }
+    } else {
       this.notificationsService.notifyCode('SYS032');
       return;
-    }
-
-    if (data.approval != '0') {
-      this.codxBookingService
-        .getProcessByCategoryID(this.categoryIDProcess)
-        .subscribe((res: any) => {
-          this.codxBookingService
-            .release(data, res?.processID, 'EP_Bookings', this.funcID)
-            .subscribe((res) => {
-              if (res?.msgCodeError == null && res?.rowCount) {
-                this.notificationsService.notifyCode('ES007');
-                data.approveStatus = EPCONST.A_STATUS.Released;
-                data.write = false;
-                data.delete = false;
-                this.view.dataService.update(data).subscribe();
-              } else {
-                this.notificationsService.notifyCode(res?.msgCodeError);
-              }
-            });
-        });
-    } else {
-      data.approveStatus = EPCONST.A_STATUS.Approved;
-      data.write = false;
-      data.delete = false;
-      this.view.dataService.update(data).subscribe();
-      this.notificationsService.notifyCode('ES007');
-      this.codxBookingService
-        .afterApprovedManual(
-          this.formModel.entityName,
-          data.recID,
-          EPCONST.A_STATUS.Approved
-        )
-        .subscribe();
     }
   }
 
   cancel(data: any) {
-    if (this.authService?.userValue?.userID != data?.createdBy) {
+    if (
+      this.curUser?.userID == data?.createdBy ||
+      this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
+    ) {
+      this.codxBookingService
+        .cancel(data?.recID, '', this.formModel.entityName)
+        .subscribe((res: any) => {
+          if (res && res?.msgCodeError == null) {
+            this.notificationsService.notifyCode(EPCONST.MES_CODE.Success); //đã hủy gửi duyệt
+            data.approveStatus = EPCONST.A_STATUS.Cancel;
+            this.view.dataService.update(data).subscribe();
+          } else {
+            this.notificationsService.notifyCode(res?.msgCodeError);
+          }
+        });
+    } else {
       this.notificationsService.notifyCode('SYS032');
       return;
     }
-    this.codxBookingService
-      .cancel(data?.recID, '', this.formModel.entityName)
-      .subscribe((res: any) => {
-        if (res && res?.msgCodeError == null) {
-          this.notificationsService.notifyCode(EPCONST.MES_CODE.Success); //đã hủy gửi duyệt
-          data.approveStatus = EPCONST.A_STATUS.Cancel;
-          this.view.dataService.update(data).subscribe();
-        } else {
-          this.notificationsService.notifyCode(res?.msgCodeError);
-        }
-      });
   }
 
   reschedule(data: any) {
-    let host: any;
-    if (data?.resources != null) {
-      host = data?.resources.filter((res) => res.roleType == '1');
-    }
     if (
-      !this.codxBookingService.checkRoleHost(
-        this.authService.userValue,
-        host[0].userID,
-        this.isAdmin
-      )
+      this.curUser?.userID == data?.owner ||
+      this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
     ) {
+      let dialogReschedule = this.callfc.openForm(
+        CodxRescheduleBookingRoomComponent,
+        '',
+        550,
+        400,
+        this.funcID,
+        [data, this.formModel, this.popupTitle]
+      );
+      dialogReschedule.closed.subscribe((x) => {
+        if (!x.event) this.view.dataService.clear();
+        if (x.event == null && this.view.dataService.hasSaved)
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe((x) => {
+              this.detectorRef.detectChanges();
+            });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
+    } else {
       this.notificationsService.notifyCode('SYS032');
       return;
     }
-    let dialogReschedule = this.callfc.openForm(
-      CodxRescheduleBookingRoomComponent,
-      '',
-      550,
-      400,
-      this.funcID,
-      [data, this.formModel, this.popupTitle]
-    );
-    dialogReschedule.closed.subscribe((x) => {
-      if (!x.event) this.view.dataService.clear();
-      if (x.event == null && this.view.dataService.hasSaved)
-        this.view.dataService
-          .delete([this.view.dataService.dataSelected])
-          .subscribe((x) => {
-            this.detectorRef.detectChanges();
-          });
-      else if (x.event) {
-        x.event.modifiedOn = new Date();
-        this.view.dataService.update(x.event).subscribe();
-      }
-    });
   }
 
   invite(data: any) {
-    let host: any;
-    if (data?.resources != null) {
-      host = data?.resources.filter((res) => res.roleType == '1');
-    }
     if (
-      !this.codxBookingService.checkRoleHost(
-        this.authService.userValue,
-        host[0].userID,
-        this.isAdmin
-      )
+      this.curUser?.userID == data?.owner ||
+      this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
     ) {
+      let dialogInvite = this.callfc.openForm(
+        CodxInviteRoomAttendeesComponent,
+        '',
+        800,
+        500,
+        this.funcID,
+        [data, this.formModel, this.popupTitle]
+      );
+      dialogInvite.closed.subscribe((x) => {
+        if (!x.event) this.view.dataService.clear();
+        if (x.event == null && this.view.dataService.hasSaved)
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe((x) => {
+              this.detectorRef.detectChanges();
+            });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
+    } else {
       this.notificationsService.notifyCode('SYS032');
       return;
     }
-    let dialogInvite = this.callfc.openForm(
-      CodxInviteRoomAttendeesComponent,
-      '',
-      800,
-      500,
-      this.funcID,
-      [data, this.formModel, this.popupTitle]
-    );
-    dialogInvite.closed.subscribe((x) => {
-      if (!x.event) this.view.dataService.clear();
-      if (x.event == null && this.view.dataService.hasSaved)
-        this.view.dataService
-          .delete([this.view.dataService.dataSelected])
-          .subscribe((x) => {
-            this.detectorRef.detectChanges();
-          });
-      else if (x.event) {
-        x.event.modifiedOn = new Date();
-
-        this.view.dataService.update(x.event).subscribe();
-      }
-    });
   }
 
   addNew(evt?) {
@@ -875,11 +887,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   edit(data?) {
     if (data) {
-      if (this.authService?.userValue?.userID != data?.createdBy) {
-        this.notificationsService.notifyCode('SYS032');
-        return;
-      }
-      if (true) {
+      if (
+        this.curUser?.userID == data?.createdBy ||
+        this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
+      ) {
         this.codxBookingService
           .getBookingByRecID(data?.recID)
           .subscribe((booking) => {
@@ -931,6 +942,9 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               });
             }
           });
+      } else {
+        this.notificationsService.notifyCode('SYS032');
+        return;
       }
     }
   }
@@ -990,19 +1004,21 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   delete(data?) {
-    if (this.authService?.userValue?.userID != data?.createdBy) {
+    if ( this.curUser?.userID == data?.createdBy || this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin) ) {
+      let deleteItem = this.view.dataService.dataSelected;
+      if (data) {
+        deleteItem = data;
+      }
+      this.view.dataService.delete([deleteItem]).subscribe(() => {});      
+    }
+    else{
       this.notificationsService.notifyCode('SYS032');
       return;
     }
-    let deleteItem = this.view.dataService.dataSelected;
-    if (data) {
-      deleteItem = data;      
-    }
-    this.view.dataService.delete([deleteItem]).subscribe(() => {});
   }
-  
+
   viewDetail(data: any) {
-    if(data.resourceType==EPCONST.VLL.ResourceType.Stationery){
+    if (data.resourceType == EPCONST.VLL.ResourceType.Stationery) {
       return;
     }
     let option = new SidebarModel();
@@ -1017,19 +1033,19 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   allocate(data: any) {
-    if(data.approverID!=this.authService?.userValue?.userID){
+    if (data?.approverID != this.curUser?.userID) {
       this.notificationsService.notifyCode('SYS032');
-        return;
+      return;
     }
-    if (data.approval == '1') {
+    if (data?.approval == '1') {
       this.api
         .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [data?.recID])
         .subscribe((trans: any) => {
           trans.map((item: any) => {
-            if (item.stepType === 'I') {
+            if (item?.stepType === 'I') {
               this.codxBookingService
                 .approve(
-                  item?.recID, //ApprovelTrans.RecID
+                  item?.recID, 
                   this.allocateStatus,
                   '',
                   ''
@@ -1037,7 +1053,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                 .subscribe((res: any) => {
                   if (res?.msgCodeError == null && res?.rowCount >= 0) {
                     this.notificationsService.notifyCode('SYS034'); //đã duyệt
-                    data.issueStatus = '3';
+                    
+                    data.issueStatus = this.allocateStatus =='5'? '3' :'4';
                     this.view.dataService.update(data).subscribe();
                   } else {
                     this.notificationsService.notifyCode(res?.msgCodeError);

@@ -124,8 +124,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTab();
-    if (this.action == 'add' || this.action == 'copy')
-      this.getAutoNumber(this.autoNumber);
+    this.getAutoNumber(this.autoNumber);
+
+    if (this.action == 'add' || this.action == 'copy') this.data.address = null;
     if (this.data?.objectID) {
       this.getListContactByObjectID(this.data?.objectID);
     }
@@ -220,16 +221,20 @@ export class PopupAddCmCustomerComponent implements OnInit {
   getAutoNumber(autoNumber) {
     switch (this.funcID) {
       case 'CM0101':
-        this.data.customerID = autoNumber;
+        this.data.customerID =
+          this.action != 'edit' ? autoNumber : this.data.customerID;
         break;
       case 'CM0102':
-        this.data.contactID = autoNumber;
+        this.data.contactID =
+          this.action != 'edit' ? autoNumber : this.data.contactID;
         break;
       case 'CM0103':
-        this.data.partnerID = autoNumber;
+        this.data.partnerID =
+          this.action != 'edit' ? autoNumber : this.data.partnerID;
         break;
       case 'CM0104':
-        this.data.competitorID = autoNumber;
+        this.data.competitorID =
+          this.action != 'edit' ? autoNumber : this.data.competitorID;
         break;
     }
   }
@@ -406,12 +411,16 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (this.funcID == 'CM0102') {
       if (this.data.mobile != null && this.data.mobile.trim() != '') {
         if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
+      }else{
+        this.data.mobile = null;
       }
       if (
         this.data.personalEmail != null &&
         this.data.personalEmail.trim() != ''
       ) {
         if (!this.checkEmailOrPhone(this.data.personalEmail, 'E')) return;
+      }else{
+        this.data.personalEmail = null;
       }
     }
 

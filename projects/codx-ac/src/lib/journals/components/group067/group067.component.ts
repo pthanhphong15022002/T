@@ -25,7 +25,7 @@ export class Group067Component extends UIComponent {
   @Output() change = new EventEmitter();
   @Output() buttonClick = new EventEmitter();
 
-  constructor(private injector: Injector) {
+  constructor(injector: Injector) {
     super(injector);
   }
   //#endregion

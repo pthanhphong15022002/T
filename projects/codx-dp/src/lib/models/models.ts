@@ -47,6 +47,12 @@ export class DP_Processes {
   autoName: string;
   steps: DP_Steps[] = [];
   approveRule :boolean = false ;
+
+  icon: string;
+  released: string;
+  releasedName: string;
+  module: string;
+  function: string;
 }
 
 export class DP_Processes_Permission {
@@ -112,7 +118,7 @@ export class DP_Steps {
   taskControl: string;
   leadtimeControl: boolean = true;
   durationControl: boolean = true;
-  startControl: string = '0'; // update bit to string
+  startControl: string = '1'; // update bit to string
   reScheduleTasks: boolean = true;
   options: string; // json
   roles: DP_Steps_Roles[] = []; // objects

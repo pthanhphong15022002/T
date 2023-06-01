@@ -21,7 +21,7 @@
     <div class="mb-3">
       <div class="row py-2">
         <div class="col-2">
-          <codx-label default="Mã tiềm năng:"></codx-label>:
+          <codx-label default="Mã tiềm năng:"></codx-label>
         </div>
         <div class="col-4">
           <span
@@ -42,7 +42,7 @@
         </div>
 
         <div class="col-2">
-          <codx-label default="Quy mô nhân sự:"></codx-label>:
+          <codx-label default="Quy mô nhân sự:"></codx-label>
         </div>
         <div class="col-4">
           <span
@@ -109,7 +109,7 @@
         ></span>
 
         </div>
-        <div class="col-2"><codx-label default="Chiến dịch:" fiedName="CampaignID"  [formModel]="formModel"></codx-label>:</div>
+        <div class="col-2"><codx-label default="Chiến dịch:" fiedName="CampaignID"  [formModel]="formModel"></codx-label></div>
         <div class="col-4">
           <span
           class="fs-7"
@@ -131,7 +131,7 @@
 
       <div class="row py-2">
         <div class="col-2">
-          <codx-label default="Điện thoại:"></codx-label>:
+          <codx-label default="Điện thoại:"></codx-label>
         </div>
         <div class="col-4">
           <span
@@ -218,7 +218,7 @@
 
       </div>
       <div class="row py-2">
-        <div class="col-2"><codx-label default="Website:" fiedName="WebPage"  [formModel]="formModel"></codx-label>:</div>
+        <div class="col-2"><codx-label default="Website:" fiedName="WebPage"  [formModel]="formModel"></codx-label></div>
         <div class="col-4">
           <span
           class="fs-7"
@@ -338,7 +338,7 @@
     [objectID]="dataSelected?.recID"
     [objectName]="dataSelected?.leadName"
     [objectType]="'2'"
-    [hidenMF]="false"
+    [hidenMF]="dataSelected?.status != '5' ? false : true"
     [type]="'formDetail'"
   ></codx-list-contacts>
 </ng-template>
@@ -349,6 +349,8 @@
 [funcID]="'CM0205'"
 [entityName]="'CM_Leads'"
 [id]="dataSelected.recID"
+[hidden]="dataSelected?.status != '5' ? false : true"
+
 (addressName)="addressName($event)"
 ></codx-address-cm>
 </ng-template>
