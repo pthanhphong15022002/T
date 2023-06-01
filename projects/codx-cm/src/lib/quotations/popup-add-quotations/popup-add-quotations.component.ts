@@ -281,6 +281,7 @@ export class PopupAddQuotationsComponent implements OnInit {
         this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
         this.modelCustomerIDDeals = { customerID: this.quotations.customerID };
         this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+        // this.disableCusID = true;
         break;
       case 'customerID':
         this.quotations.refID = null;

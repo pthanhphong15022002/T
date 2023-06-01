@@ -121,6 +121,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
   activeDefault = '';
   func0Default = '';
   funcIDDefault = '';
+  vllDefault ='SYS008'
 
   constructor(
     private pageTitle: PageTitleService,
@@ -812,8 +813,8 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
 
   //load menu Child
   loadMenuChild() {
-    this.requestMenuCustom.predicates = 'ApplyFor!=@0 && !Deleted';
-    this.requestMenuCustom.dataValues = '0';
+    this.requestMenuCustom.predicates = 'ApplyFor!=@0 && !Deleted && Released && Module==@1';
+    this.requestMenuCustom.dataValues = '0;CM';
     this.requestMenuCustom.entityName = 'DP_Processes';
     this.fetch().subscribe((item) => {
       this.dataMenuChildCustom = item;
