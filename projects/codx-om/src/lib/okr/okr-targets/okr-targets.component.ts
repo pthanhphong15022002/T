@@ -61,7 +61,8 @@ export class OkrTargetsComponent implements OnInit {
   @Input() curOrgUnitID: any; // orgUnitID/EmployeesID của owner
   @Input() isCollapsed = false;
   @Input() listUM = [];
-  @Input() currentUser;
+  @Input() currentUser;  
+  @Input() reloadedMF=true;
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =
     new EventEmitter();
   @Output('updateOKRPlans') updateOKRPlans: EventEmitter<any> =

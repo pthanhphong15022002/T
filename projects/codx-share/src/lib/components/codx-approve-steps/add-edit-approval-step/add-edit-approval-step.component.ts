@@ -618,15 +618,14 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                 .subscribe((res) => {
                   if (res) {
                     let listUser = res[0].split(';');
-                    if (listUser != null && listUser.length > 2) {
+                    if (listUser != null && listUser.length >= 2) {
                       this.notifySvr.alertCode('ES033').subscribe((x) => {
                         if (x.event?.status == 'Y') {
                           let appr = new Approvers();
                           appr.roleType = element?.objectType;
                           appr.name = element?.text;
                           appr.approver = element?.id;
-                          appr.icon =
-                            element?.icon != null ? element?.icon : null;
+                          appr.icon = element?.icon != null ? element?.icon : null;
                           this.lstApprover.push(appr);
                         } else {
                           return;

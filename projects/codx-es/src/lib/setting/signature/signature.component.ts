@@ -130,6 +130,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
               width: 30,
               template: this.itemAction,
               textAlign: 'Center',
+              controlType:'text',
             },
             // {
             //   field: 'email',
@@ -146,6 +147,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
                 : 'FullName',
               template: this.fullName,
               width: 180,
+              controlType:'text',
             },
             {
               field: 'signatureType',
@@ -154,6 +156,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
                 : 'SignatureType',
               template: this.signatureType,
               width: 140,
+              controlType:'text',
             },
             {
               field: 'supplier',
@@ -162,6 +165,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
                 : 'Supplier',
               template: this.supplier,
               width: 150,
+              controlType:'text',
             },
             {
               field: 'signature1',
@@ -171,6 +175,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
               template: this.imageSignature1,
               width: 130,
               textAlign: 'Center',
+              controlType:'text',
             },
             {
               field: 'signature2',
@@ -180,6 +185,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
               template: this.imageSignature2,
               width: 130,
               textAlign: 'Center',
+              controlType:'text',
             },
             {
               field: 'stamp',
@@ -187,12 +193,14 @@ export class SignatureComponent implements OnInit, AfterViewInit {
               template: this.imageStamp,
               width: 130,
               textAlign: 'Center',
+              controlType:'text',
             },
             {
               field: 'otpControl',
               headerText: gv ? gv['OTPControl'].headerText || 'Icon' : 'Icon',
               template: this.oTPControl,
               width: 110,
+              controlType:'text',
             },
             // {
             //   field: 'stop',

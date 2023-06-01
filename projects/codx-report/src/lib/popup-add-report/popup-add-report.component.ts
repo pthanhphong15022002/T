@@ -9,6 +9,7 @@ import {
   ViewChild,
   TemplateRef,
 } from '@angular/core';
+import { RemovingEventArgs, UploaderComponent } from '@syncfusion/ej2-angular-inputs';
 import {
   ApiHttpService,
   AuthStore,
@@ -26,7 +27,35 @@ import { AttachmentService } from 'projects/codx-share/src/lib/components/attach
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { utils } from 'xlsx';
 import { PopupEditParamComponent } from '../popup-edit-param/popup-edit-param.component';
-
+import {L10n } from '@syncfusion/ej2-base';
+import { FileInfo } from '@shared/models/file.model';
+L10n.load({
+  vi: {
+    "uploader": {
+      "Browse": "Duyệt ...",
+      "Clear": "Xóa tất cả",
+      "Upload": "Tải lên",
+      "dropFilesHint": "Hoặc thả tập tin ở đây",
+      "invalidMaxFileSize": "Kích thước tệp quá lớn",
+      "invalidMinFileSize": "Kích thước tệp quá nhỏ",
+      "invalidFileType": "Loại tệp không được phép",
+      "uploadFailedMessage": "Không thể tải lên tệp",
+      "uploadSuccessMessage": "Tải tài liệu thành công",
+      "removedSuccessMessage": "Xóa tệp thành công",
+      "removedFailedMessage": "Không thể xóa tệp",
+      "inProgress": "Đang tải lên",
+      "readyToUploadMessage": "Sẵn sàng để tải lên",
+      "abort": "Huỷ bỏ",
+      "remove": "Loại bỏ",
+      "cancel": "Hủy bỏ",
+      "delete": "Xóa  tệp",
+      "pauseUpload": "Tạm dừng tải lên tệp",
+      "pause": "Tạm ngừng",
+      "resume": "Sơ yếu lý lịch",
+      "retry": "Thử lại",
+      "fileUploadCancel": "Đã hủy tải lên tệp"
+    },
+  }})
 @Component({
   selector: 'popup-add-report',
   templateUrl: './popup-add-report.component.html',
@@ -38,7 +67,8 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   @ViewChild('tabSignature') tabSignature: TemplateRef<any>;
   @ViewChild('tabTemplate') tabTemplate: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
-
+  @ViewChild('uploader') uploader!: UploaderComponent;
+  files:any=[];
   title: string = 'Thêm mới báo cáo';
   tabContent: any[] = [];
   tabTitle: any[] = [];
@@ -155,6 +185,35 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         this.recID = this.data.recID;
         this.parameters = this.data.parameters;
         this.getRootFunction(this.data.moduleID, this.data.reportType);
+        if(this.data.reportContent){
+          if(this.data.reportContent.split(',').length ==1){
+            this.data.reportContent = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${this.data.reportContent}`
+          }
+
+          let file = this.dataBase64toFile(this.data.reportContent,this.data.location ? this.data.location : this.data.reportName);
+          let fileInfo:any = {};
+          fileInfo.id=file.name;
+          fileInfo.name = file.name;
+          fileInfo.rawFile = file;
+          fileInfo.type=file.type;
+          fileInfo.statusCode='1';
+          fileInfo.status='Sẵn sàng';
+          fileInfo.size =file.size;
+          let filePop:any={};
+          filePop.name=this.data.location ? this.data.location : this.data.reportName;
+          filePop.size = file.size;
+          filePop.type = file.type.split('/')[1];
+          this.files.push(filePop);
+          let ins = setInterval(()=>{
+            if(this.uploader){
+              clearInterval(ins);
+              this.uploader.filesData=[];
+              this.uploader.filesData.push(fileInfo);
+              this.uploader.refresh();
+            }
+          },50)
+
+        }
       } else {
         this.setDefaut();
       }
@@ -303,24 +362,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     })
   }
 
-  // cellSave(evt: any){
-  //   if(evt.action == 'edit'){
-  //     if(JSON.stringify(this.oldParamData) == JSON.stringify(evt.data)) return;
-  //     this.api
-  //     .execSv(
-  //       'SYS',
-  //       'ERM.Business.SYS',
-  //       'ReportParametersBusiness',
-  //       'UpdateReportParamAsync',
-  //       evt.data
-  //     )
-  //     .subscribe((res: any) => {
-  //       if (res) {
-  //         this.getReportParams();
-  //       }
-  //     });
-  //   }
-  // }
   setTitle(evt: any) {}
 
   buttonClick(evt: any) {}
@@ -399,20 +440,20 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     if (!this.data.recID) {
       this.data.recID = this.recID;
     }
-    if (this.attachment && this.attachment.fileUploadList.length > 0) {
-      this.attachment.objectId = this.recID;
-      console.log(this.attachment.fileUploadList);
+    // if (this.attachment && this.attachment.fileUploadList.length > 0) {
+    //   this.attachment.objectId = this.recID;
+    //   console.log(this.attachment.fileUploadList);
 
-      (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
+    //   (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
 
-        if (item2?.status == 0) {
-        }
+    //     if (item2?.status == 0) {
+    //     }
 
 
-      });
-      this.data.reportName = this.data.location =
-      this.attachment.fileUploadList[0].fileName;
-    }
+    //   });
+    //   this.data.reportName = this.data.location =
+    //   this.attachment.fileUploadList[0].fileName;
+    // }
     if(!this.data.customName) this.data.customName = this.data.defaultName;
     if (!this.data.service) this.data.service = 'rpt' + this.moduleName;
     if(this.data.assemblyName) this.data.service = this.data.assemblyName.split(".").pop();
@@ -459,6 +500,89 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
           )
           .subscribe();
   }
+
+  fileSelected(e:any){
+    console.log(e.filesData)
+    let file = e.filesData[0].rawFile;
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    let t=this;
+    reader.onload = function () {
+      //me.modelvalue = reader.result;
+      console.log(reader.result);
+      let strBase64 = reader.result;
+      if((strBase64 as string).split(',').length > 1){
+        strBase64 = (strBase64 as string).split(',')[1];
+      }
+      t.data.reportContent = strBase64;
+      //t.data.reportName = file.name;
+      t.data.location = file.name;
+    };
+    reader.onerror = function (error) {
+      console.log('Error: ', error);
+    };
+
+}
+ onFileRemove(args: RemovingEventArgs): void {
+  args.postRawFile = false;
+}
+
+download(){
+  this.api.execSv('rptsys',
+                  'Codx.RptBusiniess.SYS',
+                  'ReportBusiness',
+                  'GetRootFileAsync',
+                  this.data.reportID).subscribe((res:any)=>{
+                    let linkSource = res;
+                    if(linkSource.split(',').length ==1){
+                      linkSource = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${linkSource}`
+                    }
+                    const downloadLink = document.createElement("a");
+                    downloadLink.href = linkSource;
+                    downloadLink.download = this.data.reportName;
+                    downloadLink.click();
+                  })
+
+}
+
+fileRendering(e:any){
+
+  let iconEle = document.createElement('i');
+  iconEle.classList.add('icon-i-cloud-arrow-down','icon-20','text-hover-primary','icon-download-report')
+  iconEle.title = 'download';
+  let t= this;
+  iconEle.addEventListener('click',function(){
+    t.downloadCustomFile(e);
+  });
+  e.element.insertBefore(iconEle,e.element.lastChild)
+}
+
+private downloadCustomFile(e:any){
+  let linkSource = this.data.reportContent;
+   if(linkSource.split(',').length ==1){
+       linkSource = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${linkSource}`
+      }
+    const downloadLink = document.createElement("a");
+    downloadLink.href = linkSource;
+    downloadLink.download = this.data.reportName;
+    downloadLink.click();
+}
+
+private dataBase64toFile(dataStr:string, filename:string) {
+  let arr = dataStr.split(','),
+      mime =this.data.reportName.split('.')[1],
+      bstr = atob(arr[arr.length - 1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+  if(arr.length>1){
+    mime = arr[0]?.match(/:(.*?);/)[1]
+  }
+  while(n--){
+      u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, {type:mime});
+}
+
 }
 class GuId {
   static newGuid() {

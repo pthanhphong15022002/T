@@ -69,15 +69,14 @@
         <ejs-combobox
           [dataSource]="lstLeadCbxOne"
           [fields]="fieldCbx"
-          [disabled]="true"
           [value]="leadOne?.recID"
+          [readonly]="true"
         ></ejs-combobox>
       </div>
       <div class="w-20">
         <ejs-combobox
           [dataSource]="lstLeadCbxTwo"
           [fields]="fieldCbx"
-          [disabled]="true"
           [value]="leadTwo?.recID"
           (valueChange)="cbxLeadChange($event, 'two')"
         ></ejs-combobox>
@@ -86,7 +85,6 @@
         <ejs-combobox
           [dataSource]="lstLeadCbxThree"
           [fields]="fieldCbx"
-          [disabled]="true"
           [value]="leadThree?.recID"
           (valueChange)="cbxLeadChange($event, 'three')"
         ></ejs-combobox>
@@ -1667,7 +1665,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactOne)"
+                    [innerHTML]="
+                      countContactAndAddress(lstContactNew, lstContactOne)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -1728,7 +1728,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactTwo)"
+                    [innerHTML]="
+                      countContactAndAddress(lstContactNew, lstContactTwo)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -1791,7 +1793,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactThree)"
+                    [innerHTML]="
+                      countContactAndAddress(lstContactNew, lstContactThree)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -1827,7 +1831,7 @@
               [dataSource]="lstContactNew"
               [fields]="fieldContacts"
               [value]="contactDefault"
-              (valueChange)="cbxContactChange($event)"
+              (valueChange)="cbxContactChange($event, 'contact')"
             ></ejs-combobox>
           </div>
         </div>
@@ -1906,7 +1910,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary min-w-120px me-2"
-                  (click)="clickPopupContacts('remove', lstAddressNew, leadNew)"
+                  (click)="clickPopupAddress('remove', lstAddressNew, leadNew)"
                 >
                   <i class="icon-check-correct icon-16 me-1"></i>
                   <codx-label
@@ -1915,6 +1919,18 @@
                     default="Loại bỏ địa chỉ"
                   ></codx-label>
                 </button>
+              </div>
+              <div class="d-flex justify-content-end align-items-center">
+                <codx-label
+                  class="label-colon"
+                  name="lblSelect"
+                  [formModel]="dialog.formModel"
+                  default="Đã chọn"
+                ></codx-label>
+
+                <span class="me-1">
+                  {{ lstAddressNew.length }}
+                </span>
               </div>
             </div>
           </div>
@@ -1933,7 +1949,7 @@
                   <button
                     type="button"
                     class="btn btn-outline-primary min-w-120px me-2"
-                    (click)="clickPopupContacts('add', lstAddressOne, leadOne)"
+                    (click)="clickPopupAddress('add', lstAddressOne, leadOne)"
                   >
                     <i class="icon-check-correct icon-16 me-1"></i>
                     <codx-label
@@ -1953,7 +1969,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactOne)"
+                    [innerHTML]="
+                      countContactAndAddress(lstAddressNew, lstAddressOne)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -1964,7 +1982,7 @@
                     ></codx-label
                   ></span>
                   <span class="me-1">
-                    {{ lstContactOne.length }}
+                    {{ lstAddressOne.length }}
                   </span>
                 </div>
               </div>
@@ -1985,7 +2003,7 @@
                   <button
                     type="button"
                     class="btn btn-outline-primary min-w-120px me-2"
-                    (click)="clickPopupContacts('add', lstContactTwo, leadTwo)"
+                    (click)="clickPopupAddress('add', lstAddressTwo, leadTwo)"
                   >
                     <i class="icon-check-correct icon-16 me-1"></i>
                     <codx-label
@@ -2005,7 +2023,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactTwo)"
+                    [innerHTML]="
+                      countContactAndAddress(lstAddressNew, lstAddressTwo)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -2016,7 +2036,7 @@
                     ></codx-label
                   ></span>
                   <span class="me-1">
-                    {{ lstContactTwo.length }}
+                    {{ lstAddressTwo.length }}
                   </span>
                 </div>
               </div>
@@ -2038,7 +2058,7 @@
                     type="button"
                     class="btn btn-outline-primary min-w-120px me-2"
                     (click)="
-                      clickPopupContacts('add', lstAddressThree, leadThree)
+                      clickPopupAddress('add', lstAddressThree, leadThree)
                     "
                   >
                     <i class="icon-check-correct icon-16 me-1"></i>
@@ -2059,7 +2079,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactThree)"
+                    [innerHTML]="
+                      countContactAndAddress(lstAddressNew, lstAddressThree)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -2070,7 +2092,7 @@
                     ></codx-label
                   ></span>
                   <span class="me-1">
-                    {{ lstContactThree.length }}
+                    {{ lstAddressThree.length }}
                   </span>
                 </div>
               </div>
@@ -2095,7 +2117,7 @@
               [dataSource]="lstAddressNew"
               [fields]="fieldAddress"
               [value]="addressDefault"
-              (valueChange)="cbxContactChange($event)"
+              (valueChange)="cbxContactChange($event, 'address')"
             ></ejs-combobox>
           </div>
         </div>
