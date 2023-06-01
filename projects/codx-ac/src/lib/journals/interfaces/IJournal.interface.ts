@@ -72,4 +72,5 @@ export interface IJournal {
   dataValue: string;
   checkImage: boolean;
   inputMode: string;
+  postingMode: string;
 }
