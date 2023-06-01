@@ -65,19 +65,9 @@
                   | async
               "
             ></div>
-
-
-
             </div>
 
             <div class="d-flex align-items-top justify-content-start mb-2">
-      <codx-tag
-              [entityName]="'CM_Deals'"
-              [disabled]="true"
-              [isEdit]="false"
-              [value]="test"
-            >
-            </codx-tag>
             </div>
 
             <div class="d-flex align-items-top justify-content-start mb-2">
@@ -154,58 +144,20 @@
             <div class="d-flex flex-wrap align-items-top mb-2">
               <div class="d-flex align-items-center me-6 mb-1">
                 <codx-label
-                  default="Ngày tạo:"
+                [formModel]="formModel"
+                fiedName="ExpectedClosed"
+                  default="Ngày dự kiến đóng:"
                   class="text-dark fw-bold me-1"
                 ></codx-label>
                 <span
                   class="text-gray-600"
-                  #createdOn
+                  #expectedClosed
                   [innerHTML]="
-                    dataSelected?.createdOn
+                    dataSelected?.expectedClosed
                       | formatvalue
                         : formModel
-                        : 'createdOn'
-                        : createdOn
-                        : 'CMDeals'
-                        : 'grvCMDeals'
-                      | async
-                  "
-                ></span>
-              </div>
-              <div class="d-flex align-items-center me-6 mb-1">
-                <codx-label
-                  default="Ngày bắt đầu:"
-                  class="text-dark fw-bold me-1"
-                ></codx-label>
-                <span
-                  class="text-gray-600"
-                  #startDate
-                  [innerHTML]="
-                    dataSelected?.startDate
-                      | formatvalue
-                        : formModel
-                        : 'startDate'
-                        : createdOn
-                        : 'CMDeals'
-                        : 'grvCMDeals'
-                      | async
-                  "
-                ></span>
-              </div>
-              <div class="d-flex align-items-center me-3 mb-1">
-                <codx-label
-                  default="Ngày đến hạn:"
-                  class="text-dark fw-bold me-1"
-                ></codx-label>
-                <span
-                  class="text-gray-600"
-                  #endDate
-                  [innerHTML]="
-                    dataSelected?.endDate
-                      | formatvalue
-                        : formModel
-                        : 'endDate'
-                        : createdOn
+                        : 'expectedClosed'
+                        : expectedClosed
                         : 'CMDeals'
                         : 'grvCMDeals'
                       | async
