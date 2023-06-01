@@ -64,8 +64,8 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
   }
 
   ngAfterViewInit() {
-    this.form.formGroup.patchValue(this.Paras);
     this.setFromDateToDate(this.runPeriodic.runDate);
+    this.form.formGroup.patchValue(this.Paras);
   }
 
   //#endregion
@@ -150,7 +150,37 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
   }
 
   onSaveAdd(){
+    this.checkParasValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      this.notification.notifyCode('SYS023', 0, '');
+      return;
+    } else {
+      if (this.formType == 'add' || this.formType == 'copy') {
+        this.runPeriodic.status = 1;
+        this.runPeriodic.paras = JSON.stringify(this.Paras);
+        this.dialog.dataService.updateDatas.set(
+          this.runPeriodic['_uuid'],
+          this.runPeriodic
+        );
+        this.dialog.dataService
+          .save(null, 0, '', 'SYS006', true)
+          .subscribe((res) => {
+            if (res && res.update.data != null) {
+              this.onClearData();
+              this.dialog.dataService.addNew().subscribe((res) => {
+                this.form.formGroup.patchValue(res);
+                this.form.formGroup.patchValue(this.Paras);
+                this.runPeriodic = this.dialog.dataService!.dataSelected;
+              });
+            }
+          });
+      }
+    }
+  }
 
+  onClearData(){
+    this.Paras = new Paras();
   }
 
   checkParasValidate() {

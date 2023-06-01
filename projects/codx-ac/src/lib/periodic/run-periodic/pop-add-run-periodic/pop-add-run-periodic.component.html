@@ -107,7 +107,7 @@
     <div class="d-flex align-items-center justify-content-end pt-3">
         <div class="d-flex align-items-center me-3">
             <div *ngIf="formType != 'edit'" class="ms-2">
-                <button type="button" class="btn btn-md btn-light-primary" >
+                <button type="button" class="btn btn-md btn-light-primary" (click)="onSaveAdd()">
                 <codx-label class="fw-normal" fiedName="lblSave" default="Lưu & thêm"></codx-label>
                 </button>
             </div>
