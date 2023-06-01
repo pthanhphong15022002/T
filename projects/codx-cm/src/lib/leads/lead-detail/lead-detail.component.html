@@ -83,22 +83,6 @@
                 "
               ></span>
           </div>
-          <div class="d-flex align-items-center">
-              <codx-label
-                default="Nhân viên bán hàng:"
-                class="fw-bold me-2"
-              ></codx-label>
-              <div class="h-25px">
-                <codx-imgs
-                [isToolTip]="true"
-                [width]="25"
-                [objectId]="dataSelected.salespersonID"
-                ojectType="AD_Users"
-                [numberImages]="1"
-              >
-              </codx-imgs>
-            </div>
-          </div>
         </div>
         <div class="d-flex align-items-top mb-2">
           <codx-label default="Nhu cầu:" class="fw-bold me-2 text-nowrap"></codx-label>
@@ -162,7 +146,7 @@
             </div>
           </div>
           <div class="d-flex flex-column">
-              <div class="mb-2">              
+              <div class="mb-2">
                 <codx-label
                   default="Bán hàng/Tư vấn"
                   class="text-dark fw-bold"
@@ -172,7 +156,7 @@
                 <codx-imgs
                   [isToolTip]="true"
                   [width]="30"
-                  [objectId]="dataSelected.owner"
+                  [objectId]="dataSelected.salespersonID"
                   ojectType="AD_Users"
                   [numberImages]="1"
                 >
@@ -181,7 +165,7 @@
                 <codx-imgs
                   [isToolTip]="true"
                   [width]="30"
-                  [objectId]="dataSelected.consultantID"
+                  [objectId]="dataSelected?.consultantID"
                   ojectType="AD_Users"
                   [numberImages]="1"
                 >

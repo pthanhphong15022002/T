@@ -30,6 +30,7 @@
     [imageReferType]="'avt'"
     [imageWidth]="35"
     imgCss="me-3"
+    [imageObjName]="data?.leadName"
     [imageObjType]="'CM_Leads'"
 
     cardCss="card-template border-bottom p-3 list-task"
@@ -63,8 +64,6 @@
               : formModel
               : 'addresses'
               : addresses
-              : 'CMLeads'
-              : 'grvCMLeads'
             | async
         "
       ></span>
@@ -146,7 +145,7 @@
           </codx-imgs>
         </div>
       </div>
-      
+
     </div>
   </div>
 
