@@ -1,5 +1,5 @@
 
-<div class="wp-contents-shares">
+<div *ngIf="loaded" class="wp-contents-shares">
     <ng-container *ngIf="data;else postShareDeleted">
         <ng-container [ngSwitch]="refType">
             <!-- WP_Comments -->

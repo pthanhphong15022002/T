@@ -79,7 +79,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   isClickSave = false;
   crrRole: any;
   accountable: boolean = false;
-  paramView: any;   //param view 
+  paramView: any; //param view
 
   constructor(
     private authStore: AuthStore,
@@ -115,13 +115,16 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
 
     this.cache.functionList(this.dialog.formModel.funcID).subscribe((f) => {
       if (f && f.module) {
-        this.cache.viewSettingValues(f.module +'Parameters').subscribe((res)=>{
-          if(res?.length > 0){
-            let dataParam = res.filter(x=>x.category=='1'&& !x.transType)[0];
-            if(dataParam)
-             this.paramView = JSON.parse(dataParam.dataValue);
-          }
-        })
+        this.cache
+          .viewSettingValues(f.module + 'Parameters')
+          .subscribe((res) => {
+            if (res?.length > 0) {
+              let dataParam = res.filter(
+                (x) => x.category == '1' && !x.transType
+              )[0];
+              if (dataParam) this.paramView = JSON.parse(dataParam.dataValue);
+            }
+          });
       }
     });
     this.cache.valueList(this.vllRole).subscribe((res) => {
@@ -914,6 +917,21 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
                     this.dataReferences.unshift(ref);
                   }
                 });
+            }
+          });
+        break;
+      case 'DP_Instances_Steps_Tasks':
+        this.api
+          .execSv<any>(
+            'DP',
+            'DP',
+            'InstancesBusiness',
+            'GetTempReferenceByRefIDAsync',
+            task.refID
+          )
+          .subscribe((result) => {
+            if (result && result?.length > 0) {
+              this.dataReferences = result;
             }
           });
         break;

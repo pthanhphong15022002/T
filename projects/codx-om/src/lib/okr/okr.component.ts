@@ -117,6 +117,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   loadedData: boolean;
   loadedDataTree: boolean;
   useSKR = false;
+  reloadedMF=true;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -407,6 +408,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             oldOB.current = newOB?.current;
             oldOB.weight = newOB?.weight;
             oldOB.progress = newOB?.progress;
+            oldOB.modifiedOn = new Date();
             if(newOB?.items!=null && newOB?.items?.length>0){
               //update KR
               for(let k=0;k<newOB?.items?.length;k++){
@@ -419,7 +421,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                   oldKR.current = newKR?.current;
                   oldKR.weight = newKR?.weight;
                   oldKR.progress = newKR?.progress;
-
+                  oldKR.modifiedOn = new Date();
                   if(newKR?.items!=null && newKR?.items?.length>0){
                     //update SKR
                     for(let s=0;s<newKR?.items?.length;s++){
@@ -431,7 +433,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                         oldSKR.target = newSKR?.target;
                         oldSKR.current = newSKR?.current;
                         oldSKR.weight = newSKR?.weight;
-                        oldSKR.progress = newSKR?.progress;      
+                        oldSKR.progress = newSKR?.progress;  
+                        oldSKR.modifiedOn = new Date();    
                       }
                       else{
                         oldKR?.items.push(newSKR);
@@ -453,6 +456,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
+  
   getOrgTreeOKR() {
     if (this.curUser?.employee != null) {
       let tempOrgID = '';
@@ -726,7 +730,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   changePlanStatus(status) {
-    this.showPlanMF = false;
+    this.reloadedMF = false;
+    this.detectorRef.detectChanges();
     if (status == OMCONST.VLL.PlanStatus.NotStarted) {
       this.codxOmService
         .beforeUnReleasePlan(this.dataOKRPlans?.recID)
@@ -737,20 +742,29 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                 res +
                 ' để xử lí.'
             ); //OM_WAIT: Đợi mssgCode
+            
+              this.reloadedMF = true;
+              this.detectorRef.detectChanges();
             return;
+            
           } else {
             this.codxOmService
               .changePlanStatus(this.dataOKRPlans.recID, status)
               .subscribe((res) => {
                 if (res) {
                   this.dataOKRPlans.status = status;
+                  this.detectorRef.detectChanges();
+                  this.reloadedMF = true;
+                  this.detectorRef.detectChanges();
                   //this.getOKRPlans(this.periodID, this.interval, this.year);
                   this.notificationsService.notifyCode('SYS034'); //thành công
+
                 }
                 // else{
 
                 //   this.notificationsService.notifyCode('SYS034'); //thành công
                 // }
+                
               });
           }
         });
@@ -760,6 +774,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         .subscribe((res) => {
           if (res) {
             this.dataOKRPlans.status = status;
+            this.detectorRef.detectChanges();
+            this.reloadedMF = true;
+            this.detectorRef.detectChanges();
             //this.getOKRPlans(this.periodID, this.interval, this.year);
             this.notificationsService.notifyCode('SYS034'); //thành công
             if ((status = OMCONST.VLL.PlanStatus.Ontracking)) {
@@ -772,6 +789,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                 });
             }
           }
+          
         });
     }
   }

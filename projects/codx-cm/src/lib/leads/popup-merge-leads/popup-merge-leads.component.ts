@@ -82,25 +82,25 @@ export class PopupMergeLeadsComponent implements OnInit {
     this.dialog = dialog;
     this.title = dt?.data?.title;
     this.leadOne = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.leadNew = JSON.parse(JSON.stringify(this.leadOne));
+
+  }
+  async ngOnInit() {
+    this.leadNew.recID = Util.uid();
     this.recIDLead = this.leadOne?.recID;
     this.nameLead = this.leadOne?.leadName;
     this.modifyOn = this.leadOne?.modifiedOn;
-  }
-  async ngOnInit() {
-    this.changeAvata = false;
     this.lstLeadCbxOne = await this.getCbxLead(null, null);
     this.lstLeadCbxTwo = await this.getCbxLead(this.leadOne?.recID, null);
     this.lstLeadCbxThree = await this.getCbxLead(this.leadOne?.recID, null);
-    this.leadNew = JSON.parse(JSON.stringify(this.leadOne));
-    this.leadNew.recID = Util.uid();
+
+    this.changeAvata = false;
   }
 
   async ngAfterViewInit() {
-    this.cache.gridViewSetup('CMLeads', 'grvCMLeads').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
+    this.gridViewSetup = await firstValueFrom(
+      this.cache.gridViewSetup('CMLeads', 'grvCMLeads')
+    );
     if (this.leadOne) {
       this.lstContactOne = await this.getContacts(this.leadOne?.recID);
       this.lstAddressOne = await this.getListAddress(
@@ -191,13 +191,23 @@ export class PopupMergeLeadsComponent implements OnInit {
               this.imageAvatar.updateFileDirectReload(res?.recID)
             );
 
-            this.dialog.close(res);
+            this.dialog.close([
+              res,
+              this.leadOne,
+              this.leadTwo,
+              this.leadThree,
+            ]);
             this.noti.notifyCode('SYS034');
           } else {
             await firstValueFrom(
               this.cmSv.copyFileAvata(this.recIDLead, this.leadNew.recID)
             );
-            this.dialog.close(res);
+            this.dialog.close([
+              res,
+              this.leadOne,
+              this.leadTwo,
+              this.leadThree,
+            ]);
             this.noti.notifyCode('SYS034');
           }
         }
@@ -436,13 +446,16 @@ export class PopupMergeLeadsComponent implements OnInit {
       case 'salespersonID':
         if (e.field === 'salespersonID1' && e.component.checked === true) {
           this.leadNew.salespersonID = this.leadOne?.salespersonID;
+          this.leadNew.owner = this.leadOne?.salespersonID;
         } else if (
           e.field === 'salespersonID2' &&
           e.component.checked === true
         ) {
           this.leadNew.salespersonID = this.leadTwo?.salespersonID;
+          this.leadNew.owner = this.leadTwo?.salespersonID;
         } else {
           this.leadNew.salespersonID = this.leadThree?.salespersonID;
+          this.leadNew.owner = this.leadThree?.salespersonID;
         }
         break;
       case 'consultantID':

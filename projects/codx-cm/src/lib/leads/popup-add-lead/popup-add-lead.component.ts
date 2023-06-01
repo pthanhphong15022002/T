@@ -68,14 +68,14 @@ menuGeneralSystem = {
   subText: 'General system',
 };
 menuGeneralContact = {
-  icon: 'icon-info',
+  icon: 'icon-contact_phone',
   text: 'Người liên hệ',
   name: 'GeneralContact',
   subName: 'General contact',
   subText: 'General contact',
 };
 menuGeneralAddress = {
-  icon: 'icon-info',
+  icon: 'icon-place',
   text: 'Danh sách địa chỉ',
   name: 'GeneralAddress',
   subName: 'General address',
@@ -142,30 +142,14 @@ valueChangeDate($event) {
 
 saveLead() {
 
-  // if (!this.lead?.leadName?.trim()) {
-  //   this.notificationsService.notifyCode(
-  //     'SYS009',
-  //     0,
-  //     '"' + this.gridViewSetup['DealName']?.headerText + '"'
-  //   );
-  //   return;
-  // }
-  // if (!this.lead?.customerID) {
-  //   this.notificationsService.notifyCode(
-  //     'SYS009',
-  //     0,
-  //     '"' + this.gridViewSetup['CustomerID']?.headerText + '"'
-  //   );
-  //   return;
-  // }
-  // if(!this.lead?.owner){
-  //   this.notificationsService.notifyCode(
-  //     'SYS009',
-  //     0,
-  //     '"' + this.gridViewSetup['Owner']?.headerText + '"'
-  //   );
-  //   return;
-  // }
+  if (!this.lead?.leadName?.trim()) {
+    this.notificationsService.notifyCode(
+      'SYS009',
+      0,
+      '"' + this.gridViewSetup['DealName']?.headerText + '"'
+    );
+    return;
+  }
   if(this.action !== this.actionEdit) {
     this.onAdd();
   }
@@ -190,20 +174,20 @@ onAdd() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
-        if (res) {
+        if (res?.save[0] && res?.save) {
           var recID = res?.save[0].recID;
           if (this.avatarChange) {
             this.imageUpload
               .updateFileDirectReload(recID)
               .subscribe((result) => {
                 if (result) {
-                  this.dialog.close([res.save[0]]);
+                  this.dialog.close(res.save[0]);
                 } else {
-                  this.dialog.close([res.save[0]]);
+                  this.dialog.close(res.save[0]);
                 }
               });
           } else {
-            this.dialog.close([res.save[0]]);
+            this.dialog.close(res.save[0]);
           }
         }
       });
@@ -213,7 +197,7 @@ onEdit() {
     this.dialog.dataService
     .save((option: any) => this.beforeSave(option))
     .subscribe((res) => {
-      if (res && res.update[0]) {
+      if (res.update[0] && res.update) {
         var recID = res.update[0].recID;
         (this.dialog.dataService as CRUDService)
           .update(res.update[0])
