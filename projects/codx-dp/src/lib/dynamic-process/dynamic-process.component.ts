@@ -54,8 +54,7 @@ import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/cate
 })
 export class DynamicProcessComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   // View
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -191,7 +190,7 @@ export class DynamicProcessComponent
       this.changeDetectorRef.detectChanges();
     }
   }
-  onDragDrop(e: any) {}
+  onDragDrop(e: any) { }
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
@@ -866,42 +865,42 @@ export class DynamicProcessComponent
 
   cancelReleaseProcess(process) {
     this.dpService
-        .releaseProcess([process, false])
-        .subscribe((res) => {
-          if (res) {
-            process.status = "1";
-            process.released = false;
-            process.modifiedOn = res;
-            process.modifiedBy = this.user?.userID;
-            this.view.dataService.update(process).subscribe();
-            this.changeDetectorRef.detectChanges();
-            this.notificationsService.notifyCode('SYS007');
-          }
-        })
+      .releaseProcess([process, false])
+      .subscribe((res) => {
+        if (res) {
+          process.status = "1";
+          process.released = false;
+          process.modifiedOn = res;
+          process.modifiedBy = this.user?.userID;
+          this.view.dataService.update(process).subscribe();
+          this.changeDetectorRef.detectChanges();
+          this.notificationsService.notifyCode('SYS007');
+        }
+      })
   }
 
-  saveReleaseProcess(){
+  saveReleaseProcess() {
     this.dpService
-        .releaseProcess([this.processRelease, true])
-        .subscribe((res) => {
-          if (res) {
-            this.processReleaseClone.icon = this.processRelease.icon;
-            this.processReleaseClone.released = true;
-            this.processReleaseClone.releasedName = this.processRelease.releasedName;
-            this.processReleaseClone.module =  this.processRelease.module;
-            this.processReleaseClone.function = this.processRelease.function;
-            this.processReleaseClone.status = "7";
-            this.processReleaseClone.modifiedOn = res;
-            this.processReleaseClone.modifiedBy = this.user?.userID;
-            this.view.dataService.update(this.processReleaseClone).subscribe();
-            this.changeDetectorRef.detectChanges();
-            this.notificationsService.notifyCode('SYS007');
-            this.popupRelease.close();
-          }
-        });
+      .releaseProcess([this.processRelease, true])
+      .subscribe((res) => {
+        if (res) {
+          this.processReleaseClone.icon = this.processRelease.icon;
+          this.processReleaseClone.released = true;
+          this.processReleaseClone.releasedName = this.processRelease.releasedName;
+          this.processReleaseClone.module = this.processRelease.module;
+          this.processReleaseClone.function = this.processRelease.function;
+          this.processReleaseClone.status = "7";
+          this.processReleaseClone.modifiedOn = res;
+          this.processReleaseClone.modifiedBy = this.user?.userID;
+          this.view.dataService.update(this.processReleaseClone).subscribe();
+          this.changeDetectorRef.detectChanges();
+          this.notificationsService.notifyCode('SYS007');
+          this.popupRelease.close();
+        }
+      });
   }
 
-  changeValueName(event,data) {
+  changeValueName(event, data) {
     let value = event?.data;
     if (typeof event?.data === 'string') {
       value = value.trim();
@@ -909,7 +908,7 @@ export class DynamicProcessComponent
     data = value;
   }
 
-  changeValue(event,data) {
+  changeValue(event, data) {
     let value = event?.data;
     if (typeof event?.data === 'string') {
       value = value.trim();
