@@ -123,6 +123,9 @@ export class ListContractsComponent implements OnInit, OnChanges {
     if(this.quotationID){
       contracts.quotationID = this.quotationID;
     }
+    if(this.customersID){
+      contracts.customerID = this.customersID;
+    }
     let contractOutput = await this.openPopupContract(null, "add",contracts);
     if(contractOutput?.event?.contract){
       this.listContract.push(contractOutput?.event?.contract);

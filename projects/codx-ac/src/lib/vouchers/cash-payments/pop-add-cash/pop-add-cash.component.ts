@@ -502,27 +502,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     switch (this.formType) {
       case 'add':
         if (this.hasSaved) {
-          this.dialog.dataService.updateDatas.set(
-            this.cashpayment['_uuid'],
-            this.cashpayment
-          );
-          this.dialog.dataService
-            .save(
-              (opt: RequestOption) => {
-                opt.methodName = 'UpdateLogicAsync';
-                opt.data = [this.cashpayment];
-              },
-              0,
-              '',
-              '',
-              false
-            )
-            .subscribe((res) => {
-              if (res && res.update.data != null) {
-                this.oldReasonID = res.update.data.reasonID;
-                this.loadGrid();
-              }
-            });
+          this.loadGrid();
         } else {
           this.journalService.handleVoucherNoAndSave(
             this.journal,
@@ -555,27 +535,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
         break;
       case 'edit':
-        this.dialog.dataService.updateDatas.set(
-          this.cashpayment['_uuid'],
-          this.cashpayment
-        );
-        this.dialog.dataService
-          .save(
-            (opt: RequestOption) => {
-              opt.methodName = 'UpdateLogicAsync';
-              opt.data = [this.cashpayment];
-            },
-            0,
-            '',
-            '',
-            false
-          )
-          .subscribe((res) => {
-            if (res && res.update.data != null) {
-              this.oldReasonID = res.update.data.reasonID;
-              this.loadGrid();
-            }
-          });
+        this.loadGrid();
         break;
     }
   }
