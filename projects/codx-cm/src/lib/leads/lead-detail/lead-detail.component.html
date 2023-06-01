@@ -10,13 +10,12 @@
     (clickMF)="clickMF($event, dataSelected)"
   >
     <ng-template #header let-data>
-      <div class="d-flex justify-content-start text-info">
-        <div>
-          <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
-        </div>
-        <div>
-          <span
-          class="text-gray-700"
+      <div class="d-flex justify-content-start text-info mt-n6">
+        <span>
+          <i class="icon-add_shopping_cart icon-18 me-2 text-gray-700"></i>
+        </span>
+        <span
+          class="text-dark fs-6 fw-bold"
           #businesslineID
           [innerHTML]="
           dataSelected?.businesslineID
@@ -29,7 +28,6 @@
               | async
           "
         ></span>
-        </div>
       </div>
       <div class="container_detail mt-3">
         <div class="d-flex justify-content-between pb-3">

@@ -73,6 +73,7 @@ export class ShareComponent implements OnInit {
   isShare = true;
   requestTitle = '';
   ownerID :any;
+  emailTemplate :any;
   toPermission: Permission[] = [];
   byPermission: Permission[] = [];
   ccPermission: Permission[];
@@ -99,7 +100,6 @@ export class ShareComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
     ) {
-      debugger
       this.dialog = dialog;       
       this.type = data.data[0];
       this.fileEditing = data.data[1];
@@ -120,6 +120,15 @@ export class ShareComponent implements OnInit {
     this.user = this.auth.get();       
     if(this.dmSV.breakCumArr.length>0 && this.dmSV.breakCumArr.includes(this.fullName)) this.fullName= null
     if(!this.isShare) this.getOwner();
+    else this.getEmailTemplate();
+  }
+
+  getEmailTemplate()
+  {
+    this.api.execSv("SYS", "ERM.Business.AD", "EmailTemplatesBusiness", "GetEmailTemplateByTemplateTypeAsync","DM_Share").subscribe((res : any)=>{
+      this.shareContent = res?.message;
+      this.changeDetectorRef.detectChanges()
+    })
   }
 
 
@@ -261,7 +270,6 @@ export class ShareComponent implements OnInit {
   }
 
   onShare() {
-    debugger
     if (this.shareContent === '') {
       //$('#shareContent').addClass('form-control is-invalid');
       this.errorshow = true;
