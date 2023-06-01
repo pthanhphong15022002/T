@@ -330,6 +330,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.action == 'edit' ? this.lstContactDeletes : [],
       this.listAddress,
       this.listAddressDelete,
+      this.avatarChange
     ];
     op.data = data;
     return true;

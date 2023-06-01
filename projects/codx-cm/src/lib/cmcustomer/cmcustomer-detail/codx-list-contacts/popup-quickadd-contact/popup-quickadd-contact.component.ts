@@ -55,6 +55,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
   ngOnInit(): void {
     if (this.action == 'add') {
+      this.contactType = '0';
       if (this.listContacts != null && this.listContacts.length > 0) {
         if (this.listContacts.some((x) => x.isDefault == true)) {
           this.isDefault = false;

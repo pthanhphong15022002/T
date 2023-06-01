@@ -258,7 +258,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   createIndex()
   {
-    this.callSV.openForm(CodxCreateIndexComponent, 'Create Index', 500, 700);
+    this.callSV.openForm(CodxCreateIndexComponent, 'Create Index', 600, 700);
   }
 
   clearTenant() {

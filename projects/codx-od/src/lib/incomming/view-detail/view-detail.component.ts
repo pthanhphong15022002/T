@@ -540,7 +540,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   openFormFuncID(val: any, datas: any = null, isData = false) {
-    debugger
     let that = this;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
@@ -1263,7 +1262,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           val,
           datas,
           this.view.dataService,
-          this.formModel
+          this.formModel,
+          this.afterSave
         )
         // this.shareService.defaultMoreFunc(
         //   val,
@@ -1394,7 +1394,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  afterSaveTask(e?: any, that: any = null) {
+  afterSave(e?: any, that: any = null) {
     // Chú thích ;
     // e:{
     //   funcID: Mã moreFunc ,

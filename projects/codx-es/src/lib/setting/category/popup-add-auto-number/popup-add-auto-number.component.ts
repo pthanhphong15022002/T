@@ -99,6 +99,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.autoNoCode = data?.data?.autoNoCode;
 
     this.description = data?.data?.description;
+    this.isAdd=data?.data?.isAdd;
 
     // Thiết lập số tự động mặc định của function
     this.functionID = data?.data?.functionID;
@@ -212,6 +213,9 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
           this.esService.getAutoNumber(this.autoNoCode).subscribe((res) => {
             if (res != null) {
               this.data = res;
+              if(this.isAdd){
+                res.lastNumber=0;
+              }
               if (res.autoNoCode != null) {
                 this.isAdd = false;
                 this.formModel.currentData = this.data;

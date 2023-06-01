@@ -447,6 +447,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           autoNoCode: this.data?.autoNumber,
           description: this.formModel?.entityName,
           newAutoNoCode: this.data.categoryID ?? this.data.recID,
+          isAdd:true,
           isSaveNew: '1',
         },'', {isFull:true} as any
       );
@@ -469,7 +470,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         {
           formModel: this.dialog.formModel,
           autoNoCode: this.data?.autoNumber,
-
+          isAdd:false,
           description: this.formModel?.entityName,
         }
       );

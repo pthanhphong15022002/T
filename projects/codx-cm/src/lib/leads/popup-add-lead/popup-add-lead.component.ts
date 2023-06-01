@@ -142,30 +142,30 @@ valueChangeDate($event) {
 
 saveLead() {
 
-  if (!this.lead?.leadName?.trim()) {
-    this.notificationsService.notifyCode(
-      'SYS009',
-      0,
-      '"' + this.gridViewSetup['DealName']?.headerText + '"'
-    );
-    return;
-  }
-  if (!this.lead?.customerID) {
-    this.notificationsService.notifyCode(
-      'SYS009',
-      0,
-      '"' + this.gridViewSetup['CustomerID']?.headerText + '"'
-    );
-    return;
-  }
-  if(!this.lead?.owner){
-    this.notificationsService.notifyCode(
-      'SYS009',
-      0,
-      '"' + this.gridViewSetup['Owner']?.headerText + '"'
-    );
-    return;
-  }
+  // if (!this.lead?.leadName?.trim()) {
+  //   this.notificationsService.notifyCode(
+  //     'SYS009',
+  //     0,
+  //     '"' + this.gridViewSetup['DealName']?.headerText + '"'
+  //   );
+  //   return;
+  // }
+  // if (!this.lead?.customerID) {
+  //   this.notificationsService.notifyCode(
+  //     'SYS009',
+  //     0,
+  //     '"' + this.gridViewSetup['CustomerID']?.headerText + '"'
+  //   );
+  //   return;
+  // }
+  // if(!this.lead?.owner){
+  //   this.notificationsService.notifyCode(
+  //     'SYS009',
+  //     0,
+  //     '"' + this.gridViewSetup['Owner']?.headerText + '"'
+  //   );
+  //   return;
+  // }
   if(this.action !== this.actionEdit) {
     this.onAdd();
   }
