@@ -190,7 +190,6 @@ export class PopupAddDealComponent
       if (e.data) {
         var tmp = new CM_Contacts();
         tmp = JSON.parse(JSON.stringify(e.data));
-        tmp.recID = Util.uid();
         tmp.refID = e.data.recID;
         if (!this.lstContactDeal.some((x) => x.refID == e?.data?.recID)) {
           this.lstContactDeal.push(tmp);
@@ -232,6 +231,14 @@ export class PopupAddDealComponent
   }
 
   saveOpportunity() {
+    if (!this.deal?.businessLineID) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['BusinessLineID']?.headerText + '"'
+      );
+      return;
+    }
     if (!this.deal?.processID) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -253,14 +260,6 @@ export class PopupAddDealComponent
         'SYS009',
         0,
         '"' + this.gridViewSetup['CustomerID']?.headerText + '"'
-      );
-      return;
-    }
-    if (!this.deal?.category) {
-      this.notificationsService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['Category']?.headerText + '"'
       );
       return;
     }
@@ -307,6 +306,11 @@ export class PopupAddDealComponent
     if (!ischeckFormat) {
       this.notificationsService.notifyCode(messageCheckFormat);
       return;
+    }
+    if(this.lstContactDeal != null && this.lstContactDeal.length > 0){
+      this.lstContactDeal.forEach((res) => {
+        res.recID = Util.uid();
+      });
     }
     this.convertDataInstance(this.deal, this.instance);
     this.updateDateDeal(this.instance, this.deal);
