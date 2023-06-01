@@ -187,7 +187,7 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'trainLevel':
           if (this.data[field]) {
             this.trainLevel = event.component['dataSource'].find(x => x.value == this.data[field]).text;
-            if (this.data['trainFieldID'] && !this.data['degreeName']) {
+            if (this.data['trainFieldID'] && (!this.data['degreeName'] || this.data['degreeName'] == "")) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
             }
@@ -196,7 +196,7 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'trainFieldID':
           if (this.data[field]) {
             this.trainFieldID = event.component.dataService.data.find(x => x.TrainFieldID == this.data[field]).TrainFieldName;
-            if (this.data['trainLevel'] && !this.data['degreeName']) {
+            if (this.data['trainLevel'] && (!this.data['degreeName'] || this.data['degreeName'] == "")) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
             }
