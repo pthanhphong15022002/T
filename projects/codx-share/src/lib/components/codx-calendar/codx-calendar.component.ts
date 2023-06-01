@@ -150,6 +150,14 @@ export class CodxCalendarComponent
           this.navigate();
         }
       });
+
+    this.cacheService.valueList('WP006').subscribe((res) => {
+      res.datas.map((res) => {
+        if (this.calendarParams.hasOwnProperty(res.value)) {
+          this.items.push({ id: res.value, text: res.text });
+        }
+      });
+    });
   }
 
   ngAfterViewInit() {
@@ -200,14 +208,6 @@ export class CodxCalendarComponent
         this.assignTaskFM?.formName,
         this.assignTaskFM?.gridViewName
       );
-    });
-
-    this.cacheService.valueList('WP006').subscribe((res) => {
-      res.datas.map((res) => {
-        if (this.calendarParams.hasOwnProperty(res.value)) {
-          this.items.push({ id: res.value, text: res.text });
-        }
-      });
     });
   }
 

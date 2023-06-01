@@ -147,7 +147,9 @@ body.tailwind #selected {
   background-color: var(--primary);
   border-color: var(--primary);
   color: #fff;
-  &:hover {
+  &:hover,
+  &:active,
+  &:focus {
     background-color: var(--primary);
     border-color: var(--primary);
     color: #fff;
