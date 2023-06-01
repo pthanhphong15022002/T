@@ -336,7 +336,6 @@
           format="d"
           [formModel]="dialog.formModel"
           [Group]="form.formGroup"
-          [disabled]="data?.signatureType != '1' || !isAdd ? true : false"
         >
         </codx-input>
       </div>
@@ -347,7 +346,6 @@
           type="password"
           field="password"
           [crrValue]="data?.password"
-          [disabled]="data?.signatureType != '1' || !isAdd ? true : false"
           (valueChange)="passwordChange($event)"
         >
         </codx-input>

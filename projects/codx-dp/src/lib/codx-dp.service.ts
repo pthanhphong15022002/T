@@ -528,12 +528,12 @@ export class CodxDpService {
     );
   }
 
-  getTree(listRef) {
+  getTree(recID) {
     return this.api.exec<any>(
       'TM',
       'TaskBusiness',
-      'GetListTaskTreeByListRefIDAsync',
-      listRef
+      'GetListTaskTreeBySeasonIDAsync',
+      recID
     );
   }
 

@@ -10,13 +10,13 @@
 </ng-template>
 <ng-template #itemTemplate let-data>
   <codx-temp-full [descTmp]="descTmp" [desc2Tmp]="desc2Tmp" [titleTmp]="titleTmp"
-    [icoCss]="
-  'w-35px symbol h-35px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' + (data?.subType | vll : 'AC100' : 'text' | async)"
-    [icoStyle]="setStyles((data?.subType | vll : 'AC100' : 'color' | async))" [date]="data?.voucherDate"
-    cardCss="card-template border-bottom p-3" [formModel]="view.formModel" [modeImgs]="true" [titleLine]="2"
-    [dataItem]="data" [icoDateCss]="'icon-access_alarm'" [status]="data?.status" [statusVll]="'AC040'" [hideMF]="false"
-    [typeMF]="'hover'" [moreFuncCss]="'me-15'" (changeDataMF)="changeDataMF($event, data)"
-    (clickMF)="clickMF($event, data)">
+    [icoCss]="'w-35px symbol h-35px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' + (data?.subType | vll : 'AC100' : 'text' | async)"
+    [icoStyle]="setStyles((data?.subType | vll : 'AC100' : 'color' | async))" cardCss="card-template border-bottom p-3"
+    [formModel]="view.formModel" [modeImgs]="true" [titleLine]="2" [dataItem]="data" [status]="data?.status"
+    [date]="data?.voucherDate" [icoDateCss]="'icon-access_alarm'"
+    [resources]="data?.createdBy != undefined ? data?.createdBy : ''" [resourceObjType]="'AD_Users'"
+    [statusVll]="'AC040'" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
+    (changeDataMF)="changeDataMF($event, data)" (clickMF)="clickMF($event, data)">
   </codx-temp-full>
 </ng-template>
 <ng-template #templateDetail>
@@ -60,7 +60,8 @@
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
     <div class="d-flex align-items-center ac-cashID mt-n8 mb-2">
-      <div [style]="'background-color:' + (itemSelected?.subType | vll : 'AC100' : 'color' | async)" class="w-35px symbol h-35px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
+      <div [style]="'background-color:' + (itemSelected?.subType | vll : 'AC100' : 'color' | async)"
+        class="w-35px symbol h-35px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
         <i class="text-white" [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
       </div>
       <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">
@@ -71,9 +72,11 @@
         <img src="../assets/themes/ac/default/img/Alarmclock.svg" class="w-15px h-15px me-1" />
         <codx-label class="fw-bold label-colon mt-1" default="Ngày chứng từ" [formModel]="view.formModel">
         </codx-label>
-        <span class="text-gray-600 mt-1">
-          {{formatDate(itemSelected?.voucherDate)}}
-        </span>
+        <span #voucherDate [innerHTML]="
+        itemSelected?.voucherDate
+              | formatvalue : view.formModel : 'voucherDate' : voucherDate : 'CashPayments' : 'grvCashPayments'
+              | async
+          " class="text-gray-600 mt-1"></span>
       </div>
     </div>
     <div class="d-flex justify-content-between flex-grow-1 mb-2">
@@ -90,8 +93,8 @@
         <span class="badge badge-pill badge-primary me-3">
           <span *ngIf="journal.multiCurrency == '0'"
             class="fw-bold">{{itemSelected?.totalAmt?.toLocaleString('it-IT')}}</span>
-          <span *ngIf="journal.multiCurrency == '1'"
-            class="fw-bold">{{itemSelected?.totalAmt?.toLocaleString('it-IT')+' '+itemSelected?.currencyID
+          <span *ngIf="journal.multiCurrency == '1'" class="fw-bold">{{itemSelected?.totalAmt?.toLocaleString('it-IT')+'
+            '+itemSelected?.currencyID
             }}</span>
         </span>
       </div>
@@ -118,15 +121,15 @@
       </div>
       <div class="d-flex align-self-center">
         <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
-            [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
-          </codx-vll>
+          [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+        </codx-vll>
       </div>
     </div>
     <div class="d-flex align-items-top mb-1">
       <!-- <span class="icon-i-journal-album icon-16 me-2"></span> -->
       <img src="../assets/themes/ac/default/img/Ledger.svg" class="w-15px h-15px me-2" />
-      <span *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'"
-        class="fw-bold text-nowrap me-2">{{'1' | vll : 'AC091' : 'text' | async}}: </span>
+      <span *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'" class="fw-bold text-nowrap me-2">{{'1'
+        | vll : 'AC091' : 'text' | async}}: </span>
       <span *ngIf="itemSelected?.subType == '3'" class="fw-bold text-nowrap me-2">{{'3' | vll : 'AC093' : 'text'
         | async}}: </span>
       <span #cashBookID class="text-gray-600"
@@ -201,29 +204,6 @@
     <codx-tabs [entityName]="view.formModel.entityName" [formModel]="view.formModel" [objectID]="itemSelected.recID"
       [funcID]="view.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
   </ng-container>
-</ng-template>
-<ng-template #footerList let-data>
-  <div class="d-flex align-items-center justify-content-between mt-1">
-    <div class="d-flex justify-content-start align-items-center me-2">
-      <span class="me-2">
-        <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
-          [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
-        </codx-vll>
-      </span>
-      <div class="d-flex align-items-center">
-        <!-- <span class="icon-i-alarm-outline icon-16 me-1 "></span> -->
-        <img src="../assets/themes/ac/default/img/Alarmclock.svg" class="w-16px h-16px me-1" />
-        <span class="text-gray-600 mt-1">
-          {{formatDate(data?.voucherDate)}}
-        </span>
-      </div>
-    </div>
-    <div class="me-2">
-      <codx-imgs [numberImages]="1" [isToolTip]="true" [objectId]="data?.createdBy" [objectName]="data?.createdBy"
-        [objectType]="'AD_Users'" [width]="30">
-      </codx-imgs>
-    </div>
-  </div>
 </ng-template>
 <ng-template #tabBasic>
   <ng-container *ngIf="(itemSelected.subType != '2') && acctTrans">
@@ -356,8 +336,7 @@
                         </codx-label>
                         <span style="white-space: nowrap" class="fs-7 text-gray-700">{{item.projectID}}</span>
                         &nbsp;-&nbsp;
-                        <span #projectID class="fs-7 text-gray-700 line-clamp line-clamp-1"
-                          [innerHTML]="
+                        <span #projectID class="fs-7 text-gray-700 line-clamp line-clamp-1" [innerHTML]="
                           item.projectID
                             | formatvalue
                               : fmCashPaymentsLines
@@ -478,8 +457,7 @@
                         </codx-label>
                         <span style="white-space: nowrap" class="fs-7 text-gray-700">{{item.projectID}}</span>
                         &nbsp;-&nbsp;
-                        <span #projectID class="fs-7 text-gray-700 line-clamp line-clamp-1"
-                          [innerHTML]="
+                        <span #projectID class="fs-7 text-gray-700 line-clamp line-clamp-1" [innerHTML]="
                           item.projectID
                             | formatvalue
                               : fmCashPaymentsLines
@@ -503,7 +481,7 @@
                 </div>
               </td>
               <td *ngIf="itemSelected?.currencyID != baseCurr">
-                
+
               </td>
               <td>
                 <div *ngIf="item.memo != null && item.memo != ''" class="d-flex flex-wrap">
@@ -615,22 +593,22 @@
             <td>
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.invoiceDate != null && item.invoiceDate != '')">
-                  <span [ngbTooltip]="popdate"
-                    class="fw-bold line-clamp line-clamp-1">{{formatDate(item.invoiceDate)}}</span>
-                  <ng-template #popdate>
-                    <span class="fw-bold">{{formatDate(item.invoiceDate)}}</span>
-                  </ng-template>
+                  <span #invoiceDate [innerHTML]="
+                    item?.invoiceDate
+              | formatvalue : view.formModel : 'invoiceDate' : invoiceDate : 'SettledInvoices' : 'grvSettledInvoices'
+              | async
+          " class="text-gray-600 mt-1"></span>
                 </ng-container>
               </div>
             </td>
             <td>
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.dueDate != null && item.dueDate != '')">
-                  <span [ngbTooltip]="popduedate"
-                    class="fw-bold line-clamp line-clamp-1">{{formatDate(item.dueDate)}}</span>
-                  <ng-template #popduedate>
-                    <span class="fw-bold">{{formatDate(item.dueDate)}}</span>
-                  </ng-template>
+                  <span #dueDate [innerHTML]="
+                    item?.dueDate
+              | formatvalue : view.formModel : 'dueDate' : dueDate : 'SettledInvoices' : 'grvSettledInvoices'
+              | async
+          " class="text-gray-600 mt-1"></span>
                 </ng-container>
               </div>
             </td>
