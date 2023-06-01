@@ -317,8 +317,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           'TM',
           'ERM.Business.TM',
           'TaskBusiness',
-          'GetListTaskTreeBySeasonIDAsync',
-          this.itemSelected?.sessionID
+          'GetListTaskTreeByRefIDAsync',
+          this.itemSelected?.refID
         )
         .subscribe((res) => {
           if (res) this.dataTree = res || [];
