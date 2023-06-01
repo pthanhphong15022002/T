@@ -11,7 +11,7 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-3">
               <i class="icon-info icon-18 me-2"></i>
-              <codx-label class="fw-bold fs-5-sm" fiedName="lblGeneral" [formModel]="form.formModel"
+              <codx-label class="fw-bold fs-6" fiedName="lblGeneral" [formModel]="form.formModel"
                 default="Thông tin chung"></codx-label>
             </div>
           </ng-template>
@@ -28,10 +28,11 @@
           <ng-template #headerText>
             <div #cashRef class="d-flex align-items-top me-2 mt-3">
               <i class="icon-format_list_numbered icon-18 me-2"></i>
-              <codx-label class="fw-bold fs-5-sm" fiedName="lblDetail1" [formModel]="form.formModel"
+              <codx-label class="fw-bold fs-6" fiedName="lblDetail1" [formModel]="form.formModel"
                 default="Chi tiết"></codx-label>
             </div>
           </ng-template>
+         
           <ng-template #content>
             <ng-container *ngTemplateOutlet="tabLine"></ng-container>
           </ng-template>
@@ -42,9 +43,9 @@
             <div #cashRef class="d-flex align-items-top me-2 mt-3">
               <i *ngIf="cashpayment?.subType == '2'" class="icon-format_list_numbered icon-18 me-2"></i>
               <i *ngIf="cashpayment?.subType == '5'" class="icon-i-file-earmark-binary icon-18 me-2"></i>
-              <codx-label *ngIf="cashpayment?.subType == '2'" class="fw-bold fs-5-sm" fiedName="lblDetail2"
+              <codx-label *ngIf="cashpayment?.subType == '2'" class="fw-bold fs-6" fiedName="lblDetail2"
                 [formModel]="form.formModel" default="Chi tiết"></codx-label>
-              <codx-label *ngIf="cashpayment?.subType == '5'" class="fw-bold fs-5-sm" fiedName="lblDetail2"
+              <codx-label *ngIf="cashpayment?.subType == '5'" class="fw-bold fs-6" fiedName="lblDetail2"
                 [formModel]="form.formModel" default="Hóa đơn công nợ"></codx-label>
             </div>
           </ng-template>
@@ -54,7 +55,7 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <div class="mb-1">
+    <div class="mb-1 listcash-content">
       <ng-container *ngTemplateOutlet="addLine"></ng-container>
     </div>
   </div>
@@ -804,34 +805,32 @@
 
 <!-- Start: VoucherLineRefs -->
 <ng-template #tabsettledInvoices>
-  <div class="h-100 tabline-content" *ngIf="cashpayment?.subType === '2' || cashpayment?.subType === '5'">
+  <div class="h-100 tabline-content position-relative" *ngIf="cashpayment?.subType === '2' || cashpayment?.subType === '5'">
     <codx-gridview-v2 #gridSet formName="SettledInvoices" gridViewName="grvSettledInvoices"
       entityName="AC_SettledInvoices" [templateMore]="morefunction" [editSettings]="editSettings"
       [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false"
-      [dataSource]="settledInvoices" rowHeight="40" (cellChanged)="settledLineChanged($event)"></codx-gridview-v2>
-  </div>
-  <div #btnRef class="container w-90 h-90">
-    <div style="background: none" class="list-empty card card-flush h-100">
-      <div class="d-flex flex-center justify-content-center mt-2">
-        <div class="d-flex align-items-center me-3">
-          <div *ngIf="formType != 'edit'" class="ms-2">
-            <button class="btn btn-sm btn-success mr-2" (click)="settlement(0)">
-              <i class="icon-i-clipboard-plus icon-18"></i>
+      [dataSource]="settledInvoices" rowHeight="40" (cellChanged)="settledLineChanged($event)">
+    </codx-gridview-v2>  
+    <div #btnRef class="btn-addline">
+        <div class="d-flex align-items-center">
+          <div *ngIf="formType != 'edit'">
+            <button class="btn btn-sm btn-success" (click)="settlement(0)">
+              <i class="icon-i-clipboard-plus icon-16"></i>
               <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice1"
                 default="Đề xuất thanh toán"></codx-label>
             </button>
           </div>
           <div class="ms-2">
             <button class="btn btn-sm btn-danger" (click)="settlement(1)">
-              <i class="icon-i-clipboard-plus icon-18"></i>
+              <i class="icon-i-clipboard-plus icon-16"></i>
               <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice"
                 default="Thanh toán tự động"></codx-label>
             </button>
           </div>
         </div>
       </div>
-    </div>
   </div>
+ 
 </ng-template>
 <!-- End: VoucherLineRefs -->
 
