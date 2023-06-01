@@ -237,7 +237,8 @@ export class PopupEBasicSalariesComponent
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS006');
-            p[0].emp = this.employeeObj;
+            // p[0].emp = this.employeeObj;
+            p.emp = this.employeeObj;
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS023');
         });
@@ -247,7 +248,8 @@ export class PopupEBasicSalariesComponent
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            p[0].emp = this.employeeObj;
+            // p[0].emp = this.employeeObj;
+            p.emp = this.employeeObj;
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS021');
         });

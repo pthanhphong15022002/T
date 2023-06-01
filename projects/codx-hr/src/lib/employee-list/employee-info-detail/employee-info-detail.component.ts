@@ -681,7 +681,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         debugger;
         if (history.state) {
           if (history.state.empInfo) {
-            debugger;
             this.infoPersonal = JSON.parse(history.state.empInfo);
             this.getManagerEmployeeInfoById();
           }
@@ -1710,6 +1709,73 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   loadedESalary: boolean;
   loadEBenefit: boolean;
 
+  initBenefitInfo(){
+      this.loadEBenefit = false;
+      let date = new Date();
+      let rqBenefit = new DataRequest();
+      rqBenefit.entityName = 'HR_EBenefits';
+      rqBenefit.dataValues = this.employeeID + ';' + `${date.toISOString()}`;
+      rqBenefit.predicates = 'EmployeeID=@0 and EffectedDate<=@1';
+      rqBenefit.page = 1;
+      rqBenefit.pageSize = 100;
+
+      this.hrService.loadData('HR', rqBenefit).subscribe((res) => {
+        console.log('ds benefit', res);
+
+        if (res && res[0]) {
+          let lstTemp = res[0];
+          let lstRes = [];
+          for (let i = 0; i < lstTemp.length; i++) {
+            if (lstTemp[i].expiredDate) {
+              let dateExp = new Date(lstTemp[i].expiredDate).toISOString();
+              if (date.toISOString() < dateExp) {
+                lstRes.push(lstTemp[i]);
+              }
+            } else {
+              lstRes.push(lstTemp[i]);
+            }
+          }
+          this.listCrrBenefit = lstRes;
+          debugger;
+          console.log('ds benefit cuoi cung', this.listCrrBenefit);
+          this.loadEBenefit = true;
+          this.df.detectChanges();
+        }
+      });
+    
+  }
+
+  initBasicSalaryInfo(){
+      let date = new Date();
+      let rqBSalary = new DataRequest();
+      rqBSalary.entityName = 'HR_EBasicSalaries';
+      rqBSalary.dataValues = this.employeeID + ';' + `${date.toISOString()}`;
+      rqBSalary.predicates = 'EmployeeID=@0 and EffectedDate<=@1';
+      rqBSalary.page = 1;
+      rqBSalary.pageSize = 1;
+      this.loadedESalary = false;
+
+      this.hrService.loadData('HR', rqBSalary).subscribe((res) => {
+        if (res && res[0]) {
+          let lstTemp = res[0];
+          let lstRes = [];
+          for (let i = 0; i < lstTemp.length; i++) {
+            if (lstTemp[i].expiredDate) {
+              let dateExp = new Date(lstTemp[i].expiredDate).toISOString();
+              if (date.toISOString() < dateExp) {
+                lstRes.push(lstTemp[i]);
+              }
+            } else {
+              lstRes.push(lstTemp[i]);
+            }
+          }
+          this.crrEBSalary = lstRes[0];
+          this.loadedESalary = true;
+          this.df.detectChanges();
+        }
+      });
+  }
+
   initSalaryInfo() {
     if (this.employeeID) {
       //Job salaries Lương chức danh
@@ -1730,72 +1796,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       // }
 
       // Salary
-      if (!this.crrEBSalary) {
-        let date = new Date();
-        let rqBSalary = new DataRequest();
-        rqBSalary.entityName = 'HR_EBasicSalaries';
-        rqBSalary.dataValues = this.employeeID + ';' + `${date.toISOString()}`;
-        rqBSalary.predicates = 'EmployeeID=@0 and EffectedDate<=@1';
-        rqBSalary.page = 1;
-        rqBSalary.pageSize = 1;
-        this.loadedESalary = false;
+      this.initBasicSalaryInfo();
 
-        this.hrService.loadData('HR', rqBSalary).subscribe((res) => {
-          if (res && res[0]) {
-            let lstTemp = res[0];
-            let lstRes = [];
-            for (let i = 0; i < lstTemp.length; i++) {
-              if (lstTemp[i].expiredDate) {
-                let dateExp = new Date(lstTemp[i].expiredDate).toISOString();
-                if (date.toISOString() < dateExp) {
-                  lstRes.push(lstTemp[i]);
-                }
-              } else {
-                lstRes.push(lstTemp[i]);
-              }
-            }
-            this.crrEBSalary = lstRes[0];
-            this.loadedESalary = true;
-            this.df.detectChanges();
-          }
-        });
-      }
 
       // Benefit
-      if (!this.listCrrBenefit) {
-        this.loadEBenefit = false;
-        let date = new Date();
-        let rqBenefit = new DataRequest();
-        rqBenefit.entityName = 'HR_EBenefits';
-        rqBenefit.dataValues = this.employeeID + ';' + `${date.toISOString()}`;
-        rqBenefit.predicates = 'EmployeeID=@0 and EffectedDate<=@1';
-        rqBenefit.page = 1;
-        rqBenefit.pageSize = 1;
-
-        this.hrService.loadData('HR', rqBenefit).subscribe((res) => {
-          console.log('ds benefit', res);
-
-          if (res && res[0]) {
-            let lstTemp = res[0];
-            let lstRes = [];
-            for (let i = 0; i < lstTemp.length; i++) {
-              if (lstTemp[i].expiredDate) {
-                let dateExp = new Date(lstTemp[i].expiredDate).toISOString();
-                if (date.toISOString() < dateExp) {
-                  lstRes.push(lstTemp[i]);
-                }
-              } else {
-                lstRes.push(lstTemp[i]);
-              }
-            }
-            this.listCrrBenefit = lstRes;
-            debugger;
-            console.log('ds benefit', this.listCrrBenefit);
-            this.loadEBenefit = true;
-            this.df.detectChanges();
-          }
-        });
-      }
+      this.initBenefitInfo()
 
       // if (!this.listCrrBenefit) this.loadEBenefit = false;
       // this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
@@ -2150,7 +2155,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   getECurrentContract() {
-    if (!this.crrEContract) {
       let date = new Date();
       //HR_EContracts
       let rqContract = new DataRequest();
@@ -2180,7 +2184,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       //   }
       //   this.df.detectChanges();
       // });
-    }
   }
 
   initHRProcess() {
@@ -2399,6 +2402,27 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }
 
     this.initHRProcess();
+  }
+
+  checkIsNewestDate(effectedDate, expiredDate){
+    if(effectedDate){
+      let eff = new Date(effectedDate).toISOString();
+      let date = new Date().toISOString();
+      if(expiredDate){
+        let expire = new Date(expiredDate).toISOString();
+        if(date >= eff && date <= expire){
+          return true;
+        }
+        return false;
+      }
+      else{
+        if(date >= eff){
+          return true;
+        }
+        return false;
+      }
+    }
+    return true;
   }
 
   add(functionID) {
@@ -2724,36 +2748,42 @@ export class EmployeeInfoDetailComponent extends UIComponent {
               this.hrService.DeleteEBenefit(data).subscribe((p) => {
                 if (p != null) {
                   this.notify.notifyCode('SYS008');
-                  if (data.isCurrent == true) {
-                    // const index = this.listCrrBenefit.indexOf(data);
-                    // if (index > -1) {
-                    //   this.listCrrBenefit.splice(index, 1);
-                    // }
-                    this.hrService
-                      .GetCurrentBenefit(this.employeeID)
-                      .subscribe((res) => {
-                        if (res) {
-                          this.listCrrBenefit = res;
-                          this.df.detectChanges();
-                        }
-                      });
+                  let index = this.listCrrBenefit.indexOf(data)
+                  debugger
+                  if(index){
+                    this.listCrrBenefit.splice(index, 1);
                   }
-                  (this.eBenefitGrid?.dataService as CRUDService)
-                    ?.remove(data)
-                    .subscribe();
-                  this.hrService
-                    .GetIsCurrentBenefitWithBenefitID(
-                      this.employeeID,
-                      data.benefitID
-                    )
-                    .subscribe((res) => {
-                      (this.eBenefitGrid?.dataService as CRUDService)
-                        ?.update(res)
-                        .subscribe();
-                    });
-                  this.eBenefitRowCount = this.eBenefitRowCount - 1;
-                  this.df.detectChanges();
-                } else {
+
+                //   if (data.isCurrent == true) {
+                //     // const index = this.listCrrBenefit.indexOf(data);
+                //     // if (index > -1) {
+                //     //   this.listCrrBenefit.splice(index, 1);
+                //     // }
+                //     this.hrService
+                //       .GetCurrentBenefit(this.employeeID)
+                //       .subscribe((res) => {
+                //         if (res) {
+                //           this.listCrrBenefit = res;
+                //           this.df.detectChanges();
+                //         }
+                //       });
+                //   }
+                //   (this.eBenefitGrid?.dataService as CRUDService)
+                //     ?.remove(data)
+                //     .subscribe();
+                //   this.hrService
+                //     .GetIsCurrentBenefitWithBenefitID(
+                //       this.employeeID,
+                //       data.benefitID
+                //     )
+                //     .subscribe((res) => {
+                //       (this.eBenefitGrid?.dataService as CRUDService)
+                //         ?.update(res)
+                //         .subscribe();
+                //     });
+                //   // this.eBenefitRowCount = this.eBenefitRowCount - 1;
+                //   this.df.detectChanges();
+                 } else {
                   this.notify.notifyCode('SYS022');
                 }
               });
@@ -2796,11 +2826,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.hrService
-                      .GetCurrentEBasicSalariesByEmployeeID(data.employeeID)
-                      .subscribe((dataEBaSlary) => {
-                        this.crrEBSalary = dataEBaSlary;
-                      });
+                    this.initBasicSalaryInfo();
+                    // this.hrService
+                    //   .GetCurrentEBasicSalariesByEmployeeID(data.employeeID)
+                    //   .subscribe((dataEBaSlary) => {
+                    //     this.crrEBSalary = dataEBaSlary;
+                    //   });
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -2978,7 +3009,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
               this.hrService.deleteEContract(data).subscribe((res) => {
                 if (res && res[0]) {
                   this.notify.notifyCode('SYS008');
-                  this.crrEContract = res[1];
+                  this.getECurrentContract();
                   this.df.detectChanges();
                 } else {
                   this.notify.notifyCode('SYS022');
@@ -3508,32 +3539,33 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
+        debugger
+        // this.initBenefitInfo();
+
         if (actionType == 'add' || actionType == 'copy') {
-          if (res.event.length > 1) {
-            (this.eBenefitGrid?.dataService as CRUDService)
-              ?.update(res.event[0])
-              .subscribe();
-            (this.eBenefitGrid?.dataService as CRUDService)
-              ?.add(res.event[1])
-              .subscribe();
-          } else {
-            (this.eBenefitGrid?.dataService as CRUDService)
-              ?.add(res.event[0])
-              .subscribe();
+          if (res.event[0]){
+            if(this.checkIsNewestDate(res.event[0].effectedDate, res.event[0].expiredDate) == true){
+              this.listCrrBenefit.push(res.event[0]);
+            }
           }
-          this.eBenefitRowCount += 1;
         } else if (actionType == 'edit') {
-          (this.eBenefitGrid?.dataService as CRUDService)
-            ?.update(res.event)
-            .subscribe();
+          if(res.event){
+            let kq = this.checkIsNewestDate(res.event.effectedDate, res.event.expiredDate)
+            if(kq == true){
+              this.listCrrBenefit.push(res.event);
+            }
+            else if(kq == false){
+              let index = this.listCrrBenefit.indexOf(data)
+              if(index){
+                this.listCrrBenefit.splice(index, 1);
+              }
+            }
+          }
+          // (this.eBenefitGrid?.dataService as CRUDService)
+          //   ?.update(res.event)
+          //   .subscribe();
         }
 
-        this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
-          if (res?.length) {
-            this.listCrrBenefit = res;
-            this.df.detectChanges();
-          }
-        });
       }
     });
   }
@@ -3651,6 +3683,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (!res?.event) {
         (this.basicSalaryGridview?.dataService as CRUDService)?.clear();
       } else {
+        debugger
         // this.eBasicSalaryRowCount += this.updateGridView(
         //   this.basicSalaryGridview,
         //   actionType,
@@ -3664,12 +3697,19 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         //     ?.update(element)
         //     .subscribe();
         // });
-        if (res.event[0].isCurrent) {
-          this.crrEBSalary = res.event[0];
+        if (res.event){
+          if(this.checkIsNewestDate(res.event.effectedDate, res.event.expiredDate) == true){
+            this.crrEBSalary = res.event;
+          }
+          else{
+            this.initBasicSalaryInfo();
+          }
         }
-        (this.basicSalaryGridview?.dataService as CRUDService)
-          ?.update(res.event[0])
-          .subscribe();
+
+
+        // (this.basicSalaryGridview?.dataService as CRUDService)
+        //   ?.update(res.event[0])
+        //   .subscribe();
       }
       this.df.detectChanges();
     });
@@ -4315,9 +4355,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
       else if (res.event) {
-        if (res.event.isCurrent == true) {
+        if(this.checkIsNewestDate(res.event.effectedDate, res.event.expiredDate) == true){
           this.crrEContract = res.event;
-        } else {
+        }
+        else{
           this.getECurrentContract();
         }
       }
@@ -4439,35 +4480,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     //   if (res?.event) this.view.dataService.clear();
     // });
   }
-  //#endregion
-
-  //#region HR_EContracts
-  addEContracts(actionHeaderText) {
-    this.view.dataService.dataSelected = this.infoPersonal;
-    let option = new SidebarModel();
-    option.Width = '850px';
-    let dialogAdd = this.callfunc.openSide(
-      PopupEContractComponent,
-      {
-        actionType: 'add',
-        salarySelected: null,
-        headerText:
-          actionHeaderText + ' ' + this.getFormHeader(this.eContractFuncID),
-        employeeId: this.employeeID,
-        funcID: this.eContractFuncID,
-        openFrom: 'empDetail',
-      },
-      option
-    );
-    dialogAdd.closed.subscribe((res) => {
-      if (res) {
-        this.crrJobSalaries = res.event;
-        this.df.detectChanges();
-      }
-      if (res?.event) this.view.dataService.clear();
-    });
-  }
-
   //#endregion
 
   //#region  HR_EBusinessTravels
