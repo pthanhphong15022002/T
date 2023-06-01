@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
-import { AuthStore, CodxFormComponent, DialogData, DialogRef, NotificationsService, RequestOption, UIComponent } from 'codx-core';
+import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxInputComponent, DialogData, DialogRef, NotificationsService, RequestOption, UIComponent } from 'codx-core';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
@@ -16,6 +16,7 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
   //region Constructor
 
   @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('itemID') itemID: CodxInputComponent;
   headerText: any;
   formType: any;
 
@@ -92,6 +93,13 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
         break;
       case 'itemGroupID':
         this.Paras.itemGroupID = e.data;
+        if(this.itemID)
+        {
+          (this.itemID.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+          this.itemID.crrValue = null;
+          this.Paras.itemID = null;
+          this.form.formGroup.patchValue(this.Paras);
+        }
         break;
       case 'itemID':
         this.Paras.itemID = e.data;
