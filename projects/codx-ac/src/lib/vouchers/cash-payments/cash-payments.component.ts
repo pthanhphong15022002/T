@@ -437,11 +437,6 @@ export class CashPaymentsComponent extends UIComponent {
     //       });
     //   });
   }
-
-  formatDate(date) {
-    return new Date(date).toLocaleDateString();
-  }
-
   loadjounal() {
     const options = new DataRequest();
     options.entityName = 'AC_Journals';
