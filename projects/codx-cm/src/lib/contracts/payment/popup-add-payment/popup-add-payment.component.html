@@ -105,6 +105,7 @@
             field="scheduleAmt"
             type="number"
             [min]="0"
+            [max]="this.contract.contractAmt"
             [crrValue]="payment?.scheduleAmt"
             (valueChange)="valueChangeText($event)"
           >
