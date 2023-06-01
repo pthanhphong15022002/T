@@ -2709,9 +2709,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
               this.hrService.deleteEHealth(data).subscribe((p) => {
                 if (p != null) {
                   this.notify.notifyCode('SYS008');
-                  (this.eHealthsGrid.dataService as CRUDService)
-                    .remove(data)
-                    .subscribe();
+                  this.updateGridView(this.eHealthsGrid, 'delete', null, data);
+
+                  // (this.eHealthsGrid.dataService as CRUDService)
+                  //   .remove(data)
+                  //   .subscribe();
                   // this.eHealthRowCount = this.eHealthRowCount - 1;
                   this.df.detectChanges();
                 } else {
@@ -2759,9 +2761,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
               this.hrService.deleteEVaccine(data).subscribe((p) => {
                 if (p != null) {
                   this.notify.notifyCode('SYS008');
-                  (this.eVaccinesGrid.dataService as CRUDService)
-                    .remove(data)
-                    .subscribe();
+                  this.updateGridView(this.eVaccinesGrid, 'delete', null, data);
+                  // (this.eVaccinesGrid.dataService as CRUDService)
+                  //   .remove(data)
+                  //   .subscribe();
                   // this.eVaccineRowCount = this.eVaccineRowCount - 1;
                   this.df.detectChanges();
                 } else {
@@ -2900,9 +2903,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 .DeleteEmployeeEDiseasesInfo(data.recID)
                 .subscribe((p) => {
                   if (p == true) {
-                    (this.eDiseasesGrid.dataService as CRUDService)
-                      .remove(data)
-                      .subscribe();
+                    this.notify.notifyCode('SYS008');
+                  this.updateGridView(this.eDiseasesGrid, 'delete', null, data);
+                    // (this.eDiseasesGrid.dataService as CRUDService)
+                    //   .remove(data)
+                    //   .subscribe();
                     // this.eDiseasesRowCount--;
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2983,9 +2988,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
               this.hrService.deleteEAccident(data?.recID).subscribe((res) => {
                 if (res) {
                   this.notify.notifyCode('SYS008');
-                  (this.eAccidentGridView.dataService as CRUDService)
-                    ?.remove(data)
-                    .subscribe();
+                  this.updateGridView(this.eAccidentGridView, 'delete', null, data);
+
+                  // (this.eAccidentGridView.dataService as CRUDService)
+                  //   ?.remove(data)
+                  //   .subscribe();
                   // this.eAccidentsRowCount--;
                   this.df.detectChanges();
                 } else this.notify.notifyCode('SYS022');
@@ -3997,8 +4004,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.eAccidentGridView?.dataService as CRUDService)?.clear();
-      else {
-        this.updateGridView(this.eAccidentGridView, actionType, res.event);
+      else if(res.event) {
+        this.updateGridView(this.eAccidentGridView, actionType, res.event, data);
       }
       this.df.detectChanges();
     });
@@ -4321,8 +4328,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //#region HR_EHealths
 
   HandleEmployeeEHealths(actionHeaderText, actionType: string, data: any) {
-    if (this.eHealthsGrid)
-      this.eHealthsGrid.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.eHealthsGrid.formModel;
@@ -4342,16 +4347,17 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        if (actionType == 'add' || actionType == 'copy') {
-          // this.eHealthRowCount += 1;
-          (this.eHealthsGrid.dataService as CRUDService)
-            .add(res.event)
-            .subscribe();
-        } else if (actionType == 'edit') {
-          (this.eHealthsGrid.dataService as CRUDService)
-            .update(res.event)
-            .subscribe();
-        }
+        this.updateGridView(this.eHealthsGrid, actionType, res.event, data);
+        // if (actionType == 'add' || actionType == 'copy') {
+        //   // this.eHealthRowCount += 1;
+        //   (this.eHealthsGrid.dataService as CRUDService)
+        //     .add(res.event)
+        //     .subscribe();
+        // } else if (actionType == 'edit') {
+        //   (this.eHealthsGrid.dataService as CRUDService)
+        //     .update(res.event)
+        //     .subscribe();
+        // }
       }
       this.df.detectChanges();
     });
@@ -4401,7 +4407,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         actionHeaderText + ' ' + this.getFormHeader(this.eDiseasesFuncID),
     });
     dialogAdd.closed.subscribe((res) => {
-      if (res) this.updateGridView(this.eDiseasesGrid, actionType, res.event);
+      if (res.event) this.updateGridView(this.eDiseasesGrid, actionType, res.event, data);
       this.df.detectChanges();
     });
 
@@ -4527,16 +4533,17 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        if (actionType == 'add' || actionType == 'copy') {
-          // this.eVaccineRowCount += 1;
-          (this.eVaccinesGrid.dataService as CRUDService)
-            .add(res.event)
-            .subscribe();
-        } else if (actionType == 'edit') {
-          (this.eVaccinesGrid.dataService as CRUDService)
-            .update(res.event)
-            .subscribe();
-        }
+        this.updateGridView(this.eVaccinesGrid, actionType, res.event, data);
+        // if (actionType == 'add' || actionType == 'copy') {
+        //   // this.eVaccineRowCount += 1;
+        //   (this.eVaccinesGrid.dataService as CRUDService)
+        //     .add(res.event)
+        //     .subscribe();
+        // } else if (actionType == 'edit') {
+        //   (this.eVaccinesGrid.dataService as CRUDService)
+        //     .update(res.event)
+        //     .subscribe();
+        // }
       }
       this.df.detectChanges();
     });
@@ -5262,6 +5269,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     newData: any,
     oldData?: any
   ) {
+    debugger
     let returnVal = 0;
     let index = 0;
     if(oldData){

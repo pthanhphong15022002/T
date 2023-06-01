@@ -50,7 +50,7 @@
                 ></codx-img>
                 <div style="position: absolute; right: 0px; bottom: 0px">
                   <ng-container *ngFor="let role of listRoles">
-                    <ng-container *ngIf="role.value == data.roleType">
+                    <ng-container *ngIf="role.value == (data.roleType? data.roleType:'R')">
                       <span
                         ><img
                           src="/assets/themes/tm/default/img/{{ role.icon }}"
@@ -80,7 +80,7 @@
               </div>
               <div class="text-gray-600">
                 <span
-                  *ngIf="data.category == '1' || data.category == '3'"
+                  *ngIf="data.category == '1' || data.category == '3' || (data.category == '2' && !data.parentID)" 
                   [innerHTML]="
                     data?.memo
                       ? sanitizer.bypassSecurityTrustHtml(data?.memo)

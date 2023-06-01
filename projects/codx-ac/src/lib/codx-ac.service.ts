@@ -8,17 +8,18 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { Observable, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { Reason } from './models/Reason.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxAcService {
+  childMenuClick = new BehaviorSubject<any>(null)
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
-    private notiService: NotificationsService
+    private notiService: NotificationsService,
   ) {}
   setCacheFormModel(formModel: FormModel) {
     this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {

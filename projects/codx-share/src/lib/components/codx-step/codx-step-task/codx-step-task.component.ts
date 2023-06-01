@@ -668,6 +668,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task.refID = data?.recID;
     task.refType = 'DP_Instance';
     task.dueDate = data?.endDate;
+    task.sessionID = this.currentStep?.instanceID;
     let dataReferences = [
       {
         recIDReferences: data.recID,

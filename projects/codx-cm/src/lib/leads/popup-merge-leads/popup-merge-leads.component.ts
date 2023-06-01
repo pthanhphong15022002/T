@@ -88,7 +88,7 @@ export class PopupMergeLeadsComponent implements OnInit {
   }
   async ngOnInit() {
     this.changeAvata = false;
-    this.lstLeadCbxOne = await this.getCbxLead(Util.uid());
+    this.lstLeadCbxOne = await this.getCbxLead(null, null);
 
     this.leadNew = JSON.parse(JSON.stringify(this.leadOne));
     this.leadNew.recID = Util.uid();
@@ -102,9 +102,10 @@ export class PopupMergeLeadsComponent implements OnInit {
     });
     if (this.leadOne) {
       this.lstContactOne = await this.getContacts(this.leadOne?.recID);
-      this.lstAddressOne = await this.getListAddress(this.dialog?.formModel?.entityName, this.leadOne?.recID);
-      this.lstLeadCbxTwo = await this.getCbxLead(this.leadOne?.recID);
-      this.lstLeadCbxThree = await this.getCbxLead(this.leadTwo?.recID);
+      this.lstAddressOne = await this.getListAddress(
+        this.dialog?.formModel?.entityName,
+        this.leadOne?.recID
+      );
     }
 
     this.changeDetector.detectChanges();
@@ -124,11 +125,13 @@ export class PopupMergeLeadsComponent implements OnInit {
     lst = await firstValueFrom(this.cmSv.getListAddress(entityName, recID));
     return lst;
   }
-  async getCbxLead(id) {
+  async getCbxLead(id1, id2) {
     var options = new DataRequest();
     options.entityName = 'CM_Leads';
-    options.predicates = 'Status!=@0 and IsDuplicated==false';
-    options.dataValues = '5';
+    options.predicates =
+      'Status!=@0 and (RecID!=@1 and RecID!=@2) and IsDuplicated==false';
+    options.dataValues =
+      '5' + ';' + (id1 ?? Util.uid()) + ';' + (id2 ?? Util.uid());
     options.pageLoading = false;
     var lst = await firstValueFrom(this.cmSv.loadDataAsync('CM', options));
     return lst;
@@ -147,16 +150,14 @@ export class PopupMergeLeadsComponent implements OnInit {
       this.noti.notify('Gộp tối thiểu 2 tiềm năng và đối đa 3 tiềm năng');
       return;
     }
-    if(this.lstContactNew != null && this.lstContactNew.length > 0){
+    if (this.lstContactNew != null && this.lstContactNew.length > 0) {
       this.lstContactNew.forEach((res) => {
-          res.recID = Util.uid();
-
+        res.recID = Util.uid();
       });
     }
-    if(this.lstAddressNew != null && this.lstAddressNew.length > 0){
+    if (this.lstAddressNew != null && this.lstAddressNew.length > 0) {
       this.lstAddressNew.forEach((res) => {
-          res.recID = Util.uid();
-
+        res.recID = Util.uid();
       });
     }
     var data = [
@@ -188,7 +189,7 @@ export class PopupMergeLeadsComponent implements OnInit {
                   this.dialog.close(res);
                 }
               });
-          }else{
+          } else {
             this.dialog.close(res);
           }
         }
@@ -202,33 +203,58 @@ export class PopupMergeLeadsComponent implements OnInit {
       if (type == 'two') {
         if (e == this.leadOne?.recID || e == this.leadThree?.recID) {
           this.noti.notify('Tiềm năng được chọn vui lòng chọn tiềm năng khác');
-          this.leadTwo.recID = null;
           this.leadTwo = null;
+          this.lstContactTwo = [];
+          this.lstAddressTwo = [];
+          this.lstLeadCbxThree = await this.getCbxLead(
+            this.leadOne?.recID,
+            this.leadTwo?.recID
+          );
+
           return;
         } else {
           var index = this.lstLeadCbxTwo.findIndex((x) => x.recID == e);
           if (index != -1) {
             this.leadTwo = this.lstLeadCbxTwo[index];
+            this.lstLeadCbxTwo = await this.getCbxLead(
+              this.leadOne?.recID,
+              this.leadThree?.recID
+            );
             this.lstContactTwo = await this.getContacts(this.leadTwo?.recID);
-            this.lstAddressTwo= await this.getListAddress(this.dialog?.formModel?.entityName, this.leadTwo?.recID);
-
+            this.lstAddressTwo = await this.getListAddress(
+              this.dialog?.formModel?.entityName,
+              this.leadTwo?.recID
+            );
           }
         }
       } else {
         if (e == this.leadTwo?.recID || e == this.leadOne?.recID) {
           this.noti.notify('Tiềm năng được chọn vui lòng chọn tiềm năng khác');
-          this.leadThree.recID = null;
           this.leadThree = null;
+          this.lstContactThree = [];
+          this.lstAddressThree = [];
+          this.lstLeadCbxTwo = await this.getCbxLead(
+            this.leadOne?.recID,
+            this.leadThree?.recID
+          );
+
           return;
         } else {
           var index = this.lstLeadCbxThree.findIndex((x) => x.recID == e);
           if (index != -1) {
             this.leadThree = this.lstLeadCbxThree[index];
+            this.lstLeadCbxThree = await this.getCbxLead(
+              this.leadOne?.recID,
+              this.leadTwo?.recID
+            );
+
             this.lstContactThree = await this.getContacts(
               this.leadThree?.recID
             );
-            this.lstAddressThree= await this.getListAddress(this.dialog?.formModel?.entityName, this.leadThree?.recID);
-
+            this.lstAddressThree = await this.getListAddress(
+              this.dialog?.formModel?.entityName,
+              this.leadThree?.recID
+            );
           }
         }
       }
@@ -450,9 +476,10 @@ export class PopupMergeLeadsComponent implements OnInit {
 
   clickPopupContacts(type, lstContact, data) {
     let obj = {
-      lstContact,
+      list: lstContact,
       type: type,
       lead: data,
+      category: 'contact',
     };
     let option = new DialogModel();
     option.zIndex = 1001;
@@ -504,11 +531,68 @@ export class PopupMergeLeadsComponent implements OnInit {
     });
   }
 
-  countContact(lstContactNew, lstContactOld) {
+  clickPopupAddress(type, lstAddress, data) {
+    let obj = {
+      list: lstAddress,
+      type: type,
+      lead: data,
+      category: 'address',
+    };
+    let option = new DialogModel();
+    option.zIndex = 1001;
+    option.FormModel = this.dialog.formModel;
+    let popupContract = this.callFc.openForm(
+      PopupRemoveAddContactComponent,
+      '',
+      700,
+      650,
+      '',
+      obj,
+      '',
+      option
+    );
+    popupContract.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        var lstDeal = [];
+        if (e.event.length > 0) {
+          lstDeal = e?.event;
+          lstDeal.forEach((item) => (item.checked = false));
+
+          if (type == 'add') {
+            if (this.lstAddressNew != null && this.lstAddressNew.length > 0) {
+              const filteredAddress = lstDeal.filter(
+                (item) =>
+                  !this.lstAddressNew.some(
+                    (contact) => contact.recID === item.recID
+                  )
+              );
+
+              this.lstAddressNew.push(...filteredAddress);
+            } else {
+              this.lstAddressNew = lstDeal;
+            }
+          } else {
+            this.lstAddressNew = this.lstAddressNew.filter(
+              (item1) => !lstDeal.some((item2) => item1.recID === item2.recID)
+            );
+            if (
+              this.addressDefault &&
+              !this.lstAddressNew.some((x) => x.recID == this.addressDefault)
+            ) {
+              this.addressDefault = null;
+            }
+          }
+        }
+        this.changeDetector.detectChanges();
+      }
+    });
+  }
+
+  countContactAndAddress(lstNew, lstOld) {
     let count = 0;
 
-    for (const item1 of lstContactNew) {
-      for (const item2 of lstContactOld) {
+    for (const item1 of lstNew) {
+      for (const item2 of lstOld) {
         if (item1.recID === item2.recID) {
           count++;
           break; // Nếu tìm thấy đối tượng giống nhau, thoát khỏi vòng lặp trong contact2
@@ -518,14 +602,25 @@ export class PopupMergeLeadsComponent implements OnInit {
     return count;
   }
 
-  cbxContactChange(e) {
-    if (e != this.contactDefault) {
-      this.contactDefault = e;
-      var index = this.lstContactNew.findIndex((x) => x.recID == e);
-      if (index != -1) {
-        this.lstContactNew[index].isDefault = true;
+  cbxContactChange(e, type) {
+    if(type == 'contact'){
+      if (e != this.contactDefault) {
+        this.contactDefault = e;
+        var index = this.lstContactNew.findIndex((x) => x.recID == e);
+        if (index != -1) {
+          this.lstContactNew[index].isDefault = true;
+        }
+      }
+    }else{
+      if (e != this.addressDefault) {
+        this.addressDefault = e;
+        var index = this.lstAddressNew.findIndex((x) => x.recID == e);
+        if (index != -1) {
+          this.lstAddressNew[index].isDefault = true;
+        }
       }
     }
+
   }
 
   addAvatar() {

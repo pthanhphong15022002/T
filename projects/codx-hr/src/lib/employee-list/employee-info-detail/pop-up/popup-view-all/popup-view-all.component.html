@@ -11,8 +11,10 @@
         <ng-container *ngComponentOutlet="filter"></ng-container>
     </ng-container> -->
 
-    <div class="card-body p-0 mt-3" >
-      <codx-gridview
+    <div class="card-body p-0 mt-3" 
+    *ngIf="formModel && columnGrid; else emptyDataTemplate"
+    >
+      <!-- <codx-gridview
         #gridView
         [funcId]="funcID"
         service="HR"
@@ -25,7 +27,21 @@
         [formModel]="formModel"
         [columnsGrid]="columnGrid"
         [emptyTemplate]="emptyDataTemplate"
-      ></codx-gridview>
+      ></codx-gridview> -->
+
+      <codx-gridview-v2
+      #gridView
+      [formModel]="formModel"
+      [columnsGrid]="columnGrid"
+      [service]="'HR'"
+      [assemblyName]="'Core'"
+      [className]="'DataBusiness'"
+      [hideMoreFunc]="true"
+      [method]="'LoadDataAsync'"
+      [predicates]="'EmployeeID=@0'"
+      [dataValues]="employeeId"
+      [emptyTemplate]="emptyDataTemplate"
+    ></codx-gridview-v2>
     </div>
   </ng-template>
 </codx-form>
