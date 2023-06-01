@@ -46,7 +46,12 @@ export class PopupMergeLeadsComponent implements OnInit {
   lstContactTwo = [];
   lstContactThree = [];
   lstAddressNew = [];
+  lstAddressOne = [];
+  lstAddressTwo = [];
+  lstAddressThree = [];
   fieldContacts = { text: 'contactName', value: 'recID' };
+  fieldAddress = { text: 'adressName', value: 'recID' };
+  addressDefault: any;
   contactDefault: any;
   popoverCrr: any;
   contactDefaultOne = '';
@@ -97,6 +102,7 @@ export class PopupMergeLeadsComponent implements OnInit {
     });
     if (this.leadOne) {
       this.lstContactOne = await this.getContacts(this.leadOne?.recID);
+      this.lstAddressOne = await this.getListAddress(this.dialog?.formModel?.entityName, this.leadOne?.recID);
       this.lstLeadCbxTwo = await this.getCbxLead(this.leadOne?.recID);
       this.lstLeadCbxThree = await this.getCbxLead(this.leadTwo?.recID);
     }
@@ -113,7 +119,11 @@ export class PopupMergeLeadsComponent implements OnInit {
     lst = await firstValueFrom(this.cmSv.getListContactByObjectID(objectID));
     return lst;
   }
-
+  async getListAddress(entityName, recID) {
+    var lst = [];
+    lst = await firstValueFrom(this.cmSv.getListAddress(entityName, recID));
+    return lst;
+  }
   async getCbxLead(id) {
     var options = new DataRequest();
     options.entityName = 'CM_Leads';
@@ -137,7 +147,18 @@ export class PopupMergeLeadsComponent implements OnInit {
       this.noti.notify('Gộp tối thiểu 2 tiềm năng và đối đa 3 tiềm năng');
       return;
     }
+    if(this.lstContactNew != null && this.lstContactNew.length > 0){
+      this.lstContactNew.forEach((res) => {
+          res.recID = Util.uid();
 
+      });
+    }
+    if(this.lstAddressNew != null && this.lstAddressNew.length > 0){
+      this.lstAddressNew.forEach((res) => {
+          res.recID = Util.uid();
+
+      });
+    }
     var data = [
       this.leadNew,
       this.leadOne.recID,
@@ -189,6 +210,8 @@ export class PopupMergeLeadsComponent implements OnInit {
           if (index != -1) {
             this.leadTwo = this.lstLeadCbxTwo[index];
             this.lstContactTwo = await this.getContacts(this.leadTwo?.recID);
+            this.lstAddressTwo= await this.getListAddress(this.dialog?.formModel?.entityName, this.leadTwo?.recID);
+
           }
         }
       } else {
@@ -204,6 +227,8 @@ export class PopupMergeLeadsComponent implements OnInit {
             this.lstContactThree = await this.getContacts(
               this.leadThree?.recID
             );
+            this.lstAddressThree= await this.getListAddress(this.dialog?.formModel?.entityName, this.leadThree?.recID);
+
           }
         }
       }

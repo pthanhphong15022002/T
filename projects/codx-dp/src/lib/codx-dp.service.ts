@@ -375,6 +375,14 @@ export class CodxDpService {
       data
     );
   }
+  releaseProcess(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'ReleaseProcessAsync',
+      data
+    );
+  }
   restoreBinById(recID) {
     return this.api.exec<any>(
       'DP',

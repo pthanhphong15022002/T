@@ -680,6 +680,14 @@ export class CodxCmService {
       data
     );
   }
+  getListContractByCustomersID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetContractsByCustomersIDAsync',
+      data
+    );
+  }
   //quotation lines test
   getQuotationsLinesByTransID(transID) {
     return this.api.exec<any>(

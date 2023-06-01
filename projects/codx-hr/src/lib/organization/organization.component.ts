@@ -7,9 +7,10 @@ import {
 } from '@angular/core';
 import {
   ButtonModel,
+  CRUDService,
   CodxFormDynamicComponent,
   CodxTreeviewComponent,
-  CRUDService,
+  ResourceModel,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -40,7 +41,7 @@ export class OrgorganizationComponent extends UIComponent {
   codxTreeView: CodxTreeviewComponent = null;
   dataService: CRUDService = null;
   templateActive: number = 0;
-  isCorporation:boolean = false;
+  isCorporation: boolean = false;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
@@ -49,8 +50,7 @@ export class OrgorganizationComponent extends UIComponent {
 
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
 
-  constructor(
-    private inject: Injector) {
+  constructor(private inject: Injector) {
     super(inject);
   }
 
@@ -73,14 +73,52 @@ export class OrgorganizationComponent extends UIComponent {
         id: '1',
         type: ViewType.list,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           template: this.itemTemplate,
         },
       },
+      // {
+      //   id: '2',
+      //   type: ViewType.tree_orgchart,
+      //   sameData: true,
+      //   active: false,
+      //   model: {
+      //     resizable: true,
+      //     template: this.tempTree,
+      //     panelRightRef: this.panelRightLef,
+      //     template2: this.tmpOrgChart,
+      //     resourceModel: { parentIDField: 'ParentID' },
+      //   },
+      // },
+      // {
+      //   id: '151',
+      //   type: ViewType.tree_list,
+      //   sameData: true,
+      //   active: false,
+      //   model: {
+      //     resizable: true,
+      //     template: this.tempTree,
+      //     panelRightRef: this.panelRightLef,
+      //     template2: this.tmpList,
+      //     resourceModel: { parentIDField: 'ParentID' },
+      //   },
+      // },
+      {
+        id: '153',
+        type: ViewType.tree_masterdetail,
+        sameData: true,
+        active: false,
+        model: {
+          resizable: true,
+          template: this.tempTree,
+          panelRightRef: this.panelRightLef,
+          template2: this.tmpMasterDetail,
+          resourceModel: { parentIDField: 'ParentID' },
+        },
+      },
     ];
     this.detectorRef.detectChanges();
-
   }
 
   //loadEmployList
@@ -106,7 +144,7 @@ export class OrgorganizationComponent extends UIComponent {
   // delete data
   deleteData(data: any) {
     if (data) {
-      this.view.dataService.delete([data],true).subscribe();
+      this.view.dataService.delete([data], true).subscribe();
       // (this.dataService as CRUDService).delete([data], true).subscribe();
     }
   }
@@ -122,7 +160,7 @@ export class OrgorganizationComponent extends UIComponent {
         funcID: this.view.formModel.funcID,
         isModeAdd: false,
         titleMore: event.text,
-        action:event
+        action: event,
       };
       let popup = this.callfc.openSide(
         PopupAddOrganizationComponent,
@@ -144,15 +182,14 @@ export class OrgorganizationComponent extends UIComponent {
       option.Width = '550px';
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      this.view.dataService.copy()
-      .subscribe((result: any) => {
+      this.view.dataService.copy().subscribe((result: any) => {
         if (result) {
           let object = {
             data: result,
             funcID: this.view.formModel.funcID,
             isModeAdd: true,
             titleMore: event.text,
-            action:event
+            action: event,
           };
           let popup = this.callfc.openSide(
             PopupAddOrganizationComponent,
@@ -181,8 +218,7 @@ export class OrgorganizationComponent extends UIComponent {
   // selected change
   onSelectionChanged(evt: any) {
     var data = evt.data || evt;
-    if (data && this.orgUnitID !== data.orgUnitID) 
-    {
+    if (data && this.orgUnitID !== data.orgUnitID) {
       this.orgUnitID = data.orgUnitID;
     }
   }
@@ -193,16 +229,15 @@ export class OrgorganizationComponent extends UIComponent {
       option.Width = '550px';
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      this.view.dataService.addNew()
-      .subscribe((result: any) => {
+      this.view.dataService.addNew().subscribe((result: any) => {
         if (result) {
-          result["parentID"] = this.orgUnitID;
+          result['parentID'] = this.orgUnitID;
           let object = {
             data: result,
             funcID: this.view.formModel.funcID,
             isModeAdd: true,
             titleMore: e.text,
-            action:e
+            action: e,
           };
           let popup = this.callfc.openSide(
             PopupAddOrganizationComponent,
@@ -221,15 +256,22 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   // convert org to tmp
-  getOrgInfor(data){
-    this.api.execSv("HR","ERM.Business.HR","OrganizationUnitsBusiness","GetOrgInforAsync",[data.orgUnitID])
-    .subscribe((res:any) => {
-      if(res){
-        data.parentName = res.parentName;
-        data.employeeManager = res.employeeManager;
-        data.positionName = res.positionName;
-        this.view.dataService.update(data).subscribe();
-      }
-    });
+  getOrgInfor(data) {
+    this.api
+      .execSv(
+        'HR',
+        'ERM.Business.HR',
+        'OrganizationUnitsBusiness',
+        'GetOrgInforAsync',
+        [data.orgUnitID]
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          data.parentName = res.parentName;
+          data.employeeManager = res.employeeManager;
+          data.positionName = res.positionName;
+          this.view.dataService.update(data).subscribe();
+        }
+      });
   }
 }

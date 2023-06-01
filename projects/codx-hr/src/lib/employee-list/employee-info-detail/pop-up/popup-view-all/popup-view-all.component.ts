@@ -15,6 +15,7 @@ import {
   CallFuncService,
   CodxFormComponent,
   CodxGridviewComponent,
+  CodxGridviewV2Component,
   DataRequest,
   DataService,
   DialogData,
@@ -92,7 +93,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   ops = ['y'];
 
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('gridView') gridView: CodxGridviewComponent;
+  @ViewChild('gridView') gridView: CodxGridviewV2Component;
   @ViewChild('filterPassport', { static: true })
   filterPassport: TemplateRef<any>;
   @ViewChild('customeHeader', { static: true }) customeHeader: TemplateRef<any>;
@@ -607,7 +608,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.updateGridView(this.gridView, 'delete', data);
+                    this.updateGridView(this.gridView, 'delete', null, data);
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -618,7 +619,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.updateGridView(this.gridView, 'delete', data);
+                    this.updateGridView(this.gridView, 'delete', null, data);
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -629,7 +630,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.updateGridView(this.gridView, 'delete', data);
+                    this.updateGridView(this.gridView, 'delete', null, data);
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -640,7 +641,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.updateGridView(this.gridView, 'delete', data);
+                    this.updateGridView(this.gridView, 'delete', null, data);
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -651,7 +652,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                 .subscribe((p) => {
                   if (p) {
                     this.notify.notifyCode('SYS008');
-                    this.updateGridView(this.gridView, 'delete', data);
+                    this.updateGridView(this.gridView, 'delete', null, data);
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -662,7 +663,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                 .subscribe((p) => {
                   if (p[0] != null) {
                     this.notify.notifyCode('SYS008');
-                    this.updateGridView(this.gridView, 'delete', data);
+                    this.updateGridView(this.gridView, 'delete', null, data);
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -703,30 +704,33 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   }
 
   updateGridView(
-    gridView: CodxGridviewComponent,
+    gridView: CodxGridviewV2Component,
     actionType: string,
-    dataItem: any
+    newData: any,
+    oldData?: any
   ) {
-    if (!dataItem) (gridView?.dataService as CRUDService)?.clear();
-    else {
-      debugger
-      let returnVal = 0;
-      if (actionType == 'add' || actionType == 'copy') {
-        (gridView?.dataService as CRUDService)?.add(dataItem).subscribe();
-      this.df.detectChanges();
-      debugger
-        returnVal = 1;
-      } else if (actionType == 'edit') {
-        (gridView?.dataService as CRUDService)?.update(dataItem).subscribe();
-        this.df.detectChanges();
-      } else if ((actionType == 'delete')) {
-        (gridView?.dataService as CRUDService)?.remove(dataItem).subscribe();
-        this.df.detectChanges();
-        returnVal = -1;
-      }
-      // return returnVal;
-      this.rowCount += returnVal;
+    let returnVal = 0;
+    let index = 0;
+    if(oldData){
+      index = gridView.dataService.data.findIndex(
+        (p) => p.recID == oldData.recID
+      );
     }
+    if (actionType == 'add' || actionType == 'copy') {
+      (gridView?.dataService as CRUDService)?.add(newData, 0).subscribe();
+      gridView.addRow(newData, 0, true);
+      returnVal = 1;
+    } else if (actionType == 'edit') {
+      (gridView?.dataService as CRUDService)?.update(newData).subscribe();
+      gridView.updateRow(index, newData, false);
+    } else if ((actionType == 'delete')) {
+      (gridView?.dataService as CRUDService)?.remove(oldData).subscribe();
+      gridView.deleteRow(oldData,true);
+      returnVal = -1;
+    }
+    // return returnVal;
+    this.rowCount += returnVal;
+    this.df.detectChanges();
   }
 
   handleEmployeePassportInfo(actionHeaderText, actionType: string, data: any) {
@@ -748,7 +752,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
 
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        this.updateGridView(this.gridView, actionType, res.event);
+        this.updateGridView(this.gridView, actionType, res.event, data);
       }
       this.df.detectChanges();
     });
@@ -772,7 +776,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        this.updateGridView(this.gridView, actionType, res.event);
+        this.updateGridView(this.gridView, actionType, res.event, data);
       }
       this.df.detectChanges();
     });
@@ -800,7 +804,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        this.updateGridView(this.gridView, actionType, res.event);
+        this.updateGridView(this.gridView, actionType, res.event, data);
       }
       this.df.detectChanges();
     });
@@ -827,7 +831,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        this.updateGridView(this.gridView, actionType, res.event[0]);
+        this.updateGridView(this.gridView, actionType, res.event[0], data);
       }
       this.df.detectChanges();
     });
@@ -851,7 +855,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        this.updateGridView(this.gridView, actionType, res.event);
+        this.updateGridView(this.gridView, actionType, res.event, data);
       }
       this.df.detectChanges();
     });
@@ -987,7 +991,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        this.updateGridView(this.gridView, actionType, res.event);
+        this.updateGridView(this.gridView, actionType, res.event, data);
       }
       this.df.detectChanges();
     });

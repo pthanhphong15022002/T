@@ -59,7 +59,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       this.chartOfAccounts.detail = true;
     }
     this.cache
-      .gridViewSetup('ChartOfAccounts', 'grvChartOfAccounts')
+      .gridViewSetup('ChartOfAccounts', 'grvAccountsAC')
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
@@ -79,6 +79,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    this.form.formGroup.patchValue(this.chartOfAccounts);
   }
   //#endregion
 
