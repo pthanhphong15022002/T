@@ -391,6 +391,7 @@ export class CashPaymentsComponent extends UIComponent {
           .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
             this.acctTrans = res;
+            this.loadTotal();
           });
         break;
       default:
