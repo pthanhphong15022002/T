@@ -69,15 +69,14 @@
         <ejs-combobox
           [dataSource]="lstLeadCbxOne"
           [fields]="fieldCbx"
-          [disabled]="true"
           [value]="leadOne?.recID"
+          [readonly]="true"
         ></ejs-combobox>
       </div>
       <div class="w-20">
         <ejs-combobox
           [dataSource]="lstLeadCbxTwo"
           [fields]="fieldCbx"
-          [disabled]="true"
           [value]="leadTwo?.recID"
           (valueChange)="cbxLeadChange($event, 'two')"
         ></ejs-combobox>
@@ -86,7 +85,6 @@
         <ejs-combobox
           [dataSource]="lstLeadCbxThree"
           [fields]="fieldCbx"
-          [disabled]="true"
           [value]="leadThree?.recID"
           (valueChange)="cbxLeadChange($event, 'three')"
         ></ejs-combobox>

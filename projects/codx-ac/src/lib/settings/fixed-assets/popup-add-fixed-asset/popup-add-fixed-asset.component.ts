@@ -6,14 +6,15 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  CRUDService,
   CodxFormComponent,
   DialogData,
   DialogRef,
   RequestOption,
   UIComponent,
 } from 'codx-core';
-import { IAsset } from '../interfaces/IAsset.interface';
 import { CodxAcService } from '../../../codx-ac.service';
+import { IAsset } from '../interfaces/IAsset.interface';
 
 @Component({
   selector: 'lib-popup-add-fixed-asset',
@@ -27,6 +28,7 @@ export class PopupAddFixedAssetComponent
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
 
+  dataService: CRUDService;
   title: string;
   asset: IAsset = {} as IAsset;
   gvs: any;
@@ -47,16 +49,17 @@ export class PopupAddFixedAssetComponent
   ];
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private acService: CodxAcService,
     @Optional() public dialogRef: DialogRef,
     @Optional() private dialogData: DialogData
   ) {
     super(injector);
 
-    this.asset = this.dialogRef.dataService?.dataSelected;
+    this.dataService = this.dialogRef.dataService;
+    this.asset = this.dataService.dataSelected;
 
-    if (this.dialogData.data?.formType === "edit") {
+    if (this.dialogData.data?.formType === 'edit') {
       this.isEdit = true;
       this.oldAssetId = this.asset.assetID;
     }
@@ -82,25 +85,31 @@ export class PopupAddFixedAssetComponent
   //#endregion
 
   //#region Event
-  handleClickSave(): void {
+  onClickSave(): void {
     console.log(this.asset);
 
     if (!this.acService.validateFormData(this.form.formGroup, this.gvs)) {
       return;
     }
 
-    this.dialogRef.dataService
+    this.dataService
       .save((req: RequestOption) => {
-        req.methodName = !this.isEdit ? 'AddAsync' : 'UpdateAsync';
+        if (!this.isEdit) {
+          return false;
+        }
+
+        req.methodName = 'UpdateAsync';
         req.className = 'AssetsBusiness';
         req.assemblyName = 'ERM.Business.AM';
-        req.service = 'AM';
-        req.data = !this.isEdit ? this.asset : [this.asset, this.oldAssetId];
-
+        req.data = [this.asset, this.oldAssetId];
         return true;
       })
-      .subscribe((res) => {
-        if (res.save || res.update) {
+      .subscribe((res: any) => {
+        console.log(res);
+        const isOkay: boolean = !this.isEdit
+          ? res.save.data || res.update.data
+          : res.save || res.update;
+        if (isOkay) {
           this.dialogRef.close();
         }
       });
