@@ -46,6 +46,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   journalNo: any;
   modeGrid: any;
   lsitem: any;
+  lswarehouse: any;
   inventoryJournalLines: Array<InventoryJournalLines> = [];
   inventoryJournalLinesDelete: Array<InventoryJournalLines> = [];
   lockFields = [];
@@ -128,12 +129,12 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case 'ACT0708':
         this.cache.valueList(this.vllReceipt).subscribe((res) => {
           this.fmInventoryJournalLines.entityName = res?.datas[1].value;
-        })
+        });
         break;
       case 'ACT0714':
         this.cache.valueList(this.vllIssue).subscribe((res) => {
           this.fmInventoryJournalLines.entityName = res?.datas[1].value;
-        })
+        });
         break;
     }
   }
@@ -147,6 +148,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.loadTotal();
     this.loadJournal();
     this.loadItems();
+    this.loadWarehouses();
   }
 
   ngAfterViewInit() {
@@ -181,11 +183,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         case'warehouseid':
           {
             this.inventoryJournal.warehouseID = e.data;
-            this.api.exec('IV', 'InventoryJournalsBusiness', 'GetWarehouseNameAsync', [e.data])
-            .subscribe((res: any) => {
-              this.inventoryJournal.warehouseName = res;
-              this.form.formGroup.patchValue(this.inventoryJournal);
-            });
+            this.getWarehouseName(e.data);
+            this.form.formGroup.patchValue(this.inventoryJournal);
           }
           break;
         case 'warehousename':
@@ -864,14 +863,31 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           }
         });
     }
+    if(this.formType == 'add')
+    {
+      this.loadWarehouseFromJournal();
+    }
     if (
       this.inventoryJournal &&
       this.inventoryJournal.unbounds &&
       this.inventoryJournal.unbounds.lockFields &&
       this.inventoryJournal.unbounds.lockFields.length
-    ) {
+    ){
       this.lockFields = this.inventoryJournal.unbounds
         .lockFields as Array<string>;
+    }
+    else{
+      this.api
+        .exec('IV', 'InventoryJournalsBusiness', 'SetUnboundsAsync', [
+          this.inventoryJournal
+        ])
+        .subscribe((res: any) => {
+          if (res.unbounds && res.unbounds.lockFields && res.unbounds.lockFields.length) {
+            this.inventoryJournal.unbounds = res.unbounds;
+            this.lockFields = this.inventoryJournal.unbounds
+              .lockFields as Array<string>;
+          }
+        });
     }
     if (this.inventoryJournal.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
@@ -978,6 +994,51 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       if(res)
         this.lsitem = res;
     });
+  }
+
+  loadWarehouses(){
+    this.api.exec('IV', 'WareHousesBusiness', 'LoadAllDataAsync')
+    .subscribe((res: any) => {
+      if(res)
+        this.lswarehouse = res;
+    });
+  }
+
+  loadWarehouseFromJournal(){
+    switch(this.funcID)
+    {
+      case 'ACT0708':
+        if(this.inventoryJournal.warehouseReceipt)
+        {
+          this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseReceipt;
+          this.api.exec('IV', 'InventoryJournalsBusiness', 'GetWarehouseNameAsync', [this.inventoryJournal.warehouseID])
+            .subscribe((res: any) => {
+              if (res.length > 0) {
+                this.inventoryJournal.warehouseName = res;
+                this.form.formGroup.patchValue(this.inventoryJournal);
+              }
+            });
+        }
+        break;
+      case 'ACT0714':
+        if(this.inventoryJournal.warehouseIssue)
+        {
+          this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseIssue;
+          this.api.exec('IV', 'InventoryJournalsBusiness', 'GetWarehouseNameAsync', [this.inventoryJournal.warehouseID])
+            .subscribe((res: any) => {
+              if (res.length > 0) {
+                this.inventoryJournal.warehouseName = res;
+                this.form.formGroup.patchValue(this.inventoryJournal);
+              }
+            });
+        }
+        break;
+    }
+  }
+
+  getWarehouseName(warehouseID: any){
+    var warehouse = this.lswarehouse.filter(x => x.warehouseID == warehouseID);
+    this.inventoryJournal.warehouseName = warehouse[0].warehouseName;
   }
 
   getItem(itemID: any){

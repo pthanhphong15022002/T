@@ -1,8 +1,10 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   AuthStore,
   ButtonModel,
   UIComponent,
+  UrlUtil,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -22,7 +24,7 @@ export class PeriodicComponent extends UIComponent {
 
   user: any;
 
-  constructor(inject: Injector, private authstore: AuthStore) {
+  constructor(inject: Injector, private authstore: AuthStore, private route: Router) {
     super(inject);
     this.user = this.authstore.get();
   }
@@ -60,7 +62,16 @@ export class PeriodicComponent extends UIComponent {
     }
   }
 
-  click(e, data) {}
+  click(e, data) {
+    this.cache.functionList(data?.functionID).subscribe((func) => {
+      if (func) {
+        let urlRedirect = '/' + UrlUtil.getTenant();
+        if (func && func.url && func.url.charAt(0) != '/') urlRedirect += '/';
+        urlRedirect += func.url;
+        this.route.navigate([urlRedirect]);
+      }
+    });
+  }
   //#region Events
 
   //#region Method

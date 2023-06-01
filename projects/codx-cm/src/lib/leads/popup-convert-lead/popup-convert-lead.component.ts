@@ -117,6 +117,13 @@ export class PopupConvertLeadComponent implements OnInit {
   async ngOnInit() {
     this.formModelDeals = await this.cmSv.getFormModel('CM0201');
     this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
+    this.gridViewSetupDeal = await firstValueFrom(
+      this.cache.gridViewSetup('CMDeals', 'grvCMDeals')
+    );
+
+    this.gridViewSetupCustomer = await firstValueFrom(
+      this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
+    );
     var options = new DataRequest();
     options.entityName = 'DP_Processes';
     options.predicates = 'ApplyFor=@0 && !Deleted';
@@ -126,6 +133,7 @@ export class PopupConvertLeadComponent implements OnInit {
       this.listCbxProcess =
         process != null && process.length > 0 ? process : [];
     });
+    this.setData();
 
     this.changeDetectorRef.detectChanges();
   }
@@ -134,19 +142,7 @@ export class PopupConvertLeadComponent implements OnInit {
     if (this.radioChecked) {
       this.countAddSys++;
     }
-    this.setData();
-    this.cache.gridViewSetup('CMDeals', 'grvCMDeals').subscribe((res) => {
-      if (res) {
-        this.gridViewSetupDeal = res;
-      }
-    });
-    this.cache
-      .gridViewSetup('CMCustomers', 'grvCMCustomers')
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetupCustomer = res;
-        }
-      });
+
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
     this.changeDetectorRef.detectChanges();
