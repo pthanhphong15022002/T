@@ -20,6 +20,7 @@ import {
   CRUDService,
   CacheService,
   CallFuncService,
+  CodxInputComponent,
   DataRequest,
   DialogData,
   DialogModel,
@@ -44,6 +45,8 @@ import { PopupAddPaymentHistoryComponent } from '../payment/popup-add-payment-hi
 })
 export class AddContractsComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('inputQuotation') inputQuotation: CodxInputComponent;
+  @ViewChild('inputDeal') inputDeal: CodxInputComponent;
   @ViewChild('more') more: TemplateRef<any>;
   @ViewChild('test') test: any;
   REQUIRE = ['contractName', 'contractID', 'useType','contractType','pmtMethodID','pmtStatus','delModeID','delStatus'];
@@ -56,7 +59,7 @@ export class AddContractsComponent implements OnInit {
   tabClicked = '';
   listClicked = [];
   account: any;
-  type: 'view' | 'list';
+  type: 'view' | 'deal' | 'quotation' | 'customer';
   customer: CM_Customers;
   customerID = {};
   listQuotationsLine: CM_QuotationsLines[];
@@ -105,6 +108,7 @@ export class AddContractsComponent implements OnInit {
   grvPayments: any;
   disabledDelActualDate = false;
   view = [];
+  customerIdOld = null;
 
   constructor(
     private cache: CacheService,
@@ -237,16 +241,43 @@ export class AddContractsComponent implements OnInit {
     this.contracts[event?.field] = event?.data;
   }
 
+  setValueComboboxDeal(){
+    let listDeal = this.inputDeal.ComponentCurrent.dataService.data;
+    if(listDeal){
+      if(this.customerIdOld != this.contracts.customerID){
+          this.contracts.dealID = null;
+          this.inputDeal.ComponentCurrent.dataService.data = [];
+      }
+    }
+  }
+  setValueComboboxQuotation(){
+    let listQoutation = this.inputQuotation.ComponentCurrent.dataService.data;
+    if(listQoutation){
+      if(this.customerIdOld != this.contracts.customerID){
+        this.contracts.quotationID = null;
+        this.inputQuotation.ComponentCurrent.dataService.data = [];
+    }
+    }
+  }
+
   valueChangeCombobox(event) {
     this.contracts[event?.field] = event?.data;
     if (event?.field == 'dealID' && event?.data) {
       this.getCustomerByDealID(event?.data);
-    }
-    if (event?.field == 'customerID' && event?.data) {
-      this.getCustomerByrecID(event?.data);
+      this.setValueComboboxQuotation();
+      if(!this.contracts.customerID){
+      }
     }
     if (event?.field == 'quotationID' && event?.data) {
       this.getDataByQuotationID(event?.data);
+      this.setValueComboboxDeal();
+      if(!this.contracts.customerID){
+      }
+    }
+    if (event?.field == 'customerID' && event?.data) {
+      this.setValueComboboxQuotation();
+      this.setValueComboboxDeal();
+      this.getCustomerByrecID(event?.data);
     }
     if (event?.field == 'delStatus') {
       this.disabledDelActualDate =
@@ -261,69 +292,6 @@ export class AddContractsComponent implements OnInit {
   changeValueDate(event) {
     this.contracts[event?.field] = new Date(event?.data?.fromDate);
   }
-
-  // async loadSetting() {
-  //   this.grvSetup = await firstValueFrom(
-  //     this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
-  //   );
-  //   this.vllStatus = this.grvSetup['Status'].referedValue;
-  //   //lay grid view
-  //   let arrField = Object.values(this.grvSetup).filter((x: any) => x.isVisible);
-  //   if (Array.isArray(arrField)) {
-  //     this.arrFieldIsVisible = arrField
-  //       .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-  //       .map((x: any) => x.fieldName);
-  //     this.getColumsGrid(this.grvSetup);
-  //   }
-  // }
-
-  // getColumsGrid(grvSetup) {
-  //   this.columnGrids = [];
-  //   this.arrFieldIsVisible.forEach((key) => {
-  //     let field = Util.camelize(key);
-  //     let template: any;
-  //     let colums: any;
-  //     switch (key) {
-  //       case 'Status':
-  //         template = this.templateStatus;
-  //         break;
-  //       case 'CustomerID':
-  //         template = this.templateCustomer;
-  //         break;
-  //       case 'CreatedBy':
-  //         template = this.templateCreatedBy;
-  //         break;
-  //       case 'TotalTaxAmt':
-  //         template = this.templateTotalTaxAmt;
-  //         break;
-  //       case 'TotalAmt':
-  //         template = this.templateTotalAmt;
-  //         break;
-  //       case 'TotalSalesAmt':
-  //         template = this.templateTotalSalesAmt;
-  //         break;
-  //       default:
-  //         break;
-  //     }
-  //     if (template) {
-  //       colums = {
-  //         field: field,
-  //         headerText: grvSetup[key].headerText,
-  //         width: grvSetup[key].width,
-  //         template: template,
-  //         // textAlign: 'center',
-  //       };
-  //     } else {
-  //       colums = {
-  //         field: field,
-  //         headerText: grvSetup[key].headerText,
-  //         width: grvSetup[key].width,
-  //       };
-  //     }
-
-  //     this.columnGrids.push(colums);
-  //   });
-
 
   loadComboboxData(comboboxName: string, service: string): Observable<any> {
     const dataRequest = new DataRequest();
@@ -439,6 +407,7 @@ export class AddContractsComponent implements OnInit {
   }
 
   setDataContractCombobox(customer) {
+    this.customerIdOld = this.contracts.customerID;
     this.customer = customer; 
     this.customerID = { customerID: customer?.recID };
     this.contracts.customerID = customer?.recID;
