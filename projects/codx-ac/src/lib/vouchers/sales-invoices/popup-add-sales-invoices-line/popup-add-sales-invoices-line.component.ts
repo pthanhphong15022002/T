@@ -54,7 +54,7 @@ export class PopupAddSalesInvoicesLineComponent
   nameByIdPipe = new NameByIdPipe();
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private acService: CodxAcService,
     private salesInvoiceService: SalesInvoiceService,
     @Optional() public dialogRef: DialogRef,
