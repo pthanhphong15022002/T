@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
 import {
+  CacheService,
   DialogModel,
   FormModel,
   ResourceModel,
@@ -29,6 +30,10 @@ import { FormGroup } from '@angular/forms';
 import { PopupAddComponent } from '../codx-tasks/popup-add/popup-add.component';
 import { AddNoteComponent } from '../calendar-notes/add-note/add-note.component';
 import { of, switchMap, take } from 'rxjs';
+import {
+  SpeedDialItemEventArgs,
+  SpeedDialItemModel,
+} from '@syncfusion/ej2-angular-buttons';
 
 @Component({
   selector: 'app-codx-calendar',
@@ -76,9 +81,12 @@ export class CodxCalendarComponent
   assignTaskFM: FormModel;
   assignTaskFG: FormGroup;
 
+  items: SpeedDialItemModel[] = [];
+
   constructor(
     injector: Injector,
-    private calendarService: CodxCalendarService
+    private calendarService: CodxCalendarService,
+    private cacheService: CacheService
   ) {
     super(injector);
     this.carFM = new FormModel();
@@ -113,7 +121,6 @@ export class CodxCalendarComponent
               this.calendarParams[prop] = JSON.parse(res[prop]);
             }
           }
-          console.log('Calendar Parameters', this.calendarParams);
         }
       });
 
@@ -143,6 +150,14 @@ export class CodxCalendarComponent
           this.navigate();
         }
       });
+
+    this.cacheService.valueList('WP006').subscribe((res) => {
+      res.datas.map((res) => {
+        if (this.calendarParams.hasOwnProperty(res.value)) {
+          this.items.push({ id: res.value, text: res.text });
+        }
+      });
+    });
   }
 
   ngAfterViewInit() {
@@ -409,7 +424,9 @@ export class CodxCalendarComponent
   //#endregion
 
   //#region Add event from module on calendar
-  addEvent(transType: string) {
+  addEvent(args: SpeedDialItemEventArgs) {
+    let transType = args.item.id;
+
     switch (transType) {
       case 'EP_BookingCars':
         this.addBookingCar();
@@ -624,8 +641,9 @@ export class CodxCalendarComponent
             isOtherModule: true, //tu modele khac truyn qua
           };
           return this.callfc.openSide(
-            PopupAddComponent,obj,
-           // [res.data, 'add', true, 'Thêm', 'TMT0203', null, false, true],
+            PopupAddComponent,
+            obj,
+            // [res.data, 'add', true, 'Thêm', 'TMT0203', null, false, true],
             option
           ).closed;
         }),
@@ -689,5 +707,6 @@ export class CodxCalendarComponent
         }
       });
   }
+
   //#endregion
 }
