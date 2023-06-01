@@ -414,14 +414,14 @@ export class CodxCmService {
       data
     );
   }
-  // getInstanceStepsByMoveStages(data: any) {
-  //   return this.api.exec<any>(
-  //     'DP',
-  //     'InstancesBusiness',
-  //     'MoveStageInDealAsync',
-  //     data
-  //   );
-  // }
+  copyFileAvata(idOld, idNew) {
+    return this.api.exec<any>(
+      'CM',
+      'ContactsBusiness',
+      'CopyAvatarByIdAsync',
+      [idOld, idNew]
+    );
+  }
 
   addInstance(data: any) {
     return this.api.exec<any>(
@@ -710,6 +710,15 @@ export class CodxCmService {
       'CM',
       'ContractsPaymentsBusiness',
       'AddPaymentsAsync',
+      contracts
+    );
+  }
+
+  addPaymentsHistory(contracts) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'AddPaymentsHistoryAsync',
       contracts
     );
   }

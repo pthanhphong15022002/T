@@ -788,7 +788,7 @@ export class InstanceDetailComponent implements OnInit {
   saveAssign(e) {
     if (e) {
       this.loadTree(this.id);
-      this.GetStepsByInstanceIDAsync();
+      // this.GetStepsByInstanceIDAsync();
     }
   }
   showColumnControl(stepID) {

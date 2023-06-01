@@ -147,12 +147,16 @@ export class CodxListContactsComponent implements OnInit {
   insertFieldCheckbox() {
     if (this.isConvertLeadToCus) {
       for (var i = 0; i < this.listContacts.length; i++) {
-        if (!this.listContacts[i].checked && this.listContacts[i].objectType != this.objectType) this.listContacts[i].checked = false;
+        if (
+          !this.listContacts[i].checked &&
+          this.listContacts[i].objectType != this.objectType
+        )
+          this.listContacts[i].checked = false;
       }
       if (this.lstContactRef != null && this.lstContactRef.length > 0) {
-        for(var i = 0; i < this.listContacts.length; i++){
+        for (var i = 0; i < this.listContacts.length; i++) {
           let contact = this.listContacts[i];
-          if(this.lstContactRef.map(x => x.refID).includes(contact.recID)){
+          if (this.lstContactRef.map((x) => x.refID).includes(contact.recID)) {
             this.listContacts[i].checked = true;
           }
         }
@@ -174,10 +178,8 @@ export class CodxListContactsComponent implements OnInit {
         break;
       case 'CM0102_2':
       case 'CM0102_3':
+      case 'SYS02':
         this.deleteContactToCM(data);
-        break;
-      case 'SYS04':
-        // this.copy(data);
         break;
       case 'CM0102_1':
         if (this.isButton == true)
@@ -193,15 +195,20 @@ export class CodxListContactsComponent implements OnInit {
           case 'SYS003':
           case 'SYS004':
           case 'SYS002':
-          case 'SYS02':
           case 'SYS04':
             res.disabled = true;
             break;
           case 'CM0102_2':
-            if (this.funcID == 'CM0103' || this.objectType == '2') res.disabled = true;
+            if (this.funcID == 'CM0103' || this.objectType == '2')
+              res.disabled = true;
             break;
           case 'CM0102_3':
-            if (this.funcID == 'CM0101' || this.objectType == '2') res.disabled = true;
+            if (this.funcID == 'CM0101' || this.objectType == '2')
+              res.disabled = true;
+            break;
+          case 'SYS02':
+            if (this.objectType != '2') res.disabled = true;
+
             break;
         }
       });

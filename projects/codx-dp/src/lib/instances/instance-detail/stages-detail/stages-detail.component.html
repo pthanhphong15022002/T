@@ -336,6 +336,7 @@
         [isEditTimeDefault]="leadtimeControl"
         [isUpdateProgressGroup]="progressTaskGroupControl"
         [isOnlyView]="isOnlyView"
+        (saveAssign)="saveAssignStepTask($event)"
         (continueStep)="continueStep($event)"
         (isChangeProgress)="changeProgressStep($event)"
       ></codx-step-task>

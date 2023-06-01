@@ -106,10 +106,10 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
    }
   }
   gridCreated(e, grid) {
-    let hBody
-    let d = grid?.nativeElement?.parentElement.offsetHeight;
-    if (this.cardbodyGeneral)
-      hBody = this.cardbodyGeneral.nativeElement.parentElement.offsetHeight;
+    // let hBody
+    // let d = grid?.nativeElement?.parentElement.offsetHeight;
+    // if (this.cardbodyGeneral)
+    //   hBody = this.cardbodyGeneral.nativeElement.parentElement.offsetHeight;
       //  this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
   }
 
@@ -169,13 +169,13 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       listPaymentAdd: this.listPaymentAdd,
       listPaymentEdit: this.listPaymentEdit,
       listPaymentDelet: this.listPaymentDelete,
-      contractID: this.contracts?.recID,
+      contract: this.contracts,
       isSave: this.isSave,
     };
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 1001;
+    option.zIndex = 2001;
     option.FormModel = this.fmContractsPayments;
     let popupPayment = this.callfunc.openForm(
       PopupAddPaymentComponent,

@@ -9,3 +9,34 @@
 tr:hover .onhover{
   display: inline-block;
 }
+
+::ng-deep{
+  #reportInfo .e-upload-actions{
+    display: none;
+  }
+  #reportInfo .e-file-status{
+    display: none;
+  }
+
+  .icon-download-report{
+    -ms-flex-align: center;
+    align-items: center;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    font-size: 18px;
+    height: 20px;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin: 15px;
+    margin-top: -8px;
+    padding: 10px;
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    vertical-align: middle;
+    width: 20px;
+  }
+
+}

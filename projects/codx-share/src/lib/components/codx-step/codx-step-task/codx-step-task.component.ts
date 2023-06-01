@@ -68,7 +68,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Output() isChangeProgress = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();
   @Output() valueChangeProgress = new EventEmitter<any>();
-  id = '';
+  @Output() saveAssign = new EventEmitter<any>();
+  
   currentStep: any;
   isUpdate;
   user: any;
@@ -97,6 +98,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     delete: true,
   };
   titleAction: any = '';
+  id: string;
+ 
 
   constructor(
     private callfc: CallFuncService,
@@ -666,13 +669,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     var task = new TM_Tasks();
     task.taskName = data.taskName;
     task.refID = data?.recID;
-    task.refType = 'DP_Instance';
+    task.refType = 'DP_Instances_Steps_Tasks';
     task.dueDate = data?.endDate;
     task.sessionID = this.currentStep?.instanceID;
     let dataReferences = [
       {
         recIDReferences: data.recID,
-        refType: 'DP_Instances',
+        refType: 'DP_Instances_Steps_Tasks',
         createdOn: data.createdOn,
         memo: data.taskName,
         createdBy: data.createdBy,
@@ -697,7 +700,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       if (e && e.event != null) {
         doneSave = true;
       }
-      // this.saveAssign.emit(doneSave);
+      this.saveAssign.emit(doneSave);
     });
   }
   //group task
