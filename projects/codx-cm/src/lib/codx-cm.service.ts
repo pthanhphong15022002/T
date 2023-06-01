@@ -352,9 +352,9 @@ export class CodxCmService {
         options
       )
       .pipe(
-        tap((r) => console.log(r)),
+        tap(),
         map((r) => r[0]),
-        tap((r) => console.log(r))
+        tap()
       );
   }
 
