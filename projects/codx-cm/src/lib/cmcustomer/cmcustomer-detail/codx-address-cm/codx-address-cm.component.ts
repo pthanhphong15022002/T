@@ -39,6 +39,7 @@ export class CodxAddressCmComponent implements OnInit {
   @Output() addressName = new EventEmitter<any>();
   @Output() convertAddress = new EventEmitter<any>();
   @Input() listAddress = [];
+  @Input() selectAll: boolean = false;
   listAddressDelete = [];
   formModelAddress: FormModel;
   moreFuncAdd = '';
@@ -52,6 +53,8 @@ export class CodxAddressCmComponent implements OnInit {
   assemblyName = 'ERM.Business.BS';
   className = 'AddressBookBusiness';
   method = 'GetListAddressAsync';
+  isCheckedAll: boolean = false;
+
   constructor(
     private cmSv: CodxCmService,
     private cache: CacheService,
@@ -69,7 +72,7 @@ export class CodxAddressCmComponent implements OnInit {
       ) {
         this.getListAddress();
       }
-    }else{
+    } else {
       this.loaded = true;
     }
   }
@@ -86,23 +89,37 @@ export class CodxAddressCmComponent implements OnInit {
   loadListAdress(lstAddress) {
     this.listAddress = this.cmSv.bringDefaultContactToFront(lstAddress);
     if (this.listAddress != null && this.listAddress.length > 0) {
+      for (var i = 0; i < this.listAddress.length; i++) {
+        if (!this.listAddress[i].checked) this.listAddress[i].checked = false;
+      }
       this.changeAddress(this.listAddress[0]);
     }
   }
   getListAddress() {
     this.loaded = false;
-    this.request.predicates = 'ObjectID=@0 && ObjectType=@1';
-    this.request.dataValues = this.id + ';' + this.entityName;
-    this.request.entityName = 'BS_AddressBook';
-    this.request.funcID = this.funcID;
-    this.className = 'AddressBookBusiness';
-    this.fetch().subscribe((item) => {
-      this.listAddress = this.cmSv.bringDefaultContactToFront(item);
-      if (this.listAddress != null && this.listAddress.length > 0) {
-        this.changeAddress(this.listAddress[0]);
-      }
+    if (!this.selectAll) {
+      this.request.predicates = 'ObjectID=@0 && ObjectType=@1';
+      this.request.dataValues = this.id + ';' + this.entityName;
+      this.request.entityName = 'BS_AddressBook';
+      this.request.funcID = this.funcID;
+      this.className = 'AddressBookBusiness';
+      this.fetch().subscribe((item) => {
+        this.listAddress = this.cmSv.bringDefaultContactToFront(item);
+        if (this.listAddress != null && this.listAddress.length > 0) {
+          if (this.isConvertLeadToCus) {
+            for (var i = 0; i < this.listAddress.length; i++) {
+              if (!this.listAddress[i].checked) this.listAddress[i].checked = false;
+            }
+          }
+          this.changeAddress(this.listAddress[0]);
+        }
+        this.loaded = true;
+      });
+    } else {
+      this.loadListAdress(this.listAddress);
       this.loaded = true;
-    });
+
+    }
   }
 
   private fetch(): Observable<any[]> {
@@ -127,6 +144,7 @@ export class CodxAddressCmComponent implements OnInit {
 
   changeAddress(data) {
     this.currentRecID = data?.recID;
+
     this.changeDetectorRef.detectChanges();
   }
   clickMFAddress(e, data) {
@@ -266,6 +284,21 @@ export class CodxAddressCmComponent implements OnInit {
   }
 
   valueChange(e, data) {
-    this.convertAddress.emit({ e: e, data: data });
+    this.convertAddress.emit({ e: e?.target?.checked, data: data });
+    if (this.selectAll) {
+      this.isCheckedAll = this.listAddress.every((item) => item.checked);
+    }
+  }
+
+  toggleAll(e) {
+    if (e?.target) {
+      this.isCheckedAll = e?.target?.checked;
+      this.listAddress.forEach((item) => (item.checked = this.isCheckedAll));
+    }
+    this.convertAddress.emit({
+      e: e?.target?.checked,
+      data: null,
+      type: 'selectAll',
+    });
   }
 }

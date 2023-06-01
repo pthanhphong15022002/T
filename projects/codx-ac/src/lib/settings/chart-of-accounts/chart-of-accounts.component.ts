@@ -162,24 +162,11 @@ export class ChartOfAccountsComponent extends UIComponent {
         );
       });
   }
-
   delete(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .delete([data], true, (option: RequestOption) =>
-        this.beforeDelete(option, data)
-      )
-      .subscribe(() => {});
-  }
-  beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteAsync';
-    opt.className = 'AccountsBusiness';
-    opt.assemblyName = 'AC';
-    opt.service = 'AC';
-    opt.data = data;
-    return true;
+    this.view.dataService.delete([data], true).subscribe((res: any) => {});
   }
   //#endregion
 }

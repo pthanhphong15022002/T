@@ -9,43 +9,68 @@ import { CM_Leads } from '../../../models/cm_model';
 })
 export class PopupRemoveAddContactComponent implements OnInit {
   dialog: any;
-  lstContact = [];
+  list = [];
+
   type = '';
   lead: CM_Leads = new CM_Leads();
-  lstContactLead = [];
+  lstLead = [];
+  category = '';
   constructor(@Optional() dt?: DialogData, @Optional() dialog?: DialogRef) {
     this.dialog = dialog;
     this.type = dt?.data?.type;
-    this.lstContact = JSON.parse(JSON.stringify(dt?.data?.lstContact));
+    this.category = dt?.data?.category;
+      this.list = JSON.parse(JSON.stringify(dt?.data?.list));
+
     this.lead = dt?.data?.lead;
   }
   ngOnInit(): void {
-    if (this.lstContact != null) {
+    if (this.list != null) {
       if (this.type == 'add')
-        this.lstContact.forEach((item) => (item.isDefault = false));
+        this.list.forEach((item) => (item.isDefault = false));
     }
   }
 
   onSave() {
-    this.dialog.close(this.lstContactLead);
+    this.dialog.close(this.lstLead);
   }
 
   objectConvert(e) {
     if (e?.type == 'selectAll') {
       if (e.e == true) {
-        this.lstContactLead = this.lstContact;
+        this.lstLead = this.list;
       } else {
-        this.lstContactLead = [];
+        this.lstLead = [];
       }
     } else {
       if (e.e == true) {
-        this.lstContactLead.push(Object.assign({}, e?.data));
+        this.lstLead.push(Object.assign({}, e?.data));
       } else {
-        var index = this.lstContactLead.findIndex(
+        var index = this.lstLead.findIndex(
           (x) => x.recID == e?.data?.recID
         );
         if (index != -1) {
-          this.lstContactLead.splice(index, 1);
+          this.lstLead.splice(index, 1);
+        }
+      }
+    }
+  }
+
+  convertAddress(e){
+    if (e?.type == 'selectAll') {
+      if (e.e == true) {
+        this.lstLead = this.list;
+      } else {
+        this.lstLead = [];
+      }
+    } else {
+      if (e.e == true) {
+        this.lstLead.push(Object.assign({}, e?.data));
+      } else {
+        var index = this.lstLead.findIndex(
+          (x) => x.recID == e?.data?.recID
+        );
+        if (index != -1) {
+          this.lstLead.splice(index, 1);
         }
       }
     }

@@ -7,3 +7,9 @@
     right: 0;
     top: -28px;
 }
+.e-summarycontent{
+    padding-top: 10px;
+}
+.add-cash #gridViewV2.e-grid .e-summarycell {
+    border-width: 0;
+}

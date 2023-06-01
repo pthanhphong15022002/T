@@ -8,6 +8,7 @@ import {
   SimpleChanges,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -34,6 +35,7 @@ import { PopupMergeLeadsComponent } from './popup-merge-leads/popup-merge-leads.
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
   styleUrls: ['./leads.component.scss'],
+  encapsulation:ViewEncapsulation.None,
 })
 export class LeadsComponent
   extends UIComponent
@@ -526,9 +528,18 @@ export class LeadsComponent
         if (!e?.event) this.view.dataService.clear();
 
         if (e && e.event) {
-          if (e.event.recID) {
-            e.event.modifiedOn = new Date();
-            this.view.dataService.add(e.event, 0).subscribe();
+          if (e.event.length > 0) {
+            e.event[0].modifiedOn = new Date();
+            this.view.dataService.add(e.event[0], 0).subscribe();
+            if(e.event[1]){
+              this.view.dataService.remove(e.event[1]).subscribe();
+            }
+            if(e.event[2]){
+              this.view.dataService.remove(e.event[2]).subscribe();
+            }
+            if(e.event[3]){
+              this.view.dataService.remove(e.event[3]).subscribe();
+            }
             this.dataSelected = JSON.parse(
               JSON.parse(JSON.stringify(this.view.dataService.data[0]))
             );
