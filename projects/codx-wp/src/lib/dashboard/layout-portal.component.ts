@@ -49,7 +49,7 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     //   });
   }
   asideClick(evt: any) {
-    if (evt.assemblyName == 'HCS') {
+    if (evt?.function?.assemblyName == 'HCS') {
       evt.cancel = true;
       this.shareService.loginHCS().subscribe((token) => {
         this.cache.functionList(evt.funcId).subscribe((res) => {
