@@ -61,9 +61,9 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
 
   isEditMode: boolean = false;
 
-  palletColor = ['#06ddb8', '#a6dff5'];
+  paletteColor = ['#06ddb8', '#a6dff5'];
 
-  // palletColorTopChart = ['#005dc7', '#0078ff', ''];
+  // paletteColorTopChart = ['#005dc7', '#0078ff', ''];
 
   chartSettings6: ChartSettings = {
     seriesSetting: [
@@ -403,6 +403,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('TM', 'TaskBusiness', 'GetDataTeamDashboardAsync', [model])
       .subscribe((res) => {
         this.teamDBData = res;
+        console.log(this.teamDBData);
         setTimeout(() => {
           this.isLoaded = true;
         }, 500);

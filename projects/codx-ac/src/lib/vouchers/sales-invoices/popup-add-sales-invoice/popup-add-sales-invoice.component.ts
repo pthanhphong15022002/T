@@ -9,7 +9,7 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
-  UIComponent
+  UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Observable } from 'rxjs';
@@ -58,9 +58,10 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     mode: 'Normal',
   };
   fmSalesInvoicesLines: FormModel;
+  isReturnInvoice: boolean;
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private acService: CodxAcService,
     private journalService: JournalService,
     private salesInvoiceService: SalesInvoiceService,
@@ -76,6 +77,8 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     this.isEdit = dialogData.data.formType === 'edit';
     this.masterService.hasSaved = this.isEdit;
     this.salesInvoice = this.dialogRef.dataService?.dataSelected;
+
+    this.isReturnInvoice = dialogRef.formModel.funcID === 'ACT0701';
 
     // create a CRUDService for SM_SalesInvoicesLines
     this.detailService = acService.createCrudService(
@@ -188,9 +191,10 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   }
 
   onCreate(e): void {
-    this.grid.disableField(this.hiddenFields);
-    // this.grid.hideColums([this.gvsSalesInvoicesLines.ItemName.headerText]);
-    // console.log(this.grid.columnsGrid);
+    // this.grid.disableField(this.hiddenFields);
+    // setTimeout(() => {
+    //   this.grid.hideColumns([this.gvsSalesInvoicesLines.ItemName.headerText]);
+    // }, 100);
   }
 
   onCellChange(e): void {

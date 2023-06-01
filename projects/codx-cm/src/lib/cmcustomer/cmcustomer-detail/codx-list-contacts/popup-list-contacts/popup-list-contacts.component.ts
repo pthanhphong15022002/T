@@ -105,9 +105,11 @@ export class PopupListContactsComponent implements OnInit {
         )
       ) {
         if (this.isDefault) {
+          var nameDefault = this.lstContactCm.find(x => x.isDefault)?.contactName;
+
           var config = new AlertConfirmInputConfig();
           config.type = 'YesNo';
-          this.notiService.alertCode('CM001').subscribe((x) => {
+          this.notiService.alertCode('CM005', null,"'" + nameDefault + "'" ).subscribe((x) => {
             if (x.event.status == 'Y') {
               this.onAdd(type);
             }

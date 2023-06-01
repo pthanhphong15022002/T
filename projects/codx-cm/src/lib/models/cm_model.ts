@@ -153,8 +153,8 @@ export class CM_Deals {
   businessLineID: string;
   memo: string;
   tags: string;
-  dealValue: number;
-  probability: number;
+  dealValue: number = 0;
+  probability: number = 0;
   expectedClosed: Date;
   status: string = "1";
   statusCodeID: string;
