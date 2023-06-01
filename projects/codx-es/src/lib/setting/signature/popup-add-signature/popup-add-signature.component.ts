@@ -300,9 +300,9 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           this.notification.notify(event?.message);
         } else {
           if (event && this.data.signature1 == null) {
-            this.data.signature1 = (event[0] as any).recID;
+            this.data.signature1 = (event[0] as any)?.recID;
           }
-          this.data.signature1 = (event[0] as any).recID;
+          this.data.signature1 = (event[0] as any)?.recID;
         }
         break;
       }
@@ -311,9 +311,9 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           this.notification.notify(event?.message);
         } else {
           if (event && this.data.signature2 == null) {
-            this.data.signature2 = (event[0] as any).recID;
+            this.data.signature2 = (event[0] as any)?.recID;
           }
-          this.data.signature2 = (event[0] as any).recID;
+          this.data.signature2 = (event[0] as any)?.recID;
           break;
         }
         break;
@@ -323,9 +323,9 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           this.notification.notify(event?.message);
         } else {
           if (event && this.data.stamp == null) {
-            this.data.stamp = (event[0] as any).recID;
+            this.data.stamp = (event[0] as any)?.recID;
           }
-          this.data.stamp = (event[0] as any).recID;
+          this.data.stamp = (event[0] as any)?.recID;
           break;
         }
         break;
