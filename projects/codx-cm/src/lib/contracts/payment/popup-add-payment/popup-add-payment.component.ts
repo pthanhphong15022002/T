@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Optional } from '@angular/core';
 import { DialogData, DialogRef, NotificationsService } from 'codx-core';
-import { CM_ContractsPayments } from '../../../models/cm_model';
+import {  CM_Contracts, CM_ContractsPayments } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -12,6 +12,7 @@ import { firstValueFrom } from 'rxjs';
 export class PopupAddPaymentComponent {
   isSave = false;
   action = '';
+  contract: CM_Contracts;
   payment: CM_ContractsPayments;
   listPayment: CM_ContractsPayments[];
   listPaymentAdd: CM_ContractsPayments[];
@@ -30,12 +31,13 @@ export class PopupAddPaymentComponent {
     this.dialog = dialog;
     this.isSave = dt?.data?.isSave || false;
     this.action = dt?.data?.action;
-    this.contractID = dt?.data?.contractID;
+    this.contract = dt?.data?.contract;
     this.payment = dt?.data?.payment;
     this.listPayment = dt?.data?.listPayment  || [];
     this.listPaymentAdd = dt?.data?.listPaymentAdd  || [];
     this.listPaymentEdit = dt?.data?.listPaymentEdit  || [];
     this.listPaymentDelete = dt?.data?.listPaymentDelete  || [];
+    this.contractID = this.contract?.recID;
   }
 
   ngOnInit(): void {
@@ -64,11 +66,12 @@ export class PopupAddPaymentComponent {
   }
 
   valueChangeText(event) {
-    try {
-      this.payment[event?.field] = event?.data;
-    } catch (error) {
-      console.log(error);
+    this.payment[event?.field] = event?.data;
+    if(event?.field == 'scheduleAmt' && event?.data > this.contract.contractAmt){
+      this.notiService.notifyCode('Số tiền thanh toán lớn hơn giá trị hợp đồng');
+      this.payment[event?.field] = this.contract.contractAmt;
     }
+    
   }
 
   valueChangeCombobox(event) {

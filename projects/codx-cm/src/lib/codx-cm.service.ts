@@ -713,6 +713,15 @@ export class CodxCmService {
       contracts
     );
   }
+
+  addPaymentsHistory(contracts) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'AddPaymentsHistoryAsync',
+      contracts
+    );
+  }
   editPayments(contracts) {
     return this.api.exec<any>(
       'CM',

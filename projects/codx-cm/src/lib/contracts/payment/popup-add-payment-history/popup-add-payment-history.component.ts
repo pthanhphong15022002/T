@@ -24,6 +24,7 @@ export class PopupAddPaymentHistoryComponent {
 
   listPaymentHistoryOfPayment: CM_ContractsPayments[]; //
 
+  remainAmt = 0;
   title = "Lịch sử thanh toán";
   dialog: DialogRef;
   constructor(
@@ -48,6 +49,7 @@ export class PopupAddPaymentHistoryComponent {
   ngOnInit(): void {
     this.listPaymentHistoryOfPayment = this.listPaymentHistory.filter(paymentHistory => paymentHistory.refLineID == this.payment?.recID)
     this.setDataInput();
+    this.remainAmt = this.payment?.remainAmt || 0;
   }
 
   setDataInput() {
@@ -76,6 +78,10 @@ export class PopupAddPaymentHistoryComponent {
 
   valueChangeText(event) {
     this.paymentHistory[event?.field] = event?.data;
+    if(event?.field == 'paidAmt'){
+      this.payment.remainAmt = this.remainAmt - (event?.data || 0);
+      this.paymentHistory.remainAmt = this.payment?.remainAmt;
+    }
   }
 
   valueChangeCombobox(event) {
@@ -108,13 +114,15 @@ export class PopupAddPaymentHistoryComponent {
     }
   }
 
-  //Số tiền còn lại: remainAmt remainAmt
+  //Dư nợ còn lại: remainAmt remainAmt
   // số tiền đã thanh toán: paidAmt
 
   async addPaymentHistory(isClose) {
+    this.paymentHistory.remainAmt = this.payment.remainAmt;
     if (this.isSave) {
-      let paymentOut = await firstValueFrom(this.cmService.addPayments(this.paymentHistory))
-      this.listPaymentHistory.push(paymentOut);
+      let paymentOut = await firstValueFrom(this.cmService.addPaymentsHistory(this.paymentHistory))
+      this.listPaymentHistory.push(this.paymentHistory);
+      // this.listPaymentHistory.push(paymentOut);
       this.listPaymentHistoryOfPayment.push(paymentOut);
       this.updateContractAndPaymentByPaymentHistory();
       this.notiService.notifyCode('SYS006');
@@ -139,11 +147,16 @@ export class PopupAddPaymentHistoryComponent {
 
   updateContractAndPaymentByPaymentHistory() {
     this.payment.paidAmt += Number(this.paymentHistory.paidAmt || 0);
-    this.payment.remainAmt = this.payment?.scheduleAmt - this.payment?.paidAmt || this.payment.scheduleAmt;
-    let paymentFind = this.listPayment.find(payment => payment.recID == this.payment?.recID);
+    // this.payment.remainAmt = this.payment?.scheduleAmt - this.payment?.paidAmt || this.payment.scheduleAmt;
+    let paymentFind = this.listPayment?.find(payment => payment.recID == this.payment?.recID);
+    let paymentAddFind = this.listPaymentAdd?.find(payment => payment.recID == this.payment?.recID);
     if (paymentFind) {
       paymentFind.paidAmt += Number(this.paymentHistory.paidAmt || 0);
-      paymentFind.remainAmt = this.payment?.scheduleAmt - this.paymentHistory?.paidAmt || this.payment.scheduleAmt;
+      paymentFind.remainAmt = this.payment?.remainAmt
+    }
+    if (paymentAddFind) {
+      paymentAddFind.paidAmt += Number(this.paymentHistory.paidAmt || 0);
+      paymentAddFind.remainAmt = this.payment?.remainAmt
     }
 
     this.contract.paidAmt += Number(this.paymentHistory.paidAmt);
