@@ -105,6 +105,47 @@ export class CmcustomerDetailComponent implements OnInit {
     // this.getGridviewSetup();
     // this.getVllByGridViewSetupContact();
     this.getFormModelAddress();
+    if(this.funcID == 'CM0101' || this.funcID == 'CM0102'){
+      this.tabControl = [
+        { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+        {
+          name: 'Comment',
+          textDefault: 'Thảo luận',
+          isActive: false,
+          template: null,
+        },
+        {
+          name: 'Attachment',
+          textDefault: 'Đính kèm',
+          isActive: false,
+          template: null,
+        },
+        { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
+        {
+          name: 'References',
+          textDefault: 'Liên kết',
+          isActive: false,
+          template: null,
+        }
+      ];
+    }else{
+      this.tabControl = [
+        { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+        {
+          name: 'Comment',
+          textDefault: 'Thảo luận',
+          isActive: false,
+          template: null,
+        },
+        {
+          name: 'Attachment',
+          textDefault: 'Đính kèm',
+          isActive: false,
+          template: null,
+        }
+      ];
+    }
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {

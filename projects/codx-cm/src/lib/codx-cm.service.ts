@@ -352,9 +352,9 @@ export class CodxCmService {
         options
       )
       .pipe(
-        tap((r) => console.log(r)),
+        tap(),
         map((r) => r[0]),
-        tap((r) => console.log(r))
+        tap()
       );
   }
 
@@ -710,6 +710,15 @@ export class CodxCmService {
       'CM',
       'ContractsPaymentsBusiness',
       'AddPaymentsAsync',
+      contracts
+    );
+  }
+
+  addPaymentsHistory(contracts) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsPaymentsBusiness',
+      'AddPaymentsHistoryAsync',
       contracts
     );
   }

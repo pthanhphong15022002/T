@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { CRUDService } from 'codx-core';
+import { CRUDService, ImageViewerComponent } from 'codx-core';
 import { TabDetailCustomComponent } from '../../deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
 

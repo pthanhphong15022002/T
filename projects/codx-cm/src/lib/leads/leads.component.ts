@@ -362,7 +362,7 @@ export class LeadsComponent
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
-      titleAction: action === 'add' ? 'Thêm tiền năng' : 'Sao chép tiềm năng',
+      titleAction: action === 'add' ? 'Thêm tiềm năng' : 'Sao chép tiềm năng',
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,
@@ -406,6 +406,7 @@ export class LeadsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
+            e.event.modifiedOn = new Date();
             this.view.dataService.update(e.event).subscribe();
             this.changeDetectorRef.detectChanges();
           }

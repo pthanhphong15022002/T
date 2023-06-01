@@ -23,7 +23,7 @@ export class ViewImgContactComponent {
   popupOld: any;
   popoverList: any;
   popoverDetail: any;
-
+  popover: any;
   constructor(private changeDectec: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -37,7 +37,6 @@ export class ViewImgContactComponent {
     this.listUserSearch = [];
     this.listUser = [];
     this.changeDectec.detectChanges();
-
   }
 
   seachUser(e, value, p) {
@@ -46,23 +45,31 @@ export class ViewImgContactComponent {
       this.popupSearch = p;
       this.listUserSearch = value;
       this.listUser = value;
-    }, 200);
 
-    this.changeDectec.detectChanges();
+      this.changeDectec.detectChanges();
+    }, 0);
+  }
+
+  hoverPopup(p) {
+    setTimeout(() => {
+      if (this.popover) this.popover.close();
+      p.open();
+      this.popover = p;
+    }, 0);
   }
 
   searchName(e) {
-    if (e.trim() == '') {
-      this.listUserSearch = this.listUser;
-      return;
-    }
-    let value = e.trim().toLowerCase();
     setTimeout(() => {
+      if (e.trim() == '') {
+        this.listUserSearch = this.listUser;
+        return;
+      }
+      let value = e.trim().toLowerCase();
       this.listUserSearch = this.listUser.filter(
         (item) => item.contactName.toString().toLowerCase().search(value) >= 0
       );
-    }, 200);
-    this.changeDectec.detectChanges();
+      this.changeDectec.detectChanges();
+    }, 0);
 
     // this.listUserSearch = resouscesSearch;
   }

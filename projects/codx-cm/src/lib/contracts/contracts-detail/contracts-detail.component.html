@@ -62,9 +62,17 @@
         "
       ></span>
     </div>
-    <div class="d-flex justify-content-end align-items-center">
+    <div class="d-flex justify-content-end align-items-center me-2">
       <span class="icon-monetization_on icon-16 me-2 text-warning"></span>
-      <span class="fs-6 fw-bold">25.000.000</span>
+      <!-- <span class="fs-6 fw-bold">25.000.000</span> -->
+      <span
+        class="fs-6 fw-bold"
+        [innerHTML]="
+          data?.contractAmt
+            | formatvalue : view.formModel : 'ContractAmt'
+            | async
+        "
+      ></span>
     </div>
   </div>
   <div class="d-flex justify-content-between align-items-center">
@@ -79,18 +87,27 @@
       >
       </codx-vll>
     </div>
-    <div class="d-flex justify-content-end align-items-center">
-      <span class="icon-16 icon-av_timer me-1"></span>
-      <span>{{ data.createdOn | date : "dd/MM/yyyy" }}</span>
-    </div>
-    <div>
-      <codx-imgs
-        [width]="25"
-        [objectId]="data.createdBy"
-        ojectType="AD_Users"
-        [numberImages]="1"
-      >
-      </codx-imgs>
+    <div class="d-flex align-items-center">
+      <div class="d-flex justify-content-end align-items-center me-2">
+        <span class="icon-16 icon-av_timer me-1"></span>
+        <span
+          class="fs-6 fw-bold"
+          [innerHTML]="
+            data?.createdOn
+              | formatvalue : view.formModel : 'CreatedOn'
+              | async
+          "
+        ></span>
+      </div>
+      <div>
+        <codx-imgs
+          [width]="25"
+          [objectId]="data.createdBy"
+          ojectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -732,6 +749,7 @@
         class="label-colon"
         fiedName="taxCode"
         [formModel]="view.formModel"
+        [setRequire]="false"
       >
       </codx-label>
       <span
@@ -750,6 +768,7 @@
         class="label-colon"
         fiedName="address"
         [formModel]="view.formModel"
+        [setRequire]="false"
       >
       </codx-label>
       <span
@@ -770,6 +789,7 @@
         class="label-colon"
         fiedName="phone"
         [formModel]="view.formModel"
+        [setRequire]="false"
       >
       </codx-label>
       <span
@@ -786,6 +806,7 @@
         class="label-colon"
         fiedName="representative"
         [formModel]="view.formModel"
+        [setRequire]="false"
       >
       </codx-label>
       <span
@@ -804,6 +825,7 @@
         class="label-colon"
         fiedName="jobTitle"
         [formModel]="view.formModel"
+        [setRequire]="false"
       >
       </codx-label>
       <span
@@ -824,6 +846,7 @@
         class="label-colon"
         fiedName="bankAccount"
         [formModel]="view.formModel"
+        [setRequire]="false"
       >
       </codx-label>
       <span
@@ -840,6 +863,7 @@
         class="label-colon"
         fiedName="bankID"
         [formModel]="view.formModel"
+        [setRequire]="false"
       >
       </codx-label>
       <span

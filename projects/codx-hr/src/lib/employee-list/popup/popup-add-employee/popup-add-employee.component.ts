@@ -160,15 +160,17 @@ export class PopupAddEmployeeComponent implements OnInit {
             //this.data[field] = null;
             return;
           }
-          if (this.data.idExpiredOn < this.data.issuedOn) {
+          if (this.data.idExpiredOn && this.data.idExpiredOn < this.data.issuedOn) {
             this.notifySV.notifyCode('HR002');
             return;
           }
           break;
         case 'idExpiredOn':
-          if (this.data.idExpiredOn < this.data.issuedOn) {
-            this.notifySV.notifyCode('HR002');
-            return;
+          if(value && this.data.issuedOn){
+            if (this.data.idExpiredOn < this.data.issuedOn) {
+              this.notifySV.notifyCode('HR002');
+              return;
+            }
           }
           break;
         case 'birthday':
@@ -196,7 +198,7 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'trainLevel':
           if (this.data[field]) {
             this.trainLevel = event.component['dataSource'].find((x) => x.value == this.data[field]).text;
-            if (this.trainLevel.length > 0 &&this.trainFieldID.length > 0 &&
+            if (this.trainLevel.length > 0 && this.trainFieldID.length > 0 &&
               (!this.data['degreeName'] || this.data['degreeName'] == '')) {
               this.data['degreeName'] =
                 this.trainLevel + ' ' + this.trainFieldID;

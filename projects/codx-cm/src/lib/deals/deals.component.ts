@@ -295,7 +295,7 @@ export class DealsComponent
   }
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-    if (!data.roles.isOnwer) {
+    if (!data?.roles?.isOnwer) {
       for (let more of $event) {
         switch (more.functionID) {
           case 'SYS01':
@@ -344,13 +344,13 @@ export class DealsComponent
               break;
             // reason success
             case 'CM0201_3':
-              if (this.checkMoreReason(data) || data.closed || !data.roleMore.isReasonSuccess) {
+              if (this.checkMoreReason(data) || data.closed || !data.roleMore?.isReasonSuccess) {
                 more.disabled = true;
               }
               break;
             // reason fail
             case 'CM0201_4':
-              if (this.checkMoreReason(data) || data.closed || !data.roleMore.isReasonFail)   {
+              if (this.checkMoreReason(data) || data.closed || !data.roleMore?.isReasonFail)   {
                 more.disabled = true;
               }
               break;

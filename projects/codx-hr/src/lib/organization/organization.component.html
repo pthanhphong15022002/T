@@ -1,5 +1,6 @@
 <codx-views
   #view
+  [funcID]="funcID"
   service="HR"
   assemblyName="ERM.Business.HR"
   entityName="HR_OrganizationUnits"
@@ -11,7 +12,6 @@
   [button]="button"
   (selectedChange)="onSelectionChanged($event)"
   (buttonClick)="btnClick($event)"
-  (viewChanged)="changeView($event)"
 >
 </codx-views>
 <!-- tree -->
@@ -22,9 +22,9 @@
   </div>
 </ng-template>
 <!-- panel right lef -->
-<ng-template #panelRightLef>
+<!-- <ng-template #panelRightLef>
   <ng-container *ngTemplateOutlet="currView"></ng-container>
-</ng-template>
+</ng-template> -->
 
 <!-- tree master detail -->
 <ng-template #tmpMasterDetail>
