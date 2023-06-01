@@ -126,7 +126,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.getTab();
     this.getAutoNumber(this.autoNumber);
 
-    if (this.action == 'add' || this.action == 'copy') this.data.address = null;
+    if (this.action == 'add' || this.action == 'copy'){
+      if(this.funcID == 'CM0101' || this.funcID == 'CM0102'){
+        this.data.address = null;
+      }
+    }
     if (this.data?.objectID) {
       this.getListContactByObjectID(this.data?.objectID);
     }
