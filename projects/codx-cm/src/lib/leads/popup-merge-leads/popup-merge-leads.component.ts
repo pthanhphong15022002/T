@@ -191,13 +191,13 @@ export class PopupMergeLeadsComponent implements OnInit {
               this.imageAvatar.updateFileDirectReload(res?.recID)
             );
 
-            this.dialog.close(res);
+            this.dialog.close([res, this.leadOne, this.leadTwo, this.leadThree]);
             this.noti.notifyCode('SYS034');
           } else {
             await firstValueFrom(
               this.cmSv.copyFileAvata(this.recIDLead, this.leadNew.recID)
             );
-            this.dialog.close(res);
+            this.dialog.close([res, this.leadOne, this.leadTwo, this.leadThree]);
             this.noti.notifyCode('SYS034');
           }
         }
@@ -436,13 +436,18 @@ export class PopupMergeLeadsComponent implements OnInit {
       case 'salespersonID':
         if (e.field === 'salespersonID1' && e.component.checked === true) {
           this.leadNew.salespersonID = this.leadOne?.salespersonID;
+          this.leadNew.owner = this.leadOne?.salespersonID;
         } else if (
           e.field === 'salespersonID2' &&
           e.component.checked === true
         ) {
           this.leadNew.salespersonID = this.leadTwo?.salespersonID;
+          this.leadNew.owner = this.leadTwo?.salespersonID;
+
         } else {
           this.leadNew.salespersonID = this.leadThree?.salespersonID;
+          this.leadNew.owner = this.leadThree?.salespersonID;
+
         }
         break;
       case 'consultantID':
