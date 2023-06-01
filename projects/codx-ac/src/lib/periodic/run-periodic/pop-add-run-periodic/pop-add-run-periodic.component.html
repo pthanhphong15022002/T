@@ -81,7 +81,7 @@
         <div #noteRef class="form-group">
             <codx-label fiedName="ItemID" [formModel]="form.formModel">
             </codx-label>
-            <codx-input [Group]="form.formGroup" field="itemID" [formModel]="form.formModel" (valueChange)="valuechange($event)">
+            <codx-input #itemID [Group]="form.formGroup" field="itemID" [formModel]="form.formModel" (valueChange)="valuechange($event)">
             </codx-input>
         </div>
         <div class="form-group">
