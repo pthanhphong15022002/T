@@ -84,7 +84,10 @@
           </div>
 
           <div class="d-flex justify-content-around align-items-center mt-3">
-            <button class="btn btn-outline-primary btn-md" (click)="resetParams()">
+            <button
+              class="btn btn-outline-primary btn-md"
+              (click)="resetParams()"
+            >
               <span>Reset</span>
             </button>
             <button class="btn btn-primary btn-md" (click)="saveParams()">
@@ -99,33 +102,26 @@
           [resources]="resources"
           [resourceModel]="dataResourceModel"
         ></lib-calendar-center>
-        
       </div>
     </div>
-    <!-- Floating Action Button -->
-    <div class="floating-container w-200px min-w-200px">
-      <div class="element-container w-100">
-        <div class="m-1" *ngFor="let param of calendarParams | keyvalue">
-          <button type="button" class="btn btn-light-primary w-100"
-            *ngIf="param?.value.ShowEvent === '1'"
-            (click)="addEvent(param?.key)"
-          >
-            <codx-vll
-              [showText]="true"
-              [showBgColor]="false"
-              name="WP006"
-              [value]="param?.key"
-            />
-          </button>
-        </div>
-      </div>
-      <div class="px-1">
-        <button type="button" class="btn btn-icon btn-lg btn-primary">
-          <span class="icon-add icon-20"></span>
-        </button>
-      </div>
-    </div>
-
   </div>
-
+  <button
+    ejs-speeddial
+    id="speeddial"
+    target="#target"
+    itemTemplate="#itemTemplate"
+    openIconCss="icon-add"
+    cssClass="e-primary"
+    [items]="items"
+    (clicked)="addEvent($event)"
+  >
+    <ng-template #itemTemplate let-items="">
+      <div
+        *ngIf="this.calendarParams[items?.id].ShowEvent === '1'"
+        class="itemlist"
+      >
+        <span class="text">{{ items.text }}</span>
+      </div>
+    </ng-template>
+  </button>
 </ng-template>

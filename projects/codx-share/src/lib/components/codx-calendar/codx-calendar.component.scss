@@ -122,21 +122,9 @@ body.tailwind #selected {
   font-style: normal;
 }
 
-@keyframes come-in {
-  0% {
-    transform: translatey(100px);
-    opacity: 0;
-  }
-  30% {
-    transform: translateX(-50px) scale(0.4);
-  }
-  70% {
-    transform: translateX(0px) scale(1.2);
-  }
-  100% {
-    transform: translatey(0px) scale(1);
-    opacity: 1;
-  }
+/* Represents the styles for speeddial list items */
+.itemlist .text {
+  padding: 0 5px;
 }
 
 .floating-container {
@@ -181,5 +169,6 @@ body.tailwind #selected {
 }
 
 .e-calendar .e-content.e-month td.e-today span.e-day {
-  box-shadow: inset 1px 0 var(--primary), inset 0 1px var(--primary), inset -1px 0 var(--primary-dark), inset 0 -1px var(--primary-dark);
+  box-shadow: inset 1px 0 var(--primary), inset 0 1px var(--primary),
+    inset -1px 0 var(--primary-dark), inset 0 -1px var(--primary-dark);
 }
