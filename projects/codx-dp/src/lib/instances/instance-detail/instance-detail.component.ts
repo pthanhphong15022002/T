@@ -312,10 +312,10 @@ export class InstanceDetailComponent implements OnInit {
         changes['dataSelect'].currentValue?.recID === this.id
       )
         return;
-      this.loaded = false;  /// bien này không cần cũng được tại luôn có dataSelect -- bỏ loader vào  loadChangeData thì bị giật
+      this.loaded = false; /// bien này không cần cũng được tại luôn có dataSelect -- bỏ loader vào  loadChangeData thì bị giật
       this.id = changes['dataSelect'].currentValue.recID;
       this.loadChangeData();
-      this.isChangeData = false; 
+      this.isChangeData = false;
       // this.dataSelect = changes['dataSelect'].currentValue
 
       this.loaded = true;
@@ -337,7 +337,7 @@ export class InstanceDetailComponent implements OnInit {
     var data = [this.id, this.dataSelect.processID, this.instanceStatus];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
-        this.loadTree(res);
+        this.loadTree(this.id);
         this.tags = this.dataSelect?.tags;
         this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
@@ -779,23 +779,15 @@ export class InstanceDetailComponent implements OnInit {
       div.style.setProperty('max-height', maxHeight + 'px', 'important');
     }
   }
-  loadTree(listStep) {
-    var listRefTask = [];
-    listStep.forEach((obj) => {
-      if (obj.tasks?.length > 0) {
-        var arr = obj.tasks.map((x) => x.recID);
-        listRefTask = listRefTask.concat(arr);
-      }
+  loadTree(recID) {
+    this.dpSv.getTree(recID).subscribe((res) => {
+      if (res) this.treeTask = res;
     });
-    if (listRefTask?.length > 0) {
-      this.dpSv.getTree(JSON.stringify(listRefTask)).subscribe((res) => {
-        if (res) this.treeTask = res;
-      });
-    }
   }
+
   saveAssign(e) {
     if (e) {
-      this.loadTree(this.listSteps);
+      this.loadTree(this.id);
       this.GetStepsByInstanceIDAsync();
     }
   }
