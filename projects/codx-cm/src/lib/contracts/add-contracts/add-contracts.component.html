@@ -126,9 +126,9 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="dealID"
-              [model]=""
               [crrValue]="contracts?.dealID"
               (valueChange)="valueChangeCombobox($event)"
+              [model]="customerID"
             >
             </codx-input>
             <!-- <codx-combobox-select></codx-combobox-select> -->
@@ -146,10 +146,11 @@
             <codx-input
               [formModel]="dialog.formModel"
               field="quotationID"
-              type="combobox"
-              [refValue]="'CMQuotations'"
+              
+         
               [crrValue]="contracts?.quotationID"
               (valueChange)="valueChangeCombobox($event)"
+              [model]="customerID"
             >
             </codx-input>
           </div>

@@ -58,6 +58,7 @@ export class AddContractsComponent implements OnInit {
   account: any;
   type: 'view' | 'list';
   customer: CM_Customers;
+  customerID = {};
   listQuotationsLine: CM_QuotationsLines[];
   quotations: CM_Quotations;
 
@@ -345,7 +346,7 @@ export class AddContractsComponent implements OnInit {
 
   setDataContract(data) {
     if (this.action == 'add') {
-      this.contracts = data;
+      this.contracts = data;  
       this.contracts.recID = Util.uid();
       this.contracts.projectID = this.projectID;
       this.contracts.contractDate = new Date();
@@ -437,16 +438,18 @@ export class AddContractsComponent implements OnInit {
     });
   }
 
-  setDataContractCombobox(dataContract) {
-    this.contracts.customerID = dataContract?.recID;
-    this.contracts.taxCode = dataContract?.taxCode;
-    this.contracts.address = dataContract?.address;
-    this.contracts.phone = dataContract?.phone;
-    this.contracts.faxNo = dataContract?.faxNo;
+  setDataContractCombobox(customer) {
+    this.customer = customer; 
+    this.customerID = { customerID: customer?.recID };
+    this.contracts.customerID = customer?.recID;
+    this.contracts.taxCode = customer?.taxCode;
+    this.contracts.address = customer?.address;
+    this.contracts.phone = customer?.phone;
+    this.contracts.faxNo = customer?.faxNo;
     this.contracts.representative = null;
     this.contracts.jobTitle = null;
-    this.contracts.bankAccount = dataContract?.bankAccount;
-    this.contracts.bankID = dataContract?.bankID;
+    this.contracts.bankAccount = customer?.bankAccount;
+    this.contracts.bankID = customer?.bankID;
   }
 
   handleSaveContract() {
@@ -677,7 +680,7 @@ export class AddContractsComponent implements OnInit {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 1001;
+    option.zIndex = 2001;
     option.FormModel = formModel;
 
     let popupPaymentHistory = this.callfunc.openForm(

@@ -108,13 +108,6 @@ export class RunPeriodicComponent extends UIComponent{
           option,
           this.view.funcID
         );
-        this.dialog.closed.subscribe((e) => {
-          if(e?.event)
-          {
-            this.view.dataService.update(e.event).subscribe();
-            this.dt.detectChanges();
-          }
-        });
       });
   }
 
@@ -161,13 +154,6 @@ export class RunPeriodicComponent extends UIComponent{
           obj,
           option
         );
-        this.dialog.closed.subscribe((e) => {
-          if(e?.event)
-          {
-            this.view.dataService.update(e.event).subscribe();
-            this.dt.detectChanges();
-          }
-        });
       });
   }
 
@@ -175,19 +161,8 @@ export class RunPeriodicComponent extends UIComponent{
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .delete([data], true, (option: RequestOption) =>
-        this.beforeDelete(option, data)
-      )
-      .subscribe((res: any) => {});
-  }
-  beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteAsync';
-    opt.className = 'RunPeriodicBusiness';
-    opt.assemblyName = 'AC';
-    opt.service = 'AC';
-    opt.data = data;
-    return true;
+    this.view.dataService.delete([data], true).subscribe((res: any) => {
+    });
   }
   //endRegion Function
 }

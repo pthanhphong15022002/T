@@ -11,6 +11,7 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
   @Input() color = '';
   @Input() class = ''; 
   @Input() change: any; 
+  @Input() isStart: any; 
   @Output() tab = new EventEmitter(); // giá trị trả về khi chọn => name
 
   sizeIcon = '';
@@ -28,12 +29,25 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
 
   ngOnChanges(changes: SimpleChanges){
     if(changes.listTab || changes.change){
-      this.listTaskConvert = this.listTab.map((item) => {
-        return {...item, isActive: false}
-      })
-      this.listTaskConvert[0].isActive = true;
-      this.tabOld = this.listTaskConvert[0];
-      this.tab.emit(this.listTaskConvert[0].name); 
+      if(this.isStart){
+        this.listTaskConvert = this.listTab.map((item) => {
+          return {...item, isActive: false}
+        })
+        this.listTaskConvert[0].isActive = true;
+        this.tabOld = this.listTaskConvert[0];
+        this.tab.emit(this.listTaskConvert[0].name); 
+      }else{
+        if(this.tabOld){
+          this.tab.emit(this.tabOld.name); 
+        }else{
+          this.listTaskConvert = this.listTab.map((item) => {
+            return {...item, isActive: false}
+          })
+          this.listTaskConvert[0].isActive = true;
+          this.tabOld = this.listTaskConvert[0];
+          this.tab.emit(this.listTaskConvert[0].name); 
+        }
+      }
     }
   }
   clickMenu(item) {

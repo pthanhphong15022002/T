@@ -327,7 +327,7 @@ export class ContractsDetailComponent extends UIComponent{
 
   completedContract(contract: CM_Contracts){
     this.notiService
-      .alertCode('Bạn có muốn hoàn tất hợp đồng này', null, ['"' + contract?.contractName + '"' || ''])
+      .alertCode('CM004', null, ['"' + contract?.contractName + '"' || ''])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           this.contractService.updateStatus(contract?.recID).subscribe((res) => {

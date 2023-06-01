@@ -83,6 +83,7 @@ export class TabDetailCustomComponent
     //nvthuan
     if(changes.dataSelected){
       this.getListInstanceStep();
+      this.getDataGanttChart(this.dataSelected?.refID, this.dataSelected?.processID)
     //  this.dataSelected? = ch
     //  this.getListContactByObjectID(this.dataSelected?.recID);
     }
