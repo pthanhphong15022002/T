@@ -35,11 +35,11 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
 
   onInit() {}
   asideClick(evt: any) {
-    if (evt.funcId == 'HCS_001') {
+    if (evt.assemblyName == 'HCS') {
       evt.cancel = true;
       this.shareService.loginHCS().subscribe((token) => {
         this.cache.functionList(evt.funcId).subscribe((res) => {
-          let url = `${res?.url}/verifytoken.aspx?tklid=${token}&returnUrl=${res?.url}`;
+          let url = `${res?.className}/verifytoken.aspx?tklid=${token}&returnUrl=${res?.url}`;
           if (url != '') {
             window.open(url, '_blank');
           }
