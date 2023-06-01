@@ -170,7 +170,7 @@ export class CodxApproveStepsComponent
   }
 
   onSaveForm() {
-    debugger
+    
     if (this.type == '1') {
       //Lưu khi cập nhật step
       this.updateApprovalStep();
