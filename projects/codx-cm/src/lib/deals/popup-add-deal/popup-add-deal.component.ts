@@ -18,6 +18,7 @@ import {
   AuthStore,
   UIComponent,
   RequestOption,
+  Util,
 } from 'codx-core';
 import { CM_Contacts, CM_Deals } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
@@ -189,15 +190,16 @@ export class PopupAddDealComponent
       if (e.data) {
         var tmp = new CM_Contacts();
         tmp = JSON.parse(JSON.stringify(e.data));
+        tmp.recID = Util.uid();
         tmp.refID = e.data.recID;
-        if (!this.lstContactDeal.some((x) => x.recID == e?.data?.recID)) {
+        if (!this.lstContactDeal.some((x) => x.refID == e?.data?.recID)) {
           this.lstContactDeal.push(tmp);
           this.loadContactDeal.loadListContact(this.codxCmService.bringDefaultContactToFront(this.lstContactDeal));
         }
       }
     } else {
       var index = this.lstContactDeal.findIndex(
-        (x) => x.recID == e?.data?.recID
+        (x) => x.refID == e?.data?.recID
       );
       this.lstContactDeal.splice(index, 1);
     }
