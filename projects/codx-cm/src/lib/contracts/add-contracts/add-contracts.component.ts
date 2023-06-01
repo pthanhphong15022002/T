@@ -46,6 +46,7 @@ export class AddContractsComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('more') more: TemplateRef<any>;
   @ViewChild('test') test: any;
+  REQUIRE = ['contractName', 'contractID', 'useType','contractType','pmtMethodID','pmtStatus','delModeID','delStatus'];
   contracts: CM_Contracts;
   contractsInput: CM_Contracts;
   dialog!: DialogRef;
@@ -101,6 +102,8 @@ export class AddContractsComponent implements OnInit {
   listPaymentDelete: CM_ContractsPayments[] = [];
   columns: any;
   grvPayments: any;
+  disabledDelActualDate = false;
+  view = [];
 
   constructor(
     private cache: CacheService,
@@ -124,6 +127,12 @@ export class AddContractsComponent implements OnInit {
   }
   ngOnInit() {
     this.setDataContract(this.contractsInput);
+    this.disabledDelActualDate =
+      !this.contracts?.delStatus ||
+      this.contracts?.delStatus == '0' ||
+      this.contracts?.delStatus == '1'
+        ? true
+        : false;
     this.listClicked = [
       {
         name: 'general',
@@ -194,6 +203,35 @@ export class AddContractsComponent implements OnInit {
     ];
   }
 
+  getFormModel() {
+    this.cache
+      .gridViewSetup(
+        this.dialog?.formModel?.formName,
+        this.dialog?.formModel?.gridViewName
+      )
+      .subscribe((res) => {
+        for (let key in res) {
+          if (res[key]['isRequire']) {
+            let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
+            this.view[keyConvert] = res[key]['headerText'];
+          }
+        }
+      });
+  }
+
+  // getFormModel() {
+  //   this.cache
+  //     .gridViewSetup(
+  //       this.fmContractsPayments?.formName,
+  //       this.fmContractsPayments?.gridViewName
+  //     )
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.grvPayments = res;
+  //       }
+  //     });
+  // }
+
   valueChangeText(event) {
     this.contracts[event?.field] = event?.data;
   }
@@ -208,6 +246,10 @@ export class AddContractsComponent implements OnInit {
     }
     if (event?.field == 'quotationID' && event?.data) {
       this.getDataByQuotationID(event?.data);
+    }
+    if (event?.field == 'delStatus') {
+      this.disabledDelActualDate =
+        event?.data == '0' || event?.data == '1' ? true : false;
     }
   }
 
@@ -281,18 +323,6 @@ export class AddContractsComponent implements OnInit {
   //     this.columnGrids.push(colums);
   //   });
 
-  getFormModel() {
-    this.cache
-      .gridViewSetup(
-        this.fmContractsPayments?.formName,
-        this.fmContractsPayments?.gridViewName
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.grvPayments = res;
-        }
-      });
-  }
 
   loadComboboxData(comboboxName: string, service: string): Observable<any> {
     const dataRequest = new DataRequest();
@@ -336,7 +366,7 @@ export class AddContractsComponent implements OnInit {
     }
   }
 
-  setCOntractByDataOutput(){
+  setCOntractByDataOutput() {
     if (this.contracts.dealID) {
       this.getCustomerByDealID(this.contracts.dealID);
     }
@@ -374,13 +404,17 @@ export class AddContractsComponent implements OnInit {
   }
 
   getPayMentByContractID(contractID) {
-    this.contractService.getPaymentsByContractID(contractID).subscribe((res) => {
-      if (res) {
-        let listPayAll =  res as CM_ContractsPayments[];
-        this.listPayment = listPayAll.filter(pay => pay.lineType == '0');
-        this.listPaymentHistory = listPayAll.filter(pay => pay.lineType == '1');
-      }
-    });
+    this.contractService
+      .getPaymentsByContractID(contractID)
+      .subscribe((res) => {
+        if (res) {
+          let listPayAll = res as CM_ContractsPayments[];
+          this.listPayment = listPayAll.filter((pay) => pay.lineType == '0');
+          this.listPaymentHistory = listPayAll.filter(
+            (pay) => pay.lineType == '1'
+          );
+        }
+      });
   }
 
   getDataByQuotationID(recID) {
@@ -395,7 +429,8 @@ export class AddContractsComponent implements OnInit {
         this.contracts.dealID = quotation?.refID;
         this.contracts.contractAmt = quotation.totalAmt; // giá trị hợp đồng
         this.contracts.paidAmt = this.contracts.paidAmt || 0; // số tiền đã thanh toán
-        this.contracts.remainAmt = Number(this.contracts.contractAmt) - Number(this.contracts.paidAmt); // số tiền còn lại 
+        this.contracts.remainAmt =
+          Number(this.contracts.contractAmt) - Number(this.contracts.paidAmt); // số tiền còn lại
         this.contracts.currencyID = quotation.currencyID; // tiền tệ
         this.contracts.exchangeRate = quotation.exchangeRate; // tỷ giá
       }
@@ -415,22 +450,33 @@ export class AddContractsComponent implements OnInit {
   }
 
   handleSaveContract() {
-    switch (this.action) {
-      case 'add':
-      case 'copy':
-        this.addContracts();
-        break;
-      case 'edit':
-        this.editContract();
-        break;
+    let message = [];
+    for (let key of this.REQUIRE) {
+      if((typeof this.contracts[key] === 'string' && !this.contracts[key].trim()) || !this.contracts[key] || this.contracts[key]?.length === 0) {
+        message.push(this.view[key]);
+      }
     }
+    if (message.length > 0) {
+      this.notiService.notifyCode('SYS009', 0,'"' + message.join(', ') + ' " ');
+    }else{
+      switch (this.action) {
+        case 'add':
+        case 'copy':
+          this.addContracts();
+          break;
+        case 'edit':
+          this.editContract();
+          break;
+      }
+    }
+    
   }
 
   beforeSave(op: RequestOption) {
     let data = [];
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddContractsAsync';
-      data = [this.contracts,this.listPaymentAdd,];
+      data = [this.contracts, this.listPaymentAdd];
     }
     if (this.action == 'edit') {
       op.methodName = 'UpdateContractAsync';
@@ -533,7 +579,11 @@ export class AddContractsComponent implements OnInit {
         if (indexPayDelete >= 0) {
           this.listPayment.splice(indexPayDelete, 1);
           this.listPaymentDelete.push(payment);
-          for (let index = indexPayDelete; index < this.listPayment.length; index++){
+          for (
+            let index = indexPayDelete;
+            index < this.listPayment.length;
+            index++
+          ) {
             this.listPayment[index].rowNo = index + 1;
           }
           this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
@@ -550,12 +600,12 @@ export class AddContractsComponent implements OnInit {
       listPaymentAdd: this.listPaymentAdd,
       listPaymentEdit: this.listPaymentEdit,
       listPaymentDelet: this.listPaymentDelete,
-      contractID: this.contracts?.recID,
+      contract: this.contracts,
     };
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 1001;
+    option.zIndex = 2001;
     option.FormModel = this.fmContractsPayments;
     let popupPayment = this.callfunc.openForm(
       PopupAddPaymentComponent,
@@ -593,7 +643,7 @@ export class AddContractsComponent implements OnInit {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 1001;
+    option.zIndex = 2001;
     option.FormModel = this.fmContractsPaymentsHistory;
     let popupPayHistory = this.callfunc.openForm(
       PopupViewPaymentHistoryComponent,
@@ -627,7 +677,7 @@ export class AddContractsComponent implements OnInit {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 1001;
+    option.zIndex = 2001;
     option.FormModel = formModel;
 
     let popupPaymentHistory = this.callfunc.openForm(

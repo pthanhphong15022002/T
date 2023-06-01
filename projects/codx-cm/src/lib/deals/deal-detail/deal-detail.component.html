@@ -4,36 +4,48 @@
     [formModel]="formModel"
     [body]="body"
     [dataItem]="dataSelected"
-    [hideMF]="false"
+    [hideMF]="true"
     [footer]="tabs"
     (changeDataMF)="changeDataMF($event, dataSelected)"
     (clickMF)="clickMF($event, dataSelected)"
   >
     <ng-template #header let-data>
+      <div class="d-flex justify-content-between">
+        <div class="text-info">
 
-      <div class="d-flex justify-content-start text-info">
-        <div>
-          <i class="icon-add_shopping_cart icon-16 me-2 "></i>
+          <div>
+            <i class="icon-add_shopping_cart icon-16 me-2 "></i>
+            <span
+            class="text-gray-700 fs-4"
+            #businessLineID
+            [innerHTML]="
+            dataSelected?.businessLineID
+                | formatvalue
+                  : formModel
+                  : 'businessLineID'
+                  : businessLineID
+                  : 'CMDeals'
+                  : 'grvCMDeals'
+                | async
+            "
+          ></span>
+          </div>
         </div>
+        <div></div>
         <div>
-          <span
-          class="text-gray-700"
-          #businessLineID
-          [innerHTML]="
-          dataSelected?.businessLineID
-              | formatvalue
-                : formModel
-                : 'businessLineID'
-                : businessLineID
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
-          "
-        ></span>
+          <codx-mfunc
+          [hideMF]="false"
+          [dataItem]="dataSelected"
+          [formModel]="formModel"
+          (changeDataMF)="changeDataMF($event, dataSelected)"
+          (clickMF)="clickMF($event, dataSelected)"
+          [isBookMark]="true"
+          type="view"
+        ></codx-mfunc>
         </div>
       </div>
 
-      <div class="container_detail mt-2">
+      <div class="container_detail mt-1">
         <div class="d-flex align-items-top justify-content-between">
           <div class="w-100 d-flex flex-column">
         <div class="d-flex align-items-top justify-content-between">
@@ -53,8 +65,11 @@
                   | async
               "
             ></div>
-
             </div>
+
+            <div class="d-flex align-items-top justify-content-start mb-2">
+            </div>
+
             <div class="d-flex align-items-top justify-content-start mb-2">
               <codx-label
                 default="Cơ hội:"
@@ -129,58 +144,20 @@
             <div class="d-flex flex-wrap align-items-top mb-2">
               <div class="d-flex align-items-center me-6 mb-1">
                 <codx-label
-                  default="Ngày tạo:"
+                [formModel]="formModel"
+                fiedName="ExpectedClosed"
+                  default="Ngày dự kiến đóng:"
                   class="text-dark fw-bold me-1"
                 ></codx-label>
                 <span
                   class="text-gray-600"
-                  #createdOn
+                  #expectedClosed
                   [innerHTML]="
-                    dataSelected?.createdOn
+                    dataSelected?.expectedClosed
                       | formatvalue
                         : formModel
-                        : 'createdOn'
-                        : createdOn
-                        : 'CMDeals'
-                        : 'grvCMDeals'
-                      | async
-                  "
-                ></span>
-              </div>
-              <div class="d-flex align-items-center me-6 mb-1">
-                <codx-label
-                  default="Ngày bắt đầu:"
-                  class="text-dark fw-bold me-1"
-                ></codx-label>
-                <span
-                  class="text-gray-600"
-                  #startDate
-                  [innerHTML]="
-                    dataSelected?.startDate
-                      | formatvalue
-                        : formModel
-                        : 'startDate'
-                        : createdOn
-                        : 'CMDeals'
-                        : 'grvCMDeals'
-                      | async
-                  "
-                ></span>
-              </div>
-              <div class="d-flex align-items-center me-3 mb-1">
-                <codx-label
-                  default="Ngày đến hạn:"
-                  class="text-dark fw-bold me-1"
-                ></codx-label>
-                <span
-                  class="text-gray-600"
-                  #endDate
-                  [innerHTML]="
-                    dataSelected?.endDate
-                      | formatvalue
-                        : formModel
-                        : 'endDate'
-                        : createdOn
+                        : 'expectedClosed'
+                        : expectedClosed
                         : 'CMDeals'
                         : 'grvCMDeals'
                       | async

@@ -17,7 +17,7 @@
     ></codx-gridview-v2>
   </div>
   <div>
-    <div #tabsNote class="row">
+    <div #tabsNote class="row" *ngIf="quotations">
       <div class="form-group col-6">
         <codx-label fiedName="memo" [formModel]="fmQuotations"></codx-label>
         <codx-input

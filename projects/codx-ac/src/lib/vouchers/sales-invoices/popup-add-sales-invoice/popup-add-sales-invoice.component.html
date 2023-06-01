@@ -30,122 +30,13 @@
               <div class="col-7 ac-left">
                 <div class="mw-750px">
                   <div class="row">
-                    <div class="col-6 form-group">
-                      <codx-label
-                        fiedName="objectID"
-                        [formModel]="form.formModel"
-                      ></codx-label>
-                      <codx-input
-                        field="objectID"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
-                        (valueChange)="onInputChange($event)"
-                      ></codx-input>
-                    </div>
-                    <div class="col-6 form-group">
-                      <codx-label
-                        fiedName="objectName"
-                        [formModel]="form.formModel"
-                      ></codx-label>
-                      <codx-input
-                        field="objectName"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
-                      ></codx-input>
-                    </div>
-
-                    <div class="col-3 form-group">
-                      <codx-label
-                        fiedName="pmtMethodID"
-                        [formModel]="form.formModel"
-                      ></codx-label>
-                      <codx-input
-                        field="pmtMethodID"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
-                      ></codx-input>
-                    </div>
-                    <div class="col-3 form-group">
-                      <codx-label
-                        fiedName="pmtTermID"
-                        [formModel]="form.formModel"
-                      ></codx-label>
-                      <codx-input
-                        field="pmtTermID"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
-                      ></codx-input>
-                    </div>
-                    <div class="col-3 form-group">
-                      <codx-label
-                        fiedName="delModeID"
-                        [formModel]="form.formModel"
-                      ></codx-label>
-                      <codx-input
-                        field="delModeID"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
-                      ></codx-input>
-                    </div>
-                    <div class="col-3 form-group">
-                      <codx-label
-                        fiedName="warehouse"
-                        [formModel]="form.formModel"
-                      ></codx-label>
-                      <codx-input
-                        field="warehouse"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
-                      ></codx-input>
-                    </div>
-
-                    <div class="col-3 form-group">
-                      <codx-label
-                        fiedName="channelID"
-                        [formModel]="form.formModel"
-                      ></codx-label>
-                      <codx-input
-                        field="channelID"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
-                      ></codx-input>
-                    </div>
-                    <div class="col-3 form-group">
-                      <codx-label
-                        fiedName="salespersonID"
-                        [formModel]="form.formModel"
-                      ></codx-label>
-                      <codx-input
-                        field="salespersonID"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
-                      ></codx-input>
-                    </div>
-                    <div class="col-3 form-group">
-                      <codx-label
-                        fiedName="supervisorID"
-                        [formModel]="form.formModel"
-                      ></codx-label>
-                      <codx-input
-                        field="supervisorID"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
-                      ></codx-input>
-                    </div>
-                    <div
-                      class="col-3 form-group"
-                      *ngIf="!hiddenFields.includes('ProjectID')"
-                    >
-                      <codx-label
-                        fiedName="projectID"
-                        [formModel]="form.formModel"
-                      ></codx-label>
-                      <codx-input
-                        field="projectID"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
-                      ></codx-input>
-                    </div>
+                    <ng-container
+                      *ngTemplateOutlet="
+                        isReturnInvoice
+                          ? returnInvoiceTemplate
+                          : salesInvoiceTemplate
+                      "
+                    ></ng-container>
                   </div>
                 </div>
               </div>
@@ -667,4 +558,156 @@
     [isBookMark]="true"
     type="view"
   ></codx-mfunc>
+</ng-template>
+
+<ng-template #salesInvoiceTemplate>
+  <div class="col-6 form-group">
+    <codx-label fiedName="objectID" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      field="objectID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      (valueChange)="onInputChange($event)"
+    ></codx-input>
+  </div>
+  <div class="col-6 form-group">
+    <codx-label fiedName="objectName" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      field="objectName"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+
+  <div class="col-3 form-group">
+    <codx-label
+      fiedName="pmtMethodID"
+      [formModel]="form.formModel"
+    ></codx-label>
+    <codx-input
+      field="pmtMethodID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+  <div class="col-3 form-group">
+    <codx-label fiedName="pmtTermID" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      field="pmtTermID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+  <div class="col-3 form-group">
+    <codx-label fiedName="delModeID" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      field="delModeID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+  <div class="col-3 form-group">
+    <codx-label fiedName="warehouse" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      field="warehouse"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+
+  <div class="col-3 form-group">
+    <codx-label fiedName="channelID" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      field="channelID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+  <div class="col-3 form-group">
+    <codx-label
+      fiedName="salespersonID"
+      [formModel]="form.formModel"
+    ></codx-label>
+    <codx-input
+      field="salespersonID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+  <div class="col-3 form-group">
+    <codx-label
+      fiedName="supervisorID"
+      [formModel]="form.formModel"
+    ></codx-label>
+    <codx-input
+      field="supervisorID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+  <div class="col-3 form-group" *ngIf="!hiddenFields.includes('ProjectID')">
+    <codx-label fiedName="projectID" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      field="projectID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+</ng-template>
+
+<ng-template #returnInvoiceTemplate>
+  <div class="col-6 form-group">
+    <codx-label fiedName="objectID" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      field="objectID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      (valueChange)="onInputChange($event)"
+    ></codx-input>
+  </div>
+  <div class="col-6 form-group">
+    <codx-label fiedName="objectName" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      field="objectName"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+
+  <div class="col-4 form-group">
+    <codx-label
+      fiedName="salespersonID"
+      [formModel]="form.formModel"
+    ></codx-label>
+    <codx-input
+      field="salespersonID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+  <div class="col-4 form-group">
+    <codx-label fiedName="warehouse" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      field="warehouse"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+  <div class="col-4 form-group">
+    <codx-label fiedName="refID" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      field="refID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+
+  <div class="col-12 form-group">
+    <codx-label fiedName="memo" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      field="memo"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
 </ng-template>

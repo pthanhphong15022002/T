@@ -90,7 +90,7 @@
               <i class="fas fa-ellipsis-h"></i>
             </a>
             <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-              <li *ngIf="item.write && item.createdBy == user.userID">
+              <li *ngIf="item.write">
                 <a (click)="editPost(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-edit icon-16 me-2 icon-editPost"></span>
                   <codx-label [formModel]="formModel" name="lblEdit" default="Chỉnh sửa">

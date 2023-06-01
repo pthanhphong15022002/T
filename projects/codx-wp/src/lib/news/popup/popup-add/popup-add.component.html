@@ -282,12 +282,12 @@
                     <ng-container *ngIf="data.createdBy == user.userID ">
                         <div class="card-footer px-0">
                             <div class="d-flex align-items-center justify-content-end">
-                                <div *ngIf="data.approveStatus != APPROVE_STATUS.APPROVETED">
+                                <div *ngIf="!data.isActive">
                                     <button [disabled]="loading" (click)="clickUpdate()" type="button" class="btn btn-primary">
                                         <codx-label [formModel]="dialogRef.formModel" name="lblUpdate" default="Cập nhật"></codx-label>
                                     </button>
                                 </div>
-                                <ng-container *ngIf="data.approveStatus == APPROVE_STATUS.NEW">
+                                <ng-container *ngIf="!data.isActive && data.approveControl == '0' ">
                                     <div class="ms-3">
                                         <button [disabled]="loading" (click)="clickRelease()" type="button" class="btn btn-primary">
                                             <codx-label [formModel]="dialogRef.formModel" name="lblRelease" default="Phát hành"></codx-label>

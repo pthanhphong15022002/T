@@ -3,6 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '@shared/shared.module';
+import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
@@ -58,6 +59,7 @@ const routes: Routes = [
     SharedModule,
     TabModule,
     CodxShareModule,
+    UploaderModule
   ],
   exports: [
     CodxReportComponent,

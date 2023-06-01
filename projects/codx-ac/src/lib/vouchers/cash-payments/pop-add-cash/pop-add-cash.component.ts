@@ -326,7 +326,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                       }
                     });
                 } else {
-                  
                 }
               });
             } else {
@@ -499,6 +498,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   addRow() {
+    if (
+      !this.acService.validateFormData(this.form.formGroup, this.gridViewSetup)
+    ) {
+      return;
+    }
     switch (this.formType) {
       case 'add':
         if (this.hasSaved) {
@@ -823,13 +827,16 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                       'AddListAsync',
                       [this.cashpayment, this.settledInvoices]
                     )
-                    .subscribe((res) => {});
+                    .subscribe((res) => {
+                      if (res && res.update.data != null) {
+                        this.dialog.close({
+                          update: true,
+                          data: res.update.data,
+                        });
+                        this.dt.detectChanges();
+                      }
+                    });
                 }
-                this.dialog.close({
-                  update: true,
-                  data: res.update,
-                });
-                this.dt.detectChanges();
               }
             });
         } else {
@@ -858,10 +865,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                           'AddListAsync',
                           [this.cashpayment, this.settledInvoices]
                         )
-                        .subscribe((res) => {});
+                        .subscribe((res) => {
+                          if (res && res.save.data != null) {
+                            this.dialog.close();
+                            this.dt.detectChanges();
+                          }
+                        });
                     }
-                    this.dialog.close();
-                    this.dt.detectChanges();
                   }
                 });
             }

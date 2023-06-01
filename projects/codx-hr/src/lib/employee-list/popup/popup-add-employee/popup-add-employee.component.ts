@@ -56,7 +56,7 @@ export class PopupAddEmployeeComponent implements OnInit {
 
   trainFieldID: string = '';
   trainLevel: string = '';
-  orgNote: string = '';
+  // orgNote: string = '';
   constructor(
     private api: ApiHttpService,
     private notifySV: NotificationsService,
@@ -73,50 +73,48 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
     if (this.dialogRef.dataService.keyField === 'EmployeeID') {
       this.employeeIDDisable = true;
-    } else
-      this.employeeIDDisable = false;
-
+    } else this.employeeIDDisable = false;
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
-    this.getOrgNote();
+    // this.getOrgNote();
   }
 
   //get grvSetup
   getGrvSetup(fromName: string, grdViewName: string) {
     this.cache.gridViewSetup(fromName, grdViewName).subscribe((grv: any) => {
       if (grv) {
-        this.grvSetUp = grv
-      };
+        this.grvSetUp = grv;
+      }
     });
   }
   //set header text
   setTitle(e) {
     this.headerText += ' ' + e;
   }
-  getOrgNote() {
-    if (this.data['orgUnitID']) {
-      this.orgNote = '';
-      this.api.execSv<any>('HR', 'HR', 'OrganizationUnitsBusiness', 'GetOrgTreeByOrgIDAsync', [this.data['orgUnitID'], 9])
-        .subscribe(res => {
-          let resLength = res.length;
-          if (res) {
-            if(res[0].locationID){
-              this.data['locationID'] = res[0].locationID;
-              this.form.formGroup.controls['locationID'].patchValue(res[0].locationID);
-            }
-            if (resLength > 1) {
-              this.orgNote = res[1].orgUnitName;
-              if (resLength > 2) {
-                for (var i = 2; i < resLength; i++) {
-                  this.orgNote += ', ' + res[i].orgUnitName;
-                }
-              }
-            }
-          }
-        });
-    }
-  }
+  // getOrgNote() {
+  //   if (this.data['orgUnitID']) {
+  //     this.orgNote = '';
+  //     this.api.execSv<any>('HR', 'HR', 'OrganizationUnitsBusiness', 'GetOrgTreeByOrgIDAsync', [this.data['orgUnitID'], 9])
+  //       .subscribe(res => {
+  //         let resLength = res.length;
+  //         if (res) {
+  //           if(res[0].locationID){
+  //             this.data['locationID'] = res[0].locationID;
+  //             this.form.formGroup.controls['locationID'].patchValue(res[0].locationID);
+  //           }
+  //           if (resLength > 1) {
+  //             this.orgNote = res[1].orgUnitName;
+  //             if (resLength > 2) {
+  //               for (var i = 2; i < resLength; i++) {
+  //                 this.orgNote += ', ' + res[i].orgUnitName;
+  //               }
+  //             }
+  //           }
+  //         }
+  //       });
+  //   }
+  // }
 
   //value change
   valueChange(event: any) {
@@ -128,22 +126,33 @@ export class PopupAddEmployeeComponent implements OnInit {
       switch (field) {
         case 'positionID':
           if (value) {
-            this.api.execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetPosInfoAsync', [value])
+            this.api
+              .execSv(
+                'HR',
+                'ERM.Business.HR',
+                'PositionsBusiness',
+                'GetPosInfoAsync',
+                [value]
+              )
               .subscribe((posInfo: any) => {
                 if (posInfo) {
-                  this.data['jobLevel'] = posInfo.jobLevel ? posInfo.jobLevel : null;
-                  this.data['orgUnitID'] = posInfo.orgUnitID ? posInfo.orgUnitID : null;
+                  this.data['jobLevel'] = posInfo.jobLevel
+                    ? posInfo.jobLevel
+                    : null;
+                  this.data['orgUnitID'] = posInfo.orgUnitID
+                    ? posInfo.orgUnitID
+                    : null;
                   this.form.formGroup.patchValue({
                     jobLevel: this.data.jobLevel,
-                    orgUnitID: this.data.orgUnitID
-                  })
-                  this.getOrgNote();
+                    orgUnitID: this.data.orgUnitID,
+                  });
+                  // this.getOrgNote();
                 }
               });
           }
           break;
         case 'orgUnitID':
-          this.getOrgNote();
+          // this.getOrgNote();
           break;
         case 'issuedOn':
           if (this.data.issuedOn >= new Date().toJSON()) {
@@ -151,15 +160,17 @@ export class PopupAddEmployeeComponent implements OnInit {
             //this.data[field] = null;
             return;
           }
-          if (this.data.idExpiredOn < this.data.issuedOn) {
+          if (this.data.idExpiredOn && this.data.idExpiredOn < this.data.issuedOn) {
             this.notifySV.notifyCode('HR002');
             return;
           }
           break;
         case 'idExpiredOn':
-          if (this.data.idExpiredOn < this.data.issuedOn) {
-            this.notifySV.notifyCode('HR002');
-            return;
+          if(value && this.data.issuedOn){
+            if (this.data.idExpiredOn < this.data.issuedOn) {
+              this.notifySV.notifyCode('HR002');
+              return;
+            }
           }
           break;
         case 'birthday':
@@ -186,19 +197,32 @@ export class PopupAddEmployeeComponent implements OnInit {
           break;
         case 'trainLevel':
           if (this.data[field]) {
-            this.trainLevel = event.component['dataSource'].find(x => x.value == this.data[field]).text;
-            if (this.data['trainFieldID'] && !this.data['degreeName']) {
-              this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
-              this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
+            this.trainLevel = event.component['dataSource'].find((x) => x.value == this.data[field]).text;
+            if (this.trainLevel.length > 0 && this.trainFieldID.length > 0 &&
+              (!this.data['degreeName'] || this.data['degreeName'] == '')) {
+              this.data['degreeName'] =
+                this.trainLevel + ' ' + this.trainFieldID;
+              this.form.formGroup.controls['degreeName'].patchValue(
+                this.data['degreeName']
+              );
             }
           }
           break;
         case 'trainFieldID':
           if (this.data[field]) {
-            this.trainFieldID = event.component.dataService.data.find(x => x.TrainFieldID == this.data[field]).TrainFieldName;
-            if (this.data['trainLevel'] && !this.data['degreeName']) {
-              this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
-              this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
+            this.trainFieldID = event.component.dataService.data.find(
+              (x) => x.TrainFieldID == this.data[field]
+            ).TrainFieldName;
+            if (
+              this.trainLevel.length > 0 &&
+              this.trainFieldID.length > 0 &&
+              (!this.data['degreeName'] || this.data['degreeName'] == '')
+            ) {
+              this.data['degreeName'] =
+                this.trainLevel + ' ' + this.trainFieldID;
+              this.form.formGroup.controls['degreeName'].patchValue(
+                this.data['degreeName']
+              );
             }
           }
           break;
@@ -326,10 +350,13 @@ export class PopupAddEmployeeComponent implements OnInit {
   save(data: any, funcID: string) {
     if (data) {
       this.api
-        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'SaveWithOrgFieldAsync', [
-          data,
-          funcID,
-        ])
+        .execSv(
+          'HR',
+          'ERM.Business.HR',
+          'EmployeesBusiness',
+          'SaveWithOrgFieldAsync',
+          [data, funcID]
+        )
         .subscribe((res: any) => {
           if (res) {
             this.codxImg
@@ -350,9 +377,13 @@ export class PopupAddEmployeeComponent implements OnInit {
   update(data: any) {
     if (data) {
       this.api
-        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'UpdateWithOrgFieldAsync', [
-          data,
-        ])
+        .execSv(
+          'HR',
+          'ERM.Business.HR',
+          'EmployeesBusiness',
+          'UpdateWithOrgFieldAsync',
+          [data]
+        )
         .subscribe((res: any) => {
           this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
           this.notifySV.notifyCode(res ? 'SYS007' : 'SYS021');
