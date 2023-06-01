@@ -950,74 +950,47 @@ export class CodxShareService {
       if (dialog) {
         dialog.closed.subscribe((res) => {
           let oComment = res?.event;
-          this.api
-            .execSv(
-              'ES',
-              'ERM.Business.ES',
-              'ApprovalTransBusiness',
-              'ApproveAsync',
-              [data?.approvalRecID, status, oComment.comment, oComment.reasonID]
-            )
-            .subscribe((res2: any) => {
-              if (!res2?.msgCodeError) {
-                data.statusApproval = 
-                afterSave(data.statusApproval)
-                //  if (status.toString() == '2') {
-                //    this.view.dataService.remove(data).subscribe();
-                //  } else {
-                //    data.status = status;
-                //    this.view.dataService.update(data).subscribe();
-                //    this.esService.setupChange.next(true);
-                //  }
-                //  this.notifySvr.notifyCode('SYS007');
-              } //else this.notifySvr.notify(res2?.msgCodeError);
-            });
-        });
-      } else {
-        this.api
-          .execSv(
-            'ES',
-            'ERM.Business.ES',
-            'ApprovalTransBusiness',
-            'ApproveAsync',
-            [data?.recID, status, '', '']
-          )
+          this.approval(data?.approvalRecID, status, oComment.comment, oComment.reasonID)
           .subscribe((res2: any) => {
             if (!res2?.msgCodeError) {
-              if (!res2?.msgCodeError) {
-                if (status.toString() == '2') {
-                  dataService.remove(data).subscribe();
-                } else {
-                  data.status = status;
-                  dataService.update(data).subscribe();
-                  //this.esService.setupChange.next(true);
-                }
-              }
+              data.statusApproval = status;
+              dataService.update(data).subscribe();
               this.notificationsService.notifyCode('SYS007');
-            } else this.notificationsService.notify(res2?.msgCodeError);
+              afterSave(data.statusApproval)
+            }else this.notificationsService.notify(res2?.msgCodeError);
           });
+        });
+      } else {
+        this.approval(data?.approvalRecID, status, "" , "")
+        .subscribe((res2: any) => {
+          if (!res2?.msgCodeError) {
+            data.statusApproval = status
+            dataService.update(data).subscribe();
+            this.notificationsService.notifyCode('SYS007');
+            afterSave(data.statusApproval)
+          } else this.notificationsService.notify(res2?.msgCodeError);
+        });
       }
     }
     if (funcID == 'SYS207') {
-      this.api
-        .execSv<any>(
-          'es',
-          'ERM.Business.ES',
-          'ApprovalTransBusiness',
-          'UndoAsync',
-          [data.approvalRecID]
-        )
-        .subscribe((res) => {
-          if (res != null) {
-            data = res;
-            dataService.update(data).subscribe();
-            //this.esService.setupChange.next(true);
-          }
-        });
+      this.undoApproval(data.approvalRecID).subscribe((res) => {
+        if (res) {
+          data.statusApproval = res?.status;
+          dataService.update(data).subscribe();
+          //this.notificationsService.notifyCode('SYS007');
+        }
+      });
     }
   }
+  approval(approvalRecID: any, status: any , comment: any , reasonID: any)
+  {
+    return this.api.execSv<any>('es','ERM.Business.ES','ApprovalTransBusiness','ApproveAsync',[approvalRecID, status, comment, reasonID]);
+  }
+  undoApproval(approvalRecID:any)
+  {
+    return this.api.execSv<any>('es','ERM.Business.ES','ApprovalTransBusiness','UndoAsync',[approvalRecID]);
+  }
 }
-
 //#region Model
 
 export class Approvers {

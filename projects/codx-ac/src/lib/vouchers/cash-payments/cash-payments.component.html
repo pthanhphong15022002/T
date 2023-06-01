@@ -52,9 +52,8 @@
 </ng-template>
 <ng-template #desc2Tmp let-data>
   <div *ngIf="data?.objectName" class="d-flex align-items-center mb-1">
-    <!-- <span class="icon-corporate_fare text-primary icon-20 me-1"></span> -->
-    <img src="../assets/themes/ac/default/img/Officebuilding.svg" class="w-15px h-15px me-2" />
-    <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1">{{data?.objectName}}</span>
+    <img src="../assets/themes/ac/default/img/company.svg" class="w-20px h-20px me-2" />
+    <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1 mt-1">{{data?.objectName}}</span>
   </div>
 </ng-template>
 <ng-template #header>
@@ -68,8 +67,7 @@
         {{ itemSelected?.voucherNo }}
       </span>
       <div class="d-flex align-items-center me-3">
-        <!-- <span class="icon-i-calendar-date icon-16 me-2"></span> -->
-        <img src="../assets/themes/ac/default/img/Alarmclock.svg" class="w-15px h-15px me-1" />
+        <span class="icon-access_alarm icon-18 me-1"></span>
         <codx-label class="fw-bold label-colon mt-1" default="Ngày chứng từ" [formModel]="view.formModel">
         </codx-label>
         <span #voucherDate [innerHTML]="
@@ -82,7 +80,7 @@
     <div class="d-flex justify-content-between flex-grow-1 mb-2">
       <div class="d-flex align-items-center">
         <!-- <span class="me-2 icon-corporate_fare text-primary icon-20"></span> -->
-        <img src="../assets/themes/ac/default/img/Officebuilding.svg" class="w-15px h-15px me-2" />
+        <img src="../assets/themes/ac/default/img/company.svg" class="w-25px h-25px me-2" />
         <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1" #objectName [innerHTML]="
             itemSelected?.objectName
               | formatvalue : view.formModel : 'objectName' : objectName
@@ -105,8 +103,7 @@
   <ng-container *ngIf="itemSelected">
     <div class="d-flex justify-content-between flex-grow-1 mb-1">
       <div class="d-flex align-items-center">
-        <span class="icon-i-person-bounding-box icon-16 me-2"></span>
-        <!-- <img src="../assets/themes/ac/default/img/Banknote.svg" class="w-16px h-16px me-2" /> -->
+        <img src="../assets/themes/ac/default/img/person.svg" class="w-16px h-16px me-2" />
         <span class="fw-bold me-2">Người nhận tiền: </span>
         <span *ngIf="this.view.funcID == 'ACT0410'" #payee [innerHTML]="
             itemSelected?.payee
@@ -127,7 +124,7 @@
     </div>
     <div class="d-flex align-items-top mb-1">
       <!-- <span class="icon-i-journal-album icon-16 me-2"></span> -->
-      <img src="../assets/themes/ac/default/img/Ledger.svg" class="w-15px h-15px me-2" />
+      <img src="../assets/themes/ac/default/img/financial-book.svg" class="w-16px h-16px me-2" />
       <span *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'" class="fw-bold text-nowrap me-2">{{'1'
         | vll : 'AC091' : 'text' | async}}: </span>
       <span *ngIf="itemSelected?.subType == '3'" class="fw-bold text-nowrap me-2">{{'3' | vll : 'AC093' : 'text'
@@ -139,7 +136,7 @@
     </div>
     <div class="d-flex align-items-top mb-1">
       <!-- <span class="icon-i-wallet2 icon-16 me-2"></span> -->
-      <img src="../assets/themes/ac/default/img/Scroll.svg" class="w-15px h-15px me-2" />
+      <img src="../assets/themes/ac/default/img/pay.svg" class="w-16px h-16px me-2" />
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="ReasonID" [formModel]="view.formModel">
       </codx-label>
       <!-- <span #reasonID class="text-gray-600" [innerHTML]="
@@ -155,7 +152,7 @@
     </div>
     <div class="d-flex align-items-top mb-1">
       <!-- <span class="icon-brush icon-16 me-2"></span> -->
-      <img src="../assets/themes/ac/default/img/Memo.svg" class="w-15px h-15px me-2" />
+      <img src="../assets/themes/ac/default/img/notes.svg" class="w-16px h-16px me-2" />
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="view.formModel">
       </codx-label>
       <span #memo class="text-gray-600" [innerHTML]="
