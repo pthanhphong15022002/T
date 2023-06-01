@@ -8,6 +8,7 @@ import {
   SimpleChanges,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -34,6 +35,7 @@ import { PopupMergeLeadsComponent } from './popup-merge-leads/popup-merge-leads.
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
   styleUrls: ['./leads.component.scss'],
+  encapsulation:ViewEncapsulation.None,
 })
 export class LeadsComponent
   extends UIComponent
