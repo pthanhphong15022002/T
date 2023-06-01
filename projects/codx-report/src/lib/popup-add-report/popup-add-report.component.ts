@@ -525,6 +525,8 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
 }
  onFileRemove(args: RemovingEventArgs): void {
   args.postRawFile = false;
+  this.data.reportContent='';
+  this.data.location='';
 }
 
 download(){
