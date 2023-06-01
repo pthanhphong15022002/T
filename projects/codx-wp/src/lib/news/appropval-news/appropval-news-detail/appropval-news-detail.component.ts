@@ -134,6 +134,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
                     if(res)
                     {
                       this.data.approveStatus = "5";
+                      this.hideMFC = true;
                       this.dataService.update(this.data).subscribe();
                       this.evtUpdateApproval.emit("5");
                       this.notifySvr.notifyCode("WP005");
