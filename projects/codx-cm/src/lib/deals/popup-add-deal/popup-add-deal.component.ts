@@ -227,6 +227,14 @@ export class PopupAddDealComponent
   }
 
   saveOpportunity() {
+    if (!this.deal?.businessLineID) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['BusinessLineID']?.headerText + '"'
+      );
+      return;
+    }
     if (!this.deal?.processID) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -248,14 +256,6 @@ export class PopupAddDealComponent
         'SYS009',
         0,
         '"' + this.gridViewSetup['CustomerID']?.headerText + '"'
-      );
-      return;
-    }
-    if (!this.deal?.category) {
-      this.notificationsService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['Category']?.headerText + '"'
       );
       return;
     }

@@ -197,20 +197,31 @@ export class LeadsComponent
 
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-      if (data.status == '1') {
+      if (!data.roles.isOnwer) {
         for (let more of $event) {
           switch (more.functionID) {
-            case 'SYS03':
-            case 'SYS04':
-            case 'SYS02':
-            case 'CM0201_2':
-              more.isblur = false;
-              break;
             default:
-              more.isblur = true;
+              more.disabled = true;
           }
         }
       }
+      else {
+        if (data.status == '1') {
+          for (let more of $event) {
+            switch (more.functionID) {
+              case 'SYS03':
+              case 'SYS04':
+              case 'SYS02':
+              case 'CM0201_2':
+                more.isblur = false;
+                break;
+              default:
+                more.isblur = true;
+            }
+          }
+        }
+      }
+
     }
   }
   checkMoreReason(data, isUseReason) {
