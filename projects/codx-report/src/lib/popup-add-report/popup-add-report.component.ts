@@ -437,6 +437,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   async saveForm() {
+
     if (!this.data.recID) {
       this.data.recID = this.recID;
     }
@@ -473,6 +474,9 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     if (!this.data.service) {
       this.data.service = this.data.assemblyName;
     }
+    if(this.data.reportContent.split(',').length >1){
+      this.data.reportContent = this.data.reportContent.split(',')[1];
+    }
     this.api
       .execSv(
         'rptsys',
@@ -482,7 +486,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         [this.data, this.fuctionItem]
       )
       .subscribe((res) => {
-        this.setDataset();
+        this.data.reportContent && this.setDataset();
         this.dialog.close();
       });
 

@@ -26,12 +26,13 @@
                 <div class="position-relative mt-1">
                   <codx-img
                     [funcId]="funcID"
-                    [objectId]="employeeID"
+                    [objectId]="infoPersonal?.employeeID"
                     [objectName]="infoPersonal?.employeeName"
                     [objectType]="'HR_Employees'"
                     [imageType]="'circle'"
                     [isAllowEdit]="true"
                     [updateDirect]="true"
+                    [isAllowChangeInputID]="true"
                     class="pic-emloyee"
                     [width]="100"
                   >
@@ -2101,7 +2102,7 @@
           </div>
 
           <div #family class="mt-5">
-            <div class="row" *ngIf="lstFamily?.length > 0; else emptyDataTemplate">
+            <div class="row" *ngIf="lstFamily?.length > 0 && eFamilyFormModel; else emptyDataTemplate">
               <ng-container *ngFor="let item of lstFamily">
                 <div class="col-6 mb-5 ps-15">
                   <div class="rounded rounded-2 border border-gray-150 w-300px mw-300px">
@@ -2115,7 +2116,7 @@
                       [title]="item?.relationName"
                       [titleCss]="'fs-6 mb-1'"
                       [subTitleTmp]="subtitleTmp"
-                      [formModel]="eInfoFormModel"
+                      [formModel]="eFamilyFormModel"
                       [dataItem]="item"
                       [imgOn]="item?.modifiedOn"
                       [typeMF]="'hover'"

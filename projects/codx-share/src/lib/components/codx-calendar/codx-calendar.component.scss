@@ -122,86 +122,41 @@ body.tailwind #selected {
   font-style: normal;
 }
 
-@keyframes come-in {
-  0% {
-    transform: translatey(100px);
-    opacity: 0;
-  }
-  30% {
-    transform: translateX(-50px) scale(0.4);
-  }
-  70% {
-    transform: translateX(0px) scale(1.2);
-  }
-  100% {
-    transform: translatey(0px) scale(1);
-    opacity: 1;
-  }
+/* Represents the styles for speeddial list items */
+.itemlist .text {
+  padding: 0 5px;
 }
 
-.floating-container {
-  position: fixed;
-  width: 100px;
-  height: 200px;
-  bottom: 20px;
-  right: 20px;
+.e-speeddial-li .itemlist {
+  display: inherit;
+  width: 100%;
+  border: 1px solid transparent;
+  align-items: center;
+  padding: 5px;
+  border-radius: 500px;
+  background-color: rgba(104, 99, 104, 0.1);
+  box-shadow: 0 0 4px grey;
+}
 
-  &:hover {
+.e-speeddial-li .itemlist:hover {
+  background-color: rgb(224, 224, 224);
+}
 
-    .floating-button {
-      box-shadow: 0 10px 25px rgba(44, 179, 240, 0.6);
-      transform: translatey(5px);
-      transition: all 0.3s;
-    }
-
-    .element-container .float-element {
-      &:nth-child(n) {
-        animation: come-in 0.4s forwards 0.2s;
-      }
-    }
-  }
-
-  .floating-button {
-    position: absolute;
-    width: 65px;
-    height: 65px;
-    background: #2cb3f0;
-    bottom: 0;
-    border-radius: 50%;
-    left: 0;
-    right: 0;
-    margin: auto;
-    color: white;
-    line-height: 65px;
-    text-align: center;
-    font-size: 23px;
-    z-index: 100;
-    box-shadow: 0 10px 25px -5px rgba(44, 179, 240, 0.6);
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .float-element {
-    position: relative;
-    display: block;
-    width: 100px;
-    height: 30px;
-    margin: 15px auto;
-    padding: 20px;
-    text-align: center;
-    z-index: 0;
-    opacity: 0;
-    cursor: pointer;
-    transform: translateX(100px);
-    transform: translateY(200px);
-
-    &:nth-child(n) {
-      background-color: #ffffff;
-      box-shadow: 0 20px 20px -10px rgba(66, 165, 245, 0.5);
-    }
+.e-btn.e-primary,
+.e-css.e-btn.e-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
   }
 }
 
 .e-calendar .e-content.e-month td.e-today span.e-day {
-  box-shadow: inset 1px 0 var(--primary), inset 0 1px var(--primary), inset -1px 0 var(--primary-dark), inset 0 -1px var(--primary-dark);
+  box-shadow: inset 1px 0 var(--primary), inset 0 1px var(--primary),
+    inset -1px 0 var(--primary-dark), inset 0 -1px var(--primary-dark);
 }
