@@ -128,7 +128,7 @@ export class CmcustomerDetailComponent implements OnInit {
     this.loaded = false;
     this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
     // this.getListContactByObjectID(this.dataSelected?.recID);
-    this.getAdressNameByIsDefault(this.dataSelected?.recID, this.entityName);
+    this.addressNameCM = this.dataSelected?.address;
     setTimeout(() => {
       this.viewTag = this.dataSelected?.tags
     }, 100);

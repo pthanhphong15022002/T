@@ -3,12 +3,37 @@
   [views]="views"
   entityName="AM_Assets"
   [button]="btnAdd"
-  (buttonClick)="handleClickAdd($event)"
+  (buttonClick)="onClickAdd($event)"
 >
 </codx-views>
 
+<ng-template #header1>
+  <codx-label
+    fiedName="lblHeader1"
+    [formModel]="view.formModel"
+    default="Thông tin chung"
+  ></codx-label>
+</ng-template>
+
+<ng-template #header2>
+  <codx-label
+    fiedName="lblHeader2"
+    [formModel]="view.formModel"
+    default="Thông tin khấu hao"
+  ></codx-label>
+</ng-template>
+
+<ng-template #header3>
+  <codx-label
+    fiedName="lblHeader3"
+    [formModel]="view.formModel"
+    default="Tình trạng"
+  ></codx-label>
+</ng-template>
+
 <ng-template #rowTemplate let-data>
   <tr>
+    <td></td>
     <td class="p-3">
       <div class="fw-bold">{{ data?.assetName }}</div>
       <div>
@@ -32,6 +57,7 @@
       </div>
       <div>
         <codx-vll
+          *ngIf="data?.assetType"
           [showText]="true"
           [showBgColor]="true"
           name="AC080"
@@ -81,8 +107,16 @@
     </td>
 
     <td class="text-center p-3">
-      <span class="badge badge-warning">{{ data?.status }}</span>
-      <div class="text-secondary">{{ data?.createdOn }}</div>
+      <span class="badge badge-warning"
+        ><codx-label
+          fiedName="lblStatus"
+          [formModel]="view.formModel"
+          [default]="data?.status === '1' ? 'Còn sử dụng' : 'Hết hạn'"
+        ></codx-label
+      ></span>
+      <div class="text-secondary">
+        {{ data?.createdOn | date : "dd/MM/yyyy" }}
+      </div>
       <div>{{ data?.createdBy }}</div>
     </td>
 
@@ -90,7 +124,7 @@
       <codx-mfunc
         [dataItem]="data"
         [formModel]="view.formModel"
-        (clickMF)="handleClickMoreFuncs($event, data)"
+        (clickMF)="onClickMoreFuncs($event, data)"
         [isBookMark]="true"
         type="view"
       ></codx-mfunc>
@@ -102,7 +136,7 @@
   <codx-mfunc
     [dataItem]="data"
     [formModel]="view.formModel"
-    (clickMF)="handleClickMoreFuncs($event, data)"
+    (clickMF)="onClickMoreFuncs($event, data)"
     [isBookMark]="true"
     type="view"
   ></codx-mfunc>

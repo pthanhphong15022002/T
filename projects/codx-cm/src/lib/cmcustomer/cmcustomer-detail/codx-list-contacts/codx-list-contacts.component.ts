@@ -198,10 +198,10 @@ export class CodxListContactsComponent implements OnInit {
             res.disabled = true;
             break;
           case 'CM0102_2':
-            if (this.funcID == 'CM0103') res.disabled = true;
+            if (this.funcID == 'CM0103' || this.objectType == '2') res.disabled = true;
             break;
           case 'CM0102_3':
-            if (this.funcID == 'CM0101') res.disabled = true;
+            if (this.funcID == 'CM0101' || this.objectType == '2') res.disabled = true;
             break;
         }
       });
