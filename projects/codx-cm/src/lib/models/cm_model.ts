@@ -403,7 +403,7 @@ export class CM_ContractsPayments {
   paidnumbererest: number; //Số tiền lãi đã thanh toán
   paidVAT: number; //Số tiền thuế VAT đã thanh toán
   paidNote: string; //Ghi chú thanh toán
-  refNo: string; //Số tham chiếu
+  refNo: string; //Mã hợp đồng
   refDate: Date; //Ngày tham chiếu
   refLineID: string; //Mã dòng tham chiếu
   extendOn: Date; //Ngày gia hạn
