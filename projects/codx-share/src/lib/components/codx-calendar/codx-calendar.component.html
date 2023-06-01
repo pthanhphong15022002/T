@@ -1,7 +1,7 @@
 <codx-views #view [views]="views" [toolbarDisplay]="false" [autoLoad]="false">
 </codx-views>
 <ng-template #templateLeft>
-  <div class="bg-white rounded-3 p-3">
+  <div class="bg-white rounded-3 p-3 position-relative">
     <div class="d-flex justify-content-center">
       <div class="w-30 min-w-225px mw-450px me-5">
         <ejs-calendar
@@ -102,28 +102,30 @@
         
       </div>
     </div>
-  </div>
-  <!-- Floating Action Button -->
-  <div class="floating-container">
-    <div class="element-container">
-      <div *ngFor="let param of calendarParams | keyvalue">
-        <div
-          *ngIf="param?.value.ShowEvent === '1'"
-          class="float-element"
-          (click)="addEvent(param?.key)"
-        >
-          <codx-vll
-            [showText]="true"
-            [showBgColor]="false"
-            name="WP006"
-            [value]="param?.key"
-          />
+    <!-- Floating Action Button -->
+    <div class="floating-container w-200px min-w-200px">
+      <div class="element-container w-100">
+        <div class="m-1" *ngFor="let param of calendarParams | keyvalue">
+          <button type="button" class="btn btn-light-primary w-100"
+            *ngIf="param?.value.ShowEvent === '1'"
+            (click)="addEvent(param?.key)"
+          >
+            <codx-vll
+              [showText]="true"
+              [showBgColor]="false"
+              name="WP006"
+              [value]="param?.key"
+            />
+          </button>
         </div>
       </div>
+      <div class="px-1">
+        <button type="button" class="btn btn-icon btn-lg btn-primary">
+          <span class="icon-add icon-20"></span>
+        </button>
+      </div>
     </div>
-    <button type="button" class="btn btn-icon btn-lg rounded-3 btn-primary">
-      <span class="icon-add icon-24"></span>
-    </button>
-    
+
   </div>
+
 </ng-template>
