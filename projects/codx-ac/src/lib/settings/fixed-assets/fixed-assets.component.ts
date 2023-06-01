@@ -6,10 +6,9 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { IAsset } from './interfaces/IAsset.interface';
+import { map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
 import { PopupAddFixedAssetComponent } from './popup-add-fixed-asset/popup-add-fixed-asset.component';
-import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'lib-fixed-assets',
@@ -20,13 +19,16 @@ export class FixedAssetsComponent extends UIComponent {
   //#region Constructor
   @ViewChild('moreTemplate') moreTemplate?: TemplateRef<any>;
   @ViewChild('rowTemplate') rowTemplate: TemplateRef<any>;
+  @ViewChild('header1', { static: true }) header1: TemplateRef<any>;
+  @ViewChild('header2', { static: true }) header2: TemplateRef<any>;
+  @ViewChild('header3', { static: true }) header3: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   btnAdd: ButtonModel = { id: 'btnAdd' };
   functionName: string;
 
-  constructor(private inject: Injector, private acService: CodxAcService) {
-    super(inject);
+  constructor(injector: Injector, private acService: CodxAcService) {
+    super(injector);
   }
   //#endregion
 
@@ -36,10 +38,7 @@ export class FixedAssetsComponent extends UIComponent {
       .functionList('ACT0811')
       .pipe(
         tap((t) => console.log(t)),
-        map(
-          (data) =>
-            data.defaultName.charAt(0).toLowerCase() + data.defaultName.slice(1)
-        )
+        map((data) => this.acService.toCamelCase(data.defaultName))
       )
       .subscribe((res) => (this.functionName = res));
   }
@@ -64,17 +63,17 @@ export class FixedAssetsComponent extends UIComponent {
           resources: [
             {
               width: '40%',
-              headerText: 'Thông tin chung',
+              headerTemplate: this.header1,
               field: 'header1',
             },
             {
               width: '40%',
-              headerText: 'Thông tin khấu hao',
+              headerTemplate: this.header2,
               field: 'header2',
             },
             {
               width: '18%',
-              headerText: 'Tình trạng',
+              headerTemplate: this.header3,
               field: 'header3',
             },
             { width: '2%', field: 'threeDot', headerText: '' },
@@ -87,7 +86,7 @@ export class FixedAssetsComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  handleClickAdd(e) {
+  onClickAdd(e) {
     console.log({ e });
 
     this.view.dataService.addNew().subscribe((newItem) => {
@@ -110,7 +109,7 @@ export class FixedAssetsComponent extends UIComponent {
     });
   }
 
-  handleClickMoreFuncs(e, data) {
+  onClickMoreFuncs(e, data) {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -123,7 +122,9 @@ export class FixedAssetsComponent extends UIComponent {
         break;
     }
   }
+  //#endregion
 
+  //#region Method
   delete(data): void {
     this.view.dataService
       .delete([data], true)
@@ -131,8 +132,9 @@ export class FixedAssetsComponent extends UIComponent {
   }
 
   edit(e, data): void {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.edit(data).subscribe(() => {
+    const copiedData = { ...data };
+    this.view.dataService.dataSelected = copiedData;
+    this.view.dataService.edit(copiedData).subscribe(() => {
       const options = new SidebarModel();
       options.Width = '800px';
       options.DataService = this.view.dataService;
@@ -169,9 +171,6 @@ export class FixedAssetsComponent extends UIComponent {
       );
     });
   }
-  //#endregion
-
-  //#region Method
   //#endregion
 
   //#region Function

@@ -18,6 +18,7 @@ import {
   AuthStore,
   UIComponent,
   RequestOption,
+  Util,
 } from 'codx-core';
 import { CM_Contacts, CM_Deals } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
@@ -190,14 +191,14 @@ export class PopupAddDealComponent
         var tmp = new CM_Contacts();
         tmp = JSON.parse(JSON.stringify(e.data));
         tmp.refID = e.data.recID;
-        if (!this.lstContactDeal.some((x) => x.recID == e?.data?.recID)) {
+        if (!this.lstContactDeal.some((x) => x.refID == e?.data?.recID)) {
           this.lstContactDeal.push(tmp);
           this.loadContactDeal.loadListContact(this.codxCmService.bringDefaultContactToFront(this.lstContactDeal));
         }
       }
     } else {
       var index = this.lstContactDeal.findIndex(
-        (x) => x.recID == e?.data?.recID
+        (x) => x.refID == e?.data?.recID
       );
       this.lstContactDeal.splice(index, 1);
     }
@@ -230,6 +231,14 @@ export class PopupAddDealComponent
   }
 
   saveOpportunity() {
+    if (!this.deal?.businessLineID) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['BusinessLineID']?.headerText + '"'
+      );
+      return;
+    }
     if (!this.deal?.processID) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -251,14 +260,6 @@ export class PopupAddDealComponent
         'SYS009',
         0,
         '"' + this.gridViewSetup['CustomerID']?.headerText + '"'
-      );
-      return;
-    }
-    if (!this.deal?.category) {
-      this.notificationsService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['Category']?.headerText + '"'
       );
       return;
     }
@@ -305,6 +306,11 @@ export class PopupAddDealComponent
     if (!ischeckFormat) {
       this.notificationsService.notifyCode(messageCheckFormat);
       return;
+    }
+    if(this.lstContactDeal != null && this.lstContactDeal.length > 0){
+      this.lstContactDeal.forEach((res) => {
+        res.recID = Util.uid();
+      });
     }
     this.convertDataInstance(this.deal, this.instance);
     this.updateDateDeal(this.instance, this.deal);

@@ -375,6 +375,14 @@ export class CodxDpService {
       data
     );
   }
+  releaseProcess(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'ReleaseProcessAsync',
+      data
+    );
+  }
   restoreBinById(recID) {
     return this.api.exec<any>(
       'DP',
@@ -520,12 +528,12 @@ export class CodxDpService {
     );
   }
 
-  getTree(listRef) {
+  getTree(recID) {
     return this.api.exec<any>(
       'TM',
       'TaskBusiness',
-      'GetListTaskTreeByListRefIDAsync',
-      listRef
+      'GetListTaskTreeBySeasonIDAsync',
+      recID
     );
   }
 

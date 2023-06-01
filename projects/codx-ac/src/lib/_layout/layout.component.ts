@@ -9,6 +9,7 @@ import {
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { BehaviorSubject } from 'rxjs';
+import { CodxAcService } from '../codx-ac.service';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
@@ -18,7 +19,8 @@ export class LayoutComponent extends LayoutBaseComponent {
   dialog!: DialogRef;
   constructor(
     inject: Injector,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    private codxAC: CodxAcService,
   ) {
     super(inject);
 
@@ -32,5 +34,10 @@ export class LayoutComponent extends LayoutBaseComponent {
     option.Width = '550px';
     this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
     this.dialog.closed.subscribe();
+  }
+  childMenuClick(e){
+    if(e &&e?.recID){
+      this.codxAC.childMenuClick.next(e.recID);
+    }
   }
 }

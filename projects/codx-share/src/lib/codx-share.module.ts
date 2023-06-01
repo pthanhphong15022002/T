@@ -192,6 +192,7 @@ import { AddNoteComponent } from './components/calendar-notes/add-note/add-note.
 import { PopupTitleComponent } from './components/calendar-notes/add-note/save-note/popup-title/popup-title.component';
 import { SaveNoteComponent } from './components/calendar-notes/add-note/save-note/save-note.component';
 import { UpdateNotePinComponent } from './components/calendar-notes/update-note-pin/update-note-pin.component';
+import { CodxCreateIndexComponent } from './components/codx-create-index/codx-create-index.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -369,6 +370,7 @@ const T_Pipe: Type<any>[] = [
     AddEditApprovalStepComponent,
     PopupAddApproverComponent,
     CodxClearCacheComponent,
+    CodxCreateIndexComponent
   ],
   exports: [T_Component, T_Pipe],
   imports: [

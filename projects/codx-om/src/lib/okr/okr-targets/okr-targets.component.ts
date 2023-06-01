@@ -64,7 +64,8 @@ export class OkrTargetsComponent implements OnInit {
   @Input() currentUser;
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =
     new EventEmitter();
-    @Output('updateOKRPlans') updateOKRPlans: EventEmitter<any> =new EventEmitter();
+  @Output('updateOKRPlans') updateOKRPlans: EventEmitter<any> =
+    new EventEmitter();
   dtStatus = [];
   krTitle = '';
   obTitle = '';
@@ -101,6 +102,7 @@ export class OkrTargetsComponent implements OnInit {
         yName: 'percent',
       },
     ],
+
     service: 'OM',
     assembly: 'ERM.Business.OM',
     className: 'DashBoardBusiness',
@@ -425,7 +427,7 @@ export class OkrTargetsComponent implements OnInit {
           func.functionID == 'SYS003' ||
           func.functionID == 'SYS004' ||
           func.functionID == 'SYS007' ||
-          func.functionID == 'SYS002' || 
+          func.functionID == 'SYS002' ||
           func.functionID == OMCONST.MFUNCID.KRDetail ||
           func.functionID == OMCONST.MFUNCID.SKRDetail
         ) {
@@ -491,7 +493,9 @@ export class OkrTargetsComponent implements OnInit {
           func.functionID == OMCONST.MFUNCID.SKRCheckIn
         ) {
           if (
-            (kr?.items != null && kr?.items.length > 0) ||  kr?.hasAssign != null || this.dataOKRPlans.status !='2' 
+            (kr?.items != null && kr?.items.length > 0) ||
+            kr?.hasAssign != null ||
+            this.dataOKRPlans.status != '2'
           ) {
             func.disabled = true;
           } else {
@@ -502,15 +506,14 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
   changeDataOBMF(evt: any, ob: any) {
-    
     if (evt != null && ob != null) {
       evt.forEach((func) => {
         if (
           //MF hệ thống
           func.functionID == 'SYS003' ||
           func.functionID == 'SYS004' ||
-          func.functionID == 'SYS007' ||  
-          func.functionID == 'SYS002' ||         
+          func.functionID == 'SYS007' ||
+          func.functionID == 'SYS002' ||
           func.functionID == OMCONST.MFUNCID.OBDetail ||
           func.functionID == OMCONST.MFUNCID.OBDistribute
         ) {
@@ -870,9 +873,9 @@ export class OkrTargetsComponent implements OnInit {
       '',
       dModel
     );
-    dialogEditWeightKR.closed.subscribe(res=>{
+    dialogEditWeightKR.closed.subscribe((res) => {
       this.updateOKRPlans.emit(this.dataOKRPlans?.recID);
-    })
+    });
   }
   editSKRWeight(kr: any, popupTitle: any) {
     if (kr.items == null || kr.items.length == 0) {
@@ -892,9 +895,9 @@ export class OkrTargetsComponent implements OnInit {
       '',
       dModel
     );
-    dialogEditWeightSKR.closed.subscribe(res=>{
+    dialogEditWeightSKR.closed.subscribe((res) => {
       this.updateOKRPlans.emit(this.dataOKRPlans?.recID);
-    })
+    });
   }
   checkIn(kr: any, popupTitle: any) {
     // if (this.dataOKRPlans.status!=OMCONST.VLL.PlanStatus.Ontracking ) {
@@ -1223,12 +1226,12 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
   showHistoryCheckIn(evt: any, data: any) {
-    evt.stopPropagation();    
+    evt.stopPropagation();
     evt.preventDefault();
-    
-    if (data?.checkIns != null && data?.checkIns.length>0 != null) {
+
+    if (data?.checkIns != null && data?.checkIns.length > 0 != null) {
       this.selectOKR = data;
-      this.selectOKR.checkIns= Array.from(this.selectOKR.checkIns).reverse();
+      this.selectOKR.checkIns = Array.from(this.selectOKR.checkIns).reverse();
       let dialogShowCheckInHistory = this.callfunc.openForm(
         this.checkInHistory,
         '',

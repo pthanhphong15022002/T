@@ -1,0 +1,34 @@
+<codx-form 
+    [headerText]="'Create Index'"
+    [body]="body"
+    [dialog]="dialog"
+>
+</codx-form>
+
+<ng-template #body>
+    <div class="d-flex flex-column">
+        <div class="d-flex align-items-center pb-5">
+            <codx-input 
+                type="checkbox"
+                label="Tất cả (Module , File từ trước đến nay)"
+            >
+            </codx-input>
+        </div>
+        <div class="d-flex flex-column pb-5">
+            <codx-input 
+                type="checkbox"
+                label="Module"
+            >
+            </codx-input>
+            <div class="list-function row">
+                <ng-container *ngIf="listModule">
+                    <div *ngFor="let item of listModule" class="col-4">
+                        <div class="d-flex just  ">
+                        </div>
+                        {{item.customName}}
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>

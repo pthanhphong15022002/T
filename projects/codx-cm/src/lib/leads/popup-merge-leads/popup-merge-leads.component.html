@@ -69,15 +69,14 @@
         <ejs-combobox
           [dataSource]="lstLeadCbxOne"
           [fields]="fieldCbx"
-          [disabled]="true"
           [value]="leadOne?.recID"
+          [readonly]="true"
         ></ejs-combobox>
       </div>
       <div class="w-20">
         <ejs-combobox
           [dataSource]="lstLeadCbxTwo"
           [fields]="fieldCbx"
-          [disabled]="true"
           [value]="leadTwo?.recID"
           (valueChange)="cbxLeadChange($event, 'two')"
         ></ejs-combobox>
@@ -86,7 +85,6 @@
         <ejs-combobox
           [dataSource]="lstLeadCbxThree"
           [fields]="fieldCbx"
-          [disabled]="true"
           [value]="leadThree?.recID"
           (valueChange)="cbxLeadChange($event, 'three')"
         ></ejs-combobox>
@@ -742,12 +740,22 @@
               ></codx-input>
             </div>
             <div
-              [innerHTML]="
-                leadOne?.industries
-                  | formatvalue : dialog.formModel : 'Industries'
-                  | async
-              "
-            ></div>
+              *ngFor="let item of leadOne?.industries.split(';'); index as i"
+              class="d-inline"
+            >
+              <span
+                class="text-gray-700"
+                [innerHTML]="
+                  item | formatvalue : dialog.formModel : 'Industries' | async
+                "
+              ></span
+              ><span
+                class="me-1"
+                *ngIf="i < leadOne?.industries.split(';').length - 1"
+                >,</span
+              >
+              <!-- {{ dataSelected?.segmentID }} -->
+            </div>
           </div>
         </div>
         <div class="w-20">
@@ -764,12 +772,21 @@
               ></codx-input>
             </div>
             <div
-              [innerHTML]="
-                leadTwo?.industries
-                  | formatvalue : dialog.formModel : 'Industries'
-                  | async
-              "
-            ></div>
+              *ngFor="let item of leadTwo?.industries.split(';'); index as i"
+              class="d-inline"
+            >
+              <span
+                class="text-gray-700"
+                [innerHTML]="
+                  item | formatvalue : dialog.formModel : 'Industries' | async
+                "
+              ></span
+              ><span
+                class="me-1"
+                *ngIf="i < leadTwo?.industries.split(';').length - 1"
+                >,</span
+              >
+            </div>
           </div>
         </div>
         <div class="w-20">
@@ -786,12 +803,21 @@
               ></codx-input>
             </div>
             <div
-              [innerHTML]="
-                leadThree?.industries
-                  | formatvalue : dialog.formModel : 'Industries'
-                  | async
-              "
-            ></div>
+              *ngFor="let item of leadThree?.industries.split(';'); index as i"
+              class="d-inline"
+            >
+              <span
+                class="text-gray-700"
+                [innerHTML]="
+                  item | formatvalue : dialog.formModel : 'Industries' | async
+                "
+              ></span
+              ><span
+                class="me-1"
+                *ngIf="i < leadThree?.industries.split(';').length - 1"
+                >,</span
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -1639,7 +1665,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactOne)"
+                    [innerHTML]="
+                      countContactAndAddress(lstContactNew, lstContactOne)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -1700,7 +1728,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactTwo)"
+                    [innerHTML]="
+                      countContactAndAddress(lstContactNew, lstContactTwo)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -1763,7 +1793,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactThree)"
+                    [innerHTML]="
+                      countContactAndAddress(lstContactNew, lstContactThree)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -1799,7 +1831,7 @@
               [dataSource]="lstContactNew"
               [fields]="fieldContacts"
               [value]="contactDefault"
-              (valueChange)="cbxContactChange($event)"
+              (valueChange)="cbxContactChange($event, 'contact')"
             ></ejs-combobox>
           </div>
         </div>
@@ -1845,6 +1877,320 @@
               [formModel]="dialog.formModel"
               [sizeImg]="25"
             ></codx-view-img-contact>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-2">
+      <codx-label
+        name="lblListAddress"
+        class="h4 text-dark text-primary fw-bold"
+        default="Danh sách địa chỉ"
+        [formModel]="dialog.formModel"
+      >
+      </codx-label>
+      <div class="mt-1 row form-group">
+        <div class="w-20">
+          <codx-label
+            [formModel]="dialog.formModel"
+            name="lblListAddress"
+            default="Danh sách địa chỉ"
+          ></codx-label>
+        </div>
+        <div class="w-20">
+          <div
+            class="d-flex flex-column"
+            *ngIf="lstAddressNew != null && lstAddressNew.length > 0"
+          >
+            <div class="d-flex">
+              <div
+                class="d-flex justify-content-start align-items-center"
+                style="min-width: 130px"
+              >
+                <button
+                  type="button"
+                  class="btn btn-outline-primary min-w-120px me-2"
+                  (click)="clickPopupAddress('remove', lstAddressNew, leadNew)"
+                >
+                  <i class="icon-check-correct icon-16 me-1"></i>
+                  <codx-label
+                    name="lblCheckOutAddress"
+                    [formModel]="dialog.formModel"
+                    default="Loại bỏ địa chỉ"
+                  ></codx-label>
+                </button>
+              </div>
+              <div class="d-flex justify-content-end align-items-center">
+                <codx-label
+                  class="label-colon"
+                  name="lblSelect"
+                  [formModel]="dialog.formModel"
+                  default="Đã chọn"
+                ></codx-label>
+
+                <span class="me-1">
+                  {{ lstAddressNew.length }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadOne?.recID">
+            <div
+              class="d-flex flex-column"
+              *ngIf="lstAddressOne != null && lstAddressOne.length > 0"
+            >
+              <div class="d-flex">
+                <div
+                  class="d-flex justify-content-start align-items-center"
+                  style="min-width: 130px"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary min-w-120px me-2"
+                    (click)="clickPopupAddress('add', lstAddressOne, leadOne)"
+                  >
+                    <i class="icon-check-correct icon-16 me-1"></i>
+                    <codx-label
+                      name="lblSelectAddress"
+                      [formModel]="dialog.formModel"
+                      default="Chọn địa chỉ"
+                    ></codx-label>
+                  </button>
+                </div>
+
+                <div class="d-flex justify-content-end align-items-center">
+                  <codx-label
+                    class="label-colon"
+                    name="lblSelect"
+                    [formModel]="dialog.formModel"
+                    default="Đã chọn"
+                  ></codx-label>
+                  <span
+                    class="me-1"
+                    [innerHTML]="
+                      countContactAndAddress(lstAddressNew, lstAddressOne)
+                    "
+                  ></span>
+                  <span class="me-1">
+                    <codx-label
+                      class=""
+                      name="lblOf"
+                      [formModel]="dialog.formModel"
+                      default="của"
+                    ></codx-label
+                  ></span>
+                  <span class="me-1">
+                    {{ lstAddressOne.length }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadTwo?.recID">
+            <div
+              class="d-flex flex-column"
+              *ngIf="lstAddressTwo != null && lstAddressTwo.length > 0"
+            >
+              <div class="d-flex">
+                <div
+                  class="d-flex justify-content-start align-items-center"
+                  style="min-width: 130px"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary min-w-120px me-2"
+                    (click)="clickPopupAddress('add', lstAddressTwo, leadTwo)"
+                  >
+                    <i class="icon-check-correct icon-16 me-1"></i>
+                    <codx-label
+                      name="lblSelectAddress"
+                      [formModel]="dialog.formModel"
+                      default="Chọn địa chỉ"
+                    ></codx-label>
+                  </button>
+                </div>
+
+                <div class="d-flex justify-content-end align-items-center">
+                  <codx-label
+                    class="label-colon"
+                    name="lblSelect"
+                    [formModel]="dialog.formModel"
+                    default="Đã chọn"
+                  ></codx-label>
+                  <span
+                    class="me-1"
+                    [innerHTML]="
+                      countContactAndAddress(lstAddressNew, lstAddressTwo)
+                    "
+                  ></span>
+                  <span class="me-1">
+                    <codx-label
+                      class=""
+                      name="lblOf"
+                      [formModel]="dialog.formModel"
+                      default="của"
+                    ></codx-label
+                  ></span>
+                  <span class="me-1">
+                    {{ lstAddressTwo.length }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadThree?.recID">
+            <div
+              class="d-flex flex-column"
+              *ngIf="lstAddressThree != null && lstAddressThree.length > 0"
+            >
+              <div class="d-flex">
+                <div
+                  class="d-flex justify-content-start align-items-center"
+                  style="min-width: 130px"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary min-w-120px me-2"
+                    (click)="
+                      clickPopupAddress('add', lstAddressThree, leadThree)
+                    "
+                  >
+                    <i class="icon-check-correct icon-16 me-1"></i>
+                    <codx-label
+                      name="lblSelectAddress"
+                      [formModel]="dialog.formModel"
+                      default="Chọn địa chỉ"
+                    ></codx-label>
+                  </button>
+                </div>
+
+                <div class="d-flex justify-content-end align-items-center">
+                  <codx-label
+                    class="label-colon"
+                    name="lblSelect"
+                    [formModel]="dialog.formModel"
+                    default="Đã chọn"
+                  ></codx-label>
+                  <span
+                    class="me-1"
+                    [innerHTML]="
+                      countContactAndAddress(lstAddressNew, lstAddressThree)
+                    "
+                  ></span>
+                  <span class="me-1">
+                    <codx-label
+                      class=""
+                      name="lblOf"
+                      [formModel]="dialog.formModel"
+                      default="của"
+                    ></codx-label
+                  ></span>
+                  <span class="me-1">
+                    {{ lstAddressThree.length }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-1 row form-group">
+        <div class="w-20">
+          <codx-label
+            [formModel]="dialog.formModel"
+            name="lblDefaultAddress"
+            [default]="'địa chỉ mặc định'"
+          ></codx-label>
+        </div>
+        <div class="w-20">
+          <div
+            class="d-flex"
+            *ngIf="lstAddressNew != null && lstAddressNew.length > 0"
+          >
+            <ejs-combobox
+              [dataSource]="lstAddressNew"
+              [fields]="fieldAddress"
+              [value]="addressDefault"
+              (valueChange)="cbxContactChange($event, 'address')"
+            ></ejs-combobox>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadOne?.recID">
+            <div
+              class="mb-1"
+              *ngIf="lstAddressOne != null && lstAddressOne.length > 0"
+            >
+              <div
+                *ngFor="let data of lstAddressOne"
+                class="d-flex align-items-center text-gray-600 codx-textlabel"
+              >
+                <ng-container *ngIf="data.isDefault">
+                  <span
+                    class="icon-16 me-2 text-hover-primary cursor-pointer"
+                    [class]="data?.adressType | vll : 'CRM009' : 'icon' | async"
+                    [style.color]="
+                      data?.adressType | vll : 'CRM009' : 'textColor' | async
+                    "
+                  ></span>
+                  <span>{{ data?.adressName }}</span>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadTwo?.recID">
+            <div
+              class="mb-1"
+              *ngIf="lstAddressTwo != null && lstAddressTwo.length > 0"
+            >
+              <div
+                *ngFor="let data of lstAddressTwo"
+                class="d-flex align-items-center text-gray-600 codx-textlabel"
+              >
+                <ng-container *ngIf="data.isDefault">
+                  <span
+                    class="icon-16 me-2 text-hover-primary cursor-pointer"
+                    [class]="data?.adressType | vll : 'CRM009' : 'icon' | async"
+                    [style.color]="
+                      data?.adressType | vll : 'CRM009' : 'textColor' | async
+                    "
+                  ></span>
+                  <span>{{ data?.adressName }}</span>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadThree?.recID">
+            <div
+              class="mb-1"
+              *ngIf="lstAddressThree != null && lstAddressThree.length > 0"
+            >
+              <div
+                *ngFor="let data of lstAddressThree"
+                class="d-flex align-items-center text-gray-600 codx-textlabel"
+              >
+                <ng-container *ngIf="data.isDefault">
+                  <span
+                    class="icon-16 me-2 text-hover-primary cursor-pointer"
+                    [class]="data?.adressType | vll : 'CRM009' : 'icon' | async"
+                    [style.color]="
+                      data?.adressType | vll : 'CRM009' : 'textColor' | async
+                    "
+                  ></span>
+                  <span>{{ data?.adressName }}</span>
+                </ng-container>
+              </div>
+            </div>
           </div>
         </div>
       </div>

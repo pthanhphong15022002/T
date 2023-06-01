@@ -44,6 +44,8 @@ import { PopupAddSalesInvoiceComponent } from './vouchers/sales-invoices/popup-a
 import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
 import { GroupShareComponent } from './journals/components/group-share/group-share.component';
+import { PopUpCashComponent } from './vouchers/cash-payments/pop-up-cash/pop-up-cash.component';
+import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
 
 export const routes: Routes = [
   {
@@ -92,6 +94,11 @@ export const routes: Routes = [
       },
       {
         path: 'salesinvoices/:funcID',
+        component: SalesInvoicesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'salesreturn/:funcID',
         component: SalesInvoicesComponent,
         data: { noReuse: true },
       },
@@ -160,6 +167,7 @@ export const routes: Routes = [
     PopAddLineinventoryComponent,
     Group067Component,
     GroupShareComponent,
+    PopUpCashComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

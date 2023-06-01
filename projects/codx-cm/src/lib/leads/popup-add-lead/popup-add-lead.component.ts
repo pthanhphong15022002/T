@@ -166,19 +166,6 @@ saveLead() {
   //   );
   //   return;
   // }
-  // var ischeck = true;
-  // var ischeckFormat = true;
-  // var title = '';
-  // var messageCheckFormat = '';
-
-  // if (!ischeck) {
-  //   this.notificationsService.notifyCode('SYS009', 0, '"' + title + '"');
-  //   return;
-  // }
-  // if (!ischeckFormat) {
-  //   this.notificationsService.notifyCode(messageCheckFormat);
-  //   return;
-  // }
   if(this.action !== this.actionEdit) {
     this.onAdd();
   }

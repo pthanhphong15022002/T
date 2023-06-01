@@ -276,7 +276,7 @@
     </div>
   </div>
 
-  <div class="form-group row mt-5">
+  <div class="row mt-5 mb-3">
     <div class="col-6">
       <span
         [innerHTML]="EBasicSalaryObj?.status | formatvalue : formModel : 'status' | async"
@@ -284,13 +284,17 @@
       </span>
     </div>
     <div class="col-6">
-      <codx-input
-        field="isCurrent"
-        [formModel]="formModel"
-        [disabled]="true"
-        [Group]="formGroup"
-      ></codx-input>
-      <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
+      <div class="d-flex align-items-center">
+        <span class="me-2">
+          <codx-input
+            field="isCurrent"
+            [formModel]="formModel"
+            [disabled]="true"
+            [Group]="formGroup"
+          ></codx-input>
+        </span>
+        <codx-label class="fw-bold" fiedName="IsCurrent" [formModel]="formModel"></codx-label>
+      </div>
     </div>
   </div>
 
@@ -369,7 +373,7 @@
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group border-bottom pb-1">
     <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
     <codx-input
       field="signerID"
