@@ -59,7 +59,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       this.chartOfAccounts.detail = true;
     }
     this.cache
-      .gridViewSetup('ChartOfAccounts', 'grvChartOfAccounts')
+      .gridViewSetup('ChartOfAccounts', 'grvAccountsAC')
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
