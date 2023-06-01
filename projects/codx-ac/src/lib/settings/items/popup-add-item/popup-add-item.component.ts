@@ -21,12 +21,11 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { Item } from '../interfaces/Item.interface';
 import { ItemColor } from '../interfaces/ItemColor.Interface';
 import { ItemSize } from '../interfaces/ItemSize.interface';
+import { ItemStyle } from '../interfaces/ItemStyle.interface';
 import { ItemsProduction } from '../interfaces/ItemsProduction.interface';
 import { ItemsPurchase } from '../interfaces/ItemsPurchase.interface';
 import { ItemsSales } from '../interfaces/ItemsSales.interface';
-import { ItemStyle } from '../interfaces/ItemStyle.interface';
 import { UMConversion } from '../interfaces/UMConversion.interface';
-import { ItemsService } from '../items.service';
 import { PopupAddItemColorComponent } from '../popup-add-item-color/popup-add-item-color.component';
 import { PopupAddItemConversionComponent } from '../popup-add-item-conversion/popup-add-item-conversion.component';
 import { PopupAddItemSizeComponent } from '../popup-add-item-size/popup-add-item-size.component';
@@ -125,7 +124,6 @@ export class PopupAddItemComponent
   constructor(
     private injector: Injector,
     private notiService: NotificationsService,
-    private itemsService: ItemsService,
     private acService: CodxAcService,
     @Optional() public dialogRef: DialogRef,
     @Optional() private dialogData: DialogData
@@ -152,7 +150,7 @@ export class PopupAddItemComponent
           )
           .subscribe((res) => {
             if (res) {
-              this.itemsService.deleteImage(itemSize.recID, 'IV_ItemSizes');
+              this.acService.deleteFile(itemSize.recID, 'IV_ItemSizes');
             }
           });
       }
@@ -167,7 +165,7 @@ export class PopupAddItemComponent
           )
           .subscribe((res) => {
             if (res) {
-              this.itemsService.deleteImage(itemSize.recID, 'IV_ItemSizes');
+              this.acService.deleteFile(itemSize.recID, 'IV_ItemSizes');
             }
           });
       }
@@ -184,7 +182,7 @@ export class PopupAddItemComponent
           )
           .subscribe((res) => {
             if (res) {
-              this.itemsService.deleteImage(itemStyle.recID, 'IV_ItemStyles');
+              this.acService.deleteFile(itemStyle.recID, 'IV_ItemStyles');
             }
           });
       }
@@ -214,7 +212,7 @@ export class PopupAddItemComponent
           )
           .subscribe((res) => {
             if (res) {
-              this.itemsService.deleteImage(
+              this.acService.deleteFile(
                 itemConversion.recID,
                 'BS_UMConversion'
               );
@@ -342,7 +340,7 @@ export class PopupAddItemComponent
         if (res) {
           this.notiService.notifyCode('SYS008');
 
-          this.itemsService.deleteImage(itemSize.recID, 'IV_ItemSizes');
+          this.acService.deleteFile(itemSize.recID, 'IV_ItemSizes');
 
           if (sizeType === 1) {
             this.itemSizes1 = this.itemSizes1.filter(
@@ -366,7 +364,7 @@ export class PopupAddItemComponent
         if (res) {
           this.notiService.notifyCode('SYS008');
 
-          this.itemsService.deleteImage(recID, 'BS_UMConversion');
+          this.acService.deleteFile(recID, 'BS_UMConversion');
 
           this.itemConversions = this.itemConversions.filter(
             (i) => i.recID !== recID
@@ -384,7 +382,7 @@ export class PopupAddItemComponent
         if (res) {
           this.notiService.notifyCode('SYS008');
 
-          this.itemsService.deleteImage(itemStyle.recID, 'IV_ItemStyles');
+          this.acService.deleteFile(itemStyle.recID, 'IV_ItemStyles');
 
           this.itemStyles = this.itemStyles.filter(
             (i) => i.recID !== itemStyle.recID

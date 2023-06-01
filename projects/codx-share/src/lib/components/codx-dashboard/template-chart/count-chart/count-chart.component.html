@@ -1,15 +1,15 @@
-<div class="card m-2">
-  <div class="card-body">
-    <div class="d-flex align-items-center">
-      <img [src]="this.iconUrl" class="svg-icon" />
-      <div class="ms-2">
-        <div class="fw-bold fs-4">
-          {{ this.title }}
-          <div class="fw-bold fs-3">
-            {{ +this.value }}
-          </div>
-        </div>
-      </div>
+<div class="w-100 h-100 d-flex justify-content-start align-items-center p-2">
+  <img
+    [src]="this.iconUrl"
+    style="width: 30px; height: auto"
+    class="svg-icon m-2"
+  />
+  <div class="p-2">
+    <div class="fw-bold" style="font-size: 0.75vw">
+      {{ this.title }}
+    </div>
+    <div class="fw-bold" style="font-size: 1.25vw">
+      {{ +this.value }}
     </div>
   </div>
 </div>

@@ -7,7 +7,11 @@
   [tabContent]="
     funcID == 'CM0101'
       ? [tabGeneralInfo, tabDefault, tabAddress, tabContacts]
-      : funcID == 'CM0102'  ? [tabGeneralInfo, tabDefault, tabAddress] : funcID == 'CM0103' ? [tabGeneralInfo, tabDefault, tabContacts] : [tabGeneralInfo, tabDefault]
+      : funcID == 'CM0102'
+      ? [tabGeneralInfo, tabDefault, tabAddress]
+      : funcID == 'CM0103'
+      ? [tabGeneralInfo, tabDefault, tabContacts]
+      : [tabGeneralInfo, tabDefault]
   "
   [openMore]="false"
   [dialog]="dialog"
@@ -57,8 +61,7 @@
   <ng-container *ngIf="form?.formGroup">
     <div>
       <codx-list-contacts
-      [selectAll]="false"
-
+        [selectAll]="false"
         (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
         (lstContactEmit)="lstContactEmit($event)"
         [funcID]="funcID"
@@ -621,6 +624,7 @@
         <codx-label [formModel]="form.formModel" [fiedName]="'CustomerID'">
         </codx-label>
         <codx-input
+          [disabled]="true"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="customerID"
@@ -1089,17 +1093,24 @@
   <div class="row">
     <div class="col-6">
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" [fiedName]="funcID == 'CM0103' ? 'PartnerID' : 'CompetitorID'">
+        <codx-label
+          [formModel]="form.formModel"
+          [fiedName]="funcID == 'CM0103' ? 'PartnerID' : 'CompetitorID'"
+        >
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          [disabled]="true"
           [field]="funcID == 'CM0103' ? 'partnerID' : 'competitorID'"
         >
         </codx-input>
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" [fiedName]="funcID == 'CM0103' ? 'PartnerName' : 'CompetitorName'">
+        <codx-label
+          [formModel]="form.formModel"
+          [fiedName]="funcID == 'CM0103' ? 'PartnerName' : 'CompetitorName'"
+        >
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
@@ -1150,8 +1161,7 @@
       </codx-input>
     </div>
     <div class="col-6 form-group">
-      <codx-label [formModel]="form.formModel" fiedName="Phone">
-      </codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
       <codx-input
         [formModel]="form.formModel"
         [Group]="form.formGroup"
@@ -1172,8 +1182,7 @@
       </codx-input>
     </div>
     <div class="col-6 form-group">
-      <codx-label [formModel]="form.formModel" fiedName="FaxNo">
-      </codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="FaxNo"> </codx-label>
       <codx-input
         [formModel]="form.formModel"
         [Group]="form.formGroup"
@@ -1184,8 +1193,7 @@
   </div>
   <div class="row">
     <div class="col-6 form-group">
-      <codx-label [formModel]="form.formModel" fiedName="CEO">
-      </codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="CEO"> </codx-label>
       <codx-input
         [formModel]="form.formModel"
         [Group]="form.formGroup"
@@ -1194,8 +1202,7 @@
       </codx-input>
     </div>
     <div class="col-6 form-group">
-      <codx-label [formModel]="form.formModel" fiedName="Email">
-      </codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
       <codx-input
         [formModel]="form.formModel"
         [Group]="form.formGroup"
@@ -1206,8 +1213,7 @@
   </div>
   <div class="row">
     <div class="col-6 form-group">
-      <codx-label [formModel]="form.formModel" fiedName="TaxCode">
-      </codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="TaxCode"> </codx-label>
       <codx-input
         [formModel]="form.formModel"
         [Group]="form.formGroup"
@@ -1216,8 +1222,7 @@
       </codx-input>
     </div>
     <div class="col-6 form-group">
-      <codx-label [formModel]="form.formModel" fiedName="WebPage">
-      </codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="WebPage"> </codx-label>
       <codx-input
         [formModel]="form.formModel"
         [Group]="form.formGroup"
@@ -1237,7 +1242,6 @@
       >
       </codx-input>
     </div>
-
   </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Industries">
@@ -1250,8 +1254,7 @@
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="address">
-    </codx-label>
+    <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
       [Group]="form.formGroup"
@@ -1260,8 +1263,7 @@
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="Memo">
-    </codx-label>
+    <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
       [Group]="form.formGroup"

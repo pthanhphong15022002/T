@@ -31,7 +31,7 @@
               <span >{{data?.reportName}}</span>
             </div> -->
 
-            <div class="m-3">
+            <div class="m-3" *ngIf="rootFunction">
               <codx-attachment
                 #attachment
                 [objectType]="'SYS_ReportList'"

@@ -473,6 +473,9 @@ export class CodxAddBookingCarComponent
   }
 
   deleteAttender(attID: string) {
+    if (this.viewOnly) {
+      return;
+    }
     var tempDelete;
     this.resources.forEach((item) => {
       if (item.userID == attID) {

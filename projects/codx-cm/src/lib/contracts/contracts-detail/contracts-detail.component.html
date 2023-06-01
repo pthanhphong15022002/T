@@ -69,7 +69,6 @@
   </div>
   <div class="d-flex justify-content-between align-items-center">
     <div>
-
       <codx-vll
         [name]="vllStatus"
         [field]="'Status'"
@@ -329,6 +328,7 @@
 
 <ng-template #mainRightTemp>
   <codx-taskbar
+    [change]="itemSelected"
     [listTab]="listClicked"
     (tab)="changeTab($event)"
     size="20"
@@ -368,10 +368,6 @@
   ></codx-tabs>
 </ng-template>
 
-<ng-template #contract let-data>
-  <list-contracts [projectID]="itemSelected?.recID"></list-contracts>
-</ng-template>
-
 <ng-template #generalTemplate>
   <div class="A mb-5">
     <div>
@@ -392,7 +388,12 @@
   </div>
 </ng-template>
 <ng-template #itemsTemplate>
-  <view-quotations></view-quotations>
+  <view-quotations
+    [quotationLines]="listQuotationsLine"
+    [quotations]="quotations"
+    [fmQuotationLines]="fmQuotationLines"
+    [fmQuotations]="fmQuotations"
+  ></view-quotations>
 </ng-template>
 
 <ng-template #payTemplate>
@@ -400,121 +401,302 @@
     <div class="fs-6 fw-bold"><span>Tiến độ thanh toán</span></div>
     <div class="row">
       <div class="col-4">
-        <span>Giá trị hợp đồng: </span>
-        <span>{{ itemSelected?.contractAmt }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="contractAmt"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.contractAmt
+              | formatvalue : view.formModel : 'ContractAmt'
+              | async
+          "
+        ></span>
+        <!-- <span>Giá trị hợp đồng: </span> -->
       </div>
       <div class="col-4">
-        <span>Số tiền thanh toán: </span>
-        <span>{{ itemSelected?.paidAmt }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="paidAmt"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.paidAmt
+              | formatvalue : view.formModel : 'PaidAmt'
+              | async
+          "
+        ></span>
+        <!-- <span>Số tiền thanh toán: </span> -->
       </div>
       <div class="col-4">
-        <span>Số tiền còn lại: </span>
-        <span>{{ itemSelected?.remainAmt }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="remainAmt"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.remainAmt
+              | formatvalue : view.formModel : 'RemainAmt'
+              | async
+          "
+        ></span>
+        <!-- <span>Số tiền còn lại: </span> -->
       </div>
     </div>
     <div class="row">
       <div class="col-4">
-        <span>Giá trị hợp đồng: </span>
-        <span>{{ itemSelected?.contractAmt }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="pmtStatus"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.pmtStatus
+              | formatvalue : view.formModel : 'PmtStatus'
+              | async
+          "
+        ></span>
+        <!-- Tình trạng thanh toán -->
       </div>
       <div class="col-8">
-        <span>Tình trạng thanh toán: </span>
-        <span>{{ itemSelected?.paymentStatus }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="pmtDeadline"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.pmtDeadline
+              | formatvalue : view.formModel : 'PmtDeadline'
+              | async
+          "
+        ></span>
+        <!--Hạn thanh toán-->
       </div>
     </div>
     <div class="row">
       <div class="col-4">
-        <span>Điều khoản thanh toán: </span>
-        <span>{{ itemSelected?.pmtTermID }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="pmtTermID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.pmtTermID
+              | formatvalue : view.formModel : 'PmtTermID'
+              | async
+          "
+        ></span>
+        <!-- <span>Điều khoản thanh toán: </span> -->
       </div>
       <div class="col-8">
-        <span>Phương thức thanh toán: </span>
-        <span>{{ itemSelected?.pmtMethodID }}</span>
+        <codx-label
+          class="label-colon"
+          fiedName="pmtMethodID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.pmtMethodID
+              | formatvalue : view.formModel : 'PmtMethodID'
+              | async
+          "
+        ></span>
+        <!-- <span>Phương thức thanh toán: </span> -->
       </div>
     </div>
   </div>
 
   <div>
     <div class="fs-6 fw-bold"><span>Lịch thanh toán</span></div>
-    <!-- <product></product> -->
-    <table class="table table-striped">
-      <thead>
-        <tr class="fw-bold">
-          <th>STT</th>
-          <th>Ngày thanh toán</th>
-          <th>Số tiền thanh toán</th>
-          <th>Trạng thái</th>
-          <th>Đã thanh toán</th>
-          <th>Dư nợ còn lại</th>
-          <th>Ghi chú</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let paymemnt of listPayment">
-          <td>{{ paymemnt?.rowNo }}</td>
-          <td>{{ paymemnt?.scheduleDate | date : "dd/MM/yyyy" }}</td>
-          <td>{{ paymemnt?.scheduleAmt }}</td>
-          <td>{{ paymemnt?.status }}</td>
-          <td>{{ paymemnt?.remainAmt }}</td>
-          <td>{{ paymemnt?.remainAmt }}</td>
-          <td>{{ paymemnt?.memo }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="d-flex align-items-center">
-      <div class="content-icon">
-        <span class="icon-add text-primary"></span>
-      </div>
-      <button
-        style="height: 28px"
-        type="button"
-        class="btn btn-outline-primary btn-sm"
-        (click)="addPay()"
-      >
-        <codx-label
-          [formModel]
-          fiedName
-          default="Thêm lịch thanh toán"
-        ></codx-label>
-      </button>
-    </div>
+    <view-payment
+      [isSave]="true"
+      [contracts]="itemSelected"
+      [listPayment]="listPayment"
+      [listPaymentHistory]="listPaymentHistory"
+    ></view-payment>
   </div>
 
   <div>
     <div class="fs-6 fw-bold"><span>Tiến giao hàng</span></div>
     <div class="row">
       <div class="col-4">
-        <span>Điều khoản giao hàng: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delTermID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delTermID
+              | formatvalue : view.formModel : 'DelTermID'
+              | async
+          "
+        ></span>
+        <!-- <span>Điều khoản giao hàng: </span> -->
       </div>
       <div class="col-4">
-        <span>Hình thức giao hàng: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delModeID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delModeID
+              | formatvalue : view.formModel : 'DelModeID'
+              | async
+          "
+        ></span>
+        <!-- <span>Hình thức giao hàng: </span> -->
       </div>
       <div class="col-4">
-        <span>Phí vận chuyển: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delPrice"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delPrice
+              | formatvalue : view.formModel : 'DelPrice'
+              | async
+          "
+        ></span>
+        <!-- <span>Phí vận chuyển: </span> -->
       </div>
     </div>
     <div class="row">
       <div class="col-4">
-        <span>Hạn giao hàng: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delDeadline"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delDeadline
+              | formatvalue : view.formModel : 'DelDeadline'
+              | async
+          "
+        ></span>
+        <!-- <span>Hạn giao hàng: </span> -->
       </div>
       <div class="col-4">
-        <span>Tình trạng giao hàng: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delStatus"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delStatus
+              | formatvalue : view.formModel : 'DelStatus'
+              | async
+          "
+        ></span>
+        <!-- <span>Tình trạng giao hàng: </span> -->
       </div>
       <div class="col-4">
-        <span>Ngày giao hàng thành công: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delActualDate"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delActualDate
+              | formatvalue : view.formModel : 'DelActualDate'
+              | async
+          "
+        ></span>
+        <!-- <span>Ngày giao hàng thành công: </span> -->
       </div>
     </div>
     <div class="row">
       <div class="col-4">
-        <span>Liên hệ giao hàng: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delContactID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delContactID
+              | formatvalue : view.formModel : 'DelContactID'
+              | async
+          "
+        ></span>
+        <!-- Liên hệ giao hàng-->
       </div>
       <div class="col-8">
-        <span>Số diện thoại: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delPhone"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delPhone
+              | formatvalue : view.formModel : 'DelPhone'
+              | async
+          "
+        ></span>
+        <!-- <span>Số diện thoại: </span> -->
       </div>
     </div>
     <div class="row">
       <div class="col-12">
-        <span>Địa chỉ giao hàng: </span>
+        <codx-label
+          class="label-colon"
+          fiedName="delAddress"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="me-3"
+          [innerHTML]="
+            itemSelected?.delAddress
+              | formatvalue : view.formModel : 'DelAddress'
+              | async
+          "
+        ></span>
+        <!-- <span>Địa chỉ giao hàng: </span> -->
       </div>
     </div>
   </div>
@@ -528,67 +710,144 @@
   <div class="row fs-6 my-2">
     <div class="col-6">
       <codx-label
-      class="label-colon"
-      fiedName="exchangeRate"
-      [formModel]="view.formModel"
-    >
-    </codx-label>
-      <span>Tên công ty: </span>
-      <span>{{
-        data?.type == "A" ? data?.value?.legalName : data?.value?.companyName
-      }}</span>
+        class="label-colon"
+        fiedName="companyName"
+        [formModel]="view.formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
+      <span *ngIf="data?.type == 'A'">{{ data?.value?.legalName }}</span>
+      <span
+        *ngIf="data?.type == 'B'"
+        class="fs-7"
+        [innerHTML]="
+          data?.value?.customerID
+            | formatvalue : view.formModel : 'CustomerID'
+            | async
+        "
+      ></span>
     </div>
     <div class="col-5">
-      <span>Mã số thuế: </span>
-      <span>{{
-        data?.type == "A" ? data?.value?.taxCode : data?.value?.taxCode
-      }}</span>
+      <codx-label
+        class="label-colon"
+        fiedName="taxCode"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.value?.taxCode
+            | formatvalue : view.formModel : 'TaxCode'
+            | async
+        "
+      ></span>
     </div>
   </div>
   <div class="row fs-6 my-2">
     <div class="col-12">
-      <span>Địa chỉ: </span>
-      <span>{{
-        data?.type == "A" ? data?.value?.street : data?.value?.address
-      }}</span>
+      <codx-label
+        class="label-colon"
+        fiedName="address"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.type == 'A'
+            ? data?.value?.street
+            : (data?.value?.address
+              | formatvalue : view.formModel : 'Address'
+              | async)
+        "
+      ></span>
     </div>
   </div>
   <div class="row fs-6 my-2">
     <div class="col-12">
-      <span>Điện thoại: </span>
-      <span>{{
-        data?.type == "A" ? data?.value?.phone : data?.value?.phone
-      }}</span>
+      <codx-label
+        class="label-colon"
+        fiedName="phone"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.value?.phone | formatvalue : view.formModel : 'Phone' | async
+        "
+      ></span>
     </div>
   </div>
   <div class="row fs-6 my-2">
     <div class="col-6">
-      <span>Người đại diện: </span>
-      <span>{{
-        data?.type == "A"
-          ? data?.value?.contactName
-          : data?.value?.representative
-      }}</span>
+      <codx-label
+        class="label-colon"
+        fiedName="representative"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.type == 'A'
+            ? data?.value?.contactName
+            : (data?.value?.representative
+              | formatvalue : view.formModel : 'Representative'
+              | async)
+        "
+      ></span>
     </div>
     <div class="col-6">
-      <span>Chức vụ: </span>
-      <span>{{
-        data?.type == "A" ? data?.value?.jobTitle : data?.value?.jobTitle
-      }}</span>
+      <codx-label
+        class="label-colon"
+        fiedName="jobTitle"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.type == 'A'
+            ? data?.value?.contactName
+            : (data?.value?.representative
+              | formatvalue : view.formModel : 'JobTitle'
+              | async)
+        "
+      ></span>
     </div>
   </div>
   <div class="row fs-6 my-2">
     <div class="col-6">
-      <span>Tài khoản ngân hàng: </span>
-      <span>{{
-        data?.type == "A" ? data?.value?.bankAccount : data?.value?.bankAccount
-      }}</span>
+      <codx-label
+        class="label-colon"
+        fiedName="bankAccount"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.value?.bankAccount
+            | formatvalue : view.formModel : 'BankAccount'
+            | async
+        "
+      ></span>
     </div>
     <div class="col-6">
-      <span>Ngân hàng: </span>
-      <span>{{
-        data?.type == "A" ? data?.value?.bankID : data?.value?.bankID
-      }}</span>
+      <codx-label
+        class="label-colon"
+        fiedName="bankID"
+        [formModel]="view.formModel"
+      >
+      </codx-label>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.value?.bankID | formatvalue : view.formModel : 'BankID' | async
+        "
+      ></span>
     </div>
   </div>
 </ng-template>

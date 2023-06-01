@@ -1,10 +1,10 @@
 <codx-layout-add #form [formModel]="formModel" [subHeader]="" [footer]="footer" [dialog]="dialogRef" [openMore]="true"
-  [tabInfo]="tabInfo" [tabContent]="[emmployeeInfo, personalInfo, legalInfo]" [title]="headerText"
+  [tabInfo]="tabInfo" [tabContent]="[employeeInfo, personalInfo, legalInfo]" [title]="headerText"
   (setTitle)="setTitle($event)" [data]="data">
 </codx-layout-add>
 
 <!-- tab Employee -->
-<ng-template #emmployeeInfo>
+<ng-template #employeeInfo>
   <ng-container *ngIf="form?.formGroup">
     <div>
       <div class="d-flex justify-content-between form-group align-items-center form-group pb-4">
@@ -104,6 +104,7 @@
         <codx-input field="orgUnitID" [formModel]="formModel" [Group]="form.formGroup"
           (valueChange)="valueChange($event)">
         </codx-input>
+        <!-- <span class="fst-italic"> {{orgNote}} </span> -->
       </div>
 
       <div class="form-group">

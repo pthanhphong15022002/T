@@ -502,26 +502,40 @@ export class LeadsComponent
   //#endregion
 
   //#region mergeLead
-  mergeLead(data){
-    let obj = {
-      data,
-      title: this.titleAction
-    }
-    let option = new DialogModel();
-    option.IsFull = true;
-    option.zIndex = 1001;
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    let popupContract = this.callfc.openForm(
-      PopupMergeLeadsComponent,
-      '',
-      null,
-      null,
-      '',
-      obj,
-      '',
-      option
-    );
+  mergeLead(data) {
+      let obj = {
+        data,
+        title: this.titleAction,
+      };
+      let option = new DialogModel();
+      option.IsFull = true;
+      option.zIndex = 1001;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let popupContract = this.callfc.openForm(
+        PopupMergeLeadsComponent,
+        '',
+        null,
+        null,
+        '',
+        obj,
+        '',
+        option
+      );
+      popupContract.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
+
+        if (e && e.event) {
+          if (e.event.recID) {
+            e.event.modifiedOn = new Date();
+            this.view.dataService.add(e.event, 0).subscribe();
+            this.dataSelected = JSON.parse(
+              JSON.parse(JSON.stringify(this.view.dataService.data[0]))
+            );
+            this.detectorRef.detectChanges();
+          }
+        }
+      });
   }
   //#endregion
 

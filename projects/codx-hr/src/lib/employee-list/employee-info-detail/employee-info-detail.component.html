@@ -4319,25 +4319,6 @@
             class="mb-1 mt-5"
             *ngIf="awardFormModel && awardColumnsGrid; else emptyDataTemplate"
           >
-            <!-- <div class="">
-              <codx-gridview-v2
-                *ngIf="awardColumnsGrid && awardFormModel"
-                #eAwardGridView
-                [formModel]="awardFormModel"
-                [columnsGrid]="awardColumnsGrid"
-                [service]="'HR'"
-                [assemblyName]="'Core'"
-                [className]="'DataBusiness'"
-                [method]="'LoadDataAsync'"
-                [sort]="[eAwardsSortModel1, eAwardsSortModel2]"
-                [predicates]="'EmployeeID=@0'"
-                [dataValues]="employeeID"
-                [pageSize]="numPageSizeGridView"
-                [entityName]="'HR_EAwards'"
-                height="auto"
-                [emptyTemplate]="emptyDataTemplate"
-              ></codx-gridview-v2>
-            </div> -->
             <ng-container>
               <codx-gridview-v2
                 #eAwardGridView
@@ -5123,8 +5104,10 @@
               </button>
             </div>
           </div>
-          <div class="mb-1">
-            <codx-gridview
+          <div class="mb-1"
+          *ngIf="eAccidentsFormModel && eAccidentsColumnsGrid; else emptyDataTemplate"
+          >
+            <!-- <codx-gridview
               *ngIf="eAccidentsColumnsGrid && eAccidentsFormModel"
               #eAccidentGridView
               [formModel]="eAccidentsFormModel"
@@ -5141,7 +5124,22 @@
               [sort]="[accidentDateSortModel]"
               [emptyTemplate]="emptyDataTemplate"
             >
-            </codx-gridview>
+            </codx-gridview> -->
+
+            <codx-gridview-v2
+            #eAccidentGridView
+            [formModel]="eAccidentsFormModel"
+            [columnsGrid]="eAccidentsColumnsGrid"
+            [sort]="[accidentDateSortModel]"
+            [service]="'HR'"
+            [assemblyName]="'Core'"
+            [className]="'DataBusiness'"
+            [hideMoreFunc]="true"
+            [method]="'LoadDataAsync'"
+            [predicates]="'EmployeeID=@0'"
+            [dataValues]="employeeID"
+            [emptyTemplate]="emptyDataTemplate"
+          ></codx-gridview-v2>
           </div>
         </div>
       </div>
@@ -5196,8 +5194,10 @@
           </div>
 
           <!--Griddiseases-->
-          <div class="mt-7">
-            <codx-gridview
+          <div class="mt-7"
+          *ngIf="eDiseasesFormModel && eDiseasesColumnsGrid; else emptyDataTemplate"
+          >
+            <!-- <codx-gridview
               *ngIf="eDiseasesColumnsGrid && eDiseasesFormModel"
               #eDiseasesGridView
               [formModel]="eDiseasesFormModel"
@@ -5214,7 +5214,22 @@
               [sort]="[diseasesFromDateSortModel]"
               [emptyTemplate]="emptyDataTemplate"
             >
-            </codx-gridview>
+            </codx-gridview> -->
+
+            <codx-gridview-v2
+            #eDiseasesGridView
+            [formModel]="eDiseasesFormModel"
+            [columnsGrid]="eDiseasesColumnsGrid"
+            [sort]="[diseasesFromDateSortModel]"
+            [service]="'HR'"
+            [assemblyName]="'Core'"
+            [className]="'DataBusiness'"
+            [hideMoreFunc]="true"
+            [method]="'LoadDataAsync'"
+            [predicates]="'EmployeeID=@0'"
+            [dataValues]="employeeID"
+            [emptyTemplate]="emptyDataTemplate"
+          ></codx-gridview-v2>
           </div>
           <!-- <div
                       class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
@@ -5275,9 +5290,11 @@
               </button>
             </div>
           </div>
-          <div class="mb-1 mt-6">
+          <div class="mb-1 mt-6"
+          *ngIf="eHealthFormModel && eHealthColumnGrid; else emptyDataTemplate"
+          >
             <div>
-              <codx-gridview
+              <!-- <codx-gridview
                 *ngIf="eHealthColumnGrid"
                 #eHealthsGridView
                 [formModel]="eHealthFormModel"
@@ -5292,7 +5309,22 @@
                 [entityName]="'HR_EHealths'"
                 [sort]="[healthDateSortModel]"
                 [emptyTemplate]="emptyDataTemplate"
-              ></codx-gridview>
+              ></codx-gridview> -->
+
+              <codx-gridview-v2
+              #eHealthsGridView
+              [formModel]="eHealthFormModel"
+              [columnsGrid]="eHealthColumnGrid"
+              [sort]="[healthDateSortModel]"
+              [service]="'HR'"
+              [assemblyName]="'Core'"
+              [className]="'DataBusiness'"
+              [hideMoreFunc]="true"
+              [method]="'LoadDataAsync'"
+              [predicates]="'EmployeeID=@0'"
+              [dataValues]="employeeID"
+              [emptyTemplate]="emptyDataTemplate"
+            ></codx-gridview-v2>
             </div>
           </div>
         </div>
@@ -5359,8 +5391,10 @@
               </button>
             </div>
           </div>
-          <div class="mt-7">
-            <codx-gridview
+          <div class="mt-7"
+          *ngIf="eVaccineFormModel && eVaccineColumnGrid; else emptyDataTemplate"
+          >
+            <!-- <codx-gridview
               *ngIf="eVaccineColumnGrid"
               #eVaccinesGridView
               [formModel]="eVaccineFormModel"
@@ -5375,9 +5409,23 @@
               [entityName]="'HR_EVaccines'"
               height="auto"
               [sort]="[injectDateSortModel]"
-              [sort]="[injectDateSortModel]"
               [emptyTemplate]="emptyDataTemplate"
-            ></codx-gridview>
+            ></codx-gridview> -->
+
+            <codx-gridview-v2
+            #eVaccinesGridView
+            [formModel]="eVaccineFormModel"
+            [columnsGrid]="eVaccineColumnGrid"
+            [service]="'HR'"
+            [assemblyName]="'Core'"
+            [className]="'DataBusiness'"
+            [sort]="[injectDateSortModel]"
+            [hideMoreFunc]="true"
+            [method]="'LoadDataAsync'"
+            [predicates]="'EmployeeID=@0'"
+            [dataValues]="employeeID"
+            [emptyTemplate]="emptyDataTemplate"
+          ></codx-gridview-v2>
           </div>
         </div>
       </div>

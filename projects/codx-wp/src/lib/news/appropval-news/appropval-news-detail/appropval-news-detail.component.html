@@ -3,9 +3,8 @@
         [header]="header" 
         [body]="body" 
         (clickMF)="clickMF($event)" 
-
         [formModel]="formModel" 
-        [hideMF]="false"
+        [hideMF]="hideMFC"
         [dataItem]="data"
         [footer]="footer">
     </codx-detail-tmp>
@@ -33,18 +32,18 @@
                         
                     </div>
                     <div class="d-flex align-items-center">
-                        <ng-container *ngIf="data.user?.positionName">
+                        <ng-container *ngIf="data.user.positionName">
                             <div class="text-dark me-5">
                                 <span>{{data.user.positionName}}</span>
                             </div>
                         </ng-container>
-                        <ng-container *ngIf="data.user?.email">
+                        <ng-container *ngIf="data.user.email">
                             <div class="d-flex align-items-center text-dark me-5">
                                 <span><i class="icon-email me-2"></i></span>
                                 <span>{{data.user.email}}</span>
                             </div>
                         </ng-container>
-                        <ng-container *ngIf="data.user?.phone">
+                        <ng-container *ngIf="data.user.phone">
                             <div class="d-flex align-items-center text-dark p-0 me-5">
                                 <span><i class="icon-phone_android me-2"></i></span>
                                 <span>{{data.user.phone}}</span>

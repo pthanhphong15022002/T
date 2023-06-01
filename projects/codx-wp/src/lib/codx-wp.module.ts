@@ -16,8 +16,6 @@ import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { OrgorganizationComponent } from 'projects/codx-hr/src/lib/organization/organization.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { ApproveDetailComponent } from './approve/approve-detail/approve-detail.component';
-import { ApproveComponent } from './approve/approve.component';
 import { CodxWpComponent } from './codx-wp.component';
 import { CompanyInforComponent } from './company-infor/company-infor.component';
 import { CompanyEditComponent } from './company-infor/popup-edit/company-edit/company-edit.component';
@@ -108,8 +106,6 @@ const Component: Type<any>[] = [
   PopupSearchPostComponent,
   LayoutComponent,
   PopupAddPostComponent,
-  ApproveComponent,
-  ApproveDetailComponent,
 ];
 
 @NgModule({

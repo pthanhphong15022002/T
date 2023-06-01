@@ -319,7 +319,8 @@ export class AddContractsComponent implements OnInit {
       this.contracts.recID = Util.uid();
       this.contracts.projectID = this.projectID;
       this.contracts.contractDate = new Date();
-      this.contracts.status = '1';
+      this.contracts.status = '0';
+      this.setCOntractByDataOutput();
     }
     if (this.action == 'edit') {
       this.contracts = data;
@@ -332,6 +333,18 @@ export class AddContractsComponent implements OnInit {
       delete this.contracts['id'];
       this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);
+    }
+  }
+
+  setCOntractByDataOutput(){
+    if (this.contracts.dealID) {
+      this.getCustomerByDealID(this.contracts.dealID);
+    }
+    if (this.contracts.customerID) {
+      this.getCustomerByrecID(this.contracts.customerID);
+    }
+    if (this.contracts.quotationID) {
+      this.getDataByQuotationID(this.contracts.quotationID);
     }
   }
 
@@ -360,6 +373,16 @@ export class AddContractsComponent implements OnInit {
     });
   }
 
+  getPayMentByContractID(contractID) {
+    this.contractService.getPaymentsByContractID(contractID).subscribe((res) => {
+      if (res) {
+        let listPayAll =  res as CM_ContractsPayments[];
+        this.listPayment = listPayAll.filter(pay => pay.lineType == '0');
+        this.listPaymentHistory = listPayAll.filter(pay => pay.lineType == '1');
+      }
+    });
+  }
+
   getDataByQuotationID(recID) {
     this.contractService.getDataByTransID(recID).subscribe((res) => {
       if (res) {
@@ -375,16 +398,6 @@ export class AddContractsComponent implements OnInit {
         this.contracts.remainAmt = Number(this.contracts.contractAmt) - Number(this.contracts.paidAmt); // số tiền còn lại 
         this.contracts.currencyID = quotation.currencyID; // tiền tệ
         this.contracts.exchangeRate = quotation.exchangeRate; // tỷ giá
-      }
-    });
-  }
-
-  getPayMentByContractID(contractID) {
-    this.cmService.getPaymentsByContractID(contractID).subscribe((res) => {
-      if (res) {
-        let listPayAll =  res as CM_ContractsPayments[];
-        this.listPayment = listPayAll.filter(pay => pay.lineType == '0');
-        this.listPaymentHistory = listPayAll.filter(pay => pay.lineType == '1');
       }
     });
   }

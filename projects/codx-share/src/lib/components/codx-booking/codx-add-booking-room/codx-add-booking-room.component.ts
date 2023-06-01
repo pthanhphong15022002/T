@@ -418,6 +418,9 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           if( this.data?.attendees !=null && this.data?.resources!=null){
 
             this.guestNumber = this.data?.attendees - this.data?.resources.length;
+            if(this.guestNumber<0){              
+              this.guestNumber=0;
+            }
           }
           else{
             this.guestNumber=0;
@@ -588,6 +591,9 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   guestChange(evt: any) {
     if (evt?.data != null) {
       this.guestNumber = evt?.data;
+      if(this.guestNumber<0){
+        this.guestNumber=0;
+      }
       this.attendeesNumber = this.resources.length + this.guestNumber;
       this.changeDetectorRef.detectChanges();
     }
