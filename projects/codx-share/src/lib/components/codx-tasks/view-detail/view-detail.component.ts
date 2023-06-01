@@ -309,21 +309,36 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       !this.itemSelected ||
       !this.itemSelected?.taskID ||
       (this.itemSelected.category == '1' && !this.itemSelected.isAssign) 
-      // || (this.itemSelected?.category == '2' && !this.itemSelected.parentID)
     )
       return;
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetTreeAssignByTaskIDAsync',
-        this.itemSelected?.taskID
-      )
-      .subscribe((res) => {
-        if (res) this.dataTree = res || [];
-        this.changeDetectorRef.detectChanges();
-      });
+      if(this.itemSelected?.category == '2' && !this.itemSelected.parentID){
+        this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetListTaskTreeBySeasonIDAsync',
+          this.itemSelected?.sessionID
+        )
+        .subscribe((res) => {
+          if (res) this.dataTree = res || [];
+          this.changeDetectorRef.detectChanges();
+        });
+      }else{
+        this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetTreeAssignByTaskIDAsync',
+          this.itemSelected?.taskID
+        )
+        .subscribe((res) => {
+          if (res) this.dataTree = res || [];
+          this.changeDetectorRef.detectChanges();
+        });
+      }
+  
   }
   //#endregion
 
