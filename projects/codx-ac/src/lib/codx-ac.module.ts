@@ -97,6 +97,11 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'salesreturn/:funcID',
+        component: SalesInvoicesComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'reports/:funcID',
         component: ReportsComponent,
         data: { noReuse: true },
