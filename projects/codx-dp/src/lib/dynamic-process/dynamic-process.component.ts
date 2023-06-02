@@ -854,7 +854,9 @@ export class DynamicProcessComponent
 
   releaseProcess(process) {
     this.processReleaseClone = process;
-    this.processRelease = JSON.parse(JSON.stringify(process));
+    this.processRelease = JSON.parse(JSON.stringify(process)) as DP_Processes;
+    this.processRelease.module = "CM";
+    this.processRelease.function = this.processRelease.applyFor == '1' ? 'CM0201' : 'CM0401';
     this.popupRelease = this.callfc.openForm(
       this.releaseProcessTemp,
       '',
@@ -880,6 +882,9 @@ export class DynamicProcessComponent
   }
 
   saveReleaseProcess() {
+    if(!this.processRelease.releasedName.trim()){
+
+    }
     this.dpService
       .releaseProcess([this.processRelease, true])
       .subscribe((res) => {
