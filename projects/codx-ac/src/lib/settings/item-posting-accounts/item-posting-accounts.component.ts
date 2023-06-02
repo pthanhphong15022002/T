@@ -264,11 +264,8 @@ export class ItempostingaccountsComponent extends UIComponent {
         option,
         this.view.funcID
       );
-      this.dialog.closed.subscribe((e) => {
-        if (e?.event) {
-          this.view.dataService.update(e.event).subscribe();
-          this.dt.detectChanges();
-        }
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null) this.view.dataService.clear();
       });
     });
   }
@@ -290,12 +287,7 @@ export class ItempostingaccountsComponent extends UIComponent {
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = '550px';
         this.dialog = this.callfunc.openSide(PopAddItemComponent, obj, option);
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event) {
-            this.view.dataService.update(e.event).subscribe();
-            this.dt.detectChanges();
-          }
-        });
+        
       });
   }
   copy(e, data) {
@@ -316,12 +308,7 @@ export class ItempostingaccountsComponent extends UIComponent {
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = '550px';
         this.dialog = this.callfunc.openSide(PopAddItemComponent, obj, option);
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event) {
-            this.view.dataService.update(e.event).subscribe();
-            this.dt.detectChanges();
-          }
-        });
+        
       });
   }
   delete(data) {

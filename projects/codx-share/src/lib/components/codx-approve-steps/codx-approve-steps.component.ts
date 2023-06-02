@@ -170,6 +170,7 @@ export class CodxApproveStepsComponent
   }
 
   onSaveForm() {
+    
     if (this.type == '1') {
       //Lưu khi cập nhật step
       this.updateApprovalStep();
@@ -207,6 +208,7 @@ export class CodxApproveStepsComponent
   }
 
   add() {
+   
     let data = {
       transID: this.type == '1' ? this.recID : this.transId,
       stepNo: this.lstStep.length + 1,
@@ -228,6 +230,14 @@ export class CodxApproveStepsComponent
   }
 
   edit(approvalStep) {
+    
+    if(this.lstStep && this.lstStep.length > 0)
+    {
+      this.lstStep.forEach(elm => {
+        if(!elm.signatureType) elm.signatureType = this.data?.signatureType ?? this.signatureType
+      });
+    }
+    
     let data = {
       transID: this.type == '1' ? this.recID : this.transId,
       stepNo: this.currentStepNo,
@@ -240,6 +250,7 @@ export class CodxApproveStepsComponent
       hideTabQuery: true,
     };
     
+   
     if(this.isTemplate){
       data.transID=this.transId;
     }
