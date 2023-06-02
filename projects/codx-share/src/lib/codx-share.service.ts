@@ -992,6 +992,19 @@ export class CodxShareService {
   {
     var listApproveMF = [];
     
+
+    if(funcID == "SYS202")
+    {
+      var consensus = 
+      {
+        functionID : "SYS202",
+        text: "Ký",
+        color: "#666666"
+      }
+      
+      listApproveMF.push(consensus);
+    }
+
     if(funcID == "SYS203")
     {
       var consensus = 
@@ -1011,7 +1024,14 @@ export class CodxShareService {
       text: "Từ chối",
       color: "#F64E60"
     }
-    listApproveMF.push(tc);
+
+    var ll =
+    {
+      functionID : "SYS206",
+      text: "Làm lại",
+      color: "#FFA800"
+    }
+    listApproveMF.push(ll,tc);
     return listApproveMF;
   }
 
