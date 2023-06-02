@@ -30,6 +30,7 @@ import {
   FormModel,
   CRUDService,
   DataService,
+  CodxLabelComponent,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
@@ -67,7 +68,7 @@ export class DynamicProcessComponent
   @ViewChild('releaseProcess') releaseProcessTemp: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('footerButton') footerButton: TemplateRef<any>;
-
+  @ViewChild('releasedNameTem') releasedNameTem: CodxLabelComponent;
   @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   // Input
   @Input() dataObj?: any;
@@ -883,7 +884,9 @@ export class DynamicProcessComponent
 
   saveReleaseProcess() {
     if(!this.processRelease.releasedName.trim()){
-
+      this.releasedNameTem
+      this.notificationsService.notifyCode('SYS009', 0,'"' +'Tên quy trình được phát hành'+ '"');
+      return;
     }
     this.dpService
       .releaseProcess([this.processRelease, true])
