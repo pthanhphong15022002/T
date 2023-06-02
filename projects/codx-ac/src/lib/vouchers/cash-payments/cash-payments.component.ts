@@ -56,8 +56,8 @@ export class CashPaymentsComponent extends UIComponent {
   dataCategory: any;
   journal: IJournal;
   approval: any;
-  totalacct:any;
-  totaloff:any;
+  totalacct: any;
+  totaloff: any;
   className: any;
   classNameLine: any;
   entityName: any;
@@ -88,6 +88,7 @@ export class CashPaymentsComponent extends UIComponent {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
+  parent: any;
   authStore: AuthStore;
   constructor(
     private inject: Injector,
@@ -108,6 +109,11 @@ export class CashPaymentsComponent extends UIComponent {
     });
     this.routerActive.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
+      if (params?.parent) {
+        this.cache.functionList(params.parent).subscribe((res) => {
+          if (res) this.parent = res;
+        });
+      }
     });
     this.cache.companySetting().subscribe((res) => {
       this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
@@ -160,9 +166,13 @@ export class CashPaymentsComponent extends UIComponent {
         this.className = 'CashReceiptsBusiness';
         break;
     }
+    this.view.setRootNode(this.parent?.customName);
     this.detectorRef.detectChanges();
-}
+  }
 
+  ngOnDestroy() {
+    this.view.setRootNode('');
+  }
   //#endregion
 
   //#region Event
@@ -391,6 +401,7 @@ export class CashPaymentsComponent extends UIComponent {
           .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
             this.acctTrans = res;
+            this.loadTotal();
           });
         break;
       default:
@@ -457,7 +468,7 @@ export class CashPaymentsComponent extends UIComponent {
     for (let index = 0; index < this.acctTrans.length; index++) {
       if (!this.acctTrans[index].crediting) {
         totalacct = totalacct + this.acctTrans[index].transAmt;
-      }else{
+      } else {
         totaloff = totaloff + this.acctTrans[index].transAmt;
       }
     }
@@ -492,13 +503,15 @@ export class CashPaymentsComponent extends UIComponent {
     };
     return styles;
   }
-  
-  createLine(item){
+
+  createLine(item) {
     var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
-    let index = data.filter((x) => x.crediting == item.crediting).findIndex(x => x.recID == item.recID);
-    if (index == ((data.filter((x) => x.crediting == item.crediting)).length) - 1) {
+    let index = data
+      .filter((x) => x.crediting == item.crediting)
+      .findIndex((x) => x.recID == item.recID);
+    if (index == data.filter((x) => x.crediting == item.crediting).length - 1) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }

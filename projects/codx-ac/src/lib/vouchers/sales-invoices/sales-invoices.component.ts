@@ -48,6 +48,7 @@ export class SalesInvoicesComponent
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
+  parent: any;
 
   constructor(
     inject: Injector,
@@ -58,6 +59,11 @@ export class SalesInvoicesComponent
 
     this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
+      if (params?.parent) {
+        this.cache.functionList(params.parent).subscribe((res) => {
+          if (res) this.parent = res;
+        });
+      }
     });
   }
   //#endregion
@@ -92,6 +98,11 @@ export class SalesInvoicesComponent
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       this.functionName = this.acService.toCamelCase(res.defaultName);
     });
+    this.view.setRootNode(this.parent?.customName);
+  }
+
+  ngOnDestroy() {
+    this.view.setRootNode('');
   }
   //#endregion
 

@@ -15,12 +15,14 @@ import {
   ApiHttpService,
   CacheService,
   CallFuncService,
-  CodxGridviewComponent,
+  CodxGridviewV2Component,
   CRUDService,
   FormModel,
   SidebarModel,
   ViewsComponent,
 } from 'codx-core';
+import { CodxHrService } from '../../codx-hr.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-organization-masterdetail',
@@ -28,6 +30,7 @@ import {
   styleUrls: ['./organization-master-detail.component.css'],
 })
 export class OrganizationMasterDetailComponent implements OnInit, OnChanges {
+  console = console;
   @Input() orgUnitID: string = '';
   @Input() view: ViewsComponent = null;
   @Input() formModel: FormModel = null;
@@ -35,8 +38,9 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges {
   totalEmployee: number = 0;
   columnsGrid: any[] = null;
   grvSetup: any = {};
+  funcID: string;
   formModelEmp: FormModel = new FormModel();
-  @ViewChild('grid') grid: CodxGridviewComponent;
+  @ViewChild('grid') grid: CodxGridviewV2Component;
   @ViewChild('templateName') templateName: TemplateRef<any>;
   @ViewChild('templateBirthday') templateBirthday: TemplateRef<any>;
   @ViewChild('templatePhone') templatePhone: TemplateRef<any>;
@@ -49,64 +53,82 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges {
     private api: ApiHttpService,
     private cache: CacheService,
     private callFC: CallFuncService,
+    private hrService: CodxHrService,
+    private activedRouter: ActivatedRoute,
     private dt: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.formModelEmp.formName = 'Employees';
-    this.formModelEmp.gridViewName = 'grvEmployees';
-    this.formModelEmp.entityName = 'HR_Employees';
-    this.cache
-      .gridViewSetup(this.formModelEmp.formName, this.formModelEmp.gridViewName)
-      .subscribe((grd: any) => {
-        if (grd) {
-          this.grvSetup = grd;
-          this.columnsGrid = [
-            {
-              headerText: grd['EmployeeName']['headerText'],
-              field: 'EmployeeName',
-              template: this.templateName,
-              width: '30%',
-            },
-            {
-              headerText: grd['Birthday']['headerText'],
-              field: 'Birthday',
-              template: this.templateBirthday,
-              width: '10%',
-            },
-            {
-              headerText: grd['Phone']['headerText'],
-              field: 'Phone',
-              template: this.templatePhone,
-              width: '15%',
-            },
-            {
-              headerText: grd['Email']['headerText'],
-              field: 'Email',
-              template: this.templateEmail,
-              width: '15%',
-            },
-            {
-              headerText: grd['JoinedOn']['headerText'],
-              field: 'JoinedOn',
-              template: this.templateJoinedOn,
-              width: '10%',
-            },
-            {
-              headerText: grd['Status']['headerText'],
-              field: 'Status',
-              template: this.templateStatus,
-              width: '20%',
-            },
-          ];
-        }
-      });
+    // if (!this.funcID) {
+    //   this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // }
+
+    // this.hrService.getFormModel(this.funcID).then((res) => {
+    //   this.appointionFormModel = res;
+    // });
+    if (!this.columnsGrid) {
+      this.formModelEmp.formName = 'Employees';
+      this.formModelEmp.gridViewName = 'grvEmployees';
+      this.formModelEmp.entityName = 'HR_Employees';
+      this.cache
+        .gridViewSetup(
+          this.formModelEmp.formName,
+          this.formModelEmp.gridViewName
+        )
+        .subscribe((grd: any) => {
+          if (grd) {
+            this.grvSetup = grd;
+            this.columnsGrid = [
+              {
+                headerText: grd['EmployeeName']['headerText'],
+                field: 'EmployeeName',
+                template: this.templateName,
+                width: '250',
+              },
+              {
+                headerText: grd['Birthday']['headerText'],
+                field: 'Birthday',
+                template: this.templateBirthday,
+                width: '150',
+              },
+              {
+                headerText: grd['Phone']['headerText'],
+                field: 'Phone',
+                template: this.templatePhone,
+                width: '150',
+              },
+              {
+                headerText: grd['Email']['headerText'],
+                field: 'Email',
+                template: this.templateEmail,
+                width: '150',
+              },
+              {
+                headerText: grd['JoinedOn']['headerText'],
+                field: 'JoinedOn',
+                template: this.templateJoinedOn,
+                width: '150',
+              },
+              {
+                headerText: grd['Status']['headerText'],
+                field: 'Status',
+                template: this.templateStatus,
+                width: '150',
+              },
+            ];
+          }
+        });
+    }
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
       this.getManager(this.orgUnitID);
       if (this.grid) {
-        this.grid.dataService.setPredicates([], [this.orgUnitID]).subscribe();
+        this.grid.dataService
+          .setPredicates([], [this.orgUnitID])
+          .subscribe((res: any) => {
+            this.grid.refresh();
+          });
       }
     }
   }

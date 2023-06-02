@@ -127,33 +127,45 @@ body.tailwind #selected {
   padding: 0 5px;
 }
 
-.e-speeddial-li .itemlist {
-  display: inherit;
-  width: 100%;
-  border: 1px solid transparent;
-  align-items: center;
-  padding: 5px;
-  border-radius: 500px;
-  background-color: rgba(104, 99, 104, 0.1);
-  box-shadow: 0 0 4px grey;
+.floating-container {
+  position: fixed;
+  z-index: 9999;
+  width: 200px;
+  height: 40px;
+  bottom: 20px;
+  right: 0px;
+  overflow: hidden;
+  background-color: var(--bg-body);
+  padding: 6px;
+  border-radius: var(--primary-light);
+  border-radius: 6px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+.element-container{
+  height: auto;
+  margin-right: -200px;
 }
+  &:hover {
 
-.e-speeddial-li .itemlist:hover {
-  background-color: rgb(224, 224, 224);
-}
+    height: auto;
+    transition: all .5s;
 
-.e-btn.e-primary,
-.e-css.e-btn.e-primary {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
-  &:hover,
-  &:active,
-  &:focus {
-    background-color: var(--primary);
-    border-color: var(--primary);
-    color: #fff;
+    .element-container{
+      height: auto;
+      transition: all .5s;
+      margin-right: 0;
+    }
+
   }
+
+  .floating-button {
+    width: 60px;
+    height: 60px;
+    background: var(--primary);
+    border-radius: 50%!important;
+    counter-reset: var(--primary-inverce);
+  }
+
+
 }
 
 .e-calendar .e-content.e-month td.e-today span.e-day {

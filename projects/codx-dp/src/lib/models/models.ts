@@ -49,7 +49,7 @@ export class DP_Processes {
   approveRule :boolean = false ;
 
   icon: string;
-  released: string;
+  released: boolean;
   releasedName: string;
   module: string;
   function: string;

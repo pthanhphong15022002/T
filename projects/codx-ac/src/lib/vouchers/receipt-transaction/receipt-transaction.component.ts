@@ -1,5 +1,24 @@
-import { Component, Injector, Optional, TemplateRef, ViewChild} from '@angular/core';
-import { AuthStore, ButtonModel, CallFuncService, DataRequest, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  Component,
+  Injector,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  AuthStore,
+  ButtonModel,
+  CallFuncService,
+  DataRequest,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  RequestOption,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { InventoryJournals } from '../../models/InventoryJournals.model';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -12,10 +31,9 @@ import { InventoryJournalLines } from '../../models/InventoryJournalLines.model'
 @Component({
   selector: 'lib-receipt-transaction',
   templateUrl: './receipt-transaction.component.html',
-  styleUrls: ['./receipt-transaction.component.css']
+  styleUrls: ['./receipt-transaction.component.css'],
 })
-export class ReceiptTransactionComponent extends UIComponent{
-  
+export class ReceiptTransactionComponent extends UIComponent {
   //#region Constructor
 
   views: Array<ViewModel> = [];
@@ -39,7 +57,7 @@ export class ReceiptTransactionComponent extends UIComponent{
   lsVatCode: any;
   gridViewLines: any;
   entityName: any;
-  funcID: any ;
+  funcID: any;
   vllReceipt: any = 'AC116';
   vllIssue: any = 'AC117';
   fmInventoryJournalLines: FormModel = {
@@ -58,6 +76,7 @@ export class ReceiptTransactionComponent extends UIComponent{
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
+  parent: any;
   constructor(
     private inject: Injector,
     private notification: NotificationsService,
@@ -69,19 +88,23 @@ export class ReceiptTransactionComponent extends UIComponent{
     this.dialog = dialog;
     this.routerActive.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
+      if (params?.parent) {
+        this.cache.functionList(params.parent).subscribe((res) => {
+          if (res) this.parent = res;
+        });
+      }
     });
     this.funcID = this.routerActive.snapshot.params['funcID'];
-    switch(this.funcID)
-    {
+    switch (this.funcID) {
       case 'ACT0708':
         this.cache.valueList(this.vllReceipt).subscribe((res) => {
           this.entityName = res?.datas[0].value;
-        })
+        });
         break;
       case 'ACT0714':
         this.cache.valueList(this.vllIssue).subscribe((res) => {
           this.entityName = res?.datas[0].value;
-        })
+        });
         break;
     }
     this.cache
@@ -96,8 +119,7 @@ export class ReceiptTransactionComponent extends UIComponent{
 
   //#region Init
 
-  onInit(): void {
-  }
+  onInit(): void {}
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
@@ -122,6 +144,11 @@ export class ReceiptTransactionComponent extends UIComponent{
         },
       },
     ];
+    this.view.setRootNode(this.parent?.customName);
+  }
+
+  ngOnDestroy() {
+    this.view.setRootNode('');
   }
   //#endregion
 
@@ -242,8 +269,7 @@ export class ReceiptTransactionComponent extends UIComponent{
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.delete([data], true).subscribe((res: any) => {
-    });
+    this.view.dataService.delete([data], true).subscribe((res: any) => {});
   }
   export(data) {
     var gridModel = new DataRequest();
@@ -271,7 +297,7 @@ export class ReceiptTransactionComponent extends UIComponent{
   //#endregion
 
   //#region Function
-  
+
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'InventoryJournalsBusiness';
@@ -282,7 +308,9 @@ export class ReceiptTransactionComponent extends UIComponent{
   }
   loadDatadetail(data) {
     this.api
-      .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [data.recID])
+      .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
+        data.recID,
+      ])
       .subscribe((res: any) => {
         this.inventoryJournalLines = res;
       });
@@ -310,8 +338,8 @@ export class ReceiptTransactionComponent extends UIComponent{
     this.loadDatadetail(this.itemSelected);
   }
 
-  formatDate(date){
-    return new Date(date).toLocaleDateString();;
+  formatDate(date) {
+    return new Date(date).toLocaleDateString();
   }
   //#endregion
 }

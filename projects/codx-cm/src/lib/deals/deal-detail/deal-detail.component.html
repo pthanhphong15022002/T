@@ -245,6 +245,7 @@
             <div class="d-flex tab-header">
               <codx-taskbar
                 [listTab]="tabDetail"
+                [change]="dataSelected"
                 (tab)="changeTab($event)"
                 size="18"
                 class="mb-3"
@@ -290,7 +291,7 @@
   <list-contracts
     [dealID]="dataSelected?.recID"
     [listContract]="listContract"
-    [customers]=""
+    [type]="'deal'"
   ></list-contracts>
 </ng-template>
 <!-- <ng-template #quotations let-data>

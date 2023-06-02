@@ -156,6 +156,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   onSaveForm() {
+    debugger
     if (this.type == '1') {
       //Lưu khi cập nhật step
       this.updateApprovalStep();
@@ -209,6 +210,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       type: '0',
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
       hideTabQuery: true,
+      signatureType: this.data?.signatureType ?? this.signatureType,
     };
     this.openPopupAddAppStep(data);
   }

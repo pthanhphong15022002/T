@@ -40,8 +40,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
   styleUrls: ['./deals.component.scss'],
-})
-export class DealsComponent
+})export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit, OnChanges
 {
@@ -703,6 +702,10 @@ export class DealsComponent
                   data = res[0];
                   this.view.dataService.update(data).subscribe();
                   this.detailViewDeal.dataSelected = data;
+
+                  if (e.event.isReason != null) {
+                    this.moveReason( data, e.event.isReason);
+                  }
                   this.detectorRef.detectChanges();
                 }
               });
@@ -789,29 +792,29 @@ export class DealsComponent
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
         var instance = e.event?.instance;
-        var instanceMove = e.event?.instanceMove;
-        if (instanceMove) {
-          var dealOld = JSON.parse(JSON.stringify(data));
-          var dealNew = JSON.parse(JSON.stringify(data));
-          dealOld = this.updateReasonDeal(e.event?.instance, dealOld);
-          dealNew = this.convertDataInstance(
-            dealNew,
-            instanceMove,
-            e.event?.nextStep
-          );
-          var datas = [dealOld, dealNew];
-          this.codxCmService.moveDealReason(datas).subscribe((res) => {
-            if (res) {
-              data = res[0];
-              this.view.dataService.dataSelected = data;
-              this.view.dataService
-                .update(this.view.dataService.dataSelected)
-                .subscribe();
-              this.view.dataService.add(res[1], 0).subscribe((res) => {});
-              this.detectorRef.detectChanges();
-            }
-          });
-        } else {
+        // var instanceMove = e.event?.instanceMove;
+        // if (instanceMove) {
+        //   var dealOld = JSON.parse(JSON.stringify(data));
+        //   var dealNew = JSON.parse(JSON.stringify(data));
+        //   dealOld = this.updateReasonDeal(e.event?.instance, dealOld);
+        //   dealNew = this.convertDataInstance(
+        //     dealNew,
+        //     instanceMove,
+        //     e.event?.nextStep
+        //   );
+        //   var datas = [dealOld, dealNew];
+        //   this.codxCmService.moveDealReason(datas).subscribe((res) => {
+        //     if (res) {
+        //       data = res[0];
+        //       this.view.dataService.dataSelected = data;
+        //       this.view.dataService
+        //         .update(this.view.dataService.dataSelected)
+        //         .subscribe();
+        //       this.view.dataService.add(res[1], 0).subscribe((res) => {});
+        //       this.detectorRef.detectChanges();
+        //     }
+        //   });
+        // } else {
           data = this.updateReasonDeal(e.event?.instance, data);
           var datas = [data, data.customerID];
           this.codxCmService.updateDeal(datas).subscribe((res) => {
@@ -821,7 +824,7 @@ export class DealsComponent
               this.detectorRef.detectChanges();
             }
           });
-        }
+       // }
       }
     });
   }
@@ -848,7 +851,6 @@ export class DealsComponent
     deal.nextStep = '';
     return deal;
   }
-
   startDeal(recId) {
     var data = [recId];
     this.codxCmService.startDeal(data).subscribe((res) => {
@@ -1005,6 +1007,7 @@ export class DealsComponent
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
+            this.detailViewDeal.dataSelected = JSON.parse(JSON.stringify(e.event));
             this.changeDetectorRef.detectChanges();
           }
         });

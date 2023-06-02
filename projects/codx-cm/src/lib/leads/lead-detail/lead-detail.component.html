@@ -37,6 +37,7 @@
                   [objectName]="dataSelected?.leadName"
                   [imgOn]="dataSelected?.modifiedOn"
                   [objectType]="'CM_Leads'"
+                  [referType]="'avt'"
                   [width]="35"
                 >
                 </codx-img>
@@ -196,6 +197,7 @@
             <div class="d-flex tab-header">
               <codx-taskbar
                 [listTab]="tabDetail"
+                [change]="dataSelected"
                 (tab)="changeTab($event)"
                 size="18"
                 class="mb-3 fw-bold"
