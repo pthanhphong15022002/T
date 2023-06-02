@@ -1,6 +1,8 @@
-import { Component, Optional, OnInit } from '@angular/core';
+import { CodxListContactsComponent } from './../../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
+import { Component, Optional, OnInit, ViewChild } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
 import { CM_Leads } from '../../../models/cm_model';
+import { CodxAddressCmComponent } from '../../../cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
 
 @Component({
   selector: 'lib-popup-remove-add-contact',
@@ -8,6 +10,9 @@ import { CM_Leads } from '../../../models/cm_model';
   styleUrls: ['./popup-remove-add-contact.component.scss'],
 })
 export class PopupRemoveAddContactComponent implements OnInit {
+  @ViewChild('loadListContact') codxListContact: CodxListContactsComponent;
+  @ViewChild('loadListAddress') loadListAddress: CodxAddressCmComponent;
+
   dialog: any;
   list = [];
 
@@ -19,7 +24,7 @@ export class PopupRemoveAddContactComponent implements OnInit {
     this.dialog = dialog;
     this.type = dt?.data?.type;
     this.category = dt?.data?.category;
-      this.list = JSON.parse(JSON.stringify(dt?.data?.list));
+    this.list = JSON.parse(JSON.stringify(dt?.data?.list));
 
     this.lead = dt?.data?.lead;
   }
@@ -37,40 +42,52 @@ export class PopupRemoveAddContactComponent implements OnInit {
   objectConvert(e) {
     if (e?.type == 'selectAll') {
       if (e.e == true) {
-        this.lstLead = this.list;
+        this.lstLead = JSON.parse(JSON.stringify(this.list));
       } else {
         this.lstLead = [];
       }
     } else {
       if (e.e == true) {
-        this.lstLead.push(Object.assign({}, e?.data));
+        if (e.data) {
+          var tmp = JSON.parse(JSON.stringify(e.data));
+          this.lstLead.push(Object.assign({}, tmp));
+        }
       } else {
-        var index = this.lstLead.findIndex(
-          (x) => x.recID == e?.data?.recID
-        );
+        var index = this.lstLead.findIndex((x) => x.recID == e?.data?.recID);
+        var indexList = this.list.findIndex((x) => x.recID == e?.data?.recID);
         if (index != -1) {
           this.lstLead.splice(index, 1);
+        }
+        if (indexList != -1) {
+          this.list[indexList].checked = false;
+          this.codxListContact.loadListContact(this.list);
         }
       }
     }
   }
 
-  convertAddress(e){
+  convertAddress(e) {
     if (e?.type == 'selectAll') {
       if (e.e == true) {
-        this.lstLead = this.list;
+        this.lstLead = JSON.parse(JSON.stringify(this.list));
       } else {
         this.lstLead = [];
       }
     } else {
       if (e.e == true) {
-        this.lstLead.push(Object.assign({}, e?.data));
+        if (e.data) {
+          var tmp = JSON.parse(JSON.stringify(e.data));
+          this.lstLead.push(Object.assign({}, tmp));
+        }
       } else {
-        var index = this.lstLead.findIndex(
-          (x) => x.recID == e?.data?.recID
-        );
+        var index = this.lstLead.findIndex((x) => x.recID == e?.data?.recID);
+        var indexList = this.list.findIndex((x) => x.recID == e?.data?.recID);
         if (index != -1) {
           this.lstLead.splice(index, 1);
+        }
+        if (indexList != -1) {
+          this.list[indexList].checked = false;
+          this.loadListAddress.loadListAdress(this.list);
         }
       }
     }
