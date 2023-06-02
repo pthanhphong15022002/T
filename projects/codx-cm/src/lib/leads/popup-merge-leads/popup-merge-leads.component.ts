@@ -169,9 +169,9 @@ export class PopupMergeLeadsComponent implements OnInit {
     }
     var data = [
       this.leadNew,
-      this.leadOne.recID,
-      this.leadTwo.recID,
-      this.leadThree.recID,
+      this.leadOne?.recID,
+      this.leadTwo?.recID,
+      this.leadThree?.recID,
       this.lstContactNew,
       this.lstAddressNew,
     ];

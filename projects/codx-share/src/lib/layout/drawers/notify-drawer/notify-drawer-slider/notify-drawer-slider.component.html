@@ -46,7 +46,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="formModel?.funcID">
+    <div *ngIf="formModel">
       <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event)"
           (changeDataMF)="changeDataMF($event)" >
       </codx-mfunc>
