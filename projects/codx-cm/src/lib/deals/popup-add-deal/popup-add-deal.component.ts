@@ -204,7 +204,7 @@ export class PopupAddDealComponent
         (x) => x.refID == e?.data?.recID
       );
       this.lstContactDeal.splice(index, 1);
-      this.loadContactDeal.loadListContact(this.codxCmService.bringDefaultContactToFront(this.lstContactDeal));
+
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -501,6 +501,9 @@ export class PopupAddDealComponent
       if(this.action === this.actionEdit) {
         await this.getListInstanceSteps(this.deal.processID);
         await this.getListContactByDealID(this.deal.recID);
+      }
+      else if(this.action === this.actionCopy) {
+        await this.getListInstanceSteps(this.deal.processID);
       }
     } catch (error) {}
   }

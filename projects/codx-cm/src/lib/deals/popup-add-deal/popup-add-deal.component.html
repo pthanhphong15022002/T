@@ -195,7 +195,7 @@
         >
         </codx-label>
         <codx-input
-          [Group]="form.formGroup"
+        type="number"
           field="dealValue"
           [min]="deal?.dealValue"
           (valueChange)="valueChange($event)"
@@ -232,7 +232,6 @@
         >
         </codx-label>
         <codx-input
-        [Group]="form.formGroup"
         type="number"
         [min]="deal?.probability"
         [max]="100"
