@@ -1045,13 +1045,46 @@ export class CodxTasksComponent
   //#endregion
   //#region Event đã có dùng clickChildrenMenu truyền về
   changeView(evt: any) {
+   this.viewCrr = evt?.view?.type;
+   
     if (this.crrFuncID != this.funcID) {
-      this.afterLoad();
-      this.crrFuncID = this.funcID;
+      this.cache.viewSettings(this.funcID).subscribe((views) => {
+        if (views) {
+          this.afterLoad();
+          this.crrFuncID = this.funcID;
+          this.views = [];
+          let idxActive = -1;
+          this.viewsDefault.forEach((v, index) => {
+            let idx = views.findIndex((x) => x.view == v.type);
+            if (idx != -1) {
+              v.hide = false;
+              if (v.type != this.viewCrr) v.active = false;
+              else v.active = true;
+              if (views[idx].isDefault) idxActive = index;
+            } else {
+              v.hide = true;
+              v.active = false;
+            }
+            this.views.push(v);
+          });
+          if (!this.views.some((x) => x.active)) {
+            if (idxActive != -1) this.views[idxActive].active = true;
+            else this.views[0].active = true;
+
+            let viewModel =
+              idxActive != -1 ? this.views[idxActive] : this.views[0];
+            this.view.viewActiveType = viewModel.type;
+            this.view.viewChange(viewModel);
+            // this.view.load();
+          }
+
+          this.detectorRef.detectChanges();
+        }
+      });
     }
     return;
     // core Hảo sua roi nên không cân đoạn này nữa
-    // this.viewCrr = evt?.view?.type;
+  
 
     // if (this.crrFuncID != this.funcID) {
     //   this.cache.viewSettings(this.funcID).subscribe((views) => {
