@@ -1688,6 +1688,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         processID
       )
       .subscribe((res2: any) => {
+        debugger
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         //trình ký

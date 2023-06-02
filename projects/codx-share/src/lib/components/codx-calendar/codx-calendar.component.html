@@ -1,7 +1,7 @@
 <codx-views #view [views]="views" [toolbarDisplay]="false" [autoLoad]="false">
 </codx-views>
 <ng-template #templateLeft>
-  <div class="bg-white rounded-3 p-3">
+  <div class="bg-white rounded-3 p-3 position-relative">
     <div class="d-flex justify-content-center">
       <div class="w-30 min-w-225px mw-450px me-5">
         <ejs-calendar
@@ -84,7 +84,10 @@
           </div>
 
           <div class="d-flex justify-content-around align-items-center mt-3">
-            <button class="btn btn-outline-primary btn-md" (click)="resetParams()">
+            <button
+              class="btn btn-outline-primary btn-md"
+              (click)="resetParams()"
+            >
               <span>Reset</span>
             </button>
             <button class="btn btn-primary btn-md" (click)="saveParams()">
@@ -99,31 +102,26 @@
           [resources]="resources"
           [resourceModel]="dataResourceModel"
         ></lib-calendar-center>
-        
       </div>
     </div>
   </div>
-  <!-- Floating Action Button -->
-  <div class="floating-container">
-    <div class="element-container">
-      <div *ngFor="let param of calendarParams | keyvalue">
-        <div
-          *ngIf="param?.value.ShowEvent === '1'"
-          class="float-element"
-          (click)="addEvent(param?.key)"
-        >
-          <codx-vll
-            [showText]="true"
-            [showBgColor]="false"
-            name="WP006"
-            [value]="param?.key"
-          />
-        </div>
+  <button
+    ejs-speeddial
+    id="speeddial"
+    target="#target"
+    itemTemplate="#itemTemplate"
+    openIconCss="icon-add"
+    cssClass="e-primary"
+    [items]="items"
+    (clicked)="addEvent($event)"
+  >
+    <ng-template #itemTemplate let-items="">
+      <div
+        *ngIf="this.calendarParams[items?.id].ShowEvent === '1'"
+        class="itemlist"
+      >
+        <span class="text">{{ items.text }}</span>
       </div>
-    </div>
-    <button type="button" class="btn btn-icon btn-lg rounded-3 btn-primary">
-      <span class="icon-add icon-24"></span>
-    </button>
-    
-  </div>
+    </ng-template>
+  </button>
 </ng-template>

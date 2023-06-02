@@ -253,7 +253,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
                   [this.objectUmconversion]
                 )
                 .subscribe(() => {});
-              this.dialog.close(res.save);
+              this.dialog.close();
               this.dt.detectChanges();
             } else {
               this.notification.notifyCode(
@@ -286,7 +286,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
                 )
                 .subscribe(() => {});
             }
-            this.dialog.close(res.update);
+            this.dialog.close();
             this.dt.detectChanges();
           });
       }

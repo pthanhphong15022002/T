@@ -322,65 +322,30 @@
                         </div>
                       </div>
                       <!-- đưa ra ngoài -->
-                      <ng-container
+                      <!-- <ng-container
                         *ngIf="
                           f?.functionID == 'CM02' || f?.functionID == 'CM04'
                         "
-                      >
+                      > -->
                         <ng-container
                           *ngFor="let menuCus of dataMenuChildCustom"
                         >
                           <ng-container
                             *ngIf="
-                              f?.functionID == 'CM02' && menuCus.applyFor == 1
+                              checkFunParent(
+                                f?.functionID, menuCus.function )
                             "
                           >
-                            <div
-                              class="menu-item menu-accordion"
-                              [attr.data-funcid]="menuCus.recID"
-                              [ngClass]="
-                                codxService.activeMenu.func1 ===
-                                menuCus.recID
-                                  ? 'here show'
-                                  : ''
-                              "
-                            >
-                              <span
-                                class="menu-link"
-                                (click)="
-                                  clickMenuChildCustom(f.functionID, menuCus)
-                                "
-                              >
-                                <span class="menu-icon">
-                                  <span
-                                    class="svg-icon svg-icon-2"
-                                    [class]="
-                                      menuCus.applyFor
-                                        | vll : 'DP002' : 'icon'
-                                        | async
-                                    "
-                                  ></span>
-                                  <!-- [inlineSVG]="c.smallIcon" -->
-                                </span>
-                                <span
-                                  class="menu-title fw-bold line-clamp-menu"
-                                  [ngbTooltip]="menuCus.processName"
-                                  >{{ menuCus.processName }}</span
-                                >
-                              </span>
-                            </div>
-                          </ng-container>
-                          <ng-container
+                            <!-- <ng-container
                             *ngIf="
-                              f?.functionID == 'CM04' && menuCus.applyFor != 1
+                              f?.functionID == 'CM02' && chec
                             "
-                          >
+                          > -->
                             <div
                               class="menu-item menu-accordion"
                               [attr.data-funcid]="menuCus.recID"
                               [ngClass]="
-                                codxService.activeMenu.func1 ===
-                                menuCus.recID
+                                codxService.activeMenu.func1 === menuCus.recID
                                   ? 'here show'
                                   : ''
                               "
@@ -395,8 +360,8 @@
                                   <span
                                     class="svg-icon svg-icon-2"
                                     [class]="
-                                      menuCus.applyFor
-                                        | vll : 'DP002' : 'icon'
+                                      menuCus.icon
+                                        | vll : vllDefault : 'icon'
                                         | async
                                     "
                                   ></span>
@@ -404,13 +369,13 @@
                                 </span>
                                 <span
                                   class="menu-title fw-bold line-clamp-menu"
-                                  [ngbTooltip]="menuCus.processName"
-                                  >{{ menuCus.processName }}</span
+                                  [ngbTooltip]="menuCus.releasedName"
+                                  >{{ menuCus.releasedName }}</span
                                 >
                               </span>
                             </div>
                           </ng-container>
-                        </ng-container>
+                        <!-- </ng-container> -->
                       </ng-container>
                     </div>
                   </div>

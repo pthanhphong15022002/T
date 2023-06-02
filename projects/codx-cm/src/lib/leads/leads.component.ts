@@ -199,7 +199,7 @@ export class LeadsComponent
 
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-      if (!data.roles.isOnwer) {
+      if (!data?.roles?.isOnwer) {
         for (let more of $event) {
           switch (more.functionID) {
             default:
@@ -406,6 +406,7 @@ export class LeadsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
+            e.event.modifiedOn = new Date();
             this.view.dataService.update(e.event).subscribe();
             this.changeDetectorRef.detectChanges();
           }

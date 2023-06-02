@@ -109,6 +109,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    debugger
     this.dialog = dialog;
     this.transId = data?.data.transID;
     this.stepNo = data?.data.stepNo;

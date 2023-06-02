@@ -193,6 +193,7 @@ import { PopupTitleComponent } from './components/calendar-notes/add-note/save-n
 import { SaveNoteComponent } from './components/calendar-notes/add-note/save-note/save-note.component';
 import { UpdateNotePinComponent } from './components/calendar-notes/update-note-pin/update-note-pin.component';
 import { CodxCreateIndexComponent } from './components/codx-create-index/codx-create-index.component';
+import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -403,6 +404,7 @@ const T_Pipe: Type<any>[] = [
     LazyLoadImageModule,
     DragDropModule,
     ProgressBarAllModule,
+    SpeedDialModule
   ],
 })
 export class CodxShareModule {
