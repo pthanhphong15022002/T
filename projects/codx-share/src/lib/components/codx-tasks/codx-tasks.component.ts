@@ -1045,6 +1045,8 @@ export class CodxTasksComponent
   //#endregion
   //#region Event đã có dùng clickChildrenMenu truyền về
   changeView(evt: any) {
+   this.viewCrr = evt?.view?.type;
+   
     if (this.crrFuncID != this.funcID) {
       this.cache.viewSettings(this.funcID).subscribe((views) => {
         if (views) {
@@ -1071,7 +1073,7 @@ export class CodxTasksComponent
 
             let viewModel =
               idxActive != -1 ? this.views[idxActive] : this.views[0];
-            //this.view.viewActiveType = viewModel.type;
+            this.view.viewActiveType = viewModel.type;
             this.view.viewChange(viewModel);
             // this.view.load();
           }
@@ -1082,7 +1084,7 @@ export class CodxTasksComponent
     }
     return;
     // core Hảo sua roi nên không cân đoạn này nữa
-    // this.viewCrr = evt?.view?.type;
+  
 
     // if (this.crrFuncID != this.funcID) {
     //   this.cache.viewSettings(this.funcID).subscribe((views) => {
