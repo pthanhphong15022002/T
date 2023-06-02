@@ -54,6 +54,7 @@ export class CodxShareService {
   //
   user;
   //
+  //listApproveMF = [];
   constructor(
     private notificationsService: NotificationsService,
     private callfunc: CallFuncService,
@@ -832,6 +833,7 @@ export class CodxShareService {
         )
           list[i].disabled = true;
       }
+
       // this.listApproveMF = list.filter(
       //   (p) => p.data.functionID == 'SYS208' || p.disabled == false
       // );
@@ -872,9 +874,14 @@ export class CodxShareService {
       }
     }
   }
-  clickMFApproval(e: any, data: any, dataService: any, formModel: any) {
+  clickMFApproval(
+    e: any,
+    data: any,
+    dataService: any,
+    formModel: any,
+    afterSave: any
+  ) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
-    debugger;
     var funcID = e?.functionID;
     if (data.eSign == true) {
       //Kys
@@ -890,11 +897,11 @@ export class CodxShareService {
         option.Width = '800px';
         option.DataService = dataService;
         option.FormModel = formModel;
-
-        console.log('oTrans', data);
-
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
+
+        var listApproveMF = this.getMoreFunction(funcID);
+
         let dialogApprove = this.callfunc.openForm(
           PopupSignForApprovalComponent,
           'Thêm mới',
@@ -905,19 +912,19 @@ export class CodxShareService {
             funcID: 'EST021',
             sfRecID: data.transID,
             title: data.htmlView,
-            status: data.status,
+            status: data.statusApproval,
             stepType: data.stepType,
             stepNo: data.stepNo,
-            transRecID: data.recID,
+            transRecID: data.approvalRecID,
             oTrans: data,
-            //lstMF: this.listApproveMF,
+            lstMF: listApproveMF,
           },
           '',
           dialogModel
         );
         dialogApprove.closed.subscribe((x) => {
           if (x.event?.result) {
-            data.status = x.event?.mode;
+            data.statusApproval = x.event?.mode;
             dataService.update(data).subscribe();
             //  this.esService.setupChange.next(true);
             //  this.esService.isStatusChange.subscribe((res) => {
@@ -933,13 +940,13 @@ export class CodxShareService {
           }
 
           /*return {
-               result: true,
-               mode: 1
-             }
-   
-             mode: 1. Ký
-                 2. Từ chối
-                 3. Làm lại */
+              result: true,
+              mode: 1
+            }
+  
+            mode: 1. Ký
+                2. Từ chối
+                3. Làm lại */
         });
       }
 
@@ -969,72 +976,102 @@ export class CodxShareService {
       if (dialog) {
         dialog.closed.subscribe((res) => {
           let oComment = res?.event;
-          this.api
-            .execSv(
-              'ES',
-              'ERM.Business.ES',
-              'ApprovalTransBusiness',
-              'ApproveAsync',
-              [data?.recID, status, oComment.comment, oComment.reasonID]
-            )
-            .subscribe((res2: any) => {
-              if (!res2?.msgCodeError) {
-                //  if (status.toString() == '2') {
-                //    this.view.dataService.remove(data).subscribe();
-                //  } else {
-                //    data.status = status;
-                //    this.view.dataService.update(data).subscribe();
-                //    this.esService.setupChange.next(true);
-                //  }
-                //  this.notifySvr.notifyCode('SYS007');
-              } //else this.notifySvr.notify(res2?.msgCodeError);
-            });
-        });
-      } else {
-        this.api
-          .execSv(
-            'ES',
-            'ERM.Business.ES',
-            'ApprovalTransBusiness',
-            'ApproveAsync',
-            [data?.recID, status, '', '']
-          )
-          .subscribe((res2: any) => {
+          this.approval(
+            data?.approvalRecID,
+            status,
+            oComment.comment,
+            oComment.reasonID
+          ).subscribe((res2: any) => {
             if (!res2?.msgCodeError) {
-              if (!res2?.msgCodeError) {
-                if (status.toString() == '2') {
-                  dataService.remove(data).subscribe();
-                } else {
-                  data.status = status;
-                  dataService.update(data).subscribe();
-                  //this.esService.setupChange.next(true);
-                }
-              }
+              data.statusApproval = status;
+              dataService.update(data).subscribe();
               this.notificationsService.notifyCode('SYS007');
+              afterSave(data.statusApproval);
             } else this.notificationsService.notify(res2?.msgCodeError);
           });
+        });
+      } else {
+        this.approval(data?.approvalRecID, status, '', '').subscribe(
+          (res2: any) => {
+            if (!res2?.msgCodeError) {
+              data.statusApproval = status;
+              dataService.update(data).subscribe();
+              this.notificationsService.notifyCode('SYS007');
+              afterSave(data.statusApproval);
+            } else this.notificationsService.notify(res2?.msgCodeError);
+          }
+        );
       }
     }
     if (funcID == 'SYS207') {
-      this.api
-        .execSv<any>(
-          'es',
-          'ERM.Business.ES',
-          'ApprovalTransBusiness',
-          'UndoAsync',
-          [data.approvalRecID]
-        )
-        .subscribe((res) => {
-          if (res != null) {
-            data = res;
-            dataService.update(data).subscribe();
-            //this.esService.setupChange.next(true);
-          }
-        });
+      this.undoApproval(data.approvalRecID).subscribe((res) => {
+        if (res) {
+          data.statusApproval = res?.status;
+          dataService.update(data).subscribe();
+          //this.notificationsService.notifyCode('SYS007');
+        }
+      });
     }
   }
-}
 
+  getMoreFunction(funcID: any) {
+    var listApproveMF = [];
+
+    if (funcID == 'SYS202') {
+      var consensus = {
+        functionID: 'SYS202',
+        text: 'Ký',
+        color: '#666666',
+      };
+
+      listApproveMF.push(consensus);
+    }
+
+    if (funcID == 'SYS203') {
+      var consensus = {
+        functionID: 'SYS203',
+        text: 'Đồng thuận',
+        color: '#666666',
+      };
+
+      listApproveMF.push(consensus);
+    }
+
+    //Từ chối
+    var tc = {
+      functionID: 'SYS205',
+      text: 'Từ chối',
+      color: '#F64E60',
+    };
+
+    var ll = {
+      functionID: 'SYS206',
+      text: 'Làm lại',
+      color: '#FFA800',
+    };
+    listApproveMF.push(ll, tc);
+    return listApproveMF;
+  }
+
+  approval(approvalRecID: any, status: any, comment: any, reasonID: any) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'ApproveAsync',
+      [approvalRecID, status, comment, reasonID]
+    );
+  }
+  undoApproval(approvalRecID: any) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'UndoAsync',
+      [approvalRecID]
+    );
+  }
+}
 //#region Model
 
 export class Approvers {

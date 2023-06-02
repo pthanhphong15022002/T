@@ -20,6 +20,7 @@ import {
   CRUDService,
   CacheService,
   CallFuncService,
+  CodxInputComponent,
   DataRequest,
   DialogData,
   DialogModel,
@@ -44,19 +45,23 @@ import { PopupAddPaymentHistoryComponent } from '../payment/popup-add-payment-hi
 })
 export class AddContractsComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('inputQuotation') inputQuotation: CodxInputComponent;
+  @ViewChild('inputDeal') inputDeal: CodxInputComponent;
   @ViewChild('more') more: TemplateRef<any>;
   @ViewChild('test') test: any;
+  REQUIRE = ['contractName', 'contractID', 'useType','contractType','pmtMethodID','pmtStatus','delModeID','delStatus'];
   contracts: CM_Contracts;
   contractsInput: CM_Contracts;
   dialog!: DialogRef;
-  isLoadDate: any;
+
   action = 'add';
   projectID: string;
   tabClicked = '';
   listClicked = [];
   account: any;
-  type: 'view' | 'list';
+  type: 'view' | 'deal' | 'quotation' | 'customer';
   customer: CM_Customers;
+  customerID = {};
   listQuotationsLine: CM_QuotationsLines[];
   quotations: CM_Quotations;
 
@@ -101,6 +106,10 @@ export class AddContractsComponent implements OnInit {
   listPaymentDelete: CM_ContractsPayments[] = [];
   columns: any;
   grvPayments: any;
+  disabledDelActualDate = false;
+  view = [];
+  customerIdOld = null;
+  isLoadDate = true;
 
   constructor(
     private cache: CacheService,
@@ -124,6 +133,12 @@ export class AddContractsComponent implements OnInit {
   }
   ngOnInit() {
     this.setDataContract(this.contractsInput);
+    this.disabledDelActualDate =
+      !this.contracts?.delStatus ||
+      this.contracts?.delStatus == '0' ||
+      this.contracts?.delStatus == '1'
+        ? true
+        : false;
     this.listClicked = [
       {
         name: 'general',
@@ -193,6 +208,33 @@ export class AddContractsComponent implements OnInit {
       // /template: this.columnVatid,
     ];
   }
+  // getFormModel() {
+  //   this.cache
+  //     .gridViewSetup(
+  //       this.fmContractsPayments?.formName,
+  //       this.fmContractsPayments?.gridViewName
+  //     )
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.grvPayments = res;
+  //       }
+  //     });
+  // }
+  getFormModel() {
+    this.cache
+      .gridViewSetup(
+        this.dialog?.formModel?.formName,
+        this.dialog?.formModel?.gridViewName
+      )
+      .subscribe((res) => {
+        for (let key in res) {
+          if (res[key]) {
+            let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
+            this.view[keyConvert] = res[key]['headerText'];
+          }
+        }
+      });
+  }
 
   valueChangeText(event) {
     this.contracts[event?.field] = event?.data;
@@ -202,96 +244,62 @@ export class AddContractsComponent implements OnInit {
     this.contracts[event?.field] = event?.data;
     if (event?.field == 'dealID' && event?.data) {
       this.getCustomerByDealID(event?.data);
-    }
-    if (event?.field == 'customerID' && event?.data) {
-      this.getCustomerByrecID(event?.data);
+      this.setValueComboboxQuotation();
+      if(!this.contracts.customerID){
+      }
     }
     if (event?.field == 'quotationID' && event?.data) {
       this.getDataByQuotationID(event?.data);
+      this.setValueComboboxDeal();
+      if(!this.contracts.customerID){
+      }
+    }
+    if (event?.field == 'customerID' && event?.data) {
+      this.setValueComboboxQuotation();
+      this.setValueComboboxDeal();
+      this.getCustomerByrecID(event?.data);
+    }
+    if (event?.field == 'delStatus') {
+      this.disabledDelActualDate =
+        event?.data == '0' || event?.data == '1' ? true : false;
     }
   }
 
-  valueChangeAlert(event) {
-    this.contracts[event?.field] = event?.data;
+  setValueComboboxDeal(){
+    let listDeal = this.inputDeal.ComponentCurrent.dataService.data;
+    if(listDeal){
+      if(this.customerIdOld != this.contracts.customerID){
+          this.contracts.dealID = null;
+          this.inputDeal.ComponentCurrent.dataService.data = [];
+      }
+    }
+  }
+  setValueComboboxQuotation(){
+    let listQoutation = this.inputQuotation.ComponentCurrent.dataService.data;
+    if(listQoutation){
+      if(this.customerIdOld != this.contracts.customerID){
+        this.contracts.quotationID = null;
+        this.inputQuotation.ComponentCurrent.dataService.data = [];
+    }
+    }
   }
 
   changeValueDate(event) {
     this.contracts[event?.field] = new Date(event?.data?.fromDate);
-  }
-
-  // async loadSetting() {
-  //   this.grvSetup = await firstValueFrom(
-  //     this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
-  //   );
-  //   this.vllStatus = this.grvSetup['Status'].referedValue;
-  //   //lay grid view
-  //   let arrField = Object.values(this.grvSetup).filter((x: any) => x.isVisible);
-  //   if (Array.isArray(arrField)) {
-  //     this.arrFieldIsVisible = arrField
-  //       .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-  //       .map((x: any) => x.fieldName);
-  //     this.getColumsGrid(this.grvSetup);
-  //   }
-  // }
-
-  // getColumsGrid(grvSetup) {
-  //   this.columnGrids = [];
-  //   this.arrFieldIsVisible.forEach((key) => {
-  //     let field = Util.camelize(key);
-  //     let template: any;
-  //     let colums: any;
-  //     switch (key) {
-  //       case 'Status':
-  //         template = this.templateStatus;
-  //         break;
-  //       case 'CustomerID':
-  //         template = this.templateCustomer;
-  //         break;
-  //       case 'CreatedBy':
-  //         template = this.templateCreatedBy;
-  //         break;
-  //       case 'TotalTaxAmt':
-  //         template = this.templateTotalTaxAmt;
-  //         break;
-  //       case 'TotalAmt':
-  //         template = this.templateTotalAmt;
-  //         break;
-  //       case 'TotalSalesAmt':
-  //         template = this.templateTotalSalesAmt;
-  //         break;
-  //       default:
-  //         break;
-  //     }
-  //     if (template) {
-  //       colums = {
-  //         field: field,
-  //         headerText: grvSetup[key].headerText,
-  //         width: grvSetup[key].width,
-  //         template: template,
-  //         // textAlign: 'center',
-  //       };
-  //     } else {
-  //       colums = {
-  //         field: field,
-  //         headerText: grvSetup[key].headerText,
-  //         width: grvSetup[key].width,
-  //       };
-  //     }
-
-  //     this.columnGrids.push(colums);
-  //   });
-
-  getFormModel() {
-    this.cache
-      .gridViewSetup(
-        this.fmContractsPayments?.formName,
-        this.fmContractsPayments?.gridViewName
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.grvPayments = res;
-        }
-      });
+    if((event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') && this.isLoadDate){
+      const startDate =  new Date(this.contracts['effectiveFrom']);
+      const endDate = new Date(this.contracts['effectiveTo']);     
+      if (endDate && startDate > endDate){
+        // this.isSaveTimeTask = false;
+        this.isLoadDate = !this.isLoadDate;
+        this.notiService.notifyCode('CM010',0, this.view['effectiveTo'], this.view['effectiveFrom']);
+        return;
+      } else {
+        // this.isSaveTimeTask = true;
+      }
+    }else{
+      this.isLoadDate = !this.isLoadDate;
+    }
   }
 
   loadComboboxData(comboboxName: string, service: string): Observable<any> {
@@ -315,7 +323,7 @@ export class AddContractsComponent implements OnInit {
 
   setDataContract(data) {
     if (this.action == 'add') {
-      this.contracts = data;
+      this.contracts = data;  
       this.contracts.recID = Util.uid();
       this.contracts.projectID = this.projectID;
       this.contracts.contractDate = new Date();
@@ -336,7 +344,7 @@ export class AddContractsComponent implements OnInit {
     }
   }
 
-  setCOntractByDataOutput(){
+  setCOntractByDataOutput() {
     if (this.contracts.dealID) {
       this.getCustomerByDealID(this.contracts.dealID);
     }
@@ -374,13 +382,17 @@ export class AddContractsComponent implements OnInit {
   }
 
   getPayMentByContractID(contractID) {
-    this.contractService.getPaymentsByContractID(contractID).subscribe((res) => {
-      if (res) {
-        let listPayAll =  res as CM_ContractsPayments[];
-        this.listPayment = listPayAll.filter(pay => pay.lineType == '0');
-        this.listPaymentHistory = listPayAll.filter(pay => pay.lineType == '1');
-      }
-    });
+    this.contractService
+      .getPaymentsByContractID(contractID)
+      .subscribe((res) => {
+        if (res) {
+          let listPayAll = res as CM_ContractsPayments[];
+          this.listPayment = listPayAll.filter((pay) => pay.lineType == '0');
+          this.listPaymentHistory = listPayAll.filter(
+            (pay) => pay.lineType == '1'
+          );
+        }
+      });
   }
 
   getDataByQuotationID(recID) {
@@ -395,42 +407,57 @@ export class AddContractsComponent implements OnInit {
         this.contracts.dealID = quotation?.refID;
         this.contracts.contractAmt = quotation.totalAmt; // giá trị hợp đồng
         this.contracts.paidAmt = this.contracts.paidAmt || 0; // số tiền đã thanh toán
-        this.contracts.remainAmt = Number(this.contracts.contractAmt) - Number(this.contracts.paidAmt); // số tiền còn lại 
+        this.contracts.remainAmt =
+          Number(this.contracts.contractAmt) - Number(this.contracts.paidAmt); // số tiền còn lại
         this.contracts.currencyID = quotation.currencyID; // tiền tệ
         this.contracts.exchangeRate = quotation.exchangeRate; // tỷ giá
       }
     });
   }
 
-  setDataContractCombobox(dataContract) {
-    this.contracts.customerID = dataContract?.recID;
-    this.contracts.taxCode = dataContract?.taxCode;
-    this.contracts.address = dataContract?.address;
-    this.contracts.phone = dataContract?.phone;
-    this.contracts.faxNo = dataContract?.faxNo;
+  setDataContractCombobox(customer) {
+    this.customerIdOld = this.contracts.customerID;
+    this.customer = customer; 
+    this.customerID = { customerID: customer?.recID };
+    this.contracts.customerID = customer?.recID;
+    this.contracts.taxCode = customer?.taxCode;
+    this.contracts.address = customer?.address;
+    this.contracts.phone = customer?.phone;
+    this.contracts.faxNo = customer?.faxNo;
     this.contracts.representative = null;
     this.contracts.jobTitle = null;
-    this.contracts.bankAccount = dataContract?.bankAccount;
-    this.contracts.bankID = dataContract?.bankID;
+    this.contracts.bankAccount = customer?.bankAccount;
+    this.contracts.bankID = customer?.bankID;
   }
 
   handleSaveContract() {
-    switch (this.action) {
-      case 'add':
-      case 'copy':
-        this.addContracts();
-        break;
-      case 'edit':
-        this.editContract();
-        break;
+    let message = [];
+    for (let key of this.REQUIRE) {
+      if((typeof this.contracts[key] === 'string' && !this.contracts[key].trim()) || !this.contracts[key] || this.contracts[key]?.length === 0) {
+        message.push(this.view[key]);
+      }
     }
+    if (message.length > 0) {
+      this.notiService.notifyCode('SYS009', 0,'"' + message.join(', ') + ' " ');
+    }else{
+      switch (this.action) {
+        case 'add':
+        case 'copy':
+          this.addContracts();
+          break;
+        case 'edit':
+          this.editContract();
+          break;
+      }
+    }
+    
   }
 
   beforeSave(op: RequestOption) {
     let data = [];
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddContractsAsync';
-      data = [this.contracts,this.listPaymentAdd,];
+      data = [this.contracts, this.listPaymentAdd];
     }
     if (this.action == 'edit') {
       op.methodName = 'UpdateContractAsync';
@@ -461,7 +488,7 @@ export class AddContractsComponent implements OnInit {
           // this.changeDetector.detectChanges();
         });
     } else {
-      this.cmService.addContracts(this.contracts).subscribe((res) => {
+      this.cmService.addContracts([this.contracts, this.listPaymentAdd]).subscribe((res) => {
         if (res) {
           this.dialog.close({ contract: res, action: this.action });
         }
@@ -478,7 +505,13 @@ export class AddContractsComponent implements OnInit {
           this.dialog.close({ contract: res, action: this.action });
         });
     } else {
-      this.cmService.editContracts(this.contracts).subscribe((res) => {
+      let data = [
+        this.contracts,
+        this.listPaymentAdd,
+        this.listPaymentEdit,
+        this.listPaymentDelete,
+      ];
+      this.cmService.editContracts(data).subscribe((res) => {
         if (res) {
           this.dialog.close({ contract: res, action: this.action });
         }
@@ -533,7 +566,11 @@ export class AddContractsComponent implements OnInit {
         if (indexPayDelete >= 0) {
           this.listPayment.splice(indexPayDelete, 1);
           this.listPaymentDelete.push(payment);
-          for (let index = indexPayDelete; index < this.listPayment.length; index++){
+          for (
+            let index = indexPayDelete;
+            index < this.listPayment.length;
+            index++
+          ) {
             this.listPayment[index].rowNo = index + 1;
           }
           this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
@@ -550,12 +587,12 @@ export class AddContractsComponent implements OnInit {
       listPaymentAdd: this.listPaymentAdd,
       listPaymentEdit: this.listPaymentEdit,
       listPaymentDelet: this.listPaymentDelete,
-      contractID: this.contracts?.recID,
+      contract: this.contracts,
     };
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 1001;
+    option.zIndex = 2001;
     option.FormModel = this.fmContractsPayments;
     let popupPayment = this.callfunc.openForm(
       PopupAddPaymentComponent,
@@ -593,7 +630,7 @@ export class AddContractsComponent implements OnInit {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 1001;
+    option.zIndex = 2001;
     option.FormModel = this.fmContractsPaymentsHistory;
     let popupPayHistory = this.callfunc.openForm(
       PopupViewPaymentHistoryComponent,
@@ -627,7 +664,7 @@ export class AddContractsComponent implements OnInit {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 1001;
+    option.zIndex = 2001;
     option.FormModel = formModel;
 
     let popupPaymentHistory = this.callfunc.openForm(

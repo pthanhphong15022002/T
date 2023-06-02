@@ -18,6 +18,7 @@ import {
 } from 'codx-core';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { PopupAddOrganizationComponent } from './popup-add-organization/popup-add-organization.component';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'lib-organization',
   templateUrl: './organization.component.html',
@@ -37,7 +38,7 @@ export class OrgorganizationComponent extends UIComponent {
   currView?: TemplateRef<any>;
   start = '<span class="opacity-50">';
   end = '</span>';
-  funcID: string = '';
+  funcID: string;
   codxTreeView: CodxTreeviewComponent = null;
   dataService: CRUDService = null;
   templateActive: number = 0;
@@ -50,11 +51,16 @@ export class OrgorganizationComponent extends UIComponent {
 
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
 
-  constructor(private inject: Injector) {
+  constructor(inject: Injector, private activedRouter: ActivatedRoute) {
     super(inject);
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
   onInit(): void {
+    // if (!this.funcID) {
+    //   this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // }
+
     this.router.params.subscribe((params) => {
       if (params['funcID']) {
         this.funcID = params['funcID'];
@@ -70,50 +76,24 @@ export class OrgorganizationComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.views = [
       {
-        id: '1',
+        // id: '1',
         type: ViewType.list,
-        sameData: true,
         active: true,
+        sameData: true,
         model: {
           template: this.itemTemplate,
         },
       },
-      // {
-      //   id: '2',
-      //   type: ViewType.tree_orgchart,
-      //   sameData: true,
-      //   active: false,
-      //   model: {
-      //     resizable: true,
-      //     template: this.tempTree,
-      //     panelRightRef: this.panelRightLef,
-      //     template2: this.tmpOrgChart,
-      //     resourceModel: { parentIDField: 'ParentID' },
-      //   },
-      // },
-      // {
-      //   id: '151',
-      //   type: ViewType.tree_list,
-      //   sameData: true,
-      //   active: false,
-      //   model: {
-      //     resizable: true,
-      //     template: this.tempTree,
-      //     panelRightRef: this.panelRightLef,
-      //     template2: this.tmpList,
-      //     resourceModel: { parentIDField: 'ParentID' },
-      //   },
-      // },
       {
-        id: '153',
+        // id: '2',
         type: ViewType.tree_masterdetail,
+        active: true,
         sameData: true,
-        active: false,
         model: {
           resizable: true,
           template: this.tempTree,
-          panelRightRef: this.panelRightLef,
-          template2: this.tmpMasterDetail,
+          panelRightRef: this.tmpMasterDetail,
+          // template2: this.tmpMasterDetail,
           resourceModel: { parentIDField: 'ParentID' },
         },
       },
@@ -144,8 +124,8 @@ export class OrgorganizationComponent extends UIComponent {
   // delete data
   deleteData(data: any) {
     if (data) {
-      this.view.dataService.delete([data], true).subscribe();
-      // (this.dataService as CRUDService).delete([data], true).subscribe();
+      // this.view.dataService.delete([data], true).subscribe();
+      this.view.dataService.delete([data]).subscribe(() => {});
     }
   }
   // edit data
@@ -208,12 +188,12 @@ export class OrgorganizationComponent extends UIComponent {
   }
   // change view
   changeView(evt: any) {
-    this.currView = null;
-    if (evt.view) {
-      this.templateActive = evt.view.type;
-      this.currView = evt.view.model.template2;
-    }
-    this.detectorRef.detectChanges();
+    // this.currView = null;
+    // if (evt.view) {
+    //   this.templateActive = evt.view.type;
+    //   this.currView = evt.view.model.template2;
+    // }
+    // this.detectorRef.detectChanges();
   }
   // selected change
   onSelectionChanged(evt: any) {

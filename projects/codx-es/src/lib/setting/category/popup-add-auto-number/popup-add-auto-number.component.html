@@ -23,6 +23,7 @@
               [crrValue]="autoDefaultData.autoAssignRule || '2'"
               (valueChange)="valueDefaultChange($event)"
               (controlBlur)="blur($event)"
+              [disabled]="disableAssignRule"
             >
             </codx-input>
           </div>
@@ -162,7 +163,7 @@
                 [formModel]="formModel"
                 [showSpinButton]="false"
                 field="lastNumber"
-                [disabled]="true"
+                [disabled]="false"
               >
               </codx-input>
             </div>
@@ -278,7 +279,7 @@
                   field="lastNumber"
                   type="number"
                   (valueChange)="valueSettingChange($event)"
-                  [crrValue]="autoNoSetting.lastNumber || 0"
+                  [crrValue]="autoNoSetting.lastNumber"
                   [showSpinButton]="false"
                   (controlBlur)="blur($event)"
                 >

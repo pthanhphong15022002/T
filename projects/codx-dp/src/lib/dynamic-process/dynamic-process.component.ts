@@ -30,6 +30,7 @@ import {
   FormModel,
   CRUDService,
   DataService,
+  CodxLabelComponent,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
@@ -54,8 +55,7 @@ import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/cate
 })
 export class DynamicProcessComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   // View
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -68,7 +68,7 @@ export class DynamicProcessComponent
   @ViewChild('releaseProcess') releaseProcessTemp: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('footerButton') footerButton: TemplateRef<any>;
-
+  @ViewChild('releasedNameTem') releasedNameTem: CodxLabelComponent;
   @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   // Input
   @Input() dataObj?: any;
@@ -191,7 +191,7 @@ export class DynamicProcessComponent
       this.changeDetectorRef.detectChanges();
     }
   }
-  onDragDrop(e: any) {}
+  onDragDrop(e: any) { }
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
@@ -566,6 +566,12 @@ export class DynamicProcessComponent
       case 'DP01016': // phát hành quy trình
         this.releaseProcess(data);
         break;
+      case 'DP01017': //cập nhật phát hành quy trình
+        this.releaseProcess(data);
+        break;
+      case 'DP01018': // hủy phát hành quy trình
+        this.cancelReleaseProcess(data);
+        break;
     }
     this.isButton = false;
   }
@@ -651,6 +657,15 @@ export class DynamicProcessComponent
             } else if (!data.approveRule) {
               res.isblur = true;
             }
+            break;
+          case 'DP01016':
+            res.isblur = data.released ? true : false;
+            break;
+          case 'DP01017':
+            res.isblur = data.released ? false : true;
+            break;
+          case 'DP01018':
+            res.isblur = data.released ? false : true;
             break;
         }
       });
@@ -840,7 +855,9 @@ export class DynamicProcessComponent
 
   releaseProcess(process) {
     this.processReleaseClone = process;
-    this.processRelease = JSON.parse(JSON.stringify(process));
+    this.processRelease = JSON.parse(JSON.stringify(process)) as DP_Processes;
+    this.processRelease.module = "CM";
+    this.processRelease.function = this.processRelease.applyFor == '1' ? 'CM0201' : 'CM0401';
     this.popupRelease = this.callfc.openForm(
       this.releaseProcessTemp,
       '',
@@ -849,25 +866,49 @@ export class DynamicProcessComponent
     );
   }
 
-  saveReleaseProcess(){
+  cancelReleaseProcess(process) {
     this.dpService
-        .releaseProcess([this.processRelease])
-        .subscribe((res) => {
-          if (res) {
-            this.processReleaseClone.icon = this.processRelease.icon;
-            this.processReleaseClone.released = this.processRelease.released;
-            this.processReleaseClone.releasedName = this.processRelease.releasedName;
-            this.processReleaseClone.module =  this.processRelease.module;
-            this.processReleaseClone.function = this.processRelease.function;
-            this.processReleaseClone.modifiedOn = res;
-            this.processReleaseClone.modifiedBy = this.user?.userID;
-            this.notificationsService.notifyCode('SYS007');
-            this.popupRelease.close();
-          }
-        });
+      .releaseProcess([process, false])
+      .subscribe((res) => {
+        if (res) {
+          process.status = "1";
+          process.released = false;
+          process.modifiedOn = res;
+          process.modifiedBy = this.user?.userID;
+          this.view.dataService.update(process).subscribe();
+          this.changeDetectorRef.detectChanges();
+          this.notificationsService.notifyCode('SYS007');
+        }
+      })
   }
 
-  changeValueName(event,data) {
+  saveReleaseProcess() {
+    if(!this.processRelease.releasedName.trim()){
+      this.releasedNameTem
+      this.notificationsService.notifyCode('SYS009', 0,'"' +'Tên quy trình được phát hành'+ '"');
+      return;
+    }
+    this.dpService
+      .releaseProcess([this.processRelease, true])
+      .subscribe((res) => {
+        if (res) {
+          this.processReleaseClone.icon = this.processRelease.icon;
+          this.processReleaseClone.released = true;
+          this.processReleaseClone.releasedName = this.processRelease.releasedName;
+          this.processReleaseClone.module = this.processRelease.module;
+          this.processReleaseClone.function = this.processRelease.function;
+          this.processReleaseClone.status = "7";
+          this.processReleaseClone.modifiedOn = res;
+          this.processReleaseClone.modifiedBy = this.user?.userID;
+          this.view.dataService.update(this.processReleaseClone).subscribe();
+          this.changeDetectorRef.detectChanges();
+          this.notificationsService.notifyCode('SYS007');
+          this.popupRelease.close();
+        }
+      });
+  }
+
+  changeValueName(event, data) {
     let value = event?.data;
     if (typeof event?.data === 'string') {
       value = value.trim();
@@ -875,7 +916,7 @@ export class DynamicProcessComponent
     data = value;
   }
 
-  changeValue(event,data) {
+  changeValue(event, data) {
     let value = event?.data;
     if (typeof event?.data === 'string') {
       value = value.trim();

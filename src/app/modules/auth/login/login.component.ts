@@ -403,22 +403,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   private extendLogin(type: string) {
     var id = '';
-    switch (type) {
-      case 'a':
-        id = AmazonLoginProvider.PROVIDER_ID;
-        break;
-      case 'f':
-        id = FacebookLoginProvider.PROVIDER_ID;
-        break;
-      case 'g':
-        id = GoogleLoginProvider.PROVIDER_ID;
-        break;
-      case 'm':
-        id = MicrosoftLoginProvider.PROVIDER_ID;
-        break;
-    }
-
-    if (id) this.extendAuthService.signIn(id);
   }
 
   private loginAfter(data: any) {

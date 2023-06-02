@@ -195,9 +195,10 @@
         >
         </codx-label>
         <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
+        type="number"
           field="dealValue"
+          [min]="0"
+          [crrValue]="deal?.dealValue"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -207,14 +208,14 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
-          fiedName="Owner"
-          default="Nhân viên bán hàng"
+          fiedName="SalespersonID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
         </codx-label>
     <ejs-combobox [dataSource]="listParticipants"
     (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
+    [placeholder]="gridViewSetup?.SalespersonID?.description"
     [allowFiltering]='true' [value]="owner"></ejs-combobox>
       </div>
     </div>
@@ -232,10 +233,11 @@
         >
         </codx-label>
         <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
+        type="number"
+        [min]="0"
+        [max]="100"
         field="probability"
-
+        [crrValue]="deal?.probability"
         (valueChange)="valueChange($event)"
       >
       </codx-input>

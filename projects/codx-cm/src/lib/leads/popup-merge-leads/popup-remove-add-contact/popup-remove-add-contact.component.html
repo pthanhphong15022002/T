@@ -31,9 +31,21 @@
   </div>
 </ng-template>
 <ng-template #body>
-  <div *ngIf="lstContact != null">
-    <codx-list-contacts [listContacts]="lstContact" [objectID]="lead?.recID" (objectConvert)="objectConvert($event)" [hidenMF]="true" [isConvertLeadToCus]="true" [selectAll]="true" [formModel]="dialog.formModel"></codx-list-contacts>
-  </div>
+  <ng-container *ngIf="category == 'contact'">
+    <codx-list-contacts
+    #loadListContact
+      [listContacts]="list"
+      [objectID]="lead?.recID"
+      (objectConvert)="objectConvert($event)"
+      [hidenMF]="true"
+      [isConvertLeadToCus]="true"
+      [selectAll]="true"
+      [formModel]="dialog.formModel"
+    ></codx-list-contacts>
+  </ng-container>
+  <ng-container *ngIf="category == 'address'">
+    <codx-address-cm #loadListAddress [id]="lead?.recID" [entityName]="dialog?.formModel?.entityName" [hidden]="true" [isConvertLeadToCus]="true" [selectAll]="true" [listAddress]="list" (convertAddress)="convertAddress($event)"></codx-address-cm>
+  </ng-container>
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">

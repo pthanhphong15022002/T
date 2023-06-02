@@ -16,10 +16,11 @@ import {
 } from 'codx-core';
 import { combineLatestWith, map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
-import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
-import { SalesInvoiceService } from '../sales-invoices.service';
+import { JournalService } from '../../../journals/journals.service';
 import { NameByIdPipe } from '../../../pipes/nameById.pipe';
 import { Item } from '../../../settings/items/interfaces/Item.interface';
+import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
+import { SalesInvoiceService } from '../sales-invoices.service';
 
 @Component({
   selector: 'lib-popup-add-sales-invoices-line',
@@ -32,6 +33,9 @@ export class PopupAddSalesInvoicesLineComponent
 {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('diM1') diM1: CodxInputComponent;
+  @ViewChild('diM2') diM2: CodxInputComponent;
+  @ViewChild('diM3') diM3: CodxInputComponent;
   @ViewChild('idiM0') idiM0: CodxInputComponent;
   @ViewChild('idiM1') idiM1: CodxInputComponent;
   @ViewChild('idiM2') idiM2: CodxInputComponent;
@@ -52,11 +56,13 @@ export class PopupAddSalesInvoicesLineComponent
   transID: string;
   vats: any[];
   nameByIdPipe = new NameByIdPipe();
+  journalNo: string;
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private acService: CodxAcService,
     private salesInvoiceService: SalesInvoiceService,
+    private journalService: JournalService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
   ) {
@@ -72,6 +78,10 @@ export class PopupAddSalesInvoicesLineComponent
     this.index = dialogData.data.index;
     this.action = dialogData.data.action;
     this.hiddenFields = dialogData.data.hiddenFields;
+
+    this.router.queryParams.subscribe((params) => {
+      this.journalNo = params?.journalNo;
+    });
   }
   //#endregion
 
@@ -83,6 +93,20 @@ export class PopupAddSalesInvoicesLineComponent
           ? this.salesInvoicesLines
           : this.salesInvoicesLine)
     );
+
+    // this.journalService
+    //   .getJournal(this.journalNo)
+    //   .subscribe((res: IJournal) => {
+    //     const journal: IJournal = res?.dataValue
+    //       ? { ...res, ...JSON.parse(res.dataValue) }
+    //       : res;
+
+    //     const hiddenFields: string[] =
+    //       this.journalService.getHiddenFields(journal);
+    //     if (hiddenFields.includes('DIM1')) {
+    //       // this.journalService.loadComboboxBy067(this.journalNo, "diM1Control", "diM1", this.diM1, "")
+    //     }
+    //   });
 
     const title$ = this.cache.valueList('AC070').pipe(
       tap((t) => console.log(t)),
@@ -123,24 +147,18 @@ export class PopupAddSalesInvoicesLineComponent
       this.form.formGroup.controls.idiM3.reset();
       this.form.formGroup.controls.idiM6.reset();
       this.form.formGroup.controls.idiM7.reset();
-      (
-        this.idiM0.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
-      (
-        this.idiM1.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
-      (
-        this.idiM2.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
-      (
-        this.idiM3.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
-      (
-        this.idiM6.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
-      (
-        this.idiM7.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(['ItemID=@0'], [e.data]);
+      (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        [];
+      (this.idiM1.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        [];
+      (this.idiM2.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        [];
+      (this.idiM3.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        [];
+      (this.idiM6.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        [];
+      (this.idiM7.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        [];
 
       this.form.formGroup.controls.umid.reset();
       const item: Item = this.salesInvoiceService.items.find(
@@ -153,9 +171,8 @@ export class PopupAddSalesInvoicesLineComponent
 
     if (e.field === 'idiM4') {
       this.form.formGroup.controls.idiM5.reset();
-      (
-        this.idiM5.ComponentCurrent as CodxComboboxComponent
-      ).dataService.setPredicates(['WarehouseID=@0'], [e.data]);
+      (this.idiM5.ComponentCurrent as CodxComboboxComponent).dataService.data =
+        [];
     }
 
     if (['costPrice', 'quantity'].includes(e.field)) {

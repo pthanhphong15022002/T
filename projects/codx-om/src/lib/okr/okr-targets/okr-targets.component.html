@@ -279,7 +279,7 @@
             [viewType]="3"
             ngbTooltip="Bình luận"
           ></codx-comment-temp>
-          <span class="me-2" *ngIf="okrFM?.obFM">
+          <span class="me-2" *ngIf="okrFM?.obFM && reloadedMF">
             <codx-mfunc
               [formModel]="okrFM?.obFM"
               type="view"
@@ -464,18 +464,18 @@
           [viewType]="3"
           ngbTooltip="Bình luận"
         ></codx-comment-temp>
-        <span class="me-2" *ngIf="item?.okrType == krType && okrFM?.krFM">
+        <span class="me-2" *ngIf="item?.okrType == krType && okrFM?.krFM && reloadedMF">
           <codx-mfunc
-            [formModel]="okrFM?.krFM"
+            [formModel]="okrFM?.krFM "
             type="view"
             [dataItem]="item"
             (clickMF)="clickKRMF($event, item, false)"
             (changeDataMF)="changeDataKRMF($event, item, false)"
           ></codx-mfunc>
         </span>
-        <span class="me-2" *ngIf="item?.okrType == skrType && okrFM?.skrFM">
+        <span class="me-2" *ngIf="item?.okrType == skrType && okrFM?.skrFM && reloadedMF">
           <codx-mfunc
-            [formModel]="okrFM?.skrFM"
+            [formModel]="okrFM?.skrFM "
             type="view"
             [dataItem]="item"
             (clickMF)="clickKRMF($event, item, true)"

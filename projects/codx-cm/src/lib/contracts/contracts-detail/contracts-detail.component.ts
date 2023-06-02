@@ -73,6 +73,8 @@ export class ContractsDetailComponent extends UIComponent{
   className = 'ContractsBusiness';
   methodLoadData = 'GetListContractsAsync';
 
+  isAddContract = true;
+
   fmQuotations: FormModel = {
     formName: 'CMQuotations',
     gridViewName: 'grvCMQuotations',
@@ -195,7 +197,10 @@ export class ContractsDetailComponent extends UIComponent{
   click(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.addContract();
+        if(this.isAddContract){
+          this.isAddContract = false;
+          this.addContract();
+        }
         break;
     }
   }
@@ -322,7 +327,7 @@ export class ContractsDetailComponent extends UIComponent{
 
   completedContract(contract: CM_Contracts){
     this.notiService
-      .alertCode('Bạn có muốn hoàn tất hợp đồng này', null, ['"' + contract?.contractName + '"' || ''])
+      .alertCode('CM004', null, ['"' + contract?.contractName + '"' || ''])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           this.contractService.updateStatus(contract?.recID).subscribe((res) => {
@@ -380,6 +385,7 @@ export class ContractsDetailComponent extends UIComponent{
       option
     );
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
+    this.isAddContract = true;
     return dataPopupOutput;
   }
 
@@ -419,11 +425,11 @@ export class ContractsDetailComponent extends UIComponent{
       action,
       data,
       type,
-      contractID: this.itemSelected?.recID
+      contract: this.itemSelected,
     };
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 1001;
+    option.zIndex = 2001;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     let popupTask = this.callfc.openForm(

@@ -2802,7 +2802,7 @@ codx-vll.badge.badge-md span::before{
   // margin: 2px 5px!important;
 //}
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link .menu-title{
-  //font-size: 12px!important;
+  font-size: 12px!important;
   padding-top: 2px!important;
   line-height: 16px!important;
 }
@@ -3037,6 +3037,17 @@ codx-toolbar-report{
 }
 
 ///
+/// 
+/// 
+.gridview-sum{
+  .sum-label{
+      color: var(--text-gray-500);
+      margin-bottom: 4px;
+  }
+  .sum-content{
+      color: var(--text-dark);
+  }
+}
 .e-grid .e-headercelldiv {
   margin-left: -5px;
 }

@@ -71,6 +71,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     this.loadInit();
   }
 
+  //region Event
   close() {
     if(this.hasSave == false)
     {
@@ -81,6 +82,61 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     });
   }
 
+  valueChange(e: any){
+    this.inventoryJournalLine[e.field] = e.data;
+      switch (e.field) 
+      {
+        case 'itemID':
+          this.loadItemNameAndItemUMID(e.data);
+          if(this.idiM0)
+          {
+            (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.idiM0.crrValue = null;
+            this.inventoryJournalLine.idiM0 = null;
+          }
+          if(this.idiM1)
+          {
+            (this.idiM1.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.idiM1.crrValue = null;
+            this.inventoryJournalLine.idiM1 = null;
+          }
+          if(this.idiM2)
+          {
+            (this.idiM2.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.idiM2.crrValue = null;
+            this.inventoryJournalLine.idiM2 = null;
+          }
+          if(this.idiM3)
+          {
+            (this.idiM3.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.idiM3.crrValue = null;
+            this.inventoryJournalLine.idiM3 = null;
+          }
+          if(this.idiM6)
+          {
+            (this.idiM6.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.idiM6.crrValue = null;
+            this.inventoryJournalLine.idiM6 = null;
+          }
+          if(this.idiM7)
+          {
+            (this.idiM7.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.idiM7.crrValue = null;
+            this.inventoryJournalLine.idiM7 = null;
+          }
+          this.form.formGroup.patchValue(this.inventoryJournalLine);
+          break;
+        case 'idiM4':
+          (this.idiM5.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+          this.idiM5.crrValue = null;
+          this.inventoryJournalLine.idiM5 = null;
+          this.form.formGroup.patchValue(this.inventoryJournalLine);
+        break;
+      }
+  }
+  //endregion Event
+
+  //region Method
   onSave() {
     this.checkValidate();
     if (this.validate > 0) {
@@ -140,23 +196,9 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
         });
     }
   }
+  //endregion Method
 
-  clearInventoryJournalLines() {
-    let idx = this.objectInventoryJournalLines.length;
-    let data = new InventoryJournalLines();
-    this.api
-      .exec<any>('IV', 'InventoryJournalLinesBusiness', 'SetDefaultAsync', [
-        this.inventoryJournal,
-        data,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          res.rowNo = idx + 1;
-          this.inventoryJournalLine = res;
-          this.form.formGroup.patchValue(res);
-        }
-      });
-  }
+  //region Function
 
   loadControl(value) {
     let index = this.lockFields.findIndex((x) => x == value);
@@ -167,56 +209,24 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     }
   }
 
-  valueChange(e: any){
-  this.inventoryJournalLine[e.field] = e.data;
-    switch (e.field) {
-      case 'itemID':
-        this.loadItemNameAndItemUMID(e.data);
-          (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-          (this.idiM1.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-          (this.idiM2.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-          (this.idiM3.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-          (this.idiM6.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-          (this.idiM7.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-          this.idiM0.crrValue = null;
-          this.idiM1.crrValue = null;
-          this.idiM2.crrValue = null;
-          this.idiM3.crrValue = null;
-          this.idiM6.crrValue = null;
-          this.idiM7.crrValue = null;
-          this.inventoryJournalLine.idiM0 = null;
-          this.inventoryJournalLine.idiM1 = null;
-          this.inventoryJournalLine.idiM2 = null;
-          this.inventoryJournalLine.idiM3 = null;
-          this.inventoryJournalLine.idiM6 = null;
-          this.inventoryJournalLine.idiM7 = null;
-          this.form.formGroup.patchValue(this.inventoryJournalLine);
-        break;
-        case 'idiM4':
-          (this.idiM5.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-          this.idiM5.crrValue = null;
-          this.inventoryJournalLine.idiM5 = null;
-          this.form.formGroup.patchValue(this.inventoryJournalLine);
-        break;
-    }
-  }
-  calculateAtm(e:any){
-    if (e.crrValue) {
-      this.inventoryJournalLine[e.ControlName] = e.crrValue;
-      switch (e.ControlName) {
-        case 'costPrice':
-        case 'quantity':
-          this.inventoryJournalLine.costAmt =
-            this.inventoryJournalLine.quantity *
-            this.inventoryJournalLine.costPrice;
-          this.form.formGroup.patchValue(this.inventoryJournalLine);
-          break;
-      }
-    }
-  }
-
   loadInit(){
     this.formModel = this.form?.formModel;
+    this.form.formGroup.patchValue(this.inventoryJournalLine);
+  }
+
+  loadItems(){
+    this.api.exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
+    .subscribe((res: any) => {
+      if (res != null) {
+        this.lsitem = res;
+      }
+    });
+  }
+
+  loadItemNameAndItemUMID(itemID: any){
+    var item = this.lsitem.filter(x => x.itemID == itemID);
+    this.inventoryJournalLine.itemName = item[0].itemName;
+    this.inventoryJournalLine.umid = item[0].umid;
     this.form.formGroup.patchValue(this.inventoryJournalLine);
   }
 
@@ -244,19 +254,36 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     }
   }
 
-  loadItems(){
-    this.api.exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
-    .subscribe((res: any) => {
-      if (res != null) {
-        this.lsitem = res;
+  calculateAtm(e:any){
+    if (e.crrValue) {
+      this.inventoryJournalLine[e.ControlName] = e.crrValue;
+      switch (e.ControlName) {
+        case 'costPrice':
+        case 'quantity':
+          this.inventoryJournalLine.costAmt =
+            this.inventoryJournalLine.quantity *
+            this.inventoryJournalLine.costPrice;
+          this.form.formGroup.patchValue(this.inventoryJournalLine);
+          break;
       }
-    });
+    }
   }
 
-  loadItemNameAndItemUMID(itemID: any){
-    var item = this.lsitem.filter(x => x.itemID == itemID);
-    this.inventoryJournalLine.itemName = item[0].itemName;
-    this.inventoryJournalLine.umid = item[0].umid;
-    this.form.formGroup.patchValue(this.inventoryJournalLine);
+  clearInventoryJournalLines() {
+    let idx = this.objectInventoryJournalLines.length;
+    let data = new InventoryJournalLines();
+    this.api
+      .exec<any>('IV', 'InventoryJournalLinesBusiness', 'SetDefaultAsync', [
+        this.inventoryJournal,
+        data,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          res.rowNo = idx + 1;
+          this.inventoryJournalLine = res;
+          this.form.formGroup.patchValue(res);
+        }
+      });
   }
+  //endregion Function
 }

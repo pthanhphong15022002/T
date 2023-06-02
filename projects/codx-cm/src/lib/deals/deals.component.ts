@@ -40,8 +40,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
   styleUrls: ['./deals.component.scss'],
-})
-export class DealsComponent
+})export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit, OnChanges
 {
@@ -295,6 +294,24 @@ export class DealsComponent
   }
   changeDataMF($event, data) {
     if ($event != null && data != null) {
+    if (!data?.roles?.isOnwer) {
+      for (let more of $event) {
+        switch (more.functionID) {
+          case 'SYS01':
+          case 'SYS101':
+          case 'CM0201_1':
+          case 'CM0201_3':
+          case 'CM0201_4':
+          case 'SYS03':
+          case 'SYS04':
+          case 'SYS02':
+          case 'CM0201_2':
+          default:
+            more.disabled = true;
+        }
+      }
+    }
+    else {
       if (data.status == '1') {
         for (let more of $event) {
           switch (more.functionID) {
@@ -318,18 +335,21 @@ export class DealsComponent
       } else {
         for (let more of $event) {
           switch (more.functionID) {
+            // move stage
             case 'CM0201_1':
-              if (this.checkMoreReason(data.roleMore) || data.closed) {
+              if (this.checkMoreReason(data) || data.closed) {
                 more.disabled = true;
               }
               break;
+            // reason success
             case 'CM0201_3':
-              if (this.checkMoreReason(data.roleMore) || data.closed) {
+              if (this.checkMoreReason(data) || data.closed || !data.roleMore?.isReasonSuccess) {
                 more.disabled = true;
               }
               break;
+            // reason fail
             case 'CM0201_4':
-              if (this.checkMoreReason(data.roleMore) || data.closed) {
+              if (this.checkMoreReason(data) || data.closed || !data.roleMore?.isReasonFail)   {
                 more.disabled = true;
               }
               break;
@@ -350,15 +370,30 @@ export class DealsComponent
                 more.isblur = false;
               }
               break;
-            case 'SYS01':
-            case 'SYS03':
-            case 'SYS04':
-            case 'SYS02':
             case 'SYS101':
-            case 'SYS102':
+            case 'SYS01':
+              if (this.checkMoreReason(data) || data.closed ) {
+                more.disabled = true;
+              }
+              break;
+
             case 'SYS103':
+            case 'SYS03':
+              if ( this.checkMoreReason(data)  || data.closed||!data.roles.write  ) {
+                more.disabled = true;
+              }
+              break;
+
+            case 'SYS102':
+            case 'SYS02':
+              if ( this.checkMoreReason(data)  || data.closed ||  !data.roles.delete ) {
+                more.disabled = true;
+              }
+              break;
+
             case 'SYS104':
-              if (this.checkMoreReason(data.roleMore) || data.closed) {
+            case 'SYS04':
+              if ( this.checkMoreReason(data) || data.closed || !data.roles.delete ) {
                 more.disabled = true;
               }
               break;
@@ -366,6 +401,7 @@ export class DealsComponent
         }
       }
     }
+  }
   }
   async executeApiCalls() {
     try {
@@ -389,46 +425,17 @@ export class DealsComponent
 
   checkMoreReason(tmpPermission) {
     if (
-      tmpPermission.isReasonSuccess &&
-      tmpPermission.isReasonFail &&
-      tmpPermission.isMoveStage
+      !tmpPermission.roleMore.isReasonSuccess &&
+      !tmpPermission.roleMore.isReasonFail &&
+      !tmpPermission.roleMore.isMoveStage
     ) {
-      return true;
-    }
-    if (tmpPermission.isReasonSuccess) {
-      return true;
-    }
-    if (tmpPermission.IsReasonFail) {
-      return true;
-    }
-    if (tmpPermission.isMoveStage) {
       return true;
     }
     return false;
   }
 
   checkRoleInSystem(tmpRole){
-    if(tmpRole.roles.read && tmpRole.roles.create && tmpRole.roles.write && tmpRole.roles.assign && tmpRole.roles.delete ) {
-      return true;
-    }
-    if (tmpRole.roles.read) {
-      return true;
-    }
-     //Copy
-    if (tmpRole.roles.create) {
-      return true;
-    }
-    //edit
-    if (tmpRole.roles.write) {
-      return true;
-    }
-    //delete
-    if (tmpRole.roles.delete) {
-      return true;
-    }
-    if (tmpRole.roles.assign) {
-      return true;
-    }
+
     return false;
 
   }
@@ -658,13 +665,8 @@ export class DealsComponent
             stepName: data?.currentStepName,
             formModel: formMD,
             deal: data,
-            listStepCbx: null,
-            stepIdClick: null,
             stepReason: stepReason,
             headerTitle: this.titleAction,
-            listStepProccess: null,
-            lstParticipants: null,
-            isDurationControl: null,
             applyFor: '1',
             dataCM: dataCM,
           };
@@ -700,27 +702,16 @@ export class DealsComponent
                   data = res[0];
                   this.view.dataService.update(data).subscribe();
                   this.detailViewDeal.dataSelected = data;
+
+                  if (e.event.isReason != null) {
+                    this.moveReason( data, e.event.isReason);
+                  }
                   this.detectorRef.detectChanges();
                 }
               });
-              //xu ly data đổ về
-              // data = e.event.instance;
-              // this.listStepInstances = e.event.listStep;
-              // if (e.event.isReason != null) {
-              //   this.moveReason(null, data, e.event.isReason);
-              // }
-              // this.view.dataService.update(data).subscribe();
-              // if (this.kanban) this.kanban.updateCard(data);
-              // this.dataSelected = data;
-
-              // if (this.detailViewInstance) {
-              //   this.detailViewInstance.dataSelect = this.dataSelected;
-              //   this.detailViewInstance.listSteps = this.listStepInstances;
-              // }
             }
           });
         });
-      // });
     });
   }
 
@@ -801,29 +792,29 @@ export class DealsComponent
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
         var instance = e.event?.instance;
-        var instanceMove = e.event?.instanceMove;
-        if (instanceMove) {
-          var dealOld = JSON.parse(JSON.stringify(data));
-          var dealNew = JSON.parse(JSON.stringify(data));
-          dealOld = this.updateReasonDeal(e.event?.instance, dealOld);
-          dealNew = this.convertDataInstance(
-            dealNew,
-            instanceMove,
-            e.event?.nextStep
-          );
-          var datas = [dealOld, dealNew];
-          this.codxCmService.moveDealReason(datas).subscribe((res) => {
-            if (res) {
-              data = res[0];
-              this.view.dataService.dataSelected = data;
-              this.view.dataService
-                .update(this.view.dataService.dataSelected)
-                .subscribe();
-              this.view.dataService.add(res[1], 0).subscribe((res) => {});
-              this.detectorRef.detectChanges();
-            }
-          });
-        } else {
+        // var instanceMove = e.event?.instanceMove;
+        // if (instanceMove) {
+        //   var dealOld = JSON.parse(JSON.stringify(data));
+        //   var dealNew = JSON.parse(JSON.stringify(data));
+        //   dealOld = this.updateReasonDeal(e.event?.instance, dealOld);
+        //   dealNew = this.convertDataInstance(
+        //     dealNew,
+        //     instanceMove,
+        //     e.event?.nextStep
+        //   );
+        //   var datas = [dealOld, dealNew];
+        //   this.codxCmService.moveDealReason(datas).subscribe((res) => {
+        //     if (res) {
+        //       data = res[0];
+        //       this.view.dataService.dataSelected = data;
+        //       this.view.dataService
+        //         .update(this.view.dataService.dataSelected)
+        //         .subscribe();
+        //       this.view.dataService.add(res[1], 0).subscribe((res) => {});
+        //       this.detectorRef.detectChanges();
+        //     }
+        //   });
+        // } else {
           data = this.updateReasonDeal(e.event?.instance, data);
           var datas = [data, data.customerID];
           this.codxCmService.updateDeal(datas).subscribe((res) => {
@@ -833,7 +824,7 @@ export class DealsComponent
               this.detectorRef.detectChanges();
             }
           });
-        }
+       // }
       }
     });
   }
@@ -860,7 +851,6 @@ export class DealsComponent
     deal.nextStep = '';
     return deal;
   }
-
   startDeal(recId) {
     var data = [recId];
     this.codxCmService.startDeal(data).subscribe((res) => {
@@ -1017,6 +1007,7 @@ export class DealsComponent
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
+            this.detailViewDeal.dataSelected = JSON.parse(JSON.stringify(e.event));
             this.changeDetectorRef.detectChanges();
           }
         });

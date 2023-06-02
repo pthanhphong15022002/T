@@ -48,7 +48,9 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('gridQuationsLines') gridQuationsLines: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
-  @ViewChild('customerIDCbx') customerIDCbx: CodxInputComponent;
+  @ViewChild('dealsCbx') dealsCbx: CodxInputComponent;
+  @ViewChild('customerCbx') customerCbx: CodxInputComponent;
+  @ViewChild('customerIDCbx') contactCbx: CodxInputComponent;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
 
@@ -262,7 +264,10 @@ export class PopupAddQuotationsComponent implements OnInit {
     );
     if (count > 0) return;
     if (!(this.listQuotationLines?.length > 0)) {
-      this.notiService.notify("Thêm danh sách sản phẩm để hoàn thành báo giá - Chờ Khanh thêm messeger !" ,'3')  
+      this.notiService.notify(
+        'Thêm danh sách sản phẩm để hoàn thành báo giá - Chờ Khanh thêm messeger !',
+        '3'
+      );
       return;
     }
     if (this.action == 'add' || this.action == 'copy') {
@@ -275,23 +280,56 @@ export class PopupAddQuotationsComponent implements OnInit {
   //change Data
   changeCombox(e) {
     if (!e?.data || !e?.field) return;
-    this.quotations[e.field] = e.data;
-    switch (e?.field) {
-      case 'refID':
-        this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-        this.modelCustomerIDDeals = { customerID: this.quotations.customerID };
-        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
-        break;
-      case 'customerID':
-        this.quotations.refID = null;
-        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
-        break;
-        case 'contactID':
+    // if (this.quotations[e.field] != e.data) {
+      this.quotations[e.field] = e.data;
+      switch (e?.field) {
+        case 'refID':
+          // (
+          //   this.customerCbx.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.data = [];
+          // this.customerCbx.crrValue = null;
+          // (
+          //   this.contactCbx.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.data = [];
+          // this.contactCbx.crrValue = null;
+
+          this.quotations.customerID =
+            e?.component?.itemsSelected[0]?.CustomerID;
+          this.modelCustomerIDDeals = {
+            customerID: this.quotations.customerID,
+          };
+          this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+          // this.quotations.contactID = null;
+          break;
+        case 'customerID':
+          // (
+          //   this.customerCbx.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.data = [];
+          // this.customerCbx.crrValue = null;
+          // (
+          //   this.contactCbx.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.data = [];
+          // this.contactCbx.crrValue = null;
+
           // this.quotations.refID = null;
-        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
-        break;
-    }
-    this.form.formGroup.patchValue(this.quotations);
+          // this.quotations.contactID = null;
+          this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+          break;
+        case 'contactID':
+          //(
+          //   this.dealsCbx.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.data = [];
+          // this.dealsCbx.crrValue = null;
+          // (
+          //   this.contactCbx.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.data = [];
+          // this.contactCbx.crrValue = null;
+
+          this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+          break;
+      }
+      this.form.formGroup.patchValue(this.quotations);
+    // }
   }
 
   valueChange(e) {

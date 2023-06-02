@@ -19,7 +19,7 @@ export class JournalService {
   duplicateVoucherNo: string;
 
   constructor(
-    private api: ApiHttpService,
+    private apiService: ApiHttpService,
     private acService: CodxAcService,
     private notiService: NotificationsService,
     private cacheService: CacheService
@@ -37,7 +37,7 @@ export class JournalService {
   }
 
   deleteAutoNumber(autoNoCode: string): void {
-    this.api
+    this.apiService
       .execSv('SYS', 'AD', 'AutoNumbersBusiness', 'DeleteAutoNumberAsync', [
         autoNoCode,
       ])
@@ -81,7 +81,7 @@ export class JournalService {
       options.pageLoading = false;
       this.acService.loadDataAsync(service, options).subscribe((res: any[]) => {
         if (res.length > 0) {
-          this.api
+          this.apiService
             .exec(
               'ERM.Business.AC',
               'CommonBusiness',
@@ -147,8 +147,10 @@ export class JournalService {
     }
 
     const idimControls: string[] = journal?.idimControl?.split(',');
-    for (let i = 0; i < idimControls?.length; i++) {
-      hiddenFields.push('IDIM' + idimControls[i]);
+    for (let i = 0; i < 10; i++) {
+      if (!idimControls.includes(i.toString())) {
+        hiddenFields.push('IDIM' + i);
+      }
     }
 
     return hiddenFields;
@@ -181,12 +183,11 @@ export class JournalService {
   }
 
   getVoucherNoPlaceholderText(): Observable<string> {
-    return this.cacheService
-      .moreFunction('AutoVoucherNumber', 'grvAutoVoucherNumber')
-      .pipe(
-        tap((t) => console.log(t)),
-        map((data) => data.find((m) => m.functionID === 'ACT04')?.defaultName)
-      );
+    return this.acService.getDefaultNameFromMoreFunctions(
+      'AutoVoucherNumber',
+      'grvAutoVoucherNumber',
+      'ACT04'
+    );
   }
 
   hasVouchers(journal: IJournal): Observable<boolean> {

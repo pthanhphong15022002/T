@@ -13,9 +13,8 @@ export class PostShareComponent implements OnInit {
   @Input() refType:string = "";
   @Input() formModel:FormModel = null;
 
-
+  loaded:boolean = false;
   data:any = null;
-
   pattern:any = null;
 
   constructor(
@@ -28,7 +27,6 @@ export class PostShareComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getData();
-
   }
 
   getData(){
@@ -39,9 +37,9 @@ export class PostShareComponent implements OnInit {
       "GetPostByIDAsync",
       [this.objectID])
       .subscribe((res:any) => {
+        this.loaded = true;
         this.data = res;
         this.dt.detectChanges();
-
       });
     }
     else if(this.refType == "WP_News"){
@@ -51,9 +49,9 @@ export class PostShareComponent implements OnInit {
       "GetPostByIDAsync",
       [this.objectID])
       .subscribe((res:any) => {
+        this.loaded = true;
         this.data = res;
         this.dt.detectChanges();
-
       });
     }
     else
@@ -64,6 +62,7 @@ export class PostShareComponent implements OnInit {
       "GetCardFromWPAsync",
       [this.objectID])
       .subscribe((res:any) => {
+        this.loaded = true;
         this.data = res;
         this.dt.detectChanges();
       });

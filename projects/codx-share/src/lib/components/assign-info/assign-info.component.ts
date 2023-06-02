@@ -54,6 +54,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   taskGroup: TM_TaskGroups;
   task: TM_Tasks = new TM_Tasks();
   functionID = 'TMT0203'; // giao việc nên cố định funcID này
+  entytiNameDefault = 'TM_AssignTasks';
   popover: any;
   title = 'Giao việc';
   showPlan = true;
@@ -79,7 +80,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   isClickSave = false;
   crrRole: any;
   accountable: boolean = false;
-  paramView: any;   //param view 
+  paramView: any; //param view
+  showLabelAttachment = false
 
   constructor(
     private authStore: AuthStore,
@@ -113,15 +115,22 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.user = this.authStore.get();
     this.formModel = this.dialog.formModel;
 
+    this.cache.functionList(this.functionID).subscribe((f) => {
+      this.entytiNameDefault = f.entityName ?? this.entytiNameDefault;
+    });
+
     this.cache.functionList(this.dialog.formModel.funcID).subscribe((f) => {
       if (f && f.module) {
-        this.cache.viewSettingValues(f.module +'Parameters').subscribe((res)=>{
-          if(res?.length > 0){
-            let dataParam = res.filter(x=>x.category=='1'&& !x.transType)[0];
-            if(dataParam)
-             this.paramView = JSON.parse(dataParam.dataValue);
-          }
-        })
+        this.cache
+          .viewSettingValues(f.module + 'Parameters')
+          .subscribe((res) => {
+            if (res?.length > 0) {
+              let dataParam = res.filter(
+                (x) => x.category == '1' && !x.transType
+              )[0];
+              if (dataParam) this.paramView = JSON.parse(dataParam.dataValue);
+            }
+          });
       }
     });
     this.cache.valueList(this.vllRole).subscribe((res) => {
@@ -476,6 +485,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
+    this.showLabelAttachment = this.isHaveFile;
   }
   eventApply(e: any) {
     var assignTo = '';
@@ -914,6 +924,21 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
                     this.dataReferences.unshift(ref);
                   }
                 });
+            }
+          });
+        break;
+      case 'DP_Instances_Steps_Tasks':
+        this.api
+          .execSv<any>(
+            'DP',
+            'DP',
+            'InstancesBusiness',
+            'GetTempReferenceByRefIDAsync',
+            task.refID
+          )
+          .subscribe((result) => {
+            if (result && result?.length > 0) {
+              this.dataReferences = result;
             }
           });
         break;

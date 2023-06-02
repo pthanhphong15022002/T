@@ -171,7 +171,8 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
             element.loadChildrent = false;
           }
         });
-        this.data = JSON.parse(JSON.stringify(result))
+        // this.data = JSON.parse(JSON.stringify(result))
+        this.removeNode(node.positionID);
       }
       this.setDataOrg(this.data);
     }
@@ -218,16 +219,14 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
     return false;
   }
 
-  removeNode(id:string,result:any[] = null): any[] | null{
-    let data  = this.data.filter(e => e.reportTo === id)
-    if(data?.length > 0)
-    {
-      result = result.concat(data);
-      data.forEach(element => {
-        this.removeNode(element.positionID,result);
+  removeNode(positionID:string){
+    var children = this.data.filter((x) => x.reportTo === positionID);
+    if(children.length> 0) {
+      children.forEach(element => {
+        this.data = this.data.filter((x) => x.positionID !== element.positionID)
+        this.removeNode(element.positionID);
       });
     }
-    return result;
   }
 
   

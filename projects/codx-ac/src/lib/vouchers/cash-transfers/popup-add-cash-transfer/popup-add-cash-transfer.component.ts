@@ -63,7 +63,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
   ignoredFields: string[] = [];
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private acService: CodxAcService,
     private journalService: JournalService,
     private cashTransferService: CashTransferService,

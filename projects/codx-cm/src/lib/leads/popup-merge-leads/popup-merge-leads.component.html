@@ -24,7 +24,7 @@
       <button
         type="button"
         class="btn btn-outline-primary min-w-70px"
-        (click)="onSupport()"
+        (click)="onSupport(popupSupport)"
       >
         <i class="icon-sticky_note_2 icon-16 me-1"></i>
         <codx-label
@@ -69,15 +69,14 @@
         <ejs-combobox
           [dataSource]="lstLeadCbxOne"
           [fields]="fieldCbx"
-          [disabled]="true"
           [value]="leadOne?.recID"
+          [readonly]="true"
         ></ejs-combobox>
       </div>
       <div class="w-20">
         <ejs-combobox
           [dataSource]="lstLeadCbxTwo"
           [fields]="fieldCbx"
-          [disabled]="true"
           [value]="leadTwo?.recID"
           (valueChange)="cbxLeadChange($event, 'two')"
         ></ejs-combobox>
@@ -86,7 +85,6 @@
         <ejs-combobox
           [dataSource]="lstLeadCbxThree"
           [fields]="fieldCbx"
-          [disabled]="true"
           [value]="leadThree?.recID"
           (valueChange)="cbxLeadChange($event, 'three')"
         ></ejs-combobox>
@@ -154,7 +152,7 @@
             </codx-img>
           </div>
         </div>
-        <div class="w-20">
+        <div class="w-20 d-flex">
           <div class="w-10" *ngIf="leadTwo?.recID">
             <codx-input
               id="avata2"
@@ -195,7 +193,7 @@
             >
             </codx-img> -->
         </div>
-        <div class="w-20">
+        <div class="w-20 d-flex">
           <div class="w-10" *ngIf="leadThree?.recID">
             <codx-input
               id="avata3"
@@ -385,15 +383,15 @@
         <div class="w-20">
           <codx-label
             [formModel]="dialog.formModel"
-            fiedName="Phone"
+            fiedName="CompanyPhone"
           ></codx-label>
         </div>
         <div class="w-20">
           <codx-input
-            field="phone"
+            field="companyPhone"
             type="text"
             [formModel]="dialog.formModel"
-            [crrValue]="leadNew?.phone"
+            [crrValue]="leadNew?.companyPhone"
             (valueChange)="valueChange($event)"
           ></codx-input>
         </div>
@@ -401,19 +399,19 @@
           <div class="d-flex" *ngIf="leadOne?.recID">
             <div class="w-10">
               <codx-input
-                id="phone1"
-                name="phone"
+                id="companyPhone1"
+                name="companyPhone"
                 class="test-check"
                 type="radio"
-                field="phone1"
+                field="companyPhone1"
                 [checked]="true"
-                (valueChange)="changeRadio($event, 'phone')"
+                (valueChange)="changeRadio($event, 'companyPhone')"
               ></codx-input>
             </div>
             <div
               [innerHTML]="
-                leadOne?.phone
-                  | formatvalue : dialog.formModel : 'Phone'
+                leadOne?.companyPhone
+                  | formatvalue : dialog.formModel : 'CompanyPhone'
                   | async
               "
             ></div>
@@ -423,19 +421,19 @@
           <div class="d-flex" *ngIf="leadTwo?.recID">
             <div class="w-10">
               <codx-input
-                id="phone2"
-                name="phone"
+                id="companyPhone2"
+                name="companyPhone"
                 class="test-check"
                 type="radio"
-                field="phone2"
+                field="companyPhone2"
                 [checked]="false"
-                (valueChange)="changeRadio($event, 'phone')"
+                (valueChange)="changeRadio($event, 'companyPhone')"
               ></codx-input>
             </div>
             <div
               [innerHTML]="
-                leadTwo?.phone
-                  | formatvalue : dialog.formModel : 'Phone'
+                leadTwo?.companyPhone
+                  | formatvalue : dialog.formModel : 'CompanyPhone'
                   | async
               "
             ></div>
@@ -445,19 +443,19 @@
           <div class="d-flex" *ngIf="leadThree?.recID">
             <div class="w-10">
               <codx-input
-                id="phone3"
-                name="phone"
+                id="companyPhone3"
+                name="companyPhone"
                 class="test-check"
                 type="radio"
-                field="phone3"
+                field="companyPhone3"
                 [checked]="false"
-                (valueChange)="changeRadio($event, 'phone')"
+                (valueChange)="changeRadio($event, 'companyPhone')"
               ></codx-input>
             </div>
             <div
               [innerHTML]="
-                leadThree?.phone
-                  | formatvalue : dialog.formModel : 'Phone'
+                leadThree?.companyPhone
+                  | formatvalue : dialog.formModel : 'CompanyPhone'
                   | async
               "
             ></div>
@@ -1330,6 +1328,89 @@
         <div class="w-20">
           <codx-label
             [formModel]="dialog.formModel"
+            fiedName="BusinesslineID"
+          ></codx-label>
+        </div>
+        <div class="w-20">
+          <codx-input
+            field="businesslineID"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.businesslineID"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadOne?.recID">
+            <div class="w-10">
+              <codx-input
+                id="businesslineID1"
+                name="businesslineID"
+                class="test-check"
+                type="radio"
+                field="businesslineID1"
+                [checked]="true"
+                (valueChange)="changeRadio($event, 'businesslineID')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadOne?.businesslineID
+                  | formatvalue : dialog.formModel : 'BusinesslineID'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadTwo?.recID">
+            <div class="w-10">
+              <codx-input
+                id="businesslineID2"
+                name="businesslineID"
+                class="test-check"
+                type="radio"
+                field="businesslineID2"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'businesslineID')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadTwo?.businesslineID
+                  | formatvalue : dialog.formModel : 'BusinesslineID'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadThree?.recID">
+            <div class="w-10">
+              <codx-input
+                id="businesslineID3"
+                name="businesslineID"
+                class="test-check"
+                type="radio"
+                field="businesslineID3"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'businesslineID')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadThree?.businesslineID
+                  | formatvalue : dialog.formModel : 'BusinesslineID'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="mt-1 row form-group">
+        <div class="w-20">
+          <codx-label
+            [formModel]="dialog.formModel"
             fiedName="CustomerResource"
           ></codx-label>
         </div>
@@ -1667,7 +1748,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactOne)"
+                    [innerHTML]="
+                      countContactAndAddress(lstContactNew, lstContactOne)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -1728,7 +1811,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactTwo)"
+                    [innerHTML]="
+                      countContactAndAddress(lstContactNew, lstContactTwo)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -1791,7 +1876,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactThree)"
+                    [innerHTML]="
+                      countContactAndAddress(lstContactNew, lstContactThree)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -1827,7 +1914,7 @@
               [dataSource]="lstContactNew"
               [fields]="fieldContacts"
               [value]="contactDefault"
-              (valueChange)="cbxContactChange($event)"
+              (valueChange)="cbxContactChange($event, 'contact')"
             ></ejs-combobox>
           </div>
         </div>
@@ -1906,7 +1993,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary min-w-120px me-2"
-                  (click)="clickPopupContacts('remove', lstAddressNew, leadNew)"
+                  (click)="clickPopupAddress('remove', lstAddressNew, leadNew)"
                 >
                   <i class="icon-check-correct icon-16 me-1"></i>
                   <codx-label
@@ -1915,6 +2002,18 @@
                     default="Loại bỏ địa chỉ"
                   ></codx-label>
                 </button>
+              </div>
+              <div class="d-flex justify-content-end align-items-center">
+                <codx-label
+                  class="label-colon"
+                  name="lblSelect"
+                  [formModel]="dialog.formModel"
+                  default="Đã chọn"
+                ></codx-label>
+
+                <span class="me-1">
+                  {{ lstAddressNew.length }}
+                </span>
               </div>
             </div>
           </div>
@@ -1933,7 +2032,7 @@
                   <button
                     type="button"
                     class="btn btn-outline-primary min-w-120px me-2"
-                    (click)="clickPopupContacts('add', lstAddressOne, leadOne)"
+                    (click)="clickPopupAddress('add', lstAddressOne, leadOne)"
                   >
                     <i class="icon-check-correct icon-16 me-1"></i>
                     <codx-label
@@ -1953,7 +2052,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactOne)"
+                    [innerHTML]="
+                      countContactAndAddress(lstAddressNew, lstAddressOne)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -1964,7 +2065,7 @@
                     ></codx-label
                   ></span>
                   <span class="me-1">
-                    {{ lstContactOne.length }}
+                    {{ lstAddressOne.length }}
                   </span>
                 </div>
               </div>
@@ -1985,7 +2086,7 @@
                   <button
                     type="button"
                     class="btn btn-outline-primary min-w-120px me-2"
-                    (click)="clickPopupContacts('add', lstContactTwo, leadTwo)"
+                    (click)="clickPopupAddress('add', lstAddressTwo, leadTwo)"
                   >
                     <i class="icon-check-correct icon-16 me-1"></i>
                     <codx-label
@@ -2005,7 +2106,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactTwo)"
+                    [innerHTML]="
+                      countContactAndAddress(lstAddressNew, lstAddressTwo)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -2016,7 +2119,7 @@
                     ></codx-label
                   ></span>
                   <span class="me-1">
-                    {{ lstContactTwo.length }}
+                    {{ lstAddressTwo.length }}
                   </span>
                 </div>
               </div>
@@ -2038,7 +2141,7 @@
                     type="button"
                     class="btn btn-outline-primary min-w-120px me-2"
                     (click)="
-                      clickPopupContacts('add', lstAddressThree, leadThree)
+                      clickPopupAddress('add', lstAddressThree, leadThree)
                     "
                   >
                     <i class="icon-check-correct icon-16 me-1"></i>
@@ -2059,7 +2162,9 @@
                   ></codx-label>
                   <span
                     class="me-1"
-                    [innerHTML]="countContact(lstContactNew, lstContactThree)"
+                    [innerHTML]="
+                      countContactAndAddress(lstAddressNew, lstAddressThree)
+                    "
                   ></span>
                   <span class="me-1">
                     <codx-label
@@ -2070,7 +2175,7 @@
                     ></codx-label
                   ></span>
                   <span class="me-1">
-                    {{ lstContactThree.length }}
+                    {{ lstAddressThree.length }}
                   </span>
                 </div>
               </div>
@@ -2083,7 +2188,7 @@
           <codx-label
             [formModel]="dialog.formModel"
             name="lblDefaultAddress"
-            [default]="'địa chỉ mặc định'"
+            [default]="'Địa chỉ mặc định'"
           ></codx-label>
         </div>
         <div class="w-20">
@@ -2095,7 +2200,7 @@
               [dataSource]="lstAddressNew"
               [fields]="fieldAddress"
               [value]="addressDefault"
-              (valueChange)="cbxContactChange($event)"
+              (valueChange)="cbxContactChange($event, 'address')"
             ></ejs-combobox>
           </div>
         </div>
@@ -2175,3 +2280,43 @@
     </div>
   </div>
 </div>
+
+<ng-template #popupSupport >
+  <codx-form
+    [customToolbar]="title"
+    [body]="body"
+    [dialog]="dialogSup"
+  >
+  <ng-template #title>
+    <div class="d-flex justify-content-between w-100">
+      <div class="d-flex justify-content-start">
+        <div class="h3">
+          <codx-label
+            name="lblMergeSupport"
+            [formModel]="dialog.formModel"
+            [default]="
+              'Hướng dẫn gộp trùng tiềm năng'
+            "
+          ></codx-label>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button
+          style="border: none; outline: none; background: none"
+          (click)="dialogSup.close()"
+        >
+          <i class="icon-close icon-18 text-hover-danger"></i>
+        </button>
+      </div>
+    </div>
+
+  </ng-template>
+    <ng-template #body>
+      <div *ngIf="lstVllSupport">
+        <ng-container *ngFor="let item of lstVllSupport">
+          <li class="text-dark text-gray-800 mb-1">{{item?.text}}</li>
+        </ng-container>
+      </div>
+    </ng-template>
+  </codx-form>
+</ng-template>

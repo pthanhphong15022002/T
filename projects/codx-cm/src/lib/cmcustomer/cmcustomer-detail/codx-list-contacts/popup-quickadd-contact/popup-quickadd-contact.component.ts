@@ -29,6 +29,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   objectType: any;
   objectName: any;
   listContacts = [];
+  nameDefault: any;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -54,6 +55,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
   ngOnInit(): void {
     if (this.action == 'add') {
+      this.contactType = '0';
       if (this.listContacts != null && this.listContacts.length > 0) {
         if (this.listContacts.some((x) => x.isDefault == true)) {
           this.isDefault = false;
@@ -197,9 +199,10 @@ export class PopupQuickaddContactComponent implements OnInit {
           )
         ) {
           if (this.isDefault) {
+            this.nameDefault = this.listContacts.find(x => x.isDefault)?.contactName;
             var config = new AlertConfirmInputConfig();
             config.type = 'YesNo';
-            this.notiService.alertCode('CM001').subscribe((x) => {
+            this.notiService.alertCode('CM005', null,"'" + this.nameDefault + "'" ).subscribe((x) => {
               if (x.event.status == 'Y') {
                 this.onAdd();
               }

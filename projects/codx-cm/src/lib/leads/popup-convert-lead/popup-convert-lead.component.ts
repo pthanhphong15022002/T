@@ -115,38 +115,32 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   async ngOnInit() {
+    if (
+      this.lead.businesslineID != null &&
+      this.lead.businesslineID.trim() != ''
+    ) {
+      this.getProcessIDByBusinessLineID(this.lead.businesslineID);
+    }
     this.formModelDeals = await this.cmSv.getFormModel('CM0201');
+
     this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
-    var options = new DataRequest();
-    options.entityName = 'DP_Processes';
-    options.predicates = 'ApplyFor=@0 && !Deleted';
-    options.dataValues = '1';
-    options.pageLoading = false;
-    this.cmSv.loadDataAsync('DP', options).subscribe((process) => {
-      this.listCbxProcess =
-        process != null && process.length > 0 ? process : [];
-    });
+    this.gridViewSetupDeal = await firstValueFrom(
+      this.cache.gridViewSetup('CMDeals', 'grvCMDeals')
+    );
+    this.gridViewSetupCustomer = await firstValueFrom(
+      this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
+    );
+    this.setData();
 
     this.changeDetectorRef.detectChanges();
   }
 
   async ngAfterViewInit() {
+
     if (this.radioChecked) {
       this.countAddSys++;
     }
-    this.setData();
-    this.cache.gridViewSetup('CMDeals', 'grvCMDeals').subscribe((res) => {
-      if (res) {
-        this.gridViewSetupDeal = res;
-      }
-    });
-    this.cache
-      .gridViewSetup('CMCustomers', 'grvCMCustomers')
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetupCustomer = res;
-        }
-      });
+
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
     this.changeDetectorRef.detectChanges();
@@ -175,6 +169,74 @@ export class PopupConvertLeadComponent implements OnInit {
     // this.deal.owner = this.lead?.salespersonID;
     this.deal.note = this.lead?.note;
     this.deal.memo = this.lead?.memo;
+    this.changeDetectorRef.detectChanges();
+  }
+
+  async getProcessIDByBusinessLineID(businessLineID) {
+    var options = new DataRequest();
+    options.entityName = 'CM_BusinessLines';
+    options.predicates = 'RecID=@0';
+    options.dataValues = businessLineID;
+    options.pageLoading = false;
+    var businessLine = await firstValueFrom(
+      this.cmSv.loadDataAsync('CM', options)
+    );
+    if (businessLine != null && businessLine.length > 0) {
+      this.deal.processID = businessLine[0]?.processID;
+      var options = new DataRequest();
+      options.entityName = 'DP_Processes';
+      options.predicates = 'ApplyFor=@0 && !Deleted';
+      options.dataValues = '1';
+      options.pageLoading = false;
+      this.listCbxProcess = await firstValueFrom(
+        this.cmSv.loadDataAsync('DP', options)
+      );
+      if (this.listCbxProcess != null && this.listCbxProcess.length > 0) {
+        this.getProcessByProcessID(this.deal.processID);
+      }
+    }
+  }
+
+  async getProcessByProcessID(e) {
+    var process = this.listCbxProcess.find((x) => x.recID == e);
+    if (process != null && process.permissions != null) {
+      var lstPerm = process.permissions.filter((x) => x.roleType == 'P');
+      this.listParticipants =
+        lstPerm != null && lstPerm.length > 0
+          ? await this.cmSv.getListUserByOrg(lstPerm)
+          : [];
+    }
+    if (this.deal.processID) {
+      var lstStep =
+        process?.steps != null ? this.groupByStep(process?.steps) : [];
+      this.deal.endDate = this.HandleEndDate(lstStep);
+
+    }
+
+    if (
+      process.instanceNoSetting != null &&
+      process.instanceNoSetting.trim() != ''
+    ) {
+      this.deal.dealID = await firstValueFrom(
+        this.api.execSv<any>(
+          'DP',
+          'ERM.Business.DP',
+          'InstancesBusiness',
+          'GenAutoNumberInstanceNoSettingApiAsync',
+          process.instanceNoSetting
+        )
+      );
+    } else {
+      this.deal.dealID = await firstValueFrom(
+        this.api.execSv<any>(
+          'SYS',
+          'ERM.Business.AD',
+          'AutoNumbersBusiness',
+          'GenAutoNumberAsync',
+          ['CM0201', 'CM_Deals', 'DealID']
+        )
+      );
+    }
     this.changeDetectorRef.detectChanges();
   }
 
@@ -318,7 +380,11 @@ export class PopupConvertLeadComponent implements OnInit {
       this.customer.recID = this.customerID;
     }
     this.deal.customerID = this.customer?.recID;
-
+    if (this.lstContactDeal != null) {
+      this.lstContactDeal.forEach((res) => {
+        res.recID = Util.uid();
+      });
+    }
     if (this.listAddressCustomer != null) {
       this.listAddressCustomer.forEach((res) => {
         if (res?.objectID == this.lead.recID) {
@@ -328,7 +394,7 @@ export class PopupConvertLeadComponent implements OnInit {
     }
   }
 
-  convertDataInstanceAndDeal() {
+  async convertDataInstanceAndDeal() {
     this.instance.recID = Util.uid();
     this.instance.title = this.deal?.dealName;
     this.instance.memo = this.deal?.memo;
@@ -339,70 +405,46 @@ export class PopupConvertLeadComponent implements OnInit {
     this.instance.startDate = null;
     this.instance.processID = this.deal?.processID;
     this.instance.stepID = this.deal?.stepID;
-    this.deal.stepID = this.listInstanceSteps[0]?.stepID;
-    this.deal.nextStep = this.listInstanceSteps[1]?.stepID;
     this.deal.status = '1';
     this.deal.refID = this.instance.recID;
     this.deal.startDate = null;
+    this.listInstanceSteps = await firstValueFrom(
+      this.api.execSv<any>(
+        'DP',
+        'ERM.Business.DP',
+        'InstancesBusiness',
+        'CreateListInstancesStepsByProcessAsync',
+        this.deal.processID
+      )
+    );
+    if(this.listInstanceSteps != null && this.listInstanceSteps.length > 0){
+      this.deal.stepID = this.listInstanceSteps[0]?.stepID;
+      this.deal.nextStep = this.listInstanceSteps[1]?.stepID;
+    }
+
+
   }
 
   //#endregion
+  valueBusinessLine(e) {
+    if (this.deal?.businessLineID != e?.data) {
+      this.deal.businessLineID = e?.data;
+      if (this.deal.businessLineID) {
+        var processId = e.component.itemsSelected[0].ProcessID;
+        if (processId != this.deal?.processID) {
+          this.deal.processID = processId;
 
+          this.getProcessByProcessID(this.deal.processID);
+        }
+      }
+    }
+  }
   async cbxProcessChange(e) {
     if (e != null && e.trim() != '') {
       if (e != this.deal?.processID) {
         this.deal.processID = e;
         if (this.listCbxProcess != null) {
-          var process = this.listCbxProcess.find((x) => x.recID == e);
-          if (process != null && process.permissions != null) {
-            var lstPerm = process.permissions.filter((x) => x.roleType == 'P');
-            this.listParticipants =
-              lstPerm != null && lstPerm.length > 0
-                ? await this.cmSv.getListUserByOrg(lstPerm)
-                : [];
-          }
-          if (this.deal.processID) {
-            var lstStep =
-              process?.steps != null ? this.groupByStep(process?.steps) : [];
-            this.deal.endDate = this.HandleEndDate(lstStep);
-            this.listInstanceSteps = await firstValueFrom(
-              this.api.execSv<any>(
-                'DP',
-                'ERM.Business.DP',
-                'InstancesBusiness',
-                'CreateListInstancesStepsByProcessAsync',
-                this.deal.processID
-              )
-            );
-          }
-
-          if (
-            process.instanceNoSetting != null &&
-            process.instanceNoSetting.trim() != ''
-          ) {
-            this.deal.dealID = await firstValueFrom(
-              this.api.execSv<any>(
-                'DP',
-                'ERM.Business.DP',
-                'InstancesBusiness',
-                'GenAutoNumberInstanceNoSettingApiAsync',
-                process.instanceNoSetting
-              )
-            );
-          } else {
-            this.deal.dealID = await firstValueFrom(
-              this.api.execSv<any>(
-                'SYS',
-                'ERM.Business.AD',
-                'AutoNumbersBusiness',
-                'GenAutoNumberAsync',
-                ['CM0201', 'CM_Deals', 'DealID']
-              )
-            );
-          }
         }
-
-        this.changeDetectorRef.detectChanges();
       }
     }
   }
@@ -603,28 +645,29 @@ export class PopupConvertLeadComponent implements OnInit {
         tmpContact.recID = Util.uid();
         tmpContact.refID = e.data.recID;
         tmpContact.checked = false;
-        if (
-          !this.lstContactCustomer.some(
-            (x) => x.refID == tmpContact.refID
-          )
-        ) {
+        if (!this.lstContactCustomer.some((x) => x.refID == tmpContact.refID)) {
           var check = this.lstContactCustomer.findIndex(
             (x) => x.isDefault == true
           );
           if (tmpContact.isDefault == true) {
             if (check != -1) {
+              var nameDefault = this.lstContactCustomer.find(
+                (x) => x.isDefault
+              )?.contactName;
               var config = new AlertConfirmInputConfig();
               config.type = 'YesNo';
-              this.notiService.alertCode('CM001').subscribe((x) => {
-                if (x.event.status == 'Y') {
-                  this.lstContactCustomer[check].isDefault = false;
-                } else {
-                  tmpContact.isDefault = false;
-                }
-                this.lstContactCustomer.push(Object.assign({}, tmpContact));
-                this.codxListContact.loadListContact(this.lstContactCustomer);
-                this.changeDetectorRef.detectChanges();
-              });
+              this.notiService
+                .alertCode('CM005', null, "'" + nameDefault + "'")
+                .subscribe((x) => {
+                  if (x.event.status == 'Y') {
+                    this.lstContactCustomer[check].isDefault = false;
+                  } else {
+                    tmpContact.isDefault = false;
+                  }
+                  this.lstContactCustomer.push(Object.assign({}, tmpContact));
+                  this.codxListContact.loadListContact(this.lstContactCustomer);
+                  this.changeDetectorRef.detectChanges();
+                });
             } else {
               this.lstContactCustomer.push(Object.assign({}, tmpContact));
               this.codxListContact.loadListContact(this.lstContactCustomer);
@@ -660,7 +703,6 @@ export class PopupConvertLeadComponent implements OnInit {
       if (e.data) {
         var tmp = new CM_Contacts();
         tmp = JSON.parse(JSON.stringify(e.data));
-        tmp.recID = Util.uid();
         tmp.refID = e.data.recID;
         var indexCus = this.lstContactCustomer.findIndex(
           (x) => x.recID == e.data.recID
@@ -708,8 +750,10 @@ export class PopupConvertLeadComponent implements OnInit {
 
   //#region address
   convertAddress(e) {
-    if (e.e.data == true) {
+    if (e.e == true) {
       if (e?.data != null) {
+        var tmp = JSON.parse(JSON.stringify(e.data));
+
         var check = this.listAddressCustomer.findIndex(
           (x) => x.isDefault == true
         );
@@ -721,18 +765,18 @@ export class PopupConvertLeadComponent implements OnInit {
               if (x.event.status == 'Y') {
                 this.listAddressCustomer[check].isDefault = false;
               } else {
-                e.data.isDefault = false;
+                tmp.isDefault = false;
               }
-              this.listAddressCustomer.push(Object.assign({}, e?.data));
+              this.listAddressCustomer.push(Object.assign({}, tmp));
               this.codxListAddress.loadListAdress(this.listAddressCustomer);
               this.changeDetectorRef.detectChanges();
             });
           } else {
-            this.listAddressCustomer.push(Object.assign({}, e?.data));
+            this.listAddressCustomer.push(Object.assign({}, tmp));
             this.codxListAddress.loadListAdress(this.listAddressCustomer);
           }
         } else {
-          this.listAddressCustomer.push(Object.assign({}, e?.data));
+          this.listAddressCustomer.push(Object.assign({}, tmp));
           this.codxListAddress.loadListAdress(this.listAddressCustomer);
         }
       }

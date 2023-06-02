@@ -153,8 +153,8 @@ export class CM_Deals {
   businessLineID: string;
   memo: string;
   tags: string;
-  dealValue: number;
-  probability: number;
+  dealValue: number = 0;
+  probability: number = 0;
   expectedClosed: Date;
   status: string = "1";
   statusCodeID: string;
@@ -403,7 +403,7 @@ export class CM_ContractsPayments {
   paidnumbererest: number; //Số tiền lãi đã thanh toán
   paidVAT: number; //Số tiền thuế VAT đã thanh toán
   paidNote: string; //Ghi chú thanh toán
-  refNo: string; //Số tham chiếu
+  refNo: string; //Mã hợp đồng
   refDate: Date; //Ngày tham chiếu
   refLineID: string; //Mã dòng tham chiếu
   extendOn: Date; //Ngày gia hạn

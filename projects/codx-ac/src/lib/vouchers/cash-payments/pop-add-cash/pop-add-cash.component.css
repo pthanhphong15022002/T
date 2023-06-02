@@ -1,9 +1,15 @@
 
 .tabline-content .e-content{
-    height: calc(100vh - 482px)!important;
+   max-height: calc(100vh - 480px)!important;
 }
 .btn-addline{
     position: absolute;
     right: 0;
     top: -28px;
+}
+.e-summarycontent{
+    padding-top: 10px;
+}
+.add-cash #gridViewV2.e-grid .e-summarycell {
+    border-width: 0;
 }

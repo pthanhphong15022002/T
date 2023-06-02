@@ -29,27 +29,22 @@
 </container-element>
 <!-- nvthuan công việc -->
 <ng-template #task let-data="value">
-  <div *ngFor="let step of listStep; let i = index" class="mt-5">
-    <div>
-      <span
-        class="h4 me-3 justify-content-center align-items-center"
-        style="
-          width: 35px;
-          height: 35px;
-          border-radius: 50%;
-          background-color: rgb(45, 171, 255);
-          display: inline-flex;
-        "
-        >{{ i + 1 }}</span
-      >
-      <span class="h4">{{ step.stepName }}</span>
+  <div *ngFor="let step of listStep; let i = index" >
+    <div class="d-flex align-items-center justify-content-between me-5">
+      <div class="d-flex align-items-center fw-bold">
+        <i class="icon-account_balance icon-20 me-2"></i>
+        <span class="fs-5">{{ step.stepName }}</span>
+      </div>
+      <codx-progressbar [progress]="step?.progress || 0"></codx-progressbar>
     </div>
+
     <codx-step-task
       [dataSources]="step"
       [isShowButton]="false"
       [isShowMore]="true"
+      [isDeepCopy]="false"
     ></codx-step-task>
-    <hr />
+    <hr class="m-0 p-0" />
   </div>
 </ng-template>
 <!-- nvthuan sản phẩm -->
@@ -265,8 +260,7 @@
 <ng-template #contact>
   <div>
     <codx-list-contacts
-    [selectAll]="false"
-
+      [selectAll]="false"
       [funcID]="'CM0205'"
       [objectID]="dataSelected?.recID"
       [objectName]="dataSelected.dealName"

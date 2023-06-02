@@ -336,36 +336,6 @@
             </codx-input>
           </div>
         </div>
-        <div *ngIf="loadControl('ProjectID')" class="col-4">
-          <div class="form-group">
-            <codx-label
-              [formModel]="form.formModel"
-              fiedName="ProjectID"
-            ></codx-label>
-            <codx-input
-              [Group]="form.formGroup"
-              [formModel]="form.formModel"
-              (valueChange)="valueChange($event)"
-              field="projectID"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div *ngIf="loadControl('AssetGroupID')" class="col-8">
-          <div class="form-group">
-            <codx-label
-              [formModel]="form.formModel"
-              fiedName="AssetGroupID"
-            ></codx-label>
-            <codx-input
-              [Group]="form.formGroup"
-              [formModel]="form.formModel"
-              (valueChange)="valueChange($event)"
-              field="assetGroupID"
-            >
-            </codx-input>
-          </div>
-        </div>
       </div>
     </ng-container>
     <ng-container *ngIf="funcID == 'ACT0714'">
@@ -669,36 +639,6 @@
               [formModel]="form.formModel"
               (valueChange)="valueChange($event)"
               field="diM3"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div *ngIf="loadControl('ProjectID')" class="col-4">
-          <div class="form-group">
-            <codx-label
-              [formModel]="form.formModel"
-              fiedName="ProjectID"
-            ></codx-label>
-            <codx-input
-              [Group]="form.formGroup"
-              [formModel]="form.formModel"
-              (valueChange)="valueChange($event)"
-              field="projectID"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div *ngIf="loadControl('AssetGroupID')" class="col-8">
-          <div class="form-group">
-            <codx-label
-              [formModel]="form.formModel"
-              fiedName="AssetGroupID"
-            ></codx-label>
-            <codx-input
-              [Group]="form.formGroup"
-              [formModel]="form.formModel"
-              (valueChange)="valueChange($event)"
-              field="assetGroupID"
             >
             </codx-input>
           </div>
