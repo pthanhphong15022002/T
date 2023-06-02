@@ -65,6 +65,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
+  parent: any;
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -75,6 +76,11 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.dialog = dialog;
     this.routerActive.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
+      if (params?.parent) {
+        this.cache.functionList(params.parent).subscribe((res) => {
+          if (res) this.parent = res;
+        });
+      }
     });
     this.cache
       .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
@@ -134,6 +140,11 @@ export class PurchaseinvoicesComponent extends UIComponent {
         },
       },
     ];
+    this.view.setRootNode(this.parent?.customName);
+  }
+
+  ngOnDestroy() {
+    this.view.setRootNode('');
   }
   //#endregion
 
@@ -231,21 +242,18 @@ export class PurchaseinvoicesComponent extends UIComponent {
       });
   }
   delete(data) {
-
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .delete([data], true).subscribe((res: any) => {
-        if (res) {
-          this.api.exec(
-            'ERM.Business.AC',
-            'VATInvoicesBusiness',
-            'DeleteAsync',
-            [data.recID])
-            .subscribe((res: any) => {});
-        }
-      });
+    this.view.dataService.delete([data], true).subscribe((res: any) => {
+      if (res) {
+        this.api
+          .exec('ERM.Business.AC', 'VATInvoicesBusiness', 'DeleteAsync', [
+            data.recID,
+          ])
+          .subscribe((res: any) => {});
+      }
+    });
   }
   //#endregion
 

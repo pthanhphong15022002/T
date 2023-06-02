@@ -100,7 +100,10 @@ export class JournalsComponent extends UIComponent {
         if (func && func.url && func.url.charAt(0) != '/') urlRedirect += '/';
         urlRedirect += func.url;
         this.route.navigate([urlRedirect], {
-          queryParams: { journalNo: data.journalNo },
+          queryParams: {
+            journalNo: data.journalNo,
+            parent: this.view.funcID,
+          },
         });
       }
     });

@@ -56,6 +56,7 @@ import { lvFileClientAPI } from '@shared/services/lv.component';
 import { environment } from 'src/environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { type_image, type_video } from './attachment.type';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -3193,7 +3194,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
       let index = this.fileUploadList.findIndex(
         (d) => d.fileName.toString() === files[i].name.toString()
       ); //find index in your array
-      if (index == -1) {
+      if (index == -1) 
+      {
         var data: any;
         if (drag) {
           data = await files[i].arrayBuffer();
@@ -3203,28 +3205,23 @@ export class AttachmentComponent implements OnInit, OnChanges {
         }
 
         var fileUpload = new FileUpload();
-        fileUpload.fileName = files[i].name;
         var type = files[i].type.toLowerCase();
-        if (type == 'png' || type == 'jpg' || type == 'bmp') {
-          fileUpload.avatar = data;
+        fileUpload.fileName = files[i].name;
+        
+
+        //Lấy avatar mặc định theo định dạng file
+        //Image
+        if (type_image.includes(type)) fileUpload.avatar = data;
+        //Video
+        else if (type_video.includes(type)) 
+        {
+          var url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(files[i].rawFile));
+          fileUpload.data = url;
+          fileUpload.avatar = this.urlAvartarIcon(fileUpload.fileName);
         } 
-        // else if (
-        //   type == 'mp4' ||
-        //   type == 'm4v' ||
-        //   type == 'avi' ||
-        //   type == 'mov' ||
-        //   type == 'mpg' ||
-        //   type == 'mpeg'
-        // ) {
-        //   var url = this.sanitizer.bypassSecurityTrustUrl(
-        //     URL.createObjectURL(files[i].rawFile)
-        //   );
-        //   fileUpload.data = url;
-        // } 
-        else
-          fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(
-            fileUpload.fileName
-          )}`;
+        //Các file định dạng khác
+        else fileUpload.avatar = this.urlAvartarIcon(fileUpload.fileName);
+
         fileUpload.extension =
           files[i].name.substring(
             files[i].name.lastIndexOf('.'),
@@ -3240,10 +3237,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.objectType = this.objectType;
         fileUpload.objectID = this.objectId;
         fileUpload.fileSize = files[i].size;
-       
         fileUpload.order = count;
         fileUpload.description = files[i].description; //
-
         fileUpload.funcID = this.functionID;
         fileUpload.folderType = this.folderType;
         fileUpload.referType = this.referType;
@@ -3256,9 +3251,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.folderID = this.dmSV.folderId.getValue();
 
 
-        fileUpload.permissions = this.addPermissionForRoot(
-          fileUpload.permissions
-        );
+        fileUpload.permissions = this.addPermissionForRoot(fileUpload.permissions);
 
         addedList.push(Object.assign({}, fileUpload));
         this.fileUploadList.push(Object.assign({}, fileUpload));
@@ -3289,6 +3282,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
       this.onMultiFileSave();
     }
     return false;
+  }
+
+  //Icon avatar mặc định
+  urlAvartarIcon(fileName:any)
+  {
+    return `../../../assets/codx/dms/${this.getAvatar(fileName)}`
   }
 
   clearData() {

@@ -34,72 +34,8 @@ import { AppConfig } from '@core/services/config/app-config';
 import { RouteReuseStrategy } from '@angular/router';
 import { CodxEiModule } from 'projects/codx-ei/src/public-api';
 import { SosComponent } from '@pages/sos/sos.component';
-import {
-  SocialLoginModule,
-  SocialAuthServiceConfig,
-  AmazonLoginProvider,
-  FacebookLoginProvider,
-  GoogleLoginProvider,
-  MicrosoftLoginProvider,
-} from '@abacritt/angularx-social-login';
+
 import { LayoutTenantComponent } from '@modules/auth/tenants/layout/layout.component';
-
-const socialConfigFactory = () => {
-  return new Promise((resolve, reject) => {
-    try {
-      setTimeout(() => {
-        let providers = [];
-
-        if (environment.saas == 1 && environment.externalLogin) {
-          if (environment.externalLogin.amazonId) {
-            providers.push({
-              id: AmazonLoginProvider.PROVIDER_ID,
-              provider: new AmazonLoginProvider(
-                environment.externalLogin.amazonId
-              ),
-            });
-          }
-
-          if (environment.externalLogin.googleId) {
-            providers.push({
-              id: GoogleLoginProvider.PROVIDER_ID,
-              provider: new GoogleLoginProvider(
-                environment.externalLogin.googleId
-              ),
-            });
-          }
-
-          if (environment.externalLogin.facebookId) {
-            providers.push({
-              id: FacebookLoginProvider.PROVIDER_ID,
-              provider: new FacebookLoginProvider(
-                environment.externalLogin.facebookId
-              ),
-            });
-          }
-
-          if (environment.externalLogin.microsoftId) {
-            providers.push({
-              id: MicrosoftLoginProvider.PROVIDER_ID,
-              provider: new MicrosoftLoginProvider(
-                environment.externalLogin.microsoftId
-              ),
-            });
-          }
-        }
-
-        var config = {
-          autoLogin: false,
-          providers: providers,
-        } as SocialAuthServiceConfig;
-
-        resolve(config);
-      }, 100);
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
 
 registerLocaleData(localeVi);
 
@@ -178,7 +114,6 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
       animation: 'pulse',
       loadingText: 'This item is actually loading...',
     }),
-    SocialLoginModule,
     NgbModule,
   ],
   exports: [],
@@ -193,10 +128,6 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
       useFactory: appInitializer,
       multi: true,
       deps: [AuthService, AppConfigService],
-    },
-    {
-      provide: 'SocialAuthServiceConfig',
-      useFactory: socialConfigFactory,
     },
     { provide: LOCALE_ID, useValue: 'vi-VN' },
     { provide: RouteReuseStrategy, useClass: CacheRouteReuseStrategy },
