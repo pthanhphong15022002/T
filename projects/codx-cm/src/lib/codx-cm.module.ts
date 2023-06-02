@@ -71,6 +71,7 @@ import { ViewQuotationsComponent } from './contracts/component/view-quotations/v
 import { ViewImgContactComponent } from './leads/popup-merge-leads/view-img-contact/view-img-contact.component';
 import { PopupRemoveAddContactComponent } from './leads/popup-merge-leads/popup-remove-add-contact/popup-remove-add-contact.component';
 import { ViewPaymentComponent } from './contracts/payment/view-payment/view-payment.component';
+import { GanttChartComponent } from './deals/gantt-chart/gantt-chart.component';
 
 const routes: Routes = [
   {
@@ -183,6 +184,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewImgContactComponent,
     PopupRemoveAddContactComponent,
     ViewPaymentComponent,
+    GanttChartComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

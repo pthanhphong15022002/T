@@ -170,6 +170,7 @@
               [formModel]="form.formModel"
             ></codx-label>
             <codx-input
+              #dealsCbx
               field="refID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
@@ -216,12 +217,11 @@
               [formModel]="form.formModel"
             ></codx-label>
             <codx-input
-              #customerIDCbx
+              #customerCbx
               field="customerID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               [disabled]="disableCusID"
-              [crrValue]="quotations.customerID"
               (valueChange)="changeCombox($event)"
             ></codx-input>
           </div>
@@ -231,10 +231,13 @@
               [formModel]="form.formModel"
             ></codx-label>
             <codx-input
-              field="contactID"
+              #contactCbx
+              field="contactID" 
               [formModel]="form.formModel"
-              [model]="modelObjectIDContacs"
-              [crrValue]="quotations.contactID"
+        
+              [model]="{
+                objectID: this.quotations.customerID
+              }"
               (valueChange)="changeCombox($event)"
             ></codx-input>
           </div>
