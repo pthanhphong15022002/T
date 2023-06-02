@@ -197,7 +197,8 @@
         <codx-input
         type="number"
           field="dealValue"
-          [min]="deal?.dealValue"
+          [min]="0"
+          [crrValue]="deal?.dealValue"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -233,9 +234,10 @@
         </codx-label>
         <codx-input
         type="number"
-        [min]="deal?.probability"
+        [min]="0"
         [max]="100"
         field="probability"
+        [crrValue]="deal?.probability"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
