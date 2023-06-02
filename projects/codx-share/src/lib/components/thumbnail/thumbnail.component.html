@@ -1,9 +1,9 @@
 <div [style]="isScroll == '0'?'max-height: 100px; overflow-y: auto;':null">
   <ng-container *ngIf="files != null && files.length > 0">
-    <div *ngFor="let item of files" class="d-flex align-items-center mb-2">
+    <div *ngFor="let item of files" class="d-flex justify-content-between align-items-center mb-2">
       <div *ngIf="(item.data != null) then data else nodata"></div>
       <ng-template #data>
-        <div class="has-action-menu-1">
+        <div class="has-action-menu-1 d-flex align-items-center  w-100">
           <div (dblclick)="openFile(item.data)" class="cursor-pointer">
             <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
             <ng-template #simple>
@@ -19,8 +19,7 @@
               <div *ngIf="isReferType && item.data.referType == 'source'" class="div-icon-source"><i class="icon-14 icon-i-lock-fill"></i></div>
             </ng-template>
           </div>
-          <div *ngIf="hideHover == '1'"
-          class="action-menu-1 d-flex justify-content-center align-items-center cursor-pointer">
+          <div *ngIf="hideHover == '1'" class="action-menu-1 d-flex justify-content-center align-items-center cursor-pointer">
           <div class="btn btn-sm btn-icon btn-white cursor-pointer " *ngIf="(hideDelete=='0' && !isReferType) || (isReferType && item.data.referType != 'source')"
             (click)="deleteFile(item.data)">
             <i class="icon-close text-danger icon-16"></i>
@@ -86,12 +85,12 @@
         </div>
         </div>
         <ng-container *ngIf="tmpRight">
-          <ng-container *ngTemplateOutlet="tmpRight ; context: { $implicit: file}"></ng-container>
+          <ng-container *ngTemplateOutlet="tmpRight ; context: { $implicit: item}"></ng-container>
         </ng-container>
       </ng-template>
       <ng-template #nodata>
-        <div (dblclick)="openFile(item)" class="cursor-pointer">
-          <div class="has-action-menu-1">
+        <div (dblclick)="openFile(item)" class="cursor-pointer d-flex justify-content-between align-items-center w-100">
+          <div class="has-action-menu-1 d-flex align-items-center w-100">
             <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
             <div *ngIf="hideHover == '1'" class="action-menu-1 d-flex align-items-center cursor-pointer">
               <div class="btn btn-sm btn-icon btn-white cursor-pointer" *ngIf="(hideDelete=='0' && !isReferType) || (isReferType && item.referType != 'source')"
@@ -159,7 +158,7 @@
             </div>
           </div>
           <ng-container *ngIf="tmpRight">
-            <ng-container *ngTemplateOutlet="tmpRight ; context: { $implicit: file}"></ng-container>
+            <ng-container *ngTemplateOutlet="tmpRight ; context: { $implicit: item}"></ng-container>
           </ng-container>
           <ng-template #simple>
             <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-20px me-3 cursor-pointer"

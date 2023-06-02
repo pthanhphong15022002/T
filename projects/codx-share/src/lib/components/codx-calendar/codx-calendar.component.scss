@@ -127,32 +127,20 @@ body.tailwind #selected {
   padding: 0 5px;
 }
 
-.e-speeddial-li .itemlist {
-  display: inherit;
-  width: 100%;
-  border: 1px solid transparent;
-  align-items: center;
-  padding: 5px;
-  border-radius: 500px;
-  background-color: rgba(104, 99, 104, 0.1);
-  box-shadow: 0 0 4px grey;
-}
+.e-speeddial-popup {
+  min-width: 175px;
 
-.e-speeddial-li .itemlist:hover {
-  background-color: rgb(224, 224, 224);
-}
+  background-color: var(--white);
+  padding:4px 6px;
+  border-radius: 6px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  ul{
+    width: 100%;
+    padding: 0!important;
 
-.e-btn.e-primary,
-.e-css.e-btn.e-primary {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
-  &:hover,
-  &:active,
-  &:focus {
-    background-color: var(--primary);
-    border-color: var(--primary);
-    color: #fff;
+    .e-speeddial-li{
+      margin: 2px 0!important;
+    }
   }
 }
 
