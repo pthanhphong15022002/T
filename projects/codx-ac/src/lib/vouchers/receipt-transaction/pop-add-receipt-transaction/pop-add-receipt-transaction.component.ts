@@ -235,7 +235,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
 
     this.gridHeight = hBody - (hTab + hNote + 180);
-    grid.disableField(this.lockFields);
+    grid.hideColumns(this.lockFields);
   }
 
   lineChanged(e: any) {
