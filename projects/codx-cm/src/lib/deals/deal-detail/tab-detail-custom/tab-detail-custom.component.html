@@ -29,7 +29,7 @@
 </container-element>
 <!-- nvthuan công việc -->
 <ng-template #task let-data="value">
-  <div *ngFor="let step of listStep; let i = index" class="mt-5">
+  <div *ngFor="let step of listStep; let i = index" >
     <div class="d-flex align-items-center justify-content-between me-5">
       <div class="d-flex align-items-center fw-bold">
         <i class="icon-account_balance icon-20 me-2"></i>
@@ -42,8 +42,9 @@
       [dataSources]="step"
       [isShowButton]="false"
       [isShowMore]="true"
+      [isDeepCopy]="false"
     ></codx-step-task>
-    <hr />
+    <hr class="m-0 p-0" />
   </div>
 </ng-template>
 <!-- nvthuan sản phẩm -->
