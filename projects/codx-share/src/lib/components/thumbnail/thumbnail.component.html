@@ -86,7 +86,7 @@
         </div>
         </div>
         <ng-container *ngIf="tmpRight">
-          <ng-container *ngTemplateOutlet="tmpRight ; context: { $implicit: file}"></ng-container>
+          <ng-container *ngTemplateOutlet="tmpRight ; context: { $implicit: item}"></ng-container>
         </ng-container>
       </ng-template>
       <ng-template #nodata>
@@ -159,7 +159,7 @@
             </div>
           </div>
           <ng-container *ngIf="tmpRight">
-            <ng-container *ngTemplateOutlet="tmpRight ; context: { $implicit: file}"></ng-container>
+            <ng-container *ngTemplateOutlet="tmpRight ; context: { $implicit: item}"></ng-container>
           </ng-container>
           <ng-template #simple>
             <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-20px me-3 cursor-pointer"
