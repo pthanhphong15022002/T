@@ -147,8 +147,10 @@ export class JournalService {
     }
 
     const idimControls: string[] = journal?.idimControl?.split(',');
-    for (let i = 0; i < idimControls?.length; i++) {
-      hiddenFields.push('IDIM' + idimControls[i]);
+    for (let i = 0; i < 10; i++) {
+      if (!idimControls.includes(i.toString())) {
+        hiddenFields.push('IDIM' + i);
+      }
     }
 
     return hiddenFields;

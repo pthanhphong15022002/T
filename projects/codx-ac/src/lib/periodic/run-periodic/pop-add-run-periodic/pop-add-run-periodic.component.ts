@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
-import { AuthStore, CodxFormComponent, DialogData, DialogRef, NotificationsService, RequestOption, UIComponent } from 'codx-core';
+import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxInputComponent, DialogData, DialogRef, NotificationsService, RequestOption, UIComponent } from 'codx-core';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
@@ -16,6 +16,7 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
   //region Constructor
 
   @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('itemID') itemID: CodxInputComponent;
   headerText: any;
   formType: any;
 
@@ -64,8 +65,8 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
   }
 
   ngAfterViewInit() {
-    this.form.formGroup.patchValue(this.Paras);
     this.setFromDateToDate(this.runPeriodic.runDate);
+    this.form.formGroup.patchValue(this.Paras);
   }
 
   //#endregion
@@ -92,6 +93,13 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
         break;
       case 'itemGroupID':
         this.Paras.itemGroupID = e.data;
+        if(this.itemID)
+        {
+          (this.itemID.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+          this.itemID.crrValue = null;
+          this.Paras.itemID = null;
+          this.form.formGroup.patchValue(this.Paras);
+        }
         break;
       case 'itemID':
         this.Paras.itemID = e.data;
@@ -115,18 +123,15 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
       if (this.formType == 'add' || this.formType == 'copy') {
         this.runPeriodic.status = 1;
         this.runPeriodic.paras = JSON.stringify(this.Paras);
+        this.dialog.dataService.updateDatas.set(
+          this.runPeriodic['_uuid'],
+          this.runPeriodic
+        );
         this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'AddAsync';
-            opt.className = 'RunPeriodicBusiness';
-            opt.assemblyName = 'AC';
-            opt.service = 'AC';
-            opt.data = [this.runPeriodic];
-            return true;
-          })
+          .save(null, 0, '', 'SYS006', true)
           .subscribe((res) => {
-            if (res && res.save != null) {
-              this.dialog.close(res.save);
+            if (res && res.update.data != null) {
+              this.dialog.close();
               this.dt.detectChanges();
             }
           });
@@ -135,18 +140,16 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
         if(this.runPeriodic.status == 0)
           this.runPeriodic.status = 1;
         this.runPeriodic.paras = JSON.stringify(this.Paras);
-        this.dialog.dataService
-        .save((opt: RequestOption) => {
-          opt.methodName = 'UpdateAsync';
-          opt.className = 'RunPeriodicBusiness';
-          opt.assemblyName = 'AC';
-          opt.service = 'AC';
-          opt.data = [this.runPeriodic];
-          return true;
-        })
-        .subscribe((res) => {
-          if (res.update) {
-            this.dialog.close(res.update);
+        this.dialog.dataService.updateDatas.set(
+          this.runPeriodic['_uuid'],
+          this.runPeriodic
+        );
+        this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
+          if (res && res.update.data != null) {
+            this.dialog.close({
+              update: true,
+              data: res.update,
+            });
             this.dt.detectChanges();
           }
         });
@@ -155,7 +158,37 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
   }
 
   onSaveAdd(){
+    this.checkParasValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      this.notification.notifyCode('SYS023', 0, '');
+      return;
+    } else {
+      if (this.formType == 'add' || this.formType == 'copy') {
+        this.runPeriodic.status = 1;
+        this.runPeriodic.paras = JSON.stringify(this.Paras);
+        this.dialog.dataService.updateDatas.set(
+          this.runPeriodic['_uuid'],
+          this.runPeriodic
+        );
+        this.dialog.dataService
+          .save(null, 0, '', 'SYS006', true)
+          .subscribe((res) => {
+            if (res && res.update.data != null) {
+              this.onClearData();
+              this.dialog.dataService.addNew().subscribe((res) => {
+                this.form.formGroup.patchValue(res);
+                this.form.formGroup.patchValue(this.Paras);
+                this.runPeriodic = this.dialog.dataService!.dataSelected;
+              });
+            }
+          });
+      }
+    }
+  }
 
+  onClearData(){
+    this.Paras = new Paras();
   }
 
   checkParasValidate() {

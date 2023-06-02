@@ -47,8 +47,9 @@
     [imgOn]="data?.modifiedOn"
     [imageReferType]="'avt'"
     [imageWidth]="35"
-    imgCss="me-4"
+    imgCss="me-3"
     [title]="data?.customerName"
+    [titleCss]="'fs-6 mb-1'"
     [descTmp]="descTmpCard"
   >
   </codx-temp-full>
@@ -83,10 +84,10 @@
           "
         ></span>
       </div>
-      <div class="d-flex align-items-center justify-content-start mb-1">
-        <i class="icon-add_shopping_cart icon-16 me-2"></i>
+      <div class="d-flex justify-content-start mb-1 w-100">
+        <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
         <span
-          class="text-gray-700"
+          class="text-gray-600 fs-7"
           #businessLineID
           [innerHTML]="
             data?.businessLineID
@@ -200,15 +201,16 @@
     [formModel]="view.formModel"
     [footer]="footer"
     [titleCss]="'fw-bold fs-6'"
+    [hideMF]="!data?.roles?.isOnwer "
     [dataItem]="data"
   >
   </codx-temp-full>
 </ng-template>
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column w-100">
-    <div class="d-flex align-items-center justify-content-start mb-1">
+    <div class="mb-1">
       <span
-        class="text-gray-700"
+        class="text-gray-600"
         #dealName
         [innerHTML]="
           data?.dealName
@@ -223,7 +225,7 @@
       ></span>
     </div>
     <div class="d-flex align-items-center justify-content-start mb-1">
-      <i class="icon-add_shopping_cart icon-16 me-2"></i>
+      <i class="icon-add_shopping_cart icon-16 text-gray-700 me-2"></i>
       <span
         class="text-gray-700"
         #businessLineID
@@ -234,18 +236,18 @@
         "
       ></span>
     </div>
-    <div class="d-flex justify-content-between py-1">
-      <div class="d-flex align-items-start pe-4">
-        <span class="icon-monetization_on icon-16 text-warning me-2"></span>
-        <span
+    <div class="row mb-1 mx-0">
+      <div class="col-5 ps-0 d-flex align-items-start">
+        <span class="icon-monetization_on icon-16 text-warning me-1"></span>
+        <span class="line-clamp line-clamp-1"
           [innerHTML]="
             data?.dealValue | formatvalue : view.formModel : 'dealValue' | async
           "
         ></span>
       </div>
-      <div class="d-flex align-items-center">
-        <span class="icon-check_circle icon-16 text-green me-2"></span>
-        <span
+      <div class="col-3 d-flex align-items-center">
+        <span class="icon-check_circle icon-16 text-green me-1"></span>
+        <span class="line-clamp line-clamp-1"
           [innerHTML]="
             data?.probability
               | formatvalue : view.formModel : 'probability'
@@ -254,10 +256,10 @@
         ></span
         ><span *ngIf="data?.probability">%</span>
       </div>
-      <div class="d-flex align-items-center">
+      <div class="col-4 pe-0 d-flex align-items-center">
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
-          class="text-gray-700"
+          class="text-gray-700 fs-7"
           #createdOn
           [innerHTML]="
             data.createdOn | formatvalue : view.formModel : 'createdOn' | async
@@ -265,70 +267,71 @@
         ></span>
       </div>
     </div>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-end codx-badge">
+        <div class="me-2 badge badge-light-primary"></div>
+        <div
+          *ngIf="data.status != '1'"
+          [ngStyle]="{
+            'background-color':
+              data.status == '3' || data.status == '4'
+                ? colorReasonSuccess?.color
+                : data.status == '5' || data.status == '6'
+                ? colorReasonFail?.color
+                : data?.steps['backgroundColor']
+          }"
+          class="me-2 badge badge-sm d-flex align-items-center"
+        >
+          <span
+            [ngClass]="data?.steps['icon']"
+            [ngStyle]="{ color: data?.steps['iconColor'] }"
+            class="me-1"
+          ></span>
+          <span
+            class="menu-title fw-bold line-clamp-menu"
+            [ngbTooltip]="data?.currentStepName"
+            [ngStyle]="{ color: data?.steps['textColor'] }"
+            >{{ data?.currentStepName }}</span
+          >
+        </div>
+        <div *ngIf="data.status == '1'">
+          <codx-vll
+            [name]="'DP028'"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-sm"
+          >
+          </codx-vll>
+        </div>
+  
+        <div class="d-flex align-items-center text-gray-600">
+          <span class="icon-16 icon-av_timer me-1"></span>
+          <span
+            class="text-gray-700"
+            #endDate
+            [innerHTML]="
+              data.endDate | formatvalue : view.formModel : 'endDate' | async
+            "
+          ></span>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mt-1">
+        <codx-imgs
+          [isToolTip]="true"
+          [width]="25"
+          [objectId]="data.owner"
+          objectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
+    </div>
   </div>
 </ng-template>
 <ng-template #footer let-data>
-  <div class="d-flex justify-content-between align-items-center">
-    <div class="d-flex align-items-end codx-badge">
-      <div class="me-2 badge badge-light-primary"></div>
-      <div
-        *ngIf="data.status != '1'"
-        [ngStyle]="{
-          'background-color':
-            data.status == '3' || data.status == '4'
-              ? colorReasonSuccess?.color
-              : data.status == '5' || data.status == '6'
-              ? colorReasonFail?.color
-              : data?.steps['backgroundColor']
-        }"
-        class="me-2 badge badge-sm d-flex align-items-center"
-      >
-        <span
-          [ngClass]="data?.steps['icon']"
-          [ngStyle]="{ color: data?.steps['iconColor'] }"
-          class="me-1"
-        ></span>
-        <span
-          class="menu-title fw-bold line-clamp-menu"
-          [ngbTooltip]="data?.currentStepName"
-          [ngStyle]="{ color: data?.steps['textColor'] }"
-          >{{ data?.currentStepName }}</span
-        >
-      </div>
-      <div *ngIf="data.status == '1'">
-        <codx-vll
-          [name]="'DP028'"
-          [field]="'Status'"
-          [value]="data?.status"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-light badge-sm"
-        >
-        </codx-vll>
-      </div>
-
-      <div class="d-flex align-items-center text-gray-600">
-        <span class="icon-16 icon-av_timer me-1"></span>
-        <span
-          class="text-gray-700"
-          #endDate
-          [innerHTML]="
-            data.endDate | formatvalue : view.formModel : 'endDate' | async
-          "
-        ></span>
-      </div>
-    </div>
-    <div class="d-flex justify-content-center mt-1">
-      <codx-imgs
-        [isToolTip]="true"
-        [width]="25"
-        [objectId]="data.owner"
-        objectType="AD_Users"
-        [numberImages]="1"
-      >
-      </codx-imgs>
-    </div>
-  </div>
+  
 </ng-template>
 <ng-template #baseHeaderRightTmp let-data>
   <div>

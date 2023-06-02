@@ -126,8 +126,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.getTab();
     this.getAutoNumber(this.autoNumber);
 
-    if (this.action == 'add' || this.action == 'copy'){
-      if(this.funcID == 'CM0101' || this.funcID == 'CM0102'){
+    if (this.action == 'add' || this.action == 'copy') {
+      if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
         this.data.address = null;
       }
     }
@@ -330,31 +330,24 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.action == 'edit' ? this.lstContactDeletes : [],
       this.listAddress,
       this.listAddressDelete,
-      this.avatarChange
+      this.avatarChange,
     ];
     op.data = data;
     return true;
   }
 
-  onAdd() {
+  async onAdd() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
-      .subscribe((res) => {
+      .subscribe(async (res) => {
         if (res) {
           var recID = res?.save?.recID;
           if (this.avatarChange) {
-            this.imageUpload
-              .updateFileDirectReload(recID)
-              .subscribe((result) => {
-                if (result) {
-                  this.dialog.close([res.save]);
-                } else {
-                  this.dialog.close([res.save]);
-                }
-              });
-          } else {
-            this.dialog.close([res.save]);
+            await firstValueFrom(
+              this.imageUpload.updateFileDirectReload(recID)
+            );
           }
+          this.dialog.close([res.save]);
         }
       });
   }
@@ -366,23 +359,19 @@ export class PopupAddCmCustomerComponent implements OnInit {
   onUpdate() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
-      .subscribe((res) => {
+      .subscribe(async (res) => {
         if (res && res.update) {
           var recID = res.update?.recID;
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
           if (this.avatarChange) {
-            this.imageUpload
-              .updateFileDirectReload(recID)
-              .subscribe((result) => {
-                if (result) {
-                  this.dialog.close(res.update);
-                }
-              });
-          } else {
-            this.dialog.close(res.update);
+            await firstValueFrom(
+              this.imageUpload.updateFileDirectReload(recID)
+            );
+
           }
+          this.dialog.close(res.update);
         }
       });
   }
@@ -416,7 +405,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (this.funcID == 'CM0102') {
       if (this.data.mobile != null && this.data.mobile.trim() != '') {
         if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
-      }else{
+      } else {
         this.data.mobile = null;
       }
       if (
@@ -424,7 +413,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         this.data.personalEmail.trim() != ''
       ) {
         if (!this.checkEmailOrPhone(this.data.personalEmail, 'E')) return;
-      }else{
+      } else {
         this.data.personalEmail = null;
       }
     }

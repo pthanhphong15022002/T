@@ -30,15 +30,6 @@ import {
   UrlUtil,
   UserModel,
 } from 'codx-core';
-import {
-  AmazonLoginProvider,
-  FacebookLoginProvider,
-  GoogleLoginProvider,
-  MicrosoftLoginProvider,
-  SocialUser,
-  SocialAuthService,
-} from '@abacritt/angularx-social-login';
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -76,8 +67,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private dt: ChangeDetectorRef,
     private auth: AuthStore,
     private cache: CacheService,
-    private readonly authService: AuthService,
-    private readonly extendAuthService: SocialAuthService
+    private readonly authService: AuthService //private readonly extendAuthService: SocialAuthService
   ) {
     this.layoutCZ = environment.layoutCZ;
     const tenant = this.tenantStore.getName();
@@ -398,22 +388,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   private extendLogin(type: string) {
     var id = '';
-    switch (type) {
-      case 'a':
-        id = AmazonLoginProvider.PROVIDER_ID;
-        break;
-      case 'f':
-        id = FacebookLoginProvider.PROVIDER_ID;
-        break;
-      case 'g':
-        id = GoogleLoginProvider.PROVIDER_ID;
-        break;
-      case 'm':
-        id = MicrosoftLoginProvider.PROVIDER_ID;
-        break;
-    }
-
-    if (id) this.extendAuthService.signIn(id);
   }
 
   private loginAfter(data: any) {

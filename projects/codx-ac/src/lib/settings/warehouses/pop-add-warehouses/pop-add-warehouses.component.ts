@@ -291,7 +291,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
                   this.objects,
                 ])
                 .subscribe(() => {});
-              this.dialog.close(res.save);
+              this.dialog.close();
               this.dt.detectChanges();
             } else {
               this.notification.notifyCode(
@@ -334,7 +334,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
                   this.objects,
                 ])
                 .subscribe(() => {});
-              this.dialog.close(res.update);
+              this.dialog.close();
               this.dt.detectChanges();
             }
           });
