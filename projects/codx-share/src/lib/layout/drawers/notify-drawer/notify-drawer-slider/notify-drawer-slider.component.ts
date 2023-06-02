@@ -26,7 +26,6 @@ export class NotifyDrawerSliderComponent implements OnInit {
   ) 
   {    
     this.dialogRef = dialogRef;
-    this.formModel = new FormModel();
   }
 
   ngOnInit(): void {
@@ -46,6 +45,8 @@ export class NotifyDrawerSliderComponent implements OnInit {
     });
     this.cache.functionList("BGT001")
     .subscribe((func:any)=>{
+      this.formModel = new FormModel();
+      debugger
       this.formModel.funcID = func.functionID;
       this.formModel.formName = func.formName;
       this.formModel.gridViewName = func.gridViewName;

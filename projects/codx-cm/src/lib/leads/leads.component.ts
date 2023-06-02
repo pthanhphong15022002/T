@@ -35,7 +35,7 @@ import { PopupMergeLeadsComponent } from './popup-merge-leads/popup-merge-leads.
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
   styleUrls: ['./leads.component.scss'],
-  encapsulation:ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None,
 })
 export class LeadsComponent
   extends UIComponent
@@ -206,8 +206,7 @@ export class LeadsComponent
               more.disabled = true;
           }
         }
-      }
-      else {
+      } else {
         if (data.status == '1') {
           for (let more of $event) {
             switch (more.functionID) {
@@ -223,7 +222,6 @@ export class LeadsComponent
           }
         }
       }
-
     }
   }
   checkMoreReason(data, isUseReason) {
@@ -507,48 +505,48 @@ export class LeadsComponent
 
   //#region mergeLead
   mergeLead(data) {
-      let obj = {
-        data,
-        title: this.titleAction,
-      };
-      let option = new DialogModel();
-      option.IsFull = true;
-      option.zIndex = 1001;
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      let popupContract = this.callfc.openForm(
-        PopupMergeLeadsComponent,
-        '',
-        null,
-        null,
-        '',
-        obj,
-        '',
-        option
-      );
-      popupContract.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
+    let obj = {
+      data,
+      title: this.titleAction,
+    };
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1001;
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    let popupContract = this.callfc.openForm(
+      PopupMergeLeadsComponent,
+      '',
+      null,
+      null,
+      '',
+      obj,
+      '',
+      option
+    );
+    popupContract.closed.subscribe((e) => {
+      if (!e?.event) this.view.dataService.clear();
 
-        if (e && e.event) {
-          if (e.event.length > 0) {
-            e.event[0].modifiedOn = new Date();
-            this.view.dataService.add(e.event[0], 0).subscribe();
-            if(e.event[1]){
-              this.view.dataService.remove(e.event[1]).subscribe();
-            }
-            if(e.event[2]){
-              this.view.dataService.remove(e.event[2]).subscribe();
-            }
-            if(e.event[3]){
-              this.view.dataService.remove(e.event[3]).subscribe();
-            }
-            this.dataSelected = JSON.parse(
-              JSON.parse(JSON.stringify(this.view.dataService.data[0]))
-            );
-            this.detectorRef.detectChanges();
+      if (e && e.event) {
+        if (e.event.length > 0) {
+          e.event[0].modifiedOn = new Date();
+          this.view.dataService.add(e.event[0], 0).subscribe();
+          if (e.event[1]) {
+            this.view.dataService.remove(e.event[1]).subscribe();
           }
+          if (e.event[2]) {
+            this.view.dataService.remove(e.event[2]).subscribe();
+          }
+          if (e.event[3]) {
+            this.view.dataService.remove(e.event[3]).subscribe();
+          }
+          this.dataSelected = JSON.parse(
+            JSON.stringify(this.view.dataService.data[0])
+          );
+          this.detectorRef.detectChanges();
         }
-      });
+      }
+    });
   }
   //#endregion
 
