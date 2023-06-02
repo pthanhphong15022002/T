@@ -280,18 +280,18 @@ export class PopupAddQuotationsComponent implements OnInit {
   //change Data
   changeCombox(e) {
     if (!e?.data || !e?.field) return;
-    if (this.quotations[e.field] != e.data) {
+    // if (this.quotations[e.field] != e.data) {
       this.quotations[e.field] = e.data;
       switch (e?.field) {
         case 'refID':
-          (
-            this.customerCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.customerCbx.crrValue = null;
-          (
-            this.contactCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.contactCbx.crrValue = null;
+          // (
+          //   this.customerCbx.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.data = [];
+          // this.customerCbx.crrValue = null;
+          // (
+          //   this.contactCbx.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.data = [];
+          // this.contactCbx.crrValue = null;
 
           this.quotations.customerID =
             e?.component?.itemsSelected[0]?.CustomerID;
@@ -299,37 +299,37 @@ export class PopupAddQuotationsComponent implements OnInit {
             customerID: this.quotations.customerID,
           };
           this.modelObjectIDContacs = { objectID: this.quotations.customerID };
-          this.quotations.contactID = null;
+          // this.quotations.contactID = null;
           break;
         case 'customerID':
-          (
-            this.customerCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.customerCbx.crrValue = null;
-          (
-            this.contactCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.contactCbx.crrValue = null;
+          // (
+          //   this.customerCbx.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.data = [];
+          // this.customerCbx.crrValue = null;
+          // (
+          //   this.contactCbx.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.data = [];
+          // this.contactCbx.crrValue = null;
 
-          this.quotations.refID = null;
-          this.quotations.contactID = null;
+          // this.quotations.refID = null;
+          // this.quotations.contactID = null;
           this.modelObjectIDContacs = { objectID: this.quotations.customerID };
           break;
         case 'contactID':
-          (
-            this.dealsCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.dealsCbx.crrValue = null;
-          (
-            this.contactCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.contactCbx.crrValue = null;
+          //(
+          //   this.dealsCbx.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.data = [];
+          // this.dealsCbx.crrValue = null;
+          // (
+          //   this.contactCbx.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.data = [];
+          // this.contactCbx.crrValue = null;
 
           this.modelObjectIDContacs = { objectID: this.quotations.customerID };
           break;
       }
       this.form.formGroup.patchValue(this.quotations);
-    }
+    // }
   }
 
   valueChange(e) {
