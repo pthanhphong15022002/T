@@ -444,8 +444,9 @@
           </codx-label>
         </div>
         <codx-input
-          type="text"
-          name="reminder"
+          type="number"
+          [formModel]="form.formModel"
+          [min]="0"
           field="reminder"
           (valueChange)="valueChange($event)"
           [crrValue]="meeting.reminder"
