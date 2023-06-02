@@ -290,7 +290,7 @@
         [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
-        [autoLoad]="false" (created)="gridCreated(gridCash)" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
+        [autoLoad]="false" (created)="gridCreated()" [height]="gridHeight" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
         (cellChanged)="lineChanged($event)"></codx-gridview-v2>
 
       <div #btnRef class="btn-addline">
@@ -850,11 +850,11 @@
     <codx-gridview-v2 #gridSet formName="SettledInvoices" gridViewName="grvSettledInvoices"
       entityName="AC_SettledInvoices" [templateMore]="morefunction" [editSettings]="editSettings"
       [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false"
-      [dataSource]="settledInvoices" rowHeight="40" (cellChanged)="settledLineChanged($event)">
+      [dataSource]="settledInvoices" (created)="gridCreated()" [height]="gridHeight" (cellChanged)="settledLineChanged($event)">
     </codx-gridview-v2>  
     <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
-          <div *ngIf="formType != 'edit'">
+          <div *ngIf="action != 'edit'">
             <button class="btn btn-sm btn-light-primary" (click)="settlement(0)">
               <i class="icon-i-wallet2 icon-16"></i>
               <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice1"
@@ -921,20 +921,20 @@
     <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
       <div class="d-flex align-items-center me-2">
         <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
-          <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
-          <i *ngIf="formType == 'copy'" class="icon-content_copy icon-16"></i>
-          <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
+          <i *ngIf="action == 'add'" class="icon-add_box icon-16"></i>
+          <i *ngIf="action == 'copy'" class="icon-content_copy icon-16"></i>
+          <i *ngIf="action == 'edit'" class="icon-edit_square icon-16"></i>
         </div>
         <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
           {{ headerText }}
         </div>
         <ng-container *ngIf="form.formGroup">
-          <div *ngIf="formType == 'add'" class="me-3 input-circle input-border-0 w-350px">
+          <div *ngIf="action == 'add'" class="me-3 input-circle input-border-0 w-350px">
             <codx-input [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
               (valueChange)="changeType($event)">
             </codx-input>
           </div>
-          <span *ngIf="(formType == 'edit' && cashpayment?.subType)" class="me-3">
+          <span *ngIf="(action == 'edit' && cashpayment?.subType)" class="me-3">
             <codx-vll [name]="'AC063'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
               [showText]="true" [showBgColor]="true" class="badge badge-light-primary badge-lg">
             </codx-vll>
@@ -949,7 +949,7 @@
         </div>
       </div>
       <div class="d-flex align-items-center me-3">
-        <div *ngIf="formType != 'edit'" class="ms-2">
+        <div *ngIf="action != 'edit'" class="ms-2">
           <button type="button" class="btn btn-md btn-light-primary" (click)="onSaveAdd()">
             <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
           </button>
