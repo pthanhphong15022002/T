@@ -139,9 +139,11 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     this.tenant = this.tenantStore.get()?.tenant;
     if (!this.tenant) this.tenant = UrlUtil.getTenant();
     this.codxCM.childMenuDefault.subscribe((res) => {
-      this.activeDefault = res.activeDefault;
-      this.func0Default = res.func0Default;
-      this.funcIDDefault = res.funcIDDefault;
+      if(res){
+        this.activeDefault = res?.activeDefault;
+        this.func0Default = res?.func0Default;
+        this.funcIDDefault = res?.funcIDDefault;
+      }   
     });
     this.loadMenuChild();
   }
@@ -813,8 +815,8 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
 
   //load menu Child
   loadMenuChild() {
-    this.requestMenuCustom.predicates = 'ApplyFor!=@0 && !Deleted && Released && Module==@1';
-    this.requestMenuCustom.dataValues = '0;CM';
+    this.requestMenuCustom.predicates = 'Module==@0 && !Deleted && Released';
+    this.requestMenuCustom.dataValues = 'CM';
     this.requestMenuCustom.entityName = 'DP_Processes';
     this.fetch().subscribe((item) => {
       this.dataMenuChildCustom = item;
@@ -829,18 +831,18 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     this.isClickMenuCus = true;
     let url = 'cm/processrelease/';
 
-    let funcParent = '';
-    switch (funcID) {
-      case 'CM02':
-        funcParent = 'CM0201';
-        this.codxService.activeMenu.func0 = 'CM02';
-        break;
-      case 'CM04':
-        this.codxService.activeMenu.func0 = 'CM04';
-        if (data.applyFor == '2') funcParent = 'CM0401';
-        else if (data.applyFor == '3') funcParent = 'CM0402';
-        break;
-    }
+    let funcParent = data.function;
+    // switch (funcID) {
+    //   case 'CM02':
+    //     funcParent = 'CM0201';
+    //     this.codxService.activeMenu.func0 = 'CM02';
+    //     break;
+    //   case 'CM04':
+    //     this.codxService.activeMenu.func0 = 'CM04';
+    //     if (data.applyFor == '2') funcParent = 'CM0401';
+    //     else if (data.applyFor == '3') funcParent = 'CM0402';
+    //     break;
+    // }
     //     // if (data.applyFor == '2') url = 'cm/processrelease/CM0401';
     //     // else if (data.applyFor == '3') url = 'cm/processrelease/CM0402';
     //     break;
@@ -853,5 +855,10 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     //   queryParams: { funcParent : funcParent ,recID: data.recID },
     // });
     this.codxService.navigate('', url + funcParent + `/${data.recID}`);
+  }
+
+  checkFunParent(func0,funcCheck){
+    let fun = this.getFunc(funcCheck);
+    return func0 == fun?.parentID
   }
 }

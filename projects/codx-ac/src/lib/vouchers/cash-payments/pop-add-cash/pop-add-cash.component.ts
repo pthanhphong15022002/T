@@ -110,7 +110,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     gridViewName: 'grvCashPaymentsLines',
     entityName: 'AC_CashPaymentsLines',
   };
-  gridHeight: number;
+  gridHeight: any;
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
@@ -235,14 +235,16 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.cashpaymentline = [];
         this.loadSubType1(false);
         this.loadSubType2(true);
+        this.loadSubType5(false);
         break;
       case '5':
         ele.hideTab(0, false);
         ele.hideTab(1, false);
         this.cashpaymentline = [];
         this.settledInvoices = [];
-        this.loadSubType1(true);
+        this.loadSubType1(false);
         this.loadSubType2(false);
+        this.loadSubType5(true);
         break;
       case '1':
       case '9':
@@ -252,9 +254,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.cashpaymentline = [];
         this.loadSubType1(true);
         this.loadSubType2(false);
-        if (this.gridCash) {
-          this.gridCreated(this.gridCash);
-        }
+        this.loadSubType5(false);
+        // if (this.gridCash) {
+        //   this.gridCreated(this.gridCash);
+        // }
         break;
       default:
         ele.hideTab(0, true);
@@ -262,9 +265,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.settledInvoices = [];
         this.loadSubType1(true);
         this.loadSubType2(false);
-        if (this.gridSet) {
-          this.gridCreated(this.gridSet);
-        }
+        // if (this.gridSet) {
+        //   this.gridCreated(this.gridSet);
+        // }
         break;
     }
   }
@@ -400,19 +403,22 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   gridCreated(grid) {
-    let hBody, hHeader, hTab, hItem, hDoc;
-    let body = document.getElementsByClassName('card-body scroll-y h-100');
-    let header = document.getElementsByClassName(
-      'e-gridheader e-lib e-draggable e-droppable'
-    );
-    let tab = document.getElementsByClassName('e-text-wrap');
-    if (body) hBody = (body[0] as HTMLElement).offsetHeight;
-    if (header) hHeader = (header[0] as HTMLElement).offsetHeight;
-    if (tab) hTab = hTab = (tab[0] as HTMLElement).offsetHeight * 2;
-    if (this.itemRef)
-      hItem = this.itemRef.nativeElement.parentElement.offsetHeight;
-    if (this.docRef) hDoc = this.docRef.nativeElement.offsetHeight;
-    this.gridHeight = hBody - (hHeader + hTab + hItem + hDoc + 90 + 30); //90 là header & footer, //30 là tfoot grid
+    setTimeout(() => {
+      let hBody, hHeader, hTab, hItem;
+      let body = document.getElementsByClassName('card-body scroll-y h-100');
+      let header = document.getElementsByClassName(
+        'e-gridheader e-lib e-draggable e-droppable'
+      );
+      let tab = document.getElementsByClassName('e-text-wrap');
+      if (body) hBody = (body[0] as HTMLElement).offsetHeight;
+      if (header) hHeader = (header[0] as HTMLElement).offsetHeight;
+      if (tab) hTab = hTab = (tab[0] as HTMLElement).offsetHeight * 2;
+      if (this.itemRef)
+        hItem = this.itemRef.nativeElement.parentElement.offsetHeight;
+      this.gridHeight = hBody - (hHeader + hTab + hItem + 90); //90 là header & footer, //30 là tfoot grid
+      this.gridCash.height = this.gridHeight;
+      //this.gridCash.hideColumns(['ReasonID']);
+    }, 500);
   }
 
   lineChanged(e: any) {
@@ -1304,6 +1310,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       return false;
     }
   }
+
   loadSubType1(enable) {
     var element = document.getElementById('ac-type-1');
     if (element) {
@@ -1314,8 +1321,23 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }
   }
+
   loadSubType2(enable) {
     var element = document.querySelectorAll('.ac-type-2');
+    if (element) {
+      if (enable) {
+        for (let index = 0; index < element.length; index++) {
+          (element[index] as HTMLElement).style.display = 'inline';
+        }
+      } else {
+        for (let index = 0; index < element.length; index++) {
+          (element[index] as HTMLElement).style.display = 'none';
+        }
+      }
+    }
+  }
+  loadSubType5(enable) {
+    var element = document.querySelectorAll('.ac-type-5');
     if (element) {
       if (enable) {
         for (let index = 0; index < element.length; index++) {

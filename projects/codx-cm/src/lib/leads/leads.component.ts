@@ -199,7 +199,7 @@ export class LeadsComponent
 
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-      if (!data.roles.isOnwer) {
+      if (!data?.roles?.isOnwer) {
         for (let more of $event) {
           switch (more.functionID) {
             default:

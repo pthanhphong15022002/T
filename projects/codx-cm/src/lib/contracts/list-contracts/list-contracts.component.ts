@@ -18,6 +18,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
   @Input() customersID: string;
   @Input() dealID: string;
   @Input() quotationID: string;
+  @Input() type: 'view' | 'deal' | 'quotation' | 'customer';
   dateFomat = 'dd/MM/yyyy';
   account: any;
   customersData:any;
@@ -180,7 +181,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
       action,
       contract: contract || null,
       account: this.account,
-      type:'list'
+      type: this.type
     }
     let option = new DialogModel();
     option.IsFull = true;

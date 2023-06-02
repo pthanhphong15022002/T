@@ -100,4 +100,65 @@ export class ContractsService {
     );
   }
 
+  // async loadSetting() {
+  //   this.grvSetup = await firstValueFrom(
+  //     this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
+  //   );
+  //   this.vllStatus = this.grvSetup['Status'].referedValue;
+  //   //lay grid view
+  //   let arrField = Object.values(this.grvSetup).filter((x: any) => x.isVisible);
+  //   if (Array.isArray(arrField)) {
+  //     this.arrFieldIsVisible = arrField
+  //       .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+  //       .map((x: any) => x.fieldName);
+  //     this.getColumsGrid(this.grvSetup);
+  //   }
+  // }
+
+  // getColumsGrid(grvSetup) {
+  //   this.columnGrids = [];
+  //   this.arrFieldIsVisible.forEach((key) => {
+  //     let field = Util.camelize(key);
+  //     let template: any;
+  //     let colums: any;
+  //     switch (key) {
+  //       case 'Status':
+  //         template = this.templateStatus;
+  //         break;
+  //       case 'CustomerID':
+  //         template = this.templateCustomer;
+  //         break;
+  //       case 'CreatedBy':
+  //         template = this.templateCreatedBy;
+  //         break;
+  //       case 'TotalTaxAmt':
+  //         template = this.templateTotalTaxAmt;
+  //         break;
+  //       case 'TotalAmt':
+  //         template = this.templateTotalAmt;
+  //         break;
+  //       case 'TotalSalesAmt':
+  //         template = this.templateTotalSalesAmt;
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //     if (template) {
+  //       colums = {
+  //         field: field,
+  //         headerText: grvSetup[key].headerText,
+  //         width: grvSetup[key].width,
+  //         template: template,
+  //         // textAlign: 'center',
+  //       };
+  //     } else {
+  //       colums = {
+  //         field: field,
+  //         headerText: grvSetup[key].headerText,
+  //         width: grvSetup[key].width,
+  //       };
+  //     }
+
+  //     this.columnGrids.push(colums);
+  //   });
 }
