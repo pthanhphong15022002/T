@@ -1,6 +1,8 @@
 <ng-container *ngIf="funcID == 'CM0201'">
+  <!-- <lib-cases [funcID]="'CM0401'" [dataObj]="dataObj"></lib-cases> -->
   <lib-deals [funcID]="funcID" [dataObj]="dataObj"></lib-deals>
 </ng-container>
 <ng-container *ngIf="funcID != 'CM0201'">
     <lib-cases [funcID]="funcID" [dataObj]="dataObj"></lib-cases>
+    <!-- <lib-deals [funcID]="'CM0201'" [dataObj]="dataObj"></lib-deals> -->
   </ng-container>

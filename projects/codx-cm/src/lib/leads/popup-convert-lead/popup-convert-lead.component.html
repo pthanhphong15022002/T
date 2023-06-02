@@ -58,7 +58,7 @@
             [refValue]="gridViewSetupDeal?.BusinessLineID?.referedValue"
             [placeholder]="gridViewSetupDeal?.BusinessLineID?.description"
             field="businessLineID"
-            (valueChange)="valueChange($event)"
+            (valueChange)="valueBusinessLine($event)"
           >
           </codx-input>
         </div>
@@ -93,15 +93,14 @@
             default="Quy trình"
           >
           </codx-label>
-          <div *ngIf="listCbxProcess.length > 0 && listCbxProcess != null">
-            <ejs-combobox
-              [dataSource]="listCbxProcess"
-              [fields]="fieldCbxProcess"
-              [value]="deal?.processID"
-              [placeholder]="gridViewSetupDeal?.ProcessID?.description"
-              (valueChange)="cbxProcessChange($event)"
-            ></ejs-combobox>
-          </div>
+          <codx-input
+            [formModel]="formModelDeals"
+            field="processID"
+            [disabled]="true"
+            [model]="{ ApplyFor: '1' }"
+            [crrValue]="deal?.processID"
+          >
+          </codx-input>
         </div>
       </div>
     </div>
