@@ -48,6 +48,7 @@ import { RunPeriodicComponent } from './periodic/run-periodic/run-periodic.compo
 import { PopAddRunPeriodicComponent } from './periodic/run-periodic/pop-add-run-periodic/pop-add-run-periodic.component';
 import { PopUpCashComponent } from './vouchers/cash-payments/pop-up-cash/pop-up-cash.component';
 import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
+import { ReplacePipe } from './pipes/replace.pipe';
 
 export const routes: Routes = [
   {
@@ -176,7 +177,8 @@ export const routes: Routes = [
     GroupShareComponent,
     RunPeriodicComponent,
     PopAddRunPeriodicComponent,
-    PopUpCashComponent
+    PopUpCashComponent,
+    ReplacePipe
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
