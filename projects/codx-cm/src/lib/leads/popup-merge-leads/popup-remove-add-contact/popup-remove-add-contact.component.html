@@ -44,7 +44,7 @@
     ></codx-list-contacts>
   </ng-container>
   <ng-container *ngIf="category == 'address'">
-    <codx-address-cm [id]="lead?.recID" [entityName]="dialog?.formModel?.entityName" [hidden]="true" [isConvertLeadToCus]="true" [selectAll]="true" [listAddress]="list" (convertAddress)="convertAddress($event)"></codx-address-cm>
+    <codx-address-cm #loadListAddress [id]="lead?.recID" [entityName]="dialog?.formModel?.entityName" [hidden]="true" [isConvertLeadToCus]="true" [selectAll]="true" [listAddress]="list" (convertAddress)="convertAddress($event)"></codx-address-cm>
   </ng-container>
 </ng-template>
 <ng-template #footer>
