@@ -1187,6 +1187,8 @@ export class CodxEsService {
         entityName,
         funcID,
         '<div>' + oSignFile.title + '</div>',
+        "",
+        oSignFile.refType
       ]
     );
   }

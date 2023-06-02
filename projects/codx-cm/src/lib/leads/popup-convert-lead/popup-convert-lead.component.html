@@ -93,6 +93,15 @@
             default="Quy trình"
           >
           </codx-label>
+          <!-- <div *ngIf="deal?.processID">
+            <ejs-combobox
+            [dataSource]="listCbxProcess"
+            [fields]="fieldCbxProcess"
+            [value]="deal?.processID"
+            [readonly]="true"
+          ></ejs-combobox>
+          </div> -->
+
           <codx-input
             [formModel]="formModelDeals"
             field="processID"
