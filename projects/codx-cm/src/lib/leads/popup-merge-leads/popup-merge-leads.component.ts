@@ -361,13 +361,13 @@ export class PopupMergeLeadsComponent implements OnInit {
           this.leadNew.establishDate = this.leadThree?.establishDate;
         }
         break;
-      case 'phone':
-        if (e.field === 'phone1' && e.component.checked === true) {
-          this.leadNew.phone = this.leadOne?.phone;
-        } else if (e.field === 'phone2' && e.component.checked === true) {
-          this.leadNew.phone = this.leadTwo?.phone;
+      case 'companyPhone':
+        if (e.field === 'companyPhone1' && e.component.checked === true) {
+          this.leadNew.companyPhone = this.leadOne?.companyPhone;
+        } else if (e.field === 'companyPhone2' && e.component.checked === true) {
+          this.leadNew.companyPhone = this.leadTwo?.companyPhone;
         } else {
-          this.leadNew.phone = this.leadThree?.phone;
+          this.leadNew.companyPhone = this.leadThree?.companyPhone;
         }
         break;
       case 'faxNo':
