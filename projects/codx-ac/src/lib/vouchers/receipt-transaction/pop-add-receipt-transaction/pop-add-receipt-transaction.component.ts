@@ -148,7 +148,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.loadTotal();
     this.loadJournal();
     this.loadItems();
-    this.loadWarehouses();
   }
 
   ngAfterViewInit() {
@@ -194,7 +193,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         case'warehouseid':
           {
             this.inventoryJournal.warehouseID = e.data;
-            this.getWarehouseName(e.data);
+            this.inventoryJournal.warehouseName = e.component.itemsSelected[0].WarehouseName;
             this.form.formGroup.patchValue(this.inventoryJournal);
           }
           break;
@@ -507,7 +506,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
     if(this.formType == 'copy' && this.inventoryJournal.warehouseID)
     {
-      this.getWarehouse(this.inventoryJournal.warehouseID);
+      this.getWarehouseName(this.inventoryJournal.warehouseID);
     }
     if(this.formType == 'add')
     {
@@ -517,14 +516,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           if(this.inventoryJournal.warehouseReceipt)
           {
             this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseReceipt;
-            this.getWarehouse(this.inventoryJournal.warehouseID);
+            this.getWarehouseName(this.inventoryJournal.warehouseID);
           }
           break;
         case 'ACT0714':
           if(this.inventoryJournal.warehouseIssue)
           {
             this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseIssue;
-            this.getWarehouse(this.inventoryJournal.warehouseID);
+            this.getWarehouseName(this.inventoryJournal.warehouseID);
           }
           break;
       }
@@ -579,14 +578,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     .subscribe((res: any) => {
       if(res)
         this.lsitem = res;
-    });
-  }
-
-  loadWarehouses(){
-    this.api.exec('IV', 'WareHousesBusiness', 'LoadAllDataAsync')
-    .subscribe((res: any) => {
-      if(res)
-        this.lswarehouse = res;
     });
   }
 
@@ -1013,7 +1004,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.form.formGroup.patchValue(this.inventoryJournal);
   }
 
-  getWarehouse(warehouseID: any){
+  getWarehouseName(warehouseID: any){
     this.api.exec('IV', 'InventoryJournalsBusiness', 'GetWarehouseNameAsync', [warehouseID])
       .subscribe((res: any) => {
         if (res.length > 0) {
@@ -1021,11 +1012,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.form.formGroup.patchValue(this.inventoryJournal);
         }
       });
-  }
-
-  getWarehouseName(warehouseID: any){
-    var warehouse = this.lswarehouse.filter(x => x.warehouseID == warehouseID);
-    this.inventoryJournal.warehouseName = warehouse[0].warehouseName;
   }
 
   getItem(itemID: any){
