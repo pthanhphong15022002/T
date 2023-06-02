@@ -54,6 +54,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   taskGroup: TM_TaskGroups;
   task: TM_Tasks = new TM_Tasks();
   functionID = 'TMT0203'; // giao việc nên cố định funcID này
+  entytiNameDefault = 'TM_AssignTasks';
   popover: any;
   title = 'Giao việc';
   showPlan = true;
@@ -80,6 +81,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   crrRole: any;
   accountable: boolean = false;
   paramView: any; //param view
+  showLabelAttachment = false
 
   constructor(
     private authStore: AuthStore,
@@ -112,6 +114,10 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.formModel = this.dialog.formModel;
+
+    this.cache.functionList(this.functionID).subscribe((f) => {
+      this.entytiNameDefault = f.entityName ?? this.entytiNameDefault;
+    });
 
     this.cache.functionList(this.dialog.formModel.funcID).subscribe((f) => {
       if (f && f.module) {
@@ -479,6 +485,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
+    this.showLabelAttachment = this.isHaveFile;
   }
   eventApply(e: any) {
     var assignTo = '';

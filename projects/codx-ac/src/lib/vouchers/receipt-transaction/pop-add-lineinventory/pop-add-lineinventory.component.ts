@@ -161,9 +161,9 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
   loadControl(value) {
     let index = this.lockFields.findIndex((x) => x == value);
     if (index == -1) {
-      return false;
-    } else {
       return true;
+    } else {
+      return false;
     }
   }
 
