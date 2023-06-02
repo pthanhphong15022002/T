@@ -5,8 +5,6 @@ import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 
 import {
   CodxFormComponent,
-  CodxListviewComponent,
-  CRUDService,
   DataRequest,
   DialogData,
   DialogRef,
@@ -37,6 +35,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   genderGrvSetup: any;
   isUseEmployee: boolean;
   employeeObj: any;
+  decisionNoDisable: boolean = false;
   @ViewChild('form') form: CodxFormComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
 
@@ -166,6 +165,12 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    if (this.dialog.dataService?.keyField === 'ContractNo') {
+      this.decisionNoDisable = false;
+    } else {
+      this.decisionNoDisable = true;
+    }
+
     this.hrService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((fg) => {
@@ -238,10 +243,10 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
 
     // if (this.actionType === 'copy' || this.actionType === 'add') {
     //   delete this.EAppointionObj.recID;

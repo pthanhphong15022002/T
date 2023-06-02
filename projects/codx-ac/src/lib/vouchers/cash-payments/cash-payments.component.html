@@ -52,7 +52,7 @@
 </ng-template>
 <ng-template #desc2Tmp let-data>
   <div *ngIf="data?.objectName" class="d-flex align-items-center mb-1">
-    <img src="../assets/themes/ac/default/img/company.svg" class="w-20px h-20px me-2" />
+    <img src="../assets/themes/ac/default/img/company.svg" class="w-15px h-15px me-2" />
     <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1 mt-1">{{data?.objectName}}</span>
   </div>
 </ng-template>
@@ -80,7 +80,7 @@
     <div class="d-flex justify-content-between flex-grow-1 mb-2">
       <div class="d-flex align-items-center">
         <!-- <span class="me-2 icon-corporate_fare text-primary icon-20"></span> -->
-        <img src="../assets/themes/ac/default/img/company.svg" class="w-25px h-25px me-2" />
+        <img src="../assets/themes/ac/default/img/company.svg" class="w-20px h-20px me-2" />
         <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1" #objectName [innerHTML]="
             itemSelected?.objectName
               | formatvalue : view.formModel : 'objectName' : objectName

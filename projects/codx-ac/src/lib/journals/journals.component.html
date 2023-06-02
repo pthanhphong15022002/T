@@ -29,6 +29,7 @@
   >
   </codx-views>
 </div>
+
 <ng-template #itemTemplate let-data>
   <codx-card-img
     cardCss="dp-card-process border rounded-2 h-100 w-225px"
@@ -57,4 +58,229 @@
 
 <ng-template #titleTmp let-data>
   <span class="fs-6 fw-bold text-dark w-100 py-3">{{ data?.journalDesc }}</span>
+</ng-template>
+
+<ng-template #header1Template>
+  <codx-label
+    field="lblHeader1"
+    [formModel]="view.formModel"
+    default="Sổ nhật ký"
+  ></codx-label>
+</ng-template>
+
+<ng-template #header2Template>
+  <codx-label
+    field="lblHeader2"
+    [formModel]="view.formModel"
+    default="Thiết lập chung"
+  ></codx-label>
+</ng-template>
+
+<ng-template #header3Template>
+  <codx-label
+    field="lblHeader3"
+    [formModel]="view.formModel"
+    default="Phân quyền"
+  ></codx-label>
+</ng-template>
+
+<ng-template #column1Template let-data>
+  <div class="d-flex gap-3 p-3">
+    <codx-img
+      [imgSource]="
+        !data.checkImage
+          ? 'assets/themes/ac/default/img/' +
+            (data.journalType | vll : 'AC078' : 'text' | async)
+          : ''
+      "
+      [funcId]="view.formModel?.funcID"
+      [objectId]="data.recID"
+      [objectType]="view.formModel?.entityName"
+      [width]="75"
+      [imgOn]="data.modifiedOn"
+      [isDefaulImg]="true"
+      imageType="square"
+    >
+    </codx-img>
+
+    <div>
+      <div class="fw-bold">{{ data.journalDesc }}</div>
+      <div>
+        <codx-label
+          fiedName="periodID"
+          [formModel]="view.formModel"
+        ></codx-label>
+        : {{ data.periodID }}
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #column2Template let-data>
+  <div class="d-flex gap-3">
+    <div class="mw-45 text-truncate">
+      <codx-label
+        fiedName="drAcctControl"
+        [formModel]="view.formModel"
+      ></codx-label>
+      :
+      <span
+        [innerHTML]="
+          data.drAcctID
+            | formatvalue : view.formModel : 'drAcctID'
+            | async
+            | replace : ';' : ', '
+        "
+      ></span>
+      &nbsp;
+    </div>
+    •
+    <div class="mw-45 text-truncate">
+      <codx-label
+        fiedName="crAcctControl"
+        [formModel]="view.formModel"
+      ></codx-label>
+      :
+      <span
+        [innerHTML]="
+          data.crAcctID
+            | formatvalue : view.formModel : 'crAcctID'
+            | async
+            | replace : ';' : ', '
+        "
+      ></span>
+      &nbsp;
+    </div>
+  </div>
+
+  <div class="d-flex gap-3">
+    <div class="mw-30 text-truncate">
+      <codx-label
+        fiedName="diM1Control"
+        [formModel]="view.formModel"
+      ></codx-label>
+      :
+      <span
+        [innerHTML]="
+          data.diM1
+            | formatvalue : view.formModel : 'diM1'
+            | async
+            | replace : ';' : ', '
+        "
+      ></span>
+      &nbsp;
+    </div>
+    •
+    <div class="mw-30 text-truncate">
+      <codx-label
+        fiedName="diM2Control"
+        [formModel]="view.formModel"
+      ></codx-label>
+      :
+      <span
+        [innerHTML]="
+          data.diM2
+            | formatvalue : view.formModel : 'diM2'
+            | async
+            | replace : ';' : ', '
+        "
+      ></span>
+      &nbsp;
+    </div>
+    •
+    <div class="mw-30 text-truncate">
+      <codx-label
+        fiedName="diM3Control"
+        [formModel]="view.formModel"
+      ></codx-label>
+      :
+      <span
+        [innerHTML]="
+          data.diM3
+            | formatvalue : view.formModel : 'diM3'
+            | async
+            | replace : ';' : ', '
+        "
+      ></span>
+      &nbsp;
+    </div>
+  </div>
+
+  <div class="d-flex gap-3">
+    <div>
+      <codx-label
+        fiedName="projectControl"
+        [formModel]="view.formModel"
+      ></codx-label>
+      :
+      <span
+        [innerHTML]="
+          data.assetControl
+            | formatvalue : view.formModel : 'projectControl'
+            | async
+        "
+      ></span>
+    </div>
+    •
+    <div>
+      <codx-label
+        fiedName="loanControl"
+        [formModel]="view.formModel"
+      ></codx-label>
+      :
+      <span
+        [innerHTML]="
+          data.assetControl
+            | formatvalue : view.formModel : 'loanControl'
+            | async
+        "
+      ></span>
+    </div>
+    •
+    <div>
+      <codx-label
+        fiedName="assetControl"
+        [formModel]="view.formModel"
+      ></codx-label>
+      :
+      <span
+        [innerHTML]="
+          data.assetControl
+            | formatvalue : view.formModel : 'assetControl'
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #column3Template let-data>
+  <div class="text-truncate">
+    <codx-label fiedName="creater" [formModel]="view.formModel"></codx-label>
+    <span
+      >:
+      {{
+        this.creaters | nameById : "journalNo" : "value" : data.journalNo
+      }}</span
+    >
+  </div>
+  <div class="text-truncate">
+    <codx-label fiedName="poster" [formModel]="view.formModel"></codx-label>
+    <span
+      >:
+      {{
+        this.posters | nameById : "journalNo" : "value" : data.journalNo
+      }}</span
+    >
+  </div>
+</ng-template>
+
+<ng-template #moreTemplate let-data>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    (clickMF)="clickMF($event, data)"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
 </ng-template>

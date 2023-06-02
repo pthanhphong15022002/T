@@ -2,6 +2,7 @@ import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   ButtonModel,
+  DataRequest,
   NotificationsService,
   SidebarModel,
   UIComponent,
@@ -9,7 +10,10 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { CodxAcService } from '../codx-ac.service';
+import { NameByIdPipe } from '../pipes/nameById.pipe';
+import { IJournalPermission } from './interfaces/IJournalPermission.interface';
 import { JournalService } from './journals.service';
 import { PopupAddJournalComponent } from './popup-add-journal/popup-add-journal.component';
 
@@ -20,6 +24,20 @@ import { PopupAddJournalComponent } from './popup-add-journal/popup-add-journal.
 export class JournalsComponent extends UIComponent {
   //#region Constructor
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('moreTemplate', { static: true }) moreTemplate: TemplateRef<any>;
+  @ViewChild('header1Template', { static: true })
+  header1Template: TemplateRef<any>;
+  @ViewChild('header2Template', { static: true })
+  header2Template: TemplateRef<any>;
+  @ViewChild('header3Template', { static: true })
+  header3Template: TemplateRef<any>;
+  @ViewChild('column1Template', { static: true })
+  column1Template: TemplateRef<any>;
+  @ViewChild('column2Template', { static: true })
+  column2Template: TemplateRef<any>;
+  @ViewChild('column3Template', { static: true })
+  column3Template: TemplateRef<any>;
+
   views: Array<ViewModel> = [];
   button: ButtonModel = {
     id: 'btnAdd',
@@ -28,6 +46,12 @@ export class JournalsComponent extends UIComponent {
   vll86 = [];
   vll85 = [];
   func = [];
+
+  randomSubject = new BehaviorSubject<number>(Math.random());
+  nameByIdPipe = new NameByIdPipe();
+  creaters: { journalNo: string; value: string }[];
+  posters: { journalNo: string; value: string }[];
+
   constructor(
     inject: Injector,
     private route: Router,
@@ -55,6 +79,76 @@ export class JournalsComponent extends UIComponent {
         this.vll85 = res.datas;
       }
     });
+
+    // dùng tạm, chỉnh sau 😐
+    // get data for permission column
+    combineLatest({
+      users: this.journalService.getUsers(),
+      userGroups: this.journalService.getUserGroups(),
+      userRoles: this.journalService.getUserRoles(),
+      random: this.randomSubject.asObservable(),
+    }).subscribe(({ users, userGroups, userRoles }) => {
+      const options = new DataRequest();
+      options.entityName = 'AC_JournalsPermission';
+      options.pageLoading = false;
+      this.acService
+        .loadDataAsync('AC', options)
+        .subscribe((journalPermissions: IJournalPermission[]) => {
+          let createrMap: Map<string, string[]> = new Map();
+          let posterMap: Map<string, string[]> = new Map();
+
+          for (const permission of journalPermissions) {
+            let name: string;
+            if (permission.objectType === 'U') {
+              name = this.nameByIdPipe.transform(
+                users,
+                'UserID',
+                'UserName',
+                permission.objectID
+              );
+            } else if (permission.objectType === 'UG') {
+              name = this.nameByIdPipe.transform(
+                userGroups,
+                'GroupID',
+                'GroupName',
+                permission.objectID
+              );
+            } else {
+              name = this.nameByIdPipe.transform(
+                userRoles,
+                'RoleID',
+                'RoleName',
+                permission.objectID
+              );
+            }
+
+            if (permission.add === '1') {
+              let creaters: string[] =
+                createrMap.get(permission.journalNo) ?? [];
+              creaters.push(name);
+              createrMap.set(permission.journalNo, creaters);
+            }
+
+            if (permission.post === '1') {
+              let posters: string[] = posterMap.get(permission.journalNo) ?? [];
+              posters.push(name);
+              posterMap.set(permission.journalNo, posters);
+            }
+          }
+
+          this.creaters = Array.from(createrMap, ([key, value]) => ({
+            journalNo: key,
+            value: value.join(', '),
+          }));
+          this.posters = Array.from(posterMap, ([key, value]) => ({
+            journalNo: key,
+            value: value.join(', '),
+          }));
+
+          console.log(this.creaters);
+          console.log(this.posters);
+        });
+    });
   }
 
   ngAfterViewInit(): void {
@@ -67,11 +161,33 @@ export class JournalsComponent extends UIComponent {
           template: this.itemTemplate,
         },
       },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          resources: [
+            {
+              headerTemplate: this.header1Template,
+              template: this.column1Template,
+            },
+            {
+              headerTemplate: this.header2Template,
+              template: this.column2Template,
+              width: '50%',
+            },
+            {
+              headerTemplate: this.header3Template,
+              template: this.column3Template,
+            },
+          ],
+          template2: this.moreTemplate,
+        },
+      },
     ];
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      this.functionName =
-        res.defaultName.charAt(0).toLowerCase() + res.defaultName.slice(1);
+      this.functionName = this.acService.toCamelCase(res.defaultName);
     });
   }
   //#region Init
@@ -100,7 +216,10 @@ export class JournalsComponent extends UIComponent {
         if (func && func.url && func.url.charAt(0) != '/') urlRedirect += '/';
         urlRedirect += func.url;
         this.route.navigate([urlRedirect], {
-          queryParams: { journalNo: data.journalNo },
+          queryParams: {
+            journalNo: data.journalNo,
+            parent: this.view.funcID,
+          },
         });
       }
     });
@@ -147,15 +266,19 @@ export class JournalsComponent extends UIComponent {
       options.DataService = this.view.dataService;
       options.FormModel = this.view.formModel;
 
-      this.callfc.openSide(
-        PopupAddJournalComponent,
-        {
-          formType: 'edit',
-          formTitle: `${e.text} ${this.functionName}`,
-        },
-        options,
-        this.view.funcID
-      );
+      this.callfc
+        .openSide(
+          PopupAddJournalComponent,
+          {
+            formType: 'edit',
+            formTitle: `${e.text} ${this.functionName}`,
+          },
+          options,
+          this.view.funcID
+        )
+        .closed.subscribe(() => {
+          this.randomSubject.next(Math.random()); // ❌ bùa refresh
+        });
     });
   }
 

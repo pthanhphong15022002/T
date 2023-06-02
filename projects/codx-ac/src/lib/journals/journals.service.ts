@@ -147,8 +147,10 @@ export class JournalService {
     }
 
     const idimControls: string[] = journal?.idimControl?.split(',');
-    for (let i = 0; i < idimControls?.length; i++) {
-      hiddenFields.push('IDIM' + idimControls[i]);
+    for (let i = 0; i < 10; i++) {
+      if (!idimControls.includes(i.toString())) {
+        hiddenFields.push('IDIM' + i);
+      }
     }
 
     return hiddenFields;
@@ -221,5 +223,17 @@ export class JournalService {
     return subject
       .asObservable()
       .pipe(tap((t) => console.log('hasVouchers', t)));
+  }
+
+  getUserGroups(): Observable<any[]> {
+    return this.acService.loadComboboxData('Share_GroupUsers', 'AD');
+  }
+
+  getUserRoles(): Observable<any[]> {
+    return this.acService.loadComboboxData('Share_UserRoles', 'AD');
+  }
+
+  getUsers(): Observable<any[]> {
+    return this.acService.loadComboboxData('Share_Users', 'AD');
   }
 }

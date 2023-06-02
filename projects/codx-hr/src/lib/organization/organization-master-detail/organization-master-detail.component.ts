@@ -59,9 +59,9 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    // if (!this.funcID) {
-    //   this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // }
+    if (!this.funcID) {
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    }
 
     // this.hrService.getFormModel(this.funcID).then((res) => {
     //   this.appointionFormModel = res;

@@ -1154,6 +1154,8 @@
             <div class="row mb-5">
               <div class="text-gray-600 pb-1">
                 <span class="icon-place icon-16 text-gray-600 me-2"></span>
+                <codx-label fiedName="tAddress" [formModel]="eInfoFormModel">
+                </codx-label>
               </div>
               <div class="ms-7">
                 <span
@@ -1831,8 +1833,13 @@
               </codx-label>
             </div>
             <div class="d-flex align-items-center">
-              <span class="fw-bold text-dark ms-7">
-                {{ infoPersonal?.foWorking }}
+              <span class="fw-bold text-dark ms-7"
+              [innerHTML]="
+                  infoPersonal?.foWorking
+                    | formatvalue : eInfoFormModel : 'foWorking'
+                    | async
+                "
+              >
               </span>
             </div>
           </div>
@@ -1844,8 +1851,13 @@
               </codx-label>
             </div>
             <div class="d-flex align-items-center">
-              <span class="fw-bold text-dark ms-7">
-                {{ infoPersonal?.foKind }}
+              <span class="fw-bold text-dark ms-7"
+              [innerHTML]="
+                  infoPersonal?.foKind
+                    | formatvalue : eInfoFormModel : 'foKind'
+                    | async
+                "
+              >
               </span>
             </div>
           </div>
