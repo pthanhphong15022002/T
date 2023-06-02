@@ -53,7 +53,7 @@ export class AddContractsComponent implements OnInit {
   contracts: CM_Contracts;
   contractsInput: CM_Contracts;
   dialog!: DialogRef;
-  isLoadDate: any;
+
   action = 'add';
   projectID: string;
   tabClicked = '';
@@ -109,6 +109,7 @@ export class AddContractsComponent implements OnInit {
   disabledDelActualDate = false;
   view = [];
   customerIdOld = null;
+  isLoadDate = true;
 
   constructor(
     private cache: CacheService,
@@ -216,7 +217,7 @@ export class AddContractsComponent implements OnInit {
       )
       .subscribe((res) => {
         for (let key in res) {
-          if (res[key]['isRequire']) {
+          if (res[key]) {
             let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
             this.view[keyConvert] = res[key]['headerText'];
           }
@@ -291,6 +292,20 @@ export class AddContractsComponent implements OnInit {
 
   changeValueDate(event) {
     this.contracts[event?.field] = new Date(event?.data?.fromDate);
+    if((event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') && this.isLoadDate){
+      const startDate =  new Date(this.contracts['effectiveFrom']);
+      const endDate = new Date(this.contracts['effectiveTo']);     
+      if (endDate && startDate > endDate){
+        // this.isSaveTimeTask = false;
+        this.isLoadDate = !this.isLoadDate;
+        this.notiService.notifyCode('CM010',0, this.view['effectiveTo'], this.view['effectiveFrom']);
+        return;
+      } else {
+        // this.isSaveTimeTask = true;
+      }
+    }else{
+      this.isLoadDate = !this.isLoadDate;
+    }
   }
 
   loadComboboxData(comboboxName: string, service: string): Observable<any> {
@@ -479,7 +494,7 @@ export class AddContractsComponent implements OnInit {
           // this.changeDetector.detectChanges();
         });
     } else {
-      this.cmService.addContracts(this.contracts).subscribe((res) => {
+      this.cmService.addContracts([this.contracts, this.listPaymentAdd]).subscribe((res) => {
         if (res) {
           this.dialog.close({ contract: res, action: this.action });
         }
@@ -496,7 +511,13 @@ export class AddContractsComponent implements OnInit {
           this.dialog.close({ contract: res, action: this.action });
         });
     } else {
-      this.cmService.editContracts(this.contracts).subscribe((res) => {
+      let data = [
+        this.contracts,
+        this.listPaymentAdd,
+        this.listPaymentEdit,
+        this.listPaymentDelete,
+      ];
+      this.cmService.editContracts(data).subscribe((res) => {
         if (res) {
           this.dialog.close({ contract: res, action: this.action });
         }
