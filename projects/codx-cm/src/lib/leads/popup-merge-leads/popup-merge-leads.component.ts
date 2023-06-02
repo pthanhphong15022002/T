@@ -153,10 +153,18 @@ export class PopupMergeLeadsComponent implements OnInit {
     if (this.countValidate > 0) {
       return;
     }
+
+    if(this.leadNew.companyPhone != null && this.leadNew.companyPhone.trim() != ''){
+      if(!this.checkEmailOrPhone(this.leadNew.companyPhone, 'P')) return;
+    }
+
     if (this.leadTwo == null && this.leadThree == null) {
       this.noti.notify('CM008');
       return;
     }
+
+
+
     if (this.lstContactNew != null && this.lstContactNew.length > 0) {
       this.lstContactNew.forEach((res) => {
         res.recID = Util.uid();
@@ -215,6 +223,24 @@ export class PopupMergeLeadsComponent implements OnInit {
   }
 
   onSupport() {}
+
+  checkEmailOrPhone(field, type) {
+    if (type == 'E') {
+      var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      if (!field.toLowerCase().match(validEmail)) {
+        this.noti.notifyCode('SYS037');
+        return false;
+      }
+    }
+    if (type == 'P') {
+      var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(02+([0-9]{9})))\b)/;
+      if (!field.toLowerCase().match(validPhone)) {
+        this.noti.notifyCode('RS030');
+        return false;
+      }
+    }
+    return true;
+  }
   //#endregion
   async cbxLeadChange(e, type) {
     if (e) {
