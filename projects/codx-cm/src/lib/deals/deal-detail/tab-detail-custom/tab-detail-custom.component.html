@@ -30,13 +30,13 @@
 <!-- nvthuan công việc -->
 <ng-template #task let-data="value">
   <div *ngFor="let step of listStep; let i = index" >
-    <div class="d-flex align-items-center justify-content-between me-5">
+    <!-- <div class="d-flex align-items-center justify-content-between me-5">
       <div class="d-flex align-items-center fw-bold">
         <i class="icon-account_balance icon-20 me-2"></i>
         <span class="fs-5">{{ step.stepName }}</span>
       </div>
       <codx-progressbar [progress]="step?.progress || 0"></codx-progressbar>
-    </div>
+    </div> -->
 
     <codx-step-task
       [dataSources]="step"
@@ -271,33 +271,10 @@
 </ng-template>
 
 <ng-template #ganttChart>
-  <div class="border border-gray-150">
-    <codx-gantt-chart
-      [dataSource]="ganttDs"
-      [taskFields]="taskFields"
-      [taskbarHeight]="60"
-      [rowHeight]="60"
-      [readOnly]="true"
-      [templateTaskbar]="ganttItems"
-      [timelineSettings]="timelineSettings"
-      [columns]="columns"
-      [toolbar]="[]"
-    ></codx-gantt-chart>
-    <ng-template #ganttItems let-data>
-      <div
-        class="d-flex justify-content-center align-items-center"
-        (click)="clickDetailGanchart(data.recID)"
-        [ngStyle]="{
-          'background-color': getColor(data.recID),
-          'border-radius': '3px',
-        }"
-      >
-        <span class="fw-bold text-dark line-clamp line-clamp-1 px-1">
-          {{ data.name }}
-        </span>
-      </div>
-    </ng-template>
-  </div>
+  <gantt-chart
+    [dataSelected]="dataSelected"
+    [listSteps]="listSteps"
+  ></gantt-chart>
 </ng-template>
 
 <ng-template #field>
