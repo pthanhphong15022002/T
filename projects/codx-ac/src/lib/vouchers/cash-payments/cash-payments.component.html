@@ -91,7 +91,7 @@
         <span class="badge badge-pill badge-primary me-3">
           <span *ngIf="journal.multiCurrency == '0'"
             class="fw-bold">{{itemSelected?.totalAmt?.toLocaleString('it-IT')}}</span>
-          <span *ngIf="journal.multiCurrency == '1'" class="fw-bold">{{itemSelected?.totalAmt?.toLocaleString('it-IT')+'
+          <span *ngIf="journal.multiCurrency == '1'" class="fw-bold">{{itemSelected?.totalDR?.toLocaleString('it-IT')+'
             '+itemSelected?.currencyID
             }}</span>
         </span>

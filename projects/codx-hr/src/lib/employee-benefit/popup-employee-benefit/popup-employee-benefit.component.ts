@@ -35,7 +35,7 @@ export class PopupEmployeeBenefitComponent
   headerText: string;
   employeeObj: any;
   genderGrvSetup: any;
-
+  decisionNoDisable: boolean = false;
   //Render Signer Position follow Singer ID
   data: any;
 
@@ -63,6 +63,12 @@ export class PopupEmployeeBenefitComponent
   }
 
   initForm() {
+    if (this.dialog.dataService?.keyField === 'DecisionNo') {
+      this.decisionNoDisable = false;
+    } else {
+      this.decisionNoDisable = true;
+    }
+
     this.hrSevice
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
@@ -220,6 +226,11 @@ export class PopupEmployeeBenefitComponent
   }
 
   onSaveForm() {
+    if (this.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
     if (
       this.currentEJobSalaries.expiredDate <
       this.currentEJobSalaries.effectedDate

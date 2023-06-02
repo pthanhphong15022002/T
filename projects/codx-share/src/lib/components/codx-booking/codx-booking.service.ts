@@ -1,6 +1,8 @@
 
+import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import axios from 'axios';
 import { ApiHttpService, FormModel, NotificationsService, CacheService, AuthStore } from 'codx-core';
 
 import { Observable } from 'rxjs';
@@ -9,11 +11,13 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CodxBookingService {
+  environment: any;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
     private auth: AuthStore,
     private fb: FormBuilder,
+    private datePipe: DatePipe,
     private notificationsService: NotificationsService
 
     ) {}
@@ -855,5 +859,123 @@ export class CodxBookingService {
       'GetByModuleWithCategoryAsync',
       ['EPStationeryParameters', category]
     );
+  }
+
+  async connectMeetingNow(
+    meetingTitle: string,
+    meetingDescription: string,
+    meetingDuration: number,
+    meetingPassword: string,
+    userName: string,
+    mail: string,
+    isManager: boolean,
+    meetingUrl?: string,
+    meetingStartDate?: string,
+    meetingStartTime?: string
+  ) {
+    meetingStartDate = meetingStartDate ?? new Date().toString();
+
+    meetingStartDate = this.datePipe
+      .transform(meetingStartDate, 'yyyy-MM-dd')
+      .toString();
+
+    meetingStartTime =
+      meetingStartTime ??
+      this.datePipe.transform(new Date().toString(), 'HH:mm');
+
+    let url =
+      meetingUrl ??
+      (await this.createMeeting(
+        meetingUrl,
+        meetingTitle,
+        meetingDescription,
+        meetingStartDate,
+        meetingStartTime,
+        meetingDuration,
+        meetingPassword
+      ).then((url) => {
+        return url;
+      }));
+
+    return axios
+      .create({
+        baseURL: this.environment.SureMeet.baseUrl,
+      })
+      .post(this.environment.SureMeet.tokenUrl, {
+        client_id: this.environment.SureMeet.client_id,
+        client_secret: this.environment.SureMeet.client_secret,
+      })
+      .then((res: any) => {
+        let data = {
+          app_id: this.environment.SureMeet.app_id,
+          app_secret: this.environment.SureMeet.app_secret,
+          key: (url as string).split('/').reverse().at(0),
+          password: null,
+          name: userName,
+          email: mail,
+          manager: isManager == true ? 1 : 0,
+        };
+        return axios
+          .create({
+            baseURL: this.environment.SureMeet.baseUrl,
+          })
+          .post(this.environment.SureMeet.connectMettingUrl, data)
+          .then((connectData: any) => {
+            if (connectData?.data?.url) {
+              return connectData?.data?.url;
+            }
+          })
+          .catch((err: any) => {});
+      })
+      .catch((err: any) => {});
+  }
+
+  createMeeting(
+    meetingUrl,
+    meetingTitle,
+    meetingDescription,
+    meetingStartDate,
+    meetingStartTime,
+    meetingDuration,
+    meetingPassword
+  ): Promise<string> {
+    if (meetingUrl) {
+      return meetingUrl;
+    }
+    return axios
+      .create({
+        baseURL: this.environment.SureMeet.baseUrl,
+      })
+      .post(this.environment.SureMeet.tokenUrl, {
+        client_id: this.environment.SureMeet.client_id,
+        client_secret: this.environment.SureMeet.client_secret,
+      })
+      .then((res: any) => {
+        let data = {
+          app_id: this.environment.SureMeet.app_id,
+          app_secret: this.environment.SureMeet.app_secret,
+          meetingschedule_id: 0,
+          meetingschedule_title: meetingTitle,
+          meetingschedule_description: meetingDescription,
+          meetingschedule_startdate: this.datePipe
+            .transform(meetingStartDate, 'yyyy-MM-dd')
+            .toString(),
+          meetingschedule_starttime: meetingStartTime,
+          meetingschedule_duration: meetingDuration,
+          meetingschedule_password: meetingPassword,
+        };
+
+        return axios
+          .create({
+            baseURL: this.environment.SureMeet.baseUrl,
+          })
+          .post(this.environment.SureMeet.addUpdateMeetingUrl, data)
+          .then((meeting: any) => {
+            return meeting.data.url;
+          })
+          .catch((err: any) => {});
+      })
+      .catch((err: any) => {});
+    return null;
   }
 }

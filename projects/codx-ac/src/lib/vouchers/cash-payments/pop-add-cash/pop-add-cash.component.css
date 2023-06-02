@@ -1,6 +1,6 @@
 
 .tabline-content .e-content{
-   max-height: calc(100vh - 480px)!important;
+   height: calc(100vh - 480px)!important;
 }
 .btn-addline{
     position: absolute;

@@ -222,7 +222,6 @@
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               [disabled]="disableCusID"
-              [crrValue]="quotations.customerID"
               (valueChange)="changeCombox($event)"
             ></codx-input>
           </div>
@@ -233,10 +232,12 @@
             ></codx-label>
             <codx-input
               #contactCbx
-              field="contactID"
+              field="contactID" 
               [formModel]="form.formModel"
-              [model]="modelObjectIDContacs"
-              [crrValue]="quotations.contactID"
+        
+              [model]="{
+                objectID: this.quotations.customerID
+              }"
               (valueChange)="changeCombox($event)"
             ></codx-input>
           </div>
