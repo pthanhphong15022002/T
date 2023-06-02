@@ -170,6 +170,7 @@
               [formModel]="form.formModel"
             ></codx-label>
             <codx-input
+              #dealsCbx
               field="refID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
@@ -216,7 +217,7 @@
               [formModel]="form.formModel"
             ></codx-label>
             <codx-input
-              #customerIDCbx
+              #customerCbx
               field="customerID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
@@ -231,6 +232,7 @@
               [formModel]="form.formModel"
             ></codx-label>
             <codx-input
+              #contactCbx
               field="contactID"
               [formModel]="form.formModel"
               [model]="modelObjectIDContacs"
