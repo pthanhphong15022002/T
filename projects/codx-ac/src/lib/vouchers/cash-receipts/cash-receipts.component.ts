@@ -66,6 +66,7 @@ export class CashReceiptsComponent extends UIComponent {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
+  parent: any;
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -77,6 +78,11 @@ export class CashReceiptsComponent extends UIComponent {
     this.dialog = dialog;
     this.routerActive.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
+      if (params?.parent) {
+        this.cache.functionList(params.parent).subscribe((res) => {
+          if (res) this.parent = res;
+        });
+      }
     });
   }
   //#endregion
@@ -123,6 +129,11 @@ export class CashReceiptsComponent extends UIComponent {
         },
       },
     ];
+    this.view.setRootNode(this.parent?.customName);
+  }
+
+  ngOnDestroy() {
+    this.view.setRootNode('');
   }
   //#endregion
 

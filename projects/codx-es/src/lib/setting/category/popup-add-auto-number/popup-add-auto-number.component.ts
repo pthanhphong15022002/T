@@ -83,6 +83,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   addedSegments:any=[];
   autoNumberSettingPreview:string ='';
   funcItem!:any;
+  disableAssignRule= false;
   constructor(
     private cache: CacheService,
     private cr: ChangeDetectorRef,
@@ -100,7 +101,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
 
     this.description = data?.data?.description;
     this.isAdd=data?.data?.isAdd;
-
+    this.disableAssignRule = data?.data?.disableAssignRule;
     // Thiết lập số tự động mặc định của function
     this.functionID = data?.data?.functionID;
     if(this.functionID){

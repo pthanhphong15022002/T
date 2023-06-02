@@ -59,19 +59,18 @@ export class ViewImgContactComponent {
   }
 
   searchName(e) {
-    setTimeout(() => {
-      if (e.trim() == '') {
-        this.listUserSearch = this.listUser;
-        return;
-      }
-      let value = e.trim().toLowerCase();
-      this.listUserSearch = this.listUser.filter(
-        (item) => item.contactName.toString().toLowerCase().search(value) >= 0
-      );
-      this.changeDectec.detectChanges();
-    }, 0);
+    if (e.trim() == '') {
+      this.listUserSearch = this.listUser;
+      return;
+    }
+    let value = e.trim().toLowerCase();
+    var lstSearch = this.listUser.filter(
+      (item) => item.contactName.toString().toLowerCase().search(value) >= 0
+    );
 
-    // this.listUserSearch = resouscesSearch;
+    this.listUserSearch = lstSearch;
+    this.changeDectec.detectChanges();
+
   }
 
   setTextPopover(text) {

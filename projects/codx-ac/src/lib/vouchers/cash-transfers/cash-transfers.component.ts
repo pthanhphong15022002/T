@@ -33,6 +33,7 @@ export class CashTransfersComponent
   };
   functionName: string;
   journalNo: string;
+  parent: any;
 
   constructor(
     injector: Injector,
@@ -42,6 +43,11 @@ export class CashTransfersComponent
 
     this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
+      if (params?.parent) {
+        this.cache.functionList(params.parent).subscribe((res) => {
+          if (res) this.parent = res;
+        });
+      }
     });
   }
   //#endregion
@@ -67,6 +73,11 @@ export class CashTransfersComponent
         res.defaultName.charAt(0).toLowerCase() + res.defaultName.slice(1);
       console.log(res);
     });
+    this.view.setRootNode(this.parent?.customName);
+  }
+
+  ngOnDestroy() {
+    this.view.setRootNode('');
   }
   //#endregion
 
