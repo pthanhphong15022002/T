@@ -300,7 +300,6 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res.save) {
-              var data = res.save;
               this.api
                 .exec('ERM.Business.BS', 'ExchangeRatesBusiness', 'AddAsync', [
                   this.currencies.currencyID,
@@ -308,7 +307,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
                 ])
                 .subscribe((res: []) => {
                   if (res) {
-                    this.dialog.close(data);
+                    this.dialog.close();
                   }
                 });
             } else {
@@ -333,7 +332,6 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res.save || res.update) {
-              var data = res.update;
               this.api
                 .exec(
                   'ERM.Business.BS',
@@ -347,7 +345,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
                 )
                 .subscribe((res: []) => {
                   if (res) {
-                    this.dialog.close(data);
+                    this.dialog.close();
                     this.dt.detectChanges();
                   }
                 });
