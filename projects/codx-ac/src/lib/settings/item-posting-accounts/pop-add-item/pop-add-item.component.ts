@@ -151,7 +151,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res.save) {
-              this.dialog.close(res.save);
+              this.dialog.close();
               this.dt.detectChanges();
             } else {
               this.notification.notify('Thiết lập đã tồn tại', '2');
@@ -171,7 +171,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res.save || res.update) {
-              this.dialog.close(res.update);
+              this.dialog.close();
               this.dt.detectChanges();
             }
           });

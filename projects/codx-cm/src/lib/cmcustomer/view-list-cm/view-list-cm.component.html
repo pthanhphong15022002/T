@@ -1,4 +1,4 @@
-<div class="px-3 py-4 mx-3 border-bottom" *ngIf="dataSelected; else noData">
+<div class="p-3 border-bottom" *ngIf="dataSelected; else noData">
   <ng-container
     [ngTemplateOutlet]="customers"
     [ngTemplateOutletContext]="{ $implicit: dataSelected }"
@@ -32,7 +32,7 @@
         imgCss="me-4"
         [imageObjType]="entityName"
         [titleTmp]="titleTmp"
-        [titleCss]="'fs-6'"
+        [titleCss]="'fs-6 fw-bold'"
         [descTmp]="descTmp"
         [formModel]="formModel"
         [dataItem]="data"
@@ -41,7 +41,7 @@
       </codx-temp-full>
       <ng-template #titleTmp let-data>
         <div class="d-flex align-items-center mb-1 min-w-350px">
-          <div class="text-dark line-clamp line-clamp-1 me-2">
+          <div class="text-dark line-clamp line-clamp-1 me-2 fs-6 fw-bold">
             {{
               funcID == "CM0101"
                 ? data.customerName
@@ -60,8 +60,8 @@
       <ng-template #descTmp let-data>
         <div class="d-flex flex-column">
           <div class="mb-1" *ngIf="addressNameCM">
-            <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
-            <span class="text-gray-700">{{ addressNameCM }}</span>
+            <span class="icon-location_on icon-16 me-1 text-gray-600"></span>
+            <span class="text-gray-600">{{ addressNameCM }}</span>
           </div>
           <div *ngIf="funcID != 'CM0102'">
             <codx-tag
@@ -274,7 +274,7 @@
         </div
       >
     </div>
-    <div class="w-10px min-w-10px">
+    <div class="w-100px min-w-100px">
       <codx-mfunc
         [formModel]="formModel"
         (clickMF)="clickMF($event, dataSelected)"
