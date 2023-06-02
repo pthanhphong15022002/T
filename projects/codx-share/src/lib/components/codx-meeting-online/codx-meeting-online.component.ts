@@ -1,17 +1,8 @@
 import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
-import {
-  Component,
-  Injector,
-  Input,
-  Optional,
-} from '@angular/core';
+import { Component, Injector, Input, Optional } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import {
-  UIComponent,
-  DialogData,
-  DialogRef,
-} from 'codx-core';
+import { UIComponent, DialogData, DialogRef } from 'codx-core';
 
 import axios from 'axios';
 @Component({
@@ -31,6 +22,8 @@ export class CodxMeetingOnlineComponent extends UIComponent {
   @Input() userName;
   @Input() mail = null;
   @Input() isManager: boolean = false;
+
+  ownerLink = '';
   environment = {
     SureMeet: {
       baseUrl: 'https://api.suremeet.vn/',
@@ -44,12 +37,13 @@ export class CodxMeetingOnlineComponent extends UIComponent {
     },
   };
   data;
+
   dialogRef: DialogRef;
   formGroup?: FormGroup;
   constructor(
     injector: Injector,
     private datePipe: DatePipe,
-    
+
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -88,25 +82,39 @@ export class CodxMeetingOnlineComponent extends UIComponent {
   //       return url;
   //     });
   // }
-  
+
   createMeeting() {
     if (this.meetingUrl) {
       return this.meetingUrl;
     }
     this.createAMeeting(
-        this.meetingUrl,
+      this.meetingUrl,
+      this.meetingTitle,
+      this.meetingDescription,
+      this.meetingStartDate,
+      this.meetingStartTime,
+      this.meetingDuration,
+      this.meetingPassword
+    ).then((url) => {
+      this.meetingUrl = url;
+      let isManager = true;
+      this.connectMeetingNow(
         this.meetingTitle,
         this.meetingDescription,
-        this.meetingStartDate,
-        this.meetingStartTime,
         this.meetingDuration,
-        this.meetingPassword
-      )
-      .then((url) => {
-        this.meetingUrl = url;
-        this.detectorRef.detectChanges();
-        return url;
+        this.meetingPassword,
+        this.userName,
+        this.mail,
+        isManager,
+        this.meetingUrl,
+        this.meetingStartDate,
+        this.meetingStartTime
+      ).then((ownerUrl) => {
+        this.ownerLink = ownerUrl;
       });
+      this.detectorRef.detectChanges();
+      return url;
+    });
   }
   changeHost(imgUrl) {
     this.curHost = imgUrl;
@@ -120,13 +128,16 @@ export class CodxMeetingOnlineComponent extends UIComponent {
   closeDialog(isSave: boolean) {
     if (isSave) {
       this.data[0].onlineUrl = this.meetingUrl;
-      this.dialog.close(this.meetingUrl);
+
+      let links = {
+        owner: this.ownerLink,
+        attendee: this.meetingUrl,
+      };
+      this.dialog.close(links);
     } else {
       this.dialog.close();
     }
   }
-
-  
 
   createAMeeting(
     meetingUrl,

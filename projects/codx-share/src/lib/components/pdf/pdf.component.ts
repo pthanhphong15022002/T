@@ -1509,6 +1509,7 @@ export class PdfComponent
 
   changeSignature_StampImg(area: tmpSignArea) {
     let setupShowForm = new SetupShowSignature();
+    debugger
     let userID = this.oApprovalTrans.approver;
     // if (userID == this.curSignerType) {
     //   userID = this.lstSigners.find((x) => x.roleType == userID)?.authorID;

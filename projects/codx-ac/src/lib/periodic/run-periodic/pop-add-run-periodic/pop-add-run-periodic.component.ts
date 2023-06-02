@@ -115,6 +115,7 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
 
   onSave(){
     this.checkParasValidate();
+    this.checkRunPeriodicValidate();
     if (this.validate > 0) {
       this.validate = 0;
       this.notification.notifyCode('SYS023', 0, '');
@@ -159,6 +160,7 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
 
   onSaveAdd(){
     this.checkParasValidate();
+    this.checkRunPeriodicValidate();
     if (this.validate > 0) {
       this.validate = 0;
       this.notification.notifyCode('SYS023', 0, '');
@@ -201,6 +203,29 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
             if (
               this.Paras[keymodel[i]] == null ||
               String(this.Paras[keymodel[i]]).match(/^ *$/) !== null
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+              );
+              this.validate++;
+            }
+          }
+        }
+      }
+    }
+  }
+  checkRunPeriodicValidate() {
+    var keygrid = Object.keys(this.gridViewSetup);
+    var keymodel = Object.keys(this.runPeriodic);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              this.runPeriodic[keymodel[i]] == null ||
+              String(this.runPeriodic[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

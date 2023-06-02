@@ -107,11 +107,8 @@ export class CustomersComponent extends UIComponent {
         option,
         this.view.funcID
       );
-      this.dialog.closed.subscribe((e) => {
-        if (e?.event) {
-          this.view.dataService.update(e.event).subscribe();
-          this.dt.detectChanges();
-        }
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null) this.view.dataService.clear();
       });
     });
   }
@@ -135,12 +132,6 @@ export class CustomersComponent extends UIComponent {
           obj,
           option
         );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event) {
-            this.view.dataService.update(e.event).subscribe();
-            this.dt.detectChanges();
-          }
-        });
       });
   }
   copy(e, data) {
@@ -163,12 +154,6 @@ export class CustomersComponent extends UIComponent {
           obj,
           option
         );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event) {
-            this.view.dataService.update(e.event).subscribe();
-            this.dt.detectChanges();
-          }
-        });
       });
   }
   delete(data) {

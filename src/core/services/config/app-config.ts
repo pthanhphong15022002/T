@@ -17,6 +17,7 @@ export abstract class AppConfig {
   captchaKey: string;
   captchaEnable: number;
   externalLogin: ExternalLogin;
+  loginHCS: string;
 }
 
 export abstract class ExternalLogin {

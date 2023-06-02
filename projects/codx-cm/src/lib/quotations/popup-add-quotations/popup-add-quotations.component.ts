@@ -48,7 +48,9 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('gridQuationsLines') gridQuationsLines: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
-  @ViewChild('customerIDCbx') customerIDCbx: CodxInputComponent;
+  @ViewChild('dealsCbx') dealsCbx: CodxInputComponent;
+  @ViewChild('customerCbx') customerCbx: CodxInputComponent;
+  @ViewChild('contactCbx') contactCbx: CodxInputComponent;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
 
@@ -83,7 +85,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   disableCusID = false;
   disableContactsID = false;
   modelObjectIDContacs: any;
-  modelCustomerIDDeals: any;
+  // modelCustomerIDDeals: any;
   titleActionLine = '';
   columnsGrid = [];
   arrFieldIsVisible: any[];
@@ -91,6 +93,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   currencyIDOld = 'VND';
   grvSetupQuotations: any;
   grvSetupQuotationsLines: any;
+  crrCustomerID: string;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -262,7 +265,10 @@ export class PopupAddQuotationsComponent implements OnInit {
     );
     if (count > 0) return;
     if (!(this.listQuotationLines?.length > 0)) {
-      this.notiService.notify("Thêm danh sách sản phẩm để hoàn thành báo giá - Chờ Khanh thêm messeger !" ,'3')  
+      this.notiService.notify(
+        'Thêm danh sách sản phẩm để hoàn thành báo giá - Chờ Khanh thêm messeger !',
+        '3'
+      );
       return;
     }
     if (this.action == 'add' || this.action == 'copy') {
@@ -275,24 +281,57 @@ export class PopupAddQuotationsComponent implements OnInit {
   //change Data
   changeCombox(e) {
     if (!e?.data || !e?.field) return;
+   
     this.quotations[e.field] = e.data;
     switch (e?.field) {
       case 'refID':
-        this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-        this.modelCustomerIDDeals = { customerID: this.quotations.customerID };
-        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
-        // this.disableCusID = true;
+        if (
+          this.quotations.customerID !=
+          e?.component?.itemsSelected[0]?.CustomerID
+        ) {
+          this.customerCbx.ComponentCurrent.dataService.data = [] ;
+          this.customerCbx.crrValue = null ;
+
+          this.quotations.customerID =
+            e?.component?.itemsSelected[0]?.CustomerID;
+          this.customerCbx.crrValue = this.quotations.customerID;
+
+          this.contactCbx.ComponentCurrent.dataService.data = [];
+          this.contactCbx.crrValue = null;
+          this.crrCustomerID =  this.quotations.customerID ;
+        }
         break;
       case 'customerID':
-        this.quotations.refID = null;
-        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+        if (this.crrCustomerID !=  this.quotations.customerID) {
+          //co hoi
+          this.dealsCbx.crrValue = null;
+          this.quotations.refID = null;
+          // lien he
+          this.contactCbx.ComponentCurrent.dataService.data = [];
+          this.contactCbx.crrValue = null;
+          this.quotations.contactID = null;
+        }
+
         break;
-        case 'contactID':
-          // this.quotations.refID = null;
-        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+      case 'contactID':
+        if (
+          this.quotations.customerID != e?.component?.itemsSelected[0]?.ObjectID
+        ) {
+          this.customerCbx.ComponentCurrent.dataService.data = [] ;
+          this.customerCbx.crrValue = null ;
+          
+          this.quotations.refID = null;
+          this.customerCbx.ComponentCurrent.dataService.data = [];
+          this.dealsCbx.ComponentCurrent.dataService.data = [];
+
+          this.quotations.customerID = e?.component?.itemsSelected[0]?.ObjectID;
+          this.customerCbx.crrValue = this.quotations.customerID;
+        }
         break;
     }
+
     this.form.formGroup.patchValue(this.quotations);
+    // }
   }
 
   valueChange(e) {

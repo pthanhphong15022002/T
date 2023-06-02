@@ -1,7 +1,7 @@
 <codx-views #view [views]="views" [toolbarDisplay]="false" [autoLoad]="false">
 </codx-views>
 <ng-template #templateLeft>
-  <div class="bg-white rounded-3 p-3">
+  <div class="bg-white rounded-3 p-3 position-relative">
     <div class="d-flex justify-content-center">
       <div class="w-30 min-w-225px mw-450px me-5">
         <ejs-calendar
@@ -105,23 +105,26 @@
       </div>
     </div>
   </div>
-  <button
-    ejs-speeddial
-    id="speeddial"
-    target="#target"
-    itemTemplate="#itemTemplate"
-    openIconCss="icon-add"
-    cssClass="e-primary"
-    [items]="items"
-    (clicked)="addEvent($event)"
-  >
-    <ng-template #itemTemplate let-items="">
-      <div
-        *ngIf="this.calendarParams[items?.id].ShowEvent === '1'"
-        class="itemlist"
-      >
-        <span class="text">{{ items.text }}</span>
-      </div>
-    </ng-template>
-  </button>
+  <div *ngIf="items && items.length > 0">
+    <button
+      #speeddial
+      ejs-speeddial
+      id="speeddial"
+      target="#target"
+      itemTemplate="#itemTemplate"
+      openIconCss="icon-add"
+      cssClass="e-primary"
+      [items]="items"
+      (clicked)="addEvent($event)"
+    >
+      <ng-template #itemTemplate let-items="">
+        <button type="button"
+          *ngIf="this.calendarParams[items?.id].ShowEvent === '1'"
+          class="btn btn-light-primary w-100"
+        >
+          <span class="text">{{ items.text }}</span>
+        </button>
+      </ng-template>
+    </button>
+  </div>
 </ng-template>

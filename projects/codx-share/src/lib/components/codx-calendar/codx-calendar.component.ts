@@ -31,6 +31,7 @@ import { PopupAddComponent } from '../codx-tasks/popup-add/popup-add.component';
 import { AddNoteComponent } from '../calendar-notes/add-note/add-note.component';
 import { of, switchMap, take } from 'rxjs';
 import {
+  SpeedDialComponent,
   SpeedDialItemEventArgs,
   SpeedDialItemModel,
 } from '@syncfusion/ej2-angular-buttons';
@@ -48,6 +49,7 @@ export class CodxCalendarComponent
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('ejCalendar') ejCalendar!: CalendarComponent;
   @ViewChild('calendarCenter') calendarCenter!: CalendarCenterComponent;
+  @ViewChild('speeddial') speeddial: SpeedDialComponent;
 
   dataResourceModel = [];
   request?: ResourceModel;
@@ -94,6 +96,15 @@ export class CodxCalendarComponent
     this.myTaskFM = new FormModel();
     this.assignTaskFM = new FormModel();
     this.fields = { text: 'defaultName', value: 'functionID' };
+    this.cacheService.valueList('WP006').subscribe((res) => {
+      res.datas.map((res) => {
+        if (this.calendarParams.hasOwnProperty(res.value)) {
+          this.items.push({ id: res.value, text: res.text });
+        }
+      });
+      console.log('Vll', res);
+      console.log('Speed Dial', this.items);
+    });
   }
 
   onInit(): void {
@@ -150,14 +161,6 @@ export class CodxCalendarComponent
           this.navigate();
         }
       });
-
-    this.cacheService.valueList('WP006').subscribe((res) => {
-      res.datas.map((res) => {
-        if (this.calendarParams.hasOwnProperty(res.value)) {
-          this.items.push({ id: res.value, text: res.text });
-        }
-      });
-    });
   }
 
   ngAfterViewInit() {
@@ -363,7 +366,10 @@ export class CodxCalendarComponent
   }
 
   getCalendarNotes() {
-    this.calendarCenter.resources = this.resources;
+    if (this.calendarCenter) {
+      this.calendarCenter.resources = this.resources;
+    }
+
     this.calendarService.calendarData$.subscribe((res) => {
       if (res) {
         this.calendarCenter && this.calendarCenter.updateData(res);
