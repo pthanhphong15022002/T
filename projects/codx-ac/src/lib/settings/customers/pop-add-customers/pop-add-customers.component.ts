@@ -686,7 +686,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                   this.objects,
                 ])
                 .subscribe((res: []) => {});
-              this.dialog.close(res.save);
+              this.dialog.close();
               this.dt.detectChanges();
             } else {
               this.notification.notifyCode(
@@ -747,7 +747,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                   this.objects,
                 ])
                 .subscribe((res: []) => {});
-              this.dialog.close(res.update);
+              this.dialog.close();
               this.dt.detectChanges();
             }
           });
