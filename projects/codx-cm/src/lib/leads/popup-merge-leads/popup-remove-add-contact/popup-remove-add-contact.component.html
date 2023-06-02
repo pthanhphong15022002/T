@@ -33,6 +33,7 @@
 <ng-template #body>
   <ng-container *ngIf="category == 'contact'">
     <codx-list-contacts
+    #loadListContact
       [listContacts]="list"
       [objectID]="lead?.recID"
       (objectConvert)="objectConvert($event)"
