@@ -136,10 +136,10 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
 
     this.data.employeeID = this.employId;
     console.log('employeeId', this.data.employeeID);

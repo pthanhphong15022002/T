@@ -20,12 +20,17 @@
                 label="Module"
             >
             </codx-input>
-            <div class="list-function row">
+            <div class="list-function row py-3">
                 <ng-container *ngIf="listModule">
-                    <div *ngFor="let item of listModule" class="col-4">
-                        <div class="d-flex just  ">
+                    <div *ngFor="let item of listModule" class="col-4 d-flex align-items-center justify-content-center px-8 py-5">
+                        <div class="d-flex justify-content-center w-50px">
+                            <codx-input type="checkbox"></codx-input>
                         </div>
-                        {{item.customName}}
+                        <div class="d-flex flex-column align-items-center w-150px">
+                            <img class="img-module" [src]="item.smallIcon" />
+                            {{item.customName}}
+                        </div>
+                        
                     </div>
                 </ng-container>
             </div>

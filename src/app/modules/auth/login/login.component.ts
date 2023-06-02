@@ -30,6 +30,16 @@ import {
   UrlUtil,
   UserModel,
 } from 'codx-core';
+import {
+  AmazonLoginProvider,
+  FacebookLoginProvider,
+  GoogleLoginProvider,
+  MicrosoftLoginProvider,
+  SocialUser,
+  SocialAuthService,
+} from '@abacritt/angularx-social-login';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -55,7 +65,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   sysSetting;
   // private fields
   unsubscribe: Subscription[] = [];
-
+  iParams = '';
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -67,7 +77,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     private dt: ChangeDetectorRef,
     private auth: AuthStore,
     private cache: CacheService,
-    private readonly authService: AuthService //private readonly extendAuthService: SocialAuthService
+    private readonly authService: AuthService,
+    // private readonly extendAuthService: SocialAuthService,
+    private shareService: CodxShareService
   ) {
     this.layoutCZ = environment.layoutCZ;
     const tenant = this.tenantStore.getName();
@@ -79,6 +91,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
     // redirect to home if already logged in
     this.routeActive.queryParams.subscribe((params) => {
+      // if (params.i){
+      //   this.iParams = params.i
+      // }
       if (params.sk) {
         this.api
           .execSv<string[]>(
@@ -415,7 +430,11 @@ export class LoginComponent implements OnInit, OnDestroy {
               //   })
               // )
               .subscribe((data: any) => {
-                if (data && data.userID)
+                this.iParams = UrlUtil.getUrl('i') || '';
+
+                if (this.iParams == 'hcs') {
+                  this.shareService.redirect(this.iParams, this.returnUrl);
+                } else if (data && data.userID)
                   this.router.navigate([
                     `${this.returnUrl + '&token=' + this.auth.get().token}`,
                   ]);

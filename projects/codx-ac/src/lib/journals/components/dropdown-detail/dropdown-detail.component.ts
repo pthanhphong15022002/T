@@ -6,7 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormModel, UIComponent } from 'codx-core';
-import { DropdownDetailService } from './dropdown-detail.service';
+import { JournalService } from '../../journals.service';
 
 @Component({
   selector: 'lib-dropdown-detail',
@@ -24,10 +24,7 @@ export class DropdownDetailComponent extends UIComponent implements OnChanges {
 
   shareModels: { id: string; text: string }[];
 
-  constructor(
-    injector: Injector,
-    private dropdownDetailService: DropdownDetailService
-  ) {
+  constructor(injector: Injector, private journalService: JournalService) {
     super(injector);
   }
   //#endregion
@@ -40,13 +37,13 @@ export class DropdownDetailComponent extends UIComponent implements OnChanges {
       const objectId: string[] = this.objectId?.split(';');
 
       if (this.objectType === 'UG') {
-        this.dropdownDetailService.getUserGroups().subscribe((userGroups) => {
+        this.journalService.getUserGroups().subscribe((userGroups) => {
           this.shareModels = userGroups
             ?.filter((d) => objectId.includes(d.GroupID))
             .map((d) => ({ id: d.GroupID, text: d.GroupName }));
         });
       } else if (this.objectType === 'R') {
-        this.dropdownDetailService.getUserRoles().subscribe((userRoles) => {
+        this.journalService.getUserRoles().subscribe((userRoles) => {
           this.shareModels = userRoles
             ?.filter((d) => objectId.includes(d.RecID))
             .map((d) => ({ id: d.RecID, text: d.RoleName })); // wtf core???

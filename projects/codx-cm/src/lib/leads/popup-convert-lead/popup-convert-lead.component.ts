@@ -122,29 +122,21 @@ export class PopupConvertLeadComponent implements OnInit {
       this.getProcessIDByBusinessLineID(this.lead.businesslineID);
     }
     this.formModelDeals = await this.cmSv.getFormModel('CM0201');
+
     this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
     this.gridViewSetupDeal = await firstValueFrom(
       this.cache.gridViewSetup('CMDeals', 'grvCMDeals')
     );
-
     this.gridViewSetupCustomer = await firstValueFrom(
       this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
     );
-    var options = new DataRequest();
-    options.entityName = 'DP_Processes';
-    options.predicates = 'ApplyFor=@0 && !Deleted';
-    options.dataValues = '1';
-    options.pageLoading = false;
-    this.cmSv.loadDataAsync('DP', options).subscribe((process) => {
-      this.listCbxProcess =
-        process != null && process.length > 0 ? process : [];
-    });
     this.setData();
 
     this.changeDetectorRef.detectChanges();
   }
 
   async ngAfterViewInit() {
+
     if (this.radioChecked) {
       this.countAddSys++;
     }
@@ -191,6 +183,14 @@ export class PopupConvertLeadComponent implements OnInit {
     );
     if (businessLine != null && businessLine.length > 0) {
       this.deal.processID = businessLine[0]?.processID;
+      var options = new DataRequest();
+      options.entityName = 'DP_Processes';
+      options.predicates = 'ApplyFor=@0 && !Deleted';
+      options.dataValues = '1';
+      options.pageLoading = false;
+      this.listCbxProcess = await firstValueFrom(
+        this.cmSv.loadDataAsync('DP', options)
+      );
       if (this.listCbxProcess != null && this.listCbxProcess.length > 0) {
         this.getProcessByProcessID(this.deal.processID);
       }
@@ -210,15 +210,7 @@ export class PopupConvertLeadComponent implements OnInit {
       var lstStep =
         process?.steps != null ? this.groupByStep(process?.steps) : [];
       this.deal.endDate = this.HandleEndDate(lstStep);
-      this.listInstanceSteps = await firstValueFrom(
-        this.api.execSv<any>(
-          'DP',
-          'ERM.Business.DP',
-          'InstancesBusiness',
-          'CreateListInstancesStepsByProcessAsync',
-          this.deal.processID
-        )
-      );
+
     }
 
     if (
@@ -402,7 +394,7 @@ export class PopupConvertLeadComponent implements OnInit {
     }
   }
 
-  convertDataInstanceAndDeal() {
+  async convertDataInstanceAndDeal() {
     this.instance.recID = Util.uid();
     this.instance.title = this.deal?.dealName;
     this.instance.memo = this.deal?.memo;
@@ -413,11 +405,24 @@ export class PopupConvertLeadComponent implements OnInit {
     this.instance.startDate = null;
     this.instance.processID = this.deal?.processID;
     this.instance.stepID = this.deal?.stepID;
-    this.deal.stepID = this.listInstanceSteps[0]?.stepID;
-    this.deal.nextStep = this.listInstanceSteps[1]?.stepID;
     this.deal.status = '1';
     this.deal.refID = this.instance.recID;
     this.deal.startDate = null;
+    this.listInstanceSteps = await firstValueFrom(
+      this.api.execSv<any>(
+        'DP',
+        'ERM.Business.DP',
+        'InstancesBusiness',
+        'CreateListInstancesStepsByProcessAsync',
+        this.deal.processID
+      )
+    );
+    if(this.listInstanceSteps != null && this.listInstanceSteps.length > 0){
+      this.deal.stepID = this.listInstanceSteps[0]?.stepID;
+      this.deal.nextStep = this.listInstanceSteps[1]?.stepID;
+    }
+
+
   }
 
   //#endregion
