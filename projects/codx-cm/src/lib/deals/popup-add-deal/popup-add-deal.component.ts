@@ -147,6 +147,11 @@ export class PopupAddDealComponent
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
     }
+
+    if(this.action === this.actionCopy) {
+      this.deal.owner = null;
+      this.deal.salespersonID = null;
+    }
   }
 
   onInit(): void {}
@@ -283,7 +288,7 @@ export class PopupAddDealComponent
       this.notificationsService.notifyCode(
         'SYS009',
         0,
-        '"' + this.gridViewSetup['Owner']?.headerText + '"'
+        '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
       );
       return;
     }
