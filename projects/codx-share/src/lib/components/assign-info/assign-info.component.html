@@ -107,11 +107,19 @@
       </codx-input> -->
       </div>
     </div>
-
+    <div class="d-flex align-items-center nav-item w-100 mb-1" *ngIf="showLabelAttachment">
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+        <div class="fw-bold text-primary">
+          <codx-label name="lblAttachments"  default="Tài liệu đính kèm">
+          </codx-label>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <codx-attachment
         #attachment
-        [objectType]="dialog.formModel.entityName"
+        [objectType]="entytiNameDefault"
         [objectId]="task?.recID"
         hideFolder="1"
         hideImageUpload="0"
