@@ -54,10 +54,12 @@ export const routes: Routes = [
 
       {
         path: 'bookingstationery/:funcID',
+        data: { noReuse: true },
         component: EPBookingComponent,
       },
       {
         path: 'approvestationery/:funcID',
+        data: { noReuse: true },
         component: EPApprovalComponent,
       },
       // {
@@ -67,19 +69,23 @@ export const routes: Routes = [
 
       {
         path: 'bookingrooms/:funcID',
+        data: { noReuse: true },
         component: EPBookingComponent,
       },
       {
         path: 'approverooms/:funcID',
+        data: { noReuse: true },
         component: EPApprovalComponent,
       },
 
       {
         path: 'bookingcars/:funcID',
+        data: { noReuse: true },
         component: EPBookingComponent,
       },
       {
         path: 'approvecars/:funcID',
+        data: { noReuse: true },
         component: EPApprovalComponent,
       },
       {
