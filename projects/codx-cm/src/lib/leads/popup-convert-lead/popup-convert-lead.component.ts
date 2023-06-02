@@ -116,10 +116,10 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async ngOnInit() {
     if (
-      this.lead.businesslineID != null &&
-      this.lead.businesslineID.trim() != ''
+      this.lead.businessLineID != null &&
+      this.lead.businessLineID.trim() != ''
     ) {
-      this.getProcessIDByBusinessLineID(this.lead.businesslineID);
+      this.getProcessIDByBusinessLineID(this.lead.businessLineID);
     }
     this.formModelDeals = await this.cmSv.getFormModel('CM0201');
     this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
@@ -171,7 +171,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer.establishDate = this.lead?.establishDate;
     this.deal.recID = Util.uid();
     this.deal.channelID = this.lead?.channelID;
-    this.deal.businessLineID = this.lead?.businesslineID;
+    this.deal.businessLineID = this.lead?.businessLineID;
     this.deal.consultantID = this.lead?.consultantID;
     // this.deal.salespersonID = this.lead?.salespersonID;
     // this.deal.owner = this.lead?.salespersonID;

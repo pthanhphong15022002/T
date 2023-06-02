@@ -1328,6 +1328,88 @@
         <div class="w-20">
           <codx-label
             [formModel]="dialog.formModel"
+            fiedName="businessLineID"
+          ></codx-label>
+        </div>
+        <div class="w-20">
+          <codx-input
+            field="businessLineID"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.businessLineID"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadOne?.recID">
+            <div class="w-10">
+              <codx-input
+                id="businessLineID1"
+                name="businessLineID"
+                class="test-check"
+                type="radio"
+                field="businessLineID1"
+                [checked]="true"
+                (valueChange)="changeRadio($event, 'businessLineID')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadOne?.businessLineID
+                  | formatvalue : dialog.formModel : 'BusinessLineID'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadTwo?.recID">
+            <div class="w-10">
+              <codx-input
+                id="businessLineID2"
+                name="businessLineID"
+                class="test-check"
+                type="radio"
+                field="businessLineID2"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'businessLineID')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadTwo?.businessLineID
+                  | formatvalue : dialog.formModel : 'BusinessLineID'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadThree?.recID">
+            <div class="w-10">
+              <codx-input
+                id="businessLineID3"
+                name="businessLineID"
+                class="test-check"
+                type="radio"
+                field="businessLineID3"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'businessLineID')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadThree?.businessLineID
+                  | formatvalue : dialog.formModel : 'BusinessLineID'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-1 row form-group">
+        <div class="w-20">
+          <codx-label
+            [formModel]="dialog.formModel"
             fiedName="CustomerResource"
           ></codx-label>
         </div>
