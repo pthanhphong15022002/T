@@ -208,7 +208,18 @@ export class AddContractsComponent implements OnInit {
       // /template: this.columnVatid,
     ];
   }
-
+  // getFormModel() {
+  //   this.cache
+  //     .gridViewSetup(
+  //       this.fmContractsPayments?.formName,
+  //       this.fmContractsPayments?.gridViewName
+  //     )
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.grvPayments = res;
+  //       }
+  //     });
+  // }
   getFormModel() {
     this.cache
       .gridViewSetup(
@@ -225,40 +236,8 @@ export class AddContractsComponent implements OnInit {
       });
   }
 
-  // getFormModel() {
-  //   this.cache
-  //     .gridViewSetup(
-  //       this.fmContractsPayments?.formName,
-  //       this.fmContractsPayments?.gridViewName
-  //     )
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.grvPayments = res;
-  //       }
-  //     });
-  // }
-
   valueChangeText(event) {
     this.contracts[event?.field] = event?.data;
-  }
-
-  setValueComboboxDeal(){
-    let listDeal = this.inputDeal.ComponentCurrent.dataService.data;
-    if(listDeal){
-      if(this.customerIdOld != this.contracts.customerID){
-          this.contracts.dealID = null;
-          this.inputDeal.ComponentCurrent.dataService.data = [];
-      }
-    }
-  }
-  setValueComboboxQuotation(){
-    let listQoutation = this.inputQuotation.ComponentCurrent.dataService.data;
-    if(listQoutation){
-      if(this.customerIdOld != this.contracts.customerID){
-        this.contracts.quotationID = null;
-        this.inputQuotation.ComponentCurrent.dataService.data = [];
-    }
-    }
   }
 
   valueChangeCombobox(event) {
@@ -286,8 +265,23 @@ export class AddContractsComponent implements OnInit {
     }
   }
 
-  valueChangeAlert(event) {
-    this.contracts[event?.field] = event?.data;
+  setValueComboboxDeal(){
+    let listDeal = this.inputDeal.ComponentCurrent.dataService.data;
+    if(listDeal){
+      if(this.customerIdOld != this.contracts.customerID){
+          this.contracts.dealID = null;
+          this.inputDeal.ComponentCurrent.dataService.data = [];
+      }
+    }
+  }
+  setValueComboboxQuotation(){
+    let listQoutation = this.inputQuotation.ComponentCurrent.dataService.data;
+    if(listQoutation){
+      if(this.customerIdOld != this.contracts.customerID){
+        this.contracts.quotationID = null;
+        this.inputQuotation.ComponentCurrent.dataService.data = [];
+    }
+    }
   }
 
   changeValueDate(event) {
