@@ -493,16 +493,16 @@ export class PopupMergeLeadsComponent implements OnInit {
           this.leadNew.consultantID = this.leadThree?.consultantID;
         }
         break;
-        case 'businessLineID':
-        if (e.field === 'businessLineID1' && e.component.checked === true) {
-          this.leadNew.businessLineID = this.leadOne?.businessLineID;
+        case 'businesslineID':
+        if (e.field === 'businesslineID1' && e.component.checked === true) {
+          this.leadNew.businesslineID = this.leadOne?.businesslineID;
         } else if (
-          e.field === 'businessLineID2' &&
+          e.field === 'businesslineID2' &&
           e.component.checked === true
         ) {
-          this.leadNew.businessLineID = this.leadTwo?.businessLineID;
+          this.leadNew.businesslineID = this.leadTwo?.businesslineID;
         } else {
-          this.leadNew.businessLineID = this.leadThree?.businessLineID;
+          this.leadNew.businesslineID = this.leadThree?.businesslineID;
         }
         break;
     }

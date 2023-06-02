@@ -659,7 +659,7 @@ export class CM_Leads {
   category: string;
   channelID: string;
   campaignID: string;
-  businessLineID: string;
+  businesslineID: string;
   memo: string;
   companyName: string;
   tags: string;
