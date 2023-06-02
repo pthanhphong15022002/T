@@ -207,6 +207,7 @@
     <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM1')">
       <codx-label fiedName="diM1" [formModel]="form.formModel"></codx-label>
       <codx-input
+        #diM1
         field="diM1"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
@@ -215,6 +216,7 @@
     <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM2')">
       <codx-label fiedName="diM2" [formModel]="form.formModel"></codx-label>
       <codx-input
+        #diM2
         field="diM2"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
@@ -223,6 +225,7 @@
     <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM3')">
       <codx-label fiedName="diM3" [formModel]="form.formModel"></codx-label>
       <codx-input
+        #diM3
         field="diM3"
         [formModel]="form.formModel"
         [Group]="form.formGroup"

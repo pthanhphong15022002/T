@@ -105,23 +105,26 @@
       </div>
     </div>
   </div>
-  <button
-    ejs-speeddial
-    id="speeddial"
-    target="#target"
-    itemTemplate="#itemTemplate"
-    openIconCss="icon-add"
-    cssClass="e-primary"
-    [items]="items"
-    (clicked)="addEvent($event)"
-  >
-    <ng-template #itemTemplate let-items="">
-      <button type="button"
-        *ngIf="this.calendarParams[items?.id].ShowEvent === '1'"
-        class="btn btn-light-primary w-100"
-      >
-        <span>{{ items.text }}</span>
-      </button>
-    </ng-template>
-  </button>
+  <div *ngIf="items && items.length > 0">
+    <button
+      #speeddial
+      ejs-speeddial
+      id="speeddial"
+      target="#target"
+      itemTemplate="#itemTemplate"
+      openIconCss="icon-add"
+      cssClass="e-primary"
+      [items]="items"
+      (clicked)="addEvent($event)"
+    >
+      <ng-template #itemTemplate let-items="">
+        <button type="button"
+          *ngIf="this.calendarParams[items?.id].ShowEvent === '1'"
+          class="btn btn-light-primary w-100"
+        >
+          <span class="text">{{ items.text }}</span>
+        </button>
+      </ng-template>
+    </button>
+  </div>
 </ng-template>

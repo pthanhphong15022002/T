@@ -54,6 +54,7 @@ export class CodxShareService {
   //
   user;
   //
+  //listApproveMF = [];
   constructor(
     private notificationsService: NotificationsService,
     private callfunc: CallFuncService,
@@ -820,6 +821,7 @@ export class CodxShareService {
         )
           list[i].disabled = true;
       }
+    
       // this.listApproveMF = list.filter(
       //   (p) => p.data.functionID == 'SYS208' || p.disabled == false
       // );
@@ -880,6 +882,9 @@ export class CodxShareService {
           option.FormModel = formModel;
           let dialogModel = new DialogModel();
           dialogModel.IsFull = true;
+          
+          var listApproveMF = this.getMoreFunction(funcID);
+        
           let dialogApprove = this.callfunc.openForm(
             PopupSignForApprovalComponent,
             'Thêm mới',
@@ -890,19 +895,19 @@ export class CodxShareService {
               funcID: 'EST021',
               sfRecID: data.transID,
               title: data.htmlView,
-              status: data.status,
+              status: data.statusApproval,
               stepType: data.stepType,
               stepNo: data.stepNo,
-              transRecID: data.recID,
+              transRecID: data.approvalRecID,
               oTrans: data,
-              //lstMF: this.listApproveMF,
+              lstMF: listApproveMF,
             },
             '',
             dialogModel
           );
           dialogApprove.closed.subscribe((x) => {
             if (x.event?.result) {
-              data.status = x.event?.mode;
+              data.statusApproval = x.event?.mode;
               dataService.update(data).subscribe();
             //  this.esService.setupChange.next(true);
             //  this.esService.isStatusChange.subscribe((res) => {
@@ -982,13 +987,61 @@ export class CodxShareService {
       });
     }
   }
+
+  getMoreFunction(funcID:any)
+  {
+    var listApproveMF = [];
+    
+
+    if(funcID == "SYS202")
+    {
+      var consensus = 
+      {
+        functionID : "SYS202",
+        text: "Ký",
+        color: "#666666"
+      }
+      
+      listApproveMF.push(consensus);
+    }
+
+    if(funcID == "SYS203")
+    {
+      var consensus = 
+      {
+        functionID : "SYS203",
+        text: "Đồng thuận",
+        color: "#666666"
+      }
+      
+      listApproveMF.push(consensus);
+    }
+
+    //Từ chối
+    var tc = 
+    {
+      functionID : "SYS205",
+      text: "Từ chối",
+      color: "#F64E60"
+    }
+
+    var ll =
+    {
+      functionID : "SYS206",
+      text: "Làm lại",
+      color: "#FFA800"
+    }
+    listApproveMF.push(ll,tc);
+    return listApproveMF;
+  }
+
   approval(approvalRecID: any, status: any , comment: any , reasonID: any)
   {
-    return this.api.execSv<any>('es','ERM.Business.ES','ApprovalTransBusiness','ApproveAsync',[approvalRecID, status, comment, reasonID]);
+    return this.api.execSv<any>('ES','ERM.Business.ES','ApprovalTransBusiness','ApproveAsync',[approvalRecID, status, comment, reasonID]);
   }
   undoApproval(approvalRecID:any)
   {
-    return this.api.execSv<any>('es','ERM.Business.ES','ApprovalTransBusiness','UndoAsync',[approvalRecID]);
+    return this.api.execSv<any>('ES','ERM.Business.ES','ApprovalTransBusiness','UndoAsync',[approvalRecID]);
   }
 }
 //#region Model
