@@ -408,6 +408,7 @@ export class LeadsComponent
           if (e && e.event != null) {
             e.event.modifiedOn = new Date();
             this.view.dataService.update(e.event).subscribe();
+            //this.leadsComponent.dataSelected = JSON.parse(JSON.stringify(e.event));
             this.changeDetectorRef.detectChanges();
           }
         });

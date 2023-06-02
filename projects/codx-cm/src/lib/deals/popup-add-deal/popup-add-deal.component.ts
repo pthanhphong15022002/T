@@ -204,6 +204,7 @@ export class PopupAddDealComponent
         (x) => x.refID == e?.data?.recID
       );
       this.lstContactDeal.splice(index, 1);
+      this.loadContactDeal.loadListContact(this.codxCmService.bringDefaultContactToFront(this.lstContactDeal));
     }
     this.changeDetectorRef.detectChanges();
   }
