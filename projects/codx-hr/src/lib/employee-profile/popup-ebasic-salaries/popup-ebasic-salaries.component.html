@@ -220,7 +220,7 @@
 >
 </codx-form>
 <ng-template #body>
-  <div *ngIf="fromListView" class="form-group row">
+  <div *ngIf="fromListView" class="form-group mt-5">
     <div class="col-6">
       <div class="d-flex">
         <div
@@ -229,6 +229,7 @@
         >
           <codx-img
             [width]="40"
+            class="me-3"
             [objectId]="employeeObj?.employeeID"
             [referType]="'avt'"
             [objectName]="employeeObj?.employeeName"
@@ -255,10 +256,22 @@
             <span>{{ employeeObj?.employeeName }}</span>
           </div>
           <div class="text-gray-500 fs-7">
-            <span [innerHTML]="employeeObj?.positionID"></span>
+            <span
+              [innerHTML]="
+                employeeObj?.positionID
+                  | formatvalue : formModel : 'positionID'
+                  | async
+              "
+            ></span>
           </div>
           <div class="text-gray-700">
-            <span [innerHTML]="employeeObj?.orgUnitID"></span>
+            <span
+              [innerHTML]="
+                employeeObj?.orgUnitID
+                  | formatvalue : formModel : 'orgUnitID'
+                  | async
+              "
+            ></span>
           </div>
         </div>
       </div>
@@ -279,7 +292,9 @@
   <div class="row mt-5 mb-3">
     <div class="col-6">
       <span
-        [innerHTML]="EBasicSalaryObj?.status | formatvalue : formModel : 'status' | async"
+        [innerHTML]="
+          EBasicSalaryObj?.status | formatvalue : formModel : 'status' | async
+        "
       >
       </span>
     </div>
@@ -293,11 +308,14 @@
             [Group]="formGroup"
           ></codx-input>
         </span>
-        <codx-label class="fw-bold" fiedName="IsCurrent" [formModel]="formModel"></codx-label>
+        <codx-label
+          class="fw-bold"
+          fiedName="IsCurrent"
+          [formModel]="formModel"
+        ></codx-label>
       </div>
     </div>
   </div>
-
 
   <div class="form-group row">
     <div class="col-6">
