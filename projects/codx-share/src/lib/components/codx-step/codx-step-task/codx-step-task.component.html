@@ -1,4 +1,18 @@
 <div id="id" class="main" [ngClass]="'show-main'">
+  <div class="d-flex align-items-center justify-content-between me-5 " *ngIf="isShowStep">
+    <div class="qqq d-flex align-items-center fw-bold w-100 has-action-menu">
+      <i class="icon-account_balance icon-20 me-2"></i>
+      <span class="fs-5 w-100">{{ currentStep.stepName }}</span>
+      <codx-mfunc
+        [formModel]="grvMoreFunction"
+        [isBookMark]="true"
+        [dataItem]="moreDefaut"
+        [type]="'hover'"
+        class="mb-5"
+      ></codx-mfunc>
+    </div>
+    <codx-progressbar [progress]="currentStep?.progress || 0"></codx-progressbar>
+  </div>
   <!-- drap drop công việc ngoài-->
   <div class="main-body" *ngIf="listGroupTask?.length> 0">
     <div

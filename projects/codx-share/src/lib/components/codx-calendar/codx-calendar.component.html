@@ -112,18 +112,18 @@
       id="speeddial"
       target="#target"
       itemTemplate="#itemTemplate"
-      openIconCss="icon-add"
+      openIconCss="icon-add icon-22"
       cssClass="e-primary"
       [items]="items"
       (clicked)="addEvent($event)"
     >
       <ng-template #itemTemplate let-items="">
-        <button type="button"
+        <div
           *ngIf="this.calendarParams[items?.id].ShowEvent === '1'"
-          class="btn btn-light-primary w-100"
+          class="itemlist"
         >
           <span class="text">{{ items.text }}</span>
-        </button>
+        </div>
       </ng-template>
     </button>
   </div>

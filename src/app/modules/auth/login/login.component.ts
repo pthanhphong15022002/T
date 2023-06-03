@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private auth: AuthStore,
     private cache: CacheService,
     private readonly authService: AuthService,
-    private readonly extendAuthService: SocialAuthService,
+    // private readonly extendAuthService: SocialAuthService,
     private shareService: CodxShareService
   ) {
     this.layoutCZ = environment.layoutCZ;

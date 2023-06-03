@@ -192,7 +192,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
         dataInput: data,
         empObj: this.currentEmpObj,
         headerText: actionHeaderText,
-        employeeId: data?.employeeID,
+        employeeId: this.currentEmpObj?.employeeID,
         funcID: this.view.funcID,
         openFrom: 'empDisciplinesProcess',
       },
