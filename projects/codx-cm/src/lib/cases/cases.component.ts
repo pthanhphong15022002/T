@@ -30,6 +30,7 @@ import { CM_Customers } from '../models/cm_model';
 import { PopupAddCaseComponent } from './popup-add-case/popup-add-case.component';
 import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
+import { CasesDetailComponent } from './case-detail/cases-detail.component';
 
 @Component({
   selector: 'lib-cases',
@@ -55,6 +56,7 @@ export class CasesComponent
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
+  @ViewChild('casesDetail') casesDetail: CasesDetailComponent;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -101,6 +103,8 @@ export class CasesComponent
   hideMoreFC = false;
   listHeader: any;
   processID: any;
+  colorReasonSuccess: any;
+  colorReasonFail: any;
 
   constructor(
     private inject: Injector,
@@ -113,7 +117,7 @@ export class CasesComponent
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
-
+    this.executeApiCalls();
     // Get API
     // this.getListCustomer();
   }
@@ -213,7 +217,6 @@ export class CasesComponent
       this.view.dataService.predicates = null;
       this.view.dataService.dataValues = null;
       this.view.dataObj = this.dataObj;
-
       this.view?.views?.forEach((x) => {
         if (x.type == 6) {
           x.request.dataObj = this.dataObj;
@@ -252,6 +255,26 @@ export class CasesComponent
     }
   }
 
+  async executeApiCalls() {
+    try {
+      await this.getColorReason();
+    } catch (error) {}
+  }
+
+  async getColorReason() {
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.colorReasonSuccess = item;
+          } else if (item.value === 'F') {
+            this.colorReasonFail = item;
+          }
+        }
+      }
+    });
+  }
+
 
   changeView(e) {
 
@@ -267,7 +290,7 @@ export class CasesComponent
   }
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-      if (data.status == '1') {
+      if (data.status == 'test') {
         for (let more of $event) {
           switch (more.functionID) {
             case 'SYS01':
@@ -376,16 +399,16 @@ export class CasesComponent
       case 'SYS02':
         this.delete(data);
         break;
-      case 'CM0301_1':
+      case 'CM0401_1':
         this.moveStage(data);
         break;
-      case 'CM0301_2':
+      case 'CM0401_2':
         this.handelStartDay(data);
         break;
-      case 'CM0301_3':
+      case 'CM0401_3':
         this.moveReason(data, true);
         break;
-      case 'CM0301_4':
+      case 'CM0401_4':
         this.moveReason(data, false);
         break;
       // Open cases
