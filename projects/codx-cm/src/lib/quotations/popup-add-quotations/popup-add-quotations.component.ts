@@ -50,7 +50,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
   @ViewChild('dealsCbx') dealsCbx: CodxInputComponent;
   @ViewChild('customerCbx') customerCbx: CodxInputComponent;
-  @ViewChild('customerIDCbx') contactCbx: CodxInputComponent;
+  @ViewChild('contactCbx') contactCbx: CodxInputComponent;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
 
@@ -85,7 +85,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   disableCusID = false;
   disableContactsID = false;
   modelObjectIDContacs: any;
-  modelCustomerIDDeals: any;
+  // modelCustomerIDDeals: any;
   titleActionLine = '';
   columnsGrid = [];
   arrFieldIsVisible: any[];
@@ -93,6 +93,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   currencyIDOld = 'VND';
   grvSetupQuotations: any;
   grvSetupQuotationsLines: any;
+  crrCustomerID: string;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -280,56 +281,57 @@ export class PopupAddQuotationsComponent implements OnInit {
   //change Data
   changeCombox(e) {
     if (!e?.data || !e?.field) return;
-    if (this.quotations[e.field] != e.data) {
-      this.quotations[e.field] = e.data;
-      switch (e?.field) {
-        case 'refID':
-          (
-            this.customerCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.customerCbx.crrValue = null;
-          (
-            this.contactCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.contactCbx.crrValue = null;
+   
+    this.quotations[e.field] = e.data;
+    switch (e?.field) {
+      case 'refID':
+        if (
+          this.quotations.customerID !=
+          e?.component?.itemsSelected[0]?.CustomerID
+        ) {
+          this.customerCbx.ComponentCurrent.dataService.data = [] ;
+          this.customerCbx.crrValue = null ;
 
           this.quotations.customerID =
             e?.component?.itemsSelected[0]?.CustomerID;
-          this.modelCustomerIDDeals = {
-            customerID: this.quotations.customerID,
-          };
-          this.modelObjectIDContacs = { objectID: this.quotations.customerID };
-          this.quotations.contactID = null;
-          break;
-        case 'customerID':
-          (
-            this.customerCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.customerCbx.crrValue = null;
-          (
-            this.contactCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.contactCbx.crrValue = null;
+          this.customerCbx.crrValue = this.quotations.customerID;
 
-          this.quotations.refID = null;
-          this.quotations.contactID = null;
-          this.modelObjectIDContacs = { objectID: this.quotations.customerID };
-          break;
-        case 'contactID':
-          (
-            this.dealsCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
+          this.contactCbx.ComponentCurrent.dataService.data = [];
+          this.contactCbx.crrValue = null;
+          this.crrCustomerID =  this.quotations.customerID ;
+        }
+        break;
+      case 'customerID':
+        if (this.crrCustomerID !=  this.quotations.customerID) {
+          //co hoi
           this.dealsCbx.crrValue = null;
-          (
-            this.contactCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
+          this.quotations.refID = null;
+          // lien he
+          this.contactCbx.ComponentCurrent.dataService.data = [];
           this.contactCbx.crrValue = null;
+          this.quotations.contactID = null;
+        }
 
-          this.modelObjectIDContacs = { objectID: this.quotations.customerID };
-          break;
-      }
-      this.form.formGroup.patchValue(this.quotations);
+        break;
+      case 'contactID':
+        if (
+          this.quotations.customerID != e?.component?.itemsSelected[0]?.ObjectID
+        ) {
+          this.customerCbx.ComponentCurrent.dataService.data = [] ;
+          this.customerCbx.crrValue = null ;
+          
+          this.quotations.refID = null;
+          this.customerCbx.ComponentCurrent.dataService.data = [];
+          this.dealsCbx.ComponentCurrent.dataService.data = [];
+
+          this.quotations.customerID = e?.component?.itemsSelected[0]?.ObjectID;
+          this.customerCbx.crrValue = this.quotations.customerID;
+        }
+        break;
     }
+
+    this.form.formGroup.patchValue(this.quotations);
+    // }
   }
 
   valueChange(e) {

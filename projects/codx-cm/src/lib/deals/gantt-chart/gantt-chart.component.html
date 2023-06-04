@@ -1,0 +1,39 @@
+<div class="w-100 d-flex justify-content-end mb-4">
+   <!-- tùy chọn thời gian -->
+   <span class="input-sm">
+     <codx-input
+       type="valuelist"
+       [crrValue]="crrViewGant"
+       [refValue]="vllViewGannt"
+       (valueChange)="changeViewTimeGant($event)"
+     >
+     </codx-input>
+   </span>
+ </div>
+ <div class="border border-gray-150">
+   <codx-gantt-chart
+     [dataSource]="ganttDs"
+     [taskFields]="taskFields"
+     [taskbarHeight]="60"
+     [rowHeight]="60"
+     [readOnly]="true"
+     [templateTaskbar]="ganttItems"
+     [timelineSettings]="timelineSettings"
+     [columns]="columns"
+     [toolbar]="[]"
+   ></codx-gantt-chart>
+   <ng-template #ganttItems let-data>
+     <div
+       class="d-flex justify-content-center align-items-center"
+       (click)="clickDetailGanchart(data.recID)"
+       [ngStyle]="{
+         'background-color': getColor(data.recID),
+         'border-radius': '3px',
+       }"
+     >
+       <span class="fw-bold text-dark line-clamp line-clamp-1 px-1">
+         {{ data.name }}
+       </span>
+     </div>
+   </ng-template>
+ </div>

@@ -314,7 +314,7 @@ export class PopupEProcessContractComponent
       this.hrSevice
         .validateBeforeSaveContract(this.data, true)
         .subscribe((res) => {
-          console.log('result', res);
+          // console.log('result', res);
           if (res) {
             if (res[0]) {
               //code test
@@ -324,7 +324,7 @@ export class PopupEProcessContractComponent
               this.data = res;
             } else if (res[1]) {
               this.notify.alertCode(res[1]).subscribe((stt) => {
-                console.log('click', res);
+                // console.log('click', res);
                 if (stt?.event.status == 'Y') {
                   if (res[1] == 'HR010') {
                     this.hrSevice
