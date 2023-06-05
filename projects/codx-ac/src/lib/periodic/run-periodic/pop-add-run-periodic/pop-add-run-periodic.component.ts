@@ -100,6 +100,7 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
         this.runPeriodic.itemGroupID = e.data;
         if(this.itemID)
         {
+          (this.itemID.ComponentCurrent as CodxComboboxComponent).model.itemGroupID = this.runPeriodic.itemGroupID;
           (this.itemID.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
           this.itemID.crrValue = null;
           this.runPeriodic.itemID = null;
@@ -168,10 +169,9 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
           .save(null, 0, '', 'SYS006', true)
           .subscribe((res) => {
             if (res.save) {
-              this.onClearParas();
               this.dialog.dataService.addNew().subscribe((res) => {
-                this.runPeriodic = new RunPeriodic();
                 this.runPeriodic = this.dialog.dataService!.dataSelected;
+                this.onClearParas();
                 this.form.formGroup.patchValue(this.runPeriodic);
               });
             }

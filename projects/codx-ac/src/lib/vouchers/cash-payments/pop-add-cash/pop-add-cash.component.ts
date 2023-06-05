@@ -231,7 +231,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   changeType(e?: any, ele?: TabComponent) {
     let i;
-    if (e) i = e.data;
+    if (e){
+      i = e.data;
+      this.cashpayment.subType = e.data;
+    } 
     if (!e && this.cashpayment.subType) i = this.cashpayment.subType;
     if (!ele) ele = this.tabObj;
     switch (i) {
@@ -271,7 +274,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.settledInvoices = [];
         this.loadSubType1(true);
         this.loadSubType2(false);
-        if (this.gridSet) this.gridCreated();
+        this.loadSubType5(false);
         break;
     }
   }
@@ -458,7 +461,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     //     hItem = this.itemRef.nativeElement.parentElement.offsetHeight;
     //   this.gridHeight = hBody - (hHeader + hTab + hItem + 100 + 30); //90 là header & footer, //30 là tfoot grid
 
-    // }, 500);
+    // }, 1000);
   }
 
   lineChanged(e: any) {
@@ -1249,7 +1252,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       if (res && res.event && res.event.length) {
         // this.setVoucherRef(res.event);
         this.settledInvoices = res.event;
-        this.gridCash.gridRef.refresh();
+        this.gridSet.refresh();
       }
     });
   }
@@ -1398,6 +1401,19 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.total = this.total + element.dr;
       });
       this.cashpayment.totalDR = this.total;
+    }
+  }
+
+  expand(){
+    var eCollape = document.querySelectorAll('.codx-detail-footer.dialog-footer.collape');
+    var eExpand = document.querySelectorAll('.codx-detail-footer.dialog-footer.expand');
+    if (eCollape.length > 0) {
+      (eCollape[0] as HTMLElement).classList.remove('collape');
+      (eCollape[0] as HTMLElement).classList.add('expand');
+    }
+    if (eExpand.length > 0) {
+      (eExpand[0] as HTMLElement).classList.remove('expand');
+      (eExpand[0] as HTMLElement).classList.add('collape');
     }
   }
   //#endregion
