@@ -100,6 +100,7 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
         this.runPeriodic.itemGroupID = e.data;
         if(this.itemID)
         {
+          (this.itemID.ComponentCurrent as CodxComboboxComponent).model.itemGroupID = this.runPeriodic.itemGroupID;
           (this.itemID.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
           this.itemID.crrValue = null;
           this.runPeriodic.itemID = null;
@@ -170,9 +171,8 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
             if (res.save) {
               this.onClearParas();
               this.dialog.dataService.addNew().subscribe((res) => {
-                this.runPeriodic = new RunPeriodic();
+                this.form.formGroup.patchValue(res);
                 this.runPeriodic = this.dialog.dataService!.dataSelected;
-                this.form.formGroup.patchValue(this.runPeriodic);
               });
             }
           });
@@ -186,6 +186,7 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
     this.runPeriodic.itemID = null;
     this.runPeriodic.warehouseID = null;
     this.runPeriodic.accountID = null;
+    this.form.formGroup.patchValue(this.runPeriodic);
   }
 
   checkRunPeriodicValidate() {
