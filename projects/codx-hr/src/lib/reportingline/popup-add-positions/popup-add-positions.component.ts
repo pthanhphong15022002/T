@@ -34,7 +34,7 @@ export class PopupAddPositionsComponent implements OnInit {
   formGroup;
   blocked: boolean = false;
   isAfterRender = false;
-  // gridViewSetup: any;
+  grvSetup: any;
   // validate: any = 0;
   @Output() Savechange = new EventEmitter();
 
@@ -85,21 +85,14 @@ export class PopupAddPositionsComponent implements OnInit {
           this.isAfterRender = true;
         }
       });
-    // this.cacheService
-    //   .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.gridViewSetup = res;
-    //       console.log(Object.keys(this.gridViewSetup));
-    //     }
-    //   });
-    this.getFucnName(this.functionID);
+    this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
+    this.getFuncName(this.functionID);
     if (this.isAdd)
       this.blocked = this.dialogRef.dataService.keyField ? true : false;
     else this.blocked = true;
   }
   // get function name
-  getFucnName(funcID: string) {
+  getFuncName(funcID: string) {
     if (funcID) {
       this.cacheService.functionList(funcID).subscribe((func) => {
         if (func) {
@@ -112,10 +105,16 @@ export class PopupAddPositionsComponent implements OnInit {
       });
     }
   }
-
+  //get grvSetup
+  getGrvSetup(fromName: string, grdViewName: string) {
+    this.cacheService.gridViewSetup(fromName, grdViewName).subscribe((grv: any) => {
+      if (grv) {
+        this.grvSetup = grv;
+      }
+    });
+  }
   // value change
   dataChange(e: any, field: string) {
-    debugger
     if (e) {
       if (e?.length == undefined) {
         this.data[field] = e?.data;

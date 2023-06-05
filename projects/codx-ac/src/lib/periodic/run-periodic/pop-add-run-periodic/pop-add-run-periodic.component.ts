@@ -169,10 +169,10 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
           .save(null, 0, '', 'SYS006', true)
           .subscribe((res) => {
             if (res.save) {
-              this.onClearParas();
               this.dialog.dataService.addNew().subscribe((res) => {
-                this.form.formGroup.patchValue(res);
                 this.runPeriodic = this.dialog.dataService!.dataSelected;
+                this.onClearParas();
+                this.form.formGroup.patchValue(this.runPeriodic);
               });
             }
           });
@@ -186,7 +186,6 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
     this.runPeriodic.itemID = null;
     this.runPeriodic.warehouseID = null;
     this.runPeriodic.accountID = null;
-    this.form.formGroup.patchValue(this.runPeriodic);
   }
 
   checkRunPeriodicValidate() {
