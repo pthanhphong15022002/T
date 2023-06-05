@@ -196,7 +196,7 @@
                   </div>
                 </div>
                 <div class="d-flex flex-row align-items-center">
-                  <div
+                  <!-- <div
                     class="d-flex align-items-center kr-process w-200px min-w-200px align-items-center me-2">
                     <div class="h-15px w-100 bgEDEDED rounded-4">
                       <div class="bg-color rounded-4 h-15px" role="progressbar"
@@ -208,7 +208,7 @@
                       {{ item?.cummulated }}
                       %
                     </div>
-                  </div>
+                  </div> -->
                   <div class="d-flex flex-column align-items-center kr-process w-150px me-7 pb-2"  [ngbTooltip]="'Tiến độ'" >
                     <span class="mb-1" *ngIf="item?.cummulated==0" [innerHTML]="(item?.cummulated)+'%'"></span>
                     <span class="mb-1" *ngIf="item?.cummulated!=0"

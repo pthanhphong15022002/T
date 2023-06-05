@@ -259,13 +259,13 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
+          this.view.dataService.add(res.event).subscribe((res) => {});
           this.df.detectChanges();
         } else if (actionType == 'copy') {
-          this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
+          this.view.dataService.add(res.event).subscribe((res) => {});
           this.df.detectChanges();
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event[0]).subscribe((res) => {});
+          this.view.dataService.update(res.event).subscribe((res) => {});
           this.df.detectChanges();
         }
       }

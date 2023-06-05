@@ -15,6 +15,16 @@ export class ContractsService {
     private notiService: NotificationsService,
   ) { }
 
+  async getFormModel(functionID) {
+    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let formModel = {};
+    formModel['formName'] = f?.formName;
+    formModel['gridViewName'] = f?.gridViewName;
+    formModel['entityName'] = f?.entityName;
+    formModel['funcID'] = functionID;
+    return formModel;
+  }
+
   async openPopupContract(projectID,action, contract,formModel){
     let data = {
       projectID,

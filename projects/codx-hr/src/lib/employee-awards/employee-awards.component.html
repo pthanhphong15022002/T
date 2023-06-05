@@ -272,6 +272,7 @@
       >
       </span>
       <span
+        *ngIf="data?.awardFormCategory"
         class="text-primary"
         [ngbTooltip]="grvSetup?.AwardFormCategory?.headerText"
         [innerHTML]="

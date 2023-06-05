@@ -184,7 +184,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.logicTaskGroup(this.task.taskGroupID);
     }
     this.action = dt?.data?.action;
-    this.showAssignTo = dt?.data?.showAssignTo;
+    this.showAssignTo = dt?.data?.isAssignTask;  // phân công cho
     this.titleAction = dt?.data?.titleAction;
     this.functionID = dt?.data?.functionID;
     this.taskCopy = dt?.data?.taskCopy;

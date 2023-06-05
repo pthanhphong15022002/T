@@ -139,7 +139,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       PopupEmployeeBusinessComponent,
       {
         funcID: this.view.funcID,
-        employeeId: data?.employeeID,
+        employeeId: this.currentEmpObj.employeeID,
         headerText: actionHeaderText,
         empObj: this.currentEmpObj,
         actionType: actionType,

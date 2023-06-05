@@ -23,6 +23,7 @@
               [crrValue]="autoDefaultData.autoAssignRule || '2'"
               (valueChange)="valueDefaultChange($event)"
               (controlBlur)="blur($event)"
+              [disabled]="disableAssignRule"
             >
             </codx-input>
           </div>

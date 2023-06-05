@@ -237,7 +237,7 @@
 
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'me-4 h-100'"
+    [imgCss]="'me-4 h-100px'"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-10'"
@@ -330,7 +330,8 @@
         <span *ngIf="data.expiredDate">
           <span class="mx-1 fs-7">-</span>
         </span>
-        <span class="fs-7"
+        <span
+          class="fs-7"
           *ngIf="data.expiredDate"
           [ngbTooltip]="grvSetup?.ExpiredDate?.headerText"
         >

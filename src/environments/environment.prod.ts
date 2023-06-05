@@ -19,6 +19,7 @@ export const environment = {
   hideFavCount: false,
   singleExec: false,
   asideMinimize: 'icon-title',
+  loginHCS: '',
   layout: {
     title: '',
     icon: '',

@@ -108,6 +108,8 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   workPermitCol1: TemplateRef<any>;
   @ViewChild('workPermitCol2', { static: true })
   workPermitCol2: TemplateRef<any>;
+  @ViewChild('headTempWorkPermit1', { static: true }) headTempWorkPermit1: TemplateRef<any>;
+  @ViewChild('headTempWorkPermit2', { static: true }) headTempWorkPermit2: TemplateRef<any>;
 
   //Column grid visa viewChild
   @ViewChild('visaCol1', { static: true }) visaCol1: TemplateRef<any>;
@@ -280,21 +282,24 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         let workHeaderText = res;
         this.workPermitColumnGrid = [
           {
-            headerText:
-              workHeaderText['WorkPermitNo'] +
-              ' | ' +
-              workHeaderText['IssuedPlace'],
+            // headerText:
+            //   workHeaderText['WorkPermitNo'] +
+            //   ' | ' +
+            //   workHeaderText['IssuedPlace'],
+              headerTemplate: this.headTempWorkPermit1,
             template: this.workPermitCol1,
             width: '150',
           },
           {
-            headerText:
-              workHeaderText['IssuedDate'] + ' | ' + workHeaderText['ToDate'],
+            // headerText:
+            //   workHeaderText['IssuedDate'] + ' | ' + workHeaderText['ToDate'],
+              headerTemplate: this.headTempWorkPermit2,
             template: this.workPermitCol2,
             width: '150',
           },
         ];
         if (this.funcID == this.eWorkPermitFuncID) {
+
           this.columnGrid = this.workPermitColumnGrid;
           this.filter = null;
           //Get row count

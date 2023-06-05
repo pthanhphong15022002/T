@@ -1,17 +1,8 @@
 import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
-import {
-  Component,
-  Injector,
-  Input,
-  Optional,
-} from '@angular/core';
+import { Component, Injector, Input, Optional } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import {
-  UIComponent,
-  DialogData,
-  DialogRef,
-} from 'codx-core';
+import { UIComponent, DialogData, DialogRef } from 'codx-core';
 
 import axios from 'axios';
 @Component({
@@ -31,6 +22,8 @@ export class CodxMeetingOnlineComponent extends UIComponent {
   @Input() userName;
   @Input() mail = null;
   @Input() isManager: boolean = false;
+
+  ownerLink = '';
   environment = {
     SureMeet: {
       baseUrl: 'https://api.suremeet.vn/',
@@ -39,17 +32,18 @@ export class CodxMeetingOnlineComponent extends UIComponent {
       connectMettingUrl: 'PublicMeeting/Verify',
       client_id: 'portal',
       client_secret: 'lacviet@2022@$%!$$!(@',
-      app_id: 'demo.suremeet@gmail.com',
-      app_secret: '123456',
+      app_id: 'ecodx@lacviet.com.vn',
+      app_secret: 'LacViet@123!@#',
     },
   };
   data;
+
   dialogRef: DialogRef;
   formGroup?: FormGroup;
   constructor(
     injector: Injector,
     private datePipe: DatePipe,
-    
+
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -61,6 +55,8 @@ export class CodxMeetingOnlineComponent extends UIComponent {
   baseUrl = '.\\assets\\themes\\ep\\default\\img\\';
   vllImgUrl = [];
   curHost;
+
+  accessToken = '';
   onInit(): void {
     this.cache.valueList('EP021').subscribe((res) => {
       this.vllImgUrl = res.datas;
@@ -68,45 +64,52 @@ export class CodxMeetingOnlineComponent extends UIComponent {
     });
   }
 
-  // createMeeting() {
-  //   if (this.meetingUrl) {
-  //     return this.meetingUrl;
-  //   }
-  //   this.codxMeetingOnlineService
-  //     .createMeeting(
-  //       this.meetingUrl,
-  //       this.meetingTitle,
-  //       this.meetingDescription,
-  //       this.meetingStartDate,
-  //       this.meetingStartTime,
-  //       this.meetingDuration,
-  //       this.meetingPassword
-  //     )
-  //     .subscribe((url) => {
-  //       this.meetingUrl = url;
-  //       this.detectorRef.detectChanges();
-  //       return url;
-  //     });
-  // }
-  
   createMeeting() {
     if (this.meetingUrl) {
       return this.meetingUrl;
     }
     this.createAMeeting(
-        this.meetingUrl,
+      this.meetingUrl,
+      this.meetingTitle,
+      this.meetingDescription,
+      this.meetingStartDate,
+      this.meetingStartTime,
+      this.meetingDuration,
+      this.meetingPassword
+    ).then((url) => {
+      this.meetingUrl = url;
+      let isManager = true;
+      this.connectMeetingNow(
         this.meetingTitle,
         this.meetingDescription,
-        this.meetingStartDate,
-        this.meetingStartTime,
         this.meetingDuration,
-        this.meetingPassword
-      )
-      .then((url) => {
-        this.meetingUrl = url;
-        this.detectorRef.detectChanges();
-        return url;
+        this.meetingPassword,
+        this.userName,
+        this.mail,
+        isManager,
+        this.meetingUrl,
+        this.meetingStartDate,
+        this.meetingStartTime
+      ).then((ownerUrl) => {
+        this.ownerLink = ownerUrl;
       });
+
+      this.connectMeetingNow(
+        this.meetingTitle,
+        this.meetingDescription,
+        this.meetingDuration,
+        this.meetingPassword,
+        this.userName,
+        this.mail,
+        !isManager,
+        this.meetingUrl,
+        this.meetingStartDate,
+        this.meetingStartTime
+      ).then((attendeeUrl) => {
+        this.meetingUrl = attendeeUrl;
+      });
+      this.detectorRef.detectChanges();
+    });
   }
   changeHost(imgUrl) {
     this.curHost = imgUrl;
@@ -120,15 +123,18 @@ export class CodxMeetingOnlineComponent extends UIComponent {
   closeDialog(isSave: boolean) {
     if (isSave) {
       this.data[0].onlineUrl = this.meetingUrl;
-      this.dialog.close(this.meetingUrl);
+
+      let links = {
+        owner: this.ownerLink,
+        attendee: this.meetingUrl,
+      };
+      this.dialog.close(links);
     } else {
       this.dialog.close();
     }
   }
 
-  
-
-  createAMeeting(
+  async createAMeeting(
     meetingUrl,
     meetingTitle,
     meetingDescription,
@@ -148,7 +154,8 @@ export class CodxMeetingOnlineComponent extends UIComponent {
         client_id: this.environment.SureMeet.client_id,
         client_secret: this.environment.SureMeet.client_secret,
       })
-      .then(() => {
+      .then((result) => {
+        this.accessToken = result.data.access_token;
         let data = {
           app_id: this.environment.SureMeet.app_id,
           app_secret: this.environment.SureMeet.app_secret,
@@ -167,7 +174,11 @@ export class CodxMeetingOnlineComponent extends UIComponent {
           .create({
             baseURL: this.environment.SureMeet.baseUrl,
           })
-          .post(this.environment.SureMeet.addUpdateMeetingUrl, data)
+          .post(this.environment.SureMeet.addUpdateMeetingUrl, data, {
+            headers: {
+              Authorization: 'Bearer ' + this.accessToken,
+            },
+          })
           .then((meeting: any) => {
             return meeting.data.url;
           })
@@ -199,50 +210,55 @@ export class CodxMeetingOnlineComponent extends UIComponent {
       meetingStartTime ??
       this.datePipe.transform(new Date().toString(), 'HH:mm');
 
-    let url =
-      meetingUrl ??
-      (await this.createAMeeting(
-        meetingUrl,
-        meetingTitle,
-        meetingDescription,
-        meetingStartDate,
-        meetingStartTime,
-        meetingDuration,
-        meetingPassword
-      ).then((url) => {
-        return url;
-      }));
+    // let url =
+    //   meetingUrl ??
+    //   (await this.createAMeeting(
+    //     meetingUrl,
+    //     meetingTitle,
+    //     meetingDescription,
+    //     meetingStartDate,
+    //     meetingStartTime,
+    //     meetingDuration,
+    //     meetingPassword
+    //   ).then((url) => {
+    //     return url;
+    //   }));
 
+    let data = {
+      app_id: this.environment.SureMeet.app_id,
+      app_secret: this.environment.SureMeet.app_secret,
+      key: (meetingUrl as string).split('/').reverse().at(0),
+      password: null,
+      name: userName,
+      email: mail,
+      manager: isManager == true ? 1 : 0,
+    };
     return axios
       .create({
         baseURL: this.environment.SureMeet.baseUrl,
       })
-      .post(this.environment.SureMeet.tokenUrl, {
-        client_id: this.environment.SureMeet.client_id,
-        client_secret: this.environment.SureMeet.client_secret,
+      .post(this.environment.SureMeet.connectMettingUrl, data, {
+        headers: {
+          Authorization: 'Bearer ' + this.accessToken,
+        },
       })
-      .then(() => {
-        let data = {
-          app_id: this.environment.SureMeet.app_id,
-          app_secret: this.environment.SureMeet.app_secret,
-          key: (url as string).split('/').reverse().at(0),
-          password: null,
-          name: userName,
-          email: mail,
-          manager: isManager == true ? 1 : 0,
-        };
-        return axios
-          .create({
-            baseURL: this.environment.SureMeet.baseUrl,
-          })
-          .post(this.environment.SureMeet.connectMettingUrl, data)
-          .then((connectData: any) => {
-            if (connectData?.data?.url) {
-              return connectData?.data?.url;
-            }
-          })
-          .catch(() => {});
+      .then((connectData: any) => {
+        if (connectData?.data?.url) {
+          return connectData?.data?.url;
+        }
       })
       .catch(() => {});
+    // return axios
+    //   .create({
+    //     baseURL: this.environment.SureMeet.baseUrl,
+    //   })
+    //   .post(this.environment.SureMeet.tokenUrl, {
+    //     client_id: this.environment.SureMeet.client_id,
+    //     client_secret: this.environment.SureMeet.client_secret,
+    //   })
+    //   .then(() => {
+
+    //   })
+    //   .catch(() => {});
   }
 }

@@ -8,6 +8,7 @@ import {
   Output,
   EventEmitter,
   ViewChild,
+  TemplateRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
@@ -50,10 +51,10 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() permissions: any;
   @Input() objectID = '';
   @Input() isReferType: boolean = false;
+  @Input() tmpRight?: TemplateRef<any>;
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileDelete = new EventEmitter<any>();
   @Output() viewFile = new EventEmitter<any>();
-
   titleEditFileDialog = 'Cập nhật file';
   titleUpdateFile = 'Cập nhật file';
   titleUpdateShare = 'Chia sẻ';

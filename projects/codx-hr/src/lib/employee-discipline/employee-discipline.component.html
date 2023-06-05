@@ -369,6 +369,7 @@
       <div>
         <!-- <div class="justify-content-between mb-1"> -->
         <span
+          *ngIf="data.disciplineFormCategory"
           class="text-warning"
           [ngbTooltip]="grvSetup?.DisciplineFormCategory?.headerText"
           [innerHTML]="
@@ -387,7 +388,10 @@
             *ngIf="data?.fromDate"
             class="icon-i-info-circle-fill fs-9 icon-6 mx-2 text-gray-400"
           ></span>
-          <span [ngbTooltip]="grvSetup?.FromDate?.headerText">
+          <span
+            *ngIf="data?.fromDate"
+            [ngbTooltip]="grvSetup?.FromDate?.headerText"
+          >
             <i class="icon-calendar_today icon-14 me-1"></i>
             {{ data?.fromDate | fmDT }}
           </span>

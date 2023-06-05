@@ -159,6 +159,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() actionType :string = "" ; 
   @Input() isReferType: boolean = false;
   @Input() tmpRight?: TemplateRef<any>;
+  @Input() tmpRightThumb?: TemplateRef<any>;
 
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;

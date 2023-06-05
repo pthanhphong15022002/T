@@ -213,6 +213,7 @@ export class PopupEBasicSalariesComponent
 
   onSaveForm() {
     if (this.formGroup.invalid) {
+      console.log(this.formGroup.invalid);
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }

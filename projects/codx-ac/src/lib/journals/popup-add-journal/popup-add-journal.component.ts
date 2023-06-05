@@ -361,6 +361,15 @@ export class PopupAddJournalComponent
       return;
     }
 
+    // 4: kho
+    if (
+      this.journalTypes109.includes(this.journal.journalType) &&
+      !this.journal.idimControl?.split(',').includes('4')
+    ) {
+      this.notiService.notifyCode('AC0015', 0);
+      return;
+    }
+
     const propNames1: string[] = [
       'drAcctControl',
       'crAcctControl',
@@ -430,7 +439,7 @@ export class PopupAddJournalComponent
         this.notiService.notifyCode(
           'AC0008',
           0,
-          `"${tempJournal.journalName}"`,
+          `"${tempJournal.journalDesc}"`,
           `"${changedFields.join(', ')}"`
         );
 
@@ -538,7 +547,7 @@ export class PopupAddJournalComponent
     this.isHidden = true;
   }
 
-  onClickOpenCustomizedMultiSelectPopup(): void {
+  onClickOpenMultiSelectPopup(): void {
     this.callfc
       .openForm(
         MultiSelectPopupComponent,

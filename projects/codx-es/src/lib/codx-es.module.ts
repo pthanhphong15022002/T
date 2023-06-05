@@ -66,6 +66,7 @@ const routes: Routes = [
     children: [
       {
         path: 'signfiles/:funcID',
+        data: { noReuse: true },
         component: SignFileComponent,
       },
 
@@ -87,6 +88,7 @@ const routes: Routes = [
       },
       {
         path: 'approvals/:funcID',
+        data: { noReuse: true },
         loadChildren: () =>
           import('projects/codx-es/src/lib/codx-approvel.module').then(
             (m) => m.ApprovelModule

@@ -230,6 +230,7 @@ export class PopupEmployeeBusinessComponent
 
   //Change date and render days
   valueChangedDate(evt: any) {
+    this.formGroup.patchValue(this.data);
     let days = 1;
     if (evt.field === 'beginDate') {
       this.data.beginDate = evt.data.fromDate;
@@ -257,10 +258,20 @@ export class PopupEmployeeBusinessComponent
   }
 
   onSaveForm(isCloseForm: boolean) {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
+    if (this.data.beginDate > this.data.endDate) {
+      this.hrService.notifyInvalidFromTo(
+        'EndDate',
+        'BeginDate',
+        this.formModel
+      );
+      return;
+    }
+
     if (this.data.IsOversea == true && this.data.country == null) {
       this.notitfy.notifyCode('HR011');
       return;

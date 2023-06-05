@@ -46,6 +46,10 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
     if(this.runPeriodic.paras != null)
     {
       this.Paras = JSON.parse(this.runPeriodic.paras);
+      this.runPeriodic.itemGroupID = this.Paras.itemGroupID;
+      this.runPeriodic.itemID = this.Paras.itemID;
+      this.runPeriodic.warehouseID = this.Paras.warehouseID;
+      this.runPeriodic.accountID = this.Paras.accountID;
     }
     this.formType = dialogData.data?.formType;
     this.cache
@@ -66,7 +70,7 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
 
   ngAfterViewInit() {
     this.setFromDateToDate(this.runPeriodic.runDate);
-    this.form.formGroup.patchValue(this.Paras);
+    this.form.formGroup.patchValue(this.runPeriodic);
   }
 
   //#endregion
@@ -74,6 +78,7 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
   //region Event
 
   close(){
+    this.onClearParas();
     this.dialog.close();
   }
 
@@ -92,29 +97,30 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
         this.runPeriodic.memo = e.data;
         break;
       case 'itemGroupID':
-        this.Paras.itemGroupID = e.data;
+        this.runPeriodic.itemGroupID = e.data;
         if(this.itemID)
         {
+          (this.itemID.ComponentCurrent as CodxComboboxComponent).model.itemGroupID = this.runPeriodic.itemGroupID;
           (this.itemID.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
           this.itemID.crrValue = null;
-          this.Paras.itemID = null;
-          this.form.formGroup.patchValue(this.Paras);
+          this.runPeriodic.itemID = null;
+          this.form.formGroup.patchValue(this.runPeriodic);
         }
         break;
       case 'itemID':
-        this.Paras.itemID = e.data;
+        this.runPeriodic.itemID = e.data;
         break;
       case 'accountID':
-        this.Paras.accountID = e.data;
+        this.runPeriodic.accountID = e.data;
         break;
       case 'warehouseID':
-        this.Paras.warehouseID = e.data;
+        this.runPeriodic.warehouseID = e.data;
         break;
     }
   }
 
   onSave(){
-    this.checkParasValidate();
+    this.checkRunPeriodicValidate();
     if (this.validate > 0) {
       this.validate = 0;
       this.notification.notifyCode('SYS023', 0, '');
@@ -122,15 +128,11 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
     } else {
       if (this.formType == 'add' || this.formType == 'copy') {
         this.runPeriodic.status = 1;
-        this.runPeriodic.paras = JSON.stringify(this.Paras);
-        this.dialog.dataService.updateDatas.set(
-          this.runPeriodic['_uuid'],
-          this.runPeriodic
-        );
+        this.setParas();
         this.dialog.dataService
           .save(null, 0, '', 'SYS006', true)
           .subscribe((res) => {
-            if (res && res.update.data != null) {
+            if (res.save) {
               this.dialog.close();
               this.dt.detectChanges();
             }
@@ -139,11 +141,7 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
       if (this.formType == 'edit') {
         if(this.runPeriodic.status == 0)
           this.runPeriodic.status = 1;
-        this.runPeriodic.paras = JSON.stringify(this.Paras);
-        this.dialog.dataService.updateDatas.set(
-          this.runPeriodic['_uuid'],
-          this.runPeriodic
-        );
+        this.setParas();
         this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
           if (res && res.update.data != null) {
             this.dialog.close({
@@ -158,7 +156,7 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
   }
 
   onSaveAdd(){
-    this.checkParasValidate();
+    this.checkRunPeriodicValidate();
     if (this.validate > 0) {
       this.validate = 0;
       this.notification.notifyCode('SYS023', 0, '');
@@ -166,20 +164,15 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
     } else {
       if (this.formType == 'add' || this.formType == 'copy') {
         this.runPeriodic.status = 1;
-        this.runPeriodic.paras = JSON.stringify(this.Paras);
-        this.dialog.dataService.updateDatas.set(
-          this.runPeriodic['_uuid'],
-          this.runPeriodic
-        );
+        this.setParas();
         this.dialog.dataService
           .save(null, 0, '', 'SYS006', true)
           .subscribe((res) => {
-            if (res && res.update.data != null) {
-              this.onClearData();
+            if (res.save) {
               this.dialog.dataService.addNew().subscribe((res) => {
-                this.form.formGroup.patchValue(res);
-                this.form.formGroup.patchValue(this.Paras);
                 this.runPeriodic = this.dialog.dataService!.dataSelected;
+                this.onClearParas();
+                this.form.formGroup.patchValue(this.runPeriodic);
               });
             }
           });
@@ -187,20 +180,24 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
     }
   }
 
-  onClearData(){
+  onClearParas(){
     this.Paras = new Paras();
+    this.runPeriodic.itemGroupID = null;
+    this.runPeriodic.itemID = null;
+    this.runPeriodic.warehouseID = null;
+    this.runPeriodic.accountID = null;
   }
 
-  checkParasValidate() {
+  checkRunPeriodicValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.Paras);
+    var keymodel = Object.keys(this.runPeriodic);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
-              this.Paras[keymodel[i]] == null ||
-              String(this.Paras[keymodel[i]]).match(/^ *$/) !== null
+              this.runPeriodic[keymodel[i]] == null ||
+              String(this.runPeriodic[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -221,6 +218,14 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
       let result = new Date(runDate);
       result.setDate(1);
       this.runPeriodic.fromDate = result;
+  }
+
+  setParas(){
+    this.Paras.itemGroupID = this.runPeriodic.itemGroupID;
+    this.Paras.itemID = this.runPeriodic.itemID;
+    this.Paras.warehouseID = this.runPeriodic.warehouseID;
+    this.Paras.accountID = this.runPeriodic.accountID;
+    this.runPeriodic.paras = JSON.stringify(this.Paras);
   }
   //endRegion Function
 }

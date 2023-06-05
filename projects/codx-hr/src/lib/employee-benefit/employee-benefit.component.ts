@@ -337,7 +337,7 @@ export class EmployeeBenefitComponent extends UIComponent {
         actionType: actionType,
         empObj: this.currentEmpObj,
         headerText: actionHeaderText,
-        employeeId: data?.employeeID,
+        employeeId: this.currentEmpObj.employeeID,
         funcID: this.view.funcID,
         dataObj: data,
         fromListView: true,
