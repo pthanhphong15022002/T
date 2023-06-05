@@ -34,6 +34,7 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
   date = new Date();
   grvWP:any = null;
   isEdit:boolean = false;
+  defaulVote:any = null;
   REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
@@ -67,6 +68,7 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
         this.vllL1480 = res.datas;
+        this.defaulVote = this.vllL1480[0];
       }
     });
     this.getGrdSetup();
@@ -408,5 +410,13 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
   clickCancelEdit(){
     this.isEdit = false;
     this.new = false;
+  }
+
+  // doubleclick votes
+  dbLikePost(data){
+    debugger
+    if(data && this.defaulVote){
+      this.votePost(data,this.defaulVote.value);
+    }
   }
 }
