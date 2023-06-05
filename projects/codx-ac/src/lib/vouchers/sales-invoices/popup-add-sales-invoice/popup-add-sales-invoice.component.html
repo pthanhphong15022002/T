@@ -21,7 +21,7 @@
                 fiedName="lblGeneralInfoTab"
                 default="Thông tin chứng từ"
                 [formModel]="form.formModel"
-                class="fw-bold fs-5-sm text-uppercase"
+                class="fw-bold fs-5-sm"
               ></codx-label>
             </div>
           </ng-template>
@@ -54,6 +54,7 @@
                         [formModel]="form.formModel"
                         [Group]="form.formGroup"
                         (valueChange)="onInputChange($event)"
+                        [disabled]="journal.multiCurrency === '0'"
                       ></codx-input>
                     </div>
                     <div class="col-6 form-group">
@@ -65,6 +66,7 @@
                         field="exchangeRate"
                         [formModel]="form.formModel"
                         [Group]="form.formGroup"
+                        [disabled]="journal.multiCurrency === '0'"
                       ></codx-input>
                     </div>
                   </div>
@@ -111,7 +113,7 @@
                 fiedName="lblReceiptInfo"
                 [formModel]="form.formModel"
                 default="Thông tin hóa đơn"
-                class="fw-bold fs-5-sm text-uppercase"
+                class="fw-bold fs-5-sm"
               ></codx-label>
             </div>
           </ng-template>
@@ -250,7 +252,7 @@
                 fiedName="lblRef"
                 [formModel]="form.formModel"
                 default="Tham chiếu"
-                class="fw-bold fs-5-sm text-uppercase"
+                class="fw-bold fs-5-sm"
               ></codx-label>
             </div>
           </ng-template>
@@ -356,7 +358,7 @@
                 fiedName="lblOtherInfo"
                 [formModel]="form.formModel"
                 default="Thông tin khác"
-                class="fw-bold fs-5-sm text-uppercase"
+                class="fw-bold fs-5-sm"
               ></codx-label>
             </div>
           </ng-template>
@@ -385,7 +387,7 @@
           <ng-template #headerText>
             <i class="icon-format_list_numbered icon-20 me-2"></i>
             <codx-label
-              class="fw-bold fs-5-sm text-uppercase"
+              class="fw-bold fs-5-sm"
               fiedName="lblDetail"
               [formModel]="form.formModel"
               default="Chi tiết"

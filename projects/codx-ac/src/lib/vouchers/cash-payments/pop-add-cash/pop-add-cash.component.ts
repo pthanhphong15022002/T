@@ -458,7 +458,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     //     hItem = this.itemRef.nativeElement.parentElement.offsetHeight;
     //   this.gridHeight = hBody - (hHeader + hTab + hItem + 100 + 30); //90 là header & footer, //30 là tfoot grid
 
-    // }, 500);
+    // }, 1000);
   }
 
   lineChanged(e: any) {
