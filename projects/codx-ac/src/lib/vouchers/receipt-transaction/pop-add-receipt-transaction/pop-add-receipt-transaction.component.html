@@ -119,7 +119,7 @@
       <div class="col-2 ac-bettween"></div>
       <div class="col-3 ac-right d-flex justify-content-end">
         <div class="d-flex flex-column mw-300px">
-          <div class="row">
+          <div *ngIf="journal" class="row">
             <div class="col-6">
               <div class="form-group">
                 <codx-label fiedName="CurrencyID" [formModel]="form.formModel">

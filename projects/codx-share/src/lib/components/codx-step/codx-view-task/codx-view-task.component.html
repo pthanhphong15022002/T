@@ -9,11 +9,16 @@
 ></codx-form>
 
 <ng-template #customToolbar>
-  <div class="d-flex justify-content-between align-items-center w-100 py-1 mt-2">
-    <span class="fs-3 fw-bold">{{title}}</span>
-    <span class="icon-close icon-18 cursor-pointer p-1" (click)="closePopup()"></span>
+  <div
+    class="d-flex justify-content-between align-items-center w-100 py-1 mt-2"
+  >
+    <span class="fs-3 fw-bold">{{ title }}</span>
+    <span
+      class="icon-close icon-18 cursor-pointer p-1"
+      (click)="closePopup()"
+    ></span>
   </div>
-</ng-template >
+</ng-template>
 
 <ng-template #header>
   <div class="offcanvas-header w-100">
@@ -45,7 +50,6 @@
   </div>
 </ng-template>
 
-
 <ng-template #body>
   <div class="offcanvas-content offcanvas-extend fixed-extend">
     <div class="d-flex">
@@ -62,7 +66,6 @@
     </div>
   </div>
 </ng-template>
-
 
 <ng-template #right>
   <div class="d-flex tab-header">
@@ -104,9 +107,30 @@
       [ngTemplateOutlet]="attachments"
     >
     </ng-container>
+    <ng-container *ngIf="viewModelDetail == 'assignTask'">
+      <div *ngIf="dataTree && dataTree.length > 0">
+        <codx-view-assign
+          [dataTree]="dataTree"
+          [formModel]="frmModel"
+          referType="source"
+        ></codx-view-assign>
+      </div>
+      <div class="container h-100" *ngIf="dataTree && dataTree.length == 0">
+        <div class="list-empty card card-flush h-100">
+          <div class="d-flex flex-column flex-center justify-content-center">
+            <img
+              src="../assets/themes/sys/default/img/DataEmpty.svg"
+              class="w-200px"
+            />
+            <div class="fs-5 text-dark fw-bold mt-2 text-center">
+              {{ "SYS011" | mssg | async }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
-
 
 <ng-template #nav>
   <div class="d-flex justify-content-between align-items-center py-1">
@@ -118,20 +142,25 @@
         ></span>
       </div>
       <div class="ms-2">
-        <span class="fs-4 fw-bold text-dark">{{ dataView?.taskName || dataView?.taskGroupName}}</span>
+        <span class="fs-4 fw-bold text-dark">{{
+          dataView?.taskName || dataView?.taskGroupName
+        }}</span>
         <ng-container [ngTemplateOutlet]="describe"></ng-container>
       </div>
     </div>
-    <div class="disabled-inline cursor-pointer" 
-    (click)="openPopupUpdateProgress(dataView,type)"
-    [ngClass]="checkUpdateProgress(dataView,type) ? 'cursor-pointer' : 'cursor-not-allowed'" >
-      <codx-progressbar
-        [progress]="dataView?.progress"
-      ></codx-progressbar>
+    <div
+      class="disabled-inline cursor-pointer"
+      (click)="openPopupUpdateProgress(dataView, type)"
+      [ngClass]="
+        checkUpdateProgress(dataView, type)
+          ? 'cursor-pointer'
+          : 'cursor-not-allowed'
+      "
+    >
+      <codx-progressbar [progress]="dataView?.progress"></codx-progressbar>
     </div>
   </div>
 </ng-template>
-
 
 <ng-template #main>
   <hr />
@@ -153,16 +182,15 @@
     </ul> -->
     <div>
       <codx-fields-detail-temp
-      *ngIf="instanceStep"
-      [dataStep]="instanceStep"
-      [showColumnControl]="1"
-      [isUpdate]="false"
-      [isShowTitle]="false"
-  >
-  </codx-fields-detail-temp>
+        *ngIf="instanceStep"
+        [dataStep]="instanceStep"
+        [showColumnControl]="1"
+        [isUpdate]="false"
+        [isShowTitle]="false"
+      >
+      </codx-fields-detail-temp>
     </div>
   </div>
-
 
   <hr *ngIf="type == 'P'" />
   <div *ngIf="type == 'P'">
@@ -187,10 +215,10 @@
         [isShowFile]="false"
         [isShowComment]="false"
         [isViewStep]="true"
+        (saveAssign)="saveAssign($event)"
       ></codx-step-task>
     </div>
   </div>
-
 
   <div
     class="d-flex justify-content-start"
@@ -206,7 +234,6 @@
       >
       </codx-label>
     </div>
-
 
     <div>
       <codx-attachment
@@ -232,7 +259,6 @@
   </div>
   <hr *ngIf="type !== 'G' && type !== 'P'" />
 
-
   <div *ngIf="type !== 'P'">
     <codx-label
       class="fs-5"
@@ -245,7 +271,6 @@
     <p [innerHTML]="dataInput['memo']"></p>
   </div>
   <hr *ngIf="type !== 'P'" />
-
 
   <div *ngIf="type !== 'P'">
     <codx-label
@@ -287,7 +312,6 @@
   </div>
 </ng-template>
 
-
 <ng-template #showOwner>
   <!-- Chủ quy trình -->
   <div class="d-flex align-items-center" *ngIf="type == 'M'">
@@ -308,7 +332,6 @@
     </div>
   </div>
 
-
   <div class="d-flex align-items-center" *ngIf="type != 'M'">
     <codx-label
       class="fs-5 font-weight-normal me-4"
@@ -325,7 +348,6 @@
       ></ng-container>
     </div>
   </div>
-
 
   <!-- Người tham gia -->
   <div class="d-flex mt-4" *ngIf="type == 'M'">
@@ -377,7 +399,6 @@
       </span>
     </div>
 
-
     <div class="d-flex align-items-center me-2">
       <span class="icon-access_time icon-20 text-primary-500 me-1"></span>
       <span class="date" *ngIf="dataInput['startDate'] && dataInput['endDate']">
@@ -391,7 +412,6 @@
       <codx-label name="durationHour" default="giờ"></codx-label>
       <span>)</span>
     </div>
-
 
     <div *ngIf="type == 'C'" class="d-flex align-items-center me-2">
       <span class="icon-local_phone icon-18 me-1"></span>
@@ -458,7 +478,6 @@
     </codx-attachment>
   </div>
 </ng-template>
-
 
 <!-- End Form Group -->
 <ng-template #showUser let-data="users">

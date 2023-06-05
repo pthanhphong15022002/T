@@ -2,14 +2,12 @@ import { Observable } from 'rxjs';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
-  DataRequest,
   NotificationsService,
   SidebarModel,
   ViewModel,
   ViewType,
   UIComponent,
   CRUDService,
-  Util,
   RequestOption,
 } from 'codx-core';
 import { PopupAddEmployeeComponent } from './popup/popup-add-employee/popup-add-employee.component';
@@ -36,7 +34,6 @@ export class EmployeeListComponent extends UIComponent {
 
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
-
   // template any
 
   constructor(
@@ -58,11 +55,6 @@ export class EmployeeListComponent extends UIComponent {
     this.cache.moreFunction('CoDXSystem', '').subscribe((mFuc: any) => {
       if (mFuc) this.sysMoreFunc = mFuc;
     });
-
-    // this.cache.gridViewSetup('employees', 'grvEmployeeInfomation')
-    // .subscribe(grv => {
-    //   if(grv) this.grvSetup = grv;
-    // })
   }
 
   ngAfterViewInit(): void {
@@ -340,7 +332,6 @@ export class EmployeeListComponent extends UIComponent {
         data: this.view.dataService.data,
         request: this.view.dataService.request,
       };
-      //this.codxService.reloadCurrentRoute();
       this.codxService.navigate('', func?.url, queryParams, state, true);
     });
   }
