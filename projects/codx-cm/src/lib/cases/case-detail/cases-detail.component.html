@@ -303,6 +303,7 @@
     [formModel]="formModel"
     [tabClicked]="tabClicked"
     [dataSelected]="dataSelected"
+    (saveAssign)="saveAssign($event)"
   ></codx-tab-case-detail>
 </ng-template>
 <ng-template #tabs let-data>

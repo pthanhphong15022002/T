@@ -264,6 +264,7 @@
   <codx-tab-deal-detail
     [tabClicked]="tabClicked"
     [dataSelected]="dataSelected"
+    (saveAssign)="saveAssign($event)"
   ></codx-tab-deal-detail>
 </ng-template>
 <ng-template #tabs let-data>
