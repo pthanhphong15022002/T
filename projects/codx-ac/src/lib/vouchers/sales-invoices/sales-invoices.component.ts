@@ -137,7 +137,6 @@ export class SalesInvoicesComponent
           {
             formType: 'add',
             formTitle: `${e.text} ${this.functionName}`,
-            journalNo: this.journalNo,
           },
           options,
           this.view.funcID
@@ -190,7 +189,6 @@ export class SalesInvoicesComponent
         {
           formType: 'edit',
           formTitle: `${e.text} ${this.functionName}`,
-          journalNo: this.journalNo,
         },
         options,
         this.view.funcID
@@ -213,7 +211,6 @@ export class SalesInvoicesComponent
         {
           formType: 'add',
           formTitle: `${e.text} ${this.functionName}`,
-          journalNo: this.journalNo,
         },
         options,
         this.view.funcID
