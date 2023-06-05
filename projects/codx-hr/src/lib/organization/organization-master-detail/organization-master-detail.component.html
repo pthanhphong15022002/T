@@ -1,12 +1,18 @@
-<div class="container mt-4 h-100">
+<div class="container mt-4">
   <div class="row mb-2" *ngIf="employeeManager">
     <div class="col-2 col-xl-2 col-md-4 col-xs-12">
       <codx-img
+        [funcId]="funcID"
         [width]="90"
         [objectId]="employeeManager?.employeeID"
         [objectName]="employeeManager?.employeeName"
         [objectType]="'HR_Employees'"
-        [referType]="'avt'"
+        [imageType]="'circle'"
+        [isAllowEdit]="true"
+        [updateDirect]="true"
+        [isAllowChangeInputID]="true"
+        class="pic-emloyee"
+        [width]="100"
       >
       </codx-img>
     </div>
@@ -88,7 +94,7 @@
           </ng-template>
         </div>
       </div>
-      <div class="w-20 text-center">
+      <div class="w-10 text-center">
         <p class="h1 text-primary">{{ grid?.dataService?.rowCount }}</p>
         <codx-label
           class="text-gray-700"
@@ -111,6 +117,7 @@
       [method]="'GetEmployeesMasterDetailAsync'"
       [dataValues]="orgUnitID"
       [emptyTemplate]="emptyDataTemplate"
+      height="100%"
     ></codx-gridview-v2>
     <!-- <codx-gridview
       #grid

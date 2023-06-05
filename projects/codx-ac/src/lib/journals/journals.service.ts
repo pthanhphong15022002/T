@@ -224,4 +224,16 @@ export class JournalService {
       .asObservable()
       .pipe(tap((t) => console.log('hasVouchers', t)));
   }
+
+  getUserGroups(): Observable<any[]> {
+    return this.acService.loadComboboxData('Share_GroupUsers', 'AD');
+  }
+
+  getUserRoles(): Observable<any[]> {
+    return this.acService.loadComboboxData('Share_UserRoles', 'AD');
+  }
+
+  getUsers(): Observable<any[]> {
+    return this.acService.loadComboboxData('Share_Users', 'AD');
+  }
 }

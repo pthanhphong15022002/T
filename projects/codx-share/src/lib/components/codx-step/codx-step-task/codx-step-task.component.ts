@@ -50,6 +50,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() stepId: any;
   @Input() dataSources: any;
   @Input() isShowMore = true;
+  @Input() isShowStep = false;
   @Input() isShowButton = true;
   @Input() isShowFile = true;
   @Input() isShowComment = true;
