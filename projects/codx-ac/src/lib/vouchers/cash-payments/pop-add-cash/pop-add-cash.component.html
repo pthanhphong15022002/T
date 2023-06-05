@@ -295,8 +295,8 @@
       <table style="table-layout: fixed;" class="table table-row-bordered">
         <tfoot style="background-color: whitesmoke;position: sticky;
           bottom: 0;">
-          <ng-container *ngFor="let item of gridCash.visibleColumns">
-            <td class="w-20" *ngIf="item.summaryBottom == '1'">
+          <ng-container *ngFor="let item of visibleColumns">
+            <td class="w-10" *ngIf="item.summaryBottom == '1'">
               <div class="d-flex align-items-center">
                 <span style="font-size: 14px;" class="sum-content fw-bold">Tổng cộng: </span>
                 <span style="font-size: 14px;" class="sum-content fw-bold">0</span>
@@ -859,7 +859,7 @@
     <codx-gridview-v2 #gridSet formName="SettledInvoices" gridViewName="grvSettledInvoices"
       entityName="AC_SettledInvoices" [templateMore]="morefunction" [editSettings]="editSettings"
       [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false"
-      [dataSource]="settledInvoices" (cellChanged)="settledLineChanged($event)">
+      [dataSource]="settledInvoices" (created)="gridCreatSet()" (cellChanged)="settledLineChanged($event)">
     </codx-gridview-v2>
     <div #btnRef class="btn-addline">
       <div class="d-flex align-items-center">
@@ -881,19 +881,29 @@
     </div>
   </div>
   <div class="row" *ngIf="settledInvoices.length == 0" style="height: 40px;">
+    <table style="table-layout: fixed;" class="table table-row-bordered">
+      <tfoot style="background-color: whitesmoke;position: sticky;
+        bottom: 0;">
+        <ng-container *ngFor="let item of visibleColumnsSet">
+          <td class="w-10" *ngIf="item.summaryBottom == '1'">
+            <div class="d-flex align-items-center">
+              <span style="font-size: 14px;" class="sum-content fw-bold">Tổng cộng: </span>
+              <span style="font-size: 14px;" class="sum-content fw-bold">0</span>
+            </div>
+          </td>
+          <td *ngIf="item.summaryBottom != '1'">
+          </td>
+        </ng-container>
+      </tfoot>
+    </table>
   </div>
 </ng-template>
 <!-- End: VoucherLineRefs -->
 
 <!-- Start: More function -->
 <ng-template #morefunction let-data>
-  <div class="d-flex align-items-center justify-content-center">
-    <span ngbTooltip="Xóa" placement="bottom" type="button" class="btn btn-icon btn-light-danger ms-1"
-      (click)="deleteRow(data)">
-      <i class="icon-delete icon-16"></i>
-    </span>
-  </div>
-
+  <codx-mfunc [dataItem]="data" [formModel]="form.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
+    type="view"></codx-mfunc>
 </ng-template>
 <ng-template #morefunction2 let-data>
   <div class="d-flex align-items-center justify-content-start">
