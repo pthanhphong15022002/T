@@ -192,6 +192,7 @@
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
                       (valueChange)="onInputChange($event)"
+                      [disabled]="journal?.multiCurrency === '0'"
                     ></codx-input>
                   </div>
                   <div class="col-6 form-group">
@@ -203,6 +204,7 @@
                       field="exchangeRate"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
+                      [disabled]="journal?.multiCurrency === '0'"
                     ></codx-input>
                   </div>
                 </div>
@@ -409,6 +411,7 @@
                       [formModel]="fmVATInvoice"
                     ></codx-label>
                     <codx-input
+                      #diM3
                       field="diM3"
                       [formModel]="fmVATInvoice"
                       [Group]="fgVatInvoice"
@@ -424,6 +427,7 @@
                       [formModel]="fmVATInvoice"
                     ></codx-label>
                     <codx-input
+                      #diM1
                       field="diM1"
                       [formModel]="fmVATInvoice"
                       [Group]="fgVatInvoice"
@@ -439,6 +443,7 @@
                       [formModel]="fmVATInvoice"
                     ></codx-label>
                     <codx-input
+                      #diM2
                       field="diM2"
                       [formModel]="fmVATInvoice"
                       [Group]="fgVatInvoice"

@@ -350,7 +350,7 @@ export class CmCustomerComponent
               e.event.modifiedOn = new Date();
               this.view.dataService.update(e.event).subscribe();
               this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-              this.customerDetail.getOneCustomerDetail();
+              this.customerDetail.getOneCustomerDetail(this.dataSelected);
               this.detectorRef.detectChanges();
             }
           });

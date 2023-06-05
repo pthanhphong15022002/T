@@ -146,7 +146,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   onInit(): void {
     this.loadInit();
     this.loadTotal();
-    this.loadJournal();
     this.loadItems();
   }
 
@@ -553,6 +552,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     if (this.inventoryJournal.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
     }
+    this.loadJournal();
   }
 
   loadJournal(){

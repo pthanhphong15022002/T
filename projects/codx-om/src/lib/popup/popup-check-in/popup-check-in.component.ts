@@ -14,6 +14,7 @@ import {
   FormModel,
   NotificationsService,
   UIComponent,
+  Util,
   ViewModel,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -55,7 +56,7 @@ export class PopupCheckInComponent
     this.dialogRef = dialogRef;
     this.oldDataKR = dialogData.data[0];
     this.checkIns = dialogData.data[2];
-    this.checkIns.status ='1';
+    this.checkIns.status = new Date(this.oldDataKR?.nextCheckIn)< new Date()? '1' :'2';
     this.okrFM = dialogData.data[2];
   }
   //---------------------------------------------------------------------------------//
@@ -80,10 +81,10 @@ export class PopupCheckInComponent
   //---------------------------------------------------------------------------------//
   getCacheData() {
     this.cache
-      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
       .subscribe((grv) => {
         if (grv) {
-          this.grView = grv;
+          this.grView = Util.camelizekeyObj(grv);
           this.getCurrentKR();
         }
       });
@@ -143,21 +144,21 @@ export class PopupCheckInComponent
       this.checkIns.cummulated = this.checkIns.value + this.dataKR?.actual;
     }
     this.codxOmService
-      .checkInKR(this.dataKR.recID, this.checkIns)
-      .subscribe((res: any) => {
-        if (res) {
-          this.codxOmService
-            .calculatorProgressOfPlan([this.dataKR?.transID])
-            .subscribe((listPlan: any) => {
-              if (listPlan != null) {
-                this.dialogRef && this.dialogRef.close(listPlan);
-              } else {
-                this.dialogRef && this.dialogRef.close(res);
-              }
-            });
-          this.notificationsService.notifyCode('SYS034');
-        }
-      });
+    .checkInKR(this.dataKR.recID, this.checkIns)
+    .subscribe((res: any) => {
+      if (res) {
+        this.codxOmService
+          .calculatorProgressOfPlan([this.dataKR?.transID])
+          .subscribe((listPlan: any) => {
+            if (listPlan != null) {
+              this.dialogRef && this.dialogRef.close(listPlan);
+            } else {
+              this.dialogRef && this.dialogRef.close(res);
+            }
+          });
+        this.notificationsService.notifyCode('SYS034');
+      }
+    });
   }
 
   //---------------------------------------------------------------------------------//

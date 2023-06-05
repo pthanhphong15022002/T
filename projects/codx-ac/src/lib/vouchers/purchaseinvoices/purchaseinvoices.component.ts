@@ -179,20 +179,23 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.view.dataService
       .addNew((o) => this.setDefault(o))
       .subscribe((res: any) => {
-        var obj = {
-          formType: 'add',
-          headerText: this.headerText,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.isFull = true;
-        this.dialog = this.callfunc.openSide(
-          PopAddPurchaseComponent,
-          obj,
-          option,
-          this.view.funcID
-        );
+        if(res)
+        {
+          var obj = {
+            formType: 'add',
+            headerText: this.headerText,
+          };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.isFull = true;
+          this.dialog = this.callfunc.openSide(
+            PopAddPurchaseComponent,
+            obj,
+            option,
+            this.view.funcID
+          );
+        }
       });
   }
   edit(e, data) {
@@ -202,20 +205,23 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
-        var obj = {
-          formType: 'edit',
-          headerText: this.funcName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.isFull = true;
-        this.dialog = this.callfunc.openSide(
-          PopAddPurchaseComponent,
-          obj,
-          option,
-          this.view.funcID
-        );
+        if(res)
+        {
+          var obj = {
+            formType: 'edit',
+            headerText: this.funcName,
+          };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.isFull = true;
+          this.dialog = this.callfunc.openSide(
+            PopAddPurchaseComponent,
+            obj,
+            option,
+            this.view.funcID
+          );
+        }
       });
   }
   copy(e, data) {
@@ -225,20 +231,23 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.view.dataService
       .copy((o) => this.setDefault(o))
       .subscribe((res: any) => {
-        var obj = {
-          formType: 'copy',
-          headerText: this.funcName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.isFull = true;
-        this.dialog = this.callfunc.openSide(
-          PopAddPurchaseComponent,
-          obj,
-          option,
-          this.view.funcID
-        );
+        if(res)
+        {
+          var obj = {
+            formType: 'copy',
+            headerText: this.funcName,
+          };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.isFull = true;
+          this.dialog = this.callfunc.openSide(
+            PopAddPurchaseComponent,
+            obj,
+            option,
+            this.view.funcID
+          );
+        }
       });
   }
   delete(data) {

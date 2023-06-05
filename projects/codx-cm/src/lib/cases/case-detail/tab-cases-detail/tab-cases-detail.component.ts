@@ -1,9 +1,11 @@
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-gantt';
@@ -22,6 +24,7 @@ export class TabCasesDetailComponent
   @Input() tabClicked: any;
   @Input() dataSelected: any;
   @Input() formModel: FormModel;
+  @Output() saveAssign = new EventEmitter<any>();
   titleAction: string = '';
   listStep = [];
   isUpdate = true; //xư lý cho edit trung tuy chinh ko
@@ -97,4 +100,9 @@ export class TabCasesDetailComponent
     }
     return 1;
   }
+
+    //event giao viec
+    saveAssignTask(e){
+      if(e) this.saveAssign.emit(e);
+    }
 }

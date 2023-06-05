@@ -43,12 +43,7 @@ export class CodxCmService {
   }
 
   getAvatar(avata) {
-    return this.api.exec<any>(
-      'DM',
-      'FileBussiness',
-      'GetAvatarAsync',
-      [avata]
-    );
+    return this.api.exec<any>('DM', 'FileBussiness', 'GetAvatarAsync', [avata]);
   }
 
   getContacts() {
@@ -415,12 +410,10 @@ export class CodxCmService {
     );
   }
   copyFileAvata(idOld, idNew) {
-    return this.api.exec<any>(
-      'CM',
-      'ContactsBusiness',
-      'CopyAvatarByIdAsync',
-      [idOld, idNew]
-    );
+    return this.api.exec<any>('CM', 'ContactsBusiness', 'CopyAvatarByIdAsync', [
+      idOld,
+      idNew,
+    ]);
   }
 
   addInstance(data: any) {
@@ -928,12 +921,22 @@ export class CodxCmService {
                 '"' + grvSetup[keygrid[index]].headerText + '"'
               );
               noValidCout++;
-              return  noValidCout;
+              return noValidCout;
             }
           }
         }
       }
     }
-    return noValidCout
+    return noValidCout;
+  }
+
+  //gettree by sessionID
+  getTreeBySessionID(recID) {
+    return this.api.exec<any>(
+      'TM',
+      'TaskBusiness',
+      'GetListTaskTreeBySessionIDAsync',
+      recID
+    );
   }
 }
