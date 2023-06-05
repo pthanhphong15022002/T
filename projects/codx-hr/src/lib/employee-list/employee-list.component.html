@@ -2,6 +2,7 @@
   [selectedFirst]="true" (selectedChange)="selectedChange($event)">
 </codx-views>
 
+<!-- #region gridView-mode -->
 <!--column Nhân viên -->
 <ng-template #colEmployee let-data>
   <div class="d-flex align-items-center cursor-pointer hover-active py-3" (dblclick)="clickViewEmpInfo(data)">
@@ -79,13 +80,6 @@
           [innerHTML]="data.mobile | formatvalue : view.formModel : 'mobile' | async">
         </span>
       </div>
-      <!-- <div class="d-flex align-items-center">
-        <span class="icon-place icon-16 text-dark me-2"></span>
-        <span class="text-gray-700" [ngbTooltip]="data.address? grvSetup?.Address.headerText : null" [innerHTML]="data.address
-        | formatvalue : view.formModel : 'address'
-        | async">
-        </span>
-      </div> -->
     </div>
   </div>
 </ng-template>
@@ -124,17 +118,6 @@
         | async">
         </span>
       </div>
-      <!-- <div class="align-items-center">
-        <span class="text-gray-700 me-1">
-          <codx-label [setRequire]="false" [fiedName]="'Education'" [formModel]="view.formModel"
-            default="Trình độ: "></codx-label>
-        </span>
-
-        <span class="text-gray-700" [innerHTML]="data.education
-        | formatvalue : view.formModel : 'education'
-        | async">
-        </span>
-      </div> -->
     </div>
   </div>
 </ng-template>
@@ -179,8 +162,10 @@
     </div>
   </div>
 </ng-template>
+<!-- #endregion gridView-mode -->
 
 
+<!-- #region ListView-Mode -->
 <!-- header -->
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 ps-2 pe-4">
@@ -362,3 +347,4 @@
   </div>
 </ng-template>
 <!-- end template list -->
+<!-- #endregion ListView-Mode -->
