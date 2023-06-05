@@ -503,13 +503,13 @@ export class PopupAddDealComponent
     try {
       await this.getGridView(this.formModel);
       await this.getListProcess(this.typeForDeal);
-      if(this.action === this.actionEdit) {
+      if(this.action !== this.actionAdd) {
         await this.getListInstanceSteps(this.deal.processID);
+      }
+      if(this.action === this.actionEdit) {
         await this.getListContactByDealID(this.deal.recID);
       }
-      else if(this.action === this.actionCopy) {
-        await this.getListInstanceSteps(this.deal.processID);
-      }
+
     } catch (error) {}
   }
   async getGridView(formModel) {

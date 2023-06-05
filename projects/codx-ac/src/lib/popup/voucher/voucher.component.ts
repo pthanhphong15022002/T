@@ -90,11 +90,11 @@ export class VoucherComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    let hBody, hTab;
-    if (this.cardbodyRef)
-      hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
-    if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
-    this.gridHeight = hBody - (hTab + 120);
+    // let hBody, hTab;
+    // if (this.cardbodyRef)
+    //   hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
+    // if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
+    // this.gridHeight = hBody - (hTab + 120);
     this.acService.setPopupSize(this.dialog,'80%','80%');
   }
   //#endregion

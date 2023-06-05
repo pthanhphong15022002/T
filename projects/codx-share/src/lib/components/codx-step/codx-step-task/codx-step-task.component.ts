@@ -49,28 +49,30 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModel: FormModel;
   @Input() stepId: any;
   @Input() dataSources: any;
-  @Input() isShowMore = true;
-  @Input() isShowStep = false;
+  @Input() isShowMore = true; // show more function
+  @Input() isShowStep = false; 
   @Input() isShowButton = true;
   @Input() isShowFile = true;
   @Input() isShowComment = true;
-  @Input() isDeepCopy = true;
-  @Input() typeProgress = 1;
-  @Input() isLockSuccess = false;
-  @Input() isSaveProgress = true;
+  @Input() isDeepCopy = true; // copy sâu 
+  @Input() isLockSuccess = false; // lọc cái task 100%
+  @Input() isSaveProgress = true; // lưu progress vào db
 
-  @Input() isClose = false;
-  @Input() isStart = true;
-  @Input() isOnlyView = true;
-  @Input() isEditTimeDefault = true;
-  @Input() isUpdateProgressGroup = true;
+  @Input() isClose = false; // đóng nhiệm vụ
+  @Input() isStart = true; // bắt đầu ngay 
+  @Input() isOnlyView = true; // đang ở giai đoạn nào
   @Input() isRoleAll = true;
   @Input() isViewStep = false;
+
   @Output() isChangeProgress = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();
   @Output() valueChangeProgress = new EventEmitter<any>();
   @Output() saveAssign = new EventEmitter<any>();
 
+  isEditTimeDefault = false;
+  isUpdateProgressGroup = false;
+  isUpdateProgressStep = false;
+  
   currentStep: any;
   isUpdate;
   user: any;
@@ -144,13 +146,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       if (this.isOnlyView) {
         this.getTaskEnd();
       }
-      // if(this.idStepOld != this.currentStep?.recID){
-      //   let isTaskEnd = this.progressTaskEnd == 100 ? true : false;
-      //   if(this.isOnlyView){
-      //     this.continueStep.emit(isTaskEnd);
-      //   }
-      // }
-      // this.idStepOld = this.currentStep?.recID;
     }
   }
 
@@ -163,7 +158,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     formModel['funcID'] = functionID;
     return formModel;
   }
-
+  // loại bỏ những task có progress 100%
   removeTaskSuccess() {
     if (this.listGroupTask?.length > 0) {
       for (let i = 0; i < this.listGroupTask.length; ) {
@@ -204,6 +199,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         ? JSON.parse(JSON.stringify(this.dataSources))
         : this.dataSources;
     }
+    this.isUpdateProgressGroup = this.currentStep?.progressStepControl || false;
+    this.isUpdateProgressStep = this.currentStep?.progressTaskGroupControl || false;
+    this.isEditTimeDefault = this.currentStep?.leadtimeControl || false;
+
     const taskGroupList = this.currentStep?.tasks.reduce((group, product) => {
       const { taskGroupID } = product;
       group[taskGroupID] = group[taskGroupID] ?? [];
@@ -858,6 +857,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
     return dataPopupOutput;
   }
+  
   async openPopupUpdateProgress(data, type) {
     if (!this.isOnlyView || !this.isStart || this.isClose || this.isViewStep)
       return;
@@ -868,7 +868,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.isRoleAll,
       this.isOnlyView,
       this.isUpdateProgressGroup,
-      false,
+      this.isUpdateProgressStep,
       this.user
     );
     if (!checkUpdate) return;
@@ -1047,8 +1047,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   checkUpdateProgress(dataUpdate, type) {
     if (this.isOnlyView && this.isStart && !this.isClose && !this.isViewStep) {
-      if (type != 'G' && type != 'P') {
-        //task
+      if(type  == "P"){
+        return this.isUpdateProgressStep && this.isRoleAll ? true : false;
+      }else if(type == "G"){
+        let isGroup = false;
+        if (!this.isRoleAll) {
+          isGroup = this.checRoleTask(dataUpdate, 'O');
+        }
+        return this.isUpdateProgressGroup && (this.isRoleAll || isGroup)
+          ? true
+          : false;
+      }else{
         let isGroup = false;
         let isTask = false;
         if (!this.isRoleAll) {
@@ -1061,15 +1070,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           }
         }
         return this.isRoleAll || isGroup || isTask ? true : false;
-      } else {
-        //group
-        let isGroup = false;
-        if (!this.isRoleAll) {
-          isGroup = this.checRoleTask(dataUpdate, 'O');
-        }
-        return this.isUpdateProgressGroup && (this.isRoleAll || isGroup)
-          ? true
-          : false;
       }
     }
     return false;

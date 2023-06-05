@@ -29,7 +29,7 @@ export class CodxViewTaskComponent implements OnInit {
   owner = []; //role
   person = []; //role
   listDataLink = [];
-  dataInput: any; //format về như vậy {recID,name,startDate,type, roles, durationHour, durationDay,parentID }
+  dataInput: any; 
   dataProgress: any = null;
 
   isOnlyView = false;
