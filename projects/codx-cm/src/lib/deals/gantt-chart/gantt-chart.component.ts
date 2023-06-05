@@ -16,11 +16,14 @@ import { CodxCmService } from '../../codx-cm.service';
 @Component({
   selector: 'gantt-chart',
   templateUrl: './gantt-chart.component.html',
-  styleUrls: ['./gantt-chart.component.scss']
+  styleUrls: ['./gantt-chart.component.scss'],
 })
-export class GanttChartComponent extends UIComponent implements OnInit, AfterViewInit{
-  @Input()  ganttDs = [];
-  @Input()  dataSelected;
+export class GanttChartComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
+  @Input() ganttDs = [];
+  @Input() dataSelected;
   @Input() listSteps: DP_Instances_Steps[] = [];
 
   crrViewGant = 'W';
@@ -173,9 +176,7 @@ export class GanttChartComponent extends UIComponent implements OnInit, AfterVie
     super(inject);
   }
   ngAfterViewInit() {}
-  onInit(): void {
-   
-  }
+  onInit(): void {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.dataSelected) {
@@ -216,17 +217,49 @@ export class GanttChartComponent extends UIComponent implements OnInit, AfterVie
   }
 
   clickDetailGanchart(recID) {
-    let data = this.ganttDsClone?.find((item) => item.recID === recID);
-    if (data) {
+    let idxCrr = this.ganttDsClone?.findIndex((item) => item.recID === recID);
+    if (idxCrr != -1) {
+      let data = this.ganttDsClone[idxCrr];
       let frmModel: FormModel = {
         entityName: 'DP_Instances_Steps_Tasks',
         formName: 'DPInstancesStepsTasks',
         gridViewName: 'grvDPInstancesStepsTasks',
       };
+      let listRefIDAssign = '';
+      //a thao viết lấy ref listRefIDAssign
+      switch (data?.type) {
+        case 'T':
+          listRefIDAssign = data.recID;
+          break;
+        case 'G':
+          for (var i = idxCrr + 1; i < this.ganttDsClone.length; i++) {
+            if (this.ganttDsClone[i]?.type == 'T') {
+              if (listRefIDAssign && listRefIDAssign.trim() != '')
+                listRefIDAssign += ';' + this.ganttDsClone[i].recID;
+              else listRefIDAssign = this.ganttDsClone[i].recID;
+            } else break;
+          }
+          break;
+        case 'P':
+          for (var i = idxCrr + 1; i < this.ganttDsClone.length; i++) {
+           
+            if (this.ganttDsClone[i]?.type == 'G') {
+              continue;
+            } else if (this.ganttDsClone[i]?.type == 'T') {
+              if (listRefIDAssign && listRefIDAssign.trim() != '')
+                listRefIDAssign += ';' + this.ganttDsClone[i].recID;
+              else listRefIDAssign = this.ganttDsClone[i].recID;
+            } else break;
+          }
+            //thieu cong task ngooai mai hoir thuan de xets
+          break;
+      }
+      //end
       let listData = {
         value: data,
         listIdRoleInstance: this.ownerInstance,
         type: data?.type,
+        listRefIDAssign: listRefIDAssign,
       };
       let option = new SidebarModel();
       option.Width = '550px';
