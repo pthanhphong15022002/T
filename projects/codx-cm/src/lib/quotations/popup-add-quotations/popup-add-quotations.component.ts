@@ -37,7 +37,8 @@ import { PopupAddQuotationsLinesComponent } from '../../quotations-lines/popup-a
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/tmpCrm.model';
 import { TempComponent } from 'codx-core/lib/templates/base-temp/base.component';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
+import { DateTimePickerAllModule } from '@syncfusion/ej2-angular-calendars';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -281,7 +282,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   //change Data
   changeCombox(e) {
     if (!e?.data || !e?.field) return;
-   
+
     this.quotations[e.field] = e.data;
     switch (e?.field) {
       case 'refID':
@@ -289,8 +290,8 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.quotations.customerID !=
           e?.component?.itemsSelected[0]?.CustomerID
         ) {
-          this.customerCbx.ComponentCurrent.dataService.data = [] ;
-          this.customerCbx.crrValue = null ;
+          this.customerCbx.ComponentCurrent.dataService.data = [];
+          this.customerCbx.crrValue = null;
 
           this.quotations.customerID =
             e?.component?.itemsSelected[0]?.CustomerID;
@@ -298,11 +299,11 @@ export class PopupAddQuotationsComponent implements OnInit {
 
           this.contactCbx.ComponentCurrent.dataService.data = [];
           this.contactCbx.crrValue = null;
-          this.crrCustomerID =  this.quotations.customerID ;
+          this.crrCustomerID = this.quotations.customerID;
         }
         break;
       case 'customerID':
-        if (this.crrCustomerID !=  this.quotations.customerID) {
+        if (this.crrCustomerID != this.quotations.customerID) {
           //co hoi
           this.dealsCbx.ComponentCurrent.dataService.data = [];
           this.dealsCbx.crrValue = null;
@@ -318,17 +319,15 @@ export class PopupAddQuotationsComponent implements OnInit {
         if (
           this.quotations.customerID != e?.component?.itemsSelected[0]?.ObjectID
         ) {
-          this.customerCbx.ComponentCurrent.dataService.data = [] ;
-          this.customerCbx.crrValue = null ;
-          
-        
+          this.customerCbx.ComponentCurrent.dataService.data = [];
+          this.customerCbx.crrValue = null;
+
           this.dealsCbx.ComponentCurrent.dataService.data = [];
           this.quotations.refID = null;
-          this.dealsCbx.crrValue = null
-          
+          this.dealsCbx.crrValue = null;
+
           this.quotations.customerID = e?.component?.itemsSelected[0]?.ObjectID;
           this.customerCbx.crrValue = this.quotations.customerID;
-         
         }
         break;
     }
@@ -600,7 +599,84 @@ export class PopupAddQuotationsComponent implements OnInit {
     });
   }
 
-  copyLine(dt) {}
+  copyLine(dataCopy) {
+    //gọi alow copy
+    this.codxCM
+      .getDefault(
+        'CM',
+        this.fmQuotationLines.funcID,
+        this.fmQuotationLines.entityName
+      )
+      .subscribe((dt) => {
+        if (dt && dt.data) {
+          let data = dt.data;
+
+          let arrField = Object.values(this.grvSetupQuotationsLines).filter(
+            (x: any) => x.allowCopy
+          );
+          if (Array.isArray(arrField)) {
+            arrField.forEach((v:any) => {
+                let field = Util.camelize(v.fieldName);
+                data[field] = dataCopy[field];
+            });
+          }
+
+          data.rowNo = this.listQuotationLines.length + 1;
+          data.exchangeRate = this.quotations?.exchangeRate;
+          data.currencyID = this.quotations?.currencyID;
+          data.transID = this.quotations?.recID;
+
+          this.cache
+            .functionList(this.fmQuotationLines.funcID)
+            .subscribe((f) => {
+              this.cache
+                .gridViewSetup(
+                  this.fmQuotationLines.formName,
+                  this.fmQuotationLines.gridViewName
+                )
+                .subscribe((res) => {
+                  let title = f?.customName || f?.description;
+                  var obj = {
+                    headerText:
+                      this.titleActionLine +
+                      ' ' +
+                      title.charAt(0).toLowerCase() +
+                      title.slice(1),
+                    quotationsLine: data,
+                    listQuotationLines: this.listQuotationLines,
+                    grvSetup: this.grvSetupQuotationsLines,
+                  };
+                  let opt = new DialogModel();
+                  opt.zIndex = 1000;
+                  opt.FormModel = this.fmQuotationLines;
+
+                  let dialogQuotations = this.callFc.openForm(
+                    PopupAddQuotationsLinesComponent,
+                    '',
+                    650,
+                    570,
+                    '',
+                    obj,
+                    '',
+                    opt
+                  );
+                  dialogQuotations.closed.subscribe((res) => {
+                    if (res?.event) {
+                      if (res?.event) {
+                        data = res?.event;
+                        this.quotationLinesAddNew.push(data);
+                        this.listQuotationLines.push(data);
+                        this.gridQuationsLines.refresh();
+                        this.loadTotal();
+                        this.changeDetector.detectChanges();
+                      }
+                    }
+                  });
+                });
+            });
+        }
+      });
+  }
 
   linesUpdate(data) {
     let indexAdd = this.quotationLinesAddNew.findIndex(

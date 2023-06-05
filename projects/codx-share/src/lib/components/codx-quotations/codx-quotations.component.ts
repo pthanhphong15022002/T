@@ -258,18 +258,21 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
     });
   }
 
-  copy(e, data) {
+  copy(e, dataCopy) {
     //gọi alow copy
     this.getDefault().subscribe((res) => {
       let data = res.data;
       data['_uuid'] = data['quotationsID'] ?? Util.uid();
       data['idField'] = 'quotationsID';
-      Object.values(map(this.grvSetup)).forEach((v) => {
-        if (v.allowCopy) {
-          let field = Util.camelize(v.fieldName);
-          data[field] = data[field];
-        }
-      });
+      let arrField = Object.values(this.grvSetup).filter(
+        (x: any) => x.allowCopy
+      );
+      if (Array.isArray(arrField)) {
+        arrField.forEach((v:any) => {
+            let field = Util.camelize(v.fieldName);
+            data[field] = dataCopy[field];
+        });
+      }
       this.quotation = data;
       if (!this.quotation.quotationsID) {
         this.api
