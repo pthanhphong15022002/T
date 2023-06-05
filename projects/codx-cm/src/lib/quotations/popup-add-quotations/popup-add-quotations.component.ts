@@ -304,6 +304,7 @@ export class PopupAddQuotationsComponent implements OnInit {
       case 'customerID':
         if (this.crrCustomerID !=  this.quotations.customerID) {
           //co hoi
+          this.dealsCbx.ComponentCurrent.dataService.data = [];
           this.dealsCbx.crrValue = null;
           this.quotations.refID = null;
           // lien he
@@ -321,11 +322,11 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.customerCbx.crrValue = null ;
           
           this.quotations.refID = null;
-          this.customerCbx.ComponentCurrent.dataService.data = [];
           this.dealsCbx.ComponentCurrent.dataService.data = [];
 
           this.quotations.customerID = e?.component?.itemsSelected[0]?.ObjectID;
           this.customerCbx.crrValue = this.quotations.customerID;
+         
         }
         break;
     }
