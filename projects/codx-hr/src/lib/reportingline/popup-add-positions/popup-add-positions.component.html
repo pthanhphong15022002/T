@@ -17,36 +17,36 @@
 
 <ng-template #positionInfo>
     <div class="row form-group">
-        <codx-label [formModel]="formModel" fiedName="PositionID" default="Mã chức danh"></codx-label>
+        <codx-label [formModel]="formModel" fiedName="PositionID"></codx-label>
         <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="positionID"
           [disabled]="blocked">
         </codx-input>
     </div>
     <div class="row form-group">
-        <codx-label [formModel]="formModel" fiedName="PositionName" default="Tên chức danh công việc">
+        <codx-label [formModel]="formModel" fiedName="PositionName">
         </codx-label>
         <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="positionName">
         </codx-input>
     </div>
     <div class="row form-group">
-        <codx-label [formModel]="formModel" fiedName="PositionName2" default="Ngôn ngữ khác"></codx-label>
+        <codx-label [formModel]="formModel" fiedName="PositionName2"></codx-label>
         <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="positionName2">
         </codx-input>
     </div>
     <div class="row form-group">
-        <codx-label [formModel]="formModel" fiedName="JobID" default="Nhóm chức danh">
+        <codx-label [formModel]="formModel" fiedName="JobID">
         </codx-label>
         <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="jobID">
         </codx-input>
     </div>
     <div class="row form-group">
-        <codx-label [formModel]="formModel" fiedName="JobLevel" default="Chức vụ">
+        <codx-label [formModel]="formModel" fiedName="JobLevel">
         </codx-label>
         <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="jobLevel">
         </codx-input>
     </div>
     <div class="row form-group">
-        <codx-label [formModel]="formModel" fiedName="OrgUnitID" default="Nhóm/Team">
+        <codx-label [formModel]="formModel" fiedName="OrgUnitID">
         </codx-label>
         <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="orgUnitID">
         </codx-input>
@@ -72,7 +72,7 @@
 <ng-template #description>
   <div class="row form-group">    
     <codx-label fiedName="JobDescription" [formModel]="formModel"></codx-label>
-    <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="jobDescription">
+    <codx-input class="form-control job-desc" [formModel]="formModel" [Group]="formGroup" field="jobDescription">
     </codx-input>
   </div>
 </ng-template>

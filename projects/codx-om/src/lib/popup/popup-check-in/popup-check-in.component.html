@@ -1,9 +1,9 @@
 <codx-form #form [body]="body" [footer]="footer" [dialog]="dialogRef" [formModel]="formModel" [formGroup]="fCheckinKR"
   [data]="checkIns"  [showHeader]="false" *ngIf="fCheckinKR && isAfterRender">
   <ng-template #body>
-    <div class="p-5 h-100">
+    <div class="pt-5 h-100 d-flex justify-content-center">
       <!--Header-->
-      <div class="d-flex flex-column justify-content-center align-items-center w-100">
+      <div class="d-flex flex-column justify-content-start align-items-center w-80">
         <span class="fs-2 fw-bold mt-2"> {{headerText}}</span>
         <codx-label [default]="'KR: '+ dataKR?.okrName" class="text-gray-500 mt-2 mb-2 text-center px-20"></codx-label>
         <div class="d-flex flex-column align-items-center kr-process w-150px "  [ngbTooltip]="'Tiến độ'">
@@ -23,24 +23,25 @@
           <div class="row">
             <div class="col-4" *ngIf="dataKR?.checkInMode=='1'">
               <codx-label class="fw-bold mb-1" default="Kết quả thực hiện" fiedName="Value" [formModel]="form.formModel"></codx-label>
-              <!-- <codx-input [min]="0" [max]="dataKR.checkInMode==1?100:100-dataKR.progress" [showSpinButton]="false" ControlName="value" [formModel]="formModel" [Group]="form.formGroup"></codx-input> -->
-              <codx-input type="number"  [min]="0"  [showSpinButton]="false" field="cummulated" (valueChange)="valueChange($event)"  [crrValue]="checkIns?.cummulated"></codx-input>
+              <codx-input type="number"  [min]="0" [placeholder]="grView?.value?.description" [showSpinButton]="false" field="cummulated" (valueChange)="valueChange($event)"  [crrValue]="checkIns?.cummulated"></codx-input>
             </div>
             <div class="col-4" *ngIf="dataKR?.checkInMode!='1'">
               <codx-label class="fw-bold mb-1"  fiedName="Value" [formModel]="form.formModel"></codx-label>
-              <codx-input type="number" [min]="0"  [showSpinButton]="false" field="value"  (valueChange)="valueChange($event)" [crrValue]="checkIns?.value"></codx-input>
+              <codx-input type="number" [min]="0" [placeholder]="grView?.value?.description" [showSpinButton]="false" field="value"  (valueChange)="valueChange($event)" [crrValue]="checkIns?.value"></codx-input>
             </div>
             <div class="col-4">
               <codx-label class="fw-bold mb-1" default="Tình trạng" fiedName="Status" [formModel]="form.formModel"></codx-label>
-              <codx-input ControlName="status" [formModel]="formModel" [Group]="fCheckinKR"></codx-input>
+              <codx-input type="valuelist" field="status" [crrValue]="checkIns?.status" [refValue]="grView?.status?.referedValue" [disabled]="true"></codx-input>
+            
+              <!-- <codx-input ControlName="status" [formModel]="formModel" [Group]="fCheckinKR"></codx-input> -->
             </div>
           </div>
-          <div class="form-group mt-2">
-            <codx-label *ngIf="dataKR?.checkInMode=='1'" name="lbl"
-              default="(*) Kết quả thực hiện là kết quả sau cùng" class="text-primary"></codx-label>
-            <codx-label *ngIf="dataKR?.checkInMode=='2'" name="lbl"
+          <div class="my-2">
+            <codx-label *ngIf="dataKR?.checkInMode=='1'" name="lblOMCheckIn1"
+              default="(*) Kết quả thực hiện là kết quả sau cùng" class="text-primary om-decription"></codx-label>
+            <codx-label *ngIf="dataKR?.checkInMode=='2'" name="lblOMCheckIn2"
               default="(*) Kết quả thực hiện sẽ được cộng dồn để tính kết quả sau cùng"
-              class="text-primary"></codx-label>
+              class="text-primary om-decription"></codx-label>
           </div>
           <div class="form-group">
             <codx-label default="Ghi chú" fiedName="Comment" [formModel]="form.formModel"></codx-label>
@@ -63,24 +64,27 @@
 
   <ng-template #footer>
     <!--Footer-->
-    <div class="d-flex justify-content-between align-items-center">
-      <button type="button" (click)="popupUploadFile($event)"
-        class="btn btn-light-primary">
-        <i class="icon-cloud_upload icon-16 me-1"></i>
-        <codx-label fiedName="lblUploadFile" default="Đính kèm" [formModel]="formModel"></codx-label>
-      </button>
-
-      <div class="d-flex justify-content-end"> 
-        <button type="button" (click)="checkinCancel()"
-          class="me-2 btn btn-outline-primary">
-          <codx-label name="lblCancel" default="Hủy" [formModel]="formModel"></codx-label>
-        </button>
-        <button type="button" (click)="checkinSave()"
-          class="btn btn-primary">
-          <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
-        </button>
+    <div class="h-100 d-flex justify-content-center">
+      <div class="d-flex justify-content-end align-items-center w-80">
+        <!-- <button type="button" (click)="popupUploadFile($event)"
+          class="btn btn-light-primary">
+          <i class="icon-cloud_upload icon-16 me-1"></i>
+          <codx-label fiedName="lblUploadFile" default="Đính kèm" [formModel]="formModel"></codx-label>
+        </button> -->
+  
+        <div class="d-flex justify-content-end"> 
+          <button type="button" (click)="checkinCancel()"
+            class="me-2 btn btn-outline-primary">
+            <codx-label name="lblCancel" default="Hủy" [formModel]="formModel"></codx-label>
+          </button>
+          <button type="button" (click)="checkinSave()"
+            class="btn btn-primary">
+            <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
+          </button>
+        </div>
       </div>
     </div>
+    
     
   </ng-template>
 </codx-form>

@@ -7,6 +7,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
+  AuthService,
+  AuthStore,
   CallFuncService,
   UIComponent,
 } from 'codx-core';
@@ -23,12 +25,19 @@ export class CodxBookingRoomScheduleContentComponent
 {
   @Input() recID: any;
   data:any;
+  curUser: import("codx-core").UserModel;
   constructor(
     private injector: Injector,
     private codxShareService: CodxShareService,
-    private callFuncService: CallFuncService
+    private callFuncService: CallFuncService,
+    private authService: AuthService,
+    private authStore: AuthStore,
   ) {
     super(injector);
+    this.curUser =this.authStore.get();
+    if(this.curUser==null){
+      this.curUser= this.authService?.userValue;
+    }
   }
 
   onInit(): void {
@@ -48,9 +57,9 @@ export class CodxBookingRoomScheduleContentComponent
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
-  meetingNow(url:string){
-    if(url !=null){
-
+  meetingNow(){
+    if(this.data?.onlineUrl !=null){
+      let url = this.curUser?.userID == this.data?.createdBy || this.curUser?.userID == this.data?.owner ? this.data?.onlineUrl2 :this.data?.onlineUrl;
       window.open(url, '_blank');
     }
   }

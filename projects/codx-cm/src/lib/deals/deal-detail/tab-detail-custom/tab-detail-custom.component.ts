@@ -2,9 +2,11 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-gantt';
@@ -26,6 +28,7 @@ export class TabDetailCustomComponent
   @Input() dataSelected: any;
   @Input() formModel: any;
   @Input() listSteps: DP_Instances_Steps[] = [];
+  @Output() saveAssign = new EventEmitter<any>();
   titleAction: string = '';
   listStep = [];
   isUpdate = true; //xư lý cho edit trung tuy chinh ko
@@ -149,5 +152,9 @@ export class TabDetailCustomComponent
       return this.listStepsProcess[idx]?.showColumnControl;
     }
     return 1;
+  }
+  //event giao viec
+  saveAssignTask(e){
+    if(e) this.saveAssign.emit(e);
   }
 }
