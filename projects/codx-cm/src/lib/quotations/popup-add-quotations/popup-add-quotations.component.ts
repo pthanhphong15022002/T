@@ -321,9 +321,11 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.customerCbx.ComponentCurrent.dataService.data = [] ;
           this.customerCbx.crrValue = null ;
           
-          this.quotations.refID = null;
+        
           this.dealsCbx.ComponentCurrent.dataService.data = [];
-
+          this.quotations.refID = null;
+          this.dealsCbx.crrValue = null
+          
           this.quotations.customerID = e?.component?.itemsSelected[0]?.ObjectID;
           this.customerCbx.crrValue = this.quotations.customerID;
          
