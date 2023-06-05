@@ -68,6 +68,12 @@ export class NewsDetailComponent extends UIComponent {
     ];
     this.detectorRef.detectChanges();
   }
+
+  //
+  onLoading(event:any){
+    debugger
+  }
+
   //load data 
   loadData(recID: string, category: string) {
     this.getData(recID);

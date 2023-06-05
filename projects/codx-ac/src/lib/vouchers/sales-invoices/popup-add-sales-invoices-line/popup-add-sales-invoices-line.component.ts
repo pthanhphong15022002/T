@@ -16,6 +16,7 @@ import {
 } from 'codx-core';
 import { combineLatestWith, map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
+import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
 import { NameByIdPipe } from '../../../pipes/nameById.pipe';
 import { Item } from '../../../settings/items/interfaces/Item.interface';
@@ -77,7 +78,6 @@ export class PopupAddSalesInvoicesLineComponent
     this.isEdit = dialogData.data.formType === 'edit';
     this.index = dialogData.data.index;
     this.action = dialogData.data.action;
-    this.hiddenFields = dialogData.data.hiddenFields;
 
     this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
@@ -94,19 +94,43 @@ export class PopupAddSalesInvoicesLineComponent
           : this.salesInvoicesLine)
     );
 
-    // this.journalService
-    //   .getJournal(this.journalNo)
-    //   .subscribe((res: IJournal) => {
-    //     const journal: IJournal = res?.dataValue
-    //       ? { ...res, ...JSON.parse(res.dataValue) }
-    //       : res;
+    this.journalService
+      .getJournal(this.journalNo)
+      .subscribe((res: IJournal) => {
+        const journal: IJournal = res?.dataValue
+          ? { ...res, ...JSON.parse(res.dataValue) }
+          : res;
 
-    //     const hiddenFields: string[] =
-    //       this.journalService.getHiddenFields(journal);
-    //     if (hiddenFields.includes('DIM1')) {
-    //       // this.journalService.loadComboboxBy067(this.journalNo, "diM1Control", "diM1", this.diM1, "")
-    //     }
-    //   });
+        this.hiddenFields = this.journalService.getHiddenFields(journal);
+
+        this.journalService.loadComboboxBy067(
+          journal,
+          'diM1Control',
+          'diM1',
+          this.diM1,
+          'DepartmentID',
+          this.form,
+          'diM1'
+        );
+        this.journalService.loadComboboxBy067(
+          journal,
+          'diM2Control',
+          'diM2',
+          this.diM2,
+          'CostCenterID',
+          this.form,
+          'diM2'
+        );
+        this.journalService.loadComboboxBy067(
+          journal,
+          'diM3Control',
+          'diM3',
+          this.diM3,
+          'CostItemID',
+          this.form,
+          'diM3'
+        );
+      });
 
     const title$ = this.cache.valueList('AC070').pipe(
       tap((t) => console.log(t)),

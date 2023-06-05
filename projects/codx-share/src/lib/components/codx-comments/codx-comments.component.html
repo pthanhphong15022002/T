@@ -165,7 +165,7 @@
                 <div class="d-flex flex-grow-1 fs-7">
                     <div class="btn-like delay-500 me-3">
                         <div *ngIf="!data.myVoteType;else dataMyVoted">
-                            <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                            <div class="d-flex align-items-center justify-content-center text-hover-primary" (click)="dbLikePost(data)">
                                 <span class="text-gray-600">
                                     <codx-label formName="WP_Comments" name="lblLike" default="Thích">
                                     </codx-label>
@@ -186,10 +186,11 @@
                             </ng-container>
                         </div>
                         <ng-template #dataMyVoted>
-                            <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                <span [style.color]="data.myVoteType | vll:'L1480':'textColor' | async">
+                            <div (click)="votePost(data, data.myVoteType)" class="d-flex align-items-center justify-content-center text-hover-primary">
+                                <!-- <span [style.color]="data.myVoteType | vll:'L1480':'textColor' | async">
                                     {{data.myVoteType | vll:'L1480':'text' | async}}
-                                </span>
+                                </span> -->
+                                <codx-vll [name]="'L1480'" [value]="data.myVoteType" [showText]="true" [showBgColor]="true"></codx-vll>
                             </div>
                         </ng-template>
                     </div>

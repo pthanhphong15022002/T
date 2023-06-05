@@ -1257,7 +1257,8 @@
     <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
-      [Group]="form.formGroup"
+      [crrValue]="data?.address"
+      (valueChange)="valueChangeAdress($event)"
       field="address"
     >
     </codx-input>

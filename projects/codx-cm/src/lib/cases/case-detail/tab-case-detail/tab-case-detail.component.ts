@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, Injector, Input, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Injector,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-gantt';
 import { UIComponent, FormModel } from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
@@ -6,48 +15,60 @@ import { CodxCmService } from '../../../codx-cm.service';
 @Component({
   selector: 'codx-tab-case-detail',
   templateUrl: './tab-case-detail.component.html',
-  styleUrls: ['./tab-case-detail.component.scss']
+  styleUrls: ['./tab-case-detail.component.scss'],
 })
-export class TabCaseDetailComponent extends UIComponent
+export class TabCaseDetailComponent
+  extends UIComponent
   implements OnInit, AfterViewInit
 {
   @Input() tabClicked: any;
   @Input() dataSelected: any;
-  @Input() formModel: any;
+  @Input() formModel: FormModel;
+  @Output() saveAssign = new EventEmitter<any>();
   titleAction: string = '';
   listStep = [];
   isUpdate = true; //xư lý cho edit trung tuy chinh ko
   listStepsProcess = [];
   listCategory = [];
-  // titleDefault= "Trường tùy chỉnh"//truyen vay da
+
+
+  casesType:string='';
   readonly tabInformation: string = 'Information';
   readonly tabField: string = 'Field';
   readonly tabTask: string = 'Task';
 
 
-  fmProcductsLines: FormModel = {
-    formName: 'CMProducts',
-    gridViewName: 'grvCMProducts',
-    entityName: 'CM_Products',
-  };
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
     allowDeleting: true,
   };
 
-  constructor(private inject: Injector, private cmService: CodxCmService) {
+  constructor(
+    private inject: Injector,
+    private cmService: CodxCmService) {
     super(inject);
     this.executeApiCalls();
   }
   ngAfterViewInit() {}
   onInit(): void {
-    //this.getListInstanceStep();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['dataSelected']) {
+      this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+      this.casesType = this.dataSelected?.caseType;
+      // if (changes['dataSelected'].currentValue != null && changes['dataSelected'].currentValue?.recID) {
+      //   // if (changes['dataSelected'].currentValue?.recID == this.caseId) return;
+      //   // this.caseId = changes['dataSelected'].currentValue?.recID;
+      //   // this.getContactByObjectID(changes['dataSelected'].currentValue?.customerID);
+      // }
+    }
+
   }
 
   async executeApiCalls() {
     try {
-    //  await this.getListInstanceStep();
       await this.getValueList();
     } catch (error) {
       console.error('Error executing API calls:', error);
@@ -71,10 +92,9 @@ export class TabCaseDetailComponent extends UIComponent
     });
   }
 
-  getNameCategory(categoryId:string) {
-    return this.listCategory.filter(x=> x.value == categoryId)[0]?.text;
+  getNameCategory(categoryId: string) {
+    return this.listCategory.filter((x) => x.value == categoryId)[0]?.text;
   }
-
 
   //truong tuy chinh - đang cho bằng 1
   showColumnControl(stepID) {
@@ -85,4 +105,9 @@ export class TabCaseDetailComponent extends UIComponent
     }
     return 1;
   }
+
+    //event giao viec
+    saveAssignTask(e){
+      if(e) this.saveAssign.emit(e);
+    }
 }
