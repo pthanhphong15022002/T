@@ -1451,22 +1451,49 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   loadAccountControl(visibleColumns) {
-    var arr = ['AccountID', 'OffsetAcctID'];
+    var arr = ['AccountID', 'OffsetAcctID','DepartmentID','CostItemID','CostCenterID','ProjectID'];
     arr.forEach((fieldName) => {
       let idx = this.gridCash.visibleColumns.findIndex(
         (x) => x.fieldName == fieldName
       );
       if (idx > -1) {
-        if (fieldName == 'AccountID') {
-          if (this.journal.drAcctControl == '1' || this.journal.drAcctControl == '2') {
-            visibleColumns[idx].predicate = '@0.Contains(AccountID)';
-            visibleColumns[idx].dataValue = `[${this.journal?.drAcctID}]`;
-          }
-        }else{
-          if (this.journal.crAcctControl == '1' || this.journal.crAcctControl == '2') {
-            visibleColumns[idx].predicate = '@0.Contains(AccountID)';
-            visibleColumns[idx].dataValue = `[${this.journal?.crAcctID}]`;
-          }
+        switch(fieldName){
+          case 'AccountID':
+            if (this.journal.drAcctControl == '1' || this.journal.drAcctControl == '2') {
+              visibleColumns[idx].predicate = '@0.Contains(AccountID)';
+              visibleColumns[idx].dataValue = `[${this.journal?.drAcctID}]`;
+            }
+            break;
+          case 'OffsetAcctID':
+            if (this.journal.crAcctControl == '1' || this.journal.crAcctControl == '2') {
+              visibleColumns[idx].predicate = '@0.Contains(AccountID)';
+              visibleColumns[idx].dataValue = `[${this.journal?.crAcctID}]`;
+            }
+            break;
+          case 'DepartmentID':
+            if (this.journal.crAcctControl == '1' || this.journal.crAcctControl == '2') {
+              visibleColumns[idx].predicate = '@0.Contains(DepartmentID)';
+              visibleColumns[idx].dataValue = `[${this.journal?.diM1}]`;
+            }
+            break;
+          case 'CostItemID':
+            if (this.journal.crAcctControl == '1' || this.journal.crAcctControl == '2') {
+              visibleColumns[idx].predicate = '@0.Contains(CostItemID)';
+              visibleColumns[idx].dataValue = `[${this.journal?.diM3}]`;
+            }
+            break;  
+          case 'CostCenterID':
+            if (this.journal.crAcctControl == '1' || this.journal.crAcctControl == '2') {
+              visibleColumns[idx].predicate = '@0.Contains(CostCenterID)';
+              visibleColumns[idx].dataValue = `[${this.journal?.diM2}]`;
+            }
+            break;  
+          // case 'ProjectID':
+          //   if (this.journal.crAcctControl == '1' || this.journal.crAcctControl == '2') {
+          //     visibleColumns[idx].predicate = '@0.Contains(ProjectID)';
+          //     visibleColumns[idx].dataValue = `[${this.journal?.pro}]`;
+          //   }
+          //   break;  
         }
       }
     });
