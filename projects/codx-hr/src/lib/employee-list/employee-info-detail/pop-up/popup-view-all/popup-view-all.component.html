@@ -144,41 +144,19 @@
                 | async
             "
           ></span>
+          <i class="icon-i-dot text-gray-500 icon-16"></i>
+          <span
+          class="badge badge-primary border-2"
+          [innerHTML]="
+            data?.workPermitType
+              | formatvalue : formModel : 'workPermitType'
+              | async
+          "
+        ></span>
         </span>
       </div>
       <div class="d-flex align-items-center">
         <span class="icon-email icon-16 text-gray-500 me-2"></span>
-        <span class="text-dark">
-          <span
-            [innerHTML]="
-              data?.issuedPlace
-                | formatvalue : formModel : 'issuedPlace'
-                | async
-            "
-          ></span>
-        </span>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #workPermitCol2 let-data>
-  <div class="has-action-menu">
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-5px">
-        <span class="icon-event icon-16 text-primary me-2"></span>
-        <span class="text-dark">
-          <span
-            [innerHTML]="
-              data?.issuedDate
-                | formatvalue : formModel : 'issuedDate'
-                | async
-            "
-          ></span>
-        </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span class="icon-event icon-16 text-danger me-2"></span>
         <span class="text-dark">
           <span
             [innerHTML]="
@@ -197,6 +175,32 @@
                 | async
             "
           ></span>
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #workPermitCol2 let-data>
+  <div class="has-action-menu">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-event icon-16 text-primary me-2"></span>
+        <span class="text-dark">
+          <span
+            [innerHTML]="
+              data?.jobAssign
+                | formatvalue : formModel : 'JobAssign'
+                | async
+            "
+          ></span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 text-danger me-2"></span>
+        <span class="text-dark">
+          <span
+          >{{data.workingForm}}</span>
         </span>
       </div>
       <codx-mfunc
@@ -858,6 +862,26 @@
   [formModel]="formModel"
   [name]="'lblBenefitGridCol3'"
   default="Hiệu lực"
+  class="fw-bold fs-6 text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempWorkPermit1>
+  <codx-label
+  [formModel]="formModel"
+  [name]="'lblWorkPermitGridCol1'"
+  default="Số GPLĐ | Thời hạn"
+  class="fw-bold fs-6 text-gray-600"
+>
+</codx-label>
+</ng-template>
+
+<ng-template #headTempWorkPermit2>
+  <codx-label
+  [formModel]="formModel"
+  [name]="'lblWorkPermitGridCol2'"
+  default="Vị trí công việc | Hình thức làm việc"
   class="fw-bold fs-6 text-gray-600"
 >
 </codx-label>

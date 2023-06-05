@@ -92,59 +92,6 @@
       ></codx-input>
     </div>
 
-    <div class="form-group">
-      <codx-label
-        fiedName="inputMode"
-        [formModel]="form.formModel"
-      ></codx-label>
-      <codx-input
-        field="inputMode"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      ></codx-input>
-    </div>
-
-    <div class="row">
-      <div class="col-6 form-group">
-        <codx-label
-          fiedName="assignRule"
-          [formModel]="form.formModel"
-        ></codx-label>
-        <codx-input
-          field="assignRule"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </div>
-
-      <div class="col-6 form-group">
-        <codx-label
-          fiedName="voucherFormat"
-          [formModel]="form.formModel"
-        ></codx-label>
-        <div class="d-flex align-items-center">
-          <div class="w-100 me-1">
-            <codx-input
-              disabled="true"
-              field="voucherFormat"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-            ></codx-input>
-          </div>
-          <div class="w-auto">
-            <button
-              type="button"
-              class="btn btn-icon btn-light-primary"
-              role="button"
-              (click)="onClickOpenAutoNumberPopup()"
-            >
-              <span class="icon-edit-one icon-18"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div ngbAccordion>
       <div ngbAccordionItem class="border-0">
         <div ngbAccordionHeader>
@@ -162,11 +109,38 @@
             <ng-template>
               <div class="form-group">
                 <codx-label
+                  fiedName="inputMode"
+                  [formModel]="form.formModel"
+                ></codx-label>
+                <codx-input
+                  field="inputMode"
+                  [formModel]="form.formModel"
+                  [Group]="form.formGroup"
+                ></codx-input>
+              </div>
+
+              <div class="form-group">
+                <codx-label
                   fiedName="postingMode"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <codx-input
                   field="postingMode"
+                  [formModel]="form.formModel"
+                  [Group]="form.formGroup"
+                ></codx-input>
+              </div>
+
+              <div
+                class="form-group"
+                *ngIf="journalTypes106.includes(journal.journalType)"
+              >
+                <codx-label
+                  fiedName="cashBookID"
+                  [formModel]="form.formModel"
+                ></codx-label>
+                <codx-input
+                  field="cashBookID"
                   [formModel]="form.formModel"
                   [Group]="form.formGroup"
                 ></codx-input>
@@ -201,21 +175,6 @@
                   refValue="InventoryReasonsAC"
                   [crrValue]="journal.reasonID"
                   (valueChange)="onInputChange($event)"
-                ></codx-input>
-              </div>
-
-              <div
-                class="form-group"
-                *ngIf="journalTypes106.includes(journal.journalType)"
-              >
-                <codx-label
-                  fiedName="cashBookID"
-                  [formModel]="form.formModel"
-                ></codx-label>
-                <codx-input
-                  field="cashBookID"
-                  [formModel]="form.formModel"
-                  [Group]="form.formGroup"
                 ></codx-input>
               </div>
 
@@ -265,16 +224,57 @@
       class="fs-5 text-primary"
     ></codx-label>
 
-    <div class="d-flex gap-2 mt-6">
+    <div class="row mt-6">
+      <div class="col-6 form-group">
+        <codx-label
+          fiedName="assignRule"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="assignRule"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+
+      <div class="col-6 form-group">
+        <codx-label
+          fiedName="voucherFormat"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <div class="d-flex align-items-center">
+          <div class="w-100 me-1">
+            <codx-input
+              disabled="true"
+              field="voucherFormat"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+          <div class="w-auto">
+            <button
+              type="button"
+              class="btn btn-icon btn-light-primary"
+              role="button"
+              (click)="onClickOpenAutoNumberPopup()"
+            >
+              <span class="icon-edit-one icon-18"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <codx-label
+        fiedName="multiCurrency"
+        [formModel]="form.formModel"
+      ></codx-label>
       <codx-input
         field="multiCurrency"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
       ></codx-input>
-      <codx-label
-        fiedName="multiCurrency"
-        [formModel]="form.formModel"
-      ></codx-label>
     </div>
 
     <ng-container *ngIf="journal.multiCurrency">
@@ -580,6 +580,34 @@
           <div class="col-8">
             <div class="mb-1">
               <codx-label
+                fiedName="subControl"
+                [formModel]="form.formModel"
+              ></codx-label>
+            </div>
+            <codx-label
+              fiedName="lblSubControl"
+              [formModel]="form.formModel"
+              [default]="gvs.SubControl?.description"
+              class="text-gray-500 font-italic fw-normal"
+            ></codx-label>
+          </div>
+
+          <div class="col-4">
+            <codx-input
+              field="subControl"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              [placeholder]="' '"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group mt-5">
+        <div class="row align-items-center">
+          <div class="col-8">
+            <div class="mb-1">
+              <codx-label
                 fiedName="settleControl"
                 [formModel]="form.formModel"
               ></codx-label>
@@ -682,7 +710,7 @@
             type="button"
             class="btn btn-icon btn-light-primary"
             role="button"
-            (click)="onClickOpenCustomizedMultiSelectPopup()"
+            (click)="onClickOpenMultiSelectPopup()"
           >
             <i class="icon-edit-one icon-18"></i>
           </button>
@@ -761,12 +789,7 @@
       (change)="onShareInputChange($event)"
     ></lib-group-share>
 
-    <div class="d-flex gap-2 mb-6">
-      <codx-input
-        field="autoPost"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      ></codx-input>
+    <div class="d-flex justify-content-between mb-6">
       <codx-label
         *ngIf="['1', '2'].includes(journal.approvalControl)"
         fiedName="autoPost"
@@ -779,6 +802,11 @@
         [formModel]="form.formModel"
         [default]="gvs.AutoPost.description.split(';')[0]"
       ></codx-label>
+      <codx-input
+        field="autoPost"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
     </div>
 
     <lib-group-share
@@ -791,16 +819,16 @@
       (change)="onShareInputChange($event)"
     ></lib-group-share>
 
-    <div class="d-flex gap-2 mb-6">
+    <div class="d-flex justify-content-between mb-6">
+      <codx-label
+        fiedName="unpostControl"
+        [formModel]="form.formModel"
+      ></codx-label>
       <codx-input
         field="unpostControl"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
       ></codx-input>
-      <codx-label
-        fiedName="unpostControl"
-        [formModel]="form.formModel"
-      ></codx-label>
     </div>
 
     <ng-container *ngIf="journal.unpostControl">

@@ -209,7 +209,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
       PopupEappointionsComponent,
       {
         actionType: actionType,
-        employeeId: data?.employeeID,
+        employeeId: this.currentEmpObj.employeeID,
         funcID: this.view.funcID,
         appointionObj: data,
         headerText: actionHeaderText,
