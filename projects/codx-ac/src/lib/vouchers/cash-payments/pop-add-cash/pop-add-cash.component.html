@@ -55,7 +55,11 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-
+    <div class="col-4 mt-2">
+      <div class="listcash-content">
+        <ng-container *ngTemplateOutlet="addLine"></ng-container>
+      </div>
+    </div>
   </div>
 </ng-template>
 <!-- End: Body -->
@@ -253,25 +257,29 @@
               </div>
             </div>
           </div>
-          <!-- Ngày chứng từ -->
-          <div class="form-group">
-            <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
-            </codx-label>
-            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="voucherDate"
-              (valueChange)="valueChange($event)">
-            </codx-input>
+          <div class="row">
+            <div class="col-6">
+              <!-- Ngày chứng từ -->
+              <div class="form-group">
+                <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="voucherDate"
+                  (valueChange)="valueChange($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)" [disabled]="journal?.assignRule != '0'">
+                </codx-input>
+              </div>
+            </div>
           </div>
-          <div class="form-group mb-0">
-            <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
-            </codx-label>
-            <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
-              (valueChange)="valueChange($event)" [disabled]="journal?.assignRule != '0'">
-            </codx-input>
-          </div>
-
         </div>
       </div>
-
     </div>
   </ng-container>
 </ng-template>
@@ -285,8 +293,8 @@
         [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
-        [autoLoad]="false" (created)="gridCreated()" [height]="gridHeight" (onAddNew)="onAddNew($event)"
-        (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"></codx-gridview-v2>
+        [autoLoad]="false" (created)="gridCreated()" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
+        (cellChanged)="lineChanged($event)"></codx-gridview-v2>
 
       <div #btnRef class="btn-addline">
         <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow()">
@@ -311,11 +319,6 @@
           </ng-container>
         </tfoot>
       </table>
-    </div>
-    <div class="col-4 mt-2">
-      <div class="listcash-content">
-        <ng-container *ngTemplateOutlet="addLine"></ng-container>
-      </div>
     </div>
   </ng-container>
   <!-- <ng-container
@@ -868,8 +871,7 @@
     <codx-gridview-v2 #gridSet formName="SettledInvoices" gridViewName="grvSettledInvoices"
       entityName="AC_SettledInvoices" [templateMore]="morefunction" [editSettings]="editSettings"
       [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false"
-      [dataSource]="settledInvoices" (created)="gridCreated()" [height]="gridHeight"
-      (cellChanged)="settledLineChanged($event)">
+      [dataSource]="settledInvoices" (cellChanged)="settledLineChanged($event)">
     </codx-gridview-v2>
     <div #btnRef class="btn-addline">
       <div class="d-flex align-items-center">
@@ -890,7 +892,8 @@
       </div>
     </div>
   </div>
-
+  <div class="row" *ngIf="settledInvoices.length == 0" style="height: 40px;">
+  </div>
 </ng-template>
 <!-- End: VoucherLineRefs -->
 
@@ -918,9 +921,9 @@
 
 <!-- Start: Footer -->
 <ng-template #footer>
-  <div class="codx-detail-footer dialog-footer" *ngIf="cashpayment">
+  <div class="codx-detail-footer dialog-footer collape" *ngIf="cashpayment">
     <div class="btn btn-white btn-icon tab-action">
-      <span class="icon-unfold_more icon-20"></span>
+      <span (click)="expand()" class="icon-unfold_more icon-20"></span>
     </div>
     <ng-container *ngTemplateOutlet="tabRef"></ng-container>
   </div>
