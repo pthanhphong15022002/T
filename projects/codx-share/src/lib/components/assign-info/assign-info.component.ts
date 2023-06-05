@@ -81,7 +81,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   crrRole: any;
   accountable: boolean = false;
   paramView: any; //param view
-  showLabelAttachment = false
+  showLabelAttachment = false;
 
   constructor(
     private authStore: AuthStore,
@@ -395,14 +395,32 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;
     if (this.isClickSave) return;
     this.isClickSave = true;
-    if (this.isHaveFile && this.attachment)
+    //bua cho DP
+    if (
+      this.listTaskResources?.length == 1 &&
+      this.formModel.entityName == 'DP_Instances_Steps_Tasks'
+    ) {
+      this.task.recID = this.task.refID;
+    }
+
+    if (this.isHaveFile && this.attachment) {
+      //bua cho DP
+      if(this.task.recID == this.task.refID){
+        this.attachment.objectId = this.task.recID;
+        if(this.attachment.fileUploadList?.length > 0){
+          this.attachment.fileUploadList.forEach(f=>{
+            f.objectID = this.task.recID
+          })
+        }
+      }
+     
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           this.task.attachments = Array.isArray(res) ? res.length : 1;
           this.actionSaveAssign(taskIDParent, isContinue);
         }
       });
-    else this.actionSaveAssign(taskIDParent, isContinue);
+    } else this.actionSaveAssign(taskIDParent, isContinue);
   }
 
   actionSaveAssign(taskIDParent, isContinue) {

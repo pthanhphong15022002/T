@@ -115,12 +115,7 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   async ngOnInit() {
-    if (
-      this.lead.businesslineID != null &&
-      this.lead.businesslineID.trim() != ''
-    ) {
-      this.getProcessIDByBusinessLineID(this.lead.businesslineID);
-    }
+
     this.formModelDeals = await this.cmSv.getFormModel('CM0201');
 
     this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
@@ -136,7 +131,12 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
-
+    if (
+      this.lead.businesslineID != null &&
+      this.lead.businesslineID.trim() != ''
+    ) {
+      this.getProcessIDByBusinessLineID(this.lead.businesslineID);
+    }
     if (this.radioChecked) {
       this.countAddSys++;
     }
@@ -199,44 +199,47 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async getProcessByProcessID(e) {
     var process = this.listCbxProcess.find((x) => x.recID == e);
-    if (process != null && process.permissions != null) {
-      var lstPerm = process.permissions.filter((x) => x.roleType == 'P');
-      this.listParticipants =
-        lstPerm != null && lstPerm.length > 0
-          ? await this.cmSv.getListUserByOrg(lstPerm)
-          : [];
-    }
-    if (this.deal.processID) {
-      var lstStep =
-        process?.steps != null ? this.groupByStep(process?.steps) : [];
-      this.deal.endDate = this.HandleEndDate(lstStep);
+    if(process != null){
+      if (process.permissions != null) {
+        var lstPerm = process.permissions.filter((x) => x.roleType == 'P');
+        this.listParticipants =
+          lstPerm != null && lstPerm.length > 0
+            ? await this.cmSv.getListUserByOrg(lstPerm)
+            : [];
+      }
+      if (this.deal.processID) {
+        var lstStep =
+          process?.steps != null ? this.groupByStep(process?.steps) : [];
+        this.deal.endDate = this.HandleEndDate(lstStep);
 
+      }
+
+      if (
+        process.instanceNoSetting != null &&
+        process.instanceNoSetting.trim() != ''
+      ) {
+        this.deal.dealID = await firstValueFrom(
+          this.api.execSv<any>(
+            'DP',
+            'ERM.Business.DP',
+            'InstancesBusiness',
+            'GenAutoNumberInstanceNoSettingApiAsync',
+            process.instanceNoSetting
+          )
+        );
+      } else {
+        this.deal.dealID = await firstValueFrom(
+          this.api.execSv<any>(
+            'SYS',
+            'ERM.Business.AD',
+            'AutoNumbersBusiness',
+            'GenAutoNumberAsync',
+            ['CM0201', 'CM_Deals', 'DealID']
+          )
+        );
+      }
     }
 
-    if (
-      process.instanceNoSetting != null &&
-      process.instanceNoSetting.trim() != ''
-    ) {
-      this.deal.dealID = await firstValueFrom(
-        this.api.execSv<any>(
-          'DP',
-          'ERM.Business.DP',
-          'InstancesBusiness',
-          'GenAutoNumberInstanceNoSettingApiAsync',
-          process.instanceNoSetting
-        )
-      );
-    } else {
-      this.deal.dealID = await firstValueFrom(
-        this.api.execSv<any>(
-          'SYS',
-          'ERM.Business.AD',
-          'AutoNumbersBusiness',
-          'GenAutoNumberAsync',
-          ['CM0201', 'CM_Deals', 'DealID']
-        )
-      );
-    }
     this.changeDetectorRef.detectChanges();
   }
 

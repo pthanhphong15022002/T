@@ -92,29 +92,6 @@ export class PopupAddEmployeeComponent implements OnInit {
   setTitle(e) {
     this.headerText += ' ' + e;
   }
-  // getOrgNote() {
-  //   if (this.data['orgUnitID']) {
-  //     this.orgNote = '';
-  //     this.api.execSv<any>('HR', 'HR', 'OrganizationUnitsBusiness', 'GetOrgTreeByOrgIDAsync', [this.data['orgUnitID'], 9])
-  //       .subscribe(res => {
-  //         let resLength = res.length;
-  //         if (res) {
-  //           if(res[0].locationID){
-  //             this.data['locationID'] = res[0].locationID;
-  //             this.form.formGroup.controls['locationID'].patchValue(res[0].locationID);
-  //           }
-  //           if (resLength > 1) {
-  //             this.orgNote = res[1].orgUnitName;
-  //             if (resLength > 2) {
-  //               for (var i = 2; i < resLength; i++) {
-  //                 this.orgNote += ', ' + res[i].orgUnitName;
-  //               }
-  //             }
-  //           }
-  //         }
-  //       });
-  //   }
-  // }
 
   //value change
   valueChange(event: any) {
@@ -217,75 +194,26 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'siRegisterOn':
           if (this.data['siRegisterOn'] >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['SIRegisterOn']['headerText']);
-            // this.data[field] = null;
-            // this.form.formGroup.controls[field].patchValue(null);
+            this.data[field] = null;
+            this.form.formGroup.controls[field].patchValue(null);
             return;
           }
           break;
         case 'pitIssuedOn':
           if (this.data['pitIssuedOn'] >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['PITIssuedOn']['headerText']);
-            // this.data[field] = null;
-            // this.form.formGroup.controls[field].patchValue(null);
+            this.data[field] = null;
+            this.form.formGroup.controls[field].patchValue(null);
             return;
           }
           break;
       }
-
-      // if (field === 'issuedOn') {
-      //   let today = new Date();
-      //   if (this.data.issuedOn >= today.toJSON()) {
-      //     this.notifySV.notifyCode('HR012');
-      //     //this.data[field] = null;
-      //     return;
-      //   }
-      // }
-      // if (field === 'birthday' && value) {
-      //   if (!this.validateBirthday(value)) {
-      //     this.notifySV.notifyCode('HR001');
-      //     //this.data[field] = null;
-      //     //this.form.formGroup.controls[field].patchValue({field : null});
-      //     return;
-      //   }
-      // }
-      // if (field == 'positionID') {
-      //   let itemSelected = event.component?.itemsSelected[0];
-      //   if (itemSelected) {
-      //     if (itemSelected['OrgUnitID']) {
-      //       let orgUnitID = itemSelected['OrgUnitID'];
-      //       if (orgUnitID != this.data['orgUnitID']) {
-      //         this.form.formGroup.patchValue({ orgUnitID: orgUnitID });
-      //         this.data['orgUnitID'] = orgUnitID;
-      //       }
-      //     }
-      //     if (itemSelected['DepartmentID']) {
-      //       let departmentID = itemSelected['DepartmentID'];
-      //       if (departmentID != this.data['departmentID']) {
-      //         this.form.formGroup.patchValue({ departmentID: departmentID });
-      //         this.data['departmentID'] = departmentID;
-      //       }
-      //     }
-      //     if (itemSelected['DivisionID']) {
-      //       let divisionID = itemSelected['DivisionID'];
-      //       if (divisionID != this.data['divisionID']) {
-      //         this.form.formGroup.patchValue({ divisionID: divisionID });
-      //         this.data['divisionID'] = divisionID;
-      //       }
-      //     }
-      //     if (itemSelected['CompanyID']) {
-      //       let companyID = itemSelected['CompanyID'];
-      //       if (companyID != this.data['companyID']) {
-      //         this.form.formGroup.patchValue({ companyID: companyID });
-      //         this.data['companyID'] = companyID;
-      //       }
-      //     }
-      //   }
-      // }
     }
   }
 
   // validate age > 18
   validateBirthday(birthday: any) {
+    if(birthday) return false;
     let ageDifMs = Date.now() - Date.parse(birthday);
     let ageDate = new Date(ageDifMs);
     let age = Math.abs(ageDate.getUTCFullYear() - 1970);
@@ -330,7 +258,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       this.notifySV.notifyCode('HR002');
       return false;
     }
-    if (!this.validateBirthday(this.data.birthday) && this.data.birthday) {
+    if (!this.validateBirthday(this.data.birthday)) {
       this.notifySV.notifyCode('HR001');
       return false;
     }
@@ -393,4 +321,27 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.codxModifiedOn = new Date();
     //this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
   }
+    // getOrgNote() {
+  //   if (this.data['orgUnitID']) {
+  //     this.orgNote = '';
+  //     this.api.execSv<any>('HR', 'HR', 'OrganizationUnitsBusiness', 'GetOrgTreeByOrgIDAsync', [this.data['orgUnitID'], 9])
+  //       .subscribe(res => {
+  //         let resLength = res.length;
+  //         if (res) {
+  //           if(res[0].locationID){
+  //             this.data['locationID'] = res[0].locationID;
+  //             this.form.formGroup.controls['locationID'].patchValue(res[0].locationID);
+  //           }
+  //           if (resLength > 1) {
+  //             this.orgNote = res[1].orgUnitName;
+  //             if (resLength > 2) {
+  //               for (var i = 2; i < resLength; i++) {
+  //                 this.orgNote += ', ' + res[i].orgUnitName;
+  //               }
+  //             }
+  //           }
+  //         }
+  //       });
+  //   }
+  // }
 }
