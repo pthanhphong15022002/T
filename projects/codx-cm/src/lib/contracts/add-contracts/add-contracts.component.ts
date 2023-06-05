@@ -328,6 +328,8 @@ export class AddContractsComponent implements OnInit {
       this.contracts.projectID = this.projectID;
       this.contracts.contractDate = new Date();
       this.contracts.status = '0';
+      this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
+      this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
       this.setCOntractByDataOutput();
     }
     if (this.action == 'edit') {
