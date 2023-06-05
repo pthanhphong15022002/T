@@ -100,7 +100,7 @@ export class PopAddRunPeriodicComponent extends UIComponent implements OnInit{
         this.runPeriodic.itemGroupID = e.data;
         if(this.itemID)
         {
-          (this.itemID.ComponentCurrent as CodxComboboxComponent).model.itemGroupID = this.Paras.itemGroupID;
+          (this.itemID.ComponentCurrent as CodxComboboxComponent).model.itemGroupID = this.runPeriodic.itemGroupID;
           (this.itemID.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
           this.itemID.crrValue = null;
           this.runPeriodic.itemID = null;
