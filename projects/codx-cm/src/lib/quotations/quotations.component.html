@@ -32,22 +32,21 @@
   <codx-temp-full
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
-    [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
     [title]="data.quotationName"
     [descTmp]="descTmp"
     [formModel]="view.formModel"
-    [titleCss]="'fw-bold fs-4'"
+    [titleCss]="'fw-bold fs-6 mb-2'"
     [dataItem]="data"
     [footer]="footerTmp"
   >
   </codx-temp-full>
 </ng-template>
 <ng-template #descTmp let-data>
-  <div class="py-2">
-    <span class="icon-corporate_fare text-primary icon-16 me-2"></span>
-    <span
+  <div class="d-flex align-items-top mb-1">
+    <span class="icon-corporate_fare text-gray-700 icon-16 me-2"></span>
+    <span class="text-gray-700"
       [innerHTML]="
         data?.customerID | formatvalue : view.formModel : 'customerID' | async
       "
@@ -56,27 +55,24 @@
 </ng-template>
 <ng-template #footerTmp let-data>
   <div class="d-flex justify-content-between align-items-center py-2">
-    <div class="d-flex align-items-end codx-badge">
-      <div class="d-flex align-items-center">
-        <span>
-          <codx-label
-            class="label-colon"
-            fiedName="VersionName"
-            [formModel]="view.formModel"
-          ></codx-label
-        ></span>
-        <span
-          [innerHTML]="
-            data?.versionName
-              | formatvalue : view.formModel : 'versionName'
-              | async
-          "
-        ></span>
-      </div>
-    </div>
-    <div class="d-flex align-items-center justify-content-end me-3">
+    <div class="d-flex align-items-center">
       <span>
-        <span class="icon-monetization_on pe-1" style="color: gold"></span>
+        <codx-label
+          class="label-colon"
+          fiedName="VersionName"
+          [formModel]="view.formModel"
+        ></codx-label
+      ></span>
+      <span
+        [innerHTML]="
+          data?.versionName
+            | formatvalue : view.formModel : 'versionName'
+            | async
+        "
+      ></span>
+    </div>
+    <div class="d-flex align-items-top justify-content-end me-3">
+      <span class="icon-monetization_on icon-16 text-warning me-1"></span>
         <span
           class="codx-label me-1"
           [innerHTML]="
@@ -92,33 +88,30 @@
               | async
           "
         ></span>
-      </span>
     </div>
   </div>
   <div class="d-flex justify-content-between align-items-center">
-    <div class="d-flex align-items-end codx-badge">
-      <div class="d-flex align-items-center text-gray-600">
-        <codx-vll
-          [name]="vllStatus"
-          [field]="'Status'"
-          [value]="data?.status"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-light badge-md fs-7"
-        >
-        </codx-vll>
-      </div>
+    <div class="d-flex align-items-center">
+      <codx-vll
+        [name]="vllStatus"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm"
+      >
+      </codx-vll>
     </div>
-    <div class="d-flex align-items-center justify-content-center">
-      <span class="me-2">
+    <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center me-2">
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
-          class="fs-7"
+          class="text-gray-700"
           [innerHTML]="
             data.deadline | formatvalue : view.formModel : 'deadline' | async
           "
         ></span>
-      </span>
+      </div>
       <codx-imgs
         [width]="25"
         [objectId]="data.createdBy"
