@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupAddCaseComponent } from './popup-add-case.component';
+import { TabCaseDetailComponent } from './tab-cases-detail.component';
 
-describe('PopupAddCaseComponent', () => {
-  let component: PopupAddCaseComponent;
-  let fixture: ComponentFixture<PopupAddCaseComponent>;
+describe('TabCaseDetailComponent', () => {
+  let component: TabCaseDetailComponent;
+  let fixture: ComponentFixture<TabCaseDetailComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopupAddCaseComponent ]
+      declarations: [ TabCaseDetailComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PopupAddCaseComponent);
+    fixture = TestBed.createComponent(TabCaseDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -43,11 +43,39 @@
             </span>
           </div>
           <div class="ms-3">
-            <div class="badge badge-md badge-primary">
-              <span>
-                {{ dataSelected?.currentStepName }}
-              </span>
-            </div>
+            <div class="d-flex justify-content-end mb-2">
+              <div
+          *ngIf="dataSelected.status != '1'"   [ngStyle]="{
+            'background-color':
+            dataSelected.status == '3' || dataSelected.status == '4'
+                ? colorReasonSuccess?.color
+                : dataSelected.status == '5' || dataSelected.status == '6'
+                ? colorReasonFail?.color
+                : dataSelected?.steps['backgroundColor']
+          }"
+          class="me-2 badge badge-sm d-flex align-items-center"
+        >
+          <span
+            [ngClass]="dataSelected?.steps['icon']"
+            [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
+            class="me-1"
+          ></span>
+          <span  class="menu-title fw-bold line-clamp-menu"  [ngbTooltip]="dataSelected?.currentStepName" [ngStyle]="{ color: data?.steps['textColor'] }">{{  dataSelected?.currentStepName }}</span>
+        </div>
+          <div   *ngIf="dataSelected.status == '1'" >
+
+            <codx-vll
+            [name]="'DP028'"
+            [field]="'Status'"
+            [value]="dataSelected?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-sm"
+          >
+          </codx-vll>
+
+          </div>
+        </div>
           </div>
         </div>
         <div class="d-flex flex-row mb-2">
@@ -212,24 +240,17 @@
               <div class="ms-20">
                 <div class="mb-2">
                   <codx-label
-                    default="Bán hàng/Tư vấn"
-                    class="text-dark fw-bold"
+                  fiedName="Owner"
+                  class="label-colon"
+                  [setRequire]="false"
+                  [formModel]="formModel"
                   ></codx-label>
                 </div>
                 <div class="d-flex flex-center">
                   <codx-imgs
                     [isToolTip]="true"
                     [width]="30"
-                    [objectId]="dataSelected.salespersonID"
-                    ojectType="AD_Users"
-                    [numberImages]="1"
-                  >
-                  </codx-imgs>
-
-                  <codx-imgs
-                    [isToolTip]="true"
-                    [width]="30"
-                    [objectId]="dataSelected?.consultantID"
+                    [objectId]="dataSelected?.owner"
                     ojectType="AD_Users"
                     [numberImages]="1"
                   >
@@ -299,11 +320,11 @@
   </codx-detail-tmp>
 </ng-container>
 <ng-template #body let-data>
-  <codx-tab-case-detail
+  <codx-tab-cases-detail
     [formModel]="formModel"
     [tabClicked]="tabClicked"
     [dataSelected]="dataSelected"
-  ></codx-tab-case-detail>
+  ></codx-tab-cases-detail>
 </ng-template>
 <ng-template #tabs let-data>
   <codx-tabs

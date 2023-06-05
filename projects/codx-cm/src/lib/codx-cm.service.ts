@@ -464,6 +464,14 @@ export class CodxCmService {
       data
     );
   }
+  openOrClosedCases(data: any) {
+    return this.api.exec<any>(
+      'CM',
+      'CasesBusiness',
+      'OpenOrClosedCasesAsync',
+      data
+    );
+  }
   getListChannels() {
     return this.api.exec<any>('CM', 'ChannelsBusiness', 'GetListChannelsAsync');
   }
@@ -585,6 +593,15 @@ export class CodxCmService {
       [id]
     );
   }
+
+  getOneContactByObjectID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContactsBusiness',
+      'GetOneContactAsync',
+      data
+    );
+  }
   getListContactByCustomerID(data) {
     return this.api.exec<any>(
       'CM',
@@ -593,6 +610,7 @@ export class CodxCmService {
       data
     );
   }
+
 
   genAutoNumber(funcID: any, entityName: string, key: any) {
     return this.api.execSv<any>(
@@ -614,12 +632,31 @@ export class CodxCmService {
       data
     );
   }
+  startCases(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'StartCasesAsync',
+      data
+    );
+  }
   moveStageDeal(data) {
     return this.api.execSv<any>(
       'CM',
       'ERM.Business.CM',
       'DealsBusiness',
       'MoveStageDealAsync',
+      data
+    );
+  }
+
+  moveStageCases(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'MoveStageCasesAsync',
       data
     );
   }
@@ -642,6 +679,9 @@ export class CodxCmService {
       data
     );
   }
+
+
+
 
   getListContactByLeadID(data) {
     return this.api.exec<any>(

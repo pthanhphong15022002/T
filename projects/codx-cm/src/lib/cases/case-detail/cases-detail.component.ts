@@ -3,7 +3,7 @@ import { CRUDService, FormModel } from 'codx-core';
 import { TabDetailCustomComponent } from '../../deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/cm_model';
-import { TabCaseDetailComponent } from './tab-case-detail/tab-case-detail.component';
+import { TabCasesDetailComponent } from './tab-cases-detail/tab-cases-detail.component';
 
 @Component({
   selector: 'codx-cases-detail',
@@ -13,12 +13,15 @@ import { TabCaseDetailComponent } from './tab-case-detail/tab-case-detail.compon
 export class CasesDetailComponent  implements OnInit {
 
   @Input() dataSelected: any;
+  @Input() colorReasonSuccess: any;
+  @Input() colorReasonFail: any;
   @Input() formModel: FormModel;
   @Input() funcID: string; //True - Khách hàng; False - Liên hệ
   @Output() clickMoreFunc = new EventEmitter<any>();
+  @Output() changeMF = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
-  @ViewChild('tabCaseDetailComponent') tabCaseDetailComponent: TabCaseDetailComponent;
+  @ViewChild('tabCaseDetailComponent') tabCaseDetailComponent: TabCasesDetailComponent;
 
 
   tabControl = [
@@ -63,16 +66,15 @@ export class CasesDetailComponent  implements OnInit {
     if (changes['dataSelected']) {
       this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
       if (changes['dataSelected'].currentValue != null && changes['dataSelected'].currentValue?.recID) {
-        if (changes['dataSelected'].currentValue?.recID == this.caseId) return;
         this.caseId = changes['dataSelected'].currentValue?.recID;
-        this.getContactByObjectID(changes['dataSelected'].currentValue?.customerID);
+        this.getContactByObjectID(this.dataSelected.contactID ,this.dataSelected.customerID);
       }
     }
-
   }
 
-  getContactByObjectID(customerID) {
-    this.codxCmService.getContactByObjectID(customerID).subscribe((res) => {
+  getContactByObjectID(contactId,customerID) {
+    var data = [customerID,contactId];
+    this.codxCmService.getOneContactByObjectID(data).subscribe((res) => {
       if (res) {
         this.contactPerson = res;
       }
@@ -95,6 +97,14 @@ export class CasesDetailComponent  implements OnInit {
 
   clickMF(e, data){
     this.clickMoreFunc.emit({e: e, data: data});
+  }
+
+  changeDataMF(e, data) {
+    this.changeMF.emit({
+      e: e,
+      data: data,
+    });
+
   }
 
   changeFooter(e){
