@@ -30,14 +30,14 @@ import {
   UrlUtil,
   UserModel,
 } from 'codx-core';
-import {
-  AmazonLoginProvider,
-  FacebookLoginProvider,
-  GoogleLoginProvider,
-  MicrosoftLoginProvider,
-  SocialUser,
-  SocialAuthService,
-} from '@abacritt/angularx-social-login';
+// import {
+//   AmazonLoginProvider,
+//   FacebookLoginProvider,
+//   GoogleLoginProvider,
+//   MicrosoftLoginProvider,
+//   SocialUser,
+//   SocialAuthService,
+// } from '@abacritt/angularx-social-login';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
