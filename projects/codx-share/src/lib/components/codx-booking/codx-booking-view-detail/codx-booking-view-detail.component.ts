@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import {
   AuthService,
+  AuthStore,
   CallFuncService,
   DialogRef,
   UIComponent,
@@ -91,17 +92,24 @@ export class CodxBookingViewDetailComponent
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
     { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
   ];
+  curUser: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
     private callFuncService: CallFuncService,
-    private authService: AuthService
+    private authService: AuthService,
+    private authStore: AuthStore,
   ) {
     super(injector);
     // this.routerRecID = this.router.snapshot.params['id'];
     // if (this.routerRecID != null) {
     //   //this.hideFooter = true;
     // }
+    
+    this.curUser =this.authStore.get();
+    if(this.curUser==null){
+      this.curUser= this.authService?.userValue;
+    }
   }
 
   //---------------------------------------------------------------------------------//
@@ -642,8 +650,9 @@ export class CodxBookingViewDetailComponent
     return time;
   }
 
-  meetingNow(url: string) {
-    if (url != null) {
+  meetingNow(){
+    if(this.itemDetail?.onlineUrl !=null){
+      let url = this.curUser?.userID == this.itemDetail?.createdBy || this.curUser?.userID == this.itemDetail?.owner ? this.itemDetail?.onlineUrl2 :this.itemDetail?.onlineUrl;
       window.open(url, '_blank');
     }
   }
