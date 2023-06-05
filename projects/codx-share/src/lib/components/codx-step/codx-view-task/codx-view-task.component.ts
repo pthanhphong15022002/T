@@ -42,9 +42,10 @@ export class CodxViewTaskComponent implements OnInit {
   connection = '';
   listTypeTask = [];
   tabInstances = [
-    { type: 'history', title: 'History' },
-    { type: 'comment', title: 'Comment' },
-    { type: 'attachments', title: 'Attachments' },
+    { type: 'history', title: 'Lịch sử' },
+    { type: 'comment', title: 'Thảo luận' },
+    { type: 'attachments', title: 'Đính kèm' },
+    { type: 'assignTask', title: 'Giao việc' },
   ];
   viewModelDetail = 'history';
   dateFomat = 'dd/MM/yyyy';
@@ -56,6 +57,8 @@ export class CodxViewTaskComponent implements OnInit {
   hideExtend = true;
   isShowUpdate = false;
   user: any;
+  dataTree: any;
+
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -75,6 +78,7 @@ export class CodxViewTaskComponent implements OnInit {
     this.isUpdateProgressGroup = dt?.data?.isUpdateProgressGroup;
     this.listIdRoleInstance = dt?.data?.listIdRoleInstance;
     this.getModeFunction();
+    this.getTree(); //get tree by refID
   }
 
   ngOnInit(): void {
@@ -104,7 +108,7 @@ export class CodxViewTaskComponent implements OnInit {
       });
   }
 
-  checkRole(){
+  checkRole() {
     if (this.listIdRoleInstance?.some((id) => id == this.user.userID)) {
       this.isRoleAll = true;
     } else if (this.instanceStep?.roles?.length > 0) {
@@ -114,7 +118,8 @@ export class CodxViewTaskComponent implements OnInit {
             element?.objectID == this.user.userID && element.roleType == 'S'
         ) || false;
     }
-    this.isUpdateProgressGroup = this.instanceStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
+    this.isUpdateProgressGroup =
+      this.instanceStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
     this.isUpdateProgressStep = this.instanceStep?.progressStepControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
   }
 
@@ -205,7 +210,6 @@ export class CodxViewTaskComponent implements OnInit {
     this.viewModelDetail = e;
   }
 
-
   extendShow(): void {
     this.hideExtend = !this.hideExtend;
     var doc = document.getElementsByClassName('extend-more')[0];
@@ -286,5 +290,24 @@ export class CodxViewTaskComponent implements OnInit {
       this.user
     );
     return check;
+  }
+  //ve tree giao viec byRef
+  getTree() {
+    let method = 'GetListTaskTreeByRefIDAsync';
+    let data = this.dataInput.recID;
+
+    if (this.type == 'P' || this.type == 'G')
+      //chua lam ne return cho khoi loi
+      // method = 'GetListTaskTreeByListRefIDAsync';
+       //data = JSON.stringify([]) ;
+      return;
+    this.api
+      .execSv<any>('TM', 'ERM.Business.TM', 'TaskBusiness', method, data)
+      .subscribe((tree) => {
+        this.dataTree = tree || [];
+      });
+  }
+  saveAssign(e) {
+    if (e) this.getTree();
   }
 }

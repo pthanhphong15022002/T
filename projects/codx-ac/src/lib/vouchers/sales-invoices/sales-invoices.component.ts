@@ -125,23 +125,22 @@ export class SalesInvoicesComponent
         ])
       )
       .subscribe((res: any) => {
-        console.log({ res });
+        if (res) {
+          let options = new SidebarModel();
+          options.DataService = this.view.dataService;
+          options.FormModel = this.view.formModel;
+          options.isFull = true;
 
-        let options = new SidebarModel();
-        options.DataService = this.view.dataService;
-        options.FormModel = this.view.formModel;
-        options.isFull = true;
-
-        this.callfc.openSide(
-          PopupAddSalesInvoiceComponent,
-          {
-            formType: 'add',
-            formTitle: `${e.text} ${this.functionName}`,
-            journalNo: this.journalNo,
-          },
-          options,
-          this.view.funcID
-        );
+          this.callfc.openSide(
+            PopupAddSalesInvoiceComponent,
+            {
+              formType: 'add',
+              formTitle: `${e.text} ${this.functionName}`,
+            },
+            options,
+            this.view.funcID
+          );
+        }
       });
   }
 
@@ -190,7 +189,6 @@ export class SalesInvoicesComponent
         {
           formType: 'edit',
           formTitle: `${e.text} ${this.functionName}`,
-          journalNo: this.journalNo,
         },
         options,
         this.view.funcID
@@ -213,7 +211,6 @@ export class SalesInvoicesComponent
         {
           formType: 'add',
           formTitle: `${e.text} ${this.functionName}`,
-          journalNo: this.journalNo,
         },
         options,
         this.view.funcID

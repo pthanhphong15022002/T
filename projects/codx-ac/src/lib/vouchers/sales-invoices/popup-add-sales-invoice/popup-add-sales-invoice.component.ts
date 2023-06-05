@@ -324,7 +324,6 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
                   {
                     formType: 'add',
                     index: index,
-                    hiddenFields: this.hiddenFields,
                   },
                   '',
                   dialogModel
@@ -376,7 +375,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     this.masterService
       .addNew(() =>
         this.api.exec('SM', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
-          this.dialogData.data?.journalNo,
+          this.salesInvoice.journalNo,
         ])
       )
       .subscribe((res: ISalesInvoice) => {

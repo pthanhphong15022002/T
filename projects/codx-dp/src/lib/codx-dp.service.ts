@@ -532,7 +532,7 @@ export class CodxDpService {
     return this.api.exec<any>(
       'TM',
       'TaskBusiness',
-      'GetListTaskTreeBySeasonIDAsync',
+      'GetListTaskTreeBySessionIDAsync',
       recID
     );
   }

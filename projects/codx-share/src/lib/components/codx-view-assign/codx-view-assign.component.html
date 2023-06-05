@@ -88,7 +88,7 @@
                   "
                 >
                 </span>
-                <span *ngIf="data.category == '2'"> {{ data?.memo2 }}</span>
+                <span *ngIf="data.category == '2' && data.parentID"> {{ data?.memo2 }}</span>
               </div>
             </div>
           </div>
@@ -101,13 +101,14 @@
             ></codx-assign-temp>
           </span>
           <span class="me-4">
-            <codx-comment-temp [objectID]="data.recID"></codx-comment-temp>
+            <codx-comment-temp [objectID]="data.recID" ></codx-comment-temp>
           </span>
           <span class="me-4">
             <codx-attachment-temp
               [objectID]="data.recID"
               [formModel]="formModel"
               [referType]="referType"
+              [viewType]="'4'"
             ></codx-attachment-temp>
           </span>
 
