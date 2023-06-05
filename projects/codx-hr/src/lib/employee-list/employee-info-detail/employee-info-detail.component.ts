@@ -2407,6 +2407,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           }
         });
     }
+    console.log('info perrrrrson', this.infoPersonal)
 
     this.initHRProcess();
   }

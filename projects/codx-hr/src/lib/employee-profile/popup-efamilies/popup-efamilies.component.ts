@@ -83,11 +83,12 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.familyMemberObj = res?.data;
-            if (this.familyMemberObj.registerFrom == '0001-01-01T00:00:00')
+            if(new Date(this.familyMemberObj.registerFrom).getFullYear() == 1){
               this.familyMemberObj.registerFrom = null;
-            if (this.familyMemberObj.registerTo == '0001-01-01T00:00:00')
+            }
+            if(new Date(this.familyMemberObj.registerTo).getFullYear() == 1){
               this.familyMemberObj.registerTo = null;
-
+            }
             this.familyMemberObj.employeeID = this.employId;
             this.formModel.currentData = this.familyMemberObj;
             this.formGroup.patchValue(this.familyMemberObj);
@@ -97,16 +98,18 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
+        if (new Date(this.familyMemberObj.registerFrom).getFullYear() == 1)
+        {
+          this.familyMemberObj.registerFrom = null;
+        }
+        if (new Date(this.familyMemberObj.registerTo).getFullYear() == 1)
+        {
+          this.familyMemberObj.registerTo = null;
+        }
         if (this.actionType == 'edit') {
           this.familyMemberObj.modifiedOn = new Date();
         }
-
-        if (this.actionType == 'copy') {
-          if (this.familyMemberObj.registerFrom == '0001-01-01T00:00:00')
-            this.familyMemberObj.registerFrom = null;
-          if (this.familyMemberObj.registerTo == '0001-01-01T00:00:00')
-            this.familyMemberObj.registerTo = null;
-        }
+        debugger
         this.formGroup.patchValue(this.familyMemberObj);
         this.formModel.currentData = this.familyMemberObj;
         this.formGroup.patchValue(this.familyMemberObj);
@@ -150,10 +153,10 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     this.familyMemberObj.registerFrom = this.fromdateVal;
     this.familyMemberObj.registerTo = this.todateVal;
 
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
 
     if (this.familyMemberObj.birthday >= today.toJSON()) {
       this.notify.notifyCode('HR004');
