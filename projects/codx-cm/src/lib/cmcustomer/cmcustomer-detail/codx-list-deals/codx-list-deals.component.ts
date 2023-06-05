@@ -88,4 +88,11 @@ export class CodxListDealsComponent implements OnInit {
       return null;
     }
   }
+  checkOverflow(event: any, popup: any) {
+    let parent = event.currentTarget.parentElement;
+    let child = event.currentTarget;
+    if (child.scrollWidth >= parent.scrollWidth) {
+      popup.open();
+    }
+  }
 }

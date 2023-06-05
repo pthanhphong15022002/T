@@ -192,21 +192,24 @@ export class ReceiptTransactionComponent extends UIComponent {
     this.view.dataService
       .addNew((o) => this.setDefault(o))
       .subscribe((res: any) => {
-        var obj = {
-          formType: 'add',
-          headerText: this.headerText,
-          entityMaster: this.entityName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.isFull = true;
-        this.dialog = this.callfunc.openSide(
-          PopAddReceiptTransactionComponent,
-          obj,
-          option,
-          this.view.funcID
-        );
+        if(res)
+        {
+          var obj = {
+            formType: 'add',
+            headerText: this.headerText,
+            entityMaster: this.entityName,
+          };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.isFull = true;
+          this.dialog = this.callfunc.openSide(
+            PopAddReceiptTransactionComponent,
+            obj,
+            option,
+            this.view.funcID
+          );
+        }
       });
   }
   edit(e, data) {
@@ -216,29 +219,32 @@ export class ReceiptTransactionComponent extends UIComponent {
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
-        var obj = {
-          formType: 'edit',
-          headerText: this.funcName,
-          entityMaster: this.entityName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.isFull = true;
-        this.dialog = this.callfunc.openSide(
-          PopAddReceiptTransactionComponent,
-          obj,
-          option,
-          this.view.funcID
-        );
-        this.dialog.closed.subscribe((res) => {
-          if (res.event != null) {
-            if (res.event['update']) {
-              this.itemSelected = res.event['data'];
-              this.loadDatadetail(this.itemSelected);
+        if(res)
+        {
+          var obj = {
+            formType: 'edit',
+            headerText: this.funcName,
+            entityMaster: this.entityName,
+          };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.isFull = true;
+          this.dialog = this.callfunc.openSide(
+            PopAddReceiptTransactionComponent,
+            obj,
+            option,
+            this.view.funcID
+          );
+          this.dialog.closed.subscribe((res) => {
+            if (res.event != null) {
+              if (res.event['update']) {
+                this.itemSelected = res.event['data'];
+                this.loadDatadetail(this.itemSelected);
+              }
             }
-          }
-        });
+          });
+        }
       });
   }
   copy(e, data) {
@@ -248,21 +254,24 @@ export class ReceiptTransactionComponent extends UIComponent {
     this.view.dataService
       .copy((o) => this.setDefault(o))
       .subscribe((res: any) => {
-        var obj = {
-          formType: 'copy',
-          headerText: this.funcName,
-          entityMaster: this.entityName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.isFull = true;
-        this.dialog = this.callfunc.openSide(
-          PopAddReceiptTransactionComponent,
-          obj,
-          option,
-          this.view.funcID
-        );
+        if(res)
+        {
+          var obj = {
+            formType: 'copy',
+            headerText: this.funcName,
+            entityMaster: this.entityName,
+          };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.isFull = true;
+          this.dialog = this.callfunc.openSide(
+            PopAddReceiptTransactionComponent,
+            obj,
+            option,
+            this.view.funcID
+          );
+        }
       });
   }
   delete(data) {

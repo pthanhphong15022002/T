@@ -80,7 +80,7 @@
                 </codx-input>
               </div>
             </div>
-            <div class="col-2">
+            <div class="col-3">
               <!-- Số tiền -->
               <div class="form-group">
                 <codx-label *ngIf="form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'"
@@ -131,52 +131,7 @@
                 </div>
               </div>
             </div>
-            <div style="display: none;" class="col-2 ac-type-2">
-              <div class="form-group">
-                <!-- Lý do chi -->
-                <div class="form-group">
-                  <codx-label fiedName="CashPaymentOrdersAmt" [formModel]="form.formModel">
-                  </codx-label>
-                  <codx-input disabled="true" [Group]="form.formGroup" field="cashPaymentOrdersAmt"
-                    [formModel]="form.formModel" (valueChange)="valueChange($event)">
-                  </codx-input>
-                </div>
-              </div>
-            </div>
-            <div style="display: none;" class="col-3 ac-type-5">
-              <div class="form-group">
-                <codx-label fiedName="lblCashAdvance" default="Số tiền đã tạm ứng" [formModel]="form.formModel">
-                </codx-label>
-                <codx-input disabled="true" type="text" [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)">
-                </codx-input>
-              </div>
-            </div>
-            <div style="display: none;" class="col-2 ac-type-5">
-              <div class="form-group">
-                <!-- Lý do chi -->
-                <div class="form-group">
-                  <codx-label fiedName="lblCashexcess" default="Số tiền chi thêm" [formModel]="form.formModel">
-                  </codx-label>
-                  <codx-input disabled="true" type="text" [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)">
-                  </codx-input>
-                </div>
-              </div>
-            </div>
             <div style="display: none;" class="col-3 ac-type-2">
-              <div class="form-group">
-                <!-- Lý do chi -->
-                <div class="form-group">
-                  <codx-label fiedName="CashPaymentOrdersID" [formModel]="form.formModel">
-                  </codx-label>
-                  <codx-input [Group]="form.formGroup" field="cashPaymentOrdersID" [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)">
-                  </codx-input>
-                </div>
-              </div>
-            </div>
-            <div style="display: none;" class="col-2 ac-type-5">
               <div class="form-group">
                 <!-- Lý do chi -->
                 <div class="form-group">
@@ -200,7 +155,40 @@
                 </div>
               </div>
             </div>
-            <div id="ac-type-1" class="col-5">
+            <div style="display: none;" class="col-2 ac-type-2">
+              <div class="form-group">
+                <!-- Lý do chi -->
+                <div class="form-group">
+                  <codx-label fiedName="CashPaymentOrdersAmt" [formModel]="form.formModel">
+                  </codx-label>
+                  <codx-input disabled="true" [Group]="form.formGroup" field="cashPaymentOrdersAmt"
+                    [formModel]="form.formModel" (valueChange)="valueChange($event)">
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+            <div style="display: none;" class="col-3 ac-type-5">
+              <div class="form-group">
+                <!-- Lý do chi -->
+                <div class="form-group">
+                  <codx-label fiedName="RefID" [formModel]="form.formModel">
+                  </codx-label>
+                  <codx-input [Group]="form.formGroup" field="refID" [formModel]="form.formModel"
+                    (valueChange)="valueChange($event)">
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+            <div style="display: none;" class="col-3 ac-type-5">
+              <div class="form-group">
+                <codx-label fiedName="lblCashAdvance" default="Số tiền đã tạm ứng" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input disabled="true" type="text" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div id="ac-type-1" class="col-6">
               <div class="form-group">
                 <!-- Người nhận tiền -->
                 <div *ngIf="form.formModel.funcID == 'ACT0410'" class="form-group">
@@ -219,7 +207,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-11">
+            <div class="col-12">
               <div class="form-group mb-0">
                 <codx-label fiedName="Memo" [formModel]="form.formModel">
                 </codx-label>

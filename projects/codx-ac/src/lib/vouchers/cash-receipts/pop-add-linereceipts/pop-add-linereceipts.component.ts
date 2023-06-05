@@ -71,8 +71,9 @@ export class PopAddLinereceiptsComponent extends UIComponent implements OnInit {
       'drAcctID',
       this.cbxAccountID,
       'AccountID',
-      this.form,
-      'accountID'
+      this.form.formGroup,
+      'accountID',
+      this.dialogData.data?.type === 'edit'
     );
     this.journalService.loadComboboxBy067(
       this.dialogData.data.journal,
@@ -80,8 +81,9 @@ export class PopAddLinereceiptsComponent extends UIComponent implements OnInit {
       'crAcctID',
       this.cbxOffsetAcctID,
       'AccountID',
-      this.form,
-      'offsetAcctID'
+      this.form.formGroup,
+      'offsetAcctID',
+      this.dialogData.data?.type === 'edit'
     );
 
     this.form.formGroup.patchValue({
