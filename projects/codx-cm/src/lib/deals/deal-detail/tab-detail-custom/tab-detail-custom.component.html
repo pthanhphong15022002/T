@@ -24,27 +24,36 @@
     [ngTemplateOutlet]="ganttChart"
   ></some-element>
 
-
   <some-element *ngSwitchDefault></some-element>
 </container-element>
 <!-- nvthuan công việc -->
 <ng-template #task let-data="value">
-  <div *ngFor="let step of listStep; let i = index" >
-    <!-- <div class="d-flex align-items-center justify-content-between me-5">
-      <div class="d-flex align-items-center fw-bold">
-        <i class="icon-account_balance icon-20 me-2"></i>
-        <span class="fs-5">{{ step.stepName }}</span>
-      </div>
-      <codx-progressbar [progress]="step?.progress || 0"></codx-progressbar>
-    </div> -->
-
+  <div
+    *ngFor="let step of listStep"
+    class="list-step ps-4"
+    [ngStyle]="step?.stepStatus != '1' ? { background: '#00000030' } : {}"
+  >
     <codx-step-task
       [dataSources]="step"
       [isShowButton]="false"
       [isShowMore]="true"
       [isDeepCopy]="false"
       [isShowStep]="true"
+      (continueStep)="continueStep($event,step)"
     ></codx-step-task>
+    <!-- <codx-step-task
+      [dataSources]="step"
+      [isShowMore]="true"
+      [isDeepCopy]="false"
+      [isShowButton]="true"
+      [isStart]="isStart"
+      [isClose]="isClosed"
+      [isRoleAll]="isRoleAll"
+      [isOnlyView]="isOnlyView"
+      (saveAssign)="saveAssignStepTask($event)"
+      (continueStep)="continueStep($event)"
+      (isChangeProgress)="changeProgressStep($event)"
+  ></codx-step-task> -->
     <hr class="m-0 p-0" />
   </div>
 </ng-template>
@@ -74,88 +83,94 @@
     <div class="mb-3">
       <div class="row py-2">
         <div class="col-2"><codx-label default="Mã cơ hội"></codx-label>:</div>
-        <div class="col-4">{{dataSelected?.dealID }}</div>
+        <div class="col-4">{{ dataSelected?.dealID }}</div>
 
         <div class="col-2"><codx-label default="Chiến dịch"></codx-label>:</div>
         <div class="col-4">
           <span
-          class="fs-7"
-          #campaignID
-          [innerHTML]="
-          dataSelected?.campaignID
-              | formatvalue
-                : formModel
-                : 'campaignID'
-                : campaignID
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
-          "
-        ></span>
+            class="fs-7"
+            #campaignID
+            [innerHTML]="
+              dataSelected?.campaignID
+                | formatvalue
+                  : formModel
+                  : 'campaignID'
+                  : campaignID
+                  : 'CMDeals'
+                  : 'grvCMDeals'
+                | async
+            "
+          ></span>
         </div>
       </div>
 
       <div class="row py-2">
-        <div class="col-2"><codx-label default="Loại cơ hội"></codx-label>:</div>
+        <div class="col-2">
+          <codx-label default="Loại cơ hội"></codx-label>:
+        </div>
         <div class="col-4">
           {{ getNameCategory(dataSelected?.category) }}
         </div>
         <div class="col-2"><codx-label default="Kênh"></codx-label>:</div>
         <div class="col-4">
           <span
-          class="fs-7"
-          #channelID
-          [innerHTML]="
-          dataSelected?.channelID
-              | formatvalue
-                : formModel
-                : 'channelID'
-                : channelID
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
-          "
-        ></span>
-          </div>
+            class="fs-7"
+            #channelID
+            [innerHTML]="
+              dataSelected?.channelID
+                | formatvalue
+                  : formModel
+                  : 'channelID'
+                  : channelID
+                  : 'CMDeals'
+                  : 'grvCMDeals'
+                | async
+            "
+          ></span>
+        </div>
       </div>
       <div class="row py-2">
         <div class="col-2">
-          <codx-label  fiedName="DealValue" default="Doanh số dự kiến"></codx-label>:
+          <codx-label
+            fiedName="DealValue"
+            default="Doanh số dự kiến"
+          ></codx-label
+          >:
         </div>
         <div class="col-4">
           <span
-          class="fs-7"
-          #dealValue
-          [innerHTML]="
-          dataSelected?.dealValue
-              | formatvalue
-                : formModel
-                : 'dealValue'
-                : dealValue
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
-          "
-        ></span>
+            class="fs-7"
+            #dealValue
+            [innerHTML]="
+              dataSelected?.dealValue
+                | formatvalue
+                  : formModel
+                  : 'dealValue'
+                  : dealValue
+                  : 'CMDeals'
+                  : 'grvCMDeals'
+                | async
+            "
+          ></span>
         </div>
 
         <div class="col-2"><codx-label default="Quy trình"></codx-label>:</div>
         <div class="col-4">
           <span
-          class="fs-7"
-          #processName
-          [innerHTML]="
-          dataSelected?.processName
-              | formatvalue
-                : formModel
-                : 'processName'
-                : processName
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
-          "
-        ></span>
-          </div>
+            class="fs-7"
+            #processName
+            [innerHTML]="
+              dataSelected?.processName
+                | formatvalue
+                  : formModel
+                  : 'processName'
+                  : processName
+                  : 'CMDeals'
+                  : 'grvCMDeals'
+                | async
+            "
+          ></span>
+        </div>
       </div>
 
       <div class="row py-2">
@@ -163,21 +178,20 @@
           <codx-label default="Tỷ lệ thành công"></codx-label>:
         </div>
         <div class="col-4">
-
           <span
-          class="fs-7"
-          #probability
-          [innerHTML]="
-          dataSelected?.probability
-              | formatvalue
-                : formModel
-                : 'probability'
-                : probability
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
-          "
-        ></span>
+            class="fs-7"
+            #probability
+            [innerHTML]="
+              dataSelected?.probability
+                | formatvalue
+                  : formModel
+                  : 'probability'
+                  : probability
+                  : 'CMDeals'
+                  : 'grvCMDeals'
+                | async
+            "
+          ></span>
         </div>
 
         <div class="col-2">
@@ -185,41 +199,40 @@
         </div>
         <div class="col-4">
           <span
-          class="fs-7"
-          #salespersonID
-          [innerHTML]="
-          dataSelected?.salespersonID
-              | formatvalue
-                : formModel
-                : 'salespersonID'
-                : salespersonID
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
-          "
-        ></span>
+            class="fs-7"
+            #salespersonID
+            [innerHTML]="
+              dataSelected?.salespersonID
+                | formatvalue
+                  : formModel
+                  : 'salespersonID'
+                  : salespersonID
+                  : 'CMDeals'
+                  : 'grvCMDeals'
+                | async
+            "
+          ></span>
+        </div>
       </div>
-
-    </div>
       <div class="row pt-2">
         <div class="col-2">
           <codx-label default="Ngày dự kiến đóng"></codx-label>:
         </div>
         <div class="col-4">
           <span
-          class="fs-7"
-          #endDate
-          [innerHTML]="
-          dataSelected?.endDate
-              | formatvalue
-                : formModel
-                : 'endDate'
-                : endDate
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
-          "
-        ></span>
+            class="fs-7"
+            #endDate
+            [innerHTML]="
+              dataSelected?.endDate
+                | formatvalue
+                  : formModel
+                  : 'endDate'
+                  : endDate
+                  : 'CMDeals'
+                  : 'grvCMDeals'
+                | async
+            "
+          ></span>
         </div>
 
         <div class="col-2">
@@ -227,33 +240,29 @@
         </div>
         <div class="col-4">
           <span
-          class="fs-7"
-          #consultantID
-          [innerHTML]="
-          dataSelected?.consultantID
-              | formatvalue
-                : formModel
-                : 'consultantID'
-                : consultantID
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
-          "
-        ></span>
+            class="fs-7"
+            #consultantID
+            [innerHTML]="
+              dataSelected?.consultantID
+                | formatvalue
+                  : formModel
+                  : 'consultantID'
+                  : consultantID
+                  : 'CMDeals'
+                  : 'grvCMDeals'
+                | async
+            "
+          ></span>
         </div>
-
-
       </div>
     </div>
     <div class="mt-2">
       <div class="mb-3">
         <h2><codx-label default="Mô tả nhu cầu"></codx-label></h2>
       </div>
-      <span class="py-2"
-        >
-        {{dataSelected.memo}}
-        </span
-      >
+      <span class="py-2">
+        {{ dataSelected.memo }}
+      </span>
     </div>
   </div>
 </ng-template>
@@ -293,7 +302,9 @@
 </ng-template>
 
 <ng-template #opponent>
-  <codx-tab-dealcompetitors [dealID]="dataSelected.recID"></codx-tab-dealcompetitors>
+  <codx-tab-dealcompetitors
+    [dealID]="dataSelected.recID"
+  ></codx-tab-dealcompetitors>
 </ng-template>
 
 <ng-template #opportunity>
