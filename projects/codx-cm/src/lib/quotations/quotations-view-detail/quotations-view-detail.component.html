@@ -24,135 +24,154 @@
     [dataItem]="itemSelected"
   >
     <ng-template #header>
-      <div class="container_detail mt-3">
-        <div class="d-flex flex-grow-1 mb-4">
-          <div class="d-flex flex-column flex-grow-1">
-            <div class="d-flex justify-content-between">
-              <div class="fw-bold fs-3 text-dark">
-                <span
-                  class="me-5"
-                  [innerHTML]="
-                    itemSelected.quotationName
-                      | formatvalue : formModel : 'quotationName'
-                      | async
-                  "
-                ></span>
-                <span
-                  [innerHTML]="
-                    itemSelected.quotationID
-                      | formatvalue : formModel : 'quotationID'
-                      | async
-                  "
-                ></span>
-              </div>
-              <div class="d-flex flex-row align-items-start">
-                <codx-vll
-                  *ngIf="vllStatus"
-                  [name]="vllStatus"
-                  [field]="'Status'"
-                  [value]="itemSelected?.status"
-                  [showText]="true"
-                  [showBgColor]="true"
-                  class="badge badge-light badge-md fs-7"
-                >
-                </codx-vll>
-              </div>
-            </div>
-          </div>
+      <div class="d-flex align-items-top justify-content-between mb-1">
+        <div class="d-flex align-items-center w-100">
+          <span
+            class="fw-bold text-dark fs-5"
+            [innerHTML]="
+              itemSelected.quotationName
+                | formatvalue : formModel : 'quotationName'
+                | async
+            "
+          ></span>
+          <span class="icon-i-dot icon-22 text-gray-700"></span>
+          <span class="fs-5 text-gray-600"
+            [innerHTML]="
+              itemSelected.quotationID
+                | formatvalue : formModel : 'quotationID'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="d-flex align-items-center justify-content-end ms-5">
+          <span class="me-2">
+            <codx-vll
+            *ngIf="vllStatus"
+            [name]="vllStatus"
+            [field]="'Status'"
+            [value]="itemSelected?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-md fs-7"
+          >
+          </codx-vll>
+          </span>
+          <codx-imgs
+            [width]="25"
+            [objectId]="itemSelected.createdBy"
+            ojectType="AD_Users"
+            [numberImages]="1"
+          >
+          </codx-imgs>
         </div>
       </div>
     </ng-template>
     <ng-template #body>
       <div class="container_detail mt-3">
         <div class="d-flex justify-content-between">
-          <div class="d-flex">
-            <div class="me-10 d-flex">
-              <span>
-                <codx-label
-                  class="label-colon"
-                  fiedName="VersionName"
-                  [formModel]="formModel"
-                ></codx-label
-              ></span>
-              <span
-                [innerHTML]="
-                  itemSelected?.versionName
-                    | formatvalue : formModel : 'versionName'
-                    | async
-                "
-              ></span>
+          <div class="d-flex flex-column w-100">
+            <div class="d-flex align-items-center mb-2">
+              <div class="me-5 d-flex align-items-center">
+                <span class="fw-bold text-dark">
+                  <codx-label
+                    class="label-colon"
+                    fiedName="VersionName"
+                    [formModel]="formModel"
+                  ></codx-label
+                ></span>
+                <span class="text-gray-700"
+                  [innerHTML]="
+                    itemSelected?.versionName
+                      | formatvalue : formModel : 'versionName'
+                      | async
+                  "
+                ></span>
+              </div>
+              <div class="me-5 d-flex align-items-center">
+                <span class="fw-bold text-dark">
+                  <codx-label
+                    class="label-colon"
+                    fiedName="CreatedOn"
+                    [formModel]="formModel"
+                  ></codx-label
+                ></span>
+                <span class="text-gray-700"
+                  [innerHTML]="
+                    itemSelected?.createdOn
+                      | formatvalue : formModel : 'createdOn'
+                      | async
+                  "
+                ></span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span class="fw-bold text-dark">
+                  <codx-label
+                    class="label-colon"
+                    fiedName="Deadline"
+                    [formModel]="formModel"
+                  ></codx-label
+                ></span>
+                <span class="text-gray-700"
+                  [innerHTML]="
+                    itemSelected?.deadline
+                      | formatvalue : formModel : 'deadline'
+                      | async
+                  "
+                ></span>
+              </div>
             </div>
-            <div class="me-10 d-flex">
-              <span>
-                <codx-label
-                  class="label-colon"
-                  fiedName="CreatedOn"
-                  [formModel]="formModel"
-                ></codx-label
-              ></span>
-              <span
-                [innerHTML]="
-                  itemSelected?.createdOn
-                    | formatvalue : formModel : 'createdOn'
-                    | async
-                "
-              ></span>
-            </div>
-            <div class="d-flex">
-              <span>
-                <codx-label
-                  class="label-colon"
-                  fiedName="Deadline"
-                  [formModel]="formModel"
-                ></codx-label
-              ></span>
-              <span
-                [innerHTML]="
-                  itemSelected?.deadline
-                    | formatvalue : formModel : 'deadline'
-                    | async
-                "
-              ></span>
-            </div>
-          </div>
-          <div class="d-flex flex-row align-items-start">
-            <codx-imgs
-              [width]="35"
-              [objectId]="itemSelected.createdBy"
-              ojectType="AD_Users"
-              [numberImages]="1"
-            >
-            </codx-imgs>
-          </div>
-        </div>
+            
+            <div class="d-flex flex-column mb-2">
+              <div class="d-flex align-items-center mb-1">
+                <span class="fw-bold text-dark text-nowrap">
+                  <codx-label
+                    class="label-colon"
+                    fiedName="RefID"
+                    [formModel]="formModel"
+                  ></codx-label
+                ></span>
+                <span class="text-gray-700"
+                  [innerHTML]="
+                    itemSelected?.refID
+                      | formatvalue : formModel : 'refID'
+                      | async
+                  "
+                ></span>
+              </div>
+              <div class="d-flex align-items-center mb-1">
+                <span class="text-dark fw-bold text-nowrap">
+                  <codx-label
+                    class="label-colon"
+                    fiedName="CustomerID"
+                    [formModel]="formModel"
+                  ></codx-label
+                ></span>
+                <span
+                  class="icon-corporate_fare text-primary icon-16 me-2"
+                ></span>
+                <span
+                  [innerHTML]="
+                    itemSelected?.customerID
+                      | formatvalue : formModel : 'customerID'
+                      | async
+                  "
+                ></span>
+              </div>
 
-        <div class="d-flex flex-column py-3">
-          <div class="d-flex row">
-            <div class="d-flex col-6">
-              <span>
-                <codx-label
-                  class="label-colon"
-                  fiedName="RefID"
-                  [formModel]="formModel"
-                ></codx-label
-              ></span>
-              <span
-                [innerHTML]="
-                  itemSelected?.refID
-                    | formatvalue : formModel : 'refID'
-                    | async
-                "
-              ></span>
             </div>
-            <div class="d-flex col-6">
-              <span>
+          </div>
+          <div class="d-flex flex-column w-150px min-w-150px">
+            
+            <div class="d-flex align-items-center"></div>
+            <div class="d-flex justify-content-end align-items-center mb-1">
+              <span class="text-dark fw-bold">
                 <codx-label
                   class="label-colon"
                   fiedName="CurrencyID"
                   [formModel]="formModel"
                 ></codx-label
               ></span>
-              <span
+              <span class="text-gray-700"
                 [innerHTML]="
                   itemSelected?.currencyID
                     | formatvalue : formModel : 'currencyID'
@@ -160,36 +179,15 @@
                 "
               ></span>
             </div>
-          </div>
-          <div class="d-flex row">
-            <div class="d-flex col-6">
-              <span>
-                <codx-label
-                  class="label-colon"
-                  fiedName="CustomerID"
-                  [formModel]="formModel"
-                ></codx-label
-              ></span>
-              <span
-                class="icon-corporate_fare text-primary icon-16 me-2"
-              ></span>
-              <span
-                [innerHTML]="
-                  itemSelected?.customerID
-                    | formatvalue : formModel : 'customerID'
-                    | async
-                "
-              ></span>
-            </div>
-            <div class="d-flex col-6">
-              <span>
+            <div class="d-flex justify-content-end align-items-center mb-1">
+              <span class="text-dark fw-bold">
                 <codx-label
                   class="label-colon"
                   fiedName="ExchangeRate"
                   [formModel]="formModel"
                 ></codx-label
               ></span>
-              <span
+              <span class="text-gray-700"
                 [innerHTML]="
                   itemSelected?.exchangeRate
                     | formatvalue : formModel : 'exchangeRate'
@@ -198,6 +196,7 @@
               ></span>
             </div>
           </div>
+          
         </div>
 
         <div *ngIf="contact" class="d-flex flex-grow-1 mt-4 mb-4">
