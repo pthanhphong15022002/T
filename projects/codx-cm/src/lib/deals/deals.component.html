@@ -188,11 +188,10 @@
     [imageObjName]="data?.customerName"
     [imageReferType]="'avt'"
     [imageWidth]="35"
-    imgCss="me-4"
+    imgCss="me-3"
     [imageObjType]="'CM_Customers'"
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
-    [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
     [title]="data?.customerName"
@@ -237,7 +236,7 @@
       ></span>
     </div>
     <div class="row mb-1 mx-0">
-      <div class="col-5 ps-0 d-flex align-items-start">
+      <div class="col-4 ps-0 d-flex align-items-start">
         <span class="icon-monetization_on icon-16 text-warning me-1"></span>
         <span class="line-clamp line-clamp-1"
           [innerHTML]="
@@ -245,7 +244,7 @@
           "
         ></span>
       </div>
-      <div class="col-3 d-flex align-items-center">
+      <div class="col-4 d-flex align-items-center">
         <span class="icon-check_circle icon-16 text-green me-1"></span>
         <span class="line-clamp line-clamp-1"
           [innerHTML]="

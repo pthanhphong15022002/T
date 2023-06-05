@@ -11,12 +11,10 @@
   >
     <ng-template #header let-data>
       <div class="d-flex justify-content-between">
-        <div class="text-info">
-
-          <div>
-            <i class="icon-add_shopping_cart icon-16 me-2 "></i>
-            <span
-            class="text-gray-700 fs-4"
+        <div class="text-info d-flex align-items-center">
+          <i class="icon-add_shopping_cart icon-18 me-2 text-gray-700"></i>
+          <span
+            class="text-dark fs-6 fw-bold"
             #businessLineID
             [innerHTML]="
             dataSelected?.businessLineID
@@ -29,7 +27,6 @@
                 | async
             "
           ></span>
-          </div>
         </div>
         <div></div>
         <div>
@@ -50,9 +47,7 @@
           <div class="w-100 d-flex flex-column">
         <div class="d-flex align-items-top justify-content-between">
           <div class="w-100 d-flex flex-column">
-            <div class="fs-2 fw-bold mb-2">
-              <div
-              class="text-gray-600"
+            <div class="fw-bold text-dark fs-5 mb-2"
               #customerName
               [innerHTML]="
                 dataSelected?.customerName
@@ -65,12 +60,8 @@
                   | async
               "
             ></div>
-            </div>
-
-            <div class="d-flex align-items-top justify-content-start mb-2">
-            </div>
-
-            <div class="d-flex align-items-top justify-content-start mb-2">
+            
+            <div class="d-flex align-items-top justify-content-start mb-1">
               <codx-label
                 default="Cơ hội:"
                 class="text-dark fw-bold me-2"
@@ -91,7 +82,7 @@
               "
             ></span>
             </div>
-            <div class="d-flex align-items-top mb-2">
+            <div class="d-flex align-items-top mb-1">
               <codx-label
                 default="Lĩnh vực hoạt động:"
                 class="text-dark fw-bold me-2"
@@ -112,10 +103,10 @@
           ></span>
 
             </div>
-            <div class="d-flex align-items-top justify-content-start mb-2">
+            <div class="d-flex align-items-top justify-content-start mb-1">
               <codx-label
                 default="Nhu cầu:"
-                class="text-dark fw-bold me-2"
+                class="text-dark fw-bold me-2 text-nowrap"
               ></codx-label>
               <span
               class="text-gray-700"
@@ -132,7 +123,7 @@
               "
             ></span>
             </div>
-            <div class="mb-2">
+            <div class="mb-1">
               <codx-tag
                 [entityName]="formModel.entityName"
                 [disabled]="true"
@@ -141,7 +132,7 @@
               >
               </codx-tag>
             </div>
-            <div class="d-flex flex-wrap align-items-top mb-2">
+            <div class="d-flex flex-wrap align-items-top mb-1">
               <div class="d-flex align-items-center me-6 mb-1">
                 <codx-label
                 [formModel]="formModel"
@@ -166,7 +157,7 @@
               </div>
             </div>
           </div>
-          <div class="w-150px min-w-150px d-flex flex-column">
+          <div class="w-175px min-w-175px d-flex flex-column">
             <div class="d-flex flex-column">
               <div class="d-flex align-items-top justify-content-end mb-2">
                 <span class="icon-monetization_on pe-1 text-warning"></span>
@@ -209,10 +200,12 @@
 
                 </div>
               </div>
-              <div class="d-flex flex-column align-items-top">
+              <div class="d-flex flex-column align-items-top mt-3">
                 <div class="d-flex justify-content-end">
-                  <codx-label default="Bán hàng" class="text-dark fw-bold mb-1"></codx-label>/
-                  <codx-label default="Tư vấn:" class="text-dark fw-bold mb-1"></codx-label>
+                  <codx-label
+                    default="Bán hàng/Tư vấn"
+                    class="text-dark fw-bold mb-2"
+                  ></codx-label>
                 </div>
                 <div class="d-flex justify-content-end">
                   <codx-imgs
@@ -264,6 +257,7 @@
   <codx-tab-deal-detail
     [tabClicked]="tabClicked"
     [dataSelected]="dataSelected"
+    (saveAssign)="saveAssign($event)"
   ></codx-tab-deal-detail>
 </ng-template>
 <ng-template #tabs let-data>
