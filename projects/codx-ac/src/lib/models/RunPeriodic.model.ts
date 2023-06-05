@@ -19,5 +19,8 @@ export class RunPeriodic {
     modifiedOn: any;
     modifiedBy: any;
     paras: any;
+    itemGroupID: any;
+    warehouseID: any;
+    accountID: any;
     itemID: any;
   }
