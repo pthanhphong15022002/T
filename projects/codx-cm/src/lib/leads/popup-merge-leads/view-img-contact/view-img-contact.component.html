@@ -17,7 +17,7 @@
       </span>
     </span>
     <div
-      class="contain"
+      class="contain-1"
       [style]="'width: ' + sizeImg + 'px;' + 'height: ' + sizeImg + 'px;'"
       #search="ngbPopover"
       (click)="seachUser($event, lstContact, search)"
@@ -39,12 +39,12 @@
           objectType="'CM_Contacts'"
         ></codx-img>
         <div class="d-flex flex-column ms-1">
-          <div class="text-dark fw-bold ">{{ item.contactName }}</div>
+          <div class="text-dark fw-bold">{{ item.contactName }}</div>
           <div class="text-dark text-gray-600">{{ item?.jobTitle }}</div>
           <div class="mb-1 d-flex align-items-center" *ngIf="item?.mobile">
             <span
               [ngClass]="
-              item.allowCall
+                item.allowCall
                   ? 'icon-phone_android text-primary'
                   : 'icon-phonelink_erase'
               "
@@ -59,7 +59,9 @@
           <div class="d-flex align-items-center" *ngIf="item?.personalEmail">
             <span
               [ngClass]="
-              item.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'
+                item.allowEmail
+                  ? 'icon-email text-primary'
+                  : 'icon-print_disabled'
               "
               class="icon-16 me-1 text-gray-900"
             ></span>
@@ -77,63 +79,68 @@
 
 <ng-template #searchLst>
   <div class="popup-search" *ngIf="listUserSearch != null">
-    <div class="fw-bold">
+    <div class="heard">
       <codx-label
         name="lblContacts"
         [formModel]="formModel"
         default="Danh sách liên hệ"
       ></codx-label>
-      <span class="ms-1">{{ "(" + listUserSearch.length + ")" }}</span>
+      <span class="ms-1"> {{ "(" + listUserSearch.length + ")" }}</span>
     </div>
-    <div *ngIf="lstContact.length > 0">
+
+    <div class="search">
       <codx-searchbar (searchEvent)="searchName($event)"></codx-searchbar>
     </div>
-    <ng-container *ngIf="listUserSearch != null && listUserSearch.length > 0">
-      <div
-        class="d-flex align-items-start user-card p-3"
-        *ngFor="let item of listUserSearch"
-      >
-        <div class="me-3">
-          <codx-img
-            [objectName]="item?.contactName"
-            [objectId]="item?.recID"
-            objectType="CM_Contacts"
-          >
-          </codx-img>
-        </div>
-        <div class="d-flex flex-column flex-grow-1">
-          <div class="text-dark fw-bold">{{ item?.contactName }}</div>
-          <div class="text-gray-600 fs-7">{{ item?.jobTitle }}</div>
-          <div class="mb-1 d-flex align-items-center" *ngIf="item?.mobile">
-            <span
-              [ngClass]="
-              item.allowCall
-                  ? 'icon-phone_android text-primary'
-                  : 'icon-phonelink_erase'
-              "
-              class="icon-16 me-1"
-            ></span>
-            <span
-              [ngClass]="item.allowCall ? 'text-primary' : ''"
-              class="text-gray-900"
-              >{{ item.mobile }}</span
+    <div class="list-user">
+      <ng-container *ngIf="listUserSearch != null && listUserSearch.length > 0">
+        <div
+          class="contains-user d-flex align-items-start user-card p-3"
+          *ngFor="let item of listUserSearch"
+        >
+          <div class="me-3">
+            <codx-img
+              [objectName]="item?.contactName"
+              [objectId]="item?.recID"
+              objectType="CM_Contacts"
             >
+            </codx-img>
           </div>
-          <div class="d-flex align-items-center" *ngIf="item?.personalEmail">
-            <span
-              [ngClass]="
-              item.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'
-              "
-              class="icon-16 me-1 text-gray-900"
-            ></span>
-            <span
-              [ngClass]="item.allowEmail ? 'text-primary' : ''"
-              class="text-gray-900"
-              >{{ item.personalEmail }}</span
-            >
+          <div class="d-flex flex-column flex-grow-1">
+            <div class="text-dark fw-bold">{{ item?.contactName }}</div>
+            <div class="text-gray-600 fs-7">{{ item?.jobTitle }}</div>
+            <div class="mb-1 d-flex align-items-center" *ngIf="item?.mobile">
+              <span
+                [ngClass]="
+                  item.allowCall
+                    ? 'icon-phone_android text-primary'
+                    : 'icon-phonelink_erase'
+                "
+                class="icon-16 me-1"
+              ></span>
+              <span
+                [ngClass]="item.allowCall ? 'text-primary' : ''"
+                class="text-gray-900"
+                >{{ item.mobile }}</span
+              >
+            </div>
+            <div class="d-flex align-items-center" *ngIf="item?.personalEmail">
+              <span
+                [ngClass]="
+                  item.allowEmail
+                    ? 'icon-email text-primary'
+                    : 'icon-print_disabled'
+                "
+                class="icon-16 me-1 text-gray-900"
+              ></span>
+              <span
+                [ngClass]="item.allowEmail ? 'text-primary' : ''"
+                class="text-gray-900"
+                >{{ item.personalEmail }}</span
+              >
+            </div>
           </div>
         </div>
-      </div>
-    </ng-container>
+      </ng-container>
+    </div>
   </div>
 </ng-template>
