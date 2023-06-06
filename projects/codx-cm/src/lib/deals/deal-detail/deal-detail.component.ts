@@ -9,7 +9,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ApiHttpService, CRUDService, FormModel } from 'codx-core';
+import { ApiHttpService, CRUDService, CacheService, FormModel } from 'codx-core';
 import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/cm_model';
@@ -84,16 +84,17 @@ export class DealDetailComponent implements OnInit {
 
   nameDetail = '';
   tabClicked = '';
-  test: any;
+  contactPerson:any;
 
   tabDetail = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
-    private api: ApiHttpService
+    private api: ApiHttpService,
+    private cache: CacheService,
   ) {
     this.listTab(this.funcID);
-    // this.test='Dịch vụ;VIP;Năm 2024';
+    this.executeApiCalls();
   }
 
   ngOnInit(): void {}
@@ -109,6 +110,8 @@ export class DealDetailComponent implements OnInit {
       };
       this.tabControl.splice(index, 1, contract);
     }
+
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -118,6 +121,7 @@ export class DealDetailComponent implements OnInit {
       this.getContractByDeaID();
     }
   }
+
 
   listTab(funcID) {
     this.tabDetail = [
@@ -158,6 +162,11 @@ export class DealDetailComponent implements OnInit {
         isActive: false,
       },
     ];
+  }
+  async executeApiCalls() {
+    try {
+      this.formModelCustomer = await this.codxCmService.getFormModel('CM0101');
+    } catch (error) {}
   }
 
   changeTab(e) {

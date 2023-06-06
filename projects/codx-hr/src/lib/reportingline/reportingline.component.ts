@@ -49,6 +49,7 @@ export class ReportinglineComponent extends UIComponent {
   request: ResourceModel;
   codxTreeView: CodxTreeviewComponent = null;
   isCorporation: boolean;
+  grvSetup: any[] = [];
   constructor(
     inject: Injector,
     private adService: CodxAdService
@@ -66,6 +67,24 @@ export class ReportinglineComponent extends UIComponent {
           this.isCorporation = res.isCorporation;
         }
       });
+    this.getFunction(this.funcID);
+
+  }
+  getFunction(funcID: string) {
+    if (funcID) {
+      this.cache.functionList(funcID).subscribe((func: any) => {
+        if (func) this.funcID = func;
+        if (func?.formName && func?.gridViewName) {
+          this.cache
+            .gridViewSetup(func.formName, func.gridViewName)
+            .subscribe((grd: any) => {
+              if (grd) {
+                this.grvSetup = grd;
+              }
+            });
+        }
+      });
+    }
   }
   ngAfterViewInit(): void {
     this.button = {

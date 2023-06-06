@@ -208,6 +208,8 @@ export class AddContractsComponent implements OnInit {
       // /template: this.columnVatid,
     ];
   }
+  ngAfterViewInit(){
+  }
   // getFormModel() {
   //   this.cache
   //     .gridViewSetup(
@@ -608,7 +610,9 @@ export class AddContractsComponent implements OnInit {
     );
 
     popupPayment.closed.subscribe((res) => {
-      this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+      if(res){
+        this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+      }
     });
   }
 
@@ -681,7 +685,12 @@ export class AddContractsComponent implements OnInit {
     );
 
     popupPaymentHistory.closed.subscribe((res) => {
-      this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+      if(res){
+        this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+      }
+      
     });
   }
+
+ 
 }

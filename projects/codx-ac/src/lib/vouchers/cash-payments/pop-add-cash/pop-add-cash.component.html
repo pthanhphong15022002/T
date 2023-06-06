@@ -288,7 +288,7 @@
         </button>
       </div>
     </div>
-    <div class="row" *ngIf="cashpaymentline.length == 0" style="height: 40px;background-color: whitesmoke;">
+    <div class="row" *ngIf="cashpaymentline.length == 0" style="height: 30px;background-color: whitesmoke;">
     </div>
   </ng-container>
   <!-- <ng-container
@@ -862,7 +862,7 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="settledInvoices.length == 0" style="height: 40px;background-color: whitesmoke;">
+  <div class="row" *ngIf="settledInvoices.length == 0" style="height: 30px;background-color: whitesmoke;">
   </div>
 </ng-template>
 <!-- End: VoucherLineRefs -->
@@ -917,7 +917,7 @@
         </div>
         <ng-container *ngIf="form.formGroup">
           <div *ngIf="action == 'add'" class="me-3 input-circle input-border-0 w-350px">
-            <codx-input [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
+            <codx-input aria-disabled ="true" [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
               (valueChange)="changeType($event)">
             </codx-input>
           </div>
