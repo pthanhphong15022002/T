@@ -44,7 +44,7 @@
           ></span>
         </div>
         <div class="d-flex align-items-center justify-content-end ms-5">
-          <span class="me-2">
+          <span>
             <codx-vll
             *ngIf="vllStatus"
             [name]="vllStatus"
@@ -52,7 +52,7 @@
             [value]="itemSelected?.status"
             [showText]="true"
             [showBgColor]="true"
-            class="badge badge-light badge-md fs-7"
+            class="badge badge-light badge-sm"
           >
           </codx-vll>
           </span>
@@ -67,7 +67,7 @@
       </div>
     </ng-template>
     <ng-template #body>
-      <div class="container_detail mt-3">
+      <div class="container_detail mt-2">
         <div class="d-flex justify-content-between">
           <div class="d-flex flex-column w-100">
             <div class="d-flex align-items-center mb-2">
@@ -121,7 +121,7 @@
               </div>
             </div>
             
-            <div class="d-flex flex-column mb-2">
+            <div class="d-flex flex-column">
               <div class="d-flex align-items-center mb-1">
                 <span class="fw-bold text-dark text-nowrap">
                   <codx-label
@@ -199,11 +199,11 @@
           
         </div>
 
-        <div *ngIf="contact" class="d-flex flex-grow-1 mt-4 mb-4">
+        <div *ngIf="contact" class="d-flex flex-grow-1 mt-2 mb-2">
           <div class="me-3">
             <codx-img
               [referType]="'avt'"
-              [width]="50"
+              [width]="40"
               [objectId]="itemSelected?.contactID"
               objectType="CM_Contacts"
               [imgOn]="contact?.modifiedOn"
@@ -214,7 +214,7 @@
           <div class="d-flex flex-column flex-grow-1">
             <div class="d-flex justify-content-between">
               <div class="d-flex flex-column">
-                <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+                <div class="fw-bold fs-6 text-dark mb-1">
                   <span
                     #contactName
                     [innerHTML]="
@@ -229,12 +229,12 @@
                     "
                   ></span>
                 </div>
-                <div class="text-gray-500 me-4 mb-1"></div>
+                
                 <ng-container>
                   <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center me-4">
+                    <div class="d-flex align-items-center me-5">
                       <span
-                        class="icon-phone_android icon-16 text-gray-700 me-2"
+                        class="icon-phone_android icon-16 text-gray-600 me-1"
                       ></span>
                       <div div class="text-gray-700">
                         <span
@@ -254,9 +254,9 @@
                     </div>
                     <div class="d-flex align-items-center">
                       <span
-                        class="icon-email icon-16 text-gray-700 me-2"
+                        class="icon-email icon-16 text-gray-600 me-1"
                       ></span>
-                      <div div class="font-size-sm">
+                      <div class="text-gray-700">
                         <span
                           #email
                           [innerHTML]="
@@ -280,7 +280,7 @@
         </div>
       </div>
 
-      <div class="mt-6 mb-3 text-primary fw-bold">
+      <div class="mt-5 mb-2 text-primary fs-6 fw-bold">
         <codx-label
           name="lblTaskName"
           [formModel]="formModel"
@@ -302,135 +302,135 @@
         [dataSource]="dataSource"
         [autoLoad]="false"
         rowHeight="40"
+        [height]="'auto'"
         predicates="TransID=@0"
         [dataValues]="itemSelected.recID"
       ></codx-gridview-v2>
 
-      <div #tabsNote class="row mt-5">
-        <div class="form-group col-8">
+      <div #tabsNote class="d-flex justify-content-between mt-3">
+        <div class="form-group w-100">
           <codx-label fiedName="Memo" [formModel]="formModel"></codx-label>
           <div
-            class="text-gray-700"
+            class="text-gray-700 mb-1"
             *ngIf="itemSelected?.memo"
             [innerHTML]="sanitizer.bypassSecurityTrustHtml(itemSelected?.memo)"
           ></div>
-          <div
+          <div class="text-gray-700 mb-1"
             *ngIf="!itemSelected?.memo"
             [innerHTML]="
               itemSelected?.memo | formatvalue : formModel : 'memo' | async
             "
           ></div>
         </div>
-        <div
-          class="col-4 fw-bolder fs-6">
-        <div class="d-flex justify-content-between">
-          <div class="">
-            <codx-label
-              class="label-colon"
-              fiedName="TotalAmt"
-              [formModel]="formModel"
-            ></codx-label>
+        <div class="w-300px min-w-300px ms-6">
+          <div class="d-flex align-items-center">
+            <div class="fw-bold text-dark">
+              <codx-label
+                class="label-colon"
+                fiedName="TotalAmt"
+                [formModel]="formModel"
+              ></codx-label>
+            </div>
+            <div class="d-flex align-items-center text-gray-700">
+              <span
+                class="me-1"
+                [innerHTML]="
+                itemSelected.totalSalesAmt
+                    | formatvalue : formModel : 'totalSalesAmt'
+                    | async
+                "
+              ></span>
+              <span
+                class="codx-label"
+                [innerHTML]="
+                itemSelected.currencyID
+                    | formatvalue : formModel : 'currencyID'
+                    | async
+                "
+              ></span>
+            </div>
           </div>
-          <div class="d-flex justify-content-end">
-            <span
-              class="me-3"
-              [innerHTML]="
-              itemSelected.totalSalesAmt
-                  | formatvalue : formModel : 'totalSalesAmt'
-                  | async
-              "
-            ></span>
-            <span
-              class="codx-label"
-              [innerHTML]="
-              itemSelected.currencyID
-                  | formatvalue : formModel : 'currencyID'
-                  | async
-              "
-            ></span>
+          <div class="d-flex align-items-center">
+            <div class="fw-bold text-dark">
+              <codx-label
+                class="label-colon"
+                fiedName="DiscAmt"
+                [formModel]="formModel"
+              ></codx-label>
+            </div>
+            <div class="d-flex align-items-center text-gray-700">
+              <span
+                class="me-1"
+                [innerHTML]="
+                itemSelected.discAmt
+                    | formatvalue : formModel : 'DiscAmt'
+                    | async
+                "
+              ></span>
+              <span
+                class="codx-label"
+                [innerHTML]="
+                itemSelected.currencyID
+                    | formatvalue : formModel : 'currencyID'
+                    | async
+                "
+              ></span>
+            </div>
           </div>
-        </div>
-        <div class="d-flex justify-content-between">
-          <div>
-            <codx-label
-              class="label-colon"
-              fiedName="DiscAmt"
-              [formModel]="formModel"
-            ></codx-label>
+          <div class="d-flex align-items-center">
+            <div class="fw-bold text-dark">
+              <codx-label
+                class="label-colon"
+                fiedName="totalTaxAmt"
+                [formModel]="formModel"
+              ></codx-label>
+            </div>
+            <div class="d-flex align-items-center text-gray-700">
+              <span
+                class="me-1"
+                [innerHTML]="
+                itemSelected?.totalTaxAmt
+                    | formatvalue : formModel : 'totalTaxAmt'
+                    | async
+                "
+              ></span>
+              <span
+                class="codx-label"
+                [innerHTML]="
+                itemSelected.currencyID
+                    | formatvalue : formModel : 'currencyID'
+                    | async
+                "
+              ></span>
+            </div>
           </div>
-          <div class="d-flex justify-content-end">
-            <span
-              class="me-3"
-              [innerHTML]="
-              itemSelected.discAmt
-                  | formatvalue : formModel : 'DiscAmt'
-                  | async
-              "
-            ></span>
-            <span
-              class="codx-label"
-              [innerHTML]="
-              itemSelected.currencyID
-                  | formatvalue : formModel : 'currencyID'
-                  | async
-              "
-            ></span>
+          <div class="d-flex align-items-center">
+            <div class="fw-bold text-dark">
+              <codx-label
+                class="label-colon text-danger"
+                fiedName="TotalAmt"
+                [formModel]="formModel"
+              ></codx-label>
+            </div>
+            <div class="d-flex align-items-center">
+              <span
+                class="me-3"
+                [innerHTML]="
+                itemSelected.totalAmt
+                    | formatvalue : formModel : 'TotalAmt'
+                    | async
+                "
+              ></span>
+              <span
+                class="codx-label"
+                [innerHTML]="
+                itemSelected.currencyID
+                    | formatvalue : formModel : 'currencyID'
+                    | async
+                "
+              ></span>
+            </div>
           </div>
-        </div>
-        <div class="d-flex justify-content-between">
-          <div>
-            <codx-label
-              class="label-colon"
-              fiedName="totalTaxAmt"
-              [formModel]="formModel"
-            ></codx-label>
-          </div>
-          <div class="d-flex justify-content-end">
-            <span
-              class="me-3"
-              [innerHTML]="
-              itemSelected?.totalTaxAmt
-                  | formatvalue : formModel : 'totalTaxAmt'
-                  | async
-              "
-            ></span>
-            <span
-              class="codx-label"
-              [innerHTML]="
-              itemSelected.currencyID
-                  | formatvalue : formModel : 'currencyID'
-                  | async
-              "
-            ></span>
-          </div>
-        </div>
-        <div class="d-flex justify-content-between">
-          <div class="">
-            <codx-label
-              class="label-colon text-danger"
-              fiedName="TotalAmt"
-              [formModel]="formModel"
-            ></codx-label>
-          </div>
-          <div class="d-flex justify-content-end">
-            <span
-              class="me-3"
-              [innerHTML]="
-              itemSelected.totalAmt
-                  | formatvalue : formModel : 'TotalAmt'
-                  | async
-              "
-            ></span>
-            <span
-              class="codx-label"
-              [innerHTML]="
-              itemSelected.currencyID
-                  | formatvalue : formModel : 'currencyID'
-                  | async
-              "
-            ></span>
-          </div>
-        </div>
         </div>
       </div>
     </ng-template>

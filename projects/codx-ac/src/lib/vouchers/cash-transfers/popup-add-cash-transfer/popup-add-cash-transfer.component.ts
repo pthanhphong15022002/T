@@ -31,6 +31,9 @@ export class PopupAddCashTransferComponent extends UIComponent {
   @ViewChild('cbxCashAcctID') cbxCashAcctID: CodxInputComponent;
   @ViewChild('cbxOffsetAcctID') cbxOffsetAcctID: CodxInputComponent;
   @ViewChild('switchHasInvoice') switchHasInvoice: SwitchComponent;
+  @ViewChild('diM1') diM1: CodxInputComponent;
+  @ViewChild('diM2') diM2: CodxInputComponent;
+  @ViewChild('diM3') diM3: CodxInputComponent;
 
   cashTransfer: ICashTransfer = {} as ICashTransfer;
   vatInvoice: IVATInvoice = {} as IVATInvoice;
@@ -129,8 +132,9 @@ export class PopupAddCashTransferComponent extends UIComponent {
           'drAcctID',
           this.cbxCashAcctID,
           'AccountID',
-          this.form,
-          'cashAcctID'
+          this.form.formGroup,
+          'cashAcctID',
+          this.isEdit
         );
         this.journalService.loadComboboxBy067(
           this.journal,
@@ -138,8 +142,39 @@ export class PopupAddCashTransferComponent extends UIComponent {
           'crAcctID',
           this.cbxOffsetAcctID,
           'AccountID',
-          this.form,
-          'offsetAcctID'
+          this.form.formGroup,
+          'offsetAcctID',
+          this.isEdit
+        );
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'diM1Control',
+          'diM1',
+          this.diM1,
+          'DepartmentID',
+          this.fgVatInvoice,
+          'diM1',
+          this.isEdit
+        );
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'diM2Control',
+          'diM2',
+          this.diM2,
+          'CostCenterID',
+          this.fgVatInvoice,
+          'diM2',
+          this.isEdit
+        );
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'diM3Control',
+          'diM3',
+          this.diM3,
+          'CostItemID',
+          this.fgVatInvoice,
+          'diM3',
+          this.isEdit
         );
 
         if (this.journal.assignRule === '2') {

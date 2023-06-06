@@ -310,8 +310,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       .execSv("SV",'SV', 'QuestionsBusiness', 'GetByRecIDAsync', recID)
       .subscribe((res: any) => {
         if (res && res[0] && res[0].length > 0) {
-          
-          debugger
           this.questions = this.getHierarchy(res[0], res[1]);
           this.SVServices.getFilesByObjectTypeRefer(
             this.functionList.entityName,
@@ -412,7 +410,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
                 }
               }
             }
-            else
+            else if(dtS[i].children[a].answers)
             {
               var check = dtS[i].children[a].answers.filter(x=>x.other);
               if(check && check.length>0) dtS[i].children[a].other = true;
@@ -1204,6 +1202,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   addCard(itemActive, seqNoSession = null, category) {
+    debugger
     if (itemActive) {
       if (category == 'S') this.addSession(itemActive, seqNoSession);
       else this.addNoSession(itemActive, seqNoSession, category);

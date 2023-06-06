@@ -1,44 +1,43 @@
 <ng-template #subHeader let-form>
   <div class="d-flex flex-column">
     <div class="pb-2" *ngIf="cases?.caseNo">
-      <span class="me-2">
-        {{gridViewSetup['CaseNo']?.headerText}} |
+      <span> {{ gridViewSetup["CaseNo"]?.headerText }}: </span>
+      <span class="ps-2 pe-2">
+        {{ cases?.caseNo }}
       </span>
-      <span class="me-2">
-       {{cases?.caseNo}} |
-      </span>
+      |
       <span
-      class="fs-7"
-      #createdOn
-      [innerHTML]="
-      cases?.createdOn
-          | formatvalue
-            : formModel
-            : 'createdOn'
-            : createdOn
-            : 'CMCases'
-            : 'grvCMCases'
-          | async
-      "
-    ></span>
+        class="fs-7 ps-2 pe-2"
+        #createdOn
+        [innerHTML]="
+          cases?.createdOn
+            | formatvalue : formModel : 'createdOn' : createdOn
+            | async
+        "
+      ></span>
+      |
+      <span class="text-gray-700 ps-2">
+        {{ cases?.createdOn | date : "mediumTime" }}
+      </span>
     </div>
-    <div class="pb-2">    <codx-tag
-      field="tags"
-      [entityName]="formModel.entityName"
-      [isEdit]="true"
-      [disabled]="false"
-      (valueChange)="valueChange($event)"
-    ></codx-tag></div>
+    <div class="pb-2">
+      <codx-tag
+        field="tags"
+        [entityName]="formModel.entityName"
+        [isEdit]="true"
+        [disabled]="false"
+        (valueChange)="valueChange($event)"
+      ></codx-tag>
+    </div>
   </div>
 </ng-template>
 
 <ng-template #body let-form>
   <div class="row">
-    <div class="col-6">
+    <div class="col-12">
       <div class="form-group">
         <codx-label
           fiedName="CaseName"
-          default="Tóm tắt"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -51,25 +50,6 @@
           (valueChange)="valueChange($event)"
         >
         </codx-input>
-      </div>
-    </div>
-    <div class="col-6" *ngIf="listCbxProcess.length > 0 && listCbxProcess != null">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          fiedName="ProcessID"
-          [Group]="form.formGroup"
-          default="Quy trình xử lý"
-        >
-        </codx-label>
-        <ejs-combobox
-        id="recID"
-        [dataSource]="listCbxProcess"
-        [fields]="fieldCbxProcess"
-        [enabled]=" actionEdit !== action "
-        [value]="cases?.processID"
-        (valueChange)="cbxProcessChange($event,'processID')"
-      ></ejs-combobox>
       </div>
     </div>
   </div>
@@ -93,106 +73,203 @@
         </codx-input>
       </div>
     </div>
+
     <div class="col-6">
       <div class="form-group">
         <codx-label
-          fiedName="OccuredOn"
-          default="Thời gian xảy ra thực tế"
           [formModel]="form.formModel"
+          fiedName="ProcessID"
           [Group]="form.formGroup"
         >
         </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="occuredOn"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
+        <div>
+          <codx-input
+            [formModel]="form.formModel"
+            field="processID"
+            [model]="{ ApplyFor: applyFor }"
+            [disabled]="actionEdit === action"
+            [crrValue]="cases?.processID"
+            (valueChange)="cbxProcessChange($event)"
+          >
+          </codx-input>
+        </div>
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="col-6" >
-      <div class="form-group" *ngIf="listCbxContacts.length > 0 && listCbxContacts != null">
-        <codx-label
-          fiedName="ContactID"
-          default="Liên hệ"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-label>
-        <ejs-combobox
-        id="recID"
-        [dataSource]="listCbxContacts"
-        [fields]="fieldCbxContacts"
-        [value]="contactID"
-        (valueChange)="cbxChange($event,'contactID')"
-      ></ejs-combobox>
-
-      </div>
-    </div>
-    <div class="col-6" >
+    <div class="col-6">
       <div class="form-group">
         <codx-label
-          fiedName="OccuredOn"
-          default="Thời gian phát hiện"
+          fiedName="ContactID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
         </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="occuredOn"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
+        <div *ngIf="listCbxContacts.length > 0 && listCbxContacts != null">
+          <ejs-combobox
+            id="recID"
+            [dataSource]="listCbxContacts"
+            [fields]="fieldCbxContacts"
+            [value]="contactID"
+            (valueChange)="cbxChange($event, 'contactID')"
+          ></ejs-combobox>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row">
+
     <div class="col-6">
       <div class="form-group">
         <codx-label
           [formModel]="form.formModel"
           fiedName="ChannelID"
           [Group]="form.formGroup"
-          default="Kênh"
         >
         </codx-label>
-        <ejs-combobox
-        id="recID"
-        [dataSource]="listCbxCampaigns"
-        [fields]="fieldCbxCampaigns"
-        (valueChange)="cbxChange($event,'channelID')"
-      ></ejs-combobox>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="channelID"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
       </div>
     </div>
+  </div>
+
+  <div class="row">
     <div class="col-6">
       <div class="form-group">
         <codx-label
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          fiedName="OccuredPlace"
-          default="Ví trí cụ thể"
+          fiedName="State"
         >
         </codx-label>
-
         <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="occuredPlace"
-        (valueChange)="valueChange($event)"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="state"
+          crrValue="2"
+          [crrValue]="cases?.state"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
+      </div>
+    </div>
 
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="Severity"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="severity"
+          [crrValue]="cases?.severity"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="col-6" >
-      <div class="form-group" >
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="OccuredPlace">
+        </codx-label>
+
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="occuredPlace"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="Priority"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="priority"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="OccuredOn"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="occuredOn"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="EndDate"
+        >
+        </codx-label>
+        <codx-input
+          type="datetime"
+          field="endDate"
+          format="d"
+          [crrValue]="cases?.endDate"
+          (valueChange)="valueChangeDate($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="OccuredOn"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="occuredOn"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
         <codx-label
           fiedName="Owner"
           default="Người phụ trách"
@@ -200,94 +277,13 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-    <ejs-combobox [dataSource]="listParticipants"
-    (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
-    [allowFiltering]='true' [value]="owner"></ejs-combobox>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          fiedName="State"
-          default="Tính chất sự cố"
-        >
-        </codx-label>
-        <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="state"
-        crrValue="2"
-        [crrValue]="cases?.state"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-          fiedName="EndDate"
-          default="Ngày đến hạn dự kiến"
-        >
-        </codx-label>
-        <codx-input
-        type="datetime"
-        field="endDate"
-        format="d"
-        [crrValue]="cases?.endDate"
-        (valueChange)="valueChangeDate($event)"
-      >
-      </codx-input>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          fiedName="Severity"
-          default="Mức độ nghiệm trọng"
-        >
-        </codx-label>
-        <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="severity"
-        [crrValue]="cases?.severity"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-    </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          fiedName="Priority"
-          default="Độ ưu tiên"
-        >
-        </codx-label>
-        <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="priority"
-        type="valuelist"
-        refValue="CRM028"
-        [crrValue]="cases?.priority"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
+        <ejs-combobox
+          [dataSource]="listParticipants"
+          (valueChange)="valueChangeOwner($event)"
+          [fields]="fieldCbxParticipants"
+          [allowFiltering]="true"
+          [value]="owner"
+        ></ejs-combobox>
       </div>
     </div>
   </div>
@@ -356,6 +352,46 @@
       </div>
     </div>
   </div>
+  <ng-container>
+    <div
+      class="d-flex align-items-center justify-content-between mt-4"
+      style="float: left; clear: left"
+    >
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+        <div class="fw-bold text-primary">
+          <codx-label
+            fiedName="Attachments"
+            [formModel]="dialog.formModel"
+            default="Tài liệu đính kèm"
+          >
+          </codx-label>
+        </div>
+      </div>
+    </div>
+    <div>
+      <codx-attachment
+        #attachment
+        [objectId]="cases.recID"
+        [objectType]="dialog.formModel.entityName"
+        [referType]="'source'"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        [formModel]="dialog.formModel"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        displayThumb="full"
+        showMessage="0"
+        [dataSelected]="cases"
+      >
+      </codx-attachment>
+    </div>
+  </ng-container>
 </ng-template>
 
 <ng-template #footer let-form>
@@ -369,21 +405,19 @@
       ><span>
         <codx-label
           name="UploadFile"
+          [formModel]="dialog.formModel"
           default="Upload File"
         ></codx-label>
       </span>
     </button>
     <button type="button" class="btn btn-primary ms-1" (click)="saveCases()">
-      <codx-label
-        name="Save"
-        default="Lưu"
-      ></codx-label>
+      <codx-label name="Save" default="Lưu"></codx-label>
     </button>
   </div>
 </ng-template>
 
 <ng-template #tabCustomFieldDetail let-form>
-  <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty ">
+  <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty">
     <ng-container *ngFor="let step of listInstanceSteps">
       <ng-container *ngIf="step?.fields?.length > 0">
         <ng-container *ngFor="let item of step.fields">
@@ -419,20 +453,20 @@
   ></codx-layout-add>
 
   <ng-template #tabGeneralInfoDetail>
-    <ng-container [ngTemplateOutlet]="body"
-    [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    <ng-container
+      [ngTemplateOutlet]="body"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>
   </ng-template>
 
   <ng-template #tabInputInfo>
-    <ng-container [ngTemplateOutlet]="tabCustomFieldDetail"
-    [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    <ng-container
+      [ngTemplateOutlet]="tabCustomFieldDetail"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>
   </ng-template>
 </ng-container>
 
 <ng-template #dataIsEmpty>
-<codx-no-data>
-
-</codx-no-data>
+  <codx-no-data> </codx-no-data>
 </ng-template>

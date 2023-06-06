@@ -29,7 +29,7 @@ export class CodxViewTaskComponent implements OnInit {
   owner = []; //role
   person = []; //role
   listDataLink = [];
-  dataInput: any; //format về như vậy {recID,name,startDate,type, roles, durationHour, durationDay,parentID }
+  dataInput: any; 
   dataProgress: any = null;
 
   isOnlyView = false;
@@ -58,6 +58,7 @@ export class CodxViewTaskComponent implements OnInit {
   isShowUpdate = false;
   user: any;
   dataTree: any;
+  listRefIDAssign: any;
 
   constructor(
     private cache: CacheService,
@@ -77,6 +78,7 @@ export class CodxViewTaskComponent implements OnInit {
     this.isOnlyView = dt?.data?.isOnlyView;
     this.isUpdateProgressGroup = dt?.data?.isUpdateProgressGroup;
     this.listIdRoleInstance = dt?.data?.listIdRoleInstance;
+    this.listRefIDAssign = dt?.data?.listRefIDAssign; // a thảo truyền để lấy listRef của cong việc
     this.getModeFunction();
     this.getTree(); //get tree by refID
   }
@@ -293,14 +295,16 @@ export class CodxViewTaskComponent implements OnInit {
   }
   //ve tree giao viec byRef
   getTree() {
-    let method = 'GetListTaskTreeByRefIDAsync';
-    let data = this.dataInput.recID;
-
-    if (this.type == 'P' || this.type == 'G')
-      //chua lam ne return cho khoi loi
-      // method = 'GetListTaskTreeByListRefIDAsync';
-       //data = JSON.stringify([]) ;
+    if (!this.listRefIDAssign) {
+      this.dataTree = [];
       return;
+    }
+    let method = 'GetListTaskTreeByRefIDAsync';
+    let data = this.listRefIDAssign;
+    if (this.type == 'P' || this.type == 'G') {
+      method = 'GetListTaskTreeByListRefIDAsync';
+      data = JSON.stringify(this.listRefIDAssign.split(';'));
+    }
     this.api
       .execSv<any>('TM', 'ERM.Business.TM', 'TaskBusiness', method, data)
       .subscribe((tree) => {

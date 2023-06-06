@@ -1,15 +1,3 @@
-<!-- <codx-form
-  #form
-  [headerText]="title"
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialogRef"
-  [data]="data"
-  [formModel]="formModel"
-  *ngIf="isAfterRender"
->
-</codx-form> -->
-
 <codx-layout-add #form (setTitle)="setTile(form)" [tabInfo]="tabInfo" [formModel]="dialogRef.formModel"
   [footer]="footer" [dialog]="dialogRef" [openMore]="true" [tabContent]="[positionInfo, description]" [data]="data"
   *ngIf="isAfterRender">
@@ -72,7 +60,7 @@
 <ng-template #description>
   <div class="row form-group">    
     <codx-label fiedName="JobDescription" [formModel]="formModel"></codx-label>
-    <codx-input class="form-control job-desc" [formModel]="formModel" [Group]="formGroup" field="jobDescription">
+    <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="jobDescription">
     </codx-input>
   </div>
 </ng-template>
