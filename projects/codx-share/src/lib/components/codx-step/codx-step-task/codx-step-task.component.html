@@ -3,7 +3,9 @@
     class="d-flex align-items-center justify-content-between me-5"
     *ngIf="isShowStep"
   >
-    <div class="qqq d-flex align-items-center fw-bold w-100 has-action-menu step-content">
+    <div
+      class="qqq d-flex align-items-center fw-bold w-100 has-action-menu step-content"
+    >
       <i class="icon-account_balance icon-20 me-2"></i>
       <span class="fs-5 w-100">{{ currentStep.stepName }}</span>
       <codx-mfunc
@@ -23,7 +25,16 @@
           : 'cursor-not-allowed'
       "
     >
-      <codx-progressbar [progress]="currentStep?.progress || 0"></codx-progressbar>
+      <codx-progressbar
+        [progress]="currentStep?.progress || 0"
+        #popoverDetails="ngbPopover"
+        [ngbPopover]="'Cập nhật tiến độ'"
+        (mouseenter)="popoverDetails.open()"
+        (mouseleave)="popoverDetails.close()"
+        popoverClass="approverStepClass"
+        container="body"
+        placement="top bottom"
+      ></codx-progressbar>
     </div>
   </div>
   <!-- drap drop công việc ngoài-->
@@ -330,7 +341,13 @@
           : 'cursor-not-allowed'
       "
     >
-      <codx-progressbar [progress]="data?.value?.progress"></codx-progressbar>
+      <codx-progressbar
+        [progress]="data?.value?.progress"
+        #p="ngbPopover"
+        [ngbPopover]="'Cập nhật tiến độ'"
+        (mouseenter)="p.open()"
+        (mouseleave)="p.close()"
+      ></codx-progressbar>
     </div>
     <div class="notify" style="min-width: 40px" *ngIf="isShowFile">
       <codx-attachment-temp

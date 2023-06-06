@@ -201,7 +201,7 @@ export class PopupAddJournalComponent
       this.vllIDIMControls069 = res.datas;
 
       this.tempIDIMControls = this.vllIDIMControls069.filter((d) =>
-        this.journal.idimControl?.split(',').includes(d.value)
+        this.journal.idimControl?.split(';').includes(d.value)
       );
     });
 
@@ -364,7 +364,7 @@ export class PopupAddJournalComponent
     // 4: kho
     if (
       this.journalTypes109.includes(this.journal.journalType) &&
-      !this.journal.idimControl?.split(',').includes('4')
+      !this.journal.idimControl?.split(';').includes('4')
     ) {
       this.notiService.notifyCode('AC0015', 0);
       return;
@@ -557,6 +557,7 @@ export class PopupAddJournalComponent
         '',
         {
           selectedOptions: this.journal.idimControl,
+          showAll: false,
         }
       )
       .closed.subscribe(({ event }) => {
@@ -564,7 +565,7 @@ export class PopupAddJournalComponent
 
         this.journal.idimControl = event;
         this.tempIDIMControls = this.vllIDIMControls069.filter((d) =>
-          this.journal.idimControl.split(',').includes(d.value)
+          this.journal.idimControl.split(';').includes(d.value)
         );
       });
   }
