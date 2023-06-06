@@ -28,7 +28,6 @@ export class ViewDetailEappointionsComponent implements OnInit {
   @ViewChild('attachment') attachment;
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
 
-  @Input() funcID;
   @Input() formModel;
   @Input() view: ViewsComponent;
   @Input() itemDetail: any;
@@ -64,7 +63,6 @@ export class ViewDetailEappointionsComponent implements OnInit {
     private router: ActivatedRoute,
     private api: ApiHttpService
   ) {
-    this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.authStore.get();
   }
 

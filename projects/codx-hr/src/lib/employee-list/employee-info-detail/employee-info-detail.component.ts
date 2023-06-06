@@ -599,6 +599,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   filterEDayoffDatavalues;
   //#endregion
 
+  reRender = false;
+
   //#region filter variables of form main EBusinessTravel
   yearFilterValueBusinessTravel;
   startDateBusinessTravelFilterValue;
@@ -623,6 +625,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   pageNum: number = 0;
   crrIndex: number = 0;
   onInit(): void {
+    debugger
     if (this.funcID) {
       this.hrService.getFunctionList(this.funcID).subscribe((res: any[]) => {
         if (res && res[1] > 0) {
@@ -674,11 +677,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       });
     }
     this.routeActive.queryParams.subscribe((params) => {
-      debugger;
       this.employeeID = params['employeeID'];
       this.pageNum = params['page'];
       if (this.employeeID || this.user.userID) {
-        debugger;
         if (history.state) {
           if (history.state.empInfo) {
             this.infoPersonal = JSON.parse(history.state.empInfo);
@@ -748,33 +749,15 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           });
         }
-
-        this.hrService
-          .GetEmpCurrentPassport(this.employeeID)
-          .subscribe((res) => {
-            this.crrPassport = JSON.parse(JSON.stringify(res));
-          });
-
-        this.hrService.GetEmpCurrentVisa(this.employeeID).subscribe((res) => {
-          this.crrVisa = JSON.parse(JSON.stringify(res));
-        });
-
-        this.hrService
-          .GetEmpCurrentWorkpermit(this.employeeID)
-          .subscribe((res) => {
-            this.crrWorkpermit = JSON.parse(JSON.stringify(res));
-          });
-
-        this.hrService.getGrossSalary(this.employeeID).subscribe((res) => {
-          this.employeeGrossSalary = JSON.parse(JSON.stringify(res));
-        });
+        this.loadEmpCurrentInfo();
       }
+      this.initFormModel();
+      this.initSortModel();
+      this.initHeaderText();
+      this.initPersonalInfo();
+      this.initLegalInfo();
+      this.initForm();
     });
-    this.initFormModel();
-    this.initSortModel();
-    this.initHeaderText();
-    this.initLegalInfo();
-    this.initForm();
   }
 
   ngAfterViewInit(): void {
@@ -1649,7 +1632,28 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }
   }
 
-  init;
+
+  loadEmpCurrentInfo(){
+    this.hrService
+    .GetEmpCurrentPassport(this.employeeID)
+    .subscribe((res) => {
+      this.crrPassport = JSON.parse(JSON.stringify(res));
+    });
+
+  this.hrService.GetEmpCurrentVisa(this.employeeID).subscribe((res) => {
+    this.crrVisa = JSON.parse(JSON.stringify(res));
+  });
+
+  this.hrService
+    .GetEmpCurrentWorkpermit(this.employeeID)
+    .subscribe((res) => {
+      this.crrWorkpermit = JSON.parse(JSON.stringify(res));
+    });
+
+  this.hrService.getGrossSalary(this.employeeID).subscribe((res) => {
+    this.employeeGrossSalary = JSON.parse(JSON.stringify(res));
+  });
+  }
 
   initPersonalInfo() {
     if (this.employeeID) {
@@ -1663,6 +1667,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.hrService.getEFamilyWithDataRequest(opFamily).subscribe((res) => {
         if (res) this.lstFamily = res[0];
       });
+
+      console.log('thong tin gia dinh', this.lstFamily);
+      
 
       let rqExperience = new DataRequest();
       rqExperience.gridViewName = 'grvEExperiences';
@@ -1687,6 +1694,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           }
         });
 
+        console.log('thong tin kinh nghiem', this.lstExperiences);
+      
       // let opPassport = new DataRequest();
       // opPassport.gridViewName = 'grvEPassports';
       // opPassport.entityName = 'HR_EPassports';
@@ -1736,7 +1745,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           }
           this.listCrrBenefit = lstRes;
-          debugger;
           console.log('ds benefit cuoi cung', this.listCrrBenefit);
           this.loadEBenefit = true;
           this.df.detectChanges();
@@ -2167,7 +2175,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       rqContract.pageSize = 1;
 
       this.hrService.loadData('HR', rqContract).subscribe((res) => {
-        debugger;
         if (res && res[0]) {
           this.crrEContract = res[0][0];
         } else {
@@ -2400,6 +2407,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           }
         });
     }
+    console.log('info perrrrrson', this.infoPersonal)
 
     this.initHRProcess();
   }
@@ -2749,7 +2757,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 if (p != null) {
                   this.notify.notifyCode('SYS008');
                   let index = this.listCrrBenefit.indexOf(data)
-                  debugger
                   if(index){
                     this.listCrrBenefit.splice(index, 1);
                   }
@@ -3539,7 +3546,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        debugger
         // this.initBenefitInfo();
 
         if (actionType == 'add' || actionType == 'copy') {
@@ -3683,7 +3689,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (!res?.event) {
         (this.basicSalaryGridview?.dataService as CRUDService)?.clear();
       } else {
-        debugger
         // this.eBasicSalaryRowCount += this.updateGridView(
         //   this.basicSalaryGridview,
         //   actionType,
@@ -4018,7 +4023,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (!res?.event)
         (this.eDisciplineGrid?.dataService as CRUDService).clear();
       if (res.event)
-      debugger
         this.updateGridView(this.eDisciplineGrid, actionType, res.event, null);
       this.df.detectChanges();
     });
@@ -4175,7 +4179,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
       else if (res.event)
-      debugger
         // this.eCertificateRowCount += this.updateGridView(
         //   this.eCertificateGrid,
         //   actionType,
@@ -4241,7 +4244,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) (this.skillGrid?.dataService as CRUDService)?.clear();
       else if (res.event != null) {
-        debugger
         // this.lstESkill = res?.event[1];
         // if (this.skillGrid) {
         //   this.eSkillRowCount += this.updateGridView(
@@ -4569,6 +4571,101 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     this.hrService.addSkillGrade(null).subscribe();
   }
 
+  refreshGridViews(){
+    // Anh Trầm chỉ, setInterval đợi nó load cái grid xong mới gọi refresh
+    let ins = setInterval(()=>{
+      if(this.eDisciplineGrid){
+        clearInterval(ins);
+        this.eDisciplineGrid.refresh();
+      }
+    },100)
+
+    let ins2 = setInterval(()=>{
+      if(this.appointionGridView){
+        clearInterval(ins2);
+        this.appointionGridView.refresh();
+      }
+    },100)
+
+    let ins3 = setInterval(()=>{
+      if(this.dayoffGrid){
+        clearInterval(ins3);
+        this.dayoffGrid.refresh();
+      }
+    },100)
+
+    let ins4 = setInterval(()=>{
+      if(this.businessTravelGrid){
+        clearInterval(ins4);
+        this.businessTravelGrid.refresh();
+      }
+    },100)
+
+    let ins5 = setInterval(()=>{
+      if(this.AwardGrid){
+        clearInterval(ins5);
+        this.AwardGrid.refresh();
+      }
+    },100)
+
+    let ins6 = setInterval(()=>{
+      if(this.eDegreeGrid){
+        clearInterval(ins6);
+        this.eDegreeGrid.refresh();
+      }
+    },100)
+
+    let ins7 = setInterval(()=>{
+      if(this.eCertificateGrid){
+        clearInterval(ins7);
+        this.eCertificateGrid.refresh();
+      }
+    },100)
+
+    let ins8 = setInterval(()=>{
+      if(this.skillGrid){
+        clearInterval(ins8);
+        this.skillGrid.refresh();
+      }
+    },100)
+
+    let ins9 = setInterval(()=>{
+      if(this.eTrainCourseGrid){
+        clearInterval(ins9);
+        this.eTrainCourseGrid.refresh();
+      }
+    },100)
+
+    let ins10 = setInterval(()=>{
+      if(this.eAccidentGridView){
+        clearInterval(ins10);
+        this.eAccidentGridView.refresh();
+      }
+    },100)
+
+    let ins11 = setInterval(()=>{
+      if(this.eDiseasesGrid){
+        clearInterval(ins11);
+        this.eDiseasesGrid.refresh();
+      }
+    },100)
+
+    let ins12 = setInterval(()=>{
+      if(this.eHealthsGrid){
+        clearInterval(ins12);
+        this.eHealthsGrid.refresh();
+      }
+    },100)
+
+    let ins13 = setInterval(()=>{
+      if(this.eVaccinesGrid){
+        clearInterval(ins13);
+        this.eVaccinesGrid.refresh();
+      }
+    },100)
+  }
+
+
   nextEmp() {
     if (this.listEmp) {
       let index = this.listEmp.findIndex(
@@ -4609,6 +4706,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             request: this.request,
           }
         );
+        this.refreshGridViews();
       }
     }
   }
@@ -4641,6 +4739,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             request: this.request,
           }
         );
+        this.refreshGridViews();
       }
     }
   }
@@ -4834,7 +4933,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.filterEBenefitPredicates += `BenefitID==@${i}`;
       }
       this.filterEBenefitPredicates += ') ';
-      debugger;
       this.filterEBenefitPredicates += `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
       this.filterEBenefitPredicates += ') ';
       (this.eBenefitGrid.dataService as CRUDService)
@@ -4921,7 +5019,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       opt
     );
     popup.closed.subscribe((res) => {
-      debugger;
       if (res?.event) {
         if (res?.event == 'none') {
           this.listCrrBenefit = null;
@@ -5031,7 +5128,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       opt
     );
     popup.closed.subscribe((res) => {
-      debugger;
       if (res?.event) {
         if (res?.event == 'none') {
           this.crrEBSalary = null;
@@ -5281,7 +5377,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     newData: any,
     oldData?: any
   ) {
-    debugger
     let returnVal = 0;
     let index = 0;
     if(oldData){

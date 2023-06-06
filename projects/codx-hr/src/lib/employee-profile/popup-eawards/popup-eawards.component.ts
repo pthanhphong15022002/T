@@ -5,16 +5,13 @@ import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 
 import {
   CodxFormComponent,
-  CodxListviewComponent,
-  CRUDService,
   DataRequest,
   DialogData,
-  DialogRef, 
+  DialogRef,
   FormModel,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-eawards',
@@ -207,6 +204,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
+    this.formGroup.patchValue(this.formModel.currentData);
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;

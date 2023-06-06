@@ -27,9 +27,11 @@ import {
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { CM_Customers } from '../models/cm_model';
-import { PopupAddCaseComponent } from './popup-add-case/popup-add-case.component';
 import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
+import { CasesDetailComponent } from './case-detail/cases-detail.component';
+import { PopupAddCasesComponent } from './popup-add-cases/popup-add-cases.component';
+import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 
 @Component({
   selector: 'lib-cases',
@@ -55,6 +57,7 @@ export class CasesComponent
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
+  @ViewChild('casesDetail') casesDetail: CasesDetailComponent;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -101,6 +104,11 @@ export class CasesComponent
   hideMoreFC = false;
   listHeader: any;
   processID: any;
+  colorReasonSuccess: any;
+  colorReasonFail: any;
+  caseType:string;
+  applyFor:string;
+
 
   constructor(
     private inject: Injector,
@@ -111,15 +119,20 @@ export class CasesComponent
     private notificationsService: NotificationsService
   ) {
     super(inject);
-    if (!this.funcID)
+    if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+      this.checkFunction(this.funcID);
+    }
 
+
+    this.executeApiCalls();
     // Get API
     // this.getListCustomer();
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+      this.checkFunction(this.funcID);
     }
     if (changes['dataObj']) {
       this.dataObj = changes['dataObj'].currentValue;
@@ -213,7 +226,6 @@ export class CasesComponent
       this.view.dataService.predicates = null;
       this.view.dataService.dataValues = null;
       this.view.dataObj = this.dataObj;
-
       this.view?.views?.forEach((x) => {
         if (x.type == 6) {
           x.request.dataObj = this.dataObj;
@@ -252,6 +264,26 @@ export class CasesComponent
     }
   }
 
+  async executeApiCalls() {
+    try {
+      await this.getColorReason();
+    } catch (error) {}
+  }
+
+  async getColorReason() {
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.colorReasonSuccess = item;
+          } else if (item.value === 'F') {
+            this.colorReasonFail = item;
+          }
+        }
+      }
+    });
+  }
+
 
   changeView(e) {
 
@@ -267,78 +299,112 @@ export class CasesComponent
   }
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-      if (data.status == '1') {
-        for (let more of $event) {
-          switch (more.functionID) {
-            case 'SYS01':
-            case 'SYS101':
-            case 'CM0301_1':
-            case 'CM0301_3':
-            case 'CM0301_4':
-              more.disabled = true;
-              break;
-            case 'SYS03':
-            case 'SYS04':
-            case 'SYS02':
-            case 'CM0201_2':
-              more.isblur = false;
-              break;
-            default:
-              more.isblur = true;
+      if (false)
+       {
+
+
+
+      }
+      else {
+        if (data.status == '1') {
+          for (let more of $event) {
+            switch (more.functionID) {
+              case 'SYS01':
+              case 'SYS101':
+              case 'CM0401_1':
+              case 'CM0401_3':
+              case 'CM0401_4':
+                more.disabled = true;
+                break;
+              case 'SYS03':
+              case 'SYS04':
+              case 'SYS02':
+              // start day
+              case 'CM0401_2':
+                more.isblur = false;
+                break;
+              default:
+                more.isblur = true;
+            }
           }
-        }
-      } else {
-        for (let more of $event) {
-          switch (more.functionID) {
-            case 'CM0301_1':
-              if (this.checkMoreReason(data.permission) || data.closed) {
+        } else {
+          for (let more of $event) {
+            switch (more.functionID) {
+              case 'CM0401_1':
+                if (data.closed) {
+                  more.disabled = true;
+                }
+                break;
+              case 'CM0401_3':
+                if ( data.closed) {
+                  more.disabled = true;
+                }
+                break;
+              case 'CM0401_4':
+                if ( data.closed) {
+                  more.disabled = true;
+                }
+                break;
+              case 'CM0401_2':
                 more.disabled = true;
-              }
-              break;
-            case 'CM0301_3':
-              if (this.checkMoreReason(data.permission) || data.closed) {
-                more.disabled = true;
-              }
-              break;
-            case 'CM0301_4':
-              if (this.checkMoreReason(data.permission) || data.closed) {
-                more.disabled = true;
-              }
-              break;
-            case 'CM0301_2':
-              more.disabled = true;
-              break;
-            case 'CM0301_8':
-              if (data.closed) {
-                more.isblur = true;
-              } else {
-                more.isblur = false;
-              }
-              break;
-            case 'CM0301_9':
-              if (!data.closed) {
-                more.isblur = true;
-              } else {
-                more.isblur = false;
-              }
-              break;
-            case 'SYS01':
-            case 'SYS03':
-            case 'SYS04':
-            case 'SYS02':
-            case 'SYS101':
-            case 'SYS102':
-            case 'SYS103':
-            case 'SYS104':
-              if (this.checkMoreReason(data.permission) || data.closed) {
-                more.disabled = true;
-              }
-              break;
+                break;
+              case 'CM0401_7':
+                if ( data.closed) {
+                  more.disabled = true;
+                }
+                break;
+              case 'CM0401_8':
+                if (data.closed) {
+                  more.isblur = true;
+                } else {
+                  more.isblur = false;
+                }
+                break;
+              case 'CM0401_9':
+                if (!data.closed) {
+                  more.isblur = true;
+                } else {
+                  more.isblur = false;
+                }
+                break;
+              case 'SYS101':
+              case 'SYS01':
+                if ( data.closed ) {
+                  more.disabled = true;
+                }
+                break;
+              case 'SYS103':
+              case 'SYS03':
+                if (  data.closed ) {
+                  more.disabled = true;
+                }
+                break;
+              case 'SYS104':
+              case 'SYS04':
+                if (  data.closed  ) {
+                  more.disabled = true;
+                }
+                break;
+              case 'SYS102':
+              case 'SYS02':
+                if (data.closed ) {
+                  more.disabled = true;
+                }
+                break;
+
+            }
           }
         }
       }
+
+
     }
   }
+  changeMF(e) {
+    this.changeDataMF(e.e, e.data);
+  }
+
+
   checkMoreReason(tmpPermission) {
     if (
       tmpPermission.isReasonSuccess &&
@@ -376,28 +442,28 @@ export class CasesComponent
       case 'SYS02':
         this.delete(data);
         break;
-      case 'CM0301_1':
+      case 'CM0401_1':
         this.moveStage(data);
         break;
-      case 'CM0301_2':
+      case 'CM0401_2':
         this.handelStartDay(data);
         break;
-      case 'CM0301_3':
+      case 'CM0401_3':
         this.moveReason(data, true);
         break;
-      case 'CM0301_4':
+      case 'CM0401_4':
         this.moveReason(data, false);
         break;
       // Open cases
-      case 'CM0301_8':
-   //     this.openOrClosecases(data, true);
+      case 'CM0401_8':
+        this.openOrCloseCases(data, true);
         break;
-      case 'CM0301_7':
-   //     this.popupOwnerRoles(data);
+      case 'CM0401_7':
+        this.popupOwnerRoles(data);
         break;
       // Close cases
-      case 'CM0301_9':
-  //      this.openOrClosecases(data, false);
+      case 'CM0401_9':
+        this.openOrCloseCases(data, false);
         break;
       //xuất file
       case 'CM0401_5':
@@ -444,7 +510,7 @@ export class CasesComponent
             cases: data,
             stepReason: stepReason,
             headerTitle: this.titleAction,
-            applyFor: '1',
+            applyFor: this.applyFor,
             dataCM: dataCM,
           };
           var dialogMoveStage = this.callfc.openForm(
@@ -472,16 +538,15 @@ export class CasesComponent
                   nextStep = listStep[index]?.stepID;
                 }
               }
-
               var dataUpdate = [data.recID, instance.stepID, nextStep];
-              // this.codxCmService.moveStagecases(dataUpdate).subscribe((res) => {
-              //   if (res) {
-              //     data = res[0];
-              //     this.view.dataService.update(data).subscribe();
-              //  //   this.detailViewcases.dataSelected = data;
-              //     this.detectorRef.detectChanges();
-              //   }
-              // });
+              this.codxCmService.moveStageCases(dataUpdate).subscribe((res) => {
+                if (res) {
+                  data = res[0];
+                  this.view.dataService.update(data).subscribe();
+               //   this.detailViewcases.dataSelected = data;
+                  this.detectorRef.detectChanges();
+                }
+              });
             }
           });
         });
@@ -489,12 +554,24 @@ export class CasesComponent
   }
   handelStartDay(data) {
     this.notificationsService
-      .alertCode('DP033', null, ['"' + data?.casesName + '"' || ''])
+      .alertCode('DP033', null, ['"' + data?.caseName + '"' || ''])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-    //      this.startcases(data.recID);
+           this.startCases(data.recID,data.caseType);
         }
       });
+  }
+  startCases(caseId, caseType){
+    var data = [caseId,caseType];
+    this.codxCmService.startCases(data).subscribe((res) => {
+      if (res[0]) {
+        this.dataSelected = res[0];
+        this.notificationsService.notifyCode('SYS007');
+        this.view.dataService.update(this.dataSelected).subscribe();
+        if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      }
+      this.detectorRef.detectChanges();
+    });
   }
 
   moveReason(data: any, isMoveSuccess: boolean) {
@@ -522,7 +599,7 @@ export class CasesComponent
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
-      applyFor: '1',
+      applyFor: this.applyFor,
       dataCM: dataCM,
       stepName: data.currentStepName,
     };
@@ -540,28 +617,28 @@ export class CasesComponent
         var instance = e.event?.instance;
         var instanceMove = e.event?.instanceMove;
         if (instanceMove) {
-          var casesOld = JSON.parse(JSON.stringify(data));
-          var casesNew = JSON.parse(JSON.stringify(data));
-          casesOld = this.updateReasonCases(e.event?.instance, casesOld);
-          casesNew = this.convertDataInstance(
-            casesNew,
+          var dealOld = JSON.parse(JSON.stringify(data));
+          var dealNew = JSON.parse(JSON.stringify(data));
+          dealOld = this.updateReasonCases(instance, dealOld);
+          dealNew = this.convertDataInstance(
+            dealNew,
             instanceMove,
             e.event?.nextStep
           );
-          var datas = [casesOld, casesNew];
-          // this.codxCmService.movecasesReason(datas).subscribe((res) => {
-          //   if (res) {
-          //     data = res[0];
-          //     this.view.dataService.dataSelected = data;
-          //     this.view.dataService
-          //       .update(this.view.dataService.dataSelected)
-          //       .subscribe();
-          //     this.view.dataService.add(res[1], 0).subscribe((res) => {});
-          //     this.detectorRef.detectChanges();
-          //   }
-          // });
+          var datas = [dealOld, dealNew];
+          this.codxCmService.moveDealReason(datas).subscribe((res) => {
+            if (res) {
+              data = res[0];
+              this.view.dataService.dataSelected = data;
+              this.view.dataService
+                .update(this.view.dataService.dataSelected)
+                .subscribe();
+              this.view.dataService.add(res[1], 0).subscribe((res) => {});
+              this.detectorRef.detectChanges();
+            }
+          });
         } else {
-          data = this.updateReasonCases(e.event?.instance, data);
+          data = this.updateReasonCases(instance, data);
           var datas = [data, data.customerID];
           this.codxCmService.updateDeal(datas).subscribe((res) => {
             if (res) {
@@ -596,6 +673,75 @@ export class CasesComponent
     cases.nextStep = nextStep;
     cases.startDate = null;
     return cases;
+  }
+
+  openOrCloseCases(data, check) {
+    var datas = [data.recID, data.processID, check];
+    this.notificationsService
+      .alertCode('DP018', null, "'" + this.titleAction + "'")
+      .subscribe((info) => {
+        if (info.event.status == 'Y') {
+          this.codxCmService.openOrClosedCases(datas).subscribe((res) => {
+            if (res) {
+              data.closed = check ? true : false;
+              data.closedOn = check ? new Date() : data.ClosedOn;
+              data.ModifiedOn = new Date();
+              this.dataSelected = data;
+              this.view.dataService.update(data).subscribe();
+              this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
+              if (data.showInstanceControl === '1') {
+                this.view.dataService.update(this.dataSelected).subscribe();
+              }
+              if (
+                data.showInstanceControl === '0' ||
+                data.showInstanceControl === '2'
+              ) {
+                this.view.dataService.remove(this.dataSelected).subscribe();
+                this.dataSelected = this.view.dataService.data[0];
+                this.view.dataService.onAction.next({
+                  type: 'delete',
+                  data: data,
+                });
+              }
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+      });
+  }
+  popupOwnerRoles(data) {
+    this.dataSelected = data;
+    this.cache.functionList('DPT0402').subscribe((fun) => {
+      var formMD = new FormModel();
+      let dialogModel = new DialogModel();
+      formMD.funcID = fun.functionID;
+      formMD.entityName = fun.entityName;
+      formMD.formName = fun.formName;
+      formMD.gridViewName = fun.gridViewName;
+      dialogModel.zIndex = 999;
+      dialogModel.FormModel = formMD;
+      var dataCM = {
+        refID: data?.refID,
+        processID: data?.processID,
+        stepID: data?.stepID,
+      };
+      var dialog = this.callfc.openForm(
+        PopupEditOwnerstepComponent,
+        '',
+        500,
+        280,
+        '',
+        [null, this.titleAction, data, this.applyFor, dataCM],
+        '',
+        dialogModel
+      );
+      dialog.closed.subscribe((e) => {
+        if (e && e?.event != null) {
+          this.notificationsService.notifyCode('SYS007');
+          this.detectorRef.detectChanges();
+        }
+      });
+    });
   }
 
 
@@ -686,10 +832,12 @@ export class CasesComponent
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
-      titleAction: 'Phiếu ghi nhận thông tin',
+      caseType: this.caseType,
+      applyFor: this.applyFor,
+      titleAction: this.titleAction,
     };
     let dialogCustomcases = this.callfc.openSide(
-      PopupAddCaseComponent,
+      PopupAddCasesComponent,
       obj,
       option
     );
@@ -724,7 +872,7 @@ export class CasesComponent
           titleAction: 'Chỉnh sửa Phiếu ghi nhận sự cố',
         };
         let dialogCustomcases = this.callfc.openSide(
-          PopupAddCaseComponent,
+          PopupAddCasesComponent,
           obj,
           option
         );
@@ -807,5 +955,16 @@ export class CasesComponent
       option
     );
    popup.closed.subscribe((e) => {});
+  }
+
+  checkFunction(funcID:any){
+    if(funcID === 'CM0401') {
+      this.caseType = '1';
+      this.applyFor = '2';
+    }
+    else if(funcID === 'CM0402') {
+      this.caseType = '2';
+      this.applyFor = '3';
+    }
   }
 }

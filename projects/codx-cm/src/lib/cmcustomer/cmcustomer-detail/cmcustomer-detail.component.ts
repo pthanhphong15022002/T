@@ -156,7 +156,7 @@ export class CmcustomerDetailComponent implements OnInit {
       ) {
         if (changes['dataSelected'].currentValue?.recID == this.id) return;
         this.id = changes['dataSelected'].currentValue?.recID;
-        this.getOneCustomerDetail();
+        this.getOneCustomerDetail(this.dataSelected);
         this.getContractByCustomersID();
       }
     }
@@ -164,10 +164,10 @@ export class CmcustomerDetailComponent implements OnInit {
 
   ngAfterViewInit(): void {}
 
-  getOneCustomerDetail() {
+  getOneCustomerDetail(dataSelected) {
     this.viewTag = '';
     this.loaded = false;
-    this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+    this.dataSelected = JSON.parse(JSON.stringify(dataSelected));
     // this.getListContactByObjectID(this.dataSelected?.recID);
     this.addressNameCM = this.dataSelected?.address;
     setTimeout(() => {

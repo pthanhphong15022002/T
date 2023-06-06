@@ -147,6 +147,11 @@ export class PopupAddDealComponent
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
     }
+
+    if(this.action === this.actionCopy) {
+      this.deal.owner = null;
+      this.deal.salespersonID = null;
+    }
   }
 
   onInit(): void {}
@@ -204,7 +209,7 @@ export class PopupAddDealComponent
         (x) => x.refID == e?.data?.recID
       );
       this.lstContactDeal.splice(index, 1);
-      this.loadContactDeal.loadListContact(this.codxCmService.bringDefaultContactToFront(this.lstContactDeal));
+
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -283,7 +288,7 @@ export class PopupAddDealComponent
       this.notificationsService.notifyCode(
         'SYS009',
         0,
-        '"' + this.gridViewSetup['Owner']?.headerText + '"'
+        '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
       );
       return;
     }
@@ -498,10 +503,13 @@ export class PopupAddDealComponent
     try {
       await this.getGridView(this.formModel);
       await this.getListProcess(this.typeForDeal);
-      if(this.action === this.actionEdit) {
+      if(this.action !== this.actionAdd) {
         await this.getListInstanceSteps(this.deal.processID);
+      }
+      if(this.action === this.actionEdit) {
         await this.getListContactByDealID(this.deal.recID);
       }
+
     } catch (error) {}
   }
   async getGridView(formModel) {

@@ -21,6 +21,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   funcID;
   idField = 'RecID';
   formGroup: FormGroup;
+  fieldHeaderTexts;
   formModel: FormModel;
   dialog: DialogRef;
   data;
@@ -64,6 +65,8 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
               if (fg) {
                 this.formGroup = fg;
                 this.initForm();
+            console.log('formGroup ne', this.formGroup);
+                
               }
             });
         }
@@ -75,9 +78,13 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
           if (fg) {
             this.formGroup = fg;
             this.initForm();
+            console.log('formGroup ne', this.formGroup);
           }
         });
     }
+    this.hrService.getHeaderText(this.funcID).then((res) => {
+      this.fieldHeaderTexts = res;
+    })
   }
 
   ngAfterViewInit() {
@@ -148,7 +155,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
 
     let ddd = new Date();
     if(this.data.issuedOn > ddd.toISOString()){
-      this.notitfy.notifyCode('HR014');
+      this.notitfy.notifyCode('HR014',0,this.fieldHeaderTexts['IssuedOn']);
       return;
     }
 
@@ -165,14 +172,16 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
 
 
     //Xu li validate thong tin CMND nhan vien
-    if (this.data.idExpiredOn < this.data.issuedOn) {
-      this.hrService.notifyInvalidFromTo(
-        'ExpiredDate',
-        'IssuedOn',
-        this.formModel
-        )
-        return;
-      }
+    if(this.data.idExpiredOn && this.data.issuedOn){
+      if (this.data.idExpiredOn < this.data.issuedOn) {
+        this.hrService.notifyInvalidFromTo(
+          'IDExpiredOn',
+          'IssuedOn',
+          this.formModel
+          )
+          return;
+        }
+    }
       
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe((p) => {
       if (p != null) {

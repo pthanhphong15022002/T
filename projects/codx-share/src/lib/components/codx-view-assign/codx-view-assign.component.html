@@ -50,7 +50,11 @@
                 ></codx-img>
                 <div style="position: absolute; right: 0px; bottom: 0px">
                   <ng-container *ngFor="let role of listRoles">
-                    <ng-container *ngIf="role.value == (data.roleType? data.roleType:'R')">
+                    <ng-container
+                      *ngIf="
+                        role.value == (data.roleType ? data.roleType : 'R')
+                      "
+                    >
                       <span
                         ><img
                           src="/assets/themes/tm/default/img/{{ role.icon }}"
@@ -80,7 +84,11 @@
               </div>
               <div class="text-gray-600">
                 <span
-                  *ngIf="data.category == '1' || data.category == '3' || (data.category == '2' && !data.parentID)" 
+                  *ngIf="
+                    data.category == '1' ||
+                    data.category == '3' ||
+                    (data.category == '2' && !data.parentID)
+                  "
                   [innerHTML]="
                     data?.memo
                       ? sanitizer.bypassSecurityTrustHtml(data?.memo)
@@ -88,7 +96,9 @@
                   "
                 >
                 </span>
-                <span *ngIf="data.category == '2'"> {{ data?.memo2 }}</span>
+                <span *ngIf="data.category == '2' && data.parentID">
+                  {{ data?.memo2 }}</span
+                >
               </div>
             </div>
           </div>
@@ -110,7 +120,7 @@
               [referType]="referType"
             ></codx-attachment-temp>
           </span>
-
+          <!-- [viewType]="'4'" -->
           <div class="w-125px d-flex justify-content-end">
             <codx-vll
               [name]="data?.category == '3' ? vllStatusAssign : vllStatus"

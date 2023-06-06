@@ -121,9 +121,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   ) {}
   ngAfterViewInit(): void {
     this.tabControl = [
-      { name: 'History', textDefault: 'Lịch sử', isActive: true },
-      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-      { name: 'Comment', textDefault: 'Bình luận', isActive: false }
+      { name: 'History', textDefault: 'Lịch sử', isActive: true ,icon: "icon-i-clock-history" },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false,icon: "icon-i-paperclip"  },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false,icon: "icon-i-chat-right" }
     ];
     if (this.view?.funcID == 'ODT41' || (this.view?.funcID == 'ODT51' && this.dataItem?.dispatchType == '3') || this.xd)
       this.tabControl.push({
@@ -138,6 +138,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         name: 'AssignTo',
         textDefault: 'Giao việc',
         isActive: false,
+        icon: "icon-i-clipboard-check"
       });
     }
   }
@@ -1688,7 +1689,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         processID
       )
       .subscribe((res2: any) => {
-        debugger
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         //trình ký

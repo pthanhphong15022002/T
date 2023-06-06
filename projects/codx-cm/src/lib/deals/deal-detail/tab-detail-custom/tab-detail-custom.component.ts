@@ -1,17 +1,20 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-gantt';
 import { UIComponent, FormModel, SidebarModel } from 'codx-core';
 import { PopupAddCmCustomerComponent } from '../../../cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
 import { CodxCmService } from '../../../codx-cm.service';
-import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
+import { DealsComponent } from '../../deals.component';
 
 @Component({
   selector: 'codx-tab-deal-detail',
@@ -26,29 +29,12 @@ export class TabDetailCustomComponent
   @Input() dataSelected: any;
   @Input() formModel: any;
   @Input() listSteps: DP_Instances_Steps[] = [];
+  @Output() saveAssign = new EventEmitter<any>();
   titleAction: string = '';
   listStep = [];
   isUpdate = true; //xư lý cho edit trung tuy chinh ko
   listStepsProcess = [];
   listCategory = [];
-
-  ganttDs = [];
-  ganttDsClone = [];
-  timelineSettings: any;
-  ownerInstance: string[] = [];
-  columns = [
-    { field: 'name', headerText: 'Tên', width: '250' },
-    { field: 'startDate', headerText: 'Ngày bắt đầu' },
-    { field: 'endDate', headerText: 'Ngày kết thúc' },
-  ];
-  taskFields = {
-    id: 'recID',
-    name: 'name',
-    startDate: 'startDate',
-    endDate: 'endDate',
-    type: 'type',
-    color: 'color',
-  };
   // titleDefault= "Trường tùy chỉnh"//truyen vay da
   readonly tabInformation: string = 'Information';
   readonly tabField: string = 'Field';
@@ -57,7 +43,6 @@ export class TabDetailCustomComponent
   readonly tabTask: string = 'Task';
   readonly tabProduct: string = 'Product';
   readonly tabGanttChart: string = 'GanttChart';
-
 
   fmProcductsLines: FormModel = {
     formName: 'CMProducts',
@@ -70,22 +55,23 @@ export class TabDetailCustomComponent
     allowDeleting: true,
   };
 
-  constructor(private inject: Injector, private codxCmService: CodxCmService) {
+  constructor(
+    private inject: Injector,
+    private codxCmService: CodxCmService,
+    private changeDetec: ChangeDetectorRef,
+    private dealComponent: DealsComponent,
+  ) {
     super(inject);
-
   }
   ngAfterViewInit() {}
   onInit(): void {
     this.executeApiCalls();
   }
 
-  ngOnChanges(changes: SimpleChanges){
+  ngOnChanges(changes: SimpleChanges) {
     //nvthuan
-    if(changes.dataSelected){
-      this.getListInstanceStep();
-      this.getDataGanttChart(this.dataSelected?.refID, this.dataSelected?.processID)
-    //  this.dataSelected? = ch
-    //  this.getListContactByObjectID(this.dataSelected?.recID);
+    if (changes.dataSelected) {
+      this.getListInstanceStep();   
     }
   }
 
@@ -98,21 +84,16 @@ export class TabDetailCustomComponent
   }
   //nvthuan
   getListInstanceStep() {
-    var data = [this.dataSelected?.refID,this.dataSelected?.processID,this.dataSelected?.status];
-      this.codxCmService.getStepInstance(data).subscribe((res) => {
-        this.listStep = res;
-        this.checkCompletedInstance(this.dataSelected?.status);
-      });
+    var data = [
+      this.dataSelected?.refID,
+      this.dataSelected?.processID,
+      this.dataSelected?.status,
+    ];
+    this.codxCmService.getStepInstance(data).subscribe((res) => {
+      this.listStep = res;
+      this.checkCompletedInstance(this.dataSelected?.status);
+    });
   }
-
-  // getListContactByObjectID(objectID) {
-  //   this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
-  //     if (res && res.length > 0) {
-  //       this.listContacts = res;
-  //       this.contactPerson = this.listContacts.find((x) => x.isDefault);
-  //     }
-  //   });
-  // }
 
   deleteListReason(listStep: any): void {
     listStep.pop();
@@ -133,10 +114,9 @@ export class TabDetailCustomComponent
     });
   }
 
-  getNameCategory(categoryId:string) {
-    return this.listCategory.filter(x=> x.value == categoryId)[0]?.text;
+  getNameCategory(categoryId: string) {
+    return this.listCategory.filter((x) => x.value == categoryId)[0]?.text;
   }
-
 
   addContact() {
     var contact = 'CM0103'; // contact
@@ -176,101 +156,52 @@ export class TabDetailCustomComponent
     return 1;
   }
 
-  getColor(recID) {
-    var idx = this.ganttDs.findIndex((x) => x.recID == recID);
-    return this.ganttDs[idx]?.color;
-  }
+  continueStep(isTaskEnd, step) {
+    let transferControl = this.dataSelected.steps.transferControl;
+    if(transferControl == '0') return;
 
-   //ganttchar
-   getDataGanttChart(instanceID, processID) {
-    this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'GetDataGanntChartAsync', [
-        instanceID,
-        processID,
-      ])
-      .subscribe((res) => {
-        if (res && res?.length > 0) {
-          this.ganttDs = res;
-          this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
-          let test = this.ganttDsClone.map((i) => {
-            return {
-              name: i.name,
-              start: i.startDate,
-              end: i.endDate,
-            };
-          });
-        }
-      });
-  }
+    let isShowFromTaskAll = false;
+    let isShowFromTaskEnd = !this.checkContinueStep(true,step);
+    let isContinueTaskEnd = isTaskEnd;
+    let isContinueTaskAll = this.checkContinueStep(false,step);
+    let dataInstance = {
+      listStep: this.listStep,
+      isAuto: {
+        isShowFromTaskAll,
+        isShowFromTaskEnd,
+        isContinueTaskEnd,
+        isContinueTaskAll,
+      },
+    };
 
-  clickDetailGanchart(recID) {
-    let data = this.ganttDsClone?.find((item) => item.recID === recID);
-    if (data) {
-      let frmModel: FormModel = {
-        entityName: 'DP_Instances_Steps_Tasks',
-        formName: 'DPInstancesStepsTasks',
-        gridViewName: 'grvDPInstancesStepsTasks',
-      };
-      let listData = {
-        value: data,
-        listIdRoleInstance: this.ownerInstance,
-        type: data?.type,
-      };
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.zIndex = 1011;
-      option.FormModel = frmModel;
-      let dialog = this.callfc.openSide(
-        CodxViewTaskComponent,
-        listData,
-        option
-      );
-      dialog.closed.subscribe((data) => {
-        let dataProgress = data?.event;
-        if (dataProgress) {
-          let stepFind = this.listSteps.find(
-            (step) => step.recID == dataProgress?.stepID
-          );
-          if (stepFind) {
-            if (dataProgress?.type == 'P') {
-              stepFind.progress = dataProgress?.progressStep;
-              stepFind.note = dataProgress?.note;
-              stepFind.actualEnd = dataProgress?.actualEnd;
-            } else if (dataProgress?.type == 'G') {
-              let groupFind = stepFind?.taskGroups?.find(
-                (group) => group?.recID == dataProgress?.groupTaskID
-              );
-              if (groupFind) {
-                groupFind.progress = dataProgress?.progressGroupTask;
-                groupFind.note = dataProgress?.note;
-                groupFind.actualEnd = dataProgress?.actualEnd;
-                if (dataProgress?.isUpdate) {
-                  stepFind.progress = dataProgress?.progressStep;
-                }
-              }
-            } else {
-              let taskFind = stepFind?.tasks?.find(
-                (task) => task?.recID == dataProgress?.taskID
-              );
-              if (taskFind) {
-                taskFind.progress = dataProgress?.progressTask;
-                taskFind.note = dataProgress?.note;
-                taskFind.actualEnd = dataProgress?.actualEnd;
-                if (dataProgress?.isUpdate) {
-                  let groupFind = stepFind?.taskGroups?.find(
-                    (group) => group?.recID == dataProgress?.groupTaskID
-                  );
-                  if (groupFind) {
-                    groupFind.progress = dataProgress?.progressGroupTask;
-                  }
-                  stepFind.progress = dataProgress?.progressStep;
-                }
-              }
-            }
-          }
-        }
-        console.log(dataProgress?.event);
-      });
+    if(transferControl == '1' && isContinueTaskAll){
+      this.dealComponent.moveStage(this.dataSelected);
     }
+    if(transferControl == '2' && isContinueTaskEnd){
+      this.dealComponent.moveStage(this.dataSelected);
+    }
+//    this.serviceInstance.autoMoveStage(dataInstance);
+  }
+
+  checkContinueStep(isDefault,step) {
+    let check = true;
+    let listTask = isDefault
+      ? step?.tasks?.filter((task) => task?.requireCompleted)
+      : step?.tasks;
+    if (listTask?.length <= 0) {
+      return isDefault ? true : false;
+    }
+    for (let task of listTask) {
+      if (task.progress != 100) {
+        check = false;
+        break;
+      }
+    }
+    return check;
+  }
+
+  //event giao viec
+  saveAssignTask(e){
+    if(e) this.saveAssign.emit(e);
   }
 }

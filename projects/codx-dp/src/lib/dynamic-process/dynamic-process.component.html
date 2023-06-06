@@ -408,7 +408,6 @@
         class="label-colon text-gray-600"
         fiedName="processName"
         [formModel]="view.formModel"
-        [default]="'Quy trình'"
         [setRequire]="false"
       ></codx-label>
       <span
@@ -459,6 +458,7 @@
 
     <div class="form-group">
       <codx-label
+        #releasedNameTem
         fiedName="releasedName"
         [formModel]="view.formModel"
       ></codx-label>

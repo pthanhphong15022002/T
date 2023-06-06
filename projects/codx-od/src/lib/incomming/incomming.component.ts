@@ -49,6 +49,8 @@ import { ActivatedRoute } from '@angular/router';
 import { CodxOdService } from '../codx-od.service';
 import { isObservable } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { CodxViewApprovalStepComponent } from 'projects/codx-share/src/lib/components/codx-view-approval-step/codx-view-approval-step.component';
+import { ApprovalStepComponent } from './approval-step/approval-step.component';
 
 @Component({
   selector: 'app-incomming',
@@ -638,5 +640,19 @@ export class IncommingComponent
       return 'icon-access_alarm';
     }
     return '';
+  }
+  browsingProcess(recID:any,approveStatus:any)
+  {
+    this.dialog = this.callfunc.openForm(
+      ApprovalStepComponent,
+      "",
+      500,
+      700,
+      this.view?.formModel?.funcID,
+      {
+        transID: recID,
+        approveStatus: approveStatus
+      }
+    );
   }
 }

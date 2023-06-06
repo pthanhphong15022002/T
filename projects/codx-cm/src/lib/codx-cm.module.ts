@@ -48,9 +48,6 @@ import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-
 import { NoDataComponent } from './contracts/component/no-data/no-data.component';
 import { ContractsDetailComponent} from './contracts/contracts-detail/contracts-detail.component';
 import { CasesComponent } from './cases/cases.component';
-import { CaseDetailComponent } from './cases/case-detail/case-detail.component';
-import { PopupAddCaseComponent } from './cases/popup-add-case/popup-add-case.component';
-import { TabCaseDetailComponent } from './cases/case-detail/tab-case-detail/tab-case-detail.component';
 import { CodxAddressCmComponent } from './cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
 import { LeadsComponent } from './leads/leads.component';
 import { PopupAddLeadComponent } from './leads/popup-add-lead/popup-add-lead.component';
@@ -71,6 +68,10 @@ import { ViewQuotationsComponent } from './contracts/component/view-quotations/v
 import { ViewImgContactComponent } from './leads/popup-merge-leads/view-img-contact/view-img-contact.component';
 import { PopupRemoveAddContactComponent } from './leads/popup-merge-leads/popup-remove-add-contact/popup-remove-add-contact.component';
 import { ViewPaymentComponent } from './contracts/payment/view-payment/view-payment.component';
+import { CasesDetailComponent } from './cases/case-detail/cases-detail.component';
+import { GanttChartComponent } from './deals/gantt-chart/gantt-chart.component';
+import { TabCasesDetailComponent } from './cases/case-detail/tab-cases-detail/tab-cases-detail.component';
+import { PopupAddCasesComponent } from './cases/popup-add-cases/popup-add-cases.component';
 
 const routes: Routes = [
   {
@@ -159,9 +160,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     NoDataComponent,
     ContractsDetailComponent,
     CasesComponent,
-    CaseDetailComponent,
-    PopupAddCaseComponent,
-    TabCaseDetailComponent,
+    CasesDetailComponent,
+    PopupAddCasesComponent,
+    TabCasesDetailComponent,
     CodxAddressCmComponent,
     LeadsComponent,
     PopupAddLeadComponent,
@@ -183,6 +184,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewImgContactComponent,
     PopupRemoveAddContactComponent,
     ViewPaymentComponent,
+    GanttChartComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

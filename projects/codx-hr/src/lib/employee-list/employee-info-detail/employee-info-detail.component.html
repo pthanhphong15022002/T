@@ -73,10 +73,12 @@
                                 <span #gender>
                                   <codx-vll
                                     [showText]="true"
+                                    [field]="'Gender'"
                                     [showBgColor]="true"
-                                    [showIcon]="true"
+                                    [formModel]="eInfoFormModel"
+                                    [showIcon]="false"
                                     [value]="infoPersonal?.gender"
-                                    class="badge badge-square badge-md fs-7"
+                                    class="badge badge-light badge-md fs-body border-0 me-2"
                                   >
                                   </codx-vll>
                                 </span>
@@ -1154,6 +1156,8 @@
             <div class="row mb-5">
               <div class="text-gray-600 pb-1">
                 <span class="icon-place icon-16 text-gray-600 me-2"></span>
+                <codx-label fiedName="tAddress" [formModel]="eInfoFormModel">
+                </codx-label>
               </div>
               <div class="ms-7">
                 <span
@@ -1285,15 +1289,17 @@
                         | async
                     "
                   ></span>
-                  &nbsp;-&nbsp;
-                  <span
-                    class="fw-bold text-dark"
-                    [innerHTML]="
-                      infoPersonal?.hiCardTo
-                        | formatvalue : eInfoFormModel : 'hiCardTo'
-                        | async
-                    "
-                  ></span>
+                  <span *ngIf="infoPersonal?.hiCardTo">
+                    &nbsp;-&nbsp;
+                    <span
+                      class="fw-bold text-dark"
+                      [innerHTML]="
+                        infoPersonal?.hiCardTo
+                          | formatvalue : eInfoFormModel : 'hiCardTo'
+                          | async
+                      "
+                    ></span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -1472,7 +1478,18 @@
                             | formatvalue : eInfoFormModel : 'accountBankID'
                             | async
                         "
-                      ></span>
+                      >
+                      
+                    </span>
+
+                    <!-- <codx-vll
+                    class="badge"
+                    [field]="'AccountBankID'"
+                    [value]="infoPersonal?.accountBankID"
+                    [formModel]="eInfoFormModel"
+                    [showText]="true"
+                    [showBgColor]="false"
+                  ></codx-vll> -->
                     </div>
                   </div>
                 </div>
@@ -1648,7 +1665,13 @@
                       </codx-label>
                     </div>
                     <div class="d-flex align-items-center">
-                      <span class="fw-bold text-dark ms-7">
+                      <span class="fw-bold text-dark ms-7"
+                      [innerHTML]="
+                      crrVisa?.visaNo
+                        | formatvalue : eVisaFormModel : 'visaNo'
+                        | async
+                    "
+                      >
                         {{ crrVisa?.visaNo }}
                       </span>
                     </div>
@@ -1730,7 +1753,13 @@
                       </codx-label>
                     </div>
                     <div class="d-flex align-items-center">
-                      <span class="fw-bold text-dark">
+                      <span class="fw-bold text-dark"
+                      [innerHTML]="
+                      crrVisa?.issuedPlace
+                        | formatvalue : eVisaFormModel : 'issuedPlace'
+                        | async
+                    "
+                      >
                         {{ crrVisa?.issuedPlace }}
                       </span>
                     </div>
@@ -1831,8 +1860,13 @@
               </codx-label>
             </div>
             <div class="d-flex align-items-center">
-              <span class="fw-bold text-dark ms-7">
-                {{ infoPersonal?.foWorking }}
+              <span class="fw-bold text-dark ms-7"
+              [innerHTML]="
+                  infoPersonal?.foWorking
+                    | formatvalue : eInfoFormModel : 'foWorking'
+                    | async
+                "
+              >
               </span>
             </div>
           </div>
@@ -1844,8 +1878,13 @@
               </codx-label>
             </div>
             <div class="d-flex align-items-center">
-              <span class="fw-bold text-dark ms-7">
-                {{ infoPersonal?.foKind }}
+              <span class="fw-bold text-dark ms-7"
+              [innerHTML]="
+                  infoPersonal?.foKind
+                    | formatvalue : eInfoFormModel : 'foKind'
+                    | async
+                "
+              >
               </span>
             </div>
           </div>
@@ -3664,7 +3703,7 @@
         </div>
         <ng-container
           *ngIf="
-            loadEBenefit && listCrrBenefit.length > 0;
+            loadEBenefit && listCrrBenefit?.length > 0;
             else emptyDataTemplate
           "
         >

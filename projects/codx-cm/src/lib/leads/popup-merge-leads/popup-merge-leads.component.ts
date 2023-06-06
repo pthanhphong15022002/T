@@ -38,6 +38,7 @@ export class PopupMergeLeadsComponent implements OnInit {
   leadOne: CM_Leads = new CM_Leads();
   leadTwo: CM_Leads = new CM_Leads();
   leadThree: CM_Leads = new CM_Leads();
+  dialogSup: DialogRef;
 
   title = '';
   gridViewSetup: any;
@@ -69,7 +70,7 @@ export class PopupMergeLeadsComponent implements OnInit {
   fieldCbx = { text: 'leadName', value: 'recID' };
   modifyOn: Date;
   countValidate = 0;
-
+  lstVllSupport = [];
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -98,9 +99,6 @@ export class PopupMergeLeadsComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
-    this.gridViewSetup = await firstValueFrom(
-      this.cache.gridViewSetup('CMLeads', 'grvCMLeads')
-    );
     if (this.leadOne) {
       this.lstContactOne = await this.getContacts(this.leadOne?.recID);
       this.lstAddressOne = await this.getListAddress(
@@ -108,7 +106,9 @@ export class PopupMergeLeadsComponent implements OnInit {
         this.leadOne?.recID
       );
     }
-
+    this.gridViewSetup = await firstValueFrom(
+      this.cache.gridViewSetup('CMLeads', 'grvCMLeads')
+    );
     this.changeDetector.detectChanges();
   }
 
@@ -154,16 +154,17 @@ export class PopupMergeLeadsComponent implements OnInit {
       return;
     }
 
-    if(this.leadNew.companyPhone != null && this.leadNew.companyPhone.trim() != ''){
-      if(!this.checkEmailOrPhone(this.leadNew.companyPhone, 'P')) return;
+    if (
+      this.leadNew.companyPhone != null &&
+      this.leadNew.companyPhone.trim() != ''
+    ) {
+      if (!this.checkEmailOrPhone(this.leadNew.companyPhone, 'P')) return;
     }
 
     if (this.leadTwo == null && this.leadThree == null) {
       this.noti.notify('CM008');
       return;
     }
-
-
 
     if (this.lstContactNew != null && this.lstContactNew.length > 0) {
       this.lstContactNew.forEach((res) => {
@@ -222,7 +223,23 @@ export class PopupMergeLeadsComponent implements OnInit {
       });
   }
 
-  onSupport() {}
+  onSupport(popup) {
+    this.cache.valueList('CRM038').subscribe((vllSFormat) => {
+      this.lstVllSupport = vllSFormat?.datas;
+      let dialogModel = new DialogModel();
+      dialogModel.zIndex = 1001;
+      this.dialogSup = this.callFc.openForm(
+        popup,
+        '',
+        600,
+        400,
+        '',
+        null,
+        '',
+        dialogModel
+      );
+    });
+  }
 
   checkEmailOrPhone(field, type) {
     if (type == 'E') {
@@ -390,7 +407,10 @@ export class PopupMergeLeadsComponent implements OnInit {
       case 'companyPhone':
         if (e.field === 'companyPhone1' && e.component.checked === true) {
           this.leadNew.companyPhone = this.leadOne?.companyPhone;
-        } else if (e.field === 'companyPhone2' && e.component.checked === true) {
+        } else if (
+          e.field === 'companyPhone2' &&
+          e.component.checked === true
+        ) {
           this.leadNew.companyPhone = this.leadTwo?.companyPhone;
         } else {
           this.leadNew.companyPhone = this.leadThree?.companyPhone;
@@ -519,7 +539,7 @@ export class PopupMergeLeadsComponent implements OnInit {
           this.leadNew.consultantID = this.leadThree?.consultantID;
         }
         break;
-        case 'businesslineID':
+      case 'businesslineID':
         if (e.field === 'businesslineID1' && e.component.checked === true) {
           this.leadNew.businesslineID = this.leadOne?.businesslineID;
         } else if (

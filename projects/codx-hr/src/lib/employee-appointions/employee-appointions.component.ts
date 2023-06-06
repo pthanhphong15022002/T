@@ -1,27 +1,23 @@
 import {
+  ChangeDetectorRef,
   Component,
   Injector,
-  ChangeDetectorRef,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
-  DataRequest,
   DialogRef,
-  FormModel,
   NotificationsService,
   RequestOption,
   SidebarModel,
   UIComponent,
-  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
-import { CodxEpService } from 'projects/codx-ep/src/public-api';
 import { PopupEappointionsComponent } from '../employee-profile/popup-eappointions/popup-eappointions.component';
 
 @Component({
@@ -42,14 +38,9 @@ export class EmployeeAppointionsComponent extends UIComponent {
   //#endregion
 
   views: Array<ViewModel> = [];
-  funcID: string;
-  method = 'GetListAppointionsByDataRequestAsync';
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
-    text: 'Thêm',
   };
-  eAppointionsHeader;
-  eAppointionsFormModel: FormModel;
   currentEmpObj: any = null;
   grvSetup: any;
 
@@ -63,7 +54,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
   cmtStatus: string = '';
   genderGrvSetup: any;
 
-  //#region eJobSalaryFuncID
+  //#region more functions
   actionAddNew = 'HRTPro02A01';
   actionSubmit = 'HRTPro02A03';
   actionUpdateCanceled = 'HRTPro02AU0';
@@ -72,109 +63,35 @@ export class EmployeeAppointionsComponent extends UIComponent {
   actionUpdateApproved = 'HRTPro02AU5';
   actionUpdateClosed = 'HRTPro02AU9';
 
-  //Fix change when change codx-view
-  popupTitle: any;
-  columnGrids: any;
-
   constructor(
     inject: Injector,
     private hrService: CodxHrService,
-    private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
-    //Fix change when change codx-view
-    private codxEpService: CodxEpService
+    private activatedRoute: ActivatedRoute
   ) {
     super(inject);
-    this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    // this.cache.functionList(this.funcID).subscribe((res) => {
-    //   if (res) {
-    //     this.popupTitle = res.defaultName.toString();
-    //   }
-    // });
-    // this.hrService.getFormModel(this.funcID).then((res) => {
-    //   if (res) {
-    //     this.eAppointionsFormModel = res;
-    //   }
-    // });
   }
 
-  initForm() {
-    if (!this.funcID) {
-      this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    }
-    //Load headertext from grid view setup database
-    this.cache
-      .gridViewSetup('EAppointions', 'grvEAppointions')
-      .subscribe((res) => {
-        if (res) {
+  GetGvSetup() {
+    let funID = this.activatedRoute.snapshot.params['funcID'];
+    this.cache.functionList(funID).subscribe((fuc) => {
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((res) => {
           this.grvSetup = res;
-          // this.grvSetup = Util.camelizekeyObj(res);
-        }
-      });
-
-    //Load data field gender from database
-    this.cache
-      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-      .subscribe((res) => {
-        this.genderGrvSetup = res?.Gender;
-      });
+        });
+    });
   }
 
   onInit(): void {
-    this.initForm();
+    this.GetGvSetup();
   }
-
-  //Fix change when change codx-view
-  // viewChanged(evt: any) {
-  //   this.funcID = this.router.snapshot.params['funcID'];
-  //   this.cache.functionList(this.funcID).subscribe((res) => {
-  //     if (res) {
-  //       this.popupTitle = res.defaultName.toString();
-  //     }
-  //   });
-  //   this.hrService.getFormModel(this.funcID).then((res) => {
-  //     if (res) {
-  //       this.eAppointionsFormModel = res;
-  //     }
-  //   });
-  // }
-
-  //Fix change when change codx-view
-  // onLoading(evt: any) {
-  //   let formModel = this.view.formModel;
-  //   if (formModel) {
-  //     this.cache
-  //       .gridViewSetup(formModel?.formName, formModel?.gridViewName)
-  //       .subscribe((gv) => {
-  //         this.views = [
-  //           {
-  //             type: ViewType.list,
-  //             active: true,
-  //             sameData: true,
-  //             model: {
-  //               template: this.templateList,
-  //               headerTemplate: this.headerTemplate,
-  //             },
-  //           },
-  //           {
-  //             type: ViewType.listdetail,
-  //             sameData: true,
-  //             active: true,
-  //             model: {
-  //               template: this.templateListDetail,
-  //               panelRightRef: this.panelRightListDetail,
-  //             },
-  //           },
-  //         ];
-  //         this.detectorRef.detectChanges();
-  //       });
-  //   }
-  // }
 
   ngAfterViewInit(): void {
     this.views = [
       {
+        id: '1',
         type: ViewType.list,
         active: true,
         sameData: true,
@@ -184,20 +101,16 @@ export class EmployeeAppointionsComponent extends UIComponent {
         },
       },
       {
+        id: '2',
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.panelRightListDetail,
         },
       },
     ];
-
-    //Get Header text when view detail
-    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) => {
-      this.eAppointionsHeader = res;
-    });
   }
 
   //Open, push data to modal
@@ -209,7 +122,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
       PopupEappointionsComponent,
       {
         actionType: actionType,
-        employeeId: data?.employeeID,
+        employeeId: data?.employeeID || this.currentEmpObj.employeeID,
         funcID: this.view.funcID,
         appointionObj: data,
         headerText: actionHeaderText,
@@ -221,21 +134,18 @@ export class EmployeeAppointionsComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.view.dataService.add(res.event).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.add(res.event).subscribe();
         } else if (actionType == 'copy') {
-          this.view.dataService.add(res.event).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.add(res.event).subscribe();
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.update(res.event).subscribe();
         }
+        this.df.detectChanges();
       }
-      if (res?.event) this.view.dataService.clear();
     });
   }
 
-  addAppoint(event): void {
+  AddAppoint(event): void {
     this.currentEmpObj = this.itemDetail.emp;
     if (event.id == 'btnAdd') {
       this.HandleEAppoint(
@@ -258,6 +168,39 @@ export class EmployeeAppointionsComponent extends UIComponent {
 
   //#region more functions
 
+  onSaveUpdateForm() {
+    this.hrService
+      .EditEmployeeAppointionsMoreFunc(this.editStatusObj)
+      .subscribe((res) => {
+        if (res != null) {
+          this.notify.notifyCode('SYS007');
+          let data = {
+            ...res[0],
+            emp: this.currentEmpObj,
+          };
+          this.hrService
+            .addBGTrackLog(
+              res[0].recID,
+              this.cmtStatus,
+              this.view.formModel.entityName,
+              'C1',
+              null,
+              'EAppointionsBusiness'
+            )
+            .subscribe();
+          this.dialogEditStatus && this.dialogEditStatus.close(data);
+        }
+      });
+  }
+
+  ValueChangeComment(evt) {
+    this.cmtStatus = evt.data;
+  }
+
+  CloseStatus(dialog: DialogRef) {
+    dialog.close();
+  }
+
   //Set form group data when open Modal dialog
   ngAfterViewChecked() {
     if (!this.formGroup?.value) {
@@ -272,43 +215,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
     }
   }
 
-  onSaveUpdateForm() {
-    this.hrService
-      .EditEmployeeAppointionsMoreFunc(this.editStatusObj)
-      .subscribe((res) => {
-        if (res != null) {
-          this.notify.notifyCode('SYS007');
-          let data = {
-            ...res[0],
-            emp: this.currentEmpObj,
-          };
-          this.view.formModel.entityName;
-          this.hrService
-            .addBGTrackLog(
-              res[0].recID,
-              this.cmtStatus,
-              this.view.formModel.entityName,
-              'C1',
-              null,
-              'EAppointionsBusiness'
-            )
-            .subscribe((res) => {
-              console.log('kq luu track log', res);
-            });
-          this.dialogEditStatus && this.dialogEditStatus.close(data);
-        }
-      });
-  }
-
-  ValueChangeComment(evt) {
-    this.cmtStatus = evt.data;
-  }
-
-  close2(dialog: DialogRef) {
-    dialog.close();
-  }
-
-  popupUpdateEAppointStatus(funcID, data) {
+  PopupUpdateEAppointStatus(funcID, data) {
     this.hrService.handleUpdateRecordStatus(funcID, data);
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;
@@ -323,9 +230,9 @@ export class EmployeeAppointionsComponent extends UIComponent {
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
-        this.view.dataService.update(res.event).subscribe((res) => {});
+        this.view.dataService.update(res.event).subscribe();
+        this.df.detectChanges();
       }
-      this.df.detectChanges();
     });
   }
 
@@ -342,7 +249,9 @@ export class EmployeeAppointionsComponent extends UIComponent {
               this.processID.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> Bổ nhiệm điều chuyển - ' +
+              '<div> ' +
+                this.view.function.description +
+                ' - ' +
                 this.itemDetail.decisionNo +
                 '</div>'
             )
@@ -381,7 +290,9 @@ export class EmployeeAppointionsComponent extends UIComponent {
           let eJobSalaryObj = parsedJSON[index];
           if (eJobSalaryObj['ApprovalRule'] == '1') {
             this.release();
-          } else {
+          }
+          //
+          else {
           }
         }
       }
@@ -390,7 +301,6 @@ export class EmployeeAppointionsComponent extends UIComponent {
 
   clickMF(event, data): void {
     this.itemDetail = data;
-
     switch (event.functionID) {
       case this.actionSubmit:
         this.beforeRelease();
@@ -401,7 +311,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
-        this.popupUpdateEAppointStatus(event.functionID, oUpdate);
+        this.PopupUpdateEAppointStatus(event.functionID, oUpdate);
         break;
       //Propose increase salaries
       case this.actionAddNew:
@@ -436,13 +346,13 @@ export class EmployeeAppointionsComponent extends UIComponent {
       //Copy
       case 'SYS04':
         this.currentEmpObj = data;
-        this.copyValue(event.text, this.currentEmpObj);
+        this.CopyValue(event.text, this.currentEmpObj);
         this.df.detectChanges();
         break;
     }
   }
 
-  copyValue(actionHeaderText, data) {
+  CopyValue(actionHeaderText, data) {
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
       this.HandleEAppoint(
         actionHeaderText + ' ' + this.view.function.description,
@@ -451,18 +361,18 @@ export class EmployeeAppointionsComponent extends UIComponent {
       );
     });
   }
-  changeDataMF(event, data): void {
+  ChangeDataMF(event, data): void {
     this.hrService.handleShowHideMF(event, data, this.view);
   }
 
   //#endregion
 
   //#region Handle detail data
-  changeItemDetail(event) {
+  ChangeItemDetail(event) {
     this.itemDetail = event?.data;
   }
 
-  clickEvent(event, data) {
+  ClickEvent(event) {
     this.clickMF(event?.event, event?.data);
   }
 

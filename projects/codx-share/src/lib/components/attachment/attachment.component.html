@@ -97,7 +97,7 @@
                             </div>
                         </ng-template>
                         <div class="block">
-                            <div class="box"></div>
+                            <div class="div-share-box"></div>
                             <svg class="svg">
                                 <defs>
                                     <linearGradient id="gradientStyle">
@@ -268,7 +268,7 @@
                 <codx-thumbnail [displayThumb]="displayThumb" [formModel]="formModel" [files]="data" [isScroll]="'1'"
                     (fileCount)="handleDeleteCount($event)" [isDeleteTemp]="isDeleteTemp" [hideDelete]="hideDelete"
                     [hideMoreF]="hideMoreF" (viewFile)="handleView($event)" (fileDelete)="handleDelete($event)"
-                    [permissions]="permissions" [objectID]="objectId" [isReferType]="isReferType">
+                    [permissions]="permissions" [objectID]="objectId" [isReferType]="isReferType" [tmpRight]="tmpRightThumb">
                 </codx-thumbnail>
             </div>
         </div>

@@ -37,7 +37,8 @@ import { PopupAddQuotationsLinesComponent } from '../../quotations-lines/popup-a
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/tmpCrm.model';
 import { TempComponent } from 'codx-core/lib/templates/base-temp/base.component';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
+import { DateTimePickerAllModule } from '@syncfusion/ej2-angular-calendars';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -48,7 +49,9 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('gridQuationsLines') gridQuationsLines: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
-  @ViewChild('customerIDCbx') customerIDCbx: CodxInputComponent;
+  @ViewChild('dealsCbx') dealsCbx: CodxInputComponent;
+  @ViewChild('customerCbx') customerCbx: CodxInputComponent;
+  @ViewChild('contactCbx') contactCbx: CodxInputComponent;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
 
@@ -83,7 +86,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   disableCusID = false;
   disableContactsID = false;
   modelObjectIDContacs: any;
-  modelCustomerIDDeals: any;
+  // modelCustomerIDDeals: any;
   titleActionLine = '';
   columnsGrid = [];
   arrFieldIsVisible: any[];
@@ -91,6 +94,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   currencyIDOld = 'VND';
   grvSetupQuotations: any;
   grvSetupQuotationsLines: any;
+  crrCustomerID: string;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -262,7 +266,10 @@ export class PopupAddQuotationsComponent implements OnInit {
     );
     if (count > 0) return;
     if (!(this.listQuotationLines?.length > 0)) {
-      this.notiService.notify("Thêm danh sách sản phẩm để hoàn thành báo giá - Chờ Khanh thêm messeger !" ,'3')  
+      this.notiService.notify(
+        'Thêm danh sách sản phẩm để hoàn thành báo giá - Chờ Khanh thêm messeger !',
+        '3'
+      );
       return;
     }
     if (this.action == 'add' || this.action == 'copy') {
@@ -275,24 +282,58 @@ export class PopupAddQuotationsComponent implements OnInit {
   //change Data
   changeCombox(e) {
     if (!e?.data || !e?.field) return;
+
     this.quotations[e.field] = e.data;
     switch (e?.field) {
       case 'refID':
-        this.quotations.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-        this.modelCustomerIDDeals = { customerID: this.quotations.customerID };
-        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
-        // this.disableCusID = true;
+        if (
+          this.quotations.customerID !=
+          e?.component?.itemsSelected[0]?.CustomerID
+        ) {
+          this.customerCbx.ComponentCurrent.dataService.data = [];
+          this.customerCbx.crrValue = null;
+
+          this.quotations.customerID =
+            e?.component?.itemsSelected[0]?.CustomerID;
+          this.customerCbx.crrValue = this.quotations.customerID;
+
+          this.contactCbx.ComponentCurrent.dataService.data = [];
+          this.contactCbx.crrValue = null;
+          this.crrCustomerID = this.quotations.customerID;
+        }
         break;
       case 'customerID':
-        this.quotations.refID = null;
-        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+        if (this.crrCustomerID != this.quotations.customerID) {
+          //co hoi
+          this.dealsCbx.ComponentCurrent.dataService.data = [];
+          this.dealsCbx.crrValue = null;
+          this.quotations.refID = null;
+          // lien he
+          this.contactCbx.ComponentCurrent.dataService.data = [];
+          this.contactCbx.crrValue = null;
+          this.quotations.contactID = null;
+        }
+
         break;
-        case 'contactID':
-          // this.quotations.refID = null;
-        this.modelObjectIDContacs = { objectID: this.quotations.customerID };
+      case 'contactID':
+        if (
+          this.quotations.customerID != e?.component?.itemsSelected[0]?.ObjectID
+        ) {
+          this.customerCbx.ComponentCurrent.dataService.data = [];
+          this.customerCbx.crrValue = null;
+
+          this.dealsCbx.ComponentCurrent.dataService.data = [];
+          this.quotations.refID = null;
+          this.dealsCbx.crrValue = null;
+
+          this.quotations.customerID = e?.component?.itemsSelected[0]?.ObjectID;
+          this.customerCbx.crrValue = this.quotations.customerID;
+        }
         break;
     }
+
     this.form.formGroup.patchValue(this.quotations);
+    // }
   }
 
   valueChange(e) {
@@ -558,7 +599,84 @@ export class PopupAddQuotationsComponent implements OnInit {
     });
   }
 
-  copyLine(dt) {}
+  copyLine(dataCopy) {
+    //gọi alow copy
+    this.codxCM
+      .getDefault(
+        'CM',
+        this.fmQuotationLines.funcID,
+        this.fmQuotationLines.entityName
+      )
+      .subscribe((dt) => {
+        if (dt && dt.data) {
+          let data = dt.data;
+
+          let arrField = Object.values(this.grvSetupQuotationsLines).filter(
+            (x: any) => x.allowCopy
+          );
+          if (Array.isArray(arrField)) {
+            arrField.forEach((v:any) => {
+                let field = Util.camelize(v.fieldName);
+                data[field] = dataCopy[field];
+            });
+          }
+
+          data.rowNo = this.listQuotationLines.length + 1;
+          data.exchangeRate = this.quotations?.exchangeRate;
+          data.currencyID = this.quotations?.currencyID;
+          data.transID = this.quotations?.recID;
+
+          this.cache
+            .functionList(this.fmQuotationLines.funcID)
+            .subscribe((f) => {
+              this.cache
+                .gridViewSetup(
+                  this.fmQuotationLines.formName,
+                  this.fmQuotationLines.gridViewName
+                )
+                .subscribe((res) => {
+                  let title = f?.customName || f?.description;
+                  var obj = {
+                    headerText:
+                      this.titleActionLine +
+                      ' ' +
+                      title.charAt(0).toLowerCase() +
+                      title.slice(1),
+                    quotationsLine: data,
+                    listQuotationLines: this.listQuotationLines,
+                    grvSetup: this.grvSetupQuotationsLines,
+                  };
+                  let opt = new DialogModel();
+                  opt.zIndex = 1000;
+                  opt.FormModel = this.fmQuotationLines;
+
+                  let dialogQuotations = this.callFc.openForm(
+                    PopupAddQuotationsLinesComponent,
+                    '',
+                    650,
+                    570,
+                    '',
+                    obj,
+                    '',
+                    opt
+                  );
+                  dialogQuotations.closed.subscribe((res) => {
+                    if (res?.event) {
+                      if (res?.event) {
+                        data = res?.event;
+                        this.quotationLinesAddNew.push(data);
+                        this.listQuotationLines.push(data);
+                        this.gridQuationsLines.refresh();
+                        this.loadTotal();
+                        this.changeDetector.detectChanges();
+                      }
+                    }
+                  });
+                });
+            });
+        }
+      });
+  }
 
   linesUpdate(data) {
     let indexAdd = this.quotationLinesAddNew.findIndex(

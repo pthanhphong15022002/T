@@ -24,7 +24,7 @@
       <button
         type="button"
         class="btn btn-outline-primary min-w-70px"
-        (click)="onSupport()"
+        (click)="onSupport(popupSupport)"
       >
         <i class="icon-sticky_note_2 icon-16 me-1"></i>
         <codx-label
@@ -2280,3 +2280,43 @@
     </div>
   </div>
 </div>
+
+<ng-template #popupSupport >
+  <codx-form
+    [customToolbar]="title"
+    [body]="body"
+    [dialog]="dialogSup"
+  >
+  <ng-template #title>
+    <div class="d-flex justify-content-between w-100">
+      <div class="d-flex justify-content-start">
+        <div class="h3">
+          <codx-label
+            name="lblMergeSupport"
+            [formModel]="dialog.formModel"
+            [default]="
+              'Hướng dẫn gộp trùng tiềm năng'
+            "
+          ></codx-label>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button
+          style="border: none; outline: none; background: none"
+          (click)="dialogSup.close()"
+        >
+          <i class="icon-close icon-18 text-hover-danger"></i>
+        </button>
+      </div>
+    </div>
+
+  </ng-template>
+    <ng-template #body>
+      <div *ngIf="lstVllSupport">
+        <ng-container *ngFor="let item of lstVllSupport">
+          <li class="text-dark text-gray-800 mb-1">{{item?.text}}</li>
+        </ng-container>
+      </div>
+    </ng-template>
+  </codx-form>
+</ng-template>
