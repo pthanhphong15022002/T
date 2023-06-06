@@ -213,7 +213,7 @@ export class PopupAddEmployeeComponent implements OnInit {
 
   // validate age > 18
   validateBirthday(birthday: any) {
-    if(birthday) return false;
+    if(!birthday) return false;
     let ageDifMs = Date.now() - Date.parse(birthday);
     let ageDate = new Date(ageDifMs);
     let age = Math.abs(ageDate.getUTCFullYear() - 1970);
