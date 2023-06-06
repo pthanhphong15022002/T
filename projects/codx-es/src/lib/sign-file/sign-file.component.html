@@ -74,7 +74,30 @@
         )
       "
     ></div>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <div class="progress-container-align position-relative">
+          <span class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+            <span>
+              <span class="fs-8 fw-bold">{{data?.processTrans}}</span>
+              <span class="fs-8">%</span>
+            </span>
+          </span>
+          <ejs-progressbar [id]="data.recID" [type]="'Circular'" [maximum]="100" [minimum]="0" [value]="data?.processTrans" [width]="'60'" [height]="'60'" [trackThickness]="5" [progressThickness]="3" [progressColor]="'#187DE4'">
+          </ejs-progressbar>
+        </div>
+        <div class="d-flex align-items-center" >
+          <span class="me-2" >
+            <codx-assign-temp [objectID]="data?.taskID"></codx-assign-temp>
+          </span>
+          <span class="me-2" *ngIf="data?.recID">
+            <codx-comment-temp [objectID]="data.recID"></codx-comment-temp>
+          </span>
+          <span class="me-2" *ngIf="data?.recID">
+            <codx-attachment-temp [objectID]="data.recID" [formModel]="view?.formModel" [hideDelete]="1" [hideMoreF]="0"></codx-attachment-temp>
+          </span>
+        </div>
+      </div>
       <codx-imgs
         [objectId]="data?.createdBy != undefined ? data?.createdBy : ''"
         objectType="AD_Users"
@@ -82,6 +105,10 @@
         [width]="30"
       >
       </codx-imgs>
+    </div>
+    <div class="d-flex justify-content-end align-items-center text-primary" (click)="browsingProcess(data?.recID,data?.approveStatus)">
+      <codx-label  default="Quy trình duyệt" [fiedName]="'lblBrowsingProcess'"></codx-label>
+      <i class="icon-i-chevron-double-right text-primary icon-14"></i>
     </div>
   </div>
 </ng-template>

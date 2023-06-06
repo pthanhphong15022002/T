@@ -1,22 +1,6 @@
 <ng-container *ngIf="loaded">
   <div [class]="'detail-form'">
     <div class="d-flex" *ngIf="!hidenMF && objectID">
-      <div *ngIf="objectType != '2'">
-        <button
-          type="button"
-          class="btn btn-sm btn-icon btn-primary me-2 d-flex"
-          style="min-width: 180px"
-          (click)="isButton ? clickPopupContacts() : null"
-        >
-          <i class="icon-check-correct icon-16 me-1"></i>
-          <codx-label
-            name="lblSelectContacts"
-            [formModel]="formModelContact"
-            default="Chọn liên hệ từ hệ thống"
-          ></codx-label>
-        </button>
-      </div>
-
       <button
         type="button"
         class="btn btn-sm btn-primary"
@@ -36,9 +20,17 @@
     *ngIf="listContacts != null && listContacts.length > 0; else noData"
   >
     <div class="d-flex mb-1" *ngIf="selectAll">
-
-      <input type="checkbox" [(ngModel)]="isCheckedAll" (change)="toggleAll($event)">
-      <codx-label class="ms-1" name="lblSelectAll" [formModel]="formModelContact" default="Chọn tất cả"></codx-label>
+      <input
+        type="checkbox"
+        [(ngModel)]="isCheckedAll"
+        (change)="toggleAll($event)"
+      />
+      <codx-label
+        class="ms-1"
+        name="lblSelectAll"
+        [formModel]="formModelContact"
+        default="Chọn tất cả"
+      ></codx-label>
     </div>
     <div *ngFor="let item of listContacts">
       <ng-container
@@ -77,7 +69,11 @@
     <div class="d-flex flex-column w-100 me-3">
       <div class="d-flex align-items-center">
         <div class="me-1" *ngIf="isConvertLeadToCus">
-          <input type="checkbox" [(ngModel)]="data.checked" (change)="valueChange($event, data)">
+          <input
+            type="checkbox"
+            [(ngModel)]="data.checked"
+            (change)="valueChange($event, data)"
+          />
           <!-- <codx-input
             type="checkbox"
             [crrValue]="false"
@@ -85,7 +81,7 @@
         </div>
         <div class="me-3">
           <codx-img
-            [objectId]="data.recID"
+            [objectId]="objectType != '4' ? data.recID : data.refID"
             [objectName]="data?.contactName"
             [objectType]="'CM_Contacts'"
             [width]="30"
@@ -110,11 +106,13 @@
               placement="right bottom left"
               container="body"
             ></span>
-            
           </div>
 
-          <div class="" *ngIf="data.jobTitle">
+          <div class="mb-1" *ngIf="data?.jobTitle">
             <span class="text-gray-600">{{ data.jobTitle }}</span>
+          </div>
+          <div *ngIf="data?.role">
+            <span class="text-gray-600">{{ data?.role }}</span>
           </div>
           <!-- <div class="" *ngIf="data.isDefault">
             <codx-label
@@ -166,7 +164,7 @@
     </div>
     <div class="action-menu-od w-100px">
       <codx-mfunc
-        [hidden]="hidenMF"
+        [hidden]="hidenMF && objectType != '4' ? true : false"
         [formModel]="formModelContact"
         [isBookMark]="true"
         [dataItem]="data"
