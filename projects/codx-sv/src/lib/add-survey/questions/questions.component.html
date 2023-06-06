@@ -1552,6 +1552,15 @@
           data-underline="false"
           [model]="titleEditorModel"
           [validationRules]="commentRule"
+          [value]="itemQuestion.question"
+          (valueChange)="
+          valueChangeQuestionEJS(
+            $event,
+            itemSession,
+            itemQuestion,
+            'question'
+          )
+        "
         >
         </ejs-inplaceeditor>
         <ng-container #questionMF *ngIf="itemQuestion?.active" class="d-flex">
@@ -1589,6 +1598,15 @@
         data-underline="false"
         [model]="descriptionEditorModel"
         [validationRules]="commentRule"
+        [value]="itemQuestion.comment"
+        (valueChange)="
+          valueChangeQuestionEJS(
+            $event,
+            itemSession,
+            itemQuestion,
+            'comment'
+          )
+        "
       >
       </ejs-inplaceeditor>
     </div>

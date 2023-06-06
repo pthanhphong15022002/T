@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupAddCaseComponent } from './popup-add-case.component';
+import { PopupAddCaseComponent } from './popup-add-cases.component';
 
 describe('PopupAddCaseComponent', () => {
   let component: PopupAddCaseComponent;

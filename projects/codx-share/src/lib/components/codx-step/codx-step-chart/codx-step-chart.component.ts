@@ -11,14 +11,14 @@ import { EditSettingsModel } from '@syncfusion/ej2-gantt';
 import { UIComponent, FormModel, SidebarModel } from 'codx-core';
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
-import { CodxCmService } from '../../codx-cm.service';
+
 
 @Component({
-  selector: 'gantt-chart',
-  templateUrl: './gantt-chart.component.html',
-  styleUrls: ['./gantt-chart.component.scss'],
+  selector: 'codx-step-chart',
+  templateUrl: './codx-step-chart.component.html',
+  styleUrls: ['./codx-step-chart.component.scss']
 })
-export class GanttChartComponent
+export class CodxStepChartComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -170,7 +170,6 @@ export class GanttChartComponent
 
   constructor(
     private inject: Injector,
-    private codxCmService: CodxCmService,
     private changeDetec: ChangeDetectorRef
   ) {
     super(inject);

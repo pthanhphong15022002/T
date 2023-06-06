@@ -38,7 +38,11 @@ import { UpdateVersionComponent } from './incomming/updateversion/updateversion.
 import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
-
+import {
+  ProgressAnnotationService,
+  ProgressBarModule,
+} from '@syncfusion/ej2-angular-progressbar';
+import { ApprovalStepComponent } from './incomming/approval-step/approval-step.component';
 const routes: Routes = [
   {
     path: '',
@@ -116,6 +120,7 @@ const routes: Routes = [
     CompletedComponent,
     RefuseComponent,
     UpdateVersionComponent,
+    ApprovalStepComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -128,8 +133,10 @@ const routes: Routes = [
     SharedModule,
     CodxShareModule,
     UploaderModule,
+    ProgressBarModule
     // NgbModule
   ],
   exports: [RouterModule],
+  providers: [ProgressAnnotationService],
 })
 export class CodxODModule {}

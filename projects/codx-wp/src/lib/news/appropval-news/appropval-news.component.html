@@ -2,6 +2,9 @@
   [views]="views" 
   idField="recID" 
   [service]="'WP'"
+  [assemblyName]="'ERM.Business.WP'"
+  [className]="'NewsBusiness'"
+  [method]="'GetDataApproAsync'"
   [selectedFirst]="true" 
   (selectedChange)="selectedChange($event)">
 </codx-views>
@@ -31,7 +34,7 @@
         [showIcoBgColor]="true"
         [showIcoText]="false"
         [title]="vllWP004[data.category].text"
-        [desc]="setDescription(data)"
+        [desc]="data.contents"
         [descLine]="2" 
         [date]="data.createdOn"
         [status]="data.approveStatus" 

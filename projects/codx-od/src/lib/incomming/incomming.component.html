@@ -80,7 +80,33 @@
         )
       "
     ></div>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <ng-container *ngIf="data?.dispatchType != '1'">
+          <div class="progress-container-align position-relative">
+            <span class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+              <span>
+                <span class="fs-8 fw-bold">{{data?.processTrans}}</span>
+                <span class="fs-8">%</span>
+              </span>
+            </span>
+            <ejs-progressbar [id]="data.recID" [type]="'Circular'" [maximum]="100" [minimum]="0" [value]="data?.processTrans" [width]="'60'" [height]="'60'" [trackThickness]="5" [progressThickness]="3" [progressColor]="'#FF0000'">
+            </ejs-progressbar>
+          </div>
+          <!-- <e-progressbar-annotations> <e-progressbar-annotation [content]="item?.progress +'%'" > </e-progressbar-annotation> </e-progressbar-annotations> [animation]="{enable: true, duration: 2000, delay: 0}" -->
+        </ng-container>
+        <div class="d-flex align-items-center" >
+          <span class="me-2" >
+            <codx-assign-temp [objectID]="data?.taskID"></codx-assign-temp>
+          </span>
+          <span class="me-2" *ngIf="data?.recID">
+            <codx-comment-temp [objectID]="data.recID"></codx-comment-temp>
+          </span>
+          <span class="me-2" *ngIf="data?.recID">
+            <codx-attachment-temp [objectID]="data.recID" [formModel]="view?.formModel" [hideDelete]="1" [hideMoreF]="0"></codx-attachment-temp>
+          </span>
+        </div>
+      </div>
       <codx-imgs
         [objectId]="getIdUser(data.createdBy, data.owner)"
         objectType="AD_Users"
@@ -89,6 +115,12 @@
       >
       </codx-imgs>
     </div>
+    <ng-container *ngIf="data?.dispatchType != '1'">
+      <div class="d-flex justify-content-end align-items-center text-primary" (click)="browsingProcess(data?.recID,data?.approveStatus)">
+        <codx-label  default="Quy trình duyệt" [fiedName]="'lblBrowsingProcess'"></codx-label>
+        <i class="icon-i-chevron-double-right text-primary icon-14"></i>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 

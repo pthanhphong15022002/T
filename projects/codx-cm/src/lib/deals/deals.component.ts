@@ -631,14 +631,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   //end Kanaban
 
   moveStage(data: any) {
-    // if (!this.isClick) {
-    //   return;
-    // }
-    // if (listStepCbx.length == 0 || listStepCbx == null) {
-    //   listStepCbx = this.listSteps;
-    // }
-    // this.isClick = false;
-    // this.crrStepID = data.stepID;
+
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;

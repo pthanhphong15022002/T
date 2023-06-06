@@ -46,7 +46,7 @@ import { CodxShareService } from '../../codx-share.service';
 
 
 @Component({
-  selector: 'codx-aside-custom',
+  selector: 'codx-aside-custom-share',
   templateUrl: './codx-aside-custom.component.html',
   styleUrls: ['./codx-aside-custom.component.css'],
   host: { class: 'aside' },
