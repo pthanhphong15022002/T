@@ -362,7 +362,7 @@
 ></ng-template>
 
 <ng-template #tabContacts>
-  <ng-container>
+  <!-- <ng-container>
     <div class="d-flex flex-column mb-1">
       <div class="title text-primary fs-4 fw-bold">
         <codx-label
@@ -392,7 +392,7 @@
       [isConvertLeadToCus]="customerID ? true : false"
       [type]="'formAdd'"
     ></codx-list-contacts>
-  </ng-container>
+  </ng-container> -->
   <ng-container>
     <div class="title text-primary fs-4 fw-bold">
       <codx-label
@@ -438,7 +438,7 @@
   </ng-container>
 </ng-template>
 <ng-template #tabAddress>
-  <ng-container>
+  <!-- <ng-container>
     <div class="d-flex flex-column mb-1">
       <div class="title text-primary fs-4 fw-bold">
         <codx-label
@@ -466,7 +466,7 @@
       [hidden]="true"
       [isConvertLeadToCus]="customerID ? true : false"
     ></codx-address-cm>
-  </ng-container>
+  </ng-container> -->
   <ng-container>
     <div class="title text-primary fs-4 fw-bold">
       <codx-label
@@ -661,6 +661,7 @@
               [placeholder]="gridViewSetupCustomer?.EstablishDate?.description"
               field="establishDate"
               (valueChange)="valueDateChange($event, 'customer')"
+
             >
             </codx-input>
           </div>
@@ -770,6 +771,8 @@
           type="textarea"
           [crrValue]="customer?.memo"
           [formModel]="formModelCustomer"
+          [placeholder]="gridViewSetupCustomer?.Memo?.description"
+
           field="memo"
           (valueChange)="valueChangeCustomer($event)"
         >

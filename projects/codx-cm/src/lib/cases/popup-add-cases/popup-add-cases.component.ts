@@ -1,21 +1,23 @@
-import { Contact } from './../../../../../codx-sm/src/lib/models/Contact.model';
+import { Contact } from '../../../../../codx-sm/src/lib/models/Contact.model';
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { UIComponent, DialogRef, FormModel, NotificationsService, AuthStore, DialogData, RequestOption } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Cases, CM_Deals } from '../../models/cm_model';
 import { tmpInstances } from '../../models/tmpModel';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
-  selector: 'lib-popup-add-case',
-  templateUrl: './popup-add-case.component.html',
-  styleUrls: ['./popup-add-case.component.scss']
+  selector: 'lib-popup-add-cases',
+  templateUrl: './popup-add-cases.component.html',
+  styleUrls: ['./popup-add-cases.component.scss']
 })
-export class PopupAddCaseComponent  extends UIComponent
+export class PopupAddCasesComponent  extends UIComponent
 implements OnInit, AfterViewInit
 {
 // view child
 @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
 @ViewChild('tabCustomFieldDetail') tabCustomFieldDetail: TemplateRef<any>;
+@ViewChild('attachment') attachment: AttachmentComponent;
 
 // setting values in system
 dialog: DialogRef;
@@ -27,7 +29,6 @@ titleAction: string = '';
 action: string = '';
 autoName: string = '';
 title: string = '';
-typeCase: string = '';
 
 // Data struct cases
 cases: CM_Cases = new CM_Cases();
@@ -92,6 +93,10 @@ contactID:string = '';
 instance: tmpInstances = new tmpInstances();
 instanceSteps: any;
 listInstanceSteps: any[] = [];
+caseType:string = '';
+applyFor:string = '';
+  isHaveFile: boolean;
+  showLabelAttachment: boolean;
 
 constructor(
   private inject: Injector,
@@ -107,16 +112,15 @@ constructor(
   this.formModel = dialog.formModel;
   this.titleAction = dt?.data?.titleAction;
   this.action = dt?.data?.action;
+  this.applyFor = dt?.data?.applyFor;
+  this.caseType = dt?.data?.caseType;
 
-  this.executeApiCalls();
   this.cases.status = '1';
   if (this.action != this.actionAdd) {
     this.cases = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.getListContacts(this.cases?.customerID);
   }
-  console.log(this.cases);
-  console.log(this.test);
-  this.typeCase = this.cases?.caseType;
+  this.executeApiCalls();
 }
 
 onInit(): void {
@@ -213,11 +217,11 @@ cbxChange($event, field) {
     this.cases[field] = $event;
   }
 }
-cbxProcessChange($event, field) {
+cbxProcessChange($event) {
   if ($event) {
-    this.cases[field] = $event;
-    if ($event) {
-      var result = this.checkProcessInList($event);
+    this.cases[$event.field] = $event.data;
+    if ($event.data) {
+      var result = this.checkProcessInList($event.data);
       if (result) {
         this.listInstanceSteps = result?.steps;
         this.listParticipants = result?.permissions;
@@ -225,7 +229,7 @@ cbxProcessChange($event, field) {
         this.cases.endDate =this.HandleEndDate(this.listInstanceSteps, this.action, null);
         this.changeDetectorRef.detectChanges();
       } else {
-        this.getListInstanceSteps($event);
+        this.getListInstanceSteps($event.data);
       }
     }
   }
@@ -277,13 +281,13 @@ valueChangeOwner($event) {
   }
 }
 valueChangeCustomer($event){
-  if($event.data){
-    var result = this.checkContactInList($event);
+  if($event){
+    var result = this.checkContactInList($event.data);
     if (result) {
       this.listCbxContacts = result?.contacts;
       this.changeDetectorRef.detectChanges();
     } else {
-      this.getListContacts($event);
+      this.getListContacts($event.data);
     }
 
   }
@@ -292,6 +296,7 @@ onAdd() {
   this.dialog.dataService
     .save((option: any) => this.beforeSave(option), 0)
     .subscribe((res) => {
+      this.attachment?.clearData();
       if (res) {
         this.dialog.close(res.save[0]);
       } else this.dialog.close();
@@ -322,7 +327,10 @@ ngAfterViewInit(): void {
 async executeApiCalls() {
   try {
     await this.getGridView(this.formModel);
-    await this.getListProcess(this.typeForCases);
+    // await this.getListProcess(this.typeForCases);
+    if(this.action !== this.actionAdd) {
+      await this.getListInstanceSteps(this.cases.processID);
+    }
   } catch (error) {
     console.error('Error executing API calls:', error);
   }
@@ -335,16 +343,6 @@ async getGridView(formModel) {
         this.gridViewSetup = res;
       }
     });
-}
-async getListProcess(applyFor) {
-  var processID = this.action !== this.actionEdit ? '' : this.cases.processID;
-  var data = [applyFor, processID];
-  this.codxCmService.getListCbxProcess(data).subscribe((res) => {
-    if (res && res.length > 0) {
-      this.listCbxProcess = res[0];
-      this.changeDetectorRef.detectChanges();
-    }
-  });
 }
 
 async getListInstanceSteps(processId: any) {
@@ -457,7 +455,6 @@ updateDataCases(instance: tmpInstances, cases: CM_Cases) {
     cases.refID = instance.recID;
   }
   cases.owner = this.owner;
-  cases.contactID = this.contactID;
 }
 checkFormat(field) {
   if (field.dataType == 'T') {
@@ -573,12 +570,35 @@ checkEndDayInstance(endDate, endDateCondition) {
 //   this.changeDetectorRef.detectChanges();
 // }
 
-addFile($event){
-
+addFile(e) {
+  this.attachment.uploadFile();
 }
-
+fileAdded(e) {}
+getfileCount(e) {
+  if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
+  else this.isHaveFile = false;
+  this.showLabelAttachment = this.isHaveFile;
+}
 // onSave(){
 
+// }
+
+// async actionSaveBeforeSaveAttachment() {
+//   if (this.attachment?.fileUploadList?.length > 0) {
+//     (await this.attachment.saveFilesObservable()).subscribe((res) => {
+//       if (res) {
+//         var countAttack = 0;
+//         countAttack = Array.isArray(res) ? res.length : 1;
+//         this.cases.attachments =
+//           this.action === this.actionEdit
+//             ? this.cases.attachments + countAttack
+//             : countAttack;
+//    //     this.selectedAction();
+//       }
+//     });
+//   } else {
+//   //  this.selectedAction();
+//   }
 // }
 
 }

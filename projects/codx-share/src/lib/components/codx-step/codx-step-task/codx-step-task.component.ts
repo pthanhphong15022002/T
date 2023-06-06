@@ -49,27 +49,29 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModel: FormModel;
   @Input() stepId: any;
   @Input() dataSources: any;
-  @Input() isShowMore = true;
-  @Input() isShowStep = false;
+  @Input() isShowMore = true; // show more function
+  @Input() isShowStep = false; 
   @Input() isShowButton = true;
   @Input() isShowFile = true;
   @Input() isShowComment = true;
-  @Input() isDeepCopy = true;
-  @Input() typeProgress = 1;
-  @Input() isLockSuccess = false;
-  @Input() isSaveProgress = true;
+  @Input() isDeepCopy = true; // copy sâu 
+  @Input() isLockSuccess = false; // lọc cái task 100%
+  @Input() isSaveProgress = true; // lưu progress vào db
 
-  @Input() isClose = false;
-  @Input() isStart = true;
-  @Input() isOnlyView = true;
-  @Input() isEditTimeDefault = true;
-  @Input() isUpdateProgressGroup = true;
+  @Input() isClose = false; // đóng nhiệm vụ
+  @Input() isStart = true; // bắt đầu ngay 
+  @Input() isOnlyView = true; // đang ở giai đoạn nào
   @Input() isRoleAll = true;
   @Input() isViewStep = false;
+
   @Output() isChangeProgress = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();
   @Output() valueChangeProgress = new EventEmitter<any>();
   @Output() saveAssign = new EventEmitter<any>();
+
+  isEditTimeDefault = false;
+  isUpdateProgressGroup = false;
+  isUpdateProgressStep = false;
   
   currentStep: any;
   isUpdate;
@@ -100,7 +102,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   };
   titleAction: any = '';
   id: string;
- 
 
   constructor(
     private callfc: CallFuncService,
@@ -145,13 +146,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       if (this.isOnlyView) {
         this.getTaskEnd();
       }
-      // if(this.idStepOld != this.currentStep?.recID){
-      //   let isTaskEnd = this.progressTaskEnd == 100 ? true : false;
-      //   if(this.isOnlyView){
-      //     this.continueStep.emit(isTaskEnd);
-      //   }
-      // }
-      // this.idStepOld = this.currentStep?.recID;
     }
   }
 
@@ -164,7 +158,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     formModel['funcID'] = functionID;
     return formModel;
   }
-
+  // loại bỏ những task có progress 100%
   removeTaskSuccess() {
     if (this.listGroupTask?.length > 0) {
       for (let i = 0; i < this.listGroupTask.length; ) {
@@ -205,6 +199,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         ? JSON.parse(JSON.stringify(this.dataSources))
         : this.dataSources;
     }
+    this.isUpdateProgressGroup = this.currentStep?.progressStepControl || false;
+    this.isUpdateProgressStep = this.currentStep?.progressTaskGroupControl || false;
+    this.isEditTimeDefault = this.currentStep?.leadtimeControl || false;
+
     const taskGroupList = this.currentStep?.tasks.reduce((group, product) => {
       const { taskGroupID } = product;
       group[taskGroupID] = group[taskGroupID] ?? [];
@@ -859,6 +857,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
     return dataPopupOutput;
   }
+  
   async openPopupUpdateProgress(data, type) {
     if (!this.isOnlyView || !this.isStart || this.isClose || this.isViewStep)
       return;
@@ -869,7 +868,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.isRoleAll,
       this.isOnlyView,
       this.isUpdateProgressGroup,
-      false,
+      this.isUpdateProgressStep,
       this.user
     );
     if (!checkUpdate) return;
@@ -977,6 +976,30 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         formName: 'DPInstancesStepsTasks',
         gridViewName: 'grvDPInstancesStepsTasks',
       };
+      //a thao laasy refID
+      let listRefIDAssign = '';
+      switch (type) {
+        case 'T':
+          listRefIDAssign = data.recID;
+          break;
+        case 'G':
+          if (data.task?.length > 0) {
+            let arrRecIDTask = data.task.map((x) => x.recID);
+            listRefIDAssign = arrRecIDTask.join(';');
+          }
+          break;
+        case 'P':
+          if (data.taskGroup?.length > 0) {
+            if (data.taskGroup?.task?.length > 0) {
+              let arrRecIDTask = data.taskGroup.task.map((x) => x.recID);
+              if (listRefIDAssign&& listRefIDAssign.trim()!='')
+                listRefIDAssign += ';' + arrRecIDTask.join(';');else listRefIDAssign = arrRecIDTask.split(';')
+            }
+            //thieu cong task ngooai mai hoir thuan de xets
+          }
+          break;
+      }
+      
       let listData = {
         type,
         value: data,
@@ -985,6 +1008,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         isUpdate: this.isUpdate,
         isOnlyView: this.isOnlyView,
         isUpdateProgressGroup: this.isUpdateProgressGroup,
+        listRefIDAssign: listRefIDAssign,
       };
       let option = new SidebarModel();
       option.Width = '550px';
@@ -1023,8 +1047,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   checkUpdateProgress(dataUpdate, type) {
     if (this.isOnlyView && this.isStart && !this.isClose && !this.isViewStep) {
-      if (type != 'G' && type != 'P') {
-        //task
+      if(type  == "P"){
+        return this.isUpdateProgressStep && this.isRoleAll ? true : false;
+      }else if(type == "G"){
+        let isGroup = false;
+        if (!this.isRoleAll) {
+          isGroup = this.checRoleTask(dataUpdate, 'O');
+        }
+        return this.isUpdateProgressGroup && (this.isRoleAll || isGroup)
+          ? true
+          : false;
+      }else{
         let isGroup = false;
         let isTask = false;
         if (!this.isRoleAll) {
@@ -1037,15 +1070,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           }
         }
         return this.isRoleAll || isGroup || isTask ? true : false;
-      } else {
-        //group
-        let isGroup = false;
-        if (!this.isRoleAll) {
-          isGroup = this.checRoleTask(dataUpdate, 'O');
-        }
-        return this.isUpdateProgressGroup && (this.isRoleAll || isGroup)
-          ? true
-          : false;
       }
     }
     return false;
@@ -1085,28 +1109,31 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   createMeeting(data) {
     this.stepService.getDefault('TMT0501', 'CO_Meetings').subscribe((res) => {
       if (res && res?.data) {
-     
         let meeting = res.data;
         meeting['_uuid'] = meeting['meetingID'] ?? Util.uid();
         meeting['idField'] = 'meetingID';
         meeting.meetingName = data?.taskName;
         meeting.meetingType = '1';
-        meeting.reminder = Number.isNaN(data.reminders)? Number.parseInt(data.reminders) : 0
+        meeting.reminder = Number.isNaN(data.reminders)
+          ? Number.parseInt(data.reminders)
+          : 0;
         let option = new SidebarModel();
         option.Width = '800px';
         option.zIndex = 1011;
         let formModel = new FormModel();
 
-        let preside ;
+        let preside;
         let participants;
-        let listPermissions=''
-        if(data?.roles?.length>0){
-          preside = data?.roles.filter(x=>x.roleType=='O')[0]?.objectID ;
-          if(preside)
-          listPermissions +=preside
-          participants = data?.roles.filter(x=>x.roleType=='P').map(x=>x.objectID).join(";");
-          if(participants){
-            listPermissions += ";" + participants
+        let listPermissions = '';
+        if (data?.roles?.length > 0) {
+          preside = data?.roles.filter((x) => x.roleType == 'O')[0]?.objectID;
+          if (preside) listPermissions += preside;
+          participants = data?.roles
+            .filter((x) => x.roleType == 'P')
+            .map((x) => x.objectID)
+            .join(';');
+          if (participants) {
+            listPermissions += ';' + participants;
           }
         }
         this.cache.functionList('TMT0501').subscribe((f) => {
@@ -1115,7 +1142,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               this.cache
                 .gridViewSetup(f.formName, f.gridViewName)
                 .subscribe((grvSetup) => {
-                  if(grvSetup){
+                  if (grvSetup) {
                     formModel.funcID = 'TMT0501';
                     formModel.entityName = f.entityName;
                     formModel.formName = f.formName;
@@ -1126,7 +1153,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                       action: 'add',
                       titleAction: this.titleAction,
                       disabledProject: false,
-                      preside:  preside,
+                      preside: preside,
                       data: meeting,
                       listPermissions: listPermissions,
                       isOtherModule: true,
@@ -1144,7 +1171,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                       }
                     });
                   }
-                 
                 });
             });
           }

@@ -33,16 +33,16 @@ export class PopupEditOwnerstepComponent {
     this.data = dt?.data[2];
 
     this.applyFor = dt?.data[3];
+    var recID =  this.dataCM  ? this.dataCM.refID : this.data?.recID;
+    var stepID =  this.dataCM  ? this.dataCM.stepID : this.data?.stepID;
     if(this.applyFor != '0') {
       this.dataCM = dt?.data[4];
-      this.getListPermission(this.dataCM.processID,this.applyFor);
+      this.getListPermission(this.dataCM.processID,this.applyFor,stepID);
     }
     else {
       this.startControl = dt?.data[4];
     }
 
-    var recID =  this.dataCM  ? this.dataCM.refID : this.data?.recID;
-    var stepID =  this.dataCM  ? this.dataCM.stepID : this.data?.stepID;
     this.getStepByStepIDAndInID(recID, stepID);
   }
 
@@ -62,8 +62,8 @@ export class PopupEditOwnerstepComponent {
         }
       });
   }
- async getListPermission(processId, applyFor) {
-  var data = [processId,applyFor]
+ async getListPermission(processId, applyFor,stepID) {
+  var data = [processId,applyFor,stepID]
     this.codxDpService.getListPermission(data).subscribe(async res =>{
       if(res){
        this.lstParticipants =  await this.codxDpService.getListUserByOrg(res[0]);

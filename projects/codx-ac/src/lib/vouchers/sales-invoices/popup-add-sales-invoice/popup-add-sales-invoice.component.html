@@ -6,11 +6,12 @@
   [dialog]="dialogRef"
   [customToolbar]="customToolbar"
   [data]="salesInvoice"
+  class="ac-dialog"
 >
 </codx-form>
 
 <ng-template #body>
-  <div class="card-add mt-5 popup-sales">
+  <div class="card-add popup-sales">
     <ejs-tab>
       <e-tabitems>
         <e-tabitem>
@@ -54,7 +55,7 @@
                         [formModel]="form.formModel"
                         [Group]="form.formGroup"
                         (valueChange)="onInputChange($event)"
-                        [disabled]="journal.multiCurrency === '0'"
+                        [disabled]="journal?.multiCurrency === '0'"
                       ></codx-input>
                     </div>
                     <div class="col-6 form-group">
@@ -66,7 +67,7 @@
                         field="exchangeRate"
                         [formModel]="form.formModel"
                         [Group]="form.formGroup"
-                        [disabled]="journal.multiCurrency === '0'"
+                        [disabled]="journal?.multiCurrency === '0'"
                       ></codx-input>
                     </div>
                   </div>
@@ -406,7 +407,6 @@
               [allowFiltering]="true"
               [allowSorting]="true"
               [autoLoad]="false"
-              [height]="200"
               [dataSource]="salesInvoicesLines"
               (cellChanged)="onCellChange($event)"
               (created)="onCreate($event)"
@@ -428,6 +428,7 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
+
     <div class="d-flex justify-content-center my-3">
       <button
         class="btn btn-light-primary btn-sm mt-3 d-flex align-items-center"
@@ -441,6 +442,7 @@
         ></codx-label>
       </button>
     </div>
+
     <div class="row mt-5">
       <div class="col-5 form-group">
         <codx-label fiedName="memo" [formModel]="form.formModel"></codx-label>
@@ -464,13 +466,18 @@
 </ng-template>
 
 <ng-template #footer>
-  <codx-tabs
-    [entityName]="form.formModel.entityName"
-    [formModel]="form.formModel"
-    [objectID]="salesInvoice?.recID"
-    [funcID]="form.formModel.funcID"
-    [TabControl]="tabs"
-  ></codx-tabs>
+  <div class="ac-dialog-footer">
+    <div class="btn btn-white btn-icon tab-action">
+      <span class="icon-unfold_more icon-20"></span>
+    </div>
+    <codx-tabs
+      [entityName]="form.formModel.entityName"
+      [formModel]="form.formModel"
+      [objectID]="salesInvoice?.recID"
+      [funcID]="form.formModel.funcID"
+      [TabControl]="tabs"
+    ></codx-tabs>
+  </div>
 </ng-template>
 
 <ng-template #customToolbar>

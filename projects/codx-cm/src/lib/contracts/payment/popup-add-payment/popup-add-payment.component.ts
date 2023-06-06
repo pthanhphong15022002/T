@@ -19,6 +19,7 @@ export class PopupAddPaymentComponent {
   listPaymentEdit: CM_ContractsPayments[];
   listPaymentDelete: CM_ContractsPayments[];
   contractID = null;
+  percent = 0;
 
   title = 'Lịch thanh toán';
   dialog: DialogRef;
@@ -65,11 +66,20 @@ export class PopupAddPaymentComponent {
     }
   }
 
+  valueChangePercent(e) {
+    this.percent = e?.data;
+    this.payment.scheduleAmt = (this.percent*this.contract.contractAmt)/100
+  }
+
+
   valueChangeText(event) {
     this.payment[event?.field] = event?.data;
     if(event?.field == 'scheduleAmt' && event?.data > this.contract.contractAmt){
       this.notiService.notifyCode('Số tiền thanh toán lớn hơn giá trị hợp đồng');
       this.payment[event?.field] = this.contract.contractAmt;
+    }
+    if(event?.field == 'scheduleAmt'){
+      this.percent = (this.payment.scheduleAmt/this.contract.contractAmt)*100;
     }
     
   }

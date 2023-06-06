@@ -27,6 +27,7 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   visaObj;
   actionType;
   headerText: '';
+  fieldHeaderTexts;
   funcID;
   idField = 'RecID';
   indexSelected;
@@ -119,11 +120,22 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
             this.initForm();
           }
         });
+        this.hrService.getHeaderText(this.funcID).then((res) => {
+          this.fieldHeaderTexts = res;
+        })
   }
 
   onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
+    debugger
+
+    let ddd = new Date();
+    if(this.visaObj.issuedDate > ddd.toISOString()){
+      this.notify.notifyCode('HR014',0, this.fieldHeaderTexts['IssuedDate']);
       return;
     }
 

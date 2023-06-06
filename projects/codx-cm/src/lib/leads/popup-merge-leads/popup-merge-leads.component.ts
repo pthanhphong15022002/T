@@ -99,9 +99,6 @@ export class PopupMergeLeadsComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
-    this.gridViewSetup = await firstValueFrom(
-      this.cache.gridViewSetup('CMLeads', 'grvCMLeads')
-    );
     if (this.leadOne) {
       this.lstContactOne = await this.getContacts(this.leadOne?.recID);
       this.lstAddressOne = await this.getListAddress(
@@ -109,7 +106,9 @@ export class PopupMergeLeadsComponent implements OnInit {
         this.leadOne?.recID
       );
     }
-
+    this.gridViewSetup = await firstValueFrom(
+      this.cache.gridViewSetup('CMLeads', 'grvCMLeads')
+    );
     this.changeDetector.detectChanges();
   }
 
