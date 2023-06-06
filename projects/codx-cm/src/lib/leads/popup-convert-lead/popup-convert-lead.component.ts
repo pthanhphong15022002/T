@@ -367,7 +367,6 @@ export class PopupConvertLeadComponent implements OnInit {
     //     res.recID = Util.uid();
     //   });
     // }
-
   }
 
   async convertDataInstanceAndDeal() {
@@ -676,6 +675,8 @@ export class PopupConvertLeadComponent implements OnInit {
         tmp.recID = Util.uid();
         tmp.refID = e.data.recID;
         tmp.objectType = '4';
+        tmp.isDefault = false;
+
         var indexCus = this.lstContactCustomer.findIndex(
           (x) => x.recID == e.data.recID
         );
@@ -704,7 +705,12 @@ export class PopupConvertLeadComponent implements OnInit {
       );
       if (e.action == 'edit') {
         if (findIndex != -1) {
-          this.lstContactDeal[findIndex] = e.data;
+          var isDefault = this.lstContactDeal[findIndex]?.isDefault;
+          var role = this.lstContactDeal[findIndex]?.role;
+
+          this.lstContactDeal[findIndex] = JSON.parse(JSON.stringify(e.data));
+          this.lstContactDeal[findIndex].isDefault = isDefault;
+          this.lstContactDeal[findIndex].role = role;
         }
       } else {
         this.lstContactDelete.push(Object.assign({}, e?.data));
@@ -724,7 +730,9 @@ export class PopupConvertLeadComponent implements OnInit {
       if (e.action == 'edit') {
         if (findIndex != -1) {
           var isDefault = this.lstContactCustomer[findIndex].isDefault;
-          this.lstContactCustomer[findIndex] = JSON.parse(JSON.stringify(e.data));
+          this.lstContactCustomer[findIndex] = JSON.parse(
+            JSON.stringify(e.data)
+          );
           this.lstContactCustomer[findIndex].recID = e.data.refID;
           this.lstContactCustomer[findIndex].role = null;
           this.lstContactCustomer[findIndex].isDefault = isDefault;
@@ -739,7 +747,6 @@ export class PopupConvertLeadComponent implements OnInit {
     this.lstContactCustomer = e;
   }
   //#endregion
-
 
   changeAvatar() {
     this.avatarChange = true;
