@@ -15,29 +15,16 @@
 </container-element>
 <!-- nvthuan công việc -->
 <ng-template #task let-data="value">
-  <div></div>
-  <div *ngFor="let step of listStep; let i = index" class="mt-5">
-    <div>
-      <span
-        class="h4 me-3 justify-content-center align-items-center"
-        style="
-          width: 35px;
-          height: 35px;
-          border-radius: 50%;
-          background-color: rgb(45, 171, 255);
-          display: inline-flex;
-        "
-        >{{ i + 1 }}</span
-      >
-      <span class="h4">{{ step.stepName }}</span>
+    <div *ngFor="let step of listStep; let i = index" >
+      <codx-step-task
+        [dataSources]="step"
+        [isShowButton]="false"
+        [isShowMore]="true"
+        [isDeepCopy]="false"
+        (saveAssign)="saveAssignTask($event)"
+      ></codx-step-task>
+      <hr class="m-0 p-0" />
     </div>
-    <codx-step-task
-      [dataSources]="step"
-      [isShowButton]="false"
-      [isShowMore]="true"
-    ></codx-step-task>
-    <hr />
-  </div>
 </ng-template>
 
 <ng-template #information>  <div class="d-flex flex-column">
@@ -84,7 +71,7 @@
               class="fs-7"
               #processID
               [innerHTML]="
-                dataSelected?.ProcessID
+                dataSelected?.processName
                   | formatvalue : formModel : 'processID' : processID : 'CMCases'
                   : 'grvCMCases'
                   | async

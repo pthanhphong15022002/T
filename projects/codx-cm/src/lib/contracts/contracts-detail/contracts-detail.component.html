@@ -19,7 +19,7 @@
 <!-- temp left -->
 <ng-template #itemTemplate let-data>
   <codx-temp-full
-    cardCss="card-template border-bottom p-3 list-task"
+    cardCss="card-template border-bottom py-3 px-4 list-task"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF($event, data)"
@@ -36,8 +36,8 @@
 
 <ng-template #descTmp let-data>
   <div class="d-flex align-items-top mb-1">
-    <span class="icon-business icon-16 me-2"></span>
-    <span class="text-gray-700">{{
+    <span class="icon-business icon-16 me-2 text-gray-600"></span>
+    <span class="text-gray-600">{{
       data?.companyName || "Cty cổ phần tin học lạc việt"
     }}</span>
   </div>
@@ -62,11 +62,11 @@
         "
       ></span>
     </div>
-    <div class="d-flex justify-content-end align-items-center me-2">
-      <span class="icon-monetization_on icon-16 me-2 text-warning"></span>
+    <div class="d-flex justify-content-end align-items-center">
+      <span class="icon-monetization_on icon-16 me-1 text-warning"></span>
       <!-- <span class="fs-6 fw-bold">25.000.000</span> -->
       <span
-        class="fs-6 fw-bold"
+        class="text-gray-700"
         [innerHTML]="
           data?.contractAmt
             | formatvalue : view.formModel : 'ContractAmt'
@@ -83,15 +83,15 @@
         [value]="data?.status"
         [showText]="true"
         [showBgColor]="true"
-        class="badge badge-primary badge-md fs-7"
+        class="badge badge-primary badge-sm"
       >
       </codx-vll>
     </div>
     <div class="d-flex align-items-center">
-      <div class="d-flex justify-content-end align-items-center me-2">
-        <span class="icon-16 icon-av_timer me-1"></span>
+      <div class="d-flex align-items-center me-2">
+        <span class="icon-16 icon-av_timer me-1 text-gray-600"></span>
         <span
-          class="fs-6 fw-bold"
+          class="text-gray-700"
           [innerHTML]="
             data?.createdOn
               | formatvalue : view.formModel : 'CreatedOn'
@@ -99,7 +99,7 @@
           "
         ></span>
       </div>
-      <div>
+      <div class="h-25px">
         <codx-imgs
           [width]="25"
           [objectId]="data.createdBy"
@@ -126,33 +126,42 @@
 </ng-template>
 
 <ng-template #headerRightTemp>
-  <div class="d-flex align-items-center justify-content-between">
-    <div class="d-flex align-items-center fs-5 fw-bold">
-      <span>{{ itemSelected?.contractName }}</span>
-      <span> - </span>
-      <span>{{ itemSelected?.contractID }}</span>
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <div class="d-flex align-items-center">
+      <span class="fs-4 fw-bold">{{ itemSelected?.contractName }}</span>
+      <span class="mx-2 text-gray-500">-</span>
+      <span class="fs-6 text-gray-700">{{ itemSelected?.contractID }}</span>
     </div>
-    <div>
+    <div class="ms-3 d-flex align-items-center">
       <codx-vll
         [name]="vllStatus"
         [field]="'Status'"
         [value]="itemSelected?.status"
         [showText]="true"
         [showBgColor]="true"
-        class="badge badge-primary badge-md fs-7"
+        class="badge badge-primary badge-md"
       >
       </codx-vll>
-    </div>
+      <div class="me-2">
+        <codx-imgs
+          [width]="25"
+          [objectId]="itemSelected.createdBy"
+          ojectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
+    </div> 
   </div>
-  <div class="d-flex align-items-center justify-content-between fs-6 mb-5">
-    <div>
+  <div class="d-flex align-items-center mb-1">
+    <div class="d-flex align-items-center w-50">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="contractDate"
         [formModel]="view.formModel"
       ></codx-label>
       <span
-        class="me-3"
+        class="text-gray-600"
         [innerHTML]="
           itemSelected?.contractDate
             | formatvalue : view.formModel : 'ContractDate'
@@ -160,14 +169,14 @@
         "
       ></span>
     </div>
-    <div>
+    <div class="d-flex align-items-center w-50">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="effectiveFrom"
         [formModel]="view.formModel"
       ></codx-label>
       <span
-        class="me-3"
+        class="text-gray-600"
         [innerHTML]="
           itemSelected?.effectiveFrom
             | formatvalue : view.formModel : 'EffectiveFrom'
@@ -175,14 +184,17 @@
         "
       ></span>
     </div>
-    <div>
+    
+    
+  </div>
+  <div class="d-flex align-items-top mb-1">
+    <div class="d-flex align-items-center w-50">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="effectiveTo"
         [formModel]="view.formModel"
       ></codx-label>
-      <span
-        class="me-3"
+      <span class="text-gray-600"
         [innerHTML]="
           itemSelected?.effectiveTo
             | formatvalue : view.formModel : 'EffectiveTo'
@@ -190,14 +202,13 @@
         "
       ></span>
     </div>
-    <div>
+    <div class="d-flex align-items-center w-50">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="extendOn"
         [formModel]="view.formModel"
       ></codx-label>
-      <span
-        class="me-3"
+      <span class="text-gray-600"
         [innerHTML]="
           itemSelected?.extendOn
             | formatvalue : view.formModel : 'ExtendOn'
@@ -205,40 +216,31 @@
         "
       ></span>
     </div>
-    <div>
-      <codx-imgs
-        [width]="25"
-        [objectId]="itemSelected.createdBy"
-        ojectType="AD_Users"
-        [numberImages]="1"
-      >
-      </codx-imgs>
-    </div>
   </div>
-  <div class="row fs-6">
-    <div class="col-6">
+  <div class="d-flex align-items-top mb-1">
+    <div class="w-50 d-flex align-items-center">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="dealID"
         [formModel]="view.formModel"
       ></codx-label>
       <span
-        class="fs-7"
+        class="text-gray-700"
         [innerHTML]="
           itemSelected?.dealID | formatvalue : view.formModel : 'DealID' | async
         "
       ></span>
     </div>
-    <div class="col-6 d-flex align-items-center">
-      <div class="me-5">
+    <div class="w-50 d-flex align-items-center">
+      <div class="me-5 d-flex align-items-center">
         <codx-label
-          class="label-colon"
+          class="label-colon fw-bold text-dark"
           fiedName="currencyID"
           [formModel]="view.formModel"
         >
         </codx-label>
         <span
-          class="fs-7"
+          class="text-warning"
           [innerHTML]="
             itemSelected?.currencyID
               | formatvalue : view.formModel : 'CurrencyID'
@@ -247,15 +249,15 @@
         >
         </span>
       </div>
-      <div>
+      <div class="d-flex align-items-center">
         <codx-label
-          class="label-colon"
+          class="label-colon fw-bold text-dark"
           fiedName="exchangeRate"
           [formModel]="view.formModel"
         >
         </codx-label>
         <span
-          class="fs-7"
+          class="text-gray-700"
           [innerHTML]="
             itemSelected?.exchangeRate
               | formatvalue : view.formModel : 'ExchangeRate'
@@ -266,16 +268,16 @@
       </div>
     </div>
   </div>
-  <div class="row fs-6">
-    <div class="col-6">
+  <div class="d-flex align-items-top mb-1">
+    <div class="w-50 d-flex align-items-center">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="quotationID"
         [formModel]="view.formModel"
       >
       </codx-label>
       <span
-        class="fs-7"
+        class="text-gray-700"
         [innerHTML]="
           itemSelected?.quotationID
             | formatvalue : view.formModel : 'QuotationID'
@@ -285,16 +287,16 @@
       </span>
     </div>
     <!-- Hợp đồng sử dụng -->
-    <div class="col-6">
+    <div class="w-50 d-flex align-items-center">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="useType"
         [formModel]="view.formModel"
         [setRequire]="false"
       >
       </codx-label>
       <span
-        class="fs-7"
+        class="text-gray-700"
         [innerHTML]="
           itemSelected?.useType
             | formatvalue : view.formModel : 'UseType'
@@ -304,17 +306,17 @@
       </span>
     </div>
   </div>
-  <div class="row fs-6">
-    <div class="col-6">
+  <div class="d-flex align-items-center mb-1">
+    <div class="w-50 d-flex align-items-center">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="orderID"
         [formModel]="view.formModel"
         [setRequire]="false"
       >
       </codx-label>
       <span
-        class="fs-7"
+        class="text-gray-700"
         [innerHTML]="
           itemSelected?.orderID
             | formatvalue : view.formModel : 'OrderID'
@@ -323,16 +325,16 @@
       ></span>
     </div>
     <!-- Loại hợp đồng -->
-    <div class="col-6">
+    <div class="w-50 d-flex align-items-center">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="contractType"
         [formModel]="view.formModel"
         [setRequire]="false"
       >
       </codx-label>
       <span
-        class="fs-7"
+        class="text-gray-700"
         [innerHTML]="
           itemSelected?.contractType
             | formatvalue : view.formModel : 'ContractType'
@@ -348,7 +350,7 @@
     [change]="itemSelected"
     [listTab]="listClicked"
     (tab)="changeTab($event)"
-    size="20"
+    size="18"
     class="mt-5"
   ></codx-taskbar>
   <hr class="mt-0" />
@@ -388,7 +390,7 @@
 <ng-template #generalTemplate>
   <div class="A mb-5">
     <div>
-      <span class="fs-5 fw-bold">Bên A</span>
+      <span class="fs-6 fw-bold text-primary">Bên A</span>
     </div>
     <ng-container
       [ngTemplateOutlet]="general"
@@ -397,7 +399,7 @@
   </div>
 
   <div class="B mb-5">
-    <div><span class="fs-5 fw-bold">Bên B</span></div>
+    <div><span class="fs-6 fw-bold text-primary">Bên B</span></div>
     <ng-container
       [ngTemplateOutlet]="general"
       [ngTemplateOutletContext]="{ data: { value: itemSelected, type: 'B' } }"
@@ -724,7 +726,7 @@
 </ng-template>
 
 <ng-template #general let-data="data">
-  <div class="row fs-6 my-2">
+  <div class="row my-2">
     <div class="col-6">
       <codx-label
         class="label-colon"

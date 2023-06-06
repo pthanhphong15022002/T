@@ -3,13 +3,10 @@ import {
   Component,
   Injector,
   TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
+  ViewChild
 } from '@angular/core';
 import {
-  ButtonModel,
-  CodxFormDynamicComponent,
-  CodxTreeviewComponent,
+  ButtonModel, CodxTreeviewComponent,
   CRUDService,
   DialogModel,
   DialogRef,
@@ -19,7 +16,7 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType,
+  ViewType
 } from 'codx-core';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { PopupAddPositionsComponent } from './popup-add-positions/popup-add-positions.component';
@@ -42,22 +39,10 @@ export class ReportinglineComponent extends UIComponent {
   dialog!: DialogRef;
   moreFuncs: Array<ButtonModel> = [];
   funcID: string;
-  posInfo: any = {};
   employees: any = [];
   itemSelected: any;
-  countResource = 0;
-  listEmployeeSearch = [];
-  popoverCrr: any;
-  allRoles: any;
-  lstRoles: any;
-  searchField: any;
-  listEmployee = [];
-  popoverDataSelected: any;
   orgUnitID: any;
   ListViewService: CRUDService;
-  predicates = 'PositionID = @0';
-  dataValues: string = '';
-  isLoaded: boolean = false;
   detailComponent: any = null;
   dataSelected: any = null;
   positionID: string = '';
@@ -65,9 +50,7 @@ export class ReportinglineComponent extends UIComponent {
   codxTreeView: CodxTreeviewComponent = null;
   isCorporation: boolean;
   constructor(
-    private notifiSv: NotificationsService,
     inject: Injector,
-    private dt: ChangeDetectorRef,
     private adService: CodxAdService
   ) {
     super(inject);
@@ -153,10 +136,6 @@ export class ReportinglineComponent extends UIComponent {
             option,
           );
           form.closed.subscribe((res: any) => {
-            // if (res?.event?.save) {
-            //   let node = res.event.save.data;
-            //   this.codxTreeView.setNodeTree(node);
-            // }
             if (res?.event) {
               let node = res.event;
               this.codxTreeView.setNodeTree(node);
@@ -199,7 +178,7 @@ export class ReportinglineComponent extends UIComponent {
             //dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: result,
-            funcID: this.view.formModel.funcID,
+            funcID: this.funcID,
             isAdd: false,
             title: event.text,
             isCorporation: this.isCorporation, 
@@ -229,11 +208,11 @@ export class ReportinglineComponent extends UIComponent {
             //dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: res,
-            funcID: this.view.formModel.funcID,
+            funcID: this.funcID,
             isAdd: true,
             title: event.text,
           };
-          this.callfc.openSide(PopupAddPositionsComponent,object,option,this.view.formModel.funcID)
+          this.callfc.openSide(PopupAddPositionsComponent,object,option,this.funcID)
           .closed.subscribe((res)=>{
             if (res?.event?.save) {
               let node = res.event.save.data;
@@ -297,6 +276,4 @@ export class ReportinglineComponent extends UIComponent {
       );
     }
   }
-  searchUser($event) {}
-  searchChange(event: any) {}
 }

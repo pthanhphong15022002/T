@@ -34,7 +34,7 @@
                                     [width]="50">
                                 </codx-img>
                                 <ng-container *ngIf="item.message?.messageType != '3' && item.message?.messageType != '5'">
-                                    <div class="ms-2">{{item.message.message}}</div>
+                                    <div class="ms-2 line-clamp line-clamp-2">{{item.message.message}}</div>
                                 </ng-container>
                             </div>
                         </ng-template>

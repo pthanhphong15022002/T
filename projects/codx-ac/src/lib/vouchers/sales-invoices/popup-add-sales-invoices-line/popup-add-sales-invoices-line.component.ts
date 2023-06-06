@@ -109,8 +109,9 @@ export class PopupAddSalesInvoicesLineComponent
           'diM1',
           this.diM1,
           'DepartmentID',
-          this.form,
-          'diM1'
+          this.form.formGroup,
+          'diM1',
+          this.isEdit
         );
         this.journalService.loadComboboxBy067(
           journal,
@@ -118,8 +119,9 @@ export class PopupAddSalesInvoicesLineComponent
           'diM2',
           this.diM2,
           'CostCenterID',
-          this.form,
-          'diM2'
+          this.form.formGroup,
+          'diM2',
+          this.isEdit
         );
         this.journalService.loadComboboxBy067(
           journal,
@@ -127,8 +129,9 @@ export class PopupAddSalesInvoicesLineComponent
           'diM3',
           this.diM3,
           'CostItemID',
-          this.form,
-          'diM3'
+          this.form.formGroup,
+          'diM3',
+          this.isEdit
         );
       });
 

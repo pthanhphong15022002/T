@@ -18,6 +18,7 @@ import { FormGroup } from '@angular/forms';
 })
 export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
   formModel: FormModel;
+  fieldHeaderTexts;
   formGroup: FormGroup;
   dialog: DialogRef;
   data;
@@ -55,6 +56,9 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
           }
         });
     }
+    this.hrService.getHeaderText(this.formModel.funcID).then((res) => {
+      this.fieldHeaderTexts = res;
+    })
   }
 
   ngAfterViewInit() {}
@@ -64,6 +68,19 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
       this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       return;
     }
+    debugger
+
+    let ddd = new Date();
+    if(this.data.pitIssuedOn > ddd.toISOString()){
+      this.notify.notifyCode('HR014',0, this.fieldHeaderTexts['PITIssuedOn']);
+      return;
+    }
+
+    if(this.data.siRegisterOn > ddd.toISOString()){
+      this.notify.notifyCode('HR014',0, this.fieldHeaderTexts['SIRegisterOn']);
+      return;
+    }
+
 
     this.hrService
       .saveEmployeeSelfInfo(this.data)

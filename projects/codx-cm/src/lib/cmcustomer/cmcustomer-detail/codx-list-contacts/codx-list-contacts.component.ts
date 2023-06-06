@@ -195,6 +195,7 @@ export class CodxListContactsComponent implements OnInit {
           case 'SYS003':
           case 'SYS004':
           case 'SYS002':
+          case 'SYS001':
           case 'SYS04':
             res.disabled = true;
             break;
