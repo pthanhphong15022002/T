@@ -186,10 +186,9 @@
       <div class="col-6">
         <codx-label fiedName="BeginDate" [formModel]="formModel"></codx-label>
         <codx-input
-          type="datetime"
-          format="d"
           field="beginDate"
-          [crrValue]="data?.beginDate"
+          [formModel]="formModel"
+          [Group]="formGroup"
           (valueChange)="valueChangedDate($event)"
         >
         </codx-input>
@@ -197,10 +196,9 @@
       <div class="col-6">
         <codx-label fiedName="EndDate" [formModel]="formModel"></codx-label>
         <codx-input
-          type="datetime"
-          format="d"
           field="endDate"
-          [crrValue]="data?.endDate"
+          [formModel]="formModel"
+          [Group]="formGroup"
           (valueChange)="valueChangedDate($event)"
         >
         </codx-input>
@@ -361,7 +359,7 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button class="btn btn-primary" (click)="onSaveForm(false)">
+    <button class="btn btn-primary" (click)="onSaveForm()">
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"

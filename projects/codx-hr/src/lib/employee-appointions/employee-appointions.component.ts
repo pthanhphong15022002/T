@@ -256,7 +256,6 @@ export class EmployeeAppointionsComponent extends UIComponent {
                 '</div>'
             )
             .subscribe((result) => {
-              console.log(result);
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
@@ -264,7 +263,6 @@ export class EmployeeAppointionsComponent extends UIComponent {
                 this.hrService
                   .EditEmployeeAppointionsMoreFunc(this.itemDetail)
                   .subscribe((res) => {
-                    console.log('Result after send edit' + res);
                     if (res) {
                       this.view?.dataService
                         ?.update(this.itemDetail)
