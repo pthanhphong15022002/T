@@ -97,11 +97,11 @@ export class PopupEmployeeBusinessComponent
           if (res) {
             this.data = res?.data;
             this.data.beginDate = null;
-            // this.data.isOversea = false;
             this.data.country = null;
             this.data.endDate = null;
             this.data.employeeID = this.employeeId;
             this.formModel.currentData = this.data;
+            this.data.periodType = '1';
             this.formGroup.patchValue(this.data);
             //Attache value checked oversea
             this.formGroup.patchValue({
@@ -178,8 +178,6 @@ export class PopupEmployeeBusinessComponent
     }
   }
 
-  ngAfterViewInit() {}
-
   onInit(): void {
     this.hrService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
@@ -223,41 +221,52 @@ export class PopupEmployeeBusinessComponent
       this.cr.detectChanges();
     }
   }
-  //Count days
-  HandleCountDay(value: number) {
-    return Math.ceil(value / (1000 * 3600 * 24));
+
+  HandleTotalDaysVal(periodType: string) {
+    let beginDate = new Date(this.data.beginDate);
+    let endDate = new Date(this.data.endDate);
+    let dif = endDate.getTime() - beginDate.getTime();
+    if (periodType == '1') {
+      this.data.days = dif / (1000 * 60 * 60 * 24) + 1;
+    }
+    if (
+      (periodType == '2' || periodType == '3') &&
+      this.data.beginDate == this.data.endDate
+    ) {
+      this.data.days = 0.5;
+    }
+
+    if (
+      this.data.endDate > this.data.beginDate &&
+      (periodType == '2' || periodType == '3')
+    ) {
+      this.data.endDate = this.data.beginDate;
+      this.formGroup.patchValue({ endDate: this.data.beginDate });
+      this.data.days = 0.5;
+    }
+
+    this.formGroup.patchValue({
+      days: this.data.endDate < this.data.beginDate ? '' : this.data.days,
+    });
   }
 
   //Change date and render days
   valueChangedDate(evt: any) {
-    this.formGroup.patchValue(this.data);
-    let days = 1;
     if (evt.field === 'beginDate') {
-      this.data.beginDate = evt.data.fromDate;
+      this.data.beginDate = evt.data;
+      this.data.endDate = evt.data;
+      this.formGroup.patchValue({ endDate: evt.data });
     }
     if (evt.field === 'endDate') {
-      this.data.endDate = evt.data.fromDate;
+      this.data.endDate = evt.data;
     }
-    //All day = 1 , morning = 2 , afternoon = 3
-    if (
-      this.data.beginDate !== undefined &&
-      this.data.endDate !== undefined &&
-      this.data.periodType !== null
-    ) {
-      days = this.data.endDate - this.data.beginDate;
-      if (this.data.periodType === '1') {
-        this.formGroup.patchValue({
-          days: this.HandleCountDay(days) + 1,
-        });
-      } else {
-        this.formGroup.patchValue({
-          days: this.HandleCountDay(days) + 0.5,
-        });
-      }
+
+    if (this.data.endDate && this.data.beginDate) {
+      this.HandleTotalDaysVal(this.data.periodType);
     }
   }
 
-  onSaveForm(isCloseForm: boolean) {
+  onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;

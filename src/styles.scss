@@ -69,6 +69,13 @@ erm-quick-links-inner .dropdown-menu {
 .table.table-bordered tbody tr:last-child td {
   border: 1px var(--gray-150) solid !important;
 }
+
+codx-input[type="radio"] ejs-radiobutton{
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: start;
+}
 /***** end theme ****/
 ::-webkit-scrollbar {
   width: 0.4rem !important;
@@ -1895,13 +1902,13 @@ codx-tabs {
   .tab-footer {
     margin-top: 5px;
   }
-  // .badge.badge-sm {
-  //   margin-top: 4px;
-  //   margin-left: -5px;
-  //   padding-left: 1px !important;
-  //   padding-right: 1px !important;
-  //   font-size: 10px !important;
-  // }
+  a.nav-link .badge.badge-sm {
+    margin-top: 4px;
+    margin-left: -5px;
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+    font-size: 10px !important;
+  }
   .nav-tabs .nav-link.active,
   .nav-tabs .nav-item.show .nav-link {
     background-color: transparent;
@@ -3061,4 +3068,16 @@ codx-toolbar-report{
 
 codx-view-list-detail .instance-select .nav-link {
   padding: 4px 7px;
+}
+
+////////////////
+#kt_aside_menu .hover-scroll-overlay-y {
+  &::-webkit-scrollbar {
+    width: 0rem !important;
+  }
+}
+codx-wrapper.hover-scroll-overlay-y {
+  &::-webkit-scrollbar {
+    width: 0rem !important;
+  }
 }

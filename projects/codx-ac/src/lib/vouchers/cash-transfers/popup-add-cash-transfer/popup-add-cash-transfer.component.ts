@@ -434,7 +434,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
           this.fgVatInvoice.patchValue(res);
 
           setTimeout(() => {
-            this.loadDims(this.journal, false);
+            this.loadDims(this.journal, false); // bùa
           });
         });
       });

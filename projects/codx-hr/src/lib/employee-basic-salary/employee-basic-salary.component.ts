@@ -1,10 +1,12 @@
 import {
+  ChangeDetectorRef,
   Component,
   Injector,
-  ChangeDetectorRef,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   DialogRef,
@@ -16,10 +18,8 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
-import { ActivatedRoute } from '@angular/router';
 import { PopupEBasicSalariesComponent } from '../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { ViewBasicSalaryDetailComponent } from './view-basic-salary-detail/view-basic-salary-detail.component';
-import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-employee-basic-salary',
@@ -49,14 +49,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     private notify: NotificationsService
   ) {
     super(injector);
-    // this.funcID = this.activatedRoute.snapshot.params['funcID'];
   }
-
-  service = 'HR';
-  assemblyName = 'ERM.Business.HR';
-  entityName = 'HR_EBasicSalaries';
-  className = 'EBasicSalariesBusiness';
-  method = 'GetListEBasicSalariesAsync';
 
   actionAddNew = 'HRTPro03A01';
   actionSubmit = 'HRTPro03A03';
@@ -66,15 +59,11 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   actionUpdateApproved = 'HRTPro03AU5';
   actionUpdateClosed = 'HRTPro03AU9';
 
-  funcID: string;
   grvSetup: any;
-  // genderGrvSetup: any;
   views: Array<ViewModel> = [];
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
-    text: 'Thêm',
   };
-  eBasicSalariesHeaderText;
   formGroup: FormGroup;
   currentEmpObj: any;
   editStatusObj: any;
@@ -83,23 +72,21 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   dataCategory;
   itemDetail;
 
-  onInit(): void {
-    this.cache
-      .gridViewSetup('EBasicSalaries', 'grvEBasicSalaries')
-      .subscribe((res) => {
-        if (res) {
+  GetGvSetup() {
+    let funID = this.activatedRoute.snapshot.params['funcID'];
+    this.cache.functionList(funID).subscribe((fuc) => {
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((res) => {
           this.grvSetup = res;
-        }
-      });
-    // this.cache
-    //   .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-    //   .subscribe((res) => {
-    //     this.genderGrvSetup = res?.Gender;
-    //   });
-    if (!this.funcID) {
-      this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    }
+        });
+    });
   }
+
+  onInit(): void {
+    this.GetGvSetup();
+  }
+
   ngAfterViewInit() {
     this.views = [
       {
@@ -114,18 +101,13 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.templateItemDetailRight,
         },
       },
     ];
-    this.hrService
-      .getHeaderText(this.view?.formModel?.funcID)
-      .then((response) => {
-        this.eBasicSalariesHeaderText = response;
-      });
   }
   ngAfterViewChecked() {
     if (!this.formGroup?.value) {
@@ -205,9 +187,11 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         break;
     }
   }
+
   changeDataMF(event, data) {
     this.hrService.handleShowHideMF(event, data, this.view);
   }
+
   popupUpdateEBasicSalaryStatus(funcID, data) {
     this.hrService.handleUpdateRecordStatus(funcID, data);
 
@@ -244,12 +228,9 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       {
         //pass data
         actionType: actionType,
-        //dataObj: data,
         headerText: actionHeaderText,
-        //employeeId: data?.employeeID,
         funcID: this.view.funcID,
         salaryObj: data,
-        //empObj: this.currentEmpObj,
         fromListView: true,
       },
       option
@@ -324,13 +305,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     dialog.close();
   }
 
-  getDetailAward(event, data) {
-    if (data) {
-      this.itemDetail = data;
-      this.df.detectChanges();
-    }
-  }
-  clickEvent(event, data) {
+  clickEvent(event) {
     this.clickMF(event?.event, event?.data);
   }
 
@@ -348,8 +323,6 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
           let eBasicSalaryObj = parsedJSON[index];
           if (eBasicSalaryObj['ApprovalRule'] == '1') {
             this.release();
-          } else {
-            //đợi BA mô tả
           }
         }
       }
@@ -374,14 +347,12 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
                 '</div>'
             )
             .subscribe((result) => {
-              // console.log('ok', result);
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService.UpdateEmployeeBasicSalariesInfo((res) => {
                   if (res) {
-                    // console.log('after release', res);
                     this.view?.dataService?.update(this.itemDetail).subscribe();
                   }
                 });

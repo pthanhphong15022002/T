@@ -26,6 +26,7 @@ export class EmployeeListComponent extends UIComponent {
   function: any = null;
   sysMoreFunc: any[] = [];
   grvSetup: any;
+  funcIDEmpInfor: string = 'HRT03b';
   // template columns grid
   @ViewChild('colEmployee', { static: true }) colEmployee: TemplateRef<any>;
   @ViewChild('colContact', { static: true }) colContact: TemplateRef<any>;
@@ -35,6 +36,12 @@ export class EmployeeListComponent extends UIComponent {
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   // template any
+
+  service = 'HR';
+  assemblyName = 'ERM.Business.HR';
+  entityName = 'HR_Employees';
+  className = 'EmployeesBusiness';
+  method = 'GetModelFormEmployAsync';
 
   constructor(
     private injector: Injector,
@@ -58,44 +65,44 @@ export class EmployeeListComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    this.columnsGrid = [
-      {
-        formName: 'employees',
-        gridViewName: 'grvEmployee',
-        fieldName: 'employeeID',
-        controlName: 'lblEmployeeID',
-        headerText: 'Nhân viên',
-        width: 350,
-        template: this.colEmployee,
-      },
-      {
-        formName: 'employees',
-        gridViewName: 'grvEmployee',
-        controlName: 'LblEmail',
-        fieldName: 'email',
-        headerText: 'Liên hệ',
-        width: 200,
-        template: this.colContact,
-      },
-      {
-        formName: 'employees',
-        gridViewName: 'grvEmployee',
-        controlName: 'lblBirthday',
-        fieldName: 'birthday',
-        headerText: 'Thông tin cá nhân',
-        width: 200,
-        template: this.colPersonal,
-      },
-      {
-        formName: 'employees',
-        gridViewName: 'grvEmployee',
-        controlName: 'lblStatus',
-        fieldName: 'status',
-        headerText: 'Tình trạng',
-        width: 200,
-        template: this.colStatus,
-      },
-    ];
+    // this.columnsGrid = [
+    //   {
+    //     formName: 'employees',
+    //     gridViewName: 'grvEmployee',
+    //     fieldName: 'employeeID',
+    //     controlName: 'lblEmployeeID',
+    //     headerText: 'Nhân viên',
+    //     width: 350,
+    //     template: this.colEmployee,
+    //   },
+    //   {
+    //     formName: 'employees',
+    //     gridViewName: 'grvEmployee',
+    //     controlName: 'LblEmail',
+    //     fieldName: 'email',
+    //     headerText: 'Liên hệ',
+    //     width: 200,
+    //     template: this.colContact,
+    //   },
+    //   {
+    //     formName: 'employees',
+    //     gridViewName: 'grvEmployee',
+    //     controlName: 'lblBirthday',
+    //     fieldName: 'birthday',
+    //     headerText: 'Thông tin cá nhân',
+    //     width: 200,
+    //     template: this.colPersonal,
+    //   },
+    //   {
+    //     formName: 'employees',
+    //     gridViewName: 'grvEmployee',
+    //     controlName: 'lblStatus',
+    //     fieldName: 'status',
+    //     headerText: 'Tình trạng',
+    //     width: 200,
+    //     template: this.colStatus,
+    //   },
+    // ];
     this.views = [
       // {
       //   id: '1',
@@ -319,7 +326,6 @@ export class EmployeeListComponent extends UIComponent {
     this.itemSelected = val.data;
     this.detectorRef.detectChanges();
   }
-  funcIDEmpInfor: string = 'HRT03b';
   // view imployee infor
   clickViewEmpInfo(data: any) {
     this.cache.functionList(this.funcIDEmpInfor).subscribe((func) => {
@@ -335,4 +341,5 @@ export class EmployeeListComponent extends UIComponent {
       this.codxService.navigate('', func?.url, queryParams, state, true);
     });
   }
+
 }
