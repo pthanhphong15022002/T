@@ -33,6 +33,7 @@ import { CodxEsService } from '../codx-es.service';
 import { PopupAddSignatureComponent } from '../setting/signature/popup-add-signature/popup-add-signature.component';
 import { PopupAddSignFileComponent } from './popup-add-sign-file/popup-add-sign-file.component';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
+import { ApprovalStepSignComponent } from './approval-step/approval-step.component';
 
 @Component({
   selector: 'app-sign-file',
@@ -366,5 +367,19 @@ export class SignFileComponent extends UIComponent {
       if (fm) {
       }
     });
+  }
+  browsingProcess(recID:any,approveStatus:any)
+  {
+    this.dialog = this.callfunc.openForm(
+      ApprovalStepSignComponent,
+      "",
+      500,
+      700,
+      this.view?.formModel?.funcID,
+      {
+        transID: recID,
+        approveStatus: approveStatus
+      }
+    );
   }
 }

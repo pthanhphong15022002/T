@@ -234,6 +234,7 @@ export class GanttChartComponent
         case 'G':
           for (var i = idxCrr + 1; i < this.ganttDsClone.length; i++) {
             if (this.ganttDsClone[i]?.type == 'T') {
+              if(!this.ganttDsClone[i]?.taskGroupID) continue
               if (listRefIDAssign && listRefIDAssign.trim() != '')
                 listRefIDAssign += ';' + this.ganttDsClone[i].recID;
               else listRefIDAssign = this.ganttDsClone[i].recID;
