@@ -1008,56 +1008,17 @@
       class="mb-3"
     ></codx-taskbar>
   </div>
-  <ng-container [ngTemplateOutlet]="PayTableTemplate"></ng-container>
-  <div class="d-flex align-items-center my-5">
-    <div class="content-icon">
-      <span class="icon-add text-primary"></span>
-    </div>
-    <button
-      style="height: 28px"
-      type="button"
-      class="btn btn-outline-primary btn-sm"
-      (click)="addPayment()"
-    >
-      <codx-label
-        [formModel]="dialog.formModel"
-        fiedName=""
-        default="Thêm lịch thanh toán"
-      ></codx-label>
-    </button>
-  </div>
+  <view-payment
+    [isSave]="false"
+    [contracts]="contracts"
+    [listPayment]="listPayment"
+    [listPaymentAdd]="listPaymentAdd"
+    [listPaymentEdit]="listPaymentEdit"
+    [listPaymentDelete]="listPaymentDelete"
+    [listPaymentHistory]="listPaymentHistory"
+  ></view-payment>
+  
 </ng-template>
-
-<ng-template #PayTableTemplate let-data="value">
-  <div>
-    <codx-gridview-v2
-      #productTable
-      service="CM"
-      [formName]="fmContractsPayments.formName"
-      [gridViewName]="fmContractsPayments.gridViewName"
-      [entityName]="fmContractsPayments.entityName"
-      [templateMore]="more"
-      [contentEditable]="false"
-      [allowFiltering]="true"
-      [allowSorting]="true"
-      [dataSource]="listPayment"
-      [columnsGrid]="columns"
-      [autoLoad]="false"
-      rowHeight="40"
-      predicates="TransID=@0"
-    ></codx-gridview-v2>
-  </div>
-  <ng-template #more let-data>
-    <codx-mfunc
-      [formModel]="fmContractsPayments"
-      [isBookMark]="true"
-      [dataItem]="moreDefaut"
-      [type]="'view'"
-      (clickMF)="onClickMFPayment($event, data)"
-    ></codx-mfunc>
-  </ng-template>
-</ng-template>
-
 <!-- thông tin giao hàng -->
 <ng-template #shipTemplate let-data="value">
   <div>
