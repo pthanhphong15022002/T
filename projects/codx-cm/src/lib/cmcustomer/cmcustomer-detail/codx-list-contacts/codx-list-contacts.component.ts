@@ -38,6 +38,7 @@ export class CodxListContactsComponent implements OnInit {
   @Input() selectAll: boolean = false;
   @Input() formModel: FormModel;
   @Input() lstContactRef = [];
+  @Input() customerID: any;
   @Output() lstContactEmit = new EventEmitter<any>();
   @Output() lstContactDeleteEmit = new EventEmitter<any>();
   @Output() objectConvert = new EventEmitter<any>();
@@ -185,6 +186,9 @@ export class CodxListContactsComponent implements OnInit {
         if (this.isButton == true)
           this.clickAddContact('editType', data, this.moreFuncEdit);
         break;
+      case 'CM0102_4':
+        this.clickAddContact('editRole', data, this.moreFuncEdit);
+        break;
     }
   }
 
@@ -226,6 +230,9 @@ export class CodxListContactsComponent implements OnInit {
           case 'CM0102_1':
             if (this.objectType == '4') res.disabled = true;
             break;
+          case 'CM0102_4':
+            if (this.objectType != '4') res.disabled = true;
+            break;
         }
       });
     }
@@ -255,12 +262,13 @@ export class CodxListContactsComponent implements OnInit {
           objectName: this.objectName,
           gridViewSetup: res,
           listContacts: this.listContacts,
+          customerID: this.customerID
         };
         var dialog = this.callFc.openForm(
           PopupQuickaddContactComponent,
           '',
           500,
-          action != 'editType' ? 600 : 350,
+          action != 'editType' && action != 'editRole' ? 700 : 250,
           '',
           obj,
           '',

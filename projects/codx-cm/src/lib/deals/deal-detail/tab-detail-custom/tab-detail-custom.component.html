@@ -81,7 +81,7 @@
     <div class="text-dark text-primary fw-bold fs-6 mb-3">
       <codx-label default="Thông tin chung"></codx-label>
     </div>
-    
+
     <div class="mb-3">
       <div class="row">
         <div class="col-6">
@@ -92,7 +92,7 @@
             <div class="text-dark fw-bold codx-textcontent">
               {{dataSelected?.dealID }}
             </div>
-          </div> 
+          </div>
         </div>
         <div class="col-6">
           <div class="mb-3 d-flex align-items-top">
@@ -128,7 +128,7 @@
             <div class="text-dark fw-bold codx-textcontent">
               {{ getNameCategory(dataSelected?.category) }}
             </div>
-          </div> 
+          </div>
         </div>
         <div class="col-6">
           <div class="mb-3 d-flex align-items-top">
@@ -175,7 +175,7 @@
               "
             ></span>
             </div>
-          </div> 
+          </div>
         </div>
         <div class="col-6">
           <div class="mb-3 d-flex align-items-top">
@@ -222,7 +222,7 @@
                 "
               ></span>
             </div>
-          </div> 
+          </div>
         </div>
         <div class="col-6">
           <div class="mb-3 d-flex align-items-top">
@@ -269,7 +269,7 @@
                 "
               ></span>
             </div>
-          </div> 
+          </div>
         </div>
         <div class="col-6">
           <div class="mb-3 d-flex align-items-top">
@@ -313,8 +313,10 @@
       [funcID]="'CM0205'"
       [objectID]="dataSelected?.recID"
       [objectName]="dataSelected.dealName"
+      [customerID]="dataSelected?.customerID"
       [objectType]="'4'"
-      [hidenMF]="true"
+      [type]="'formDetail'"
+      [hidenMF]="false"
     ></codx-list-contacts>
   </div>
 </ng-template>
