@@ -18,7 +18,7 @@ export class ViewImgContactComponent {
   @Input() sizeImg = 25;
   listUserSearch = [];
   listUser = [];
-
+  lstContactPop = [];
   popupSearch: any;
   popupOld: any;
   popoverList: any;
@@ -37,6 +37,12 @@ export class ViewImgContactComponent {
     this.listUserSearch = [];
     this.listUser = [];
     this.changeDectec.detectChanges();
+  }
+
+  loadList(){
+    setTimeout(() => {
+      this.lstContactPop = this.lstContact;
+    }, 0);
   }
 
   seachUser(e, value, p) {

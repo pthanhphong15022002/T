@@ -195,20 +195,36 @@ export class CodxListContactsComponent implements OnInit {
           case 'SYS003':
           case 'SYS004':
           case 'SYS002':
+          case 'SYS001':
           case 'SYS04':
             res.disabled = true;
             break;
           case 'CM0102_2':
-            if (this.funcID == 'CM0103' || this.objectType == '2')
+            if (
+              this.funcID == 'CM0103' ||
+              this.objectType == '2' ||
+              this.objectType == '4'
+            )
               res.disabled = true;
             break;
           case 'CM0102_3':
-            if (this.funcID == 'CM0101' || this.objectType == '2')
+            if (
+              this.funcID == 'CM0101' ||
+              this.objectType == '2' ||
+              this.objectType == '4'
+            )
               res.disabled = true;
             break;
           case 'SYS02':
-            if (this.objectType != '2') res.disabled = true;
-
+            if (
+              (this.hidenMF && this.objectType == '4') ||
+              this.objectType == '1' ||
+              this.objectType == '3'
+            )
+              res.disabled = true;
+            break;
+          case 'CM0102_1':
+            if (this.objectType == '4') res.disabled = true;
             break;
         }
       });
@@ -262,15 +278,18 @@ export class CodxListContactsComponent implements OnInit {
                   this.listContacts[index].isDefault = false;
                 }
               }
-
+              if (this.objectType != '4') {
+                e.event.role = null;
+              }
               this.listContacts = this.cmSv.bringDefaultContactToFront(
                 this.cmSv.loadList(e.event, this.listContacts, 'update')
               );
+              this.contactEvent.emit({ data: e.event, action: 'edit' });
+
               var index = this.listContacts.findIndex(
                 (x) => x.recID == e.event?.recID
               );
               this.changeContacts(this.listContacts[index]);
-              this.contactEvent.emit({ data: e.event, action: 'edit' });
 
               this.lstContactEmit.emit(this.listContacts);
               this.changeDetectorRef.detectChanges();

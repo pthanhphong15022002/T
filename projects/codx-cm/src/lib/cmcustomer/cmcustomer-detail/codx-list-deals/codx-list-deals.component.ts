@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { CodxCmService } from '../../../codx-cm.service';
-import { ApiHttpService, DataRequest, FormModel } from 'codx-core';
+import { ApiHttpService, CacheService, DataRequest, FormModel } from 'codx-core';
 import { Observable, finalize, map, pipe } from 'rxjs';
 
 @Component({
@@ -21,16 +21,18 @@ export class CodxListDealsComponent implements OnInit {
   assemblyName = 'ERM.Business.CM';
   className = 'DealsBusiness';
   method = 'GetListDealsByCustomerIDAsync';
-  constructor(private cmSv: CodxCmService, private api: ApiHttpService) {}
+  colorReasonSuccess: any;
+  colorReasonFail: any;
+  constructor(private cache: CacheService,private cmSv: CodxCmService, private api: ApiHttpService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    this.getListDealsByCustomerID();
 
   }
 
   async ngOnInit() {
+    this.getListDealsByCustomerID();
     this.formModel = await this.cmSv.getFormModel('CM0201');
   }
 
@@ -86,6 +88,27 @@ export class CodxListDealsComponent implements OnInit {
       return step;
     } else {
       return null;
+    }
+  }
+
+  async getColorReason() {
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.colorReasonSuccess = item;
+          } else if (item.value === 'F') {
+            this.colorReasonFail = item;
+          }
+        }
+      }
+    });
+  }
+  checkOverflow(event: any, popup: any) {
+    let parent = event.currentTarget.parentElement;
+    let child = event.currentTarget;
+    if (child.scrollWidth >= parent.scrollWidth) {
+      popup.open();
     }
   }
 }

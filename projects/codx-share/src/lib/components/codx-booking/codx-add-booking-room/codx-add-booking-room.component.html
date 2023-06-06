@@ -18,8 +18,8 @@
         <div class="col-4 form-group ps-0" *ngIf="grView?.bookingOn?.allowPopup">
           <codx-label fiedName="BookingOn" [formModel]="form.formModel">
           </codx-label>
-          <codx-input field="bookingOn" [crrValue]="data?.bookingOn" format="d" type="datetime" class="test-datetime" [disabled]="viewOnly"
-            (valueChange)="valueDateChange($event)">
+          <codx-input field="bookingOn" [crrValue]="data?.bookingOn" format="d" type="datetime" class="test-datetime"
+            [disabled]="viewOnly" (valueChange)="valueDateChange($event)">
           </codx-input>
         </div>
 
@@ -42,7 +42,7 @@
 
         <div class="col-2 d-flex flex-column justify-content-center pe-0">
           <codx-input #checkbox type="checkbox" label="Cả ngày" labelPosition="after" field="day" class="test-check"
-            (valueChange)="valueAllDayChange($event)" [disabled]="false" [checked]="isFullDay"  [disabled]="viewOnly">
+            (valueChange)="valueAllDayChange($event)" [disabled]="false" [checked]="isFullDay" [disabled]="viewOnly">
           </codx-input>
         </div>
       </div>
@@ -52,7 +52,8 @@
           <codx-label fiedName="ResourceID" [formModel]="form.formModel">
           </codx-label>
         </div>
-        <codx-input *ngIf="viewOnly" [disabled]="viewOnly" ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"  [disabled]="viewOnly">
+        <codx-input *ngIf="viewOnly" [disabled]="viewOnly" ControlName="resourceID" [formModel]="form.formModel"
+          [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
         <ng-template #showAll>
           <div class="d-flex bg-light ps-5 py-2 justify-content-start align-items-center">
@@ -65,54 +66,58 @@
             <codx-label default="Hiện tất cả" name="lblShowAll"></codx-label>
           </div>
         </ng-template>
-          <ejs-dropdownlist *ngIf="!viewOnly" id="resource" #cusCBB [dataSource]="cbbResource" [fields]="fields" 
+        <ejs-dropdownlist *ngIf="!viewOnly" id="resource" #cusCBB [dataSource]="cbbResource" [fields]="fields"
           [placeholder]="grView?.resourceID?.description" (valueChange)="cbxResourceChange($event)"
           [footerTemplate]="showAll"></ejs-dropdownlist>
-        
-        
-          <div class="mt-2">
-            <div *ngIf="tmplstDevice != null && tmplstDevice.length > 0" class="d-flex flex-row justify-content-between">
-              <div class="d-flex justify-content-start flex-wrap">
-                <div class="d-flex" *ngFor="let item of tmplstDevice;let i =index">              
-                  <div *ngIf="i<5" class="d-flex align-items-end me-2" [ngClass]="item?.isSelected ? 'text-primary' : 'text-muted'">
-                    <span class="me-1 ps-2" [className]="item?.icon"
-                      [ngClass]="[item?.isSelected ? 'text-primary' : 'text-muted']">
-                    </span>{{ item?.text }}                
-                    <span *ngIf=" i==4 && tmplstDevice.length >5" class="ps-2 fw-bold">{{ '...' }}</span>
-                  </div>
+
+
+        <div class="mt-2">
+          <div *ngIf="tmplstDevice != null && tmplstDevice.length > 0" class="d-flex flex-row justify-content-between">
+            <div class="d-flex justify-content-start flex-wrap">
+              <div class="d-flex" *ngFor="let item of tmplstDevice;let i =index">
+                <div *ngIf="i<5" class="d-flex align-items-end me-2"
+                  [ngClass]="item?.isSelected ? 'text-primary' : 'text-muted'">
+                  <span class="me-1 ps-2" [className]="item?.icon"
+                    [ngClass]="[item?.isSelected ? 'text-primary' : 'text-muted']">
+                  </span>{{ item?.text }}
+                  <span *ngIf=" i==4 && tmplstDevice.length >5" class="ps-2 fw-bold">{{ '...' }}</span>
                 </div>
               </div>
-              <span class="text-end" *ngIf="tmplstDevice != null && tmplstDevice.length > 0 ">
-                <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md"  [disabled]="viewOnly"
-                  (click)="openPopupDevice(popupDevice)">
-                  <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
-                </button>
-              </span>
             </div>
+            <span class="text-end" *ngIf="tmplstDevice != null && tmplstDevice.length > 0 ">
+              <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" [disabled]="viewOnly"
+                (click)="openPopupDevice(popupDevice)">
+                <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
+              </button>
+            </span>
           </div>
+        </div>
       </div>
       <div class="form-group" *ngIf="grView?.agencyName?.allowPopup">
         <codx-label fiedName="agencyName" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="agencyName" [formModel]="form.formModel" [Group]="form.formGroup"  [disabled]="viewOnly">
+        <codx-input ControlName="agencyName" [formModel]="form.formModel" [Group]="form.formGroup"
+          [disabled]="viewOnly">
         </codx-input>
       </div>
 
       <div class="form-group" *ngIf="grView?.reasonID?.allowPopup">
         <codx-label fiedName="ReasonID" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="reasonID" [formModel]="form.formModel" [Group]="form.formGroup"  [disabled]="viewOnly">
+        <codx-input ControlName="reasonID" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
 
       <div class="form-group" *ngIf="grView?.title?.allowPopup">
         <codx-label fiedName="Title" [formModel]="form.formModel"> </codx-label>
-        <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly"></codx-input>
+        <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup"
+          [disabled]="viewOnly"></codx-input>
       </div>
 
       <div class="form-group" *ngIf="grView?.memo?.allowPopup">
         <codx-label fiedName="Memo" [formModel]="form.formModel"> </codx-label>
-        <codx-input ControlName="memo" [formModel]="form.formModel" [Group]="form.formGroup" class="h-105px" [disabled]="viewOnly">
+        <codx-input ControlName="memo" [formModel]="form.formModel" [Group]="form.formGroup" class="h-105px"
+          [disabled]="viewOnly">
         </codx-input>
       </div>
 
@@ -129,7 +134,8 @@
             </span>
           </div>
           <ng-container class="text-end align-items-end" *ngIf="data?.online">
-            <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="openPopupLink()" [disabled]="viewOnly">
+            <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="openPopupLink()"
+              [disabled]="viewOnly">
               <i class="icon-insert_link text-primary text-hover-primary-dark icon-24"></i>
             </button>
           </ng-container>
@@ -161,13 +167,15 @@
           <div class="symbol-group-badge" *ngIf="resources != null && resources?.length >= 1">
             <div class="symbol symbol-30px symbol-circle position-relative">
               <codx-img [width]="30" [objectId]="resources[0]?.userID" objectType="AD_Users"></codx-img>
-              <span class="position-absolute attendees-tag" [inlineSVG]="'./assets/themes/ep/default/img/'+ resources[0]?.icon"></span>
+              <span class="position-absolute attendees-tag"
+                [inlineSVG]="'./assets/themes/ep/default/img/'+ resources[0]?.icon"></span>
             </div>
           </div>
           <div class="symbol-group-badge" *ngIf="resources?.length >= 2">
             <div class="symbol symbol-30px symbol-circle position-relative">
               <codx-img [width]="30" [objectId]="resources[1]?.userID" objectType="AD_Users"></codx-img>
-              <span class="position-absolute attendees-tag" [inlineSVG]="'./assets/themes/ep/default/img/'+ resources[1]?.icon"></span>
+              <span class="position-absolute attendees-tag"
+                [inlineSVG]="'./assets/themes/ep/default/img/'+ resources[1]?.icon"></span>
             </div>
           </div>
 
@@ -221,7 +229,7 @@
         <div class="d-flex flex-row text-end align-items-end">
           <div class="mx-2">
             <codx-input type="Share" refValue="TM003" (valueChange)="shareInputChange($event)" field="resources"
-              [dataShared]="[]" [multiple]="true" [showInput]="false"  [disabled]="viewOnly">
+              [dataShared]="[]" [multiple]="true" [showInput]="false" [disabled]="viewOnly">
             </codx-input>
           </div>
         </div>
@@ -242,8 +250,8 @@
         <div class="symbol symbol-30px symbol-circle me-4">
           <codx-img [width]="30" [objectId]="item?.userID" objectType="AD_Users"></codx-img>
           <div role="button" class="pe-auto" (click)="showPopover(p, item?.userID)">
-            <span popoverClass="userPopoverClass" [ngbPopover]="!viewOnly?popoverSelectRoles:null" placement="right" #p="ngbPopover"
-              autoClose="outside" class="position-absolute attendees-tag"
+            <span popoverClass="userPopoverClass" [ngbPopover]="!viewOnly?popoverSelectRoles:null" placement="right"
+              #p="ngbPopover" autoClose="outside" class="position-absolute attendees-tag"
               [inlineSVG]="'./assets/themes/ep/default/img/'+ item?.icon">
             </span>
           </div>
@@ -262,7 +270,7 @@
 
         <div class="d-flex flex-column justify-content-center align-items-center me-5">
           <codx-input type="checkbox" [checked]="item?.optional"
-            (valueChange)="attendeesCheckChange($event, item?.userID)"  [disabled]="viewOnly">
+            (valueChange)="attendeesCheckChange($event, item?.userID)" [disabled]="viewOnly">
           </codx-input>
         </div>
 
@@ -280,8 +288,7 @@
         <div class="symbol symbol-30px symbol-circle me-4">
           <codx-img [width]="30" [objectId]="'G'" [objectName]="'G'" objectType="AD_Users"></codx-img>
           <div role="button" class="pe-auto">
-            <span class="position-absolute attendees-tag"
-              inlineSVG="./assets/themes/ep/default/img/EP009_A.svg">
+            <span class="position-absolute attendees-tag" inlineSVG="./assets/themes/ep/default/img/EP009_A.svg">
             </span>
           </div>
         </div>
@@ -296,7 +303,7 @@
 
         <div class="d-flex flex-column justify-content-center align-items-center me-5">
           <codx-input [cusButton]="true" [min]="0" [max]="50" type="number" [crrValue]="guestNumber"
-            (valueChange)="guestChange($event)"  [disabled]="viewOnly">
+            (valueChange)="guestChange($event)" [disabled]="viewOnly">
           </codx-input>
         </div>
       </div>
@@ -322,7 +329,8 @@
       </div>
       <div class="col-4 d-flex justify-content-end">
         <codx-input type="number" [cusButton]="true" class="test-number min-w-50px" [field]="item?.itemID"
-          [crrValue]="item?.quantity" [min]="0" [max]="50" (valueChange)="valueQuantityChange($event)" [disabled]="viewOnly">
+          [crrValue]="item?.quantity" [min]="0" [max]="50" (valueChange)="valueQuantityChange($event)"
+          [disabled]="viewOnly">
         </codx-input>
 
         <div class="ms-5 d-flex flex-column justify-content-center align-items-center me-5">
@@ -334,7 +342,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4" id="Stationery">
       <div class="d-flex flex-row text-end align-items-end">
         <button class="btn btn-sm btn-light-primary me-2 py-2 d-flex flex-row align-items-center" [disabled]="viewOnly"
-          (click)="openStationeryPopup()" >
+          (click)="openStationeryPopup()">
           <span class="icon-layers icon-18 me-2 py-2"></span>
           <codx-label name="lblChooseStationery" class="fw-bold" default="Chọn văn phòng phẩm">
           </codx-label>
@@ -388,14 +396,14 @@
         <button (click)="popupUploadFile()" [disabled]="viewOnly || onSaving"
           class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
           <span class="icon-cloud_upload btn-text-primary me-2"></span>
-          <codx-label fiedName="lblUploadFile" default="Đính kèm" [formModel]="form.formModel"  ></codx-label>
+          <codx-label fiedName="lblUploadFile" default="Đính kèm" [formModel]="form.formModel"></codx-label>
         </button>
         <div class="btn-group">
           <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)" [disabled]="viewOnly || onSaving">
             <codx-label name="lblApprove" default="Gửi duyệt" [formModel]="formModel"></codx-label>
           </button>
           <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="viewOnly || onSaving">
-            <codx-label name="lblSave" default="Lưu" [formModel]="formModel" ></codx-label>
+            <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
           </button>
         </div>
       </div>
@@ -432,7 +440,8 @@
           <div class="d-flex justify-content-end align-items-center">
             <div class="form-check form-check-solid form-switch">
               <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
-                [checked]="item?.isSelected" (valueChange)="checkedChange($event, item)" [disabled]="viewOnly"></codx-input>
+                [checked]="item?.isSelected" (valueChange)="checkedChange($event, item)"
+                [disabled]="viewOnly"></codx-input>
               <label class="form-check-label" for="googleswitch"></label>
             </div>
           </div>
@@ -443,8 +452,8 @@
 
   <ng-template #addLink let-dialog>
     <codx-meeting-online #suremeet [dialog]="dialog" [meetingTitle]="data?.title" [meetingDescription]="data?.memo"
-      [meetingStartDate]="data?.startDate" [meetingStartTime]="startTime" [meetingDuration]="60" [meetingPassword]="null"
-      [meetingUrl]="data?.onlineUrl" [userName]="'ABC'" [mail]="'abc@gmail.com'"
+      [meetingStartDate]="data?.startDate" [meetingStartTime]="startTime" [meetingDuration]="60"
+      [meetingPassword]="null" [meetingUrl]="data?.onlineUrl" [userName]="user.userName" [mail]="user.email"
       [isManager]="true"></codx-meeting-online>
   </ng-template>
 </codx-layout-add>

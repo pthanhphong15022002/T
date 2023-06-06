@@ -30,7 +30,6 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   @Input() gvs: any;
   @Input() transID: string;
   @Input() dataService: CRUDService;
-  @Input() hiddenFields: string[] = [];
 
   @ViewChild('grid', { static: true }) grid: CodxGridviewV2Component;
   @ViewChild('columnItemID', { static: true }) columnItemID: TemplateRef<any>;
@@ -137,7 +136,6 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
           {
             formType: 'edit',
             action: e.text,
-            hiddenFields: this.hiddenFields,
           },
           '',
           dialogModel
@@ -171,7 +169,6 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
             formType: 'add',
             // index: this.salesInvoicesLines.length,
             action: e.text,
-            hiddenFields: this.hiddenFields,
           },
           '',
           dialogModel

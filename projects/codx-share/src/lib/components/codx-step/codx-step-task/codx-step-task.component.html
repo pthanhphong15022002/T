@@ -1,6 +1,11 @@
 <div id="id" class="main" [ngClass]="'show-main'">
-  <div class="d-flex align-items-center justify-content-between me-5 " *ngIf="isShowStep">
-    <div class="qqq d-flex align-items-center fw-bold w-100 has-action-menu">
+  <div
+    class="d-flex align-items-center justify-content-between me-5"
+    *ngIf="isShowStep"
+  >
+    <div
+      class="qqq d-flex align-items-center fw-bold w-100 has-action-menu step-content"
+    >
       <i class="icon-account_balance icon-20 me-2"></i>
       <span class="fs-5 w-100">{{ currentStep.stepName }}</span>
       <codx-mfunc
@@ -11,14 +16,34 @@
         class="mb-5"
       ></codx-mfunc>
     </div>
-    <codx-progressbar [progress]="currentStep?.progress || 0"></codx-progressbar>
+    <div
+      class="disabled-inline"
+      (click)="openPopupUpdateProgress(currentStep, 'P')"
+      [ngClass]="
+        checkUpdateProgress(currentStep, 'P')
+          ? 'cursor-pointer'
+          : 'cursor-not-allowed'
+      "
+    >
+      <codx-progressbar
+        [progress]="currentStep?.progress || 0"
+        #popoverDetails="ngbPopover"
+        [ngbPopover]="'Cập nhật tiến độ'"
+        (mouseenter)="popoverDetails.open()"
+        (mouseleave)="popoverDetails.close()"
+        popoverClass="approverStepClass"
+        container="body"
+        placement="top bottom"
+      ></codx-progressbar>
+    </div>
   </div>
   <!-- drap drop công việc ngoài-->
-  <div class="main-body" *ngIf="listGroupTask?.length> 0">
+  <div class="main-body" *ngIf="listGroupTask?.length > 0">
     <div
       cdkDropList
       class="list"
-      (cdkDropListDropped)="drop($event, listGroupTask, true)">
+      (cdkDropListDropped)="drop($event, listGroupTask, true)"
+    >
       <div cdkDropListGroup>
         <ng-container *ngFor="let groupTask of listGroupTask">
           <div
@@ -26,28 +51,32 @@
             cdkDrag
             [cdkDragData]="groupTask"
             [cdkDragStartDelay]="100"
-            [cdkDragDisabled]="true">
+            [cdkDragDisabled]="true"
+          >
             <div class="card-job stages-task">
               <div
                 *ngIf="groupTask?.recID"
-                class="d-flex align-items-center justify-content-between
-                card-job-expand">
+                class="d-flex align-items-center justify-content-between card-job-expand"
+              >
                 <ng-container
                   [ngTemplateOutlet]="groupTemplate"
-                  [ngTemplateOutletContext]="{ groupTask: groupTask }">
+                  [ngTemplateOutletContext]="{ groupTask: groupTask }"
+                >
                 </ng-container>
                 <ng-container
                   [ngTemplateOutlet]="timeAndProgress"
                   [ngTemplateOutletContext]="{
-                  value: { value: groupTask, group: null, type: 'G' }
-                  }">
+                    value: { value: groupTask, group: null, type: 'G' }
+                  }"
+                >
                 </ng-container>
               </div>
               <div
                 *ngIf="!groupTask?.recID"
                 [ngStyle]="
-                groupTask?.task?.length == 0 ? { height: '30px' } : {}
-                "></div>
+                  groupTask?.task?.length == 0 ? { height: '30px' } : {}
+                "
+              ></div>
 
               <!-- kéo thả ở trong  -->
               <div
@@ -57,45 +86,52 @@
                 [id]="id + groupTask?.recID"
                 class="task"
                 [ngStyle]="
-                groupTask?.recID
-                ? { 'margin-left': '35px' }
-                : { 'margin-left': '0px' }
-                ">
+                  groupTask?.recID
+                    ? { 'margin-left': '35px' }
+                    : { 'margin-left': '0px' }
+                "
+              >
                 <ng-container *ngFor="let task of groupTask?.task">
                   <div
                     cdkDrag
                     [cdkDragStartDelay]="100"
                     [cdkDragData]="task"
                     [cdkDragDisabled]="true"
-                    class="drap-drop">
+                    class="drap-drop"
+                  >
                     <div
-                      class="d-flex align-items-center justify-content-between">
+                      class="d-flex align-items-center justify-content-between"
+                    >
                       <div style="flex-grow: 1" class="has-action-menu">
                         <ng-container
                           [ngTemplateOutlet]="taskTemplate"
                           [ngTemplateOutletContext]="{
-                          value: { task: task, group: groupTask }
-                          }"></ng-container>
+                            value: { task: task, group: groupTask }
+                          }"
+                        ></ng-container>
                       </div>
                       <div>
                         <ng-container
                           [ngTemplateOutlet]="timeAndProgress"
                           [ngTemplateOutletContext]="{
-                          value: { value: task, group: groupTask, type: 'T' }
-                          }"></ng-container>
+                            value: { value: task, group: groupTask, type: 'T' }
+                          }"
+                        ></ng-container>
                       </div>
                     </div>
 
                     <div class="ms-5">
                       <ng-container
                         [ngTemplateOutlet]="fileTemplate"
-                        [ngTemplateOutletContext]="{value: task}"></ng-container>
+                        [ngTemplateOutletContext]="{ value: task }"
+                      ></ng-container>
                     </div>
                   </div>
                 </ng-container>
                 <div
                   *ngIf="groupTask?.task?.length === 0"
-                  style="height: 10px"></div>
+                  style="height: 10px"
+                ></div>
               </div>
             </div>
           </div>
@@ -113,13 +149,15 @@
 <ng-template #groupTemplate let-groupTask="groupTask">
   <div
     class="d-flex justify-content-start align-items-center has-action-menu"
-    style="flex-grow: 1">
+    style="flex-grow: 1"
+  >
     <!-- show hiden group task -->
     <span class="">
       <button
         type="button"
         class="btn btn-icon btn-light-primary"
-        (click)="toggleTask($event, id + groupTask?.recID)">
+        (click)="toggleTask($event, id + groupTask?.recID)"
+      >
         <i class="icon-horizontal_rule icon-18"></i>
       </button>
     </span>
@@ -133,12 +171,14 @@
           class="title"
           fiedName="updateTime"
           default="Cập nhật:"
-          [formModel]="formModel">
+          [formModel]="formModel"
+        >
         </codx-label>
         <span>
           {{
-          groupTask?.modifiedOn || groupTask?.createdOn | date : dateTimeFomat
-          }}</span>
+            groupTask?.modifiedOn || groupTask?.createdOn | date : dateTimeFomat
+          }}</span
+        >
         <span>, {{ groupTask?.note || "" }}</span>
       </div>
     </div>
@@ -149,7 +189,8 @@
       [dataItem]="moreDefaut"
       [type]="'hover'"
       (clickMF)="clickMFTaskGroup($event, groupTask)"
-      (changeDataMF)="changeDataMFGroupTask($event, groupTask)">
+      (changeDataMF)="changeDataMFGroupTask($event, groupTask)"
+    >
     </codx-mfunc>
   </div>
 </ng-template>
@@ -160,25 +201,30 @@
     <div class="icon-container me-3" [ngStyle]="getColor(data?.task)">
       <span
         class="icon-18 text-primary-600"
-        [ngClass]="getIconTask(data?.task)"></span>
+        [ngClass]="getIconTask(data?.task)"
+      ></span>
     </div>
     <div class="steplist-hearder">
       <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1">
         <span>{{ data?.task?.taskName }}</span>
         <span
           [ngClass]="checkExitsParentID(data?.group?.task, data?.task)"
-          class="h4">*</span>
+          class="h4"
+          >*</span
+        >
       </div>
       <div class="text-gray-600" *ngIf="!isViewStep">
         <codx-label
           class="title"
           fiedName="updateTime"
           default="Cập nhật:"
-          [formModel]="formModel">
+          [formModel]="formModel"
+        >
         </codx-label>
-        <span>{{
-          data?.task?.modifiedOn || data?.task?.createdOn
-          | date : dateTimeFomat
+        <span
+          >{{
+            data?.task?.modifiedOn || data?.task?.createdOn
+              | date : dateTimeFomat
           }}
         </span>
       </div>
@@ -190,7 +236,8 @@
       [dataItem]="moreDefaut"
       [type]="'hover'"
       (clickMF)="clickMFTask($event, data?.group, data?.task)"
-      (changeDataMF)="changeDataMFTask($event, data?.task, data?.group)">
+      (changeDataMF)="changeDataMFTask($event, data?.task, data?.group)"
+    >
     </codx-mfunc>
   </div>
 </ng-template>
@@ -209,7 +256,8 @@
     type="inline"
     allowMultiFile="1"
     referType="source"
-    displayThumb="full">
+    displayThumb="full"
+  >
   </codx-attachment>
 </ng-template>
 
@@ -218,34 +266,60 @@
     <button
       type="button"
       class="btn btn-outline-primary me-2"
-      (click)="addGroupTask()">
+      (click)="addGroupTask()"
+    >
       <i class="icon-add icon-18 text-primary"></i>
       <codx-label
         [name]="'lblAddGroup'"
         [formName]="'DPStepsFields'"
         [gridViewName]="'grvDPStepsFields'"
-        [default]="'Thêm nhóm công việc'"></codx-label>
+        [default]="'Thêm nhóm công việc'"
+      ></codx-label>
     </button>
     <button
       type="button"
       class="btn btn-outline-primary ms-4"
       (click)="addTask(null)"
-      style="min-width: 170px">
+      style="min-width: 170px"
+    >
       <i class="icon-add_task icon-18 text-primary"></i>
       <codx-label
         [name]="'lblAddTask'"
         [formName]="'DPStepsFields'"
         [gridViewName]="'grvDPStepsFields'"
-        [default]="'Thêm công việc'"></codx-label>
+        [default]="'Thêm công việc'"
+      ></codx-label>
     </button>
   </div>
 </ng-template>
 
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
-    <span class="date text-nowrap" *ngIf="data?.value?.startDate && data?.value?.endDate">
+    <!-- <div *ngIf="data?.value?.startDate && data?.value?.endDate">
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.value?.startDate
+            | formatvalue : view.formModel : 'ContractType'
+            | async
+        "
+      ></span>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          itemSelected?.contractType
+            | formatvalue : view.formModel : 'ContractType'
+            | async
+        "
+      ></span>
+    </div> -->
+    <span
+      class="date text-nowrap"
+      *ngIf="data?.value?.startDate && data?.value?.endDate"
+    >
       {{ data?.value?.startDate | date : dateFomat }} -
-      {{ data?.value?.endDate | date : dateFomat }}</span>
+      {{ data?.value?.endDate | date : dateFomat }}</span
+    >
     <span class="d-flex align-items-center">
       <codx-imgs
         class="me-2 d-flex align-items-center"
@@ -254,16 +328,25 @@
         [numberImages]="1"
         [isToolTip]="true"
         [objectId]="getRole(data?.value, 'ID')"
-        [objectName]="getRole(data?.value, 'name')">
+        [objectName]="getRole(data?.value, 'name')"
+      >
       </codx-imgs>
     </span>
-    <div 
-      class="disabled-inline" 
-      (click)="openPopupUpdateProgress(data?.value, data?.type)" 
-      [ngClass]="checkUpdateProgress(data?.value,data?.type) ? 'cursor-pointer' : 'cursor-not-allowed'"
+    <div
+      class="disabled-inline"
+      (click)="openPopupUpdateProgress(data?.value, data?.type)"
+      [ngClass]="
+        checkUpdateProgress(data?.value, data?.type)
+          ? 'cursor-pointer'
+          : 'cursor-not-allowed'
+      "
     >
-      <codx-progressbar 
+      <codx-progressbar
         [progress]="data?.value?.progress"
+        #p="ngbPopover"
+        [ngbPopover]="'Cập nhật tiến độ'"
+        (mouseenter)="p.open()"
+        (mouseleave)="p.close()"
       ></codx-progressbar>
     </div>
     <div class="notify" style="min-width: 40px" *ngIf="isShowFile">
@@ -271,7 +354,8 @@
         [objectID]="data?.value.refID"
         [hideMoreF]="0"
         [viewType]="'4'"
-        [hideDelete]="1"></codx-attachment-temp>
+        [hideDelete]="1"
+      ></codx-attachment-temp>
     </div>
     <div class="notify" style="min-width: 40px" *ngIf="isShowComment">
       <codx-comment-temp [objectID]="data?.value.recID"></codx-comment-temp>

@@ -1036,6 +1036,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       this.data.stopOn = this.data.endDate;
       if (this.data.online != true) {
         this.data.onlineUrl = null;
+        this.data.onlineUrl2 = null;
       }
       if (this.approvalRule == '0' && approval) {
         this.data.approveStatus = '5';
@@ -1483,8 +1484,10 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   openPopupLink() {
     let dlLink = this.callfc.openForm(this.addLink, '', 500, 300, this.funcID);
     dlLink.closed.subscribe((res: any) => {
-      if (res?.event && typeof res?.event === 'string') {
-        this.data.onlineUrl = res?.event;
+      if (res?.event?.attendee !=null && res?.event?.owner !=null) {
+        this.data.onlineUrl = res?.event?.attendee;
+        this.data.onlineUrl2 = res?.event?.owner;
+        this.detectorRef.detectChanges();
       }
     });
   }

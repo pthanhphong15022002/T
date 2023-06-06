@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import {
   ApiHttpService,
   CacheService,
@@ -44,7 +45,7 @@ export class JournalService {
       .subscribe((res) => console.log(res));
   }
 
-  getJournal(journalNo: string) {
+  getJournal(journalNo: string): Observable<IJournal> {
     const journalOptions = new DataRequest();
     journalOptions.entityName = 'AC_Journals';
     journalOptions.predicates = 'JournalNo=@0';
@@ -163,8 +164,9 @@ export class JournalService {
     valueProp: string,
     cbx: CodxInputComponent,
     filterKey: string,
-    form: CodxFormComponent,
-    patchKey: string
+    formGroup: FormGroup,
+    patchKey: string,
+    isEdit: boolean
   ): void {
     // co dinh, danh sach
     if (['1', '2'].includes(journal[vll067Prop])) {
@@ -175,8 +177,8 @@ export class JournalService {
     }
 
     // mac dinh, co dinh
-    if (['0', '1'].includes(journal[vll067Prop])) {
-      form?.formGroup?.patchValue({
+    if (['0', '1'].includes(journal[vll067Prop]) && !isEdit) {
+      formGroup?.patchValue({
         [patchKey]: journal[valueProp],
       });
     }

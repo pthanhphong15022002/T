@@ -73,7 +73,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="" style="width: 45%">
+      <div class="" style="width: 35%">
         <div>
           <codx-label
             [formModel]="dialog.formModel"
@@ -91,7 +91,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="" style="width: 45%">
+      <div class="" style="width: 35%">
         <div>
           <codx-label
             [formModel]="dialog.formModel"
@@ -110,6 +110,35 @@
             (valueChange)="valueChangeText($event)"
           >
           </codx-input>
+        </div>
+      </div>
+      <div class="" style="width: 20%">
+        <div>
+          <codx-label
+            [formModel]="dialog.formModel"
+            fiedName=""
+            default="Phần trăm"
+          ></codx-label>
+        </div>
+        <div class="">
+          <codx-input
+            field="scheduleAmt"
+            type="number"
+            format="###'%'"
+            [min]="0"
+            [max]="100"
+            [crrValue]="percent"
+            (valueChange)="valueChangePercent($event)"
+          >
+          </codx-input>
+          <!-- <ejs-numerictextbox
+          [value]="percent"
+          format="###'%'"
+          min="0"
+          max="100"
+          (change)="valueChangePercent($event)"
+          disabled="false"
+        ></ejs-numerictextbox> -->
         </div>
       </div>
     </div>

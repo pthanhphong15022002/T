@@ -2,9 +2,11 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-gantt';
@@ -12,6 +14,7 @@ import { UIComponent, FormModel, SidebarModel } from 'codx-core';
 import { PopupAddCmCustomerComponent } from '../../../cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
 import { CodxCmService } from '../../../codx-cm.service';
 import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
+import { DealsComponent } from '../../deals.component';
 
 @Component({
   selector: 'codx-tab-deal-detail',
@@ -26,6 +29,7 @@ export class TabDetailCustomComponent
   @Input() dataSelected: any;
   @Input() formModel: any;
   @Input() listSteps: DP_Instances_Steps[] = [];
+  @Output() saveAssign = new EventEmitter<any>();
   titleAction: string = '';
   listStep = [];
   isUpdate = true; //xư lý cho edit trung tuy chinh ko
@@ -54,7 +58,8 @@ export class TabDetailCustomComponent
   constructor(
     private inject: Injector,
     private codxCmService: CodxCmService,
-    private changeDetec: ChangeDetectorRef
+    private changeDetec: ChangeDetectorRef,
+    private dealComponent: DealsComponent,
   ) {
     super(inject);
   }
@@ -149,5 +154,54 @@ export class TabDetailCustomComponent
       return this.listStepsProcess[idx]?.showColumnControl;
     }
     return 1;
+  }
+
+  continueStep(isTaskEnd, step) {
+    let transferControl = this.dataSelected.steps.transferControl;
+    if(transferControl == '0') return;
+
+    let isShowFromTaskAll = false;
+    let isShowFromTaskEnd = !this.checkContinueStep(true,step);
+    let isContinueTaskEnd = isTaskEnd;
+    let isContinueTaskAll = this.checkContinueStep(false,step);
+    let dataInstance = {
+      listStep: this.listStep,
+      isAuto: {
+        isShowFromTaskAll,
+        isShowFromTaskEnd,
+        isContinueTaskEnd,
+        isContinueTaskAll,
+      },
+    };
+
+    if(transferControl == '1' && isContinueTaskAll){
+      this.dealComponent.moveStage(this.dataSelected);
+    }
+    if(transferControl == '2' && isContinueTaskEnd){
+      this.dealComponent.moveStage(this.dataSelected);
+    }
+//    this.serviceInstance.autoMoveStage(dataInstance);
+  }
+
+  checkContinueStep(isDefault,step) {
+    let check = true;
+    let listTask = isDefault
+      ? step?.tasks?.filter((task) => task?.requireCompleted)
+      : step?.tasks;
+    if (listTask?.length <= 0) {
+      return isDefault ? true : false;
+    }
+    for (let task of listTask) {
+      if (task.progress != 100) {
+        check = false;
+        break;
+      }
+    }
+    return check;
+  }
+
+  //event giao viec
+  saveAssignTask(e){
+    if(e) this.saveAssign.emit(e);
   }
 }

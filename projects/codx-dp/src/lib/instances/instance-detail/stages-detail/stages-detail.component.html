@@ -326,15 +326,12 @@
     <div id="step-task" class="main p-5" [ngClass]="'show-main'">
       <codx-step-task
         [dataSources]="step"
-        [isShowButton]="true"
         [isShowMore]="true"
-        [typeProgress]="2"
-        [isRoleAll]="isRoleAll"
         [isDeepCopy]="false"
+        [isShowButton]="true"
         [isStart]="isStart"
         [isClose]="isClosed"
-        [isEditTimeDefault]="leadtimeControl"
-        [isUpdateProgressGroup]="progressTaskGroupControl"
+        [isRoleAll]="isRoleAll"
         [isOnlyView]="isOnlyView"
         (saveAssign)="saveAssignStepTask($event)"
         (continueStep)="continueStep($event)"

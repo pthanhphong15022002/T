@@ -70,30 +70,51 @@
     </div>
     <div class="d-flex align-items-top">
       <div class="d-flex flex-column">
-        <div *ngIf="getStep(data?.stepID)"
-          class="badge badge-sm d-flex align-items-center mb-1"
+        <div
+          style="width: 150px; border-radius: 20px"
+          class="d-flex align-items-center mb-1"
+          *ngIf="data.status != '1'"
           [ngStyle]="{
             'background-color':
-              getStep(data?.stepID)['backgroundColor'] != null
-                ? getStep(data?.stepID)['backgroundColor']
-                : '#0000ff'
+              data.status == '3' || data.status == '4'
+                ? colorReasonSuccess?.color
+                : data.status == '5' || data.status == '6'
+                ? colorReasonFail?.color
+                : getStep(data?.stepID)['backgroundColor']
           }"
         >
           <span
             [ngClass]="getStep(data?.stepID)['icon']"
             [ngStyle]="{ color: getStep(data?.stepID)['iconColor'] }"
-            class="me-1 icon-14"
+            class="ms-2 me-1"
           ></span>
-          <span
-            [ngStyle]="{
-              color:
-                getStep(data?.stepID)['textColor'] != null
-                  ? getStep(data?.stepID)['textColor']
-                  : '#ffffff'
-            }"
-            [innerHTML]="getStep(data?.stepID)?.stepName"
-          ></span>
+          <div
+            [ngbPopover]="getStep(data?.stepID)?.stepName"
+            #pStep="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="pStep.open()"
+            (mouseleave)="pStep.close()"
+            placement="left bottom right top"
+          >
+            <span
+              class="line-clamp line-clamp-1"
+              [ngStyle]="{ color: getStep(data?.stepID)['textColor'] }"
+              [innerHTML]="getStep(data?.stepID)?.stepName"
+            ></span>
+          </div>
         </div>
+        <div *ngIf="data.status == '1'">
+          <codx-vll
+            [name]="'DP028'"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-sm"
+          >
+          </codx-vll>
+        </div>
+
         <div class="ms-1 d-flex align-items-center mt-1">
           <span class="icon-money icon-16 text-gray-800 me-1"></span>
           <span
