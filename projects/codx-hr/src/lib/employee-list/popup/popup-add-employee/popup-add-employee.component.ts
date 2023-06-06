@@ -104,7 +104,6 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'joinedOn':
           if (this.data[field] && this.data[field] > new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['JoinedOn']['headerText']);
-            return;
           }
           break;
         case 'positionID':
@@ -130,19 +129,16 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'issuedOn':
           if (this.data.issuedOn >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR012');
-            //this.data[field] = null;
             return;
           }
           if (this.data.idExpiredOn && this.data.idExpiredOn < this.data.issuedOn) {
             this.notifySV.notifyCode('HR002');
-            return;
           }
           break;
         case 'idExpiredOn':
           if (value && this.data.issuedOn) {
             if (this.data.idExpiredOn < this.data.issuedOn) {
               this.notifySV.notifyCode('HR002');
-              return;
             }
           }
           break;
@@ -150,61 +146,49 @@ export class PopupAddEmployeeComponent implements OnInit {
           if (value) {
             if (!this.validateBirthday(value)) {
               this.notifySV.notifyCode('HR001');
-              //this.data[field] = null;
-              // this.form.formGroup.controls[field].patchValue({field : null});
-              return;
             }
           }
           break;
         case 'provinceID':
           this.data['districtID'] = null;
           this.data['wardID'] = null;
-          this.form.formGroup.controls['districtID'].patchValue(null);
-          this.form.formGroup.controls['wardID'].patchValue(null);
+          this.form.formGroup.patchValue({ districtID: null, wardID: null });
           break;
         case 'tProvinceID':
           this.data['tDistrictID'] = null;
           this.data['tWardID'] = null;
-          this.form.formGroup.controls['tDistrictID'].patchValue(null);
-          this.form.formGroup.controls['tWardID'].patchValue(null);
+          this.form.formGroup.patchValue({ tDistrictID: null, tWardID: null });
           break;
         case 'trainLevel':
-          if (this.data[field]) 
-          {
+          if (this.data[field]) {
             this.trainLevel = event.component['dataSource'].find((x) => x.value == this.data[field]).text;
-            if (this.trainLevel.length > 0 && this.trainFieldID.length > 0 
-              &&(!this.data['degreeName'] || this.data['degreeName'] == '')) 
-            {
+            if (this.trainLevel && this.trainFieldID && !this.data['degreeName']) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
             }
+          } else {
+            this.trainLevel = null;
           }
           break;
         case 'trainFieldID':
-          if (this.data[field]) 
-          {
+          if (this.data[field]) {
             this.trainFieldID = event.component.dataService.data.find((x) => x.TrainFieldID == this.data[field]).TrainFieldName;
-            if (this.trainLevel.length > 0 && this.trainFieldID.length > 0
-              && (!this.data['degreeName'] || this.data['degreeName'] == '')) {
+            if (this.trainLevel && this.trainFieldID && !this.data['degreeName']) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
             }
+          } else {
+            this.trainFieldID = null;
           }
           break;
         case 'siRegisterOn':
           if (this.data['siRegisterOn'] >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['SIRegisterOn']['headerText']);
-            this.data[field] = null;
-            this.form.formGroup.controls[field].patchValue(null);
-            return;
           }
           break;
         case 'pitIssuedOn':
           if (this.data['pitIssuedOn'] >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['PITIssuedOn']['headerText']);
-            this.data[field] = null;
-            this.form.formGroup.controls[field].patchValue(null);
-            return;
           }
           break;
       }
@@ -213,7 +197,6 @@ export class PopupAddEmployeeComponent implements OnInit {
 
   // validate age > 18
   validateBirthday(birthday: any) {
-    if(!birthday) return false;
     let ageDifMs = Date.now() - Date.parse(birthday);
     let ageDate = new Date(ageDifMs);
     let age = Math.abs(ageDate.getUTCFullYear() - 1970);
@@ -249,8 +232,8 @@ export class PopupAddEmployeeComponent implements OnInit {
     }
 
 
-    let today = new Date();
-    if (this.data.issuedOn >= today.toJSON()) {
+    let today = new Date().toJSON();
+    if (this.data.issuedOn >= today) {
       this.notifySV.notifyCode('HR012');
       return false;
     }
@@ -258,15 +241,24 @@ export class PopupAddEmployeeComponent implements OnInit {
       this.notifySV.notifyCode('HR002');
       return false;
     }
-    if (!this.validateBirthday(this.data.birthday)) {
-      this.notifySV.notifyCode('HR001');
-      return false;
+    if (this.data.birthday) {
+      if (!this.validateBirthday(this.data.birthday)) {
+        this.notifySV.notifyCode('HR001');
+        return false;
+      }
     }
-    if (this.data.joinedOn && this.data.joinedOn > today.toJSON()) {
+    if (this.data.joinedOn && this.data.joinedOn > today) {
       this.notifySV.notifyCode('HR014', 0, this.grvSetUp['JoinedOn']['headerText']);
       return false;
     }
-
+    if (this.data.pitIssuedOn && this.data.pitIssuedOn > today) {
+      this.notifySV.notifyCode('HR014', 0, this.grvSetUp['PITIssuedOn']['headerText']);
+      return false;
+    }
+    if (this.data.siRegisterOn && this.data.siRegisterOn > today) {
+      this.notifySV.notifyCode('HR014', 0, this.grvSetUp['SIRegisterOn']['headerText']);
+      return false;
+    }
     return true;
   }
 
@@ -321,7 +313,7 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.codxModifiedOn = new Date();
     //this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
   }
-    // getOrgNote() {
+  // getOrgNote() {
   //   if (this.data['orgUnitID']) {
   //     this.orgNote = '';
   //     this.api.execSv<any>('HR', 'HR', 'OrganizationUnitsBusiness', 'GetOrgTreeByOrgIDAsync', [this.data['orgUnitID'], 9])

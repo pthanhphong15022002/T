@@ -7,6 +7,7 @@ import {
   Optional,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -39,6 +40,7 @@ declare var window: any;
   selector: 'lib-pop-add-purchase',
   templateUrl: './pop-add-purchase.component.html',
   styleUrls: ['./pop-add-purchase.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   //#region Contructor
