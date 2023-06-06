@@ -1,26 +1,25 @@
-import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
-import { FormGroup } from '@angular/forms';
-import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
-import { CodxHrService } from './../codx-hr.service';
 import {
-  UIComponent,
-  ViewModel,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import {
+  AuthStore,
   ButtonModel,
-  ViewType,
+  DialogRef,
   NotificationsService,
   SidebarModel,
-  DialogRef,
-  AuthStore,
+  UIComponent,
+  ViewModel,
+  ViewType,
 } from 'codx-core';
-import {
-  Component,
-  ViewChild,
-  TemplateRef,
-  Injector,
-  ChangeDetectorRef,
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-// import { PopupEContractComponent } from '../employee-profile/popup-econtract/popup-econtract.component';
+import { CodxHrService } from './../codx-hr.service';
+import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
+import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
 
 @Component({
   selector: 'lib-employee-contract',
