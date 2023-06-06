@@ -31,6 +31,9 @@ export class PopupAddCashTransferComponent extends UIComponent {
   @ViewChild('cbxCashAcctID') cbxCashAcctID: CodxInputComponent;
   @ViewChild('cbxOffsetAcctID') cbxOffsetAcctID: CodxInputComponent;
   @ViewChild('switchHasInvoice') switchHasInvoice: SwitchComponent;
+  @ViewChild('diM1') diM1: CodxInputComponent;
+  @ViewChild('diM2') diM2: CodxInputComponent;
+  @ViewChild('diM3') diM3: CodxInputComponent;
 
   cashTransfer: ICashTransfer = {} as ICashTransfer;
   vatInvoice: IVATInvoice = {} as IVATInvoice;
@@ -76,7 +79,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.isEdit = dialogData.data.formType === 'edit';
     this.masterService = this.dialogRef.dataService;
     this.masterService.hasSaved = this.isEdit;
-    this.hiddenFields = this.cashTransfer?.unbounds?.lockFields ?? [];
     this.cashTransfer = this.masterService?.dataSelected;
     this.cashTransfer.feeControl = Boolean(
       Number(this.cashTransfer.feeControl)
@@ -113,44 +115,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
         }
       });
 
-    this.voucherNoPlaceholderText$ =
-      this.journalService.getVoucherNoPlaceholderText();
-
-    this.journalService
-      .getJournal(this.cashTransfer.journalNo)
-      .subscribe((res) => {
-        this.journal = res?.dataValue
-          ? { ...res, ...JSON.parse(res.dataValue) }
-          : res;
-
-        this.journalService.loadComboboxBy067(
-          this.journal,
-          'drAcctControl',
-          'drAcctID',
-          this.cbxCashAcctID,
-          'AccountID',
-          this.form,
-          'cashAcctID'
-        );
-        this.journalService.loadComboboxBy067(
-          this.journal,
-          'crAcctControl',
-          'crAcctID',
-          this.cbxOffsetAcctID,
-          'AccountID',
-          this.form,
-          'offsetAcctID'
-        );
-
-        if (this.journal.assignRule === '2') {
-          this.ignoredFields.push('VoucherNo');
-        }
-
-        if (this.isEdit) {
-          this.hiddenFields = this.journalService.getHiddenFields(this.journal);
-        }
-      });
-
     this.cache
       .gridViewSetup(
         this.dialogRef.formModel.formName,
@@ -167,38 +131,82 @@ export class PopupAddCashTransferComponent extends UIComponent {
         this.gvsVATInvoices = res;
       });
 
-    if (this.isEdit) {
-      // load vatInvoice
-      const options = new DataRequest();
-      options.entityName = 'AC_VATInvoices';
-      options.pageLoading = false;
-      this.acService
-        .loadDataAsync('AC', options)
-        .pipe(
-          map((invoices) =>
-            invoices.find((i) => i.transID === this.cashTransfer.recID)
-          )
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.hasInvoice = true;
-            this.invoiceService.dataSelected = res;
-            this.invoiceService.edit(res).subscribe();
+    this.voucherNoPlaceholderText$ =
+      this.journalService.getVoucherNoPlaceholderText();
+
+    this.journalService
+      .getJournal(this.cashTransfer.journalNo)
+      .subscribe((res) => {
+        this.journal = res?.dataValue
+          ? { ...res, ...JSON.parse(res.dataValue) }
+          : res;
+
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'drAcctControl',
+          'drAcctID',
+          this.cbxCashAcctID,
+          'AccountID',
+          this.form.formGroup,
+          'cashAcctID',
+          this.isEdit
+        );
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'crAcctControl',
+          'crAcctID',
+          this.cbxOffsetAcctID,
+          'AccountID',
+          this.form.formGroup,
+          'offsetAcctID',
+          this.isEdit
+        );
+
+        if (this.journal.assignRule === '2') {
+          this.ignoredFields.push('VoucherNo');
+        }
+
+        this.hiddenFields = this.journalService.getHiddenFields(this.journal);
+
+        if (this.isEdit) {
+          // load vatInvoice
+          const options = new DataRequest();
+          options.entityName = 'AC_VATInvoices';
+          options.pageLoading = false;
+          this.acService
+            .loadDataAsync('AC', options)
+            .pipe(
+              map((invoices) =>
+                invoices.find((i) => i.transID === this.cashTransfer.recID)
+              )
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.hasInvoice = true;
+                this.invoiceService.dataSelected = res;
+                this.invoiceService.edit(res).subscribe();
+                this.vatInvoice = this.fmVATInvoice.currentData = res;
+                this.fgVatInvoice.patchValue(res);
+
+                this.loadDims(this.journal, true);
+              } else {
+                this.invoiceService.addNew().subscribe((res) => {
+                  this.vatInvoice = this.fmVATInvoice.currentData = res;
+                  this.fgVatInvoice.patchValue(res);
+
+                  this.loadDims(this.journal, false);
+                });
+              }
+            });
+        } else {
+          this.invoiceService.addNew().subscribe((res) => {
             this.vatInvoice = this.fmVATInvoice.currentData = res;
             this.fgVatInvoice.patchValue(res);
-          } else {
-            this.invoiceService.addNew().subscribe((res) => {
-              this.vatInvoice = this.fmVATInvoice.currentData = res;
-              this.fgVatInvoice.patchValue(res);
-            });
-          }
-        });
-    } else {
-      this.invoiceService.addNew().subscribe((res) => {
-        this.vatInvoice = this.fmVATInvoice.currentData = res;
-        this.fgVatInvoice.patchValue(res);
+
+            this.loadDims(this.journal, false);
+          });
+        }
       });
-    }
   }
 
   ngAfterViewInit(): void {
@@ -424,6 +432,10 @@ export class PopupAddCashTransferComponent extends UIComponent {
         this.invoiceService.addNew().subscribe((res) => {
           this.vatInvoice = this.fmVATInvoice.currentData = res;
           this.fgVatInvoice.patchValue(res);
+
+          setTimeout(() => {
+            this.loadDims(this.journal, false);
+          });
         });
       });
   }
@@ -441,6 +453,39 @@ export class PopupAddCashTransferComponent extends UIComponent {
       (this.cashTransfer.fees || 0) +
       (this.hasInvoice ? this.vatInvoice?.taxAmt || 0 : 0);
     this.cashTransfer.voucherNo = this.cashTransfer.voucherNo ?? '';
+  }
+
+  loadDims(journal: IJournal, isEdit: boolean) {
+    this.journalService.loadComboboxBy067(
+      journal,
+      'diM1Control',
+      'diM1',
+      this.diM1,
+      'DepartmentID',
+      this.fgVatInvoice,
+      'diM1',
+      isEdit
+    );
+    this.journalService.loadComboboxBy067(
+      journal,
+      'diM2Control',
+      'diM2',
+      this.diM2,
+      'CostCenterID',
+      this.fgVatInvoice,
+      'diM2',
+      isEdit
+    );
+    this.journalService.loadComboboxBy067(
+      journal,
+      'diM3Control',
+      'diM3',
+      this.diM3,
+      'CostItemID',
+      this.fgVatInvoice,
+      'diM3',
+      isEdit
+    );
   }
   //#endregion
 }

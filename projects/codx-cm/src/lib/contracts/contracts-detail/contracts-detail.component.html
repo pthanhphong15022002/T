@@ -19,7 +19,7 @@
 <!-- temp left -->
 <ng-template #itemTemplate let-data>
   <codx-temp-full
-    cardCss="card-template border-bottom p-3 list-task"
+    cardCss="card-template border-bottom py-3 px-4 list-task"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF($event, data)"
@@ -36,8 +36,8 @@
 
 <ng-template #descTmp let-data>
   <div class="d-flex align-items-top mb-1">
-    <span class="icon-business icon-16 me-2"></span>
-    <span class="text-gray-700">{{
+    <span class="icon-business icon-16 me-2 text-gray-600"></span>
+    <span class="text-gray-600">{{
       data?.companyName || "Cty cổ phần tin học lạc việt"
     }}</span>
   </div>
@@ -62,11 +62,11 @@
         "
       ></span>
     </div>
-    <div class="d-flex justify-content-end align-items-center me-2">
-      <span class="icon-monetization_on icon-16 me-2 text-warning"></span>
+    <div class="d-flex justify-content-end align-items-center">
+      <span class="icon-monetization_on icon-16 me-1 text-warning"></span>
       <!-- <span class="fs-6 fw-bold">25.000.000</span> -->
       <span
-        class="fs-6 fw-bold"
+        class="text-gray-700"
         [innerHTML]="
           data?.contractAmt
             | formatvalue : view.formModel : 'ContractAmt'
@@ -83,23 +83,21 @@
         [value]="data?.status"
         [showText]="true"
         [showBgColor]="true"
-        class="badge badge-primary badge-md fs-7"
+        class="badge badge-primary badge-sm"
       >
       </codx-vll>
     </div>
     <div class="d-flex align-items-center">
-      <div class="d-flex justify-content-end align-items-center me-2">
-        <span class="icon-16 icon-av_timer me-1"></span>
+      <div class="d-flex align-items-center me-2">
+        <span class="icon-16 icon-av_timer me-1 text-gray-600"></span>
         <span
-          class="fs-6 fw-bold"
+          class="text-gray-700"
           [innerHTML]="
-            data?.createdOn
-              | formatvalue : view.formModel : 'CreatedOn'
-              | async
+            data?.createdOn | formatvalue : view.formModel : 'CreatedOn' | async
           "
         ></span>
       </div>
-      <div>
+      <div class="h-25px">
         <codx-imgs
           [width]="25"
           [objectId]="data.createdBy"
@@ -122,37 +120,47 @@
     (clickMF)="clickMF($event, itemSelected)"
     (changeDataMF)="changeDataMF($event, itemSelected)"
     [dataItem]="itemSelected"
+    class="overflow-hidden"
   ></codx-detail-tmp>
 </ng-template>
 
 <ng-template #headerRightTemp>
-  <div class="d-flex align-items-center justify-content-between">
-    <div class="d-flex align-items-center fs-5 fw-bold">
-      <span>{{ itemSelected?.contractName }}</span>
-      <span> - </span>
-      <span>{{ itemSelected?.contractID }}</span>
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <div class="d-flex align-items-center">
+      <span class="fs-4 fw-bold">{{ itemSelected?.contractName }}</span>
+      <span class="mx-2 text-gray-500">-</span>
+      <span class="fs-6 text-gray-700">{{ itemSelected?.contractID }}</span>
     </div>
-    <div>
+    <div class="ms-3 d-flex align-items-center">
       <codx-vll
         [name]="vllStatus"
         [field]="'Status'"
         [value]="itemSelected?.status"
         [showText]="true"
         [showBgColor]="true"
-        class="badge badge-primary badge-md fs-7"
+        class="badge badge-primary badge-md"
       >
       </codx-vll>
+      <div class="me-2">
+        <codx-imgs
+          [width]="25"
+          [objectId]="itemSelected.createdBy"
+          ojectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
     </div>
   </div>
-  <div class="d-flex align-items-center justify-content-between fs-6 mb-5">
-    <div>
+  <div class="d-flex align-items-center mb-1">
+    <div class="d-flex align-items-center w-50">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="contractDate"
         [formModel]="view.formModel"
       ></codx-label>
       <span
-        class="me-3"
+        class="text-gray-600"
         [innerHTML]="
           itemSelected?.contractDate
             | formatvalue : view.formModel : 'ContractDate'
@@ -160,14 +168,14 @@
         "
       ></span>
     </div>
-    <div>
+    <div class="d-flex align-items-center w-50">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="effectiveFrom"
         [formModel]="view.formModel"
       ></codx-label>
       <span
-        class="me-3"
+        class="text-gray-600"
         [innerHTML]="
           itemSelected?.effectiveFrom
             | formatvalue : view.formModel : 'EffectiveFrom'
@@ -175,14 +183,15 @@
         "
       ></span>
     </div>
-    <div>
+  </div>
+  <div class="d-flex align-items-top mb-1">
+    <div class="d-flex align-items-center w-50">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="effectiveTo"
         [formModel]="view.formModel"
       ></codx-label>
-      <span
-        class="me-3"
+      <span class="text-gray-600"
         [innerHTML]="
           itemSelected?.effectiveTo
             | formatvalue : view.formModel : 'EffectiveTo'
@@ -190,14 +199,13 @@
         "
       ></span>
     </div>
-    <div>
+    <div class="d-flex align-items-center w-50">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="extendOn"
         [formModel]="view.formModel"
       ></codx-label>
-      <span
-        class="me-3"
+      <span class="text-gray-600"
         [innerHTML]="
           itemSelected?.extendOn
             | formatvalue : view.formModel : 'ExtendOn'
@@ -205,40 +213,31 @@
         "
       ></span>
     </div>
-    <div>
-      <codx-imgs
-        [width]="25"
-        [objectId]="itemSelected.createdBy"
-        ojectType="AD_Users"
-        [numberImages]="1"
-      >
-      </codx-imgs>
-    </div>
   </div>
-  <div class="row fs-6">
-    <div class="col-6">
+  <div class="d-flex align-items-top mb-1">
+    <div class="w-50 d-flex align-items-center">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="dealID"
         [formModel]="view.formModel"
       ></codx-label>
       <span
-        class="fs-7"
+        class="text-gray-700"
         [innerHTML]="
           itemSelected?.dealID | formatvalue : view.formModel : 'DealID' | async
         "
       ></span>
     </div>
-    <div class="col-6 d-flex align-items-center">
-      <div class="me-5">
+    <div class="w-50 d-flex align-items-center">
+      <div class="me-5 d-flex align-items-center">
         <codx-label
-          class="label-colon"
+          class="label-colon fw-bold text-dark"
           fiedName="currencyID"
           [formModel]="view.formModel"
         >
         </codx-label>
         <span
-          class="fs-7"
+          class="text-warning"
           [innerHTML]="
             itemSelected?.currencyID
               | formatvalue : view.formModel : 'CurrencyID'
@@ -247,15 +246,15 @@
         >
         </span>
       </div>
-      <div>
+      <div class="d-flex align-items-center">
         <codx-label
-          class="label-colon"
+          class="label-colon fw-bold text-dark"
           fiedName="exchangeRate"
           [formModel]="view.formModel"
         >
         </codx-label>
         <span
-          class="fs-7"
+          class="text-gray-700"
           [innerHTML]="
             itemSelected?.exchangeRate
               | formatvalue : view.formModel : 'ExchangeRate'
@@ -266,16 +265,16 @@
       </div>
     </div>
   </div>
-  <div class="row fs-6">
-    <div class="col-6">
+  <div class="d-flex align-items-top mb-1">
+    <div class="w-50 d-flex align-items-center">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="quotationID"
         [formModel]="view.formModel"
       >
       </codx-label>
       <span
-        class="fs-7"
+        class="text-gray-700"
         [innerHTML]="
           itemSelected?.quotationID
             | formatvalue : view.formModel : 'QuotationID'
@@ -285,16 +284,16 @@
       </span>
     </div>
     <!-- Hợp đồng sử dụng -->
-    <div class="col-6">
+    <div class="w-50 d-flex align-items-center">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="useType"
         [formModel]="view.formModel"
         [setRequire]="false"
       >
       </codx-label>
       <span
-        class="fs-7"
+        class="text-gray-700"
         [innerHTML]="
           itemSelected?.useType
             | formatvalue : view.formModel : 'UseType'
@@ -304,17 +303,17 @@
       </span>
     </div>
   </div>
-  <div class="row fs-6">
-    <div class="col-6">
+  <div class="d-flex align-items-center mb-1">
+    <div class="w-50 d-flex align-items-center">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="orderID"
         [formModel]="view.formModel"
         [setRequire]="false"
       >
       </codx-label>
       <span
-        class="fs-7"
+        class="text-gray-700"
         [innerHTML]="
           itemSelected?.orderID
             | formatvalue : view.formModel : 'OrderID'
@@ -323,16 +322,16 @@
       ></span>
     </div>
     <!-- Loại hợp đồng -->
-    <div class="col-6">
+    <div class="w-50 d-flex align-items-center">
       <codx-label
-        class="label-colon"
+        class="label-colon fw-bold text-dark"
         fiedName="contractType"
         [formModel]="view.formModel"
         [setRequire]="false"
       >
       </codx-label>
       <span
-        class="fs-7"
+        class="text-gray-700"
         [innerHTML]="
           itemSelected?.contractType
             | formatvalue : view.formModel : 'ContractType'
@@ -344,34 +343,38 @@
 </ng-template>
 
 <ng-template #mainRightTemp>
-  <codx-taskbar
-    [change]="itemSelected"
-    [listTab]="listClicked"
-    (tab)="changeTab($event)"
-    size="20"
-    class="mt-5"
-  ></codx-taskbar>
-  <hr class="mt-0" />
-  <div>
-    <container-element [ngSwitch]="tabClicked">
-      <some-element
-        *ngSwitchCase="'general'"
-        [ngTemplateOutlet]="generalTemplate"
-      ></some-element>
-      <some-element
-        *ngSwitchCase="'detailItem'"
-        [ngTemplateOutlet]="itemsTemplate"
-      ></some-element>
-      <some-element
-        *ngSwitchCase="'pay'"
-        [ngTemplateOutlet]="payTemplate"
-      ></some-element>
-      <some-element
-        *ngSwitchCase="'termsAndRelated'"
-        [ngTemplateOutlet]="termsAndRelatedTemplate"
-      ></some-element>
-      <some-element *ngSwitchDefault></some-element>
-    </container-element>
+  <div class="d-flex flex-column" style="height: 100vh;">
+    <div>
+      <codx-taskbar
+        [change]="itemSelected"
+        [listTab]="listClicked"
+        (tab)="changeTab($event)"
+        size="18"
+        class="mt-5"
+      ></codx-taskbar>
+      <hr class="mt-0" />
+    </div>
+    <div class="main-right">
+      <container-element [ngSwitch]="tabClicked">
+        <some-element
+          *ngSwitchCase="'general'"
+          [ngTemplateOutlet]="generalTemplate"
+        ></some-element>
+        <some-element
+          *ngSwitchCase="'detailItem'"
+          [ngTemplateOutlet]="itemsTemplate"
+        ></some-element>
+        <some-element
+          *ngSwitchCase="'pay'"
+          [ngTemplateOutlet]="payTemplate"
+        ></some-element>
+        <some-element
+          *ngSwitchCase="'termsAndRelated'"
+          [ngTemplateOutlet]="termsAndRelatedTemplate"
+        ></some-element>
+        <some-element *ngSwitchDefault></some-element>
+      </container-element>
+    </div>
   </div>
 </ng-template>
 
@@ -387,8 +390,8 @@
 
 <ng-template #generalTemplate>
   <div class="A mb-5">
-    <div>
-      <span class="fs-5 fw-bold">Bên A</span>
+    <div class="mb-3">
+      <span class="fs-6 fw-bold text-primary">Bên A</span>
     </div>
     <ng-container
       [ngTemplateOutlet]="general"
@@ -397,7 +400,7 @@
   </div>
 
   <div class="B mb-5">
-    <div><span class="fs-5 fw-bold">Bên B</span></div>
+    <div class="mb-3"><span class="fs-6 fw-bold text-primary">Bên B</span></div>
     <ng-container
       [ngTemplateOutlet]="general"
       [ngTemplateOutletContext]="{ data: { value: itemSelected, type: 'B' } }"
@@ -415,17 +418,17 @@
 
 <ng-template #payTemplate>
   <div>
-    <div class="fs-6 fw-bold"><span>Tiến độ thanh toán</span></div>
-    <div class="row">
+    <div class="fs-6 fw-bold text-primary mb-3"><span>Tiến độ thanh toán</span></div>
+    <div class="row mb-2">
       <div class="col-4">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="contractAmt"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.contractAmt
               | formatvalue : view.formModel : 'ContractAmt'
@@ -436,13 +439,13 @@
       </div>
       <div class="col-4">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="paidAmt"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.paidAmt
               | formatvalue : view.formModel : 'PaidAmt'
@@ -453,13 +456,13 @@
       </div>
       <div class="col-4">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="remainAmt"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.remainAmt
               | formatvalue : view.formModel : 'RemainAmt'
@@ -469,16 +472,16 @@
         <!-- <span>Số tiền còn lại: </span> -->
       </div>
     </div>
-    <div class="row">
+    <div class="row mb-2">
       <div class="col-4">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="pmtStatus"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.pmtStatus
               | formatvalue : view.formModel : 'PmtStatus'
@@ -489,13 +492,13 @@
       </div>
       <div class="col-8">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="pmtDeadline"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.pmtDeadline
               | formatvalue : view.formModel : 'PmtDeadline'
@@ -505,16 +508,16 @@
         <!--Hạn thanh toán-->
       </div>
     </div>
-    <div class="row">
+    <div class="row mb-2">
       <div class="col-4">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="pmtTermID"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.pmtTermID
               | formatvalue : view.formModel : 'PmtTermID'
@@ -525,13 +528,13 @@
       </div>
       <div class="col-8">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="pmtMethodID"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.pmtMethodID
               | formatvalue : view.formModel : 'PmtMethodID'
@@ -544,7 +547,7 @@
   </div>
 
   <div>
-    <div class="fs-6 fw-bold"><span>Lịch thanh toán</span></div>
+    <div class="fs-6 fw-bold text-primary mb-3 mt-5"><span>Lịch thanh toán</span></div>
     <view-payment
       [isSave]="true"
       [contracts]="itemSelected"
@@ -554,17 +557,17 @@
   </div>
 
   <div>
-    <div class="fs-6 fw-bold"><span>Tiến giao hàng</span></div>
-    <div class="row">
+    <div class="fs-6 fw-bold text-primary mb-3"><span>Tiến độ giao hàng</span></div>
+    <div class="row mb-2">
       <div class="col-4">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="delTermID"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.delTermID
               | formatvalue : view.formModel : 'DelTermID'
@@ -575,13 +578,13 @@
       </div>
       <div class="col-4">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="delModeID"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.delModeID
               | formatvalue : view.formModel : 'DelModeID'
@@ -592,13 +595,13 @@
       </div>
       <div class="col-4">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="delPrice"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.delPrice
               | formatvalue : view.formModel : 'DelPrice'
@@ -608,16 +611,16 @@
         <!-- <span>Phí vận chuyển: </span> -->
       </div>
     </div>
-    <div class="row">
+    <div class="row mb-2">
       <div class="col-4">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="delDeadline"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.delDeadline
               | formatvalue : view.formModel : 'DelDeadline'
@@ -628,13 +631,13 @@
       </div>
       <div class="col-4">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="delStatus"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.delStatus
               | formatvalue : view.formModel : 'DelStatus'
@@ -645,13 +648,13 @@
       </div>
       <div class="col-4">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="delActualDate"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.delActualDate
               | formatvalue : view.formModel : 'DelActualDate'
@@ -661,16 +664,16 @@
         <!-- <span>Ngày giao hàng thành công: </span> -->
       </div>
     </div>
-    <div class="row">
+    <div class="row mb-2">
       <div class="col-4">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="delContactID"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.delContactID
               | formatvalue : view.formModel : 'DelContactID'
@@ -681,13 +684,13 @@
       </div>
       <div class="col-8">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="delPhone"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.delPhone
               | formatvalue : view.formModel : 'DelPhone'
@@ -697,16 +700,16 @@
         <!-- <span>Số diện thoại: </span> -->
       </div>
     </div>
-    <div class="row">
+    <div class="row mb-2">
       <div class="col-12">
         <codx-label
-          class="label-colon"
+          class="label-colon text-gray-600"
           fiedName="delAddress"
           [formModel]="view.formModel"
           [setRequire]="false"
         ></codx-label>
         <span
-          class="me-3"
+          class="me-3 text-dark fw-bold"
           [innerHTML]="
             itemSelected?.delAddress
               | formatvalue : view.formModel : 'DelAddress'
@@ -724,19 +727,21 @@
 </ng-template>
 
 <ng-template #general let-data="data">
-  <div class="row fs-6 my-2">
-    <div class="col-6">
-      <codx-label
-        class="label-colon"
-        fiedName="companyName"
-        [formModel]="view.formModel"
-        [setRequire]="false"
-      >
-      </codx-label>
-      <span *ngIf="data?.type == 'A'">{{ data?.value?.legalName }}</span>
+  <div class="row mb-2">
+    <div class="col-6 d-flex align-items-center">
+      <div class="w-150px min-w-150px">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="companyName"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        >
+        </codx-label>
+      </div>
+      <span class="text-dark fw-bold codx-textcontent" *ngIf="data?.type == 'A'">{{ data?.value?.legalName }}</span>
       <span
         *ngIf="data?.type == 'B'"
-        class="fs-7"
+        class="text-dark fw-bold codx-textcontent"
         [innerHTML]="
           data?.value?.customerID
             | formatvalue : view.formModel : 'CustomerID'
@@ -744,16 +749,18 @@
         "
       ></span>
     </div>
-    <div class="col-5">
-      <codx-label
-        class="label-colon"
-        fiedName="taxCode"
-        [formModel]="view.formModel"
-        [setRequire]="false"
-      >
-      </codx-label>
+    <div class="col-6 d-flex align-items-center">
+      <div class="w-150px min-w-150px">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="taxCode"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        >
+        </codx-label>
+      </div>
       <span
-        class="fs-7"
+        class="text-dark fw-bold codx-textcontent"
         [innerHTML]="
           data?.value?.taxCode
             | formatvalue : view.formModel : 'TaxCode'
@@ -762,17 +769,19 @@
       ></span>
     </div>
   </div>
-  <div class="row fs-6 my-2">
-    <div class="col-12">
-      <codx-label
-        class="label-colon"
-        fiedName="address"
-        [formModel]="view.formModel"
-        [setRequire]="false"
-      >
-      </codx-label>
+  <div class="row mb-2">
+    <div class="col-12 d-flex align-items-center">
+      <div class="w-150px min-w-150px">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="address"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        >
+        </codx-label>
+      </div>
       <span
-        class="fs-7"
+        class="text-dark fw-bold codx-textcontent"
         [innerHTML]="
           data?.type == 'A'
             ? data?.value?.street
@@ -783,34 +792,38 @@
       ></span>
     </div>
   </div>
-  <div class="row fs-6 my-2">
-    <div class="col-12">
-      <codx-label
-        class="label-colon"
-        fiedName="phone"
-        [formModel]="view.formModel"
-        [setRequire]="false"
-      >
-      </codx-label>
+  <div class="row mb-2">
+    <div class="col-12 d-flex align-items-center">
+      <div class="w-150px min-w-150px">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="phone"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        >
+        </codx-label>
+      </div>
       <span
-        class="fs-7"
+        class="text-dark fw-bold codx-textcontent"
         [innerHTML]="
           data?.value?.phone | formatvalue : view.formModel : 'Phone' | async
         "
       ></span>
     </div>
   </div>
-  <div class="row fs-6 my-2">
-    <div class="col-6">
-      <codx-label
-        class="label-colon"
-        fiedName="representative"
-        [formModel]="view.formModel"
-        [setRequire]="false"
-      >
-      </codx-label>
+  <div class="row mb-2">
+    <div class="col-6 d-flex align-items-center">
+      <div class="w-150px min-w-150px">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="representative"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        >
+        </codx-label>
+      </div>
       <span
-        class="fs-7"
+        class="text-dark fw-bold codx-textcontent"
         [innerHTML]="
           data?.type == 'A'
             ? data?.value?.contactName
@@ -820,16 +833,18 @@
         "
       ></span>
     </div>
-    <div class="col-6">
-      <codx-label
-        class="label-colon"
-        fiedName="jobTitle"
-        [formModel]="view.formModel"
-        [setRequire]="false"
-      >
-      </codx-label>
+    <div class="col-6 d-flex align-items-center">
+      <div class="w-150px min-w-150px">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="jobTitle"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        >
+        </codx-label>
+      </div>
       <span
-        class="fs-7"
+        class="text-dark fw-bold codx-textcontent"
         [innerHTML]="
           data?.type == 'A'
             ? data?.value?.contactName
@@ -840,17 +855,19 @@
       ></span>
     </div>
   </div>
-  <div class="row fs-6 my-2">
-    <div class="col-6">
-      <codx-label
-        class="label-colon"
-        fiedName="bankAccount"
-        [formModel]="view.formModel"
-        [setRequire]="false"
-      >
-      </codx-label>
+  <div class="row mb-2">
+    <div class="col-6 d-flex align-items-center">
+      <div class="w-150px min-w-150px">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="bankAccount"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        >
+        </codx-label>
+      </div>
       <span
-        class="fs-7"
+        class="text-dark fw-bold codx-textcontent"
         [innerHTML]="
           data?.value?.bankAccount
             | formatvalue : view.formModel : 'BankAccount'
@@ -858,16 +875,18 @@
         "
       ></span>
     </div>
-    <div class="col-6">
-      <codx-label
-        class="label-colon"
-        fiedName="bankID"
-        [formModel]="view.formModel"
-        [setRequire]="false"
-      >
-      </codx-label>
+    <div class="col-6 d-flex align-items-center">
+      <div class="w-150px min-w-150px">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="bankID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        >
+        </codx-label>
+      </div>
       <span
-        class="fs-7"
+        class="text-dark fw-bold codx-textcontent"
         [innerHTML]="
           data?.value?.bankID | formatvalue : view.formModel : 'BankID' | async
         "

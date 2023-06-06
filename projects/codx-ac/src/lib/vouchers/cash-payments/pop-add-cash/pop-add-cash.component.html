@@ -133,50 +133,47 @@
             </div>
             <div style="display: none;" class="col-3 ac-type-2">
               <div class="form-group">
-                <!-- Lý do chi -->
-                <div class="form-group">
-                  <codx-label fiedName="CashPaymentOrdersID" [formModel]="form.formModel">
-                  </codx-label>
-                  <codx-input [Group]="form.formGroup" field="cashPaymentOrdersID" [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)">
-                  </codx-input>
-                </div>
+                <codx-label fiedName="CashPaymentOrdersID" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" field="cashPaymentOrdersID" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
+                </codx-input>
+                <button style="position: absolute;
+                margin-left: -49px;
+                height: 30px;
+                margin-top: 1px;
+                border-radius: 0;" type="button" class="btn btn-light-primary" (click)="popupCash()">
+                  <div class="d-flex align-items-center">
+                    <i class="icon-insert_link icon-18"></i>
+                  </div>
+                </button>
               </div>
             </div>
-            <div style="display: none;" class="col-1 ac-type-2 mt-6">
+            <div style="display: none;" class="col-3 ac-type-2">
               <div class="form-group">
-                <!-- Lý do chi -->
-                <div class="form-group">
-                  <button type="button" class="btn btn-light-primary" (click)="popupCash()">
-                    <div class="d-flex align-items-center">
-                      <i class="icon-insert_link icon-18"></i>
-                    </div>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div style="display: none;" class="col-2 ac-type-2">
-              <div class="form-group">
-                <!-- Lý do chi -->
-                <div class="form-group">
-                  <codx-label fiedName="CashPaymentOrdersAmt" [formModel]="form.formModel">
-                  </codx-label>
-                  <codx-input disabled="true" [Group]="form.formGroup" field="cashPaymentOrdersAmt"
-                    [formModel]="form.formModel" (valueChange)="valueChange($event)">
-                  </codx-input>
-                </div>
+                <codx-label fiedName="CashPaymentOrdersAmt" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input disabled="true" [Group]="form.formGroup" field="cashPaymentOrdersAmt"
+                  [formModel]="form.formModel" (valueChange)="valueChange($event)">
+                </codx-input>
               </div>
             </div>
             <div style="display: none;" class="col-3 ac-type-5">
               <div class="form-group">
-                <!-- Lý do chi -->
-                <div class="form-group">
-                  <codx-label fiedName="RefID" [formModel]="form.formModel">
-                  </codx-label>
-                  <codx-input [Group]="form.formGroup" field="refID" [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)">
-                  </codx-input>
-                </div>
+                <codx-label fiedName="RefID" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" field="refID" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
+                </codx-input>
+                <button style="position: absolute;
+                margin-left: -49px;
+                height: 30px;
+                margin-top: 1px;
+                border-radius: 0;" type="button" class="btn btn-light-primary" (click)="popupCash()">
+                  <div class="d-flex align-items-center">
+                    <i class="icon-insert_link icon-18"></i>
+                  </div>
+                </button>
               </div>
             </div>
             <div style="display: none;" class="col-3 ac-type-5">
@@ -281,7 +278,7 @@
         [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
-        [autoLoad]="false" (created)="gridCreated()" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
+        [autoLoad]="false" (created)="gridCreated()" (onAddNew)="onAddNew($event)" (actionEvent)="actionEvent($event)" (onEdit)="onEdit($event)"
         (cellChanged)="lineChanged($event)"></codx-gridview-v2>
 
       <div #btnRef class="btn-addline">
@@ -291,22 +288,7 @@
         </button>
       </div>
     </div>
-    <div class="row" *ngIf="cashpaymentline.length == 0" style="height: 40px;">
-      <table style="table-layout: fixed;" class="table table-row-bordered">
-        <tfoot style="background-color: whitesmoke;position: sticky;
-          bottom: 0;">
-          <ng-container *ngFor="let item of gridCash.visibleColumns">
-            <td class="w-20" *ngIf="item.summaryBottom == '1'">
-              <div class="d-flex align-items-center">
-                <span style="font-size: 14px;" class="sum-content fw-bold">Tổng cộng: </span>
-                <span style="font-size: 14px;" class="sum-content fw-bold">0</span>
-              </div>
-            </td>
-            <td *ngIf="item.summaryBottom != '1'">
-            </td>
-          </ng-container>
-        </tfoot>
-      </table>
+    <div class="row" *ngIf="cashpaymentline.length == 0" style="height: 40px;background-color: whitesmoke;">
     </div>
   </ng-container>
   <!-- <ng-container
@@ -859,7 +841,7 @@
     <codx-gridview-v2 #gridSet formName="SettledInvoices" gridViewName="grvSettledInvoices"
       entityName="AC_SettledInvoices" [templateMore]="morefunction" [editSettings]="editSettings"
       [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false"
-      [dataSource]="settledInvoices" (cellChanged)="settledLineChanged($event)">
+      [dataSource]="settledInvoices" (created)="gridCreatSet()" (cellChanged)="settledLineChanged($event)">
     </codx-gridview-v2>
     <div #btnRef class="btn-addline">
       <div class="d-flex align-items-center">
@@ -880,20 +862,15 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="settledInvoices.length == 0" style="height: 40px;">
+  <div class="row" *ngIf="settledInvoices.length == 0" style="height: 40px;background-color: whitesmoke;">
   </div>
 </ng-template>
 <!-- End: VoucherLineRefs -->
 
 <!-- Start: More function -->
 <ng-template #morefunction let-data>
-  <div class="d-flex align-items-center justify-content-center">
-    <span ngbTooltip="Xóa" placement="bottom" type="button" class="btn btn-icon btn-light-danger ms-1"
-      (click)="deleteRow(data)">
-      <i class="icon-delete icon-16"></i>
-    </span>
-  </div>
-
+  <codx-mfunc [dataItem]="data" [formModel]="form.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
+    type="view"></codx-mfunc>
 </ng-template>
 <ng-template #morefunction2 let-data>
   <div class="d-flex align-items-center justify-content-start">
@@ -909,7 +886,7 @@
 
 <!-- Start: Footer -->
 <ng-template #footer>
-  <div class="codx-detail-footer dialog-footer collape" *ngIf="cashpayment">
+  <div ngClass="collape" class="codx-detail-footer dialog-footer collape" *ngIf="cashpayment">
     <div class="btn btn-white btn-icon tab-action">
       <span (click)="expand()" class="icon-unfold_more icon-20"></span>
     </div>
@@ -969,7 +946,7 @@
             <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
           </button>
         </div>
-        <div *ngIf="cashpayment?.status == '0' && hasSaved" class="ms-2">
+        <div *ngIf="hasSaved" class="ms-2">
           <button type="button" class="btn btn-md btn-danger" (click)="onDiscard()">
             <div class="d-flex align-items-center">
               <i class="icon-settings_backup_restore icon-16"></i>

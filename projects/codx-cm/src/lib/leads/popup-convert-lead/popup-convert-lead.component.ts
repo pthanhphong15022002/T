@@ -63,11 +63,6 @@ export class PopupConvertLeadComponent implements OnInit {
       name: 'Contacts',
     },
     {
-      icon: 'icon-location_on',
-      text: 'Danh sách địa chỉ',
-      name: 'Address',
-    },
-    {
       icon: 'con-settings',
       text: 'Thông tin nhập liệu',
       name: 'InputInformation',
@@ -89,9 +84,7 @@ export class PopupConvertLeadComponent implements OnInit {
   customerID: any;
   lstContactCustomer = []; //List contact khách hàng lấy ra và convert thêm từ tiềm năng để load ra
   lstContactDeal = []; //List contact cơ hội được convert từ khách hàng
-  listAddressCustomer = []; //List address khách hàng lấy ra và convert thêm từ tiềm năng để load ra
   lstContactDelete = [];
-  lstAddressDelete = [];
   listCustomFile: any[] = [];
   countAddNew = 0;
   countAddSys = 0;
@@ -115,15 +108,16 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   async ngOnInit() {
+    if (
+      this.lead.businesslineID != null &&
+      this.lead.businesslineID.trim() != ''
+    ) {
+      this.getProcessIDByBusinessLineID(this.lead.businesslineID);
+    }
 
     this.formModelDeals = await this.cmSv.getFormModel('CM0201');
-
-    this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
     this.gridViewSetupDeal = await firstValueFrom(
       this.cache.gridViewSetup('CMDeals', 'grvCMDeals')
-    );
-    this.gridViewSetupCustomer = await firstValueFrom(
-      this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
     );
     this.setData();
 
@@ -131,16 +125,14 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
-    if (
-      this.lead.businesslineID != null &&
-      this.lead.businesslineID.trim() != ''
-    ) {
-      this.getProcessIDByBusinessLineID(this.lead.businesslineID);
-    }
     if (this.radioChecked) {
       this.countAddSys++;
     }
+    this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
 
+    this.gridViewSetupCustomer = await firstValueFrom(
+      this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
+    );
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
     this.changeDetectorRef.detectChanges();
@@ -153,7 +145,7 @@ export class PopupConvertLeadComponent implements OnInit {
 
   setData() {
     this.customer.customerName = this.lead?.leadName;
-    this.customer.phone = this.lead?.phone;
+    this.customer.phone = this.lead?.companyPhone;
     this.customer.faxNo = this.lead?.faxNo;
     this.customer.webPage = this.lead?.webPage;
     this.customer.industries = this.lead?.industries;
@@ -182,7 +174,6 @@ export class PopupConvertLeadComponent implements OnInit {
       this.cmSv.loadDataAsync('CM', options)
     );
     if (businessLine != null && businessLine.length > 0) {
-      this.deal.processID = businessLine[0]?.processID;
       var options = new DataRequest();
       options.entityName = 'DP_Processes';
       options.predicates = 'ApplyFor=@0 && !Deleted';
@@ -192,6 +183,7 @@ export class PopupConvertLeadComponent implements OnInit {
         this.cmSv.loadDataAsync('DP', options)
       );
       if (this.listCbxProcess != null && this.listCbxProcess.length > 0) {
+        this.deal.processID = businessLine[0]?.processID;
         this.getProcessByProcessID(this.deal.processID);
       }
     }
@@ -199,7 +191,7 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async getProcessByProcessID(e) {
     var process = this.listCbxProcess.find((x) => x.recID == e);
-    if(process != null){
+    if (process != null) {
       if (process.permissions != null) {
         var lstPerm = process.permissions.filter((x) => x.roleType == 'P');
         this.listParticipants =
@@ -211,7 +203,6 @@ export class PopupConvertLeadComponent implements OnInit {
         var lstStep =
           process?.steps != null ? this.groupByStep(process?.steps) : [];
         this.deal.endDate = this.HandleEndDate(lstStep);
-
       }
 
       if (
@@ -251,16 +242,6 @@ export class PopupConvertLeadComponent implements OnInit {
         this.lstContactCustomer = [];
       }
       this.lstContactDeal = [];
-    });
-  }
-
-  getListAddress(entityName, recID) {
-    this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
-      if (res && res.length > 0) {
-        this.listAddressCustomer = res;
-      } else {
-        this.listAddressCustomer = [];
-      }
     });
   }
 
@@ -331,8 +312,6 @@ export class PopupConvertLeadComponent implements OnInit {
       this.lstContactCustomer,
       this.lstContactDeal,
       this.lstContactDelete,
-      this.listAddressCustomer,
-      this.lstAddressDelete,
     ];
     await this.api
       .execSv<any>(
@@ -383,18 +362,11 @@ export class PopupConvertLeadComponent implements OnInit {
       this.customer.recID = this.customerID;
     }
     this.deal.customerID = this.customer?.recID;
-    if (this.lstContactDeal != null) {
-      this.lstContactDeal.forEach((res) => {
-        res.recID = Util.uid();
-      });
-    }
-    if (this.listAddressCustomer != null) {
-      this.listAddressCustomer.forEach((res) => {
-        if (res?.objectID == this.lead.recID) {
-          res.recID = Util.uid();
-        }
-      });
-    }
+    // if (this.lstContactDeal != null) {
+    //   this.lstContactDeal.forEach((res) => {
+    //     res.recID = Util.uid();
+    //   });
+    // }
   }
 
   async convertDataInstanceAndDeal() {
@@ -420,12 +392,10 @@ export class PopupConvertLeadComponent implements OnInit {
         this.deal.processID
       )
     );
-    if(this.listInstanceSteps != null && this.listInstanceSteps.length > 0){
+    if (this.listInstanceSteps != null && this.listInstanceSteps.length > 0) {
       this.deal.stepID = this.listInstanceSteps[0]?.stepID;
       this.deal.nextStep = this.listInstanceSteps[1]?.stepID;
     }
-
-
   }
 
   //#endregion
@@ -557,9 +527,7 @@ export class PopupConvertLeadComponent implements OnInit {
     }
   }
 
-  changeRadio(e) {
-    this.codxConvert.getListContacts();
-    this.codxListAddress.getListAddress();
+  async changeRadio(e) {
     if (e.field === 'yes' && e.component.checked === true) {
       if (this.countAddSys > 0) {
         this.customerID = this.customerOld;
@@ -567,7 +535,6 @@ export class PopupConvertLeadComponent implements OnInit {
       }
       this.radioChecked = true;
       this.getListContactByObjectID(this.customerID);
-      this.getListAddress('CM_Customers', this.customerID);
       this.countAddSys++;
     } else if (e.field === 'no' && e.component.checked === true) {
       this.customer.recID = null;
@@ -575,8 +542,8 @@ export class PopupConvertLeadComponent implements OnInit {
         this.customerID = Util.uid();
         this.customerNewOld = this.customerID;
       }
+
       this.getListContactByObjectID(this.customerNewOld);
-      this.getListAddress('CM_Customers', this.customerNewOld);
       this.radioChecked = false;
       this.countAddNew++;
     }
@@ -600,7 +567,6 @@ export class PopupConvertLeadComponent implements OnInit {
         this.customerOld = this.customerID;
         this.lead.customerID = this.customerID;
         this.getListContactByObjectID(this.customerID);
-        this.getListAddress('CM_Customers', this.customerID);
       }
     }
   }
@@ -706,13 +672,18 @@ export class PopupConvertLeadComponent implements OnInit {
       if (e.data) {
         var tmp = new CM_Contacts();
         tmp = JSON.parse(JSON.stringify(e.data));
+        tmp.recID = Util.uid();
         tmp.refID = e.data.recID;
+        tmp.objectType = '4';
+        tmp.isDefault = false;
+
         var indexCus = this.lstContactCustomer.findIndex(
           (x) => x.recID == e.data.recID
         );
 
         if (!this.lstContactDeal.some((x) => x.refID == e?.data?.recID)) {
           this.lstContactDeal.push(tmp);
+          this.codxConvert.loadListContact(this.lstContactDeal);
         }
         if (indexCus != -1) {
           this.lstContactCustomer[indexCus].checked = true;
@@ -727,14 +698,19 @@ export class PopupConvertLeadComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  contactEvent(e) {
+  contactEventCustomer(e) {
     if (e.data) {
       var findIndex = this.lstContactDeal.findIndex(
         (x) => x.refID == e.data?.recID
       );
       if (e.action == 'edit') {
         if (findIndex != -1) {
-          this.lstContactDeal[findIndex] = e.data;
+          var isDefault = this.lstContactDeal[findIndex]?.isDefault;
+          var role = this.lstContactDeal[findIndex]?.role;
+
+          this.lstContactDeal[findIndex] = JSON.parse(JSON.stringify(e.data));
+          this.lstContactDeal[findIndex].isDefault = isDefault;
+          this.lstContactDeal[findIndex].role = role;
         }
       } else {
         this.lstContactDelete.push(Object.assign({}, e?.data));
@@ -746,62 +722,29 @@ export class PopupConvertLeadComponent implements OnInit {
     }
   }
 
-  lstContactEmit(e) {
-    this.lstContactCustomer = e;
-  }
-  //#endregion
-
-  //#region address
-  convertAddress(e) {
-    if (e.e == true) {
-      if (e?.data != null) {
-        var tmp = JSON.parse(JSON.stringify(e.data));
-
-        var check = this.listAddressCustomer.findIndex(
-          (x) => x.isDefault == true
-        );
-        if (e.data.isDefault == true) {
-          if (check != -1) {
-            var config = new AlertConfirmInputConfig();
-            config.type = 'YesNo';
-            this.notiService.alertCode('CM001').subscribe((x) => {
-              if (x.event.status == 'Y') {
-                this.listAddressCustomer[check].isDefault = false;
-              } else {
-                tmp.isDefault = false;
-              }
-              this.listAddressCustomer.push(Object.assign({}, tmp));
-              this.codxListAddress.loadListAdress(this.listAddressCustomer);
-              this.changeDetectorRef.detectChanges();
-            });
-          } else {
-            this.listAddressCustomer.push(Object.assign({}, tmp));
-            this.codxListAddress.loadListAdress(this.listAddressCustomer);
-          }
-        } else {
-          this.listAddressCustomer.push(Object.assign({}, tmp));
-          this.codxListAddress.loadListAdress(this.listAddressCustomer);
+  contactEventDeal(e) {
+    if (e.data) {
+      var findIndex = this.lstContactCustomer.findIndex(
+        (x) => x.recID == e.data?.refID
+      );
+      if (e.action == 'edit') {
+        if (findIndex != -1) {
+          var isDefault = this.lstContactCustomer[findIndex].isDefault;
+          this.lstContactCustomer[findIndex] = JSON.parse(
+            JSON.stringify(e.data)
+          );
+          this.lstContactCustomer[findIndex].recID = e.data.refID;
+          this.lstContactCustomer[findIndex].role = null;
+          this.lstContactCustomer[findIndex].isDefault = isDefault;
+          this.codxListContact.loadListContact(this.lstContactCustomer);
         }
       }
-    } else {
-      var index = this.listAddressCustomer.findIndex(
-        (x) => x.recID == e?.data?.recID
-      );
-      if (index != -1) {
-        this.listAddressCustomer.splice(index, 1);
-
-        this.codxListAddress.loadListAdress(this.listAddressCustomer);
-      }
+      this.changeDetectorRef.detectChanges();
     }
-    this.changeDetectorRef.detectChanges();
   }
 
-  lstAddressEmit(e) {
-    this.listAddressCustomer = e;
-  }
-
-  lstAddressDeleteEmit(e) {
-    this.lstAddressDelete = e;
+  lstContactEmit(e) {
+    this.lstContactCustomer = e;
   }
   //#endregion
 

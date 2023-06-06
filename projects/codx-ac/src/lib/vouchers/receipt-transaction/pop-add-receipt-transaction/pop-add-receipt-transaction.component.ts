@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, ElementRef, Injector, OnInit, Optional, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, Injector, OnInit, Optional, ViewChild, ViewEncapsulation} from '@angular/core';
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Component, CodxInplaceComponent, CodxInputComponent, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util } from 'codx-core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
@@ -18,7 +18,8 @@ import { PopAddLineinventoryComponent } from '../pop-add-lineinventory/pop-add-l
 @Component({
   selector: 'lib-pop-add-receipt-transaction',
   templateUrl: './pop-add-receipt-transaction.component.html',
-  styleUrls: ['./pop-add-receipt-transaction.component.css']
+  styleUrls: ['./pop-add-receipt-transaction.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PopAddReceiptTransactionComponent extends UIComponent implements OnInit{
 
@@ -50,6 +51,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   inventoryJournalLines: Array<InventoryJournalLines> = [];
   inventoryJournalLinesDelete: Array<InventoryJournalLines> = [];
   lockFields = [];
+  visibleColumns: Array<any> = [];
   pageCount: any;
   tab: number = 0;
   total: any = 0;
@@ -146,7 +148,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   onInit(): void {
     this.loadInit();
     this.loadTotal();
-    this.loadJournal();
     this.loadItems();
   }
 
@@ -159,15 +160,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   //#region Event
 
-  gridCreated(e, grid) {
-    let hBody, hTab, hNote;
-    if (this.cardbodyRef)
-      hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
-    if (this.inventoryRef) hTab = (this.inventoryRef as any).element.offsetHeight;
-    if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
-
-    this.gridHeight = hBody - (hTab + hNote + 180);
-    grid.hideColumns(this.lockFields);
+  gridCreated() {
+    this.visibleColumns = this.gridInventoryJournalLine.visibleColumns;
+    this.gridInventoryJournalLine.hideColumns(this.lockFields);
   }
 
   clickMF(e, data) {
@@ -553,6 +548,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     if (this.inventoryJournal.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
     }
+    this.loadJournal();
   }
 
   loadJournal(){
@@ -586,6 +582,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.inventoryJournalLines.forEach((element) => {
       totals = totals + element.costAmt;
     });
+    this.total = totals;
     this.inventoryJournal.totalAmt = totals;
     this.total = totals.toLocaleString('it-IT')
     if (this.isSaveMaster ) {

@@ -836,7 +836,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        this.updateGridView(this.gridView, actionType, res.event[0], data);
+        this.updateGridView(this.gridView, actionType, res.event, data);
       }
       this.df.detectChanges();
     });

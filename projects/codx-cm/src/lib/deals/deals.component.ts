@@ -358,16 +358,12 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
               break;
             case 'CM0201_8':
               if (data.closed) {
-                more.isblur = true;
-              } else {
-                more.isblur = false;
+                more.disabled = true;
               }
               break;
             case 'CM0201_9':
               if (!data.closed) {
-                more.isblur = true;
-              } else {
-                more.isblur = false;
+                more.disabled = true;
               }
               break;
             case 'SYS101':
@@ -631,14 +627,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   //end Kanaban
 
   moveStage(data: any) {
-    // if (!this.isClick) {
-    //   return;
-    // }
-    // if (listStepCbx.length == 0 || listStepCbx == null) {
-    //   listStepCbx = this.listSteps;
-    // }
-    // this.isClick = false;
-    // this.crrStepID = data.stepID;
+
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;

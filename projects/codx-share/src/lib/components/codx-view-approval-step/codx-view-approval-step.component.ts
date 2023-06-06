@@ -11,12 +11,15 @@ import {
   Input,
   Output,
   EventEmitter,
+  Optional,
 } from '@angular/core';
 import {
   ApiHttpService,
   ButtonModel,
   CacheService,
   DataRequest,
+  DialogData,
+  DialogRef,
   FormModel,
   ViewModel,
   ViewsComponent,
@@ -38,13 +41,13 @@ export class CodxViewApprovalStepComponent
   @Input() transID: string = '';
   @Input() approveStatus: string = '';
   @Input() eSign = false;
+  @Input() showCanceled = false;
   formModel: FormModel;
   fmApprovalTrans: FormModel;
   fmApprovalStep: FormModel;
   gridViewSetup: any = {};
 
   positionDefault: string;
-  showCanceled=false;
   lstSttApproveStep = ['1'];
   process: any = [];
   canceledProcess= [];
@@ -52,8 +55,9 @@ export class CodxViewApprovalStepComponent
   constructor(
     private esService: CodxEsService,
     private cr: ChangeDetectorRef,
-    private cache: CacheService
-  ) {}
+    private cache: CacheService,
+  ) {
+  }
   ngAfterViewInit(): void {
     this.esService.isSetupChange.subscribe((res) => {
       if (res) {

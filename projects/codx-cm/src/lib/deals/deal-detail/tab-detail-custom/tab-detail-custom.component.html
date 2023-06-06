@@ -24,28 +24,37 @@
     [ngTemplateOutlet]="ganttChart"
   ></some-element>
 
-
   <some-element *ngSwitchDefault></some-element>
 </container-element>
 <!-- nvthuan công việc -->
 <ng-template #task let-data="value">
-  <div *ngFor="let step of listStep; let i = index" >
-    <!-- <div class="d-flex align-items-center justify-content-between me-5">
-      <div class="d-flex align-items-center fw-bold">
-        <i class="icon-account_balance icon-20 me-2"></i>
-        <span class="fs-5">{{ step.stepName }}</span>
-      </div>
-      <codx-progressbar [progress]="step?.progress || 0"></codx-progressbar>
-    </div> -->
-
+  <div
+    *ngFor="let step of listStep"
+    class="list-step ps-4"
+    [ngStyle]="step?.stepStatus != '1' ? { background: '#00000030' } : {}"
+  >
     <codx-step-task
       [dataSources]="step"
       [isShowButton]="false"
       [isShowMore]="true"
       [isDeepCopy]="false"
       [isShowStep]="true"
+      (continueStep)="continueStep($event,step)"
       (saveAssign)="saveAssignTask($event)"
     ></codx-step-task>
+    <!-- <codx-step-task
+      [dataSources]="step"
+      [isShowMore]="true"
+      [isDeepCopy]="false"
+      [isShowButton]="true"
+      [isStart]="isStart"
+      [isClose]="isClosed"
+      [isRoleAll]="isRoleAll"
+      [isOnlyView]="isOnlyView"
+      (saveAssign)="saveAssignStepTask($event)"
+      (continueStep)="continueStep($event)"
+      (isChangeProgress)="changeProgressStep($event)"
+  ></codx-step-task> -->
     <hr class="m-0 p-0" />
   </div>
 </ng-template>
@@ -311,10 +320,10 @@
 </ng-template>
 
 <ng-template #ganttChart>
-  <gantt-chart
+  <codx-step-chart
     [dataSelected]="dataSelected"
     [listSteps]="listSteps"
-  ></gantt-chart>
+  ></codx-step-chart>
 </ng-template>
 
 <ng-template #field>
@@ -332,7 +341,9 @@
 </ng-template>
 
 <ng-template #opponent>
-  <codx-tab-dealcompetitors [dealID]="dataSelected.recID"></codx-tab-dealcompetitors>
+  <codx-tab-dealcompetitors
+    [dealID]="dataSelected.recID"
+  ></codx-tab-dealcompetitors>
 </ng-template>
 
 <ng-template #opportunity>

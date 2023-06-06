@@ -1,0 +1,17 @@
+<codx-form
+    [headerText]="'Quy trình duyệt'"
+    [dialog]="dialog"
+    [body]="body"
+>
+  
+</codx-form>
+
+<ng-template #body>
+    <codx-view-approval-step
+    [transID]="transID"
+    [approveStatus]="approveStatus"
+    [showCanceled]="true"
+>
+</codx-view-approval-step>
+</ng-template>
+

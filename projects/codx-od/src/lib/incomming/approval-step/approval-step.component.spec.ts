@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TabCaseDetailComponent } from './tab-case-detail.component';
+import { ApprovalStepComponent } from './approval-step.component';
 
-describe('TabCaseDetailComponent', () => {
-  let component: TabCaseDetailComponent;
-  let fixture: ComponentFixture<TabCaseDetailComponent>;
+describe('ApprovalStepComponent', () => {
+  let component: ApprovalStepComponent;
+  let fixture: ComponentFixture<ApprovalStepComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TabCaseDetailComponent ]
+      declarations: [ ApprovalStepComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TabCaseDetailComponent);
+    fixture = TestBed.createComponent(ApprovalStepComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

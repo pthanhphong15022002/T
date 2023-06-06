@@ -267,7 +267,11 @@
     [formModel]="view.formModel"
     [dataSelected]="dataSelected"
     [funcID]="funcID"
+    [colorReasonSuccess]="colorReasonSuccess"
+    [colorReasonFail]="colorReasonFail"
+    (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
+
   >
   </codx-cases-detail>
 </ng-template>

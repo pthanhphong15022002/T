@@ -32,6 +32,7 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     this.layoutModel.asideTheme = 'transparent';
     this.layoutModel.asideMinimize = 'icon';
     this.layoutModel.toolbarDisplay = false;
+    this.layoutModel.asideKeepActive = false;
   }
 
   onInit() {

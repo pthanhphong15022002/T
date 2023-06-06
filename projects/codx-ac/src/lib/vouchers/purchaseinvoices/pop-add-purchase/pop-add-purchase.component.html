@@ -202,7 +202,7 @@
       <div class="col-2 ac-bettween"></div>
       <div class="col-3 ac-right d-flex justify-content-end">
         <div class="d-flex flex-column mw-300px">
-          <div class="row">
+          <div *ngIf="journal" class="row">
             <div class="col-6">
               <div class="form-group">
                 <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
@@ -419,13 +419,20 @@
   </ng-container>
 </ng-template>
 <ng-template #tabLine>
-  <div *ngIf="modegrid == '1'" class="h-100 w-100 border">
+  <div *ngIf="modegrid == '1'" class="tabline-content position-relative">
     <codx-gridview-v2 #gridPurchaseInvoicesLine class="tabLine" #gridPurchase autoLoad="true" [formName]="fmPurchaseInvoicesLines.formName"
       [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
       [templateMore]="morefunction" [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true"
       [dataSource]="purchaseInvoicesLines" service="PS" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
       (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event, gridPurchase)" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
       [allowTextWrap]="false"></codx-gridview-v2>
+      
+      <div #btnRef class="btn-addline">
+        <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow()">
+          <i class="icon-playlist_add icon-16"></i>
+          <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
+        </button>
+      </div>
   </div>
   <ng-container *ngIf="form?.formGroup && modegrid == '2' && grvPurchaseInvoicesLines">
     <div class="table-responsive mt-3">
@@ -680,7 +687,7 @@
         [collectionSize]="purchaseInvoicesLines.length"></ngb-pagination>
     </div>
   </div>
-  <div class="container w-90 h-90">
+  <div *ngIf="modegrid == 2" class="container w-90 h-90">
     <div style="background: none" class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center mt-2">
         <div [ngbTooltip]="popContent" placement="bottom" style="width: 40px !important;height: 40px !important;"

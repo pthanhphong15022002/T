@@ -16,22 +16,21 @@
       predicates="TransID=@0"
     ></codx-gridview-v2>
   </div>
-  <div>
-    <div #tabsNote class="row" *ngIf="quotations">
-      <div class="form-group col-6">
-        <codx-label fiedName="memo" [formModel]="fmQuotations"></codx-label>
+  <div class="mt-4">
+    <div #tabsNote class="d-flex align-items-top" *ngIf="quotations">
+      <div class="w-100">
+        <div class="mb-2">
+        <codx-label class="text-gray-600" fiedName="memo" [formModel]="fmQuotations"></codx-label>
+      </div>
         <codx-input
           field="memo"
           [formModel]="fmQuotations"
           [crrValue]="quotations.memo"
         ></codx-input>
       </div>
-      <div
-        class="col-6 fw-bolder fs-5"
-        style="padding-left: 100px; padding-right: 20px"
-      >
-        <div class="d-flex justify-content-between text-nowrap">
-          <div class="">
+      <div class="w-250px min-w-250px ms-6">
+        <div class="d-flex justify-content-between text-nowrap mb-1">
+          <div class="text-gray-600">
             <codx-label
               class="label-colon"
               fiedName="TotalAmt1"
@@ -41,7 +40,7 @@
           </div>
           <div class="d-flex justify-content-end">
             <span
-              class="me-3"
+              class="fw-bold me-1"
               [innerHTML]="
                 quotations.totalSalesAmt || 0
                   | formatvalue : fmQuotations : 'totalSalesAmt'
@@ -58,8 +57,8 @@
             ></span>
           </div>
         </div>
-        <div class="d-flex justify-content-between text-nowrap">
-          <div>
+        <div class="d-flex justify-content-between text-nowrap mb-1">
+          <div class="text-gray-600">
             <codx-label
               class="label-colon"
               fiedName="DiscAmt"
@@ -68,7 +67,7 @@
           </div>
           <div class="d-flex justify-content-end">
             <span
-              class="me-3"
+              class="fw-bold me-1"
               [innerHTML]="
                 quotations.discAmt || 0
                   | formatvalue : fmQuotations : 'DiscAmt'
@@ -85,8 +84,8 @@
             ></span>
           </div>
         </div>
-        <div class="d-flex justify-content-between text-nowrap">
-          <div>
+        <div class="d-flex justify-content-between text-nowrap mb-1">
+          <div class="text-gray-600">
             <codx-label
               class="label-colon"
               fiedName="totalTaxAmt"
@@ -95,7 +94,7 @@
           </div>
           <div class="d-flex justify-content-end">
             <span
-              class="me-3"
+              class="fw-bold me-1"
               [innerHTML]="
                 quotations?.totalTaxAmt || '0'
                   | formatvalue : fmQuotations : 'totalTaxAmt'
@@ -112,17 +111,17 @@
             ></span>
           </div>
         </div>
-        <div class="d-flex justify-content-between text-nowrap">
-          <div class="">
+        <div class="d-flex justify-content-between text-nowrap mt-2">
+          <div class="fw-bold">
             <codx-label
-              class="label-colon text-danger"
+              class="label-colon"
               fiedName="TotalAmt"
               [formModel]="fmQuotations"
             ></codx-label>
           </div>
           <div class="d-flex justify-content-end">
             <span
-              class="me-3"
+              class="fw-bold me-1 text-danger"
               [innerHTML]="
                 quotations.totalAmt || '0'
                   | formatvalue : fmQuotations : 'TotalAmt'
@@ -130,7 +129,7 @@
               "
             ></span>
             <span
-              class="codx-label"
+              class="codx-label text-danger"
               [innerHTML]="
                 quotations.currencyID
                   | formatvalue : fmQuotations : 'currencyID'

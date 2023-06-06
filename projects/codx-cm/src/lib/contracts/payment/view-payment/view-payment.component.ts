@@ -60,7 +60,7 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       {
         field: 'rowNo',
         headerText: this.grvPayments?.ItemID?.RowNo ?? 'STT',
-        width: 70,
+        width: 50,
       },
       {
         field: 'scheduleDate',
@@ -87,12 +87,12 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       {
         field: 'status',
         headerText: this.grvPayments?.Status?.headerText ?? 'Trạng thái',
-        width: 90,
+        width: 100,
       },
       {
         field: 'note',
         headerText: this.grvPayments?.Note?.headerText ?? 'Ghi chú',
-        width: 90,
+        width: 100,
       },
       // textAlign: 'left',
       // /template: this.columnVatid,
@@ -106,10 +106,11 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
    }
   }
   gridCreated(e, grid) {
-    // let hBody
-    // let d = grid?.nativeElement?.parentElement.offsetHeight;
-    // if (this.cardbodyGeneral)
-    //   hBody = this.cardbodyGeneral.nativeElement.parentElement.offsetHeight;
+    let hBody
+    let d = grid?.nativeElement?.parentElement.offsetHeight;
+    let d1 = grid?.nativeElement?.element.offsetHeight;
+    if (this.cardbodyGeneral)
+      hBody = this.cardbodyGeneral.nativeElement.parentElement.offsetHeight;
       //  this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
   }
 

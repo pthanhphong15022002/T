@@ -2,7 +2,7 @@
   <ng-container *ngIf="data; else tmpEmpty">
     <ejs-diagram #diagram class="codx-orgchart h-100 w-100" [getConnectorDefaults]="connDefaults"
       [getNodeDefaults]="nodeDefaults" [layout]="layout" [tool]="tool" [snapSettings]="snapSettings"
-      [dataSourceSettings]="datasetting" (click)="orgClick($event)">
+      [dataSourceSettings]="datasetting">
       <ng-template #nodeTemplate let-node>
         <ng-container *ngIf="node?.data" [ngTemplateOutlet]="template"
           [ngTemplateOutletContext]="{ $implicit: node.data, node: node }">
@@ -29,25 +29,6 @@
     [ngStyle]="{ background: data?.positionID == positionID? 'aliceblue': null }">
     <div class="position-relative">
       <ng-container *ngIf="data.employees?.length > 0;else tmpNoEmployee">
-        <!-- <ng-container *ngIf="data.employees.length == 1;else tmpMoreEmploye">
-          <div class="d-flex flex-column flex-grow-1 align-items-center">
-            <codx-img [isDefaulImg]="true" [objectId]="data.employees[0].employeeID" [objectType]="'HR_Employees'"
-              [width]="60" [referType]="'avt'">
-            </codx-img>
-          </div>
-        </ng-container>
-        <ng-template #tmpMoreEmploye>
-          <div class="d-flex justify-content-center">
-            <codx-img [isDefaulImg]="true" [objectId]="data.employees[0].employeeID" [objectType]="'HR_Employees'"
-              [width]="60" [referType]="'avt'">
-            </codx-img>
-            <div ngbDropdown ngbDropdownToggle (click)="showEmploy(data.employees)" class="rounded-circle w-60px h-60px bg-secondary d-flex align-items-center justify-content-center">
-              <span class="text-white-50 fs-3">+{{data.employees?.length - 1}}</span>
-              
-              
-            </div>
-          </div>
-        </ng-template> -->
         <ng-container *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.employees }">
         </ng-container>
         <div class="text-center mt-2">

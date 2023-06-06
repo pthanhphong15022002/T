@@ -149,8 +149,6 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       );
     }
   }
-  handleAction(event) {}
-  onMoreMulti(event) {}
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }

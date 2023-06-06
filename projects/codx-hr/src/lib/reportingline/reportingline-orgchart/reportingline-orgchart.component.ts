@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit,OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import {
   ConnectorModel,
   Diagram,
@@ -17,20 +17,20 @@ import { threadId } from 'worker_threads';
   templateUrl: './reportingline-orgchart.component.html',
   styleUrls: ['./reportingline-orgchart.component.css']
 })
-export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
+export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
 
-  @Input() postion:any = null;
-  @Input() positionID:string = "";
+  @Input() postion: any = null;
+  @Input() positionID: string = "";
   @Input() funcID: string = "";
 
-  width:number = 250;
-  height:number = 150;
-  maxWidth:number = 250;
-  maxHeight:number = 150;
-  minWidth:number = 200;
-  minHeight:number = 150;
-  employees:any[] = [];
-  employeeInfor:any = null;
+  width: number = 250;
+  height: number = 150;
+  maxWidth: number = 250;
+  maxHeight: number = 150;
+  minWidth: number = 200;
+  minHeight: number = 150;
+  employees: any[] = [];
+  employeeInfor: any = null;
   layout: Object = {
     type: 'HierarchicalTree',
     verticalSpacing: 30,
@@ -43,26 +43,19 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
   };
   @ViewChild('diagram') diagram: any;
   datasetting: any = null;
-  data:any = null;
-  onDoneLoading : boolean = false;
+  data: any = null;
+  onDoneLoading: boolean = false;
   constructor(
-    private api:ApiHttpService,
-    private notifySV:NotificationsService,
-    private callFC:CallFuncService,
-    private changeDetectorRef:ChangeDetectorRef
-  ) 
-  { }
-  
-  
+    private api: ApiHttpService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.getDataPositionByID(this.positionID);
   }
-
-
-
+  
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.positionID.currentValue != changes.positionID.previousValue){
+    if (changes.positionID.currentValue != changes.positionID.previousValue) {
       this.onDoneLoading = false;
       this.positionID = changes.positionID.currentValue;
       this.getDataPositionByID(this.positionID);
@@ -70,7 +63,7 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
     }
   }
 
-  public connDefaults(connector: ConnectorModel,diagram: Diagram): ConnectorModel {
+  public connDefaults(connector: ConnectorModel, diagram: Diagram): ConnectorModel {
     connector.targetDecorator.shape = 'None';
     connector.type = 'Orthogonal';
     // connector.constraints = 0;
@@ -117,39 +110,21 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
     }
   }
 
-  getDataPositionByID(positionID:string)
-  {
-    if(positionID){
-      this.api.execSv("HR",
-      "ERM.Business.HR",
-      "PositionsBusiness",
-      "GetDataOrgChartAsync",
-      [positionID]
-      )
-      .subscribe((res:any) =>{
-        if(res)
-        {
-          this.data = res;
-          //this.renewData();
-          this.setDataOrg(this.data);
-        }
-        this.onDoneLoading = true;
-      });
+  getDataPositionByID(positionID: string) {
+    if (positionID) {
+      this.api.execSv("HR","ERM.Business.HR","PositionsBusiness","GetDataOrgChartAsync",[positionID])
+        .subscribe((res: any) => {
+          if (res) {
+            this.data = res;
+            //this.renewData();
+            this.setDataOrg(this.data);
+          }
+          this.onDoneLoading = true;
+        });
     }
-    
-  }
-  orgClick(event){
 
   }
 
-  showEmploy(employes:any[]){
-    debugger
-    
-  }
-
-  onSearch($event){
-    
-  }
   mouseUp(dataNode: any, evt: any) {
     this.positionID = dataNode.positionID;
     var exist = this.checkExistParent(this.positionID);
@@ -159,15 +134,13 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
     }
   }
 
-  loadDataChild(node: any,element: HTMLElement) {
+  loadDataChild(node: any, element: HTMLElement) {
     let result = [];
-    if(node.loadChildrent){
+    if (node.loadChildrent) {
       result = this.data.filter(e => e.reportTo != node.positionID);
-      if(result.length > 0)
-      {
+      if (result.length > 0) {
         result.forEach(element => {
-          if(element.positionID == node.positionID)
-          {
+          if (element.positionID == node.positionID) {
             element.loadChildrent = false;
           }
         });
@@ -176,25 +149,15 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
       }
       this.setDataOrg(this.data);
     }
-    else{
-      if(node.positionID)
-      {
-        this.api.execSv(
-          "HR",
-          "ERM.Business.HR",
-          "PositionsBusiness",
-          "GetChildOrgChartAsync",
-          [node.positionID]
-          )
-          .subscribe((res:any) =>{
-            if(res)
-            {
+    else {
+      if (node.positionID) {
+        this.api.execSv("HR","ERM.Business.HR","PositionsBusiness","GetChildOrgChartAsync",[node.positionID])
+          .subscribe((res: any) => {
+            if (res) {
               result = this.data.concat(res);
-              if(result.length > 0)
-              {
+              if (result.length > 0) {
                 result.forEach(element => {
-                  if(element.positionID == node.positionID)
-                  {
+                  if (element.positionID == node.positionID) {
                     element.loadChildrent = true;
                   }
                 });
@@ -211,7 +174,7 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
           });
       }
     }
-    
+
   }
   checkExistParent(parentID: string): boolean {
     var dt = this.data.filter((x) => x.positionID === parentID);
@@ -219,9 +182,9 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
     return false;
   }
 
-  removeNode(positionID:string){
+  removeNode(positionID: string) {
     var children = this.data.filter((x) => x.reportTo === positionID);
-    if(children.length> 0) {
+    if (children.length > 0) {
       children.forEach(element => {
         this.data = this.data.filter((x) => x.positionID !== element.positionID)
         this.removeNode(element.positionID);
@@ -229,7 +192,7 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
     }
   }
 
-  
+
   // renewData(){
   //   this.data.forEach(element => {
   //     var childCount = this.data.filter(e => e.reportTo === element.positionID 
