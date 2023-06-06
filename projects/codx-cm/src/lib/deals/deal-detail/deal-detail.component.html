@@ -17,7 +17,7 @@
             class="text-dark fs-6 fw-bold"
             #businessLineID
             [innerHTML]="
-            dataSelected?.businessLineID
+              dataSelected?.businessLineID
                 | formatvalue
                   : formModel
                   : 'businessLineID'
@@ -31,225 +31,293 @@
         <div></div>
         <div>
           <codx-mfunc
-          [hideMF]="false"
-          [dataItem]="dataSelected"
-          [formModel]="formModel"
-          (changeDataMF)="changeDataMF($event, dataSelected)"
-          (clickMF)="clickMF($event, dataSelected)"
-          [isBookMark]="true"
-          type="view"
-        ></codx-mfunc>
+            [hideMF]="false"
+            [dataItem]="dataSelected"
+            [formModel]="formModel"
+            (changeDataMF)="changeDataMF($event, dataSelected)"
+            (clickMF)="clickMF($event, dataSelected)"
+            [isBookMark]="true"
+            type="view"
+          ></codx-mfunc>
         </div>
       </div>
 
       <div class="container_detail mt-1">
-        <div class="d-flex align-items-top justify-content-between">
-          <div class="w-100 d-flex flex-column">
-        <div class="d-flex align-items-top justify-content-between">
-          <div class="w-100 d-flex flex-column">
-            <div class="fw-bold text-dark fs-5 mb-2"
-              #customerName
-              [innerHTML]="
-                dataSelected?.customerName
-                  | formatvalue
-                    : formModel
-                    : 'customerName'
-                    : customerName
-                    : 'CMDeals'
-                    : 'grvCMDeals'
-                  | async
-              "
-            ></div>
-            
-            <div class="d-flex align-items-top justify-content-start mb-1">
-              <codx-label
-                default="Cơ hội:"
-                class="text-dark fw-bold me-2"
-              ></codx-label>
-              <i class="icon-business icon-16 me-2"></i>
-              <span
-              class="text-gray-700"
-              #dealName
-              [innerHTML]="
-              dataSelected?.dealName
-                  | formatvalue
-                    : formModel
-                    : 'dealName'
-                    : dealName
-                    : 'CMDeals'
-                    : 'grvCMDeals'
-                  | async
-              "
-            ></span>
-            </div>
-            <div class="d-flex align-items-top mb-1">
-              <codx-label
-                default="Lĩnh vực hoạt động:"
-                class="text-dark fw-bold me-2"
-              ></codx-label>
-            <span
-            class="text-gray-600"
-            #industries
-            [innerHTML]="
-              dataSelected?.industries
-                | formatvalue
-                  : formModelCustomer
-                  : 'industries'
-                  : industries
-                  : 'CMCustomers'
-                  : 'grvCMCustomers'
-                | async
-            "
-          ></span>
-
-            </div>
-            <div class="d-flex align-items-top justify-content-start mb-1">
-              <codx-label
-                default="Nhu cầu:"
-                class="text-dark fw-bold me-2 text-nowrap"
-              ></codx-label>
-              <span
-              class="text-gray-700"
-              #note
-              [innerHTML]="
-              dataSelected?.note
-                  | formatvalue
-                    : formModel
-                    : 'note'
-                    : note
-                    : 'CMDeals'
-                    : 'grvCMDeals'
-                  | async
-              "
-            ></span>
-            </div>
-            <div class="mb-1">
-              <codx-tag
-                [entityName]="formModel.entityName"
-                [disabled]="true"
-                [isEdit]="false"
-                [value]="dataSelected?.tags"
-              >
-              </codx-tag>
-            </div>
-            <div class="d-flex flex-wrap align-items-top mb-1">
-              <div class="d-flex align-items-center me-6 mb-1">
-                <codx-label
-                [formModel]="formModel"
-                fiedName="ExpectedClosed"
-                  default="Ngày dự kiến đóng:"
-                  class="text-dark fw-bold me-1"
-                ></codx-label>
-                <span
-                  class="text-gray-600"
-                  #expectedClosed
-                  [innerHTML]="
-                    dataSelected?.expectedClosed
-                      | formatvalue
-                        : formModel
-                        : 'expectedClosed'
-                        : expectedClosed
-                        : 'CMDeals'
-                        : 'grvCMDeals'
-                      | async
-                  "
-                ></span>
+        <div class="d-flex justify-content-between mb-2">
+          <div class="d-flex flex-column w-100">
+            <div class="d-flex align-items-start">
+              <div class="me-4">
+                <codx-img
+                  [objectId]="dataSelected?.customerID"
+                  [objectName]="dataSelected?.customerName"
+                  [imgOn]="dataSelected?.modifiedOn"
+                  [objectType]="'CM_Customers'"
+                  [referType]="'avt'"
+                  [width]="35"
+                >
+                </codx-img>
+              </div>
+              <div class="d-flex flex-column">
+                <div class="fw-bold text-dark fs-3 mb-1">
+                  {{ dataSelected.customerName }}
+                </div>
+                <div class="d-flex align-items-center mb-1">
+                  <span
+                    class="text-gray-600"
+                    #dealName
+                    [innerHTML]="
+                      dataSelected?.dealName
+                        | formatvalue : formModel : 'dealName' : dealName
+                        | async
+                    "
+                  ></span>
+                </div>
               </div>
             </div>
           </div>
-          <div class="w-175px min-w-175px d-flex flex-column">
-            <div class="d-flex flex-column">
-              <div class="d-flex align-items-top justify-content-end mb-2">
-                <span class="icon-monetization_on pe-1 text-warning"></span>
-                <span class="fs-5 fw-bold">{{ dataSelected?.dealValue }}</span>
-              </div>
-              <div class="mb-2 d-flex align-items-center justify-content-end">
-                <span class="icon-check_circle text-green icon-16 me-1"></span>
-                <span class="fs-6">{{ dataSelected?.probability }}%</span>
-              </div>
-              <div class="d-flex justify-content-end mb-2">
-                    <div
-                *ngIf="dataSelected.status != '1'"   [ngStyle]="{
-                  'background-color':
-                  dataSelected.status == '3' || dataSelected.status == '4'
-                      ? colorReasonSuccess?.color
-                      : dataSelected.status == '5' || dataSelected.status == '6'
-                      ? colorReasonFail?.color
-                      : dataSelected?.steps['backgroundColor']
-                }"
-                class="me-2 badge badge-sm d-flex align-items-center"
+          <div class="ms-5 d-flex justify-content-between">
+            <div class="d-flex align-items-top justify-content-end fs-3">
+              <span
+                class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
+              ></span>
+              <span
+                class="fw-bold"
+                #dealValue
+                [innerHTML]="
+                  dataSelected?.dealValue
+                    | formatvalue : formModel : 'dealValue' : dealValue
+                    | async
+                "
+                >%</span
               >
-                <span
-                  [ngClass]="dataSelected?.steps['icon']"
-                  [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
-                  class="me-1"
-                ></span>
-                <span  class="menu-title fw-bold line-clamp-menu"  [ngbTooltip]="dataSelected?.currentStepName" [ngStyle]="{ color: data?.steps['textColor'] }">{{  dataSelected?.currentStepName }}</span>
-              </div>
-                <div   *ngIf="dataSelected.status == '1'" >
-
-                  <codx-vll
-                  [name]="'DP028'"
-                  [field]="'Status'"
-                  [value]="dataSelected?.status"
-                  [showText]="true"
-                  [showBgColor]="true"
-                  class="badge badge-light badge-sm"
-                >
-                </codx-vll>
-
-                </div>
-              </div>
-              <div class="d-flex flex-column align-items-top mt-3">
-                <div class="d-flex justify-content-end">
-                  <codx-label
-                    default="Bán hàng/Tư vấn"
-                    class="text-dark fw-bold mb-2"
-                  ></codx-label>
-                </div>
-                <div class="d-flex justify-content-end">
-                  <codx-imgs
-                    [isToolTip]="true"
-                    [width]="30"
-                    [objectId]="dataSelected.owner"
-                    ojectType="AD_Users"
-                    [numberImages]="1"
-                  >
-                  </codx-imgs>
-
-                  <codx-imgs
-                  [isToolTip]="true"
-                  [width]="30"
-                  [objectId]="dataSelected.consultantID"
-                  ojectType="AD_Users"
-                  [numberImages]="1"
-                >
-                </codx-imgs>
-                </div>
-              </div>
-
+            </div>
+            <div class="d-flex align-items-top justify-content-end ps-10 fs-3">
+              <span
+                class="icon-check_circle text-green icon-16 mt-1 pe-1"
+              ></span>
+              <span
+                class="text-primary"
+                #probability
+                [innerHTML]="
+                  dataSelected?.probability
+                    | formatvalue : formModel : 'probability' : probability
+                    | async
+                "
+                >%</span
+              >
             </div>
           </div>
         </div>
 
+        <div class="d-flex align-items-top justify-content-between">
+          <div class="w-100 d-flex flex-column">
+            <div class="d-flex align-items-top justify-content-between">
+              <div class="w-100 d-flex flex-column">
+                <div class="d-flex align-items-top mb-2">
+                  <codx-label
+                  fiedName="Industries"
+                  class="text-dark fw-bold me-2 label-colon"
+                  [setRequire]="false"
+                  [formModel]="formModelCustomer"
+                  default="Lĩnh vực hoạt động"
+                  ></codx-label>
+                  <span
+                    class="text-gray-600"
+                    #industries
+                    [innerHTML]="
+                      dataSelected?.industries
+                        | formatvalue
+                          : formModelCustomer
+                          : 'industries'
+                          : industries
+                        | async
+                    "
+                  ></span>
+                </div>
+                <div class="d-flex align-items-top justify-content-start mb-2">
+                  <codx-label
+                    default="Nhu cầu:"
+                    class="text-dark fw-bold me-2 text-nowrap"
+                  ></codx-label>
+                  <span
+                    class="text-gray-700"
+                    #note
+                    [innerHTML]="
+                      dataSelected?.note
+                        | formatvalue
+                          : formModel
+                          : 'note'
+                          : note
+                          : 'CMDeals'
+                          : 'grvCMDeals'
+                        | async
+                    "
+                  ></span>
+                </div>
+                <div class="mb-1">
+                  <codx-tag
+                    [entityName]="formModel.entityName"
+                    [disabled]="true"
+                    [isEdit]="false"
+                    [value]="dataSelected?.tags"
+                  >
+                  </codx-tag>
+                </div>
+                <div class="d-flex flex-wrap align-items-top mb-1">
+                  <div class="d-flex flex-column">
+                    <div class="mb-2">
+                      <codx-label
+                        class="text-dark fw-bold"
+                        default="Liên hệ chính:"
+                      ></codx-label>
+                    </div>
+                    <div class="d-flex align-items-start">
+                      <div class="me-3">
+                        <codx-img
+                          [objectId]="contactPerson?.recID"
+                          [objectName]="contactPerson?.contactName"
+                          [imgOn]="contactPerson?.modifiedOn"
+                          [objectType]="'CM_Contacts'"
+                          [width]="60"
+                        >
+                        </codx-img>
+                      </div>
+                      <div class="d-flex flex-column">
+                        <div class="fw-bold text-dark fs-6 mb-1">
+                          {{ contactPerson?.contactName }}
+                        </div>
+                        <div class="fs-7 text-gray-600 mb-1">
+                          {{ contactPerson?.jobTitle }}
+                        </div>
+                        <div class="d-flex align-items-start">
+                          <div class="d-flex align-items-center me-5">
+                            <span
+                              class="icon-phone_android text-primary icon-16 me-2"
+                            ></span>
+                            <span class="text-gray-800 fs-7">{{
+                              contactPerson?.mobile
+                            }}</span>
+                          </div>
+                          <div class="d-flex align-items-center">
+                            <span
+                              class="icon-print_disabled icon-16 me-2 text-gray-600"
+                            ></span>
+                            <span class="text-gray-800 fs-7">{{
+                              contactPerson?.personalEmail
+                            }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-175px min-w-175px d-flex flex-column">
+                <div class="d-flex flex-column">
+                  <div class="d-flex align-items-top justify-content-end mb-2">
+                    <div
+                      *ngIf="dataSelected.status != '1'"
+                      [ngStyle]="{
+                        'background-color':
+                          dataSelected.status == '3' ||
+                          dataSelected.status == '4'
+                            ? colorReasonSuccess?.color
+                            : dataSelected.status == '5' ||
+                              dataSelected.status == '6'
+                            ? colorReasonFail?.color
+                            : dataSelected?.steps['backgroundColor']
+                      }"
+                      class="me-2 badge badge-sm d-flex align-items-center"
+                    >
+                      <span
+                        [ngClass]="dataSelected?.steps['icon']"
+                        [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
+                        class="me-1"
+                      ></span>
+                      <span
+                        class="menu-title fw-bold line-clamp-menu"
+                        [ngbTooltip]="dataSelected?.currentStepName"
+                        [ngStyle]="{ color: data?.steps['textColor'] }"
+                        >{{ dataSelected?.currentStepName }}</span
+                      >
+                    </div>
+                    <div *ngIf="dataSelected.status == '1'">
+                      <codx-vll
+                        [name]="'DP028'"
+                        [field]="'Status'"
+                        [value]="dataSelected?.status"
+                        [showText]="true"
+                        [showBgColor]="true"
+                        class="badge badge-light badge-sm"
+                      >
+                      </codx-vll>
+                    </div>
+                  </div>
+                  <div
+                    class="mb-2 d-flex align-items-center justify-content-end"
+                  >
+                    <span
+                      class="text-gray-600"
+                      #expectedClosed
+                      [innerHTML]="
+                        dataSelected?.expectedClosed
+                          | formatvalue
+                            : formModel
+                            : 'expectedClosed'
+                            : expectedClosed
+                            : 'CMDeals'
+                            : 'grvCMDeals'
+                          | async
+                      "
+                    ></span>
+                  </div>
+                  <div class="d-flex flex-column align-items-top mt-3">
+                    <div class="d-flex justify-content-end">
+                      <codx-label
+                        default="Bán hàng/Tư vấn"
+                        class="text-dark fw-bold mb-2"
+                      ></codx-label>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                      <codx-imgs
+                        [isToolTip]="true"
+                        [width]="30"
+                        [objectId]="dataSelected.owner"
+                        ojectType="AD_Users"
+                        [numberImages]="1"
+                      >
+                      </codx-imgs>
 
-        <div class="view-details-header bg-body scroll-y me-3 h-100">
-          <div class="d-flex align-items-center justify-content-between">
-            <div class="d-flex tab-header">
-              <codx-taskbar
-                [listTab]="tabDetail"
-                [change]="dataSelected"
-                (tab)="changeTab($event)"
-                size="18"
-                class="mb-3"
-              ></codx-taskbar>
+                      <codx-imgs
+                        [isToolTip]="true"
+                        [width]="30"
+                        [objectId]="dataSelected.consultantID"
+                        ojectType="AD_Users"
+                        [numberImages]="1"
+                      >
+                      </codx-imgs>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="view-details-header bg-body scroll-y me-3 h-100">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex tab-header">
+                  <codx-taskbar
+                    [listTab]="tabDetail"
+                    [change]="dataSelected"
+                    (tab)="changeTab($event)"
+                    size="18"
+                    class="mb-3"
+                  ></codx-taskbar>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-
-        </div>
     </ng-template>
   </codx-detail-tmp>
 </ng-container>
@@ -257,6 +325,7 @@
   <codx-tab-deal-detail
     [tabClicked]="tabClicked"
     [dataSelected]="dataSelected"
+    [formModel]="formModel"
     (saveAssign)="saveAssign($event)"
   ></codx-tab-deal-detail>
 </ng-template>
