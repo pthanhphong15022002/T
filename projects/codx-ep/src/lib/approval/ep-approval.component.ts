@@ -166,7 +166,6 @@ export class EPApprovalComponent extends UIComponent {
       this.getSchedule();
       this.views = [
         {
-          id: '1',
           type: ViewType.listdetail,
           sameData: true,
           active: true,
@@ -178,18 +177,16 @@ export class EPApprovalComponent extends UIComponent {
         {
           sameData: false,
           type: ViewType.schedule,
-          active: true,
+          active: false,
           request2: this.scheduleHeader,
           request: this.scheduleEvent,
           //toolbarTemplate:this.footerButton,
           showSearchBar: false,
           showFilter: false,
           model: {
-            //panelLeftRef:this.panelLeft,
-            eventModel: this.scheduleHeaderModel,
+            eventModel: this.scheduleEvtModel,
             resourceModel: this.scheduleHeaderModel, //resource
             template: this.cardTemplate,
-            //template2:this.titleTmp,
             template4: this.resourceHeader,
             //template5: this.resourceTootip,//tooltip
             template6: this.mfButton, //header
@@ -198,11 +195,11 @@ export class EPApprovalComponent extends UIComponent {
             statusColorRef: 'EP022',
           },
         },
-      ];
+      ];      
+      this.navigateSchedule();
     } else if (this.funcID == EPCONST.FUNCID.S_Approval) {
       this.views = [
         {
-          id: '1',
           type: ViewType.listdetail,
           sameData: true,
           active: true,
@@ -513,6 +510,29 @@ export class EPApprovalComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
+  navigateSchedule() {
+    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
+      this.codxEpService
+        .getApproveByRecID(this.queryParams?.dataValue)
+        .subscribe((res: any) => {
+          if (res) {
+            setInterval(() => this.navigate(res.startDate), 2000);
+          }
+        });
+    }
+  }
+  navigate(date) {
+    if (!this.navigated) {
+      let ele = document.getElementsByTagName('codx-schedule')[0];
+      if (ele) {
+        let scheduleEle = ele.querySelector('ejs-schedule');
+        if ((scheduleEle as any).ej2_instances[0]) {
+          (scheduleEle as any).ej2_instances[0].selectedDate = new Date(date);
+          this.navigated = true;
+        }
+      }
+    }
+  }
   showHour(date: any) {
     let temp = new Date(date);
     let time =
