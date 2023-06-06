@@ -32,7 +32,7 @@
 
 <ng-template #itemViewList>
   <ng-container *ngFor="let data of listQuotations; let i = index">
-    <div class="has-action-menu my-5 py-3">
+    <div class="has-action-menu py-3 border-bottom border-gray-100">
       <div class="row">
         <div class="col-1 d-flex justify-content-center align-items-center">
           <span>{{ i + 1 }}</span>
@@ -52,7 +52,7 @@
         </div>
         <div class="col-3 d-flex flex-column justify-content-center">
           <span
-            class="fs-6 fw-bold"
+            class="text-dark fw-bold"
             #quotationName
             [innerHTML]="
               data.quotationName
@@ -68,7 +68,7 @@
         </div>
         <div class="col-2 d-flex justify-content-end align-items-center">
           <span
-            class="fs-6"
+            class=""
             #totalAmt
             [innerHTML]="
               data.quotationName
@@ -84,7 +84,7 @@
         </div>
         <div class="col-2 d-flex justify-content-end align-items-center">
           <span
-            class="fs-6"
+            class="text-gray-600"
             #createdOn
             [innerHTML]="
               data.createdOn
@@ -105,7 +105,7 @@
             [value]="data?.status"
             [showText]="true"
             [showBgColor]="true"
-            class="badge badge-light badge-md fs-7"
+            class="badge badge-light-primary badge-sm"
           >
           </codx-vll>
         </div>
