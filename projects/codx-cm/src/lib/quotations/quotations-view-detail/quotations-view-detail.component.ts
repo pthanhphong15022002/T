@@ -88,6 +88,7 @@ export class QuotationsViewDetailComponent implements OnChanges {
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['itemSelected']) {
+      this.getContractByDeaID();
     }
     if (this.itemSelected.contactID != this.crrContactID) {
       this.crrContactID = this.itemSelected.contactID;
@@ -124,5 +125,18 @@ export class QuotationsViewDetailComponent implements OnChanges {
 
   clickMF(e, data) {
     this.clickMoreFunction.emit({ e: e, data: data });
+  }
+
+  getContractByDeaID() {
+    if (this.itemSelected?.recID) {
+      var data = [this.itemSelected?.recID];
+      this.codxCM.getListContractByQuotationsID(data).subscribe((res) => {
+        if (res) {
+          this.listContract = res;
+        } else {
+          this.listContract = [];
+        }
+      });
+    }
   }
 }

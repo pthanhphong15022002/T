@@ -93,9 +93,7 @@
         <span
           class="text-gray-700"
           [innerHTML]="
-            data?.createdOn
-              | formatvalue : view.formModel : 'CreatedOn'
-              | async
+            data?.createdOn | formatvalue : view.formModel : 'CreatedOn' | async
           "
         ></span>
       </div>
@@ -122,6 +120,7 @@
     (clickMF)="clickMF($event, itemSelected)"
     (changeDataMF)="changeDataMF($event, itemSelected)"
     [dataItem]="itemSelected"
+    class="overflow-hidden"
   ></codx-detail-tmp>
 </ng-template>
 
@@ -151,7 +150,7 @@
         >
         </codx-imgs>
       </div>
-    </div> 
+    </div>
   </div>
   <div class="d-flex align-items-center mb-1">
     <div class="d-flex align-items-center w-50">
@@ -184,8 +183,6 @@
         "
       ></span>
     </div>
-    
-    
   </div>
   <div class="d-flex align-items-top mb-1">
     <div class="d-flex align-items-center w-50">
@@ -346,34 +343,38 @@
 </ng-template>
 
 <ng-template #mainRightTemp>
-  <codx-taskbar
-    [change]="itemSelected"
-    [listTab]="listClicked"
-    (tab)="changeTab($event)"
-    size="18"
-    class="mt-5"
-  ></codx-taskbar>
-  <hr class="mt-0" />
-  <div>
-    <container-element [ngSwitch]="tabClicked">
-      <some-element
-        *ngSwitchCase="'general'"
-        [ngTemplateOutlet]="generalTemplate"
-      ></some-element>
-      <some-element
-        *ngSwitchCase="'detailItem'"
-        [ngTemplateOutlet]="itemsTemplate"
-      ></some-element>
-      <some-element
-        *ngSwitchCase="'pay'"
-        [ngTemplateOutlet]="payTemplate"
-      ></some-element>
-      <some-element
-        *ngSwitchCase="'termsAndRelated'"
-        [ngTemplateOutlet]="termsAndRelatedTemplate"
-      ></some-element>
-      <some-element *ngSwitchDefault></some-element>
-    </container-element>
+  <div class="d-flex flex-column" style="height: 100vh;">
+    <div>
+      <codx-taskbar
+        [change]="itemSelected"
+        [listTab]="listClicked"
+        (tab)="changeTab($event)"
+        size="18"
+        class="mt-5"
+      ></codx-taskbar>
+      <hr class="mt-0" />
+    </div>
+    <div class="main-right">
+      <container-element [ngSwitch]="tabClicked">
+        <some-element
+          *ngSwitchCase="'general'"
+          [ngTemplateOutlet]="generalTemplate"
+        ></some-element>
+        <some-element
+          *ngSwitchCase="'detailItem'"
+          [ngTemplateOutlet]="itemsTemplate"
+        ></some-element>
+        <some-element
+          *ngSwitchCase="'pay'"
+          [ngTemplateOutlet]="payTemplate"
+        ></some-element>
+        <some-element
+          *ngSwitchCase="'termsAndRelated'"
+          [ngTemplateOutlet]="termsAndRelatedTemplate"
+        ></some-element>
+        <some-element *ngSwitchDefault></some-element>
+      </container-element>
+    </div>
   </div>
 </ng-template>
 
