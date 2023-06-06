@@ -330,6 +330,7 @@ export class CM_Contacts {
   modifiedOn: Date;
   modifiedBy: string;
   checked: boolean;
+  role: string;
 }
 export class BS_AddressBook {
   recID: string;

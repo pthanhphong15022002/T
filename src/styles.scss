@@ -69,6 +69,13 @@ erm-quick-links-inner .dropdown-menu {
 .table.table-bordered tbody tr:last-child td {
   border: 1px var(--gray-150) solid !important;
 }
+
+codx-input[type="radio"] ejs-radiobutton{
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: start;
+}
 /***** end theme ****/
 ::-webkit-scrollbar {
   width: 0.4rem !important;
@@ -1895,7 +1902,7 @@ codx-tabs {
   .tab-footer {
     margin-top: 5px;
   }
-  .badge.badge-sm {
+  a.nav-link .badge.badge-sm {
     margin-top: 4px;
     margin-left: -5px;
     padding-left: 1px !important;

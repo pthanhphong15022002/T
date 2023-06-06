@@ -163,7 +163,7 @@
   <div class="h-100px tabset-content position-relative">
     <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="formModel.formName"
       [gridViewName]="formModel.gridViewName" [entityName]="formModel.entityName" [dataSource]="subInvoices"
-      service="AC" [height]="gridHeight" [autoLoad]="false" rowHeight="40" [editSettings]="editSettings"
+      service="AC" [autoLoad]="false" [editSettings]="editSettings"
       (onSelected)="onSelected($event)" (onDoubleClick)="onDoubleClick($event)" (eventAction)="actions($event)"
       ></codx-gridview-v2>
   </div>

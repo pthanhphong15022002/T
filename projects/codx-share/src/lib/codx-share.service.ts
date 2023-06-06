@@ -796,7 +796,6 @@ export class CodxShareService {
   }
 
   changeMFApproval(data: any, value: object | any = null) {
-    debugger;
     var datas = value;
     if (datas) {
       var list = data.filter(

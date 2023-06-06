@@ -71,12 +71,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    // if (!this.formModel) {
-    //   this.formModel = new FormModel();
-    //   this.formModel.formName = 'EDayOffs';
-    //   this.formModel.entityName = 'HR_EDayOffs';
-    //   this.formModel.gridViewName = 'grvEDayOffs';
-    // }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
@@ -99,14 +93,8 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       }
     }
     this.formModel = dialog.formModel;
-    //this.lstDayoffs = data?.data?.lstDayOffs
 
     this.actionType = data?.data?.actionType;
-    // if (this.actionType === 'edit' || this.actionType === 'copy') {
-    //   this.dayoffObj = JSON.parse(
-    //     JSON.stringify(this.lstDayoffs[this.indexSelected])
-    //   );
-    // }
   }
 
   onInit(): void {
@@ -119,28 +107,10 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         }
       });
 
-    // this.cache
-    //   .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-    //   .subscribe((res) => {
-    //     this.genderGrvSetup = res?.Gender;
-    //   });
     if (this.employId) this.getEmployeeInfoById(this.employId, 'employeeID');
     this.getGroupKowTypeView();
     if (this.dayoffObj?.kowID) this.checkViewKowTyeGroup();
   }
-
-  // ngAfterViewInit() {
-  //   this.dialog &&
-  //     this.dialog.closed.subscribe((res) => {
-  //       if (!res.event) {
-  //         if (this.successFlag == true) {
-  //           this.dialog.close(this.dayoffObj);
-  //         } else {
-  //           this.dialog.close();
-  //         }
-  //       }
-  //     });
-  // }
 
   initForm() {
     this.cache
@@ -254,21 +224,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     }
   }
 
-  // click(data) {
-  //   console.log('formdata', data);
-  //   this.dayoffObj = data;
-  //   this.formModel.currentData = JSON.parse(JSON.stringify(this.dayoffObj))
-  //   this.indexSelected = this.lstDayoffs.findIndex(p => p.recID == this.dayoffObj.recID);
-  //   this.actionType ='edit'
-  //   this.formGroup?.patchValue(this.dayoffObj);
-  //   this.cr.detectChanges();
-  // }
-
-  // afterRenderListView(evt){
-  //   this.listView = evt;
-  //   console.log(this.listView);
-  // }
-
   HandlePregnantTypeChange(e, pregnantType) {
     if (e.component.checked == true) {
       if (pregnantType.value == '1') {
@@ -287,42 +242,50 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     }
   }
 
-  HandleTotalDaysVal() {
-    if (this.dayoffObj.periodType == '2' || this.dayoffObj.periodType == '3') {
-      this.dayoffObj.totalDays = 0.5;
-    } else {
-      let beginDate = new Date(this.dayoffObj.beginDate);
-      let endDate = new Date(this.dayoffObj.endDate);
-
-      let dif = endDate.getTime() - beginDate.getTime();
+  HandleTotalDaysVal(periodType: string) {
+    let beginDate = new Date(this.dayoffObj.beginDate);
+    let endDate = new Date(this.dayoffObj.endDate);
+    let dif = endDate.getTime() - beginDate.getTime();
+    if (periodType == '1') {
       this.dayoffObj.totalDays = dif / (1000 * 60 * 60 * 24) + 1;
     }
-
-    this.formGroup.patchValue({ totalDays: this.dayoffObj.totalDays });
-  }
-
-  HandleInputBeginDate(evt) {
-    this.dayoffObj.beginDate = evt.data;
-    if (this.dayoffObj.endDate != null && this.dayoffObj.periodType != null) {
-      //https://www.geeksforgeeks.org/how-to-calculate-the-number-of-days-between-two-dates-in-javascript/
-      if (evt.data != this.dayoffObj.endDate) {
-        this.dayoffObj.periodType = '1';
-        this.formGroup.patchValue({ periodType: this.dayoffObj.periodType });
-      }
-      this.HandleTotalDaysVal();
+    if (
+      (periodType == '2' || periodType == '3') &&
+      this.dayoffObj.beginDate == this.dayoffObj.endDate
+    ) {
+      this.dayoffObj.totalDays = 0.5;
     }
+
+    if (
+      this.dayoffObj.endDate > this.dayoffObj.beginDate &&
+      (periodType == '2' || periodType == '3')
+    ) {
+      this.dayoffObj.endDate = this.dayoffObj.beginDate;
+      this.formGroup.patchValue({ endDate: this.dayoffObj.beginDate });
+      this.dayoffObj.totalDays = 0.5;
+    }
+
+    this.formGroup.patchValue({
+      totalDays:
+        this.dayoffObj.endDate < this.dayoffObj.beginDate
+          ? ''
+          : this.dayoffObj.totalDays,
+    });
   }
 
-  HandleInputEndDate(evt) {
-    this.dayoffObj.endDate = evt.data;
-    if (this.dayoffObj.beginDate != null && this.dayoffObj.periodType != null) {
-      //https://www.geeksforgeeks.org/how-to-calculate-the-number-of-days-between-two-dates-in-javascript/
-      if (this.dayoffObj.beginDate != evt.data) {
-        this.dayoffObj.periodType = '1';
-        this.formGroup.patchValue({ periodType: this.dayoffObj.periodType });
-      }
+  //Change date and render days
+  valueChangedDate(evt: any) {
+    if (evt.field === 'beginDate') {
+      this.dayoffObj.beginDate = evt.data;
+      this.dayoffObj.endDate = evt.data;
+      this.formGroup.patchValue({ endDate: evt.data });
+    }
+    if (evt.field === 'endDate') {
+      this.dayoffObj.endDate = evt.data;
+    }
 
-      this.HandleTotalDaysVal();
+    if (this.dayoffObj.endDate && this.dayoffObj.beginDate) {
+      this.HandleTotalDaysVal(this.dayoffObj.periodType);
     }
   }
 
@@ -333,16 +296,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       return date1 <= date2;
     }
     return false;
-  }
-
-  HandleInputPeriodType(evt) {
-    this.dayoffObj.periodType = evt.data;
-
-    if (evt.data == '2' || evt.data == '3') {
-      this.dayoffObj.endDate = this.dayoffObj.beginDate;
-      this.formGroup.patchValue({ endDate: this.dayoffObj.endDate });
-    }
-    this.HandleTotalDaysVal();
   }
 
   allowToViewEmp() {

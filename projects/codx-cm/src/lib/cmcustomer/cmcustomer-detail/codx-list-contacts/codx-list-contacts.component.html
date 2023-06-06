@@ -81,7 +81,7 @@
         </div>
         <div class="me-3">
           <codx-img
-            [objectId]="data.recID"
+            [objectId]="objectType != '4' ? data.recID : data.refID"
             [objectName]="data?.contactName"
             [objectType]="'CM_Contacts'"
             [width]="30"
@@ -108,8 +108,11 @@
             ></span>
           </div>
 
-          <div class="" *ngIf="data.jobTitle">
+          <div class="mb-1" *ngIf="data?.jobTitle">
             <span class="text-gray-600">{{ data.jobTitle }}</span>
+          </div>
+          <div *ngIf="data?.role">
+            <span class="text-gray-600">{{ data?.role }}</span>
           </div>
           <!-- <div class="" *ngIf="data.isDefault">
             <codx-label

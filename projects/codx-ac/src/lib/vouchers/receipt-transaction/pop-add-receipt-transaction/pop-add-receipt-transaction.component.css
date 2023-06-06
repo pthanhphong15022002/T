@@ -1,8 +1,11 @@
 .tabline-content .e-content{
-    height: calc(100vh - 513px)!important;
+    height: calc(100vh - 525px)!important;
  }
  .tabset-content .e-content{
      height: calc(100vh - 610px)!important;
+  }
+  .table-content{
+    height: calc(100vh - 610px)!important;
   }
  .btn-addline{
      position: absolute;

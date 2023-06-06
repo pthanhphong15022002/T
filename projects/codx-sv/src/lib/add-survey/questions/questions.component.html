@@ -1586,7 +1586,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group question">
+  <div class="form-group question pb-5">
     <div class="title-des">
       <ejs-inplaceeditor
         #inplaceCommentEditor
@@ -1597,7 +1597,6 @@
         name="rte"
         data-underline="false"
         [model]="descriptionEditorModel"
-        [validationRules]="commentRule"
         [value]="itemQuestion.comment"
         (valueChange)="
           valueChangeQuestionEJS(
