@@ -139,7 +139,7 @@
       <div class="d-flex align-items-center me-2 codx-badge">
         <ng-container *ngIf="setting?.processBar">
           <div class="control-section">
-            <div class="row" style="margin-top: 8%">
+            <div class="row" style="">
               <div class="col-lg-3 col-md-3 col-3">
                 <div id="">
                   <ejs-progressbar
@@ -185,7 +185,7 @@
           ></codx-attachment-temp>
         </ng-container>
       </div>
-      <div class="ms-3 h-25px" id="{{ data.taskID }}">
+      <div class="ms-3 h-25px mt-3" id="{{ data.taskID }}">
         <ng-container
           *ngIf="
             data.category == '3' &&
@@ -196,7 +196,7 @@
           "
         >
           <codx-imgs
-            [width]="25"
+            [width]="30"
             [objectId]="data.assignTo"
             objectType="AD_Users"
             [numberImages]="3"
