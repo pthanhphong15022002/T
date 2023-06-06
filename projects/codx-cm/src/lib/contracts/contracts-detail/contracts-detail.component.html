@@ -37,7 +37,7 @@
 <ng-template #descTmp let-data>
   <div class="d-flex align-items-top mb-1">
     <span class="icon-business icon-16 me-2 text-gray-600"></span>
-    <span class="text-gray-700">{{
+    <span class="text-gray-600">{{
       data?.companyName || "Cty cổ phần tin học lạc việt"
     }}</span>
   </div>
@@ -161,7 +161,7 @@
         [formModel]="view.formModel"
       ></codx-label>
       <span
-        class="text-gray-700"
+        class="text-gray-600"
         [innerHTML]="
           itemSelected?.contractDate
             | formatvalue : view.formModel : 'ContractDate'
@@ -176,7 +176,7 @@
         [formModel]="view.formModel"
       ></codx-label>
       <span
-        class="text-gray-700"
+        class="text-gray-600"
         [innerHTML]="
           itemSelected?.effectiveFrom
             | formatvalue : view.formModel : 'EffectiveFrom'
@@ -194,7 +194,7 @@
         fiedName="effectiveTo"
         [formModel]="view.formModel"
       ></codx-label>
-      <span class="text-gray-700"
+      <span class="text-gray-600"
         [innerHTML]="
           itemSelected?.effectiveTo
             | formatvalue : view.formModel : 'EffectiveTo'
@@ -208,7 +208,7 @@
         fiedName="extendOn"
         [formModel]="view.formModel"
       ></codx-label>
-      <span class="text-gray-700"
+      <span class="text-gray-600"
         [innerHTML]="
           itemSelected?.extendOn
             | formatvalue : view.formModel : 'ExtendOn'
@@ -390,7 +390,7 @@
 <ng-template #generalTemplate>
   <div class="A mb-5">
     <div>
-      <span class="fs-5 fw-bold">Bên A</span>
+      <span class="fs-6 fw-bold text-primary">Bên A</span>
     </div>
     <ng-container
       [ngTemplateOutlet]="general"
@@ -399,7 +399,7 @@
   </div>
 
   <div class="B mb-5">
-    <div><span class="fs-5 fw-bold">Bên B</span></div>
+    <div><span class="fs-6 fw-bold text-primary">Bên B</span></div>
     <ng-container
       [ngTemplateOutlet]="general"
       [ngTemplateOutletContext]="{ data: { value: itemSelected, type: 'B' } }"
@@ -726,7 +726,7 @@
 </ng-template>
 
 <ng-template #general let-data="data">
-  <div class="row fs-6 my-2">
+  <div class="row my-2">
     <div class="col-6">
       <codx-label
         class="label-colon"

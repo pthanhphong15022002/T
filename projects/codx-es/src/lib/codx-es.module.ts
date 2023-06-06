@@ -58,6 +58,8 @@ import { PopupConfirmSaveLabelComponent } from './sign-file/popup-select-label/p
 import { PopupCommentComponent } from './sign-file/popup-comment/popup-comment.component';
 import { PopupAddSegmentComponent } from './setting/category/popup-add-segment/popup-add-segment.component';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
+import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
+import { ApprovalStepSignComponent } from './sign-file/approval-step/approval-step.component';
 
 const routes: Routes = [
   {
@@ -163,7 +165,8 @@ const routes: Routes = [
     WarningMissImgComponent,
     PopupConfirmSaveLabelComponent,
     PopupCommentComponent,
-    PopupAddSegmentComponent
+    PopupAddSegmentComponent,
+    ApprovalStepSignComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -178,6 +181,7 @@ const routes: Routes = [
     CodxShareModule,
     // PdfViewerAllModule,
     ListViewAllModule,
+    ProgressBarModule
   ],
   exports: [CodxEsComponent],
   providers: [

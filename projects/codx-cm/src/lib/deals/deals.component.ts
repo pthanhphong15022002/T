@@ -358,16 +358,12 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
               break;
             case 'CM0201_8':
               if (data.closed) {
-                more.isblur = true;
-              } else {
-                more.isblur = false;
+                more.disabled = true;
               }
               break;
             case 'CM0201_9':
               if (!data.closed) {
-                more.isblur = true;
-              } else {
-                more.isblur = false;
+                more.disabled = true;
               }
               break;
             case 'SYS101':

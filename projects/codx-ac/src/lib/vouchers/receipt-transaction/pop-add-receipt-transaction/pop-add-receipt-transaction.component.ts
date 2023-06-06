@@ -50,6 +50,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   inventoryJournalLines: Array<InventoryJournalLines> = [];
   inventoryJournalLinesDelete: Array<InventoryJournalLines> = [];
   lockFields = [];
+  visibleColumns: Array<any> = [];
   pageCount: any;
   tab: number = 0;
   total: any = 0;
@@ -158,15 +159,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   //#region Event
 
-  gridCreated(e, grid) {
-    let hBody, hTab, hNote;
-    if (this.cardbodyRef)
-      hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
-    if (this.inventoryRef) hTab = (this.inventoryRef as any).element.offsetHeight;
-    if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
-
-    this.gridHeight = hBody - (hTab + hNote + 180);
-    grid.hideColumns(this.lockFields);
+  gridCreated() {
+    this.visibleColumns = this.gridInventoryJournalLine.visibleColumns;
+    this.gridInventoryJournalLine.hideColumns(this.lockFields);
   }
 
   clickMF(e, data) {
@@ -586,6 +581,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.inventoryJournalLines.forEach((element) => {
       totals = totals + element.costAmt;
     });
+    this.total = totals;
     this.inventoryJournal.totalAmt = totals;
     this.total = totals.toLocaleString('it-IT')
     if (this.isSaveMaster ) {
