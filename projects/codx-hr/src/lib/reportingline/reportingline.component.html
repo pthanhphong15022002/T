@@ -27,15 +27,13 @@
                         <codx-label class="text-gray-600" [formModel]="view.formModel" fiedName="JobID">
                         </codx-label>
                         <span class="text-gray-600 me-1">: </span>
-                        <span class="text-dark fw-bold" *ngIf="data?.jobID"
-                            [innerHTML]="data?.jobID | formatvalue: view.formModel: 'jobID' |async"></span>
+                        <span class="text-dark fw-bold" *ngIf="data?.jobID"> {{data.jobName? data.jobName : data.jobID}}</span>
                     </div>
                     <div class="mb-1">
                         <codx-label class="text-gray-600" [formModel]="view.formModel" fiedName="JobLevel">
                         </codx-label>
                         <span class="text-gray-600 me-1">: </span>
-                        <span class="text-dark fw-bold" *ngIf="data?.jobLevel"
-                            [innerHTML]="data?.jobLevel | formatvalue: view.formModel: 'jobLevel' |async"></span>
+                        <span class="text-dark fw-bold" *ngIf="data?.jobLevel">{{data.jobLevelName? data.jobLevelName : data.jobLevel }}</span>
                     </div>
                 </div>
             </div>
@@ -47,23 +45,34 @@
                     <codx-label class="text-gray-600" [formModel]="view.formModel" fiedName="ReportTo">
                     </codx-label>
                     <span class="text-gray me-1">:</span>
-                    <span class="text-dark fw-bold" *ngIf="data?.reportTo"
-                        [innerHTML]="data?.reportTo | formatvalue : view.formModel: 'reportTo' | async "></span>
+                    <ng-container *ngIf="data.reportToName; else noReportTo">
+                        <span class="text-dark fw-bold"> {{ data.reportToName }}</span>
+                    </ng-container>
+                    <ng-template #noReportTo>
+                        <span class="place-holder"> {{ grvSetup['ReportTo'].headerText }}</span>
+                    </ng-template>
                 </div>
                 <div class="mb-1">
                     <codx-label class="text-gray-600" [formModel]="view.formModel" fiedName="ReportTo2">
                     </codx-label>
                     <span class="text-gray-600 me-1">:</span>
-                    <span class="text-dark fw-bold" *ngIf="data.reportTo2"
-                        [innerHTML]="data?.reportTo2 | formatvalue : view.formModel : 'reportTo2' | async">
-                    </span>
+                    <ng-container *ngIf="data.reportTo2Name; else noReportTo2">
+                        <span class="text-dark fw-bold"> {{ data.reportTo2Name }}</span>
+                    </ng-container>
+                    <ng-template #noReportTo2>
+                        <span class="place-holder"> {{ grvSetup['ReportTo2'].headerText }}</span>
+                    </ng-template>
                 </div>
                 <div>
                     <codx-label class="text-gray-600" [formModel]="view.formModel" fiedName="OrgUnitID">
                     </codx-label>
                     <span class="text-gray-600 me-1">:</span>
-                    <span class="text-dark fw-bold" *ngIf="data?.orgUnitID"
-                        [innerHTML]="data?.orgUnitID | formatvalue : view.formModel : 'OrgUnitID' | async"></span>
+                    <ng-container *ngIf="data.orgUnitName; else noOrgUnitID">
+                        <span class="text-dark fw-bold"> {{ data.orgUnitName }}</span>
+                    </ng-container>
+                    <ng-template #noOrgUnitID>
+                        <span class="place-holder"> {{ grvSetup['OrgUnitID'].headerText }}</span>
+                    </ng-template>
                 </div>
             </div>
         </div>
