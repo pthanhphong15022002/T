@@ -231,6 +231,16 @@
     >
     </codx-input>
   </div>
+  <div class="form-group" *ngIf="objectType == '4'">
+    <codx-label [formModel]="form.formModel" fiedName="Role"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [crrValue]="data?.role"
+      (valueChange)="valueChange($event)"
+      field="role"
+    >
+    </codx-input>
+  </div>
   <div class="d-flex justify-content-between">
     <div>
       <codx-input

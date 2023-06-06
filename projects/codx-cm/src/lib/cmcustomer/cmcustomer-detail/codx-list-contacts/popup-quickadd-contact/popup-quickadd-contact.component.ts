@@ -65,11 +65,14 @@ export class PopupQuickaddContactComponent implements OnInit {
   async ngOnInit() {
     if (this.radioChecked) {
       this.action = 'edit';
-      this.default();
+      if (this.actionOld == 'add') this.default();
       this.lstContactCbx = await this.loadContact();
-      if(this.type == 'formAdd'){
+      if (this.type == 'formAdd') {
         this.lstContactCbx = this.lstContactCbx.filter(
-          contact1 => !this.listContacts.some(contact2 => contact2.recID === contact1.recID)
+          (contact1) =>
+            !this.listContacts.some(
+              (contact2) => contact2.recID === contact1.recID
+            )
         );
       }
     }
