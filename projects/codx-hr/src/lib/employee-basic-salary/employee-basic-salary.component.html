@@ -1,11 +1,10 @@
 <codx-views
   #view
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entityName"
-  [className]="className"
-  [method]="method"
+  service="HR"
+  assemblyName="ERM.Business.HR"
+  entityName="HR_EBasicSalaries"
+  className="EBasicSalariesBusiness"
+  method="GetListEBasicSalariesAsync"
   [views]="views"
   [autoLoad]="true"
   idField="recID"
@@ -417,10 +416,9 @@
   <lib-view-basic-salary-detail
     #viewDetail
     [itemDetail]="itemDetail"
-    [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"
-    (clickMF)="clickEvent($event, data)"
+    (clickMF)="clickEvent($event)"
   >
   </lib-view-basic-salary-detail>
 </ng-template>

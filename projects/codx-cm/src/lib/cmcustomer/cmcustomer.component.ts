@@ -132,7 +132,6 @@ export class CmCustomerComponent
     });
   }
   ngAfterViewInit(): void {
-
     this.view.dataService.methodSave = 'AddCrmAsync';
     this.view.dataService.methodUpdate = 'UpdateCrmAsync';
     this.view.dataService.methodDelete = 'DeleteCmAsync';
@@ -202,7 +201,6 @@ export class CmCustomerComponent
         this.deleteContactToCM(data);
         break;
     }
-
   }
 
   clickMoreFunc(e) {
@@ -223,6 +221,7 @@ export class CmCustomerComponent
           case 'SYS003':
           case 'SYS004':
           case 'SYS002':
+          case 'CM0102_4':
           case 'CM0102_1':
             res.disabled = true;
             break;
@@ -540,7 +539,7 @@ export class CmCustomerComponent
     }
   }
 
-  addressNameCMEmit(e){
+  addressNameCMEmit(e) {
     this.dataSelected.address = e;
     this.view.dataService.update(this.dataSelected).subscribe();
     this.detectorRef.detectChanges();

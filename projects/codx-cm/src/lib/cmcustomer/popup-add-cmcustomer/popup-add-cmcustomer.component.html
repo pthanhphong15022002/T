@@ -80,12 +80,12 @@
       <div class="mb-2">
         <codx-label
           name="lblUpdateInfo"
-          class="h4 text-dark text-primary fw-bold"
+          class="fs-6 text-dark text-primary fw-bold"
           default="Thông tin bổ sung"
           [formModel]="form.formModel"
         >
         </codx-label>
-        <div class="row">
+        <div class="row mt-5">
           <div class="col-6">
             <div class="form-group">
               <codx-label [formModel]="form.formModel" fiedName="Headcounts">
@@ -133,7 +133,7 @@
         </div>
         <div class="form-group">
           <div class="d-flex justify-content-between">
-            <div>
+            <div class="me-2">
               <codx-input
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
@@ -141,22 +141,22 @@
               >
               </codx-input>
             </div>
-            <div class="w-100 ms-1">
+            <div class="w-100">
               <codx-label [formModel]="form.formModel" fiedName="OfficialHour">
               </codx-label>
             </div>
           </div>
         </div>
       </div>
-      <div class="mb-2">
+      <div class="mb-2 mt-5">
         <codx-label
           name="lblSystemInfo"
-          class="h4 text-dark text-primary fw-bold"
+          class="fs-6 text-dark text-primary fw-bold"
           default="Thông tin hệ thống"
           [formModel]="form.formModel"
         >
         </codx-label>
-        <div class="row">
+        <div class="row mt-3">
           <div class="col-6">
             <div class="form-group">
               <codx-label
@@ -777,7 +777,7 @@
   </div>
   <div class="form-group">
     <div class="d-flex justify-content-between">
-      <div>
+      <div class="me-2">
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
@@ -785,7 +785,7 @@
         >
         </codx-input>
       </div>
-      <div class="w-100 ms-1">
+      <div class="w-100">
         <codx-label [formModel]="form.formModel" fiedName="IsBlackList">
         </codx-label>
       </div>
@@ -857,7 +857,7 @@
             (valueChange)="valueChangeContact($event)"
           ></codx-input>
         </div>
-        <div class="w-100 ms-1">
+        <div class="w-100">
           <codx-label [formModel]="form.formModel" fiedName="IsDefault">
           </codx-label>
         </div>
