@@ -192,7 +192,7 @@ export class IncommingComponent
         id: '2',
         type: ViewType.kanban,
         active: false,
-        sameData: true,
+        sameData: false,
         request: this.request,
         request2: this.resourceKanban,
         model: {

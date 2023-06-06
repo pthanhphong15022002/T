@@ -98,6 +98,11 @@
       (undo)="undo($event)"></codx-booking-view-detail>
   </ng-template>
 
-
+  <ng-template #mfButton let-data>
+    <div class="mt-1 me-1">
+      <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover"
+        (changeDataMF)="changeDataMF($event, data)"></codx-mfunc>
+    </div>
+  </ng-template>
 
 </codx-views>
