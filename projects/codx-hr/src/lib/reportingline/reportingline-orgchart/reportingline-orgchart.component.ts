@@ -47,8 +47,6 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   onDoneLoading: boolean = false;
   constructor(
     private api: ApiHttpService,
-    private notifySV: NotificationsService,
-    private callFC: CallFuncService,
     private changeDetectorRef: ChangeDetectorRef
   ) { }
 

@@ -46,6 +46,17 @@
           </div>
         </div>
       </ng-container>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-input
+            field="Users"
+            type="checkbox"
+            label="Users"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
     </div>
   </ng-template>
   <ng-template #footer>

@@ -341,7 +341,7 @@ const T_Component: Type<any>[] = [
   PopupCustomFieldComponent,
   CodxViewDetailLittleComponent,
   CodxAsideCustomComponent,
-
+  CodxStepChartComponent,
   //CO
   CalendarCenterComponent,
   AddNoteComponent,
@@ -375,7 +375,6 @@ const T_Pipe: Type<any>[] = [
     PopupAddApproverComponent,
     CodxClearCacheComponent,
     CodxCreateIndexComponent,
-    CodxStepChartComponent
   ],
   exports: [T_Component, T_Pipe],
   imports: [

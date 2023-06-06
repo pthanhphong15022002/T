@@ -1895,13 +1895,13 @@ codx-tabs {
   .tab-footer {
     margin-top: 5px;
   }
-  .badge.badge-sm {
-    margin-top: 4px;
-    margin-left: -5px;
-    padding-left: 1px !important;
-    padding-right: 1px !important;
-    font-size: 10px !important;
-  }
+  // .badge.badge-sm {
+  //   margin-top: 4px;
+  //   margin-left: -5px;
+  //   padding-left: 1px !important;
+  //   padding-right: 1px !important;
+  //   font-size: 10px !important;
+  // }
   .nav-tabs .nav-link.active,
   .nav-tabs .nav-item.show .nav-link {
     background-color: transparent;
@@ -2626,12 +2626,16 @@ codx-toolbar {
     left: 0;
     right: 0;
     bottom: 2px;
-    //height: 42px;
+    height: 42px;
     background-color: #fff;
     padding: 0 0 0 10px !important;
     border-top: 1px #e5e5e7 solid;
+    overflow: hidden;
   }
-
+  .codx-detail-footer.expand{
+    height: 400px;
+    transition: all 0.3s;
+  }
   .codx-detail-footer.expand .tab-content {
     overflow: auto;
     padding: 0 15px;

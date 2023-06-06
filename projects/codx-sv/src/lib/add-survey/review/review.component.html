@@ -926,14 +926,14 @@
   <div class="d-flex">
     <div class="form-group question w-100">
       <div class="title-des d-flex">
-        <span *ngIf="itemQuestion.question">{{ itemQuestion.question }}</span>
+        <span *ngIf="itemQuestion.question"  [innerHTML]="itemQuestion.question"></span>
         <span *ngIf="!itemQuestion.question">{{ "Câu hỏi" }}</span>
       </div>
     </div>
   </div>
   <div class="form-group question">
     <div class="title-des">
-      <span *ngIf="itemQuestion.comment">{{ itemQuestion.comment }}</span>
+      <span *ngIf="itemQuestion.comment" [innerHTML]="itemQuestion.comment"></span>
       <span *ngIf="!itemQuestion.comment">{{ "Mô tả (không bắt buộc)" }}</span>
     </div>
   </div>

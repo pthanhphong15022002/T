@@ -351,17 +351,42 @@ export class CatagoryComponent implements OnInit {
             dialogModel
           );
           break;
-        case 'MultiSelectPopupComponent':
-          this.callfc.openForm(
-            MultiSelectPopupComponent,
-            'This param is not working',
-            400,
-            500,
-            '',
-            {
-              selectedOptions: '2,23,43',
-            }
-          );
+        case 'multiselectpopupcomponent':
+          var dataValue = this.dataValue[item.transType];
+          if (dataValue) {
+            var dim = dataValue[value];
+            this.callfc
+              .openForm(
+                MultiSelectPopupComponent,
+                '',
+                400,
+                500,
+                '',
+                {
+                  selectedOptions: dim,
+                  showAll: true,
+                },
+                '',
+                dialogModel
+              )
+              .closed.subscribe(({ event }) => {
+                dataValue[value] = event;
+                var dt = this.settingValue.find(
+                  (x) =>
+                    x.category == this.category && x.transType == item.transType
+                );
+                if (dt) {
+                  dt.dataValue = JSON.stringify(dataValue);
+                  this.api
+                    .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
+                    .subscribe((res) => {
+                      this.changeDetectorRef.detectChanges();
+                      console.log(res);
+                    });
+                }
+                console.log(event);
+              });
+          }
 
           break;
         default:
