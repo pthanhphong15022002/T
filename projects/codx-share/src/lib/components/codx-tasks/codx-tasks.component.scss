@@ -85,3 +85,26 @@ codx-tasks {
   background-color: white;
   box-shadow: 0 0 35px rgba(0, 0, 0, 0.07);
 }
+
+.border-description {
+  border: 1px solid !important;
+  border-color: rgb(196, 185, 185) !important;
+}
+
+.show-main {
+  display: block;
+}
+
+.hidden-main {
+  display: none;
+}
+
+.progress-text-align {
+  font-family: Roboto-Regular;
+  font-size: 14px;
+  color: #3D3E3C;
+}
+#circular_Circulartrack {
+  opacity: 1 !important;
+}
+

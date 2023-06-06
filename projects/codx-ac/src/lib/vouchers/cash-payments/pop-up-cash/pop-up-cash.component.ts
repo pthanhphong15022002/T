@@ -21,7 +21,6 @@ export class PopUpCashComponent extends UIComponent implements OnInit {
     allowEditing: true,
     mode: 'Normal',
   };
-  gridHeight: any='100%';
   dataCash: Array<any> = [];
   constructor(
     inject: Injector,
@@ -49,5 +48,14 @@ export class PopUpCashComponent extends UIComponent implements OnInit {
   }
   valueChange(e: any) {
 
+  }
+  submit(){
+    this.api
+      .exec<any>('AC', 'CashPaymentsBusiness', 'LoadDataAsync', [])
+      .subscribe((res) => {
+        if (res) {
+          this.dataCash = res;
+        }
+      })
   }
 }

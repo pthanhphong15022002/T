@@ -1,4 +1,11 @@
-import { Component, Injector, Optional, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  HostListener,
+  Injector,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import {
   CRUDService,
@@ -27,7 +34,10 @@ import { SalesInvoiceService } from '../sales-invoices.service';
   templateUrl: './popup-add-sales-invoice.component.html',
   styleUrls: ['./popup-add-sales-invoice.component.css'],
 })
-export class PopupAddSalesInvoiceComponent extends UIComponent {
+export class PopupAddSalesInvoiceComponent
+  extends UIComponent
+  implements AfterViewInit
+{
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('grid') grid: CodxGridviewV2Component;
@@ -59,6 +69,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   };
   fmSalesInvoicesLines: FormModel;
   isReturnInvoice: boolean;
+  gridHeight: number;
 
   constructor(
     injector: Injector,
@@ -134,6 +145,8 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
         this.gvsSalesInvoices = res;
       });
   }
+
+  ngAfterViewInit(): void {}
   //#endregion
 
   //#region Event
@@ -191,10 +204,29 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   }
 
   onCreate(e): void {
-    // this.grid.disableField(this.hiddenFields);
-    // setTimeout(() => {
-    //   this.grid.hideColumns([this.gvsSalesInvoicesLines.ItemName.headerText]);
-    // }, 100);
+    setTimeout(() => {
+      const bodyHeight: number =
+        document.querySelector<HTMLElement>('.card-body')?.offsetHeight;
+      const section1Height: number =
+        document.querySelector<HTMLElement>('.section1')?.offsetHeight;
+      const section3Height: number =
+        document.querySelector<HTMLElement>('.section3')?.offsetHeight;
+      const tabHeight: number =
+        document.querySelector<HTMLElement>('.e-tab-header')?.offsetHeight;
+      const thHeight: number =
+        document.querySelector<HTMLElement>('.e-gridheader')?.offsetHeight;
+      const sumRowHeight: number =
+        document.querySelector<HTMLElement>('.e-summaryrow')?.offsetHeight ?? 0;
+
+      this.gridHeight =
+        bodyHeight -
+        section1Height -
+        section3Height -
+        tabHeight -
+        thHeight -
+        sumRowHeight -
+        27;
+    }, 500);
   }
 
   onCellChange(e): void {

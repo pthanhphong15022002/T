@@ -33,7 +33,7 @@ export class VoucherComponent implements OnInit {
   vouchers: Array<any> = [];
   gridModel: DataRequest = new DataRequest();
   invoiceDueDate: any;
-  gridHeight: any='100%';
+  gridHeight: any = '100%';
   formModel: FormModel = {
     gridViewName: 'grvSettledInvoices',
     formName: 'SettledInvoices',
@@ -95,7 +95,7 @@ export class VoucherComponent implements OnInit {
     //   hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
     // if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
     // this.gridHeight = hBody - (hTab + 120);
-    this.acService.setPopupSize(this.dialog,'80%','80%');
+    this.acService.setPopupSize(this.dialog, '80%', '80%');
   }
   //#endregion
 
@@ -111,40 +111,40 @@ export class VoucherComponent implements OnInit {
     this.payAmt = e.data;
   }
 
-  oldSelected:any=[]
+  oldSelected: any = [];
   onSelected(e) {
     let data = e.data;
-    if(data.settledAmt != 0) return;
+    if (data.settledAmt != 0) return;
     let cashDiscDate;
     let accID = this.form.formGroup.controls.accountID.value;
     if (data.unbounds) cashDiscDate = data.unbounds.cashDiscDate;
     this.api
       .exec('AC', 'SettledInvoicesBusiness', 'SettlementOneLineAsync', [
         data,
-        accID,this.cashpayment.objectID,
+        accID,
+        this.cashpayment.objectID,
         this.cashpayment.journalType,
         this.cashpayment.voucherDate,
         cashDiscDate,
         this.cashpayment.currencyID,
         this.cashpayment.exchangeRate,
-        this.payAmt])
+        this.payAmt,
+      ])
       .subscribe((res) => {
         if (res) {
-          this.grid.dataSource[e.rowIndex] =res;
+          this.grid.dataSource[e.rowIndex] = res;
           this.grid.gridRef.dataSource = [...this.grid.dataSource];
-          if(e.rowIndexes && Array.isArray(e.rowIndexes)){
-            this.oldSelected = e.rowIndexes
+          if (e.rowIndexes && Array.isArray(e.rowIndexes)) {
+            this.oldSelected = e.rowIndexes;
           }
 
           setTimeout(() => {
-            if(this.isDblCLick){
+            if (this.isDblCLick) {
               this.isDblCLick = false;
               this.grid.gridRef.startEdit();
-            }
-            else{
+            } else {
               this.grid.gridRef?.selectRows(this.oldSelected);
             }
-
           }, 200);
         }
       });
@@ -243,7 +243,16 @@ export class VoucherComponent implements OnInit {
 
   apply() {
     let data = this.grid.arrSelectedRows;
-    this.dialog.close(data);
+    this.api
+      .exec<any>('AC', 'SettledInvoicesBusiness', 'AddListAsync', [
+        this.cashpayment,
+        data,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close(data);
+        }
+      });
   }
 
   paymentAmt(data) {
@@ -341,7 +350,7 @@ export class VoucherComponent implements OnInit {
         this.cashpayment.currencyID,
         this.cashpayment.exchangeRate,
         this.payAmt,
-        this.type
+        this.type,
       ])
       .subscribe((res) => {
         if (res && res.length) {
@@ -373,19 +382,19 @@ export class VoucherComponent implements OnInit {
   }
   //#endregion
 
-  isDblCLick:boolean=false;
-  onDoubleClick(e:any){
-    if(e.rowIndex){
+  isDblCLick: boolean = false;
+  onDoubleClick(e: any) {
+    if (e.rowIndex) {
       this.isDblCLick = true;
       this.grid.gridRef.selectRow(e.rowIndex);
     }
   }
-  actions(e:any){
-    if(e.type=='endEdit'){
-      if(this.oldSelected && this.oldSelected.length && this.grid.gridRef){
-        setTimeout(()=>{
+  actions(e: any) {
+    if (e.type == 'endEdit') {
+      if (this.oldSelected && this.oldSelected.length && this.grid.gridRef) {
+        setTimeout(() => {
           this.grid.gridRef.selectRows(this.oldSelected);
-        },500)
+        }, 500);
       }
     }
   }

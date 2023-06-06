@@ -81,7 +81,7 @@
     <div class="text-dark text-primary fw-bold fs-6 mb-3">
       <codx-label default="Thông tin chung"></codx-label>
     </div>
-    
+
     <div class="mb-3">
       <div class="row">
         <div class="col-6">
@@ -92,48 +92,17 @@
             <div class="text-dark fw-bold codx-textcontent">
               {{dataSelected?.dealID }}
             </div>
-          </div> 
-        </div>
-        <div class="col-6">
-          <div class="mb-3 d-flex align-items-top">
-            <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
-              <codx-label default="Chiến dịch"></codx-label>:
-            </div>
-            <div class="text-dark fw-bold codx-textcontent">
-              <span
-              #campaignID
-              [innerHTML]="
-              dataSelected?.campaignID
-                  | formatvalue
-                    : formModel
-                    : 'campaignID'
-                    : campaignID
-                    : 'CMDeals'
-                    : 'grvCMDeals'
-                  | async
-              "
-            ></span>
-            </div>
           </div>
         </div>
-      </div>
-
-
-      <div class="row">
         <div class="col-6">
           <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
-              <codx-label default="Loại cơ hội"></codx-label>:
-            </div>
-            <div class="text-dark fw-bold codx-textcontent">
-              {{ getNameCategory(dataSelected?.category) }}
-            </div>
-          </div> 
-        </div>
-        <div class="col-6">
-          <div class="mb-3 d-flex align-items-top">
-            <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
-              <codx-label default="Kênh"></codx-label>:
+              <codx-label
+              fiedName="ChannelID"
+              class="me-2 label-colon"
+              [setRequire]="false"
+              [formModel]="formModel"
+              ></codx-label>
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <span
@@ -154,11 +123,64 @@
         </div>
       </div>
 
+
       <div class="row">
         <div class="col-6">
           <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
-              <codx-label fiedName="DealValue" default="Doanh số dự kiến"></codx-label>:
+              <codx-label
+              fiedName="Category"
+              class="me-2 label-colon"
+              [setRequire]="false"
+              [formModel]="formModel"
+
+              default="Loại cơ hội"></codx-label>
+            </div>
+            <div class="text-dark fw-bold codx-textcontent">
+              {{ getNameCategory(dataSelected?.category) }}
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mb-3 d-flex align-items-top">
+            <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+              <codx-label
+              fiedName="CampaignID"
+              class="me-2 label-colon"
+              [setRequire]="false"
+              [formModel]="formModel"
+             ></codx-label>
+            </div>
+            <div class="text-dark fw-bold codx-textcontent">
+              <span
+              #campaignID
+              [innerHTML]="
+              dataSelected?.campaignID
+                  | formatvalue
+                    : formModel
+                    : 'campaignID'
+                    : campaignID
+                    : 'CMDeals'
+                    : 'grvCMDeals'
+                  | async
+              "
+            ></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="mb-3 d-flex align-items-top">
+            <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+              <codx-label
+              class="me-2 label-colon"
+              [setRequire]="false"
+              [formModel]="formModel"
+              fiedName="DealValue"
+              ></codx-label>
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <span
@@ -175,106 +197,17 @@
               "
             ></span>
             </div>
-          </div> 
-        </div>
-        <div class="col-6">
-          <div class="mb-3 d-flex align-items-top">
-            <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
-              <codx-label default="Quy trình"></codx-label>:
-            </div>
-            <div class="text-dark fw-bold codx-textcontent">
-              <span
-              #processName
-              [innerHTML]="
-              dataSelected?.processName
-                  | formatvalue
-                    : formModel
-                    : 'processName'
-                    : processName
-                    : 'CMDeals'
-                    : 'grvCMDeals'
-                  | async
-              "
-            ></span>
-            </div>
           </div>
         </div>
-      </div>
-
-      <div class="row">
         <div class="col-6">
           <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
-              <codx-label default="Tỷ lệ thành công"></codx-label>:
-            </div>
-            <div class="text-dark fw-bold codx-textcontent">
-              <span
-                #probability
-                [innerHTML]="
-                dataSelected?.probability
-                    | formatvalue
-                      : formModel
-                      : 'probability'
-                      : probability
-                      : 'CMDeals'
-                      : 'grvCMDeals'
-                    | async
-                "
-              ></span>
-            </div>
-          </div> 
-        </div>
-        <div class="col-6">
-          <div class="mb-3 d-flex align-items-top">
-            <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
-              <codx-label default="Nhân viên bán hàng"></codx-label>:
-            </div>
-            <div class="text-dark fw-bold codx-textcontent">
-              <span
-                #salespersonID
-                [innerHTML]="
-                dataSelected?.salespersonID
-                    | formatvalue
-                      : formModel
-                      : 'salespersonID'
-                      : salespersonID
-                      : 'CMDeals'
-                      : 'grvCMDeals'
-                    | async
-                "
-              ></span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-6">
-          <div class="mb-3 d-flex align-items-top">
-            <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
-              <codx-label default="Ngày dự kiến đóng:"></codx-label>
-            </div>
-            <div class="text-dark fw-bold codx-textcontent">
-              <span
-                #endDate
-                [innerHTML]="
-                dataSelected?.endDate
-                    | formatvalue
-                      : formModel
-                      : 'endDate'
-                      : endDate
-                      : 'CMDeals'
-                      : 'grvCMDeals'
-                    | async
-                "
-              ></span>
-            </div>
-          </div> 
-        </div>
-        <div class="col-6">
-          <div class="mb-3 d-flex align-items-top">
-            <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
-              <codx-label default="Nhân viến tư vấn:"></codx-label>
+              <codx-label
+              class="me-2 label-colon"
+              [setRequire]="false"
+              [formModel]="formModel"
+              fiedName="ConsultantID"
+              ></codx-label>
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <span
@@ -293,6 +226,92 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="mb-3 d-flex align-items-top">
+            <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+              <codx-label
+              class="me-2 label-colon"
+              [setRequire]="false"
+              [formModel]="formModel"
+              fiedName="Probability"
+
+            ></codx-label>
+            </div>
+            <div class="text-dark fw-bold codx-textcontent">
+              <span
+                #probability
+                [innerHTML]="
+                dataSelected?.probability
+                    | formatvalue
+                      : formModel
+                      : 'probability'
+                      : probability
+                      : 'CMDeals'
+                      : 'grvCMDeals'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mb-3 d-flex align-items-top">
+            <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+              <codx-label
+              class="me-2 label-colon"
+              [setRequire]="false"
+              [formModel]="formModel"
+              fiedName="SalespersonID"></codx-label>
+            </div>
+            <div class="text-dark fw-bold codx-textcontent">
+              <span
+                #salespersonID
+                [innerHTML]="
+                dataSelected?.salespersonID
+                    | formatvalue
+                      : formModel
+                      : 'salespersonID'
+                      : salespersonID
+                      : 'CMDeals'
+                      : 'grvCMDeals'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="mb-3 d-flex align-items-top">
+            <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+              <codx-label
+              class="me-2 label-colon"
+              [setRequire]="false"
+              [formModel]="formModel"
+              fiedName="ExpectedClosed"></codx-label>
+            </div>
+            <div class="text-dark fw-bold codx-textcontent">
+              <span
+                #expectedClosed
+                [innerHTML]="
+                dataSelected?.expectedClosed
+                    | formatvalue
+                      : formModel
+                      : 'expectedClosed'
+                      : expectedClosed
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+        </div>
+
       </div>
   </div>
     <div class="mt-5">
@@ -313,8 +332,10 @@
       [funcID]="'CM0205'"
       [objectID]="dataSelected?.recID"
       [objectName]="dataSelected.dealName"
+      [customerID]="dataSelected?.customerID"
       [objectType]="'4'"
-      [hidenMF]="true"
+      [type]="'formDetail'"
+      [hidenMF]="false"
     ></codx-list-contacts>
   </div>
 </ng-template>

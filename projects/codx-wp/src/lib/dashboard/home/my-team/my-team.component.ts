@@ -36,7 +36,7 @@ export class MyTeamComponent implements OnInit {
   popoverList: any;
   popoverEmp: any;
   listEmpInfo = [];
-  searchField = "";
+  searchText = "";
   online: any;
   offline: any;
   user:any = null;
@@ -214,4 +214,9 @@ export class MyTeamComponent implements OnInit {
     }
   }
 
+
+  valueChange(value:any){
+    debugger
+    this.searchText = value.data;
+  }
 }

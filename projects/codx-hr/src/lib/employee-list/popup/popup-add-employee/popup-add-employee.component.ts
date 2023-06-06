@@ -233,11 +233,11 @@ export class PopupAddEmployeeComponent implements OnInit {
 
 
     let today = new Date().toJSON();
-    if (this.data.issuedOn >= today) {
+    if (this.data.issuedOn && this.data.issuedOn >= today) {
       this.notifySV.notifyCode('HR012');
       return false;
     }
-    if (this.data.idExpiredOn < this.data.issuedOn) {
+    if (this.data.idExpiredOn && this.data.issuedOn && this.data.idExpiredOn < this.data.issuedOn) {
       this.notifySV.notifyCode('HR002');
       return false;
     }
