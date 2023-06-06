@@ -370,6 +370,20 @@ export class CatagoryComponent implements OnInit {
                 dialogModel
               )
               .closed.subscribe(({ event }) => {
+                dataValue[value] = event;
+                var dt = this.settingValue.find(
+                  (x) =>
+                    x.category == this.category && x.transType == item.transType
+                );
+                if (dt) {
+                  dt.dataValue = JSON.stringify(dataValue);
+                  this.api
+                    .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
+                    .subscribe((res) => {
+                      this.changeDetectorRef.detectChanges();
+                      console.log(res);
+                    });
+                }
                 console.log(event);
               });
           }

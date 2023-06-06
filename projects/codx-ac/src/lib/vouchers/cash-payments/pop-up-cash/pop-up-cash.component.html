@@ -63,22 +63,43 @@
 <ng-template #tabBasic>
     <ng-container *ngIf="form?.formGroup">
         <div class="row mt-6">
-            <div class="col-4">
-                <div class="form-group">
-                    <codx-label fiedName="objectID" [formModel]="form.formModel" default="Đối tượng">
-                    </codx-label>
-                    <codx-input type="text" field="objectID" [disabled]="true"
-                        [crrValue]="cashpayment.objectName"></codx-input>
+            <div class="col-7 ac-left">
+                <div class="mw-750px">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <codx-label fiedName="objectID" [formModel]="form.formModel" default="Đối tượng">
+                                </codx-label>
+                                <codx-input type="text" field="objectID" [disabled]="true"
+                                    [crrValue]="cashpayment.objectName"></codx-input>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <codx-label fiedName="VoucherDate" [formModel]="form.formModel"
+                                        default="Ngày đề nghị từ">
+                                    </codx-label>
+                                    <codx-input field="VoucherDate" [crrValue]="dateNow" (valueChange)="valueChange($event)"
+                                        [formModel]="form.formModel">
+                                    </codx-input>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-2">
-                <div class="form-group">
-                    <div class="form-group">
-                        <codx-label fiedName="VoucherDate" [formModel]="form.formModel" default="Ngày đề nghị từ">
-                        </codx-label>
-                        <codx-input field="VoucherDate" [crrValue]="dateNow" (valueChange)="valueChange($event)"
-                            [formModel]="form.formModel">
-                        </codx-input>
+            <div class="col-2 ac-bettween"></div>
+            <div class="col-3 ac-right d-flex justify-content-end">
+                <div class="col-6 mt-5 justify-content-end">
+                    <div class="d-flex align-items-center justify-content-end">
+                        <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="submit()">
+                            <div class="d-flex align-items-center">
+                                <i class="icon-i-funnel icon-16 me-1"></i>
+                                <codx-label class="fs-6 fw-normal" fiedName="lblSave"
+                                    default="Lấy dữ liệu"></codx-label>
+                            </div>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -86,10 +107,11 @@
     </ng-container>
 </ng-template>
 <ng-template #tabDetail>
-    <div class="h-100px w-100">
+    <div class="h-100px tabset-content position-relative">
         <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="dialog.formModel.formName"
-            [gridViewName]="dialog.formModel.gridViewName" [entityName]="dialog.formModel.entityName" [dataSource]="dataCash"
-            service="AC" [height]="gridHeight" [autoLoad]="false" rowHeight="40" [editSettings]="editSettings"></codx-gridview-v2>
+            [gridViewName]="dialog.formModel.gridViewName" [entityName]="dialog.formModel.entityName"
+            [dataSource]="dataCash" hideMoreFunc="true" service="AC" [autoLoad]="false"
+            [editSettings]="editSettings"></codx-gridview-v2>
     </div>
 </ng-template>
 <ng-template #footer>

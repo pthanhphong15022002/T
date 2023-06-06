@@ -78,7 +78,6 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   listQuotationLines: Array<any> = [];
   lockFields = [];
-  dataParent: any;
   quotationLinesAddNew = [];
   quotationLinesEdit = [];
   quotationLinesDeleted = [];

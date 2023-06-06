@@ -1065,7 +1065,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     );
     dialog.closed.subscribe((res) => {
       if (res.event) {
-        debugger
         if (inline) {
           let myInterval = setInterval(() => {
             if (this.questions && this.questions.length > 0) {
@@ -1097,7 +1096,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
                 false
               );
               this.change.detectChanges();
-              console.log('check data file', this.lstEditIV);
             }
           }, 200);
         } else {

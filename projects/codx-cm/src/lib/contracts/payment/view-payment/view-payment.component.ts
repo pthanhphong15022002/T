@@ -106,10 +106,11 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
    }
   }
   gridCreated(e, grid) {
-    // let hBody
-    // let d = grid?.nativeElement?.parentElement.offsetHeight;
-    // if (this.cardbodyGeneral)
-    //   hBody = this.cardbodyGeneral.nativeElement.parentElement.offsetHeight;
+    let hBody
+    let d = grid?.nativeElement?.parentElement.offsetHeight;
+    let d1 = grid?.nativeElement?.element.offsetHeight;
+    if (this.cardbodyGeneral)
+      hBody = this.cardbodyGeneral.nativeElement.parentElement.offsetHeight;
       //  this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
   }
 
