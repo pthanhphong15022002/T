@@ -286,7 +286,6 @@ export class CasesComponent
 
 
   changeView(e) {
-
   }
 
   click(evt: ButtonModel) {
@@ -299,40 +298,7 @@ export class CasesComponent
   }
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-      if (false)
-       {
-
-
-
-      }
-      else {
-        if (data.status == '1') {
-          for (let more of $event) {
-            switch (more.functionID) {
-              case 'SYS01':
-              case 'SYS101':
-              case 'CM0401_1':
-              case 'CM0401_3':
-              case 'CM0401_4':
-                more.disabled = true;
-                break;
-              case 'SYS03':
-              case 'SYS04':
-              case 'SYS02':
-              // start day
-              case 'CM0401_2':
-                more.isblur = false;
-                break;
-              default:
-                more.isblur = true;
-            }
-          }
-        } else {
-          this.getMore($event,data);
-        }
-      }
-
-
+        this.getMore($event,data);
     }
   }
 
@@ -348,27 +314,24 @@ export class CasesComponent
 
   getRoleMoreFunction(type) {
     var isDisabled = (eventItem, data) => {
-      if (data.closed) {
+      if(data.closed || data.status == '1'){
         eventItem.disabled = true;
-      };
+      }
     };
     var isClosed = (eventItem, data) => {
-      if(data.closed) {
-        eventItem.disabled = true;
-      }
-      return eventItem;
+      eventItem.disabled = data.closed || data.status == '1';
     }
     var isOpened = (eventItem, data) => {
-      if(!data.closed) {
-        eventItem.disabled = true;
-      }
-      return eventItem;
+        eventItem.disabled = !data.closed || data.status == '1';
+    }
+    var isStartDay = (eventItem, data) => {
+        eventItem.disabled = data.status != '1';
     }
     var functionMappings = {
       CM0401_1: isDisabled,
       CM0401_3: isDisabled,
       CM0401_4: isDisabled,
-      CM0401_2: isDisabled,
+      CM0401_2: isStartDay,
       CM0401_7: isDisabled,
       CM0401_8: isClosed,
       CM0401_9: isOpened,
