@@ -76,7 +76,7 @@
   [icoStatusVll2]="vllPriority" -->
 </ng-template>
 <ng-template #descTmp let-item>
-  <div class="line-clamp line-clamp-2 text-dark">{{item.taskName}}</div>
+  <div class="line-clamp line-clamp-2 text-dark">{{ item.taskName }}</div>
 </ng-template>
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
@@ -118,7 +118,7 @@
         [value]="data.tags"
       ></codx-tag>
     </div>
-    <div class="w-100 mb-3" *ngIf="setting?.processBar">
+    <!-- <div class="w-100 mb-3" *ngIf="setting?.processBar">
       <div class="d-flex flex-column justify-content-start">
         <div class="progress w-100 h-5px">
           <div
@@ -131,38 +131,61 @@
           ></div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!--begin::Item-->
-    <div class="d-flex justify-content-between align-items-top mt-3">
-      <div
-        *ngIf="setting?.countObjects"
-        class="d-flex align-items-center me-2 codx-badge"
-      >
-        <codx-comment-temp
-          [objectID]="data.recID"
-          [viewType]="3"
-          [openViewPopup]="false"
-        ></codx-comment-temp>
 
-        <div class="d-flex align-items-center position-relative me-4">
-          <span class="icon-i-check2-square icon-18 text-gray-400"></span>
-          <span *ngIf="data?.todo > 0"
-            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
-            >{{ data?.todo }}</span
-          >
-        </div>
-        <codx-attachment-temp
-          [objectID]="data?.recID"
-          [formModel]="view.formModel"
-          [viewType]="3"
-          [openViewPopup]="false"
-        ></codx-attachment-temp>
+    <div class="d-flex justify-content-between align-items-top mt-3">
+      <div class="d-flex align-items-center me-2 codx-badge">
+        <ng-container *ngIf="setting?.processBar">
+          <div class="control-section">
+            <div class="row" style="margin-top: 8%">
+              <div class="col-lg-3 col-md-3 col-3">
+                <div id="">
+                  <ejs-progressbar
+                    id="circular-{{ data.recID }}"
+                    [type]="type"
+                    [maximum]="max"
+                    [minimum]="min"
+                    [value]="genData(data.percentage)"
+                    [width]="width"
+                    [height]="height"
+                    [animation]="animation"
+                  >
+                  <e-progressbar-annotations>
+                    <e-progressbar-annotation [content]="getHtml(data)">
+                    </e-progressbar-annotation>
+                  </e-progressbar-annotations>
+                  </ejs-progressbar>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="setting?.countObjects">
+          <codx-comment-temp
+            [objectID]="data.recID"
+            [viewType]="3"
+            [openViewPopup]="false"
+          ></codx-comment-temp>
+
+          <div class="d-flex align-items-center position-relative me-4">
+            <span class="icon-i-check2-square icon-18 text-gray-400"></span>
+            <span
+              *ngIf="data?.todo > 0"
+              class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
+              >{{ data?.todo }}</span
+            >
+          </div>
+          <codx-attachment-temp
+            [objectID]="data?.recID"
+            [formModel]="view.formModel"
+            [viewType]="3"
+            [openViewPopup]="false"
+          ></codx-attachment-temp>
+        </ng-container>
       </div>
-      <div
-        class="ms-3 h-25px"
-        id="{{ data.taskID }}"
-      >
+      <div class="ms-3 h-25px" id="{{ data.taskID }}">
         <ng-container
           *ngIf="
             data.category == '3' &&
@@ -201,6 +224,59 @@
       </div>
     </div>
     <!--end::Item-->
+    <div class="w-100 m-3 flex-column text-center">
+      <div class="justify-content-between">
+        <div></div>
+        <div
+          class="d-flex justify-content-end me-3 text-primary"
+          (click)="clickShow($event, data.recID)"
+        >
+          <span>
+            <codx-label
+              name="lblDescripsionDetails"
+              [formModel]="view.formModel"
+              default="Mô tả chi tiết"
+            >
+            </codx-label
+          ></span>
+          <span
+            id="icon-{{ data.recID }}"
+            class="icon-keyboard_arrow_right mt-1 icon-14 align-item-center justify-content-center"
+          >
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      id="{{ data.recID }}"
+      class="w-100 border-description border-gray-300 rounded-2 px-1 mb-1 hidden-main"
+    >
+      <div class="text-dark fs-6 fw-bold mt-2 ms-1">
+        <codx-label
+          name="lblDescripsionDetails"
+          [formModel]="view.formModel"
+          default="Mô tả chi tiết"
+        >
+        </codx-label>
+      </div>
+      <div class="mb-2">
+        <div
+          class="text-gray-700 ms-2"
+          *ngIf="data?.memo"
+          [innerHTML]="sanitizer.bypassSecurityTrustHtml(itemSelected?.memo)"
+        ></div>
+        <div
+          class="text-gray-700 ms-3"
+          *ngIf="!data?.memo"
+          [innerHTML]="
+            data.memo | formatvalue : view.formModel : 'memo' | async
+          "
+        ></div>
+        <div *ngIf="data?.memo2">
+          <div class="text-gray-700 ms-3" [innerHTML]="data.memo2"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 
@@ -252,7 +328,6 @@
       <i class="icon-calendar_today icon-16 me-2"></i>
       <span class="ms-1 fw-bold">
         <span
-         
           class="text-gray-700"
           #dueDate
           [innerHTML]="
@@ -328,7 +403,7 @@
   <ng-template #tempHtml>
     <ng-container *ngIf="data?.category == '2'">
       <span
-       *ngIf="data?.memo2"
+        *ngIf="data?.memo2"
         [innerHTML]="data?.memo2"
         (mouseenter)="popoverMemo2.open()"
         (mouseover)="popoverMemo2.close()"
