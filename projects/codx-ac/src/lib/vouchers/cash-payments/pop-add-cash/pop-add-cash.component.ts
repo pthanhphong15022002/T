@@ -245,7 +245,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   changeType(e?: any, ele?: TabComponent) {
     let i;
-    if (e) {
+    if (e && e.data != null) {
       i = e.data;
       this.cashpayment.subType = e.data;
     }
@@ -1234,6 +1234,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               case '1':
                 idx = this.gridCash.dataSource.length;
                 res.rowNo = idx + 1;
+                if (res.unbounds && res.unbounds.requireFields.length) {
+                 this.requireFields = res.unbounds.requireFields as Array<string>;
+                 this.requireGrid();
+                }
                 this.gridCash.endEdit();
                 this.gridCash.addRow(res, idx);
                 break;

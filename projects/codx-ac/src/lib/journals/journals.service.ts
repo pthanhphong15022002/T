@@ -147,7 +147,7 @@ export class JournalService {
       hiddenFields.push('AssetID');
     }
 
-    const idimControls: string[] = journal?.idimControl?.split(',');
+    const idimControls: string[] = journal?.idimControl?.split(';');
     for (let i = 0; i < 10; i++) {
       if (!idimControls.includes(i.toString())) {
         hiddenFields.push('IDIM' + i);
