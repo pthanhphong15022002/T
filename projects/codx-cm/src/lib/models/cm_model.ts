@@ -320,8 +320,8 @@ export class CM_Contacts {
   memo: string;
   stop: boolean;
   userID: string;
-  allowCall: boolean;
-  allowEmail: boolean;
+  allowCall: boolean = false;
+  allowEmail: boolean = false;
   tags: string;
   owner: string;
   bUID: string;

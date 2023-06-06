@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, ElementRef, Injector, OnInit, Optional, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, Injector, OnInit, Optional, ViewChild, ViewEncapsulation} from '@angular/core';
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Component, CodxInplaceComponent, CodxInputComponent, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util } from 'codx-core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
@@ -18,7 +18,8 @@ import { PopAddLineinventoryComponent } from '../pop-add-lineinventory/pop-add-l
 @Component({
   selector: 'lib-pop-add-receipt-transaction',
   templateUrl: './pop-add-receipt-transaction.component.html',
-  styleUrls: ['./pop-add-receipt-transaction.component.css']
+  styleUrls: ['./pop-add-receipt-transaction.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PopAddReceiptTransactionComponent extends UIComponent implements OnInit{
 
