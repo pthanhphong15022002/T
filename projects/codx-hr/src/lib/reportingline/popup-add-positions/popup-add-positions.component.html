@@ -4,67 +4,66 @@
 </codx-layout-add>
 
 <ng-template #positionInfo>
-    <div class="row form-group">
-        <codx-label [formModel]="formModel" fiedName="PositionID"></codx-label>
-        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="positionID"
-          [disabled]="blocked">
-        </codx-input>
+  <div class="row form-group">
+    <codx-label [formModel]="formModel" fiedName="PositionID"></codx-label>
+    <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="positionID"
+      [disabled]="blocked">
+    </codx-input>
+  </div>
+  <div class="row form-group">
+    <codx-label [formModel]="formModel" fiedName="PositionName">
+    </codx-label>
+    <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="positionName">
+    </codx-input>
+  </div>
+  <div class="row form-group">
+    <codx-label [formModel]="formModel" fiedName="PositionName2"></codx-label>
+    <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="positionName2">
+    </codx-input>
+  </div>
+  <div class="row form-group">
+    <codx-label [formModel]="formModel" fiedName="JobID">
+    </codx-label>
+    <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="jobID">
+    </codx-input>
+  </div>
+  <div class="row form-group">
+    <codx-label [formModel]="formModel" fiedName="JobLevel">
+    </codx-label>
+    <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="jobLevel">
+    </codx-input>
+  </div>
+  <div class="row form-group">
+    <codx-label [formModel]="formModel" fiedName="OrgUnitID">
+    </codx-label>
+    <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="orgUnitID">
+    </codx-input>
+  </div>
+  <div class="row form-group">
+    <codx-label [formModel]="formModel" fiedName="ReportTo"></codx-label>
+    <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="reportTo">
+    </codx-input>
+  </div>
+  <div class="row form-group">
+    <codx-label fiedName="ReportTo2" [formModel]="formModel"></codx-label>
+    <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="reportTo2">
+    </codx-input>
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="note">
+      </codx-input>
     </div>
-    <div class="row form-group">
-        <codx-label [formModel]="formModel" fiedName="PositionName">
-        </codx-label>
-        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="positionName">
-        </codx-input>
-    </div>
-    <div class="row form-group">
-        <codx-label [formModel]="formModel" fiedName="PositionName2"></codx-label>
-        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="positionName2">
-        </codx-input>
-    </div>
-    <div class="row form-group">
-        <codx-label [formModel]="formModel" fiedName="JobID">
-        </codx-label>
-        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="jobID">
-        </codx-input>
-    </div>
-    <div class="row form-group">
-        <codx-label [formModel]="formModel" fiedName="JobLevel">
-        </codx-label>
-        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="jobLevel">
-        </codx-input>
-    </div>
-    <div class="row form-group">
-        <codx-label [formModel]="formModel" fiedName="OrgUnitID">
-        </codx-label>
-        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="orgUnitID">
-        </codx-input>
-    </div>
-    <div class="row form-group">
-        <codx-label [formModel]="formModel" fiedName="ReportTo"></codx-label>
-        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="reportTo">
-        </codx-input>
-    </div>
-    <div class="row form-group">
-        <codx-label fiedName="ReportTo2" [formModel]="formModel"></codx-label>
-        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="reportTo2">
-        </codx-input>
-    </div>
-    <div class="row">
-      <div class="form-group">
-        <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
-        <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="note">
-        </codx-input>
-      </div>
-    </div>
+  </div>
 </ng-template>
 <ng-template #description>
-  <div class="row form-group">    
+  <div class="row form-group">
     <codx-label fiedName="JobDescription" [formModel]="formModel"></codx-label>
     <codx-input class="form-control" [formModel]="formModel" [Group]="formGroup" field="jobDescription">
     </codx-input>
   </div>
 </ng-template>
-
 <ng-template #footer>
 
 
