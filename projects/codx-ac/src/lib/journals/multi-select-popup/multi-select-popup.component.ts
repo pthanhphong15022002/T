@@ -18,6 +18,7 @@ export class MultiSelectPopupComponent extends UIComponent {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   selectedOptions: string[] = [];
+  showAll: boolean = false;
   formTitle$: Observable<string>;
   dimControls$: Observable<any[]>;
 
@@ -29,7 +30,8 @@ export class MultiSelectPopupComponent extends UIComponent {
   ) {
     super(injector);
 
-    this.selectedOptions = dialogData.data.selectedOptions?.split(',') ?? [];
+    this.selectedOptions = dialogData.data.selectedOptions?.split(';') ?? [];
+    this.showAll = dialogData.data.showAll;
   }
 
   //#endregion
@@ -54,7 +56,9 @@ export class MultiSelectPopupComponent extends UIComponent {
         this.dimControls$ = this.cache.valueList('AC069').pipe(
           map((data) =>
             data.datas
-              .filter((d) => settingValues.includes(d.value))
+              .filter((d) =>
+                this.showAll ? true : settingValues.includes(d.value)
+              )
               .map((d) => ({
                 value: d.value,
                 text: d.text,

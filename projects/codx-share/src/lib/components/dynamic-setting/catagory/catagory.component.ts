@@ -27,7 +27,7 @@ import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/ca
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve-steps.component';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
-import { map, tap } from 'rxjs/operators';
+import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/multi-select-popup/multi-select-popup.component';
 @Component({
   selector: 'lib-catagory',
   templateUrl: './catagory.component.html',
@@ -41,6 +41,7 @@ export class CatagoryComponent implements OnInit {
     cpnApprovals: CodxApproveStepsComponent,
     cpnCategories: PopupAddCategoryComponent,
     cpnScheduledTasks: CodxFormScheduleComponent,
+    MultiSelectPopupComponent: MultiSelectPopupComponent,
   };
   category = '';
   title = '';
@@ -349,6 +350,19 @@ export class CatagoryComponent implements OnInit {
             '',
             dialogModel
           );
+          break;
+        case 'MultiSelectPopupComponent':
+          this.callfc.openForm(
+            MultiSelectPopupComponent,
+            'This param is not working',
+            400,
+            500,
+            '',
+            {
+              selectedOptions: '2,23,43',
+            }
+          );
+
           break;
         default:
           break;
