@@ -129,7 +129,6 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'issuedOn':
           if (this.data.issuedOn >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR012');
-            //this.data[field] = null;
             return;
           }
           if (this.data.idExpiredOn && this.data.idExpiredOn < this.data.issuedOn) {
@@ -147,8 +146,6 @@ export class PopupAddEmployeeComponent implements OnInit {
           if (value) {
             if (!this.validateBirthday(value)) {
               this.notifySV.notifyCode('HR001');
-              //this.data[field] = null;
-              // this.form.formGroup.controls[field].patchValue({field : null});
             }
           }
           break;
@@ -187,15 +184,11 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'siRegisterOn':
           if (this.data['siRegisterOn'] >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['SIRegisterOn']['headerText']);
-            // this.data[field] = null;
-            // this.form.formGroup.controls[field].patchValue(null);
           }
           break;
         case 'pitIssuedOn':
           if (this.data['pitIssuedOn'] >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['PITIssuedOn']['headerText']);
-            // this.data[field] = null;
-            // this.form.formGroup.controls[field].patchValue(null);
           }
           break;
       }

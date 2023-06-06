@@ -630,7 +630,7 @@ export class IncommingComponent
   }
   viewChange(e: any) {
     var funcID = e?.component?.instance?.funcID;
-    this.button.disabled = false;
+    //this.button.disabled = false;
     if(funcID == 'ODT81') this.button.disabled = true;
     this.getGridViewSetup(funcID);
     this.lstDtDis = null;
