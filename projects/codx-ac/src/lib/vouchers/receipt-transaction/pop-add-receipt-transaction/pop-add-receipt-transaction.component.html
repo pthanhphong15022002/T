@@ -203,7 +203,7 @@
     </div>
   </ng-container>
   <ng-container *ngIf="form?.formGroup && modeGrid == 2 && gridViewSetupLine">
-    <div class="table-responsive mt-3">
+    <div class="table-responsive table-content mt-3">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered mb-2">
         <thead>
           <tr>
@@ -411,13 +411,11 @@
       </table>
     </div>  
   </ng-container>
-  <div *ngIf="modeGrid == 2" class="d-flex flex-wrap mt-6">
+  <div *ngIf="modeGrid == 2" class="d-flex flex-wrap justify-content-between mt-6">
     <div class="d-flex align-items-center mb-1 bg-light me-5">
       <span class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 me-2 bg-primary"></span>
       <span class="text-dark fw-bold py-1 px-2">Tổng cộng: {{ total + ' ' + inventoryJournal.currencyID }}</span>
     </div>
-  </div>
-  <div class="row mt-2">
     <div *ngIf="inventoryJournalLines.length > 0 && modeGrid == 2" class="d-flex justify-content-end">
       <ngb-pagination [(page)]="page" [pageSize]="pageSize"
         [collectionSize]="inventoryJournalLines.length"></ngb-pagination>
