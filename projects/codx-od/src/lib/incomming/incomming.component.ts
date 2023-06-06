@@ -192,7 +192,7 @@ export class IncommingComponent
         id: '2',
         type: ViewType.kanban,
         active: false,
-        sameData: true,
+        sameData: false,
         request: this.request,
         request2: this.resourceKanban,
         model: {
@@ -630,7 +630,7 @@ export class IncommingComponent
   }
   viewChange(e: any) {
     var funcID = e?.component?.instance?.funcID;
-    this.button.disabled = false;
+    //this.button.disabled = false;
     if(funcID == 'ODT81') this.button.disabled = true;
     this.getGridViewSetup(funcID);
     this.lstDtDis = null;

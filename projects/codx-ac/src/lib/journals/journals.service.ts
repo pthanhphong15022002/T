@@ -45,7 +45,7 @@ export class JournalService {
       .subscribe((res) => console.log(res));
   }
 
-  getJournal(journalNo: string) {
+  getJournal(journalNo: string): Observable<IJournal> {
     const journalOptions = new DataRequest();
     journalOptions.entityName = 'AC_Journals';
     journalOptions.predicates = 'JournalNo=@0';
