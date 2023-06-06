@@ -74,7 +74,7 @@ export class MultiSelectPopupComponent extends UIComponent {
   //#region Event
   onClickSave(): void {
     console.log(this.selectedOptions);
-    this.dialogRef.close(this.selectedOptions.toString());
+    this.dialogRef.close(this.selectedOptions.join(';'));
   }
 
   onChange(e, data): void {

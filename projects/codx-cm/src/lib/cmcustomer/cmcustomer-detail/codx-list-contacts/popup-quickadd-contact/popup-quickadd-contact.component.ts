@@ -1,11 +1,13 @@
+import { firstValueFrom } from 'rxjs';
 import { CodxCmService } from '../../../../codx-cm.service';
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
 import {
   DialogData,
   DialogRef,
   NotificationsService,
   CacheService,
   AlertConfirmInputConfig,
+  DataRequest,
 } from 'codx-core';
 import { CM_Contacts } from '../../../../models/cm_model';
 import { tmpCrm } from '../../../../models/tmpCrm.model';
@@ -30,16 +32,23 @@ export class PopupQuickaddContactComponent implements OnInit {
   objectName: any;
   listContacts = [];
   nameDefault: any;
+  radioChecked = true;
+  fieldContact = { text: 'contactName', value: 'recID' };
+  lstContactCbx = [];
+  contactID: any;
+  actionOld = '';
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
     private cmSv: CodxCmService,
+    private changeDef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.title = dt?.data?.moreFuncName;
     this.action = dt?.data?.action;
+    this.actionOld = this.action;
     this.type = dt?.data?.type;
     this.recIDCm = dt?.data?.recIDCm;
     this.objectType = dt?.data?.objectType;
@@ -53,44 +62,48 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.contactType = this.data?.contactType;
     }
   }
-  ngOnInit(): void {
-    if (this.action == 'add') {
-      this.contactType = '0';
-      if (this.listContacts != null && this.listContacts.length > 0) {
-        if (this.listContacts.some((x) => x.isDefault == true)) {
-          this.isDefault = false;
-        } else {
-          this.isDefault = true;
-        }
-      } else {
-        this.isDefault = true;
+  async ngOnInit() {
+    if (this.radioChecked) {
+      this.action = 'edit';
+      if (this.actionOld == 'add') this.default();
+      this.lstContactCbx = await this.loadContact();
+      if (this.type == 'formAdd') {
+        this.lstContactCbx = this.lstContactCbx.filter(
+          (contact1) =>
+            !this.listContacts.some(
+              (contact2) => contact2.recID === contact1.recID
+            )
+        );
       }
+    }
+    if (this.action == 'add') {
+      this.default();
     }
   }
 
-  // getLastAndFirstName(contactName) {
-  //   if (contactName != null) {
-  //     var nameArr = contactName.split(' ');
-  //     if (nameArr != null && nameArr.length > 1) {
-  //       this.lastName = nameArr.slice(0, -1).join(' ');
-  //       this.firstName = nameArr[nameArr.length - 1];
-  //     } else {
-  //       this.firstName = contactName;
-  //     }
-  //   }
-  // }
-
-  beforeSave(op) {
-    var data = [];
-    op.method = 'AddCrmAsync';
-    op.className = 'CustomersBusiness';
-
-    op.data = data;
-    return true;
+  async loadContact() {
+    var options = new DataRequest();
+    options.entityName = 'CM_Contacts';
+    options.predicates = 'ObjectID==null && ObjectName==null';
+    options.pageLoading = false;
+    var lst = await firstValueFrom(this.cmSv.loadDataAsync('CM', options));
+    return lst;
   }
 
-  onAdd() {
-    var data = [];
+  default() {
+    this.contactType = '0';
+    if (this.listContacts != null && this.listContacts.length > 0) {
+      if (this.listContacts.some((x) => x.isDefault == true)) {
+        this.isDefault = false;
+      } else {
+        this.isDefault = true;
+      }
+    } else {
+      this.isDefault = true;
+    }
+  }
+
+  beforeSave(type) {
     if (this.data.firstName != null && this.data.firstName.trim() != '') {
       if (this.data.lastName != null && this.data.lastName.trim() != '') {
         this.data.contactName =
@@ -109,14 +122,46 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.data.objectName = this.objectName;
     }
     if (this.action == 'add') {
-      data = [
-        this.data,
-        this.dialog.formModel.formName,
-        this.dialog.formModel.funcID,
-        this.dialog.formModel.entityName,
-      ];
+      this.onAdd(type);
+    } else {
+      this.onEdit(type);
+    }
+  }
 
-      this.cmSv.quickAddContacts(data).subscribe((res) => {
+  onAdd(type) {
+    var data = [];
+    data = [
+      this.data,
+      this.dialog.formModel.formName,
+      this.dialog.formModel.funcID,
+      this.dialog.formModel.entityName,
+    ];
+
+    this.cmSv.quickAddContacts(data).subscribe((res) => {
+      if (res) {
+        this.data = res;
+        this.data.isDefault = this.isDefault;
+        this.data.contactType = this.contactType;
+        this.data.objectID = this.recIDCm;
+        this.data.objectType = this.objectType;
+        this.data.objectName = this.objectName;
+        if (type == 'save') {
+          this.dialog.close(this.data);
+          this.notiService.notifyCode('SYS006');
+        } else {
+          this.deleteContact(this.data);
+          this.notiService.notifyCode('SYS006');
+        }
+      } else {
+        this.dialog.close();
+        this.notiService.notifyCode('SYS023');
+      }
+    });
+  }
+
+  onEdit(type) {
+    if (this.type == 'formDetail') {
+      this.cmSv.updateContactByPopupListCt(this.data).subscribe((res) => {
         if (res) {
           this.data = res;
           this.data.isDefault = this.isDefault;
@@ -124,43 +169,35 @@ export class PopupQuickaddContactComponent implements OnInit {
           this.data.objectID = this.recIDCm;
           this.data.objectType = this.objectType;
           this.data.objectName = this.objectName;
-          this.dialog.close(this.data);
-          this.notiService.notifyCode('SYS006');
-        } else {
-          this.dialog.close();
-          this.notiService.notifyCode('SYS023');
-        }
-      });
-    } else {
-      if (this.type == 'formDetail') {
-        this.cmSv.updateContactByPopupListCt(this.data).subscribe((res) => {
-          if (res) {
-            this.data = res;
-            this.data.isDefault = this.isDefault;
-            this.data.contactType = this.contactType;
-            this.data.objectID = this.recIDCm;
-            this.data.objectType = this.objectType;
-            this.data.objectName = this.objectName;
+          if (type == 'save') {
             this.dialog.close(this.data);
             this.notiService.notifyCode('SYS007');
           } else {
-            this.dialog.close();
-            this.notiService.notifyCode('SYS021');
+            this.notiService.notifyCode('SYS007');
+            this.deleteContact(this.data);
           }
-        });
-      } else {
-        this.data.isDefault = this.isDefault;
-        this.data.contactType = this.contactType;
-        this.data.objectID = this.recIDCm;
-        this.data.objectType = this.objectType;
-        this.data.objectName = this.objectName;
+        } else {
+          this.dialog.close();
+          this.notiService.notifyCode('SYS021');
+        }
+      });
+    } else {
+      this.data.isDefault = this.isDefault;
+      this.data.contactType = this.contactType;
+      this.data.objectID = this.recIDCm;
+      this.data.objectType = this.objectType;
+      this.data.objectName = this.objectName;
+      if (type == 'save') {
         this.dialog.close(this.data);
         this.notiService.notifyCode('SYS007');
+      } else {
+        this.notiService.notifyCode('SYS007');
+        this.deleteContact(this.data);
       }
     }
   }
 
-  onSave() {
+  onSave(type) {
     if (this.contactType == null || this.contactType.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
@@ -180,7 +217,7 @@ export class PopupQuickaddContactComponent implements OnInit {
 
     if (this.data.mobile != null && this.data.mobile.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
-    }else{
+    } else {
       this.data.mobile = null;
     }
     if (
@@ -188,42 +225,47 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.data.personalEmail.trim() != ''
     ) {
       if (!this.checkEmailOrPhone(this.data.personalEmail, 'E')) return;
-    }else{
+    } else {
       this.data.personalEmail = null;
     }
 
-      if (this.listContacts != null) {
-        if (
-          this.listContacts.some(
-            (x) => x.isDefault && x.recID != this.data.recID
-          )
-        ) {
-          if (this.isDefault) {
-            this.nameDefault = this.listContacts.find(x => x.isDefault)?.contactName;
-            var config = new AlertConfirmInputConfig();
-            config.type = 'YesNo';
-            this.notiService.alertCode('CM005', null,"'" + this.nameDefault + "'" ).subscribe((x) => {
+    if (this.listContacts != null) {
+      if (
+        this.listContacts.some((x) => x.isDefault && x.recID != this.data.recID)
+      ) {
+        if (this.isDefault) {
+          this.nameDefault = this.listContacts.find(
+            (x) => x.isDefault
+          )?.contactName;
+          var config = new AlertConfirmInputConfig();
+          config.type = 'YesNo';
+          this.notiService
+            .alertCode('CM005', null, "'" + this.nameDefault + "'")
+            .subscribe((x) => {
               if (x.event.status == 'Y') {
-                this.onAdd();
+                this.beforeSave(type);
               }
             });
-          } else {
-            this.onAdd();
-          }
         } else {
-          this.onAdd();
+          this.beforeSave(type);
         }
       } else {
-        this.onAdd();
+        this.beforeSave(type);
       }
-
+    } else {
+      this.beforeSave(type);
+    }
   }
 
   valueChange(e) {
     if (e.field == 'isDefault') {
-      this.isDefault = e.data;
+      this.isDefault = e?.data;
     } else {
-      this.contactType = e.data;
+      if (e.field == 'contactType') {
+        this.contactType = e?.data;
+      } else {
+        this.data[e.field] = e?.data;
+      }
     }
   }
 
@@ -243,5 +285,71 @@ export class PopupQuickaddContactComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  async changeRadio(e) {
+    if (e.field === 'yes' && e.component.checked === true) {
+      this.radioChecked = true;
+      this.contactID = null;
+      this.default();
+      if (this.type == 'formDetail') {
+        this.lstContactCbx = await this.loadContact();
+      }
+      this.action = 'edit';
+    } else if (e.field === 'no' && e.component.checked === true) {
+      this.radioChecked = false;
+      this.default();
+
+      this.action = this.actionOld;
+    }
+  }
+
+  cbxContact(e) {
+    if (e != null) {
+      if (this.contactID != e) {
+        this.contactID = e;
+        if (this.contactID != null && this.contactID.trim() != '') {
+          var find = this.lstContactCbx.findIndex(
+            (x) => x.recID == this.contactID
+          );
+          if (find != -1) {
+            this.data = this.lstContactCbx[find];
+          }
+        }
+      }
+    }
+  }
+
+  deleteContact(data) {
+    if (data != null) {
+      var index = this.lstContactCbx.findIndex((x) => x.recID == data?.recID);
+      if (index != -1) {
+        this.lstContactCbx.splice(index, 1);
+        this.lstContactCbx = JSON.parse(JSON.stringify(this.lstContactCbx));
+      }
+      if (data.isDefault) {
+        this.listContacts.forEach((element) => {
+          element.isDefault = false;
+        });
+      }
+      this.listContacts.push(data);
+      this.contactType = '0';
+      this.contactID = null;
+      if (this.listContacts != null && this.listContacts.length > 0) {
+        if (this.listContacts.some((x) => x.isDefault == true)) {
+          this.isDefault = false;
+        } else {
+          this.isDefault = true;
+        }
+      } else {
+        this.isDefault = true;
+      }
+      this.listContacts = this.cmSv.bringDefaultContactToFront(
+        this.listContacts
+      );
+      this.data = new CM_Contacts();
+      this.default();
+      this.changeDef.detectChanges();
+    }
   }
 }

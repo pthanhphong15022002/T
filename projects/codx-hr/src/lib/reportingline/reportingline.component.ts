@@ -61,11 +61,11 @@ export class ReportinglineComponent extends UIComponent {
     this.request = new ResourceModel();
     this.request.service = 'HR';
     this.adService.getListCompanySettings()
-    .subscribe((res) => {
-      if (res) {
-        this.isCorporation = res.isCorporation;
-      }
-    });
+      .subscribe((res) => {
+        if (res) {
+          this.isCorporation = res.isCorporation;
+        }
+      });
   }
   ngAfterViewInit(): void {
     this.button = {
@@ -99,7 +99,7 @@ export class ReportinglineComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  viewChange(event: any) {}
+  viewChange(event: any) { }
   orgChartViewInit(component: any) {
     if (component) {
       this.detailComponent = component;
@@ -128,7 +128,7 @@ export class ReportinglineComponent extends UIComponent {
             funcID: this.funcID,
             isAdd: true,
             title: event.text,
-            isCorporation: this.isCorporation, 
+            isCorporation: this.isCorporation,
           };
           let form = this.callfc.openSide(
             PopupAddPositionsComponent,
@@ -181,12 +181,12 @@ export class ReportinglineComponent extends UIComponent {
             funcID: this.funcID,
             isAdd: false,
             title: event.text,
-            isCorporation: this.isCorporation, 
+            isCorporation: this.isCorporation,
           };
           this.callfc.openSide(
-            PopupAddPositionsComponent,object,option,this.funcID)
-            .closed.subscribe( res=>{
-              if(res){
+            PopupAddPositionsComponent, object, option, this.funcID)
+            .closed.subscribe(res => {
+              if (res) {
 
               }
             });
@@ -212,17 +212,17 @@ export class ReportinglineComponent extends UIComponent {
             isAdd: true,
             title: event.text,
           };
-          this.callfc.openSide(PopupAddPositionsComponent,object,option,this.funcID)
-          .closed.subscribe((res)=>{
-            if (res?.event?.save) {
-              let node = res.event.save.data;
-              this.codxTreeView.setNodeTree(node);
-            }
-          });
+          this.callfc.openSide(PopupAddPositionsComponent, object, option, this.funcID)
+            .closed.subscribe((res) => {
+              if (res?.event?.save) {
+                let node = res.event.save.data;
+                this.codxTreeView.setNodeTree(node);
+              }
+            });
         }
       });
     }
-    
+
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
@@ -245,7 +245,7 @@ export class ReportinglineComponent extends UIComponent {
         }
       });
   }
-  loadEmployByCountStatus() {}
+  loadEmployByCountStatus() { }
 
   // selected data
   onSelectionChanged(event) {
