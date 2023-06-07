@@ -66,7 +66,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     }
   }
   async ngOnInit() {
-    if(this.action != 'add'){
+    if (this.action != 'add') {
       this.radioChecked = false;
     }
     if (this.radioChecked) {
@@ -126,7 +126,7 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.isDefault = true;
     }
   }
-
+  //#region save
   beforeSave(type) {
     if (this.data.firstName != null && this.data.firstName.trim() != '') {
       if (this.data.lastName != null && this.data.lastName.trim() != '') {
@@ -280,14 +280,16 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.beforeSave(type);
     }
   }
-
+  //#endregion
   valueChange(e) {
     if (e.field == 'isDefault') {
       this.isDefault = e?.data;
     } else {
       if (e.field == 'contactType') {
         this.contactType = e?.data;
-      } else {
+      } else if(e.field != 'allowEmail' && e.field != 'allowCall'){
+        this.data[e.field] = e?.data != null && e?.data?.trim() != '' ? e?.data?.trim() : null;
+      }else{
         this.data[e.field] = e?.data;
       }
     }
@@ -351,7 +353,12 @@ export class PopupQuickaddContactComponent implements OnInit {
 
   deleteContact(data) {
     if (data != null) {
-      var index = this.lstContactCbx.findIndex((x) => x.recID == data?.recID);
+      var index = -1;
+      if (this.objectType == '4' && this.type == 'formDetail') {
+        index = this.lstContactCbx.findIndex((x) => x.recID == data?.refID);
+      } else {
+        index = this.lstContactCbx.findIndex((x) => x.recID == data?.recID);
+      }
       if (index != -1) {
         this.lstContactCbx.splice(index, 1);
         this.lstContactCbx = JSON.parse(JSON.stringify(this.lstContactCbx));

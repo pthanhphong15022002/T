@@ -13,3 +13,6 @@
 .add-cash #gridViewV2.e-grid .e-summarycell {
     border-width: 0;
 }
+.ac-ng-overlay .ngx-overlay{
+    background-color: whitesmoke !important;
+}

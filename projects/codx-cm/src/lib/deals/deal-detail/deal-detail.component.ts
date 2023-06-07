@@ -63,19 +63,20 @@ export class DealDetailComponent implements OnInit {
       isActive: false,
       template: null,
     },
-    {
-      name: 'Quotations',
-      textDefault: 'Báo giá',
-      isActive: false,
-      template: null,
-    },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
-    {
-      name: 'Contract',
-      textDefault: 'Hợp đồng',
-      isActive: false,
-      template: null,
-    },
+    // view mới bỏ nha a thảo đưa lên tab
+    // {
+    //   name: 'Quotations',
+    //   textDefault: 'Báo giá',
+    //   isActive: false,
+    //   template: null,
+    // },
+    // { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
+    // {
+    //   name: 'Contract',
+    //   textDefault: 'Hợp đồng',
+    //   isActive: false,
+    //   template: null,
+    // },
   ];
 
   formModelCustomer: FormModel;
@@ -151,7 +152,7 @@ export class DealDetailComponent implements OnInit {
       },
       {
         name: 'Task',
-        textDefault: 'Quy trình',
+        textDefault: 'Công việc',
         icon: 'icon-more',
         isActive: false,
       },
@@ -161,6 +162,19 @@ export class DealDetailComponent implements OnInit {
         icon: 'icon-insert_chart_outlined',
         isActive: false,
       },
+      {
+        name: 'Quotation',
+        textDefault: 'Báo giá',
+        icon: 'icon-monetization_on',
+        isActive: false,
+      },
+      {
+        name: 'Contract',
+        textDefault: 'Hợp đồng',
+        icon: 'icon-sticky_note_2',
+        isActive: false,
+      },
+
     ];
   }
   async executeApiCalls() {

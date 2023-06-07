@@ -219,6 +219,7 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
+    this.currentEmpObj = this.itemDetail.emp;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -230,7 +231,7 @@ export class EmployeeContractComponent extends UIComponent {
         dataObj: data,
         empObj: this.currentEmpObj,
         headerText: actionHeaderText,
-        employeeId: this.currentEmpObj.employeeID,
+        employeeId: data?.employeeID || this.currentEmpObj.employeeID,
         funcID: this.view.funcID,
         openFrom: 'empContractProcess',
       },
@@ -266,7 +267,7 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   addContract(evt) {
-    this.currentEmpObj = this.itemDetail.emp;
+    // this.currentEmpObj = this.itemDetail.emp;
     if (evt.id == 'btnAdd') {
       this.HandleEContractInfo(
         evt.text + ' ' + this.view.function.description,
