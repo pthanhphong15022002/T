@@ -234,7 +234,7 @@ export class PopupAddPostComponent implements OnInit {
     }
     this.loaded = true;
     this.data.category = this.CATEGORY.POST;
-    this.data.approveControl = "1"; // bật xét duyệt
+    this.data.approveControl = this.isApproval ? "1" : "0";
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
@@ -455,13 +455,22 @@ export class PopupAddPostComponent implements OnInit {
         'SettingValuesBusiness',
         'GetSettingValueAsync',
         ['WPParameters']
-      )
-      .subscribe((res: any) => {
+      ).subscribe((res: any) => {
         if (res) {
           let _param = JSON.parse(res);
+          //default mode coppy
           if (_param["CopyFormat"] === '1') this.copyFormat = 'keepFormat';
+          //default mode share
           if (_param["Publishmode"]) this.data.shareControl = _param["Publishmode"]; 
+          //check skip approl with user setting
+          if(_param["ExcludeApproval"]) {
+            let lstAppro = _param["ExcludeApproval"].split(";");
+            if(Array.isArray(lstAppro)){
+              this.isApproval = Array.from<string>(lstAppro).indexOf(this.user.userID) != -1 ? false : true;
+            }
+          };
         }
       });
   }
+  isApproval:boolean = true;
 }
