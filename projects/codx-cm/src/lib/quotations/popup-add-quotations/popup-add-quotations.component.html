@@ -108,7 +108,7 @@
         </e-tabitems>
       </ejs-tab>
       <div class="row mb-2">
-        <ng-container *ngTemplateOutlet="addLine"></ng-container>
+        <ng-container *ngTemplateOutlet="descriptionQuotation"></ng-container>
       </div>
     </div>
   </ng-template>
@@ -232,7 +232,7 @@
             ></codx-label>
             <codx-input
               #contactCbx
-              field="contactID" 
+              field="contactID"
               [formModel]="form.formModel"
               [crrValue]="quotations.contactID"
               [model]="{
@@ -279,7 +279,19 @@
 
   <!-- Start: Chi tiết sản phẩm -->
   <ng-template #tabDetaildQuotationLines>
-    <div class="h-100 p-3">
+    <codx-quotations-lines
+      [transID]="quotations.recID"
+      [exchangeRate]="quotations.exchangeRate"
+      [currencyID]="quotations.currencyID"
+      [listQuotationLines]="listQuotationLines"
+      [quotationLinesAddNew]="quotationLinesAddNew"
+      [quotationLinesEdit]="quotationLinesEdit"
+      [quotationLinesDeleted]="quotationLinesDeleted"
+      [actionParent]="action"
+      (eventQuotationLines)="eventQuotationLines($event)"
+    ></codx-quotations-lines>
+
+    <!-- <div class="h-100 p-3">
       <codx-gridview-v2
         #gridQuationsLines
         service="CM"
@@ -298,8 +310,20 @@
         (created)="gridCreated($event, gridQuationsLines)"
       ></codx-gridview-v2>
     </div>
+    <div class="d-flex">
+      <button
+        type="button"
+        class="btn btn-clean btn-sm btn-icon btn-icon-md p-5"
+        (click)="addPopup()"
+      >
+        <i class="icon-add_box icon-24 text-primary"></i>
+      </button>
+      <button class="btn btn-light-primary" (click)="addRow()">
+        <codx-label name="AddLines" default="Thêm dòng"></codx-label>
+      </button>
+    </div> -->
     <!-- //  [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
-    <ng-template #morefunction let-data>
+    <!-- <ng-template #morefunction let-data>
       <div class="" style="height: 30px">
         <codx-mfunc
           [dataItem]="data"
@@ -309,9 +333,9 @@
           (clickMF)="clickMFQuotationLines($event, data)"
         ></codx-mfunc>
       </div>
-    </ng-template>
+    </ng-template> -->
     <!-- tem grid -->
-    <ng-template #itemTemp let-data>
+    <!-- <ng-template #itemTemp let-data>
       <div class="d-flex align-items-center me-5 mb-1">
         <span
           class="fw-bold line-clamp line-clamp-2"
@@ -330,7 +354,6 @@
       </div>
       <div class="d-flex flex-wrap text-nowrap">
         <div class="d-flex align-items-center mb-1 me-6">
-          <!-- <span class="icon-i-dot icon-22"></span> -->
           <codx-label
             class="text-gray-700 label-colon"
             fiedName="IDIM0"
@@ -355,7 +378,6 @@
         </div>
 
         <div class="d-flex align-items-center mb-1 me-6">
-          <!-- <span class="icon-i-dot icon-22"></span> -->
           <codx-label
             class="text-gray-700 label-colon"
             fiedName="IDIM1"
@@ -380,7 +402,6 @@
         </div>
 
         <div class="d-flex align-items-center mb-1 me-6">
-          <!-- <span class="icon-i-dot icon-22"></span> -->
           <codx-label
             class="text-gray-700 label-colon"
             fiedName="IDIM2"
@@ -405,7 +426,6 @@
         </div>
 
         <div class="d-flex align-items-center mb-1 me-6">
-          <!-- <span class="icon-i-dot icon-22"></span> -->
           <codx-label
             class="text-gray-700 label-colon"
             fiedName="IDIM3"
@@ -430,7 +450,6 @@
         </div>
 
         <div class="d-flex align-items-center mb-1 me-6">
-          <!-- <span class="icon-i-dot icon-22"></span> -->
           <codx-label
             class="text-gray-700 label-colon"
             fiedName="IDIM4"
@@ -455,14 +474,14 @@
           ></span>
         </div>
       </div>
-    </ng-template>
+    </ng-template> -->
   </ng-template>
   <!-- End: Chi tiết sản phẩm -->
 
   <!--  Start:thêm sản phẩm -->
-  <ng-template #addLine>
+  <ng-template #descriptionQuotation>
     <div>
-      <div class="d-flex">
+      <!-- <div class="d-flex">
         <button
           type="button"
           class="btn btn-clean btn-sm btn-icon btn-icon-md p-5"
@@ -473,7 +492,7 @@
         <button class="btn btn-light-primary" (click)="addRow()">
           <codx-label name="AddLines" default="Thêm dòng"></codx-label>
         </button>
-      </div>
+      </div> -->
       <div #tabsNote class="row">
         <div class="form-group col-8">
           <codx-label fiedName="Memo" [formModel]="form.formModel"></codx-label>

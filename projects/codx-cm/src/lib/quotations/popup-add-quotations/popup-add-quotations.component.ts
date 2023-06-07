@@ -614,9 +614,9 @@ export class PopupAddQuotationsComponent implements OnInit {
             (x: any) => x.allowCopy
           );
           if (Array.isArray(arrField)) {
-            arrField.forEach((v:any) => {
-                let field = Util.camelize(v.fieldName);
-                data[field] = dataCopy[field];
+            arrField.forEach((v: any) => {
+              let field = Util.camelize(v.fieldName);
+              data[field] = dataCopy[field];
             });
           }
 
@@ -913,5 +913,12 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
   //end
 
-  //setDefault
+  //setData
+  eventQuotationLines(e) {
+    this.listQuotationLines = e?.listQuotationLines;
+    this.quotationLinesAddNew = e?.quotationLinesAddNew;
+    this.quotationLinesEdit = e?.quotationLinesEdit;
+    this.quotationLinesDeleted = e?.quotationLinesDeleted;
+    this.loadTotal();
+  }
 }

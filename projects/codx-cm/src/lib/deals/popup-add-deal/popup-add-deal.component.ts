@@ -1,3 +1,4 @@
+import { load } from '@syncfusion/ej2-angular-charts';
 import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import {
   AfterViewInit,
@@ -19,6 +20,9 @@ import {
   UIComponent,
   RequestOption,
   Util,
+  CodxComboboxComponent,
+  CodxInputComponent,
+  DataRequest,
 } from 'codx-core';
 import { CM_Contacts, CM_Deals } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
@@ -125,6 +129,7 @@ export class PopupAddDealComponent
   lstContactOld:any[] = [];
   isLoad:boolean = true;
   customerName:any;
+  default1:any;
 
   constructor(
     private inject: Injector,
@@ -141,6 +146,9 @@ export class PopupAddDealComponent
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
     this.model = { ApplyFor: '1' };
+    if(dt?.data.processID) {
+      this.deal.processID = dt?.data.processID;
+    }
     this.executeApiCalls();
     if (this.action != this.actionAdd) {
       this.deal = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
@@ -148,14 +156,17 @@ export class PopupAddDealComponent
       this.customerID = this.deal?.customerID;
     }
 
+
     if(this.action === this.actionCopy) {
       this.deal.owner = null;
       this.deal.salespersonID = null;
     }
+
   }
 
-  onInit(): void {}
+  onInit(): void {
 
+  }
   valueChange($event) {
     if ($event) {
       this.deal[$event.field] = $event.data;
@@ -436,22 +447,25 @@ export class PopupAddDealComponent
       this.deal.businessLineID = $event.data;
       if(this.deal.businessLineID && this.action !== this.actionEdit) {
         var processId = $event.component.itemsSelected[0].ProcessID;
-        this.deal.processID = processId
-        var result = this.checkProcessInList(processId);
-        if (result) {
-          this.listInstanceSteps = result?.steps;
-          this.listParticipants = result?.permissions;
-          this.deal.dealID = result?.dealId;
-          this.deal.endDate = this.HandleEndDate(
-            this.listInstanceSteps,
-            this.action,
-            null
-          );
-          this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
-          this.changeDetectorRef.detectChanges();
-        } else {
-          this.getListInstanceSteps(processId);
+        if(processId) {
+          this.deal.processID = processId
+          var result = this.checkProcessInList(processId);
+          if (result) {
+            this.listInstanceSteps = result?.steps;
+            this.listParticipants = result?.permissions;
+            this.deal.dealID = result?.dealId;
+            this.deal.endDate = this.HandleEndDate(
+              this.listInstanceSteps,
+              this.action,
+              null
+            );
+            this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
+            this.changeDetectorRef.detectChanges();
+          } else {
+            this.getListInstanceSteps(processId);
+          }
         }
+
 
         this.changeDetectorRef.detectChanges();
       }
@@ -495,6 +509,7 @@ export class PopupAddDealComponent
   ngAfterViewInit(): void {
     this.tabInfo = [this.menuGeneralInfo,this.menuGeneralContact];
     this.tabContent = [this.tabGeneralInfoDetail,this.tabGeneralContactDetail, this.tabCustomFieldDetail];
+
   }
   async executeApiCalls() {
     try {
@@ -506,8 +521,38 @@ export class PopupAddDealComponent
       if(this.action === this.actionEdit) {
         await this.getListContactByDealID(this.deal.recID);
       }
+      if(this.action === this.actionAdd && this.deal.processID ) {
+        await this.getBusinessLineByProcessID(this.deal.processID);
+      }
 
     } catch (error) {}
+  }
+
+  async getBusinessLineByProcessID(processID) {
+    this.codxCmService.getIdBusinessLineByProcessID([processID]).subscribe((res)=> {
+      if(res){
+        this.deal.businessLineID = res;
+        if(this.deal.businessLineID && this.action !== this.actionEdit) {
+          if(this.deal.processID) {
+            var result = this.checkProcessInList(this.deal.processID);
+            if (result) {
+              this.listInstanceSteps = result?.steps;
+              this.listParticipants = result?.permissions;
+              this.deal.dealID = result?.dealId;
+              this.deal.endDate = this.HandleEndDate(
+                this.listInstanceSteps,
+                this.action,
+                null
+              );
+              this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
+              this.changeDetectorRef.detectChanges();
+            } else {
+              this.getListInstanceSteps(this.deal.processID);
+            }
+          }
+        }
+      }
+    });
   }
   async getGridView(formModel) {
     this.cache
@@ -620,7 +665,6 @@ export class PopupAddDealComponent
     }
     deal.owner = this.owner;
     deal.salespersonID = this.owner;
-    deal.expectedClosed = deal.endDate;
   }
   checkFormat(field) {
     if (field.dataType == 'T') {

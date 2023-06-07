@@ -119,6 +119,8 @@ import { PopupViewAllComponent } from './employee-list/employee-info-detail/pop-
 import { EmployeeAppointionsComponent } from './employee-appointions/employee-appointions.component';
 import { ViewDetailEappointionsComponent } from './employee-appointions/view-detail-eappointions/view-detail-eappointions.component';
 import { PopupEquitjobComponent } from './employee-profile/popup-equitjob/popup-equitjob.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 export const routes: Routes = [
       {
         path: '',
@@ -154,6 +156,14 @@ export const routes: Routes = [
           //   path: 'contactbook/:funcID',
           //   component: EmpContactsComponent,
           // },
+          {
+            path: 'report/:funcID',
+            component: CodxReportViewsComponent,
+          },
+          {
+            path: 'report/detail/:funcID',
+            component: CodxReportViewDetailComponent,
+          },
           {
             path: 'orgchart/:funcID',
             data: { noReuse: true },

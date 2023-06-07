@@ -60,7 +60,7 @@
             [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
             class="me-1"
           ></span>
-          <span  class="menu-title fw-bold line-clamp-menu"  [ngbTooltip]="dataSelected?.currentStepName" [ngStyle]="{ color: data?.steps['textColor'] }">{{  dataSelected?.currentStepName }}</span>
+          <span  class="menu-title fw-bold line-clamp line-clamp-2"  [ngbTooltip]="dataSelected?.currentStepName" [ngStyle]="{ color: data?.steps['textColor'] }">{{  dataSelected?.currentStepName }}</span>
         </div>
           <div   *ngIf="dataSelected.status == '1'" >
 

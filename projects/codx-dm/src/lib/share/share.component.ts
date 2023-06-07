@@ -11,7 +11,7 @@ import { CodxDMService } from '../codx-dm.service';
 import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
 import { FileInfo, FileUpload, ItemInterval, Permission } from '@shared/models/file.model';
 import { resetInfiniteBlocks } from '@syncfusion/ej2-grids';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
@@ -94,6 +94,7 @@ export class ShareComponent implements OnInit {
     private formBuilder: FormBuilder,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
+    private router: Router,
    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,    
@@ -236,13 +237,16 @@ export class ShareComponent implements OnInit {
   }
   
   getPath() {
-    var index = window.location.href.indexOf("?");
-    var url = window.location.href;
-    if (index > -1) {
-      url = window.location.href.substring(0, index);
-    }
-    var url = `${url}?id=${this.id}&type=${this.type}&name=${this.fullName}`;
-    return url;
+    const queryParams = {
+      id: this.id,
+    };
+    var l = this.router.url.split('/');
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree([`/` + l[1] + `/viewfile`], {
+        queryParams: queryParams,
+      })
+    );
+    return window.location.host +  url;
   }
 
   copyToClipboard(textToCopy) {
