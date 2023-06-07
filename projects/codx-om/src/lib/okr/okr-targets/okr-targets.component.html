@@ -249,8 +249,8 @@
               ]" [style.left]="item?.progress - 2 + '%'">
             
             </span>
-            <span class="icon-notifications noti-checkin text-warning position-absolute "  [style.left]="item?.progress - 3 + '%'">        
-            </span>
+            <!-- <span class="icon-notifications noti-checkin text-warning position-absolute "  [style.left]="item?.progress - 3 + '%'">        
+            </span> -->
           </div>
           <span class="ps-4">
             <span class="mb-1" *ngIf="item?.progress != 0" [innerHTML]="
@@ -262,7 +262,7 @@
           </span>
           
         </div>
-        <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Lịch sử cập nhật"
+        <!-- <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Lịch sử cập nhật"
           >
           <span class="icon-i-clock-history text-hover-primary icon-20 text-gray-400"></span>
           <span
@@ -270,7 +270,7 @@
             *ngIf="item?.okrTasks != null && item?.okrTasks.length > 0"
             [ngClass]="item?.okrTasks && item?.okrTasks.length > 0 ? '' : ''">{{ item?.okrTasks ? item?.okrTasks?.length
             : 0 }}</span>
-        </div>
+        </div> -->
 
         <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Công việc"
           (click)="showTasks($event, item)">
