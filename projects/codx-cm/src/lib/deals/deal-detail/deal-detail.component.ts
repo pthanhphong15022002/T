@@ -9,7 +9,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ApiHttpService, CRUDService, FormModel } from 'codx-core';
+import { ApiHttpService, CRUDService, CacheService, FormModel } from 'codx-core';
 import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/cm_model';
@@ -63,19 +63,20 @@ export class DealDetailComponent implements OnInit {
       isActive: false,
       template: null,
     },
-    {
-      name: 'Quotations',
-      textDefault: 'Báo giá',
-      isActive: false,
-      template: null,
-    },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
-    {
-      name: 'Contract',
-      textDefault: 'Hợp đồng',
-      isActive: false,
-      template: null,
-    },
+    // view mới bỏ nha a thảo đưa lên tab
+    // {
+    //   name: 'Quotations',
+    //   textDefault: 'Báo giá',
+    //   isActive: false,
+    //   template: null,
+    // },
+    // { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
+    // {
+    //   name: 'Contract',
+    //   textDefault: 'Hợp đồng',
+    //   isActive: false,
+    //   template: null,
+    // },
   ];
 
   formModelCustomer: FormModel;
@@ -84,16 +85,17 @@ export class DealDetailComponent implements OnInit {
 
   nameDetail = '';
   tabClicked = '';
-  test: any;
+  contactPerson:any;
 
   tabDetail = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
-    private api: ApiHttpService
+    private api: ApiHttpService,
+    private cache: CacheService,
   ) {
     this.listTab(this.funcID);
-    // this.test='Dịch vụ;VIP;Năm 2024';
+    this.executeApiCalls();
   }
 
   ngOnInit(): void {}
@@ -109,6 +111,8 @@ export class DealDetailComponent implements OnInit {
       };
       this.tabControl.splice(index, 1, contract);
     }
+
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -118,6 +122,7 @@ export class DealDetailComponent implements OnInit {
       this.getContractByDeaID();
     }
   }
+
 
   listTab(funcID) {
     this.tabDetail = [
@@ -147,7 +152,7 @@ export class DealDetailComponent implements OnInit {
       },
       {
         name: 'Task',
-        textDefault: 'Quy trình',
+        textDefault: 'Công việc',
         icon: 'icon-more',
         isActive: false,
       },
@@ -157,7 +162,25 @@ export class DealDetailComponent implements OnInit {
         icon: 'icon-insert_chart_outlined',
         isActive: false,
       },
+      {
+        name: 'Quotation',
+        textDefault: 'Báo giá',
+        icon: 'icon-monetization_on',
+        isActive: false,
+      },
+      {
+        name: 'Contract',
+        textDefault: 'Hợp đồng',
+        icon: 'icon-sticky_note_2',
+        isActive: false,
+      },
+
     ];
+  }
+  async executeApiCalls() {
+    try {
+      this.formModelCustomer = await this.codxCmService.getFormModel('CM0101');
+    } catch (error) {}
   }
 
   changeTab(e) {

@@ -16,7 +16,9 @@
           name="lblQuickAdd"
           [formModel]="form.formModel"
           [default]="
-          actionOld == 'editType' ? title : title + ' ' + 'nhanh liên hệ'
+            actionOld == 'editType' || actionOld == 'editRole'
+              ? title
+              : title + ' ' + 'nhanh liên hệ'
           "
         ></codx-label>
       </div>
@@ -32,7 +34,7 @@
   </div>
 </ng-template>
 <ng-template #body>
-  <div class="row mb-4 mt-5"  *ngIf="actionOld == 'add'">
+  <div class="row mb-4 mt-5" *ngIf="actionOld == 'add'">
     <div class="d-flex align-items-center col-6">
       <span class="me-3">
         <codx-input
@@ -48,7 +50,11 @@
         <codx-label
           name="lblSelectContacts"
           [formModel]="dialog.formModel"
-          default="Chọn liên hệ từ hệ thống"
+          [default]="
+            objectType == '4'
+              ? 'Chọn liên hệ từ khách hàng'
+              : 'Chọn liên hệ từ hệ thống'
+          "
         ></codx-label>
       </span>
     </div>
@@ -76,12 +82,16 @@
   </div>
   <div
     class="mt-5"
-    *ngIf="radioChecked && actionOld == 'add'; then systemCustomer; else addCustomer"
+    *ngIf="
+      radioChecked && actionOld == 'add';
+      then systemCustomer;
+      else addCustomer
+    "
   ></div>
 </ng-template>
 
 <ng-template #systemCustomer>
-  <div class="form-group">
+  <div class="form-group" *ngIf="objectType != '4'">
     <codx-label [formModel]="form.formModel" fiedName="ContactType">
     </codx-label>
     <codx-input
@@ -106,7 +116,17 @@
       (valueChange)="cbxContact($event)"
     ></ejs-combobox>
   </div>
-  <div class="d-flex align-items-center mb-3">
+  <div class="form-group" *ngIf="objectType == '4'">
+    <codx-label [formModel]="form.formModel" fiedName="Role"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [crrValue]="data?.role"
+      (valueChange)="valueChange($event)"
+      field="role"
+    >
+    </codx-input>
+  </div>
+  <div class="d-flex align-items-center">
     <div class="me-3">
       <codx-input
         [field]="'isDefault'"
@@ -123,7 +143,7 @@
 </ng-template>
 
 <ng-template #addCustomer>
-  <div class="form-group">
+  <div class="form-group" *ngIf="actionOld != 'editRole'">
     <codx-label [formModel]="form.formModel" fiedName="ContactType">
     </codx-label>
     <codx-input
@@ -134,7 +154,10 @@
     >
     </codx-input>
   </div>
-  <div class="form-group" *ngIf="actionOld != 'editType'">
+  <div
+    class="form-group"
+    *ngIf="actionOld != 'editType' && actionOld != 'editRole'"
+  >
     <codx-label [formModel]="form.formModel" fiedName="LastName"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
@@ -144,7 +167,10 @@
     >
     </codx-input>
   </div>
-  <div class="form-group" *ngIf="actionOld != 'editType'">
+  <div
+    class="form-group"
+    *ngIf="actionOld != 'editType' && actionOld != 'editRole'"
+  >
     <codx-label [formModel]="dialog.formModel" fiedName="FirstName">
     </codx-label>
     <codx-input
@@ -155,7 +181,7 @@
     >
     </codx-input>
   </div>
-  <div class="form-group">
+  <div class="form-group" *ngIf="actionOld != 'editRole'">
     <codx-label [formModel]="form.formModel" fiedName="JobTitle"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
@@ -165,7 +191,10 @@
     >
     </codx-input>
   </div>
-  <div class="form-group" *ngIf="actionOld != 'editType'">
+  <div
+    class="form-group"
+    *ngIf="actionOld != 'editType' && actionOld != 'editRole'"
+  >
     <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center">
         <codx-label [formModel]="dialog.formModel" [fiedName]="'Mobile'">
@@ -195,7 +224,10 @@
     >
     </codx-input>
   </div>
-  <div class="form-group" *ngIf="actionOld != 'editType'">
+  <div
+    class="form-group"
+    *ngIf="actionOld != 'editType' && actionOld != 'editRole'"
+  >
     <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center">
         <codx-label [formModel]="form.formModel" [fiedName]="'PersonalEmail'">
@@ -235,8 +267,8 @@
     >
     </codx-input>
   </div>
-  <div class="d-flex justify-content-between">
-    <div>
+  <div class="d-flex align-items-center">
+    <div class="me-3">
       <codx-input
         [field]="'isDefault'"
         [crrValue]="isDefault"

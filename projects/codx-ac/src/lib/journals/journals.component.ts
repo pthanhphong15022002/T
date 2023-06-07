@@ -207,7 +207,7 @@ export class JournalsComponent extends UIComponent {
     }
   }
 
-  dbClick(e, data) {
+  dbClick(data) {
     let f = this.func.find((x) => x.value === data.journalType);
     if (!f) return;
     this.cache.functionList(f?.default).subscribe((func) => {
@@ -223,6 +223,14 @@ export class JournalsComponent extends UIComponent {
         });
       }
     });
+  }
+
+  onChange(e): void {
+    console.log('onChange', e);
+
+    if (e.type === 'edit') {
+      this.dbClick(e.data);
+    }
   }
   //#region Events
 

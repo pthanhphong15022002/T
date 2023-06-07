@@ -147,6 +147,9 @@ export class PopupAddDealComponent
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
     }
+    if(dt?.data.processID) {
+      this.deal.processID = dt?.data.processID;
+    }
 
     if(this.action === this.actionCopy) {
       this.deal.owner = null;

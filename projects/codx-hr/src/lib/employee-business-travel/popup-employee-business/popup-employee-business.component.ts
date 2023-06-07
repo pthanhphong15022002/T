@@ -97,7 +97,6 @@ export class PopupEmployeeBusinessComponent
           if (res) {
             this.data = res?.data;
             this.data.beginDate = null;
-            // this.data.isOversea = false;
             this.data.country = null;
             this.data.endDate = null;
             this.data.employeeID = this.employeeId;
