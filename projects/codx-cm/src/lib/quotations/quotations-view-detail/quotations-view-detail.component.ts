@@ -43,7 +43,7 @@ export class QuotationsViewDetailComponent implements OnChanges {
       isActive: false,
       template: null,
     },
-    { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
+    // { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
     {
       name: 'Approve',
       textDefault: 'Ký duyệt',
@@ -56,7 +56,7 @@ export class QuotationsViewDetailComponent implements OnChanges {
       isActive: false,
       template: null,
     },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
+    // { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
     {
       name: 'Contract',
       textDefault: 'Hợp đồng',
