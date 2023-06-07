@@ -1147,10 +1147,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             if (preside) listPermissions += preside;
             participants = data?.roles.filter((x) => x.roleType == 'P');
             if (participants?.length) {
-              let userIDPar = await firstValueFrom(
-                this.getListUserIDBy(participants)
-              );
-              if (userIDPar?.lenght > 0) {
+              let userIDPar = await this.getListUserIDByOther(participants);
+              if (userIDPar?.length > 0) {
                 let idxPre = userIDPar.findIndex((x) => x == preside);
                 if (idxPre != -1) userIDPar.splice(idxPre, 1);
                 listPermissions += ';' + userIDPar.join(';');
@@ -1203,7 +1201,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //get userID cuộc họp
 
-  async getListUserIDByOther(list = []) {
+
+  async getListUserIDByOther(list = [])  {
     let lstUserID = [];
     if (list != null && list.length > 0) {
       lstUserID = list
@@ -1216,7 +1215,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
       let userIDO = [];
       if (listO?.length > 0)
-        userIDO = await firstValueFrom(this.getListUserIDBy(listO));
+        userIDO = await firstValueFrom(this.getListUserIDBy(listO,"O"));
       if (userIDO?.length > 0) {
         const set = new Set(lstUserID.concat(userIDO));
         lstUserID = [...set];
@@ -1228,7 +1227,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
       let userIDD = [];
       if (listD?.length > 0)
-        userIDD = await firstValueFrom(this.getListUserIDBy(listD));
+        userIDD = await firstValueFrom(this.getListUserIDBy(listD,"D"));
       if (userIDD?.length > 0) {
         const set = new Set(lstUserID.concat(userIDD));
         lstUserID = [...set];
@@ -1240,7 +1239,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       // positon
       let userIDP = [];
       if (listP?.length > 0)
-        userIDP = await firstValueFrom(this.getListUserIDBy(listP));
+        userIDP = await firstValueFrom(this.getListUserIDBy(listP,"P"));
       if (userIDO?.length > 0) {
         const set = new Set(lstUserID.concat(userIDP));
         lstUserID = [...set];
@@ -1258,17 +1257,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         lstUserID = [...set];
       }
     }
-
     return lstUserID;
   }
 
-  getListUserIDBy(lstId) {
+  getListUserIDBy(lstId,type) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
       'GetListUserIDByListODPIDAsync',
-      lstId
+      [lstId,type]
     );
   }
 
