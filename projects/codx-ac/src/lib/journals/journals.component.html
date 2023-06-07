@@ -26,6 +26,7 @@
     [button]="button"
     entityName="AC_Journals"
     (buttonClick)="add($event)"
+    (onActions)="onChange($event)"
   >
   </codx-views>
 </div>
@@ -51,7 +52,7 @@
     [titleTmp]="titleTmp"
     [desc]="data?.description"
     (clickMF)="clickMF($event, data)"
-    (click)="dbClick($event, data)"
+    (click)="dbClick(data)"
   >
   </codx-card-img>
 </ng-template>
@@ -110,7 +111,7 @@
           fiedName="periodID"
           [formModel]="view.formModel"
         ></codx-label>
-        : {{ data.periodID }}
+        : <span class="text-primary">{{ data.periodID }}</span>
       </div>
     </div>
   </div>
@@ -125,6 +126,7 @@
       ></codx-label>
       :
       <span
+        class="text-primary"
         [innerHTML]="
           data.drAcctID
             | formatvalue : view.formModel : 'drAcctID'
@@ -142,6 +144,7 @@
       ></codx-label>
       :
       <span
+        class="text-primary"
         [innerHTML]="
           data.crAcctID
             | formatvalue : view.formModel : 'crAcctID'
@@ -161,6 +164,7 @@
       ></codx-label>
       :
       <span
+        class="text-primary"
         [innerHTML]="
           data.diM1
             | formatvalue : view.formModel : 'diM1'
@@ -178,6 +182,7 @@
       ></codx-label>
       :
       <span
+        class="text-primary"
         [innerHTML]="
           data.diM2
             | formatvalue : view.formModel : 'diM2'
@@ -195,6 +200,7 @@
       ></codx-label>
       :
       <span
+        class="text-primary"
         [innerHTML]="
           data.diM3
             | formatvalue : view.formModel : 'diM3'
@@ -206,68 +212,60 @@
     </div>
   </div>
 
-  <div class="d-flex gap-3">
-    <div>
-      <codx-label
-        fiedName="projectControl"
-        [formModel]="view.formModel"
-      ></codx-label>
-      :
-      <span
-        [innerHTML]="
-          data.assetControl
-            | formatvalue : view.formModel : 'projectControl'
-            | async
-        "
-      ></span>
-    </div>
-    •
-    <div>
-      <codx-label
-        fiedName="loanControl"
-        [formModel]="view.formModel"
-      ></codx-label>
-      :
-      <span
-        [innerHTML]="
-          data.assetControl
-            | formatvalue : view.formModel : 'loanControl'
-            | async
-        "
-      ></span>
-    </div>
-    •
-    <div>
-      <codx-label
-        fiedName="assetControl"
-        [formModel]="view.formModel"
-      ></codx-label>
-      :
-      <span
-        [innerHTML]="
-          data.assetControl
-            | formatvalue : view.formModel : 'assetControl'
-            | async
-        "
-      ></span>
-    </div>
+  <div class="fs-8">
+    <codx-label
+      fiedName="projectControl"
+      [formModel]="view.formModel"
+    ></codx-label>
+    :
+    <span
+      class="text-primary"
+      [innerHTML]="
+        data.assetControl
+          | formatvalue : view.formModel : 'projectControl'
+          | async
+      "
+    ></span>
+    &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+    <codx-label
+      fiedName="loanControl"
+      [formModel]="view.formModel"
+    ></codx-label>
+    :
+    <span
+      class="text-primary"
+      [innerHTML]="
+        data.assetControl | formatvalue : view.formModel : 'loanControl' | async
+      "
+    ></span>
+    &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+    <codx-label
+      fiedName="assetControl"
+      [formModel]="view.formModel"
+    ></codx-label>
+    :
+    <span
+      class="text-primary"
+      [innerHTML]="
+        data.assetControl
+          | formatvalue : view.formModel : 'assetControl'
+          | async
+      "
+    ></span>
   </div>
 </ng-template>
 
 <ng-template #column3Template let-data>
   <div class="text-truncate">
     <codx-label fiedName="creater" [formModel]="view.formModel"></codx-label>
-    <span
-      >:
-      {{
-        this.creaters | nameById : "journalNo" : "value" : data.journalNo
-      }}</span
-    >
+    :
+    <span class="text-primary">{{
+      this.creaters | nameById : "journalNo" : "value" : data.journalNo
+    }}</span>
   </div>
   <div class="text-truncate">
-    <codx-label fiedName="poster" [formModel]="view.formModel"></codx-label>
-    <span
-      >:
+    <codx-label fiedName="poster" [formModel]="view.formModel"></codx-label>:
+    <span class="text-primary">
       {{
         this.posters | nameById : "journalNo" : "value" : data.journalNo
       }}</span
