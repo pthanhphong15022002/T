@@ -42,9 +42,7 @@ codx-layout:not([data-kt-aside-minimize="on"]){
   #kt_aside_menu_header+div {
     padding-left: 12px;
   }
-  .svg-icon svg [fill]:not(.permanent):not(g) {
-    fill: var(--primary-lighter);
-  }
+  
 }
 .progress {
   background-color: #ffffff26;
@@ -199,7 +197,7 @@ codx-view-tree-detail .e-static-pane+.e-pane>.hover-scroll-y {
 
 
 .aside-light .menu .menu-title {
-  font-weight: 400;
+  font-weight: 300;
 }
 
 .dms-card-icon span[class*="icon-"] {
@@ -316,4 +314,11 @@ codx-layout[data-kt-aside-minimize="on"]{
     display: none;
   }
 }
+}
+
+
+.page-dm .aside.aside-light{
+  .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--primary-light)!important;
+  }
 }

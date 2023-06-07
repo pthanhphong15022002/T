@@ -40,8 +40,16 @@
   padding-bottom: 10px !important;
 }
 
-#kt_aside_menu {
-  margin-top: 25px;
+.wp-portal #kt_aside_menu {
+  margin-top: 27px;
+  
+  .menu-state-title-primary .menu-item .menu-link.active .menu-title,
+  .menu-state-title-primary .menu-item .menu-link:hover .menu-title {
+    color: var(--primary-darker)!important;
+  }
+  .menu-state-title-primary .menu-item .menu-link .menu-title:hover {
+    color: var(--primary-darker)!important;
+  }
 }
 
 .aside.aside-transparent {
@@ -52,9 +60,9 @@
 }
 
 .page-dashboard .aside.aside-transparent {
-  width: 300px;
-  min-width: 300px;
-  max-width: 300px;
+  width: 290px;
+  min-width: 290px;
+  max-width: 290px;
 
 }
 
@@ -75,7 +83,7 @@
 }
 
 .dashboard-main {
-  width: 1296px;
+  width: 1286px;
   margin: 0 auto;
 }
 
