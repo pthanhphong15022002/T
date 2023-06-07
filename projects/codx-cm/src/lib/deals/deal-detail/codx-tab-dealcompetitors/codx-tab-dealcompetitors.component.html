@@ -56,9 +56,8 @@
     <div class="col-3 d-flex justify-content-start">
       <div class="me-3">
         <codx-img
-          [objectId]="data.competitorID"
-          [referType]="'avt'"
-          [objectName]="getCompetitorName(data.competitorID)"
+          [objectId]="data?.competitorID"
+          [objectName]="getCompetitorName(data?.competitorID)"
           [imgOn]="data?.modifiedOn"
           [objectType]="'CM_Competitors'"
           [width]="35"

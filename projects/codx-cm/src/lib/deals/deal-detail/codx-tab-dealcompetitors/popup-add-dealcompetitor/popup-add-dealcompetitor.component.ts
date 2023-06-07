@@ -1,12 +1,15 @@
 import { Component, Optional, OnInit } from '@angular/core';
 import {
   CacheService,
+  DataRequest,
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { CM_DealsCompetitors } from 'projects/codx-cm/src/lib/models/cm_model';
 import { CodxCmService } from 'projects/codx-cm/src/projects';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-dealcompetitor',
@@ -21,6 +24,9 @@ export class PopupAddDealcompetitorComponent implements OnInit {
   gridViewSetup: any;
   lstDealCompetitors = [];
   isAddCompetitor = true;
+  lstCbx = [];
+  fieldCompetitor = { text: 'competitorName', value: 'recID' };
+
   competitorName: any;
   constructor(
     private notiService: NotificationsService,
@@ -39,13 +45,37 @@ export class PopupAddDealcompetitorComponent implements OnInit {
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.lstDealCompetitors = dt?.data?.lstDealCompetitors;
   }
-  ngOnInit(): void {
+  async ngOnInit() {
     if (this.action == 'copy') {
-      this.data.recID = null;
+      this.data.recID = Util.uid();
       this.data.competitorID = null;
     }
+    this.lstCbx = await this.loadCompetitor();
   }
 
+  //#region load combobox
+  async loadCompetitor() {
+    var options = new DataRequest();
+    options.entityName = 'CM_Competitors';
+    options.pageLoading = false;
+    var lst = await firstValueFrom(this.cmSv.loadDataAsync('CM', options));
+    if (lst != null) lst = this.checkListContact(lst);
+    return lst;
+  }
+
+  checkListContact(lst = []) {
+    lst = lst.filter(
+      (competitor1) =>
+        !this.lstDealCompetitors.some(
+          (competitor2) =>
+            competitor2.competitorID === competitor1.recID &&
+            competitor2.competitorID != this.data?.competitorID
+        )
+    );
+
+    return lst;
+  }
+  //#endregion
   onSave() {
     if (!this.isAddCompetitor) {
       if (this.competitorName == null || this.competitorName.trim() == '') {
@@ -148,6 +178,11 @@ export class PopupAddDealcompetitorComponent implements OnInit {
   valueChange(e) {
     if (e.data) {
       this.competitorName = e?.data;
+    }
+  }
+  cbxChange(e) {
+    if (this.data?.competitorID != e) {
+      this.data.competitorID = e;
     }
   }
 }
