@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   AuthService,
   ButtonModel,
@@ -17,7 +18,6 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
-import { ActivatedRoute } from '@angular/router';
 import { PopupEDisciplinesComponent } from '../employee-profile/popup-edisciplines/popup-edisciplines.component';
 
 @Component({
@@ -33,7 +33,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   @ViewChild('eInfoTemplate') eInfoTemplate?: TemplateRef<any>;
   @ViewChild('templateUpdateStatus') templateUpdateStatus: TemplateRef<any>;
-  // @ViewChild('disciplineTemplate') disciplineTemplate?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   funcID: string;
   editStatusObj: any;
@@ -43,13 +42,11 @@ export class EmployeeDisciplineComponent extends UIComponent {
   itemDetail;
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
-    text: 'Thêm',
   };
   formGroup: FormGroup;
   cmtStatus: string = '';
   currentEmpObj: any = null;
   dialogEditStatus: any;
-  //genderGrvSetup: any
   eDisciplineGrvSetup: any;
   grvSetup: any;
 
@@ -72,7 +69,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
     private auth: AuthService
   ) {
     super(inject);
-    // this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
   onInit(): void {
@@ -87,7 +83,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
   }
 
   clickEvent(event, data) {
-    // this.popupUpdateEContractStatus(event?.event?.functionID , event?.data);
     this.clickMF(event?.event, event?.data);
   }
 
@@ -181,10 +176,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.view.formModel;
-    // let isAppendix = false;
-    // if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
-    //   isAppendix = true;
-    // }
     let dialogAdd = this.callfc.openSide(
       PopupEDisciplinesComponent,
       {
@@ -192,7 +183,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
         dataInput: data,
         empObj: this.currentEmpObj,
         headerText: actionHeaderText,
-        employeeId: this.currentEmpObj?.employeeID,
+        employeeId: data?.employeeID || this.currentEmpObj.employeeID,
         funcID: this.view.funcID,
         openFrom: 'empDisciplinesProcess',
       },
@@ -263,7 +254,12 @@ export class EmployeeDisciplineComponent extends UIComponent {
         this.popupUpdateEDisciplineStatus(event.functionID, oUpdate);
         break;
       case this.actionAddNew:
-        this.HandleEDisciplineInfo(event.text, 'add', data);
+        this.currentEmpObj = this.itemDetail.emp;
+        this.HandleEDisciplineInfo(
+          event.text + ' ' + this.view.function.description,
+          'add',
+          data
+        );
         break;
 
       case 'SYS03':
