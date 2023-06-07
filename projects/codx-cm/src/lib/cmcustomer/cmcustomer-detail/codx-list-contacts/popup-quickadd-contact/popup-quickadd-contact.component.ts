@@ -287,7 +287,9 @@ export class PopupQuickaddContactComponent implements OnInit {
     } else {
       if (e.field == 'contactType') {
         this.contactType = e?.data;
-      } else {
+      } else if(e.field != 'allowEmail' && e.field != 'allowCall'){
+        this.data[e.field] = e?.data != null && e?.data?.trim() != '' ? e?.data?.trim() : null;
+      }else{
         this.data[e.field] = e?.data;
       }
     }
