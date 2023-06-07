@@ -174,7 +174,7 @@
         [gridViewName]="fmInventoryJournalLines.gridViewName" [entityName]="fmInventoryJournalLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="inventoryJournalLines" service="IV"
-        [autoLoad]="false" (created)="gridCreated()" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
+        [autoLoad]="false" (created)="gridCreated()" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (onDoubleClick)="onDoubleClick($event)"
         (cellChanged)="lineChanged($event)"></codx-gridview-v2>
 
       <div #btnRef class="btn-addline">

@@ -70,6 +70,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   hasSaved: any = false;
   isSaveMaster: any = false;
   items: any;
+  visibleColumns: Array<any> = [];
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   purchaseInvoicesLinesDelete: Array<PurchaseInvoicesLines> = [];
@@ -194,14 +195,15 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.vatinvoices[e.field] = e.data;
   }
   gridCreated(e, grid) {
-    let hBody, hTab, hNote;
-    if (this.cardbodyRef)
-      hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
-    if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
-    if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
-    this.gridHeight = hBody - (hTab + hNote + 100); //40 là header của tab
-    grid.disableField(this.lockFields);
+    this.visibleColumns = this.gridPurchaseInvoicesLine.visibleColumns;
+    this.gridPurchaseInvoicesLine.hideColumns(this.lockFields);
   }
+
+  onDoubleClick(data)
+  {
+    this.loadPredicate(this.visibleColumns, data.rowData);
+  }
+
   expandTab() {}
   cellChangedPurchase(e: any) {
     if (e.field == 'vatid' && e.data.vatid != null) {
@@ -602,6 +604,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       case '1':
         this.gridPurchaseInvoicesLine.gridRef.selectRow(Number(data.index));
         this.gridPurchaseInvoicesLine.gridRef.startEdit();
+        this.loadPredicate(this.visibleColumns, data)
         break;
       case '2':
         let index = this.purchaseInvoicesLines.findIndex(
@@ -868,7 +871,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               idx = this.gridPurchaseInvoicesLine.dataSource.length;
               res.rowNo = idx + 1;
               this.gridPurchaseInvoicesLine.addRow(res, idx);
-
+              this.loadPredicate(this.visibleColumns, res);
               break;
             case '2':
               idx = this.purchaseInvoicesLines.length;
@@ -981,6 +984,19 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     ) {
       this.lockFields = this.purchaseinvoices.unbounds
         .lockFields as Array<string>;
+    }
+    else{
+      this.api
+        .exec('IV', 'InventoryJournalsBusiness', 'SetUnboundsAsync', [
+          this.purchaseinvoices
+        ])
+        .subscribe((res: any) => {
+          if (res.unbounds && res.unbounds.lockFields && res.unbounds.lockFields.length) {
+            this.purchaseinvoices.unbounds = res.unbounds;
+            this.lockFields = this.purchaseinvoices.unbounds
+              .lockFields as Array<string>;
+          }
+        });
     }
 
     const options = new DataRequest();
@@ -1352,4 +1368,58 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   
   //#endregion
+
+  //#region Method
+
+  loadPredicate(visibleColumns, data)
+  {
+    var arr = [
+      'IDIM0',
+      'IDIM1',
+      'IDIM2',
+      'IDIM3',
+      'IDIM5',
+      'IDIM6',
+      'IDIM7',
+    ];
+    arr.forEach((fieldName) => {
+      let idx = this.gridPurchaseInvoicesLine.visibleColumns.findIndex(
+        (x) => x.fieldName == fieldName
+      );
+      if (idx > -1) {
+        switch (fieldName) {
+          case 'IDIM0':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM1':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM2':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM3':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM5':
+            visibleColumns[idx].predicate = '@0.Contains(WarehouseID)';
+            visibleColumns[idx].dataValue = `[${data?.idiM4}]`;
+            break;
+          case 'IDIM6':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM7':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+        }
+      }
+    });
+  }
+
+  //#endRegion Method
 }

@@ -356,6 +356,11 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
             case 'CM0201_2':
               more.disabled = true;
               break;
+            case 'CM0201_7':
+              if (data.closed) {
+                more.disabled = true;
+              }
+              break;
             case 'CM0201_8':
               if (data.closed) {
                 more.disabled = true;
@@ -952,6 +957,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
       titleAction: action === 'add' ? 'Thêm cơ hội' : 'Sao chép cơ hội',
+      processID: this.processID,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
