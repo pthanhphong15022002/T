@@ -34,6 +34,7 @@
       [formModel]="formModel"
       [columnsGrid]="columnGrid"
       [service]="'HR'"
+      [sorts]="[sortModel]"
       [assemblyName]="'Core'"
       [className]="'DataBusiness'"
       [hideMoreFunc]="true"
@@ -110,7 +111,6 @@
           ></span>
         </span>
         <codx-mfunc
-          (changeDataMF)="handleShowHideMf($event, data)"
           [formModel]="formModel"
           (clickMF)="clickMF($event, data, funcID)"
           type="hover"
@@ -207,7 +207,6 @@
         [formModel]="formModel"
         (clickMF)="clickMF($event, data, funcID)"
         type="hover"
-        (changeDataMF)="handleShowHideMf($event, data)"
         [dataItem]="data"
       >
       </codx-mfunc>
@@ -285,7 +284,6 @@
         </span>
       </div>
       <codx-mfunc
-        (changeDataMF)="handleShowHideMf($event, data)"
         [formModel]="formModel"
         (clickMF)="clickMF($event, data, funcID)"
         type="hover"
@@ -300,8 +298,6 @@
 
 <!-- #region Lương cơ bản columnGrid templates-->
 <ng-template #basicSalaryCol1 let-data>
-
-
   <div class="d-flex align-items-center">
     <!-- <span
       class="bullet bullet-vertical d-flex align-items-center min-h-30px mh-100 me-3"
@@ -413,7 +409,6 @@
       </div>
     </div>
     <codx-mfunc
-      (changeDataMF)="handleShowHideMf($event, data)"
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
       type="hover"
@@ -498,7 +493,6 @@
       "
     ></span>
     <codx-mfunc
-      (changeDataMF)="handleShowHideMf($event, data)"
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
       type="hover"
@@ -542,7 +536,7 @@
 
 <!-- #region Hợp đồng lao động column template  -->
 <ng-template #eContractCol1 let-data>
-  <div class="d-flex align-items-center" [ngClass]="data?.isCurrent ? 'text-primary' : ''">
+  <div class="d-flex align-items-center">
     <!-- <span
       class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-4"
       [class]="
@@ -691,7 +685,6 @@
         </span>
       </div>
       <codx-mfunc
-        (changeDataMF)="handleShowHideMf($event, data)"
         [formModel]="formModel"
         (clickMF)="clickMF($event, data, funcID)"
         type="hover"

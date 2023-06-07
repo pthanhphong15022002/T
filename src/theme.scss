@@ -30,7 +30,7 @@
 .codx-theme {
   &.default {
     --primary: #3699ff;
-    --primary-active: #005dc7;
+    --primary-active: #0052b1;
     --primary-inverse: #ffffff;
     --primary-darkest: #073563;
     --primary-darker: #005dc7;
@@ -56,7 +56,7 @@
 
   &.orange {
     --primary: #ff7619;
-    --primary-active: #ff6602;
+    --primary-active: #e04a04;
     --primary-inverse: #ffffff;
     --primary-darkest: #722b05;
     --primary-darker: #f15711;
@@ -79,7 +79,7 @@
 
   &.sapphire {
     --primary: #08ad9d;
-    --primary-active: #1ead9f;
+    --primary-active: #006e63;
     --primary-inverse: #ffffff;
     --primary-darkest: #035e59;
     --primary-darker: #027c70;
@@ -102,7 +102,7 @@
 
   &.green {
     --primary: #15ad44;
-    --primary-active: #179b3f;
+    --primary-active: #0b792c;
     --primary-inverse: #ffffff;
     --primary-darkest: #025c11;
     --primary-darker: #0f8633;
@@ -125,7 +125,7 @@
 
   &.purple {
     --primary: #6d13e4;
-    --primary-active: #50058e;
+    --primary-active: #4b08a1;
     --primary-inverse: #ffffff;
     --primary-darkest: #430791;
     --primary-darker: #5710b2;
@@ -149,7 +149,7 @@
 
   &.navy {
     --primary: #344c85;
-    --primary-active: #192440;
+    --primary-active: #131c33;
     --primary-inverse: #ffffff;
     --primary-darkest: #111930;
     --primary-darker: #192440;
@@ -167,7 +167,7 @@
     --bg-color: #192440;
     --border-light: #dbc5f5;
     --bg-aside-dark: #1e033f;
-    --bg-body: #f1f1f1;
+    --bg-body: #f5f8fa;
     --menu-active: #a0a1ec;
 
     codx-wrapper {
@@ -356,11 +356,13 @@
 
   .menu-state-title-primary .menu-item .menu-link.active .menu-title,
   .menu-state-title-primary .menu-item .menu-link:hover .menu-title {
-    color: var(--menu-active)!important;
+    //color: var(--menu-active)!important;
+    color: var(--primary-light)!important;
   }
 
   .menu-state-title-primary .menu-item .menu-link .menu-title:hover {
-    color: var(--menu-active)!important;
+    //color: var(--menu-active)!important;
+     color: var(--primary-light)!important;
   }
   .btn.btn-primary {
     border-color: var(--primary-dark) !important;
