@@ -49,6 +49,7 @@ import { PopAddRunPeriodicComponent } from './periodic/run-periodic/pop-add-run-
 import { PopUpCashComponent } from './vouchers/cash-payments/pop-up-cash/pop-up-cash.component';
 import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
 import { ReplacePipe } from './pipes/replace.pipe';
+import { NgxUiLoaderModule } from 'ngx-ui-loader';
 
 export const routes: Routes = [
   {
@@ -196,6 +197,8 @@ export const routes: Routes = [
     NameByIdPipe,
     DragDropModule,
     CoreModule,
+    NgxUiLoaderModule,
+    
   ],
 })
 export class AcModule {}

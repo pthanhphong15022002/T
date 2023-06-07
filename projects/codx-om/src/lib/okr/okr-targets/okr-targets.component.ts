@@ -709,6 +709,7 @@ export class OkrTargetsComponent implements OnInit {
             if (ob.items == null) {
               ob.items = [];
             }
+            kr.rangeDateText = this.getRangeDate(kr?.rangeDate);
             ob.items.push(kr);
             ob.hasChildren = true;
             return;
@@ -758,6 +759,7 @@ export class OkrTargetsComponent implements OnInit {
                 if (kr.items == null) {
                   kr.items = [];
                 }
+                skr.rangeDateText = this.getRangeDate(skr?.rangeDate);
                 kr.items.push(skr);
                 kr.hasChildren = true;
               }

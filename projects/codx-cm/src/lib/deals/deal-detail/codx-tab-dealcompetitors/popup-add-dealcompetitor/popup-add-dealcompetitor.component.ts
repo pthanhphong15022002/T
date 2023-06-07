@@ -20,7 +20,7 @@ export class PopupAddDealcompetitorComponent implements OnInit {
   title = '';
   gridViewSetup: any;
   lstDealCompetitors = [];
-  isAddCompetitor = false;
+  isAddCompetitor = true;
   competitorName: any;
   constructor(
     private notiService: NotificationsService,
@@ -38,18 +38,17 @@ export class PopupAddDealcompetitorComponent implements OnInit {
     this.data.dealID = dt?.data?.dealID;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.lstDealCompetitors = dt?.data?.lstDealCompetitors;
-    this.isAddCompetitor = dt?.data?.isAddCompetitor;
   }
   ngOnInit(): void {
     if (this.action == 'copy') {
-      this.data.recID = '00000000-0000-0000-0000-000000000000';
+      this.data.recID = null;
       this.data.competitorID = null;
     }
   }
 
   onSave() {
-    if(this.isAddCompetitor){
-      if(this.competitorName == null || this.competitorName.trim() == ''){
+    if (!this.isAddCompetitor) {
+      if (this.competitorName == null || this.competitorName.trim() == '') {
         {
           this.notiService.notifyCode(
             'SYS009',
@@ -59,23 +58,21 @@ export class PopupAddDealcompetitorComponent implements OnInit {
           return;
         }
       }
-      this.cmSv.addCompetitorByName(this.competitorName).subscribe(x => {
-        if(x){
+      this.cmSv.addCompetitorByName(this.competitorName).subscribe((x) => {
+        if (x) {
           this.data.competitorID = x;
           this.addHandle();
-        }else{
+        } else {
           this.dialog.close();
           this.notiService.notifyCode('SYS023');
         }
-      })
-
-    }else{
+      });
+    } else {
       this.addHandle();
     }
-
   }
 
-  addHandle(){
+  addHandle() {
     if (
       this.data?.competitorID == null ||
       this.data?.competitorID.trim() == ''
@@ -137,6 +134,14 @@ export class PopupAddDealcompetitorComponent implements OnInit {
       return false;
     } else {
       return true;
+    }
+  }
+
+  async changeRadio(e) {
+    if (e.field === 'yes' && e.component.checked === true) {
+      this.isAddCompetitor = true;
+    } else if (e.field === 'no' && e.component.checked === true) {
+      this.isAddCompetitor = false;
     }
   }
 

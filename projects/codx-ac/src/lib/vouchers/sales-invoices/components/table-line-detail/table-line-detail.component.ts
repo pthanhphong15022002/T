@@ -1,8 +1,10 @@
 import {
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   TemplateRef,
   ViewChild,
@@ -30,6 +32,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   @Input() gvs: any;
   @Input() transID: string;
   @Input() dataService: CRUDService;
+  @Output() create = new EventEmitter();
 
   @ViewChild('grid', { static: true }) grid: CodxGridviewV2Component;
   @ViewChild('columnItemID', { static: true }) columnItemID: TemplateRef<any>;
@@ -112,6 +115,10 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
         this.export(data);
         break;
     }
+  }
+
+  onCreate(e): void {
+    this.create.emit(e);
   }
   //#endregion
 
