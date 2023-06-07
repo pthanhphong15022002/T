@@ -222,7 +222,10 @@ export class ViewDetailComponent implements OnInit {
       this.transID = this.itemDetail.processID;
       if (
         this.itemDetail?.approveControl == '1' ||
+        this.itemDetail?.approveStatus == '0' ||
+        this.itemDetail?.approveStatus == '2' ||
         this.itemDetail?.approveStatus == '3' ||
+        this.itemDetail?.approveStatus == '4' ||
         this.itemDetail?.approveStatus == '5'
       ) {
         this.transID = this.itemDetail.recID;

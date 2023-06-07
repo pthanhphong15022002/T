@@ -3069,3 +3069,15 @@ codx-toolbar-report{
 codx-view-list-detail .instance-select .nav-link {
   padding: 4px 7px;
 }
+
+////////////////
+#kt_aside_menu .hover-scroll-overlay-y {
+  &::-webkit-scrollbar {
+    width: 0rem !important;
+  }
+}
+codx-wrapper.hover-scroll-overlay-y {
+  &::-webkit-scrollbar {
+    width: 0rem !important;
+  }
+}
