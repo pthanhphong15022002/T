@@ -223,7 +223,6 @@
    
   }
   .dashboard-main {
-    border: 1px red solid;
     .h-100.col-12{
       padding-right: 0!important;
      
@@ -233,12 +232,11 @@
 @media (min-width:1180px) and (max-width: 1224px) {
 
   .home-left {
-    width: 520px!important;
-    min-width: 520px!important;
+    width: 500px!important;
+    min-width: 500px!important;
   }
   .dashboard-main {
     width: 1054px;
-    border: 1px #1bee6c solid;
     margin: 0 auto;
 
   }
@@ -262,7 +260,6 @@
   }
   .dashboard-main {
     width: 964px;
-    border: 1px aqua solid;
     margin: 0 auto;
 
   }
@@ -281,7 +278,6 @@
   }
   .dashboard-main {
     width: 960px;
-    border: 1px rgb(255, 13, 235) solid;
     margin: 0 auto;
 
   }

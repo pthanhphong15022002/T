@@ -322,3 +322,8 @@ codx-layout[data-kt-aside-minimize="on"]{
     fill: var(--primary-light)!important;
   }
 }
+
+.page-dm .btn .badge {
+  top: auto !important;
+  z-index: 99;
+}
