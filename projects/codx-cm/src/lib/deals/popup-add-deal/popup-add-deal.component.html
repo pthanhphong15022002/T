@@ -39,27 +39,18 @@
 
         >
         </codx-label>
-        <!-- {{deal?.processID}} -->
-        <codx-input
+        <div *ngIf="deal?.businessLineID">
+          <codx-input
           [formModel]="form.formModel"
           field="businessLineID"
-          [disabled]="actionEdit === action"
+          [crrValue]="deal?.businessLineID"
+          [disabled]="deal?.processID"
+          [model]="{ProcessID: deal?.processID }"
           (valueChange)="valueChangeBusinessLine($event)"
         >
         </codx-input>
-        <!-- <codx-input
-        [formModel]="form.formModel"
-        field="businessLineID"
-        [model]="{ProcessID: deal?.processID }"
-      >
-      </codx-input>
+        </div>
 
-      <codx-input
-      [formModel]="form.formModel"
-      field="businessLineID"
-      [model]="{ProcessID: 'eae7f50d-012a-11ee-94b2-00155d035517' }"
-    >
-    </codx-input> -->
 
       </div>
     </div>
@@ -288,14 +279,12 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         fiedName="ExpectedClosed"
-        default="Ngày dự kiến đóng"
       >
       </codx-label>
       <codx-input
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="expectedClosed"
-
       (valueChange)="valueChange($event)"
     >
     </codx-input>
