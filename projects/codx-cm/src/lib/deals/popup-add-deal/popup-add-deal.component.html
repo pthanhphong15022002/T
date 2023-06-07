@@ -36,16 +36,31 @@
           [Group]="form.formGroup"
           fiedName="BusinessLineID"
           default="Dòng sản phẩm"
+
         >
         </codx-label>
+        {{deal?.processID}}
         <codx-input
           [formModel]="form.formModel"
-          [Group]="form.formGroup"
           field="businessLineID"
           [disabled]="actionEdit === action"
           (valueChange)="valueChangeBusinessLine($event)"
         >
         </codx-input>
+        <codx-input
+        [formModel]="form.formModel"
+        field="businessLineID"
+        [model]="{ProcessID: deal?.processID }"
+      >
+      </codx-input>
+
+      <codx-input
+      [formModel]="form.formModel"
+      field="businessLineID"
+      [model]="{ProcessID: 'eae7f50d-012a-11ee-94b2-00155d035517' }"
+    >
+    </codx-input>
+
       </div>
     </div>
 
