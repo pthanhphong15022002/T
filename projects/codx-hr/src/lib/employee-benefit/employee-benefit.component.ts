@@ -1,10 +1,12 @@
 import {
+  ChangeDetectorRef,
   Component,
   Injector,
-  ChangeDetectorRef,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   DialogRef,
@@ -16,9 +18,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
-import { ActivatedRoute } from '@angular/router';
 import { PopupEmployeeBenefitComponent } from './popup-employee-benefit/popup-employee-benefit.component';
-import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-employee-benefit',
@@ -335,11 +335,11 @@ export class EmployeeBenefitComponent extends UIComponent {
       PopupEmployeeBenefitComponent,
       {
         actionType: actionType,
+        dataObj: data,
         empObj: this.currentEmpObj,
         headerText: actionHeaderText,
-        employeeId: this.currentEmpObj.employeeID,
+        employeeId: data?.employeeID || this.currentEmpObj.employeeID,
         funcID: this.view.funcID,
-        dataObj: data,
         fromListView: true,
       },
       option
