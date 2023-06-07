@@ -411,7 +411,7 @@
                 [dataSource]="salesInvoicesLines"
                 [height]="gridHeight"
                 (cellChanged)="onCellChange($event)"
-                (created)="onCreate($event)"
+                (created)="onCreate($event, false)"
                 (onAddNew)="onAddNew($event)"
                 (onEdit)="onEdit($event)"
                 (eventAction)="onFocusOut($event)"
@@ -424,6 +424,8 @@
                   [hiddenFields]="hiddenFields"
                   [hasMF]="true"
                   [dataService]="detailService"
+                  [height]="gridHeight"
+                  (create)="onCreate($event, true)"
                 ></lib-table-line-detail>
               </ng-template>
 
