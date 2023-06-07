@@ -1132,8 +1132,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           meeting.meetingName = data?.taskName;
           meeting.meetingType = '1';
           meeting.reminder = Number.isNaN(data.reminders)
-            ? Number.parseInt(data.reminders)
-            : 0;
+            ? 0
+            : Number.parseInt(data.reminders);
           let option = new SidebarModel();
           option.Width = '800px';
           option.zIndex = 1011;
@@ -1147,13 +1147,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             if (preside) listPermissions += preside;
             participants = data?.roles.filter((x) => x.roleType == 'P');
             if (participants?.length) {
-              let userIDPar = await firstValueFrom(
-                this.getListUserIDBy(participants)
-              );
-              if (userIDPar?.lenght > 0) listPermissions += ';' + userIDPar.join(";");
+              let userIDPar = await this.getListUserIDByOther(participants);
+              if (userIDPar?.length > 0) {
+                let idxPre = userIDPar.findIndex((x) => x == preside);
+                if (idxPre != -1) userIDPar.splice(idxPre, 1);
+                listPermissions += ';' + userIDPar.join(';');
+              }
             }
           }
-          
+
           this.cache.functionList('TMT0501').subscribe((f) => {
             if (f) {
               this.cache.gridView(f.gridViewName).subscribe((res) => {
@@ -1205,45 +1207,66 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       lstUserID = list
         .filter((x) => x.objectType == 'U' || x.objectType == '1')
         .map((x) => x.objectID);
+      //org
+      let listO = list
+        .filter((x) => x.objectType == 'O')
+        .map((x) => x.objectID);
 
-      let listODP = (lstUserID = list
-        .filter(
-          (x) =>
-            x.objectType == 'O' || x.objectType == 'D' || x.objectType == 'P'
-        )
-        .map((x) => x.objectID));
+      if (listO?.length > 0) {
+        let userIDO = await firstValueFrom(this.getListUserIDBy(listO, 'O'));
+        if (userIDO?.length > 0) {
+          const set = new Set(lstUserID.concat(userIDO));
+          lstUserID = [...set];
+        }
+      }
+      // dep
+      let listD = list
+        .filter((x) => x.objectType == 'D')
+        .map((x) => x.objectID);
 
-      let userIDODP = [];
-      if (listODP?.length > 0)
-        userIDODP = await firstValueFrom(this.getListUserIDBy(listODP));
-      if (userIDODP?.length > 0) {
-        const set = new Set(lstUserID.concat(userIDODP));
-        lstUserID = [...set];
+      if (listD?.length > 0) {
+        let userIDD = await firstValueFrom(this.getListUserIDBy(listD, 'D'));
+        if (userIDD?.length > 0) {
+          let set = new Set(lstUserID.concat(userIDD));
+          lstUserID = [...set];
+        }
       }
 
-      let listR = (lstUserID = list
-        .filter((x) => x.objectType == 'R')
-        .map((x) => x.objectID));
+      let listP = list
+        .filter((x) => x.objectType == 'P')
+        .map((x) => x.objectID);
+      // positon
+      if (listP?.length > 0) {
+        let userIDP = await firstValueFrom(this.getListUserIDBy(listP, 'P'));
+        if (userIDP?.length > 0) {
+          let set = new Set(lstUserID.concat(userIDP));
+          lstUserID = [...set];
+        }
+      }
 
-      let userIDR = [];
-      if (listODP?.length > 0)
-        userIDR = await firstValueFrom(this.getListUserIDByRoleID(listR));
-      if (userIDR?.length > 0) {
-        const set = new Set(lstUserID.concat(userIDR));
-        lstUserID = [...set];
+      // Role
+      let listR = list
+        .filter((x) => x.objectType == 'R')
+        .map((x) => x.objectID);
+
+      if (listR?.length > 0) {
+        let userIDR = await firstValueFrom(this.getListUserIDByRoleID(listR));
+        if (userIDR?.length > 0) {
+          let set = new Set(lstUserID.concat(userIDR));
+          lstUserID = [...set];
+        }
       }
     }
-
     return lstUserID;
   }
 
-  getListUserIDBy(lstId) {
+  getListUserIDBy(lstId, type) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
       'GetListUserIDByListODPIDAsync',
-      lstId
+      [lstId, type]
     );
   }
 

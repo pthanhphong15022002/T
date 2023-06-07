@@ -189,6 +189,7 @@
     [imageReferType]="'avt'"
     [imageWidth]="35"
     imgCss="me-3"
+    [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
     [imageObjType]="'CM_Customers'"
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
@@ -304,7 +305,6 @@
           >
           </codx-vll>
         </div>
-  
         <div class="d-flex align-items-center text-gray-600">
           <span class="icon-16 icon-av_timer me-1"></span>
           <span
@@ -330,7 +330,6 @@
   </div>
 </ng-template>
 <ng-template #footer let-data>
-  
 </ng-template>
 <ng-template #baseHeaderRightTmp let-data>
   <div>

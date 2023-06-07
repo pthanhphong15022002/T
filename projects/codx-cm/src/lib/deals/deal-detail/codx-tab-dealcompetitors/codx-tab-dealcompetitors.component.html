@@ -52,13 +52,16 @@
 </ng-template>
 
 <ng-template #dealCompetitors let-data>
-  <div class="d-flex justify-content-between has-action-menu-od mt-2">
+  <div
+    (click)="changeComeptitor(data)"
+    [ngClass]="data.recID == this.currentRecID ? 'user-nav-active' : null"
+    class="d-flex justify-content-between align-items-top p-3 border-bottom border-gray-150 has-action-menu-od user-nav-item"
+  >
     <div class="col-3 d-flex justify-content-start">
       <div class="me-3">
         <codx-img
-          [objectId]="data.competitorID"
-          [referType]="'avt'"
-          [objectName]="getCompetitorName(data.competitorID)"
+          [objectId]="data?.competitorID"
+          [objectName]="getCompetitorName(data?.competitorID)"
           [imgOn]="data?.modifiedOn"
           [objectType]="'CM_Competitors'"
           [width]="35"
@@ -113,10 +116,16 @@
     <div class="col-3 justify-content-between d-flex align-items-start ms-2">
       <div class="d-flex justify-content-center align-items-start">
         <span
-        class="icon-16 me-2"
-        [class]="data?.status | vll : 'CRM036' : 'icon' | async"
-      >
-      </span>
+          [ngbPopover]="popupStatus"
+          #p="ngbPopover"
+          (mouseenter)="data?.status ? p.open() : ''"
+          (mouseleave)="p.close()"
+          placement="right bottom left"
+          container="body"
+          class="icon-16 text-hover-primary cursor-pointer me-2"
+          [class]="data?.status | vll : vllStatus ?? 'CRM036' : 'icon' | async"
+        >
+        </span>
       </div>
       <div class="d-flex justify-content-end align-items-start action-menu-od">
         <codx-mfunc
@@ -132,4 +141,23 @@
       </div>
     </div>
   </div>
+  <ng-template #popupStatus>
+    <!-- <div
+      class="d-flex justify-content-start mb-1"
+      [innerHTML]="
+        data?.status
+          | formatvalue : formModel : 'Status'
+          | async
+      "
+    ></div> -->
+    <!-- <codx-vll
+      [name]="'CRM036'"
+      [formModel]="formModel"
+      [field]="'Status'"
+      [value]="data?.status"
+      [showText]="true"
+    >
+    </codx-vll> -->
+    {{ data?.status | vll : vllStatus ?? 'CRM036' : "text" | async }}
+  </ng-template>
 </ng-template>
