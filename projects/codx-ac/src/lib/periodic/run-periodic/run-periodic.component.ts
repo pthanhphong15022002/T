@@ -12,6 +12,7 @@ export class RunPeriodicComponent extends UIComponent{
   
   views: Array<ViewModel> = [];
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
 
   button?: ButtonModel = { id: 'btnAdd' };
   dialog!: DialogRef;
@@ -56,6 +57,14 @@ export class RunPeriodicComponent extends UIComponent{
         model: {
           template2: this.templateMore,
           frozenColumns: 1,
+        },
+      },
+      {
+        type: ViewType.smallcard,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
         },
       },
     ];
@@ -163,6 +172,25 @@ export class RunPeriodicComponent extends UIComponent{
     }
     this.view.dataService.delete([data], true).subscribe((res: any) => {
     });
+  }
+
+  getDate(date: any){
+    var newDate = new Date(date);
+    var day, month, year;
+
+    year = newDate.getFullYear();
+    month = newDate.getMonth() + 1;
+    day = newDate.getDate();
+    
+    if (month < 10) {
+      month = '0' + month;
+    }
+
+    if (day < 10) {
+      day = '0' + day;
+    }
+    
+    return day + '/' + month + '/' + year;
   }
   //endRegion Function
 }
