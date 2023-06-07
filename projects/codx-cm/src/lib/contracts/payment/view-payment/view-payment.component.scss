@@ -12,3 +12,6 @@
    border-radius: 3px;
    margin-right: 5px;
 }
+:host ::ng-deep .e-gridcontent .e-content {
+   height: auto !important;
+}

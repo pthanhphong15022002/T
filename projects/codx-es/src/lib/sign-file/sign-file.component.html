@@ -1,6 +1,6 @@
 <ng-template #itemTemplate let-data>
   <codx-temp-full
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    cardCss="card-template border-bottom p-3"
     (click)="click(data)"
     [typeMF]="'hover'"
     [title]="data?.categoryName"
@@ -16,6 +16,7 @@
     [resources]="data?.createdBy != undefined ? data?.createdBy : ''"
     [resourceObjType]="'AD_Users'"
     [titleLine]="2"
+    [titleCss]="'fw-bold fs-6 mb-1'"
     [icoDateCss]="'icon-access_alarm'"
     [dataItem]="data"
     [formModel]="true ? view.formModel : null"
