@@ -12,6 +12,7 @@ import {
   CallFuncService,
   DataRequest,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   ImageViewerComponent,
@@ -29,6 +30,7 @@ import {
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CodxAddressCmComponent } from '../../cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
 import { tmpInstances } from '../../models/tmpModel';
+import { PopupQuickaddContactComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 
 @Component({
   selector: 'lib-popup-convert-lead',
@@ -676,7 +678,6 @@ export class PopupConvertLeadComponent implements OnInit {
         tmp.refID = e.data.recID;
         tmp.objectType = '4';
         tmp.isDefault = false;
-
         var indexCus = this.lstContactCustomer.findIndex(
           (x) => x.recID == e.data.recID
         );
@@ -688,6 +689,7 @@ export class PopupConvertLeadComponent implements OnInit {
         if (indexCus != -1) {
           this.lstContactCustomer[indexCus].checked = true;
         }
+        if (tmp.objectType) this.popupEditRoleDeal(tmp, e.data);
       }
     } else {
       var index = this.lstContactDeal.findIndex(
@@ -745,6 +747,67 @@ export class PopupConvertLeadComponent implements OnInit {
 
   lstContactEmit(e) {
     this.lstContactCustomer = e;
+  }
+
+  popupEditRoleDeal(tmp, data) {
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'CMContacts';
+    dataModel.gridViewName = 'grvCMContacts';
+    dataModel.entityName = 'CM_Contacts';
+    dataModel.funcID = 'CM0102';
+    var title = '';
+    opt.FormModel = dataModel;
+    this.cache
+      .moreFunction(dataModel.formName, dataModel.gridViewName)
+      .subscribe((fun) => {
+        if (fun && fun.length) {
+          let m = fun.find((x) => x.functionID == 'CM0102_4');
+          if (m) title = m.defaultName;
+        }
+        this.cache
+          .gridViewSetup(dataModel.formName, dataModel.gridViewName)
+          .subscribe((res) => {
+            var obj = {
+              moreFuncName: title ?? 'Cập nhật vai trò',
+              action: 'editRole',
+              dataContact: data,
+              type: 'formAdd',
+              recIDCm: this.deal?.recID,
+              objectType: '4',
+              objectName: this.deal?.dealName,
+              gridViewSetup: res,
+              listContacts: this.lstContactDeal,
+              customerID: null,
+            };
+            var dialog = this.callFc.openForm(
+              PopupQuickaddContactComponent,
+              '',
+              500,
+              250,
+              '',
+              obj,
+              '',
+              opt
+            );
+            dialog.closed.subscribe((e) => {
+              if (e && e?.event) {
+                if (e.event?.recID) {
+                  var index = this.lstContactDeal.findIndex(
+                    (x) => x.recID != e.event?.recID && x.isDefault
+                  );
+                  if (index != -1) {
+                    if (e?.event?.isDefault) {
+                      this.lstContactDeal[index].isDefault = false;
+                    }
+                  }
+                  tmp.isDefault = e?.event?.isDefault;
+                  tmp.role = e?.event?.role;
+                }
+              }
+            });
+          });
+      });
   }
   //#endregion
 

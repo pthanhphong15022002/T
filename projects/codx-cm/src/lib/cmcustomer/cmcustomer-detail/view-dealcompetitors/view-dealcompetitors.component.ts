@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CodxCmService } from '../../../codx-cm.service';
-import { ApiHttpService, DataRequest, FormModel } from 'codx-core';
+import { ApiHttpService, CacheService, DataRequest, FormModel } from 'codx-core';
 import { X } from '@angular/cdk/keycodes';
 import { Observable, finalize, map } from 'rxjs';
 
@@ -31,7 +31,9 @@ export class ViewDealcompetitorsComponent implements OnInit {
   assemblyName = 'ERM.Business.CM';
   className = 'DealsBusiness';
   method = 'GetListDealAndDealCompetitorAsync';
-  constructor(private cmSv: CodxCmService, private api: ApiHttpService) {}
+  colorReasonSuccess: any;
+  colorReasonFail: any;
+  constructor(private cache: CacheService, private cmSv: CodxCmService, private api: ApiHttpService) {}
 
   async ngOnInit(){
     this.getListDealAndDealCompetitor();
@@ -91,5 +93,19 @@ export class ViewDealcompetitorsComponent implements OnInit {
     } else {
       return null;
     }
+  }
+
+  async getColorReason() {
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.colorReasonSuccess = item;
+          } else if (item.value === 'F') {
+            this.colorReasonFail = item;
+          }
+        }
+      }
+    });
   }
 }

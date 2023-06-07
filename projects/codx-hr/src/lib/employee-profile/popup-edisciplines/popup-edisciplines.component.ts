@@ -6,7 +6,6 @@ import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
   CodxListviewComponent,
-  CRUDService,
   DataRequest,
   DialogData,
   DialogRef,
@@ -126,7 +125,6 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       this.hrService.loadData('HR', empRequest).subscribe((emp) => {
         if (emp[1] > 0) {
           this.employeeObj = emp[0][0];
-          console.log('employee cua form', this.employeeObj);
           this.cr.detectChanges();
         }
       });
@@ -170,8 +168,6 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     this.disciplineObj.divisionID = this.employeeObj?.divisionID;
     this.disciplineObj.companyID = this.employeeObj?.companyID;
     this.disciplineObj.positionID = this.employeeObj?.positionID;
-    console.log('ki luat chuan bi luuuu', this.disciplineObj);
-    console.log('thong tin nhan viennn', this.employeeObj);
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
@@ -197,12 +193,9 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   }
 
   click(data) {
-    console.log('formdata', data);
     this.disciplineObj = data;
     this.formModel.currentData = JSON.parse(JSON.stringify(this.disciplineObj));
-    // this.indexSelected = this.lstDiscipline.findIndex(
-    //   (p) => p.recID == this.disciplineObj.recID
-    // );
+
     this.actionType = 'edit';
     this.formGroup?.patchValue(this.disciplineObj);
     this.cr.detectChanges();
@@ -210,7 +203,6 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
 
   afterRenderListView(evt) {
     this.listView = evt;
-    console.log(this.listView);
   }
 
   getEmployeeInfoById(empId: string, fieldName: string) {

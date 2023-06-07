@@ -291,12 +291,17 @@
 
   <div class="row mt-5 mb-3">
     <div class="col-6">
-      <span
-        [innerHTML]="
-          EBasicSalaryObj?.status | formatvalue : formModel : 'status' | async
-        "
+      <codx-vll
+        *ngIf="EBasicSalaryObj.status"
+        [formModel]="formModel"
+        [field]="'Status'"
+        [value]="EBasicSalaryObj?.status"
+        [showText]="true"
+        [showIcon]="false"
+        [showBgColor]="true"
+        ngClass="badge badge-sm badge-light"
       >
-      </span>
+      </codx-vll>
     </div>
     <div class="col-6">
       <div class="d-flex align-items-center">
