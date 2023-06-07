@@ -127,7 +127,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
       this.lstCompetitorAddress.length > 0
     ) {
       return this.lstCompetitorAddress.find((x) => x.recID == competitorID)
-        ?.address;
+        ?.competitorName;
     } else {
       return null;
     }
