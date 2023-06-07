@@ -987,7 +987,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
     else{
       this.api
-        .exec('IV', 'InventoryJournalsBusiness', 'SetUnboundsAsync', [
+        .exec('PS', 'PurchaseInvoicesBusiness', 'SetUnboundsAsync', [
           this.purchaseinvoices
         ])
         .subscribe((res: any) => {
