@@ -313,6 +313,7 @@ export class CasesComponent
   }
 
   getRoleMoreFunction(type) {
+    var functionMappings;
     var isDisabled = (eventItem, data) => {
       if(data.closed || data.status == '1'){
         eventItem.disabled = true;
@@ -327,23 +328,29 @@ export class CasesComponent
     var isStartDay = (eventItem, data) => {
         eventItem.disabled = data.status != '1';
     }
-    var functionMappings = {
-      CM0401_1: isDisabled,
-      CM0401_3: isDisabled,
-      CM0401_4: isDisabled,
-      CM0401_2: isStartDay,
-      CM0401_7: isDisabled,
-      CM0401_8: isClosed,
-      CM0401_9: isOpened,
-      SYS101: isDisabled,
-      SYS01: isDisabled,
-      SYS103: isDisabled,
-      SYS03: isDisabled,
-      SYS104: isDisabled ,
-      SYS04: isDisabled,
-      SYS102: isDisabled,
-      SYS02: isDisabled,
-    };
+    if(this.caseType === '1') {
+      functionMappings = {
+        CM0401_1: isDisabled,
+        CM0401_3: isDisabled,
+        CM0401_4: isDisabled,
+        CM0401_2: isStartDay,
+        CM0401_7: isDisabled,
+        CM0401_8: isClosed,
+        CM0401_9: isOpened,
+        SYS101: isDisabled,
+        SYS01: isDisabled,
+        SYS103: isDisabled,
+        SYS03: isDisabled,
+        SYS104: isDisabled ,
+        SYS04: isDisabled,
+        SYS102: isDisabled,
+        SYS02: isDisabled,
+      };
+    }
+    else {
+
+    }
+
     return functionMappings[type];
 
   }

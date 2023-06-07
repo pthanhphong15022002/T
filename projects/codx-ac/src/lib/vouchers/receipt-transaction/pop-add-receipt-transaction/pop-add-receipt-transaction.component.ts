@@ -313,6 +313,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       });
   }
 
+  onDoubleClick(data)
+  {
+    this.loadPredicate(this.visibleColumns, data.rowData);
+  }
+
   close() {
     this.dialog.close();
   }
@@ -664,7 +669,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               idx = this.gridInventoryJournalLine.dataSource.length;
               res.rowNo = idx + 1;
               this.gridInventoryJournalLine.addRow(res, idx);
-
+              this.loadPredicate(this.visibleColumns, res);
               break;
             case '2':
               idx = this.inventoryJournalLines.length;
@@ -729,6 +734,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case '1':
         this.gridInventoryJournalLine.gridRef.selectRow(Number(data.index));
         this.gridInventoryJournalLine.gridRef.startEdit();
+        this.loadPredicate(this.visibleColumns, data);
         break;
       case '2':
         let index = this.inventoryJournalLines.findIndex(
@@ -961,6 +967,56 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         input.value = "";
         input.predicate = 'ItemID="' + value + '"';
         input.loadSetting();
+      }
+    });
+  }
+
+  loadPredicate(visibleColumns, data)
+  {
+    var arr = [
+      'IDIM0',
+      'IDIM1',
+      'IDIM2',
+      'IDIM3',
+      'IDIM5',
+      'IDIM6',
+      'IDIM7',
+    ];
+    arr.forEach((fieldName) => {
+      let idx = this.gridInventoryJournalLine.visibleColumns.findIndex(
+        (x) => x.fieldName == fieldName
+      );
+      if (idx > -1) {
+        switch (fieldName) {
+          case 'IDIM0':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM1':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM2':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM3':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM5':
+            visibleColumns[idx].predicate = '@0.Contains(WarehouseID)';
+            visibleColumns[idx].dataValue = `[${data?.idiM4}]`;
+            break;
+          case 'IDIM6':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM7':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+        }
       }
     });
   }

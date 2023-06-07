@@ -43,6 +43,8 @@ export class TabDetailCustomComponent
   readonly tabTask: string = 'Task';
   readonly tabProduct: string = 'Product';
   readonly tabGanttChart: string = 'GanttChart';
+  readonly tabQuotation: string = 'Quotation';
+  readonly tabContract: string = 'Contract';
 
   fmProcductsLines: FormModel = {
     formName: 'CMProducts',
@@ -71,7 +73,7 @@ export class TabDetailCustomComponent
   ngOnChanges(changes: SimpleChanges) {
     //nvthuan
     if (changes.dataSelected) {
-      this.getListInstanceStep();   
+      this.getListInstanceStep();
     }
   }
 

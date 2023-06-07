@@ -11,8 +11,8 @@
 </codx-form>
 
 <ng-template #body>
-  <div class="card-add popup-sales">
-    <ejs-tab>
+  <div class="card-add popup-sales h-100">
+    <ejs-tab class="section1">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -395,55 +395,59 @@
             ></codx-label>
           </ng-template>
           <ng-template #content>
-            <codx-gridview-v2
-              #grid
-              *ngIf="editSettings.mode === 'Normal'; else dialogMode"
-              [formName]="fmSalesInvoicesLines.formName"
-              [gridViewName]="fmSalesInvoicesLines.gridViewName"
-              [entityName]="fmSalesInvoicesLines.entityName"
-              service="SM"
-              [templateMore]="more"
-              [editSettings]="editSettings"
-              [allowFiltering]="true"
-              [allowSorting]="true"
-              [autoLoad]="false"
-              [dataSource]="salesInvoicesLines"
-              (cellChanged)="onCellChange($event)"
-              (created)="onCreate($event)"
-              (onAddNew)="onAddNew($event)"
-              (onEdit)="onEdit($event)"
-              (eventAction)="onFocusOut($event)"
-            ></codx-gridview-v2>
-            <ng-template #dialogMode>
-              <lib-table-line-detail
-                #tableLineDetail
-                [gvs]="gvsSalesInvoicesLines"
-                [transID]="salesInvoice.recID"
-                [hiddenFields]="hiddenFields"
-                [hasMF]="true"
-                [dataService]="detailService"
-              ></lib-table-line-detail>
-            </ng-template>
+            <div class="position-relative">
+              <codx-gridview-v2
+                #grid
+                *ngIf="editSettings.mode === 'Normal'; else dialogMode"
+                [formName]="fmSalesInvoicesLines.formName"
+                [gridViewName]="fmSalesInvoicesLines.gridViewName"
+                [entityName]="fmSalesInvoicesLines.entityName"
+                service="SM"
+                [templateMore]="more"
+                [editSettings]="editSettings"
+                [allowFiltering]="true"
+                [allowSorting]="true"
+                [autoLoad]="false"
+                [dataSource]="salesInvoicesLines"
+                [height]="gridHeight"
+                (cellChanged)="onCellChange($event)"
+                (created)="onCreate($event, false)"
+                (onAddNew)="onAddNew($event)"
+                (onEdit)="onEdit($event)"
+                (eventAction)="onFocusOut($event)"
+              ></codx-gridview-v2>
+              <ng-template #dialogMode>
+                <lib-table-line-detail
+                  #tableLineDetail
+                  [gvs]="gvsSalesInvoicesLines"
+                  [transID]="salesInvoice.recID"
+                  [hiddenFields]="hiddenFields"
+                  [hasMF]="true"
+                  [dataService]="detailService"
+                  [height]="gridHeight"
+                  (create)="onCreate($event, true)"
+                ></lib-table-line-detail>
+              </ng-template>
+
+              <button
+                class="btn btn-light-primary btn-sm d-flex align-items-center position-absolute end-0"
+                style="top: -28px"
+                (click)="onClickAddRow()"
+              >
+                <i class="icon-add icon-16 ms-n1"></i>
+                <codx-label
+                  fiedName="lblAddLine"
+                  [formModel]="fmSalesInvoicesLines"
+                  default="Thêm dòng"
+                ></codx-label>
+              </button>
+            </div>
           </ng-template>
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
 
-    <div class="d-flex justify-content-center my-3">
-      <button
-        class="btn btn-light-primary btn-sm mt-3 d-flex align-items-center"
-        (click)="onClickAddRow()"
-      >
-        <i class="icon-add icon-16 ms-n1"></i>
-        <codx-label
-          fiedName="lblAddLine"
-          [formModel]="fmSalesInvoicesLines"
-          default="Thêm dòng"
-        ></codx-label>
-      </button>
-    </div>
-
-    <div class="row mt-5">
+    <div class="row pt-5 section3">
       <div class="col-5 form-group">
         <codx-label fiedName="memo" [formModel]="form.formModel"></codx-label>
         <codx-input
