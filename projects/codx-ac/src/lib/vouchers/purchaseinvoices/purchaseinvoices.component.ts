@@ -221,6 +221,14 @@ export class PurchaseinvoicesComponent extends UIComponent {
             option,
             this.view.funcID
           );
+          this.dialog.closed.subscribe((res) => {
+            if (res.event != null) {
+              if (res.event['update']) {
+                this.itemSelected = res.event['data'];
+                this.loadDatadetail(this.itemSelected);
+              }
+            }
+          });
         }
       });
   }
@@ -267,6 +275,18 @@ export class PurchaseinvoicesComponent extends UIComponent {
   //#endregion
 
   //#region Function
+  changeItemDetail(event) {
+    if (event?.data.data || event?.data.error) {
+      return;
+    } else {
+      if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+        return;
+      } else {
+        this.itemSelected = event?.data;
+        this.loadDatadetail(this.itemSelected);
+      }
+    }
+  }
 
   clickChange(data) {
     this.itemSelected = data;
