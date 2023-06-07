@@ -445,7 +445,7 @@
   *ngIf="canceledProcess?.length > 0 "
 >
 
-<codx-label class="fw-bold fs-5 text-primary py-2" default="Quy trình duyệt đã hủy" name="lblCanceledTrans" (click)="showCanceledTrans(showCanceled)"></codx-label>
+<codx-label class="fw-bold fs-5 text-primary py-2 cursor-pointer" default="Quy trình duyệt đã hủy" name="lblCanceledTrans" (click)="showCanceledTrans(showCanceled)"></codx-label>
 
 <ng-container *ngIf="showCanceled">
   <ng-container *ngFor="let gr of canceledProcess">
