@@ -1132,8 +1132,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           meeting.meetingName = data?.taskName;
           meeting.meetingType = '1';
           meeting.reminder = Number.isNaN(data.reminders)
-            ? Number.parseInt(data.reminders)
-            : 0;
+            ? 0
+            : Number.parseInt(data.reminders);
           let option = new SidebarModel();
           option.Width = '800px';
           option.zIndex = 1011;

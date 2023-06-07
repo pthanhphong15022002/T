@@ -78,6 +78,9 @@
           <ng-container *ngSwitchCase="'.xls'">
             <ng-container *ngTemplateOutlet="forexcel"></ng-container
           ></ng-container>
+          <ng-container *ngSwitchDefault>
+            <ng-container *ngTemplateOutlet="default"></ng-container
+          ></ng-container>
         </ng-container>
       </ng-container>
       <ng-template #formword
@@ -111,6 +114,9 @@
           id="frame"
         ></iframe
       ></ng-template>
+      <ng-template #default>
+        <img [src]="'../../../assets/codx/dms/'+dmSV.getAvatar(this.data?.extension)"/>
+      </ng-template>
     </ng-template>
 
     <img *ngIf="isImg" [src]="linkFile" class="w-100 h-100" />
