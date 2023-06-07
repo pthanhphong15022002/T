@@ -2,40 +2,40 @@
   [dialog]="dialogRef" [formModel]="formModel" [data]="kr" *ngIf="isAfterRender">
   
   <ng-template #body>
-    <ng-container *ngIf="form && form.formGroup">
+    <ng-container *ngIf="form && form?.formGroup">
       <div class="form-group">
-        <codx-label fiedName="ParentID" [formModel]="form.formModel">
+        <codx-label fiedName="ParentID" [formModel]="form?.formModel">
         </codx-label>
-        <codx-input ControlName="parentID" [formModel]="form.formModel" [Group]="form.formGroup" >
+        <codx-input ControlName="parentID" [formModel]="form?.formModel" [Group]="form?.formGroup" >
         </codx-input>
       </div>
 
       <div class="form-group">
-        <codx-label fiedName="OKRName" [formModel]="form.formModel">
+        <codx-label fiedName="OKRName" [formModel]="form?.formModel">
         </codx-label>
-        <codx-input ControlName="okrName" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="okrName" [formModel]="form?.formModel" [Group]="form?.formGroup">
         </codx-input>
       </div>
 
       <div class="row">
         <div class="form-group col-6">
-          <codx-label fiedName="Measurement" [formModel]="form.formModel">
+          <codx-label fiedName="Measurement" [formModel]="form?.formModel">
           </codx-label>
-          <codx-input ControlName="measurement" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+          <codx-input ControlName="measurement" [formModel]="form?.formModel" [Group]="form?.formGroup"></codx-input>
         </div>
 
         <div class="form-group col-3">
-          <codx-label fiedName="Target" [formModel]="form.formModel">
+          <codx-label fiedName="Target" [formModel]="form?.formModel">
           </codx-label>
-          <codx-input ControlName="target" [formModel]="form.formModel" [Group]="form.formGroup"
+          <codx-input ControlName="target" [formModel]="form?.formModel" [Group]="form?.formGroup"
             (valueChange)="targetChange($event)">
           </codx-input>
         </div>
 
         <div class="form-group col-3 ps-0">
-          <codx-label fiedName="UMID" [formModel]="form.formModel">
+          <codx-label fiedName="UMID" [formModel]="form?.formModel">
           </codx-label>
-          <codx-input ControlName="umid" [formModel]="form.formModel" [Group]="form.formGroup">
+          <codx-input ControlName="umid" [formModel]="form?.formModel" [Group]="form?.formGroup">
           </codx-input>
         </div>
 
@@ -43,16 +43,16 @@
 
       <div class="row">
         <div class="form-group col-6">
-          <codx-label fiedName="Category" [formModel]="form.formModel">
+          <codx-label fiedName="Category" [formModel]="form?.formModel">
           </codx-label>
-          <codx-input ControlName="category" [formModel]="form.formModel" [Group]="form.formGroup">
+          <codx-input ControlName="category" [formModel]="form?.formModel" [Group]="form?.formGroup">
           </codx-input>
         </div>
 
         <div class="form-group col-6">
-          <codx-label fiedName="Plan" [formModel]="form.formModel">
+          <codx-label fiedName="Plan" [formModel]="form?.formModel">
           </codx-label>
-          <codx-input ControlName="plan" [formModel]="form.formModel" [Group]="form.formGroup"
+          <codx-input ControlName="plan" [formModel]="form?.formModel" [Group]="form?.formGroup"
             (valueChange)="planChange($event)">
           </codx-input>
         </div>
@@ -61,15 +61,15 @@
 
       <div class="row form-group mb-0">
         <div class="col-6">
-          <codx-label fiedName="Frequence" [formModel]="form.formModel">
+          <codx-label fiedName="Frequence" [formModel]="form?.formModel">
           </codx-label>
-          <codx-input ControlName="frequence" [formModel]="form.formModel" [Group]="form.formGroup">
+          <codx-input ControlName="frequence" [formModel]="form?.formModel" [Group]="form?.formGroup">
           </codx-input>
         </div>
         <div class="col-6">
-          <codx-label fiedName="CheckInMode" [formModel]="form.formModel">
+          <codx-label fiedName="CheckInMode" [formModel]="form?.formModel">
           </codx-label>
-          <codx-input ControlName="checkInMode" [formModel]="form.formModel" [Group]="form.formGroup">
+          <codx-input ControlName="checkInMode" [formModel]="form?.formModel" [Group]="form?.formGroup">
           </codx-input>
         </div>
         <!-- <div class="col-1 position-relative">
@@ -108,23 +108,23 @@
       </div>
       <!-- <div class="row">
       <div class="form-group col-4">
-        <codx-label default="Nguồn dữ liệu" fiedName="" [formModel]="form.formModel">
+        <codx-label default="Nguồn dữ liệu" fiedName="" [formModel]="form?.formModel">
         </codx-label>
         <codx-input
           ControlName="oKRName"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
+          [formModel]="form?.formModel"
+          [Group]="form?.formGroup"
         >
         </codx-input>
       </div>
 
       <div class="form-group col-6">
-        <codx-label fiedName="" [formModel]="form.formModel">
+        <codx-label fiedName="" [formModel]="form?.formModel">
         </codx-label>
         <codx-input
           ControlName="checkInMode"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
+          [formModel]="form?.formModel"
+          [Group]="form?.formGroup"
         >
         </codx-input>
       </div>
@@ -135,18 +135,28 @@
     </div> -->
 
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="owner">
+        <codx-label [formModel]="form?.formModel" fiedName="Owner"></codx-label>
+        <codx-input [formModel]="form?.formModel" [Group]="form?.formGroup" ControlName="owner">
         </codx-input>
       </div>
+      <!-- <div class="form-group">
+        <codx-label [formModel]="form?.formModel" fiedName="PersonIncharge"></codx-label>
+        <codx-input [formModel]="form?.formModel" [Group]="form?.formGroup" ControlName="personIncharge">
+        </codx-input>
+      </div> -->
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="note">
+        <codx-label default="Người phụ trách" name="lblPersonIncharge"></codx-label>
+        <codx-input placeholder="Chọn người phụ trách" field="personIncharge" [crrValue]="kr?.personIncharge" type="combobox" refValue="Users" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      <div class="form-group">      
+        <codx-label [formModel]="form?.formModel" fiedName="Note"></codx-label>
+        <codx-input [formModel]="form?.formModel" [Group]="form?.formGroup" ControlName="note">
         </codx-input>
       </div>
       <!-- <div class="row">
       <div class="form-group col-10 d-flex align-items-center">      
-        <codx-label default="Liên kết mục tiêu" fiedName="" [formModel]="form.formModel">
+        <codx-label default="Liên kết mục tiêu" fiedName="" [formModel]="form?.formModel">
         </codx-label>
       </div>
       <div class="form-group col-2 d-flex justify-content-end">
@@ -161,10 +171,10 @@
       <button class="btn btn-outline-primary d-flex flex-row justify-content-center"
         (click)="openPopupTarget(popupTarget)">
         <span class="icon-airplay btn-text-primary me-2"></span>
-        <codx-label name="lbl" class="fw-normal" default="Phân bố chỉ tiêu" [formModel]="form.formModel"></codx-label>
+        <codx-label name="lbl" class="fw-normal" default="Phân bố chỉ tiêu" [formModel]="form?.formModel"></codx-label>
       </button>
       <button class="btn btn-primary" (click)="onSaveForm()">
-        <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
+        <codx-label name="lblSave" default="Lưu" [formModel]="form?.formModel"></codx-label>
       </button>
     </div>
   </ng-template>
@@ -176,7 +186,7 @@
           <div class="d-flex justify-content-between align-items-center">
             <div class="d-flex flex-column">
               <div class="fs-4 fw-bold mb-1" id="modal-basic-title">
-                <codx-label name="lbl" default="Kế hoạch chỉ tiêu" [formModel]="form.formModel"></codx-label>
+                <codx-label name="lbl" default="Kế hoạch chỉ tiêu" [formModel]="form?.formModel"></codx-label>
               </div>
               <div class="place-holder">
                 <codx-label name="lblTargetsTitle"
@@ -230,7 +240,7 @@
         <div class="d-flex flex-column flex-grow-1">
           <div class="d-flex justify-content-between align-items-center">
             <h2 id="modal-basic-title">
-              <codx-label name="lbl" default="Tần suất cập nhật" [formModel]="form.formModel"></codx-label>
+              <codx-label name="lbl" default="Tần suất cập nhật" [formModel]="form?.formModel"></codx-label>
             </h2>
             <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
               (click)="dialogRef.close()">
@@ -291,7 +301,7 @@
         <div class="w-100 d-flex justify-content-end">
 
           <button class="btn btn-primary" (click)="onSaveCheckIn()" [disabled]="onSaving">
-            <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
+            <codx-label name="lblSave" default="Lưu" [formModel]="form?.formModel"></codx-label>
           </button>
         </div>
       </div>

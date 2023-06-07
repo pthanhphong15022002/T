@@ -176,8 +176,8 @@ export class PopupAddKRComponent extends UIComponent {
   //-----------------------------------Base Event------------------------------------//
   //---------------------------------------------------------------------------------//
   valueChange(evt: any) {
-    if (evt && evt.field) {
-      this.kr[evt.field] = evt.data;
+    if (evt && evt?.field) {
+      this.kr[evt?.field] = evt?.data;
     }
     this.detectorRef.detectChanges();
   }
@@ -435,12 +435,13 @@ export class PopupAddKRComponent extends UIComponent {
       this.calculatorTarget(this.kr?.plan);
     }
 
-    this.editTargets = [];
-
-    for (let i = 0; i < this.kr.targets.length; i++) {
-      this.editTargets.push({ ...this.kr.targets[i] });
-    }
-
+    
+    if(this.kr?.targets && this.kr.targets?.length > 0){
+      this.editTargets = [];
+      for (let i = 0; i < this.kr.targets.length; i++) {
+        this.editTargets.push({ ...this.kr.targets[i] });
+      }
+    }    
     let popUpHeight = this.kr?.plan == OMCONST.VLL.Plan.Month ? 580 : 220;
     this.dialogTargets = this.callfc.openForm(template, '', 650, 500, null);
     this.detectorRef.detectChanges();
