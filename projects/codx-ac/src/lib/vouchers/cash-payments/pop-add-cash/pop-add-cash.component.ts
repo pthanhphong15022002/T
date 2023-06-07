@@ -61,6 +61,7 @@ import { CashReceiptsLines } from '../../../models/CashReceiptsLines.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PopUpCashComponent } from '../pop-up-cash/pop-up-cash.component';
 import { E } from '@angular/cdk/keycodes';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 declare var window: any;
 @Component({
   selector: 'lib-pop-add-cash',
@@ -151,6 +152,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
+    private ngxService: NgxUiLoaderService,
     private auth: AuthService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
@@ -200,6 +202,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {
+    this.ngxService.startLoader('loader');
     this.loadInit();
   }
 
@@ -476,6 +479,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.loadAccountControl(this.gridCash.visibleColumns);
     this.gridCash.hideColumns(this.lockFields);
     this.visibleColumns = this.gridCash.visibleColumns;
+    this.ngxService.stopLoader('loader');
+    this.ngxService.destroyLoaderData('loader');
     // setTimeout(() => {
     //   let hBody, hHeader, hTab, hItem;
     //   let body = document.getElementsByClassName('card-body scroll-y h-100');
@@ -789,9 +794,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       });
   }
 
-  actionEvent(e:any){
-
-  }
+  actionEvent(e: any) {}
 
   setDefault(o) {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
@@ -1235,8 +1238,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 idx = this.gridCash.dataSource.length;
                 res.rowNo = idx + 1;
                 if (res.unbounds && res.unbounds.requireFields.length) {
-                 this.requireFields = res.unbounds.requireFields as Array<string>;
-                 this.requireGrid();
+                  this.requireFields = res.unbounds
+                    .requireFields as Array<string>;
+                  this.requireGrid();
                 }
                 this.gridCash.endEdit();
                 this.gridCash.addRow(res, idx);
