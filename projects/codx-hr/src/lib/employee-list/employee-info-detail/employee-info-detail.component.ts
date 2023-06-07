@@ -271,6 +271,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //#region filter variables of form main eDiseases
   Filter_By_EDiseases_IDArr: any = [];
   Filter_EDiseases_Predicates: string;
+
+  //#region filter variables of form main eAccident
   filterByAccidentIDArr: any = [];
   filterAccidentIdPredicate: string;
 
@@ -585,13 +587,19 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   eAccidentHeaderText;
   //#endregion
 
+  currentYear = new Date().getFullYear();
+ firstDay = new Date(this.currentYear, 0, 1);
+ lastDay = new Date(this.currentYear, 11, 31);
+ dayOffInitPredicate =  `(EmployeeID=@0 and (BeginDate>="${this.firstDay.toISOString()}" and EndDate<="${this.lastDay.toISOString()}"))`
+//  "(EmployeeID=="E0007" and (KowID==@0) and (BeginDate>="2022-12-31T17:00:00.000Z" and EndDate<="2023-12-31T16:59:59.999Z"))"
+
   //#region headerTextString
   addHeaderText;
   editHeaderText;
   //#endregion
 
   //#region filter variables of form main eDayoffs
-  filterByKowIDArr: [];
+  filterByKowIDArr: any = [];
   yearFilterValueDayOffs;
   startDateEDayoffFilterValue;
   endDateEDayoffFilterValue;
@@ -2410,6 +2418,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     console.log('info perrrrrson', this.infoPersonal)
 
     this.initHRProcess();
+  }
+
+  UpdateDataOnGrid(gridView: CodxGridviewV2Component ,lst, prdc, dtvl){
+    gridView.predicates = prdc,
+    gridView.dataValues = dtvl,
+    gridView.dataSource = lst;
+    debugger
   }
 
   checkIsNewestDate(effectedDate, expiredDate){
@@ -5019,14 +5034,26 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       opt
     );
     popup.closed.subscribe((res) => {
-      if (res?.event) {
-        if (res?.event == 'none') {
-          this.listCrrBenefit = null;
-        } else {
-          this.listCrrBenefit = res.event;
+
+      // Do popup view all có sử dụng filter nên sẽ ko tiện lấy giá trị mới nhất
+      // trả về từ popupview all nữa
+      // if (res?.event) {
+      //   if (res?.event == 'none') {
+      //     this.listCrrBenefit = null;
+      //   } else {
+      //     this.listCrrBenefit = res.event;
+      //   }
+      //   this.df.detectChanges();
+      // }
+
+      // Thay vào đó gọi api lấy lại tất cả benefit mới nhất luôn
+      this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
+        if (res) {
+          debugger
+          this.listCrrBenefit = res;
+          this.df.detectChanges();
         }
-        this.df.detectChanges();
-      }
+      });
     });
     // this.headerTextBenefit =
     //   this.getFormHeader(this.benefitFuncID) + ' | ' + 'Tất cả';
@@ -5385,30 +5412,37 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       );
     }
     if (actionType == 'add' || actionType == 'copy') {
-      (gridView?.dataService as CRUDService)?.add(newData, 0).subscribe();
-      gridView.addRow(newData, 0, true);
+      // (gridView?.dataService as CRUDService)?.add(newData, 0).subscribe();
+      // gridView.addRow(newData, 0, true);
+
+      //Gọi refresh luôn để dữ liệu hiển thị đúng theo sort
+      gridView.refresh();
+
       returnVal = 1;
     } else if (actionType == 'edit') {
-      (gridView?.dataService as CRUDService)?.update(newData).subscribe();
-      gridView.updateRow(index, newData, false);
+      // (gridView?.dataService as CRUDService)?.update(newData).subscribe();
+      // gridView.updateRow(index, newData, false);
+
+      //Gọi refresh luôn để dữ liệu hiển thị đúng theo sort
+      gridView.refresh();
     } else if ((actionType = 'delete')) {
       (gridView?.dataService as CRUDService)?.remove(oldData).subscribe();
       gridView.deleteRow(oldData,true);
       returnVal = -1;
     }
     this.df.detectChanges();
-    if (gridView.formModel.entityName == this.ePassportFormModel.entityName) {
-      this.crrPassport = gridView.dataService.data[0];
-    } else if (
-      gridView.formModel.entityName == this.eVisaFormModel.entityName
-    ) {
-      this.crrVisa = gridView.dataService.data[0];
-    } else if (
-      gridView.formModel.entityName == this.eWorkPermitFormModel.entityName
-    ) {
-      this.crrWorkpermit = gridView.dataService.data[0];
-    }
-    this.df.detectChanges();
+    // if (gridView.formModel.entityName == this.ePassportFormModel.entityName) {
+    //   this.crrPassport = gridView.dataService.data[0];
+    // } else if (
+    //   gridView.formModel.entityName == this.eVisaFormModel.entityName
+    // ) {
+    //   this.crrVisa = gridView.dataService.data[0];
+    // } else if (
+    //   gridView.formModel.entityName == this.eWorkPermitFormModel.entityName
+    // ) {
+    //   this.crrWorkpermit = gridView.dataService.data[0];
+    // }
+    // this.df.detectChanges();
     return returnVal;
   }
 
@@ -5494,18 +5528,25 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.Filter_Award_Predicates = `(EmployeeID=="${this.employeeID}")`;
       (this.AwardGrid.dataService as CRUDService)
         .setPredicates([this.Filter_Award_Predicates], [''])
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.AwardGrid , res, this.Filter_Award_Predicates,null)
+        });
     } else {
       this.Start_Date_Award_Filter_Value = evt.fromDate.toJSON();
       this.End_Date_Award_Filter_Value = evt.toDate.toJSON();
+      let inYear =new Date(this.End_Date_Award_Filter_Value).getFullYear();
+      this.Filter_Award_Predicates = `(EmployeeID=="${this.employeeID}" and InYear=="${inYear}")`;
+
       (this.AwardGrid.dataService as CRUDService)
         .setPredicates(
           [
-            `(EmployeeID=="${this.employeeID}" and AwardDate>="${this.Start_Date_Award_Filter_Value}" and AwardDate<="${this.End_Date_Award_Filter_Value}")`,
+            this.Filter_Award_Predicates
           ],
           []
         )
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.AwardGrid , res, this.Filter_Award_Predicates,null)
+        });
     }
   }
   valueChangeYearFilterEAsset(evt) {
@@ -5541,7 +5582,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           [this.filterEVaccinePredicates],
           [this.filterByVaccineTypeIDArr.join(';')]
         )
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.eVaccinesGrid , res, this.filterEVaccinePredicates,this.filterByVaccineTypeIDArr.join(';'))
+        });
     } else if (
       this.filterByVaccineTypeIDArr?.length > 0 &&
       (this.startDateEVaccineFilterValue == undefined ||
@@ -5562,7 +5605,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           [this.filterEVaccinePredicates],
           [this.filterByVaccineTypeIDArr.join(';')]
         )
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.eVaccinesGrid , res, this.filterEVaccinePredicates,this.filterByVaccineTypeIDArr.join(';'))
+        });
     } else if (
       this.filterByVaccineTypeIDArr?.length <= 0 &&
       this.startDateEVaccineFilterValue != null
@@ -5570,7 +5615,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.filterEVaccinePredicates = `(EmployeeID=="${this.employeeID}" and InjectDate>="${this.startDateEVaccineFilterValue}" and InjectDate<="${this.endDateEVaccineFilterValue}")`;
       (this.eVaccinesGrid.dataService as CRUDService)
         .setPredicates([this.filterEVaccinePredicates], [])
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.eVaccinesGrid , res, this.filterEVaccinePredicates,null)
+        });
     } else if (
       this.filterByVaccineTypeIDArr?.length <= 0 &&
       (this.startDateEVaccineFilterValue == undefined ||
@@ -5579,7 +5626,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.filterEVaccinePredicates = `(EmployeeID=="${this.employeeID}")`;
       (this.eVaccinesGrid.dataService as CRUDService)
         .setPredicates([this.filterEVaccinePredicates], [''])
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.eVaccinesGrid , res, this.filterEVaccinePredicates,null)
+        });
     }
   }
 
@@ -5591,7 +5640,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.filterESkillPredicates = `(EmployeeID=="${this.employeeID}")`;
       (this.skillGrid.dataService as CRUDService)
         .setPredicates([this.filterESkillPredicates], [''])
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.skillGrid , res, this.filterESkillPredicates,null)
+        });
     } else {
       this.filterESkillPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       for (let i = 0; i < lengthArr; i++) {
@@ -5607,7 +5658,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           [this.filterESkillPredicates],
           [this.filterByESkillIDArr.join(';')]
         )
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.skillGrid , res, this.filterESkillPredicates,this.filterByESkillIDArr.join(';'))
+        });
     }
   }
 
@@ -5633,7 +5686,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           [this.Filter_ETrainCourse_Predicates],
           [this.Filter_By_ETrainCourse_IDArr.join(';')]
         )
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.eTrainCourseGrid , res, this.Filter_ETrainCourse_Predicates,this.Filter_By_ETrainCourse_IDArr.join(';'))
+        });
     } else if (
       this.Filter_By_ETrainCourse_IDArr?.length > 0 &&
       (this.Start_Date_ETrainCourse_Filter_Value == undefined ||
@@ -5654,7 +5709,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           [this.Filter_ETrainCourse_Predicates],
           [this.Filter_By_ETrainCourse_IDArr.join(';')]
         )
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.eTrainCourseGrid , res, this.Filter_ETrainCourse_Predicates,this.Filter_By_ETrainCourse_IDArr.join(';'))
+        });
     } else if (
       this.Filter_By_ETrainCourse_IDArr?.length <= 0 &&
       this.Start_Date_ETrainCourse_Filter_Value != null
@@ -5662,7 +5719,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}" and TrainFromDate>="${this.Start_Date_ETrainCourse_Filter_Value}" and TrainFromDate<="${this.End_Date_ETrainCourse_Filter_Value}")`;
       (this.eTrainCourseGrid.dataService as CRUDService)
         .setPredicates([this.Filter_ETrainCourse_Predicates], [])
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.eTrainCourseGrid , res, this.Filter_ETrainCourse_Predicates,null)
+        });
     } else if (
       this.Filter_By_ETrainCourse_IDArr?.length <= 0 &&
       (this.Start_Date_ETrainCourse_Filter_Value == undefined ||
@@ -5671,7 +5730,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}")`;
       (this.eTrainCourseGrid.dataService as CRUDService)
         .setPredicates([this.Filter_ETrainCourse_Predicates], [''])
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.eTrainCourseGrid , res, this.Filter_ETrainCourse_Predicates,null)
+        });
     }
   }
 
@@ -5682,7 +5743,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.Filter_EDiseases_Predicates = `(EmployeeID=="${this.employeeID}")`;
       (this.eDiseasesGrid.dataService as CRUDService)
         .setPredicates([this.Filter_EDiseases_Predicates], [''])
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.eDiseasesGrid , res, this.Filter_EDiseases_Predicates,null)
+        });
     } else {
       this.Filter_EDiseases_Predicates = `(EmployeeID=="${this.employeeID}" and (`;
       for (let i = 0; i < lengthArr; i++) {
@@ -5698,7 +5761,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           [this.Filter_EDiseases_Predicates],
           [this.Filter_By_EDiseases_IDArr.join(';')]
         )
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.eDiseasesGrid , res, this.Filter_EDiseases_Predicates,this.Filter_By_EDiseases_IDArr.join(';'))
+        });
     }
   }
   // filter đào tạo
@@ -5739,28 +5804,35 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   valueChangeYearFilterBusinessTravel(evt) {
+    debugger
     if (evt.formatDate == undefined && evt.toDate == undefined) {
       this.startDateBusinessTravelFilterValue = null;
       this.endDateBusinessTravelFilterValue = null;
       this.filterBusinessTravelPredicates = `(EmployeeID=="${this.employeeID}")`;
       (this.businessTravelGrid.dataService as CRUDService)
         .setPredicates([this.filterBusinessTravelPredicates], [''])
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.businessTravelGrid , res, this.filterBusinessTravelPredicates,null)
+        });
     } else {
       this.startDateBusinessTravelFilterValue = evt.fromDate.toJSON();
       this.endDateBusinessTravelFilterValue = evt.toDate.toJSON();
+      this.filterBusinessTravelPredicates = `(EmployeeID=="${this.employeeID}" and BeginDate>="${this.startDateBusinessTravelFilterValue}" and EndDate<="${this.endDateBusinessTravelFilterValue}")`;
       (this.businessTravelGrid.dataService as CRUDService)
         .setPredicates(
           [
-            `(EmployeeID=="${this.employeeID}" and BeginDate>="${this.startDateBusinessTravelFilterValue}" and EndDate<="${this.endDateBusinessTravelFilterValue}")`,
+            this.filterBusinessTravelPredicates
           ],
           []
         )
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.businessTravelGrid , res, this.filterBusinessTravelPredicates,null)
+        });
     }
   }
 
   UpdateEDayOffsPredicate() {
+    debugger
     this.filterEDayoffPredicates = '';
     if (
       this.filterByKowIDArr?.length > 0 &&
@@ -5782,7 +5854,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           [this.filterEDayoffPredicates],
           [this.filterByKowIDArr.join(';')]
         )
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.dayoffGrid , res, this.filterEDayoffPredicates,this.filterByKowIDArr.join(';'))
+        });
     } else if (
       this.filterByKowIDArr?.length > 0 &&
       (this.startDateEDayoffFilterValue == undefined ||
@@ -5803,7 +5877,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           [this.filterEDayoffPredicates],
           [this.filterByKowIDArr.join(';')]
         )
-        .subscribe();
+        .subscribe(
+          (res) => {
+            this.UpdateDataOnGrid(this.dayoffGrid , res, this.filterEDayoffPredicates,this.filterByKowIDArr.join(';'))
+          }
+        );
     } else if (
       this.filterByKowIDArr?.length <= 0 &&
       this.startDateEDayoffFilterValue != null
@@ -5811,7 +5889,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}" and BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}")`;
       (this.dayoffGrid.dataService as CRUDService)
         .setPredicates([this.filterEDayoffPredicates], [])
-        .subscribe();
+        .subscribe(
+          (res) => {
+            this.UpdateDataOnGrid(this.dayoffGrid , res, this.filterEDayoffPredicates,null)
+          }
+        );
     } else if (
       this.filterByKowIDArr?.length <= 0 &&
       (this.startDateEDayoffFilterValue == undefined ||
@@ -5820,7 +5902,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}")`;
       (this.dayoffGrid.dataService as CRUDService)
         .setPredicates([this.filterEDayoffPredicates], [''])
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.dayoffGrid , res, this.filterEDayoffPredicates,null)
+        });
     }
   }
 
@@ -5830,6 +5914,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   valueChangeYearFilterDayOff(evt) {
+    debugger
     if (evt.formatDate == undefined && evt.toDate == undefined) {
       this.startDateEDayoffFilterValue = null;
       this.endDateEDayoffFilterValue = null;
@@ -5848,7 +5933,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.filterAccidentIdPredicate = `(EmployeeID=="${this.employeeID}")`;
       (this.eAccidentGridView.dataService as CRUDService)
         .setPredicates([this.filterAccidentIdPredicate], [''])
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.eAccidentGridView , res, this.filterAccidentIdPredicate,null)
+        });
     } else {
       this.filterAccidentIdPredicate = `(EmployeeID=="${this.employeeID}" and (`;
       for (let i = 0; i < lengthArr; i++) {
@@ -5864,7 +5951,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           [this.filterAccidentIdPredicate],
           [this.filterByAccidentIDArr.join(';')]
         )
-        .subscribe();
+        .subscribe((res) => {
+          this.UpdateDataOnGrid(this.eAccidentGridView , res, this.filterAccidentIdPredicate,this.filterByAccidentIDArr.join(';'))
+        });
     }
   }
 
