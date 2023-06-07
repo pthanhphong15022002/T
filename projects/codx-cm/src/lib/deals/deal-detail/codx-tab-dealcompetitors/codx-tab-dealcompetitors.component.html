@@ -2,22 +2,8 @@
   <div class="d-flex">
     <button
       type="button"
-      class="btn btn-sm btn-icon btn-primary me-2 d-flex"
-      style="min-width: 180px"
-      (click)="clickAddCompetitor(moreFuncAdd, 'add', null)"
-    >
-      <i class="icon-check-correct icon-16 me-1"></i>
-      <codx-label
-        name="lblSelectCompetitors"
-        [formModel]="formModel"
-        default="Chọn đối thủ từ hệ thống"
-      ></codx-label>
-    </button>
-
-    <button
-      type="button"
       class="btn btn-sm btn-primary"
-      (click)="clickAddCompetitor(moreFuncAdd, 'add', null, true)"
+      (click)="clickAddCompetitor(moreFuncAdd, 'add', null)"
     >
       <i class="icon-person_add_alt_1 icon-16 me-1"></i>
       <codx-label
