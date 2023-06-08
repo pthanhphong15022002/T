@@ -41,7 +41,6 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
   journals: any;
   objectIdim: any;
   lockFields: any;
-  items: any;
   hasSave: boolean = false;
   purchaseInvoicesLines: PurchaseInvoicesLines;
   purchaseInvoices: PurchaseInvoices;
@@ -80,7 +79,6 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.loadItems();
   }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
@@ -263,19 +261,15 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     }
   }
 
-  loadItems(){
-    this.api.exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
-    .subscribe((res: any) => {
-      if (res != null) {
-        this.items = res;
-      }
-    });
-  }
-
   loadItemNameAndItemUMID(itemID: any){
-    var item = this.items.filter(x => x.itemID == itemID);
-    this.purchaseInvoicesLines.itemName = item[0].itemName;
-    this.purchaseInvoicesLines.umid = item[0].umid;
-    this.form.formGroup.patchValue(this.purchaseInvoicesLines);
+    this.api.exec('IV', 'ItemsBusiness', 'LoadDataAsync', [itemID])
+      .subscribe((res: any) => {
+        if (res)
+        {
+          this.purchaseInvoicesLines.itemName = res.itemName;
+          this.purchaseInvoicesLines.umid = res.umid;
+          this.form.formGroup.patchValue(this.purchaseInvoicesLines);
+        }
+      });
   }
 }

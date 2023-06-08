@@ -31,24 +31,19 @@
       </div>
 
       <div class="text-gray-600 mb-1 fs-7">
-        <ng-container *ngIf="data.positionID">
-          <!-- <span [innerHTML]=" data.positionID| formatvalue : view.formModel : 'positionID' | async"></span> -->
-          <span>{{data.positionName? data.positionName : data.positionID}}</span>
-        </ng-container>
+        <!-- <span [innerHTML]=" data.positionID| formatvalue : view.formModel : 'positionID' | async"></span> -->
+        <span *ngIf="data.positionID">{{data.positionName? data.positionName : data.positionID}}</span>
       </div>
 
       <div class="text-gray-700 mb-1">
-        <ng-container *ngIf="data.orgUnitID">
-          <!-- <span [innerHTML]="data.orgUnitID | formatvalue : view.formModel : 'orgUnitID' | async"></span> -->
-          <span>{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
-        </ng-container>
+        <!-- <span [innerHTML]="data.orgUnitID | formatvalue : view.formModel : 'orgUnitID' | async"></span> -->
+        <span *ngIf="data.orgUnitID">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
+
       </div>
 
       <div class="text-gray-600">
-        <ng-container *ngIf="data.departmentID">
-          <!-- <span #departmentName [innerHTML]="data.departmentID| formatvalue : view.formModel : 'departmentID'| async"></span> -->
-          <span>{{data.departmentName? data.departmentName : data.departmentID}}</span>
-        </ng-container>
+        <!-- <span #departmentName [innerHTML]="data.departmentID| formatvalue : view.formModel : 'departmentID'| async"></span> -->
+        <span *ngIf="data.departmentID">{{data.departmentName? data.departmentName : data.departmentID}}</span>
         <ng-container *ngIf="data?.departmentID && data.divisionID">
           <span class="text-gray-400 mx-1">,</span>
         </ng-container>
@@ -204,36 +199,25 @@
         <div class="d-flex flex-column">
           <div class="d-flex align-items-center mb-1">
             <ng-container *ngIf="data.employeeName">
-              <span class="fw-bold fs-6 me-3 text-nowrap item-active" (click)="clickViewEmpInfo(data)">{{
-                data.employeeName }}</span>
+              <span class="fw-bold fs-6 me-3 text-nowrap item-active" (click)="clickViewEmpInfo(data)">{{data.employeeName }}</span>
               <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
               <span class="text-danger">{{ data.employeeID }}</span>
             </ng-container>
           </div>
           <div class="text-gray-600 mb-1 fs-7">
-            <ng-container *ngIf="data.positionID">
-              <!-- <span [innerHTML]=" data.positionID| formatvalue : view.formModel : 'positionID' | async"></span> -->
-              <span>{{data.positionName? data.positionName : data.positionID}}</span>
-            </ng-container>
+            <!-- <span [innerHTML]=" data.positionID| formatvalue : view.formModel : 'positionID' | async"></span> -->
+            <span *ngIf="data.positionID">{{data.positionName? data.positionName : data.positionID}}</span>
           </div>
           <div class="text-gray-700 mb-1">
-            <ng-container *ngIf="data.orgUnitID">
-              <!-- <span [innerHTML]="data.orgUnitID | formatvalue : view.formModel : 'orgUnitID' | async"></span> -->
-              <span>{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
-            </ng-container>
+            <!-- <span [innerHTML]="data.orgUnitID | formatvalue : view.formModel : 'orgUnitID' | async"></span> -->
+            <span *ngIf="data.orgUnitID">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
           </div>
           <div class="text-gray-600">
-            <ng-container *ngIf="data.departmentID">
-              <!-- <span #departmentName [innerHTML]="data.departmentID| formatvalue : view.formModel : 'departmentID'| async"></span> -->
-              <span>{{data.departmentName? data.departmentName : data.departmentID}}</span>
-            </ng-container>
-            <ng-container *ngIf="data?.departmentID && data.divisionID">
-              <span class="text-gray-400 mx-1">,</span>
-            </ng-container>
-            <ng-container *ngIf="data.divisionID">
-              <!-- <span #divisionName [innerHTML]="data.divisionID | formatvalue : view.formModel : 'divisionID' | async"></span> -->
-              <span>{{data.divisionName? data.divisionName: data.divisionID }}</span>
-            </ng-container>
+            <!-- <span #departmentName [innerHTML]="data.departmentID| formatvalue : view.formModel : 'departmentID'| async"></span> -->
+            <span *ngIf="data.departmentID">{{data.departmentName? data.departmentName : data.departmentID}}</span>
+            <span *ngIf="data?.departmentID && data.divisionID" class="text-gray-400 mx-1">,</span>
+            <!-- <span #divisionName [innerHTML]="data.divisionID | formatvalue : view.formModel : 'divisionID' | async"></span> -->
+            <span *ngIf="data.divisionID">{{data.divisionName? data.divisionName: data.divisionID }}</span>
           </div>
         </div>
       </div>
@@ -278,7 +262,8 @@
             <codx-label [setRequire]="false" [fiedName]="'BirthPlace'" [formModel]="view.formModel"
               default="Nơi sinh: "></codx-label>
           </span>
-          <span class="text-gray-700" [innerHTML]="data?.birthPlace | formatvalue : view.formModel : 'birthPlace'| async">
+          <span class="text-gray-700"
+            [innerHTML]="data?.birthPlace | formatvalue : view.formModel : 'birthPlace'| async">
           </span>
         </div>
         <div class="align-items-center">
@@ -319,8 +304,8 @@
           </div>
           <div class="align-items-center">
             <span class="text-gray-700 me-1">
-              <codx-label name="lblSenioritydate" [fiedName]="'Senioritydate'" [setRequire]="false" [formModel]="view.formModel"
-                default="Thâm niên: ">
+              <codx-label name="lblSenioritydate" [fiedName]="'Senioritydate'" [setRequire]="false"
+                [formModel]="view.formModel" default="Thâm niên: ">
               </codx-label>
             </span>
             <ng-container *ngIf="data.senioritydate; else noSeniorityDate">

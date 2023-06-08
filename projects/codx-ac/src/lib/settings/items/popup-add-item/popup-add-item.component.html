@@ -26,12 +26,12 @@
     [disabled]="false"
     [value]="item?.industries"
     field="industries"
-    (valueChange)="handleInputChange($event)"
+    (valueChange)="onInputChange($event)"
   ></codx-tag>
 </ng-template>
 
 <ng-template #footer>
-  <button type="button" class="btn btn-primary" (click)="handleClickSave()">
+  <button type="button" class="btn btn-primary" (click)="onClickSave()">
     <codx-label
       fiedName="lblSave"
       [formModel]="dialogRef.formModel"
@@ -122,7 +122,7 @@
         ></codx-input>
       </div>
 
-      <div class="col-5 form-group">
+      <div class="col-5 form-group" *ngIf="item.itemType === '4'">
         <codx-label
           fiedName="assetGroupID"
           [formModel]="form.formModel"
@@ -156,6 +156,7 @@
           field="dimGroupID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          (valueChange)="onDimGroupIDChange($event)"
         ></codx-input>
       </div>
     </div>
@@ -252,205 +253,130 @@
 
 <ng-template #tabSettings>
   <ng-container *ngIf="form.formGroup">
-    <div class="d-flex justify-content-between align-items-center">
-      <codx-label
-        fiedName="lblPacking1"
-        [formModel]="form.formModel"
-        default="Quy cách đóng gói"
-        class="fw-bold fs-5 text-primary"
-      ></codx-label>
+    <ng-container *ngIf="selectedDimGroup?.active0">
+      <div class="d-flex justify-content-between align-items-center">
+        <codx-label
+          fiedName="lblPacking1"
+          [formModel]="form.formModel"
+          default="Quy cách đóng gói"
+          class="fw-bold fs-5 text-primary"
+        ></codx-label>
 
-      <div class="btn btn-icon" (click)="openFormAddItemSize(1)">
-        <i class="bi bi-file-earmark-plus-fill text-primary fs-4"></i>
+        <button class="btn btn-icon" (click)="onClickOpenFormItemSize(1)">
+          <i class="bi bi-file-earmark-plus-fill text-primary fs-4"></i>
+        </button>
       </div>
-    </div>
 
-    <div class="my-3 d-flex flex-wrap gap-3">
-      <div
-        *ngFor="let itemSize of itemSizes1"
-        class="border mw-25 d-flex flex-column align-items-center p-1 position-relative hover-color"
-        role="button"
-        (click)="openFormAddItemSize(1, itemSize)"
-        (mouseenter)="hoveredItemSizeId1 = itemSize.recID"
-        (mouseleave)="hoveredItemSizeId1 = null"
+      <lib-image-box-list
+        [data]="itemSizes1"
+        entityName="IV_ItemSizes"
+        [captionTemplate]="itemSizes1CaptionTemplate"
+        (delete)="onDeleteItemSize($event)"
+        (edit)="onClickOpenFormItemSize(1, $event)"
       >
-        <codx-img
-          [funcId]="form.formModel?.funcID"
-          [objectId]="itemSize.recID"
-          [objectType]="'IV_ItemSizes'"
-          [width]="100"
-          [imgOn]="itemSize.modifiedOn"
-          [isDefaulImg]="true"
-          imageType="square"
-        >
-        </codx-img>
+        <ng-template #itemSizes1CaptionTemplate let-data>
+          {{ data?.sizeID }}
+        </ng-template>
+      </lib-image-box-list>
+    </ng-container>
 
-        <div
-          *ngIf="hoveredItemSizeId1 === itemSize.recID"
-          class="btn btn-icon position-absolute"
-          style="right: 0; top: 0"
-          (click)="deleteItemSize($event, itemSize, 1)"
-        >
-          <i class="bi bi-x-lg"></i>
+    <ng-container *ngIf="selectedDimGroup?.active1">
+      <div class="d-flex justify-content-between align-items-center">
+        <codx-label
+          fiedName="lblAttribute"
+          [formModel]="form.formModel"
+          default="Thuộc tính"
+          class="fw-bold fs-5 text-primary"
+        ></codx-label>
+
+        <div class="btn btn-icon" (click)="onClickOpenFormItemStyle()">
+          <i class="bi bi-file-earmark-plus-fill text-primary fs-4"></i>
         </div>
-
-        <div class="fw-bold">{{ itemSize.sizeID }}</div>
       </div>
-    </div>
 
-    <div class="d-flex justify-content-between align-items-center">
-      <codx-label
-        fiedName="lblAttribute"
-        [formModel]="form.formModel"
-        default="Thuộc tính"
-        class="fw-bold fs-5 text-primary"
-      ></codx-label>
-
-      <div class="btn btn-icon" (click)="openFormAddItemStyle()">
-        <i class="bi bi-file-earmark-plus-fill text-primary fs-4"></i>
-      </div>
-    </div>
-
-    <div class="my-3 d-flex flex-wrap gap-3">
-      <div
-        *ngFor="let itemStyle of itemStyles"
-        class="badge badge badge-pill badge-secondary d-flex align-items-center gap-1"
-        role="button"
-        (click)="openFormAddItemStyle(itemStyle)"
-        (mouseenter)="hoveredStyleId = itemStyle.recID"
-        (mouseleave)="hoveredStyleId = null"
-      >
-        <div>{{ itemStyle.styleID }}</div>
-        <button
-          *ngIf="hoveredStyleId === itemStyle.recID"
-          type="button"
-          class="btn-close"
-          aria-label="Close"
-          (click)="deleteItemStyle($event, itemStyle)"
-        ></button>
-      </div>
-    </div>
-
-    <div class="d-flex justify-content-between align-items-center">
-      <codx-label
-        default="Màu sắc"
-        fiedName="lblColor"
-        [formModel]="form.formModel"
-        class="fw-bold fs-5 text-primary"
-      ></codx-label>
-
-      <div class="btn btn-icon" (click)="openFormAddItemColor()">
-        <i class="bi bi-palette text-primary fs-4"></i>
-      </div>
-    </div>
-
-    <div class="my-3 d-flex flex-wrap gap-3">
-      <div
-        *ngFor="let itemColor of itemColors"
-        style="width: 30px; height: 30px"
-        class="position-relative"
-        [style.background-color]="itemColor.colorCode"
-        role="button"
-        (mouseenter)="hoveredColorId = itemColor.recID"
-        (mouseleave)="hoveredColorId = null"
-        (click)="openFormAddItemColor(itemColor)"
-      >
-        <button
-          *ngIf="hoveredColorId === itemColor.recID"
-          type="button"
-          class="btn-close btn-sm position-absolute"
-          style="top: -8px; right: -8px"
-          aria-label="Close"
-          (click)="deleteItemColor($event, itemColor)"
-        ></button>
-      </div>
-    </div>
-
-    <div class="d-flex justify-content-between align-items-center">
-      <codx-label
-        default="Quy cách"
-        fiedName="lblPacking2"
-        [formModel]="form.formModel"
-        class="fw-bold fs-5 text-primary"
-      ></codx-label>
-      <div class="btn btn-icon" (click)="openFormAddItemSize(0)">
-        <i class="bi bi-file-earmark-plus-fill text-primary fs-4"></i>
-      </div>
-    </div>
-
-    <div class="my-3 d-flex flex-wrap gap-3">
-      <div
-        *ngFor="let itemSize of itemSizes2"
-        class="border mw-25 d-flex flex-column align-items-center p-1 position-relative hover-color"
-        role="button"
-        (click)="openFormAddItemSize(0, itemSize)"
-        (mouseenter)="hoveredItemSizeId2 = itemSize.recID"
-        (mouseleave)="hoveredItemSizeId2 = null"
-      >
-        <codx-img
-          [funcId]="form.formModel?.funcID"
-          [objectId]="itemSize.recID"
-          [objectType]="'IV_ItemSizes'"
-          [width]="100"
-          [imgOn]="itemSize.modifiedOn"
-          [isDefaulImg]="true"
-          imageType="square"
-        >
-        </codx-img>
-
+      <div class="my-3 d-flex flex-wrap gap-3">
         <div
-          *ngIf="hoveredItemSizeId2 === itemSize.recID"
-          class="btn btn-icon position-absolute"
-          style="right: 0; top: 0"
-          (click)="deleteItemSize($event, itemSize, 0)"
+          *ngFor="let itemStyle of itemStyles"
+          class="badge badge badge-pill badge-secondary d-flex align-items-center gap-1"
+          role="button"
+          (click)="onClickOpenFormItemStyle(itemStyle)"
+          (mouseenter)="hoveredStyleId = itemStyle.recID"
+          (mouseleave)="hoveredStyleId = null"
         >
-          <i class="bi bi-x-lg"></i>
+          <div>{{ itemStyle.styleID }}</div>
+          <button
+            *ngIf="hoveredStyleId === itemStyle.recID"
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="onClickDeleteItemStyle($event, itemStyle)"
+          ></button>
         </div>
-
-        <div class="fw-bold">{{ itemSize.sizeID }}</div>
       </div>
-    </div>
+    </ng-container>
 
-    <div class="row mb-3">
-      <div class="d-flex gap-2">
-        <codx-input
-          class="check-circle"
-          field="autoConversion"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
+    <ng-container *ngIf="selectedDimGroup?.active2">
+      <div class="d-flex justify-content-between align-items-center">
         <codx-label
-          fiedName="autoConversion"
+          default="Màu sắc"
+          fiedName="lblColor"
           [formModel]="form.formModel"
+          class="fw-bold fs-5 text-primary"
         ></codx-label>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="col-6 form-group">
-        <codx-label
-          fiedName="conversionFormula"
-          [formModel]="form.formModel"
-        ></codx-label>
-        <codx-input
-          field="conversionFormula"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
+        <div class="btn btn-icon" (click)="onClickOpenFormItemColor()">
+          <i class="bi bi-palette text-primary fs-4"></i>
+        </div>
       </div>
 
-      <div class="col-3 form-group">
-        <codx-label
-          fiedName="pWeight"
-          [formModel]="form.formModel"
-        ></codx-label>
-        <codx-input
-          field="pWeight"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
+      <div class="my-3 d-flex flex-wrap gap-3">
+        <div
+          *ngFor="let itemColor of itemColors"
+          style="width: 30px; height: 30px"
+          class="position-relative"
+          [style.background-color]="itemColor.colorCode"
+          role="button"
+          (mouseenter)="hoveredColorId = itemColor.recID"
+          (mouseleave)="hoveredColorId = null"
+          (click)="onClickOpenFormItemColor(itemColor)"
+        >
+          <button
+            *ngIf="hoveredColorId === itemColor.recID"
+            type="button"
+            class="btn-close btn-sm position-absolute"
+            style="top: -8px; right: -8px"
+            aria-label="Close"
+            (click)="onClickDeleteItemColor($event, itemColor)"
+          ></button>
+        </div>
       </div>
-    </div>
+    </ng-container>
+
+    <ng-container *ngIf="selectedDimGroup?.active3">
+      <div class="d-flex justify-content-between align-items-center">
+        <codx-label
+          default="Quy cách"
+          fiedName="lblPacking2"
+          [formModel]="form.formModel"
+          class="fw-bold fs-5 text-primary"
+        ></codx-label>
+        <div class="btn btn-icon" (click)="onClickOpenFormItemSize(0)">
+          <i class="bi bi-file-earmark-plus-fill text-primary fs-4"></i>
+        </div>
+      </div>
+
+      <lib-image-box-list
+        [data]="itemSizes2"
+        entityName="IV_ItemSizes"
+        [captionTemplate]="itemSizes2CaptionTemplate"
+        (delete)="onDeleteItemSize($event)"
+        (edit)="onClickOpenFormItemSize(0, $event)"
+      >
+        <ng-template #itemSizes2CaptionTemplate let-data>
+          {{ data?.sizeID }}
+        </ng-template>
+      </lib-image-box-list>
+    </ng-container>
 
     <div class="d-flex justify-content-between align-items-center">
       <codx-label
@@ -459,43 +385,23 @@
         [formModel]="form.formModel"
         class="fw-bold fs-5 text-primary"
       ></codx-label>
-      <div class="btn btn-icon" (click)="openFormAddUMConversion()">
+      <div class="btn btn-icon" (click)="onClickOpenFormUMConversion()">
         <i class="bi bi-file-earmark-plus-fill text-primary fs-4"></i>
       </div>
     </div>
 
-    <div class="my-3 d-flex flex-wrap gap-3">
-      <div
-        *ngFor="let itemConversion of itemConversions"
-        class="border mw-25 d-flex flex-column align-items-center p-1 position-relative hover-color"
-        role="button"
-        (click)="openFormAddUMConversion(itemConversion)"
-      >
-        <codx-img
-          [funcId]="form.formModel?.funcID"
-          [objectId]="itemConversion.recID"
-          [objectType]="'BS_UMConversion'"
-          [width]="100"
-          [imgOn]="itemConversion.modifiedOn"
-          [isDefaulImg]="true"
-          imageType="square"
-        >
-        </codx-img>
-
-        <div
-          class="btn btn-icon position-absolute"
-          style="right: 0; top: 0"
-          (click)="deleteItemConversion($event, itemConversion.recID)"
-        >
-          <i class="bi bi-x-lg"></i>
-        </div>
-
-        <div class="fw-bold">
-          1 {{ itemConversion.fromUMID }} = {{ itemConversion.conversion }}
-          {{ itemConversion.toUMID }}
-        </div>
-      </div>
-    </div>
+    <lib-image-box-list
+      [data]="itemConversions"
+      entityName="BS_UMConversion"
+      [captionTemplate]="itemConversionCaptionTemplate"
+      (delete)="onDeleteItemConversion($event)"
+      (edit)="onClickOpenFormUMConversion($event)"
+    >
+      <ng-template #itemConversionCaptionTemplate let-data>
+        1 {{ data.fromUMID }} = {{ data.conversion }}
+        {{ data.toUMID }}
+      </ng-template>
+    </lib-image-box-list>
   </ng-container>
 </ng-template>
 
@@ -687,9 +593,7 @@
           [Group]="form.formGroup"
         ></codx-input>
       </div>
-    </div>
 
-    <div class="row">
       <div class="col-3 form-group">
         <codx-label fiedName="length" [formModel]="form.formModel"></codx-label>
         <codx-input
@@ -710,6 +614,17 @@
         <codx-label fiedName="height" [formModel]="form.formModel"></codx-label>
         <codx-input
           field="height"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="pWeight"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="pWeight"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         ></codx-input>
@@ -791,19 +706,10 @@
     <div class="row mt-3">
       <div class="col-4 form-group">
         <codx-label fiedName="umid" [formModel]="fmItemsPurchase"></codx-label>
-        <!-- <codx-input
+        <codx-input
           field="umid"
           [formModel]="fmItemsPurchase"
-          [crrValue]="itemsPurchase?.umid"
-          (valueChange)="handleInputChange($event, 'itemsPurchase')"
-        ></codx-input> -->
-        <codx-input
-          type="combobox"
-          refType="3"
-          refValue="UnitsOfMearsure"
-          field="umid"
-          [crrValue]="itemsPurchase?.umid"
-          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+          [Group]="fgItemsPurchase"
         ></codx-input>
       </div>
     </div>
@@ -817,8 +723,7 @@
         <codx-input
           field="warehouseID"
           [formModel]="fmItemsPurchase"
-          [crrValue]="itemsPurchase?.warehouseID"
-          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+          [Group]="fgItemsPurchase"
         ></codx-input>
       </div>
     </div>
@@ -832,8 +737,7 @@
         <codx-input
           field="vendorID"
           [formModel]="fmItemsPurchase"
-          [crrValue]="itemsPurchase?.vendorID"
-          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+          [Group]="fgItemsPurchase"
         ></codx-input>
       </div>
       <div class="col-4 form-group">
@@ -844,8 +748,7 @@
         <codx-input
           field="warrantyDays"
           [formModel]="fmItemsPurchase"
-          [crrValue]="itemsPurchase?.warrantyDays"
-          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+          [Group]="fgItemsPurchase"
         ></codx-input>
       </div>
     </div>
@@ -863,8 +766,7 @@
         <codx-input
           field="vatid"
           [formModel]="fmItemsPurchase"
-          [crrValue]="itemsPurchase?.vatid"
-          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+          [Group]="fgItemsPurchase"
         ></codx-input>
       </div>
       <div class="col-3 form-group">
@@ -875,8 +777,7 @@
         <codx-input
           field="importDuty"
           [formModel]="fmItemsPurchase"
-          [crrValue]="itemsPurchase?.importDuty"
-          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+          [Group]="fgItemsPurchase"
         ></codx-input>
       </div>
       <div class="col-3 form-group">
@@ -887,8 +788,7 @@
         <codx-input
           field="exciseTax"
           [formModel]="fmItemsPurchase"
-          [crrValue]="itemsPurchase?.exciseTax"
-          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+          [Group]="fgItemsPurchase"
         ></codx-input>
       </div>
     </div>
@@ -909,8 +809,7 @@
         <codx-input
           field="underDelivery"
           [formModel]="fmItemsPurchase"
-          [crrValue]="itemsPurchase?.underDelivery"
-          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+          [Group]="fgItemsPurchase"
         ></codx-input>
       </div>
       <div class="col-5 form-group">
@@ -921,8 +820,7 @@
         <codx-input
           field="overDelivery"
           [formModel]="fmItemsPurchase"
-          [crrValue]="itemsPurchase?.overDelivery"
-          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+          [Group]="fgItemsPurchase"
         ></codx-input>
       </div>
     </div>
@@ -944,8 +842,7 @@
         <codx-input
           field="umid"
           [formModel]="fmItemsSales"
-          [crrValue]="itemsSales?.umid"
-          (valueChange)="handleInputChange($event, 'itemsSales')"
+          [Group]="fgItemsSales"
         ></codx-input>
       </div>
     </div>
@@ -959,8 +856,7 @@
         <codx-input
           field="warehouseID"
           [formModel]="fmItemsSales"
-          [crrValue]="itemsSales?.warehouseID"
-          (valueChange)="handleInputChange($event, 'itemsSales')"
+          [Group]="fgItemsSales"
         ></codx-input>
       </div>
     </div>
@@ -974,8 +870,7 @@
         <codx-input
           field="warrantyDays"
           [formModel]="fmItemsSales"
-          [crrValue]="itemsSales?.warrantyDays"
-          (valueChange)="handleInputChange($event, 'itemsSales')"
+          [Group]="fgItemsSales"
         ></codx-input>
       </div>
     </div>
@@ -993,8 +888,7 @@
         <codx-input
           field="vatid"
           [formModel]="fmItemsSales"
-          [crrValue]="itemsSales?.vatid"
-          (valueChange)="handleInputChange($event, 'itemsSales')"
+          [Group]="fgItemsSales"
         ></codx-input>
       </div>
       <div class="col-3 form-group">
@@ -1005,8 +899,7 @@
         <codx-input
           field="exportDuty"
           [formModel]="fmItemsSales"
-          [crrValue]="itemsSales?.exportDuty"
-          (valueChange)="handleInputChange($event, 'itemsSales')"
+          [Group]="fgItemsSales"
         ></codx-input>
       </div>
       <div class="col-3 form-group">
@@ -1017,8 +910,7 @@
         <codx-input
           field="exciseTax"
           [formModel]="fmItemsSales"
-          [crrValue]="itemsSales?.exciseTax"
-          (valueChange)="handleInputChange($event, 'itemsSales')"
+          [Group]="fgItemsSales"
         ></codx-input>
       </div>
     </div>
@@ -1039,8 +931,7 @@
         <codx-input
           field="underDelivery"
           [formModel]="fmItemsSales"
-          [crrValue]="itemsSales?.underDelivery"
-          (valueChange)="handleInputChange($event, 'itemsSales')"
+          [Group]="fgItemsSales"
         ></codx-input>
       </div>
       <div class="col-5 form-group">
@@ -1051,8 +942,7 @@
         <codx-input
           field="overDelivery"
           [formModel]="fmItemsSales"
-          [crrValue]="itemsSales?.overDelivery"
-          (valueChange)="handleInputChange($event, 'itemsSales')"
+          [Group]="fgItemsSales"
         ></codx-input>
       </div>
     </div>
@@ -1070,8 +960,7 @@
         <codx-input
           field="setItems"
           [formModel]="fmItemsSales"
-          [crrValue]="itemsSales?.setItems"
-          (valueChange)="handleInputChange($event, 'itemsSales')"
+          [Group]="fgItemsSales"
         ></codx-input>
       </div>
     </div>
@@ -1096,8 +985,7 @@
         <codx-input
           field="leadtime"
           [formModel]="fmItemsProduction"
-          [crrValue]="itemsProduction?.leadtime"
-          (valueChange)="handleInputChange($event, 'itemsProduction')"
+          [Group]="fgItemsProduction"
         ></codx-input>
       </div>
       <div class="col-4 form-group">
@@ -1108,8 +996,7 @@
         <codx-input
           field="batchSize"
           [formModel]="fmItemsProduction"
-          [crrValue]="itemsProduction?.batchSize"
-          (valueChange)="handleInputChange($event, 'itemsProduction')"
+          [Group]="fgItemsProduction"
         ></codx-input>
       </div>
 
@@ -1121,8 +1008,7 @@
         <codx-input
           field="calcExpiryDate"
           [formModel]="fmItemsProduction"
-          [crrValue]="itemsProduction?.leadtime"
-          (valueChange)="handleInputChange($event, 'itemsProduction')"
+          [Group]="fgItemsProduction"
         ></codx-input>
       </div>
     </div>
@@ -1143,8 +1029,7 @@
         <codx-input
           field="umid"
           [formModel]="fmItemsProduction"
-          [crrValue]="itemsProduction?.umid"
-          (valueChange)="handleInputChange($event, 'itemsProduction')"
+          [Group]="fgItemsProduction"
         ></codx-input>
       </div>
     </div>
@@ -1158,8 +1043,7 @@
         <codx-input
           field="yield"
           [formModel]="fmItemsProduction"
-          [crrValue]="itemsProduction?.yield"
-          (valueChange)="handleInputChange($event, 'itemsProduction')"
+          [Group]="fgItemsProduction"
         ></codx-input>
       </div>
     </div>
@@ -1170,8 +1054,7 @@
           class="check-circle"
           field="autoIssue"
           [formModel]="fmItemsProduction"
-          [crrValue]="itemsProduction?.autoIssue"
-          (valueChange)="handleInputChange($event, 'itemsProduction')"
+          [Group]="fgItemsProduction"
         ></codx-input>
         <codx-label
           fiedName="autoIssue"
@@ -1235,26 +1118,6 @@
         [formModel]="form.formModel"
       ></codx-label>
     </div>
-
-    <!-- <div class="row mt-3">
-      <div class="col-5 form-group">
-        <codx-label fiedName="diM2" [formModel]="form.formModel"></codx-label>
-        <codx-input
-          field="diM2"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </div>
-
-      <div class="col-5 form-group">
-        <codx-label fiedName="diM3" [formModel]="form.formModel"></codx-label>
-        <codx-input
-          field="diM3"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </div>
-    </div> -->
 
     <codx-label
       default="Tính giá xuất kho"

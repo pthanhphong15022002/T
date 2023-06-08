@@ -860,8 +860,8 @@ export class DynamicProcessComponent
       ? this.processRelease.releasedName
       : this.processRelease?.processName;
     this.processRelease.module = 'CM';
-    this.processRelease.function =
-      this.processRelease.applyFor == '1' ? 'CM0201' : 'CM0401';
+    this.processRelease.function = 'CM02';
+
     this.popupRelease = this.callfc.openForm(
       this.releaseProcessTemp,
       '',
