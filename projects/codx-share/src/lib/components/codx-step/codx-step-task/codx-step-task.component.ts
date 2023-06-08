@@ -360,6 +360,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP24':
             if (task.taskType != 'M') res.disabled = true;
             break;
+          case 'DP25':
+          case 'DP20':
+          case 'DP26':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = true;
+            break;
         }
       });
     }
@@ -430,8 +439,70 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP24':
             res.disabled = true;
             break;
+          case 'DP25':
+          case 'DP20':
+          case 'DP24':
+          case 'DP26':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = true;
+            break;
         }
       });
+    }
+  }
+
+  async changeDataMFStep(event, stepData) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02': //xóa  
+          case 'SYS03': //sửa  
+          case 'SYS04': //copy        
+          case 'SYS003': //đính kèm file
+          case 'DP13': //giao việc
+          case 'DP07': //chi tiêt công việc
+          case 'DP24': //tạo lịch họp
+          case 'DP12':
+          case 'DP25':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = true;
+            break;
+          case 'DP20': // tiến độ
+            if (!((this.isRoleAll ) && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP08': // Thêm nhóm công việc
+            if (!((this.isRoleAll ) && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP25': // Chi tiết giai đoạn
+            if (!((this.isRoleAll ) && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            break;
+        }
+      });
+    }
+  }
+
+  clickMFStep(e: any, step: any) {
+    switch (e.functionID) {
+      case 'DP08': //them task
+        this.chooseTypeTask();
+        break;
+      case 'DP20': // tien do
+        this.openPopupUpdateProgress(step, 'P');
+        break;
+      case 'DP07': // view
+        this.viewTask(step, 'P');
+        break;
     }
   }
 
@@ -478,7 +549,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.copyGroupTask(group);
         break;
       case 'DP08': //them task
-        this.addTask(group?.refID);
+        this.chooseTypeTask(group?.refID);
         break;
       case 'DP12':
         this.viewTask(group, 'G');
@@ -489,7 +560,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
   //task
-  async chooseTypeTask() {
+  async chooseTypeTask(groupID = null) {
     let popupTypeTask = this.callfc.openForm(
       CodxTypeTaskComponent,
       '',
@@ -502,7 +573,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       if(this.taskType?.value == 'G'){
         this.addGroupTask();
       }else{
-        this.addTask(null);
+        this.addTask(groupID);
       }
     }
   }

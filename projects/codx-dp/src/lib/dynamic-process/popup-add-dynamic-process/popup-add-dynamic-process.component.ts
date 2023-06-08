@@ -2855,6 +2855,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             break;
           case 'DP13':
             res.disabled = true;
+            break;
+          case 'DP25':
+          case 'DP20':
+          case 'DP24':
+          case 'DP26':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = true;
+            break;
         }
       });
     }

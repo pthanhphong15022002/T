@@ -1,20 +1,41 @@
 <div id="id" class="main" [ngClass]="'show-main'">
   <div
     class="d-flex align-items-center justify-content-between me-5"
+    style="margin: -3px 0 -15px 0"
     *ngIf="isShowStep"
   >
     <div
-      class="qqq d-flex align-items-center fw-bold w-100 has-action-menu step-content"
+      class="d-flex align-items-center fw-bold w-100 has-action-menu step-content"
     >
-      <i class="icon-account_balance icon-20 me-2"></i>
-      <span class="fs-5 w-100">{{ currentStep.stepName }}</span>
+      <div
+        class="d-flex align-items-center pe-4"
+        [ngStyle]="{
+          background: currentStep?.backgroundColor,
+          'border-radius': '20px'
+        }"
+      >
+        <div
+          class="cricle"
+          [ngStyle]="{ color: currentStep?.iconColor, border: '3px solid' }"
+        >
+          <span [ngClass]="currentStep?.icon" class="fs-6"></span>
+        </div>
+        <span
+          class="line-clamp line-clamp-2 fs-5 ms-2"
+          [ngStyle]="{ color: currentStep?.textColor }"
+        >
+          {{ currentStep?.stepName }}</span
+        >
+      </div>
       <codx-mfunc
-        [formModel]="frmModelInstancesTask"
-        [isBookMark]="true"
-        [dataItem]="moreDefaut"
-        [type]="'hover'"
-        class="mb-5"
-      ></codx-mfunc>
+      [formModel]="grvMoreFunction"
+      [isBookMark]="true"
+      [dataItem]="moreDefaut"
+      [type]="'hover'"
+      (changeDataMF)="changeDataMFStep($event, currentStep)"
+      (clickMF)="clickMFStep($event, currentStep)"
+    >
+    </codx-mfunc>
     </div>
     <div
       class="disabled-inline"
