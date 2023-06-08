@@ -3095,3 +3095,20 @@ codx-wrapper.hover-scroll-overlay-y {
   }
 }
 
+/*********** ipad ************/
+
+@media (max-width: 991px) {
+  .d-lg-none.ms-2.me-n3{
+    display: none!important;
+  }
+  codx-header.header{ 
+    .ms-n3.me-1{
+      margin-left: 5px!important;
+      margin-right: 15px!important;
+    }
+    .btn.btn-light-primary:hover{
+      background-color: var(--primary-light)!important;
+    }
+  }
+  
+}
