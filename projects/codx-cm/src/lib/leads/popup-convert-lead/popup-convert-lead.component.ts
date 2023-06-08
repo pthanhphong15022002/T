@@ -205,6 +205,7 @@ export class PopupConvertLeadComponent implements OnInit {
         var lstStep =
           process?.steps != null ? this.groupByStep(process?.steps) : [];
         this.deal.endDate = this.HandleEndDate(lstStep);
+
       }
 
       if (
@@ -231,6 +232,16 @@ export class PopupConvertLeadComponent implements OnInit {
           )
         );
       }
+
+      this.listInstanceSteps = await firstValueFrom(
+        this.api.execSv<any>(
+          'DP',
+          'ERM.Business.DP',
+          'InstancesBusiness',
+          'CreateListInstancesStepsByProcessAsync',
+          this.deal?.processID
+        )
+      );
     }
 
     this.changeDetectorRef.detectChanges();
@@ -385,15 +396,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.status = '1';
     this.deal.refID = this.instance.recID;
     this.deal.startDate = null;
-    this.listInstanceSteps = await firstValueFrom(
-      this.api.execSv<any>(
-        'DP',
-        'ERM.Business.DP',
-        'InstancesBusiness',
-        'CreateListInstancesStepsByProcessAsync',
-        this.deal.processID
-      )
-    );
+
     if (this.listInstanceSteps != null && this.listInstanceSteps.length > 0) {
       this.deal.stepID = this.listInstanceSteps[0]?.stepID;
       this.deal.nextStep = this.listInstanceSteps[1]?.stepID;

@@ -80,12 +80,12 @@
         <div class="mb-1" *ngIf="getAddress(data?.competitorID)">
           <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
           <span
-            class="text-gray-900"
+            class="text-gray-900 line-clamp line-clamp-1"
             [innerHTML]="getAddress(data?.competitorID)"
           ></span>
         </div>
         <div class="">
-          <span
+          <span class="line-clamp line-clamp-1"
             [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"
           ></span>
         </div>

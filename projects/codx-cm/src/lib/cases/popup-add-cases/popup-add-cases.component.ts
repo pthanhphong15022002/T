@@ -55,7 +55,6 @@ listCbxContacts: any[] = [];
 readonly actionAdd: string = 'add';
 readonly actionCopy: string = 'copy';
 readonly actionEdit: string = 'edit';
-readonly typeForCases: string = '2';
 readonly fieldCbxProcess = { text: 'processName', value: 'recID' };
 readonly fieldCbxCampaigns = { text: 'campaignName', value: 'recID' };
 readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
@@ -327,7 +326,6 @@ ngAfterViewInit(): void {
 async executeApiCalls() {
   try {
     await this.getGridView(this.formModel);
-    // await this.getListProcess(this.typeForCases);
     if(this.action !== this.actionAdd) {
       await this.getListInstanceSteps(this.cases.processID);
     }
@@ -348,7 +346,7 @@ async getGridView(formModel) {
 async getListInstanceSteps(processId: any) {
   processId =
     this.action === this.actionCopy ? this.cases.processID : processId;
-  var data = [processId, this.cases.refID, this.action,'2'];
+  var data = [processId, this.cases.refID, this.action,this.applyFor];
   this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
     if (res && res.length > 0) {
       var obj = {
@@ -454,7 +452,11 @@ updateDataCases(instance: tmpInstances, cases: CM_Cases) {
     cases.status = '1';
     cases.refID = instance.recID;
   }
+  if(this.action === this.actionAdd) {
+    cases.caseType = this.caseType;
+  }
   cases.owner = this.owner;
+
 }
 checkFormat(field) {
   if (field.dataType == 'T') {

@@ -5,7 +5,9 @@ import {
   Optional,
   ViewChild,
 } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import {
+  CRUDService,
   CodxFormComponent,
   DataRequest,
   DialogData,
@@ -44,26 +46,21 @@ export class PopupAddItemComponent
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('itemImage') itemImage?: ImageViewerComponent;
 
-  title: string = '';
   item: Item;
   itemsPurchase: ItemsPurchase = {} as ItemsPurchase;
   itemsSales: ItemsSales = {} as ItemsSales;
   itemsProduction: ItemsProduction = {} as ItemsProduction;
+
   gridViewSetup: any;
   gvsItemsPurchase: any;
   gvsItemsSales: any;
   gvsItemsProduction: any;
+
+  title: string = '';
+  isEdit: boolean = false;
   disabled: boolean = false;
-  itemSizes1: ItemSize[] = [];
-  itemSizes2: ItemSize[] = [];
-  itemStyles: ItemStyle[] = [];
-  itemColors: ItemColor[] = [];
-  itemConversions: UMConversion[] = [];
-  hoveredStyleId: string;
-  hoveredColorId: string;
-  hoveredItemSizeId1: string;
-  hoveredItemSizeId2: string;
   tempItemID: string = '';
+  selectedDimGroup: any;
   tabInfo = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Common information' },
     {
@@ -97,47 +94,96 @@ export class PopupAddItemComponent
       name: 'Other information',
     },
   ];
+
+  itemSizes1: ItemSize[] = [];
+  itemSizes2: ItemSize[] = [];
+  itemStyles: ItemStyle[] = [];
+  itemColors: ItemColor[] = [];
+  itemConversions: UMConversion[] = [];
+
+  hoveredStyleId: string;
+  hoveredColorId: string;
+
   fmItemsPurchase: FormModel = {
     entityName: 'IV_ItemsPurchase',
     formName: 'ItemsPurchase',
     gridViewName: 'grvItemsPurchase',
     entityPer: 'IV_ItemsPurchase',
-    fieldRequired:
-      'WarrantyDays;ImportDuty;ExciseTax;UnderDelivery;OverDelivery;',
   };
   fmItemsSales: FormModel = {
     entityName: 'IV_ItemsSales',
     formName: 'ItemsSales',
     gridViewName: 'grvItemsSales',
     entityPer: 'IV_ItemsSales',
-    fieldRequired:
-      'WarrantyDays;ExportDuty;ExciseTax;UnderDelivery;OverDelivery;',
   };
   fmItemsProduction: FormModel = {
     entityName: 'IV_ItemsProduction',
     formName: 'ItemsProduction',
     gridViewName: 'grvItemsProduction',
     entityPer: 'IV_ItemsProduction',
-    fieldRequired: 'LeadTime;BatchSize;',
   };
 
+  fgItemsPurchase: FormGroup;
+  fgItemsSales: FormGroup;
+  fgItemsProduction: FormGroup;
+
+  dataService: CRUDService;
+  itemsPurchaseService: CRUDService;
+  itemsSalesService: CRUDService;
+  itemsProductionService: CRUDService;
+
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private notiService: NotificationsService,
     private acService: CodxAcService,
     @Optional() public dialogRef: DialogRef,
     @Optional() private dialogData: DialogData
   ) {
-    // debug
-    console.log({ dialogRef });
-    console.log({ dialogData });
-
     super(injector);
 
-    this.item = dialogRef.dataService?.dataSelected;
+    this.dataService = dialogRef.dataService;
+    this.item = this.dataService?.dataSelected;
     this.tempItemID = this.item?.itemID;
     this.dialogRef.formModel.currentData = this.item;
+    this.isEdit = this.dialogData.data.formType === 'edit';
+    this.disabled = this.isEdit;
 
+    this.fgItemsPurchase = this.codxService.buildFormGroup(
+      this.fmItemsPurchase.formName,
+      this.fmItemsPurchase.gridViewName,
+      this.fmItemsPurchase.entityName
+    );
+    this.fgItemsSales = this.codxService.buildFormGroup(
+      this.fmItemsSales.formName,
+      this.fmItemsSales.gridViewName,
+      this.fmItemsSales.entityName
+    );
+    this.fgItemsProduction = this.codxService.buildFormGroup(
+      this.fmItemsProduction.formName,
+      this.fmItemsProduction.gridViewName,
+      this.fmItemsProduction.entityName
+    );
+
+    this.itemsPurchaseService = acService.createCrudService(
+      injector,
+      this.fmItemsPurchase,
+      'IV'
+    );
+    this.itemsSalesService = acService.createCrudService(
+      injector,
+      this.fmItemsSales,
+      'IV'
+    );
+    this.itemsProductionService = acService.createCrudService(
+      injector,
+      this.fmItemsProduction,
+      'IV'
+    );
+  }
+  //#endregion
+
+  //#region Init
+  onInit(): void {
     this.dialogRef.closed.subscribe((res) => {
       // cancel
       for (const itemSize of this.itemSizes1.filter((i) => i.itemID === null)) {
@@ -220,31 +266,8 @@ export class PopupAddItemComponent
           });
       }
     });
-  }
-  //#endregion
 
-  //#region Init
-  onInit(): void {
-    this.cache
-      .gridViewSetup('ItemsPurchase', 'grvItemsPurchase')
-      .subscribe((res) => {
-        this.gvsItemsPurchase = res;
-      });
-    this.cache.gridViewSetup('ItemsSales', 'grvItemsSales').subscribe((res) => {
-      this.gvsItemsSales = res;
-    });
-    this.cache
-      .gridViewSetup('ItemsProduction', 'grvItemsProduction')
-      .subscribe((res) => {
-        this.gvsItemsProduction = res;
-      });
-    this.cache.gridViewSetup('Items', 'grvItems').subscribe((gvs) => {
-      this.gridViewSetup = gvs;
-    });
-
-    if (this.dialogData.data.formType == 'edit') {
-      this.disabled = true;
-
+    if (this.isEdit) {
       // load related data associated with itemID
       this.loadData(
         'IV',
@@ -307,7 +330,41 @@ export class PopupAddItemComponent
         'itemConversions',
         false
       );
+
+      if (this.item.dimGroupID) {
+        this.onDimGroupIDChange({ data: this.item.dimGroupID });
+      }
+    } else {
+      this.itemsPurchaseService.addNew().subscribe((res) => {
+        this.itemsPurchase = this.fmItemsPurchase.currentData = res;
+        this.fgItemsPurchase.patchValue(res);
+      });
+      this.itemsSalesService.addNew().subscribe((res) => {
+        this.itemsSales = this.fmItemsSales.currentData = res;
+        this.fgItemsSales.patchValue(res);
+      });
+      this.itemsProductionService.addNew().subscribe((res) => {
+        this.itemsProduction = this.fmItemsProduction.currentData = res;
+        this.fgItemsProduction.patchValue(res);
+      });
     }
+
+    this.cache
+      .gridViewSetup('ItemsPurchase', 'grvItemsPurchase')
+      .subscribe((res) => {
+        this.gvsItemsPurchase = res;
+      });
+    this.cache.gridViewSetup('ItemsSales', 'grvItemsSales').subscribe((res) => {
+      this.gvsItemsSales = res;
+    });
+    this.cache
+      .gridViewSetup('ItemsProduction', 'grvItemsProduction')
+      .subscribe((res) => {
+        this.gvsItemsProduction = res;
+      });
+    this.cache.gridViewSetup('Items', 'grvItems').subscribe((gvs) => {
+      this.gridViewSetup = gvs;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -319,21 +376,74 @@ export class PopupAddItemComponent
   //#endregion
 
   //#region Event
-  handleInputChange(e: any, prop: string = 'item'): void {
-    // debug
-    console.log('handleInputChange', e);
-    console.log({ prop });
+  onInputChange(e: any): void {
+    console.log('onInputChange', e);
 
-    this[prop][e.field] = e.data;
+    this.item[e.field] = e.data;
   }
 
-  deleteItemSize(
-    event: MouseEvent,
-    itemSize: ItemSize,
-    sizeType: number
-  ): void {
-    event.stopPropagation();
+  onDimGroupIDChange(e): void {
+    const options = new DataRequest();
+    options.entityName = 'IV_DimensionGroups';
+    options.pageLoading = false;
+    this.acService.loadDataAsync('IV', options).subscribe((dimGroups) => {
+      this.selectedDimGroup = dimGroups.find((d) => d.dimGroupID === e.data);
+    });
+  }
 
+  onClickSave(): void {
+    console.log('item', this.item);
+    console.log('itemsPurchase', this.itemsPurchase);
+    console.log('itemsSales', this.itemsSales);
+    console.log('itemsProduction', this.itemsProduction);
+
+    if (
+      !this.acService.validateFormData(
+        this.form.formGroup,
+        this.gridViewSetup,
+        ['UMID']
+      )
+    ) {
+      return;
+    }
+
+    if (
+      !this.acService.validateFormData(
+        this.fgItemsPurchase,
+        this.gvsItemsPurchase
+      )
+    ) {
+      return;
+    }
+
+    if (
+      !this.acService.validateFormData(this.fgItemsSales, this.gvsItemsSales)
+    ) {
+      return;
+    }
+
+    if (
+      !this.acService.validateFormData(
+        this.fgItemsProduction,
+        this.gvsItemsProduction
+      )
+    ) {
+      return;
+    }
+
+    if (this.itemImage?.imageUpload?.item) {
+      this.itemImage
+        .updateFileDirectReload(this.item.itemID)
+        .subscribe((res) => {
+          console.log(res);
+          this.save();
+        });
+    } else {
+      this.save();
+    }
+  }
+
+  onDeleteItemSize(itemSize: ItemSize): void {
     this.api
       .exec('IV', 'ItemSizesBusiness', 'DeleteItemSizeAsync', itemSize.recID)
       .subscribe((res) => {
@@ -342,11 +452,11 @@ export class PopupAddItemComponent
 
           this.acService.deleteFile(itemSize.recID, 'IV_ItemSizes');
 
-          if (sizeType === 1) {
+          if (itemSize.sizeType === '1') {
             this.itemSizes1 = this.itemSizes1.filter(
               (i) => i.recID !== itemSize.recID
             );
-          } else if (sizeType === 0) {
+          } else if (itemSize.sizeType === '0') {
             this.itemSizes2 = this.itemSizes2.filter(
               (i) => i.recID !== itemSize.recID
             );
@@ -355,25 +465,87 @@ export class PopupAddItemComponent
       });
   }
 
-  deleteItemConversion(event: MouseEvent, recID: string): void {
-    event.stopPropagation();
-
+  onDeleteItemConversion(itemConversion: UMConversion): void {
     this.api
-      .exec('BS', 'UMConversionBusiness', 'DeleteByRecIDAsync', recID)
+      .exec(
+        'BS',
+        'UMConversionBusiness',
+        'DeleteByRecIDAsync',
+        itemConversion.recID
+      )
       .subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('SYS008');
 
-          this.acService.deleteFile(recID, 'BS_UMConversion');
+          this.acService.deleteFile(itemConversion.recID, 'BS_UMConversion');
 
           this.itemConversions = this.itemConversions.filter(
-            (i) => i.recID !== recID
+            (i) => i.recID !== itemConversion.recID
           );
         }
       });
   }
 
-  deleteItemStyle(event: MouseEvent, itemStyle: ItemStyle): void {
+  onClickOpenFormItemSize(sizeType: number, itemSize?: ItemSize): void {
+    this.cache.gridViewSetup('ItemSizes', 'grvItemSizes').subscribe((res) => {
+      if (res) {
+        const options = new DialogModel();
+        options.FormModel = {
+          entityName: 'IV_ItemSizes',
+          formName: 'ItemSizes',
+          gridViewName: 'grvItemSizes',
+        };
+
+        this.callfc
+          .openForm(
+            PopupAddItemSizeComponent,
+            'This param is not working',
+            500,
+            400,
+            '',
+            {
+              gridViewSetup: res,
+              sizeType: sizeType,
+              funcId: this.form.formModel?.funcID,
+              itemSize: itemSize,
+              savedItemSizes:
+                sizeType === 1 ? this.itemSizes1 : this.itemSizes2,
+            },
+            '',
+            options
+          )
+          .closed.subscribe((res) => {
+            console.log(res);
+            if (!itemSize) {
+              // add
+              if (sizeType === 1) {
+                if (Array.isArray(res.event)) {
+                  this.itemSizes1.push(...res.event);
+                } else {
+                  this.itemSizes1.push(res.event as ItemSize);
+                }
+              } else {
+                // sizeType === 0
+                if (Array.isArray(res.event)) {
+                  this.itemSizes2.push(...res.event);
+                } else {
+                  this.itemSizes2.push(res.event as ItemSize);
+                }
+              }
+            } else {
+              // edit
+              if (sizeType === 1) {
+                this.itemSizes1 = res.event;
+              } else {
+                this.itemSizes2 = res.event;
+              }
+            }
+          });
+      }
+    });
+  }
+
+  onClickDeleteItemStyle(event: MouseEvent, itemStyle: ItemStyle): void {
     event.stopPropagation();
 
     this.api
@@ -391,7 +563,7 @@ export class PopupAddItemComponent
       });
   }
 
-  deleteItemColor(event: MouseEvent, itemColor: ItemColor): void {
+  onClickDeleteItemColor(event: MouseEvent, itemColor: ItemColor): void {
     event.stopPropagation();
 
     this.api
@@ -403,6 +575,136 @@ export class PopupAddItemComponent
           this.itemColors = this.itemColors.filter(
             (i) => i.recID !== itemColor.recID
           );
+        }
+      });
+  }
+
+  onClickOpenFormItemStyle(itemStyle?: ItemStyle): void {
+    this.cache.gridViewSetup('ItemStyles', 'grvItemStyles').subscribe((res) => {
+      if (res) {
+        const options = new DialogModel();
+        options.FormModel = {
+          entityName: 'IV_ItemStyles',
+          formName: 'ItemStyles',
+          gridViewName: 'grvItemStyles',
+        };
+
+        this.callfc
+          .openForm(
+            PopupAddItemStyleComponent,
+            'This param is not working',
+            500,
+            300,
+            '',
+            {
+              gridViewSetup: res,
+              funcId: this.form.formModel?.funcID,
+              itemStyle: itemStyle,
+              savedItemStyles: this.itemStyles,
+            },
+            '',
+            options
+          )
+          .closed.subscribe((res) => {
+            if (!itemStyle) {
+              // add
+              if (Array.isArray(res.event)) {
+                this.itemStyles.push(...res.event);
+              } else {
+                this.itemStyles.push(res.event as ItemStyle);
+              }
+            } else {
+              // edit
+              this.itemStyles = res.event;
+            }
+          });
+      }
+    });
+  }
+
+  onClickOpenFormItemColor(itemColor?: ItemColor): void {
+    this.cache.gridViewSetup('ItemColors', 'grvItemColors').subscribe((res) => {
+      if (res) {
+        const options = new DialogModel();
+        options.FormModel = {
+          entityName: 'IV_ItemColors',
+          formName: 'ItemColors',
+          gridViewName: 'grvItemColors',
+        };
+
+        this.callfc
+          .openForm(
+            PopupAddItemColorComponent,
+            'This param is not working',
+            500,
+            325,
+            '',
+            {
+              gridViewSetup: res,
+              itemColor: itemColor,
+              savedItemColors: this.itemColors,
+            },
+            '',
+            options
+          )
+          .closed.subscribe((res) => {
+            if (!itemColor) {
+              // add
+              if (Array.isArray(res.event)) {
+                this.itemColors.push(...res.event);
+              } else {
+                this.itemColors.push(res.event as ItemColor);
+              }
+            } else {
+              // edit
+              this.itemColors = res.event;
+            }
+          });
+      }
+    });
+  }
+
+  onClickOpenFormUMConversion(itemConversion?: UMConversion): void {
+    this.cache
+      .gridViewSetup('UMConversion', 'grvUMConversion')
+      .subscribe((res) => {
+        if (res) {
+          const options = new DialogModel();
+          options.FormModel = {
+            entityName: 'BS_UMConversion',
+            formName: 'UMConversion',
+            gridViewName: 'grvUMConversion',
+          };
+
+          this.callfc
+            .openForm(
+              PopupAddItemConversionComponent,
+              'This param is not working',
+              500,
+              300,
+              '',
+              {
+                gridViewSetup: res,
+                funcId: this.form.formModel?.funcID,
+                itemConversion: itemConversion,
+                savedItemConversions: this.itemConversions,
+              },
+              '',
+              options
+            )
+            .closed.subscribe((res) => {
+              if (!itemConversion) {
+                // add
+                if (Array.isArray(res.event)) {
+                  this.itemConversions.push(...res.event);
+                } else {
+                  this.itemConversions.push(res.event as UMConversion);
+                }
+              } else {
+                // edit
+                this.itemConversions = res.event;
+              }
+            });
         }
       });
   }
@@ -478,223 +780,6 @@ export class PopupAddItemComponent
       });
   }
 
-  handleClickSave(): void {
-    console.log(this.item);
-    // console.log(this.itemsPurchase);
-    // console.log(this.itemsSales);
-    // console.log(this.itemsProduction);
-
-    if (
-      !this.acService.validateFormData(
-        this.form.formGroup,
-        this.gridViewSetup,
-        ['UMID']
-      )
-    ) {
-      return;
-    }
-
-    if (this.itemImage?.imageUpload?.item) {
-      this.itemImage
-        .updateFileDirectReload(this.item.itemID)
-        .subscribe((res) => {
-          console.log(res);
-          this.save();
-        });
-    } else {
-      this.save();
-    }
-  }
-
-  openFormAddItemSize(sizeType: number, itemSize?: ItemSize) {
-    this.cache.gridViewSetup('ItemSizes', 'grvItemSizes').subscribe((res) => {
-      if (res) {
-        const options = new DialogModel();
-        options.FormModel = {
-          entityName: 'IV_ItemSizes',
-          formName: 'ItemSizes',
-          gridViewName: 'grvItemSizes',
-        };
-
-        this.callfc
-          .openForm(
-            PopupAddItemSizeComponent,
-            'This param is not working',
-            500,
-            300,
-            '',
-            {
-              gridViewSetup: res,
-              sizeType: sizeType,
-              funcId: this.form.formModel?.funcID,
-              itemSize: itemSize,
-              savedItemSizes:
-                sizeType === 1 ? this.itemSizes1 : this.itemSizes2,
-            },
-            '',
-            options
-          )
-          .closed.subscribe((res) => {
-            console.log(res);
-            if (!itemSize) {
-              // add
-              if (sizeType === 1) {
-                if (Array.isArray(res.event)) {
-                  this.itemSizes1.push(...res.event);
-                } else {
-                  this.itemSizes1.push(res.event as ItemSize);
-                }
-              } else {
-                // sizeType === 0
-                if (Array.isArray(res.event)) {
-                  this.itemSizes2.push(...res.event);
-                } else {
-                  this.itemSizes2.push(res.event as ItemSize);
-                }
-              }
-            } else {
-              // edit
-              if (sizeType === 1) {
-                this.itemSizes1 = res.event;
-              } else {
-                this.itemSizes2 = res.event;
-              }
-            }
-          });
-      }
-    });
-  }
-
-  openFormAddItemStyle(itemStyle?: ItemStyle): void {
-    this.cache.gridViewSetup('ItemStyles', 'grvItemStyles').subscribe((res) => {
-      if (res) {
-        const options = new DialogModel();
-        options.FormModel = {
-          entityName: 'IV_ItemStyles',
-          formName: 'ItemStyles',
-          gridViewName: 'grvItemStyles',
-        };
-
-        this.callfc
-          .openForm(
-            PopupAddItemStyleComponent,
-            'This param is not working',
-            500,
-            300,
-            '',
-            {
-              gridViewSetup: res,
-              funcId: this.form.formModel?.funcID,
-              itemStyle: itemStyle,
-              savedItemStyles: this.itemStyles,
-            },
-            '',
-            options
-          )
-          .closed.subscribe((res) => {
-            if (!itemStyle) {
-              // add
-              if (Array.isArray(res.event)) {
-                this.itemStyles.push(...res.event);
-              } else {
-                this.itemStyles.push(res.event as ItemStyle);
-              }
-            } else {
-              // edit
-              this.itemStyles = res.event;
-            }
-          });
-      }
-    });
-  }
-
-  openFormAddItemColor(itemColor?: ItemColor): void {
-    this.cache.gridViewSetup('ItemColors', 'grvItemColors').subscribe((res) => {
-      if (res) {
-        const options = new DialogModel();
-        options.FormModel = {
-          entityName: 'IV_ItemColors',
-          formName: 'ItemColors',
-          gridViewName: 'grvItemColors',
-        };
-
-        this.callfc
-          .openForm(
-            PopupAddItemColorComponent,
-            'This param is not working',
-            500,
-            325,
-            '',
-            {
-              gridViewSetup: res,
-              itemColor: itemColor,
-              savedItemColors: this.itemColors,
-            },
-            '',
-            options
-          )
-          .closed.subscribe((res) => {
-            if (!itemColor) {
-              // add
-              if (Array.isArray(res.event)) {
-                this.itemColors.push(...res.event);
-              } else {
-                this.itemColors.push(res.event as ItemColor);
-              }
-            } else {
-              // edit
-              this.itemColors = res.event;
-            }
-          });
-      }
-    });
-  }
-
-  openFormAddUMConversion(itemConversion?: UMConversion): void {
-    this.cache
-      .gridViewSetup('UMConversion', 'grvUMConversion')
-      .subscribe((res) => {
-        if (res) {
-          const options = new DialogModel();
-          options.FormModel = {
-            entityName: 'BS_UMConversion',
-            formName: 'UMConversion',
-            gridViewName: 'grvUMConversion',
-          };
-
-          this.callfc
-            .openForm(
-              PopupAddItemConversionComponent,
-              'This param is not working',
-              500,
-              300,
-              '',
-              {
-                gridViewSetup: res,
-                funcId: this.form.formModel?.funcID,
-                itemConversion: itemConversion,
-                savedItemConversions: this.itemConversions,
-              },
-              '',
-              options
-            )
-            .closed.subscribe((res) => {
-              if (!itemConversion) {
-                // add
-                if (Array.isArray(res.event)) {
-                  this.itemConversions.push(...res.event);
-                } else {
-                  this.itemConversions.push(res.event as UMConversion);
-                }
-              } else {
-                // edit
-                this.itemConversions = res.event;
-              }
-            });
-        }
-      });
-  }
-
   loadData(
     service: string,
     entityName: string,
@@ -707,17 +792,19 @@ export class PopupAddItemComponent
     option.entityName = entityName;
     option.predicates = predicate;
     option.dataValues = dataValue;
-    option.page = 1;
-    this.api
-      .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', option)
-      .subscribe((res: any) => {
-        if (first) {
-          this[prop] = res[0][0];
-        } else {
-          this[prop] = res[0];
-        }
-        console.log(prop, this[prop]);
-      });
+    option.pageLoading = false;
+    this.acService.loadDataAsync(service, option).subscribe((res: any[]) => {
+      if (first) {
+        const formModel: string = 'fm' + this.acService.toPascalCase(prop);
+        const formGroup: string = prop + 'Service';
+
+        this[prop] = this[formModel].currentData = res[0];
+        this[formGroup].patchValue(res[0]);
+      } else {
+        this[prop] = res;
+      }
+      console.log(prop, this[prop]);
+    });
   }
   //#endregion
 
