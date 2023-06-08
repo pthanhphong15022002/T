@@ -332,10 +332,12 @@ export class EmployeeListComponent extends UIComponent {
       let queryParams = {
         employeeID: data.employeeID,
         page: this.view.dataService.page,
+        totalPage: this.view.dataService.pageCount
       };
       let state = {
-        empInfo: JSON.stringify(data),
-        data: this.view.dataService.data,
+        data: this.view.dataService.data.map(function(obj){
+          return{EmployeeID:obj.employeeID};
+          }),
         request: this.view.dataService.request,
       };
       this.codxService.navigate('', func?.url, queryParams, state, true);

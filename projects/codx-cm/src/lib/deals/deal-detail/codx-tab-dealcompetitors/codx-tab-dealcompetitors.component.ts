@@ -274,6 +274,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
                         var tmp = {};
                         tmp['recID'] = e.event.competitorID;
                         tmp['address'] = address;
+                        tmp['competitorName'] = e.competitorName;
                         this.lstCompetitorAddress.push(Object.assign({}, tmp));
                       }
                     }

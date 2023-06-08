@@ -1506,10 +1506,12 @@ export class CodxTasksComponent
       this.notiService.notifyCode('TM052');
       return;
     }
-    if (data.isTimeOut) {
-      this.notiService.notifyCode('TM023');
-      return;
-    }
+
+    //bo chuc nang nay di
+    // if (data.isTimeOut) {
+    //   this.notiService.notifyCode('TM023');
+    //   return;
+    // }
 
     if (this.param.ExtendControl == '0') {
       this.notiService.notifyCode('TM021');
@@ -1802,7 +1804,7 @@ export class CodxTasksComponent
         }
         //an gia hạn cong viec
         if (
-          (x.functionID == 'TMT02019' || x.functionID == 'TMT02026') &&
+          (x.functionID == 'TMT02019' || x.functionID == 'TMT02026' ) &&
           (data.status == '80' || data.status == '90')
         )
           x.disabled = true;

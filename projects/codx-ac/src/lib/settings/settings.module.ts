@@ -49,6 +49,7 @@ import { PopAddVendorsComponent } from './vendors/pop-add-vendors/pop-add-vendor
 import { VendorsComponent } from './vendors/vendors.component';
 import { PopAddWarehousesComponent } from './warehouses/pop-add-warehouses/pop-add-warehouses.component';
 import { WarehousesComponent } from './warehouses/warehouses.component';
+import { ImageBoxListComponent } from './items/components/image-box-list/image-box-list.component';
 
 var routes: Routes = [
   {
@@ -157,6 +158,7 @@ var routes: Routes = [
     PopupAddFAPostingAccountComponent,
     FixedAssetsComponent,
     PopupAddFixedAssetComponent,
+    ImageBoxListComponent,
   ],
   imports: [
     CommonModule,

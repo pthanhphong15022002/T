@@ -35,9 +35,6 @@
         [formModel]="view.formModel"
         [default]="grvSetup?.Status?.description"
       ></codx-label>
-      <!-- <div class="w-25 text-dark p-3 fw-bold fw-500">
-      <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
-    </div> -->
     </div>
   </div>
 </ng-template>
@@ -58,9 +55,6 @@
             [objectType]="'HR_Employees'"
           >
           </codx-img>
-          <!-- <codx-vll class="badge badge-sm badge-light me-0" [name]="genderGrvSetup?.referedValue"
-            [value]="data?.emp?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
-          </codx-vll> -->
         </div>
         <div class="d-flex flex-column">
           <span class="me-2 fw-bold">{{ data?.emp?.employeeName }}</span>
@@ -198,7 +192,7 @@
 <!-- list & detail view -->
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'h-80px me-2'"
+    [imgCss]="'me-2'"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-10'"

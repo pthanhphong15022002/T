@@ -15,11 +15,11 @@ import { Reason } from './models/Reason.model';
   providedIn: 'root',
 })
 export class CodxAcService {
-  childMenuClick = new BehaviorSubject<any>(null)
+  childMenuClick = new BehaviorSubject<any>(null);
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
-    private notiService: NotificationsService,
+    private notiService: NotificationsService
   ) {}
   setCacheFormModel(formModel: FormModel) {
     this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
@@ -225,8 +225,7 @@ export class CodxAcService {
       )
       .pipe(
         tap((p) => console.log(p)),
-        map((p) => JSON.parse(p[0])),
-        tap((p) => console.log(p))
+        map((p) => JSON.parse(p[0]))
       );
   }
 
@@ -235,8 +234,7 @@ export class CodxAcService {
       .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', options)
       .pipe(
         tap((r) => console.log(r)),
-        map((r) => r[0]),
-        tap((r) => console.log(r))
+        map((r) => r[0])
       );
   }
 
