@@ -441,7 +441,7 @@ export class CmCustomerComponent
           )
         );
         if (check) {
-          this.notiService.notifyCode('CRM012');
+          this.notiService.notifyCode('CM011');
           return;
         }
       }
@@ -458,7 +458,7 @@ export class CmCustomerComponent
         )
       );
       if (check) {
-        this.notiService.notifyCode('CRM011');
+        this.notiService.notifyCode('CM012');
         return;
       }
     }
