@@ -332,9 +332,9 @@ export class EmployeeListComponent extends UIComponent {
       let queryParams = {
         employeeID: data.employeeID,
         page: this.view.dataService.page,
+        totalPage: this.view.dataService.pageCount
       };
       let state = {
-        empInfo: JSON.stringify(data),
         data: this.view.dataService.data,
         request: this.view.dataService.request,
       };
