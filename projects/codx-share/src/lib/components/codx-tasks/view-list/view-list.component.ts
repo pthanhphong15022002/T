@@ -39,6 +39,7 @@ export class ViewListComponent implements OnInit {
   vllPriority = 'TM005';
 
   @Output() clickMoreFunction = new EventEmitter<any>();
+  @Output() changeFunction = new EventEmitter<any>();
   @Output() viewTask = new EventEmitter<any>();
   @Output() hoverPopover = new EventEmitter<any>();
 
@@ -122,7 +123,7 @@ export class ViewListComponent implements OnInit {
         //an TMT02019
         if (
           (x.functionID == 'TMT02019' || x.functionID == 'TMT02026') &&
-          (data.status == '80' || data.status == '90')
+          (data.status == '80' || data.status == '90' || data.extendControl=="0")
         )
           x.disabled = true;
       });
