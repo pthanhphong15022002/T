@@ -184,7 +184,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.logicTaskGroup(this.task.taskGroupID);
     }
     this.action = dt?.data?.action;
-    this.showAssignTo = dt?.data?.isAssignTask;  // phân công cho
+    this.showAssignTo = dt?.data?.isAssignTask; // phân công cho
     this.titleAction = dt?.data?.titleAction;
     this.functionID = dt?.data?.functionID;
     this.taskCopy = dt?.data?.taskCopy;
@@ -432,9 +432,17 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listUser = this.task.assignTo?.split(';') || [];
         this.showLabelAttachment = this.task.attachments > 0 ? true : false;
         //them điều kiện ngày  08/06/2023 tho ý thuong
-        if (this.action == 'edit' && this.task.category == '2' && this.task.owner !=this.task.createdBy && this.task.verifyControl != '1') {
-          this.disableDueDate = true;
-          if (this.param?.EditControl != '1' ) this.readOnly = true;
+        if (this.action == 'edit' && this.task.category == '2') {
+          if (
+            this.task.owner == this.task.createdBy &&
+            this.task.verifyControl == '0'
+          ) {
+            this.disableDueDate = false;
+            this.readOnly = false;
+          } else {
+            this.disableDueDate = true;
+            if (this.param?.EditControl != '1') this.readOnly = true;
+          }
         }
         this.changeDetectorRef.detectChanges();
       }
