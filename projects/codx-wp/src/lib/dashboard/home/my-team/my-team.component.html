@@ -1,3 +1,4 @@
+
 <div class="card my-team">
     <div class="card-header border-0">
         <div class="card-title mt-5">
@@ -10,11 +11,14 @@
             <div class="user-teams">
                 <div *ngIf="employeeMyTeam">
                     <ng-container *ngFor="let item of employeeMyTeam; index as i">
-                        <ng-container *ngIf="item.employeeID">
-                            <ng-container *ngIf="i < 2">
-                                <ng-container [ngTemplateOutlet]="item?.isOnline ? tmpOnline : tmpOffline" [ngTemplateOutletContext]="item"></ng-container>
+                        <ng-container *ngIf="item.employeeID && i <= 10">
+                            <ng-container *ngIf="i < 10">
+                                <ng-container 
+                                    [ngTemplateOutlet]="item?.isOnline ? tmpOnline : tmpOffline" 
+                                    [ngTemplateOutletContext]="{item}">
+                                </ng-container>
                             </ng-container>
-                            <ng-container *ngIf="i == 2">
+                            <ng-container *ngIf="i == 10">
                                 <div (mouseenter)="PopoverEmpList(empPopoverList,employeeMyTeam)"
                                     [ngbPopover]="popContent" 
                                     popoverClass="empPopoverClass" 
@@ -33,7 +37,7 @@
         </div>
     </div>
 </div>
-<ng-template #tmpOnline let-item>
+<ng-template #tmpOnline let-item="item">
     <div class="ut-item user-online">
         <codx-img 
             popoverClass="userPopoverClass" 
@@ -45,20 +49,24 @@
             [openDelay]="500" 
             (mouseenter)="PopoverEmp(empPopover, item)"
             (mouseleave)="PopoverEmp(empPopover, null)" 
-            [objectName]="item?.employeeName"
-            [objectId]="item?.employeeID" objectType="HR_Employees">
+            [objectId]="item.employeeID"
+            [objectName]="item.employeeName" 
+            objectType="HR_Employees">
         </codx-img>
         <span class="value" [style.background-color]="online?.color"></span>
     </div>
 </ng-template>
-<ng-template #tmpOffline let-item>
+<ng-template #tmpOffline let-item="item">
     <div class="ut-item user-offline">
-        <codx-img popoverClass="userPopoverClass" [ngbPopover]="popEmpTitle" placement="bottom"
-            #empPopover="ngbPopover" [width]="40" [openDelay]="500"
+        <codx-img popoverClass="userPopoverClass" 
+            [ngbPopover]="popEmpTitle" 
+            placement="bottom"
+            #empPopover="ngbPopover" [width]="40" 
+            [openDelay]="500"
             (mouseenter)="PopoverEmp(empPopover, item)"
             (mouseleave)="PopoverEmp(empPopover, null)" 
-            [objectName]="item?.employeeName"
-            [objectId]="item?.employeeID" 
+            [objectId]="item.employeeID"
+            [objectName]="item.employeeName" 
             objectType="HR_Employees"
             [style.border-color]="offline?.color">
             <span class="value" [style.background-color]="offline?.color"></span>
@@ -66,23 +74,20 @@
     </div>
 </ng-template> 
 <ng-template #popContent>
-    <ng-container>
-        <div *ngFor="let emp of listEmpInfo | filter : searchText : 'employeeName': '' :''" class="pb-2 full">
-            <div class="d-flex flex-column org-card w-100 cursor-pointer" [ngbPopover]="popEmpTitle" placement="left"
-                #pemp="ngbPopover" container="body" triggers="manual" (click)="PopoverEmpOfList(pemp,emp)">
-                <div class="d-flex align-items-start">
-                    <codx-img class="me-3" [objectId]="emp?.employeeID" [objectName]="emp?.employeeName"
-                        objectType="HR_Employees" [width]="30">
-                    </codx-img>
-                    <div class="d-flex flex-column w-100">
-                        <div class="text-dark fw-bold">{{emp?.employeeName}}</div>
-                        <div class="text-gray-500 fs-7">{{emp?.positionName}}</div>
-                    </div>
+    <div *ngFor="let emp of listEmpInfo | filter : searchText : 'employeeName': '' :''" class="pb-2 full">
+        <div class="d-flex flex-column org-card w-100 cursor-pointer" [ngbPopover]="popEmpTitle" placement="left"
+            #pemp="ngbPopover" container="body" triggers="manual" (click)="PopoverEmpOfList(pemp,emp)">
+            <div class="d-flex align-items-start">
+                <codx-img class="me-3" [objectId]="emp?.employeeID" [objectName]="emp?.employeeName"
+                    objectType="HR_Employees" [width]="30">
+                </codx-img>
+                <div class="d-flex flex-column w-100">
+                    <div class="text-dark fw-bold">{{emp?.employeeName}}</div>
+                    <div class="text-gray-500 fs-7">{{emp?.positionName}}</div>
                 </div>
             </div>
         </div>
-    </ng-container>
-
+    </div>
 </ng-template>
 
 <ng-template #popTitle>

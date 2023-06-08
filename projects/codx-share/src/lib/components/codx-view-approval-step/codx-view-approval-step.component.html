@@ -6,23 +6,23 @@
     <div class="codx-approval-step pb-3 step-approve">
       <div class="codx-approval-header d-flex align-items-center mb-3">
         <div class="step-number border-success">{{ item?.stepNo }}</div>
-        <div class="step-title text-gray-700 fw-bold fs-5 me-1">
+        <div class="step-title text-gray-700 fw-bold fs-6 me-2">
           {{ item?.stepType | vll : "ES002" : "text" | async }}
         </div>
         <div
-          class="step-title text-gray-700 fw-bold fs-5 me-1"
+          class="step-title text-gray-700 fw-bold fs-6 me-2"
           *ngIf="item?.signatureType">|</div>
         <div
           *ngIf="eSign"
-          class="step-title text-gray-700 fw-bold fs-5 me-1"
+          class="step-title text-gray-700 fw-bold fs-6 me-2"
           [innerHTML]="
             item?.signatureType
               | formatvalue : fmApprovalStep : 'signatureType'
               | async
           "
         ></div>
-        <div class="text-gray-500 fs-5 me-1">-</div>
-        <div class="text-gray-500 fs-5">
+        <div class="text-gray-500 fs-6 me-2"> - </div>
+        <div class="text-gray-500 fs-6">
           {{ item?.stepName ?? item?.stepNote }}
         </div>
       </div>
@@ -225,16 +225,16 @@
     <div class="codx-approval-step pb-3 step-approve">
       <div class="codx-approval-header d-flex align-items-center mb-3">
         <div class="step-number border-success">{{ item?.stepNo }}</div>
-        <div class="step-title text-gray-700 fw-bold fs-5 me-1">
+        <div class="step-title text-gray-700 fw-bold fs-6 me-2">
           {{ item?.stepType | vll : "ES002" : "text" | async }}
           <!-- {{ item?.stepType | formatvalue : eDiseasesFormModel : "Conclusion" | async }} -->
         </div>
         <ng-container *ngIf="item?.signatureType && fmApprovalTrans">
           <div
-          class="step-title text-gray-700 fw-bold fs-5 me-1">|</div>
+          class="step-title text-gray-700 fw-bold fs-6 me-2"> | </div>
           <div
             *ngIf="eSign"
-            class="step-title text-gray-700 fw-bold fs-5 me-1"
+            class="step-title text-gray-700 fw-bold fs-6 me-2"
             [innerHTML]="
               item?.signatureType
                 | formatvalue : fmApprovalTrans : 'signatureType'
@@ -243,8 +243,8 @@
           ></div>
         </ng-container>
         
-        <div class="text-gray-400 fs-5 me-1">-</div>
-        <div class="text-gray-400 fs-5 me-1">
+        <div class="text-gray-400 fs-6 me-2"> - </div>
+        <div class="text-gray-400 fs-6 me-2">
           {{ item?.stepName ?? item?.stepNote }}
         </div>
       </div>
@@ -444,25 +444,25 @@
   class="codx-approval step-signature-temp"
   *ngIf="canceledProcess?.length > 0 "
 >
-
-<codx-label class="fw-bold fs-5 text-primary py-2" default="Quy trình duyệt đã hủy" name="lblCanceledTrans" (click)="showCanceledTrans(showCanceled)"></codx-label>
-
+<div class="mb-4">
+<codx-label class="fw-bold fs-6 text-primary py-2 cursor-pointer" default="Quy trình duyệt đã hủy" name="lblCanceledTrans" (click)="showCanceledTrans(showCanceled)"></codx-label>
+</div>
 <ng-container *ngIf="showCanceled">
   <ng-container *ngFor="let gr of canceledProcess">
     <ng-container *ngFor="let item of gr; let index = index">
       <div class="codx-approval-step pb-3 step-approve opacity-50">
         <div class="codx-approval-header d-flex align-items-center mb-3">
           <div class="step-number border-success">{{ item?.stepNo }}</div>
-          <div class="step-title text-gray-700 fw-bold fs-5 me-1">
+          <div class="step-title text-gray-700 fw-bold fs-6 me-2">
             {{ item?.stepType | vll : "ES002" : "text" | async }}
             <!-- {{ item?.stepType | formatvalue : eDiseasesFormModel : "Conclusion" | async }} -->
           </div>
           <ng-container *ngIf="item?.signatureType && fmApprovalTrans">
             <div
-            class="step-title text-gray-700 fw-bold fs-5 me-1">|</div>
+            class="step-title text-gray-700 fw-bold fs-6 me-2"> | </div>
             <div
               *ngIf="eSign"
-              class="step-title text-gray-700 fw-bold fs-5 me-1"
+              class="step-title text-gray-700 fw-bold fs-6 me-2"
               [innerHTML]="
                 item?.signatureType
                   | formatvalue : fmApprovalTrans : 'signatureType'
@@ -471,8 +471,8 @@
             ></div>
           </ng-container>
           
-          <div class="text-gray-400 fs-5 me-1">-</div>
-          <div class="text-gray-400 fs-5 me-1">
+          <div class="text-gray-400 fs-6 me-2"> - </div>
+          <div class="text-gray-400 fs-6 me-2">
             {{ item?.stepName ?? item?.stepNote }}
           </div>
         </div>

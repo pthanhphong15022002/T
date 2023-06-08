@@ -172,6 +172,9 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     this.sortModel = data?.data?.sortModel;
     this.formModel = data?.data?.formModel;
     this.hasFilter = data?.data?.hasFilter;
+
+    console.log('sortModel nhan vao', this.sortModel);
+    
   }
 
   //Get grid view setup
@@ -545,7 +548,8 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     //       this.dialogRef.close('none');
     //     }
     // } 
-    else if(this.funcID == this.eContractFuncID || this.funcID == this.ebenefitFuncID || this.funcID == this.eBasicSalaryFuncID){
+    else if(this.funcID == this.eContractFuncID  || this.funcID == this.eBasicSalaryFuncID){
+      debugger
       let lstData = this.gridView.dataService.data;
       let lstResult = []
       for(let i = 0; i < lstData.length; i++){
@@ -570,19 +574,19 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     }
   }
 
-  handleShowHideMf(event, data) {
-    for (let i = 0; i < event.length; i++) {
-      if (
-        event[i].functionID.substr(event[i].functionID.length - 7) == 'ViewAll'
-      ) {
-        event[i].disabled = true;
-        break;
-      }
-    }
-    if(this.funcID == this.eContractFuncID){
-      this.hrService.handleShowHideMF(event, data, this.formModel);
-    }
-  }
+  // handleShowHideMf(event, data) {
+  //   for (let i = 0; i < event.length; i++) {
+  //     if (
+  //       event[i].functionID.substr(event[i].functionID.length - 7) == 'ViewAll'
+  //     ) {
+  //       event[i].disabled = true;
+  //       break;
+  //     }
+  //   }
+  //   if(this.funcID == this.eContractFuncID){
+  //     this.hrService.handleShowHideMF(event, data, this.formModel);
+  //   }
+  // }
 
   clickMF(event: any, data: any, funcID = null) {
     switch (event.functionID) {
@@ -613,6 +617,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
+
                     this.updateGridView(this.gridView, 'delete', null, data);
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -624,6 +629,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
+
                     this.updateGridView(this.gridView, 'delete', null, data);
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -635,6 +641,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
+
                     this.updateGridView(this.gridView, 'delete', null, data);
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -646,6 +653,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
+
                     this.updateGridView(this.gridView, 'delete', null, data);
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -657,6 +665,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                 .subscribe((p) => {
                   if (p) {
                     this.notify.notifyCode('SYS008');
+
                     this.updateGridView(this.gridView, 'delete', null, data);
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -668,6 +677,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                 .subscribe((p) => {
                   if (p[0] != null) {
                     this.notify.notifyCode('SYS008');
+
                     this.updateGridView(this.gridView, 'delete', null, data);
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -708,6 +718,8 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     }
   }
 
+  // Hien tai ham nay chi chay truong hop delete, còn thêm mới và sửa thì
+  // refresh grid luôn, vì khi làm 2 nghiệp vụ đó còn phải xử lí sorting theo yêu cầu BA
   updateGridView(
     gridView: CodxGridviewV2Component,
     actionType: string,
@@ -722,12 +734,18 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       );
     }
     if (actionType == 'add' || actionType == 'copy') {
-      (gridView?.dataService as CRUDService)?.add(newData, 0).subscribe();
-      gridView.addRow(newData, 0, true);
+      // (gridView?.dataService as CRUDService)?.add(newData, 0).subscribe();
+      // gridView.addRow(newData, 0, true);
+
+            //Gọi refresh luôn để dữ liệu hiển thị đúng theo sort
+            gridView.refresh();
       returnVal = 1;
-    } else if (actionType == 'edit') {
-      (gridView?.dataService as CRUDService)?.update(newData).subscribe();
-      gridView.updateRow(index, newData, false);
+    } else if (actionType == 'edit') { 
+      // (gridView?.dataService as CRUDService)?.update(newData).subscribe();
+      // gridView.updateRow(index, newData, false);
+
+            //Gọi refresh luôn để dữ liệu hiển thị đúng theo sort
+            gridView.refresh();
     } else if ((actionType == 'delete')) {
       (gridView?.dataService as CRUDService)?.remove(oldData).subscribe();
       gridView.deleteRow(oldData,true);
@@ -859,11 +877,19 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      debugger
       if (res.event) {
         this.updateGridView(this.gridView, actionType, res.event, data);
       }
       this.df.detectChanges();
     });
+  }
+
+  UpdateDataOnGrid(lst, prdc, dtvl){
+    this.gridView.predicates = prdc,
+    this.gridView.dataValues = dtvl,
+    this.gridView.dataSource = lst;
+    debugger
   }
 
   //#region filter
@@ -891,7 +917,9 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
           [this.filterEBenefitPredicates],
           [this.filterByBenefitIDArr.join(';')]
         )
-        .subscribe();
+        .subscribe((res) =>{
+          this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, this.filterByBenefitIDArr.join(';'));
+        });
     } else if (
       this.filterByBenefitIDArr.length > 0 &&
       (this.startDateEBenefitFilterValue == undefined ||
@@ -913,7 +941,9 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
           [this.filterEBenefitPredicates],
           [this.filterByBenefitIDArr.join(';')]
         )
-        .subscribe();
+        .subscribe((res) =>{
+          this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, this.filterByBenefitIDArr.join(';'));
+        });
     } else if (
       this.filterByBenefitIDArr.length <= 0 &&
       this.startDateEBenefitFilterValue != null
@@ -921,7 +951,9 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeId}" and EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
       (this.gridView.dataService as CRUDService)
         .setPredicates([this.filterEBenefitPredicates], [])
-        .subscribe();
+        .subscribe((res) =>{
+          this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, null);
+        });
       console.log('truong hop 3', this.filterEBenefitPredicates);
     } else if (
       this.filterByBenefitIDArr.length <= 0 &&
@@ -932,7 +964,9 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       console.log('truong hop 4', this.filterEBenefitPredicates);
       (this.gridView.dataService as CRUDService)
         .setPredicates([this.filterEBenefitPredicates], [''])
-        .subscribe();
+        .subscribe((res) =>{
+          this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, null);
+        });
     }
   }
 

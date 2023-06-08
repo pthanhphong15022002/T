@@ -13,6 +13,7 @@ import { ApiHttpService, CRUDService, CacheService, FormModel } from 'codx-core'
 import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/cm_model';
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'codx-deal-detail',
@@ -63,19 +64,20 @@ export class DealDetailComponent implements OnInit {
       isActive: false,
       template: null,
     },
-    {
-      name: 'Quotations',
-      textDefault: 'Báo giá',
-      isActive: false,
-      template: null,
-    },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
-    {
-      name: 'Contract',
-      textDefault: 'Hợp đồng',
-      isActive: false,
-      template: null,
-    },
+    // view mới bỏ nha a thảo đưa lên tab
+    // {
+    //   name: 'Quotations',
+    //   textDefault: 'Báo giá',
+    //   isActive: false,
+    //   template: null,
+    // },
+    // { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
+    // {
+    //   name: 'Contract',
+    //   textDefault: 'Hợp đồng',
+    //   isActive: false,
+    //   template: null,
+    // },
   ];
 
   formModelCustomer: FormModel;
@@ -100,26 +102,34 @@ export class DealDetailComponent implements OnInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    let index = this.tabControl.findIndex((item) => item.name == 'Contract');
-    if (index >= 0) {
-      let contract = {
-        name: 'Contract',
-        textDefault: 'Hợp đồng',
-        isActive: false,
-        template: this.contract,
-      };
-      this.tabControl.splice(index, 1, contract);
-    }
-
-
+    // đưa lên tab rồi em cmt lại nha a bảo
+    // let index = this.tabControl.findIndex((item) => item.name == 'Contract');
+    // if (index >= 0) {
+    //   let contract = {
+    //     name: 'Contract',
+    //     textDefault: 'Hợp đồng',
+    //     isActive: false,
+    //     template: this.contract,
+    //   };
+    //   this.tabControl.splice(index, 1, contract);
+    // }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.dataSelected) {
       this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-      this.getTree() ; //ve cay giao viec
-      this.getContractByDeaID();
+      this.promiseAllAsync();
     }
+  }
+
+  async promiseAllAsync() {
+    try {
+    await this.getTree() ; //ve cay giao viec
+    await this.getContractByDeaID();
+    await this.getContactByDeaID(this.dataSelected.recID);
+
+    } catch (error) {}
+
   }
 
 
@@ -151,7 +161,7 @@ export class DealDetailComponent implements OnInit {
       },
       {
         name: 'Task',
-        textDefault: 'Quy trình',
+        textDefault: 'Công việc',
         icon: 'icon-more',
         isActive: false,
       },
@@ -161,6 +171,19 @@ export class DealDetailComponent implements OnInit {
         icon: 'icon-insert_chart_outlined',
         isActive: false,
       },
+      {
+        name: 'Quotation',
+        textDefault: 'Báo giá',
+        icon: 'icon-monetization_on',
+        isActive: false,
+      },
+      {
+        name: 'Contract',
+        textDefault: 'Hợp đồng',
+        icon: 'icon-sticky_note_2',
+        isActive: false,
+      },
+
     ];
   }
   async executeApiCalls() {
@@ -189,7 +212,7 @@ export class DealDetailComponent implements OnInit {
     console.log(e);
   }
 
-  getContractByDeaID() {
+ async getContractByDeaID() {
     if (this.dataSelected?.recID) {
       var data = [this.dataSelected?.recID];
       this.codxCmService.getListContractByDealID(data).subscribe((res) => {
@@ -201,8 +224,18 @@ export class DealDetailComponent implements OnInit {
       });
     }
   }
+  async getContactByDeaID(recID){
+    this.codxCmService.getContactByObjectID(recID).subscribe((res) => {
+      if (res) {
+        this.contactPerson = res;
+      }
+      else {
+        this.contactPerson = null;
+      }
+    });
+  }
  //load giao việc
-  getTree() {
+ async  getTree() {
     let seesionID = this.dataSelected.refID;
     this.codxCmService.getTreeBySessionID(seesionID).subscribe((tree) => {
       this.treeTask = tree || [];
@@ -210,5 +243,12 @@ export class DealDetailComponent implements OnInit {
   }
   saveAssign(e){
     if(e) this.getTree();
+  }
+
+  getContactPerson($event){
+    if($event) {
+      this.contactPerson = $event?.isDefault ? $event: null  ;
+      this.changeDetectorRef.detectChanges();
+    }
   }
 }

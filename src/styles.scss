@@ -2090,9 +2090,9 @@ lib-dynamic-process .card-header.m-h-auto.p-0 {
   color: var(--primary-dark);
   background-color: var(--gray-100);
 }
-codx-header #chat-box {
-  padding-right: 0px !important;
-}
+// codx-header #chat-box {
+//   padding-right: 0px !important;
+// }
 
 .e-dlg-target .e-tab .e-content.e-lib {
   padding-left: 0;
@@ -2812,6 +2812,10 @@ codx-vll.badge.badge-md span::before{
   // border-radius: 3px!important;
   // margin: 2px 5px!important;
 //}
+.aside-minimize-icon-title .py-1.menu-title-light{
+  padding-top: 0!important;
+  padding-bottom: 0!important;
+}
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link .menu-title{
   font-size: 12px!important;
   padding-top: 2px!important;
@@ -2860,15 +2864,24 @@ codx-vll.badge.badge-md span::before{
 .aside-minimize-icon-title .aside .menu-link {
   padding-left: 7px!important;
   padding-right: 7px!important;
+  margin-bottom: 1px;
+  margin-top: 0;
+}
+[data-kt-aside-minimize=on].aside-minimize-icon-title {
+  .aside .menu-link{
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 }
 .aside-minimize-icon-title .aside-extended .aside-primary .menu-link.active{
   border-radius: 0!important;
 }
 //
-.aside-minimize-icon-title .aside .aside-primary .aside-menu .menu-link {
-  height: 77px;
-  max-height: 77px;
-  min-height: 77px;
+
+[data-kt-aside-minimize=on].aside-minimize-icon-title:not(.aside-hoverable):not(.aside-extended) .aside-menu .menu-link, [data-kt-aside-minimize=on].aside-minimize-icon-title .aside:not(:hover):not(.aside-extended) .aside-menu .menu-link {
+  height: 71px;
+  max-height: 71px;
+  min-height: 71px;
 }
 .aside-menu .menu-item .menu-icon > img, .aside-menu .menu-item .menu-icon .svg-icon, .aside-footer .menu-item .menu-icon > img, .aside-footer .menu-item .menu-icon .svg-icon {
   width: 26px!important;
@@ -3080,4 +3093,22 @@ codx-wrapper.hover-scroll-overlay-y {
   &::-webkit-scrollbar {
     width: 0rem !important;
   }
+}
+
+/*********** ipad ************/
+
+@media (max-width: 991px) {
+  .d-lg-none.ms-2.me-n3{
+    display: none!important;
+  }
+  codx-header.header{ 
+    .ms-n3.me-1{
+      margin-left: 5px!important;
+      margin-right: 15px!important;
+    }
+    .btn.btn-light-primary:hover{
+      background-color: var(--primary-light)!important;
+    }
+  }
+  
 }
