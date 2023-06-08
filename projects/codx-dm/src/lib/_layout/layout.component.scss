@@ -203,8 +203,8 @@ codx-layout:not([data-kt-aside-minimize="on"]){
 }
 .aside-minimize-icon-title .page-dm .aside .menu-link{
   border-radius: 3px 0 0 3px!important;
-  padding: 6px 10px!important;
-  margin-bottom: 4px;
+  padding: 7px 10px!important;
+  margin-bottom: 2px;
   &:hover{
     .menu-title {
       color: var(--primary) !important;
@@ -368,3 +368,5 @@ codx-layout[data-kt-aside-minimize="on"]{
   top: auto !important;
   z-index: 99;
 }
+
+/****************/

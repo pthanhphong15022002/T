@@ -246,7 +246,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
         var dialog = this.callFc.openForm(
           PopupAddDealcompetitorComponent,
           '',
-          500,
+          800,
           600,
           '',
           obj,

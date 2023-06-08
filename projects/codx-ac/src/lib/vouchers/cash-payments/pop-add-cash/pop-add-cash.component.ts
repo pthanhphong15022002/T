@@ -268,7 +268,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                   this.loadSubType(i, this.tabObj);
                 }
               });
-          }else{
+          } else {
             this.cashpayment.subType = this.oldSubType;
             this.form.formGroup.patchValue(this.cashpayment);
           }
@@ -280,10 +280,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
       return;
     }
-    if (!e && this.cashpayment.subType){
+    if (!e && this.cashpayment.subType) {
       i = this.cashpayment.subType;
       this.oldSubType = this.cashpayment.subType;
-    } 
+    }
     if (!ele) ele = this.tabObj;
     this.loadSubType(i, ele);
   }
@@ -599,6 +599,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 .subscribe((res) => {
                   if (res && res.save.data != null) {
                     this.oldReasonID = res.save.data.reasonID;
+                    this.cashpayment = res.save.data;
                     this.hasSaved = true;
                     this.loadGrid();
                   }
