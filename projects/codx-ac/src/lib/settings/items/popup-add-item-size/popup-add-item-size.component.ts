@@ -33,18 +33,16 @@ export class PopupAddItemSizeComponent
   itemSize: ItemSize = {} as ItemSize;
   savedItemSizes: ItemSize[] = [];
   isEdit: boolean = false;
-  dialogRef: DialogRef;
   formTitle: string;
 
   constructor(
     injector: Injector,
     private acService: CodxAcService,
     private notiService: NotificationsService,
-    @Optional() dialogRef: DialogRef,
+    @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
   ) {
     super(injector);
-    this.dialogRef = dialogRef;
 
     this.dialogRef.beforeClose.subscribe(
       (res) => (res.event = this.savedItemSizes)
