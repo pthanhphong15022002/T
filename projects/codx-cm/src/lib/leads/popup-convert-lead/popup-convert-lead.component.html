@@ -227,22 +227,21 @@
             [formModel]="formModelDeals"
           >
           </codx-label>
-
+<!--
           <codx-popup-participants
             [lstParticipants]="listParticipants"
             [dialog]="dialog"
             (eventUser)="valueChangeOwner($event)"
             [owner]="deal?.salespersonID"
-          ></codx-popup-participants>
-          <!-- <ejs-combobox
+          ></codx-popup-participants> -->
+          <ejs-combobox
             [dataSource]="listParticipants"
             [fields]="fieldCbxParticipants"
             [value]="deal?.salespersonID"
             [placeholder]="gridViewSetupDeal?.SalespersonID?.description"
             (valueChange)="valueChangeOwner($event)"
-            (filtering)="onFiltering($event)"
-            [allowFiltering]="true"
-          ></ejs-combobox> -->
+
+          ></ejs-combobox>
         </div>
       </div>
     </div>
