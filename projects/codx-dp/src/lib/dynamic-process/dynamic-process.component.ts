@@ -891,7 +891,7 @@ export class DynamicProcessComponent
       this.notificationsService.notifyCode(
         'SYS009',
         0,
-        '"' + 'Tên quy trình được phát hành' + '"'
+        '"' + this.grvSetup['ReleasedName'].headerText + '"'
       );
       return;
     }
