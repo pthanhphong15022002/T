@@ -1,17 +1,28 @@
 <codx-form
   #form
-  [subHeader]="subHeader"
+  [customToolbar]="subHeader"
   [body]="setJobBody"
   [footer]="setJobFooter"
   [dialog]="dialog"
 ></codx-form>
 
 <ng-template #subHeader>
-  <codx-label
-    name="heardTypeTask"
-    class="text-gray-600 fs-6"
-    default="Chọn loại công việc"
-  ></codx-label>
+  <div class="pt-2 px-2 w-100">
+    <div class="d-flex justify-content-between align-items-center w-100">
+      <codx-label
+        name="titleTypeTasks"
+        class="fw-bold fs-4"
+        [default]="'Chọn loại công việc'"
+      ></codx-label>
+      <button
+        class="button-close d-flex p-3"
+        style="border: none; outline: none; background: none"
+        (click)="dialog.close()"
+      >
+        <i class="icon-close icon-18 text-hover-danger p-1"></i>
+      </button>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #setJobBody>
@@ -23,13 +34,13 @@
   >
     <div class="d-flex align-items-center w-100 job">
       <span
-          class="icon-18 text-white me-2 circle"
-          ngClass="{{ item?.icon }}"
-          [ngStyle]="item?.color"
+          class="icon-18 me-2 circle"
+          [ngClass]="item?.icon"
+          [ngStyle]="{'color' : (item?.color || 'gray'), 'border': '2px solid'}"
         ></span>
-        <span class="text-gray-600">{{ item?.text }}</span>
+        <span class="text-gray-600 fs-6 fw-bold">{{ item?.text }}</span>
     </div>
-    <div class="ms-3 w-20px">
+    <div class="ms-3 w-20px d-flex align-items-center">
       <codx-input
         type="radio"
         pageSize="50"

@@ -59,6 +59,7 @@ import { lastValueFrom, firstValueFrom, Observable, finalize, map } from 'rxjs';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
+import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -92,6 +93,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   typeShare = '';
   multiple = true;
   showID = true;
+  listJobType = [];
   //!--ID SHOW FORM !--//
   general = true;
   role = true;
@@ -216,7 +218,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   headerFiedName = '';
   groupTaskID = '';
   stepRoleOld: any;
-  jobType: any;
+  typeTask: any;
   actionStep = '';
   isSaveStep = false;
   processNameBefore = '';
@@ -437,6 +439,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       .subscribe((res) => {
         this.headerTextStepName = res['StepName']['headerText'];
       });
+    this.getTypeTask();
     // document.addEventListener("keydown", this.handleKeyDown);
   }
 
@@ -2566,39 +2569,43 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //Task -- nvthuan
   openTypeJob() {
-    this.popupJob = this.callfc.openForm(PopupTypeTaskComponent, '', 400, 400);
+    this.popupJob = this.callfc.openForm(CodxTypeTaskComponent, '', 450, 580);
     this.popupJob.closed.subscribe(async (value) => {
       if (value?.event && value?.event['value']) {
-        this.jobType = value?.event['value'];
-        this.handleTask('add');
+        if(value?.event['value'] == "G"){
+          this.openTaskGroup();
+        }else{
+          this.typeTask = value?.event;
+          this.handleTask('add');
+        }
       }
     });
   }
 
-  handleTask(type: string, data?: any) {
+  handleTask(action: string, data?: any) {
     let roleOld;
     let taskGroupIdOld = '';
-    let dataInput = {};
-    if (type === 'add') {
+    let taskInput = {};
+    if (action === 'add') {
       this.popupJob.close();
-    } else if (type === 'copy') {
-      dataInput = JSON.parse(JSON.stringify(data));
+    } else if (action === 'copy') {
+      taskInput = JSON.parse(JSON.stringify(data));
     } else {
       taskGroupIdOld = data['taskGroupID'];
       roleOld = JSON.parse(JSON.stringify(data['roles']));
-      dataInput = JSON.parse(JSON.stringify(data));
+      taskInput = JSON.parse(JSON.stringify(data));
     }
 
-    let listData = [
-      type,
-      this.jobType,
-      this.step,
-      this.taskGroupList,
-      dataInput || {},
-      this.taskList,
-      this.groupTaskID || null,
-      this.listFileTask,
-    ];
+    let dataInput = {
+      action,
+      typeTask: this.typeTask,
+      taskInput,
+      step: this.step,
+      listGroup : this.taskGroupList,
+      listTask: this.taskList,
+      groupTaskID: this.groupTaskID,
+      listFileTask: this.listFileTask,
+    }
     var functionID = 'DPT0206'; //id tuy chojn menu ne
     this.cache.functionList(functionID).subscribe((f) => {
       this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
@@ -2611,7 +2618,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         option.FormModel = formModel;
         option.Width = '550px';
         option.zIndex = 1001;
-        let dialog = this.callfc.openSide(PopupJobComponent, listData, option);
+        let dialog = this.callfc.openSide(PopupJobComponent, dataInput, option);
 
         dialog.closed.subscribe((e) => {
           if (e?.event) {
@@ -2778,15 +2785,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.deleteTask(taskList, task);
         break;
       case 'SYS03':
-        this.jobType = task.taskType;
+        this.typeTask = this.listJobType?.find(type => type.value == task.taskType) ;
         this.handleTask('edit', task);
         break;
       case 'SYS04':
-        this.jobType = task.taskType;
+        this.typeTask = this.listJobType?.find(type => type.value == task.taskType) ;
         this.handleTask('copy', task);
         break;
       case 'DP07':
-        this.jobType = task.taskType;
+        this.typeTask = task.taskType;
         this.viewTask(task);
         break;
     }
@@ -3105,6 +3112,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     }
     return sum;
+  }
+
+  getTypeTask(){
+    this.cache.valueList('DP004').subscribe((res) => {
+      if (res.datas) {
+        this.listJobType = res?.datas;
+      }
+    });
   }
 
   @HostListener('document:click', ['$event'])

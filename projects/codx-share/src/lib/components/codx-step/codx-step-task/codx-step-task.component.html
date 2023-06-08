@@ -263,7 +263,7 @@
 
 <ng-template #buttonTemplate let-data="value">
   <div class="d-flex justify-content-center mt-3" *ngIf="isOnlyView">
-    <button
+    <!-- <button
       type="button"
       class="btn btn-outline-primary me-2"
       (click)="addGroupTask()"
@@ -275,11 +275,11 @@
         [gridViewName]="'grvDPStepsFields'"
         [default]="'Thêm nhóm công việc'"
       ></codx-label>
-    </button>
+    </button> -->
     <button
       type="button"
       class="btn btn-outline-primary ms-4"
-      (click)="addTask(null)"
+      (click)="chooseTypeTask()"
       style="min-width: 170px"
     >
       <i class="icon-add_task icon-18 text-primary"></i>

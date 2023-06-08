@@ -493,16 +493,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let popupTypeTask = this.callfc.openForm(
       CodxTypeTaskComponent,
       '',
-      400,
-      400
+      450, 
+      580,
     );
     let dataOutput = await firstValueFrom(popupTypeTask.closed);
-    return dataOutput?.event?.value ? dataOutput?.event : null;
+    if(dataOutput?.event?.value){
+      this.taskType = dataOutput?.event;
+      if(this.taskType?.value == 'G'){
+        this.addGroupTask();
+      }else{
+        this.addTask(null);
+      }
+    }
   }
 
   async addTask(groupID) {
-    this.taskType = await this.chooseTypeTask();
-    if (!this.taskType) return;
     let task = new DP_Instances_Steps_Tasks();
     task['taskType'] = this.taskType?.value;
     task['stepID'] = this.currentStep?.recID;
@@ -540,28 +545,37 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async editTask(task) {
     if (task) {
       let taskEdit = JSON.parse(JSON.stringify(task));
+      let groupIdOld = taskEdit?.taskGroupID;
       this.taskType = this.listTaskType.find(
         (type) => type.value == taskEdit?.taskType
       );
-      let taskOutput = await this.openPopupTask('edit', taskEdit);
-      if (taskOutput?.event.task) {
-        let data = taskOutput?.event;
-        let group = this.listGroupTask.find(
-          (group) => group.refID == data.task.taskGroupID
-        );
-        let indexTask = this.currentStep?.tasks?.findIndex(
-          (taskFind) => taskFind.recID == task.recID
-        );
-        if (group) {
-          let index = group?.task?.findIndex(
-            (taskFind) => taskFind.recID == task.recID
-          );
-          if (index >= 0) {
-            group?.task?.splice(index, 1, data?.task);
+      let dataOutput = await this.openPopupTask('edit', taskEdit);
+      if (dataOutput?.event.task) {
+        let taskOutput = dataOutput?.event?.task;
+        let group = this.listGroupTask.find((group) => group.refID == taskOutput?.taskGroupID);
+        let indexTask = this.currentStep?.tasks?.findIndex((taskFind) => taskFind.recID == task.recID);
+
+        if(taskOutput?.taskGroupID != groupIdOld){
+          let groupOld = this.listGroupTask.find((group) => group.refID == groupIdOld);
+          if (groupOld) {
+            let index = groupOld?.task?.findIndex((taskFind) => taskFind.recID == task.recID);
+            if (index >= 0) {
+              groupOld?.task?.splice(index, 1);
+            }
           }
-        }
+          if (group) {
+            group?.task?.push(taskOutput);
+          }    
+        }else{
+          if (group) {
+            let index = group?.task?.findIndex((taskFind) => taskFind.recID == task.recID);
+            if (index >= 0) {
+              group?.task?.splice(index, 1, taskOutput);
+            }
+          }    
+        }   
         if (indexTask >= 0) {
-          this.currentStep?.tasks?.splice(indexTask, 1, data?.task);
+          this.currentStep?.tasks?.splice(indexTask, 1, taskOutput);
         }
       }
     }
