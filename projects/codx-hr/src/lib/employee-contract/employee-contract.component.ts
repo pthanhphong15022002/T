@@ -26,6 +26,7 @@ import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-det
   styleUrls: ['./employee-contract.component.css'],
 })
 export class EmployeeContractComponent extends UIComponent {
+  console = console;
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail: ViewDetailContractsComponent;
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;

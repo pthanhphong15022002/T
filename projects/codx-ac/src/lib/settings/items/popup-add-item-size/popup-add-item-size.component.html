@@ -13,30 +13,99 @@
   <ng-container *ngIf="form.formGroup">
     <div class="row mt-3">
       <div class="col-8">
-        <div class="row">
-          <div class="col-6 form-group">
-            <codx-label
-              fiedName="sizeID"
-              [formModel]="dialogRef.formModel"
-            ></codx-label>
-            <codx-input
-              [formModel]="dialogRef.formModel"
-              field="sizeID"
-              [Group]="form.formGroup"
-            ></codx-input>
-          </div>
+        <div class="row col-6 form-group">
+          <codx-label
+            fiedName="sizeID"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            field="sizeID"
+            [Group]="form.formGroup"
+          ></codx-input>
         </div>
 
         <div class="form-group">
           <codx-label
             fiedName="sizeName"
-            [formModel]="dialogRef.formModel"
+            [formModel]="form.formModel"
           ></codx-label>
           <codx-input
-            [formModel]="dialogRef.formModel"
+            [formModel]="form.formModel"
             field="sizeName"
             [Group]="form.formGroup"
           ></codx-input>
+        </div>
+
+        <div class="row">
+          <div class="col-4 form-group">
+            <codx-label
+              fiedName="length"
+              [formModel]="form.formModel"
+            ></codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              field="length"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+          <div class="col-4 form-group">
+            <codx-label
+              fiedName="width"
+              [formModel]="form.formModel"
+            ></codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              field="width"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+          <div class="col-4 form-group">
+            <codx-label
+              fiedName="height"
+              [formModel]="form.formModel"
+            ></codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              field="height"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+
+          <div class="col-6 form-group">
+            <codx-label
+              fiedName="nWeight"
+              [formModel]="form.formModel"
+            ></codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              field="nWeight"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+          <div class="col-6 form-group">
+            <codx-label
+              fiedName="gWeight"
+              [formModel]="form.formModel"
+            ></codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              field="gWeight"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+
+          <!-- <div class="col-12 form-group">
+            <codx-label
+              fiedName="conversion"
+              [formModel]="form.formModel"
+            ></codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              field="conversion"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div> -->
         </div>
       </div>
 
@@ -45,7 +114,7 @@
           #itemSizeImage
           [funcId]="dialogData.data.funcId"
           [objectId]="itemSize.recID"
-          [objectType]="dialogRef.formModel.entityName"
+          [objectType]="form.formModel.entityName"
           [width]="125"
           [isAllowEdit]="true"
           [isDefaulImg]="true"
@@ -66,14 +135,14 @@
     >
       <codx-label
         fiedName="lblSaveAndClear"
-        [formModel]="dialogRef.formModel"
+        [formModel]="form.formModel"
         default="Lưu & Thêm"
       ></codx-label>
     </button>
     <button type="button" class="btn btn-primary" (click)="save(true)">
       <codx-label
         fiedName="lblSave"
-        [formModel]="dialogRef.formModel"
+        [formModel]="form.formModel"
         default="Lưu"
       ></codx-label>
     </button>
@@ -82,7 +151,7 @@
     <button type="button" class="btn btn-primary" (click)="update()">
       <codx-label
         fiedName="lblUpdate"
-        [formModel]="dialogRef.formModel"
+        [formModel]="form.formModel"
         default="Lưu"
       ></codx-label>
     </button>

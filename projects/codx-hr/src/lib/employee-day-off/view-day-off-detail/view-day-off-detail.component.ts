@@ -2,23 +2,17 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Injector,
   Input,
   Output,
-  TemplateRef,
   ViewChild,
   OnChanges,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   AuthStore,
-  ButtonModel,
   CacheService,
   CallFuncService,
-  DialogRef,
   NotificationsService,
-  UIComponent,
-  ViewModel,
   ViewsComponent,
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
@@ -101,10 +95,12 @@ export class ViewDayOffDetailComponent implements OnChanges {
   clickMF(evt: any, data: any = null) {
     this.clickMFunction.emit({ event: evt, data: data });
   }
+
   ngOnChanges() {
     this.getGroupKowTypeView();
     this.checkViewKowTyeGroup();
   }
+
   getGroupKowTypeView() {
     this.groupKowTypeView = {
       groupA: {

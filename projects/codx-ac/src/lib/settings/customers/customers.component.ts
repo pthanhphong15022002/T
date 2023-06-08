@@ -160,61 +160,49 @@ export class CustomersComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .delete([data], true, (option: RequestOption) =>
-        this.beforeDelete(option, data)
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.api
-            .exec('ERM.Business.BS', 'BankAccountsBusiness', 'DeleteAsync', [
-              this.objecttype,
-              data.customerID,
-            ])
-            .subscribe((res: any) => {
-              if (res) {
-                this.api
-                  .exec(
-                    'ERM.Business.BS',
-                    'AddressBookBusiness',
-                    'DeleteAsync',
-                    [this.objecttype, data.customerID]
-                  )
-                  .subscribe((res: any) => {
-                    if (res) {
-                      this.api
-                        .exec(
-                          'ERM.Business.BS',
-                          'ContactBookBusiness',
-                          'DeleteAsync',
-                          [this.objecttype, data.customerID]
-                        )
-                        .subscribe((res: any) => {
-                          if (res) {
-                            this.api
-                              .exec(
-                                'ERM.Business.AC',
-                                'ObjectsBusiness',
-                                'DeleteAsync',
-                                [data.customerID]
-                              )
-                              .subscribe((res: any) => {});
-                          }
-                        });
-                    }
-                  });
-              }
-            });
-        }
-      });
-  }
-  beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteAsync';
-    opt.className = 'CustomersBusiness';
-    opt.assemblyName = 'SM';
-    opt.service = 'SM';
-    opt.data = data;
-    return true;
+    this.view.dataService.delete([data], true).subscribe((res: any) => {
+      if (res) {
+        this.api
+          .exec('ERM.Business.BS', 'BankAccountsBusiness', 'DeleteAsync', [
+            this.objecttype,
+            data.customerID,
+          ])
+          .subscribe((res: any) => {
+            if (res) {
+              this.api
+                .exec(
+                  'ERM.Business.BS',
+                  'AddressBookBusiness',
+                  'DeleteAsync',
+                  [this.objecttype, data.customerID]
+                )
+                .subscribe((res: any) => {
+                  if (res) {
+                    this.api
+                      .exec(
+                        'ERM.Business.BS',
+                        'ContactBookBusiness',
+                        'DeleteAsync',
+                        [this.objecttype, data.customerID]
+                      )
+                      .subscribe((res: any) => {
+                        if (res) {
+                          this.api
+                            .exec(
+                              'ERM.Business.AC',
+                              'ObjectsBusiness',
+                              'DeleteAsync',
+                              [data.customerID]
+                            )
+                            .subscribe((res: any) => {});
+                        }
+                      });
+                  }
+                });
+            }
+          });
+      }
+    });
   }
   //#endregion
 }
