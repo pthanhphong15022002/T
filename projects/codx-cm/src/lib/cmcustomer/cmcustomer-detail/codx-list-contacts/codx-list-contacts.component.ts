@@ -418,4 +418,27 @@ export class CodxListContactsComponent implements OnInit {
       this.isCheckedAll = this.listContacts.every((item) => item.checked);
     }
   }
+
+
+  getListContactsByObjectId(objectID) {
+    this.loaded = false;
+    if (!this.selectAll) {
+      this.request.predicates = 'ObjectID=@0';
+      this.request.dataValues = objectID;
+      this.request.entityName = 'CM_Contacts';
+      this.request.funcID = 'CM0102';
+      this.className = 'ContactsBusiness';
+      this.fetch().subscribe((item) => {
+        this.listContacts = this.cmSv.bringDefaultContactToFront(item);
+        if (this.listContacts != null && this.listContacts.length > 0) {
+          this.changeContacts(this.listContacts[0]);
+          if (this.isConvertLeadToCus) this.insertFieldCheckbox();
+        }
+        this.loaded = true;
+      });
+    } else {
+      this.loadListContact(this.listContacts);
+      this.loaded = true;
+    }
+  }
 }

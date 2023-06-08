@@ -108,6 +108,7 @@ export class CasesComponent
   colorReasonFail: any;
   caseType:string;
   applyFor:string;
+  formModelCrr: FormModel = new FormModel();
 
 
   constructor(
@@ -753,17 +754,7 @@ export class CasesComponent
 
   //#region CRUD
   add() {
-    switch (this.funcID) {
-      case 'CM0401': {
-        //statements;
-        this.addCases();
-        break;
-      }
-      default: {
-        //statements;
-        break;
-      }
-    }
+    this.addCases();
   }
 
   addCases() {
@@ -771,15 +762,9 @@ export class CasesComponent
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-
-      var formMD = new FormModel();
-      // formMD.funcID = funcIDApplyFor;
-      // formMD.entityName = fun.entityName;
-      // formMD.formName = fun.formName;
-      // formMD.gridViewName = fun.gridViewName;
       option.Width = '800px';
       option.zIndex = 1001;
-      this.openFormCases(formMD, option, 'add');
+      this.openFormCases(this.formModelCrr, option, 'add');
     });
   }
 
@@ -816,15 +801,10 @@ export class CasesComponent
         option.FormModel = this.view.formModel;
         option.Width = '800px';
         option.zIndex = 1001;
-        var formMD = new FormModel();
-        // formMD.funcID = funcIDApplyFor;
-        // formMD.entityName = fun.entityName;
-        // formMD.formName = fun.formName;
-        // formMD.gridViewName = fun.gridViewName;
         var obj = {
           action: 'edit',
-          formMD: formMD,
-          titleAction: 'Chỉnh sửa Phiếu ghi nhận sự cố',
+          formMD: this.formModelCrr,
+          titleAction: this.titleAction,
         };
         let dialogCustomcases = this.callfc.openSide(
           PopupAddCasesComponent,
@@ -912,14 +892,21 @@ export class CasesComponent
    popup.closed.subscribe((e) => {});
   }
 
-  checkFunction(funcID:any){
-    if(funcID === 'CM0401') {
-      this.caseType = '1';
-      this.applyFor = '2';
-    }
-    else if(funcID === 'CM0402') {
-      this.caseType = '2';
-      this.applyFor = '3';
-    }
+  async checkFunction(funcID:any){
+   await this.cache.functionList(funcID).subscribe((fun) => {
+      this.formModelCrr.funcID = fun.functionID;
+      this.formModelCrr.entityName = fun.entityName;
+      this.formModelCrr.formName = fun.formName;
+      this.formModelCrr.gridViewName = fun.gridViewName;
+      if(this.formModelCrr.formName === 'CMCases') {
+        this.caseType = '1';
+        this.applyFor = '2';
+      }
+      else if(this.formModelCrr.formName === 'CMRequests') {
+        this.caseType = '2';
+        this.applyFor = '3';
+      };
+    });
+
   }
 }

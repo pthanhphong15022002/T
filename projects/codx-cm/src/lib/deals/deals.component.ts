@@ -203,7 +203,6 @@ export class DealsComponent
           },
         },
       ];
-   
     this.changeDetectorRef.detectChanges();
   }
 
@@ -973,6 +972,7 @@ export class DealsComponent
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event).subscribe();
+        // this.dataSelected = JSON.parse(JSON.stringify(e.event));
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1008,8 +1008,9 @@ export class DealsComponent
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
+            // this.dataSelected = JSON.parse(JSON.stringify(e.event))
             this.detailViewDeal.dataSelected = JSON.parse(
-              JSON.stringify(e.event)
+              JSON.stringify(this.dataSelected)
             );
             this.changeDetectorRef.detectChanges();
           }
