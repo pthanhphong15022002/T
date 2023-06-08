@@ -1,0 +1,35 @@
+<div class="my-3 d-flex flex-wrap gap-3">
+  <div
+    *ngFor="let i of data"
+    class="border mw-25 d-flex flex-column justify-content-between align-items-center gap-1 p-1 position-relative hover-color"
+    role="button"
+    (click)="onClickEdit(i)"
+    (mouseenter)="hoveredId = i.recID"
+    (mouseleave)="hoveredId = null"
+  >
+    <codx-img
+      [funcId]="parent.form.formModel?.funcID"
+      [objectId]="i.recID"
+      [objectType]="entityName"
+      [width]="100"
+      [imgOn]="i.modifiedOn"
+      [isDefaulImg]="true"
+      imageType="square"
+    >
+    </codx-img>
+
+    <button
+      *ngIf="hoveredId === i.recID"
+      type="button"
+      class="btn-close position-absolute"
+      style="right: 5px; top: 5px"
+      (click)="onClickDelete($event, i)"
+    ></button>
+
+    <div class="fw-bold">
+      <ng-container
+        *ngTemplateOutlet="captionTemplate; context: { $implicit: i }"
+      ></ng-container>
+    </div>
+  </div>
+</div>

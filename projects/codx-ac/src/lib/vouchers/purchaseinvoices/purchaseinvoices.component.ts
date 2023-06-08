@@ -20,6 +20,7 @@ import {
 import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { PurchaseInvoicesLines } from '../../models/PurchaseInvoicesLines.model';
+import { PurchaseInvoices } from '../../models/PurchaseInvoices.model';
 
 @Component({
   selector: 'lib-purchaseinvoices',
@@ -292,9 +293,13 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.itemSelected = data;
     this.loadDatadetail(data);
   }
+
   changeDataMF() {
-    this.itemSelected = this.view.dataService.dataSelected;
-    this.loadDatadetail(this.itemSelected);
+    if(this.view.dataService.dataSelected.recID)
+    {
+      this.itemSelected = this.view.dataService.dataSelected;
+      this.loadDatadetail(this.itemSelected);
+    }
   }
   loadDatadetail(data) {
     this.api
