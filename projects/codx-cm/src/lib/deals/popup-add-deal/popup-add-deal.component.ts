@@ -23,12 +23,14 @@ import {
   CodxComboboxComponent,
   CodxInputComponent,
   DataRequest,
+  DialogModel,
 } from 'codx-core';
 import { CM_Contacts, CM_Deals } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstances } from '../../models/tmpModel';
 import { debug } from 'console';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
+import { PopupQuickaddContactComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 
 @Component({
   selector: 'lib-popup-add-deal',
@@ -44,6 +46,7 @@ export class PopupAddDealComponent
   @ViewChild('tabCustomFieldDetail') tabCustomFieldDetail: TemplateRef<any>;
   @ViewChild('tabGeneralContactDetail') tabGeneralContactDetail: TemplateRef<any>;
   @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent
+  CodxListContactsComponent
 
   // setting values in system
   dialog: DialogRef;
@@ -129,7 +132,7 @@ export class PopupAddDealComponent
   lstContactOld:any[] = [];
   isLoad:boolean = true;
   customerName:any;
-  default1:any;
+  isViewAll:boolean = false;
 
   constructor(
     private inject: Injector,
@@ -148,6 +151,7 @@ export class PopupAddDealComponent
     this.model = { ApplyFor: '1' };
     if(dt?.data.processID) {
       this.deal.processID = dt?.data.processID;
+      this.isViewAll = true;
     }
     this.executeApiCalls();
     if (this.action != this.actionAdd) {
@@ -191,7 +195,12 @@ export class PopupAddDealComponent
       );
       if (e.action == 'edit') {
         if (findIndex != -1) {
-          this.lstContactDeal[findIndex] = e.data;
+          var isDefault = this.lstContactDeal[findIndex]?.isDefault;
+          var role = this.lstContactDeal[findIndex]?.role;
+          this.lstContactDeal[findIndex] =JSON.parse(JSON.stringify(e.data));
+          this.lstContactDeal[findIndex] = JSON.parse(JSON.stringify(e.data));
+          this.lstContactDeal[findIndex].isDefault = isDefault;
+          this.lstContactDeal[findIndex].role = role;
         }
       } else {
         this.lstContactDelete.push(Object.assign({}, e?.data));
@@ -199,32 +208,115 @@ export class PopupAddDealComponent
           this.lstContactDeal.splice(findIndex, 1);
         }
       }
+      this.changeDetectorRef.detectChanges();
     }
   }
   lstContactEmit(e) {
     this.lstContactCustomer = e;
   }
   objectConvertDeal(e) {
-    if (e.e) {
+    if (e.e == true) {
       if (e.data) {
         var tmp = new CM_Contacts();
         tmp = JSON.parse(JSON.stringify(e.data));
         tmp.recID = Util.uid();
         tmp.refID = e.data.recID;
+        tmp.objectType = '4';
+        tmp.isDefault = false;
+        var indexCus = this.lstContactCustomer.findIndex(
+          (x) => x.recID == e.data.recID
+        );
+
         if (!this.lstContactDeal.some((x) => x.refID == e?.data?.recID)) {
           this.lstContactDeal.push(tmp);
-          this.loadContactDeal.loadListContact(this.codxCmService.bringDefaultContactToFront(this.lstContactDeal));
+          this.loadContactDeal.loadListContact(this.lstContactDeal);
         }
+        if (indexCus != -1) {
+          this.lstContactCustomer[indexCus].checked = true;
+        }
+        if (tmp.objectType) this.popupEditRoleDeal(tmp, e.data);
       }
     } else {
       var index = this.lstContactDeal.findIndex(
         (x) => x.refID == e?.data?.recID
       );
-      this.lstContactDeal.splice(index, 1);
+      if(index != -1) {
+        this.lstContactDeal.splice(index, 1);
+        this.loadContactDeal.loadListContact(this.lstContactDeal);
+      }
 
     }
     this.changeDetectorRef.detectChanges();
   }
+
+  popupEditRoleDeal(tmp, data) {
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'CMContacts';
+    dataModel.gridViewName = 'grvCMContacts';
+    dataModel.entityName = 'CM_Contacts';
+    dataModel.funcID = 'CM0102';
+    var title = '';
+    opt.FormModel = dataModel;
+    this.cache
+      .moreFunction(dataModel.formName, dataModel.gridViewName)
+      .subscribe((fun) => {
+        if (fun && fun.length) {
+          let m = fun.find((x) => x.functionID == 'CM0102_4');
+          if (m) title = m.defaultName;
+        }
+        this.cache
+          .gridViewSetup(dataModel.formName, dataModel.gridViewName)
+          .subscribe((res) => {
+            var obj = {
+              moreFuncName: title ?? 'Cập nhật vai trò',
+              action: 'editRole',
+              dataContact: data,
+              type: 'formAdd',
+              recIDCm: this.deal?.recID,
+              objectType: '4',
+              objectName: this.deal?.dealName,
+              gridViewSetup: res,
+              listContacts: this.lstContactDeal,
+              customerID: null,
+            };
+            var dialog = this.callfc.openForm(
+              PopupQuickaddContactComponent,
+              '',
+              500,
+              250,
+              '',
+              obj,
+              '',
+              opt
+            );
+            dialog.closed.subscribe((e) => {
+              if (e && e?.event) {
+                if (e.event?.recID) {
+                  var index = this.lstContactDeal.findIndex(
+                    (x) => x.recID != e.event?.recID && x.isDefault
+                  );
+                  if (index != -1) {
+                    if (e?.event?.isDefault) {
+                      this.lstContactDeal[index].isDefault = false;
+                    }
+                  }
+                  tmp.isDefault = e?.event?.isDefault;
+                  tmp.role = e?.event?.role;
+                }
+              }
+            });
+          });
+      });
+  }
+
+  // loadListContact(lstContact) {
+  //   this.l = this.codxCmService.bringDefaultContactToFront(lstContact);
+  //   if (this.listContacts != null && this.listContacts.length > 0) {
+  //     this.changeContacts(this.listContacts[0]);
+  //     if (this.isConvertLeadToCus) this.insertFieldCheckbox();
+  //   }
+  // }
 
   getListContactByObjectID(objectID) {
     this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
@@ -495,7 +587,7 @@ export class PopupAddDealComponent
        datas = [this.deal, this.lstContactDeal];
     }
     else {
-      this.covnertListContact(this.lstContactOld,this.lstContactDeal)
+      this.covnertListContact(this.lstContactOld,  JSON.parse(JSON.stringify(this.lstContactDeal)))
       datas = [this.deal, this.customerIDOld, this.lstContactDeal, this.lstContactAdd,this.lstContactDelete];
     }
 
@@ -521,7 +613,7 @@ export class PopupAddDealComponent
       if(this.action === this.actionEdit) {
         await this.getListContactByDealID(this.deal.recID);
       }
-      if(this.action === this.actionAdd && this.deal.processID ) {
+      if(this.action === this.actionAdd && this.deal.processID && this.isViewAll ) {
         await this.getBusinessLineByProcessID(this.deal.processID);
       }
 
@@ -792,7 +884,7 @@ export class PopupAddDealComponent
     const setNew = new Set(listNew.map(item => item.contactID));
     const list1 = listOld.filter(item => !setNew.has(item.contactID));
     const list2 = listNew.filter(item => !setOld.has(item.contactID));
-    const list3 = listOld.filter(item => setNew.has(item.contactID));
+    const list3 = listNew.filter(item => setOld.has(item.contactID));
     this.lstContactDelete = list1;
     this.lstContactAdd = list2;
     this.lstContactDeal = list3;
@@ -800,5 +892,26 @@ export class PopupAddDealComponent
   else {
     this.lstContactDelete = this.lstContactOld;
   }
+  }
+
+  contactEventDeal(e) {
+    if (e.data) {
+      var findIndex = this.lstContactCustomer.findIndex(
+        (x) => x.recID == e.data?.refID
+      );
+      if (e.action == 'edit') {
+        if (findIndex != -1) {
+          var isDefault = this.lstContactCustomer[findIndex].isDefault;
+          this.lstContactCustomer[findIndex] = JSON.parse(
+            JSON.stringify(e.data)
+          );
+          this.lstContactCustomer[findIndex].recID = e.data.refID;
+          this.lstContactCustomer[findIndex].role = null;
+          this.lstContactCustomer[findIndex].isDefault = isDefault;
+          this.loadContactDeal.loadListContact(this.lstContactCustomer);
+        }
+      }
+      this.changeDetectorRef.detectChanges();
+    }
   }
 }

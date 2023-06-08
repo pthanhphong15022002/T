@@ -279,9 +279,9 @@ export class PopupAddEmployeeComponent implements OnInit {
               .updateFileDirectReload(res.employeeID)
               .subscribe((res2: any) => {
                 this.notifySV.notifyCode('SYS006');
-                this.dialogRef.close(res);
               });
             this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
+            this.dialogRef.close(res);
           } else {
             this.notifySV.notifyCode('SYS023');
             this.dialogRef.close(null);
@@ -303,7 +303,7 @@ export class PopupAddEmployeeComponent implements OnInit {
         .subscribe((res: any) => {
           this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
           this.notifySV.notifyCode(res ? 'SYS007' : 'SYS021');
-          this.dialogRef.close(res ? data : null);
+          this.dialogRef.close(res ? res : null);
         });
     }
   }

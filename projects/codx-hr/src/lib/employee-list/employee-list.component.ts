@@ -45,7 +45,6 @@ export class EmployeeListComponent extends UIComponent {
 
   constructor(
     private injector: Injector,
-    private notifiSV: NotificationsService
   ) {
     super(injector);
   }
