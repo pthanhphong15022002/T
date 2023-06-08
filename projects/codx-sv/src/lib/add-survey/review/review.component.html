@@ -860,44 +860,32 @@
   <div class="d-flex">
     <div class="form-group question w-100">
       <div class="title-des d-flex">
-        <span>{{ "Câu hỏi hình ảnh video" }}</span>
+        <span [innerHtml]="itemQuestion.question?itemQuestion.question:'Câu hỏi hình ảnh video'"></span>
       </div>
     </div>
   </div>
   <ng-container #editImage>
     <div class="position-relative">
       <div
-        class="row mt-2 justify-content-between pd-10"
-        *ngIf="
-          lstEditIV.length > 0 && !itemQuestion.url && !itemQuestion.videoID
-        "
+        class="row mt-2 justify-content-between"
+        *ngIf="lstEditIV.length > 0 && !itemQuestion.url && !itemQuestion.videoID"
       >
         <ng-container *ngFor="let data of lstEditIV">
           <div
-            class="col-5 my-2 m-w-100"
+            class="col-5 my-2 w-100"
             *ngIf="data.objectID == itemQuestion.recID"
           >
-            <div class="w-150">
-              <ng-container *ngIf="data.referType == REFER_TYPE.IMAGE">
-                <ng-container
-                  *ngIf="data.recID || data.objectID; else imageSrc"
-                >
-                  <codx-img
-                    [objectId]="data.objectID"
-                    [objectType]="functionList.entityName"
-                    [width]="150"
-                    cssClass="pic"
-                    imageType="square"
-                    referType="image"
-                  >
-                  </codx-img>
+            <div class="w-100 d-flex justify-content-center">
+              <ng-container *ngIf="data.referType == (recID + '_' + REFER_TYPE.IMAGE)">
+                <ng-container *ngIf="data.recID || data.objectID; else imageSrc">
+                  <img class="w-500px" [src]="en.urlUpload +'/'+data?.pathDisk" alt="" />
                 </ng-container>
                 <ng-template #imageSrc>
                   <img [src]="data.avatar || data.data" alt="" />
                 </ng-template>
               </ng-container>
-              <ng-container *ngIf="data.referType == REFER_TYPE.VIDEO">
-                <video #video controls class="w-100 rounded h-auto">
+              <ng-container *ngIf="data.referType == (recID + '_' + REFER_TYPE.VIDEO)">
+                <video #video controls class="w-600px h-auto div-video-review">
                   <source [src]="data?.srcVideo" type="video/mp4" />
                 </video>
               </ng-container>

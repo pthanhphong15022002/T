@@ -1506,15 +1506,17 @@ export class CodxTasksComponent
       this.notiService.notifyCode('TM052');
       return;
     }
-    if (data.isTimeOut) {
-      this.notiService.notifyCode('TM023');
-      return;
-    }
 
-    if (this.param.ExtendControl == '0') {
-      this.notiService.notifyCode('TM021');
-      return;
-    }
+    //bo chuc nang nay di
+    // if (data.isTimeOut) {
+    //   this.notiService.notifyCode('TM023');
+    //   return;
+    // }
+
+    // if (this.param.ExtendControl == '0') {
+    //   this.notiService.notifyCode('TM021');
+    //   return;
+    // }
 
     if (data.extendStatus == '3') {
       this.api
@@ -1731,6 +1733,21 @@ export class CodxTasksComponent
 
   changeDataMF(e, data) {
     if (e) {
+      // e.forEach((x) => {
+      //   switch (x.functionID) {
+      //     //tắt duyệt confirm
+      //     case 'TMT02016':
+      //     case 'TMT02017':
+      //       if (data.confirmStatus != '1') x.disabled = true;
+      //       break;
+      //     case 'TMT02019':
+      //     case 'TMT02027':
+      //       if (data.verifyControl == '0' && data.category == '1')
+      //         x.disabled = true;
+      //         break;
+      //   }
+      // });
+
       e.forEach((x) => {
         //tắt duyệt confirm
         if (
@@ -1740,7 +1757,7 @@ export class CodxTasksComponent
           x.disabled = true;
         }
         if (
-          x.functionID == 'TMT02019' &&
+          (x.functionID == 'TMT02019' ||  x.functionID == 'TMT02027')&&
           data.verifyControl == '0' &&
           data.category == '1'
         ) {
@@ -1802,8 +1819,8 @@ export class CodxTasksComponent
         }
         //an gia hạn cong viec
         if (
-          (x.functionID == 'TMT02019' || x.functionID == 'TMT02026') &&
-          (data.status == '80' || data.status == '90')
+          (x.functionID == 'TMT02019' || x.functionID == 'TMT02027' || x.functionID == 'TMT02026' ) &&
+          (data.status == '80' || data.status == '90' || data.extendControl=="0")
         )
           x.disabled = true;
       });
@@ -2064,8 +2081,7 @@ export class CodxTasksComponent
   getHtml(data) {
     return `<div id="point-${data.recID}" style="font-size:10px;font-weight:500;color:${this.color};fill:${this.color};margin-top: 2px;"><span>${data.percentage}</span></div>`;
   }
-  genData(por){
-    return  Number.parseInt(por)??0
+  genData(por) {
+    return Number.parseInt(por) ?? 0;
   }
-  
 }
