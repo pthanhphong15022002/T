@@ -335,7 +335,9 @@ export class EmployeeListComponent extends UIComponent {
         totalPage: this.view.dataService.pageCount
       };
       let state = {
-        data: this.view.dataService.data,
+        data: this.view.dataService.data.map(function(obj){
+          return{EmployeeID:obj.employeeID};
+          }),
         request: this.view.dataService.request,
       };
       this.codxService.navigate('', func?.url, queryParams, state, true);
