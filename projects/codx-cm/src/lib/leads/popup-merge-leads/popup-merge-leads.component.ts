@@ -175,7 +175,7 @@ export class PopupMergeLeadsComponent implements OnInit {
     }
 
     if (this.leadTwo == null && this.leadThree == null) {
-      this.noti.notify('CM008');
+      this.noti.notifyCode('CM008');
       return;
     }
 
@@ -185,8 +185,7 @@ export class PopupMergeLeadsComponent implements OnInit {
       this.leadOne?.recID,
       this.leadTwo?.recID,
       this.leadThree?.recID,
-      this.lstContactNew,
-      this.lstAddressNew,
+      this.changeAvata == false ? this.recIDLead : null
     ];
 
     this.api
@@ -218,9 +217,9 @@ export class PopupMergeLeadsComponent implements OnInit {
             ]);
             this.noti.notifyCode('SYS034');
           } else {
-            await firstValueFrom(
-              this.cmSv.copyFileAvata(this.recIDLead, this.leadNew.recID)
-            );
+            // await firstValueFrom(
+            //   this.cmSv.copyFileAvata(this.recIDLead, this.leadNew.recID)
+            // );
             if (this.changeAvataContact) {
               await firstValueFrom(
                 this.imageAvatarContact.updateFileDirectReload(res?.contactID)
