@@ -674,7 +674,14 @@ export class CodxCmService {
   }
 
 
-
+  getIdBusinessLineByProcessID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'BusinessLinesBusiness',
+      'GetOneBusinessLineByProcessIDAsync',
+      data
+    );
+  }
 
   getListContactByLeadID(data) {
     return this.api.exec<any>(

@@ -15,6 +15,7 @@ import { PopupAddCmCustomerComponent } from '../../../cmcustomer/popup-add-cmcus
 import { CodxCmService } from '../../../codx-cm.service';
 import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
 import { DealsComponent } from '../../deals.component';
+import { DealDetailComponent } from '../deal-detail.component';
 
 @Component({
   selector: 'codx-tab-deal-detail',
@@ -30,6 +31,7 @@ export class TabDetailCustomComponent
   @Input() formModel: any;
   @Input() listSteps: DP_Instances_Steps[] = [];
   @Output() saveAssign = new EventEmitter<any>();
+  // @Output() contactEvent = new EventEmitter<any>();
   titleAction: string = '';
   listStep = [];
   isUpdate = true; //xư lý cho edit trung tuy chinh ko
@@ -62,6 +64,7 @@ export class TabDetailCustomComponent
     private codxCmService: CodxCmService,
     private changeDetec: ChangeDetectorRef,
     private dealComponent: DealsComponent,
+    private dealDetailComponent: DealDetailComponent
   ) {
     super(inject);
   }
@@ -205,5 +208,10 @@ export class TabDetailCustomComponent
   //event giao viec
   saveAssignTask(e){
     if(e) this.saveAssign.emit(e);
+  }
+  contactChange($event) {
+    if($event) {
+      this.dealDetailComponent.getContactPerson($event.data);
+    }
   }
 }
