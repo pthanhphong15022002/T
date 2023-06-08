@@ -78,7 +78,6 @@ export class EmployeeDayOffComponent extends UIComponent {
   views: Array<ViewModel> = [];
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
-    text: 'Thêm',
   };
   eDayOffsHeaderText;
   formGroup: FormGroup;
