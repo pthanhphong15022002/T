@@ -202,9 +202,17 @@ codx-layout:not([data-kt-aside-minimize="on"]){
   
 }
 .aside-minimize-icon-title .page-dm .aside .menu-link{
-  border-radius: 6px 0 0 6px!important;
+  border-radius: 3px 0 0 3px!important;
+  padding: 6px 10px!important;
+  margin-bottom: 4px;
+  &:hover{
+    .menu-title {
+      color: var(--primary) !important;
+    }
+  }
   &.active {
     background-color: var(--gray-100);
+    border-radius: 0!important;
     .menu-title {
       color: var(--primary-dark) !important;
     }
@@ -235,6 +243,15 @@ codx-layout:not([data-kt-aside-minimize="on"]){
     .menu-title {
       font-size: 12px;
       flex-grow: inherit!important;
+    }
+    &:hover{
+      background-color: #ffffff25!important;
+      .menu-title {
+        color: var(--primary-lighter) !important;
+      }
+      .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+        fill: var(--primary-lighter)!important;
+      }
     }
   }
 }
