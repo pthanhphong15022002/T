@@ -13,7 +13,8 @@
   (selectedChange)="changeItemDetail($event)"
 >
 </codx-views>
-<!-- <<<< -->
+
+
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-3 border-bottom w-100">
     <div class="w-50 min-w-350px p-2">
@@ -208,18 +209,19 @@
 
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'me-4 h-100px'"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [imgCss]="'me-4'"
+    cardCss="card-template border-bottom p-3"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-10'"
     [imageId]="data.emp?.employeeID"
     [imageObjType]="'HR_Employees'"
-    [imageWidth]="40"
+    [imageWidth]="35"
     [formModel]="view.formModel"
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'hover'"
     [title]="data.emp?.employeeName"
+    [titleCss]="'fs-6 mb-1'"
     [baseHeaderRightTmp]="titleRight"
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
@@ -289,8 +291,8 @@
 
   <ng-template #desc2Tmp>
     <div>
-      <div class="d-flex align-items-center mt-1">
-        <span class="icon-description icon-18 me-1"></span>
+      <div class="d-flex align-items-center mb-1">
+        <span class="icon-description icon-16 me-1"></span>
         <span class="me-3 fs-7" [ngbTooltip]="grvSetup?.ContractNo?.headerText">
           {{ data.contractNo }}
         </span>
