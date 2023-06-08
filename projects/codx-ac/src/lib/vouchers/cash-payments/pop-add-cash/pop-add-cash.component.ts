@@ -268,7 +268,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                   this.loadSubType(i, this.tabObj);
                 }
               });
-          }else{
+          } else {
             this.cashpayment.subType = this.oldSubType;
             this.form.formGroup.patchValue(this.cashpayment);
           }
@@ -280,10 +280,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
       return;
     }
-    if (!e && this.cashpayment.subType){
+    if (!e && this.cashpayment.subType) {
       i = this.cashpayment.subType;
       this.oldSubType = this.cashpayment.subType;
-    } 
+    }
     if (!ele) ele = this.tabObj;
     this.loadSubType(i, ele);
   }
@@ -599,6 +599,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 .subscribe((res) => {
                   if (res && res.save.data != null) {
                     this.oldReasonID = res.save.data.reasonID;
+                    this.cashpayment = res.save.data;
                     this.hasSaved = true;
                     this.loadGrid();
                   }
@@ -1338,47 +1339,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  loadSubType1(enable) {
-    var element = document.getElementById('ac-type-1');
-    if (element) {
-      if (enable) {
-        element.style.display = 'inline';
-      } else {
-        element.style.display = 'none';
-      }
-    }
-  }
-
-  loadSubType2(enable) {
-    var element = document.querySelectorAll('.ac-type-2');
-    if (element) {
-      if (enable) {
-        for (let index = 0; index < element.length; index++) {
-          (element[index] as HTMLElement).style.display = 'inline';
-        }
-      } else {
-        for (let index = 0; index < element.length; index++) {
-          (element[index] as HTMLElement).style.display = 'none';
-        }
-      }
-    }
-  }
-
-  loadSubType5(enable) {
-    var element = document.querySelectorAll('.ac-type-5');
-    if (element) {
-      if (enable) {
-        for (let index = 0; index < element.length; index++) {
-          (element[index] as HTMLElement).style.display = 'inline';
-        }
-      } else {
-        for (let index = 0; index < element.length; index++) {
-          (element[index] as HTMLElement).style.display = 'none';
-        }
-      }
-    }
-  }
-
   requireGrid() {
     const field = ['DIM1', 'DIM2', 'DIM3', 'ProjectID'];
     field.forEach((element) => {
@@ -1493,34 +1453,47 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       case '3':
         ele.hideTab(0, false);
         ele.hideTab(1, true);
-        this.loadSubType1(false);
-        this.loadSubType2(true);
-        this.loadSubType5(false);
+        this.loadFormSubType('3');
         break;
       case '5':
         ele.hideTab(0, false);
         ele.hideTab(1, false);
-        this.loadSubType1(false);
-        this.loadSubType2(false);
-        this.loadSubType5(true);
+        this.loadFormSubType('5');
         break;
       case '1':
       case '9':
       case '4':
         ele.hideTab(0, false);
         ele.hideTab(1, true);
-        this.loadSubType1(true);
-        this.loadSubType2(false);
-        this.loadSubType5(false);
+        this.loadFormSubType('1');
         break;
-      default:
+      case '2':
         ele.hideTab(0, true);
         ele.hideTab(1, false);
-        this.loadSubType1(true);
-        this.loadSubType2(false);
-        this.loadSubType5(false);
+        this.loadFormSubType('1');
         break;
     }
+  }
+
+  loadFormSubType(subtype){
+    var arr = ['1','3','5'];
+    arr.forEach(eName => {
+      if (eName == subtype) {
+        var element = document.querySelectorAll('.ac-type-' + eName);
+        if (element) {
+          for (let index = 0; index < element.length; index++) {
+            (element[index] as HTMLElement).style.display = 'inline';
+          }
+        }
+      }else{
+        var element = document.querySelectorAll('.ac-type-' + eName);
+        if (element) {
+          for (let index = 0; index < element.length; index++) {
+            (element[index] as HTMLElement).style.display = 'none';
+          }
+        }
+      }
+    });
   }
   //#endregion
 }
