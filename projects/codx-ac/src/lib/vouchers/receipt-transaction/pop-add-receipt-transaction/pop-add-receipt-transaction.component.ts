@@ -341,7 +341,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.inventoryJournal
         );
         this.dialog.dataService.save().subscribe((res) => {
-          if (res && res.update.data != null) {
+          if(res.update.error)
+          {
+            this.inventoryJournal.status = '0';
+          }
+          if (res && res.update.data != null && res.update.error != true) {
             this.clearInventoryJournal();
             this.dialog.dataService.clear();
             this.dialog.dataService
@@ -366,7 +370,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.formType === 'edit',
           () => {
             this.dialog.dataService.save().subscribe((res) => {
-              if (res && res.save.data != null) {
+              if(res.save.error)
+              {
+                this.inventoryJournal.status = '0';
+              }
+              if (res && res.save.data != null && res.save.error != true) {
                 this.clearInventoryJournal();
                 this.dialog.dataService.clear();
                 this.dialog.dataService
@@ -401,7 +409,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             this.dialog.dataService
               .save(null, 0, '', 'SYS006', true)
               .subscribe((res) => {
-                if (res && res.update.data != null) {
+                if(res.update.error)
+                {
+                  this.inventoryJournal.status = '0';
+                }
+                if (res && res.update.data != null && res.update.error != true) {
                   this.dialog.close({
                     update: true,
                     data: res.update,
@@ -421,7 +433,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               this.formType === 'edit',
               () => {
                 this.dialog.dataService.save().subscribe((res) => {
-                  if (res && res.save.data != null) {
+                  if(res.save.error)
+                  {
+                    this.inventoryJournal.status = '0';
+                  }
+                  if (res && res.save.data != null && res.save.error != true) {
                     this.dialog.close();
                     this.dt.detectChanges();
                   }
