@@ -101,6 +101,8 @@ export class PopupMergeLeadsComponent implements OnInit {
     this.nameContact = this.leadOne.contactName;
     this.nameLead = this.leadOne?.leadName;
     this.modifyOn = this.leadOne?.modifiedOn;
+    this.modifyOnContact = this.leadOne?.modifiedOn;
+
     this.lstLeadCbxOne = await this.getCbxLead(null, null);
     this.lstLeadCbxTwo = await this.getCbxLead(this.leadOne?.recID, null);
     this.lstLeadCbxThree = await this.getCbxLead(this.leadOne?.recID, null);
