@@ -45,14 +45,15 @@ export class CodxClearCacheComponent implements OnInit {
     var value = evt.data;
     if (field === 'All') {
       this.isAll = value;
-      if (value) this.cacheName = field;
+      if (value) this.cacheName = field + '|';
+      else this.cacheName.replace(field + '|', '');
     } else if (field === 'AllTeant') {
       this.clearAllTeant = value;
+    } else if (field == 'Users') {
+      if (value) this.cacheName += field + '|';
+      else this.cacheName.replace(field + '|', '');
     } else if (!this.isAll) {
-      if (this.cacheName.includes('All'))
-        this.cacheName = this.cacheName.replace('All', '');
-      if (value && !this.cacheName.includes(field))
-        this.cacheName += field + '|';
+      if (value) this.cacheName += field + '|';
       else this.cacheName = this.cacheName.replace(field + '|', '');
     }
     this.changeDetectorRef.detectChanges();
