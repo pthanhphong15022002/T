@@ -14,7 +14,8 @@ import {
   UIComponent,
   UploadFile,
 } from 'codx-core';
-import { combineLatestWith, map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ItemSize } from '../interfaces/ItemSize.interface';
 
@@ -58,44 +59,25 @@ export class PopupAddItemSizeComponent
       this.savedItemSizes = this.dialogData.data.savedItemSizes;
     }
 
-    const functionName1$ = this.cache.moreFunction('Items', 'grvItems').pipe(
-      map((data) => data.find((m) => m.functionID === 'ACS21301')),
-      map(
-        (data) =>
-          data.defaultName.charAt(0).toLowerCase() + data.defaultName.slice(1)
-      )
-    );
+    const functionName1$ = this.acService
+      .getDefaultNameFromMoreFunctions('Items', 'grvItems', 'ACS21301')
+      .pipe(map((res) => this.acService.toCamelCase(res)));
 
-    const functionName2$ = this.cache
-      .moreFunction('ItemSizes', 'grvItemSizes')
-      .pipe(
-        map((data) => data.find((m) => m.functionID === 'ACS21304')),
-        map(
-          (data) =>
-            data.defaultName.charAt(0).toLowerCase() + data.defaultName.slice(1)
-        )
-      );
+    const functionName2$ = this.acService
+      .getDefaultNameFromMoreFunctions('ItemSizes', 'grvItemSizes', 'ACS21304')
+      .pipe(map((res) => this.acService.toCamelCase(res)));
 
-    this.cache
-      .moreFunction('CoDXSystem', '')
-      .pipe(
-        combineLatestWith(functionName1$),
-        combineLatestWith(functionName2$)
-      )
-      .subscribe(([[actions, functionName1], functionName2]) => {
-        console.log({ actions });
-        console.log({ functionName1 });
-        console.log({ functionName2 });
+    combineLatest({
+      functionName:
+        this.dialogData.data.sizeType == 1 ? functionName1$ : functionName2$,
+      actions: this.cache.moreFunction('CoDXSystem', ''),
+    }).subscribe(({ functionName, actions }) => {
+      const action = this.isEdit
+        ? actions.find((a) => a.functionID === 'SYS03')?.customName
+        : actions.find((a) => a.functionID === 'SYS01')?.defaultName;
 
-        const action = this.isEdit
-          ? actions.find((a) => a.functionID === 'SYS03')?.customName
-          : actions.find((a) => a.functionID === 'SYS01')?.defaultName;
-
-        console.log(action);
-        const functionName =
-          this.dialogData.data.sizeType == 1 ? functionName1 : functionName2;
-        this.formTitle = `${action} ${functionName}`;
-      });
+      this.formTitle = `${action} ${functionName}`;
+    });
   }
 
   ngAfterViewInit(): void {
