@@ -1,9 +1,10 @@
 <codx-views #view idField="recID" [views]="views" [button]="button" entityName="PS_PurchaseInvoices"
-  (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo">
+  (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo"
+  (selectedChange)="changeItemDetail($event)">
 </codx-views>
 <ng-template #templateMore let-data>
   <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
-    type="hover"></codx-mfunc>
+    type="view"></codx-mfunc>
 </ng-template>
 <ng-template #itemTemplate let-data>
   <codx-temp-full [descTmp]="descTmp" [desc2Tmp]="desc2Tmp" [titleTmp]="titleTmp"

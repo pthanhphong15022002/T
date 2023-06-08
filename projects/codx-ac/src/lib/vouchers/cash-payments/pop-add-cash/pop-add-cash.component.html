@@ -1,6 +1,9 @@
 <codx-form #form [body]="body" [footer]="footer" [formModel]="dialog.formModel" [dialog]="dialog" [data]="cashpayment"
   [customToolbar]="subToolbar" [openMore]="false" ngClass="ac-dialog">
 </codx-form>
+<div class="ac-ng-overlay">
+  <ngx-ui-loader [loaderId]="'loader'"></ngx-ui-loader>
+</div>
 <!-- Start: Body -->
 <ng-template #body>
   <div class="card-add add-cash">
@@ -278,8 +281,8 @@
         [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
-        [autoLoad]="false" (created)="gridCreated()" (onAddNew)="onAddNew($event)" (actionEvent)="actionEvent($event)" (onEdit)="onEdit($event)"
-        (cellChanged)="lineChanged($event)"></codx-gridview-v2>
+        [autoLoad]="false" (created)="gridCreated()" (onAddNew)="onAddNew($event)" (actionEvent)="actionEvent($event)"
+        (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"></codx-gridview-v2>
 
       <div #btnRef class="btn-addline">
         <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow()">
@@ -841,7 +844,7 @@
     <codx-gridview-v2 #gridSet formName="SettledInvoices" gridViewName="grvSettledInvoices"
       entityName="AC_SettledInvoices" [templateMore]="morefunction" [editSettings]="editSettings"
       [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false"
-      [dataSource]="settledInvoices" (created)="gridCreatSet()" (cellChanged)="settledLineChanged($event)">
+      [dataSource]="settledInvoices" (created)="gridCreatedSet()" (cellChanged)="settledLineChanged($event)">
     </codx-gridview-v2>
     <div #btnRef class="btn-addline">
       <div class="d-flex align-items-center">
@@ -916,12 +919,12 @@
           {{ headerText }}
         </div>
         <ng-container *ngIf="form.formGroup">
-          <div *ngIf="action == 'add'" class="me-3 input-circle input-border-0 w-350px">
-            <codx-input aria-disabled ="true" [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
+          <div *ngIf="action == 'add' || cashpayment?.status == '0'" class="me-3 input-circle input-border-0 w-350px">
+            <codx-input aria-selected="true" [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
               (valueChange)="changeType($event)">
             </codx-input>
           </div>
-          <span *ngIf="(action == 'edit' && cashpayment?.subType)" class="me-3">
+          <span *ngIf="(action == 'edit' && cashpayment?.status != '0')" class="me-3">
             <codx-vll [name]="'AC063'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
               [showText]="true" [showBgColor]="true" class="badge badge-light-primary badge-lg">
             </codx-vll>

@@ -174,7 +174,7 @@ export class CodxListContactsComponent implements OnInit {
     this.moreFuncEdit = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        if ((this.isButton = true))
+        if (this.isButton == true)
           this.clickAddContact('edit', data, this.moreFuncEdit);
         break;
       case 'CM0102_2':
@@ -262,7 +262,7 @@ export class CodxListContactsComponent implements OnInit {
           objectName: this.objectName,
           gridViewSetup: res,
           listContacts: this.listContacts,
-          customerID: this.customerID
+          customerID: this.customerID,
         };
         var dialog = this.callFc.openForm(
           PopupQuickaddContactComponent,
