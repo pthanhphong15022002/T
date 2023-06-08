@@ -22,6 +22,7 @@ import { SV_Respondents } from '../../models/SV_Respondents';
 export class ReviewComponent extends UIComponent implements OnInit {
 
   @HostBinding('class.h-100') someField: boolean = false;
+  en = environment;
   respondents: SV_Respondents = new SV_Respondents();
   questions: any = [];
   functionList: any;

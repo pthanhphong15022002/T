@@ -154,26 +154,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       if (this.timeoutId) clearTimeout(this.timeoutId);
     }
 
-    // this.listTaskResousceSearch = [];
-    // this.countResource = 0;
-    // this.api
-    //   .execSv<any>(
-    //     'TM',
-    //     'ERM.Business.TM',
-    //     'TaskResourcesBusiness',
-    //     'GetListTaskResourcesByTaskIDAsync',
-    //     task.taskID
-    //   )
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.listTaskResousce = res;
-    //       this.listTaskResousceSearch = res;
-    //       this.countResource = res.length;
-    //       p.open();
-    //       this.popoverDataSelected = p;
-    //       this.hoverPopover.emit(p);
-    //     }
-    //   });
   }
   //#endregion
   //#region Event
@@ -182,7 +162,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       return this.clickMoreFunction.emit({ e: e, data: this.taskExtends });
     this.clickMoreFunction.emit({ e: e, data: dt });
   }
-
+//cai nay khong goi ve vì no con view riêng
   changeDataMF(e, data) {
     if (e) {
       e.forEach((x) => {
@@ -193,7 +173,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           x.disabled = true;
         }
         if (
-          x.functionID == 'TMT02019' &&
+          (x.functionID == 'TMT02019' || x.functionID == 'TMT02027')&&
           data.verifyControl == '0' &&
           data.category == '1'
         ) {
@@ -272,8 +252,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         }
         //an TMT02019
         if (
-          (x.functionID == 'TMT02019' || x.functionID == 'TMT02026') &&
-          (data.status == '80' || data.status == '90')
+          (x.functionID == 'TMT02019' || x.functionID == 'TMT02027') &&
+          (data.status == '80' || data.status == '90' || data.extendControl)
         )
           x.disabled = true;
       });

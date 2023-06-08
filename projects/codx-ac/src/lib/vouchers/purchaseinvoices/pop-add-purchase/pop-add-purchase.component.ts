@@ -69,7 +69,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   journal: IJournal;
   hasSaved: any = false;
   isSaveMaster: any = false;
-  items: any;
   visibleColumns: Array<any> = [];
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
@@ -135,7 +134,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   //#region Init
   onInit(): void {
     this.loadInit();
-    this.loadItems();
   }
 
   ngAfterViewInit() {
@@ -257,9 +255,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         e.data.vatAmt = this.calculateVatAmt(e.data.netAmt, e.data.vatid);
         break;
       case 'itemID':
-        var item = this.getItem(e.data.itemID);
-        e.data.itemName = item.itemName;
-        e.data.umid = item.umid;
+        this.api.exec('IV', 'ItemsBusiness', 'LoadDataAsync', [e.data.itemID])
+          .subscribe((res: any) => {
+            if (res)
+            {
+              e.data.itemName = res.itemName;
+              e.data.umid = res.umid;
+            }
+          });
         this.loadItemID(e.value);
         break;
       case 'idiM4':
@@ -661,14 +664,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     });
   }
 
-  loadItems(){
-    this.api.exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
-    .subscribe((res: any) => {
-      if(res)
-        this.items = res;
-    });
-  }
-
   loadTotal() {
     var totalnet = 0;
     var totalvat = 0;
@@ -1034,13 +1029,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       });
   }
 
-  
-
-  getItem(itemID: any){
-    var item = this.items.filter(x => x.itemID == itemID);
-    return item[0];
-  }
-
   getTaxRate(vatCodeID: any){
     var vatCode = this.lsVatCode.filter(x => x.vatid == vatCodeID)
     return vatCode[0].taxRate;
@@ -1137,12 +1125,16 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             this.dialog.dataService
               .save(null, 0, '', 'SYS006', true)
               .subscribe((res) => {
-                if (res && res.update.data != null) {
+                if (res && res.update.data != null && res.update.error != true) {
                   this.dialog.close({
                     update: true,
                     data: res.update,
                   });
                   this.dt.detectChanges();
+                }
+                if(res.update.error)
+                {
+                  this.purchaseinvoices.status = '0';
                 }
               });
           } else {
@@ -1157,10 +1149,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               this.formType === 'edit',
               () => {
                 this.dialog.dataService.save().subscribe((res) => {
-                  if (res && res.save.data != null) {
+                  if (res && res.save.data != null && res.save.error != true) {
                     this.updateVAT();
                     this.dialog.close();
                     this.dt.detectChanges();
+                  }
+                  if(res.save.error)
+                  {
+                    this.purchaseinvoices.status = '0';
                   }
                 });
               }
@@ -1213,7 +1209,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           this.purchaseinvoices
         );
         this.dialog.dataService.save().subscribe((res) => {
-          if (res && res.update.data != null) {
+          if(res.update.error)
+          {
+            this.purchaseinvoices.status = '0';
+          }
+          if (res && res.update.data != null && res.update.error != true) {
             this.clearPurchaseInvoicesLines();
             this.dialog.dataService.clear();
             this.dialog.dataService
@@ -1238,7 +1238,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           this.formType === 'edit',
           () => {
             this.dialog.dataService.save().subscribe((res) => {
-              if (res && res.save.data != null) {
+              if(res.save.error)
+              {
+                this.purchaseinvoices.status = '0';
+              }
+              if (res && res.save.data != null && res.save.error != true) {
                 this.clearPurchaseInvoicesLines();
                 this.dialog.dataService.clear();
                 this.dialog.dataService
