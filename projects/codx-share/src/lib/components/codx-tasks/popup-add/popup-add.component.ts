@@ -433,16 +433,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.showLabelAttachment = this.task.attachments > 0 ? true : false;
         //them điều kiện ngày  08/06/2023 tho ý thuong
         if (this.action == 'edit' && this.task.category == '2') {
-          if (
-            this.task.owner == this.task.createdBy &&
-            this.task.verifyControl == '0'
-          ) {
-            this.disableDueDate = false;
-            this.readOnly = false;
-          } else {
+          // if (
+          //   this.task.owner == this.task.createdBy &&
+          //   this.task.verifyControl == '0'
+          // ) {
+          //   this.disableDueDate = false;
+          //   this.readOnly = false;
+          // } else {
             this.disableDueDate = true;
             if (this.param?.EditControl != '1') this.readOnly = true;
-          }
+         // }
         }
         this.changeDetectorRef.detectChanges();
       }
