@@ -1324,6 +1324,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.totalSearch = item[1];
         this.data = [...this.data, ...this.dmSV.listFiles];
         if(this.data && this.data.length == 0) this.loaded = true;
+        else this.loaded = false;
       }
     });
   }

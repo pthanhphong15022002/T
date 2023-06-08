@@ -4,7 +4,7 @@
   assemblyName="ERM.Business.HR"
   entityName="HR_EAppointions"
   className="EAppointionsBusiness"
-  method="GetListAppointionsByDataRequestAsync"
+  method="GetListAsync"
   [views]="views"
   [autoLoad]="true"
   idField="recID"
@@ -265,7 +265,7 @@
 <!-- Detail -->
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'h-100px me-2'"
+    [imgCss]="'me-2'"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-10'"

@@ -12,6 +12,7 @@ import {
   CallFuncService,
   DataRequest,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   ImageViewerComponent,
@@ -29,6 +30,7 @@ import {
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CodxAddressCmComponent } from '../../cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
 import { tmpInstances } from '../../models/tmpModel';
+import { PopupQuickaddContactComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 
 @Component({
   selector: 'lib-popup-convert-lead',
@@ -63,11 +65,6 @@ export class PopupConvertLeadComponent implements OnInit {
       name: 'Contacts',
     },
     {
-      icon: 'icon-location_on',
-      text: 'Danh sách địa chỉ',
-      name: 'Address',
-    },
-    {
       icon: 'con-settings',
       text: 'Thông tin nhập liệu',
       name: 'InputInformation',
@@ -89,9 +86,7 @@ export class PopupConvertLeadComponent implements OnInit {
   customerID: any;
   lstContactCustomer = []; //List contact khách hàng lấy ra và convert thêm từ tiềm năng để load ra
   lstContactDeal = []; //List contact cơ hội được convert từ khách hàng
-  listAddressCustomer = []; //List address khách hàng lấy ra và convert thêm từ tiềm năng để load ra
   lstContactDelete = [];
-  lstAddressDelete = [];
   listCustomFile: any[] = [];
   countAddNew = 0;
   countAddSys = 0;
@@ -210,6 +205,7 @@ export class PopupConvertLeadComponent implements OnInit {
         var lstStep =
           process?.steps != null ? this.groupByStep(process?.steps) : [];
         this.deal.endDate = this.HandleEndDate(lstStep);
+
       }
 
       if (
@@ -236,6 +232,16 @@ export class PopupConvertLeadComponent implements OnInit {
           )
         );
       }
+
+      this.listInstanceSteps = await firstValueFrom(
+        this.api.execSv<any>(
+          'DP',
+          'ERM.Business.DP',
+          'InstancesBusiness',
+          'CreateListInstancesStepsByProcessAsync',
+          this.deal?.processID
+        )
+      );
     }
 
     this.changeDetectorRef.detectChanges();
@@ -249,16 +255,6 @@ export class PopupConvertLeadComponent implements OnInit {
         this.lstContactCustomer = [];
       }
       this.lstContactDeal = [];
-    });
-  }
-
-  getListAddress(entityName, recID) {
-    this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
-      if (res && res.length > 0) {
-        this.listAddressCustomer = res;
-      } else {
-        this.listAddressCustomer = [];
-      }
     });
   }
 
@@ -329,8 +325,6 @@ export class PopupConvertLeadComponent implements OnInit {
       this.lstContactCustomer,
       this.lstContactDeal,
       this.lstContactDelete,
-      this.listAddressCustomer,
-      this.lstAddressDelete,
     ];
     await this.api
       .execSv<any>(
@@ -381,18 +375,11 @@ export class PopupConvertLeadComponent implements OnInit {
       this.customer.recID = this.customerID;
     }
     this.deal.customerID = this.customer?.recID;
-    if (this.lstContactDeal != null) {
-      this.lstContactDeal.forEach((res) => {
-        res.recID = Util.uid();
-      });
-    }
-    if (this.listAddressCustomer != null) {
-      this.listAddressCustomer.forEach((res) => {
-        if (res?.objectID == this.lead.recID) {
-          res.recID = Util.uid();
-        }
-      });
-    }
+    // if (this.lstContactDeal != null) {
+    //   this.lstContactDeal.forEach((res) => {
+    //     res.recID = Util.uid();
+    //   });
+    // }
   }
 
   async convertDataInstanceAndDeal() {
@@ -409,15 +396,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.status = '1';
     this.deal.refID = this.instance.recID;
     this.deal.startDate = null;
-    this.listInstanceSteps = await firstValueFrom(
-      this.api.execSv<any>(
-        'DP',
-        'ERM.Business.DP',
-        'InstancesBusiness',
-        'CreateListInstancesStepsByProcessAsync',
-        this.deal.processID
-      )
-    );
+
     if (this.listInstanceSteps != null && this.listInstanceSteps.length > 0) {
       this.deal.stepID = this.listInstanceSteps[0]?.stepID;
       this.deal.nextStep = this.listInstanceSteps[1]?.stepID;
@@ -554,8 +533,6 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   async changeRadio(e) {
-    this.codxConvert.getListContacts();
-    this.codxListAddress.getListAddress();
     if (e.field === 'yes' && e.component.checked === true) {
       if (this.countAddSys > 0) {
         this.customerID = this.customerOld;
@@ -563,7 +540,6 @@ export class PopupConvertLeadComponent implements OnInit {
       }
       this.radioChecked = true;
       this.getListContactByObjectID(this.customerID);
-      this.getListAddress('CM_Customers', this.customerID);
       this.countAddSys++;
     } else if (e.field === 'no' && e.component.checked === true) {
       this.customer.recID = null;
@@ -573,7 +549,6 @@ export class PopupConvertLeadComponent implements OnInit {
       }
 
       this.getListContactByObjectID(this.customerNewOld);
-      this.getListAddress('CM_Customers', this.customerNewOld);
       this.radioChecked = false;
       this.countAddNew++;
     }
@@ -597,7 +572,6 @@ export class PopupConvertLeadComponent implements OnInit {
         this.customerOld = this.customerID;
         this.lead.customerID = this.customerID;
         this.getListContactByObjectID(this.customerID);
-        this.getListAddress('CM_Customers', this.customerID);
       }
     }
   }
@@ -703,17 +677,22 @@ export class PopupConvertLeadComponent implements OnInit {
       if (e.data) {
         var tmp = new CM_Contacts();
         tmp = JSON.parse(JSON.stringify(e.data));
+        tmp.recID = Util.uid();
         tmp.refID = e.data.recID;
+        tmp.objectType = '4';
+        tmp.isDefault = false;
         var indexCus = this.lstContactCustomer.findIndex(
           (x) => x.recID == e.data.recID
         );
 
         if (!this.lstContactDeal.some((x) => x.refID == e?.data?.recID)) {
           this.lstContactDeal.push(tmp);
+          this.codxConvert.loadListContact(this.lstContactDeal);
         }
         if (indexCus != -1) {
           this.lstContactCustomer[indexCus].checked = true;
         }
+        if (tmp.objectType) this.popupEditRoleDeal(tmp, e.data);
       }
     } else {
       var index = this.lstContactDeal.findIndex(
@@ -724,14 +703,19 @@ export class PopupConvertLeadComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  contactEvent(e) {
+  contactEventCustomer(e) {
     if (e.data) {
       var findIndex = this.lstContactDeal.findIndex(
         (x) => x.refID == e.data?.recID
       );
       if (e.action == 'edit') {
         if (findIndex != -1) {
-          this.lstContactDeal[findIndex] = e.data;
+          var isDefault = this.lstContactDeal[findIndex]?.isDefault;
+          var role = this.lstContactDeal[findIndex]?.role;
+
+          this.lstContactDeal[findIndex] = JSON.parse(JSON.stringify(e.data));
+          this.lstContactDeal[findIndex].isDefault = isDefault;
+          this.lstContactDeal[findIndex].role = role;
         }
       } else {
         this.lstContactDelete.push(Object.assign({}, e?.data));
@@ -743,62 +727,90 @@ export class PopupConvertLeadComponent implements OnInit {
     }
   }
 
+  contactEventDeal(e) {
+    if (e.data) {
+      var findIndex = this.lstContactCustomer.findIndex(
+        (x) => x.recID == e.data?.refID
+      );
+      if (e.action == 'edit') {
+        if (findIndex != -1) {
+          var isDefault = this.lstContactCustomer[findIndex].isDefault;
+          this.lstContactCustomer[findIndex] = JSON.parse(
+            JSON.stringify(e.data)
+          );
+          this.lstContactCustomer[findIndex].recID = e.data.refID;
+          this.lstContactCustomer[findIndex].role = null;
+          this.lstContactCustomer[findIndex].isDefault = isDefault;
+          this.codxListContact.loadListContact(this.lstContactCustomer);
+        }
+      }
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
   lstContactEmit(e) {
     this.lstContactCustomer = e;
   }
-  //#endregion
 
-  //#region address
-  convertAddress(e) {
-    if (e.e == true) {
-      if (e?.data != null) {
-        var tmp = JSON.parse(JSON.stringify(e.data));
-
-        var check = this.listAddressCustomer.findIndex(
-          (x) => x.isDefault == true
-        );
-        if (e.data.isDefault == true) {
-          if (check != -1) {
-            var config = new AlertConfirmInputConfig();
-            config.type = 'YesNo';
-            this.notiService.alertCode('CM001').subscribe((x) => {
-              if (x.event.status == 'Y') {
-                this.listAddressCustomer[check].isDefault = false;
-              } else {
-                tmp.isDefault = false;
-              }
-              this.listAddressCustomer.push(Object.assign({}, tmp));
-              this.codxListAddress.loadListAdress(this.listAddressCustomer);
-              this.changeDetectorRef.detectChanges();
-            });
-          } else {
-            this.listAddressCustomer.push(Object.assign({}, tmp));
-            this.codxListAddress.loadListAdress(this.listAddressCustomer);
-          }
-        } else {
-          this.listAddressCustomer.push(Object.assign({}, tmp));
-          this.codxListAddress.loadListAdress(this.listAddressCustomer);
+  popupEditRoleDeal(tmp, data) {
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'CMContacts';
+    dataModel.gridViewName = 'grvCMContacts';
+    dataModel.entityName = 'CM_Contacts';
+    dataModel.funcID = 'CM0102';
+    var title = '';
+    opt.FormModel = dataModel;
+    this.cache
+      .moreFunction(dataModel.formName, dataModel.gridViewName)
+      .subscribe((fun) => {
+        if (fun && fun.length) {
+          let m = fun.find((x) => x.functionID == 'CM0102_4');
+          if (m) title = m.defaultName;
         }
-      }
-    } else {
-      var index = this.listAddressCustomer.findIndex(
-        (x) => x.recID == e?.data?.recID
-      );
-      if (index != -1) {
-        this.listAddressCustomer.splice(index, 1);
-
-        this.codxListAddress.loadListAdress(this.listAddressCustomer);
-      }
-    }
-    this.changeDetectorRef.detectChanges();
-  }
-
-  lstAddressEmit(e) {
-    this.listAddressCustomer = e;
-  }
-
-  lstAddressDeleteEmit(e) {
-    this.lstAddressDelete = e;
+        this.cache
+          .gridViewSetup(dataModel.formName, dataModel.gridViewName)
+          .subscribe((res) => {
+            var obj = {
+              moreFuncName: title ?? 'Cập nhật vai trò',
+              action: 'editRole',
+              dataContact: data,
+              type: 'formAdd',
+              recIDCm: this.deal?.recID,
+              objectType: '4',
+              objectName: this.deal?.dealName,
+              gridViewSetup: res,
+              listContacts: this.lstContactDeal,
+              customerID: null,
+            };
+            var dialog = this.callFc.openForm(
+              PopupQuickaddContactComponent,
+              '',
+              500,
+              250,
+              '',
+              obj,
+              '',
+              opt
+            );
+            dialog.closed.subscribe((e) => {
+              if (e && e?.event) {
+                if (e.event?.recID) {
+                  var index = this.lstContactDeal.findIndex(
+                    (x) => x.recID != e.event?.recID && x.isDefault
+                  );
+                  if (index != -1) {
+                    if (e?.event?.isDefault) {
+                      this.lstContactDeal[index].isDefault = false;
+                    }
+                  }
+                  tmp.isDefault = e?.event?.isDefault;
+                  tmp.role = e?.event?.role;
+                }
+              }
+            });
+          });
+      });
   }
   //#endregion
 

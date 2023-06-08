@@ -1,26 +1,24 @@
-import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
-import { FormGroup } from '@angular/forms';
-import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
-import { CodxHrService } from './../codx-hr.service';
 import {
-  UIComponent,
-  ViewModel,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import {
   ButtonModel,
-  ViewType,
+  DialogRef,
   NotificationsService,
   SidebarModel,
-  DialogRef,
-  AuthStore,
+  UIComponent,
+  ViewModel,
+  ViewType,
 } from 'codx-core';
-import {
-  Component,
-  ViewChild,
-  TemplateRef,
-  Injector,
-  ChangeDetectorRef,
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-// import { PopupEContractComponent } from '../employee-profile/popup-econtract/popup-econtract.component';
+import { CodxHrService } from './../codx-hr.service';
+import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
+import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
 
 @Component({
   selector: 'lib-employee-contract',
@@ -28,6 +26,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./employee-contract.component.css'],
 })
 export class EmployeeContractComponent extends UIComponent {
+  console = console;
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail: ViewDetailContractsComponent;
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
@@ -37,15 +36,10 @@ export class EmployeeContractComponent extends UIComponent {
   @ViewChild('templateUpdateStatus', { static: true })
   templateUpdateStatus: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  funcID: string;
   dataCategory;
-  eContractHeaderText;
-  method = 'LoadDataEcontractWithEmployeeInfoAsync';
-  numofRecord;
   itemDetail;
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
-    text: 'Thêm',
   };
   formGroup: FormGroup;
   editStatusObj: any;
@@ -67,38 +61,29 @@ export class EmployeeContractComponent extends UIComponent {
   actionUpdateClosed = 'HRTPro01AU9';
   //#endregion
 
-  // moreFuncs = [
-  //   {
-  //     id: 'btnEdit',
-  //     icon: 'icon-list-checkbox',
-  //     text: 'Chỉnh sửa',
-  //   },
-  //   {
-  //     id: 'btnDelete',
-  //     icon: 'icon-list-checkbox',
-  //     text: 'Xóa',
-  //   },
-  // ];
-
   constructor(
     inject: Injector,
     private hrService: CodxHrService,
-    private activedRouter: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService,
-    private auth: AuthStore
+    private notify: NotificationsService
   ) {
     super(inject);
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
+
+  GetGvSetup() {
+    let funID = this.activatedRoute.snapshot.params['funcID'];
+    this.cache.functionList(funID).subscribe((fuc) => {
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((res) => {
+          this.grvSetup = res;
+        });
+    });
   }
 
   onInit(): void {
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    }
-    this.cache.gridViewSetup('EContracts', 'grvEContracts').subscribe((res) => {
-      this.grvSetup = res;
-    });
+    this.GetGvSetup();
   }
 
   ngAfterViewInit(): void {
@@ -115,26 +100,17 @@ export class EmployeeContractComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           template: this.itemTemplateListDetail,
           panelRightRef: this.panelRightListDetail,
         },
       },
     ];
-    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) => {
-      this.eContractHeaderText = res;
-    });
   }
 
+  //Set form group data when open Modal dialog
   ngAfterViewChecked() {
-    // if(this.view.dataService?.data){
-    //   this.numofRecord = this.view.dataService.data.length
-    //   var PageTiltle = (window as any).ng.getComponent(document.querySelector('codx-page-title'));
-    //   if(PageTiltle.pageTitle.breadcrumbs._value[0]?.title){
-    //     PageTiltle.pageTitle.breadcrumbs._value[0].title = `(Tất cả ${this.numofRecord})`;
-    //   }
-    // }
     if (!this.formGroup?.value) {
       this.hrService
         .getFormGroup(
@@ -147,19 +123,11 @@ export class EmployeeContractComponent extends UIComponent {
     }
   }
 
-  HandleAction(evt) {
-    console.log('on action', evt);
-  }
-
-  close2(dialog: DialogRef) {
+  CloseDialog(dialog: DialogRef) {
     dialog.close();
   }
 
   popupUpdateEContractStatus(funcID, data) {
-    // let option = new DialogModel();
-    // option.zIndex = 999;
-    // option.FormModel = this.view.formModel
-
     this.hrService.handleUpdateRecordStatus(funcID, data);
 
     this.editStatusObj = data;
@@ -175,9 +143,8 @@ export class EmployeeContractComponent extends UIComponent {
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
-        this.view.dataService.update(res.event[0]).subscribe((res) => {});
+        this.view.dataService.update(res.event[0]).subscribe();
       }
-      this.df.detectChanges();
     });
   }
 
@@ -200,9 +167,7 @@ export class EmployeeContractComponent extends UIComponent {
             null,
             'EContractsBusiness'
           )
-          .subscribe((res) => {
-            console.log('kq luu track log', res);
-          });
+          .subscribe();
         this.dialogEditStatus && this.dialogEditStatus.close(res);
       }
     });
@@ -211,8 +176,7 @@ export class EmployeeContractComponent extends UIComponent {
     this.hrService.handleShowHideMF(event, data, this.view.formModel);
   }
 
-  clickEvent(event, data) {
-    // this.popupUpdateEContractStatus(event?.event?.functionID , event?.data);
+  clickEvent(event) {
     this.clickMF(event?.event, event?.data);
   }
 
@@ -245,24 +209,7 @@ export class EmployeeContractComponent extends UIComponent {
         this.df.detectChanges();
         break;
       case 'SYS02': //delete
-        this.view.dataService.delete([data]).subscribe((res) => {
-          if (res) {
-            // debugger
-            // this.view.dataService.remove(data).subscribe((res) => {
-            //   console.log('res sau khi remove', res);
-            // });
-            // this.df.detectChanges();
-          }
-        });
-        // this.hrService.deleteEContract(data.contract).subscribe((p) => {
-        //   if (p) {
-        //     this.notify.notifyCode('SYS008');
-        //     this.view.dataService.delete(data).subscribe((res) => {});
-        //     this.df.detectChanges();
-        //   } else {
-        //     this.notify.notifyCode('SYS022');
-        //   }
-        // });
+        this.view.dataService.delete([data]).subscribe();
         break;
       case 'SYS04': //copy
         this.currentEmpObj = data.emp;
@@ -273,23 +220,19 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
+    this.currentEmpObj = this.itemDetail.emp;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.Width = '800px';
-    // let isAppendix = false;
-    // if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
-    //   isAppendix = true;
-    // }
     let dialogAdd = this.callfc.openSide(
       PopupEProcessContractComponent,
-      // isAppendix ? PopupSubEContractComponent : PopupEContractComponent,
       {
         actionType: actionType,
         dataObj: data,
         empObj: this.currentEmpObj,
         headerText: actionHeaderText,
-        employeeId: this.currentEmpObj.employeeID,
+        employeeId: data?.employeeID || this.currentEmpObj.employeeID,
         funcID: this.view.funcID,
         openFrom: 'empContractProcess',
       },
@@ -325,7 +268,7 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   addContract(evt) {
-    this.currentEmpObj = this.itemDetail.emp;
+    // this.currentEmpObj = this.itemDetail.emp;
     if (evt.id == 'btnAdd') {
       this.HandleEContractInfo(
         evt.text + ' ' + this.view.function.description,
@@ -333,10 +276,6 @@ export class EmployeeContractComponent extends UIComponent {
         null
       );
     }
-  }
-
-  onMoreMulti(evt) {
-    // console.log('chon nhieu dong', evt);
   }
 
   getIdUser(createdBy: any, owner: any) {
@@ -348,14 +287,6 @@ export class EmployeeContractComponent extends UIComponent {
 
   changeItemDetail(event) {
     this.itemDetail = event?.data;
-  }
-
-  getDetailContract(event, data) {
-    if (data) {
-      this.itemDetail = data;
-
-      this.df.detectChanges();
-    }
   }
 
   beforeRelease() {
@@ -391,11 +322,14 @@ export class EmployeeContractComponent extends UIComponent {
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> Hợp đồng lao động - ' +
-                this.itemDetail.contractNo +
+              '<div> ' +
+                this.view.function.description +
+                ' - ' +
+                this.itemDetail.decisionNo +
                 '</div>'
             )
             .subscribe((result) => {
+              console.log(result);
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
@@ -404,6 +338,7 @@ export class EmployeeContractComponent extends UIComponent {
                   .editEContract(this.itemDetail)
                   .subscribe((res) => {
                     if (res) {
+                      console.log(res);
                       this.view?.dataService
                         ?.update(this.itemDetail)
                         .subscribe();

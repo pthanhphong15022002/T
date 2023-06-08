@@ -43,6 +43,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   method = 'GetListDealAndDealCompetitorAsync';
   hidenMF: boolean;
   vllStatus = '';
+  currentRecID = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -64,6 +65,14 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit(): void {
+    this.cache
+      .gridViewSetup('CMDealsCompetitors', 'grvCMDealsCompetitors')
+      .subscribe((res) => {
+        this.vllStatus = res?.Status?.ReferedValue;
+      });
+  }
+
   getListDealAndDealCompetitor() {
     this.loaded = false;
     this.hidenMF = true;
@@ -77,7 +86,12 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
       var lstID = this.lstDealCompetitors.map((x) => x.competitorID);
       this.hidenMF = false;
       this.getAddressCompetitors(lstID);
-
+      if (
+        this.lstDealCompetitors != null &&
+        this.lstDealCompetitors.length > 0
+      ) {
+        this.changeComeptitor(this.lstDealCompetitors[0]);
+      }
       this.loaded = true;
     });
   }
@@ -99,6 +113,11 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
           return response ? response[0] : [];
         })
       );
+  }
+
+  changeComeptitor(item) {
+    this.currentRecID = item.recID;
+    this.changeDetectorRef.detectChanges();
   }
 
   getAddressCompetitors(lstId) {
@@ -127,7 +146,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
       this.lstCompetitorAddress.length > 0
     ) {
       return this.lstCompetitorAddress.find((x) => x.recID == competitorID)
-        ?.address;
+        ?.competitorName;
     } else {
       return null;
     }
@@ -139,11 +158,6 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     formModel.gridViewName = 'grvCMDealsCompetitors';
     formModel.entityName = 'CM_DealsCompetitors';
     this.formModel = formModel;
-    this.cache
-      .gridViewSetup('CMDealsCompetitors', 'grvCMDealsCompetitors')
-      .subscribe((res) => {
-        this.vllStatus = res?.Status?.ReferedValue;
-      });
   }
 
   clickMF(e, data) {
@@ -163,9 +177,9 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     }
   }
 
-  changeDataMF(e, data){
+  changeDataMF(e, data) {
     if (e != null && data != null) {
-      if(data.status == '1'){
+      if (data.status == '1') {
         this.hidenMF = true;
       }
     }
@@ -193,10 +207,10 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
       if (e?.event && e?.event != null) {
         if (e?.event?.recID) {
           if (e?.event?.status == '1') {
-            if(this.lstDealCompetitors != null){
-              this.lstDealCompetitors.forEach(res => {
-                if(res.recID != e?.event?.recID){
-                  res.status = "2";
+            if (this.lstDealCompetitors != null) {
+              this.lstDealCompetitors.forEach((res) => {
+                if (res.recID != e?.event?.recID) {
+                  res.status = '2';
                 }
               });
             }
@@ -204,14 +218,18 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
           this.lstDealCompetitors = this.cmSv.loadList(
             e?.event,
             this.lstDealCompetitors,
-            "update"
+            'update'
           );
+          var index = this.lstDealCompetitors.findIndex(
+            (x) => x.recID == e.event?.recID
+          );
+          this.changeComeptitor(this.lstDealCompetitors[index]);
         }
       }
     });
   }
 
-  clickAddCompetitor(titleMore, action, data, isAddCompetitor = false) {
+  clickAddCompetitor(titleMore, action, data) {
     this.cache
       .gridViewSetup('CMDealsCompetitors', 'grvCMDealsCompetitors')
       .subscribe((res) => {
@@ -224,13 +242,12 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
           dealID: this.dealID,
           data: data,
           lstDealCompetitors: this.lstDealCompetitors,
-          isAddCompetitor: isAddCompetitor,
         };
         var dialog = this.callFc.openForm(
           PopupAddDealcompetitorComponent,
           '',
-          470,
-          450,
+          800,
+          600,
           '',
           obj,
           '',
@@ -257,6 +274,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
                         var tmp = {};
                         tmp['recID'] = e.event.competitorID;
                         tmp['address'] = address;
+                        tmp['competitorName'] = e.competitorName;
                         this.lstCompetitorAddress.push(Object.assign({}, tmp));
                       }
                     }
@@ -267,6 +285,11 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
                 this.lstDealCompetitors,
                 action
               );
+              var index = this.lstDealCompetitors.findIndex(
+                (x) => x.recID == e.event?.recID
+              );
+              this.changeComeptitor(this.lstDealCompetitors[index]);
+
               this.changeDetectorRef.detectChanges();
             }
           }
@@ -286,6 +309,8 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
               this.lstDealCompetitors,
               'delete'
             );
+            this.changeComeptitor(0);
+
             this.notiService.notifyCode('SYS008');
             this.changeDetectorRef.detectChanges();
           }

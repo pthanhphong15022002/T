@@ -38,6 +38,7 @@ export class CodxListContactsComponent implements OnInit {
   @Input() selectAll: boolean = false;
   @Input() formModel: FormModel;
   @Input() lstContactRef = [];
+  @Input() customerID: any;
   @Output() lstContactEmit = new EventEmitter<any>();
   @Output() lstContactDeleteEmit = new EventEmitter<any>();
   @Output() objectConvert = new EventEmitter<any>();
@@ -173,7 +174,7 @@ export class CodxListContactsComponent implements OnInit {
     this.moreFuncEdit = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        if ((this.isButton = true))
+        if (this.isButton == true)
           this.clickAddContact('edit', data, this.moreFuncEdit);
         break;
       case 'CM0102_2':
@@ -184,6 +185,9 @@ export class CodxListContactsComponent implements OnInit {
       case 'CM0102_1':
         if (this.isButton == true)
           this.clickAddContact('editType', data, this.moreFuncEdit);
+        break;
+      case 'CM0102_4':
+        this.clickAddContact('editRole', data, this.moreFuncEdit);
         break;
     }
   }
@@ -200,16 +204,34 @@ export class CodxListContactsComponent implements OnInit {
             res.disabled = true;
             break;
           case 'CM0102_2':
-            if (this.funcID == 'CM0103' || this.objectType == '2')
+            if (
+              this.funcID == 'CM0103' ||
+              this.objectType == '2' ||
+              this.objectType == '4'
+            )
               res.disabled = true;
             break;
           case 'CM0102_3':
-            if (this.funcID == 'CM0101' || this.objectType == '2')
+            if (
+              this.funcID == 'CM0101' ||
+              this.objectType == '2' ||
+              this.objectType == '4'
+            )
               res.disabled = true;
             break;
           case 'SYS02':
-            if (this.objectType != '2') res.disabled = true;
-
+            if (
+              (this.hidenMF && this.objectType == '4') ||
+              this.objectType == '1' ||
+              this.objectType == '3'
+            )
+              res.disabled = true;
+            break;
+          case 'CM0102_1':
+            if (this.objectType == '4') res.disabled = true;
+            break;
+          case 'CM0102_4':
+            if (this.objectType != '4') res.disabled = true;
             break;
         }
       });
@@ -240,12 +262,13 @@ export class CodxListContactsComponent implements OnInit {
           objectName: this.objectName,
           gridViewSetup: res,
           listContacts: this.listContacts,
+          customerID: this.customerID,
         };
         var dialog = this.callFc.openForm(
           PopupQuickaddContactComponent,
           '',
           500,
-          action != 'editType' ? 600 : 350,
+          action != 'editType' && action != 'editRole' ? 700 : 250,
           '',
           obj,
           '',
@@ -263,15 +286,18 @@ export class CodxListContactsComponent implements OnInit {
                   this.listContacts[index].isDefault = false;
                 }
               }
-
+              if (this.objectType != '4') {
+                e.event.role = null;
+              }
               this.listContacts = this.cmSv.bringDefaultContactToFront(
                 this.cmSv.loadList(e.event, this.listContacts, 'update')
               );
+              this.contactEvent.emit({ data: e.event, action: 'edit' });
+
               var index = this.listContacts.findIndex(
                 (x) => x.recID == e.event?.recID
               );
               this.changeContacts(this.listContacts[index]);
-              this.contactEvent.emit({ data: e.event, action: 'edit' });
 
               this.lstContactEmit.emit(this.listContacts);
               this.changeDetectorRef.detectChanges();
@@ -390,6 +416,29 @@ export class CodxListContactsComponent implements OnInit {
     this.objectConvert.emit({ e: e?.target?.checked, data: data });
     if (this.selectAll) {
       this.isCheckedAll = this.listContacts.every((item) => item.checked);
+    }
+  }
+
+
+  getListContactsByObjectId(objectID) {
+    this.loaded = false;
+    if (!this.selectAll) {
+      this.request.predicates = 'ObjectID=@0';
+      this.request.dataValues = objectID;
+      this.request.entityName = 'CM_Contacts';
+      this.request.funcID = 'CM0102';
+      this.className = 'ContactsBusiness';
+      this.fetch().subscribe((item) => {
+        this.listContacts = this.cmSv.bringDefaultContactToFront(item);
+        if (this.listContacts != null && this.listContacts.length > 0) {
+          this.changeContacts(this.listContacts[0]);
+          if (this.isConvertLeadToCus) this.insertFieldCheckbox();
+        }
+        this.loaded = true;
+      });
+    } else {
+      this.loadListContact(this.listContacts);
+      this.loaded = true;
     }
   }
 }

@@ -493,6 +493,8 @@ export class CodxDMService {
         return 'png.svg';
       case '.js':
         return 'javascript.svg';
+      case '.apk':
+        return 'android.svg';
       default:
         return 'file.svg';
     }

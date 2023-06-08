@@ -1,22 +1,20 @@
 <codx-views
   #view
-  [funcID]="funcID"
   service="HR"
   assemblyName="ERM.Business.HR"
   entityName="HR_EContracts"
   className="EContractsBusiness"
-  [method]="method"
+  method="LoadDataEcontractWithEmployeeInfoAsync"
   [views]="views"
   [autoLoad]="true"
   idField="recID"
   [button]="buttonAdd"
   (buttonClick)="addContract($event)"
-  (onActions)="HandleAction($event)"
-  (oneMoreMulti)="onMoreMulti($event)"
   (selectedChange)="changeItemDetail($event)"
 >
 </codx-views>
-<!-- <<<< -->
+
+
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-3 border-bottom w-100">
     <div class="w-50 min-w-350px p-2">
@@ -55,10 +53,7 @@
 
     <div class="w-30 min-w-250px px-2">
       <div class="d-flex flex-row">
-        <span
-          [ngbTooltip]="grvSetup?.ContractNo?.headerText"
-          [title]="eContractHeaderText ? eContractHeaderText['ContractNo'] : ''"
-        >
+        <span [ngbTooltip]="grvSetup?.ContractNo?.headerText">
           {{ data?.contractNo }}</span
         >
 
@@ -151,29 +146,6 @@
           class="icon-notifications icon-18"
         ></div>
       </div>
-      <!-- <div class="d-flex flex-row">
-        <codx-vll
-          [formModel]="view.formModel"
-          [field]="'Status'"
-          [value]="data?.status"
-          [showText]="true"
-          [showIcon]="false"
-          [showBgColor]="true"
-          ngClass="badge badge-sm"
-        >
-        </codx-vll>
-        <span
-          *ngIf="data?.isCurrent && !data?.isExpire"
-          class="icon-bookmark text-primary icon-25"
-        >
-        </span>
-        <span
-          *ngIf="data?.isCurrent && data?.isExpire"
-          class="icon-notifications icon-25"
-          [style.color]="'#F64E60'"
-        >
-        </span>
-      </div> -->
       <div class="mt-1">
         <span> {{ data?.signedDate | fmDT }}</span>
       </div>
@@ -237,18 +209,19 @@
 
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'me-4 h-100px'"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [imgCss]="'me-4'"
+    cardCss="card-template border-bottom p-3"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-10'"
     [imageId]="data.emp?.employeeID"
     [imageObjType]="'HR_Employees'"
-    [imageWidth]="40"
+    [imageWidth]="35"
     [formModel]="view.formModel"
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'hover'"
     [title]="data.emp?.employeeName"
+    [titleCss]="'fs-6 mb-1'"
     [baseHeaderRightTmp]="titleRight"
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
@@ -318,8 +291,8 @@
 
   <ng-template #desc2Tmp>
     <div>
-      <div class="d-flex align-items-center mt-1">
-        <span class="icon-description icon-18 me-1"></span>
+      <div class="d-flex align-items-center mb-1">
+        <span class="icon-description icon-16 me-1"></span>
         <span class="me-3 fs-7" [ngbTooltip]="grvSetup?.ContractNo?.headerText">
           {{ data.contractNo }}
         </span>
@@ -385,18 +358,6 @@
       >
       </span>
     </ng-container>
-    <!-- <ng-template #tmpTest *ngIf="data?.isCurrent">
-      <span class="icon-notifications icon-18"
-      [style.color]="'#F64E60'"
-      [ngbPopover]="popOverDue"
-      #p="ngbPopover"
-      [openDelay]="500"
-      (mouseenter)="p.open()"
-      (mouseleave)="p.close()"
-      placement="left"
-    >
-    </span>
-    </ng-template> -->
   </div>
 
   <ng-template #popIsNewest>
@@ -424,11 +385,9 @@
   <lib-view-detail-contracts
     #viewdetail
     [itemDetail]="itemDetail"
-    [funcID]="funcID"
     [view]="view"
     [formModel]="view.formModel"
-    (uploaded)="getDetailContract($event, data)"
-    (clickMFunction)="clickEvent($event, data)"
+    (clickMFunction)="clickEvent($event)"
   >
   </lib-view-detail-contracts>
   <ng-template #itemRightDetail> </ng-template>
@@ -452,7 +411,7 @@
           <button
             type="button"
             class="btn btn-flex text-dark-75 px-0"
-            (click)="close2(dialog1)"
+            (click)="CloseDialog(dialog1)"
           >
             <span class="icon-close icon-18"></span>
           </button>
@@ -486,11 +445,6 @@
             (valueChange)="ValueChangeComment($event)"
           >
           </codx-input>
-          <!-- <codx-input
-            field="note"
-            [formModel]="view.formModel"
-            [Group]="formGroup"
-          ></codx-input> -->
         </div>
       </div>
     </div>
@@ -508,50 +462,3 @@
     </div>
   </div>
 </ng-template>
-
-<!-- <ng-template #templateUpdateStatus>
-  <codx-form
-  [headerText]="'Cập nhật tình trạng'"
-  [data]="editStatusObj"
-  [formModel]="view.formModel"
-  [body]="tmpBody"
-  [footer]="footer"
->
-<ng-template #tmpBody>
-
-  <div class="form-group row">
-    <codx-label
-      fiedName="signStatus" [formModel]="view.formModel">
-    </codx-label>
-    <codx-input
-      disabled="true"
-      field="signStatus"
-      [formModel]="view.formModel"
-      [Group]="formGroup"
-      ></codx-input>
-    </div>
-  
-      <div class="form-group row">
-        <codx-label fiedName="Note" [formModel]="view.formModel"></codx-label>
-        <codx-input
-          field="note"
-          [formModel]="view.formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-</ng-template>
-</codx-form>
-</ng-template>
-
-<ng-template #footer>
-  <div class="d-flex justify-content-end">
-    <button class="btn btn-primary" (click)="onSaveUpdateForm()">
-      <i class="icon-save"></i>
-      <codx-label
-        default="Lưu"
-        name="lblSave"
-        [formModel]="view.formModel"
-      ></codx-label>
-    </button>
-  </div>
-</ng-template> -->

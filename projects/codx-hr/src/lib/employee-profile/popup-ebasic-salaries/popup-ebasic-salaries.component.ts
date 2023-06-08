@@ -173,8 +173,6 @@ export class PopupEBasicSalariesComponent
     });
   }
 
-  ngAfterViewInit() {}
-
   initForm() {
     if (this.actionType == 'add') {
       this.hrService

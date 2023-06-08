@@ -40,8 +40,16 @@
   padding-bottom: 10px !important;
 }
 
-#kt_aside_menu {
-  margin-top: 25px;
+.wp-portal #kt_aside_menu {
+  margin-top: 27px;
+  
+  .menu-state-title-primary .menu-item .menu-link.active .menu-title,
+  .menu-state-title-primary .menu-item .menu-link:hover .menu-title {
+    color: var(--primary-darker)!important;
+  }
+  .menu-state-title-primary .menu-item .menu-link .menu-title:hover {
+    color: var(--primary-darker)!important;
+  }
 }
 
 .aside.aside-transparent {
@@ -52,9 +60,9 @@
 }
 
 .page-dashboard .aside.aside-transparent {
-  width: 350px;
-  min-width: 350px;
-  max-width: 350px;
+  width: 290px;
+  min-width: 290px;
+  max-width: 290px;
 
 }
 
@@ -75,7 +83,7 @@
 }
 
 .dashboard-main {
-  width: 1346px;
+  width: 1286px;
   margin: 0 auto;
 }
 
@@ -194,23 +202,92 @@
   z-index: 99;
 }
 
-@media screen and (max-width: 1365px) {
+@media (min-width: 1225px) and (max-width: 1365px) {
   .page-dashboard .aside.aside-transparent {
-    width: 200px;
-    min-width: 200px;
-    max-width: 200px;
+    width: 240px;
+    min-width: 240px;
+    max-width: 240px;
 
   }
-
   .dashboard-main {
     width: 1196px;
+
   }
 }
 
-@media (min-width:992px) and (max-width: 1215px) {
+@media (max-width: 1224px) {
   .page-dashboard {
     width: 100%;
     overflow-x: auto;
     height: calc(100vh);
+   
   }
+  .dashboard-main {
+    .h-100.col-12{
+      padding-right: 0!important;
+     
+    }
+  }
+}
+@media (min-width:1180px) and (max-width: 1224px) {
+
+  .home-left {
+    width: 500px!important;
+    min-width: 500px!important;
+  }
+  .dashboard-main {
+    width: 1054px;
+    margin: 0 auto;
+
+  }
+  .w-350px.min-w-350px{
+    width: 300px!important;
+    min-width: 300px!important;
+  }
+}
+
+@media (min-width:992px) and (max-width: 1179px) {
+
+  .page-dashboard .aside.aside-transparent {
+    width: 170px;
+    min-width: 170px;
+    max-width: 170px;
+
+  }
+  .home-left {
+    width: 480px!important;
+    min-width: 480px!important;
+  }
+  .dashboard-main {
+    width: 964px;
+    margin: 0 auto;
+
+  }
+  .w-350px.min-w-350px{
+    width: 280px!important;
+    min-width: 280px!important;
+  }
+}
+
+
+
+@media (max-width: 991px) {
+  .home-left {
+    width: 600px!important;
+    min-width: 600px!important;
+  }
+  .dashboard-main {
+    width: 960px;
+    margin: 0 auto;
+
+  }
+  .w-350px.min-w-350px{
+    width: 320px!important;
+    min-width: 320px!important;
+  }
+  .page-dashboard .aside.aside-transparent.drawer.drawer-on{
+    background-color: var(--bg-body);
+    padding-left: 25px;
+  } 
+
 }

@@ -129,7 +129,6 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'issuedOn':
           if (this.data.issuedOn >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR012');
-            //this.data[field] = null;
             return;
           }
           if (this.data.idExpiredOn && this.data.idExpiredOn < this.data.issuedOn) {
@@ -147,20 +146,18 @@ export class PopupAddEmployeeComponent implements OnInit {
           if (value) {
             if (!this.validateBirthday(value)) {
               this.notifySV.notifyCode('HR001');
-              //this.data[field] = null;
-              // this.form.formGroup.controls[field].patchValue({field : null});
             }
           }
           break;
         case 'provinceID':
           this.data['districtID'] = null;
           this.data['wardID'] = null;
-          this.form.formGroup.patchValue({districtID: null, wardID: null});
+          this.form.formGroup.patchValue({ districtID: null, wardID: null });
           break;
         case 'tProvinceID':
           this.data['tDistrictID'] = null;
           this.data['tWardID'] = null;
-          this.form.formGroup.patchValue({tDistrictID: null, tWardID: null});
+          this.form.formGroup.patchValue({ tDistrictID: null, tWardID: null });
           break;
         case 'trainLevel':
           if (this.data[field]) {
@@ -187,15 +184,11 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'siRegisterOn':
           if (this.data['siRegisterOn'] >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['SIRegisterOn']['headerText']);
-            this.data[field] = null;
-            this.form.formGroup.controls[field].patchValue(null);
           }
           break;
         case 'pitIssuedOn':
           if (this.data['pitIssuedOn'] >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['PITIssuedOn']['headerText']);
-            this.data[field] = null;
-            this.form.formGroup.controls[field].patchValue(null);
           }
           break;
       }
@@ -239,12 +232,12 @@ export class PopupAddEmployeeComponent implements OnInit {
     }
 
 
-    let today = new Date();
-    if (this.data.issuedOn >= today.toJSON()) {
+    let today = new Date().toJSON();
+    if (this.data.issuedOn && this.data.issuedOn >= today) {
       this.notifySV.notifyCode('HR012');
       return false;
     }
-    if (this.data.idExpiredOn < this.data.issuedOn) {
+    if (this.data.idExpiredOn && this.data.issuedOn && this.data.idExpiredOn < this.data.issuedOn) {
       this.notifySV.notifyCode('HR002');
       return false;
     }
@@ -254,11 +247,18 @@ export class PopupAddEmployeeComponent implements OnInit {
         return false;
       }
     }
-    if (this.data.joinedOn && this.data.joinedOn > today.toJSON()) {
+    if (this.data.joinedOn && this.data.joinedOn > today) {
       this.notifySV.notifyCode('HR014', 0, this.grvSetUp['JoinedOn']['headerText']);
       return false;
     }
-
+    if (this.data.pitIssuedOn && this.data.pitIssuedOn > today) {
+      this.notifySV.notifyCode('HR014', 0, this.grvSetUp['PITIssuedOn']['headerText']);
+      return false;
+    }
+    if (this.data.siRegisterOn && this.data.siRegisterOn > today) {
+      this.notifySV.notifyCode('HR014', 0, this.grvSetUp['SIRegisterOn']['headerText']);
+      return false;
+    }
     return true;
   }
 
@@ -279,9 +279,9 @@ export class PopupAddEmployeeComponent implements OnInit {
               .updateFileDirectReload(res.employeeID)
               .subscribe((res2: any) => {
                 this.notifySV.notifyCode('SYS006');
-                this.dialogRef.close(res);
               });
             this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
+            this.dialogRef.close(res);
           } else {
             this.notifySV.notifyCode('SYS023');
             this.dialogRef.close(null);
@@ -303,7 +303,7 @@ export class PopupAddEmployeeComponent implements OnInit {
         .subscribe((res: any) => {
           this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
           this.notifySV.notifyCode(res ? 'SYS007' : 'SYS021');
-          this.dialogRef.close(res ? data : null);
+          this.dialogRef.close(res ? res : null);
         });
     }
   }

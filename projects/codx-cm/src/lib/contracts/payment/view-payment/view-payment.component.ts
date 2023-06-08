@@ -1,6 +1,20 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { CM_Contracts, CM_ContractsPayments } from '../../../models/cm_model';
-import { CacheService, CallFuncService, DialogModel, FormModel, NotificationsService } from 'codx-core';
+import {
+  CacheService,
+  CallFuncService,
+  DialogModel,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
 import { ContractsService } from '../../service-contracts.service';
 import { PopupAddPaymentComponent } from '../popup-add-payment/popup-add-payment.component';
@@ -11,7 +25,7 @@ import { log } from 'console';
 @Component({
   selector: 'view-payment',
   templateUrl: './view-payment.component.html',
-  styleUrls: ['./view-payment.component.scss']
+  styleUrls: ['./view-payment.component.scss'],
 })
 export class ViewPaymentComponent implements OnInit, OnChanges {
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
@@ -51,20 +65,19 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private cmService: CodxCmService,
-    private contractService: ContractsService,
-  ) {
-  }
-  
+    private contractService: ContractsService
+  ) {}
+
   ngOnInit(): void {
     this.columns = [
       {
         field: 'rowNo',
         headerText: this.grvPayments?.ItemID?.RowNo ?? 'STT',
-        width: 70,
+        width: 80,
       },
       {
         field: 'scheduleDate',
-        headerText: this.grvPayments?.ScheduleDate?.headerText ?? 'Ngày hẹn thanh toán',
+        headerText:this.grvPayments?.ScheduleDate?.headerText ?? 'Ngày hẹn thanh toán',
         template: this.scheduleDateTem,
         width: 150,
       },
@@ -87,12 +100,12 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       {
         field: 'status',
         headerText: this.grvPayments?.Status?.headerText ?? 'Trạng thái',
-        width: 90,
+        width: 100,
       },
       {
         field: 'note',
         headerText: this.grvPayments?.Note?.headerText ?? 'Ghi chú',
-        width: 90,
+        width: 100,
       },
       // textAlign: 'left',
       // /template: this.columnVatid,
@@ -100,17 +113,8 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-   if(changes?.contracts){
-    console.log(this.listPayment);
-    
-   }
-  }
-  gridCreated(e, grid) {
-    // let hBody
-    // let d = grid?.nativeElement?.parentElement.offsetHeight;
-    // if (this.cardbodyGeneral)
-    //   hBody = this.cardbodyGeneral.nativeElement.parentElement.offsetHeight;
-      //  this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
+    if (changes?.contracts) {
+    }
   }
 
   onClickMFPayment(e, data) {
@@ -152,7 +156,11 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
         if (indexPayDelete >= 0) {
           this.listPayment.splice(indexPayDelete, 1);
           this.listPaymentDelete.push(payment);
-          for (let index = indexPayDelete; index < this.listPayment.length; index++){
+          for (
+            let index = indexPayDelete;
+            index < this.listPayment.length;
+            index++
+          ) {
             this.listPayment[index].rowNo = index + 1;
           }
           this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
@@ -267,4 +275,11 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
     });
   }
+
+  // gridCreated() {
+  //   let rowHeight = document.querySelector(this.class + '.e-gridcontent') as HTMLElement;
+  //   let countPayment = this.listPayment.length;
+  //   let height = Number(countPayment || 0) * 40;
+  //   rowHeight.style.height = height.toString() + 'px';
+  // }
 }

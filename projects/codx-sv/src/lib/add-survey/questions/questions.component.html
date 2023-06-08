@@ -807,7 +807,7 @@
           : 'position-relative w-100 d-flex px-5 mt-5'
       " -->
           <img [src]="getSrcImage(item)" class="w-100" />
-          <div class="d-flex align-items-center icon-MF-image-outside justify-content-center">
+          <div class="d-flex align-items-center justify-content-center">
             <div ngbDropdown class="dropdown" container="body">
               <a
                 href="javascript:void(0)"
@@ -1387,6 +1387,14 @@
           [model]="titleEditorModel"
           [validationRules]="commentRule"
           [value]="itemQuestion.question"
+          (valueChange)="
+          valueChangeQuestionEJS(
+            $event,
+            itemSession,
+            itemQuestion,
+            'question'
+          )
+        "
         >
         </ejs-inplaceeditor>
         <ng-container #questionMF *ngIf="itemQuestion?.active" class="d-flex">
@@ -1414,16 +1422,10 @@
   </div>
   <ng-container #editImage>
     <div class="position-relative">
-      <div
-        class="row mt-2 justify-content-between me-2"
-        *ngIf="lstEditIV.length > 0"
-      >
+      <div *ngIf="lstEditIV.length > 0" class="row mt-2 justify-content-between me-2" >
         <ng-container *ngFor="let data of lstEditIV">
-          <div
-            class="col-5 my-2 m-w-100"
-            *ngIf="data.objectID == itemQuestion.recID"
-          >
-            <div class="d-flex align-items-center icon-MF-image-outside">
+          <div class="col-5 my-2 w-100" *ngIf="data.objectID == itemQuestion.recID">
+            <div class="d-flex align-items-center">
               <div ngbDropdown class="dropdown" container="body">
                 <a
                   href="javascript:void(0)"
@@ -1435,7 +1437,7 @@
                   <span class="icon-more_vert icon-22"> </span>
                 </a>
                 <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                  <li>
+                  <!-- <li>
                     <a ngbDropdownItem href="javascript:void(0)">
                       <span class="icon-format_align_left"></span>
                       <codx-label
@@ -1461,12 +1463,9 @@
                         default="Căn giữa"
                       ></codx-label>
                     </a>
-                  </li>
+                  </li> -->
                   <li>
-                    <a
-                      (click)="
-                        popupUploadFile(itemQuestion.category, 'change', false)
-                      "
+                    <a (click)="popupUploadFile(itemQuestion.category, 'change', false)"
                       ngbDropdownItem
                       href="javascript:void(0)"
                     >
@@ -1499,27 +1498,17 @@
                 </ul>
               </div>
             </div>
-            <div class="w-150">
-              <ng-container *ngIf="data.referType == REFER_TYPE.IMAGE">
-                <ng-container
-                  *ngIf="data.recID || data.objectID; else imageSrc"
-                >
-                  <codx-img
-                    [objectId]="data.objectID"
-                    [objectType]="functionList.entityName"
-                    [width]="150"
-                    cssClass="pic"
-                    imageType="square"
-                    referType="image"
-                  >
-                  </codx-img>
+            <div class="w-100 d-flex align-items-center justify-content-center ">
+              <ng-container *ngIf="data.referType == recID +'_'+ REFER_TYPE.IMAGE">
+                <ng-container *ngIf="data.recID || data.objectID; else imageSrc">
+                  <img class="w-500px" [src]="en.urlUpload +'/'+data?.pathDisk" alt="" />
                 </ng-container>
                 <ng-template #imageSrc>
                   <img [src]="data.avatar || data.data" alt="" />
                 </ng-template>
               </ng-container>
-              <ng-container *ngIf="data.referType == REFER_TYPE.VIDEO">
-                <video #video controls class="w-100 rounded h-auto">
+              <ng-container *ngIf="data.referType == (recID +'_'+ REFER_TYPE.VIDEO)">
+                <video #video controls class="w-500px rounded h-auto">
                   <source [src]="data?.srcVideo" type="video/mp4" />
                 </video>
               </ng-container>
@@ -1586,7 +1575,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group question">
+  <div class="form-group question pb-5">
     <div class="title-des">
       <ejs-inplaceeditor
         #inplaceCommentEditor
@@ -1597,7 +1586,6 @@
         name="rte"
         data-underline="false"
         [model]="descriptionEditorModel"
-        [validationRules]="commentRule"
         [value]="itemQuestion.comment"
         (valueChange)="
           valueChangeQuestionEJS(

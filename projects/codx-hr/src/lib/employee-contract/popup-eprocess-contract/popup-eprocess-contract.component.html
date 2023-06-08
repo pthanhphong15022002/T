@@ -165,10 +165,17 @@
   </div> -->
   <div class="form-group row mt-5">
     <div class="col-6">
-      <span
-        [innerHTML]="data?.status | formatvalue : formModel : 'status' | async"
+      <codx-vll
+        *ngIf="data.status"
+        [formModel]="formModel"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showIcon]="false"
+        [showBgColor]="true"
+        ngClass="badge badge-sm badge-light"
       >
-      </span>
+      </codx-vll>
     </div>
     <div class="col-6">
       <codx-input

@@ -4,7 +4,7 @@
   (setTitle)="setTitle($event)"
   [subHeader]="subHeader"
   [tabInfo]="tabInfo"
-  [tabContent]="[tabDeal, tabCustomer, tabContacts, tabAddress, tabInput]"
+  [tabContent]="[tabDeal, tabCustomer, tabContacts, tabInput]"
   [openMore]="false"
   [dialog]="dialog"
   [formModel]="dialog.formModel"
@@ -227,12 +227,20 @@
             [formModel]="formModelDeals"
           >
           </codx-label>
+<!--
+          <codx-popup-participants
+            [lstParticipants]="listParticipants"
+            [dialog]="dialog"
+            (eventUser)="valueChangeOwner($event)"
+            [owner]="deal?.salespersonID"
+          ></codx-popup-participants> -->
           <ejs-combobox
             [dataSource]="listParticipants"
             [fields]="fieldCbxParticipants"
             [value]="deal?.salespersonID"
             [placeholder]="gridViewSetupDeal?.SalespersonID?.description"
             (valueChange)="valueChangeOwner($event)"
+
           ></ejs-combobox>
         </div>
       </div>
@@ -313,9 +321,12 @@
   </ng-container>
 </ng-template>
 <ng-template #tabCustomer>
-  <div class="row">
+  <div class="row mb-4 mt-5">
     <div class="d-flex align-items-center col-6">
-      <span class="d-flex align-items-center me-5">
+      <span
+        class="d-flex align-items-center"
+        style="margin-top: -15px; margin-right: 25px !important"
+      >
         <codx-input
           name="customer-1"
           class="test-check"
@@ -333,8 +344,11 @@
         ></codx-label>
       </span>
     </div>
-    <div class="d-flex col-6">
-      <span class="d-flex justify-content-between align-items-center me-5">
+    <div class="d-flex align-items-center col-6">
+      <span
+        class="d-flex align-items-center"
+        style="margin-top: -15px; margin-right: 25px !important"
+      >
         <codx-input
           name="customer-2"
           class="test-check"
@@ -381,7 +395,6 @@
       </div>
     </div>
     <codx-list-contacts
-      #codxConvert
       [selectAll]="false"
       [funcID]="form.formModel.funcID"
       [objectID]="lead?.recID"
@@ -410,7 +423,7 @@
       [objectType]="'1'"
       [objectName]="customer?.customerName"
       [isConvertLeadToCus]="true"
-      (contactEvent)="contactEvent($event)"
+      (contactEvent)="contactEventCustomer($event)"
       (lstContactEmit)="lstContactEmit($event)"
       (objectConvert)="objectConvertDeal($event)"
       [hidenMF]="false"
@@ -426,10 +439,12 @@
       ></codx-label>
     </div>
     <codx-list-contacts
+      #codxConvert
       [selectAll]="false"
       [funcID]="'CM0201'"
       [objectID]="deal?.recID"
       [listContacts]="lstContactDeal"
+      (contactEvent)="contactEventDeal($event)"
       [objectType]="'4'"
       [objectName]="deal?.dealName"
       [hidenMF]="true"
@@ -437,55 +452,7 @@
     ></codx-list-contacts>
   </ng-container>
 </ng-template>
-<ng-template #tabAddress>
-  <!-- <ng-container>
-    <div class="d-flex flex-column mb-1">
-      <div class="title text-primary fs-4 fw-bold">
-        <codx-label
-          [formModel]="form.formModel"
-          name="lblListAdressDeal"
-          default="Danh sách địa chỉ từ tiềm năng"
-        ></codx-label>
-      </div>
-      <div class="text-gray-600">
-        <codx-label
-          name="lblCheckAddressToCustomer"
-          [formModel]="form.formModel"
-          default="Chọn địa chỉ muốn thêm vào khách hàng"
-        >
-        </codx-label>
-      </div>
-    </div>
-    <codx-address-cm
-      #codxLoadAdress
-      [type]="'formAdd'"
-      [funcID]="'CM0205'"
-      [entityName]="form.formModel.entityName"
-      [id]="lead?.recID"
-      (convertAddress)="convertAddress($event)"
-      [hidden]="true"
-      [isConvertLeadToCus]="customerID ? true : false"
-    ></codx-address-cm>
-  </ng-container> -->
-  <ng-container>
-    <div class="title text-primary fs-4 fw-bold">
-      <codx-label
-        [formModel]="form.formModel"
-        name="lblListAddressCustomer"
-        default="Danh sách địa chỉ từ khách hàng"
-      ></codx-label>
-    </div>
-    <codx-address-cm
-      #codxListAddress
-      [type]="'formAdd'"
-      [funcID]="'CM0101'"
-      [entityName]="'CM_Customers'"
-      (lstAddressEmit)="lstAddressEmit($event)"
-      (lstAddressDeleteEmit)="lstAddressDeleteEmit($event)"
-      [id]="customerID"
-    ></codx-address-cm>
-  </ng-container>
-</ng-template>
+
 <ng-template #tabInput>
   <ng-container [ngTemplateOutlet]="tabCustomFieldDetail"></ng-container>
 </ng-template>
@@ -661,7 +628,6 @@
               [placeholder]="gridViewSetupCustomer?.EstablishDate?.description"
               field="establishDate"
               (valueChange)="valueDateChange($event, 'customer')"
-
             >
             </codx-input>
           </div>
@@ -772,7 +738,6 @@
           [crrValue]="customer?.memo"
           [formModel]="formModelCustomer"
           [placeholder]="gridViewSetupCustomer?.Memo?.description"
-
           field="memo"
           (valueChange)="valueChangeCustomer($event)"
         >

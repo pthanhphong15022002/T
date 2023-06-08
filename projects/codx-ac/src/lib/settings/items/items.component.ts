@@ -7,7 +7,6 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { map } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { PopupAddItemComponent } from './popup-add-item/popup-add-item.component';
 
@@ -20,9 +19,18 @@ export class ItemsComponent extends UIComponent {
   //#region Constructor
   @ViewChild('moreTemplate') moreTemplate?: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
-  @ViewChild('header1', { static: true }) header1: TemplateRef<any>;
-  @ViewChild('header2', { static: true }) header2: TemplateRef<any>;
-  @ViewChild('header3', { static: true }) header3: TemplateRef<any>;
+  @ViewChild('header1Template', { static: true })
+  header1Template: TemplateRef<any>;
+  @ViewChild('header2Template', { static: true })
+  header2Template: TemplateRef<any>;
+  @ViewChild('header3Template', { static: true })
+  header3Template: TemplateRef<any>;
+  @ViewChild('column1Template', { static: true })
+  column1Template: TemplateRef<any>;
+  @ViewChild('column2Template', { static: true })
+  column2Template: TemplateRef<any>;
+  @ViewChild('column3Template', { static: true })
+  column3Template: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   btnAdd: ButtonModel = { id: 'btnAdd' };
@@ -35,16 +43,11 @@ export class ItemsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.cache
-      .moreFunction('Items', 'grvItems')
-      .pipe(
-        map((data) => data.find((m) => m.functionID === 'ACS21300')),
-        map(
-          (data) =>
-            data.defaultName.charAt(0).toLowerCase() + data.defaultName.slice(1)
-        )
-      )
-      .subscribe((res) => (this.functionName = res));
+    this.acService
+      .getDefaultNameFromMoreFunctions('Items', 'grvItems', 'ACS21300')
+      .subscribe((res) => {
+        this.functionName = this.acService.toCamelCase(res);
+      });
   }
 
   ngAfterViewInit() {
@@ -67,25 +70,21 @@ export class ItemsComponent extends UIComponent {
           resources: [
             {
               width: '33%',
-              headerTemplate: this.header1,
-              headerText: 'Mặt hàng',
-              field: 'itemHeader',
+              headerTemplate: this.header1Template,
+              template: this.column1Template,
             },
             {
               width: '33%',
-              headerTemplate: this.header2,
-              headerText: 'Mô hình tồn kho',
-              field: 'inventoryHeader',
+              headerTemplate: this.header2Template,
+              template: this.column2Template,
             },
             {
               width: '33%',
-              headerTemplate: this.header3,
-              headerText: 'Yếu tố tồn kho',
-              field: 'dimHeader',
+              headerTemplate: this.header3Template,
+              template: this.column3Template,
             },
-            { width: '1%', field: 'statusHeader', headerText: '' },
           ],
-          template: this.itemTemplate,
+          template2: this.moreTemplate,
         },
       },
     ];
@@ -94,14 +93,10 @@ export class ItemsComponent extends UIComponent {
 
   //#region Event
   onClickAdd(e) {
-    // debug
     console.log({ e });
     console.log(this.view);
 
     this.view.dataService.addNew().subscribe((newItem) => {
-      // debug
-      console.log({ newItem });
-
       const options = new SidebarModel();
       options.Width = '800px';
       options.DataService = this.view.dataService;

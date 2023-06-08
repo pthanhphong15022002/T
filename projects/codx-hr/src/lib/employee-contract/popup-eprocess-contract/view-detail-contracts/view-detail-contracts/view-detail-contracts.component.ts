@@ -44,20 +44,17 @@ export class ViewDetailContractsComponent implements OnInit {
     private df: ChangeDetectorRef,
     private api: ApiHttpService
   ) {
-    this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.authStore.get();
   }
 
   @ViewChild('attachment') attachment;
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
 
-  @Input() funcID;
   @Input() formModel;
   @Input() view: ViewsComponent;
   @Input() itemDetail: any;
   @Input() hideMF = false;
   @Input() hideFooter = false;
-  @Output() uploaded = new EventEmitter();
   @Output() clickMFunction = new EventEmitter();
 
   user: any; //user loggin

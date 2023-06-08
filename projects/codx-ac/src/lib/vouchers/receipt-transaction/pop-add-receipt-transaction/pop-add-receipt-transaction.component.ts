@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, ElementRef, Injector, OnInit, Optional, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, Injector, OnInit, Optional, ViewChild, ViewEncapsulation} from '@angular/core';
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Component, CodxInplaceComponent, CodxInputComponent, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util } from 'codx-core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
@@ -18,7 +18,8 @@ import { PopAddLineinventoryComponent } from '../pop-add-lineinventory/pop-add-l
 @Component({
   selector: 'lib-pop-add-receipt-transaction',
   templateUrl: './pop-add-receipt-transaction.component.html',
-  styleUrls: ['./pop-add-receipt-transaction.component.css']
+  styleUrls: ['./pop-add-receipt-transaction.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PopAddReceiptTransactionComponent extends UIComponent implements OnInit{
 
@@ -45,11 +46,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   validate: any = 0;
   journalNo: any;
   modeGrid: any;
-  lsitem: any;
-  lswarehouse: any;
   inventoryJournalLines: Array<InventoryJournalLines> = [];
   inventoryJournalLinesDelete: Array<InventoryJournalLines> = [];
   lockFields = [];
+  visibleColumns: Array<any> = [];
   pageCount: any;
   tab: number = 0;
   total: any = 0;
@@ -146,7 +146,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   onInit(): void {
     this.loadInit();
     this.loadTotal();
-    this.loadItems();
   }
 
   ngAfterViewInit() {
@@ -158,15 +157,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   //#region Event
 
-  gridCreated(e, grid) {
-    let hBody, hTab, hNote;
-    if (this.cardbodyRef)
-      hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
-    if (this.inventoryRef) hTab = (this.inventoryRef as any).element.offsetHeight;
-    if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
-
-    this.gridHeight = hBody - (hTab + hNote + 180);
-    grid.hideColumns(this.lockFields);
+  gridCreated() {
+    this.visibleColumns = this.gridInventoryJournalLine.visibleColumns;
+    this.gridInventoryJournalLine.hideColumns(this.lockFields);
   }
 
   clickMF(e, data) {
@@ -254,9 +247,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           e.data.costAmt = 0;
         break;
       case 'itemID':
-        var item = this.getItem(e.data.itemID);
-        e.data.itemName = item.itemName;
-        e.data.umid = item.umid;
+        this.api.exec('IV', 'ItemsBusiness', 'LoadDataAsync', [e.data.itemID])
+          .subscribe((res: any) => {
+            if (res)
+            {
+              e.data.itemName = res.itemName;
+              e.data.umid = res.umid;
+            }
+          });
         this.loadItemID(e.value);
         break;
       case 'idiM4':
@@ -317,6 +315,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       });
   }
 
+  onDoubleClick(data)
+  {
+    this.loadPredicate(this.visibleColumns, data.rowData);
+  }
+
   close() {
     this.dialog.close();
   }
@@ -338,7 +341,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.inventoryJournal
         );
         this.dialog.dataService.save().subscribe((res) => {
-          if (res && res.update.data != null) {
+          if(res.update.error)
+          {
+            this.inventoryJournal.status = '0';
+          }
+          if (res && res.update.data != null && res.update.error != true) {
             this.clearInventoryJournal();
             this.dialog.dataService.clear();
             this.dialog.dataService
@@ -363,7 +370,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.formType === 'edit',
           () => {
             this.dialog.dataService.save().subscribe((res) => {
-              if (res && res.save.data != null) {
+              if(res.save.error)
+              {
+                this.inventoryJournal.status = '0';
+              }
+              if (res && res.save.data != null && res.save.error != true) {
                 this.clearInventoryJournal();
                 this.dialog.dataService.clear();
                 this.dialog.dataService
@@ -398,7 +409,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             this.dialog.dataService
               .save(null, 0, '', 'SYS006', true)
               .subscribe((res) => {
-                if (res && res.update.data != null) {
+                if(res.update.error)
+                {
+                  this.inventoryJournal.status = '0';
+                }
+                if (res && res.update.data != null && res.update.error != true) {
                   this.dialog.close({
                     update: true,
                     data: res.update,
@@ -418,7 +433,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               this.formType === 'edit',
               () => {
                 this.dialog.dataService.save().subscribe((res) => {
-                  if (res && res.save.data != null) {
+                  if(res.save.error)
+                  {
+                    this.inventoryJournal.status = '0';
+                  }
+                  if (res && res.save.data != null && res.save.error != true) {
                     this.dialog.close();
                     this.dt.detectChanges();
                   }
@@ -573,19 +592,12 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.pageCount = '(' + this.inventoryJournalLines.length + ')';
   }
 
-  loadItems(){
-    this.api.exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
-    .subscribe((res: any) => {
-      if(res)
-        this.lsitem = res;
-    });
-  }
-
   loadTotal() {
     var totals = 0;
     this.inventoryJournalLines.forEach((element) => {
       totals = totals + element.costAmt;
     });
+    this.total = totals;
     this.inventoryJournal.totalAmt = totals;
     this.total = totals.toLocaleString('it-IT')
     if (this.isSaveMaster ) {
@@ -667,7 +679,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               idx = this.gridInventoryJournalLine.dataSource.length;
               res.rowNo = idx + 1;
               this.gridInventoryJournalLine.addRow(res, idx);
-
+              this.loadPredicate(this.visibleColumns, res);
               break;
             case '2':
               idx = this.inventoryJournalLines.length;
@@ -732,6 +744,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case '1':
         this.gridInventoryJournalLine.gridRef.selectRow(Number(data.index));
         this.gridInventoryJournalLine.gridRef.startEdit();
+        this.loadPredicate(this.visibleColumns, data);
         break;
       case '2':
         let index = this.inventoryJournalLines.findIndex(
@@ -968,6 +981,56 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     });
   }
 
+  loadPredicate(visibleColumns, data)
+  {
+    var arr = [
+      'IDIM0',
+      'IDIM1',
+      'IDIM2',
+      'IDIM3',
+      'IDIM5',
+      'IDIM6',
+      'IDIM7',
+    ];
+    arr.forEach((fieldName) => {
+      let idx = this.gridInventoryJournalLine.visibleColumns.findIndex(
+        (x) => x.fieldName == fieldName
+      );
+      if (idx > -1) {
+        switch (fieldName) {
+          case 'IDIM0':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM1':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM2':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM3':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM5':
+            visibleColumns[idx].predicate = '@0.Contains(WarehouseID)';
+            visibleColumns[idx].dataValue = `[${data?.idiM4}]`;
+            break;
+          case 'IDIM6':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+          case 'IDIM7':
+            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
+            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
+            break;
+        }
+      }
+    });
+  }
+
   loadWarehouseID(value) {
     let sArray = [
       'warehouselocations',
@@ -1012,11 +1075,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.form.formGroup.patchValue(this.inventoryJournal);
         }
       });
-  }
-
-  getItem(itemID: any){
-    var item = this.lsitem.filter(x => x.itemID == itemID);
-    return item[0];
   }
 
   calculateNetAmt(quantity: any, costPrice: any)

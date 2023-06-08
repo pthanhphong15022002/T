@@ -133,6 +133,17 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       this.chartOfAccounts.loanControl = true;
     }
   }
+  checkSubLGControl(){
+    if(this.chartOfAccounts.subLGControl && this.chartOfAccounts.subLGType == null)
+    {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['SubLGType'].headerText + '"'
+      );
+      this.validate++;
+    }
+  }
   //#endregion
 
   //#region CRUD
@@ -140,6 +151,11 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
     if (
       !this.acService.validateFormData(this.form.formGroup, this.gridViewSetup)
     ) {
+      return;
+    }
+    this.checkSubLGControl();
+    if (this.validate > 0) {
+      this.validate = 0;
       return;
     }
     if (this.formType == 'add' || this.formType == 'copy') {

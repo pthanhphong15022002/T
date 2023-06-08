@@ -45,7 +45,7 @@ export class JournalService {
       .subscribe((res) => console.log(res));
   }
 
-  getJournal(journalNo: string) {
+  getJournal(journalNo: string): Observable<IJournal> {
     const journalOptions = new DataRequest();
     journalOptions.entityName = 'AC_Journals';
     journalOptions.predicates = 'JournalNo=@0';
@@ -147,7 +147,7 @@ export class JournalService {
       hiddenFields.push('AssetID');
     }
 
-    const idimControls: string[] = journal?.idimControl?.split(',');
+    const idimControls: string[] = journal?.idimControl?.split(';');
     for (let i = 0; i < 10; i++) {
       if (!idimControls.includes(i.toString())) {
         hiddenFields.push('IDIM' + i);

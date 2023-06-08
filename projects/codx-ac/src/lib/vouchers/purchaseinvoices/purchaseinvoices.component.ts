@@ -20,6 +20,7 @@ import {
 import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { PurchaseInvoicesLines } from '../../models/PurchaseInvoicesLines.model';
+import { PurchaseInvoices } from '../../models/PurchaseInvoices.model';
 
 @Component({
   selector: 'lib-purchaseinvoices',
@@ -221,6 +222,14 @@ export class PurchaseinvoicesComponent extends UIComponent {
             option,
             this.view.funcID
           );
+          this.dialog.closed.subscribe((res) => {
+            if (res.event != null) {
+              if (res.event['update']) {
+                this.itemSelected = res.event['data'];
+                this.loadDatadetail(this.itemSelected);
+              }
+            }
+          });
         }
       });
   }
@@ -267,14 +276,30 @@ export class PurchaseinvoicesComponent extends UIComponent {
   //#endregion
 
   //#region Function
+  changeItemDetail(event) {
+    if (event?.data.data || event?.data.error) {
+      return;
+    } else {
+      if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+        return;
+      } else {
+        this.itemSelected = event?.data;
+        this.loadDatadetail(this.itemSelected);
+      }
+    }
+  }
 
   clickChange(data) {
     this.itemSelected = data;
     this.loadDatadetail(data);
   }
+
   changeDataMF() {
-    this.itemSelected = this.view.dataService.dataSelected;
-    this.loadDatadetail(this.itemSelected);
+    if(this.view.dataService.dataSelected.recID)
+    {
+      this.itemSelected = this.view.dataService.dataSelected;
+      this.loadDatadetail(this.itemSelected);
+    }
   }
   loadDatadetail(data) {
     this.api

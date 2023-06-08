@@ -43,6 +43,12 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 import { X } from '@angular/cdk/keycodes';
 import { AssignTaskModel } from '../../models/assign-task.model';
 import { concat } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
+import {
+  AnimationModel,
+  ILoadedEventArgs,
+  ProgressTheme,
+} from '@syncfusion/ej2-angular-progressbar';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -159,6 +165,28 @@ export class CodxTasksComponent
   isHoverPop = false;
   timeoutId: any;
   viewCrr: any;
+  //porgess
+  type: string = 'Circular';
+  // startAngle: number = 0;
+  // endAngle: number = 0;
+  width: string = '55';
+  height: string = '55';
+  min: number = 0;
+  max: number = 100;
+  color = '#005DC7';
+  // radius: string = '100%';
+  // innerRadius: string = '190%';
+
+  // progressThickness2: number = 8;
+  // cornerRadius2: string = 'Round';
+  // innerRadius2: string = '72';
+
+  // theme: string = 'Material';
+  // trackThickness: number = 80;
+  // cornerRadius: string = 'Round';
+  // progressThickness: number = 10;
+  animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
+  HTMLProgress = `<div id="point1" style="font-size:20px;font-weight:bold;color:#ffffff;fill:#ffffff"><span>60%</span></div>`;
 
   constructor(
     inject: Injector,
@@ -166,6 +194,7 @@ export class CodxTasksComponent
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private tmSv: CodxTasksService,
+    public sanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);
@@ -1477,15 +1506,17 @@ export class CodxTasksComponent
       this.notiService.notifyCode('TM052');
       return;
     }
-    if (data.isTimeOut) {
-      this.notiService.notifyCode('TM023');
-      return;
-    }
 
-    if (this.param.ExtendControl == '0') {
-      this.notiService.notifyCode('TM021');
-      return;
-    }
+    //bo chuc nang nay di
+    // if (data.isTimeOut) {
+    //   this.notiService.notifyCode('TM023');
+    //   return;
+    // }
+
+    // if (this.param.ExtendControl == '0') {
+    //   this.notiService.notifyCode('TM021');
+    //   return;
+    // }
 
     if (data.extendStatus == '3') {
       this.api
@@ -1702,6 +1733,21 @@ export class CodxTasksComponent
 
   changeDataMF(e, data) {
     if (e) {
+      // e.forEach((x) => {
+      //   switch (x.functionID) {
+      //     //tắt duyệt confirm
+      //     case 'TMT02016':
+      //     case 'TMT02017':
+      //       if (data.confirmStatus != '1') x.disabled = true;
+      //       break;
+      //     case 'TMT02019':
+      //     case 'TMT02027':
+      //       if (data.verifyControl == '0' && data.category == '1')
+      //         x.disabled = true;
+      //         break;
+      //   }
+      // });
+
       e.forEach((x) => {
         //tắt duyệt confirm
         if (
@@ -1711,7 +1757,7 @@ export class CodxTasksComponent
           x.disabled = true;
         }
         if (
-          x.functionID == 'TMT02019' &&
+          (x.functionID == 'TMT02019' ||  x.functionID == 'TMT02027')&&
           data.verifyControl == '0' &&
           data.category == '1'
         ) {
@@ -1773,8 +1819,8 @@ export class CodxTasksComponent
         }
         //an gia hạn cong viec
         if (
-          (x.functionID == 'TMT02019' || x.functionID == 'TMT02026') &&
-          (data.status == '80' || data.status == '90')
+          (x.functionID == 'TMT02019' || x.functionID == 'TMT02027' ) &&
+          (data.status == '80' || data.status == '90' || data.extendControl=="0")
         )
           x.disabled = true;
       });
@@ -2010,5 +2056,32 @@ export class CodxTasksComponent
           }
         });
     }
+  }
+
+  clickShow(e, id) {
+    let elementIcon = document.getElementById('icon-' + id);
+    let element = document.getElementById(id);
+    if (element && elementIcon) {
+      let isClose = element.classList.contains('hidden-main');
+      let isShow = element.classList.contains('show-main');
+      if (isClose) {
+        elementIcon.classList.remove('icon-keyboard_arrow_right');
+        elementIcon.classList.add('icon-keyboard_arrow_down');
+        element.classList.remove('hidden-main');
+        element.classList.add('show-main');
+      } else if (isShow) {
+        element.classList.remove('show-main');
+        element.classList.add('hidden-main');
+        elementIcon.classList.remove('icon-keyboard_arrow_down');
+        elementIcon.classList.add('icon-keyboard_arrow_right');
+      }
+    }
+  }
+
+  getHtml(data) {
+    return `<div id="point-${data.recID}" style="font-size:10px;font-weight:500;color:${this.color};fill:${this.color};margin-top: 2px;"><span>${data.percentage}</span></div>`;
+  }
+  genData(por) {
+    return Number.parseInt(por) ?? 0;
   }
 }

@@ -104,6 +104,7 @@ export class CmCustomerComponent
     this.button = {
       id: this.btnAdd,
     };
+    this.showButtonAdd = true;
     this.views = [
       {
         type: ViewType.listdetail,
@@ -132,7 +133,6 @@ export class CmCustomerComponent
     });
   }
   ngAfterViewInit(): void {
-
     this.view.dataService.methodSave = 'AddCrmAsync';
     this.view.dataService.methodUpdate = 'UpdateCrmAsync';
     this.view.dataService.methodDelete = 'DeleteCmAsync';
@@ -155,15 +155,12 @@ export class CmCustomerComponent
   }
 
   afterLoad() {
-    this.showButtonAdd = ['CM0101', 'CM0102', 'CM0103', 'CM0104'].includes(
-      this.funcID
-    );
     this.cache.functionList(this.funcID).subscribe((fun) => {
       var formMD = new FormModel();
-      this.entityName = fun.entityName;
-      formMD.entityName = fun.entityName;
-      formMD.formName = fun.formName;
-      formMD.gridViewName = fun.gridViewName;
+      this.entityName = JSON.parse(JSON.stringify(fun.entityName));
+      formMD.entityName = JSON.parse(JSON.stringify(fun.entityName));
+      formMD.formName = JSON.parse(JSON.stringify(fun.formName));
+      formMD.gridViewName = JSON.parse(JSON.stringify(fun.gridViewName));
       this.view.formModel = formMD;
     });
     this.detectorRef.detectChanges();
@@ -202,7 +199,6 @@ export class CmCustomerComponent
         this.deleteContactToCM(data);
         break;
     }
-
   }
 
   clickMoreFunc(e) {
@@ -223,6 +219,7 @@ export class CmCustomerComponent
           case 'SYS003':
           case 'SYS004':
           case 'SYS002':
+          case 'CM0102_4':
           case 'CM0102_1':
             res.disabled = true;
             break;
@@ -423,44 +420,97 @@ export class CmCustomerComponent
     });
   }
 
-  delete(data: any) {
+  async delete(data: any) {
     this.view.dataService.dataSelected = data;
+    var check = false;
     if (this.funcID == 'CM0101') {
-      this.cmSv.checkCustomerIDByDealsAsync(data?.recID).subscribe((res) => {
-        if (res) {
-          this.notiService.notifyCode(
-            'Đang tồn tại trong cơ hội, không được xóa'
-          );
+      check = await firstValueFrom(
+        this.cmSv.checkCustomerIDByDealsAsync(data?.recID)
+      );
+      if (check) {
+        this.notiService.notifyCode('CM009');
+        return;
+      } else {
+        check = await firstValueFrom(
+          this.api.execSv<any>(
+            'CM',
+            'ERM.Business.CM',
+            'ContractsBusiness',
+            'IsExitsByContractAsync',
+            [data.recID]
+          )
+        );
+        if (check) {
+          this.notiService.notifyCode('CM011');
           return;
-        } else {
-          this.view.dataService
-            .delete([this.view.dataService.dataSelected], true, (opt) =>
-              this.beforeDel(opt)
-            )
-            .subscribe((res) => {
-              if (res) {
-                this.view.dataService.onAction.next({
-                  type: 'delete',
-                  data: data,
-                });
-              }
-            });
+        }
+      }
+    }
+
+    if (this.funcID == 'CM0102') {
+      check = await firstValueFrom(
+        this.api.execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'ContactsBusiness',
+          'CheckContactDealAsync',
+          [data.recID]
+        )
+      );
+      if (check) {
+        this.notiService.notifyCode('CM012');
+        return;
+      }
+    }
+
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
         }
       });
-    } else {
-      this.view.dataService
-        .delete([this.view.dataService.dataSelected], true, (opt) =>
-          this.beforeDel(opt)
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.view.dataService.onAction.next({
-              type: 'delete',
-              data: data,
-            });
-          }
-        });
-    }
+
+    // this.cmSv.checkCustomerIDByDealsAsync(data?.recID).subscribe((res) => {
+    //   if (res) {
+    //     this.notiService.notifyCode(
+    //       'Đang tồn tại trong cơ hội, không được xóa'
+    //     );
+    //     return;
+    //   } else {
+    //     this.view.dataService
+    //       .delete([this.view.dataService.dataSelected], true, (opt) =>
+    //         this.beforeDel(opt)
+    //       )
+    //       .subscribe((res) => {
+    //         if (res) {
+    //           this.view.dataService.onAction.next({
+    //             type: 'delete',
+    //             data: data,
+    //           });
+    //         }
+    //       });
+    //   }
+    // });
+    // } else {
+    //   this.view.dataService
+    //     .delete([this.view.dataService.dataSelected], true, (opt) =>
+    //       this.beforeDel(opt)
+    //     )
+    //     .subscribe((res) => {
+    //       if (res) {
+    //         this.view.dataService.onAction.next({
+    //           type: 'delete',
+    //           data: data,
+    //         });
+    //       }
+    //     });
+    // }
 
     this.detectorRef.detectChanges();
   }
@@ -523,24 +573,28 @@ export class CmCustomerComponent
 
   //#region event
   selectedChange(data) {
-    this.dataSelected = data?.data ? data?.data : data;
+    if (this.dataSelected?.recID != data?.data?.recID) {
+      this.dataSelected = data?.data ? data?.data : data;
+    }
     this.detectorRef.detectChanges();
   }
   //#endregion
 
   getNameCrm(data) {
+    var name = '';
     if (this.funcID == 'CM0101') {
-      return data.customerName;
+      name = data?.customerName;
     } else if (this.funcID == 'CM0102') {
-      return data.contactName;
+      name = data.contactName;
     } else if (this.funcID == 'CM0103') {
-      return data.partnerName;
+      name = data.partnerName;
     } else {
-      return data.competitorName;
+      name = data.competitorName;
     }
+    return name;
   }
 
-  addressNameCMEmit(e){
+  addressNameCMEmit(e) {
     this.dataSelected.address = e;
     this.view.dataService.update(this.dataSelected).subscribe();
     this.detectorRef.detectChanges();

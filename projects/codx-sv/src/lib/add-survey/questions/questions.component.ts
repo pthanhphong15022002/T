@@ -317,7 +317,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
           ).subscribe((res: any) => {
             if (res) {
               res.forEach((x) => {
-                if (x.referType = this.recID +"_"+ this.REFER_TYPE.VIDEO)
+                if (x.referType == this.recID +"_"+ this.REFER_TYPE.VIDEO)
                   x['srcVideo'] = `${environment.urlUpload}/${x.pathDisk}`;
               });
               this.lstEditIV = res;
@@ -1065,7 +1065,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     );
     dialog.closed.subscribe((res) => {
       if (res.event) {
-        debugger
         if (inline) {
           let myInterval = setInterval(() => {
             if (this.questions && this.questions.length > 0) {
@@ -1090,6 +1089,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
                 this.questions[seqNoSession].children[seqNoQuestion].qPicture =
                   true;
               }
+              debugger
               this.lstEditIV.push(res.event?.dataUpload[0]);
               this.SVServices.signalSave.next('saving');
               this.setTimeoutSaveData(
@@ -1097,7 +1097,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
                 false
               );
               this.change.detectChanges();
-              console.log('check data file', this.lstEditIV);
             }
           }, 200);
         } else {
@@ -1420,7 +1419,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       tempQuestion.category = referType;
       tempQuestion.qPicture = referType == 'image' ? true : false;
       tempQuestion.recID = !youtube ? data[0].objectID : this.generateGUID();
-      tempQuestion.url = youtube ? data : null;
+      tempQuestion.url = youtube ? data?.avatar : null;
       tempQuestion.videoID = videoID;
       if (dataQuestion.category == 'S')
         tempQuestion.parentID = dataQuestion.recID;
@@ -1440,7 +1439,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       // this.questions[seqNoSession].children[dataQuestion.seqNo + 1].active =
       //   true;
       //active card video, picture này để phát triển sau, chưa ưu tiên
-
+        debugger
       if (dataQuestion.category == 'S')
         this.itemActive = this.questions[seqNoSession].children[0];
       else
@@ -1464,6 +1463,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         isModeAdd
       );
     }
+    
     if (!youtube) {
       data[0]['recID'] = data[0].objectID;
       if (referType == 'V' && !data[0]?.srcVideo) {

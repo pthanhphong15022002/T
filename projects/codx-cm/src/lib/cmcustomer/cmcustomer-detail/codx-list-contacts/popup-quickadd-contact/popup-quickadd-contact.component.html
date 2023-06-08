@@ -16,7 +16,9 @@
           name="lblQuickAdd"
           [formModel]="form.formModel"
           [default]="
-            action == 'editType' ? title : title + ' ' + 'nhanh liên hệ'
+            actionOld == 'editType' || actionOld == 'editRole'
+              ? title
+              : title + ' ' + 'nhanh liên hệ'
           "
         ></codx-label>
       </div>
@@ -32,7 +34,119 @@
   </div>
 </ng-template>
 <ng-template #body>
+  <div class="row mb-4 mt-5" *ngIf="actionOld == 'add'">
+    <div class="col-6">
+      <div class="d-flex align-items-top">
+        <span class="me-3 w-15px mt-n3">
+          <codx-input
+            name="customer-1"
+            type="radio"
+            style="width: 100%"
+            field="yes"
+            [checked]="radioChecked ?? false"
+            (valueChange)="changeRadio($event)"
+          ></codx-input>
+        </span>
+        <span class="d-flex align-items-center">
+          <codx-label
+            name="lblSelectContacts"
+            [formModel]="dialog.formModel"
+            [default]="
+              objectType == '4'
+                ? 'Chọn liên hệ từ khách hàng'
+                : 'Chọn liên hệ từ hệ thống'
+            "
+          ></codx-label>
+        </span>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="d-flex align-items-start">
+        <span class="me-3 w-15px mt-n3">
+          <codx-input
+            name="customer-2"
+            type="radio"
+            style="width: 100%"
+            field="no"
+            [checked]="!radioChecked ?? false"
+            (valueChange)="changeRadio($event)"
+          ></codx-input>
+        </span>
+
+        <span class="d-flex justify-content-end align-items-center">
+          <codx-label
+            name="lblQuickAdd"
+            [formModel]="dialog.formModel"
+            default="Thêm nhanh liên hệ"
+          ></codx-label>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="mt-5"
+    *ngIf="
+      radioChecked && actionOld == 'add';
+      then systemCustomer;
+      else addCustomer
+    "
+  ></div>
+</ng-template>
+
+<ng-template #systemCustomer>
+  <div class="form-group" *ngIf="objectType != '4'">
+    <codx-label [formModel]="form.formModel" fiedName="ContactType">
+    </codx-label>
+    <codx-input
+      (valueChange)="valueChange($event)"
+      [crrValue]="contactType"
+      [formModel]="form.formModel"
+      field="contactType"
+    >
+    </codx-input>
+  </div>
   <div class="form-group">
+    <codx-label
+      name="lblContacts"
+      [formModel]="form.formModel"
+      default="Liên hệ"
+    >
+    </codx-label>
+    <ejs-combobox
+      [dataSource]="lstContactCbx"
+      [fields]="fieldContact"
+      [value]="contactID"
+      (valueChange)="cbxContact($event)"
+    ></ejs-combobox>
+  </div>
+  <div class="form-group" *ngIf="objectType == '4'">
+    <codx-label [formModel]="form.formModel" fiedName="Role"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [crrValue]="data?.role"
+      (valueChange)="valueChange($event)"
+      field="role"
+    >
+    </codx-input>
+  </div>
+  <div class="d-flex align-items-center">
+    <div class="me-3">
+      <codx-input
+        [field]="'isDefault'"
+        [crrValue]="isDefault"
+        type="switch"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div class="w-100">
+      <codx-label [formModel]="form.formModel" fiedName="IsDefault">
+      </codx-label>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #addCustomer>
+  <div class="form-group" *ngIf="actionOld != 'editRole'">
     <codx-label [formModel]="form.formModel" fiedName="ContactType">
     </codx-label>
     <codx-input
@@ -43,50 +157,63 @@
     >
     </codx-input>
   </div>
-  <div class="form-group" *ngIf="action != 'editType'">
+  <div
+    class="form-group"
+    *ngIf="actionOld != 'editType' && actionOld != 'editRole'"
+  >
     <codx-label [formModel]="form.formModel" fiedName="LastName"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
-      [Group]="form.formGroup"
+      [crrValue]="data?.lastName"
+      (valueChange)="valueChange($event)"
       field="lastName"
     >
     </codx-input>
   </div>
-  <div class="form-group" *ngIf="action != 'editType'">
+  <div
+    class="form-group"
+    *ngIf="actionOld != 'editType' && actionOld != 'editRole'"
+  >
     <codx-label [formModel]="dialog.formModel" fiedName="FirstName">
     </codx-label>
     <codx-input
       [formModel]="form.formModel"
-      [Group]="form.formGroup"
+      [crrValue]="data?.firstName"
+      (valueChange)="valueChange($event)"
       field="firstName"
     >
     </codx-input>
   </div>
-  <div class="form-group">
+  <div class="form-group" *ngIf="actionOld != 'editRole'">
     <codx-label [formModel]="form.formModel" fiedName="JobTitle"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
-      [Group]="form.formGroup"
+      [crrValue]="data?.jobTitle"
+      (valueChange)="valueChange($event)"
       field="jobTitle"
     >
     </codx-input>
   </div>
-  <div class="form-group" *ngIf="action != 'editType'">
+  <div
+    class="form-group"
+    *ngIf="actionOld != 'editType' && actionOld != 'editRole'"
+  >
     <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center">
         <codx-label [formModel]="dialog.formModel" [fiedName]="'Mobile'">
         </codx-label>
       </div>
-      <div class="d-flex align-items-center mb-1">
+      <div class="d-flex align-items-center mb-2">
         <codx-label
-          class="text-gray-500 fw-normal me-2"
+          class="text-gray-600 fw-normal me-3"
           [formModel]="dialog.formModel"
           [fiedName]="'AllowCall'"
         >
         </codx-label>
         <codx-input
           [formModel]="dialog.formModel"
-          [Group]="form.formGroup"
+          [crrValue]="data?.allowCall"
+          (valueChange)="valueChange($event)"
           field="allowCall"
         >
         </codx-input>
@@ -94,27 +221,32 @@
     </div>
     <codx-input
       [formModel]="form.formModel"
-      [Group]="form.formGroup"
+      [crrValue]="data?.mobile"
+      (valueChange)="valueChange($event)"
       [field]="'mobile'"
     >
     </codx-input>
   </div>
-  <div class="form-group" *ngIf="action != 'editType'">
+  <div
+    class="form-group"
+    *ngIf="actionOld != 'editType' && actionOld != 'editRole'"
+  >
     <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center">
         <codx-label [formModel]="form.formModel" [fiedName]="'PersonalEmail'">
         </codx-label>
       </div>
-      <div class="d-flex align-items-center mb-1">
+      <div class="d-flex align-items-center mb-2">
         <codx-label
-          class="text-gray-500 fw-normal me-2"
+          class="text-gray-600 fw-normal me-3"
           [formModel]="form.formModel"
           [fiedName]="'AllowEmail'"
         >
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
-          [Group]="form.formGroup"
+          [crrValue]="data?.allowEmail"
+          (valueChange)="valueChange($event)"
           field="allowEmail"
         >
         </codx-input>
@@ -122,13 +254,24 @@
     </div>
     <codx-input
       [formModel]="form.formModel"
-      [Group]="form.formGroup"
+      [crrValue]="data?.personalEmail"
+      (valueChange)="valueChange($event)"
       [field]="'personalEmail'"
     >
     </codx-input>
   </div>
-  <div class="d-flex justify-content-between">
-    <div>
+  <div class="form-group" *ngIf="objectType == '4'">
+    <codx-label [formModel]="form.formModel" fiedName="Role"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [crrValue]="data?.role"
+      (valueChange)="valueChange($event)"
+      field="role"
+    >
+    </codx-input>
+  </div>
+  <div class="d-flex align-items-center">
+    <div class="me-3">
       <codx-input
         [field]="'isDefault'"
         [crrValue]="isDefault"
@@ -136,7 +279,7 @@
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
-    <div class="w-100 ms-1">
+    <div class="w-100">
       <codx-label [formModel]="form.formModel" fiedName="IsDefault">
       </codx-label>
     </div>
@@ -144,21 +287,21 @@
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <div class="me-2">
+    <div class="me-2" *ngIf="actionOld == 'add'">
       <button
         type="button"
-        (click)="dialog.close()"
-        class="btn btn-outline-primary"
+        (click)="onSave('addAndSave')"
+        class="btn btn-light-primary"
       >
         <codx-label
-          name="lblCancel"
+          name="lblAddAndSave"
           [formModel]="dialog.formModel"
-          default="Hủy"
+          default="Lưu và thêm"
         ></codx-label>
       </button>
     </div>
     <div class="">
-      <button type="button" (click)="onSave()" class="btn btn-primary">
+      <button type="button" (click)="onSave('save')" class="btn btn-primary">
         <codx-label
           name="lblSave"
           [formModel]="dialog.formModel"
