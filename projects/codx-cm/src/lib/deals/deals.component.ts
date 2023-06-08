@@ -203,7 +203,7 @@ export class DealsComponent
           },
         },
       ];
-    this.reloadData();
+   // this.reloadData();
     this.changeDetectorRef.detectChanges();
   }
 
